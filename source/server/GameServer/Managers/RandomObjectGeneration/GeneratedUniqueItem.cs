@@ -1283,6 +1283,7 @@ namespace DOL.GS
                 case eCharacterClass.Bard:
                 case eCharacterClass.Skald:
                 case eCharacterClass.Minstrel:
+                case eCharacterClass.King:
                     if (Util.Chance(20))
                         return eProperty.MaxMana;
                     if (rand <= 22)
@@ -1317,6 +1318,11 @@ namespace DOL.GS
                 // Base classes need explicit smart-loot coverage too.  Without
                 // these cases a new character falls through to cloth/staff and
                 // receives bonuses for no usable line until promotion.
+                case eCharacterClass.King:
+                    return property == eProperty.Skill_Parry ||
+                           property == eProperty.Skill_Slashing ||
+                           property == eProperty.AllMeleeWeaponSkills ||
+                           property == eProperty.AllSkills;
                 case eCharacterClass.Fighter:
                     return property == eProperty.Skill_Parry ||
                            property == eProperty.Skill_Slashing ||
@@ -2401,6 +2407,7 @@ namespace DOL.GS
                             charClass != eCharacterClass.Blademaster &&
                             charClass != eCharacterClass.Warden &&
                             charClass != eCharacterClass.Sluaghbinder &&
+                            charClass != eCharacterClass.King &&
                             charClass != eCharacterClass.Armsman && //albion
                             charClass != eCharacterClass.Friar &&
                             charClass != eCharacterClass.Mercenary &&
@@ -2533,6 +2540,7 @@ namespace DOL.GS
                 case eProperty.Skill_Slashing:
                     {
                         if (charClass != eCharacterClass.Armsman &&
+                            charClass != eCharacterClass.King &&
                             charClass != eCharacterClass.Infiltrator &&
                             charClass != eCharacterClass.Mercenary &&
                             charClass != eCharacterClass.Minstrel &&
@@ -3312,6 +3320,7 @@ namespace DOL.GS
                             charClass != eCharacterClass.Warden &&
                             charClass != eCharacterClass.Sluaghbinder &&
                             charClass != eCharacterClass.Blademaster &&
+                            charClass != eCharacterClass.King &&
                             charClass != eCharacterClass.Armsman && //albion
                             charClass != eCharacterClass.Friar &&
                             charClass != eCharacterClass.Mercenary &&
@@ -3532,6 +3541,7 @@ namespace DOL.GS
                 case eProperty.Skill_Slashing:
                     {
                         if (charClass != eCharacterClass.Armsman &&
+                            charClass != eCharacterClass.King &&
                             charClass != eCharacterClass.Infiltrator &&
                             charClass != eCharacterClass.Mercenary &&
                             charClass != eCharacterClass.Minstrel &&
@@ -4142,6 +4152,7 @@ namespace DOL.GS
                             charClass != eCharacterClass.Valewalker &&
                             charClass != eCharacterClass.Warden &&
                             charClass != eCharacterClass.Sluaghbinder &&
+                            charClass != eCharacterClass.King &&
                             charClass != eCharacterClass.Armsman && //albion
                             charClass != eCharacterClass.Friar &&
                             charClass != eCharacterClass.Mercenary &&
@@ -4234,6 +4245,7 @@ namespace DOL.GS
                 case eProperty.Skill_Slashing:
                     {
                         if (charClass != eCharacterClass.Armsman &&
+                            charClass != eCharacterClass.King &&
                             charClass != eCharacterClass.Infiltrator &&
                             charClass != eCharacterClass.Mercenary &&
                             charClass != eCharacterClass.Minstrel &&
@@ -5411,6 +5423,10 @@ namespace DOL.GS
                 // Starter-class choices mirror the weapons issued by their
                 // trainers. This keeps level 1-4 player loot usable before the
                 // player chooses an advanced class.
+                // King / Queen (custom): one-handed slashing weapons only (no shield, no left hand)
+                case eCharacterClass.King:
+                    weaponTypes.Add(eObjectType.SlashingWeapon);
+                    break;
                 case eCharacterClass.Fighter:
                     weaponTypes.Add(eObjectType.SlashingWeapon);
                     weaponTypes.Add(eObjectType.SlashingWeapon);
@@ -5641,6 +5657,9 @@ namespace DOL.GS
                     {
                         return eObjectType.Chain;
                     }
+                // King / Queen (custom): studded, then chain from 20 (KingCareer AlbArmor 3 -> 4)
+                case eCharacterClass.King:
+                    return level < 20 ? eObjectType.Studded : eObjectType.Chain;
                 default:
                     return eObjectType.Cloth;
             }

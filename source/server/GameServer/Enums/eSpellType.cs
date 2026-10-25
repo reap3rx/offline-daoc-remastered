@@ -440,6 +440,7 @@ namespace DOL.GS
 
         // King / Queen class (Fealty): the royal commander and its retainers.
         SummonRoyalCommander,
-        SummonRetainer
+        SummonRetainer,
+        DismissRetainers
     }
 }

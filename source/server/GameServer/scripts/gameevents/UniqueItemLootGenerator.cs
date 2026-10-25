@@ -255,6 +255,10 @@ namespace DOL.GS
 					GenerateWeapon(player, charClass, eObjectType.Scythe, eInventorySlot.TwoHandWeapon); ;
 					break;
 
+				case eCharacterClass.King:     // custom King / Queen: one-handed slash only
+					GenerateWeapon(player, charClass, eObjectType.SlashingWeapon, eInventorySlot.RightHandWeapon);
+					break;
+
 				case eCharacterClass.Reaver:
 					GenerateWeapon(player, charClass, eObjectType.Flexible, eInventorySlot.RightHandWeapon);
 					GenerateWeapon(player, charClass, eObjectType.CrushingWeapon, eInventorySlot.RightHandWeapon);
