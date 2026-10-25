@@ -32,6 +32,9 @@ namespace DOL.GS.Spells
 
         public SummonMinionHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
+        /// <summary>The Bonedancer's rule: a commander's minions may total at most 75 levels. The King's retainers have no such cap.</summary>
+        protected virtual int MaxTotalMinionLevel => 75;
+
         public override bool CheckBeginCast(GameLiving selectedTarget)
         {
             // GameBots use the same commander-owned subordinate path as a real
@@ -65,7 +68,7 @@ namespace DOL.GS.Spells
 
                 int newPetLevel = AutonomousPetSupport.BonedancerSubPetLevel(Caster.Level, m_spell);
 
-                if (cumulativeLevel + newPetLevel > 75)
+                if (cumulativeLevel + newPetLevel > MaxTotalMinionLevel)
                 {
                     if (playerCaster != null)
                         MessageToCaster("Your commander is not powerful enough to control a minion of this level.", eChatType.CT_SpellResisted);

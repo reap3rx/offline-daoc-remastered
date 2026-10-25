@@ -40,6 +40,9 @@ namespace DOL.GS.PlayerClass
 
 		public override eClassType ClassType => eClassType.Hybrid;
 
+		// Like the Warden: two pulsing Majesty decrees at once.
+		public override ushort MaxPulsingSpells => 2;
+
 		// One-handed slashing weapons only: no shield and no left-hand weapon.
 		public override bool CanUseLefthandedWeapon => false;
 

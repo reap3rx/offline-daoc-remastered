@@ -61,7 +61,8 @@ namespace DOL.GS.PacketHandler
 		/// </summary>
 		public static bool UsesOwnTooltipIdentity(int spellId)
 		{
-			return spellId is >= 59000 and <= 59111;
+			// 64000-64999: the custom King / Queen class's spells (same reuse of stock icons).
+			return spellId is (>= 59000 and <= 59111) or (>= 64000 and <= 64999);
 		}
 
         /// <summary>

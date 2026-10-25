@@ -436,6 +436,10 @@ namespace DOL.GS
         SluaghbinderEpicSummon,
 
         // Sluaghbinder class realm ability: a snare that tightens every second, then bursts (AtlasOF_CripplingPlague).
-        SluaghbinderCripplingPlague
+        SluaghbinderCripplingPlague,
+
+        // King / Queen class (Fealty): the royal commander and its retainers.
+        SummonRoyalCommander,
+        SummonRetainer
     }
 }

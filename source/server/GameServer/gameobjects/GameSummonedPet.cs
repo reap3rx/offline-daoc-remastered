@@ -97,7 +97,7 @@ namespace DOL.GS
 			if ((eCharacterClass?)summonerClass?.ID is
 				eCharacterClass.Theurgist or eCharacterClass.Cabalist or eCharacterClass.Spiritmaster or
 				eCharacterClass.Bonedancer or eCharacterClass.Enchanter or eCharacterClass.Druid or
-				eCharacterClass.Sluaghbinder)
+				eCharacterClass.Sluaghbinder or eCharacterClass.King)
 				ScalSpells();
         }
 
