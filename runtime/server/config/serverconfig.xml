@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <Server>
+        <Port>10300</Port>
+        <IP>127.0.0.1</IP>
+        <RegionIP>127.0.0.1</RegionIP>
+        <RegionPort>10400</RegionPort>
+        <UdpIP>127.0.0.1</UdpIP>
+        <UdpPort>10400</UdpPort>
+        <EnableUPnP>False</EnableUPnP>
+        <DetectRegionIP>False</DetectRegionIP>
+        <ServerName>Offline DAoC: Classic SI</ServerName>
+        <ServerNameShort>OfflineClassicSI</ServerNameShort>
+        <LogConfigFile>./config/logconfig.xml</LogConfigFile>
+        <ScriptCompilationTarget>./lib/GameServerScripts.dll</ScriptCompilationTarget>
+        <ScriptAssemblies> </ScriptAssemblies>
+        <EnableCompilation>True</EnableCompilation>
+        <AutoAccountCreation>True</AutoAccountCreation>
+        <GameType>Normal</GameType>
+        <CheatLoggerName>cheats</CheatLoggerName>
+        <GMActionLoggerName>gmactions</GMActionLoggerName>
+        <InvalidNamesFile>./config/invalidnames.txt</InvalidNamesFile>
+        <DBType>SQLITE</DBType>
+        <DBConnectionString>Data Source=../data/opendaoc.sqlite3.db;Version=3;Pooling=True;Journal Mode=WAL;Synchronous=Normal;Foreign Keys=True;Default Timeout=60</DBConnectionString>
+        <DBAutosave>True</DBAutosave>
+        <DBAutosaveInterval>10</DBAutosaveInterval>
+        <MetricsEnabled>false</MetricsEnabled>
+        <MetricsInterval>60s</MetricsInterval>
+        <OtlpEndpoint>http://127.0.0.1:4317</OtlpEndpoint>
+    </Server>
+</root>

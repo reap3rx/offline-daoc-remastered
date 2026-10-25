@@ -1,0 +1,15 @@
+﻿Offline DAoC ruleset
+====================
+Target patch: 1.65 (pre-Trials of Atlantis)
+Enabled content: Classic + Shrouded Isles
+XP / RP / BP / money rates: 1x
+Disabled: Trials of Atlantis, Catacombs, Darkness Rising, Labyrinth, champion levels,
+          post-SI currencies, instances, custom free respecs, custom PvE speed boosts,
+          server-list advertising, UPnP, and external webhooks.
+
+Autonomous population policy: active world objects only. No offline, time-skipped, warm-tier,
+cold-tier, or simulated progression is permitted. Population creation is disabled and the
+active target is zero until the owner attends the first measured spawn.
+
+Auction policy: real persisted items and real copper escrow only. Synthetic listings and
+transactions are forbidden. The auction is disabled and its location is intentionally unset.

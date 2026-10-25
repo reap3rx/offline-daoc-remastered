@@ -1,0 +1,43 @@
+# ---- Offline DAoC mod: what Git tracks ----
+# Tracked: source/, docs/, tools/ (minus bundled .NET), start scripts, readmes,
+#          server config + small server JSON settings, db-changes/ SQL scripts.
+# Not tracked: game client, logs, database, navmesh, build outputs, backups.
+
+# Game client + Godot (33 GB)
+new-client/
+
+# Old patch backups
+patch-backups/
+
+# Huge release manifest
+PACKAGE MANIFEST.sha256
+
+# Bundled .NET runtime
+tools/dotnet/
+
+# Runtime: ignore everything except server config and small settings files
+runtime/*
+!runtime/ruleset.txt
+!runtime/server/
+runtime/server/*
+!runtime/server/config/
+!runtime/server/*.json
+runtime/server/*.deps.json
+runtime/server/*.runtimeconfig.json
+
+# Database files anywhere (too big for GitHub; backed up separately)
+*.db
+*.sqlite3
+*.sqlite3-journal
+*.db-journal
+
+# Logs
+*.log
+logs/
+
+# Build outputs / IDE
+bin/
+obj/
+.vs/
+*.user
+*.suo
