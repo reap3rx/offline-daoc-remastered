@@ -258,7 +258,7 @@ class QuickSlot extends Control:
 		return prev
 
 	func _can_drop_data(_pos: Vector2, data: Variant) -> bool:
-		return data is Dictionary and String(data.get("kind", "")) in ["item", "quickslot", "skill", "spell", "style", "petcmd", "macro"]
+		return data is Dictionary and String(data.get("kind", "")) in ["item", "quickslot", "skill", "spell", "style", "ability", "petcmd", "macro"]
 
 	func _drop_data(_pos: Vector2, data: Variant) -> void:
 		var e: Dictionary = data.get("entry", {}) if data.kind == "quickslot" else \

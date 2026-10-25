@@ -60,7 +60,7 @@ namespace DOL.GS
 		{
 			// Set the Commander Type
 			CommanderType = ResolveCommanderType(npcTemplate, Name);
-			if (CommanderType == eCommanderType.Unknown)
+			if (CommanderType == eCommanderType.Unknown && this is not RoyalCommanderPet)
 			{
 				log.Warn($"CommanderPet(): unrecognized commander name {Name} in npcTemplate {npcTemplate.TemplateId}, is Name in server default language?");
 			}
@@ -85,7 +85,7 @@ namespace DOL.GS
 			// controlled-list index, producing one file behind the commander.
 			Formation = eFormationType.Line;
 			FormationSpacing = 1;
-			if (CommanderType == eCommanderType.Unknown && subPetSlots == 0)
+			if (CommanderType == eCommanderType.Unknown && subPetSlots == 0 && this is not RoyalCommanderPet)
 				log.Warn($"CommanderPet(): npcTemplate for unknown commander {Name} does not specify number of subpets, defaulting to 0");
 
 			// Choose a melee weapon. CommanderSwitchWeapon keeps the offhand in
