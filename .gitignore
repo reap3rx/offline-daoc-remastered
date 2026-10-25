@@ -1,13 +1,13 @@
-# ---- Offline DAoC mod: what Git tracks ----
+﻿# ---- Offline DAoC mod: what Git tracks ----
 # Tracked: source/, docs/, tools/ (minus bundled .NET), start scripts, readmes,
 #          server config + small server JSON settings, db-changes/ SQL scripts.
 # Not tracked: game client, logs, database, navmesh, build outputs, backups.
 
 # Game client + Godot (33 GB)
-new-client/
+/new-client/
 
 # Old patch backups
-patch-backups/
+/patch-backups/
 
 # Huge release manifest
 PACKAGE MANIFEST.sha256
