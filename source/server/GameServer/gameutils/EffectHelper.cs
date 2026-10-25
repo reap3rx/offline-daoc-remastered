@@ -259,6 +259,8 @@ namespace DOL.GS
                 case eSpellType.SummonNecroPet:
                 case eSpellType.SummonCommander:
                 case eSpellType.SummonMinion:
+                case eSpellType.SummonRoyalCommander:   // King / Queen: the commander and its retainers are pets too
+                case eSpellType.SummonRetainer:
                 case eSpellType.SummonJuggernaut:
                 case eSpellType.SummonAnimistAmbusher:
                     return eEffect.Pet;

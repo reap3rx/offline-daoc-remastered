@@ -136,6 +136,8 @@ namespace DOL.GS.Spells
 						case eSpellType.Summon:
 						case eSpellType.SummonJuggernaut:
 						case eSpellType.SummonMinion:
+						case eSpellType.SummonRoyalCommander:
+						case eSpellType.SummonRetainer:
 						case eSpellType.SummonSimulacrum:
 						case eSpellType.SummonUnderhill:
 						case eSpellType.SummonAnimistAmbusher:
