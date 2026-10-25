@@ -6,6 +6,7 @@
 PlayerClass.Profession.Academy:			    Academy
 PlayerClass.Profession.ChurchofAlbion:		Church of Albion
 PlayerClass.Profession.DefendersofAlbion:	Defenders of Albion
+PlayerClass.Profession.HouseofPendragon:	House of Pendragon
 PlayerClass.Profession.GuildofShadows:		Guild of Shadows
 PlayerClass.Profession.TempleofArawn:		Temple of Arawn
 
@@ -87,6 +88,8 @@ PlayerClass.Name.Valewalker:			    Valewalker
 PlayerClass.Name.Vampiir:			        Vampiir
 PlayerClass.Name.Warden:			        Warden
 PlayerClass.Name.Sluaghbinder:              Sluaghbinder
+PlayerClass.Name.King:                      King
+PlayerClass.Name.Queen:                     Queen
 
 ### Midgard
 #### Base

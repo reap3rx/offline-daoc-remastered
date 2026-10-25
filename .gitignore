@@ -41,3 +41,8 @@ obj/
 .vs/
 *.user
 *.suo
+
+# Server world state (rewritten every run)
+runtime/server/bot-*.json
+runtime/server/rvr-world.json
+__pycache__/

@@ -960,6 +960,7 @@ namespace DOL.GS
 				eCharacterClass.Mage, 			// Mage = 18,
 				eCharacterClass.Reaver, 		// Reaver = 19,
 				eCharacterClass.Disciple,		// Disciple = 20,
+				eCharacterClass.King,			// King / Queen = 64 (custom, player-only)
 				// eCharacterClass.Heretic, 		// Heretic = 33,
 				// eCharacterClass.MaulerAlb		// Mauler_Alb = 60,
 			}},

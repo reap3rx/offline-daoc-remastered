@@ -98,5 +98,7 @@ namespace DOL.GS
 		// Experimental Hibernian class; only enabled by the isolated Sluaghbinder
 		// test-copy bot catalog (never by the main Offline DAoC installation).
 		Sluaghbinder = 63,
+		// Ryan's custom Albion class (King / Queen); player-only, never rolled by bots.
+		King = 64,
 	}
 }

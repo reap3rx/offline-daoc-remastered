@@ -89,6 +89,28 @@ PlayerClass.Mauler.GetTitle.10:		        Stone Palm
 PlayerClass.Mauler.GetTitle.5:		        Initiate Mauler
 
 ### Albion
+#### King / Queen (custom)
+PlayerClass.King.GetTitle.50:	Pendragon
+PlayerClass.King.GetTitle.45:	High King
+PlayerClass.King.GetTitle.40:	Prince
+PlayerClass.King.GetTitle.35:	Archduke
+PlayerClass.King.GetTitle.30:	Duke
+PlayerClass.King.GetTitle.25:	Marquess
+PlayerClass.King.GetTitle.20:	Earl
+PlayerClass.King.GetTitle.15:	Viscount
+PlayerClass.King.GetTitle.10:	Baron
+PlayerClass.King.GetTitle.5:	Lordling
+PlayerClass.Queen.GetTitle.50:	Pendragon
+PlayerClass.Queen.GetTitle.45:	High Queen
+PlayerClass.Queen.GetTitle.40:	Princess
+PlayerClass.Queen.GetTitle.35:	Archduchess
+PlayerClass.Queen.GetTitle.30:	Duchess
+PlayerClass.Queen.GetTitle.25:	Marchioness
+PlayerClass.Queen.GetTitle.20:	Countess
+PlayerClass.Queen.GetTitle.15:	Viscountess
+PlayerClass.Queen.GetTitle.10:	Baroness
+PlayerClass.Queen.GetTitle.5:	Lady
+
 #### Armsman
 PlayerClass.Armsman.GetTitle.50:	General
 PlayerClass.Armsman.GetTitle.45:	Captain
