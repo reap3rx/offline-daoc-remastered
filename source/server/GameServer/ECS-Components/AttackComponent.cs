@@ -1141,7 +1141,7 @@ namespace DOL.GS
             }
 
             // Action Combat: a timed parry / block still lets part of the blow through - worked out as a hit, then put back.
-            bool actionPartial = ad.IsActionPartialDefense && ad.ActionDamageFactor > 0;
+            bool actionPartial = ad.IsActionPartialDefense;
             eAttackResult actionSavedResult = ad.AttackResult;
 
             if (actionPartial)
@@ -1252,7 +1252,9 @@ namespace DOL.GS
                         ApplyTargetConversionRegen(ad.Target, (int) conversionAmount);
                     }
 
+                    double actionFullDamage = damage;
                     damage *= ad.ActionDamageFactor;    // Action Combat: guarded, or let through a timed parry / block
+                    ad.ActionMitigated = (int) Math.Max(0, actionFullDamage - damage);
 
                     if (damage < 0)
                         damage = 0;

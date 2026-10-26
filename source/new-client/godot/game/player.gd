@@ -123,10 +123,11 @@ var _cursor_at := Vector2.ZERO          # where the cursor was when a mouse-look
 # the mouse buttons fight. action_cursor: the cursor is out for the interface (Alt held) - the mouse doesn't look.
 var action_mode := false
 var action_cursor := false
-var guard_mult := 1.0                   # holding guard: slower
+var _defend_clip := ""                  # the parry / block / evade you just tried (a blow landing cuts it off)
+var _defend_slow_left := 0.0            # ... and while it plays you move at half speed
 var cam_kick := 0.0                      # a landed blow's small camera jolt (decays)
+var shoulder := Vector2.ZERO             # action combat's over-the-shoulder view: metres right / up (Camera3D offsets)
 var _dash := Vector3.ZERO               # a dodge's burst (world velocity, decays)
-var _guard_pose := ""                   # holding guard: the parry / block clip held still on this frame
 const AC_BUTTONS := ["ac_attack", "ac_parry", "ac_position", "ac_reactive", "ac_chain", "ac_dodge", "ac_cursor", "ac_hud"]
 var _dash_left := 0.0
 var grounded := false
@@ -449,40 +450,27 @@ func _ranged() -> String:
 	return WeaponModels.ranged_kind(int(PlayerData.item_at(13).get("model", 0)))
 
 
-## Action Combat's guard: the parry pose (the block pose with a shield) held still while the button is down - you
-## see you're braced. A swing, flinch or defense playing over it comes back to the pose when it ends (_animate).
-func hold_guard(on: bool, shield: bool) -> void:
-	if not on:
-		if _guard_pose != "":
-			if _action == _guard_pose:
-				_action_left = 0.0
-			_guard_pose = ""
-			if _anim:
-				_anim.speed_scale = 1.0
-		return
+## Action Combat: the parry / block / evade you try plays at once, hit or miss (owner 2026-10-26) - whatever was
+## playing gives way to it - and you move at half speed while it does. A blow that gets through cuts it off (flinch).
+func action_defend(kind: String) -> void:
 	if dead or _anim == null:
 		return
-	var clip := WeaponModels.defend_clip(_anim, combat_stance, "block" if shield else "parry")
-	if clip == "" and shield:
+	var clip := WeaponModels.defend_clip(_anim, combat_stance, kind)
+	if clip == "" and kind == "block":
 		clip = WeaponModels.defend_clip(_anim, combat_stance, "parry")
 	if clip == "":
 		return
-	_guard_pose = clip
-	_apply_guard_pose()
-
-
-func _apply_guard_pose() -> void:
-	if _guard_pose == "" or _anim == null or not _anim.has_animation(_guard_pose):
-		return
-	_action = _guard_pose
-	_action_left = 3600.0
-	_anim.play(_guard_pose, 0.08)
-	_anim.seek(_anim.get_animation(_guard_pose).length * 0.4, true)
-	_anim.speed_scale = 0.0
+	_action_left = 0.0
+	_one_shot(clip)
+	_defend_clip = clip
+	_defend_slow_left = clip_seconds(clip)
 
 
 func flinch() -> void:
-	if _action_left <= 0.0 and not dead:
+	var over_defense := _defend_clip != "" and _action == _defend_clip and _action_left > 0.0
+	if (_action_left <= 0.0 or over_defense) and not dead:
+		_defend_clip = ""
+		_defend_slow_left = 0.0
 		_one_shot("flinch")
 
 
@@ -906,7 +894,8 @@ func _physics_step(delta: float) -> void:
 	elif walking or _key(KEY_SHIFT):
 		speed = WALK_SPEED
 	var wish := local.rotated(Vector3.UP, char_yaw) * speed * speed_mult * buff_speed * snare_mult * encumbrance * stealth_mult \
-			* _wounded_mult() * (guard_mult if action_mode else 1.0)
+			* _wounded_mult() * (0.5 if action_mode and _defend_slow_left > 0.0 else 1.0)
+	_defend_slow_left = maxf(0.0, _defend_slow_left - delta)
 	if _dash_left > 0.0:                              # a dodge: a short burst on top of the run (Action Combat)
 		_dash_left -= delta
 		wish += _dash * clampf(_dash_left / 0.22, 0.0, 1.0)
@@ -962,6 +951,10 @@ func _physics_step(delta: float) -> void:
 
 	_animate(ahead, strafe, speed, delta)
 	cam_kick = move_toward(cam_kick, 0.0, delta * 0.5)
+	if camera:
+		var want := shoulder if action_mode else Vector2.ZERO
+		camera.h_offset = lerpf(camera.h_offset, want.x, minf(1.0, delta * 6.0))
+		camera.v_offset = lerpf(camera.v_offset, want.y, minf(1.0, delta * 6.0))
 	_pivot.rotation = Vector3(cam_pitch + cam_kick, cam_yaw, 0.0)
 	_arm.spring_length = lerpf(_arm.spring_length, cam_distance, minf(1.0, delta * 10.0))
 
@@ -996,8 +989,6 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 	_body_offset = lerp_angle(_body_offset, target_offset, minf(1.0, delta * 10.0))
 	_apply_model_yaw()
 	_action_left -= delta
-	if _guard_pose != "" and _action_left <= 0.0 and not dead:
-		_apply_guard_pose()                           # (something played over the guard: back to it)
 	var moving := ahead != 0.0 or strafe != 0.0
 	if casting_spell:
 		_cast_left -= delta

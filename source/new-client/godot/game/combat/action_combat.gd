@@ -3,9 +3,10 @@ extends Node
 ## for you only - monsters, gamebots and companions keep the classic rules, and F9 puts you back on them.
 ##   The mouse always looks and you face where you look (Alt held: the cursor, for the interface); A/D strafe.
 ##   Attack (left mouse): tap = one quick swing (the weapon's timer paces it; one tap buffers). Hold past HOLD_S and
-##     let go = your best anytime style. With the weapon sheathed and nothing targeted, a tap draws it.
-##   Parry (right mouse): press = a timed parry (a block with a shield) - the 0.25 s window opens at the press; keep
-##     it held = guard (braced pose, rooted, less damage, endurance per blow).
+##     let go = your best anytime style. With the weapon sheathed, the first tap only draws it.
+##   Parry (right mouse): press = a timed parry (a block with a shield) - the 0.25 s window opens at the press. The
+##     parry / block plays at once (half speed while it does); only a parry that catches a blow rings out.
+## Floating combat text: the damage you deal and take, over who took it (and what a parry / block saved).
 ##   Q / E / R: your best usable Position / Reactive / Chain style. A reactive answers one parry / block / dodge.
 ##   Dodge: double-tap a strafe / back direction (or the Dodge key) - a hop and an evade window.
 ##   Every one of these is rebindable: Options > Controls > Combat ("Action: ...").
@@ -15,7 +16,6 @@ extends Node
 ## The server talks to it in "#AC|..." system lines (ServerWorld takes them out of the chat).
 
 const HOLD_S := 0.3                    # an attack held this long is an anytime style
-const GUARD_AFTER_S := 0.18            # a parry press held this long becomes guard
 const DOUBLE_TAP_MS := 260
 const DODGE_COOLDOWN_MS := 1200
 const SOFT_RANGE_M := 12.0             # soft targeting: the monster nearest your aim within this ...
@@ -29,8 +29,8 @@ const SECTION := "action_hud"
 ## The HUD's parts: [id, label, movable]
 const PARTS := [["crosshair", "Crosshair", false], ["windup", "Wind-up ring", false], ["charge", "Charge ring", false],
 		["timer", "Swing timer", false], ["lights", "Style lights", true], ["flash", "Defense text", true],
-		["guard", "Guard label", true], ["marker", "Monster \"!\" marker", false]]
-const DEFAULT_OFFSET := {"lights": Vector2(0, 64), "flash": Vector2(0, -48), "guard": Vector2(0, -30)}
+		["marker", "Monster \"!\" marker", false], ["fct", "Floating combat text", false]]
+const DEFAULT_OFFSET := {"lights": Vector2(0, 64), "flash": Vector2(0, -48)}
 
 ## npc oid -> msec: its blow's swing was already played at the wind-up (ServerWorld skips the second one)
 static var _swung_early := {}
@@ -43,7 +43,6 @@ var _atk_down := false
 var _atk_at := 0
 var _par_down := false
 var _par_at := 0
-var _guarding := false
 var _taps := {}
 var _dodge_ready_at := 0
 var _ready := "0000"
@@ -62,6 +61,15 @@ var _editing := false
 var _panel: PanelContainer
 var _drag := ""
 var _drag_from := Vector2.ZERO
+# the reticle: what's under the crosshair becomes your target (spells, pets, ranged - not only melee)
+const RETICLE_RANGE_M := 45.0
+const RETICLE_DWELL_MS := 200          # a new monster under the crosshair this long takes over the target
+var _aim = null                        # the monster under the crosshair now (untyped: it may be gone)
+var _aim_since := 0
+var _aim_check_at := 0
+# the over-the-shoulder camera (Arrange Combat HUD's sliders): metres right / up of the usual view
+var cam_side := 0.55
+var cam_up := 0.3
 
 
 static func swung_early(oid: int) -> bool:
@@ -119,7 +127,10 @@ func on_line(text: String) -> void:
 				_windup(int(f[1]), int(f[2]))
 		"def":
 			if f.size() > 2:
-				_defended(String(f[1]), int(f[2]))
+				_defended(String(f[1]), int(f[2]), int(f[3]) if f.size() > 3 else 0)
+		"fct":                                           # damage: fct|oid (0 = you)|amount|critical|out / pet / in
+			if f.size() > 4:
+				_damage_text(int(f[1]), int(f[2]), f[3] == "1", String(f[4]))
 		"fumble":
 			_flash("STUMBLE", Color(1.0, 0.35, 0.3))
 			var p := _player()
@@ -131,10 +142,8 @@ func _set_on(v: bool) -> void:
 	var was := on
 	on = v
 	var p := _player()
-	_end_guard()
 	if p:
 		p.action_mode = on
-		p.guard_mult = 1.0
 		if not on:
 			p.action_cursor = false
 	_atk_down = false
@@ -155,9 +164,7 @@ func _windup(oid: int, ms: int) -> void:
 	_swung_early[oid] = now + ms + 400
 	if viewer and viewer.has_method("note_combat"):
 		viewer.note_combat()
-	var by_oid = viewer.npcs.get("by_oid") if viewer and viewer.npcs else null
-	var st = (by_oid as Dictionary).get(oid) if by_oid is Dictionary else null
-	var n: Npc = st.view as Npc if st and st.view is Npc else null
+	var n := _view(oid)
 	if n == null:
 		return
 	# the blow is drawn so it lands as the server lands it: the swing starts a little into the wind-up
@@ -166,8 +173,8 @@ func _windup(oid: int, ms: int) -> void:
 			n.play_attack())
 	if not bool(_show.get("marker", true)):
 		return
-	var mark: Label3D = _marks.get(oid)
-	if mark == null or not is_instance_valid(mark):
+	var mark = _marks.get(oid)
+	if not is_instance_valid(mark):
 		mark = Label3D.new()
 		mark.text = "!"
 		mark.billboard = BaseMaterial3D.BILLBOARD_ENABLED
@@ -183,16 +190,19 @@ func _windup(oid: int, ms: int) -> void:
 	mark.visible = true
 
 
-func _defended(kind: String, dmg: int) -> void:
+func _defended(kind: String, dmg: int, saved: int) -> void:
+	var gold := Color(1.0, 0.85, 0.35)
+	var blue := Color(0.55, 0.8, 1.0)
 	match kind:
 		"parry":
-			_flash("PARRY  -%d" % dmg if dmg > 0 else "PARRY", Color(1.0, 0.85, 0.35))
+			_flash("PARRIED  %d saved" % saved if saved > 0 else "PARRIED", gold)
+			_float_text(0, "PARRY  %d saved" % saved if saved > 0 else "PARRY", gold, 46, 0.5)
 		"block":
-			_flash("BLOCK  -%d" % dmg if dmg > 0 else "BLOCK", Color(0.55, 0.8, 1.0))
+			_flash("BLOCKED  %d saved" % saved if saved > 0 else "BLOCKED", blue)
+			_float_text(0, "BLOCK  %d saved" % saved if saved > 0 else "BLOCK", blue, 46, 0.5)
 		"dodge":
-			_flash("DODGE", Color(0.55, 1.0, 0.6))
-		"guard":
-			_flash("GUARD  -%d" % dmg, Color(0.8, 0.8, 0.8))
+			_flash("DODGED", Color(0.55, 1.0, 0.6))
+			_float_text(0, "DODGE", Color(0.55, 1.0, 0.6), 46, 0.5)
 		"tired":
 			_flash("TOO TIRED", Color(1.0, 0.4, 0.3))
 	var now := Time.get_ticks_msec()
@@ -221,6 +231,60 @@ func _whiff() -> void:
 	if p.sounds:
 		var ws := int(WeaponModels.info(int(MeleeMath.weapon(PlayerData).get("model", 0))).get("sound_set", 0))
 		p.sounds.weapon(ws if ws > 0 else WEAPONLESS, "use")
+
+
+func _view(oid: int) -> Npc:
+	var by_oid = viewer.npcs.get("by_oid") if viewer and viewer.npcs else null
+	var st = (by_oid as Dictionary).get(oid) if by_oid is Dictionary else null
+	if st == null:
+		return null
+	var v = st.view
+	return v as Npc if is_instance_valid(v) and v is Npc else null
+
+
+## A number rising over whoever took the blow: white yours (yellow and bigger when critical), green your pet's, red
+## what you take. (The server reports every point of damage you deal or take: ActionCombat.ReportDamage.)
+func _damage_text(oid: int, amount: int, crit: bool, way: String) -> void:
+	match way:
+		"in":
+			_float_text(0, "-%d" % amount, Color(1.0, 0.3, 0.25), 52 if crit else 42, 0.0)
+		"pet":
+			_float_text(oid, "%d" % amount, Color(0.55, 0.95, 0.55), 40, 0.0)
+		_:
+			_float_text(oid, ("%d!" % amount) if crit else "%d" % amount,
+					Color(1.0, 0.9, 0.3) if crit else Color(1, 1, 1), 64 if crit else 48, 0.0)
+
+
+func _float_text(oid: int, text: String, color: Color, size: int, lift: float) -> void:
+	if not bool(_show.get("fct", true)) or viewer == null:
+		return
+	var p := _player()
+	var at := Vector3.INF
+	if oid == 0:
+		if p:
+			at = p.global_position + Vector3(0, 2.3 + lift, 0)
+	else:
+		var n := _view(oid)
+		if n:
+			at = n.global_position + Vector3(0, n.height + 0.3 + lift, 0)
+	if at == Vector3.INF:
+		return
+	var l := Label3D.new()
+	l.text = text
+	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	l.no_depth_test = true
+	l.fixed_size = true
+	l.pixel_size = 0.0012
+	l.font_size = size
+	l.outline_size = 10
+	l.modulate = color
+	l.render_priority = 10
+	viewer.add_child(l)
+	l.global_position = at + Vector3(randf_range(-0.35, 0.35), 0, randf_range(-0.2, 0.2))
+	var t := l.create_tween().set_parallel(true)
+	t.tween_property(l, "global_position:y", l.global_position.y + 1.3, 1.1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	t.tween_property(l, "modulate:a", 0.0, 0.5).set_delay(0.6)
+	t.chain().tween_callback(l.queue_free)
 
 
 func _has_shield() -> bool:
@@ -266,12 +330,8 @@ func _input(event: InputEvent) -> void:
 			return
 		if Keybinds.matches(event, "ac_parry") and (mouse or event is InputEventKey):
 			if event.is_pressed():
-				_par_down = true
-				_par_at = now
 				Server.command("/ac parry")
-			else:
-				_par_down = false
-				_end_guard()
+				p.action_defend("block" if _has_shield() else "parry")   # the move plays now, hit or miss
 			get_viewport().set_input_as_handled()
 			return
 	if mouse and not p.action_cursor and event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
@@ -308,16 +368,13 @@ func _drawn() -> bool:
 
 func _has_target() -> bool:
 	var npcs: NpcManager = viewer.npcs if viewer else null
-	return npcs != null and npcs.target != null and is_instance_valid(npcs.target) and npcs.target.state.alive
+	return npcs != null and is_instance_valid(npcs.target) and npcs.target.state.alive
 
 
 func _attack_down(now: int) -> void:
-	if _guarding or _par_down:
-		_par_down = false
-		_end_guard()                                       # a swing drops your guard
 	_soft_target()
-	if not _drawn() and not _has_target():
-		# the weapon sheathed and nothing to hit: the tap draws it (no swing at the air)
+	if not _drawn():
+		# the weapon sheathed: the first tap only draws it (owner 2026-10-26) - the next one swings
 		if viewer.has_method("_set_server_attack"):
 			viewer._set_server_attack(true, true)
 		_atk_down = false
@@ -355,20 +412,9 @@ func _dodge(dir: Vector3) -> void:
 	if p == null or now < _dodge_ready_at or not p.grounded:
 		return
 	_dodge_ready_at = now + DODGE_COOLDOWN_MS
-	_par_down = false
-	_end_guard()
 	Server.command("/ac dodge")
 	p.dodge(dir)
-
-
-func _end_guard() -> void:
-	if _guarding:
-		_guarding = false
-		Server.command("/ac guard off")
-	var p := _player()
-	if p:
-		p.guard_mult = 1.0
-		p.hold_guard(false, false)
+	p.action_defend("evade")
 
 
 ## Soft targeting: keep your target while you look at it; otherwise the monster nearest your aim, close by.
@@ -377,7 +423,7 @@ func _soft_target() -> void:
 	var npcs: NpcManager = viewer.npcs if viewer else null
 	if p == null or npcs == null or p.camera == null:
 		return
-	var cur: Npc = npcs.target if npcs.target and is_instance_valid(npcs.target) else null
+	var cur: Npc = npcs.target if is_instance_valid(npcs.target) else null
 	if cur and cur.state.alive and _aim_score(cur, p, KEEP_ANGLE, SOFT_RANGE_M * 1.5) < INF:
 		return
 	var best: Npc = null
@@ -430,27 +476,81 @@ func _process(_delta: float) -> void:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		get_viewport().warp_mouse(get_viewport().get_visible_rect().size * 0.5)
 		_atk_down = false
-		if _par_down and (p.dead or not p.input_enabled or _typing() or _editing):
-			_par_down = false
-			_end_guard()
 	elif not free and Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	if _par_down and not _guarding and now - _par_at >= int(GUARD_AFTER_S * 1000.0) and not p.dead:
-		_guarding = true
-		p.guard_mult = 0.0                                 # braced: you hold your ground (owner: rooted is fine)
-		p.hold_guard(true, _has_shield())
-		Server.command("/ac guard on")
-	if _guarding and p.dead:
-		_par_down = false
-		_end_guard()
 	_windups = _windups.filter(func(w): return int(w.end) + 150 > now)
 	for oid in _marks.keys():
-		var m: Label3D = _marks[oid]
+		var m = _marks[oid]                              # (untyped: the monster - and its mark - may be gone)
 		if not is_instance_valid(m):
 			_marks.erase(oid)
-		elif int(m.get_meta("until", 0)) < now:
-			m.visible = false
+		elif int((m as Label3D).get_meta("until", 0)) < now:
+			(m as Label3D).visible = false
+	_reticle_tick(p, now)
+	p.shoulder = Vector2(cam_side, cam_up)
 	hud.queue_redraw()
+
+
+## The reticle: the monster the crosshair is on (its pick shape, else the one nearest the crosshair's line within a
+## small angle - easier on small or far ones), up to RETICLE_RANGE_M. Held there RETICLE_DWELL_MS it becomes your
+## target (at once when you have none) - so spells, pet commands and ranged attacks follow your aim; looking away
+## at nothing keeps the target you had.
+func _reticle_tick(p: Player, now: int) -> void:
+	if now < _aim_check_at:
+		return
+	_aim_check_at = now + 80
+	var npcs: NpcManager = viewer.npcs if viewer else null
+	if npcs == null or p.camera == null or p.action_cursor:
+		_aim = null
+		return
+	var cam := p.camera
+	var centre := get_viewport().get_visible_rect().size * 0.5
+	var hit: Npc = npcs.pick(cam, centre)
+	var best: Npc = hit if hit and _hostile(hit) and hit.global_position.distance_to(p.global_position) <= RETICLE_RANGE_M else null
+	if best == null:
+		var from := cam.project_ray_origin(centre)
+		var fwd := cam.project_ray_normal(centre)
+		var best_ang := INF
+		for i in npcs.active:
+			var n: Npc = npcs.active[i]
+			if not is_instance_valid(n) or not _hostile(n):
+				continue
+			var mid := n.global_position + Vector3(0, n.height * 0.5, 0)
+			var to := mid - from
+			var dist := to.length()
+			if dist < 0.5 or dist > RETICLE_RANGE_M + 5.0:
+				continue
+			var ang := rad_to_deg(fwd.angle_to(to))
+			var allow := maxf(2.5, rad_to_deg(atan2(maxf(0.6, n.height * 0.5), dist)))
+			if ang <= allow and ang < best_ang:
+				best_ang = ang
+				best = n
+	if best != _aim:
+		_aim = best
+		_aim_since = now
+	var cur = npcs.target
+	if _aim == null or (is_instance_valid(cur) and cur == _aim):
+		return
+	if not is_instance_valid(cur) or not cur.state.alive or now - _aim_since >= RETICLE_DWELL_MS:
+		_select_quiet(_aim)
+
+
+func _hostile(n: Npc) -> bool:
+	return n.state.alive and not n.state.stealthed and int(n.spawn.get("realm", 0)) == 0 \
+			and not (int(n.spawn.get("flags", 0)) & Npc.FLAG_CANTTARGET)
+
+
+## Target without the "You target [x]" chat line (the reticle changes targets often).
+func _select_quiet(n: Npc) -> void:
+	var npcs: NpcManager = viewer.npcs if viewer else null
+	if npcs == null or not is_instance_valid(n) or not n.state.alive:
+		return
+	npcs.target = n
+	if "target_object" in npcs:
+		npcs.set("target_object", 0)
+	PlayerData.set_target({"name": String(n.spawn.name), "level": n.state.level, "con_color": n.con_color(PlayerData.level),
+			"health": n.state.health, "guild": String(n.spawn.get("guild", ""))})
+	if Server.client:
+		Server.client.call("Target", int(n.spawn.get("oid", 0)), 0x8000 | 0x6000)
 
 
 # ---------------------------------------------------------------- the HUD and its layout
@@ -463,6 +563,8 @@ func _load_layout() -> void:
 	for id in DEFAULT_OFFSET:
 		var v = cfg.get_value(SECTION, "at_" + String(id), DEFAULT_OFFSET[id])
 		_offset[id] = v if v is Vector2 else DEFAULT_OFFSET[id]
+	cam_side = float(cfg.get_value(SECTION, "cam_side", cam_side))
+	cam_up = float(cfg.get_value(SECTION, "cam_up", cam_up))
 
 
 func _save_layout() -> void:
@@ -472,6 +574,8 @@ func _save_layout() -> void:
 		cfg.set_value(SECTION, "show_" + String(id), bool(_show[id]))
 	for id in _offset:
 		cfg.set_value(SECTION, "at_" + String(id), _offset[id])
+	cfg.set_value(SECTION, "cam_side", cam_side)
+	cfg.set_value(SECTION, "cam_up", cam_up)
 	cfg.save(SETTINGS)
 
 
@@ -482,8 +586,6 @@ func _part_rect(id: String) -> Rect2:
 			return Rect2(c + Vector2(-129, 0), Vector2(258, 44))
 		"flash":
 			return Rect2(c + Vector2(-150, -22), Vector2(300, 30))
-		"guard":
-			return Rect2(c + Vector2(-60, -14), Vector2(120, 20))
 	return Rect2(c, Vector2.ZERO)
 
 
@@ -518,6 +620,22 @@ func _build_panel() -> void:
 			_show[id] = on_
 			_save_layout())
 		box.add_child(cb)
+	# the camera over your shoulder (action combat only): the crosshair off the back of your head
+	for s in [["Camera: to the side", "cam_side", -1.5, 1.5], ["Camera: higher", "cam_up", -0.5, 1.2]]:
+		var lab := Label.new()
+		lab.text = String(s[0])
+		box.add_child(lab)
+		var sl := HSlider.new()
+		sl.min_value = float(s[2])
+		sl.max_value = float(s[3])
+		sl.step = 0.05
+		sl.value = float(get(String(s[1])))
+		sl.custom_minimum_size = Vector2(220, 18)
+		var key := String(s[1])
+		sl.value_changed.connect(func(val: float):
+			set(key, val)
+			_save_layout())
+		box.add_child(sl)
 	var row := HBoxContainer.new()
 	box.add_child(row)
 	var reset := Button.new()
@@ -563,7 +681,7 @@ func _draw_hud() -> void:
 	var c := hud.size * 0.5
 	var font := ThemeDB.fallback_font
 	if _show.get("crosshair", true) and (not p.action_cursor or _editing):
-		var cross := Color(1, 1, 1, 0.85)
+		var cross := Color(1.0, 0.35, 0.3, 0.95) if is_instance_valid(_aim) else Color(1, 1, 1, 0.85)
 		hud.draw_circle(c, 1.6, cross)
 		for d in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
 			hud.draw_line(c + d * 6.0, c + d * 12.0, cross, 1.5)
@@ -607,10 +725,6 @@ func _draw_hud() -> void:
 		if (_ready.length() > 3 and _ready[3] == "1") or _editing:
 			hud.draw_string(font, lr.position + Vector2(69, 38), "HOLD: ANYTIME", HORIZONTAL_ALIGNMENT_CENTER, 120.0, 11,
 					Color(1, 1, 1, 0.55 * dim))
-	if (_show.get("guard", true) and _guarding) or _editing:
-		var gr := _part_rect("guard")
-		hud.draw_string(font, gr.position + Vector2(0, 15), "GUARD", HORIZONTAL_ALIGNMENT_CENTER, gr.size.x, 13,
-				Color(0.85, 0.85, 0.85, 0.9 if _show.get("guard", true) else 0.35))
 	if (_show.get("flash", true) and now < _flash_until) or _editing:
 		var fr := _part_rect("flash")
 		var a := clampf((_flash_until - now) / 400.0, 0.0, 1.0) if not _editing else (1.0 if _show.get("flash", true) else 0.35)

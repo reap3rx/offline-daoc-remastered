@@ -38,6 +38,7 @@ namespace DOL.GS
         // Action Combat: how an action-mode defender answered the blow, and the share of its damage still taken.
         public eActionDefense ActionDefense { get; set; }
         public double ActionDamageFactor { get; set; } = 1.0;
+        public int ActionMitigated { get; set; }      // what that answer kept off you
         public bool IsActionPartialDefense => ActionDefense is eActionDefense.Parry or eActionDefense.Block &&
             AttackResult is eAttackResult.Parried or eAttackResult.Blocked;
         // Temporary property set by `AttackComponent.BroadcastAttackMessageToOtherPlayers`.

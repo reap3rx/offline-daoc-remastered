@@ -1347,6 +1347,7 @@ namespace DOL.GS
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
+			ActionCombat.ReportDamage(this, source, damageAmount, criticalAmount);   // floating combat text
 
 			double damageDealt = damageAmount + criticalAmount;
 

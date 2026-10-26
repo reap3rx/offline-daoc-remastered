@@ -493,12 +493,12 @@ namespace DOL.GS
 			switch (ad.ActionDefense)
 			{
 				case eActionDefense.Parry:
-					player.Out.SendMessage($"Timed parry! You turn {ad.Attacker.GetName(0, false)}'s blow aside and take {ad.Damage} damage.", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-					Send(player, "def|parry|" + ad.Damage);
+					player.Out.SendMessage($"Timed parry! You turn {ad.Attacker.GetName(0, false)}'s blow aside: {ad.ActionMitigated} damage saved, {ad.Damage} taken.", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					Send(player, $"def|parry|{ad.Damage}|{ad.ActionMitigated}");
 					break;
 				case eActionDefense.Block:
-					player.Out.SendMessage($"Timed block! You catch {ad.Attacker.GetName(0, false)}'s blow on your shield and take {ad.Damage} damage.", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-					Send(player, "def|block|" + ad.Damage);
+					player.Out.SendMessage($"Timed block! You catch {ad.Attacker.GetName(0, false)}'s blow on your shield: {ad.ActionMitigated} damage saved, {ad.Damage} taken.", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					Send(player, $"def|block|{ad.Damage}|{ad.ActionMitigated}");
 					break;
 				case eActionDefense.Dodge:
 					Send(player, "def|dodge|0");
@@ -508,6 +508,29 @@ namespace DOL.GS
 						Send(player, "def|guard|" + ad.Damage);
 					break;
 			}
+		}
+
+		/// <summary>
+		/// Floating combat text: every point of damage a player deals (or their pet deals) or takes, reported to
+		/// them as "fct|target oid (0 = you)|amount|critical|out / pet / in". Called from GameLiving.TakeDamage.
+		/// </summary>
+		public static void ReportDamage(GameLiving target, GameObject source, int damage, int critical)
+		{
+			int amount = damage + critical;
+
+			if (amount <= 0 || target == null)
+				return;
+
+			string crit = critical > 0 ? "1" : "0";
+
+			if (target is GamePlayer hurt)
+				Send(hurt, $"fct|0|{amount}|{crit}|in");
+
+			if (source is GamePlayer attacker && attacker != target)
+				Send(attacker, $"fct|{target.ObjectID}|{amount}|{crit}|out");
+			else if (source is GameNPC pet && pet.Brain is AI.Brain.IControlledBrain brain &&
+				brain.GetPlayerOwner() is GamePlayer owner && owner != target)
+				Send(owner, $"fct|{target.ObjectID}|{amount}|{crit}|pet");
 		}
 
 		public static void SendWindup(GamePlayer player, GameNPC attacker, int ms)
