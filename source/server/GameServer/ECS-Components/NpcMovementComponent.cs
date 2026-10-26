@@ -967,6 +967,10 @@ namespace DOL.GS
                 }
             }
 
+            // Action Combat: monsters fighting an action player spread around them (ActionCombat.TryGetRingSlot).
+            if (!formation && FollowTarget is GamePlayer ringPlayer && ActionCombat.TryGetRingSlot(Owner, ringPlayer, out Vector3 ringSlot))
+                return RingFollowTick(ringSlot);
+
             Vector3 relative = targetPos - _ownerPosition;
             float distanceSquared = relative.LengthSquared();
 
@@ -1032,6 +1036,36 @@ namespace DOL.GS
                 _pathfinder.ForceReplot = true;
             PathToInternal(destination, Math.Max((short) 20, speed));
             return formation ? AutonomousGroupFormationFollow.FollowCheckMilliseconds : Properties.GAMENPC_FOLLOWCHECK_TIME;
+        }
+
+        private const int RING_CHECK_MS = 250;
+
+        private int RingFollowTick(Vector3 slot)
+        {
+            Vector3 relative = slot - _ownerPosition;
+            float distanceSquared = relative.LengthSquared();
+
+            if (distanceSquared <= 15 * 15)
+            {
+                TurnTo(FollowTarget);
+
+                if (IsMoving)
+                    UpdateMovement(0);
+
+                UnsetFlag(MovementState.Pathfinding);
+                return RING_CHECK_MS;
+            }
+
+            float distance = MathF.Sqrt(distanceSquared);
+            float toPlayer = Vector3.Distance(_ownerPosition, new Vector3(FollowTarget.X, FollowTarget.Y, FollowTarget.Z));
+            short speed = toPlayer > Owner.MeleeAttackRange ? MaxSpeed : (short) Math.Min(MaxSpeed, Math.Max(60f, distance * 2.5f));
+            Vector3 destination = slot;
+
+            if (!TrySnapToMesh(ref destination))
+                destination = new Vector3(FollowTarget.X, FollowTarget.Y, FollowTarget.Z);
+
+            PathToInternal(destination, Math.Max((short) 20, speed));
+            return RING_CHECK_MS;
         }
 
         /// <summary>

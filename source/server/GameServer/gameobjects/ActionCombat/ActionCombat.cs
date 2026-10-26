@@ -163,22 +163,19 @@ namespace DOL.GS
 		public static void QueueStyle(GamePlayer player, string kind)
 		{
 			ActionCombatState state = Get(player);
+			Style style = Resolve(player, kind);
+
+			// Position / Reactive / Chain do nothing unless their condition is met (no swing, no air punch).
+			if (style == null && kind != "anytime")
+				return;
 
 			if (!EnsureAttacking(player))
 				return;
 
-			Style style = Resolve(player, kind);
-
 			if (style == null)
 			{
-				if (kind == "anytime")
-				{
-					state.Guarding = false;
-					state.SwingQueued = true;      // no anytime style known: a plain swing
-				}
-				else
-					player.Out.SendMessage($"No {kind} style is open right now.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-
+				state.Guarding = false;
+				state.SwingQueued = true;          // no anytime style known: a plain swing
 				return;
 			}
 
@@ -355,8 +352,8 @@ namespace DOL.GS
 			ActionCombatState state = Get(player);
 			long now = GameLoop.GameLoopTime;
 
-			if (now < state.ParryReadyAt)
-				return;
+			if (now < state.ParryReadyAt || !player.attackComponent.AttackState)
+				return;                            // (a sheathed weapon parries nothing: the client draws it first)
 
 			state.ParryPressedAt = now;
 			state.ParryReadyAt = now + ParryCooldownMs;
@@ -372,7 +369,7 @@ namespace DOL.GS
 			ActionCombatState state = Get(player);
 			long now = GameLoop.GameLoopTime;
 
-			if (now < state.DodgeReadyAt || !player.IsAlive || player.IsIncapacitated)
+			if (now < state.DodgeReadyAt || !player.IsAlive || player.IsIncapacitated || !player.attackComponent.AttackState)
 				return;
 
 			int cost = Math.Max(10, player.MaxEndurance * 15 / 100);
@@ -531,6 +528,65 @@ namespace DOL.GS
 			else if (source is GameNPC pet && pet.Brain is AI.Brain.IControlledBrain brain &&
 				brain.GetPlayerOwner() is GamePlayer owner && owner != target)
 				Send(owner, $"fct|{target.ObjectID}|{amount}|{crit}|pet");
+		}
+
+		// ------------------------------------------------------------------ monsters spreading out
+
+		public const int RingRadius = 100;          // where monsters stand around an action player (2.5 m)
+		public const int RingScanRadius = 450;
+		public const double RingMaxStepDegrees = 60;
+
+		private static bool IsRingAttacker(GameNPC npc, GamePlayer player)
+		{
+			return npc.IsAlive && npc.IsAttacking && npc.TargetObject == player &&
+				npc.ActiveWeaponSlot is not eActiveWeaponSlot.Distance &&
+				npc.Brain is not AI.Brain.IControlledBrain && npc.MaxSpeedBase > 0;
+		}
+
+		/// <summary>
+		/// Monsters meleeing an action player spread around them instead of stacking on one spot (owner 2026-10-26:
+		/// stacked monsters were hard to target apart). Two or more take slots on a ring: in their present order
+		/// around the player, at most RingMaxStepDegrees apart (two stand 60 degrees apart, six close the circle),
+		/// the ring turned to where they already are so nobody walks far. False: follow as usual (one alone).
+		/// </summary>
+		public static bool TryGetRingSlot(GameNPC npc, GamePlayer player, out System.Numerics.Vector3 slot)
+		{
+			slot = default;
+
+			if (!IsActive(player) || !IsRingAttacker(npc, player))
+				return false;
+
+			System.Collections.Generic.List<(GameNPC npc, double angle)> ring = new();
+
+			foreach (GameNPC other in player.GetNPCsInRadius(RingScanRadius))
+			{
+				if (other == npc || IsRingAttacker(other, player))
+					ring.Add((other, Math.Atan2(other.Y - player.Y, other.X - player.X)));
+			}
+
+			if (ring.Count < 2)
+				return false;
+
+			ring.Sort((a, b) => a.angle != b.angle ? a.angle.CompareTo(b.angle) : a.npc.ObjectID.CompareTo(b.npc.ObjectID));
+			double step = Math.Min(2 * Math.PI / ring.Count, RingMaxStepDegrees * Math.PI / 180.0);
+
+			// Where the ring sits: the turn that keeps everyone closest to where they stand.
+			double sx = 0, sy = 0;
+
+			for (int i = 0; i < ring.Count; i++)
+			{
+				sx += Math.Cos(ring[i].angle - i * step);
+				sy += Math.Sin(ring[i].angle - i * step);
+			}
+
+			double baseAngle = Math.Atan2(sy, sx);
+			int index = ring.FindIndex(x => x.npc == npc);
+
+			if (index < 0)
+				return false;                       // (not near the player yet: run up as usual)
+			double a = baseAngle + index * step;
+			slot = new System.Numerics.Vector3((float) (player.X + Math.Cos(a) * RingRadius), (float) (player.Y + Math.Sin(a) * RingRadius), player.Z);
+			return true;
 		}
 
 		public static void SendWindup(GamePlayer player, GameNPC attacker, int ms)

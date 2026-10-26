@@ -1533,6 +1533,7 @@ func _set_server_attack(on: bool, tell: bool) -> void:
 		return
 	_server_attack = on
 	_attack_on = null
+	_kept_drawn = false
 	player.set_combat(on, player.weapon_stance())        # a staff held as a staff (owner 2026-10-11)
 	var set_id := int(WeaponModels.info(int(MeleeMath.weapon(PlayerData).get("model", 0))).get("sound_set", 0))
 	if set_id > 0 and player.sounds:
@@ -1571,11 +1572,20 @@ func _server_attack_tick() -> void:
 	if PlayerData.hp <= 0:
 		_set_server_attack(false, false)
 		return
-	var t: Npc = npcs.target if npcs and npcs.target and is_instance_valid(npcs.target) else null
+	var t: Npc = npcs.target if npcs and is_instance_valid(npcs.target) else null
 	if t and t.state.alive:
 		_attack_on = t.state
-	elif _attack_on and not _attack_on.alive:
-		_set_server_attack(false, true)
+		_kept_drawn = false
+	elif (_attack_on and not _attack_on.alive) or _kept_drawn:
+		_attack_on = null
+		if action_combat and action_combat.keep_drawn():
+			_kept_drawn = true                             # action combat: others still fight you - stay drawn
+		else:
+			_kept_drawn = false
+			_set_server_attack(false, true)
+
+
+var _kept_drawn := false                       # the target died but the fight goes on (action combat)
 
 
 var sit_changed_at := -100000                  # your own sit / stand (the server's status catches up a moment later)

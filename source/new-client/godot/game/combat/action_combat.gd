@@ -329,7 +329,9 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 			return
 		if Keybinds.matches(event, "ac_parry") and (mouse or event is InputEventKey):
-			if event.is_pressed():
+			if event.is_pressed() and not _drawn():
+				_draw_weapon()                                 # sheathed: the first press draws, the next parries
+			elif event.is_pressed():
 				Server.command("/ac parry")
 				p.action_defend("block" if _has_shield() else "parry")   # the move plays now, hit or miss
 			get_viewport().set_input_as_handled()
@@ -339,14 +341,20 @@ func _input(event: InputEvent) -> void:
 		return
 	if not (event is InputEventKey or event is InputEventMouseButton) or not event.is_pressed() or event.is_echo():
 		return
-	for kind in ["position", "reactive", "chain"]:
-		if Keybinds.pressed(event, "ac_" + kind):
-			_soft_target()
-			Server.command("/ac style " + kind)
+	var kinds := ["position", "reactive", "chain"]
+	for i in kinds.size():
+		if Keybinds.pressed(event, "ac_" + kinds[i]):
+			# only when its light is on (its condition met) and the weapon is out: otherwise nothing at all
+			if _drawn() and _ready.length() > i and _ready[i] == "1":
+				_soft_target()
+				Server.command("/ac style " + kinds[i])
 			get_viewport().set_input_as_handled()
 			return
 	if Keybinds.pressed(event, "ac_dodge"):
-		_dodge(_held_dir())
+		if not _drawn():
+			_draw_weapon()                                 # sheathed: the first press draws
+		else:
+			_dodge(_held_dir())
 		get_viewport().set_input_as_handled()
 		return
 	# double-tap a direction: a dodge that way (A / D strafe in action combat, S steps back)
@@ -356,7 +364,8 @@ func _input(event: InputEvent) -> void:
 			var id := String(pair[0])
 			if now - int(_taps.get(id, -100000)) <= DOUBLE_TAP_MS:
 				_taps[id] = -100000
-				_dodge(pair[1])
+				if _drawn():                               # (sheathed: a double-tap is just walking)
+					_dodge(pair[1])
 			else:
 				_taps[id] = now
 			return
@@ -364,6 +373,30 @@ func _input(event: InputEvent) -> void:
 
 func _drawn() -> bool:
 	return viewer != null and bool(viewer.get("_server_attack"))
+
+
+func _draw_weapon() -> void:
+	if viewer and viewer.has_method("_set_server_attack"):
+		viewer._set_server_attack(true, true)
+
+
+## After your target dies, the weapon stays out while other monsters near you are still fighting (owner 2026-10-26:
+## you shouldn't have to draw again to parry the next one).
+func keep_drawn() -> bool:
+	var p := _player()
+	if not on or p == null or viewer == null or viewer.npcs == null:
+		return false
+	var by_oid = viewer.npcs.get("by_oid")
+	if not (by_oid is Dictionary):
+		return false
+	if not _windups.is_empty():
+		return true
+	var now := Time.get_ticks_msec()
+	for st in (by_oid as Dictionary).values():
+		if st and st.alive and int(st.spawn.get("realm", 0)) == 0 and int(st.combat_until) > now \
+				and (st.pos as Vector3).distance_to(p.global_position) < 25.0:
+			return true
+	return false
 
 
 func _has_target() -> bool:
