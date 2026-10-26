@@ -227,7 +227,28 @@ func _read_conc(data: PackedByteArray) -> Array:
 	return out
 
 
+## Background tasks whose owner left the scene (a zone build, NPC model loads): never waited for on the way out - the
+## main thread blocking on a worker that is itself waiting for the main thread (the renderer's command queue) froze
+## the game for good on a region change (owner 2026-10-26, entering Darkness Falls; freeze-20261026-183915). They
+## finish on their own; their results are dropped and the task is reaped here once done.
+var _orphan_tasks: Array = []
+
+
+func adopt_task(task_id: int) -> void:
+	if task_id >= 0:
+		_orphan_tasks.append(task_id)
+
+
+func _reap_tasks() -> void:
+	for t in _orphan_tasks.duplicate():
+		if WorkerThreadPool.is_task_completed(t):
+			WorkerThreadPool.wait_for_task_completion(t)
+			_orphan_tasks.erase(t)
+
+
 func _process(delta: float) -> void:
+	if not _orphan_tasks.is_empty():
+		_reap_tasks()
 	if not logged:
 		return
 	_ping_left -= delta

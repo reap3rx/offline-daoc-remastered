@@ -692,7 +692,7 @@ static func _prep_run(jobs: Dictionary, out: Dictionary) -> void:
 
 func _exit_tree() -> void:
 	if _prep_task >= 0:
-		WorkerThreadPool.wait_for_task_completion(_prep_task)
+		Server.adopt_task(_prep_task)                 # (not waited for here: see Server.adopt_task)
 		_prep_task = -1
 
 

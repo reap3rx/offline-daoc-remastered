@@ -26,6 +26,7 @@ var _index := {}
 var _building := -1                          # the zone id on the worker now
 var _built: ZoneLoader
 var _task := -1
+var _job := {}                               # the worker's build: {id, zone, packed, cancelled, lock}
 var _check_left := 0.0
 var _failed := {}                            # zone ids that didn't build (not retried)
 var _loading_now := false                    # load_around is building behind the loading screen: no streaming meanwhile
@@ -186,7 +187,8 @@ func _start_build(id: int) -> void:
 	var nm: NpcManager = viewer.get("npcs")
 	var skip := _known_models(nm)
 	var info: Dictionary = nm.models if nm else {}
-	_task = WorkerThreadPool.add_task(_build.bind(id, skip, info), false, "zone %d" % id)
+	_job = {"id": id, "zone": null, "packed": {}, "cancelled": false, "lock": Mutex.new()}
+	_task = WorkerThreadPool.add_task(Callable(RegionWorld, "_build").bind(id, skip, info, terrain_set, texture_set, _job), false, "zone %d" % id)
 
 
 ## The model paths already packed - names only: a copy of the cache itself would let the worker hold the last
@@ -199,16 +201,27 @@ func _known_models(nm: NpcManager) -> Dictionary:
 	return out
 
 
-func _build(id: int, skip: Dictionary, info: Dictionary) -> void:
+## The worker: the zone built into its job (nothing of this node touched - the region may be gone when it ends, a
+## region change; then the zone is dropped here).
+static func _build(id: int, skip: Dictionary, info: Dictionary, tset: String, xset: String, job: Dictionary) -> void:
 	var z := ZoneLoader.new()
 	z.name = "Zone%d" % id
-	z.load_zone("res://content/zones/zone%03d" % id, terrain_set, texture_set)
-	if not info.is_empty():
-		_packed = NpcManager.pack_zone_models("res://content/zones/zone%03d" % id, info, skip)
-	_built = z
+	z.load_zone("res://content/zones/zone%03d" % id, tset, xset)
+	var pk := NpcManager.pack_zone_models("res://content/zones/zone%03d" % id, info, skip) if not info.is_empty() else {}
+	var lock: Mutex = job.lock
+	lock.lock()
+	if bool(job.cancelled):
+		z.free()
+	else:
+		job.zone = z
+		job.packed = pk
+	lock.unlock()
 
 
 func _place_built() -> void:
+	_built = _job.get("zone") as ZoneLoader
+	_packed = _job.get("packed", {})
+	_job = {}
 	var z := _built
 	var id := _building
 	_built = null
@@ -291,8 +304,16 @@ func load_around(p: Vector3) -> void:
 
 func _exit_tree() -> void:
 	if _task >= 0:
-		WorkerThreadPool.wait_for_task_completion(_task)
+		# never wait for the build on the way out (it can be waiting for this very thread): mark it cancelled - it
+		# drops its zone itself when it ends - and let Server reap the task
+		var lock: Mutex = _job.lock
+		lock.lock()
+		_job.cancelled = true
+		var z = _job.get("zone")
+		_job.zone = null
+		lock.unlock()
+		if is_instance_valid(z):
+			(z as Node).free()
+		Server.adopt_task(_task)
 		_task = -1
-		if _built:
-			_built.free()
-			_built = null
+		_job = {}
