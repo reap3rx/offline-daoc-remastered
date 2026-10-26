@@ -1,6 +1,7 @@
 /*
  * Fealty: summon the King / Queen's commander.
  * Spell.LifeDrainReturn = NPC template (64001-64005), Spell.Damage = level as % of the caster's.
+ * The commander keeps one name and look for the whole career (RoyalRetinue).
  */
 using System.Linq;
 using DOL.GS.Realm;
@@ -34,6 +35,10 @@ namespace DOL.GS.Spells
 					pet.Model = (ushort)model;
 					pet.Gender = gender;
 				}
+
+				// One commander for the whole career: "Squire Anne" grows into "Knight Anne".
+				pet.Name = $"{pet.Name} {RoyalRetinue.GetOrCreateCommanderName(player, gender)}";
+				pet.GuildName = RoyalRetinue.GuildNameFor(player);
 			}
 
 			return pet;

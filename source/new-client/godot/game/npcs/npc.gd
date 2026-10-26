@@ -535,7 +535,7 @@ uniform float ghost_white = 0.0;")
 
 ## A stable look for a figure NPC from its id (Fig3Figure.npc_look).
 func _look(f: Fig3Figure) -> Dictionary:
-	return Fig3Figure.npc_look(String(spawn.id), f.meta)   # (NpcManager prepares its textures from the same look)
+	return Fig3Figure.npc_look(Fig3Figure.look_seed(spawn), f.meta)   # (NpcManager prepares its textures from the same look)
 
 
 ## A monster figure drawn the client's way (monsters.json from build_monsters.table_fields): its skin's alpha - "cut"

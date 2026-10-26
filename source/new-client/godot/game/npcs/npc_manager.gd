@@ -597,7 +597,7 @@ func _prep_needs(s: NpcState) -> Dictionary:
 				elif slot == 21:
 					helm = int(e.model)
 			var dir := Fig3Figure.texture_dir()
-			for key in Fig3Figure.texture_keys(meta, Fig3Figure.npc_look(String(spawn.id), meta), parts):
+			for key in Fig3Figure.texture_keys(meta, Fig3Figure.npc_look(Fig3Figure.look_seed(spawn), meta), parts):
 				if not Fig3Figure._tex_cache.has(dir + String(key)):
 					need["tex:" + dir + String(key)] = ["tex", [dir, key]]
 			if helm > 0:

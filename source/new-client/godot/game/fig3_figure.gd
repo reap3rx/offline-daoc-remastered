@@ -97,6 +97,17 @@ static func helm_path(model: int, prefix: String) -> String:
 	return "res://content/helms/" + String(e.file) if e.has("file") else ""
 
 
+## The seed an NPC figure's look comes from: its id, except a King / Queen's retinue (mod 2026-10-25: the server's
+## guild line "<name>'s Retinue"): that line and the NPC's own name (the last word, "Squire Anne" -> "Anne"), so the
+## same commander has the same face, hair and skin at every summon and every rank.
+static func look_seed(spawn: Dictionary) -> String:
+	var guild := String(spawn.get("guild", ""))
+	if guild.ends_with("'s Retinue"):
+		var n := String(spawn.get("name", "")).strip_edges()
+		return guild + ":" + n.get_slice(" ", n.get_slice_count(" ") - 1)
+	return String(spawn.get("id", ""))
+
+
 ## An NPC's look from its id (the database records no faces / hair for NPCs): the same for a given id every time.
 static func npc_look(id: String, meta: Dictionary) -> Dictionary:
 	var h := hash(id)
