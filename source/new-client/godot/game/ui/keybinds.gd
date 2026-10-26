@@ -57,9 +57,13 @@ func _ready() -> void:
 			"presets": {"rpg": ["Shift+G"], "fps": ["Shift+G"], "mmo": ["Shift+G"]}})
 	# Action Combat (owner 2026-10-26, ActionCombatMode): its toggle and buttons. Q / E share the strafe keys on
 	# purpose - in action combat A / D strafe and Q / E are free; R (Reply) is taken only while it is on.
-	for ac in [["action_toggle", "Action Combat On / Off", ["F9"]], ["ac_position", "Action: Position Style", ["Q"]],
+	for ac in [["action_toggle", "Action Combat On / Off", ["F9"]],
+			["ac_attack", "Action: Attack (tap swing, hold anytime style)", ["Left Mouse"]],
+			["ac_parry", "Action: Parry / Block (hold to guard)", ["Right Mouse"]],
+			["ac_position", "Action: Position Style", ["Q"]],
 			["ac_reactive", "Action: Reactive Style", ["E"]], ["ac_chain", "Action: Chain Style", ["R"]],
-			["ac_dodge", "Action: Dodge", ["Middle Mouse"]], ["ac_cursor", "Action: Show Cursor (hold)", ["LAlt"]]]:
+			["ac_dodge", "Action: Dodge", ["Middle Mouse"]], ["ac_cursor", "Action: Show Cursor (hold)", ["LAlt"]],
+			["ac_hud", "Action: Arrange Combat HUD", ["Ctrl+F9"]]]:
 		actions.append({"id": ac[0], "label": ac[1], "category": "Combat",
 				"presets": {"rpg": ac[2], "fps": ac[2], "mmo": ac[2]}})
 	categories.append("Quickbars")
@@ -229,6 +233,37 @@ func pressed(event: InputEvent, id: String) -> bool:
 		return false
 	for d in _held.get(id, []):
 		if _event_is(event, d, true):
+			return true
+	return false
+
+
+## Does this event (pressed or released) belong to the action? Modifiers ignored - a release often comes without
+## them (Action Combat's hold-to-charge / hold-to-guard buttons).
+func matches(event: InputEvent, id: String) -> bool:
+	for d in _held.get(id, []):
+		if _event_is(event, d, false):
+			return true
+	return false
+
+
+## Held, counting only bindings no action in `others` also has (Action Combat: Q / E strafe unless they are its
+## Position / Reactive keys).
+func held_unshared(id: String, others: Array) -> bool:
+	var taken := {}
+	for o in others:
+		for b in bindings.get(o, []):
+			taken[String(b)] = true
+	for b in bindings.get(id, []):
+		if String(b) == "" or taken.has(String(b)):
+			continue
+		var d := _parse(String(b))
+		var down := false
+		if d.mouse != 0:
+			down = Input.is_mouse_button_pressed(d.mouse)
+		elif d.key != KEY_NONE:
+			down = Input.is_physical_key_pressed(d.key) or Input.is_key_pressed(d.key)
+		if down and (not d.shift or Input.is_key_pressed(KEY_SHIFT)) and (not d.ctrl or Input.is_key_pressed(KEY_CTRL)) \
+				and (not d.alt or Input.is_key_pressed(KEY_ALT)):
 			return true
 	return false
 

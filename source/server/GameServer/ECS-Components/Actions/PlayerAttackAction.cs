@@ -8,6 +8,9 @@ namespace DOL.GS
     public class PlayerAttackAction : AttackAction
     {
         private GamePlayer _playerOwner;
+        private bool _quickSwing;               // Action Combat: this round is a plain (faster, lighter) swing
+        private Style _reactiveStyle;           // Action Combat: the reactive style this round uses ...
+        private AttackData _reactiveOpening;    // ... and the opening it answers (spent once it lands)
 
         public PlayerAttackAction(GamePlayer owner) : base(owner)
         {
@@ -55,6 +58,21 @@ namespace DOL.GS
 
             _combatStyle = StyleComponent.GetStyleToUse();
 
+            // Action Combat: a reaction answers one opening only (no spamming a reactive off one parry).
+            _reactiveStyle = null;
+            _reactiveOpening = null;
+
+            if (action is { Enabled: true } && _combatStyle != null)
+            {
+                if (ActionCombat.IsOpeningSpent(_playerOwner, _combatStyle))
+                    _combatStyle = null;
+                else if (ActionCombat.KindOf(_combatStyle) == "reactive")
+                {
+                    _reactiveStyle = _combatStyle;
+                    _reactiveOpening = ActionCombat.OpeningOf(_playerOwner, _combatStyle);
+                }
+            }
+
             // Check if we still have enough endurance for the style and update `_weapon` if needed.
             if (_combatStyle != null)
             {
@@ -65,6 +83,12 @@ namespace DOL.GS
                 else
                     _weapon = styleWeapon;
             }
+
+            // Action Combat: a plain swing is quicker and lighter than a styled one.
+            _quickSwing = action is { Enabled: true } && _combatStyle == null;
+
+            if (_quickSwing)
+                _effectiveness *= ActionCombat.QuickSwingDamage;
 
             return base.PrepareMeleeAttack();
         }
@@ -111,6 +135,12 @@ namespace DOL.GS
                     ActionCombat.Send(_playerOwner, "timer|" + _interval);
                     return false;
                 }
+
+                if (_reactiveStyle != null)
+                    ActionCombat.SpendOpening(_playerOwner, _reactiveStyle, _reactiveOpening);
+
+                if (_quickSwing)
+                    _interval = (int) (_interval * ActionCombat.QuickSwingSpeed);
 
                 if (action.FumblePending)
                 {

@@ -126,6 +126,8 @@ var action_cursor := false
 var guard_mult := 1.0                   # holding guard: slower
 var cam_kick := 0.0                      # a landed blow's small camera jolt (decays)
 var _dash := Vector3.ZERO               # a dodge's burst (world velocity, decays)
+var _guard_pose := ""                   # holding guard: the parry / block clip held still on this frame
+const AC_BUTTONS := ["ac_attack", "ac_parry", "ac_position", "ac_reactive", "ac_chain", "ac_dodge", "ac_cursor", "ac_hud"]
 var _dash_left := 0.0
 var grounded := false
 var _air_time := 0.0                   # seconds off the ground (the falling pose waits a moment)
@@ -445,6 +447,38 @@ func _ranged() -> String:
 	if combat_stance in WeaponModels.RANGED:
 		return combat_stance
 	return WeaponModels.ranged_kind(int(PlayerData.item_at(13).get("model", 0)))
+
+
+## Action Combat's guard: the parry pose (the block pose with a shield) held still while the button is down - you
+## see you're braced. A swing, flinch or defense playing over it comes back to the pose when it ends (_animate).
+func hold_guard(on: bool, shield: bool) -> void:
+	if not on:
+		if _guard_pose != "":
+			if _action == _guard_pose:
+				_action_left = 0.0
+			_guard_pose = ""
+			if _anim:
+				_anim.speed_scale = 1.0
+		return
+	if dead or _anim == null:
+		return
+	var clip := WeaponModels.defend_clip(_anim, combat_stance, "block" if shield else "parry")
+	if clip == "" and shield:
+		clip = WeaponModels.defend_clip(_anim, combat_stance, "parry")
+	if clip == "":
+		return
+	_guard_pose = clip
+	_apply_guard_pose()
+
+
+func _apply_guard_pose() -> void:
+	if _guard_pose == "" or _anim == null or not _anim.has_animation(_guard_pose):
+		return
+	_action = _guard_pose
+	_action_left = 3600.0
+	_anim.play(_guard_pose, 0.08)
+	_anim.seek(_anim.get_animation(_guard_pose).length * 0.4, true)
+	_anim.speed_scale = 0.0
 
 
 func flinch() -> void:
@@ -834,8 +868,12 @@ func _physics_step(delta: float) -> void:
 		strafe += (1.0 if right else 0.0) - (1.0 if left else 0.0)
 	else:
 		turn += (1.0 if left else 0.0) - (1.0 if right else 0.0)
-	if not action_mode:                               # (action combat: Q / E are its Position / Reactive buttons)
+	if not action_mode:
 		strafe += (1.0 if _act("strafe_right") else 0.0) - (1.0 if _act("strafe_left") else 0.0)
+	elif input_enabled and not dead and not _ui_typing():
+		# action combat: the strafe keys still strafe, except those that are also its buttons (Q / E by default)
+		strafe += (1.0 if Keybinds.held_unshared("strafe_right", AC_BUTTONS) else 0.0) \
+				- (1.0 if Keybinds.held_unshared("strafe_left", AC_BUTTONS) else 0.0)
 	strafe = clampf(strafe, -1.0, 1.0)
 	var ahead := (1.0 if fwd else 0.0) - (1.0 if back else 0.0)
 
@@ -958,6 +996,8 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 	_body_offset = lerp_angle(_body_offset, target_offset, minf(1.0, delta * 10.0))
 	_apply_model_yaw()
 	_action_left -= delta
+	if _guard_pose != "" and _action_left <= 0.0 and not dead:
+		_apply_guard_pose()                           # (something played over the guard: back to it)
 	var moving := ahead != 0.0 or strafe != 0.0
 	if casting_spell:
 		_cast_left -= delta

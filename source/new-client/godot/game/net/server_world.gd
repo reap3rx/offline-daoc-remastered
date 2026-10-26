@@ -1039,6 +1039,10 @@ func _combat(d: Dictionary) -> void:
 			_note_unknown(int(d[k]), "combat", Vector3.INF)
 			_request_object(int(d[k]))
 	var a := _view_of(int(d.attacker))
+	# the battle music: you struck or took a blow (not a bow being drawn - that is BOW_PREPARE, no blow yet)
+	if (int(d.attacker) == Server.me_oid or int(d.defender) == Server.me_oid) and int(d.style) != BOW_PREPARE \
+			and viewer and viewer.has_method("note_combat"):
+		viewer.note_combat()
 	# a bow drawn / loosed (AttackAction's ranged attack): the archer's bow clips, not a melee swing (owner 2026-10-15:
 	# the bone archers swung a sword at range); the arrow's hit (a bow as the weapon) swings nothing either
 	var bow_anim := int(d.style) == BOW_PREPARE or int(d.style) == BOW_SHOOT

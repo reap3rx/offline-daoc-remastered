@@ -604,7 +604,7 @@ func _switch_audio() -> void:
 	add_child(audio)
 	audio.setup(zone.dir, sky, player, false)
 	audio.begin(old.hand_over(audio))                      # the old zone fades out; its music carries on
-	if (combat and combat.attack_mode) or _server_attack:
+	if (combat and combat.attack_mode) or _battle_on:
 		audio.set_battle(true)
 
 
@@ -1249,6 +1249,7 @@ func _process_inner(delta: float) -> void:
 			if _server_ready and Server.playing:
 				_send_position(delta)
 				_server_attack_tick()
+				_battle_tick()
 				if sky and sky.storm_forced < 0.0:         # the server's storm where you stand (rain, dark sky)
 					var wz := int(region.current.info.id) if region and region.current else int(zone.info.id)
 					sky.storm_target = Server.storm_at(Server.to_region(wz, player.global_position).x)
@@ -1536,8 +1537,29 @@ func _set_server_attack(on: bool, tell: bool) -> void:
 	var set_id := int(WeaponModels.info(int(MeleeMath.weapon(PlayerData).get("model", 0))).get("sound_set", 0))
 	if set_id > 0 and player.sounds:
 		player.sounds.weapon(set_id, "activate" if on else "deactivate")   # the client's draw / sheathe sounds
-	if audio:
-		audio.set_battle(on)
+	# (the battle music follows the fighting itself now - note_combat - not the drawn weapon)
+
+
+## The battle music plays while you are actually fighting (owner 2026-10-26: DAoC tied it to the drawn weapon): any
+## blow you strike or take, or a wind-up aimed at you, keeps it going; BATTLE_LINGER_MS after the last, it fades.
+const BATTLE_LINGER_MS := 9000
+var _battle_until := 0
+var _battle_on := false
+
+
+func note_combat() -> void:
+	_battle_until = Time.get_ticks_msec() + BATTLE_LINGER_MS
+	if not _battle_on:
+		_battle_on = true
+		if audio:
+			audio.set_battle(true)
+
+
+func _battle_tick() -> void:
+	if _battle_on and (Time.get_ticks_msec() > _battle_until or PlayerData.hp <= 0):
+		_battle_on = false
+		if audio:
+			audio.set_battle(false)
 
 
 ## Attack mode drops by itself when your target dies - by your blow, a pet's, a spell, anyone's (owner 2026-10-10,

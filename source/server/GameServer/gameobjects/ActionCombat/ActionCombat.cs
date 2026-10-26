@@ -44,6 +44,10 @@ namespace DOL.GS
 		public long DodgeReadyAt;
 		public bool Guarding;
 		public bool FumblePending;
+		// A reaction answers one opening: the blow you parried / blocked / dodged (the enemy's attack), or your own
+		// blow it turned aside. Once a reactive style is used on it, it is spent until a new one comes.
+		public AttackData SpentEnemyOpening;
+		public AttackData SpentOwnOpening;
 		public long FumbledUntil;
 		public string LastReady = "";
 		public long NextReadyCheck;
@@ -61,6 +65,8 @@ namespace DOL.GS
 		public const int IdlePollMs = 50;          // how often an idle attack action checks for a click
 		public const double GuardFactor = 0.75;    // damage taken while holding guard
 		public const double GuardShieldFactor = 0.6;
+		public const double QuickSwingSpeed = 0.75;  // a plain swing recovers in 75% of the weapon's time ...
+		public const double QuickSwingDamage = 0.7;  // ... for 70% of its damage (a little less damage per second)
 
 		public static bool IsActive(GameLiving living)
 		{
@@ -206,6 +212,9 @@ namespace DOL.GS
 				if (weapon == null || !StyleProcessor.CanUseStyle(last, player, style, weapon) || !StyleProcessor.HasEnduranceFor(player, weapon, style))
 					continue;
 
+				if (IsOpeningSpent(player, style))
+					continue;
+
 				int score = style.SpecLevelRequirement * 10;
 
 				// A chain that follows the very style just landed beats a generic "after any hit" follow-up.
@@ -224,6 +233,44 @@ namespace DOL.GS
 			}
 
 			return best;
+		}
+
+		/// <summary>The opening a reactive style answers (null for other styles).</summary>
+		public static AttackData OpeningOf(GamePlayer player, Style style)
+		{
+			if (style == null || KindOf(style) != "reactive")
+				return null;
+
+			if (style.OpeningRequirementType is Style.eOpening.Defensive)
+				return (player.TargetObject as GameLiving)?.attackComponent?.attackAction?.LastAttackData;
+
+			return player.attackComponent.attackAction?.LastAttackData;
+		}
+
+		public static bool IsOpeningSpent(GamePlayer player, Style style)
+		{
+			AttackData opening = OpeningOf(player, style);
+
+			if (opening == null)
+				return false;
+
+			ActionCombatState state = Get(player);
+			return style.OpeningRequirementType is Style.eOpening.Defensive
+				? ReferenceEquals(opening, state.SpentEnemyOpening)
+				: ReferenceEquals(opening, state.SpentOwnOpening);
+		}
+
+		public static void SpendOpening(GamePlayer player, Style style, AttackData opening)
+		{
+			if (opening == null)
+				return;
+
+			ActionCombatState state = Get(player);
+
+			if (style.OpeningRequirementType is Style.eOpening.Defensive)
+				state.SpentEnemyOpening = opening;
+			else
+				state.SpentOwnOpening = opening;
 		}
 
 		public static string KindOf(Style style)
