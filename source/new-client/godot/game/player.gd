@@ -128,7 +128,9 @@ var _defend_slow_left := 0.0            # ... and while it plays you move at hal
 var cam_kick := 0.0                      # a landed blow's small camera jolt (decays)
 var shoulder := Vector2.ZERO             # action combat's over-the-shoulder view: metres right / up (Camera3D offsets)
 var _dash := Vector3.ZERO               # a dodge's burst (world velocity, decays)
-const AC_BUTTONS := ["ac_attack", "ac_parry", "ac_position", "ac_reactive", "ac_chain", "ac_dodge", "ac_cursor", "ac_hud"]
+const AC_BUTTONS := ["ac_attack", "ac_parry", "ac_position", "ac_reactive", "ac_chain", "ac_dodge", "ac_cursor", "ac_hud",
+		"ac_interact"]
+var _charge_fx: Node3D = null            # the heavy attack's charge: a glow on the weapon (the game's weapon effects)
 var _dash_left := 0.0
 var grounded := false
 var _air_time := 0.0                   # seconds off the ground (the falling pose waits a moment)
@@ -464,6 +466,30 @@ func action_defend(kind: String) -> void:
 	_one_shot(clip)
 	_defend_clip = clip
 	_defend_slow_left = clip_seconds(clip)
+
+
+## A fully charged heavy attack: the drawn weapon glows gold (the client's own weapon effects - spweapons.csv's
+## gold glows, by the weapon's stance) until the blow goes.
+const CHARGE_GLOW := {"": 11, "2h": 32, "scy": 32, "pole": 78, "staff": 92, "h2h": 11}
+
+
+func charge_glow(on: bool) -> void:
+	if not on:
+		if is_instance_valid(_charge_fx):
+			_charge_fx.queue_free()
+		_charge_fx = null
+		return
+	if is_instance_valid(_charge_fx) or _model == null or not in_combat:
+		return
+	var holder: Node3D = null
+	for h in _model.find_children("Weapon_*", "", true, false):
+		var at := (h as Node).get_parent()
+		if at is BoneAttachment3D and String((at as BoneAttachment3D).bone_name) in ["Bip01 R Held", "Bip01 R Hand"]:
+			holder = h
+			break
+	if holder == null:
+		return
+	_charge_fx = WeaponModels.add_effect(holder, int(CHARGE_GLOW.get(combat_stance, 11)))
 
 
 func flinch() -> void:

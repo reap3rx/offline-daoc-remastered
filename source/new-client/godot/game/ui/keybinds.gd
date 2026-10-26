@@ -63,6 +63,7 @@ func _ready() -> void:
 			["ac_position", "Action: Position Style", ["Q"]],
 			["ac_reactive", "Action: Reactive Style", ["E"]], ["ac_chain", "Action: Chain Style", ["R"]],
 			["ac_dodge", "Action: Dodge", ["Middle Mouse"]], ["ac_cursor", "Action: Show Cursor (hold)", ["LAlt"]],
+			["ac_interact", "Action: Interact (doors, NPCs, loot)", ["F"]],
 			["ac_hud", "Action: Arrange Combat HUD", ["Ctrl+F9"]]]:
 		actions.append({"id": ac[0], "label": ac[1], "category": "Combat",
 				"presets": {"rpg": ac[2], "fps": ac[2], "mmo": ac[2]}})

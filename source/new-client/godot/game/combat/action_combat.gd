@@ -27,9 +27,12 @@ const SETTINGS := "user://settings.cfg"
 const SECTION := "action_hud"
 
 ## The HUD's parts: [id, label, movable]
-const PARTS := [["crosshair", "Crosshair", false], ["windup", "Wind-up ring", false], ["charge", "Charge ring", false],
+const PARTS := [["crosshair", "Crosshair", false], ["windup", "Wind-up ring on the attacker", false],
+		["windup_cross", "Wind-up ring at the crosshair", false], ["charge", "Charge ring", false],
 		["timer", "Swing timer", false], ["lights", "Style lights", true], ["flash", "Defense text", true],
 		["marker", "Monster \"!\" marker", false], ["fct", "Floating combat text", false]]
+const HIDDEN_BY_DEFAULT := ["windup_cross"]
+const INTERACT_M := 6.0                # Interact's reach for what isn't right under the crosshair
 const DEFAULT_OFFSET := {"lights": Vector2(0, 64), "flash": Vector2(0, -48)}
 
 ## npc oid -> msec: its blow's swing was already played at the wind-up (ServerWorld skips the second one)
@@ -350,6 +353,10 @@ func _input(event: InputEvent) -> void:
 				Server.command("/ac style " + kinds[i])
 			get_viewport().set_input_as_handled()
 			return
+	if Keybinds.pressed(event, "ac_interact"):
+		_interact()
+		get_viewport().set_input_as_handled()
+		return
 	if Keybinds.pressed(event, "ac_dodge"):
 		if not _drawn():
 			_draw_weapon()                                 # sheathed: the first press draws
@@ -373,6 +380,108 @@ func _input(event: InputEvent) -> void:
 
 func _drawn() -> bool:
 	return viewer != null and bool(viewer.get("_server_attack"))
+
+
+## Interact (owner 2026-10-26): what the crosshair is on - talk to an NPC (a monster: target it), open a door, pick
+## up what lies on the ground, manage a companion - else the nearest of those in front of you within INTERACT_M.
+func _interact() -> void:
+	var p := _player()
+	if p == null or p.camera == null or viewer == null:
+		return
+	var centre := get_viewport().get_visible_rect().size * 0.5
+	var npcs: NpcManager = viewer.npcs
+	var picked: Dictionary = viewer._click_pick(centre) if viewer.has_method("_click_pick") else {}
+	var n: Npc = picked.get("npc")
+	if n and n.global_position.distance_to(p.global_position) <= INTERACT_M * 4.0:
+		_use_npc(n)
+		return
+	if String(picked.get("kind", "")) == "door" and viewer._click_door(centre):
+		return
+	var sw = npcs if npcs and npcs.has_method("click_object") else null
+	if sw and sw.click_object(p.camera, centre):
+		sw.get_object()
+		return
+	var bot: Node3D = WorldLink.pick_bot(p.camera, centre)
+	if bot and bool(bot.get("companion")) and viewer.companions:
+		WorldLink.target_bot(bot)
+		viewer.companions.manage(int(bot.get("bot_id")))
+		return
+	# nothing under the crosshair: the nearest thing to use in front of you
+	var acc := {"best": null, "score": INF}            # (a dictionary: the lambda below can't assign outer locals)
+	var fwd := -p.camera.global_transform.basis.z
+	fwd.y = 0.0
+	fwd = fwd.normalized() if fwd.length() > 0.01 else Vector3.FORWARD
+	var consider := func(thing, pos: Vector3, kind: String):
+		var to := pos - p.global_position
+		to.y = 0.0
+		var d := to.length()
+		if d > INTERACT_M:
+			return
+		var ang := rad_to_deg(fwd.angle_to(to.normalized())) if d > 0.5 else 0.0
+		if ang > 70.0:
+			return
+		var s := d + ang * 0.05
+		if s < float(acc.score):
+			acc.score = s
+			acc.best = [kind, thing]
+	if npcs:
+		for i in npcs.active:
+			var v: Npc = npcs.active[i]
+			if is_instance_valid(v) and v.state.alive and int(v.spawn.get("realm", 0)) != 0:
+				consider.call(v, v.global_position, "npc")
+	if sw:
+		var objs = sw.get("objects")
+		if objs is Dictionary:
+			for oid in objs:
+				var h = objs[oid]
+				if is_instance_valid(h):
+					consider.call(int(oid), (h as Node3D).global_position, "object")
+	var zones: Array = []
+	var rw = viewer.get("region")
+	if rw and rw.get("zones") is Dictionary:
+		zones = (rw.zones as Dictionary).values()
+	elif viewer.get("zone"):
+		zones = [viewer.zone]
+	for z in zones:
+		if is_instance_valid(z) and z.get("doors") is Array:
+			for d in z.doors:
+				if is_instance_valid(d):
+					consider.call(d, (d as Node3D).global_position, "door")
+	var best = acc.best
+	if best == null:
+		PlayerData.message.emit("There is nothing here to use.", "system")
+		return
+	match String(best[0]):
+		"npc":
+			_use_npc(best[1])
+		"object":
+			sw._target_ground(int(best[1]))
+			sw.get_object()
+		"door":
+			if sw and sw.has_method("request_door"):
+				sw.request_door(best[1])
+
+
+## An NPC's window (talk, merchant, vault, trainer) is open: the cursor is out for it until it closes (walking off
+## closes it - ZoneViewer._watch_npc_windows).
+func _npc_window_open() -> bool:
+	var ui = viewer.get("ui") if viewer else null
+	if ui == null:
+		return false
+	for w in [ui.get("merchant"), ui.get("vault"), ui.get("trainer"), ui.get("npc_dialog")]:
+		if w != null and is_instance_valid(w) and (w as CanvasItem).visible:
+			return true
+	return false
+
+
+func _use_npc(n: Npc) -> void:
+	var npcs: NpcManager = viewer.npcs
+	if npcs == null or not is_instance_valid(n):
+		return
+	WorldLink.clear_bot_target()
+	npcs.select(n)
+	if not _hostile(n):
+		npcs.interact(n)                                   # talk, trade, train - as a right-click on it
 
 
 func _draw_weapon() -> void:
@@ -503,7 +612,7 @@ func _process(_delta: float) -> void:
 	if p == null or not on:
 		return
 	var now := Time.get_ticks_msec()
-	var free := _editing or not p.input_enabled or _typing() or p.dead or Keybinds.held("ac_cursor")
+	var free := _editing or not p.input_enabled or _typing() or p.dead or Keybinds.held("ac_cursor") or _npc_window_open()
 	p.action_cursor = free
 	if free and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -519,6 +628,7 @@ func _process(_delta: float) -> void:
 		elif int((m as Label3D).get_meta("until", 0)) < now:
 			(m as Label3D).visible = false
 	_reticle_tick(p, now)
+	p.charge_glow(_atk_down and now - _atk_at >= int(HOLD_S * 1000.0))
 	p.shoulder = Vector2(cam_side, cam_up)
 	hud.queue_redraw()
 
@@ -592,7 +702,7 @@ func _load_layout() -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(SETTINGS)
 	for part in PARTS:
-		_show[part[0]] = bool(cfg.get_value(SECTION, "show_" + String(part[0]), true))
+		_show[part[0]] = bool(cfg.get_value(SECTION, "show_" + String(part[0]), not HIDDEN_BY_DEFAULT.has(part[0])))
 	for id in DEFAULT_OFFSET:
 		var v = cfg.get_value(SECTION, "at_" + String(id), DEFAULT_OFFSET[id])
 		_offset[id] = v if v is Vector2 else DEFAULT_OFFSET[id]
@@ -706,6 +816,40 @@ func _hud_input(event: InputEvent) -> void:
 		hud.accept_event()
 
 
+func _draw_attacker_ring(w: Dictionary, now: int, font: Font) -> void:
+	var p := _player()
+	var n := _view(int(w.oid))
+	if p == null or p.camera == null or n == null:
+		return
+	var total := maxf(1.0, float(int(w.end) - int(w.start)))
+	var t := clampf((now - int(w.start)) / total, 0.0, 1.0)
+	var left := int(w.end) - now
+	var hot := left <= PARRY_WINDOW_MS and left > -60
+	var col := Color(1.0, 0.82, 0.3) if hot else Color(1.0, 0.3, 0.2, 0.9)
+	var head := n.global_position + Vector3(0, n.height * 0.65, 0)
+	var size := hud.size
+	var at := p.camera.unproject_position(head)
+	var behind := p.camera.is_position_behind(head)
+	if not behind and Rect2(Vector2(24, 24), size - Vector2(48, 48)).has_point(at):
+		var dist := maxf(1.0, p.camera.global_position.distance_to(head))
+		var scale := clampf(8.0 / dist, 0.45, 1.3)
+		hud.draw_arc(at, lerpf(64.0, 14.0, t) * scale, 0.0, TAU, 48, col, 3.0 if hot else 2.0)
+		hud.draw_arc(at, 14.0 * scale, 0.0, TAU, 32, Color(1, 1, 1, 0.3), 1.0)
+		return
+	# off screen: an arrow on the edge, pointing at it
+	var centre := size * 0.5
+	var dir := (at - centre) * (-1.0 if behind else 1.0)
+	if dir.length() < 1.0:
+		dir = Vector2(0, 1)
+	dir = dir.normalized()
+	var reach := minf(size.x, size.y) * 0.42
+	var tip := centre + dir * reach
+	var side := Vector2(-dir.y, dir.x)
+	var grow := lerpf(10.0, 18.0, t)
+	hud.draw_colored_polygon(PackedVector2Array([tip + dir * grow, tip - dir * grow * 0.4 + side * grow * 0.7,
+			tip - dir * grow * 0.4 - side * grow * 0.7]), col)
+
+
 func _draw_hud() -> void:
 	var p := _player()
 	if p == null or not on:
@@ -727,8 +871,12 @@ func _draw_hud() -> void:
 	if _show.get("timer", true) and now < _timer_until:
 		var r := float(_timer_until - now) / float(_timer_len)
 		hud.draw_arc(c, 24.0, PI * 0.5 - PI * 0.35 * r, PI * 0.5 + PI * 0.35 * r, 24, Color(1, 1, 1, 0.45), 2.0)
-	# monsters winding up a blow at you: a ring closing on the crosshair - gold while a parry would catch it
+	# monsters winding up a blow at you: a ring closing in on each of them (an arrow at the screen's edge when one is
+	# off screen or behind you) - gold while a parry would catch it
 	if _show.get("windup", true):
+		for w in _windups:
+			_draw_attacker_ring(w, now, font)
+	if _show.get("windup_cross", false):
 		for w in _windups:
 			var total := maxf(1.0, float(int(w.end) - int(w.start)))
 			var t := clampf((now - int(w.start)) / total, 0.0, 1.0)
