@@ -1140,6 +1140,13 @@ namespace DOL.GS
                 ad.AttackResult = eAttackResult.Missed;
             }
 
+            // Action Combat: a timed parry / block still lets part of the blow through - worked out as a hit, then put back.
+            bool actionPartial = ad.IsActionPartialDefense && ad.ActionDamageFactor > 0;
+            eAttackResult actionSavedResult = ad.AttackResult;
+
+            if (actionPartial)
+                ad.AttackResult = eAttackResult.HitUnstyled;
+
             switch (ad.AttackResult)
             {
                 // Calculate damage only if we hit the target.
@@ -1189,7 +1196,7 @@ namespace DOL.GS
                     double styleDamageCap = 0.0;
                     double resistModifier = 0.0;
 
-                    if (style != null)
+                    if (style != null && !actionPartial)
                     {
                         if (StyleProcessor.ExecuteStyle(ad, baseDamageSnapshot, baseDamageCap, out styleDamage, out styleDamageCap, out int animationId))
                         {
@@ -1245,6 +1252,8 @@ namespace DOL.GS
                         ApplyTargetConversionRegen(ad.Target, (int) conversionAmount);
                     }
 
+                    damage *= ad.ActionDamageFactor;    // Action Combat: guarded, or let through a timed parry / block
+
                     if (damage < 0)
                         damage = 0;
 
@@ -1252,6 +1261,11 @@ namespace DOL.GS
                     ad.Modifier = (int) Math.Floor(resistModifier);
                     ad.CriticalChance = CalculateCriticalChance(action);
                     ad.CriticalDamage = CalculateCriticalDamage(ad);
+
+                    if (actionPartial)
+                        ad.CriticalDamage = 0;
+                    else if (ad.ActionDamageFactor < 1)
+                        ad.CriticalDamage = (int) (ad.CriticalDamage * ad.ActionDamageFactor);
 
                     if (playerOwner != null && playerOwner.UseDetailedCombatLog)
                         PrintDetailedCombatLog(playerOwner, armorFactor, absorb, armorMod, baseWeaponSkill, varianceRange, specModifier, weaponSkill, damageMod, baseDamageCap, styleDamageCap);
@@ -1286,6 +1300,17 @@ namespace DOL.GS
                     player.Out.SendMessage(stringBuilder.ToString(), eChatType.CT_DamageAdd, eChatLoc.CL_SystemWindow);
                 }
             }
+
+            if (actionPartial)
+                ad.AttackResult = actionSavedResult;
+
+            if (ad.ActionDefense is not eActionDefense.None && ad.Target is GamePlayer actionTarget)
+                ActionCombat.OnDefended(actionTarget, ad);
+
+            // Action Combat: a monster turning aside an action player's STYLE makes them stumble.
+            if (playerOwner != null && ad.Style != null && ad.AttackResult is eAttackResult.Evaded or eAttackResult.Parried or eAttackResult.Blocked &&
+                ActionCombat.IsActive(playerOwner))
+                ActionCombat.OnStyleAvoided(playerOwner, ad);
 
             // Attacked living may modify the attack data. Primarily used for keep doors and components.
             ad.Target.ModifyAttack(ad);
@@ -1699,7 +1724,18 @@ namespace DOL.GS
 
             ad.DefensePenetration = ad.Attacker.attackComponent.CalculateDefensePenetration(ad.Weapon, ad.Target.Level);
 
-            if (!defenseDisabled)
+            // Action Combat: an action-mode defender's evade / parry / block are timed presses, not dice.
+            bool actionDefender = playerOwner != null && ActionCombat.IsActive(playerOwner);
+
+            if (actionDefender)
+            {
+                eAttackResult actionResult = ActionCombat.ResolveDefense(playerOwner, ad, defenseDisabled);
+
+                if (actionResult is not eAttackResult.Any)
+                    return actionResult;
+            }
+
+            if (!defenseDisabled && !actionDefender)
             {
                 // Savage style buffs.
                 foreach (ECSGameEffect savageBuff in owner.effectListComponent.GetEffects(eEffect.SavageBuff))
@@ -1768,6 +1804,13 @@ namespace DOL.GS
 
             double missChance = Math.Min(1, GetMissChance(action, ad, lastAttackData, attackerWeapon) * 0.01);
             double fumbleChance = ad.IsMeleeAttack ? Math.Min(1, ad.Attacker.GetModified(eProperty.FumbleChance) * 0.001) : 0;
+
+            // Action Combat: an action-mode player's melee blows in reach always land - no miss, no fumble.
+            if (playerAttacker != null && ad.IsMeleeAttack && ActionCombat.IsActive(playerAttacker))
+            {
+                missChance = 0;
+                fumbleChance = 0;
+            }
 
             // At some point during Atlas' development it was decided to make fumbles a subset of misses (can't fumble without a miss), since otherwise the miss + fumble rate at low level is way too high.
             // However, this prevented fumble debuffs from working properly when fumble chance became higher than the miss chance.

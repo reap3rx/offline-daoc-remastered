@@ -429,6 +429,12 @@ namespace DOL.GS
             return true;
         }
 
+        /// <summary>Action Combat: the next melee round is due now (a reactive style skips the swing timer).</summary>
+        public void ExpediteMeleeTick()
+        {
+            _nextMeleeTick = Math.Min(_nextMeleeTick, GameLoop.GameLoopTime);
+        }
+
         public virtual void CleanUp()
         {
             LastAttackData = null;

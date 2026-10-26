@@ -364,8 +364,15 @@ namespace DOL.GS
                 target.OnArmorHit(attackData, target.Inventory?.GetItem((eInventorySlot) attackData.ArmorHitLocation));
                 HandleDamageShields(attackData);
             }
-            else if (attackData.AttackResult is eAttackResult.Blocked)
-                target.OnArmorHit(attackData, target.ActiveLeftWeapon);
+            else
+            {
+                // Action Combat: what a timed parry / block let through.
+                if (attackData.IsActionPartialDefense && attackData.Damage > 0)
+                    _owner.DealDamage(attackData);
+
+                if (attackData.AttackResult is eAttackResult.Blocked)
+                    target.OnArmorHit(attackData, target.ActiveLeftWeapon);
+            }
 
             if (_target is GameLiving livingTarget && livingTarget.effectListComponent.ContainsEffectForEffectType(eEffect.ReflexAttack))
                 HandleReflexAttack(_owner, attackData.Target, attackData.AttackResult, _interval);

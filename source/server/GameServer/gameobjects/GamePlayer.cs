@@ -201,6 +201,9 @@ namespace DOL.GS
 
         protected bool m_usedetailedcombatlog = false;
 
+        /// <summary>Action Combat's per-player state (null until first asked; see ActionCombat.cs).</summary>
+        public ActionCombatState ActionCombat { get; set; }
+
         public bool UseDetailedCombatLog
         {
             get { return m_usedetailedcombatlog; }

@@ -153,6 +153,11 @@ namespace DOL.GS
             _needBroadcastHeading = true;
         }
 
+        public void PauseMovementChecks(int milliseconds)
+        {
+            _playerMovementMonitor.Pause(milliseconds);
+        }
+
         public void OnTeleportOrRegionChange()
         {
             _playerMovementMonitor.OnTeleportOrRegionChange();

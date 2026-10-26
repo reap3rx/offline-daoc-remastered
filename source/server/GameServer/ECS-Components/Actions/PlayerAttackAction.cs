@@ -31,6 +31,28 @@ namespace DOL.GS
 
         protected override bool PrepareMeleeAttack()
         {
+            // Action Combat: no auto-attack - a round only happens for a click (a swing or a style).
+            ActionCombatState action = _playerOwner.ActionCombat;
+
+            if (action is { Enabled: true })
+            {
+                if (_target == null)
+                {
+                    action.SwingQueued = false;
+                    ActionCombat.ClearReady(_playerOwner);
+                    _interval = TICK_INTERVAL_FOR_NON_ATTACK;
+                    return false;
+                }
+
+                ActionCombat.PollReady(_playerOwner);
+
+                if (!action.SwingQueued && StyleComponent.NextCombatStyle == null)
+                {
+                    _interval = ActionCombat.IdlePollMs;
+                    return false;
+                }
+            }
+
             _combatStyle = StyleComponent.GetStyleToUse();
 
             // Check if we still have enough endurance for the style and update `_weapon` if needed.
@@ -72,7 +94,36 @@ namespace DOL.GS
 
         protected override bool FinalizeMeleeAttack()
         {
-            if (base.FinalizeMeleeAttack())
+            bool attacked = base.FinalizeMeleeAttack();
+            ActionCombatState action = _playerOwner.ActionCombat;
+
+            if (action is { Enabled: true })
+            {
+                // The click is spent either way: out of range or not facing it is a whiff, never a buffered swing.
+                action.SwingQueued = false;
+                StyleComponent.NextCombatStyle = null;
+                StyleComponent.NextCombatBackupStyle = null;
+
+                if (!attacked)
+                {
+                    _interval = AttackComponent.AttackSpeed(_weapon, _leftWeapon) / 2;   // a whiff still costs a moment
+                    ActionCombat.Send(_playerOwner, "whiff");
+                    ActionCombat.Send(_playerOwner, "timer|" + _interval);
+                    return false;
+                }
+
+                if (action.FumblePending)
+                {
+                    action.FumblePending = false;
+                    _interval *= 2;
+                    action.FumbledUntil = GameLoop.GameLoopTime + _interval;
+                }
+
+                ActionCombat.Send(_playerOwner, "timer|" + _interval);
+                ActionCombat.PollReady(_playerOwner, true);
+            }
+
+            if (attacked)
             {
                 if (_playerOwner.UseDetailedCombatLog)
                     _playerOwner.Out.SendMessage($"Attack Speed: {_interval / 1000.0}s", eChatType.CT_DamageAdd, eChatLoc.CL_SystemWindow);
@@ -83,6 +134,19 @@ namespace DOL.GS
             }
 
             return false;
+        }
+
+        public override void CleanUp()
+        {
+            ActionCombatState action = _playerOwner.ActionCombat;
+
+            if (action is { Enabled: true })
+            {
+                action.SwingQueued = false;
+                ActionCombat.ClearReady(_playerOwner);
+            }
+
+            base.CleanUp();
         }
 
         protected override bool FinalizeRangedAttack()

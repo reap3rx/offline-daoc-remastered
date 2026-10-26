@@ -35,6 +35,11 @@ namespace DOL.GS
         public bool IsSpellResisted { get; set; }
         public int Modifier { get; set; } // Resisted damage.
         public int AnimationId { get; set; }
+        // Action Combat: how an action-mode defender answered the blow, and the share of its damage still taken.
+        public eActionDefense ActionDefense { get; set; }
+        public double ActionDamageFactor { get; set; } = 1.0;
+        public bool IsActionPartialDefense => ActionDefense is eActionDefense.Parry or eActionDefense.Block &&
+            AttackResult is eAttackResult.Parried or eAttackResult.Blocked;
         // Temporary property set by `AttackComponent.BroadcastAttackMessageToOtherPlayers`.
         // Used by pets in `GameNPC.OnAttackedByEnemy` for convenience.
         public string BroadcastMessage { get; set; }

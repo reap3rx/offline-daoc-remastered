@@ -7,6 +7,7 @@ extends NpcManager
 ## its updates a mover keeps walking toward where the server said it is going (the client's own dead reckoning).
 ## Also the server's chat lines, your health / power / endurance, swings, casts, emotes and deaths.
 
+const ActionCombatMode := preload("res://game/combat/action_combat.gd")
 const RUN_UNITS := 150.0                     # a mover faster than this (units / s) runs, slower walks
 const SNAP_M := 6.0                          # an update this far from where it is drawn: jump there
 # eChatType -> the chat window's kinds
@@ -904,6 +905,11 @@ func update_views(max_build: int) -> void:
 
 func _message(d: Dictionary) -> void:
 	var t := int(d.type)
+	if String(d.text).begins_with("#AC|"):                # Action Combat's own lines (ActionCombat.cs): not chat
+		var ac: Node = viewer.get("action_combat") if viewer else null
+		if ac:
+			ac.on_line(String(d.text).substr(4))
+		return
 	if t == 0x64:                                       # CT_SocialInterface: the social window's data, not chat
 		_social(String(d.text))
 		return
@@ -1070,6 +1076,8 @@ func _combat(d: Dictionary) -> void:
 			(a as Npc).show_weapon_for(int(d.weapon))
 	if spell or bow_anim or ranged:
 		pass
+	elif a is Npc and int(d.defender) == Server.me_oid and ActionCombatMode.swung_early(int(d.attacker)):
+		pass                                       # action combat: this blow's swing was drawn with its wind-up
 	elif a is Npc:
 		if styled:
 			(a as Npc).play_style(style_anim)
@@ -1078,6 +1086,8 @@ func _combat(d: Dictionary) -> void:
 	elif a is Player and int(d.attacker) == Server.me_oid:
 		if not styled or (a as Player).play_style(style_anim) == "":
 			(a as Player).swing((a as Player).weapon_stance(), hand)
+		if not spell and int(d.result) >= 10 and viewer and viewer.get("action_combat"):
+			viewer.action_combat.on_my_hit(styled)
 	if styled and not spell and a is Node3D:
 		# the style's coloured afterimages along the swing (styles.csv: StyleTrail - the offline game's own trail)
 		var body: Node = (a as Npc).model if a is Npc else (a.get("_model") if a is Player else null)

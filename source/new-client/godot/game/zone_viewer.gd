@@ -21,6 +21,8 @@ var sky: SkySystem
 var ui: GameUI
 var npcs: NpcManager
 var combat: Combat
+const ActionCombatMode := preload("res://game/combat/action_combat.gd")   # (preloaded: no class cache needed)
+var action_combat: ActionCombatMode = null      # Action Combat (the server's game only): F9
 var quests: QuestEngine
 var emissaries: Emissaries                 # the three faction emissaries (the only custom NPCs)
 var tasks: TaskSystem                      # the 1.65 /task system
@@ -172,6 +174,10 @@ func _ready() -> void:
 		sw.region = region
 		sw.setup_server(self, zone, player)
 		npcs = sw
+		action_combat = ActionCombatMode.new()
+		action_combat.name = "ActionCombat"
+		add_child(action_combat)
+		action_combat.setup(self)
 		ui.clear_target = npcs.clear_target
 		Server.jumped.connect(_on_server_jump)
 		Server.world.connect(_on_server_world)

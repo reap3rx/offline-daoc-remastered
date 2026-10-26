@@ -55,6 +55,13 @@ func _ready() -> void:
 	# the guild window (owner 2026-10-17, a roster window beyond 1.65 - GuildWindow): Shift+G, free in every preset
 	actions.append({"id": "show_guild", "label": "Guild Window", "category": "Show",
 			"presets": {"rpg": ["Shift+G"], "fps": ["Shift+G"], "mmo": ["Shift+G"]}})
+	# Action Combat (owner 2026-10-26, ActionCombatMode): its toggle and buttons. Q / E share the strafe keys on
+	# purpose - in action combat A / D strafe and Q / E are free; R (Reply) is taken only while it is on.
+	for ac in [["action_toggle", "Action Combat On / Off", ["F9"]], ["ac_position", "Action: Position Style", ["Q"]],
+			["ac_reactive", "Action: Reactive Style", ["E"]], ["ac_chain", "Action: Chain Style", ["R"]],
+			["ac_dodge", "Action: Dodge", ["Middle Mouse"]], ["ac_cursor", "Action: Show Cursor (hold)", ["LAlt"]]]:
+		actions.append({"id": ac[0], "label": ac[1], "category": "Combat",
+				"presets": {"rpg": ac[2], "fps": ac[2], "mmo": ac[2]}})
 	categories.append("Quickbars")
 	for bar in range(1, QUICKBARS + 1):
 		for slot in range(1, QUICKBAR_SLOTS + 1):

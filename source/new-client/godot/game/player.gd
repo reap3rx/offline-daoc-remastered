@@ -119,6 +119,14 @@ var invert_mouse := false
 var _lmb_world := false                # mouse buttons pressed on the world (not on an interface window)
 var _rmb_world := false
 var _cursor_at := Vector2.ZERO          # where the cursor was when a mouse-look drag began
+# Action Combat (ActionCombatMode, owner 2026-10-26): the mouse always looks and steers (no button held), A/D strafe,
+# the mouse buttons fight. action_cursor: the cursor is out for the interface (Alt held) - the mouse doesn't look.
+var action_mode := false
+var action_cursor := false
+var guard_mult := 1.0                   # holding guard: slower
+var cam_kick := 0.0                      # a landed blow's small camera jolt (decays)
+var _dash := Vector3.ZERO               # a dodge's burst (world velocity, decays)
+var _dash_left := 0.0
 var grounded := false
 var _air_time := 0.0                   # seconds off the ground (the falling pose waits a moment)
 var hold_frames := 12                   # after a spawn / teleport: stand still until the floors are in the physics world
@@ -688,6 +696,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		_rmb_world = event.pressed
 	var rmb := _rmb_world and Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
 	var lmb := _lmb_world and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
+	if action_mode and not action_cursor and not dead and event is InputEventMouseMotion:
+		var ady: float = event.relative.y * (-1.0 if invert_mouse else 1.0) * mouse_sensitivity
+		cam_yaw -= event.relative.x * MOUSE_TURN * mouse_sensitivity
+		cam_pitch = clampf(cam_pitch - ady * 0.004, -CAM_PITCH, CAM_PITCH)
+		char_yaw = cam_yaw                              # action combat: you face where you look
+		return
+	if action_mode and not action_cursor and event is InputEventMouseButton \
+			and event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
+		return                                           # (the fight takes the buttons: ActionCombatMode)
 	if event is InputEventMouseMotion and (rmb or lmb):
 		var dy: float = event.relative.y * (-1.0 if invert_mouse else 1.0) * mouse_sensitivity
 		cam_yaw -= event.relative.x * MOUSE_TURN * mouse_sensitivity
@@ -773,7 +790,8 @@ func _physics_step(delta: float) -> void:
 		_lmb_world = false
 	if not Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
 		_rmb_world = false
-	if not (_lmb_world or _rmb_world) and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and input_enabled:
+	if not (_lmb_world or _rmb_world) and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and input_enabled \
+			and not action_mode:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE              # a release the world never saw (over a window)
 		get_viewport().warp_mouse(_cursor_at)
 	var rmb := input_enabled and _rmb_world and not dead       # a dead character doesn't move (both buttons either)
@@ -812,11 +830,12 @@ func _physics_step(delta: float) -> void:
 				fwd = true
 	var strafe := 0.0
 	var turn := 0.0
-	if rmb and not classic:                           # modern: with the right mouse held, A/D strafe
+	if (rmb and not classic) or action_mode:          # modern: with the right mouse held, A/D strafe (action: always)
 		strafe += (1.0 if right else 0.0) - (1.0 if left else 0.0)
 	else:
 		turn += (1.0 if left else 0.0) - (1.0 if right else 0.0)
-	strafe += (1.0 if _act("strafe_right") else 0.0) - (1.0 if _act("strafe_left") else 0.0)
+	if not action_mode:                               # (action combat: Q / E are its Position / Reactive buttons)
+		strafe += (1.0 if _act("strafe_right") else 0.0) - (1.0 if _act("strafe_left") else 0.0)
 	strafe = clampf(strafe, -1.0, 1.0)
 	var ahead := (1.0 if fwd else 0.0) - (1.0 if back else 0.0)
 
@@ -849,7 +868,10 @@ func _physics_step(delta: float) -> void:
 	elif walking or _key(KEY_SHIFT):
 		speed = WALK_SPEED
 	var wish := local.rotated(Vector3.UP, char_yaw) * speed * speed_mult * buff_speed * snare_mult * encumbrance * stealth_mult \
-			* _wounded_mult()
+			* _wounded_mult() * (guard_mult if action_mode else 1.0)
+	if _dash_left > 0.0:                              # a dodge: a short burst on top of the run (Action Combat)
+		_dash_left -= delta
+		wish += _dash * clampf(_dash_left / 0.22, 0.0, 1.0)
 	if cc != "":
 		wish = Vector3.ZERO                             # stunned / mesmerized / rooted: no moving
 
@@ -901,8 +923,22 @@ func _physics_step(delta: float) -> void:
 		global_position.y = _ground_h(global_position.x, global_position.z) + 0.5   # fell through: recover
 
 	_animate(ahead, strafe, speed, delta)
-	_pivot.rotation = Vector3(cam_pitch, cam_yaw, 0.0)
+	cam_kick = move_toward(cam_kick, 0.0, delta * 0.5)
+	_pivot.rotation = Vector3(cam_pitch + cam_kick, cam_yaw, 0.0)
 	_arm.spring_length = lerpf(_arm.spring_length, cam_distance, minf(1.0, delta * 10.0))
+
+
+## Action Combat's dodge: a quick hop toward `local_dir` (x right, z back, in the character's frame) - the server's
+## evade window is what actually avoids the blow; this is the body getting out of the way.
+func dodge(local_dir: Vector3) -> void:
+	if dead or cc != "" or not grounded:
+		return
+	var d := local_dir
+	d.y = 0.0
+	if d.length() < 0.1:
+		d = Vector3(0, 0, 1)                         # no direction held: a step back
+	_dash = d.normalized().rotated(Vector3.UP, char_yaw) * RUN_SPEED * 2.6
+	_dash_left = 0.22
 
 
 func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:

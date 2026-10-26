@@ -478,6 +478,10 @@ namespace DOL.GS.Styles
 			return Math.Max(1, (int) Math.Ceiling(fatCost * living.GetModified(eProperty.FatigueConsumption) * 0.01));
 		}
 
+        /// <summary>Enough endurance for the style, quietly (Action Combat's ready lights).</summary>
+        public static bool HasEnduranceFor(GamePlayer player, DbInventoryItem weapon, Style style) =>
+            weapon != null && style != null && player.Endurance >= CalculateEnduranceCost(player, style, weapon.SPD_ABS, false);
+
         public static bool CheckEnduranceCost(GameBot bot, DbInventoryItem weapon, Style style) =>
             weapon != null && style != null && bot.Endurance >= CalculateEnduranceCost(bot, style, weapon.SPD_ABS, false);
 

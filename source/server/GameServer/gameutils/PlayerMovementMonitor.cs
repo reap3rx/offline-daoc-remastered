@@ -147,6 +147,17 @@ namespace DOL.GS
             }
         }
 
+        /// <summary>Action Combat's dodge: a short, allowed burst of speed - samples taken meanwhile are skipped.</summary>
+        public void Pause(int milliseconds)
+        {
+            long now = MonotonicTime.NowMs;
+            long previousPauseUntil = Math.Max(_pausedUntil, now);
+            _pausedUntil = Math.Max(_pausedUntil, now + milliseconds);
+            _accumulatedPauseTime += Math.Max(0, _pausedUntil - previousPauseUntil);
+            _previous = default;
+            _current = default;
+        }
+
         public void OnTeleportOrRegionChange()
         {
             _previous = default;

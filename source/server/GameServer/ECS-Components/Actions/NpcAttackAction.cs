@@ -1,4 +1,5 @@
-﻿using DOL.AI.Brain;
+﻿using System;
+using DOL.AI.Brain;
 using DOL.GS.Keeps;
 using DOL.GS.ServerProperties;
 using DOL.GS.Styles;
@@ -16,6 +17,11 @@ namespace DOL.GS
         private CheckLosTimer _checkLosTimer;
         private GameObject _losCheckTarget;
         private bool _wasMeleeWeaponSwitchForced; // Used to prevent NPCs from switching to their ranged weapon automatically if they explicitly switched to a melee weapon during combat.
+
+        // Action Combat: against an action-mode player every blow is telegraphed - a wind-up, then the blow.
+        private long _windupEnd;
+        private GameObject _windupTarget;
+        private bool _struckFromWindup;
 
         private static int LosCheckInterval => Properties.CHECK_LOS_DURING_RANGED_ATTACK_MINIMUM_INTERVAL;
         private bool IsArcherGuardOrImmobile => _npcOwner is GuardArcher || _npcOwner.MaxSpeedBase == 0;
@@ -195,7 +201,61 @@ namespace DOL.GS
                 }
             }
 
-            return true;
+            return !WindingUp();
+        }
+
+        /// <summary>
+        /// Action Combat: a blow at an action-mode player in reach starts a wind-up (the player is told) and lands
+        /// ActionCombat.WindupMs later - the round is held until then. Stepping out of reach meanwhile makes it whiff.
+        /// </summary>
+        private bool WindingUp()
+        {
+            if (_target is not GamePlayer player || !ActionCombat.IsActive(player) ||
+                !_npcOwner.IsWithinRadius(player, AttackComponent.AttackRange + 50))
+            {
+                _windupEnd = 0;
+                _windupTarget = null;
+                return false;
+            }
+
+            long now = GameLoop.GameLoopTime;
+
+            // No wind-up running for this target (or a stale one, held by a stun): start one.
+            if (_windupEnd == 0 || _windupTarget != player || now > _windupEnd + 400)
+            {
+                _windupTarget = player;
+                _windupEnd = now + ActionCombat.WindupMs;
+                ActionCombat.SendWindup(player, _npcOwner, ActionCombat.WindupMs);
+                _interval = ActionCombat.WindupMs;
+                return true;
+            }
+
+            if (!GameServiceUtils.ShouldTick(_windupEnd))
+            {
+                _interval = (int) Math.Max(1, _windupEnd - now);
+                return true;
+            }
+
+            _windupEnd = 0;
+            _windupTarget = null;
+            _struckFromWindup = true;
+            return false;
+        }
+
+        protected override bool FinalizeMeleeAttack()
+        {
+            bool attacked = base.FinalizeMeleeAttack();
+
+            // The wind-up is part of the swing, not added to it: the monster's pace stays its own.
+            if (_struckFromWindup)
+            {
+                _struckFromWindup = false;
+
+                if (attacked)
+                    _interval = Math.Max(500, _interval - ActionCombat.WindupMs);
+            }
+
+            return attacked;
         }
 
         protected override bool PrepareRangedAttack()
@@ -247,6 +307,9 @@ namespace DOL.GS
             }
 
             _wasMeleeWeaponSwitchForced = false;
+            _windupEnd = 0;
+            _windupTarget = null;
+            _struckFromWindup = false;
             base.CleanUp();
         }
 
