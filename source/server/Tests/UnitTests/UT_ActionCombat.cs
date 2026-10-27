@@ -67,3 +67,38 @@ public sealed class UT_ActionCombat
         Assert.That(ad.IsActionPartialDefense, Is.False, "a dodge avoids the whole blow");
     }
 }
+
+[TestFixture]
+public sealed class UT_ActionCombatArchery
+{
+    [Test]
+    public void FullDrawHardlyMissesAndFullCriticalAlwaysCrits()
+    {
+        ActionCombat.ShotNumbers normal = ActionCombat.ShotFor(1.0, false, false, 2.0);
+        Assert.That(normal.Effectiveness, Is.EqualTo(1.0));
+        Assert.That(normal.Miss, Is.EqualTo(ActionCombat.FullDrawMiss));
+        ActionCombat.ShotNumbers crit = ActionCombat.ShotFor(1.0, false, true, 2.0);
+        Assert.That(crit.CritChance, Is.EqualTo(1.0));
+        Assert.That(crit.CritEffectiveness, Is.EqualTo(2.0));
+    }
+
+    [Test]
+    public void EarlyReleaseIsWeakerAndMissesMore()
+    {
+        ActionCombat.ShotNumbers half = ActionCombat.ShotFor(0.5, false, false, 2.0);
+        ActionCombat.ShotNumbers most = ActionCombat.ShotFor(0.9, false, false, 2.0);
+        Assert.That(half.Effectiveness, Is.LessThan(most.Effectiveness));
+        Assert.That(half.Miss, Is.GreaterThan(most.Miss));
+        ActionCombat.ShotNumbers critHalf = ActionCombat.ShotFor(0.5, false, true, 2.0);
+        Assert.That(critHalf.CritChance, Is.LessThan(0.1), "an early critical shot rarely crits");
+        Assert.That(critHalf.Miss, Is.GreaterThan(half.Miss));
+    }
+
+    [Test]
+    public void OverdrawHitsHarderButMissesOften()
+    {
+        ActionCombat.ShotNumbers over = ActionCombat.ShotFor(1.0, true, false, 2.0);
+        Assert.That(over.Effectiveness, Is.GreaterThan(1.0));
+        Assert.That(over.Miss, Is.GreaterThan(0.3));
+    }
+}

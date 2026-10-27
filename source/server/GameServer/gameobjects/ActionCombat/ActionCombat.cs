@@ -51,6 +51,13 @@ namespace DOL.GS
 		public long FumbledUntil;
 		public string LastReady = "";
 		public long NextReadyCheck;
+		// Archery: a drawn shot (normal or critical), held until it is loosed.
+		public bool Drawing;
+		public bool DrawCrit;
+		public long DrawStart;
+		public int DrawFullMs;
+		public bool Overdrawing;
+		public ECSGameTimer DrawTimer;
 	}
 
 	public static class ActionCombat
@@ -587,6 +594,247 @@ namespace DOL.GS
 			double a = baseAngle + index * step;
 			slot = new System.Numerics.Vector3((float) (player.X + Math.Cos(a) * RingRadius), (float) (player.Y + Math.Sin(a) * RingRadius), player.Z);
 			return true;
+		}
+
+		// ------------------------------------------------------------------ archery (bows, crossbows, thrown)
+
+		public const int OverdrawGraceMs = 1200;      // held this long past full draw, the bow starts to overdraw
+		public const int DrawTickMs = 250;
+		public const double OverdrawDamage = 1.6;     // an overdrawn shot that lands
+		public const double OverdrawMiss = 0.40;
+		public const double FullDrawMiss = 0.03;
+
+		private static bool IsBow(DbInventoryItem weapon) => weapon != null && weapon.SlotPosition == Slot.RANGED;
+
+		/// <summary>
+		/// The shot button pressed (/ac draw normal|crit): the bow is drawn. Full draw takes what a shot takes in the
+		/// classic game (the critical shot's longer draw for a critical). The client roots you while you draw.
+		/// </summary>
+		public static void StartDraw(GamePlayer player, bool crit)
+		{
+			ActionCombatState state = Get(player);
+
+			if (state.Drawing)
+				return;
+
+			DbInventoryItem weapon = player.ActiveWeapon;
+
+			if (player.ActiveWeaponSlot is not eActiveWeaponSlot.Distance || !IsBow(weapon))
+			{
+				Send(player, "draw|0");
+				return;
+			}
+
+			string refusal = null;
+
+			if (!player.IsAlive || player.IsIncapacitated)
+				refusal = "You can't draw your bow now.";
+			else if (crit && player.GetAbilityLevel(Abilities.Critical_Shot) <= 0)
+				refusal = "You haven't learned Critical Shot yet.";
+			else if (player.rangeAttackComponent.UpdateAmmo(weapon) == null)
+				refusal = "You must select a quiver slot to draw from!";
+			else if (!player.rangeAttackComponent.IsAmmoCompatible)
+				refusal = "You can't use your selected quiver slot with this weapon!";
+			else if (player.Endurance < (crit ? RangeAttackComponent.CRITICAL_SHOT_ENDURANCE_COST : RangeAttackComponent.DEFAULT_ENDURANCE_COST))
+				refusal = "You are too tired to draw your bow!";
+
+			if (refusal != null)
+			{
+				player.Out.SendMessage(refusal, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Send(player, "draw|0");
+				return;
+			}
+
+			// The full draw: the classic shot time (Quickness, archery speed, the critical shot's own draw).
+			RangeAttackComponent ranged = player.rangeAttackComponent;
+			eRangedAttackType before = ranged.RangedAttackType;
+			ranged.RangedAttackType = crit ? eRangedAttackType.Critical : eRangedAttackType.Normal;
+			int full = player.attackComponent.AttackSpeed(weapon);
+			ranged.RangedAttackType = before is eRangedAttackType.Critical ? eRangedAttackType.Normal : before;
+
+			state.Drawing = true;
+			state.DrawCrit = crit;
+			state.DrawStart = GameLoop.GameLoopTime;
+			state.DrawFullMs = Math.Max(500, full);
+			state.Overdrawing = false;
+			state.DrawTimer?.Stop();
+			state.DrawTimer = new ECSGameTimer(player, DrawTick, DrawTickMs);
+			Send(player, $"draw|{state.DrawFullMs}|{OverdrawGraceMs}|{(crit ? 1 : 0)}");
+		}
+
+		private static int DrawTick(ECSGameTimer timer)
+		{
+			if (timer.Owner is not GamePlayer player)
+				return 0;
+
+			ActionCombatState state = Get(player);
+
+			if (!state.Drawing)
+				return 0;
+
+			if (!player.IsAlive || player.IsIncapacitated || player.ActiveWeaponSlot is not eActiveWeaponSlot.Distance)
+			{
+				CancelDraw(player, null);
+				return 0;
+			}
+
+			if (player.IsBeingInterruptedByOther)
+			{
+				CancelDraw(player, "Your shot is interrupted!");
+				return 0;
+			}
+
+			long held = GameLoop.GameLoopTime - state.DrawStart;
+
+			if (held > state.DrawFullMs + OverdrawGraceMs)
+			{
+				// Overdrawn: the arms burn - endurance drains fast, and an empty pool ends it.
+				int drain = Math.Max(2, player.MaxEndurance * 3 / 100);
+
+				if (!state.Overdrawing)
+				{
+					state.Overdrawing = true;
+					Send(player, "overdraw");
+				}
+
+				if (player.Endurance < drain + RangeAttackComponent.DEFAULT_ENDURANCE_COST)
+				{
+					CancelDraw(player, "Your arms give out and you lower your bow.");
+					return 0;
+				}
+
+				player.ChangeEndurance(player, eEnduranceChangeType.Spell, -drain);
+			}
+
+			return DrawTickMs;
+		}
+
+		public static void CancelDraw(GamePlayer player, string why)
+		{
+			ActionCombatState state = Get(player);
+
+			if (!state.Drawing)
+				return;
+
+			state.Drawing = false;
+			state.Overdrawing = false;
+			state.DrawTimer?.Stop();
+			state.DrawTimer = null;
+
+			if (why != null)
+				player.Out.SendMessage(why, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+			Send(player, "draw|0");
+		}
+
+		/// <summary>
+		/// The shot button let go (/ac loose): the arrow goes, as good as the draw. Early: weaker and likelier to miss
+		/// (a critical rarely crits). Full: hardly misses (a critical always crits). Overdrawn: far stronger, often misses.
+		/// </summary>
+		public static void Loose(GamePlayer player)
+		{
+			ActionCombatState state = Get(player);
+
+			if (!state.Drawing)
+				return;
+
+			long held = GameLoop.GameLoopTime - state.DrawStart;
+			bool crit = state.DrawCrit;
+			bool over = state.Overdrawing || held > state.DrawFullMs + OverdrawGraceMs;
+			int full = state.DrawFullMs;
+			state.Drawing = false;
+			state.Overdrawing = false;
+			state.DrawTimer?.Stop();
+			state.DrawTimer = null;
+
+			DbInventoryItem weapon = player.ActiveWeapon;
+			GameLiving target = AttackableTarget(player);
+			string refusal = null;
+
+			if (player.ActiveWeaponSlot is not eActiveWeaponSlot.Distance || !IsBow(weapon))
+				refusal = "";
+			else if (target == null)
+				refusal = "You need a target to shoot at.";
+			else if (!player.IsWithinRadius(target, player.attackComponent.AttackRange))
+				refusal = $"{target.GetName(0, true)} is too far away.";
+			else if (!player.TargetInView)
+				refusal = $"You can't see {target.GetName(0, false)}.";
+			else if (!player.IsObjectInFront(target, 90))
+				refusal = $"{target.GetName(0, true)} is not in front of you.";
+			else if (player.rangeAttackComponent.UpdateAmmo(weapon) == null)
+				refusal = "You are out of ammunition.";
+
+			if (refusal != null)
+			{
+				if (refusal != "")
+					player.Out.SendMessage(refusal + " You lower your bow.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+
+				Send(player, "draw|0");
+				return;
+			}
+
+			double f = Math.Clamp(held / (double) full, 0.0, 1.0);
+			double critMod = Math.Clamp(2 + (player.EffectiveLevel - target.EffectiveLevel) * 0.075, 1.1, 2.0);
+			ShotNumbers numbers = ShotFor(f, over, crit, critMod);
+			bool critical = crit && Util.Chance(numbers.CritChance);
+			double effectiveness = critical ? numbers.CritEffectiveness : numbers.Effectiveness;
+			double miss = numbers.Miss;
+			string quality = over ? "overdrawn" : f >= 1.0 ? "full" : "early";
+
+			// The arrow: endurance and ammunition, the release animation, then the hit when it gets there.
+			RangeAttackComponent ranged = player.rangeAttackComponent;
+			eRangedAttackType type = critical ? eRangedAttackType.Critical : eRangedAttackType.Normal;
+			ranged.RangedAttackType = type;
+			DbInventoryItem ammo = ranged.Ammo;
+			ranged.RemoveEnduranceAndAmmoOnShot();
+			ranged.RangedAttackType = eRangedAttackType.Normal;
+
+			int ticksToTarget = player.GetDistanceTo(target) * 1000 / RangeAttackComponent.PROJECTILE_FLIGHT_SPEED;
+			byte flightDuration = (byte) (ticksToTarget > 350 ? 1 + (ticksToTarget - 350) / 75 : 1);
+			bool thrown = weapon.Object_Type == (int) eObjectType.Thrown;
+
+			foreach (GamePlayer viewer in player.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+			{
+				if (thrown)
+					viewer.Out.SendInterruptAnimation(player);
+
+				viewer.Out.SendCombatAnimation(player, target, (ushort) weapon.Model, 0x00, viewer.Out.BowShoot, flightDuration, 0x00, target.HealthPercent);
+			}
+
+			WeaponAction shot = new(player, target, weapon, effectiveness, full, type, ammo) { ActionMissChance = miss };
+			player.attackComponent.weaponAction = shot;
+			player.Stealth(false);
+
+			if (ticksToTarget > 0)
+				new ECSGameTimer(player, new ECSGameTimer.ECSTimerCallback(shot.Execute), ticksToTarget);
+			else
+				shot.Execute();
+
+			Send(player, $"shot|{quality}|{(critical ? 1 : 0)}");
+		}
+
+		public readonly record struct ShotNumbers(double Effectiveness, double CritEffectiveness, double CritChance, double Miss);
+
+		/// <summary>
+		/// A shot by its draw: f = share of the full draw (0..1), over = overdrawn. Normal: early 35%..100% damage and
+		/// 3%..53% miss, full 100% / 3%, overdrawn 160% / 40%. Critical: crit chance f^4 early (always when full or
+		/// overdrawn), the critical shot's damage (critMod; x1.3 overdrawn), miss 5%..65% early, 3% full, 45% overdrawn.
+		/// </summary>
+		public static ShotNumbers ShotFor(double f, bool over, bool crit, double critMod)
+		{
+			f = Math.Clamp(f, 0.0, 1.0);
+			double early = 0.35 + 0.65 * f;
+
+			if (crit)
+			{
+				double chance = over || f >= 1.0 ? 1.0 : Math.Pow(f, 4);
+				double miss = over ? OverdrawMiss + 0.05 : f >= 1.0 ? FullDrawMiss : 0.05 + (1 - f) * 0.6;
+				return new(over ? early * 1.3 : early, over ? critMod * 1.3 : critMod, chance, miss);
+			}
+
+			double eff = over ? OverdrawDamage : f >= 1.0 ? 1.0 : early;
+			double normalMiss = over ? OverdrawMiss : f >= 1.0 ? FullDrawMiss : FullDrawMiss + (1 - f) * 0.5;
+			return new(eff, eff, 0.0, normalMiss);
 		}
 
 		public static void SendWindup(GamePlayer player, GameNPC attacker, int ms)

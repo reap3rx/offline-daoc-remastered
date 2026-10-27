@@ -59,6 +59,8 @@ func _ready() -> void:
 	# purpose - in action combat A / D strafe and Q / E are free; R (Reply) is taken only while it is on.
 	for ac in [["action_toggle", "Action Combat On / Off", ["F9"]],
 			["ac_attack", "Action: Attack (tap swing, hold anytime style)", ["Left Mouse"]],
+			["ac_shot", "Action: Bow Shot (hold to draw, release to loose)", ["Left Mouse"]],
+			["ac_crit_shot", "Action: Critical Shot (hold to draw)", ["Right Mouse"]],
 			["ac_parry", "Action: Parry / Block (hold to guard)", ["Right Mouse"]],
 			["ac_position", "Action: Position Style", ["Q"]],
 			["ac_reactive", "Action: Reactive Style", ["E"]], ["ac_chain", "Action: Chain Style", ["R"]],
@@ -149,10 +151,18 @@ func use_preset(name: String) -> void:
 
 ## Bind slot (0 or 1) of an action; the binding is taken from any other action that had it. Returns that action's
 ## label ("" if none) so the window can say "MOVED FROM ...".
+## Action Combat's buttons for melee and for the bow never work at once: one of each may share a key (Attack and
+## Bow Shot on the left mouse ...) without taking it from the other (owner 2026-10-26).
+const CONTEXT := {"ac_attack": "melee", "ac_parry": "melee", "ac_position": "melee", "ac_reactive": "melee",
+		"ac_chain": "melee", "ac_shot": "ranged", "ac_crit_shot": "ranged"}
+
+
 func bind(id: String, slot: int, binding: String) -> String:
 	var stolen := ""
 	for other in bindings:
 		var list: Array = bindings[other]
+		if CONTEXT.has(id) and CONTEXT.has(other) and CONTEXT[id] != CONTEXT[other]:
+			continue                                     # (melee and bow buttons may share a key)
 		if binding != "" and list.has(binding) and not (other == id and list.find(binding) == slot):
 			list.erase(binding)
 			stolen = label_of(other)

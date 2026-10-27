@@ -67,6 +67,15 @@ namespace DOL.GS.Commands
 				case "dodge":
 					ActionCombat.PressDodge(player);
 					break;
+				case "draw":
+					ActionCombat.StartDraw(player, args.Length > 2 && args[2].ToLowerInvariant() == "crit");
+					break;
+				case "loose":
+					ActionCombat.Loose(player);
+					break;
+				case "cancel":
+					ActionCombat.CancelDraw(player, null);
+					break;
 				default:
 					DisplaySyntax(client);
 					break;

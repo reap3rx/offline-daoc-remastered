@@ -26,6 +26,7 @@ namespace DOL.GS
         public eRangedAttackType RangedAttackType { get; }
         public DbInventoryItem Ammo { get; }
 
+        public double? ActionMissChance { get; init; }   // Action Combat's archery: this shot's miss chance, by its draw
         public bool HasAmmoReachedTarget { get; private set; } // Used to not cancel the release animation. A bit clunky, may not work perfectly.
 
         public WeaponAction(GameLiving owner, GameObject target, DbInventoryItem attackWeapon, DbInventoryItem leftWeapon, double effectiveness, int interval, Style combatStyle)

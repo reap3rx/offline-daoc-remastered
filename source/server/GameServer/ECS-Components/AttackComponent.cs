@@ -1807,8 +1807,14 @@ namespace DOL.GS
             double missChance = Math.Min(1, GetMissChance(action, ad, lastAttackData, attackerWeapon) * 0.01);
             double fumbleChance = ad.IsMeleeAttack ? Math.Min(1, ad.Attacker.GetModified(eProperty.FumbleChance) * 0.001) : 0;
 
-            // Action Combat: an action-mode player's melee blows in reach always land - no miss, no fumble.
-            if (playerAttacker != null && ad.IsMeleeAttack && ActionCombat.IsActive(playerAttacker))
+            // Action Combat: an action-mode player's melee blows in reach always land - no miss, no fumble. Their arrows
+            // miss by how well they were drawn (ActionCombat.Loose).
+            if (action?.ActionMissChance is double drawnMiss)
+            {
+                missChance = Math.Clamp(drawnMiss, 0, 1);
+                fumbleChance = 0;
+            }
+            else if (playerAttacker != null && ad.IsMeleeAttack && ActionCombat.IsActive(playerAttacker))
             {
                 missChance = 0;
                 fumbleChance = 0;

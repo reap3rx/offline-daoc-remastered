@@ -123,13 +123,14 @@ var _cursor_at := Vector2.ZERO          # where the cursor was when a mouse-look
 # the mouse buttons fight. action_cursor: the cursor is out for the interface (Alt held) - the mouse doesn't look.
 var action_mode := false
 var action_cursor := false
+var aiming := false                     # drawing a bow in action combat: you stand to shoot (turning still aims)
 var _defend_clip := ""                  # the parry / block / evade you just tried (a blow landing cuts it off)
 var _defend_slow_left := 0.0            # ... and while it plays you move at half speed
 var cam_kick := 0.0                      # a landed blow's small camera jolt (decays)
 var shoulder := Vector2.ZERO             # action combat's over-the-shoulder view: metres right / up (Camera3D offsets)
 var _dash := Vector3.ZERO               # a dodge's burst (world velocity, decays)
 const AC_BUTTONS := ["ac_attack", "ac_parry", "ac_position", "ac_reactive", "ac_chain", "ac_dodge", "ac_cursor", "ac_hud",
-		"ac_interact"]
+		"ac_interact", "ac_shot", "ac_crit_shot"]
 var _charge_fx: Node3D = null            # the heavy attack's charge: a glow on the weapon (the game's weapon effects)
 var _dash_left := 0.0
 var grounded := false
@@ -922,6 +923,8 @@ func _physics_step(delta: float) -> void:
 	var wish := local.rotated(Vector3.UP, char_yaw) * speed * speed_mult * buff_speed * snare_mult * encumbrance * stealth_mult \
 			* _wounded_mult() * (0.5 if action_mode and _defend_slow_left > 0.0 else 1.0)
 	_defend_slow_left = maxf(0.0, _defend_slow_left - delta)
+	if aiming and action_mode:
+		wish = Vector3.ZERO
 	if _dash_left > 0.0:                              # a dodge: a short burst on top of the run (Action Combat)
 		_dash_left -= delta
 		wish += _dash * clampf(_dash_left / 0.22, 0.0, 1.0)

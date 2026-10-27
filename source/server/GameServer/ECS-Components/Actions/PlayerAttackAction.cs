@@ -95,6 +95,13 @@ namespace DOL.GS
 
         protected override bool PrepareRangedAttack()
         {
+            // Action Combat: shots are drawn and loosed by hand (ActionCombat.StartDraw / Loose), never by attack mode.
+            if (_playerOwner.ActionCombat is { Enabled: true })
+            {
+                _interval = TICK_INTERVAL_FOR_NON_ATTACK;
+                return false;
+            }
+
             if (base.PrepareRangedAttack())
             {
                 // This is also done in weaponAction.Execute(), but we must unstealth immediately if the call is delayed.

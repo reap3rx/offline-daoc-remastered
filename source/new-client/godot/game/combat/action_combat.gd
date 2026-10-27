@@ -27,7 +27,7 @@ const SETTINGS := "user://settings.cfg"
 const SECTION := "action_hud"
 
 ## The HUD's parts: [id, label, movable]
-const PARTS := [["crosshair", "Crosshair", false], ["windup", "Wind-up ring on the attacker", false],
+const PARTS := [["crosshair", "Crosshair", false], ["draw", "Bow draw ring", false], ["windup", "Wind-up ring on the attacker", false],
 		["windup_cross", "Wind-up ring at the crosshair", false], ["charge", "Charge ring", false],
 		["timer", "Swing timer", false], ["lights", "Style lights", true], ["flash", "Defense text", true],
 		["marker", "Monster \"!\" marker", false], ["fct", "Floating combat text", false]]
@@ -60,6 +60,14 @@ var _layer: CanvasLayer
 var hud: Control
 var _show := {}                        # part -> shown
 var _offset := {}                      # movable part -> offset from the screen centre
+# archery: a shot being drawn (Shot / Critical Shot held), as the server timed it
+var _drawing := false
+var _draw_button := ""                 # "ac_shot" / "ac_crit_shot": the one whose release looses it
+var _draw_crit := false
+var _draw_at := 0                      # when the draw began (msec)
+var _draw_full := 0                    # ms to full draw (0: the server hasn't answered yet)
+var _draw_grace := 1200                # held this long past full, the bow overdraws
+var _overdraw := false
 var _editing := false
 var _panel: PanelContainer
 var _drag := ""
@@ -134,6 +142,25 @@ func on_line(text: String) -> void:
 		"fct":                                           # damage: fct|oid (0 = you)|amount|critical|out / pet / in
 			if f.size() > 4:
 				_damage_text(int(f[1]), int(f[2]), f[3] == "1", String(f[4]))
+		"draw":                                          # draw|full|grace|crit, or draw|0: refused / cancelled
+			if f.size() > 1 and f[1] != "0":
+				_draw_full = int(f[1])
+				_draw_grace = int(f[2]) if f.size() > 2 else 1200
+				_draw_crit = f.size() > 3 and f[3] == "1"
+			elif _drawing:
+				_end_draw(false)
+			elif _player():
+				_player().bow_release(false)              # (refused as it was loosed: the aim lowered)
+		"overdraw":
+			_overdraw = true
+		"shot":                                          # shot|early / full / overdrawn|critical
+			if f.size() > 2:
+				if f[2] == "1":
+					_flash("CRITICAL SHOT!", Color(1.0, 0.85, 0.3))
+				elif f[1] == "overdrawn":
+					_flash("OVERDRAWN!", Color(1.0, 0.4, 0.3))
+				elif f[1] == "full":
+					_flash("FULL DRAW", Color(0.85, 0.95, 1.0))
 		"fumble":
 			_flash("STUMBLE", Color(1.0, 0.35, 0.3))
 			var p := _player()
@@ -323,7 +350,17 @@ func _input(event: InputEvent) -> void:
 	var now := Time.get_ticks_msec()
 	var mouse := event is InputEventMouseButton
 	var echo: bool = event is InputEventKey and event.is_echo()
-	if not echo and not (mouse and p.action_cursor):
+	if not echo and not (mouse and p.action_cursor) and _ranged():
+		# a bow / crossbow out: Shot and Critical Shot draw while held and loose when let go
+		for id in ["ac_shot", "ac_crit_shot"]:
+			if Keybinds.matches(event, id) and (mouse or event is InputEventKey):
+				if event.is_pressed():
+					_start_draw(id)
+				elif _drawing and _draw_button == id:
+					_loose()
+				get_viewport().set_input_as_handled()
+				return
+	if not echo and not (mouse and p.action_cursor) and not _ranged():
 		if Keybinds.matches(event, "ac_attack") and (mouse or event is InputEventKey):
 			if event.is_pressed():
 				_attack_down(now)
@@ -554,9 +591,52 @@ func _dodge(dir: Vector3) -> void:
 	if p == null or now < _dodge_ready_at or not p.grounded:
 		return
 	_dodge_ready_at = now + DODGE_COOLDOWN_MS
+	if _drawing:
+		Server.command("/ac cancel")                       # (a dodge lowers the bow)
+		_end_draw(false)
 	Server.command("/ac dodge")
 	p.dodge(dir)
 	p.action_defend("evade")
+
+
+func _ranged() -> bool:
+	return String(PlayerData.active_weapon) == "ranged"
+
+
+## Archery: the shot button pressed - the bow drawn (you stand to shoot: rooted while drawing).
+func _start_draw(button: String) -> void:
+	var p := _player()
+	if p == null or _drawing:
+		return
+	if not _drawn() and viewer.has_method("_set_server_attack"):
+		viewer._set_server_attack(true, false)            # the bow in hand (attack mode itself never auto-fires here)
+	_drawing = true
+	_draw_button = button
+	_draw_crit = button == "ac_crit_shot"
+	_draw_at = Time.get_ticks_msec()
+	_draw_full = 0
+	_overdraw = false
+	p.aiming = true
+	p.bow_draw()
+	Server.command("/ac draw crit" if _draw_crit else "/ac draw normal")
+
+
+func _loose() -> void:
+	Server.command("/ac loose")
+	_end_draw(true)
+
+
+## The draw over: loosed (the server's BowShoot plays the release) or lowered.
+func _end_draw(loosed: bool) -> void:
+	if not _drawing:
+		return
+	_drawing = false
+	_overdraw = false
+	var p := _player()
+	if p:
+		p.aiming = false
+		if not loosed:
+			p.bow_release(false)
 
 
 ## Soft targeting: keep your target while you look at it; otherwise the monster nearest your aim, close by.
@@ -628,6 +708,9 @@ func _process(_delta: float) -> void:
 		elif int((m as Label3D).get_meta("until", 0)) < now:
 			(m as Label3D).visible = false
 	_reticle_tick(p, now)
+	if _drawing and not _ranged():
+		Server.command("/ac cancel")
+		_end_draw(false)
 	p.charge_glow(_atk_down and now - _atk_at >= int(HOLD_S * 1000.0))
 	p.shoulder = Vector2(cam_side, cam_up)
 	hud.queue_redraw()
@@ -867,6 +950,25 @@ func _draw_hud() -> void:
 		var f := clampf((now - _atk_at) / (HOLD_S * 1000.0), 0.0, 1.0)
 		hud.draw_arc(c, 16.0, -PI * 0.5, -PI * 0.5 + TAU * f, 40,
 				Color(1.0, 0.82, 0.3) if f >= 1.0 else Color(1, 1, 1, 0.7), 2.5 if f >= 1.0 else 2.0)
+	# the bow's draw: a ring filling around the crosshair - gold when fully drawn, then red as it overdraws
+	if _drawing and _show.get("draw", true):
+		var held := now - _draw_at
+		var full := float(_draw_full) if _draw_full > 0 else 1.0e9
+		var fill := clampf(held / full, 0.0, 1.0)
+		var r := 26.0
+		hud.draw_arc(c, r, 0.0, TAU, 48, Color(0, 0, 0, 0.35), 4.0)
+		if held < full:
+			hud.draw_arc(c, r, -PI * 0.5, -PI * 0.5 + TAU * fill, 48, Color(1, 1, 1, 0.85), 3.0)
+		elif held < full + _draw_grace and not _overdraw:
+			hud.draw_arc(c, r, 0.0, TAU, 48, Color(1.0, 0.82, 0.3), 3.5)          # full draw: loose now
+		else:
+			var o := clampf((held - full - _draw_grace) / 2500.0, 0.0, 1.0)
+			var pulse := 0.6 + 0.4 * sin(now * 0.02)
+			hud.draw_arc(c, r, 0.0, TAU, 48, Color(1.0, 0.82 * (1.0 - o), 0.3 * (1.0 - o), pulse), 3.5 + 2.0 * o)
+			hud.draw_arc(c, r + 6.0, -PI * 0.5, -PI * 0.5 + TAU * o, 48, Color(1.0, 0.2, 0.15, 0.9), 2.5)
+		if _draw_crit:
+			hud.draw_string(font, c + Vector2(-60, r + 22.0), "CRITICAL SHOT", HORIZONTAL_ALIGNMENT_CENTER, 120.0, 11,
+					Color(1.0, 0.85, 0.35, 0.9))
 	# the swing timer: the arc under the crosshair empties as your weapon recovers
 	if _show.get("timer", true) and now < _timer_until:
 		var r := float(_timer_until - now) / float(_timer_len)
