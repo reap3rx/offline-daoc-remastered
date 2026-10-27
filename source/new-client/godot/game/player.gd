@@ -276,6 +276,8 @@ var _unmorphed := {}                     # your figure while morphed: model, ani
 
 
 func morph(info: Dictionary) -> void:
+	if hidden_look:
+		_apply_hidden_look.call_deferred()                 # (the new figure goes see-through too)
 	if _morph and is_instance_valid(_morph):
 		_morph.queue_free()
 	_morph = null
@@ -493,6 +495,29 @@ func charge_glow(on: bool) -> void:
 	_charge_fx = WeaponModels.add_effect(holder, int(CHARGE_GLOW.get(combat_stance, 11)))
 
 
+## Hidden (Stealth, the server's PlayerModelTypeChange 3): you are drawn see-through, as the old client showed you
+## to yourself (and to your realm) while stealthed - your gear with you; refresh_gear keeps it on new gear.
+var hidden_look := false
+
+
+func set_hidden_look(on: bool) -> void:
+	hidden_look = on
+	_apply_hidden_look()
+
+
+func _apply_hidden_look() -> void:
+	# meshes only (particles hide themselves by their own transparency - NifScene), each one's own value kept to restore
+	for g in find_children("*", "MeshInstance3D", true, false):
+		var mi := g as MeshInstance3D
+		if hidden_look:
+			if not mi.has_meta("_hid_t"):
+				mi.set_meta("_hid_t", mi.transparency)
+			mi.transparency = maxf(float(mi.get_meta("_hid_t")), 0.72)
+		elif mi.has_meta("_hid_t"):
+			mi.transparency = float(mi.get_meta("_hid_t"))
+			mi.remove_meta("_hid_t")
+
+
 func flinch() -> void:
 	var over_defense := _defend_clip != "" and _action == _defend_clip and _action_left > 0.0
 	if (_action_left <= 0.0 or over_defense) and not dead:
@@ -595,6 +620,8 @@ func refresh_gear() -> void:
 	_gear.clear()
 	_gear = dress(_model, PlayerData.item_at, PlayerData.active_weapon, in_combat, true,
 			PlayerData.character.get("gear", {}) if PlayerData.character.get("gear") is Dictionary else {})
+	if hidden_look:
+		_apply_hidden_look.call_deferred()
 
 
 ## A figure's worn gear, shared with the character select screen (owner 2026-10-10: the staff / armour didn't show

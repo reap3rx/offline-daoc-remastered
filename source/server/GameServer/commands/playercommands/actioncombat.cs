@@ -47,6 +47,9 @@ namespace DOL.GS.Commands
 				case "quiver":                       // (the quiver window works in classic mode too)
 					ActionCombat.SelectQuiver(player, args.Length > 2 ? args[2].ToLowerInvariant() : "next");
 					return;
+				case "poison":                       // the poison bag (PoisonBag.cs) - classic mode too
+					PoisonBag.Command(player, args);
+					return;
 			}
 
 			if (!state.Enabled)

@@ -166,6 +166,16 @@ func on_line(text: String) -> void:
 					_flash("OVERDRAWN!", Color(1.0, 0.4, 0.3))
 				elif f[1] == "full":
 					_flash("FULL DRAW", Color(0.85, 0.95, 1.0))
+		"poisons":                                       # poisons|set|invslot~count~name x4 (PoisonBag.SendState)
+			var slots := []
+			for i in range(2, f.size()):
+				var p3 := String(f[i]).split("~")
+				slots.append({"slot": int(p3[0]), "count": int(p3[1]) if p3.size() > 1 else 0,
+						"name": String(p3[2]) if p3.size() > 2 else ""})
+			Server.poison_bag = {"set": int(f[1]) if f.size() > 1 else 0, "slots": slots}
+			var ui = viewer.get("ui") if viewer else null
+			if ui and ui.windows.has("poisons"):
+				ui.windows["poisons"].refresh()
 		"fumble":
 			_flash("STUMBLE", Color(1.0, 0.35, 0.3))
 			var p := _player()
@@ -339,6 +349,14 @@ func _input(event: InputEvent) -> void:
 		return
 	if event is InputEventKey and not event.echo and Keybinds.pressed(event, "action_toggle") and not _typing():
 		_toggle()
+		get_viewport().set_input_as_handled()
+		return
+	# a melee weapon out: Shift + wheel swaps the poison bag's sets (the bag must hold something)
+	if not _ranged() and not _typing() and Keybinds.pressed(event, "poisons_swap") and _bag_used():
+		var t := Time.get_ticks_msec()
+		if t - _swap_at > 300:                             # (a wheel's notch can come as several events)
+			_swap_at = t
+			Server.command("/ac poison swap")
 		get_viewport().set_input_as_handled()
 		return
 	if _ranged() and not _typing() and (Keybinds.pressed(event, "arrows_next") or Keybinds.pressed(event, "arrows_prev")):
@@ -622,6 +640,16 @@ func _dodge(dir: Vector3) -> void:
 	p.action_defend("evade")
 
 
+var _swap_at := 0
+
+
+func _bag_used() -> bool:
+	for s in (Server.poison_bag.get("slots", []) as Array):
+		if String((s as Dictionary).get("name", "")) != "":
+			return true
+	return false
+
+
 func _ranged() -> bool:
 	return String(PlayerData.active_weapon) == "ranged"
 
@@ -714,6 +742,7 @@ func _process(_delta: float) -> void:
 	if not _queried and Server.playing:
 		_queried = true
 		Server.command("/ac query")
+		Server.command("/ac poison query")                 # (the poison bag starts putting poisons on)
 	var p := _player()
 	if p == null or not on:
 		return
@@ -1057,6 +1086,15 @@ func _draw_hud() -> void:
 		if (_ready.length() > 3 and _ready[3] == "1") or _editing:
 			hud.draw_string(font, lr.position + Vector2(69, 38), "HOLD: ANYTIME", HORIZONTAL_ALIGNMENT_CENTER, 120.0, 11,
 					Color(1, 1, 1, 0.55 * dim))
+		if _bag_used() and not _editing:                    # the poison set on its way to your weapons
+			var bag: Dictionary = Server.poison_bag
+			var set_i := int(bag.get("set", 0))
+			var sl: Array = bag.get("slots", [])
+			var a_name := String(sl[set_i * 2].get("name", "-")) if sl.size() > set_i * 2 else "-"
+			var b_name := String(sl[set_i * 2 + 1].get("name", "-")) if sl.size() > set_i * 2 + 1 else "-"
+			hud.draw_string(font, lr.position + Vector2(0, 54), "POISONS %d: %s / %s" % [set_i + 1,
+					a_name if a_name != "" else "-", b_name if b_name != "" else "-"], HORIZONTAL_ALIGNMENT_CENTER, lr.size.x, 10,
+					Color(0.6, 0.95, 0.5, 0.8 * dim))
 	if (_show.get("flash", true) and now < _flash_until) or _editing:
 		var fr := _part_rect("flash")
 		var a := clampf((_flash_until - now) / 400.0, 0.0, 1.0) if not _editing else (1.0 if _show.get("flash", true) else 0.35)

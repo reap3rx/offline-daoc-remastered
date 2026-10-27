@@ -357,6 +357,7 @@ func _build() -> void:
 	_build_benefits()
 	_build_warmap()
 	_build_quiver()
+	_build_poisons()
 	_build_guild()
 	PlayerData.window_toggle.connect(func(id: String):
 		if windows.has(id):
@@ -871,6 +872,25 @@ func _build_quiver() -> void:
 	quiver.setup("quiver", "interact", Rect2(), at)
 	_add(quiver, at, false)
 	quiver.build()
+
+
+const PoisonWindow := preload("res://game/ui/poison_window.gd")
+var poisons: ClassicWindow
+
+
+func _build_poisons() -> void:
+	if not Server.active:
+		return
+	poisons = PoisonWindow.new()
+	poisons.resizable = true
+	poisons.patch = [6, 19, 13, 33]
+	poisons.min_size = PoisonWindow.BODY
+	poisons.max_size = PoisonWindow.BODY
+	poisons.size = PoisonWindow.BODY
+	var at := Vector2(area().x * 0.5 + 160, area().y * 0.5 + 110)
+	poisons.setup("poisons", "interact", Rect2(), at)
+	_add(poisons, at, false)
+	poisons.build()
 
 
 func _build_warmap() -> void:
@@ -1757,6 +1777,9 @@ func handle_input(event: InputEvent) -> bool:
 		return true
 	if Keybinds.pressed(event, "show_quiver") and windows.has("quiver"):
 		windows["quiver"].toggle_window()
+		return true
+	if Keybinds.pressed(event, "show_poisons") and windows.has("poisons"):
+		windows["poisons"].toggle_window()
 		return true
 	if Keybinds.pressed(event, "show_journal") and journal:
 		journal.toggle_window()

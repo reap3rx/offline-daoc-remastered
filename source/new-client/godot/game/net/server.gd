@@ -129,6 +129,11 @@ func _on_raw(code: int, data: PackedByteArray) -> void:
 	raw_seen[code] = int(raw_seen.get(code, 0)) + 1
 	if code == 0x74 and data.size() >= 1:                # AttackMode (PacketLib168): the server ended (0) / began (1)
 		_on_world("attack_mode", {"on": data[0] != 0})  # your attack - stunned, out of arrows, Engage ...
+	elif code == 0x8D and data.size() >= 3:              # PlayerModelTypeChange (PacketLib168): 3 stealthed, 2 not -
+		if (int(data[0]) << 8 | int(data[1])) == me_oid:  # you go see-through while hidden, as the old client drew you
+			var v := viewer()
+			if v and v.player and v.player.has_method("set_hidden_look"):
+				v.player.set_hidden_look(int(data[2]) == 3)
 	elif code == 0x75 and data.size() >= 4:              # ConcentrationList (PacketLib191): your concentration spells
 		conc_list = _read_conc(data)
 	elif code == 0xC5 or code == 0xC6:                   # AddFriend / RemoveFriend: your friends online
@@ -1260,6 +1265,7 @@ var points := {}                         # CharacterPointsUpdate
 var info := {}                           # VariousUpdate 3: level, class, titles, guild ...
 var weapon_set := "standard"
 var active_quiver := 0                   # 1-4: the quiver slot your arrows come from (0 none)
+var poison_bag := {}                     # the server's poison bag: {set, slots: [{slot, count, name}]} (PoisonWindow)
 var gear := {}                           # hood up, cloak / helm hidden (inventory packet)
 var quests := {}                         # journal index -> {name, text} (QuestEntry)
 var weight_now := -1                     # Encumberance: what you carry / can carry (-1: not sent yet)

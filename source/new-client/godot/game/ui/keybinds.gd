@@ -71,7 +71,9 @@ func _ready() -> void:
 			["weapon_cycle", "Cycle Weapons (one hand / two hand / ranged)", ["Z"]],
 			["show_quiver", "Quiver Window", ["Ctrl+Q"]],
 			["arrows_next", "Next Arrows (bow out)", ["Shift+Wheel Up"]],
-			["arrows_prev", "Previous Arrows (bow out)", ["Shift+Wheel Down"]]]:
+			["arrows_prev", "Previous Arrows (bow out)", ["Shift+Wheel Down"]],
+			["show_poisons", "Poison Bag Window", ["Ctrl+B"]],
+			["poisons_swap", "Swap Poison Sets (melee weapon out)", ["Shift+Wheel Up", "Shift+Wheel Down"]]]:
 		actions.append({"id": ac[0], "label": ac[1], "category": "Combat",
 				"presets": {"rpg": ac[2], "fps": ac[2], "mmo": ac[2]}})
 	categories.append("Quickbars")
@@ -159,7 +161,8 @@ func use_preset(name: String) -> void:
 ## Action Combat's buttons for melee and for the bow never work at once: one of each may share a key (Attack and
 ## Bow Shot on the left mouse ...) without taking it from the other (owner 2026-10-26).
 const CONTEXT := {"ac_attack": "melee", "ac_parry": "melee", "ac_parry_only": "melee", "ac_position": "melee", "ac_reactive": "melee",
-		"ac_chain": "melee", "ac_shot": "ranged", "ac_crit_shot": "ranged"}
+		"ac_chain": "melee", "ac_shot": "ranged", "ac_crit_shot": "ranged", "poisons_swap": "melee",
+		"arrows_next": "ranged", "arrows_prev": "ranged"}
 
 
 func bind(id: String, slot: int, binding: String) -> String:
