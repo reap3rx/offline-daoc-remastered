@@ -37,6 +37,9 @@ static func build(parent: Control, tab: String) -> void:
 		lists.append(list)
 	var fill := func():
 		for l in lists:
+			if not is_instance_valid(l):                   # (this page was rebuilt: its old lists are gone)
+				return
+		for l in lists:
 			for c in (l as Node).get_children():
 				c.queue_free()
 		if Server.active:                                  # the server's skill lists (VariousUpdate 1 / 2)

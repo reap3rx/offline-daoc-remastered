@@ -566,10 +566,13 @@ func _move(d: Dictionary) -> void:
 		PlayerData.pet_changed.emit()
 
 
-func _set_health(st: NpcState, pct: int) -> void:
+## A living's health in percent. Only the server's death (dead = true: its death packet, a removal as dead) kills it
+## here: a health of 0 in an update or a blow is a monster below 1% - still alive and fighting (owner 2026-10-26: such
+## monsters became untargetable "zombies" that kept attacking until their health came back to 1%).
+func _set_health(st: NpcState, pct: int, dead := false) -> void:
 	var was := st.alive
 	st.health = pct / 100.0
-	st.alive = pct > 0
+	st.alive = pct > 0 or (was and not dead)
 	if was and not st.alive:
 		st.mode = NpcState.Mode.DEAD
 		st.corpse_left = 1e9                                    # the body stays until the server removes it
@@ -646,7 +649,7 @@ func _remove(oid: int, park := true, kind := 1, why := "") -> void:
 	if st == null:
 		return
 	if kind == 0 and st.alive:
-		_set_health(st, 0)                                     # removed dead without a health update first (a pet's,
+		_set_health(st, 0, true)                                     # removed dead without a health update first (a pet's,
 															# a spell's, another's kill): dead all the same - attack
 															# mode on it ends (owner 2026-10-14)
 	by_oid.erase(oid)
@@ -743,7 +746,7 @@ func _death(oid: int) -> void:
 		return
 	var st: NpcState = by_oid.get(oid)
 	if st:
-		_set_health(st, 0)
+		_set_health(st, 0, true)
 
 
 ## The mover: between the server's updates each moving living walks on toward its destination (or along its heading)

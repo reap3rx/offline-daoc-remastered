@@ -347,7 +347,9 @@ namespace DOL.GS
             set => m_maxHealth = value;
         }
 
-        public virtual byte HealthPercent => (byte) (MaxHealth <= 0 ? 0 : Math.Clamp(Health * 100 / MaxHealth, 0, 100));
+        // A living with any health left reads at least 1%: 0% is for the dead only (the new client took a monster under
+        // 1% for dead - an untargetable "zombie" still fighting - owner 2026-10-26).
+        public virtual byte HealthPercent => (byte) (MaxHealth <= 0 ? 0 : Health > 0 ? Math.Clamp(Health * 100 / MaxHealth, 1, 100) : 0);
         public virtual byte HealthPercentGroupWindow => HealthPercent;
 
         public virtual string GetName(int article, bool firstLetterUppercase, string lang, ITranslatableObject obj)
