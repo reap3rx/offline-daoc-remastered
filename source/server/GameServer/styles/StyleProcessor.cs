@@ -478,6 +478,20 @@ namespace DOL.GS.Styles
 			return Math.Max(1, (int) Math.Ceiling(fatCost * living.GetModified(eProperty.FatigueConsumption) * 0.01));
 		}
 
+        /// <summary>A style's endurance cost with this weapon, no free procs (Action Combat: a missed parry / block).</summary>
+        public static int EnduranceCostFor(GamePlayer player, Style style, DbInventoryItem weapon) =>
+            CalculateEnduranceCost(player, style, weapon.SPD_ABS, false);
+
+        /// <summary>The cost of a style of this endurance rating (Style.EnduranceCost) at this weapon speed.</summary>
+        public static int EnduranceCostForRating(GameLiving living, int rating, int weaponSpd) =>
+            Math.Max(1, (int) Math.Ceiling(RawFatigue(rating, weaponSpd) * living.GetModified(eProperty.FatigueConsumption) * 0.01));
+
+        /// <summary>The cost before fatigue-consumption bonuses: speed x rating / 40, +1 under 4.0 speed.</summary>
+        public static int RawFatigue(int rating, int weaponSpd) => weaponSpd * rating / 40 + (weaponSpd < 40 ? 1 : 0);
+
+        /// <summary>Whether the style is for this weapon (CheckWeaponType).</summary>
+        public static bool IsStyleForWeapon(Style style, GameLiving living, DbInventoryItem weapon) => CheckWeaponType(style, living, weapon);
+
         /// <summary>Enough endurance for the style, quietly (Action Combat's ready lights).</summary>
         public static bool HasEnduranceFor(GamePlayer player, DbInventoryItem weapon, Style style) =>
             weapon != null && style != null && player.Endurance >= CalculateEnduranceCost(player, style, weapon.SPD_ABS, false);

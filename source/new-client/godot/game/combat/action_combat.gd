@@ -235,10 +235,28 @@ func _windup(oid: int, ms: int) -> void:
 	mark.visible = true
 
 
+## The server's parry rhythm (ActionCombat.PressParry): a press, its 0.25 s window, then half a second before the
+## next (owner 2026-10-27: no spamming it) - unless it caught a blow. Pressed early, nothing happens at all.
+const PARRY_REPRESS_MS := 750
+var _parry_ready_at := 0
+
+
+func _parry_ok(now: int) -> bool:
+	if now < _parry_ready_at:
+		return false
+	_parry_ready_at = now + PARRY_REPRESS_MS
+	return true
+
+
 func _defended(kind: String, dmg: int, saved: int) -> void:
 	var gold := Color(1.0, 0.85, 0.35)
 	var blue := Color(0.55, 0.8, 1.0)
+	if kind in ["parry", "block"]:
+		_parry_ready_at = 0                                # (a caught blow: the next press is free to come at once)
 	match kind:
+		"miss":                                            # in combat, a press that caught nothing: its endurance
+			_float_text(0, "MISSED  -%d END" % dmg, Color(0.75, 0.75, 0.75), 32, 0.5)
+			return
 		"parry":
 			_flash("PARRIED  %d saved" % saved if saved > 0 else "PARRIED", gold)
 			_float_text(0, "PARRY  %d saved" % saved if saved > 0 else "PARRY", gold, 46, 0.5)
@@ -404,7 +422,7 @@ func _input(event: InputEvent) -> void:
 		if Keybinds.pressed(event, "ac_parry_only"):
 			if not _drawn():
 				_draw_weapon()
-			else:
+			elif _parry_ok(now):
 				Server.command("/ac parry only")
 				p.action_defend("parry")
 			get_viewport().set_input_as_handled()
@@ -412,7 +430,7 @@ func _input(event: InputEvent) -> void:
 		if Keybinds.matches(event, "ac_parry") and (mouse or event is InputEventKey):
 			if event.is_pressed() and not _drawn():
 				_draw_weapon()                                 # sheathed: the first press draws, the next parries
-			elif event.is_pressed():
+			elif event.is_pressed() and _parry_ok(now):
 				Server.command("/ac parry")
 				p.action_defend("block" if _has_shield() else "parry")   # the move plays now, hit or miss
 			get_viewport().set_input_as_handled()

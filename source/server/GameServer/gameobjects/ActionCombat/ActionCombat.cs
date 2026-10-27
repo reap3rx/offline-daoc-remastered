@@ -40,6 +40,7 @@ namespace DOL.GS
 		public long ParryPressedAt = -100000;
 		public long ParryReadyAt;
 		public bool ParryOnly;                 // the press was "parry, not block" (a shield carried: Shift + right mouse)
+		public bool ParryAnswered;             // the press caught a blow (else, in combat, it costs endurance)
 		public long DodgeAt = -100000;
 		public int DodgeWindowMs;
 		public long DodgeReadyAt;
@@ -69,7 +70,8 @@ namespace DOL.GS
 
 		public const int WindupMs = 600;           // a monster's telegraphed wind-up before its blow lands
 		public const int ParryWindowMs = 250;      // the timed parry / block window
-		public const int ParryCooldownMs = 500;    // a missed press can't be retried before this
+		public const int ParryCooldownMs = 500;    // after the window closes, no new press before this (owner 2026-10-27: no spam)
+		public const int MissedDefenseRating = 7;  // a missed press with no reactive style known: a typical reactive's cost
 		public const int DodgeCooldownMs = 1200;
 		public const int IdlePollMs = 50;          // how often an idle attack action checks for a click
 		public const double GuardFactor = 0.75;    // damage taken while holding guard
@@ -361,12 +363,66 @@ namespace DOL.GS
 			ActionCombatState state = Get(player);
 			long now = GameLoop.GameLoopTime;
 
-			if (now < state.ParryReadyAt || !player.attackComponent.AttackState)
+			if (now < state.ParryReadyAt || !player.attackComponent.AttackState || !player.IsAlive)
 				return;                            // (a sheathed weapon parries nothing: the client draws it first)
+
+			// In combat a press that catches nothing costs what a reactive style for that weapon would (owner
+			// 2026-10-27) - so it has to be paid for up front.
+			int cost = player.InCombat ? MissedDefenseCost(player, HasShield(player) && !parryOnly) : 0;
+
+			if (cost > 0 && player.Endurance < cost)
+			{
+				state.ParryReadyAt = now + ParryCooldownMs;
+				player.Out.SendMessage("You are too tired to parry!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Send(player, "def|tired|0");
+				return;
+			}
 
 			state.ParryOnly = parryOnly;
 			state.ParryPressedAt = now;
-			state.ParryReadyAt = now + ParryCooldownMs;
+			state.ParryAnswered = false;
+			state.ParryReadyAt = now + ParryWindowMs + ParryCooldownMs;   // half a second after the window closes
+
+			if (cost <= 0)
+				return;
+
+			long pressed = now;
+			new ECSGameTimer(player, _ =>
+			{
+				if (state.ParryPressedAt == pressed && !state.ParryAnswered && player.IsAlive)
+				{
+					int paid = Math.Min(cost, player.Endurance);
+					player.ChangeEndurance(player, eEnduranceChangeType.Spell, -paid);
+					Send(player, $"def|miss|{paid}");
+				}
+
+				return 0;
+			}, ParryWindowMs + 20);
+		}
+
+		/// <summary>
+		/// What a press that catches nothing costs: the cheapest reactive style (after a parry / block / evade) you know
+		/// for the weapon - the shield's for a block - or, knowing none, a typical reactive's cost at that weapon's speed.
+		/// </summary>
+		public static int MissedDefenseCost(GamePlayer player, bool block)
+		{
+			DbInventoryItem weapon = block ? player.ActiveLeftWeapon : player.ActiveWeapon;
+			weapon ??= player.ActiveWeapon;
+
+			if (weapon == null)
+				return 0;
+
+			int best = int.MaxValue;
+
+			foreach (Style style in player.styleComponent.GetStyleList())
+			{
+				if (style.OpeningRequirementType is not Style.eOpening.Defensive || !StyleProcessor.IsStyleForWeapon(style, player, weapon))
+					continue;
+
+				best = Math.Min(best, StyleProcessor.EnduranceCostFor(player, style, weapon));
+			}
+
+			return best != int.MaxValue ? best : StyleProcessor.EnduranceCostForRating(player, MissedDefenseRating, weapon.SPD_ABS);
 		}
 
 		public static void SetGuard(GamePlayer player, bool on)
@@ -454,7 +510,13 @@ namespace DOL.GS
 			if (inFront && now - state.ParryPressedAt <= ParryWindowMs)
 			{
 				ad.ArmorHitLocation = player.CalculateArmorHitLocation(ad);
-				state.ParryReadyAt = now;    // a good parry can be followed by another right away
+				bool caught = HasShield(player) && (!state.ParryOnly || !ad.IsMeleeAttack) || ad.IsMeleeAttack;
+
+				if (caught)
+				{
+					state.ParryAnswered = true;
+					state.ParryReadyAt = now;    // a good parry can be followed by another right away
+				}
 
 				// With a shield the press blocks - unless it was a parry press (to open a parry reaction).
 				if (HasShield(player) && (!state.ParryOnly || !ad.IsMeleeAttack))
@@ -901,7 +963,7 @@ namespace DOL.GS
 			ActionCombatState state = Get(player);
 			StringBuilder sb = new();
 			sb.AppendLine($"Action combat is {(state.Enabled ? "ON" : "OFF")}.");
-			sb.AppendLine($"Timed parry takes {ParryFactor(player) * 100:0}% of a blow (Parry {player.GetModifiedSpecLevel(Specs.Parry)}); window {ParryWindowMs} ms.");
+			sb.AppendLine($"Timed parry takes {ParryFactor(player) * 100:0}% of a blow (Parry {player.GetModifiedSpecLevel(Specs.Parry)}); window {ParryWindowMs} ms, then {ParryCooldownMs} ms before the next; in combat a press that catches nothing costs {MissedDefenseCost(player, HasShield(player))} endurance.");
 
 			if (HasShield(player))
 				sb.AppendLine($"Timed block takes {BlockFactor(player) * 100:0}% (Shields {player.GetModifiedSpecLevel(Specs.Shields)}).");

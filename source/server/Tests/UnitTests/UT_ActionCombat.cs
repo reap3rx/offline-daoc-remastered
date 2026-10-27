@@ -101,4 +101,14 @@ public sealed class UT_ActionCombatArchery
         Assert.That(over.Effectiveness, Is.GreaterThan(1.0));
         Assert.That(over.Miss, Is.GreaterThan(0.3));
     }
+
+    [Test]
+    public void MissedDefenseCostsAReactivesFatigue()
+    {
+        // speed x rating / 40, +1 under 4.0 speed (StyleProcessor.CalculateEnduranceCost)
+        Assert.That(StyleProcessor.RawFatigue(ActionCombat.MissedDefenseRating, 37), Is.EqualTo(7));   // 3.7 sword: 6 + 1
+        Assert.That(StyleProcessor.RawFatigue(ActionCombat.MissedDefenseRating, 55), Is.EqualTo(9));   // 5.5 two-hander
+        Assert.That(StyleProcessor.RawFatigue(10, 25), Is.EqualTo(7));
+        Assert.That(ActionCombat.ParryWindowMs + ActionCombat.ParryCooldownMs, Is.EqualTo(750));
+    }
 }
