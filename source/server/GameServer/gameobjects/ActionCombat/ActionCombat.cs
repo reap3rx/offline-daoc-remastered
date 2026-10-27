@@ -39,6 +39,7 @@ namespace DOL.GS
 		public bool SwingQueued;
 		public long ParryPressedAt = -100000;
 		public long ParryReadyAt;
+		public bool ParryOnly;                 // the press was "parry, not block" (a shield carried: Shift + right mouse)
 		public long DodgeAt = -100000;
 		public int DodgeWindowMs;
 		public long DodgeReadyAt;
@@ -355,7 +356,7 @@ namespace DOL.GS
 
 		// ------------------------------------------------------------------ defending
 
-		public static void PressParry(GamePlayer player)
+		public static void PressParry(GamePlayer player, bool parryOnly = false)
 		{
 			ActionCombatState state = Get(player);
 			long now = GameLoop.GameLoopTime;
@@ -363,6 +364,7 @@ namespace DOL.GS
 			if (now < state.ParryReadyAt || !player.attackComponent.AttackState)
 				return;                            // (a sheathed weapon parries nothing: the client draws it first)
 
+			state.ParryOnly = parryOnly;
 			state.ParryPressedAt = now;
 			state.ParryReadyAt = now + ParryCooldownMs;
 		}
@@ -454,7 +456,8 @@ namespace DOL.GS
 				ad.ArmorHitLocation = player.CalculateArmorHitLocation(ad);
 				state.ParryReadyAt = now;    // a good parry can be followed by another right away
 
-				if (HasShield(player))
+				// With a shield the press blocks - unless it was a parry press (to open a parry reaction).
+				if (HasShield(player) && (!state.ParryOnly || !ad.IsMeleeAttack))
 				{
 					ad.ActionDefense = eActionDefense.Block;
 					ad.ActionDamageFactor = BlockFactor(player);
@@ -667,7 +670,13 @@ namespace DOL.GS
 			state.Overdrawing = false;
 			state.DrawTimer?.Stop();
 			state.DrawTimer = new ECSGameTimer(player, DrawTick, DrawTickMs);
-			Send(player, $"draw|{state.DrawFullMs}|{OverdrawGraceMs}|{(crit ? 1 : 0)}");
+			// the bow's reach without the height bonus (the client adds that itself for the out-of-range warning)
+			int reach = player.attackComponent.AttackRange;
+
+			if (player.TargetObject is GameLiving aimed)
+				reach -= (player.Z - aimed.Z) / 2;
+
+			Send(player, $"draw|{state.DrawFullMs}|{OverdrawGraceMs}|{(crit ? 1 : 0)}|{reach}");
 		}
 
 		private static int DrawTick(ECSGameTimer timer)

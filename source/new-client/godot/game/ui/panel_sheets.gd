@@ -133,6 +133,9 @@ static func _combat(list: VBoxContainer) -> void:
 # is used by its place counted from the first one that isn't a spec ("srv:skill:<n>"); a caster's list spells by
 # line and level ("srv:spell:<line>:<level>").
 
+const SPEC_ACTIONS := ["Stealth"]                       # the server's ISpecActionHandler specs (StealthSpecHandler)
+
+
 static func _first_skill() -> int:
 	for i in Server.skills.size():
 		if int(Server.skills[i].page) != 0:
@@ -155,6 +158,10 @@ static func _server_skills(lists: Array) -> void:
 			var lv := int(sk.level)
 			var bonus := int(sk.bonus)
 			lists[0].add_child(_text_row(String(sk.name), str(lv) if bonus <= 0 else "%d+%d" % [lv, bonus]))
+			# a specialization you use as an ability (the old client: click the spec - Stealth hides you): also among
+			# the abilities, to use or drag onto a quickbar (owner 2026-10-27: no Stealth to put on the bar)
+			if String(sk.name) in SPEC_ACTIONS and lv > 0:
+				lists[1].add_child(_server_row("ability", "srv:spec:%d" % i, String(sk.name), "icon", int(sk.icon), ""))
 		elif page in [1, 5, 6]:
 			lists[1].add_child(_server_row("ability", "srv:skill:%d" % (i - first), String(sk.name), "icon", int(sk.icon), ""))
 	lists[0].add_child(_text_row("POINTS", str(PlayerData.spec_points()), UiArt.GOLD_HI))

@@ -61,7 +61,8 @@ func _ready() -> void:
 			["ac_attack", "Action: Attack (tap swing, hold anytime style)", ["Left Mouse"]],
 			["ac_shot", "Action: Bow Shot (hold to draw, release to loose)", ["Left Mouse"]],
 			["ac_crit_shot", "Action: Critical Shot (hold to draw)", ["Right Mouse"]],
-			["ac_parry", "Action: Parry / Block (hold to guard)", ["Right Mouse"]],
+			["ac_parry", "Action: Parry / Block", ["Right Mouse"]],
+			["ac_parry_only", "Action: Parry (not block, with a shield)", ["Shift+Right Mouse"]],
 			["ac_position", "Action: Position Style", ["Q"]],
 			["ac_reactive", "Action: Reactive Style", ["E"]], ["ac_chain", "Action: Chain Style", ["R"]],
 			["ac_dodge", "Action: Dodge", ["Middle Mouse"]], ["ac_cursor", "Action: Show Cursor (hold)", ["LAlt"]],
@@ -157,7 +158,7 @@ func use_preset(name: String) -> void:
 ## label ("" if none) so the window can say "MOVED FROM ...".
 ## Action Combat's buttons for melee and for the bow never work at once: one of each may share a key (Attack and
 ## Bow Shot on the left mouse ...) without taking it from the other (owner 2026-10-26).
-const CONTEXT := {"ac_attack": "melee", "ac_parry": "melee", "ac_position": "melee", "ac_reactive": "melee",
+const CONTEXT := {"ac_attack": "melee", "ac_parry": "melee", "ac_parry_only": "melee", "ac_position": "melee", "ac_reactive": "melee",
 		"ac_chain": "melee", "ac_shot": "ranged", "ac_crit_shot": "ranged"}
 
 

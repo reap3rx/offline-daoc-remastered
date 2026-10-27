@@ -130,7 +130,7 @@ var cam_kick := 0.0                      # a landed blow's small camera jolt (de
 var shoulder := Vector2.ZERO             # action combat's over-the-shoulder view: metres right / up (Camera3D offsets)
 var _dash := Vector3.ZERO               # a dodge's burst (world velocity, decays)
 const AC_BUTTONS := ["ac_attack", "ac_parry", "ac_position", "ac_reactive", "ac_chain", "ac_dodge", "ac_cursor", "ac_hud",
-		"ac_interact", "ac_shot", "ac_crit_shot"]
+		"ac_interact", "ac_shot", "ac_crit_shot", "ac_parry_only"]
 var _charge_fx: Node3D = null            # the heavy attack's charge: a glow on the weapon (the game's weapon effects)
 var _dash_left := 0.0
 var grounded := false

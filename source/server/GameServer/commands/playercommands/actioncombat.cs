@@ -62,7 +62,7 @@ namespace DOL.GS.Commands
 						ActionCombat.QueueStyle(player, args[2].ToLowerInvariant());
 					break;
 				case "parry":
-					ActionCombat.PressParry(player);
+					ActionCombat.PressParry(player, args.Length > 2 && args[2].ToLowerInvariant() == "only");
 					break;
 				case "guard":
 					ActionCombat.SetGuard(player, args.Length > 2 && args[2].ToLowerInvariant() == "on");

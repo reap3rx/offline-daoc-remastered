@@ -1227,6 +1227,8 @@ func use_entry(id: String, player: Node3D, zone_id: int, target_in_view: bool) -
 	var parts := id.split(":")
 	if parts.size() >= 3 and parts[1] == "skill":
 		client.call("UseSkill", r.x, r.y, r.z, speed, heading, target_in_view, int(parts[2]), 1)
+	elif parts.size() >= 3 and parts[1] == "spec":            # a specialization used as an ability (Stealth): type 0,
+		client.call("UseSkill", r.x, r.y, r.z, speed, heading, target_in_view, int(parts[2]), 0)   # its list index
 	elif parts.size() >= 4 and parts[1] == "spell":
 		client.call("UseSpell", r.x, r.y, r.z, speed, heading, target_in_view, int(parts[3]), int(parts[2]))
 	elif parts.size() == 2:
@@ -1597,4 +1599,9 @@ func use(id: String) -> bool:
 	var v := viewer()
 	if v == null:
 		return false
+	if id == "stealth":                                   # /stealth, /hide: the Stealth specialization's own use
+		for i in skills.size():
+			if int(skills[i].page) == 0 and String(skills[i].name) == "Stealth":
+				id = "srv:spec:%d" % i
+				break
 	return use_entry(id, v.player, current_zone_id(), not PlayerData.target.is_empty())

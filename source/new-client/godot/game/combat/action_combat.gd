@@ -70,6 +70,7 @@ var _draw_crit := false
 var _draw_at := 0                      # when the draw began (msec)
 var _draw_full := 0                    # ms to full draw (0: the server hasn't answered yet)
 var _draw_grace := 1200                # held this long past full, the bow overdraws
+var _draw_reach := 0                   # the bow's reach in units, before the height bonus (the server's AttackRange)
 var _overdraw := false
 var _editing := false
 var _panel: PanelContainer
@@ -150,6 +151,7 @@ func on_line(text: String) -> void:
 				_draw_full = int(f[1])
 				_draw_grace = int(f[2]) if f.size() > 2 else 1200
 				_draw_crit = f.size() > 3 and f[3] == "1"
+				_draw_reach = int(f[4]) if f.size() > 4 else 0
 			elif _drawing:
 				_end_draw(false)
 			elif _player():
@@ -378,6 +380,15 @@ func _input(event: InputEvent) -> void:
 				_attack_down(now)
 			elif _atk_down:
 				_attack_up(now)
+			get_viewport().set_input_as_handled()
+			return
+		# Parry Only (Shift + right mouse): with a shield, a parry instead of a block - to open a parry reaction
+		if Keybinds.pressed(event, "ac_parry_only"):
+			if not _drawn():
+				_draw_weapon()
+			else:
+				Server.command("/ac parry only")
+				p.action_defend("parry")
 			get_viewport().set_input_as_handled()
 			return
 		if Keybinds.matches(event, "ac_parry") and (mouse or event is InputEventKey):
@@ -989,6 +1000,15 @@ func _draw_hud() -> void:
 		if _draw_crit:
 			hud.draw_string(font, c + Vector2(-60, r + 22.0), "CRITICAL SHOT", HORIZONTAL_ALIGNMENT_CENTER, 120.0, 11,
 					Color(1.0, 0.85, 0.35, 0.9))
+		# out of the bow's reach (the server's own range: the bow's type, Archery Range, the arrows, height): said here
+		var tgt = viewer.npcs.target if viewer and viewer.npcs else null
+		if _draw_reach > 0 and is_instance_valid(tgt):
+			var tn := tgt as Node3D
+			var dist := Vector2(tn.global_position.x - p.global_position.x, tn.global_position.z - p.global_position.z).length() / 0.025
+			var reach := _draw_reach + (p.global_position.y - tn.global_position.y) / 0.025 / 2.0
+			if dist > reach:
+				hud.draw_string(font, c + Vector2(-80, r + 36.0), "OUT OF RANGE  %d / %d" % [roundi(dist), roundi(reach)],
+						HORIZONTAL_ALIGNMENT_CENTER, 160.0, 11, Color(1.0, 0.4, 0.3, 0.95))
 	# the swing timer: the arc under the crosshair empties as your weapon recovers
 	if _show.get("timer", true) and now < _timer_until:
 		var r := float(_timer_until - now) / float(_timer_len)
