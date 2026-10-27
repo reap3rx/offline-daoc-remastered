@@ -66,7 +66,11 @@ func _ready() -> void:
 			["ac_reactive", "Action: Reactive Style", ["E"]], ["ac_chain", "Action: Chain Style", ["R"]],
 			["ac_dodge", "Action: Dodge", ["Middle Mouse"]], ["ac_cursor", "Action: Show Cursor (hold)", ["LAlt"]],
 			["ac_interact", "Action: Interact (doors, NPCs, loot)", ["F"]],
-			["ac_hud", "Action: Arrange Combat HUD", ["Ctrl+F9"]]]:
+			["ac_hud", "Action: Arrange Combat HUD", ["Ctrl+F9"]],
+			["weapon_cycle", "Cycle Weapons (one hand / two hand / ranged)", ["Z"]],
+			["show_quiver", "Quiver Window", ["Ctrl+Q"]],
+			["arrows_next", "Next Arrows (bow out)", ["Shift+Wheel Up"]],
+			["arrows_prev", "Previous Arrows (bow out)", ["Shift+Wheel Down"]]]:
 		actions.append({"id": ac[0], "label": ac[1], "category": "Combat",
 				"presets": {"rpg": ac[2], "fps": ac[2], "mmo": ac[2]}})
 	categories.append("Quickbars")

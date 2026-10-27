@@ -58,6 +58,7 @@ namespace DOL.GS
 		public int DrawFullMs;
 		public bool Overdrawing;
 		public ECSGameTimer DrawTimer;
+		public long NextShotAt;                // shots are at least ShotDelayMs apart
 	}
 
 	public static class ActionCombat
@@ -598,6 +599,7 @@ namespace DOL.GS
 
 		// ------------------------------------------------------------------ archery (bows, crossbows, thrown)
 
+		public const int ShotDelayMs = 1000;          // the least time between two shots (owner 2026-10-26: no arrow spam)
 		public const int OverdrawGraceMs = 1200;      // held this long past full draw, the bow starts to overdraw
 		public const int DrawTickMs = 250;
 		public const double OverdrawDamage = 1.6;     // an overdrawn shot that lands
@@ -616,6 +618,12 @@ namespace DOL.GS
 
 			if (state.Drawing)
 				return;
+
+			if (GameLoop.GameLoopTime < state.NextShotAt - 100)
+			{
+				Send(player, "draw|0");                // still recovering from the last shot
+				return;
+			}
 
 			DbInventoryItem weapon = player.ActiveWeapon;
 
@@ -810,6 +818,7 @@ namespace DOL.GS
 			else
 				shot.Execute();
 
+			state.NextShotAt = GameLoop.GameLoopTime + ShotDelayMs;
 			Send(player, $"shot|{quality}|{(critical ? 1 : 0)}");
 		}
 
@@ -835,6 +844,42 @@ namespace DOL.GS
 			double eff = over ? OverdrawDamage : f >= 1.0 ? 1.0 : early;
 			double normalMiss = over ? OverdrawMiss : f >= 1.0 ? FullDrawMiss : FullDrawMiss + (1 - f) * 0.5;
 			return new(eff, eff, 0.0, normalMiss);
+		}
+
+		/// <summary>/ac quiver 1-4 | next | prev: the quiver slot your arrows come from (the quiver window, Shift + wheel).</summary>
+		public static void SelectQuiver(GamePlayer player, string which)
+		{
+			eActiveQuiverSlot[] slots = [eActiveQuiverSlot.First, eActiveQuiverSlot.Second, eActiveQuiverSlot.Third, eActiveQuiverSlot.Fourth];
+			eInventorySlot[] items = [eInventorySlot.FirstQuiver, eInventorySlot.SecondQuiver, eInventorySlot.ThirdQuiver, eInventorySlot.FourthQuiver];
+			int current = Array.IndexOf(slots, player.rangeAttackComponent.ActiveQuiverSlot);
+
+			if (which is "next" or "prev")
+			{
+				int dir = which == "next" ? 1 : -1;
+				int from = current >= 0 ? current : (dir > 0 ? -1 : 4);
+
+				for (int i = 1; i <= 4; i++)
+				{
+					int at = ((from + dir * i) % 4 + 4) % 4;
+
+					if (player.Inventory.GetItem(items[at]) != null && at != current)
+					{
+						player.SwitchQuiver(slots[at], true);
+						return;
+					}
+				}
+
+				player.Out.SendMessage(current >= 0 ? "You have no other arrows in your quiver." : "Your quiver is empty.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
+			if (int.TryParse(which, out int n) && n is >= 1 and <= 4)
+			{
+				if (player.Inventory.GetItem(items[n - 1]) == null)
+					player.Out.SendMessage($"The quiver slot {n} is empty!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				else
+					player.SwitchQuiver(slots[n - 1], true);
+			}
 		}
 
 		public static void SendWindup(GamePlayer player, GameNPC attacker, int ms)

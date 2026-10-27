@@ -356,6 +356,7 @@ func _build() -> void:
 	_build_conc()
 	_build_benefits()
 	_build_warmap()
+	_build_quiver()
 	_build_guild()
 	PlayerData.window_toggle.connect(func(id: String):
 		if windows.has(id):
@@ -834,6 +835,42 @@ func _build_guild() -> void:
 		if chat:
 			chat.start_typing(text)
 	guild_window.build()
+
+
+## Cycle Weapons (owner 2026-10-26): one key through the weapon sets you have something in - one hand (right or
+## left), two hand, ranged - in that order, so melee and the bow are one press apart.
+func _cycle_weapon() -> void:
+	var sets := []
+	if not PlayerData.item_at(10).is_empty() or not PlayerData.item_at(11).is_empty():
+		sets.append("standard")
+	if not PlayerData.item_at(12).is_empty():
+		sets.append("twohand")
+	if not PlayerData.item_at(13).is_empty():
+		sets.append("ranged")
+	if sets.size() < 2:
+		PlayerData.message.emit("You have no other weapon to switch to.", "system")
+		return
+	var at := sets.find(String(PlayerData.active_weapon))
+	PlayerData.set_active_weapon(String(sets[(at + 1) % sets.size()]))
+
+
+const QuiverWindow := preload("res://game/ui/quiver_window.gd")
+var quiver: ClassicWindow
+
+
+func _build_quiver() -> void:
+	if not Server.active:
+		return
+	quiver = QuiverWindow.new()
+	quiver.resizable = true
+	quiver.patch = [6, 19, 13, 33]
+	quiver.min_size = QuiverWindow.BODY
+	quiver.max_size = QuiverWindow.BODY
+	quiver.size = QuiverWindow.BODY
+	var at := Vector2(area().x * 0.5 + 160, area().y * 0.5)
+	quiver.setup("quiver", "interact", Rect2(), at)
+	_add(quiver, at, false)
+	quiver.build()
 
 
 func _build_warmap() -> void:
@@ -1715,6 +1752,12 @@ func handle_input(event: InputEvent) -> bool:
 		if Keybinds.pressed(event, w[0]):
 			PlayerData.set_active_weapon(w[1])
 			return true
+	if Keybinds.pressed(event, "weapon_cycle"):
+		_cycle_weapon()
+		return true
+	if Keybinds.pressed(event, "show_quiver") and windows.has("quiver"):
+		windows["quiver"].toggle_window()
+		return true
 	if Keybinds.pressed(event, "show_journal") and journal:
 		journal.toggle_window()
 		return true

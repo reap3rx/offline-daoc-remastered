@@ -1257,6 +1257,7 @@ var money := {"mithril": 0, "platinum": 0, "gold": 0, "silver": 0, "copper": 0}
 var points := {}                         # CharacterPointsUpdate
 var info := {}                           # VariousUpdate 3: level, class, titles, guild ...
 var weapon_set := "standard"
+var active_quiver := 0                   # 1-4: the quiver slot your arrows come from (0 none)
 var gear := {}                           # hood up, cloak / helm hidden (inventory packet)
 var quests := {}                         # journal index -> {name, text} (QuestEntry)
 var weight_now := -1                     # Encumberance: what you carry / can carry (-1: not sent yet)
@@ -1364,6 +1365,8 @@ func _on_inventory_items(d: Dictionary, mine: Array) -> void:
 	if set_now != weapon_set:
 		worn = true                                       # another weapon set in the hands: drawn again
 	weapon_set = set_now
+	# the quiver slot you shoot from (the hood byte's high bits: GamePlayer.SwitchQuiver; 0 none) - QuiverWindow
+	active_quiver = {0x10: 1, 0x20: 2, 0x40: 3, 0x80: 4}.get(int(d.get("hood", 0)) & 0xF0, 0)
 	apply_to_player()
 	if worn:
 		gear_changed.emit()

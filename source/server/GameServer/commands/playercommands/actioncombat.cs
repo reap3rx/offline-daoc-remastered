@@ -44,6 +44,9 @@ namespace DOL.GS.Commands
 				case "info":
 					player.Out.SendMessage(ActionCombat.Describe(player), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
+				case "quiver":                       // (the quiver window works in classic mode too)
+					ActionCombat.SelectQuiver(player, args.Length > 2 ? args[2].ToLowerInvariant() : "next");
+					return;
 			}
 
 			if (!state.Enabled)

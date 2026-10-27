@@ -61,6 +61,9 @@ var hud: Control
 var _show := {}                        # part -> shown
 var _offset := {}                      # movable part -> offset from the screen centre
 # archery: a shot being drawn (Shot / Critical Shot held), as the server timed it
+const SHOT_DELAY_MS := 1000            # at least this long between shots (ActionCombat.ShotDelayMs)
+var _shot_ready_at := 0
+var _draw_pending := ""                # a shot button pressed while recovering: drawn as soon as it may
 var _drawing := false
 var _draw_button := ""                 # "ac_shot" / "ac_crit_shot": the one whose release looses it
 var _draw_crit := false
@@ -336,6 +339,10 @@ func _input(event: InputEvent) -> void:
 		_toggle()
 		get_viewport().set_input_as_handled()
 		return
+	if _ranged() and not _typing() and (Keybinds.pressed(event, "arrows_next") or Keybinds.pressed(event, "arrows_prev")):
+		Server.command("/ac quiver next" if Keybinds.pressed(event, "arrows_next") else "/ac quiver prev")
+		get_viewport().set_input_as_handled()            # (not the camera's zoom)
+		return
 	if not on or _typing() or not p.input_enabled or p.dead:
 		return
 	if event is InputEventKey and event.pressed and not event.echo and Keybinds.pressed(event, "ac_hud"):
@@ -355,9 +362,14 @@ func _input(event: InputEvent) -> void:
 		for id in ["ac_shot", "ac_crit_shot"]:
 			if Keybinds.matches(event, id) and (mouse or event is InputEventKey):
 				if event.is_pressed():
-					_start_draw(id)
+					if Time.get_ticks_msec() < _shot_ready_at:
+						_draw_pending = id                 # still recovering from the last shot: draws when it can
+					else:
+						_start_draw(id)
 				elif _drawing and _draw_button == id:
 					_loose()
+				elif _draw_pending == id:
+					_draw_pending = ""
 				get_viewport().set_input_as_handled()
 				return
 	if not echo and not (mouse and p.action_cursor) and not _ranged():
@@ -624,6 +636,9 @@ func _start_draw(button: String) -> void:
 func _loose() -> void:
 	Server.command("/ac loose")
 	_end_draw(true)
+	_shot_ready_at = Time.get_ticks_msec() + SHOT_DELAY_MS
+	_timer_len = SHOT_DELAY_MS                             # (the recovery arc under the crosshair)
+	_timer_until = _shot_ready_at
 
 
 ## The draw over: loosed (the server's BowShoot plays the release) or lowered.
@@ -708,6 +723,11 @@ func _process(_delta: float) -> void:
 		elif int((m as Label3D).get_meta("until", 0)) < now:
 			(m as Label3D).visible = false
 	_reticle_tick(p, now)
+	if _draw_pending != "" and now >= _shot_ready_at:
+		var pend := _draw_pending
+		_draw_pending = ""
+		if _ranged() and Keybinds.held(pend):
+			_start_draw(pend)
 	if _drawing and not _ranged():
 		Server.command("/ac cancel")
 		_end_draw(false)
@@ -989,7 +1009,16 @@ func _draw_hud() -> void:
 		if not _windups.is_empty():
 			hud.draw_arc(c, 20.0, 0.0, TAU, 40, Color(1, 1, 1, 0.25), 1.0)
 	# the ready lights
-	if _show.get("lights", true) or _editing:
+	if _ranged() and not _editing:
+		if _show.get("lights", true):
+			var ar := _part_rect("lights")
+			var q := int(Server.get("active_quiver"))
+			var e: Dictionary = PlayerData.entry(13 + q) if q > 0 else {}
+			var it: Dictionary = PlayerData.item_at(13 + q) if q > 0 else {}
+			var txt := "NO ARROWS SELECTED (CTRL+Q)" if it.is_empty() else "%s  x%d   [%d/4]" % [String(it.get("name", "")).to_upper(), int(e.get("count", 1)), q]
+			hud.draw_string(font, ar.position + Vector2(0, 15), txt, HORIZONTAL_ALIGNMENT_CENTER, ar.size.x, 12,
+					Color(1.0, 0.45, 0.35) if it.is_empty() else Color(0.9, 0.9, 0.85, 0.9))
+	elif _show.get("lights", true) or _editing:
 		var lr := _part_rect("lights")
 		var names := [["ac_position", "POSITION", Color(0.45, 0.85, 1.0)], ["ac_reactive", "REACTIVE", Color(1.0, 0.8, 0.3)],
 				["ac_chain", "CHAIN", Color(0.8, 0.55, 1.0)]]

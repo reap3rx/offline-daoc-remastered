@@ -201,6 +201,8 @@ func _client_command(text: String) -> bool:
 			PlayerData.track_requested.emit(cmd)
 		"realmwar", "rw":
 			PlayerData.window_toggle.emit("warmap")
+		"quiver":                                          # the quiver window (QuiverWindow)
+			PlayerData.window_toggle.emit("quiver")
 		"qbar":
 			var ui := get_parent().get_parent() as GameUI
 			var args := rest.split(" ", false)
