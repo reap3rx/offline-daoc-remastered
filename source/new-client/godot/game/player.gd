@@ -855,6 +855,8 @@ func hold() -> void:
 func _physics_process(delta: float) -> void:
 	var t0 := Time.get_ticks_usec()
 	_physics_step(delta)
+	if lantern and torch:                                 # the belt lantern rides on your hip as you turn
+		torch.position = LANTERN_AT.rotated(Vector3.UP, char_yaw + PI)
 	Perf.phys_add("player", Time.get_ticks_usec() - t0)        # (Perf's live log: the physics tick by part)
 
 
@@ -1102,6 +1104,45 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 func _register_torch() -> void:
 	if zone:
 		zone.add_dynamic_light(torch, TORCH_ENERGY)
+
+
+## REMASTERED LIGHTING (SkySystem._set_extras, owner 2026-10-28: "a softer, yellow light, maybe originating at the
+## hip, could simulate a belt lantern"): the torch becomes a warm lantern on your belt - a soft pool of yellow light
+## round your feet, flickering a little, casting your shadow and the trees' - instead of the client's white light
+## 3.2 m overhead. Off: the client's torch again.
+const LANTERN_AT := Vector3(0.3, 1.0, 0.15)          # hip height, at your side (turned with you)
+const LANTERN_ENERGY := 1.6
+var lantern := false
+
+
+func set_lantern(on: bool) -> void:
+	lantern = on
+	if torch == null:
+		return
+	if on:
+		torch.light_color = Color(1.0, 0.74, 0.42)
+		torch.omni_range = 13.0
+		torch.omni_attenuation = 1.6                     # brightest near you, a gentle fade to the edge
+		torch.shadow_blur = 2.0
+		torch.light_volumetric_fog_energy = 0.04         # (no ball of glowing haze round you)
+		torch.light_size = 0.12                          # a lamp's flame, not a point: soft shadow edges
+		torch.set_meta("base_energy", LANTERN_ENERGY)
+		torch.set_meta("flicker", 0.06)
+		torch.set_meta("flicker_seed", 3.0)
+		torch.position = LANTERN_AT.rotated(Vector3.UP, char_yaw + PI)
+	else:
+		torch.light_color = Color.WHITE
+		torch.omni_range = TORCH_RANGE
+		torch.omni_attenuation = 1.0
+		torch.shadow_enabled = false
+		torch.light_volumetric_fog_energy = 0.25
+		torch.light_size = 0.0
+		torch.set_meta("base_energy", TORCH_ENERGY)
+		if torch.has_meta("flicker"):
+			torch.remove_meta("flicker")
+		torch.position = Vector3(0.0, TORCH_HEIGHT, 0.0)
+	if zone:
+		zone.set_light_level(zone.light_level())
 
 
 func set_torch(on: bool) -> void:

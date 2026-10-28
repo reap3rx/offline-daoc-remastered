@@ -17,6 +17,7 @@ extends RefCounted
 ## clip; "Track Angle" turns the effect to face the target (the hand burst's streak becomes the ray toward the enemy).
 
 const BOLT_SPEED_M := 850.0 * 0.025
+const FxLight := preload("res://game/fx_light.gd")   # remastered lighting: effects light their surroundings
 static var _data := {}
 static var _scenes := {}                    # gltf path -> NifScene template (duplicated per use)
 
@@ -77,6 +78,7 @@ static func release(node: Node) -> void:
 		node.queue_free()
 		return
 	_live.erase(fx.get_instance_id())
+	FxLight.detach(fx)
 	for c in fx.get_children():
 		if c is _Track:
 			c.queue_free()
@@ -304,9 +306,13 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 	NifParticles.fit_to_scale(fx)
 	for gp in (fx as NifScene).particles():
 		(gp as GPUParticles3D).amount_ratio = Perf.particle_ratio   # fewer sparks in a busy fight (Perf governor)
+	var lk := size_of(on) if bool(f.get("autoscale", false)) else 1.0
 	if not keep:
 		var secs := float(f.get("duration_s", 3.0))
 		on.get_tree().create_timer(secs if secs > 0.0 else 3.0).timeout.connect(func(): release(node))
+		FxLight.attach(fx, 2.0, 6.0 * clampf(lk, 0.5, 2.0), secs if secs > 0.0 else 3.0)
+	else:
+		FxLight.attach(fx, 1.4, 4.5 * clampf(lk, 0.5, 2.0))   # a held glow (the caster's hands while gathering)
 	return node
 
 
@@ -420,6 +426,7 @@ static func fire(client_effect: int, handles: Array, caster: Node3D, snd: Charac
 			bolt.global_position = from
 			bolt.look_at(to, Vector3.UP, true) if from.distance_to(to) > 0.01 else null
 			var secs := from.distance_to(to) / BOLT_SPEED_M
+			FxLight.attach(bolt, 2.5, 7.0)                 # a bolt lights the ground it flies over
 			sound(snd, int(e.get("sound_set", 0)), "travel")
 			var tw := bolt.create_tween()
 			tw.tween_property(bolt, "global_position", to, secs)

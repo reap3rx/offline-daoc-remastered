@@ -462,9 +462,40 @@ func _build_lights() -> void:
 		o.distance_fade_begin = 120.0
 		o.distance_fade_length = 40.0
 		o.set_meta("base_energy", 2.2)
+		var nm := String(l.get("name", "")).to_lower()
+		# remastered: fires flicker hard, torches / braziers (orange, red) a little, the magic colours only breathe
+		o.set_meta("flicker", 0.2 if nm.contains("fire") else (0.1 if nm.contains("orange") or nm.contains("red") else 0.04))
+		o.set_meta("flicker_seed", randf() * 100.0)
+		o.set_meta("fire", nm.contains("fire"))
 		add_child(o)
 		_lights.append(o)
 	set_light_level(0.0)
+
+
+## REMASTERED LIGHTING (SkySystem._set_extras): the zone's lights flicker (flicker_enabled, every frame below) and
+## its fires cast shadows within 25 m.
+static var flicker_enabled := false
+
+
+func set_remastered_lights(on: bool) -> void:
+	for o in _lights:
+		if not is_instance_valid(o) or not bool(o.get_meta("fire", false)):
+			continue
+		o.shadow_blur = 1.5
+		o.distance_fade_shadow = 25.0
+	set_light_level(_light_level)                          # (shadows by the hour; steady again when off)
+
+
+func _process(_delta: float) -> void:
+	if not flicker_enabled or _lights.is_empty():
+		return
+	var t := Time.get_ticks_msec() / 1000.0
+	for o in _lights:
+		if not is_instance_valid(o) or not o.visible or not o.has_meta("flicker"):
+			continue
+		var s := float(o.get_meta("flicker_seed"))
+		var n := sin(t * 7.3 + s) * 0.5 + sin(t * 13.7 + s * 1.7) * 0.3 + sin(t * 23.1 + s * 2.9) * 0.2
+		o.light_energy = float(o.get_meta("base_energy")) * (0.15 + 0.85 * _light_level) * (1.0 + float(o.get_meta("flicker")) * n)
 
 
 ## How strongly the zone's lights glow in the remastered volumetric fog (SkySystem): faint by day - a Hibernian
@@ -473,6 +504,10 @@ func set_fog_glow(level: float) -> void:
 	for o in _lights:
 		if is_instance_valid(o) and o.name != "Torch":
 			o.light_volumetric_fog_energy = level
+
+
+func light_level() -> float:
+	return _light_level
 
 
 ## Lights that move with something (the player's torch) join the zone's night scaling.
@@ -488,9 +523,16 @@ var _light_level := 0.0
 ## 0 = full daylight (lights barely show), 1 = night (full glow).
 func set_light_level(level: float) -> void:
 	_light_level = level
+	# remastered fires (and your lantern) cast shadows only once they matter - dusk to dawn, and underground: by day
+	# they burn at 15%, and each shadow is six views of the scene (the frame rate dropped ~15% at noon)
+	var shadows := flicker_enabled and level > 0.35
 	for o in _lights:
 		if is_instance_valid(o):
 			o.light_energy = float(o.get_meta("base_energy")) * (0.15 + 0.85 * level)
+			if bool(o.get_meta("fire", false)) or o.name == "Torch":
+				var want := shadows and (o.name != "Torch" or o.has_meta("flicker"))
+				if o.shadow_enabled != want:
+					o.shadow_enabled = want
 
 
 # ---------------------------------------------------------------- fixtures

@@ -8,6 +8,7 @@ extends Node3D
 # con colours from the client's own name-font palette (fonts/14font.bmp rows); purple isn't in it
 const CON_COLORS := {-3: Color8(130, 129, 128), -2: Color8(135, 225, 113), -1: Color8(85, 93, 214),
 		0: Color8(197, 193, 0), 1: Color8(254, 131, 49), 2: Color8(245, 0, 0), 3: Color(0.78, 0.35, 1.0)}
+const FxLight := preload("res://game/fx_light.gd")   # remastered lighting: effect lights
 const FLAG_GHOST := 0x01
 const FLAG_DONTSHOWNAME := 0x04
 const FLAG_CANTTARGET := 0x08
@@ -211,6 +212,7 @@ func _attach_effects() -> void:
 		var fx: Node3D = NifScene.copy_of(path)
 		if fx == null:
 			continue
+		fx.set_meta("fx_path", path)
 		AnimLod.keep_on_main(fx)                           # (particles, its timeline: on the main thread)
 		var skel: Skeleton3D = null
 		if model:
@@ -241,6 +243,7 @@ func _attach_effects() -> void:
 					_fx_bounds = b if _fx_bounds.size.y <= 0.0 else _fx_bounds.merge(b)
 					height = maxf(height, b.end.y)
 		NifParticles.fit_to_scale.call_deferred(fx)          # particle sprites follow the scale too (once placed)
+		(func(): FxLight.attach(fx, 1.0, 4.5)).call_deferred()   # remastered: a wisp's / flame's light round it
 
 
 ## Weapons in a monster model's hands (skeletons, the Bonedancer's commander and minions - biped monster NIFs carry the

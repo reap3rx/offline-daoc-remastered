@@ -249,7 +249,12 @@ static func add_effect(holder: Node3D, effect: int) -> Node3D:
 	holder.add_child(fx)
 	AnimLod.keep_on_main(fx)                              # (its particles and timeline: the main thread)
 	NifParticles.fit_to_scale(fx)
+	fx.set_meta("fx_path", path)
+	FxLight.attach(fx, 0.7, 3.0)                          # remastered: a flaming / glowing weapon lights its bearer
 	return fx
+
+
+const FxLight := preload("res://game/fx_light.gd")
 
 
 ## Hang a weapon / shield model on one of a figure's attach bones; returns the BoneAttachment3D, or null.

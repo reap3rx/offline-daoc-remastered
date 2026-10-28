@@ -462,6 +462,7 @@ static func _rgba(v) -> Color:
 ##     paler at night, warmer at dawn and dusk, greyer in storms.
 ## Every number here is mine (gap-fills, tuned on test shots) - the art tuning is still to come.
 var remastered := false
+var gi := false                        # real-time bounce light (SDFGI) - Graphics "gi", with remastered only
 ## Test-shot tuning (--tune=exposure:0.9,fog:0.5 ...): any number below by its key, for comparing looks.
 static var tune := {}
 var _cam_attr: CameraAttributesPractical
@@ -501,19 +502,26 @@ func set_remastered(on: bool) -> void:
 		environment.fog_sun_scatter = 0.0
 		environment.fog_aerial_perspective = 0.0
 		environment.glow_blend_mode = Environment.GLOW_BLEND_MODE_SCREEN
+		environment.sdfgi_enabled = false
+		if dungeon:
+			environment.ambient_light_energy = 0.75
+			environment.fog_light_energy = 1.0
+		if sun:
+			sun.shadow_blur = 2.5
 		if _world:
 			_world.camera_attributes = null
 		if _mist:
 			_mist.visible = false
+		_set_extras(false)
 		return
 	environment.tonemap_mode = Environment.TONE_MAPPER_AGX
 	environment.tonemap_exposure = _t("exposure", 0.85)
 	environment.tonemap_agx_contrast = _t("agx", 1.4)
 	environment.glow_enabled = true
-	environment.glow_intensity = _t("glow", 0.55)
+	environment.glow_intensity = _t("glow", 0.5)
 	environment.glow_strength = 1.0
 	environment.glow_bloom = 0.02
-	environment.glow_hdr_threshold = 0.95
+	environment.glow_hdr_threshold = 1.05
 	environment.glow_blend_mode = Environment.GLOW_BLEND_MODE_SOFTLIGHT
 	environment.ssil_enabled = _t("ssil", 1.0) > 0.0
 	environment.volumetric_fog_enabled = true
@@ -524,15 +532,35 @@ func set_remastered(on: bool) -> void:
 	environment.volumetric_fog_sky_affect = 0.15
 	environment.volumetric_fog_detail_spread = 2.0
 	environment.fog_sun_scatter = 0.0 if dungeon else _t("scatter", 0.12)
+	# darker, more threatening underground (owner 2026-10-28): little ambient light, a dim far fog - the dungeon's own
+	# torches and fires do the lighting
+	if dungeon:
+		environment.ambient_light_energy = _t("dungeon_amb", 0.45)
+		environment.fog_light_energy = _t("dungeon_fog", 0.6)
+	if sun:
+		sun.shadow_blur = _t("shadow_blur", 1.2)            # crisper near the caster, softer far off (its angular size)
+	# the engine's bounce light replaces the zone's flat ambient light with what it gathers from the sky and the
+	# lit surfaces: by day more depth, but at night and underground the zone's ambient tint (Hibernia's purple nights)
+	# is lost and the shade goes near black - an option, off by default (owner to judge)
+	environment.sdfgi_enabled = gi and not dungeon
+	if gi and not dungeon:
+		environment.sdfgi_use_occlusion = true
+		environment.sdfgi_read_sky_light = not dungeon
+		environment.sdfgi_cascades = 4
+		environment.sdfgi_min_cell_size = 0.25
+		environment.sdfgi_energy = _t("gi", 1.2)
+		environment.sdfgi_bounce_feedback = 0.4
+	_set_extras(true)
 	environment.fog_aerial_perspective = 0.0 if dungeon else _t("aerial", 0.3)
 	if _cam_attr == null:
 		_cam_attr = CameraAttributesPractical.new()
 		_cam_attr.auto_exposure_enabled = _t("ae", 1.0) > 0.0
 		_cam_attr.auto_exposure_speed = 0.6
-		_cam_attr.auto_exposure_scale = _t("aescale", 0.25)   # (0.4, the engine's: daylight 40% brighter)
 		# a narrow window: dark rooms brightened a little, glare toned down a little - not a different picture
 		_cam_attr.auto_exposure_min_sensitivity = _t("aemin", 80.0)
 		_cam_attr.auto_exposure_max_sensitivity = _t("aemax", 160.0)
+	# (0.4, the engine's, made daylight 40% brighter); underground the eyes adjust less - the dark stays dark
+	_cam_attr.auto_exposure_scale = _t("aescale_dungeon", 0.2) if dungeon else _t("aescale", 0.25)
 	if _world:
 		_world.camera_attributes = _cam_attr
 	if _mist == null:
@@ -578,7 +606,7 @@ func _remaster_frame(w: Dictionary = {}, sun_dir := Vector3.UP) -> void:
 		var col := Color(float(fc[0]), float(fc[1]), float(fc[2]))
 		environment.volumetric_fog_density = 0.004 + 0.022 * amount   # Darkness Falls (85): 0.023
 		environment.volumetric_fog_albedo = col.lerp(Color(0.8, 0.8, 0.85), 0.35)
-		environment.volumetric_fog_emission = col * 0.015
+		environment.volumetric_fog_emission = col * _t("dungeon_emit", 0.004)
 		mist = 0.01 + 0.03 * amount
 	else:
 		var haze := 0.0015 + 0.00012 * amount * 100.0     # the zone's own fog amount: 15 a light haze, 60 thick
@@ -588,8 +616,13 @@ func _remaster_frame(w: Dictionary = {}, sun_dir := Vector3.UP) -> void:
 		environment.volumetric_fog_albedo = environment.fog_light_color.lerp(Color(1, 1, 1), _t("albedo_white", 0.8)) * _t("albedo", 0.85)
 		environment.volumetric_fog_emission = environment.fog_light_color * (0.01 * night)
 		mist = 0.05 * dawn + 0.025 * night + 0.015 * dusk + 0.02 * storm
-		if sun:                                          # sunlight lights the haze strongly (shafts); moonlight less
-			sun.light_volumetric_fog_energy = _t("sunfog", 1.6) if sun_dir.y > -0.05 else 0.6
+		# sunlight lights the haze strongly (shafts); the moon only faintly, and scattered less toward you - a bright
+		# moon washed the whole night sky and the ground's colours out (owner 2026-10-28); bloom softer at night
+		var day := clampf((sun_dir.y + 0.05) * 8.0, 0.0, 1.0)
+		if sun:
+			sun.light_volumetric_fog_energy = lerpf(_t("moonfog", 0.15), _t("sunfog", 1.6), day)
+		environment.volumetric_fog_anisotropy = lerpf(_t("moon_aniso", 0.3), _t("aniso", 0.7), day)
+		environment.glow_intensity = lerpf(_t("glow_night", 0.3), _t("glow", 0.5), day)
 	var glow := 1.0 if dungeon else lerpf(_t("lampday", 0.1), 1.0, night_level)
 	var zs := _zones()
 	if absf(glow - _fog_glow) > 0.02 or zs.size() != _glow_zones:   # (and newly loaded zones of the region)
@@ -644,3 +677,17 @@ func _update_grade(night: float, twilight: float) -> void:
 		_grade_tex.width = 256
 	_grade_tex.gradient = grad
 	environment.adjustment_color_correction = _grade_tex
+
+
+const FxLight := preload("res://game/fx_light.gd")
+
+
+## The rest of the remastered look outside the sky: the player's belt lantern, flickering fires (and their shadows),
+## light from spell and weapon effects.
+func _set_extras(on: bool) -> void:
+	ZoneLoader.flicker_enabled = on
+	FxLight.set_enabled(on)
+	for zl in _zones():
+		(zl as ZoneLoader).set_remastered_lights(on)
+	if _follow and _follow.has_method("set_lantern"):
+		_follow.set_lantern(on)

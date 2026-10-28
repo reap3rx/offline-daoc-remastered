@@ -367,6 +367,8 @@ func _ready_rest(loading: LoadingScreen) -> void:
 	Graphics.apply_viewport()                               # Options > VIDEO quality on the built world
 	if args.has("remastered"):                             # test shots: --remastered=0 / 1
 		Graphics.values["remastered"] = args["remastered"] != "0"
+	if args.has("gi"):                                     # test shots: --gi=0 / 1 (bounce light)
+		Graphics.values["gi"] = args["gi"] != "0"
 	for kv in String(args.get("tune", "")).split(",", false):   # test shots: --tune=exposure:0.9,fog:0.5
 		var p := kv.split(":")
 		if p.size() == 2:
@@ -1760,10 +1762,26 @@ func _tour(prefix: String) -> void:
 		if only.size() and not only.has(spot_name.to_lower()):
 			continue
 		_go_to_spot(i)
-		var facing := player.cam_yaw
+		var facing := player.cam_yaw if not args.has("face") else deg_to_rad(float(args["face"]))   # test shots
+		if args.has("torch"):                              # test shots: --torch=0 / 1
+			player.set_torch(args["torch"] != "0")
+		if args.has("fx"):                                 # test shots: --fx=<spell fx id> held on you (its light)
+			var fx_node: Node3D = null
+			for tries in 120:
+				fx_node = SpellFx.play(int(args["fx"]), player, 1.8, true)
+				if fx_node:
+					break
+				await get_tree().process_frame
+			if fx_node:
+				var FL = load("res://game/fx_light.gd")
+				var lights: Array = fx_node.find_children("FxLight*", "OmniLight3D", true, false)
+				var fxn: Node = fx_node if fx_node is NifScene else fx_node.get_child(0)
+				print("fx light: enabled=", FL.enabled, " lights=", lights.size(), " colour=", FL.color_of(fxn),
+						" particles=", fxn.find_children("*", "GPUParticles3D", true, false).size(),
+						" steady=", FL._steady.size(), " live=", FL._live.size())
 		for turn in [0.0, PI]:
 			player.face(facing + turn)
-			player.cam_pitch = -0.18
+			player.cam_pitch = float(args.get("pitch", -0.18))    # (test shots: --pitch=0.6 looks up at the sky)
 			player.cam_distance = 7.0
 			for f in 75 + (150 if bool(Graphics.value("remastered")) else 0):   # clutter chunks build a couple per
 				await get_tree().process_frame                                   # frame; the eyes adjust (remastered)
