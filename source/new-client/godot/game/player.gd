@@ -1111,7 +1111,12 @@ func _register_torch() -> void:
 ## round your feet, flickering a little, casting your shadow and the trees' - instead of the client's white light
 ## 3.2 m overhead. Off: the client's torch again.
 const LANTERN_AT := Vector3(0.3, 1.0, 0.15)          # hip height, at your side (turned with you)
-const LANTERN_ENERGY := 1.6
+# (owner 2026-10-28, after the first: "needs to spread a bit more or be a bit more powerful ... too weak to have much
+# utility in truly dark areas" - 1.6 over 13 m was a pool round your feet; brighter alone barely helped - the
+# reach is the falloff: 0.5, a near-linear fade, lights the clearing round you and the trunks at its edge)
+const LANTERN_ENERGY := 3.4
+const LANTERN_RANGE := 30.0
+const LANTERN_FALLOFF := 0.5
 var lantern := false
 
 
@@ -1121,12 +1126,12 @@ func set_lantern(on: bool) -> void:
 		return
 	if on:
 		torch.light_color = Color(1.0, 0.74, 0.42)
-		torch.omni_range = 13.0
-		torch.omni_attenuation = 1.6                     # brightest near you, a gentle fade to the edge
+		torch.omni_range = SkySystem._t("lantern_range", LANTERN_RANGE)
+		torch.omni_attenuation = SkySystem._t("lantern_falloff", LANTERN_FALLOFF)   # brightest near you, a long fade
 		torch.shadow_blur = 2.0
 		torch.light_volumetric_fog_energy = 0.04         # (no ball of glowing haze round you)
 		torch.light_size = 0.12                          # a lamp's flame, not a point: soft shadow edges
-		torch.set_meta("base_energy", LANTERN_ENERGY)
+		torch.set_meta("base_energy", SkySystem._t("lantern", LANTERN_ENERGY))
 		torch.set_meta("flicker", 0.06)
 		torch.set_meta("flicker_seed", 3.0)
 		torch.position = LANTERN_AT.rotated(Vector3.UP, char_yaw + PI)

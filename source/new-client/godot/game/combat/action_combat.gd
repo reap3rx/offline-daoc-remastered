@@ -838,9 +838,14 @@ func _reticle_tick(p: Player, now: int) -> void:
 		_select_quiet(_aim)
 
 
+## What the reticle picks: monsters, and anyone of an enemy realm - the server's Midgard / Albion "players" (its
+## bots, sent as NPCs with their realm) and enemy guards (owner 2026-10-28: Midgard bots in the Old Frontiers could
+## only be Alt+clicked). Not your realm's people, not peaceful NPCs, nothing hidden or untargetable.
 func _hostile(n: Npc) -> bool:
-	return n.state.alive and not n.state.stealthed and int(n.spawn.get("realm", 0)) == 0 \
-			and not (int(n.spawn.get("flags", 0)) & Npc.FLAG_CANTTARGET)
+	var realm := int(n.spawn.get("realm", 0))
+	var flags := int(n.spawn.get("flags", 0))
+	return n.state.alive and not n.state.stealthed and (realm == 0 or realm != PlayerData.realm_id()) \
+			and not (flags & Npc.FLAG_CANTTARGET) and not (flags & Npc.FLAG_PEACE)
 
 
 ## Target without the "You target [x]" chat line (the reticle changes targets often).
