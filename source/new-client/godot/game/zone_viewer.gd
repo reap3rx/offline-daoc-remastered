@@ -1520,6 +1520,99 @@ func loc_line() -> String:
 			int(heading * 360 / 4096) % 360]
 
 
+const PlacedLights := preload("res://game/world/placed_lights.gd")
+
+
+## /light (owner 2026-10-28: lights where the world has no lamp model): add / remove / undo / list - at the spot the
+## cursor points at (the crosshair while action combat holds the mouse). See world/placed_lights.gd.
+func light_command(rest: String) -> void:
+	var args := rest.to_lower().split(" ", false)
+	var sub := String(args[0]) if args.size() > 0 else "help"
+	var say := func(t: String): PlayerData.message.emit(t, "system")
+	if sub in PlacedLights.KINDS:                          # (/light candle = /light add candle)
+		args.insert(0, "add")
+		sub = "add"
+	match sub:
+		"add", "remove", "del", "delete":
+			var hit := _light_point()
+			if hit.is_empty():
+				say.call("Point at the spot first - the cursor, or the crosshair in action combat - within 60 m.")
+				return
+			var z: ZoneLoader = _zone_at(hit.at)
+			if z == null:
+				say.call("That spot isn't in a loaded zone.")
+				return
+			var zid := int(z.info.get("id", -1))
+			if sub == "add":
+				var kind := String(args[1]) if args.size() > 1 else "candle"
+				if not kind in PlacedLights.KINDS:
+					say.call("Kinds: " + ", ".join(PackedStringArray(PlacedLights.KINDS)) + ".")
+					return
+				# a little off the surface it was pointed at, the flame of a candle / torch a little above it
+				var at: Vector3 = z.to_local(hit.at) + (hit.normal as Vector3) * 0.12 + Vector3(0, 0.12 if kind in ["candle", "torch"] else 0.0, 0)
+				PlacedLights.add(zid, at, kind)
+				z.add_placed_light(at, kind)
+				say.call("Placed a %s light in %s (%d placed there).%s" % [kind, z.info.name, PlacedLights.for_zone(zid).size(),
+						"" if bool(Graphics.value("remastered")) else " It shows with Remastered Lighting on (Options > Video)."])
+			else:
+				var gone := PlacedLights.remove_near(zid, z.to_local(hit.at), 2.5)
+				if gone.is_empty():
+					say.call("No placed light within 2.5 m of that spot.")
+				else:
+					z.remove_placed_light(PlacedLights.pos(gone))
+					say.call("Removed the %s light there." % String(gone.get("k", "")))
+		"undo":
+			var last := PlacedLights.undo()
+			if last.is_empty():
+				say.call("Nothing to undo.")
+				return
+			for z in _loaded_zones():
+				if int(z.info.get("id", -1)) == int(last[0]):
+					z.remove_placed_light(PlacedLights.pos(last[1]))
+			say.call("Removed the last light you placed.")
+		"list":
+			var z := zone
+			var counts := {}
+			for e in PlacedLights.for_zone(int(z.info.get("id", -1))):
+				counts[String(e.get("k", ""))] = int(counts.get(String(e.get("k", "")), 0)) + 1
+			say.call("%s: %s." % [z.info.name, "no placed lights" if counts.is_empty() else
+					", ".join(PackedStringArray(counts.keys().map(func(k): return "%d %s" % [counts[k], k])))])
+		_:
+			say.call("/light add [candle | lantern | torch | fire] - a light where you point (the cursor, or the crosshair in action combat). /light remove - the placed light nearest where you point. /light undo - the last one placed. /light list - this zone's. They show with Remastered Lighting.")
+
+
+## Where the cursor (or the crosshair, while the mouse is held for action combat) meets the world: {at, normal}.
+func _light_point() -> Dictionary:
+	if player == null or player.camera == null:
+		return {}
+	var cam := player.camera
+	var sp := get_viewport().get_mouse_position()
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		sp = get_viewport().get_visible_rect().size * 0.5
+	var from := cam.project_ray_origin(sp)
+	var q := PhysicsRayQueryParameters3D.create(from, from + cam.project_ray_normal(sp) * 60.0,
+			ZoneLoader.LAYER_WALL | ZoneLoader.LAYER_FLOOR | ZoneLoader.LAYER_SCENERY)
+	q.exclude = [player.get_rid()]
+	var r := get_world_3d().direct_space_state.intersect_ray(q)
+	return {} if r.is_empty() else {"at": r.position, "normal": r.normal}
+
+
+func _loaded_zones() -> Array:
+	return region.zones.values() if region else ([zone] if zone else [])
+
+
+## The loaded zone whose square holds a world position.
+func _zone_at(p: Vector3) -> ZoneLoader:
+	for z in _loaded_zones():
+		if not is_instance_valid(z):
+			continue
+		var l: Vector3 = (z as ZoneLoader).to_local(p)
+		var size := float((z as ZoneLoader).info.get("size_m", 1638.4))
+		if l.x >= 0.0 and l.z >= 0.0 and l.x <= size and l.z <= size:
+			return z
+	return zone
+
+
 ## Attack mode on / off: the key and the target window's ATTACK (the server's PlayerAttackRequest, or the game's).
 func _toggle_attack() -> void:
 	if Server.active:

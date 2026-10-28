@@ -207,6 +207,10 @@ func _client_command(text: String) -> bool:
 			PlayerData.window_toggle.emit("poisons")
 		"potions", "potionbag":                            # the potion bag (PotionWindow)
 			PlayerData.window_toggle.emit("potions")
+		"light", "lights":                                 # lights you place yourself (world/placed_lights.gd)
+			var v := get_tree().current_scene
+			if v and v.has_method("light_command"):
+				v.call("light_command", rest)
 		"qbar":
 			var ui := get_parent().get_parent() as GameUI
 			var args := rest.split(" ", false)

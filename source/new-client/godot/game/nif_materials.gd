@@ -116,6 +116,52 @@ func image(tex_name: String) -> Image:
 
 
 var load_usec := 0                  # time spent reading textures (ZoneLoader's "built in" line)
+
+
+# ---------------------------------------------------------------- compressed textures
+
+## COMPRESSED TEXTURES (Options > Video, owner 2026-10-28: "let's build both, since you can toggle the compressed
+## textures"): the world's textures are kept in the graphics card's own block-compressed format (BC1 / BC3 - what the
+## original client's DDS files were) instead of raw colour - a quarter of the video memory or less, and read much
+## faster. The first time a texture is used it is compressed and saved next to its picture as <name>.bc
+## (mipmaps included); after that the .bc is read, unless the picture is newer. Off: the pictures as they are (each
+## read from its PNG and its mipmaps made every time). Set by Graphics; worlds built after a change use it.
+static var compress := true
+const BC_VERSION := 1
+
+
+static func load_image(path: String, allow_compress := true) -> Image:
+	var bc := path.get_basename() + ".bc"
+	if compress and allow_compress and FileAccess.file_exists(bc) and FileAccess.file_exists(path) \
+			and FileAccess.get_modified_time(bc) >= FileAccess.get_modified_time(path):
+		var f := FileAccess.open(bc, FileAccess.READ)
+		if f:
+			var d = f.get_var()
+			f.close()
+			if d is Dictionary and int((d as Dictionary).get("v", 0)) == BC_VERSION:
+				var cached := Image.create_from_data(int(d.w), int(d.h), true, int(d.f) as Image.Format, d.data)
+				if cached and not cached.is_empty():
+					return cached
+	var img := Image.load_from_file(path) if FileAccess.file_exists(path) else null
+	if img == null:
+		return null
+	img.generate_mipmaps()
+	if not (compress and allow_compress):
+		return img
+	# BC1 when it has no alpha, BC3 when it does (the engine picks); sizes that aren't multiples of 4 stay raw
+	if img.get_width() % 4 != 0 or img.get_height() % 4 != 0:
+		return img
+	if img.compress(Image.COMPRESS_S3TC, Image.COMPRESS_SOURCE_SRGB) != OK or not img.is_compressed():
+		return img
+	var tmp := bc + ".tmp"
+	var w := FileAccess.open(tmp, FileAccess.WRITE)
+	if w:
+		w.store_var({"v": BC_VERSION, "w": img.get_width(), "h": img.get_height(), "f": int(img.get_format()),
+				"data": img.get_data()})
+		w.close()
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(bc))
+		DirAccess.rename_absolute(ProjectSettings.globalize_path(tmp), ProjectSettings.globalize_path(bc))
+	return img
 var load_count := 0
 
 
@@ -125,12 +171,11 @@ func texture(tex_name: String) -> Texture2D:
 		var t0 := Time.get_ticks_usec()
 		load_count += 1
 		var path := _path(tex_name)
-		var img := Image.load_from_file(path)
+		var img := load_image(path)
 		if img == null:
 			push_warning("missing texture " + path)
 			_textures[key] = null
 		else:
-			img.generate_mipmaps()
 			_textures[key] = ImageTexture.create_from_image(img)
 		load_usec += Time.get_ticks_usec() - t0
 	return _textures[key]

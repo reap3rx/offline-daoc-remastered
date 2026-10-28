@@ -72,6 +72,7 @@ func load_zone(content_dir: String, terrain_set_name := "blend", texture_set_nam
 	_build_fixtures()
 	prof["fixtures"] = Time.get_ticks_usec() - t
 	_build_lights()
+	_build_placed_lights()
 	# where the time went (owner 2026-10-28: loading times - which part?): the textures are part of the models' time
 	prof["textures"] = materials.load_usec
 	var parts := []
@@ -569,6 +570,14 @@ const LIGHT_TEXTURES := {
 	"firepit": "fire", "firepittex": "fire", "n_firepit": "fire", "a_coals_01_glow": "fire",
 	"smoldering_wood01_glow": "fire",
 }
+## Lamps drawn from one corner of a texture shared with other things (owner 2026-10-28: "for the candles that share
+## textures ... is there a way"): Camelot's candles are a little green-white block cut from bmagic1, the atlas its
+## chests and crates use, and have no flame of their own. A piece is a lamp when its corners use that part of the
+## texture (uv: a Rect2 of it) and it is about that size (m, smallest and largest corner-to-corner box).
+const LIGHT_REGIONS := [
+	{"tex": "bmagic1", "uv": Rect2(0.50, 0.64, 0.25, 0.12), "min": Vector3(0.12, 0.15, 0.12), "max": Vector3(0.3, 0.32, 0.3),
+			"kind": "candle"},
+]
 ## kind: [colour, range m, energy, flicker]
 const LIGHT_KINDS := {
 	"lantern": [Color(1.0, 0.72, 0.42), 7.5, 2.0, 0.06],
@@ -584,9 +593,7 @@ var _lamps := 0
 
 ## The clumps of one surface's vertices (model space): a lamp each. A lantern's light is in its glass - the lowest
 ## part (it hangs from its bracket), a torch's or candle's at its top (the flame), a fire's just above its middle.
-func _light_spots(spots: Array, mesh: Mesh, surface: int, local: Transform3D, kind: String) -> void:
-	var arrays := mesh.surface_get_arrays(surface)
-	var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+func _light_spots(spots: Array, verts: PackedVector3Array, local: Transform3D, kind: String) -> void:
 	var clumps: Array = []                                   # [sum, points]
 	for v in verts:
 		var p := local * v
@@ -638,16 +645,54 @@ func _light_spots(spots: Array, mesh: Mesh, surface: int, local: Transform3D, ki
 		spots.append({"at": at, "kind": kind})
 
 
+## LIGHT_REGIONS: the pieces of one surface drawn from a lamp's corner of a shared texture, each a light at its top.
+func _region_spots(spots: Array, arrays: Array, local: Transform3D, tex: String) -> void:
+	for rule in LIGHT_REGIONS:
+		if String(rule.tex) != tex or not (arrays[Mesh.ARRAY_TEX_UV] is PackedVector2Array):
+			continue
+		var uvs: PackedVector2Array = arrays[Mesh.ARRAY_TEX_UV]
+		var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		var area: Rect2 = rule.uv
+		var boxes: Array = []                                # one AABB a piece
+		for i in mini(uvs.size(), verts.size()):
+			if not area.has_point(uvs[i]):
+				continue
+			var p := local * verts[i]
+			var found := false
+			for b in boxes.size():
+				var box: AABB = boxes[b]
+				if box.get_center().distance_to(p) < 0.6:
+					boxes[b] = box.expand(p)
+					found = true
+					break
+			if not found:
+				boxes.append(AABB(p, Vector3.ZERO))
+		var lo: Vector3 = rule.min
+		var hi: Vector3 = rule.max
+		for box in boxes:
+			var s := (box as AABB).size
+			var flat := Vector2(minf(s.x, s.z), maxf(s.x, s.z))
+			if flat.x >= lo.x and flat.y <= hi.x and s.y >= lo.y and s.y <= hi.y:
+				var c := (box as AABB).get_center()
+				spots.append({"at": Vector3(c.x, (box as AABB).end.y + 0.08, c.z), "kind": String(rule.kind)})
+
+
 func _add_fixture_light(at: Vector3, kind: String) -> void:
 	if _fixture_light_at.is_empty():
 		for l in info.get("lights", []):                   # (the zone's own lights - _build_lights adds them later)
 			_fixture_light_at.append(Vector3(l.pos[0], l.pos[1], l.pos[2]))
 		_fixture_light_at.append(Vector3(INF, INF, INF))
+	var near := 1.0 if kind == "candle" else LIGHT_NEAR_M   # (candles stand close together: each its own small glow)
 	for q in _fixture_light_at:
-		if q.distance_to(at) < LIGHT_NEAR_M:
+		if q.distance_to(at) < near:
 			return
 	_fixture_light_at.append(at)
 	_lamps += 1
+	_make_lamp(at, kind)
+
+
+## A lamp light (remastered only): the world's own (_add_fixture_light) or one you placed (PlacedLights).
+func _make_lamp(at: Vector3, kind: String) -> OmniLight3D:
 	var k: Array = LIGHT_KINDS.get(kind, LIGHT_KINDS.lantern)
 	var o := OmniLight3D.new()
 	o.name = "Lamp"
@@ -667,6 +712,33 @@ func _add_fixture_light(at: Vector3, kind: String) -> void:
 	o.visible = flicker_enabled
 	add_child(o)
 	_lights.append(o)
+	o.light_energy = float(k[2]) * (0.15 + 0.85 * _light_level)
+	return o
+
+
+const PlacedLights := preload("res://game/world/placed_lights.gd")
+
+
+## The lights you placed in this zone (/light add).
+func _build_placed_lights() -> void:
+	for e in PlacedLights.for_zone(int(info.get("id", -1))):
+		var o := _make_lamp(PlacedLights.pos(e), String(e.get("k", "candle")))
+		o.set_meta("placed", true)
+
+
+## /light add: one more, now (zone-local metres).
+func add_placed_light(at: Vector3, kind: String) -> void:
+	var o := _make_lamp(at, kind)
+	o.set_meta("placed", true)
+
+
+## /light remove / undo: the placed light at `at` gone from the world.
+func remove_placed_light(at: Vector3) -> void:
+	for o in _lights:
+		if is_instance_valid(o) and o.has_meta("placed") and o.position.distance_to(at) < 0.05:
+			_lights.erase(o)
+			o.queue_free()
+			return
 
 
 # ---------------------------------------------------------------- fixtures
@@ -929,68 +1001,154 @@ func _parts_radius(parts: Dictionary) -> float:
 ## {meshes: [[Mesh, local Transform3D]], collision: faces, visible_faces: faces} for one converted model.
 ## ambient_only: the zone's nifs.csv "Ambient Only" column - lit by the ambient light alone (NifMaterials).
 func _load_model(path: String, ambient_only := false) -> Dictionary:
-	var doc := GLTFDocument.new()
-	var state := GLTFState.new()
-	if doc.append_from_file(path, state) != OK:
+	var data := model_data(path)
+	if data.is_empty():
 		push_warning("could not load " + path)
 		return {}
-	var specs: Array = state.json.get("extras", {}).get("nif_materials", [])
+	var specs: Array = data.specs
 	if ambient_only:
 		specs = specs.map(func(sp): return (sp as Dictionary).merged({"ambient_only": true}, true))
-	var root := doc.generate_scene(state)
 	var out := {"meshes": [], "collision": PackedVector3Array(), "visible_faces": PackedVector3Array(),
-			"climb": PackedVector3Array(),
-			"particles": state.json.get("extras", {}).get("nif_particles", []),
-			"doors": {}, "door_specs": state.json.get("extras", {}).get("nif_doors", []), "light_spots": []}
-	for node in root.find_children("*", "MeshInstance3D", true, false):
-		var mi := node as MeshInstance3D
-		var local := Transform3D.IDENTITY
-		var p: Node = mi
-		while p != root and p is Node3D:
-			local = (p as Node3D).transform * local
-			p = p.get_parent()
+			"climb": PackedVector3Array(), "particles": data.particles,
+			"doors": {}, "door_specs": data.door_specs, "light_spots": []}
+	for nd in data.nodes:
+		var nm := String(nd.name)
+		var local: Transform3D = nd.xform
+		var surfs: Array = nd.surfaces
 		# door leaves (nif_doors): panels "door<k>_..." and collision "doorcol<k>_..." in the leaf's own frame,
 		# kept apart from the static batches so they can swing open
-		if mi.name.begins_with("door"):
-			var is_col := mi.name.begins_with("doorcol")
-			var k := int(mi.name.trim_prefix("doorcol" if is_col else "door").get_slice("_", 0))
+		if nm.begins_with("door"):
+			var is_col := nm.begins_with("doorcol")
+			var k := int(nm.trim_prefix("doorcol" if is_col else "door").get_slice("_", 0))
 			if not out.doors.has(k):
 				out.doors[k] = {"meshes": [], "collision": PackedVector3Array()}
 			if is_col:
-				out.doors[k].collision.append_array(mi.mesh.get_faces())
+				out.doors[k].collision.append_array(nd.faces)
 			else:
-				var dm := mi.mesh
-				for i in dm.get_surface_count():
-					var dsrc := dm.surface_get_material(i)
-					var dname := dsrc.resource_name if dsrc else ""
-					if dname.begins_with("nifmat:") and int(dname.substr(7)) < specs.size():
-						dm.surface_set_material(i, materials.material(specs[int(dname.substr(7))]))
-				out.doors[k].meshes.append(dm)
+				out.doors[k].meshes.append(_model_mesh(nm, surfs, specs, path))
 			continue
-		var faces := mi.mesh.get_faces()
-		for k in faces.size():
-			faces[k] = local * faces[k]
-		if mi.name.begins_with("collision_"):
-			out.collision.append_array(faces)
+		if nm.begins_with("collision_"):
+			out.collision.append_array(nd.faces)
 			continue
-		if mi.name.begins_with("climb_"):                  # a ladder's climb wall (nif_static.climb_shapes)
-			out.climb.append_array(faces)
+		if nm.begins_with("climb_"):                  # a ladder's climb wall (nif_static.climb_shapes)
+			out.climb.append_array(nd.faces)
 			continue
-		out.visible_faces.append_array(faces)
-		var mesh := mi.mesh
-		for i in mesh.get_surface_count():
-			var src := mesh.surface_get_material(i)
-			var mat_name := src.resource_name if src else ""
-			if mat_name.begins_with("nifmat:") and int(mat_name.substr(7)) < specs.size():
-				var spec: Dictionary = specs[int(mat_name.substr(7))]
-				mesh.surface_set_material(i, materials.material(spec))
-				var kind := String(LIGHT_TEXTURES.get(String(spec.get("slots", {}).get("base", {}).get("tex", "")).to_lower(), ""))
+		out.visible_faces.append_array(nd.faces)
+		for sf in surfs:
+			var si := int(sf[2])
+			if si >= 0 and si < specs.size():
+				var kind := String(LIGHT_TEXTURES.get(String((specs[si] as Dictionary).get("slots", {}).get("base", {}).get("tex", "")).to_lower(), ""))
 				if kind != "":
-					_light_spots(out.light_spots, mesh, i, local, kind)
-			else:
-				push_warning("%s: surface %d has no converted material (%s)" % [path, i, mat_name])
-		out.meshes.append([mesh, local])
-	root.free()
+					_light_spots(out.light_spots, (sf[0] as Array)[Mesh.ARRAY_VERTEX], local, kind)
+				_region_spots(out.light_spots, sf[0], local, String((specs[si] as Dictionary).get("slots", {}).get("base", {}).get("tex", "")).to_lower())
+		out.meshes.append([_model_mesh(nm, surfs, specs, path), local])
+	return out
+
+
+## One node's mesh from its cached surfaces, each with its NifMaterials material.
+func _model_mesh(nm: String, surfs: Array, specs: Array, path: String) -> ArrayMesh:
+	var mesh := ArrayMesh.new()
+	mesh.resource_name = nm
+	for sf in surfs:
+		mesh.add_surface_from_arrays(int(sf[3]), sf[0], [], {}, int(sf[1]))
+		var si := int(sf[2])
+		if si >= 0 and si < specs.size():
+			mesh.surface_set_material(mesh.get_surface_count() - 1, materials.material(specs[si]))
+		else:
+			push_warning("%s: surface %d has no converted material" % [path, mesh.get_surface_count() - 1])
+	return mesh
+
+
+# ---------------------------------------------------------------- the model cache
+
+## Owner 2026-10-28 ("let's build both ... the model cache will be really good"): reading a zone was mostly
+## parsing its models' glTF (JSON with base64 buffers) - Camelot 2.5 of its 2.9 s. The first time a model is read,
+## what the zone needs of it (each node's arrays, material numbers and faces) is written next to it as
+## <model>.mcache (zstd); after that the cache is read instead, unless the glTF is newer or MODEL_CACHE_VERSION
+## changed. Content is per computer (not in git): each computer builds its own cache on its first visit.
+const MODEL_CACHE_VERSION := 1
+
+
+static func model_data(path: String) -> Dictionary:
+	var cache := path.get_basename() + ".mcache"
+	if FileAccess.file_exists(cache) and FileAccess.get_modified_time(cache) >= FileAccess.get_modified_time(path):
+		var f := FileAccess.open_compressed(cache, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
+		if f:
+			var d = f.get_var()
+			f.close()
+			if d is Dictionary and int((d as Dictionary).get("v", 0)) == MODEL_CACHE_VERSION:
+				return d
+	var data := _parse_model(path)
+	if data.is_empty():
+		return data
+	var tmp := cache + ".tmp"
+	var w := FileAccess.open_compressed(tmp, FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
+	if w:
+		w.store_var(data)
+		w.close()
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(cache))
+		DirAccess.rename_absolute(ProjectSettings.globalize_path(tmp), ProjectSettings.globalize_path(cache))
+	return data
+
+
+## The glTF read the slow way: each mesh node's surfaces straight from the parsed meshes (no scene, no read-back
+## from the graphics card), placed in the model's frame.
+static func _parse_model(path: String) -> Dictionary:
+	var doc := GLTFDocument.new()
+	var state := GLTFState.new()
+	if doc.append_from_file(path, state) != OK:
+		return {}
+	var extras: Dictionary = state.json.get("extras", {})
+	var data := {"v": MODEL_CACHE_VERSION, "specs": extras.get("nif_materials", []),
+			"particles": extras.get("nif_particles", []), "door_specs": extras.get("nif_doors", []), "nodes": []}
+	var nodes := state.get_nodes()
+	var meshes := state.get_meshes()
+	for i in nodes.size():
+		var n: GLTFNode = nodes[i]
+		if n.mesh < 0 or n.mesh >= meshes.size():
+			continue
+		var xf: Transform3D = n.xform
+		var up := n.parent
+		while up >= 0:
+			xf = (nodes[up] as GLTFNode).xform * xf
+			up = (nodes[up] as GLTFNode).parent
+		var im: ImporterMesh = (meshes[n.mesh] as GLTFMesh).mesh
+		if im == null:
+			continue
+		var nm := String(n.get("original_name")) if n.get("original_name") != null else ""
+		if nm == "":
+			nm = String(n.resource_name)
+		var surfs := []
+		for s in im.get_surface_count():
+			var mat := im.get_surface_material(s)
+			var mname := mat.resource_name if mat else ""
+			var si := int(mname.substr(7)) if mname.begins_with("nifmat:") else -1
+			surfs.append([im.get_surface_arrays(s), im.get_surface_format(s), si, im.get_surface_primitive_type(s)])
+		# door leaves keep their own frame (they swing about it); everything else in the model's frame
+		data.nodes.append({"name": nm, "xform": xf, "surfaces": surfs,
+				"faces": _faces(surfs, Transform3D.IDENTITY if nm.begins_with("door") else xf)})
+	return data
+
+
+## A node's triangles (three corners each), as Mesh.get_faces gave them - from the arrays, not the GPU.
+static func _faces(surfs: Array, xf: Transform3D) -> PackedVector3Array:
+	var out := PackedVector3Array()
+	for sf in surfs:
+		if int(sf[3]) != Mesh.PRIMITIVE_TRIANGLES:
+			continue
+		var arrays: Array = sf[0]
+		var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+		var idx = arrays[Mesh.ARRAY_INDEX]
+		if idx is PackedInt32Array and (idx as PackedInt32Array).size() > 0:
+			var base := out.size()
+			out.resize(base + (idx as PackedInt32Array).size())
+			var k := base
+			for j in idx:
+				out[k] = xf * verts[j]
+				k += 1
+		else:
+			for v in verts:
+				out.append(xf * v)
 	return out
 
 
@@ -1011,11 +1169,10 @@ func _load_texture(path: String) -> Texture2D:
 
 
 func _load_texture_now(path: String) -> Texture2D:
-	var img := Image.load_from_file(path)
+	var img := NifMaterials.load_image(path)                # (compressed textures: Options > Video)
 	if img == null:
 		push_warning("missing texture " + path)
 		return null
-	img.generate_mipmaps()
 	return ImageTexture.create_from_image(img)
 
 
