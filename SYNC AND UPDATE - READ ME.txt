@@ -1,0 +1,39 @@
+OFFLINE DAoC ON MORE THAN ONE COMPUTER
+======================================
+
+Your progress travels through Google Drive; the game's code travels through GitHub.
+
+EVERY TIME YOU PLAY
+  1. Double-click  PLAY OFFLINE DAOC (SYNCED).cmd  (instead of START OFFLINE DAOC - NEW CLIENT.cmd).
+     It loads the newest save from Google Drive, then starts the launcher as usual.
+  2. Play. When you stop the server (or close the launcher), your progress is saved to Google Drive by itself.
+     A message box appears only if something went wrong.
+  3. On a shared computer: quit the game, wait a few seconds, then sign out of Google Drive.
+
+  Never play on two computers at the same time - the two saves can't be merged. If you try, the second computer
+  warns you that the save is in use elsewhere.
+
+WHEN CLAUDE HAS MADE CHANGES (or once a week)
+  Close the game and double-click  UPDATE OFFLINE DAOC.cmd . It pulls the latest changes from GitHub, rebuilds the
+  server if it changed, and updates the new client.
+
+OTHER TOOLS
+  SAVE NOW (SYNC).cmd   save to Google Drive right now (the server must be stopped) and show the sync status.
+  tools\sync\savesync.ps1 -Pull    take the cloud save now.
+
+WHAT IS SYNCED
+  The game database (account, characters, items, bags, bots, world), the realm event records, and the new client's
+  settings, keybinds, quickbars and character looks. Each computer keeps its own display, graphics and performance
+  settings. Before a save is replaced on a computer it is backed up to runtime\save-sync\backups (last 5 kept);
+  Google Drive keeps the previous save in OfflineDAoC Saves\previous.
+
+SETTING UP ANOTHER COMPUTER (once)
+  1. Copy the whole game folder (playable-v0.36c, about 40 GB) from your main computer, e.g. with an external drive.
+     The patch-backups folder (3 GB) can be left out.
+  2. Install Google Drive for desktop and sign in; the "OfflineDAoC Saves" folder appears under My Drive.
+     (If Drive uses a letter other than G:, it is found by itself.)
+  3. Install Git (https://git-scm.com/download/win). The first update asks you to sign in to GitHub - on a shared
+     computer use a read-only access token instead of your password, and remove it when you're done.
+  4. Install the .NET 10 SDK (https://dotnet.microsoft.com/download/dotnet/10.0) - needed to rebuild the server.
+  5. Run UPDATE OFFLINE DAOC.cmd, then PLAY OFFLINE DAOC (SYNCED).cmd. The first time, it asks whether to use the
+     cloud save or this computer's - pick the cloud.
