@@ -29,6 +29,7 @@ var materials: NifMaterials
 var _terrain_mats: Array[ShaderMaterial] = []
 var _water_mats: Array[ShaderMaterial] = []
 var _lights: Array[OmniLight3D] = []
+var prof := {}                          # load_zone: microseconds by part (printed with "built in")
 var _terrain_textures := {}     # terrain set -> Texture2D
 var _detail_mean := 0.4
 
@@ -57,13 +58,28 @@ func load_zone(content_dir: String, terrain_set_name := "blend", texture_set_nam
 		# ice texture of the old client") - this zone only
 		materials.env_strength = 0.35
 	var t0 := Time.get_ticks_msec()
+	var t := Time.get_ticks_usec()
 	_load_heights()
+	prof["heights"] = Time.get_ticks_usec() - t
 	if not city:                                           # a city (Tir na Nog...) is all city chunks: no terrain, no water
+		t = Time.get_ticks_usec()
 		_build_terrain()
+		prof["terrain"] = Time.get_ticks_usec() - t
+		t = Time.get_ticks_usec()
 		_build_water()
+		prof["water"] = Time.get_ticks_usec() - t
+	t = Time.get_ticks_usec()
 	_build_fixtures()
+	prof["fixtures"] = Time.get_ticks_usec() - t
 	_build_lights()
-	print("zone %s built in %d ms" % [info.name, Time.get_ticks_msec() - t0])
+	# where the time went (owner 2026-10-28: loading times - which part?): the textures are part of the models' time
+	prof["textures"] = materials.load_usec
+	var parts := []
+	for k in ["heights", "terrain", "terrain textures", "water", "fixtures", "models", "textures", "collision"]:
+		if prof.has(k):
+			parts.append("%s %d" % [k, int(prof[k]) / 1000])
+	print("zone %s built in %d ms (%s; %d textures, %d lamps)" % [info.name, Time.get_ticks_msec() - t0, ", ".join(parts),
+			materials.load_count, _lamps])
 
 
 # ---------------------------------------------------------------- heights
@@ -479,6 +495,8 @@ static var flicker_enabled := false
 
 func set_remastered_lights(on: bool) -> void:
 	for o in _lights:
+		if is_instance_valid(o) and o.has_meta("fixture"):
+			o.visible = on                                 # (the world's own light sources: remastered only)
 		if not is_instance_valid(o) or not bool(o.get_meta("fire", false)):
 			continue
 		o.shadow_blur = 1.5
@@ -535,6 +553,122 @@ func set_light_level(level: float) -> void:
 					o.shadow_enabled = want
 
 
+# ---------------------------------------------------------------- the world's light sources (remastered)
+
+## Owner 2026-10-28: "add light sources into the world that will work with our new lighting system ... tied to objects
+## in the world? Lanterns, candles, fire places". The client lit only what its lights.csv names (a few dozen points a
+## zone), so Camelot's wall lanterns, the torches on dungeon walls and the fire pits stayed dark. The pieces of a model
+## drawn with one of these textures are a lamp, torch, candle or fire: each clump of them (LIGHT_CLUSTER_M) gets a
+## light, unless the zone already has one there. Only with remastered lighting (set_remastered_lights).
+const LIGHT_TEXTURES := {
+	"blantrn1": "lantern", "lanterntex1": "lantern", "thlantern": "lantern", "frblglanterntex": "lantern",
+	"e_lampglow": "lantern", "hlampbas": "lantern",
+	"b_irontorch": "torch", "hceltictorch": "torch", "torchparts": "torch", "torchstone01": "torch",
+	"torchstonehands": "torch",
+	"dstonecandle01": "candle", "fomor_candleglow": "candle",
+	"firepit": "fire", "firepittex": "fire", "n_firepit": "fire", "a_coals_01_glow": "fire",
+	"smoldering_wood01_glow": "fire",
+}
+## kind: [colour, range m, energy, flicker]
+const LIGHT_KINDS := {
+	"lantern": [Color(1.0, 0.72, 0.42), 7.5, 2.0, 0.06],
+	"torch": [Color(1.0, 0.62, 0.3), 8.0, 1.9, 0.15],
+	"candle": [Color(1.0, 0.76, 0.48), 3.5, 0.9, 0.1],
+	"fire": [Color(1.0, 0.55, 0.25), 10.0, 2.2, 0.2],
+}
+const LIGHT_CLUSTER_M := 2.0          # vertices this close together are one lamp (a lantern and its bracket)
+const LIGHT_NEAR_M := 3.0             # a zone light (lights.csv) or another lamp light this close: no second one
+var _fixture_light_at: Array[Vector3] = []
+var _lamps := 0
+
+
+## The clumps of one surface's vertices (model space): a lamp each. A lantern's light is in its glass - the lowest
+## part (it hangs from its bracket), a torch's or candle's at its top (the flame), a fire's just above its middle.
+func _light_spots(spots: Array, mesh: Mesh, surface: int, local: Transform3D, kind: String) -> void:
+	var arrays := mesh.surface_get_arrays(surface)
+	var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var clumps: Array = []                                   # [sum, points]
+	for v in verts:
+		var p := local * v
+		var found := false
+		for c in clumps:
+			if ((c[0] as Vector3) / float((c[1] as Array).size())).distance_to(p) < LIGHT_CLUSTER_M:
+				c[0] = (c[0] as Vector3) + p
+				(c[1] as Array).append(p)
+				found = true
+				break
+		if not found:
+			clumps.append([p, [p]])
+	# a lantern's glass, cage and bracket can fall into separate clumps: those within LIGHT_NEAR_M are one lamp
+	var merged := true
+	while merged:
+		merged = false
+		for i in clumps.size():
+			for j in range(i + 1, clumps.size()):
+				var a: Array = clumps[i]
+				var b: Array = clumps[j]
+				if ((a[0] as Vector3) / float((a[1] as Array).size())).distance_to((b[0] as Vector3) / float((b[1] as Array).size())) < LIGHT_NEAR_M:
+					clumps[i] = [(a[0] as Vector3) + (b[0] as Vector3), (a[1] as Array) + (b[1] as Array)]
+					clumps.remove_at(j)
+					merged = true
+					break
+			if merged:
+				break
+	for c in clumps:
+		var pts: Array = c[1]
+		var lo := INF
+		var hi := -INF
+		for q in pts:
+			lo = minf(lo, (q as Vector3).y)
+			hi = maxf(hi, (q as Vector3).y)
+		var at := (c[0] as Vector3) / float(pts.size())
+		if kind == "lantern":
+			var band := Vector3.ZERO                         # the glass: the vertices near the bottom
+			var n := 0
+			for q in pts:
+				if (q as Vector3).y < lo + 0.6:
+					band += q
+					n += 1
+			at = band / float(maxi(n, 1))
+			at.y = lo + 0.35
+		elif kind in ["torch", "candle"]:
+			at.y = hi + 0.1
+		elif kind == "fire":
+			at.y += 0.4
+		spots.append({"at": at, "kind": kind})
+
+
+func _add_fixture_light(at: Vector3, kind: String) -> void:
+	if _fixture_light_at.is_empty():
+		for l in info.get("lights", []):                   # (the zone's own lights - _build_lights adds them later)
+			_fixture_light_at.append(Vector3(l.pos[0], l.pos[1], l.pos[2]))
+		_fixture_light_at.append(Vector3(INF, INF, INF))
+	for q in _fixture_light_at:
+		if q.distance_to(at) < LIGHT_NEAR_M:
+			return
+	_fixture_light_at.append(at)
+	_lamps += 1
+	var k: Array = LIGHT_KINDS.get(kind, LIGHT_KINDS.lantern)
+	var o := OmniLight3D.new()
+	o.name = "Lamp"
+	o.position = at
+	o.light_color = k[0]
+	o.omni_range = float(k[1])
+	o.omni_attenuation = 1.0
+	o.shadow_enabled = false
+	o.distance_fade_enabled = true
+	o.distance_fade_begin = 90.0
+	o.distance_fade_length = 30.0
+	o.set_meta("base_energy", float(k[2]))
+	o.set_meta("flicker", float(k[3]))
+	o.set_meta("flicker_seed", randf() * 100.0)
+	o.set_meta("fire", false)                            # (no shadows: there can be hundreds of these)
+	o.set_meta("fixture", kind)
+	o.visible = flicker_enabled
+	add_child(o)
+	_lights.append(o)
+
+
 # ---------------------------------------------------------------- fixtures
 
 func _build_fixtures() -> void:
@@ -573,7 +707,9 @@ func _build_fixtures() -> void:
 	var climb_cache := {}
 	for m in per_model:
 		var model: Dictionary = info.models[m]
+		var tm := Time.get_ticks_usec()
 		var parts := _load_model(dir.path_join(model.file), bool(model.get("ambient_only", false)))
+		prof["models"] = int(prof.get("models", 0)) + Time.get_ticks_usec() - tm
 		if parts.is_empty() or (parts.meshes.is_empty() and parts.particles.is_empty() and parts.doors.is_empty()):
 			continue
 		var xforms: Array[Transform3D] = []
@@ -595,6 +731,9 @@ func _build_fixtures() -> void:
 		var far := clampf(VIEW_RANGE_PER_M * size, VIEW_RANGE_MIN_M, VIEW_RANGE_MAX_M)
 		if model.has("effect_range_m"):
 			far = float(model.effect_range_m)            # moneffects.csv max visible range
+		for spot in parts.get("light_spots", []):       # remastered: lanterns, torches, candles, fire pits give light
+			for x in xforms:
+				_add_fixture_light(x * (spot.at as Vector3), String(spot.kind))
 		for spec in parts.particles:                    # fires, smoke, glows: the NIF's own particle systems
 			for x in xforms:
 				var ps := _make_particles(spec, x, far * view_mult)
@@ -802,7 +941,7 @@ func _load_model(path: String, ambient_only := false) -> Dictionary:
 	var out := {"meshes": [], "collision": PackedVector3Array(), "visible_faces": PackedVector3Array(),
 			"climb": PackedVector3Array(),
 			"particles": state.json.get("extras", {}).get("nif_particles", []),
-			"doors": {}, "door_specs": state.json.get("extras", {}).get("nif_doors", [])}
+			"doors": {}, "door_specs": state.json.get("extras", {}).get("nif_doors", []), "light_spots": []}
 	for node in root.find_children("*", "MeshInstance3D", true, false):
 		var mi := node as MeshInstance3D
 		var local := Transform3D.IDENTITY
@@ -843,7 +982,11 @@ func _load_model(path: String, ambient_only := false) -> Dictionary:
 			var src := mesh.surface_get_material(i)
 			var mat_name := src.resource_name if src else ""
 			if mat_name.begins_with("nifmat:") and int(mat_name.substr(7)) < specs.size():
-				mesh.surface_set_material(i, materials.material(specs[int(mat_name.substr(7))]))
+				var spec: Dictionary = specs[int(mat_name.substr(7))]
+				mesh.surface_set_material(i, materials.material(spec))
+				var kind := String(LIGHT_TEXTURES.get(String(spec.get("slots", {}).get("base", {}).get("tex", "")).to_lower(), ""))
+				if kind != "":
+					_light_spots(out.light_spots, mesh, i, local, kind)
 			else:
 				push_warning("%s: surface %d has no converted material (%s)" % [path, i, mat_name])
 		out.meshes.append([mesh, local])
@@ -861,6 +1004,13 @@ func set_texture_set(set_name: String) -> void:
 # ---------------------------------------------------------------- textures
 
 func _load_texture(path: String) -> Texture2D:
+	var t0 := Time.get_ticks_usec()
+	var tex := _load_texture_now(path)
+	prof["terrain textures"] = int(prof.get("terrain textures", 0)) + Time.get_ticks_usec() - t0
+	return tex
+
+
+func _load_texture_now(path: String) -> Texture2D:
 	var img := Image.load_from_file(path)
 	if img == null:
 		push_warning("missing texture " + path)

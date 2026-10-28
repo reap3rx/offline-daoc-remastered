@@ -29,6 +29,7 @@ namespace DOL.GS.Commands
 			{
 				case "query":
 					ActionCombat.Send(player, "mode|" + (state.Enabled ? "1" : "0"));
+					ActionCombat.SendWindows(player, true);
 					return;
 				case "on":
 				case "off":

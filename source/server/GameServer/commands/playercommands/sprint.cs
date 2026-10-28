@@ -24,14 +24,16 @@ namespace DOL.GS.Commands
 		"&sprint",
 		ePrivLevel.Player,
 		"Toggles sprint mode",
-		"/sprint")]
+		"/sprint [on|off]")]
 	public class SprintCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
 		public void OnCommand(GameClient client, string[] args)
 		{
 			if (client.Player.HasAbility(Abilities.Sprint))
 			{
-				client.Player.Sprint(!client.Player.IsSprinting);
+				// on / off: the Godot client's hold-Shift sprint in action combat (owner 2026-10-28); bare: a toggle
+				string how = args.Length > 1 ? args[1].ToLowerInvariant() : "";
+				client.Player.Sprint(how == "on" || (how != "off" && !client.Player.IsSprinting));
 			}
 			else
 			{

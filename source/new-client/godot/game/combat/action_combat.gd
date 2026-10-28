@@ -4,24 +4,24 @@ extends Node
 ##   The mouse always looks and you face where you look (Alt held: the cursor, for the interface); A/D strafe.
 ##   Attack (left mouse): tap = one quick swing (the weapon's timer paces it; one tap buffers). Hold past HOLD_S and
 ##     let go = your best anytime style. With the weapon sheathed, the first tap only draws it.
-##   Parry (right mouse): press = a timed parry (a block with a shield) - the 0.25 s window opens at the press. The
-##     parry / block plays at once (half speed while it does); only a parry that catches a blow rings out.
+##   Parry (right mouse): press = a timed parry (a block with a shield) - the window opens at the press: 0.2 s for a
+##     parry, 0.15 s for a block, wider with skill (the server's numbers: "windows"). The parry / block plays at once
+##     (half speed while it does); only a parry that catches a blow rings out.
 ## Floating combat text: the damage you deal and take, over who took it (and what a parry / block saved).
 ##   Q / E / R: your best usable Position / Reactive / Chain style. A reactive answers one parry / block / dodge.
-##   Dodge: double-tap a strafe / back direction (or the Dodge key) - a hop and an evade window.
+##   Dodge: double-tap a strafe / back direction (or the Dodge key) - the dodge animation and an evade window (0.1 s,
+##     wider with Evade). No hop: the animation is the tell (owner 2026-10-28).
 ##   Every one of these is rebindable: Options > Controls > Combat ("Action: ...").
 ## The HUD: a crosshair; a ring closing in on it when a monster winds up a blow at you (gold = parry now); the
 ## charge of a held attack; the swing timer; the Position / Reactive / Chain lights; what your defense did.
 ## Ctrl+F9 (Arrange Combat HUD): drag its parts where you like, switch any of them off; kept in settings.cfg.
 ## The server talks to it in "#AC|..." system lines (ServerWorld takes them out of the chat).
 
-const HOLD_S := 0.3                    # an attack held this long is an anytime style
+const HOLD_S := 0.6                    # an attack held this long is an anytime style (owner 2026-10-28: was 0.3, too quick)
 const DOUBLE_TAP_MS := 260
-const DODGE_COOLDOWN_MS := 1200
 const SOFT_RANGE_M := 12.0             # soft targeting: the monster nearest your aim within this ...
 const SOFT_ANGLE := 40.0               # ... and this many degrees of it
 const KEEP_ANGLE := 70.0               # your current target is kept while it stays this close to your aim
-const PARRY_WINDOW_MS := 250
 const WEAPONLESS := 19                 # cc_weapons.csv: bare hands' sounds
 const SETTINGS := "user://settings.cfg"
 const SECTION := "action_hud"
@@ -137,6 +137,12 @@ func on_line(text: String) -> void:
 				_timer_until = now + _timer_len
 		"whiff":
 			_whiff()                                         # out of reach: the blow cuts air
+		"windows":                                       # windows|parry|block|dodge|cooldown (ActionCombat.SendWindows)
+			if f.size() > 4:
+				_win_parry = int(f[1])
+				_win_block = int(f[2])
+				_win_dodge = int(f[3])
+				_win_cool = int(f[4])
 		"windup":
 			if f.size() > 2:
 				_windup(int(f[1]), int(f[2]))
@@ -235,17 +241,26 @@ func _windup(oid: int, ms: int) -> void:
 	mark.visible = true
 
 
-## The server's parry rhythm (ActionCombat.PressParry): a press, its 0.25 s window, then half a second before the
-## next (owner 2026-10-27: no spamming it) - unless it caught a blow. Pressed early, nothing happens at all.
-const PARRY_REPRESS_MS := 750
+## The server's parry rhythm (ActionCombat.PressParry): a press, its window, then half a second before the next
+## (owner 2026-10-27: no spamming it) - unless it caught a blow. Pressed early, nothing happens at all. The windows
+## grow with Parry / Shields / Evade and their realm abilities (owner 2026-10-28); the server sends them.
+var _win_parry := 200
+var _win_block := 150
+var _win_dodge := 100
+var _win_cool := 500
 var _parry_ready_at := 0
 
 
-func _parry_ok(now: int) -> bool:
+func _parry_ok(now: int, parry_only := false) -> bool:
 	if now < _parry_ready_at:
 		return false
-	_parry_ready_at = now + PARRY_REPRESS_MS
+	_parry_ready_at = now + _press_window(parry_only) + _win_cool
 	return true
+
+
+## The window a parry / block press opens now (ms).
+func _press_window(parry_only := false) -> int:
+	return _win_block if _has_shield() and not parry_only else _win_parry
 
 
 func _defended(kind: String, dmg: int, saved: int) -> void:
@@ -253,6 +268,8 @@ func _defended(kind: String, dmg: int, saved: int) -> void:
 	var blue := Color(0.55, 0.8, 1.0)
 	if kind in ["parry", "block"]:
 		_parry_ready_at = 0                                # (a caught blow: the next press is free to come at once)
+	elif kind == "dodge":
+		_dodge_ready_at = 0
 	match kind:
 		"miss":                                            # in combat, a press that caught nothing: its endurance
 			_float_text(0, "MISSED  -%d END" % dmg, Color(0.75, 0.75, 0.75), 32, 0.5)
@@ -422,7 +439,7 @@ func _input(event: InputEvent) -> void:
 		if Keybinds.pressed(event, "ac_parry_only"):
 			if not _drawn():
 				_draw_weapon()
-			elif _parry_ok(now):
+			elif _parry_ok(now, true):
 				Server.command("/ac parry only")
 				p.action_defend("parry")
 			get_viewport().set_input_as_handled()
@@ -644,18 +661,17 @@ func _held_dir() -> Vector3:
 	return d
 
 
-func _dodge(dir: Vector3) -> void:
+func _dodge(_dir: Vector3) -> void:
 	var now := Time.get_ticks_msec()
 	var p := _player()
 	if p == null or now < _dodge_ready_at or not p.grounded:
 		return
-	_dodge_ready_at = now + DODGE_COOLDOWN_MS
+	_dodge_ready_at = now + _win_dodge + _win_cool
 	if _drawing:
 		Server.command("/ac cancel")                       # (a dodge lowers the bow)
 		_end_draw(false)
 	Server.command("/ac dodge")
-	p.dodge(dir)
-	p.action_defend("evade")
+	p.action_defend("evade")                               # (no hop - owner 2026-10-28: the animation is the tell)
 
 
 var _swap_at := 0
@@ -762,6 +778,7 @@ func _process(_delta: float) -> void:
 		Server.command("/ac query")
 		Server.command("/ac poison query")                 # (the poison bag starts putting poisons on)
 	var p := _player()
+	_hold_sprint(p)
 	if p == null or not on:
 		return
 	var now := Time.get_ticks_msec()
@@ -792,6 +809,36 @@ func _process(_delta: float) -> void:
 	p.charge_glow(_atk_down and now - _atk_at >= int(HOLD_S * 1000.0))
 	p.shoulder = Vector2(cam_side, cam_up)
 	hud.queue_redraw()
+
+
+## Sprint while Shift is held (owner 2026-10-28: in action combat Shift sprints instead of walking - held, not a
+## toggle). Only while a movement key is held too, so Shift + a quickbar key doesn't start it. The server's own Sprint
+## (its x1.3, its endurance) - "/sprint on" / "off"; its "prepare to sprint" chat lines are kept out of the way.
+var _sprint_held := false
+var _sprint_quiet_until := 0
+
+
+func _hold_sprint(p: Player) -> void:
+	var want := on and p != null and Server.playing and p.input_enabled and not p.dead and not _typing() \
+			and Input.is_physical_key_pressed(KEY_SHIFT) and (_moving_keys() or p.autorun)
+	if want == _sprint_held:
+		return
+	_sprint_held = want
+	_sprint_quiet_until = Time.get_ticks_msec() + 1500
+	Server.command("/sprint on" if want else "/sprint off")
+
+
+func _moving_keys() -> bool:
+	for id in ["move_forward", "move_back", "turn_left", "turn_right", "strafe_left", "strafe_right"]:
+		if Keybinds.held(id):
+			return true
+	return false
+
+
+## A sprint chat line that only echoes a hold-Shift sprint starting or stopping (ServerWorld drops it).
+func quiet_sprint_line(text: String) -> bool:
+	return Time.get_ticks_msec() < _sprint_quiet_until and text.to_lower().contains("sprint") \
+			and not text.to_lower().contains("fatigued")
 
 
 ## The reticle: the monster the crosshair is on (its pick shape, else the one nearest the crosshair's line within a
@@ -990,7 +1037,7 @@ func _draw_attacker_ring(w: Dictionary, now: int, font: Font) -> void:
 	var total := maxf(1.0, float(int(w.end) - int(w.start)))
 	var t := clampf((now - int(w.start)) / total, 0.0, 1.0)
 	var left := int(w.end) - now
-	var hot := left <= PARRY_WINDOW_MS and left > -60
+	var hot := left <= _press_window() and left > -60
 	var col := Color(1.0, 0.82, 0.3) if hot else Color(1.0, 0.3, 0.2, 0.9)
 	var head := n.global_position + Vector3(0, n.height * 0.65, 0)
 	var size := hud.size
@@ -1075,7 +1122,7 @@ func _draw_hud() -> void:
 			var total := maxf(1.0, float(int(w.end) - int(w.start)))
 			var t := clampf((now - int(w.start)) / total, 0.0, 1.0)
 			var left := int(w.end) - now
-			var hot := left <= PARRY_WINDOW_MS and left > -60
+			var hot := left <= _press_window() and left > -60
 			var rad := lerpf(78.0, 20.0, t)
 			hud.draw_arc(c, rad, 0.0, TAU, 56, Color(1.0, 0.82, 0.3) if hot else Color(1.0, 0.3, 0.2, 0.85), 3.0 if hot else 2.0)
 		if not _windups.is_empty():

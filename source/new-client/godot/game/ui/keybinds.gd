@@ -130,7 +130,8 @@ func load_bindings() -> void:
 	# those empty, so they take the new defaults once
 	var old := int(cfg.get_value("keybinds", "version", 1)) < 2 if ok else false
 	for a in actions:
-		var saved = cfg.get_value("bindings", a.id, null) if ok else null
+		# (has_section_key first: a null default still logs "no default was given" for every action new since the save)
+		var saved = cfg.get_value("bindings", a.id) if ok and cfg.has_section_key("bindings", a.id) else null
 		var quick := String(a.id).begins_with("qb2_") or String(a.id).begins_with("qb3_") or String(a.id).begins_with("qbank_")
 		if saved is Array and not (old and quick and (saved as Array).is_empty()):
 			bindings[a.id] = (saved as Array).duplicate()

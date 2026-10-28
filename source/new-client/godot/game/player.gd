@@ -122,6 +122,7 @@ var _cursor_at := Vector2.ZERO          # where the cursor was when a mouse-look
 # Action Combat (ActionCombatMode, owner 2026-10-26): the mouse always looks and steers (no button held), A/D strafe,
 # the mouse buttons fight. action_cursor: the cursor is out for the interface (Alt held) - the mouse doesn't look.
 var action_mode := false
+const FREE_TURN_RATE := 12.0             # action combat free look: how fast the body turns to where you run
 var action_cursor := false
 var aiming := false                     # drawing a bow in action combat: you stand to shoot (turning still aims)
 var _defend_clip := ""                  # the parry / block / evade you just tried (a blow landing cuts it off)
@@ -194,7 +195,12 @@ func _ready() -> void:
 	_arm = SpringArm3D.new()
 	_arm.spring_length = cam_distance
 	_arm.collision_mask = ZoneLoader.LAYER_WALL | ZoneLoader.LAYER_FLOOR | ZoneLoader.LAYER_SCENERY
-	_arm.margin = 0.2
+	# a small sphere swept along the arm, not a thin ray (owner 2026-10-28: the camera clipped through walls and
+	# terrain - a ray let the near plane cut into a wall it grazed); _process also keeps it above ground and water
+	var cam_ball := SphereShape3D.new()
+	cam_ball.radius = CAM_BALL
+	_arm.shape = cam_ball
+	_arm.margin = 0.05
 	_arm.add_excluded_object(get_rid())
 	_pivot.add_child(_arm)
 	camera = Camera3D.new()
@@ -474,6 +480,8 @@ func action_defend(kind: String) -> void:
 
 ## A fully charged heavy attack: the drawn weapon glows gold (the client's own weapon effects - spweapons.csv's
 ## gold glows, by the weapon's stance) until the blow goes.
+const CHARGE_GLOW_SCALE := 0.6
+const CHARGE_GLOW_FADE := 0.5
 const CHARGE_GLOW := {"": 11, "2h": 32, "scy": 32, "pole": 78, "staff": 92, "h2h": 11}
 
 
@@ -494,6 +502,15 @@ func charge_glow(on: bool) -> void:
 	if holder == null:
 		return
 	_charge_fx = WeaponModels.add_effect(holder, int(CHARGE_GLOW.get(combat_stance, 11)))
+	if _charge_fx == null:
+		return
+	# subtler (owner 2026-10-28: "a smaller one, or dimmer one?"): smaller, see-through, and a faint light
+	_charge_fx.scale *= CHARGE_GLOW_SCALE
+	NifParticles.fit_to_scale(_charge_fx)
+	for g in _charge_fx.find_children("*", "GeometryInstance3D", true, false):
+		(g as GeometryInstance3D).transparency = maxf((g as GeometryInstance3D).transparency, CHARGE_GLOW_FADE)
+	for l in _charge_fx.find_children("FxLight*", "OmniLight3D", true, false):
+		(l as OmniLight3D).light_energy *= 0.35
 
 
 ## Hidden (Stealth, the server's PlayerModelTypeChange 3): you are drawn see-through, as the old client showed you
@@ -582,6 +599,12 @@ func clip_seconds(clip: String) -> float:
 ## The figures' "Stand Up" clip (anims.csv) is the 8 s standing idle, not a rise (pelvis never leaves standing height),
 ## and playing it out slid a moving player along for 4-8 s (owner 2026-10-10): standing up is the sit-down played
 ## backwards (0.8-1.5 s), and moving cuts it short (_animate).
+## Action combat: the character faces where the camera looks only with the weapon out, a spell being cast or a bow
+## drawn (owner 2026-10-28) - otherwise the camera looks around freely.
+func _faces_camera() -> bool:
+	return action_mode and (in_combat or casting_spell or aiming)
+
+
 func sit(on: bool) -> void:
 	sitting = on
 	if on:
@@ -777,7 +800,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		var ady: float = event.relative.y * (-1.0 if invert_mouse else 1.0) * mouse_sensitivity
 		cam_yaw -= event.relative.x * MOUSE_TURN * mouse_sensitivity
 		cam_pitch = clampf(cam_pitch - ady * 0.004, -CAM_PITCH, CAM_PITCH)
-		char_yaw = cam_yaw                              # action combat: you face where you look
+		if _faces_camera() and not sitting:
+			char_yaw = cam_yaw                          # action combat, weapon out: you face where you look
 		return
 	if action_mode and not action_cursor and event is InputEventMouseButton \
 			and event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
@@ -789,8 +813,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			cam_pitch = clampf(cam_pitch - dy * 0.004, -1.35, 0.6)
 		else:
 			cam_pitch = clampf(cam_pitch - dy * 0.004, -CAM_PITCH, CAM_PITCH)
-		if rmb:
-			char_yaw = cam_yaw                          # steering: the character follows the camera
+		if rmb and not sitting:
+			char_yaw = cam_yaw                          # steering: the character follows the camera (sitting: looking)
 	elif event is InputEventMouseButton:
 		if event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
 			# hide the cursor while dragging, as WoW does, and put it back where the drag began (capturing the mouse
@@ -801,7 +825,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			elif not (rmb or lmb) and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 				get_viewport().warp_mouse(_cursor_at)
-			if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+			if event.pressed and event.button_index == MOUSE_BUTTON_RIGHT and not sitting:
 				char_yaw = cam_yaw                      # right-click snaps the character to the camera heading
 		elif event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN] and _over_window():
 			pass                                        # the wheel over a window scrolls it, never the camera
@@ -850,6 +874,24 @@ func _ui_typing() -> bool:
 func hold() -> void:
 	hold_frames = 12
 	velocity = Vector3.ZERO
+
+
+## The camera stays out of the ground and the water (owner 2026-10-28: looking up from a riverbank put it under the
+## river): the spring arm's sphere keeps it off walls and roofs; out in the open it also stays CAM_CLEAR above the
+## terrain and any water surface where it is. After physics (the arm places it there), before the frame is drawn.
+const CAM_BALL := 0.25
+const CAM_CLEAR := 0.35
+
+
+func _process(_delta: float) -> void:
+	if camera == null or flying or riding or (zone == null and region == null):
+		return
+	var g := camera.global_position
+	var lim := _water_h(g.x, g.z)
+	if zone and not zone.city:
+		lim = maxf(lim, _ground_h(g.x, g.z))
+	if lim > -INF and g.y < lim + CAM_CLEAR:
+		camera.global_position.y = lim + CAM_CLEAR
 
 
 func _physics_process(delta: float) -> void:
@@ -926,9 +968,23 @@ func _physics_step(delta: float) -> void:
 		_fly(delta, ahead, strafe, turn)
 		return
 
+	# Action combat with the weapon away and no spell being cast (owner 2026-10-28): the camera looks freely - you can
+	# turn it to see your character's face - and the character turns to run where you steer, relative to the camera.
+	# Weapon out, casting or aiming: you face where you look, as before. Sitting: you stay put either way.
+	var free_dir := Vector3.ZERO
+	if action_mode and not dead and cc == "":
+		if not _faces_camera():
+			if ahead != 0.0 or strafe != 0.0:
+				free_dir = Vector3(strafe, 0.0, -ahead).normalized().rotated(Vector3.UP, cam_yaw)
+				char_yaw = lerp_angle(char_yaw, atan2(-free_dir.x, -free_dir.z), minf(1.0, delta * FREE_TURN_RATE))
+				ahead = 1.0                                # (the body runs forward, toward where it is going)
+				strafe = 0.0
+		elif not sitting:
+			char_yaw = lerp_angle(char_yaw, cam_yaw, minf(1.0, delta * 18.0))   # (drawn: turn to the camera's heading)
+
 	char_yaw += turn * TURN_RATE * delta
 	var moving := absf(ahead) > 0.0 or absf(strafe) > 0.0
-	if not lmb and (moving or absf(turn) > 0.0):
+	if not lmb and not action_mode and (moving or absf(turn) > 0.0):
 		cam_yaw = lerp_angle(cam_yaw, char_yaw, minf(1.0, delta * 8.0))   # camera swings back behind
 	if not rmb and not lmb and absf(turn) > 0.0:
 		cam_yaw = char_yaw
@@ -948,10 +1004,12 @@ func _physics_step(delta: float) -> void:
 		speed = CLASSIC_BACK_SPEED if classic else BACK_SPEED   # backpedalling, straight or diagonal
 	elif classic and ahead == 0.0 and strafe != 0.0:
 		speed = CLASSIC_SIDE_SPEED                    # DAoC's slow side-step
-	elif walking or _key(KEY_SHIFT):
+	elif walking or (_key(KEY_SHIFT) and not action_mode):   # (action combat: Shift sprints - ActionCombatMode)
 		speed = WALK_SPEED
 	var wish := local.rotated(Vector3.UP, char_yaw) * speed * speed_mult * buff_speed * snare_mult * encumbrance * stealth_mult \
 			* _wounded_mult() * (0.5 if action_mode and _defend_slow_left > 0.0 else 1.0)
+	if free_dir != Vector3.ZERO:
+		wish = free_dir * wish.length()                 # free look: straight where you steer while the body turns to it
 	_defend_slow_left = maxf(0.0, _defend_slow_left - delta)
 	if aiming and action_mode:
 		wish = Vector3.ZERO

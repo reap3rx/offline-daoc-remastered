@@ -40,9 +40,9 @@ public sealed class UT_ActionCombat
     {
         Assert.That(ActionCombat.ParryFactorForSpec(0), Is.EqualTo(0.8).Within(1e-9));
         Assert.That(ActionCombat.ParryFactorForSpec(1), Is.EqualTo(0.6).Within(1e-9));
-        Assert.That(ActionCombat.ParryFactorForSpec(50), Is.EqualTo(0.1).Within(1e-9));
+        Assert.That(ActionCombat.ParryFactorForSpec(50), Is.EqualTo(0.2).Within(1e-9));
         Assert.That(ActionCombat.ParryFactorForSpec(25), Is.LessThan(ActionCombat.ParryFactorForSpec(10)));
-        Assert.That(ActionCombat.ParryFactorForSpec(80), Is.EqualTo(0.05).Within(1e-9));
+        Assert.That(ActionCombat.ParryFactorForSpec(80), Is.EqualTo(0.15).Within(1e-9));
     }
 
     [Test]
@@ -50,7 +50,36 @@ public sealed class UT_ActionCombat
     {
         Assert.That(ActionCombat.BlockFactorForSpec(0), Is.EqualTo(0.5).Within(1e-9));
         Assert.That(ActionCombat.BlockFactorForSpec(1), Is.EqualTo(0.4).Within(1e-9));
-        Assert.That(ActionCombat.BlockFactorForSpec(50), Is.EqualTo(0.0).Within(1e-9));
+        Assert.That(ActionCombat.BlockFactorForSpec(50), Is.EqualTo(0.1).Within(1e-9));
+        for (int spec = 0; spec <= 60; spec += 5)
+            Assert.That(ActionCombat.BlockFactorForSpec(spec), Is.LessThan(ActionCombat.ParryFactorForSpec(spec)), "a block saves more than a parry");
+    }
+
+    [Test]
+    public void DefenseWindowsGrowWithSkill()
+    {
+        // owner 2026-10-28: 0.1 s dodge, 0.15 s block, 0.2 s parry to start
+        Assert.That(ActionCombat.DodgeWindowFor(0, 0), Is.EqualTo(100));
+        Assert.That(ActionCombat.BlockWindowFor(1, 0), Is.EqualTo(150));
+        Assert.That(ActionCombat.ParryWindowFor(1, 0), Is.EqualTo(200));
+        Assert.That(ActionCombat.ParryWindowFor(0, 0), Is.EqualTo(200));
+        Assert.That(ActionCombat.ParryWindowFor(50, 0), Is.GreaterThan(ActionCombat.ParryWindowFor(20, 0)));
+        Assert.That(ActionCombat.DodgeWindowFor(7, 0), Is.EqualTo(310));
+        Assert.That(ActionCombat.ParryWindowFor(30, 3), Is.EqualTo(ActionCombat.ParryWindowFor(30, 0) + 60), "Mastery of Parrying widens it");
+    }
+
+    [Test]
+    public void MissedDodgeCostsMostAndParryLeast()
+    {
+        foreach (int parry in new[] { 1, 4, 7, 12 })
+        {
+            int block = ActionCombat.BlockCostFor(parry, 0);
+            int dodge = ActionCombat.DodgeCostFor(parry, block);
+            Assert.That(block, Is.GreaterThan(parry));
+            Assert.That(dodge, Is.GreaterThan(block));
+        }
+
+        Assert.That(ActionCombat.BlockCostFor(6, 11), Is.EqualTo(11), "at least the shield's own reactive");
     }
 
     [Test]
@@ -109,7 +138,7 @@ public sealed class UT_ActionCombatArchery
         Assert.That(StyleProcessor.RawFatigue(ActionCombat.MissedDefenseRating, 37), Is.EqualTo(7));   // 3.7 sword: 6 + 1
         Assert.That(StyleProcessor.RawFatigue(ActionCombat.MissedDefenseRating, 55), Is.EqualTo(9));   // 5.5 two-hander
         Assert.That(StyleProcessor.RawFatigue(10, 25), Is.EqualTo(7));
-        Assert.That(ActionCombat.ParryWindowMs + ActionCombat.ParryCooldownMs, Is.EqualTo(750));
+        Assert.That(ActionCombat.ParryCooldownMs, Is.EqualTo(500));
     }
 
     [Test]

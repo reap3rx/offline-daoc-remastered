@@ -115,9 +115,15 @@ func image(tex_name: String) -> Image:
 	return Image.load_from_file(_path(tex_name)) if FileAccess.file_exists(_path(tex_name)) else null
 
 
+var load_usec := 0                  # time spent reading textures (ZoneLoader's "built in" line)
+var load_count := 0
+
+
 func texture(tex_name: String) -> Texture2D:
 	var key := "%s/%s" % [texture_set, tex_name]
 	if not _textures.has(key):
+		var t0 := Time.get_ticks_usec()
+		load_count += 1
 		var path := _path(tex_name)
 		var img := Image.load_from_file(path)
 		if img == null:
@@ -126,6 +132,7 @@ func texture(tex_name: String) -> Texture2D:
 		else:
 			img.generate_mipmaps()
 			_textures[key] = ImageTexture.create_from_image(img)
+		load_usec += Time.get_ticks_usec() - t0
 	return _textures[key]
 
 

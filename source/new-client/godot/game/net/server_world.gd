@@ -913,6 +913,9 @@ func _message(d: Dictionary) -> void:
 		if ac:
 			ac.on_line(String(d.text).substr(4))
 		return
+	var acq: Node = viewer.get("action_combat") if viewer else null
+	if acq and acq.has_method("quiet_sprint_line") and acq.quiet_sprint_line(String(d.text)):
+		return                                          # (hold-Shift sprint's own on / off lines: ActionCombatMode)
 	if t == 0x64:                                       # CT_SocialInterface: the social window's data, not chat
 		_social(String(d.text))
 		return

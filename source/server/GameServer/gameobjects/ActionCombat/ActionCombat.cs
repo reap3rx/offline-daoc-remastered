@@ -8,10 +8,14 @@
  *     Chain buttons fire the best usable style of that kind. A reactive skips the swing timer.
  *   - Your swings never miss in range (no miss, no level fumble) and always whiff out of range. Monsters still
  *     evade, parry and block at random; if they turn aside one of your STYLES you stumble (double recovery).
- *   - Your own defense is timing, not dice: a parry press (/ac parry) opens a 0.25 s window. A blow landing
- *     in it is Parried (unlocking parry reactives) and you take only part of it - less the more Parry you have.
- *     With a shield the press is a block, scaled by Shields. Holding guard (/ac guard on) softens every blow at
- *     an endurance cost. A dodge (/ac dodge) opens an evade window (longer with Evade), at an endurance cost.
+ *   - Your own defense is timing, not dice (owner 2026-10-28): a parry press (/ac parry) opens a short window -
+ *     0.2 s untrained, wider with Parry spec and Mastery of Parrying. A blow landing in it is Parried (unlocking
+ *     parry reactives) and you take only part of it - less the more Parry you have. With a shield the press is a
+ *     block: a narrower window (0.15 s, wider with Shields / Mastery of Blocking) that saves more of the blow.
+ *     A dodge (/ac dodge) is the narrowest (0.1 s, wider with Evade / Dodger) and avoids the whole blow. A press
+ *     that catches something is free; in combat one that catches nothing costs endurance - a reactive style's for
+ *     a parry, half again for a block, twice for a dodge. Holding guard (/ac guard on) softens every blow at an
+ *     endurance cost.
  *   - Monsters fighting you wind up for WindupMs before their blow lands, and your client is told (a cue to
  *     time the parry on).
  * The client and server talk through "#AC|..." system lines the Godot client takes out of the chat.
@@ -41,9 +45,12 @@ namespace DOL.GS
 		public long ParryReadyAt;
 		public bool ParryOnly;                 // the press was "parry, not block" (a shield carried: Shift + right mouse)
 		public bool ParryAnswered;             // the press caught a blow (else, in combat, it costs endurance)
+		public int ParryWindowMs = 200;        // this press's window (parry or block, by skill)
 		public long DodgeAt = -100000;
 		public int DodgeWindowMs;
 		public long DodgeReadyAt;
+		public bool DodgeAnswered;
+		public string LastWindows = "";
 		public bool Guarding;
 		public bool FumblePending;
 		// A reaction answers one opening: the blow you parried / blocked / dodged (the enemy's attack), or your own
@@ -69,10 +76,18 @@ namespace DOL.GS
 		public const string Prefix = "#AC|";
 
 		public const int WindupMs = 600;           // a monster's telegraphed wind-up before its blow lands
-		public const int ParryWindowMs = 250;      // the timed parry / block window
+		// The timed windows (owner 2026-10-28: "very small at low skill, and get easier with levels"): the base, what
+		// each point of spec (Evade level for a dodge) adds, and what each level of the matching realm ability adds.
+		public const int ParryWindowBaseMs = 200;
+		public const int BlockWindowBaseMs = 150;
+		public const int DodgeWindowBaseMs = 100;
+		public const int WindowPerSpecMs = 3;      // Parry / Shields: spec 50 = +147 ms
+		public const int WindowPerEvadeMs = 30;    // Evade VII = +210 ms
+		public const int WindowPerRealmAbilityMs = 20;
 		public const int ParryCooldownMs = 500;    // after the window closes, no new press before this (owner 2026-10-27: no spam)
 		public const int MissedDefenseRating = 7;  // a missed press with no reactive style known: a typical reactive's cost
-		public const int DodgeCooldownMs = 1200;
+		public const double MissedBlockCost = 1.5; // a missed block / dodge costs this many missed parries (owner 2026-10-28)
+		public const double MissedDodgeCost = 2.0;
 		public const int IdlePollMs = 50;          // how often an idle attack action checks for a click
 		public const double GuardFactor = 0.75;    // damage taken while holding guard
 		public const double GuardShieldFactor = 0.6;
@@ -124,6 +139,7 @@ namespace DOL.GS
 			}
 
 			Send(player, "mode|" + (on ? "1" : "0"));
+			SendWindows(player, true);
 		}
 
 		// ------------------------------------------------------------------ attacking
@@ -322,6 +338,7 @@ namespace DOL.GS
 				sb.Append(Resolve(player, kind) != null ? '1' : '0');
 
 			string ready = sb.ToString();
+			SendWindows(player);                  // (spec / level / realm abilities change them)
 
 			if (ready == state.LastReady)
 				return;
@@ -366,30 +383,67 @@ namespace DOL.GS
 			if (now < state.ParryReadyAt || !player.attackComponent.AttackState || !player.IsAlive)
 				return;                            // (a sheathed weapon parries nothing: the client draws it first)
 
-			// In combat a press that catches nothing costs what a reactive style for that weapon would (owner
-			// 2026-10-27) - so it has to be paid for up front.
-			int cost = player.InCombat ? MissedDefenseCost(player, HasShield(player) && !parryOnly) : 0;
+			bool block = HasShield(player) && !parryOnly;
+			eActionDefense kind = block ? eActionDefense.Block : eActionDefense.Parry;
+
+			// In combat a press that catches nothing costs endurance (owner 2026-10-27) - so there has to be enough
+			// for it up front. One that catches a blow costs nothing.
+			int cost = player.InCombat ? MissedDefenseCost(player, kind) : 0;
 
 			if (cost > 0 && player.Endurance < cost)
 			{
 				state.ParryReadyAt = now + ParryCooldownMs;
-				player.Out.SendMessage("You are too tired to parry!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				player.Out.SendMessage(block ? "You are too tired to block!" : "You are too tired to parry!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 				Send(player, "def|tired|0");
 				return;
 			}
 
+			int window = Window(player, kind);
 			state.ParryOnly = parryOnly;
 			state.ParryPressedAt = now;
 			state.ParryAnswered = false;
-			state.ParryReadyAt = now + ParryWindowMs + ParryCooldownMs;   // half a second after the window closes
+			state.ParryWindowMs = window;
+			state.ParryReadyAt = now + window + ParryCooldownMs;   // half a second after the window closes
 
-			if (cost <= 0)
+			if (cost > 0)
+				ChargeIfMissed(player, () => state.ParryPressedAt == now && !state.ParryAnswered, cost, window);
+		}
+
+		public static void PressDodge(GamePlayer player)
+		{
+			ActionCombatState state = Get(player);
+			long now = GameLoop.GameLoopTime;
+
+			if (now < state.DodgeReadyAt || !player.IsAlive || player.IsIncapacitated || !player.attackComponent.AttackState)
 				return;
 
-			long pressed = now;
+			int cost = player.InCombat ? MissedDefenseCost(player, eActionDefense.Dodge) : 0;
+
+			if (cost > 0 && player.Endurance < cost)
+			{
+				state.DodgeReadyAt = now + ParryCooldownMs;
+				player.Out.SendMessage("You are too tired to dodge!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Send(player, "def|tired|0");
+				return;
+			}
+
+			int window = Window(player, eActionDefense.Dodge);
+			state.DodgeAt = now;
+			state.DodgeWindowMs = window;
+			state.DodgeAnswered = false;
+			state.DodgeReadyAt = now + window + ParryCooldownMs;
+			state.Guarding = false;
+
+			if (cost > 0)
+				ChargeIfMissed(player, () => state.DodgeAt == now && !state.DodgeAnswered, cost, window);
+		}
+
+		/// <summary>When the window has closed: if the press caught nothing, its endurance is paid.</summary>
+		private static void ChargeIfMissed(GamePlayer player, Func<bool> missed, int cost, int window)
+		{
 			new ECSGameTimer(player, _ =>
 			{
-				if (state.ParryPressedAt == pressed && !state.ParryAnswered && player.IsAlive)
+				if (missed() && player.IsAlive)
 				{
 					int paid = Math.Min(cost, player.Endurance);
 					player.ChangeEndurance(player, eEnduranceChangeType.Spell, -paid);
@@ -397,20 +451,65 @@ namespace DOL.GS
 				}
 
 				return 0;
-			}, ParryWindowMs + 20);
+			}, window + 20);
+		}
+
+		/// <summary>How long a parry / block / dodge press stays open for this player (ms).</summary>
+		public static int Window(GamePlayer player, eActionDefense kind) => kind switch
+		{
+			eActionDefense.Block => BlockWindowFor(player.GetModifiedSpecLevel(Specs.Shields), RealmAbilityLevel<RealmAbilities.MasteryOfBlocking>(player)),
+			eActionDefense.Dodge => DodgeWindowFor(player.GetAbilityLevel(Abilities.Evade), RealmAbilityLevel<RealmAbilities.AtlasOF_Dodger>(player)),
+			_ => ParryWindowFor(player.GetModifiedSpecLevel(Specs.Parry), RealmAbilityLevel<RealmAbilities.MasteryOfParrying>(player))
+		};
+
+		public static int ParryWindowFor(int spec, int realmAbility) =>
+			ParryWindowBaseMs + WindowPerSpecMs * Math.Clamp(spec - 1, 0, 60) + WindowPerRealmAbilityMs * realmAbility;
+
+		public static int BlockWindowFor(int spec, int realmAbility) =>
+			BlockWindowBaseMs + WindowPerSpecMs * Math.Clamp(spec - 1, 0, 60) + WindowPerRealmAbilityMs * realmAbility;
+
+		public static int DodgeWindowFor(int evade, int realmAbility) =>
+			DodgeWindowBaseMs + WindowPerEvadeMs * Math.Clamp(evade, 0, 7) + WindowPerRealmAbilityMs * realmAbility;
+
+		private static int RealmAbilityLevel<T>(GamePlayer player) where T : Ability
+		{
+			foreach (object a in player.GetAllAbilities())
+			{
+				if (a is T ability)
+					return Math.Max(0, ability.Level);
+			}
+
+			return 0;
 		}
 
 		/// <summary>
-		/// What a press that catches nothing costs: the cheapest reactive style (after a parry / block / evade) you know
-		/// for the weapon - the shield's for a block - or, knowing none, a typical reactive's cost at that weapon's speed.
+		/// What a press that catches nothing costs (owner 2026-10-28: dodge the most, block moderate, parry the least):
+		/// a parry costs the cheapest reactive style (after a parry / block / evade) you know for your weapon - or,
+		/// knowing none, a typical reactive's cost at its speed; a block half again (at least the shield's own
+		/// reactive); a dodge twice a parry.
 		/// </summary>
-		public static int MissedDefenseCost(GamePlayer player, bool block)
+		public static int MissedDefenseCost(GamePlayer player, eActionDefense kind)
 		{
-			DbInventoryItem weapon = block ? player.ActiveLeftWeapon : player.ActiveWeapon;
-			weapon ??= player.ActiveWeapon;
+			int parry = ReactiveCost(player, player.ActiveWeapon);
 
+			return kind switch
+			{
+				eActionDefense.Block => BlockCostFor(parry, ReactiveCost(player, player.ActiveLeftWeapon ?? player.ActiveWeapon)),
+				eActionDefense.Dodge => DodgeCostFor(parry, BlockCostFor(parry, 0)),
+				_ => parry
+			};
+		}
+
+		public static int BlockCostFor(int parryCost, int shieldReactiveCost) =>
+			Math.Max(shieldReactiveCost, (int) Math.Ceiling(parryCost * MissedBlockCost));
+
+		public static int DodgeCostFor(int parryCost, int blockCost) =>
+			Math.Max(blockCost + 1, (int) Math.Ceiling(parryCost * MissedDodgeCost));
+
+		private static int ReactiveCost(GamePlayer player, DbInventoryItem weapon)
+		{
 			if (weapon == null)
-				return 0;
+				return StyleProcessor.EnduranceCostForRating(player, MissedDefenseRating, 30);   // (bare hands)
 
 			int best = int.MaxValue;
 
@@ -425,38 +524,30 @@ namespace DOL.GS
 			return best != int.MaxValue ? best : StyleProcessor.EnduranceCostForRating(player, MissedDefenseRating, weapon.SPD_ABS);
 		}
 
+		/// <summary>The client's timing (its press gating and the wind-up ring's "now"): sent when it changes.</summary>
+		public static void SendWindows(GamePlayer player, bool force = false)
+		{
+			ActionCombatState state = player.ActionCombat;
+
+			if (state == null)
+				return;
+
+			string line = $"windows|{Window(player, eActionDefense.Parry)}|{Window(player, eActionDefense.Block)}|{Window(player, eActionDefense.Dodge)}|{ParryCooldownMs}";
+
+			if (!force && line == state.LastWindows)
+				return;
+
+			state.LastWindows = line;
+			Send(player, line);
+		}
+
 		public static void SetGuard(GamePlayer player, bool on)
 		{
 			Get(player).Guarding = on && player.IsAlive;
 		}
 
-		public static void PressDodge(GamePlayer player)
-		{
-			ActionCombatState state = Get(player);
-			long now = GameLoop.GameLoopTime;
-
-			if (now < state.DodgeReadyAt || !player.IsAlive || player.IsIncapacitated || !player.attackComponent.AttackState)
-				return;
-
-			int cost = Math.Max(10, player.MaxEndurance * 15 / 100);
-
-			if (player.Endurance < cost)
-			{
-				player.Out.SendMessage("You are too tired to dodge!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				Send(player, "def|tired|0");
-				return;
-			}
-
-			player.ChangeEndurance(player, eEnduranceChangeType.Spell, -cost);
-			int evade = player.GetAbilityLevel(Abilities.Evade);
-			state.DodgeAt = now;
-			state.DodgeWindowMs = 200 + 40 * evade;   // 200 ms untrained .. 480 ms with Evade VII
-			state.DodgeReadyAt = now + DodgeCooldownMs;
-			state.Guarding = false;
-			player.movementComponent?.PauseMovementChecks(900);   // the client's dodge hop runs faster than a run
-		}
-
-		/// <summary>Parry spec 1 takes 60% of the blow, 50 takes 10%; untrained 80%.</summary>
+		/// <summary>Parry spec 1 takes 60% of the blow, 50 takes 20%; untrained 80% (owner 2026-10-28: a parry saves the
+		/// least, a block more, a dodge all of it).</summary>
 		public static double ParryFactor(GamePlayer player) => ParryFactorForSpec(player.GetModifiedSpecLevel(Specs.Parry));
 
 		public static double ParryFactorForSpec(int spec)
@@ -464,10 +555,10 @@ namespace DOL.GS
 			if (spec <= 0)
 				return 0.8;
 
-			return Math.Clamp(0.6 - 0.5 * (spec - 1) / 49.0, 0.05, 0.6);
+			return Math.Clamp(0.6 - 0.4 * (spec - 1) / 49.0, 0.15, 0.6);
 		}
 
-		/// <summary>Shields 1 takes 40% of the blow, 50 takes nothing; untrained 50%.</summary>
+		/// <summary>Shields 1 takes 40% of the blow, 50 takes 10%; untrained 50%.</summary>
 		public static double BlockFactor(GamePlayer player) => BlockFactorForSpec(player.GetModifiedSpecLevel(Specs.Shields));
 
 		public static double BlockFactorForSpec(int spec)
@@ -475,7 +566,7 @@ namespace DOL.GS
 			if (spec <= 0)
 				return 0.5;
 
-			return Math.Clamp(0.4 - 0.4 * (spec - 1) / 49.0, 0.0, 0.4);
+			return Math.Clamp(0.4 - 0.3 * (spec - 1) / 49.0, 0.05, 0.4);
 		}
 
 		private static bool HasShield(GamePlayer player)
@@ -502,12 +593,14 @@ namespace DOL.GS
 
 			if (now - state.DodgeAt <= state.DodgeWindowMs)
 			{
+				state.DodgeAnswered = true;
+				state.DodgeReadyAt = now;        // (a dodge that avoided a blow can be followed at once)
 				ad.ActionDefense = eActionDefense.Dodge;
 				ad.EvadeChance = 100;
 				return eAttackResult.Evaded;
 			}
 
-			if (inFront && now - state.ParryPressedAt <= ParryWindowMs)
+			if (inFront && now - state.ParryPressedAt <= state.ParryWindowMs)
 			{
 				ad.ArmorHitLocation = player.CalculateArmorHitLocation(ad);
 				bool caught = HasShield(player) && (!state.ParryOnly || !ad.IsMeleeAttack) || ad.IsMeleeAttack;
@@ -963,12 +1056,13 @@ namespace DOL.GS
 			ActionCombatState state = Get(player);
 			StringBuilder sb = new();
 			sb.AppendLine($"Action combat is {(state.Enabled ? "ON" : "OFF")}.");
-			sb.AppendLine($"Timed parry takes {ParryFactor(player) * 100:0}% of a blow (Parry {player.GetModifiedSpecLevel(Specs.Parry)}); window {ParryWindowMs} ms, then {ParryCooldownMs} ms before the next; in combat a press that catches nothing costs {MissedDefenseCost(player, HasShield(player))} endurance.");
+			sb.AppendLine($"Timed parry takes {ParryFactor(player) * 100:0}% of a blow (Parry {player.GetModifiedSpecLevel(Specs.Parry)}); window {Window(player, eActionDefense.Parry)} ms; a miss in combat costs {MissedDefenseCost(player, eActionDefense.Parry)} endurance.");
 
 			if (HasShield(player))
-				sb.AppendLine($"Timed block takes {BlockFactor(player) * 100:0}% (Shields {player.GetModifiedSpecLevel(Specs.Shields)}).");
+				sb.AppendLine($"Timed block takes {BlockFactor(player) * 100:0}% (Shields {player.GetModifiedSpecLevel(Specs.Shields)}); window {Window(player, eActionDefense.Block)} ms; a miss costs {MissedDefenseCost(player, eActionDefense.Block)}.");
 
-			sb.Append($"Dodge window {200 + 40 * player.GetAbilityLevel(Abilities.Evade)} ms (Evade {player.GetAbilityLevel(Abilities.Evade)}), costs 15% endurance.");
+			sb.AppendLine($"Dodge avoids the whole blow (Evade {player.GetAbilityLevel(Abilities.Evade)}); window {Window(player, eActionDefense.Dodge)} ms; a miss costs {MissedDefenseCost(player, eActionDefense.Dodge)}.");
+			sb.Append($"After a press, {ParryCooldownMs} ms past its window before the next - at once after one that caught a blow.");
 			return sb.ToString();
 		}
 	}
