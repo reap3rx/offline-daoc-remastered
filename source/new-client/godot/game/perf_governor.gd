@@ -214,11 +214,30 @@ func _live_log() -> void:
 		Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0, _phys_max, _slow, gpu_ms,
 		Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME), Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME),
 		Performance.get_monitor(Performance.OBJECT_NODE_COUNT), Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0,
-		cpu_level, gpu_level, drawn, bots] + " | physics a tick by part (ms): " + parts)
+		cpu_level, gpu_level, drawn, bots] + _pipelines() + " | physics a tick by part (ms): " + parts)
 	f.close()
 	_phys_max = 0.0
 	_proc_max = 0.0
 	_slow = 0
+
+
+## Shader pipelines the renderer had to build since the last line (owner 2026-10-28: Camelot stutters walking around
+## - a frame waits while the render thread compiles one; the shader cache makes a second visit cheaper).
+var _pipe_last := {}
+
+
+func _pipelines() -> String:
+	var out := ""
+	for k in [["draw", RenderingServer.RENDERING_INFO_PIPELINE_COMPILATIONS_DRAW],
+			["specialization", RenderingServer.RENDERING_INFO_PIPELINE_COMPILATIONS_SPECIALIZATION],
+			["surface", RenderingServer.RENDERING_INFO_PIPELINE_COMPILATIONS_SURFACE],
+			["mesh", RenderingServer.RENDERING_INFO_PIPELINE_COMPILATIONS_MESH]]:
+		var n := int(RenderingServer.get_rendering_info(k[1]))
+		var d := n - int(_pipe_last.get(k[0], n))
+		_pipe_last[k[0]] = n
+		if d > 0:
+			out += " %s %d" % [k[0], d]
+	return " | pipelines built:" + (out if out != "" else " none")
 
 
 func _apply() -> void:
