@@ -28,23 +28,24 @@ const DEFAULTS := {
 	"render_scale": 1.0,           # 1 = native; above 1 = supersampling (no upscaling, owner)
 	"grass_distance": 72.0,        # metres
 	"grass_density": 1.0,
+	"remastered": true,            # REMASTERED LIGHTING (owner 2026-10-28): SkySystem.set_remastered
 }
 const PRESET_NAMES := ["low", "medium", "high", "ultra", "extreme"]
 # HIGH is the defaults (the owner's own game until now)
 const PRESETS := {
 	"low": {"view_distance": 0.8, "shadows": true, "shadow_size": 1024, "shadow_distance": 80.0, "shadow_filter": 1,
 			"ssao": -1, "ssil": false, "glow": false, "msaa": 0, "screen_aa": 1, "taa": false, "aniso": 2,
-			"render_scale": 1.0, "grass_distance": 45.0, "grass_density": 0.5},
+			"render_scale": 1.0, "grass_distance": 45.0, "grass_density": 0.5, "remastered": false},
 	"medium": {"view_distance": 1.0, "shadows": true, "shadow_size": 2048, "shadow_distance": 110.0, "shadow_filter": 3,
 			"ssao": 1, "ssil": false, "glow": false, "msaa": 0, "screen_aa": 1, "taa": false, "aniso": 4,
-			"render_scale": 1.0, "grass_distance": 60.0, "grass_density": 0.75},
+			"render_scale": 1.0, "grass_distance": 60.0, "grass_density": 0.75, "remastered": false},
 	"high": DEFAULTS,
 	"ultra": {"view_distance": 1.6, "shadows": true, "shadow_size": 4096, "shadow_distance": 220.0, "shadow_filter": 5,
 			"ssao": 4, "ssil": false, "glow": false, "msaa": 4, "screen_aa": 1, "taa": false, "aniso": 16,
-			"render_scale": 1.0, "grass_distance": 110.0, "grass_density": 1.0},
+			"render_scale": 1.0, "grass_distance": 110.0, "grass_density": 1.0, "remastered": true},
 	"extreme": {"view_distance": 2.5, "shadows": true, "shadow_size": 8192, "shadow_distance": 400.0, "shadow_filter": 5,
 			"ssao": 4, "ssil": true, "glow": false, "msaa": 4, "screen_aa": 2, "taa": false, "aniso": 16,
-			"render_scale": 1.0, "grass_distance": 160.0, "grass_density": 1.0},
+			"render_scale": 1.0, "grass_distance": 160.0, "grass_density": 1.0, "remastered": true},
 }
 const VIEW_MAX := 4.0                    # the slider's top: 4x the client's fog and draw ranges
 
@@ -213,6 +214,7 @@ func apply_scene(scene: Node) -> void:
 			env.glow_intensity = 0.6
 			env.glow_bloom = 0.05
 			env.glow_hdr_threshold = 1.2
+		sky.set_remastered(bool(value("remastered")))    # (after the classic settings it overrides)
 		sky.apply_view()
 	if sky and sky.sun:
 		sky.sun.shadow_enabled = bool(value("shadows"))

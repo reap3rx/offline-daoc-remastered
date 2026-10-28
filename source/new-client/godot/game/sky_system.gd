@@ -42,6 +42,7 @@ var _rain: GPUParticles3D
 var _rain_ceiling := 10.0              # metres above the player that drops start (sky_*.dat [rain] ceiling)
 var _follow: Node3D
 var dungeon := false                   # zone.json "dungeon": no sky, sun, day/night or weather (see _setup_dungeon)
+var _world: WorldEnvironment
 
 
 ## Zone-only sun shadow splits (owner 2026-10-15: the Grove of Domnann's ground shadows flickered under the canopy as
@@ -161,6 +162,7 @@ func _setup_rest(z: ZoneLoader) -> void:
 	var world := WorldEnvironment.new()
 	world.environment = environment
 	add_child(world)
+	_world = world
 
 	sun = DirectionalLight3D.new()
 	sun.shadow_enabled = true
@@ -207,6 +209,8 @@ func _setup_dungeon() -> void:
 	environment.fog_depth_curve = 1.0
 	if zone:
 		zone.set_light_level(1.0)                            # the client's lights burn all day underground
+	if remastered:
+		_remaster_frame()
 
 
 func set_hour(h: float) -> void:
@@ -233,6 +237,8 @@ func clock_text() -> String:
 func _process(delta: float) -> void:
 	if dungeon:                                              # the clock still runs (camp timers, night NPCs)
 		game_seconds = fposmod(game_seconds + delta * day_increment * time_scale, 86400.0)
+		if remastered:
+			_remaster_frame()                                # (the mist follows you)
 		return
 	var h := hour()
 	var rate := day_increment * (NIGHT_FACTOR if (h >= 18.0 or h < 6.0) else 1.0)
@@ -362,6 +368,8 @@ func _update(_delta: float) -> void:
 			# emit from the client's rain ceiling above the player (following the feet put the emitter at ground
 			# level, so every drop fell straight into the terrain and storms showed no rain)
 			_rain.global_position = _follow.global_position + Vector3(0.0, _rain_ceiling, 0.0)
+	if remastered:
+		_remaster_frame(w, sun_dir)
 
 
 func _build_rain() -> void:
@@ -437,3 +445,202 @@ static func _rgba(v) -> Color:
 		var a: float = v[3] if v.size() > 3 else 255.0
 		return Color(v[0] / 255.0, v[1] / 255.0, v[2] / 255.0, a / 255.0)
 	return Color.WHITE
+
+
+# ---------------------------------------------------------------- remastered lighting
+
+## REMASTERED LIGHTING (owner 2026-10-28, Options > VIDEO; off = the classic look as above): the same sky files and
+## zone fog, drawn with the engine's newer tools -
+##   - volumetric fog: a lit haze around you that the sun's shadows cut into shafts under trees, that the zone's
+##     torches and fires glow in; its colour is the zone's fog colour of the hour, thicker at dawn, at night and in
+##     storms; plus a ground mist (a fog volume that follows you, thinning with height) at dawn and at night.
+##     Underground: the dungeon's own fog colour, thicker the foggier the dungeon (Darkness Falls' purple).
+##   - the AgX tone curve (bright skies and dark rooms both keep their detail), bloom, indirect light (SSIL),
+##     auto exposure (eyes adjusting from a dungeon to daylight, within a narrow range), a little sun glow and sky
+##     colour in the far distance fog.
+##   - colour grading by realm (Albion warm light / cool shade, Midgard cold, Hibernia green and gold), bluer and
+##     paler at night, warmer at dawn and dusk, greyer in storms.
+## Every number here is mine (gap-fills, tuned on test shots) - the art tuning is still to come.
+var remastered := false
+## Test-shot tuning (--tune=exposure:0.9,fog:0.5 ...): any number below by its key, for comparing looks.
+static var tune := {}
+var _cam_attr: CameraAttributesPractical
+var _mist: FogVolume
+var _mist_mat: FogMaterial
+var _grade_tex: GradientTexture1D
+var _grade_key := ""
+var _grade_at := 0
+var _fog_glow := -1.0
+var _glow_zones := 0
+
+const REALM_GRADES := {
+	# shadow tint, highlight tint, saturation, contrast
+	# (the AgX curve is a little paler than the classic one: saturation over 1 gives the colour back)
+	"alb": [Color(0.96, 0.98, 1.06), Color(1.04, 1.01, 0.96), 1.15, 1.08],
+	"mid": [Color(0.94, 0.99, 1.08), Color(0.99, 1.01, 1.04), 1.05, 1.10],
+	"hib": [Color(0.95, 1.04, 1.00), Color(1.05, 1.03, 0.94), 1.22, 1.06],
+	"": [Color(1, 1, 1), Color(1, 1, 1), 1.1, 1.06],
+}
+
+
+## Graphics.apply_scene: on / off (and again after any graphics change - the classic settings it overrides).
+static func _t(key: String, v: float) -> float:
+	return float(tune.get(key, v))
+
+
+func set_remastered(on: bool) -> void:
+	remastered = on
+	if environment == null:
+		return
+	if not on:
+		environment.volumetric_fog_enabled = false
+		environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+		environment.tonemap_white = 6.0
+		environment.tonemap_exposure = 1.0
+		environment.adjustment_enabled = false
+		environment.fog_sun_scatter = 0.0
+		environment.fog_aerial_perspective = 0.0
+		environment.glow_blend_mode = Environment.GLOW_BLEND_MODE_SCREEN
+		if _world:
+			_world.camera_attributes = null
+		if _mist:
+			_mist.visible = false
+		return
+	environment.tonemap_mode = Environment.TONE_MAPPER_AGX
+	environment.tonemap_exposure = _t("exposure", 0.85)
+	environment.tonemap_agx_contrast = _t("agx", 1.4)
+	environment.glow_enabled = true
+	environment.glow_intensity = _t("glow", 0.55)
+	environment.glow_strength = 1.0
+	environment.glow_bloom = 0.02
+	environment.glow_hdr_threshold = 0.95
+	environment.glow_blend_mode = Environment.GLOW_BLEND_MODE_SOFTLIGHT
+	environment.ssil_enabled = _t("ssil", 1.0) > 0.0
+	environment.volumetric_fog_enabled = true
+	environment.volumetric_fog_length = 110.0
+	environment.volumetric_fog_anisotropy = _t("aniso", 0.7)     # light scattered forward: shafts toward the sun
+	environment.volumetric_fog_ambient_inject = _t("inject", 0.2)   # the shaded fog still lit by the sky
+	environment.volumetric_fog_gi_inject = 1.0
+	environment.volumetric_fog_sky_affect = 0.15
+	environment.volumetric_fog_detail_spread = 2.0
+	environment.fog_sun_scatter = 0.0 if dungeon else _t("scatter", 0.12)
+	environment.fog_aerial_perspective = 0.0 if dungeon else _t("aerial", 0.3)
+	if _cam_attr == null:
+		_cam_attr = CameraAttributesPractical.new()
+		_cam_attr.auto_exposure_enabled = _t("ae", 1.0) > 0.0
+		_cam_attr.auto_exposure_speed = 0.6
+		_cam_attr.auto_exposure_scale = _t("aescale", 0.25)   # (0.4, the engine's: daylight 40% brighter)
+		# a narrow window: dark rooms brightened a little, glare toned down a little - not a different picture
+		_cam_attr.auto_exposure_min_sensitivity = _t("aemin", 80.0)
+		_cam_attr.auto_exposure_max_sensitivity = _t("aemax", 160.0)
+	if _world:
+		_world.camera_attributes = _cam_attr
+	if _mist == null:
+		_mist = FogVolume.new()
+		_mist.name = "GroundMist"
+		_mist.shape = RenderingServer.FOG_VOLUME_SHAPE_BOX
+		_mist.size = Vector3(220.0, 40.0, 220.0)
+		_mist_mat = FogMaterial.new()
+		_mist_mat.height_falloff = 0.35
+		_mist_mat.edge_fade = 0.3
+		_mist.material = _mist_mat
+		add_child(_mist)
+	_mist.visible = true
+	_grade_key = ""
+	_fog_glow = -1.0
+	_remaster_frame(_phase_weights(hour()), Vector3.UP)
+
+
+func _realm() -> String:
+	if zone == null or dungeon:
+		return ""
+	var id := int(zone.info.id)
+	if id < 100:
+		return "alb"
+	if id < 180:
+		return "mid"
+	if id < 249:
+		return "hib"
+	return ""
+
+
+## Every frame while on: the fog of the hour and weather, the mist where you stand, the colour grade.
+func _remaster_frame(w: Dictionary = {}, sun_dir := Vector3.UP) -> void:
+	if environment == null or zone == null:
+		return
+	var amount := clampf(float(zone.info.fog.get("amount", 15)) / 100.0, 0.0, 1.0)
+	var dawn := float(w.get("dawn", 0.0))
+	var dusk := float(w.get("dusk", 0.0))
+	var night := float(w.get("night", 0.0))
+	var mist := 0.0
+	if dungeon:
+		var fc: Array = zone.info.fog.get("color", [0.3, 0.3, 0.35])
+		var col := Color(float(fc[0]), float(fc[1]), float(fc[2]))
+		environment.volumetric_fog_density = 0.004 + 0.022 * amount   # Darkness Falls (85): 0.023
+		environment.volumetric_fog_albedo = col.lerp(Color(0.8, 0.8, 0.85), 0.35)
+		environment.volumetric_fog_emission = col * 0.015
+		mist = 0.01 + 0.03 * amount
+	else:
+		var haze := 0.0015 + 0.00012 * amount * 100.0     # the zone's own fog amount: 15 a light haze, 60 thick
+		haze *= 1.0 + 2.0 * dawn + 0.5 * night + 0.6 * dusk + 2.0 * storm
+		environment.volumetric_fog_density = clampf(haze * _t("fog", 1.0), 0.0005, 0.04)
+		# near-white: the light's own colour tints it (the zone fog's blue-grey made a cyan wash)
+		environment.volumetric_fog_albedo = environment.fog_light_color.lerp(Color(1, 1, 1), _t("albedo_white", 0.8)) * _t("albedo", 0.85)
+		environment.volumetric_fog_emission = environment.fog_light_color * (0.01 * night)
+		mist = 0.05 * dawn + 0.025 * night + 0.015 * dusk + 0.02 * storm
+		if sun:                                          # sunlight lights the haze strongly (shafts); moonlight less
+			sun.light_volumetric_fog_energy = _t("sunfog", 1.6) if sun_dir.y > -0.05 else 0.6
+	var glow := 1.0 if dungeon else lerpf(_t("lampday", 0.1), 1.0, night_level)
+	var zs := _zones()
+	if absf(glow - _fog_glow) > 0.02 or zs.size() != _glow_zones:   # (and newly loaded zones of the region)
+		_fog_glow = glow
+		_glow_zones = zs.size()
+		for zl in zs:
+			(zl as ZoneLoader).set_fog_glow(glow)
+	if _mist and _follow:
+		_mist_mat.density = mist
+		_mist.visible = mist > 0.002
+		_mist.global_position = _follow.global_position + Vector3(0.0, 2.0, 0.0)
+		_mist_mat.albedo = environment.volumetric_fog_albedo
+	_update_grade(night, dawn + dusk)
+
+
+func _update_grade(night: float, twilight: float) -> void:
+	var now := Time.get_ticks_msec()
+	if now < _grade_at and _grade_key != "":
+		return
+	_grade_at = now + 250
+	var g: Array = REALM_GRADES.get(_realm(), REALM_GRADES[""])
+	var shadow: Color = g[0]
+	var high: Color = g[1]
+	var sat := float(g[2]) * _t("sat", 1.0)
+	var con := float(g[3]) * _t("con", 1.0)
+	shadow = shadow * Color(1, 1, 1).lerp(Color(0.92, 0.96, 1.10), night)
+	high = high * Color(1, 1, 1).lerp(Color(1.06, 1.0, 0.9), twilight).lerp(Color(0.96, 0.98, 1.04), night)
+	sat *= lerpf(1.0, 0.85, night) * lerpf(1.0, 0.8, storm)
+	con *= lerpf(1.0, 0.97, storm)
+	var key := "%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f" % [shadow.r, shadow.g, shadow.b, high.r, high.g, high.b, sat, con]
+	if key == _grade_key:
+		return
+	_grade_key = key
+	environment.adjustment_enabled = true
+	environment.adjustment_saturation = sat
+	environment.adjustment_contrast = con
+	environment.adjustment_brightness = 1.0
+	# a per-channel curve (the engine's 1D colour correction): each channel x -> x * tint(x), the tint going from
+	# the shadow colour in the dark end to the highlight colour in the bright end - split toning
+	var grad := Gradient.new()
+	var offs := PackedFloat32Array()
+	var cols := PackedColorArray()
+	for i in 17:
+		var x := i / 16.0
+		var t := shadow.lerp(high, smoothstep(0.0, 1.0, x))
+		offs.append(x)
+		cols.append(Color(clampf(x * t.r, 0.0, 1.0), clampf(x * t.g, 0.0, 1.0), clampf(x * t.b, 0.0, 1.0)))
+	grad.offsets = offs
+	grad.colors = cols
+	if _grade_tex == null:
+		_grade_tex = GradientTexture1D.new()
+		_grade_tex.width = 256
+	_grade_tex.gradient = grad
+	environment.adjustment_color_correction = _grade_tex

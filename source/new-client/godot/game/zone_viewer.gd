@@ -365,6 +365,12 @@ func _place_arrival(loc: Dictionary, zone_id: int, start: Dictionary) -> void:
 
 func _ready_rest(loading: LoadingScreen) -> void:
 	Graphics.apply_viewport()                               # Options > VIDEO quality on the built world
+	if args.has("remastered"):                             # test shots: --remastered=0 / 1
+		Graphics.values["remastered"] = args["remastered"] != "0"
+	for kv in String(args.get("tune", "")).split(",", false):   # test shots: --tune=exposure:0.9,fog:0.5
+		var p := kv.split(":")
+		if p.size() == 2:
+			SkySystem.tune[p[0]] = float(p[1])
 	Graphics.apply_scene(self)
 	hud = Label.new()
 	hud.position = Vector2(12, 10)
@@ -1745,6 +1751,9 @@ func _stand_near(at: Vector3, metres: float) -> void:
 
 func _tour(prefix: String) -> void:
 	get_window().size = Vector2i(1600, 900)
+	if args.has("clean"):                                # --clean: the world alone (no debug text, no windows)
+		hud.visible = false
+		ui.visible = false
 	var only: PackedStringArray = String(args.get("spots", "")).to_lower().split(",", false)
 	for i in _spots.size():
 		var spot_name := String(_spots[i].name)
@@ -1756,9 +1765,9 @@ func _tour(prefix: String) -> void:
 			player.face(facing + turn)
 			player.cam_pitch = -0.18
 			player.cam_distance = 7.0
-			for f in 75:                                   # clutter chunks build a couple per frame
-				await get_tree().process_frame
-			var path := "%s_%s_%d.png" % [prefix, spot_name.replace(" ", "_"), int(rad_to_deg(turn))]
+			for f in 75 + (150 if bool(Graphics.value("remastered")) else 0):   # clutter chunks build a couple per
+				await get_tree().process_frame                                   # frame; the eyes adjust (remastered)
+			var path := "%s_%s_%d.png" % [prefix, spot_name.replace(" ", "_").validate_filename(), int(rad_to_deg(turn))]
 			get_viewport().get_texture().get_image().save_png(path)
 			print("saved ", path)
 	get_tree().quit()
@@ -1790,6 +1799,9 @@ func _bench() -> void:
 
 func _shots(spec: String, prefix: String) -> void:
 	get_window().size = Vector2i(1600, 900)
+	if args.has("clean"):                                # --clean: the world alone (no debug text, no windows)
+		hud.visible = false
+		ui.visible = false
 	player.visible = args.has("show-player")         # --show-player: stand the player at each shot target
 	var cam := Camera3D.new()
 	cam.far = 1500.0
@@ -1814,7 +1826,7 @@ func _shots(spec: String, prefix: String) -> void:
 			target.y = player.global_position.y + 1.0
 		cam.global_position = eye
 		cam.look_at(target)
-		for f in 30:
+		for f in 30 + (150 if bool(Graphics.value("remastered")) else 0):   # (remastered: the eyes adjust)
 			await get_tree().process_frame
 		var path := "%s_%d.png" % [prefix, k]
 		get_viewport().get_texture().get_image().save_png(path)

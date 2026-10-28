@@ -467,6 +467,14 @@ func _build_lights() -> void:
 	set_light_level(0.0)
 
 
+## How strongly the zone's lights glow in the remastered volumetric fog (SkySystem): faint by day - a Hibernian
+## town's purple lamps washed the whole daylit haze purple - full at night and underground.
+func set_fog_glow(level: float) -> void:
+	for o in _lights:
+		if is_instance_valid(o) and o.name != "Torch":
+			o.light_volumetric_fog_energy = level
+
+
 ## Lights that move with something (the player's torch) join the zone's night scaling.
 func add_dynamic_light(o: OmniLight3D, base_energy: float) -> void:
 	o.set_meta("base_energy", base_energy)

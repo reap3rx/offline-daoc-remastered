@@ -179,6 +179,7 @@ func _ready() -> void:
 	torch.omni_range = TORCH_RANGE
 	torch.omni_attenuation = 1.0
 	torch.shadow_enabled = false                         # the client's fixed-function point lights cast no shadows
+	torch.light_volumetric_fog_energy = 0.25             # (remastered fog: no bright ball of haze round you)
 	add_child(torch)
 	var cfg := ConfigFile.new()
 	cfg.load("user://settings.cfg")
