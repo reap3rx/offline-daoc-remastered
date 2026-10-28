@@ -475,7 +475,7 @@ namespace DOL.GS
                     return false;
                 }
 
-                if (!CheckHorseInventoryRestrictions(fromSlot, toSlot))
+                if (!CheckHorseInventoryRestrictions(fromSlot, toSlot, fromItem, toItem))
                     return false;
 
                 if (!CheckPoisonApplication(fromItem, toItem))
@@ -504,7 +504,7 @@ namespace DOL.GS
                 if (!GetValidInventorySlot(ref playerInventorySlot))
                     return false;
 
-                if (!CheckHorseInventoryRestrictions(externalSlot, playerInventorySlot))
+                if (!CheckHorseInventoryRestrictions(externalSlot, playerInventorySlot, fromItem, toItem))
                     return false;
 
                 if (!CheckPoisonApplication(fromItem, toItem))
@@ -656,19 +656,26 @@ namespace DOL.GS
             return false;
         }
 
-        private bool CheckHorseInventoryRestrictions(eInventorySlot fromSlot, eInventorySlot toSlot)
+        /// <summary>
+        /// The saddlebag slots are the potion bag (PotionBag, owner 2026-10-27): what goes in must be a potion - the
+        /// item moved in, and on a swap the bag's item that would come out to a bag slot too.
+        /// </summary>
+        private bool CheckHorseInventoryRestrictions(eInventorySlot fromSlot, eInventorySlot toSlot, DbInventoryItem fromItem, DbInventoryItem toItem)
         {
-            if (toSlot is not >= eInventorySlot.FirstBagHorse or not <= eInventorySlot.LastBagHorse && fromSlot is not >= eInventorySlot.FirstBagHorse or not <= eInventorySlot.LastBagHorse)
+            bool toBag = PotionBag.IsBagSlot(toSlot);
+            bool fromBag = PotionBag.IsBagSlot(fromSlot);
+
+            if (!toBag && !fromBag)
                 return true;
 
-            // Don't let player move active horse to a horse bag, which will disable all bags!
-            if (fromSlot == eInventorySlot.Horse)
-                m_player.Out.SendMessage("You can't move your active horse into a saddlebag!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            else if (m_player.Client.Account.PrivLevel != 1 || (m_player.CanUseHorseInventorySlot((int) fromSlot) && m_player.CanUseHorseInventorySlot((int) toSlot)))
-                return true;
+            if ((toBag && fromItem != null && !PotionBag.Fits(fromItem)) || (fromBag && toItem != null && !PotionBag.Fits(toItem)))
+            {
+                m_player.Out.SendMessage("Only potions go in the potion bag.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                m_player.Out.SendInventorySlotsUpdate(null);
+                return false;
+            }
 
-            m_player.Out.SendInventorySlotsUpdate(null);
-            return false;
+            return true;
         }
 
         private bool CheckPoisonApplication(DbInventoryItem fromItem, DbInventoryItem toItem)

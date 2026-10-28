@@ -436,6 +436,17 @@ namespace DOL.GS.Spells
 
 					break;
 				}
+				case eSpellTarget.REALM when playerCaster != null:
+				{
+					// A player's heal / buff with no ally selected lands on the player (owner 2026-10-27): nothing, a
+					// monster or enemy, or a non-companion NPC (merchant, guard ...) selected means "me".
+					Target ??= Caster.TargetObject as GameLiving;
+
+					if (!AllyTarget.IsAlly(playerCaster, Target))
+						Target = Caster;
+
+					break;
+				}
 				default:
 				{
 					// Get the current target if we don't have one already.
@@ -449,7 +460,7 @@ namespace DOL.GS.Spells
 			{
 				// This may be wrong. This is the LoS state at the time the player used the spell, not necessarily for the target the spell is being cast on, assuming it can change.
 				// It should be fine since it's updated at the same time as `TargetObject`, and the spell handler doesn't receive a target explicitly. But it needs more testing.
-				HasLos = Caster.TargetInView;
+				HasLos = Target == Caster || Caster.TargetInView;     // (yourself is always in view)
 			}
 			else if (Caster is GameNPC npcOwner)
 			{

@@ -128,4 +128,16 @@ public sealed class UT_ActionCombatArchery
         Assert.That(old.Templates[1], Is.EqualTo("weak_poison"));
         Assert.That(PoisonBag.Parse("").Templates, Is.All.Empty);
     }
+
+    [Test]
+    public void PotionBagTakesPotionsOnly()
+    {
+        Assert.That(PotionBag.Fits(40, (int) eObjectType.Magical, 15563), Is.True);          // a potion
+        Assert.That(PotionBag.Fits(40, (int) eObjectType.AlchemyTincture, 9001), Is.True);   // a tincture
+        Assert.That(PotionBag.Fits(40, (int) eObjectType.GenericItem, 0), Is.False);         // a quest item
+        Assert.That(PotionBag.Fits(40, (int) eObjectType.Poison, 0), Is.False);              // the poison bag's
+        Assert.That(PotionBag.Fits(35, (int) eObjectType.Magical, 77), Is.False);            // a charged ring
+        Assert.That(PotionBag.IsBagSlot(eInventorySlot.FirstBagHorse) && PotionBag.IsBagSlot(eInventorySlot.LastBagHorse), Is.True);
+        Assert.That(PotionBag.IsBagSlot(eInventorySlot.LastBackpack), Is.False);
+    }
 }

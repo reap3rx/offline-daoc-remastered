@@ -73,6 +73,7 @@ func _ready() -> void:
 			["arrows_next", "Next Arrows (bow out)", ["Shift+Wheel Up"]],
 			["arrows_prev", "Previous Arrows (bow out)", ["Shift+Wheel Down"]],
 			["show_poisons", "Poison Bag Window", ["Ctrl+B"]],
+			["show_potions", "Potion Bag Window", ["Ctrl+P"]],
 			["poisons_swap", "Swap Poison Sets (melee weapon out)", ["Shift+Wheel Up", "Shift+Wheel Down"]]]:
 		actions.append({"id": ac[0], "label": ac[1], "category": "Combat",
 				"presets": {"rpg": ac[2], "fps": ac[2], "mmo": ac[2]}})

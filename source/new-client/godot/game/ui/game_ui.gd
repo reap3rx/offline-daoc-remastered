@@ -358,6 +358,7 @@ func _build() -> void:
 	_build_warmap()
 	_build_quiver()
 	_build_poisons()
+	_build_potions()
 	_build_guild()
 	PlayerData.window_toggle.connect(func(id: String):
 		if windows.has(id):
@@ -891,6 +892,25 @@ func _build_poisons() -> void:
 	poisons.setup("poisons", "interact", Rect2(), at)
 	_add(poisons, at, false)
 	poisons.build()
+
+
+const PotionWindow := preload("res://game/ui/potion_window.gd")
+var potions: ClassicWindow
+
+
+func _build_potions() -> void:
+	if not Server.active:
+		return
+	potions = PotionWindow.new()
+	potions.resizable = true
+	potions.patch = [6, 19, 13, 33]
+	potions.min_size = PotionWindow.BODY
+	potions.max_size = PotionWindow.BODY
+	potions.size = PotionWindow.BODY
+	var at := Vector2(area().x * 0.5 - 340, area().y * 0.5 - 100)
+	potions.setup("potions", "interact", Rect2(), at)
+	_add(potions, at, false)
+	potions.build()
 
 
 func _build_warmap() -> void:
@@ -1780,6 +1800,9 @@ func handle_input(event: InputEvent) -> bool:
 		return true
 	if Keybinds.pressed(event, "show_poisons") and windows.has("poisons"):
 		windows["poisons"].toggle_window()
+		return true
+	if Keybinds.pressed(event, "show_potions") and windows.has("potions"):
+		windows["potions"].toggle_window()
 		return true
 	if Keybinds.pressed(event, "show_journal") and journal:
 		journal.toggle_window()

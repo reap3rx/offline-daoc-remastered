@@ -205,6 +205,8 @@ func _client_command(text: String) -> bool:
 			PlayerData.window_toggle.emit("quiver")
 		"poisons", "poisonbag":                            # the poison bag (PoisonWindow)
 			PlayerData.window_toggle.emit("poisons")
+		"potions", "potionbag":                            # the potion bag (PotionWindow)
+			PlayerData.window_toggle.emit("potions")
 		"qbar":
 			var ui := get_parent().get_parent() as GameUI
 			var args := rest.split(" ", false)
