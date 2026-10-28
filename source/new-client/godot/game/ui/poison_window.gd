@@ -2,7 +2,8 @@ extends ClassicWindow
 ## The poison bag (owner 2026-10-27): four poisons in two sets - slots 1 + 2, slots 3 + 4. The server puts the active
 ## set on your weapons by itself whenever the game's poisoning rules allow it (out of combat, Envenom high enough):
 ## the first of the set on the weapon in your hand, the second on the left-hand weapon (PoisonBag.cs). Drag a poison
-## from the backpack onto a slot to choose it (the stack stays in the backpack); right-click a slot to empty it.
+## stack from the backpack onto a slot to put it in the bag - it leaves the backpack (owner 2026-10-27: no backpack
+## space taken), any number of one poison to a slot; right-click a slot to put its poisons back in the backpack.
 ## Shift + mouse wheel (Swap Poison Sets) switches sets with a melee weapon out. Ctrl+B or /poisons opens it.
 
 const BODY := Vector2(190, 104)
@@ -46,7 +47,7 @@ func build() -> void:
 		n.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		add_child(n)
 		_counts.append(n)
-	var hint := UiArt.label("DRAG POISONS IN - SHIFT+WHEEL SWAPS SETS", 7, UiArt.CREAM)
+	var hint := UiArt.label("DRAG IN - RIGHT-CLICK TAKES OUT", 7, UiArt.CREAM)
 	hint.position = Vector2(6, 88)
 	hint.size = Vector2(BODY.x - 12, 10)
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -59,7 +60,7 @@ func build() -> void:
 	refresh()
 
 
-## The server's poison bag (#AC|poisons, kept in Server.poison_bag): {set, slots: [{slot, count, name}]}.
+## The server's poison bag (#AC|poisons, kept in Server.poison_bag): {set, slots: [{model, count, name}]}.
 func refresh() -> void:
 	var bag: Dictionary = Server.get("poison_bag") if Server.get("poison_bag") is Dictionary else {}
 	var active := int(bag.get("set", 0))
@@ -69,7 +70,7 @@ func refresh() -> void:
 	for i in 4:
 		var e: Dictionary = slots[i] if i < slots.size() else {}
 		(_slots[i] as PoisonSlot).show_entry(e, i / 2 == active)
-		(_counts[i] as Label).text = ("x%d" % int(e.count)) if not e.is_empty() and String(e.name) != "" else ""
+		(_counts[i] as Label).text = ("x%d" % int(e.count)) if not e.is_empty() and int(e.count) > 0 else ""
 
 
 class PoisonSlot extends Control:
@@ -107,13 +108,11 @@ class PoisonSlot extends Control:
 		add_child(_rim)
 
 	func show_entry(e: Dictionary, active: bool) -> void:
-		var nm := String(e.get("name", ""))
-		var it: Dictionary = PlayerData.item_at(int(e.get("slot", 0))) if int(e.get("slot", 0)) > 0 else {}
-		_icon.texture = ItemDb.icon(int(it.get("icon", 0))) if not it.is_empty() else null
-		_icon.modulate = Color(1, 1, 1) if int(e.get("count", 0)) > 0 else Color(1, 1, 1, 0.35)
+		var n := int(e.get("count", 0))
+		var nm := String(e.get("name", "")) if n > 0 else ""
+		_icon.texture = ItemDb.icon(Server.item_icon(int(e.get("model", 0)))) if nm != "" else null
 		_rim.visible = active and nm != ""
-		tooltip_text = nm.to_upper() + (" (NONE LEFT)" if nm != "" and int(e.get("count", 0)) == 0 else "") \
-				if nm != "" else "EMPTY - DRAG A POISON HERE"
+		tooltip_text = "%s x%d - RIGHT-CLICK: BACK TO THE BACKPACK" % [nm.to_upper(), n] if nm != "" else "EMPTY - DRAG A POISON HERE"
 
 	func _can_drop_data(_p: Vector2, data: Variant) -> bool:
 		return InventorySheet.is_item(data)

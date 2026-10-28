@@ -111,4 +111,21 @@ public sealed class UT_ActionCombatArchery
         Assert.That(StyleProcessor.RawFatigue(10, 25), Is.EqualTo(7));
         Assert.That(ActionCombat.ParryWindowMs + ActionCombat.ParryCooldownMs, Is.EqualTo(750));
     }
+
+    [Test]
+    public void PoisonBagSavesItsContents()
+    {
+        PoisonBagState bag = PoisonBag.Parse("lethal_poison:12,,weak_poison:3,dead:0;1");
+        Assert.That(bag.Templates, Is.EqualTo(new[] { "lethal_poison", "", "weak_poison", "" }));
+        Assert.That(bag.Counts, Is.EqualTo(new[] { 12, 0, 3, 0 }));
+        Assert.That(bag.Set, Is.EqualTo(1));
+        Assert.That(bag.Legacy, Is.False);
+        Assert.That(PoisonBag.Format(bag), Is.EqualTo("lethal_poison:12,,weak_poison:3,;1"));
+
+        // the first version only pointed at backpack stacks: those are taken in on first use
+        PoisonBagState old = PoisonBag.Parse("lethal_poison,weak_poison,,;0");
+        Assert.That(old.Legacy, Is.True);
+        Assert.That(old.Templates[1], Is.EqualTo("weak_poison"));
+        Assert.That(PoisonBag.Parse("").Templates, Is.All.Empty);
+    }
 }

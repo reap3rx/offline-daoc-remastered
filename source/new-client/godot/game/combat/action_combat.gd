@@ -166,11 +166,11 @@ func on_line(text: String) -> void:
 					_flash("OVERDRAWN!", Color(1.0, 0.4, 0.3))
 				elif f[1] == "full":
 					_flash("FULL DRAW", Color(0.85, 0.95, 1.0))
-		"poisons":                                       # poisons|set|invslot~count~name x4 (PoisonBag.SendState)
+		"poisons":                                       # poisons|set|model~count~name x4 (PoisonBag.SendState)
 			var slots := []
 			for i in range(2, f.size()):
 				var p3 := String(f[i]).split("~")
-				slots.append({"slot": int(p3[0]), "count": int(p3[1]) if p3.size() > 1 else 0,
+				slots.append({"model": int(p3[0]), "count": int(p3[1]) if p3.size() > 1 else 0,
 						"name": String(p3[2]) if p3.size() > 2 else ""})
 			Server.poison_bag = {"set": int(f[1]) if f.size() > 1 else 0, "slots": slots}
 			var ui = viewer.get("ui") if viewer else null
