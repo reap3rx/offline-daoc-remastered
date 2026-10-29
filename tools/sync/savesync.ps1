@@ -75,11 +75,44 @@ function Server-Running {
         Where-Object { $_.ExecutablePath -eq $exe }).Count -gt 0
 }
 
-function Game-Running {
-    if (Server-Running) { return $true }
+function Launcher-Running {
     $launcher = Join-Path $Root 'new-client\runtime\OfflineDAoC.exe'
     return @(Get-CimInstance Win32_Process -Filter "Name='OfflineDAoC.exe'" -ErrorAction SilentlyContinue |
         Where-Object { $_.ExecutablePath -eq $launcher }).Count -gt 0
+}
+
+function Game-Running {
+    return (Server-Running) -or (Launcher-Running)
+}
+
+# A server left running with no launcher (owner 2026-10-28: the launcher closed in a hurry left CoreServer running
+# unseen, and the next PLAY said "already running"): offered to be stopped. Without its launcher it can't be asked to
+# shut down, so it is closed; characters are saved when they log out. The earlier session's save watcher then saves
+# to the cloud and clears the in-use mark - waited for here.
+function Stop-LeftoverServer {
+    $exe = Join-Path $Root 'runtime\server\CoreServer.exe'
+    $procs = @(Get-CimInstance Win32_Process -Filter "Name='CoreServer.exe'" -ErrorAction SilentlyContinue |
+        Where-Object { $_.ExecutablePath -eq $exe })
+    if ($procs.Count -eq 0) { return $true }
+    $since = $procs[0].CreationDate
+    Write-Host ""
+    Write-Host "A game server from an earlier session is still running (started $since)."
+    Write-Host "The launcher was closed without stopping it, so it has no window."
+    $a = Ask "Stop it and play? [Y/n]" 'y'
+    if ($a -eq 'n') { return $false }
+    foreach ($p in $procs) { Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue }
+    $deadline = (Get-Date).AddSeconds(15)
+    while ((Server-Running) -and (Get-Date) -lt $deadline) { Start-Sleep 1 }
+    if (Server-Running) { Write-Host "The server didn't stop - close CoreServer in Task Manager, then try again."; return $false }
+    Write-Host "Stopped. Saving the last session to the cloud..."
+    $deadline = (Get-Date).AddSeconds(120)
+    while ((Get-Date) -lt $deadline) {
+        $watchers = @(Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" -ErrorAction SilentlyContinue |
+            Where-Object { $_.ProcessId -ne $PID -and $_.CommandLine -match 'savesync\.ps1' -and $_.CommandLine -match '-Watch' })
+        if ($watchers.Count -eq 0) { break }
+        Start-Sleep 2
+    }
+    return $true
 }
 
 function Local-Stamp {
@@ -319,6 +352,9 @@ if ($Watch) {
 }
 
 if ($Play) {
+    if ((Server-Running) -and -not (Launcher-Running)) {
+        if (-not (Stop-LeftoverServer)) { Start-Sleep 3; exit 1 }
+    }
     if (Game-Running) { Write-Host "The game is already running on this computer."; Start-Sleep 3; exit 1 }
     $synced = $false
     if (-not $cloud -or -not (Test-Path $cloud)) {

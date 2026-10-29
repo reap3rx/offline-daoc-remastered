@@ -244,8 +244,32 @@ internal sealed partial class MainForm : Form
             UpdateAutoRefreshCountdown();
             _autoRefresh.Start();
         };
-        FormClosing += (_, _) =>
+        FormClosing += async (_, e) =>
         {
+            // Closing while this launcher's server runs (owner 2026-10-28: a launcher closed in a hurry left
+            // CoreServer running with no window, and the next PLAY said the game was already running): offer to stop
+            // it properly first - only the launcher can, it holds the server's console.
+            if (!_closeAfterServerStop && _serverProcess is { HasExited: false })
+            {
+                DialogResult answer = MessageBox.Show(this,
+                    "The server is still running.\n\nStop it properly before closing? Everyone is saved and the next PLAY starts clean.\n\nYes: stop the server, then close.\nNo: close and leave the server running in the background.\nCancel: keep the launcher open.",
+                    "Close Offline DAoC", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (answer == DialogResult.Cancel)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                if (answer == DialogResult.Yes)
+                {
+                    e.Cancel = true;
+                    await StopServerAsync();
+                    if (_serverProcess is { HasExited: false })
+                        return;                               // still shutting down: the launcher stays open
+                    _closeAfterServerStop = true;
+                    Close();
+                    return;
+                }
+            }
             _serverReadinessPoll.Stop();
             _serverLog?.Dispose();
         };
@@ -2719,6 +2743,8 @@ internal sealed partial class MainForm : Form
         _playButton.Enabled = false;
         _footer.Text = "Server is starting — Enter Realm will unlock automatically when it is ready…";
     }
+
+    private bool _closeAfterServerStop;
 
     private async Task StopServerAsync()
     {
