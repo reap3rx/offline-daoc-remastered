@@ -17,7 +17,7 @@ extends Node
 ## Ctrl+F9 (Arrange Combat HUD): drag its parts where you like, switch any of them off; kept in settings.cfg.
 ## The server talks to it in "#AC|..." system lines (ServerWorld takes them out of the chat).
 
-const HOLD_S := 0.6                    # an attack held this long is an anytime style (owner 2026-10-28: was 0.3, too quick)
+const HOLD_S := 0.45                   # an attack held this long is an anytime style (owner 2026-10-28: 0.3 too quick, 0.6 too long)
 const DOUBLE_TAP_MS := 260
 const SOFT_RANGE_M := 12.0             # soft targeting: the monster nearest your aim within this ...
 const SOFT_ANGLE := 40.0               # ... and this many degrees of it

@@ -1529,9 +1529,15 @@ func light_command(rest: String) -> void:
 	var args := rest.to_lower().split(" ", false)
 	var sub := String(args[0]) if args.size() > 0 else "help"
 	var say := func(t: String): PlayerData.message.emit(t, "system")
-	if sub in PlacedLights.KINDS:                          # (/light candle = /light add candle)
+	if sub in PlacedLights.KINDS or sub == "magic":        # (/light candle = /light add candle)
 		args.insert(0, "add")
 		sub = "add"
+	if args.size() > 1 and args[1] == "magic":             # /light add magic red: "magic_red"
+		var col := String(args[2]) if args.size() > 2 else "blue"
+		if not col in PlacedLights.MAGIC:
+			say.call("Magic lights: red, blue, yellow, green.")
+			return
+		args[1] = "magic_" + col
 	match sub:
 		"add", "remove", "del", "delete":
 			var hit := _light_point()
@@ -1546,13 +1552,13 @@ func light_command(rest: String) -> void:
 			if sub == "add":
 				var kind := String(args[1]) if args.size() > 1 else "candle"
 				if not kind in PlacedLights.KINDS:
-					say.call("Kinds: " + ", ".join(PackedStringArray(PlacedLights.KINDS)) + ".")
+					say.call("Kinds: candle, lantern, torch, fire, magic red / blue / yellow / green.")
 					return
 				# a little off the surface it was pointed at, the flame of a candle / torch a little above it
 				var at: Vector3 = z.to_local(hit.at) + (hit.normal as Vector3) * 0.12 + Vector3(0, 0.12 if kind in ["candle", "torch"] else 0.0, 0)
 				PlacedLights.add(zid, at, kind)
 				z.add_placed_light(at, kind)
-				say.call("Placed a %s light in %s (%d placed there).%s" % [kind, z.info.name, PlacedLights.for_zone(zid).size(),
+				say.call("Placed a %s light in %s (%d placed there).%s" % [kind.replace("_", " "), z.info.name, PlacedLights.for_zone(zid).size(),
 						"" if bool(Graphics.value("remastered")) else " It shows with Remastered Lighting on (Options > Video)."])
 			else:
 				var gone := PlacedLights.remove_near(zid, z.to_local(hit.at), 2.5)
@@ -1578,7 +1584,7 @@ func light_command(rest: String) -> void:
 			say.call("%s: %s." % [z.info.name, "no placed lights" if counts.is_empty() else
 					", ".join(PackedStringArray(counts.keys().map(func(k): return "%d %s" % [counts[k], k])))])
 		_:
-			say.call("/light add [candle | lantern | torch | fire] - a light where you point (the cursor, or the crosshair in action combat). /light remove - the placed light nearest where you point. /light undo - the last one placed. /light list - this zone's. They show with Remastered Lighting.")
+			say.call("/light add [candle | lantern | torch | fire | magic red/blue/yellow/green] - a light where you point (the cursor, or the crosshair in action combat). /light remove - the placed light nearest where you point. /light undo - the last one placed. /light list - this zone's. They show with Remastered Lighting.")
 
 
 ## Where the cursor (or the crosshair, while the mouse is held for action combat) meets the world: {at, normal}.

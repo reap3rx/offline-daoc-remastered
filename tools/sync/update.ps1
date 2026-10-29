@@ -136,5 +136,12 @@ if ($behind -gt 0) {
         Say "Note: the launcher's source changed - ask Claude to rebuild it on this computer." Yellow
     }
 }
+# ---------------------------------------------------------------- 4. the zones' caches (models, compressed textures)
+
+if (-not $DryRun -and (Test-Path $dst)) {
+    Say "Building any missing zone caches (quick when they're all there)..." Cyan
+    & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $Root 'tools\sync\prebuild_caches.ps1') -Root $Root
+}
+
 Say ""
 Say "Done$(if ($DryRun) { ' (dry run - nothing was changed)' })." Green

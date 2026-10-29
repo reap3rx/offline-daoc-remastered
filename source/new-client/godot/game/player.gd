@@ -883,6 +883,28 @@ const CAM_BALL := 0.25
 const CAM_CLEAR := 0.35
 
 
+## How far (up to dist) the camera can slide along dir before a wall, a roof or the ground - its sphere swept there.
+var _offset_query: PhysicsShapeQueryParameters3D
+
+
+func _offset_room(dir: Vector3, dist: float) -> float:
+	if camera == null or dist <= 0.001 or not is_inside_tree():
+		return dist
+	if _offset_query == null:
+		_offset_query = PhysicsShapeQueryParameters3D.new()
+		var ball := SphereShape3D.new()
+		ball.radius = CAM_BALL
+		_offset_query.shape = ball
+		_offset_query.exclude = [get_rid()]
+	_offset_query.collision_mask = _arm.collision_mask
+	_offset_query.transform = Transform3D(Basis.IDENTITY, camera.global_position)
+	_offset_query.motion = dir * dist
+	var r := get_world_3d().direct_space_state.cast_motion(_offset_query)
+	if r.size() < 2:
+		return dist
+	return maxf(0.0, dist * float(r[0]) - 0.05)
+
+
 func _process(_delta: float) -> void:
 	if camera == null or flying or riding or (zone == null and region == null):
 		return
@@ -1070,8 +1092,14 @@ func _physics_step(delta: float) -> void:
 	cam_kick = move_toward(cam_kick, 0.0, delta * 0.5)
 	if camera:
 		var want := shoulder if action_mode else Vector2.ZERO
-		camera.h_offset = lerpf(camera.h_offset, want.x, minf(1.0, delta * 6.0))
-		camera.v_offset = lerpf(camera.v_offset, want.y, minf(1.0, delta * 6.0))
+		# the over-the-shoulder offset slides the view sideways past where the arm checked (owner 2026-10-28: in
+		# Camelot's alleys the camera looked through the wall beside you): only as far as there is room
+		if want != Vector2.ZERO and not flying:
+			want.x = signf(want.x) * _offset_room(camera.global_basis.x * signf(want.x), absf(want.x))
+			want.y = signf(want.y) * _offset_room(camera.global_basis.y * signf(want.y), absf(want.y))
+		var rate := minf(1.0, delta * 6.0)
+		camera.h_offset = want.x if absf(want.x) < absf(camera.h_offset) else lerpf(camera.h_offset, want.x, rate)
+		camera.v_offset = want.y if absf(want.y) < absf(camera.v_offset) else lerpf(camera.v_offset, want.y, rate)
 	_pivot.rotation = Vector3(cam_pitch + cam_kick, cam_yaw, 0.0)
 	_arm.spring_length = lerpf(_arm.spring_length, cam_distance, minf(1.0, delta * 10.0))
 

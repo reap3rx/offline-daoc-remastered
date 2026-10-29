@@ -651,7 +651,9 @@ namespace DOL.GS
 
                         // Unstealth right after entering combat mode if anything is targeted.
                         // A timer is used to allow any potential opener to be executed.
-                        if (player.IsStealthed)
+                        // Action combat (owner 2026-10-28): the weapon is drawn to sneak up and open with a style, and
+                        // there is no auto-attack - only a swing, a style or being hit brings you out.
+                        if (player.IsStealthed && !ActionCombat.IsActive(player))
                             new ECSGameTimer(player, Unstealth, 1);
 
                         static int Unstealth(ECSGameTimer timer)

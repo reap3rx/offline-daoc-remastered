@@ -583,7 +583,12 @@ const LIGHT_KINDS := {
 	"lantern": [Color(1.0, 0.72, 0.42), 7.5, 2.0, 0.06],
 	"torch": [Color(1.0, 0.62, 0.3), 8.0, 1.9, 0.15],
 	"candle": [Color(1.0, 0.76, 0.48), 3.5, 0.9, 0.1],
-	"fire": [Color(1.0, 0.55, 0.25), 10.0, 2.2, 0.2],
+	"fire": [Color(1.0, 0.55, 0.25), 13.0, 3.6, 0.45],    # (owner 2026-10-28: brighter, to fill a room; livelier)
+	# /light add magic red | blue | yellow | green (owner 2026-10-28): a steady glow that only breathes
+	"magic_red": [Color(1.0, 0.22, 0.15), 8.0, 2.2, 0.05],
+	"magic_blue": [Color(0.3, 0.5, 1.0), 8.0, 2.2, 0.05],
+	"magic_yellow": [Color(1.0, 0.85, 0.3), 8.0, 2.2, 0.05],
+	"magic_green": [Color(0.35, 1.0, 0.4), 8.0, 2.2, 0.05],
 }
 const LIGHT_CLUSTER_M := 2.0          # vertices this close together are one lamp (a lantern and its bracket)
 const LIGHT_NEAR_M := 3.0             # a zone light (lights.csv) or another lamp light this close: no second one
@@ -1069,7 +1074,12 @@ func _model_mesh(nm: String, surfs: Array, specs: Array, path: String) -> ArrayM
 const MODEL_CACHE_VERSION := 1
 
 
+static var model_cache := true             # (tests: --model-cache=0 parses every glTF as before)
+
+
 static func model_data(path: String) -> Dictionary:
+	if not model_cache:
+		return _parse_model(path)
 	var cache := path.get_basename() + ".mcache"
 	if FileAccess.file_exists(cache) and FileAccess.get_modified_time(cache) >= FileAccess.get_modified_time(path):
 		var f := FileAccess.open_compressed(cache, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)

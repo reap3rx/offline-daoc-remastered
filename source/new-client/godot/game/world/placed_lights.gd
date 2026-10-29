@@ -8,7 +8,8 @@ extends RefCounted
 ## the lamps found on the models (ZoneLoader).
 
 const PATH := "user://world/placed_lights.json"
-const KINDS := ["candle", "lantern", "torch", "fire"]
+const KINDS := ["candle", "lantern", "torch", "fire", "magic_red", "magic_blue", "magic_yellow", "magic_green"]
+const MAGIC := ["red", "blue", "yellow", "green"]
 static var _data := {}                     # zone id (String) -> [{"p": [x, y, z], "k": kind}]
 static var _loaded := false
 static var _lock := Mutex.new()
