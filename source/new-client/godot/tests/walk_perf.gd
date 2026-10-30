@@ -17,6 +17,9 @@ var _pipe_last := 0
 var _pipe_start := 0
 var _snd_last := 0
 var _build_last := 0
+var _tick_last := 0
+var _anim_last := 0
+var _animn_last := 0
 var _wall0 := 0                                    # the walk's wall clock vs the sum of the deltas the engine gave
 var _inflated := 0                                 # frames whose delta was over twice the wall time since the last
 var _t_proc := 0                                   # this frame's main-thread marks: our _process, pre-draw, post-draw
@@ -69,6 +72,7 @@ func _process(delta: float) -> void:
 		for k in ks.slice(0, 4):
 			top += "%s %.0f " % [k, int(parts[k]) / 1000.0]
 		top += "| wall %d: process %d, draw %d, to the ticks %d, ticks %d (%d) | " % _span
+		top += "tick %.0f anim %.0f (%d) | " % [(mgr.prof_tick_us - _tick_last) / 1000.0, (AnimLod.prof_anim_us - _anim_last) / 1000.0, AnimLod.prof_anim_n - _animn_last]
 		top += "build %.0f process %.0f physics %.0f" % [(mgr.prof_build_us - _build_last) / 1000.0,
 				Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0, Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0]
 		slow.append([snappedf(t, 0.01), int(_span[0]), mgr.prof_built - last_built, mgr.active.size(),
@@ -76,6 +80,9 @@ func _process(delta: float) -> void:
 				int(RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME)),
 				_pipelines() - _pipe_last, (ZoneAudio.load_us + CharacterSounds.load_us - _snd_last) / 1000, top])
 	_build_last = mgr.prof_build_us
+	_tick_last = mgr.prof_tick_us
+	_anim_last = AnimLod.prof_anim_us
+	_animn_last = AnimLod.prof_anim_n
 	_pipe_last = _pipelines()
 	_snd_last = ZoneAudio.load_us + CharacterSounds.load_us
 	last_built = mgr.prof_built

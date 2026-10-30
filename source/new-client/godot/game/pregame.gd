@@ -132,6 +132,25 @@ func _ready() -> void:
 	_show("realm")
 	if shot != "":
 		_shots.call_deferred(shot)
+	for a in OS.get_cmdline_user_args():                 # test runs with the server: --auto-play=alb:Name
+		if a.begins_with("--auto-play=") and Server.active:
+			_auto_play.call_deferred(a.split("=", true, 1)[1])
+
+
+## A test run against the server: that realm's character of that name enters the world (no clicks).
+func _auto_play(spec: String) -> void:
+	var r := spec.get_slice(":", 0)
+	var who := spec.get_slice(":", 1).to_lower()
+	_pick_realm(r)
+	for i in 120:
+		await get_tree().create_timer(0.5).timeout
+		chars = Server.characters_in(r)
+		for j in chars.size():
+			if String((chars[j] as Dictionary).get("name", "")).to_lower() == who:
+				sel = j
+				_play()
+				return
+	print("[auto-play] no character %s in %s" % [who, r])
 
 
 # ---------------------------------------------------------------- screens

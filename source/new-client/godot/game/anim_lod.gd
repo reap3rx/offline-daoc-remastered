@@ -20,8 +20,12 @@ const FULL := true
 ## Posing on all the CPU's cores (owner 2026-10-11: "why is every animation burning one cpu core?"): each character's
 ## view (Npc / BotView) is its own sub-thread process group, so Godot steps them in parallel on its worker threads after
 ## the main thread's work each frame; the camera they measure against is a snapshot the main thread takes first
-## (snapshot()); the skeleton budget is shared under a lock. --anim-single turns it off (all on the main thread).
-static var threaded := not ("--anim-single" in OS.get_cmdline_user_args())
+## (snapshot()); the skeleton budget is shared under a lock.
+## OFF unless --anim-threads (claude 2026-10-30, the Camelot lag): with the server's bots about - figures with weapons,
+## shields and helms on bone attachments - posing on the worker threads fought over the engine's locks. In Camelot's
+## trainer square (180 figures) a view's pose took 14-46 ms on a worker against 0.3 ms on the main thread, and frames
+## took 400-490 ms; all on the main thread the worst frame was 74 ms (tests/walk_perf.gd, claude-work/livewalk.ps1).
+static var threaded := "--anim-threads" in OS.get_cmdline_user_args()
 static var cam_pos := Vector3.ZERO
 static var cam_planes: Array[Plane] = []
 static var _snap_frame := -1

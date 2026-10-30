@@ -394,8 +394,9 @@ func _ready_rest(loading: LoadingScreen) -> void:
 	# 0.36c (the server's client) always starts with it hidden (owner 2026-10-11); Ctrl+F12 still shows it
 	hud.visible = test_run or (BootSettings.dev and not Server.active and bool(hcfg.get_value("debug", "hud", false)))
 
-	if args.has("probe"):                                # debug scripts from tests/ (e.g. --probe=strafe_probe)
-		var probe: Node = load("res://tests/%s.gd" % args["probe"]).new()
+	if args.has("probe") or args.has("live-probe"):     # debug scripts from tests/ (e.g. --probe=strafe_probe;
+		# --live-probe: the same in the server's world, after --auto-play)
+		var probe: Node = load("res://tests/%s.gd" % args.get("probe", args.get("live-probe"))).new()
 		add_child(probe)
 	if args.has("anim"):
 		player.force_clip = String(args["anim"])
