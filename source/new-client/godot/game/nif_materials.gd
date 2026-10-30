@@ -235,6 +235,8 @@ func _shader(alpha: String, double_sided: bool, unlit := false, split := false, 
 			defs += "#define FOLIAGE\n"                 # trees and bushes: wind, rounded canopy light
 		if alpha == "mask":
 			defs += "#define CUTOUT\n"                  # leaves, grass cards, fences: edges kept at a distance
+		if ambient_only and alpha in ["mask", "blend"]:
+			defs += "#define LEAVES\n"                  # the see-through part of a tree: the only part the wind moves
 	var code := "shader_type spatial;\nrender_mode %s;\n" % ", ".join(modes) + defs + SHADER_BODY
 	if ambient_only and not unlit and alpha != "add" and alpha != "screen":
 		# the zone's nifs.csv "Ambient Only" column (trees, evergreens, bushes): the client lights these without any
@@ -390,21 +392,24 @@ void vertex() {
 		MODELVIEW_MATRIX = VIEW_MATRIX * mat4(vec4(side * s, 0.0), vec4(up * s, 0.0), vec4(fwd * s, 0.0), MODEL_MATRIX[3]);
 	}
 #ifdef FOLIAGE
-	// a tree or bush (stands on its origin): the higher a vertex, the more it sways; leaves flutter too
+	// a tree or bush (stands on its origin): a rounded normal for the canopy light
 	fol_n = normalize(vec3(VERTEX.x, 0.6 + VERTEX.y * 0.12, VERTEX.z) + vec3(0.0, 0.001, 0.0));
 	fol_n = normalize((MODELVIEW_MATRIX * vec4(fol_n, 0.0)).xyz);
+#ifdef LEAVES
+	// only the leaves move, so trunks stay put: branches sway from about 2.5 m up, more towards the top, and
+	// every leaf flutters a little
 	if (remaster_fx > 0.5 && wind_strength > 0.0) {
 		vec3 wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 		float h = clamp(VERTEX.y / 6.0, 0.0, 1.6);
+		float hb = clamp((VERTEX.y - 2.5) / 5.0, 0.0, 1.4);
 		float ph = dot(MODEL_MATRIX[3].xyz, vec3(0.13, 0.0, 0.17));
 		float sway = sin(TIME * 1.1 + ph) * 0.65 + sin(TIME * 2.3 + ph * 1.7) * 0.35;
-		vec3 off = vec3(sway, 0.0, sway * 0.55) * 0.09 * h * h;
-#ifdef CUTOUT
+		vec3 off = vec3(sway, 0.0, sway * 0.55) * 0.08 * hb * hb;
 		off += vec3(sin(TIME * 6.5 + wp.x * 2.1 + wp.y * 3.1), sin(TIME * 7.9 + wp.z * 2.3) * 0.5,
 				sin(TIME * 5.7 + wp.z * 1.9 + wp.y * 2.7)) * 0.025 * min(h * 2.0, 1.0);
-#endif
 		VERTEX += inverse(mat3(MODEL_MATRIX)) * (off * wind_strength);
 	}
+#endif
 #endif
 	uv_a = UV;
 	uv_b = UV2;

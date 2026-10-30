@@ -37,6 +37,7 @@ scaling_3d/mode=0
 scaling_3d/scale=1.0
 textures/default_filters/anisotropic_filtering_level=4
 driver/threads/thread_model=1
+rendering_device/d3d12/max_resource_descriptors=524288
 
 [autoload]
 
