@@ -166,8 +166,11 @@ float cloud_density(vec3 p, bool detail) {
 vec4 clouds(vec3 dir, float jitter) {
 	if (dir.y < 0.01) return vec4(0.0);
 	float t0 = CLOUD_LO / dir.y;
-	float t1 = min(CLOUD_HI / dir.y, t0 + 7000.0);
-	const int STEPS = 24;
+	// (no cap on the path through the slab: cutting it short sliced the clouds low in the sky with straight, boxy
+	// edges - owner 2026-10-30; far off they thin away instead)
+	float t1 = min(CLOUD_HI / dir.y, 45000.0);
+	if (t0 >= t1) return vec4(0.0);
+	const int STEPS = 28;
 	float dt = (t1 - t0) / float(STEPS);
 	vec3 L = normalize(cloud_light_dir);
 	float mu = dot(dir, L);
@@ -177,7 +180,7 @@ vec4 clouds(vec3 dir, float jitter) {
 	vec3 acc = vec3(0.0);
 	for (int i = 0; i < STEPS; i++) {
 		vec3 p = dir * (t0 + (float(i) + jitter) * dt);
-		float d = cloud_density(p, true);
+		float d = cloud_density(p, true) * (1.0 - smoothstep(18000.0, 42000.0, length(p.xz)));
 		if (d < 0.01) continue;
 		// light reaching this point: two samples toward the light
 		float ld = cloud_density(p + L * 180.0, false) + cloud_density(p + L * 520.0, false) * 1.4;

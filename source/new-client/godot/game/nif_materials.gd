@@ -405,10 +405,17 @@ void vertex() {
 		float hb = clamp((VERTEX.y - 2.5) / 5.0, 0.0, 1.4);
 		float ph = dot(MODEL_MATRIX[3].xyz, vec3(0.13, 0.0, 0.17));
 		float sway = sin(TIME * 1.1 + ph) * 0.65 + sin(TIME * 2.3 + ph * 1.7) * 0.35;
-		vec3 off = vec3(sway, 0.0, sway * 0.55) * 0.08 * hb * hb;
+		// a tree drawn as one see-through mesh (bark and leaves on one texture - the willows, owner 2026-10-30: "the
+		// trunks still jiggle"): bark is solid all round its texels, leaves are not - the base texture's coverage
+		// near this vertex, at a coarse mip, keeps the bark still; and the trunk's middle sways least
+		vec2 vuv = base_uv == 0 ? UV : (base_uv == 1 ? UV2 : (base_uv == 2 ? CUSTOM0.xy : CUSTOM0.zw));
+		float solid = has_base ? textureLod(base_tex, vuv, 2.0).a : 0.0;
+		float leafy = 1.0 - smoothstep(0.85, 0.98, solid);
+		float reach = mix(0.3, 1.0, smoothstep(0.8, 3.0, length(VERTEX.xz)));
+		vec3 off = vec3(sway, 0.0, sway * 0.55) * 0.08 * hb * hb * reach;
 		off += vec3(sin(TIME * 6.5 + wp.x * 2.1 + wp.y * 3.1), sin(TIME * 7.9 + wp.z * 2.3) * 0.5,
 				sin(TIME * 5.7 + wp.z * 1.9 + wp.y * 2.7)) * 0.025 * min(h * 2.0, 1.0);
-		VERTEX += inverse(mat3(MODEL_MATRIX)) * (off * wind_strength);
+		VERTEX += inverse(mat3(MODEL_MATRIX)) * (off * wind_strength * leafy);
 	}
 #endif
 #endif

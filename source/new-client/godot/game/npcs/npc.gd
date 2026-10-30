@@ -1022,6 +1022,10 @@ func make_corpse() -> void:
 		return
 	corpse = true
 	play_death(true)
+	# the server has let the body go, so the manager no longer ticks this view: it ticks itself now - its death clip
+	# and its sinking (claude 2026-10-30: with the posing back on the main thread the bodies froze mid-swing)
+	if not AnimLod.threaded:
+		set_process(true)
 	if _pick:
 		_pick.process_mode = Node.PROCESS_MODE_DISABLED
 	for l in get_meta("plate", []):                        # (the plates follow only the living views)
