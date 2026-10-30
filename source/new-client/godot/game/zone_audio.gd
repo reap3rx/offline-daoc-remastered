@@ -95,6 +95,8 @@ func setup(zone_dir: String, sky_system: SkySystem, follow: Node3D, start := tru
 	_mp3 = AudioStreamPlayer.new()
 	_mp3.bus = "ZoneMusic"
 	add_child(_mp3)
+	if sky and not sky.lightning.is_connected(_on_lightning):
+		sky.lightning.connect(_on_lightning)
 	if start:
 		begin()
 	else:
@@ -200,6 +202,8 @@ func _process(delta: float) -> void:
 	if data.is_empty() or sky == null or listener == null:
 		return
 	_time += delta
+	if sky.remastered:
+		_storm_sounds(delta)
 	var p := listener.global_position / M          # zone units: x east, z south
 	var minute := fposmod(sky.hour() * 60.0, 1440.0)
 	var raining := sky.storm > RAIN_LEVEL
@@ -247,7 +251,10 @@ func _loop(st: Dictionary, snd: Dictionary, want: bool, fade_time: float, delta:
 		snd["player"] = player
 		snd["vol"] = _pick(row["vol"])
 		player.play(_rng.randf() * player.stream.get_length())   # don't start every bed at its first sample
-	player.volume_db = linear_to_db(maxf(float(s["volume"]) / 100.0 * snd["vol"] * snd["gain"], 0.0001))
+	var weather := 1.0
+	if sky.remastered and String(player.get_meta("file", "")).begins_with("files/ran"):
+		weather = lerpf(0.55, 1.35, sky.rain_amount())       # the rain beds follow how hard it rains
+	player.volume_db = linear_to_db(maxf(float(s["volume"]) / 100.0 * snd["vol"] * snd["gain"] * weather, 0.0001))
 
 
 ## The cc_sounds row a sound plays now: its id (version 1), or its structure (version 2): an s_ row as is, a g_ group's
@@ -288,6 +295,8 @@ func _one_shot(st: Dictionary, snd: Dictionary, music: bool) -> void:
 		return
 	if _time - st["last_random"] < float(st["def"]["random_sound_spacing"]):
 		return
+	if sky.remastered and String(row.get("file", "")).contains("thunder"):
+		return                                     # (remastered: the thunder follows the lightning - storm_thunder)
 	if snd["player"] != null and is_instance_valid(snd["player"]):
 		return                                     # still playing
 	if music and st["busy"] != null and is_instance_valid(st["busy"]):
@@ -324,6 +333,7 @@ func _make_player(row: Dictionary, loop: bool, music: bool) -> AudioStreamPlayer
 	var player := AudioStreamPlayer.new()
 	player.stream = _stream(row["file"], loop)
 	player.set_meta("snd", String(row.get("name", "")))     # which client sound it is (debug_text, probes)
+	player.set_meta("file", String(row.get("file", "")))
 	player.pitch_scale = _pick(row["rate"])
 	var pan := _pick(row["pan"])
 	var k := clampi(roundi((pan + 1.0) * 0.5 * (PAN_STEPS - 1)), 0, PAN_STEPS - 1)
@@ -388,3 +398,57 @@ func debug_text() -> String:
 		if c is AudioStreamPlayer and c.playing:
 			playing += 1
 	return "audio: %d voices%s" % [playing, " + entry music" if _mp3 != null and _mp3.playing else ""]
+
+
+# ---------------------------------------------------------------- remastered storms (claude 2026-10-30)
+## The client's own thunder and wind files, timed to the remastered weather: thunder after each lightning flash (the
+## nearer the strike, the sooner and louder), distant rumbles in a building storm with no flash yet, and wind gusts
+## that come more often and louder as the storm grows. The zone's own random thunder is held back meanwhile.
+const THUNDER := ["files/thunder1.wav", "files/thunder2.wav", "files/thunder3.wav", "files/thunder4.wav",
+		"files/thunder5.wav", "files/thunder6.wav"]
+var _gust_at := 0.0
+var _rumble_at := 0.0
+
+
+func _on_lightning(strength: float) -> void:
+	if not is_processing() or not sky.remastered:
+		return
+	var near := _rng.randf()                       # 0 far off .. 1 overhead
+	var delay := lerpf(3.5, 0.25, near)
+	get_tree().create_timer(delay).timeout.connect(func():
+		if is_instance_valid(self) and is_processing():
+			_weather_shot(THUNDER[_rng.randi() % THUNDER.size()], lerpf(0.14, 0.5, near) * clampf(strength, 0.3, 1.0),
+					_rng.randf_range(0.9, 1.1)))
+
+
+func _storm_sounds(delta: float) -> void:
+	var storm := sky.storm
+	var thunder := SkySystem._t("lightning", 1.0)
+	# a storm building: now and then a far rumble (no flash: it is beyond the horizon)
+	if storm > 0.35 and storm <= 0.6 and thunder > 0.0:
+		_rumble_at -= delta
+		if _rumble_at <= 0.0:
+			_rumble_at = _rng.randf_range(18.0, 45.0)
+			_weather_shot(THUNDER[_rng.randi() % THUNDER.size()], 0.08 * thunder, _rng.randf_range(0.75, 0.9))
+	# gusts: more and louder with the storm
+	var wind := SkySystem._t("storm_wind", 1.5)
+	if storm > 0.3 and wind > 0.0:
+		_gust_at -= delta
+		if _gust_at <= 0.0:
+			_gust_at = lerpf(14.0, 4.0, storm) * _rng.randf_range(0.7, 1.3)
+			_weather_shot("files/wind%02d.wav" % _rng.randi_range(1, 27), lerpf(0.03, 0.12, storm) * minf(wind / 1.5, 1.5),
+					_rng.randf_range(0.9, 1.1))
+
+
+func _weather_shot(file: String, volume: float, pitch: float) -> void:
+	var st := _stream(file, false)
+	if st == null:
+		return
+	var player := AudioStreamPlayer.new()
+	player.stream = st
+	player.pitch_scale = pitch
+	player.volume_db = linear_to_db(maxf(volume, 0.0001))
+	player.bus = "Ambient_pan%d" % _rng.randi_range(1, PAN_STEPS - 2)
+	add_child(player)
+	player.finished.connect(player.queue_free)
+	player.play()

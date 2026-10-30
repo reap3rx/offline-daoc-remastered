@@ -771,6 +771,12 @@ var _flash := 0.0
 var _flash_next := 6.0
 var _flash_pulses := 0
 var _flash_rng := RandomNumberGenerator.new()
+signal lightning(strength: float)        # a lightning flash (ZoneAudio: the thunder after it)
+
+
+## How hard it rains now: 0 dry .. 1 the heaviest (the rain particles' share).
+func rain_amount() -> float:
+	return _rain.amount_ratio if _rain and _rain.emitting else 0.0
 
 
 func _weather_fx(delta: float, sun_dir: Vector3) -> void:
@@ -804,6 +810,7 @@ func _weather_fx(delta: float, sun_dir: Vector3) -> void:
 		if _flash_next <= 0.0:
 			_flash_pulses = _flash_rng.randi_range(1, 3)
 			_flash = _flash_rng.randf_range(0.6, 1.0)
+			lightning.emit(_flash)
 			_flash_next = _flash_rng.randf_range(5.0, 16.0) / maxf(storm, 0.6)
 	if _flash > 0.0:
 		_flash = maxf(_flash - delta * 7.0, 0.0)
