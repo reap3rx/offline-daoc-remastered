@@ -2935,9 +2935,60 @@ internal sealed partial class MainForm : Form
         return PortableCredentials.ReadOrCreate(_root);
     }
 
+    // The server process last seen accepting connections on the game port.
+    private volatile int _listeningServerPid;
+
+    // Windows' TCP table is not a reliable "is it listening" signal on every PC: on Ryan's it reports the
+    // server's live listener as CLOSED / FIN_WAIT_1 / missing for most of a session, so a table-only check
+    // flickers between Running and Starting (Enter Realm then says the server is stopped). The table is still
+    // the fast path; when it misses, a server process that once accepted a test connection counts as running
+    // until it exits, and a server not yet confirmed gets one quick loopback connect.
     private bool IsServerRunning()
     {
-        return IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners().Any(endpoint => endpoint.Port == 10300);
+        bool inTable = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners().Any(endpoint => endpoint.Port == 10300);
+        int? pid = CurrentServerPid();
+        if (pid is null)
+        {
+            _listeningServerPid = 0;
+            return inTable;
+        }
+        if (inTable || pid == _listeningServerPid)
+        {
+            _listeningServerPid = pid.Value;
+            return true;
+        }
+        if (!GamePortAcceptsConnections())
+            return false;
+        _listeningServerPid = pid.Value;
+        return true;
+    }
+
+    private int? CurrentServerPid()
+    {
+        try
+        {
+            if (_serverProcess is { HasExited: false } own)
+                return own.Id;
+        }
+        catch (InvalidOperationException)
+        {
+        }
+        using var external = FindExactServerProcess();
+        return external?.Id;
+    }
+
+    private static bool GamePortAcceptsConnections()
+    {
+        try
+        {
+            using var probe = new System.Net.Sockets.TcpClient();
+            var connect = probe.ConnectAsync(System.Net.IPAddress.Loopback, 10300);
+            return connect.Wait(500) && probe.Connected;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private void BeginServerReadinessPolling()
