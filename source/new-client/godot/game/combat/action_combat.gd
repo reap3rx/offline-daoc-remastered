@@ -782,7 +782,9 @@ func _process(_delta: float) -> void:
 	if p == null or not on:
 		return
 	var now := Time.get_ticks_msec()
-	var free := _editing or not p.input_enabled or _typing() or p.dead or Keybinds.held("ac_cursor") or _npc_window_open()
+	var lp = viewer.get("look_panel") if viewer else null
+	var free: bool = _editing or not p.input_enabled or _typing() or p.dead or Keybinds.held("ac_cursor") or _npc_window_open() \
+			or (lp != null and is_instance_valid(lp) and lp.visible)
 	p.action_cursor = free
 	if free and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE

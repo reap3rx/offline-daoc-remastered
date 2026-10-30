@@ -207,6 +207,10 @@ func _client_command(text: String) -> bool:
 			PlayerData.window_toggle.emit("poisons")
 		"potions", "potionbag":                            # the potion bag (PotionWindow)
 			PlayerData.window_toggle.emit("potions")
+		"look":                                            # the look panel (ui/look_panel.gd): tune the remastered look
+			var lv := get_tree().current_scene
+			if lv and lv.has_method("toggle_look_panel"):
+				lv.call("toggle_look_panel")
 		"light", "lights":                                 # lights you place yourself (world/placed_lights.gd)
 			var v := get_tree().current_scene
 			if v and v.has_method("light_command"):

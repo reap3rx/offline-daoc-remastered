@@ -59,6 +59,7 @@ var values := DEFAULTS.duplicate()
 
 
 func _ready() -> void:
+	NifMaterials.ensure_globals()                        # (the world shader's global values, before any zone builds)
 	for a in OS.get_cmdline_user_args():                 # test runs keep the defaults (their own settings file)
 		if a.trim_prefix("--").split("=")[0] in BootSettings.TEST_FLAGS:
 			return

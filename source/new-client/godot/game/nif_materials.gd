@@ -16,6 +16,29 @@ var _folders := {}                  # texture set name -> folder with <name>.png
 var _shaders := {}                  # variant key -> Shader
 var _materials := {}                # spec json -> ShaderMaterial
 var _textures := {}                 # "set/name" -> Texture2D
+var world := false                  # a zone's own models (ZoneLoader): the remastered world shading (SHADER_BODY's WORLD)
+
+
+## The remastered world look's global shader values (SHADER_BODY), made once before any shader uses them.
+static var _globals_lock := Mutex.new()
+static var _globals_done := false
+const GLOBALS := {"remaster_fx": [RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.0],
+		"zone_fill": [RenderingServer.GLOBAL_VAR_TYPE_VEC3, Vector3.ZERO],
+		"relief_strength": [RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.12],
+		"shine_strength": [RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.6],
+		"wind_strength": [RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 1.0],
+		"foliage_light": [RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 0.7]}
+
+
+static func ensure_globals() -> void:
+	if _globals_done:
+		return
+	_globals_lock.lock()
+	if not _globals_done:
+		for k in GLOBALS:                                # (only made here; the engine's list is editor-only)
+			RenderingServer.global_shader_parameter_add(k, GLOBALS[k][0], GLOBALS[k][1])
+		_globals_done = true
+	_globals_lock.unlock()
 
 
 func _init(folders: Dictionary, initial_set: String) -> void:
@@ -186,7 +209,7 @@ func texture(tex_name: String) -> Texture2D:
 ## destcolor: source factor DESTCOLOR (nif_static): what's behind x (1 + colour), or with invdest (destination
 ## INVSRCALPHA, spec dest_keep) x (colour + 1 - alpha) - a multiply blend; black leaves what's behind as it was.
 func _shader(alpha: String, double_sided: bool, unlit := false, split := false, ambient_only := false, invdest := false) -> Shader:
-	var key := "%s/%s/%s/%s/%s/%s" % [alpha, double_sided, unlit, split, ambient_only, invdest]
+	var key := "%s/%s/%s/%s/%s/%s/%s" % [alpha, double_sided, unlit, split, ambient_only, invdest, world]
 	if _shaders.has(key):
 		return _shaders[key]
 	var modes := ["cull_disabled" if double_sided else "cull_back"]
@@ -204,7 +227,15 @@ func _shader(alpha: String, double_sided: bool, unlit := false, split := false, 
 		modes.append_array(["blend_mix", "depth_draw_never", "unshaded"])
 	elif alpha == "destcolor":                           # behind x ALBEDO (above 1 brightens: the HDR buffer keeps it)
 		modes.append_array(["blend_mul", "depth_draw_never", "unshaded", "fog_disabled"])
-	var code := "shader_type spatial;\nrender_mode %s;\n" % ", ".join(modes) + SHADER_BODY
+	ensure_globals()
+	var defs := ""
+	if world and not unlit and alpha in ["opaque", "mask", "blend"]:
+		defs += "#define WORLD\n"                       # the world's own surfaces: remastered relief, fill (below)
+		if ambient_only:
+			defs += "#define FOLIAGE\n"                 # trees and bushes: wind, rounded canopy light
+		if alpha == "mask":
+			defs += "#define CUTOUT\n"                  # leaves, grass cards, fences: edges kept at a distance
+	var code := "shader_type spatial;\nrender_mode %s;\n" % ", ".join(modes) + defs + SHADER_BODY
 	if ambient_only and not unlit and alpha != "add" and alpha != "screen":
 		# the zone's nifs.csv "Ambient Only" column (trees, evergreens, bushes): the client lights these without any
 		# shading - ambient plus the whole sun / moon light, no angle falloff, no shadows (Midgard noon: ambient
@@ -214,7 +245,13 @@ func _shader(alpha: String, double_sided: bool, unlit := false, split := false, 
 		code += """
 uniform vec3 diffuse_tint = vec3(1.0);
 void light() {
-	DIFFUSE_LIGHT += (LIGHT_IS_DIRECTIONAL ? 1.0 : ATTENUATION) * LIGHT_COLOR / PI * diffuse_tint;
+	float shade = 1.0;
+#ifdef FOLIAGE
+	// remastered: a canopy lit as a rough ball (NORMAL points out from the trunk, fragment()) - the sunny side
+	// brighter, the far side in its own shade, never black
+	shade = mix(1.0, 0.45 + 0.8 * clamp((dot(NORMAL, LIGHT) + 0.4) / 1.4, 0.0, 1.0), foliage_light * remaster_fx);
+#endif
+	DIFFUSE_LIGHT += (LIGHT_IS_DIRECTIONAL ? 1.0 : ATTENUATION) * LIGHT_COLOR / PI * diffuse_tint * shade;
 }
 """
 	elif split and not unlit and alpha != "add" and alpha != "screen":
@@ -234,7 +271,23 @@ void light() {
 	if unlit:                                            # unshaded draws ALBEDO alone: the emission is its colour
 		code = code.replace("//UNLIT_OUT", "ALBEDO = EMISSION;")
 	if alpha == "mask":
-		code = code.replace("//ALPHA_OUT", "ALPHA = c.a * opacity;\n\tALPHA_SCISSOR_THRESHOLD = alpha_cut;")
+		# remastered world cut-outs (leaves, fences): the alpha raised with the mip level, so far trees don't thin out
+		# into sticks, and sharpened to the pixel so the edge is clean instead of a jagged half-transparent fringe
+		code = code.replace("//ALPHA_OUT", """float a = c.a * opacity;
+#ifdef CUTOUT
+	if (remaster_fx > 0.5) {
+		a *= 1.0 + max(textureQueryLod(base_tex, pick(base_uv, base_wrap, vec2(textureSize(base_tex, 0)))).x, 0.0) * 0.22;
+		a = clamp((a - alpha_cut) / max(fwidth(a), 0.0001) + 0.5, 0.0, 1.0);
+		ALPHA = a;
+		ALPHA_SCISSOR_THRESHOLD = 0.5;
+	} else {
+		ALPHA = a;
+		ALPHA_SCISSOR_THRESHOLD = alpha_cut;
+	}
+#else
+	ALPHA = a;
+	ALPHA_SCISSOR_THRESHOLD = alpha_cut;
+#endif""")
 	elif alpha == "blend":
 		code = code.replace("//ALPHA_OUT", "ALPHA = c.a * opacity;")
 	elif alpha == "add":
@@ -258,6 +311,14 @@ void light() {
 
 
 const SHADER_BODY := """
+// REMASTERED LIGHTING's world look (owner 2026-10-29; SkySystem sets them, the look panel tunes them)
+global uniform float remaster_fx;      // 1 while remastered lighting is on
+global uniform vec3 zone_fill;         // the zone's ambient tint, added back while bounce light (SDFGI) replaces it
+global uniform float relief_strength;  // surface relief from the texture's light and dark (metres per unit)
+global uniform float shine_strength;   // smoother, shinier light parts
+global uniform float wind_strength;    // trees and bushes sway
+global uniform float foliage_light;    // canopies shaded as rounded shapes
+varying vec3 fol_n;
 uniform sampler2D base_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D dark_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D detail_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
@@ -328,6 +389,23 @@ void vertex() {
 		vec3 fwd = normalize(cross(side, up));
 		MODELVIEW_MATRIX = VIEW_MATRIX * mat4(vec4(side * s, 0.0), vec4(up * s, 0.0), vec4(fwd * s, 0.0), MODEL_MATRIX[3]);
 	}
+#ifdef FOLIAGE
+	// a tree or bush (stands on its origin): the higher a vertex, the more it sways; leaves flutter too
+	fol_n = normalize(vec3(VERTEX.x, 0.6 + VERTEX.y * 0.12, VERTEX.z) + vec3(0.0, 0.001, 0.0));
+	fol_n = normalize((MODELVIEW_MATRIX * vec4(fol_n, 0.0)).xyz);
+	if (remaster_fx > 0.5 && wind_strength > 0.0) {
+		vec3 wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+		float h = clamp(VERTEX.y / 6.0, 0.0, 1.6);
+		float ph = dot(MODEL_MATRIX[3].xyz, vec3(0.13, 0.0, 0.17));
+		float sway = sin(TIME * 1.1 + ph) * 0.65 + sin(TIME * 2.3 + ph * 1.7) * 0.35;
+		vec3 off = vec3(sway, 0.0, sway * 0.55) * 0.09 * h * h;
+#ifdef CUTOUT
+		off += vec3(sin(TIME * 6.5 + wp.x * 2.1 + wp.y * 3.1), sin(TIME * 7.9 + wp.z * 2.3) * 0.5,
+				sin(TIME * 5.7 + wp.z * 1.9 + wp.y * 2.7)) * 0.025 * min(h * 2.0, 1.0);
+#endif
+		VERTEX += inverse(mat3(MODEL_MATRIX)) * (off * wind_strength);
+	}
+#endif
 	uv_a = UV;
 	uv_b = UV2;
 	uv_c = CUSTOM0.xy;
@@ -407,6 +485,40 @@ void fragment() {
 	}
 	ROUGHNESS = 0.9;
 	SPECULAR = has_gloss ? texture(gloss_tex, pick(gloss_uv, gloss_wrap, vec2(textureSize(gloss_tex, 0)))).r * 0.8 : specular_amount;
+#ifdef WORLD
+	if (remaster_fx > 0.5) {
+		EMISSION += ALBEDO * zone_fill;                  // (zero unless bounce light is on)
+		float lum = dot(ALBEDO, vec3(0.3, 0.59, 0.11));
+#ifdef FOLIAGE
+		NORMAL = normalize(mix(NORMAL, fol_n, 0.85));
+#else
+		// relief: the texture's light parts raised, its dark seams sunk (a bump from the picture itself - the
+		// surface gradient method, no tangents needed), then smoother and shinier where it is light
+		if (relief_strength > 0.0 && has_base) {
+			// the height's slope along the texture (two neighbouring texels at the mip drawn), carried onto the
+			// screen by the texture coordinates' own slopes - smooth per pixel
+			vec2 buv = pick(base_uv, base_wrap, vec2(textureSize(base_tex, 0))) + scr(base_scroll) + base_offset;
+			float lod = max(textureQueryLod(base_tex, buv).x, 0.0) + 1.5;   // (a coarser mip: the shapes, not the grain)
+			vec2 stp = exp2(lod) / vec2(textureSize(base_tex, 0));
+			vec3 luma = vec3(0.3, 0.59, 0.11);
+			float h0 = dot(textureLod(base_tex, buv, lod).rgb, luma);
+			vec2 dh = vec2(dot(textureLod(base_tex, buv + vec2(stp.x, 0.0), lod).rgb, luma) - h0,
+					dot(textureLod(base_tex, buv + vec2(0.0, stp.y), lod).rgb, luma) - h0) / stp;
+			float dhdx = dot(dh, dFdx(buv));
+			float dhdy = dot(dh, dFdy(buv));
+			vec3 dpdx = dFdx(VERTEX);
+			vec3 dpdy = dFdy(VERTEX);
+			vec3 r1 = cross(dpdy, NORMAL);
+			vec3 r2 = cross(NORMAL, dpdx);
+			float det = dot(dpdx, r1);
+			vec3 grad = sign(det) * (dhdx * r1 + dhdy * r2);
+			NORMAL = normalize(abs(det) * NORMAL - grad * relief_strength);
+		}
+		ROUGHNESS = mix(0.92, 0.55, smoothstep(0.25, 0.85, lum) * shine_strength);
+		SPECULAR = max(SPECULAR, specular_amount * (0.6 + 1.2 * lum * shine_strength));
+#endif
+	}
+#endif
 	//UNLIT_OUT
 	//ALPHA_OUT
 }

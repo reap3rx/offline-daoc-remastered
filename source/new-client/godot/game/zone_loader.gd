@@ -53,6 +53,7 @@ func load_zone(content_dir: String, terrain_set_name := "blend", texture_set_nam
 	for k in info.texture_sets:
 		folders[k] = dir.path_join(info.texture_sets[k])
 	materials = NifMaterials.new(folders, texture_set)
+	materials.world = true                                 # (the remastered world shading: relief, wind, fill)
 	if int(info.get("id", 0)) == 160:
 		# Tuscaran Glacier's ice: its reflections turned down further (owner 2026-10-17: "its really missing the gritty
 		# ice texture of the old client") - this zone only

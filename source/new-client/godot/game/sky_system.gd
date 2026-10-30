@@ -235,6 +235,8 @@ func clock_text() -> String:
 
 
 func _process(delta: float) -> void:
+	if zone and int(zone.info.get("id", -1)) != _look_zone:
+		apply_look()
 	if dungeon:                                              # the clock still runs (camp timers, night NPCs)
 		game_seconds = fposmod(game_seconds + delta * day_increment * time_scale, 86400.0)
 		if remastered:
@@ -348,7 +350,8 @@ func _update(_delta: float) -> void:
 	var fog = _blend("lights_and_fog", "distance_fog", w)
 	if amb != null:
 		environment.ambient_light_color = amb
-		environment.ambient_light_energy = float(amb_amount if amb_amount != null else 0.5) * AMBIENT_SCALE
+		environment.ambient_light_energy = float(amb_amount if amb_amount != null else 0.5) * AMBIENT_SCALE \
+				* (_t("ambient", 1.0) if remastered else 1.0)
 	if fog != null:
 		environment.fog_light_color = fog
 	var light_dir := sun_dir if sun_dir.y > -0.05 else moon_dir     # at night the moon lights the world
@@ -465,6 +468,41 @@ var remastered := false
 var gi := false                        # real-time bounce light (SDFGI) - Graphics "gi", with remastered only
 ## Test-shot tuning (--tune=exposure:0.9,fog:0.5 ...): any number below by its key, for comparing looks.
 static var tune := {}
+static var cli_tune := {}                    # --tune test values: on top of every zone's look
+const LOOKS_SHIPPED := "res://game/data/zone_looks.json"
+const LOOKS_MINE := "user://world/zone_looks.json"   # the look panel's saves (the save sync carries the world folder)
+var _look_zone := -2
+
+
+## Each zone's tuned look (owner 2026-10-29: art tuning): "default" for every zone, then the zone's own, from the
+## shipped file and then yours - the look panel (Ctrl+F12) edits yours. Re-applied when you change zone.
+static func looks() -> Dictionary:
+	var out := {}
+	for path in [LOOKS_SHIPPED, LOOKS_MINE]:
+		if FileAccess.file_exists(path):
+			var d = JSON.parse_string(FileAccess.get_file_as_string(path))
+			if d is Dictionary:
+				for k in d:
+					if not out.has(k):
+						out[k] = {}
+					(out[k] as Dictionary).merge(d[k], true)
+	return out
+
+
+func apply_look(force := false) -> void:
+	var id := int(zone.info.get("id", -1)) if zone else -1
+	if id == _look_zone and not force:
+		return
+	_look_zone = id
+	var all := looks()
+	var t := {}
+	t.merge(all.get("default", {}), true)
+	t.merge(all.get(str(id), {}), true)
+	t.merge(cli_tune, true)
+	tune = t
+	if remastered:
+		set_remastered(true)
+var _fill_now := Vector3(-1, -1, -1)
 var _cam_attr: CameraAttributesPractical
 var _mist: FogVolume
 var _mist_mat: FogMaterial
@@ -489,10 +527,23 @@ static func _t(key: String, v: float) -> float:
 	return float(tune.get(key, v))
 
 
+## The world shader's remastered values (NifMaterials SHADER_BODY): relief, shine, wind, canopy light - tunable.
+func _world_look(on: bool) -> void:
+	NifMaterials.ensure_globals()
+	RenderingServer.global_shader_parameter_set("remaster_fx", 1.0 if on else 0.0)
+	RenderingServer.global_shader_parameter_set("relief_strength", _t("relief", 0.12))
+	RenderingServer.global_shader_parameter_set("shine_strength", _t("shine", 0.6))
+	RenderingServer.global_shader_parameter_set("wind_strength", _t("wind", 1.0))
+	RenderingServer.global_shader_parameter_set("foliage_light", _t("foliage", 0.7))
+	if not on:
+		RenderingServer.global_shader_parameter_set("zone_fill", Vector3.ZERO)
+
+
 func set_remastered(on: bool) -> void:
 	remastered = on
 	if environment == null:
 		return
+	_world_look(on)
 	if not on:
 		environment.volumetric_fog_enabled = false
 		environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
@@ -630,12 +681,22 @@ func _remaster_frame(w: Dictionary = {}, sun_dir := Vector3.UP) -> void:
 		_glow_zones = zs.size()
 		for zl in zs:
 			(zl as ZoneLoader).set_fog_glow(glow)
+	mist *= _t("mist", 1.0)
 	if _mist and _follow:
 		_mist_mat.density = mist
 		_mist.visible = mist > 0.002
 		_mist.global_position = _follow.global_position + Vector3(0.0, 2.0, 0.0)
 		_mist_mat.albedo = environment.volumetric_fog_albedo
 	_update_grade(night, dawn + dusk)
+	# bounce light (SDFGI) replaces the zone's flat ambient light: the zone's own tint is put back on every world
+	# surface as a fill the shader adds (owner 2026-10-29: "a real fix" - nights and shade keep their colour)
+	var fill := Vector3.ZERO
+	if gi and not dungeon and environment.sdfgi_enabled:
+		var a := environment.ambient_light_color * environment.ambient_light_energy * _t("fill", 0.85)
+		fill = Vector3(a.r, a.g, a.b)
+	if fill != _fill_now:
+		_fill_now = fill
+		RenderingServer.global_shader_parameter_set("zone_fill", fill)
 
 
 func _update_grade(night: float, twilight: float) -> void:

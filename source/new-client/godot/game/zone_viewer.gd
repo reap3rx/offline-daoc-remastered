@@ -373,7 +373,10 @@ func _ready_rest(loading: LoadingScreen) -> void:
 		var p := kv.split(":")
 		if p.size() == 2:
 			SkySystem.tune[p[0]] = float(p[1])
+			SkySystem.cli_tune[p[0]] = float(p[1])
 	Graphics.apply_scene(self)
+	if args.has("look"):                                  # test shots: --look opens the look panel
+		toggle_look_panel.call_deferred()
 	hud = Label.new()
 	hud.position = Vector2(12, 10)
 	hud.add_theme_color_override("font_color", Color(1, 0.96, 0.85))
@@ -1521,6 +1524,17 @@ func loc_line() -> String:
 
 
 const PlacedLights := preload("res://game/world/placed_lights.gd")
+const LookPanel := preload("res://game/ui/look_panel.gd")
+var look_panel: CanvasLayer = null
+
+
+## /look: the look panel (tune the remastered look per zone - ui/look_panel.gd).
+func toggle_look_panel() -> void:
+	if look_panel == null:
+		look_panel = LookPanel.new()
+		add_child(look_panel)
+		look_panel.setup(self)
+	look_panel.toggle()
 
 
 ## /light (owner 2026-10-28: lights where the world has no lamp model): add / remove / undo / list - at the spot the
