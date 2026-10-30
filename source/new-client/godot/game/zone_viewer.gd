@@ -473,6 +473,8 @@ func _build_sky() -> void:
 	if args.has("storm"):
 		sky.storm_forced = float(args["storm"])
 		sky.storm = sky.storm_forced
+		if sky.storm >= 0.5:
+			sky._wet = 1.0                               # (test shots: already soaked, not a minute later)
 	# the client's zone ambience + entry music (content/zones/zoneNNN/audio.json from pipeline/build_sounds.py)
 	if not args.has("mute"):
 		audio = ZoneAudio.new()

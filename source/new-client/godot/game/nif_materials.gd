@@ -320,6 +320,7 @@ global uniform float relief_strength;  // surface relief from the texture's ligh
 global uniform float shine_strength;   // smoother, shinier light parts
 global uniform float wind_strength;    // trees and bushes sway
 global uniform float foliage_light;    // canopies shaded as rounded shapes
+global uniform float wetness;          // rain-soaked surfaces: darker, glossy (project.godot [shader_globals])
 varying vec3 fol_n;
 uniform sampler2D base_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform sampler2D dark_tex : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
@@ -522,6 +523,15 @@ void fragment() {
 		ROUGHNESS = mix(0.92, 0.55, smoothstep(0.25, 0.85, lum) * shine_strength);
 		SPECULAR = max(SPECULAR, specular_amount * (0.6 + 1.2 * lum * shine_strength));
 #endif
+		if (wetness > 0.0) {                             // the rain: darker, and glossy where it faces up
+			float up = smoothstep(0.2, 0.8, dot(NORMAL, (VIEW_MATRIX * vec4(0.0, 1.0, 0.0, 0.0)).xyz));
+			float w = wetness * mix(0.4, 1.0, up);
+			ALBEDO *= 1.0 - 0.3 * w;
+#ifndef FOLIAGE
+			ROUGHNESS = mix(ROUGHNESS, 0.32, w * 0.8);
+			SPECULAR = mix(SPECULAR, 0.45, w);
+#endif
+		}
 	}
 #endif
 	//UNLIT_OUT

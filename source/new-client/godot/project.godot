@@ -58,3 +58,10 @@ project/assembly_name="MMOEngine"
 
 3d/merge_rasterizer_cell_scale=0.25
 3d/warnings/navmesh_edge_merge_errors=false
+
+[shader_globals]
+
+wetness={
+"type": "float",
+"value": 0.0
+}

@@ -26,6 +26,7 @@ uniform sampler2D weights1 : filter_linear, repeat_disable;
 uniform vec2 patch_index;              // which patch of the zone this chunk is (column, row)
 uniform float patches = 8.0;
 uniform float far_fade_m = 260.0;      // blend gives way to the baked ground beyond this distance
+global uniform float wetness;          // the remastered rain: darker, glossy ground (sky_system.gd)
 
 varying vec3 world_pos;
 
@@ -66,4 +67,10 @@ void fragment() {
 	}
 	ROUGHNESS = 0.95;
 	SPECULAR = 0.25;
+	if (wetness > 0.0) {
+		// darker and a little glossy - not a mirror: the bright storm sky in every grazing patch read as snow
+		ALBEDO *= 1.0 - 0.35 * wetness;
+		ROUGHNESS = mix(0.95, 0.55, wetness);
+		SPECULAR = mix(0.25, 0.32, wetness);
+	}
 }

@@ -241,6 +241,8 @@ func _process(delta: float) -> void:
 		game_seconds = fposmod(game_seconds + delta * day_increment * time_scale, 86400.0)
 		if remastered:
 			_remaster_frame()                                # (the mist follows you)
+		if _wet_set > 0.0 or _flash > 0.0:
+			_weather_off()                                   # (no rain underground: dry, no lightning)
 		return
 	var h := hour()
 	var rate := day_increment * (NIGHT_FACTOR if (h >= 18.0 or h < 6.0) else 1.0)
@@ -373,6 +375,7 @@ func _update(_delta: float) -> void:
 			_rain.global_position = _follow.global_position + Vector3(0.0, _rain_ceiling, 0.0)
 	if remastered:
 		_remaster_frame(w, sun_dir)
+		_weather_fx(_delta, sun_dir)
 
 
 func _build_rain() -> void:
@@ -534,6 +537,7 @@ func _world_look(on: bool) -> void:
 	RenderingServer.global_shader_parameter_set("relief_strength", _t("relief", 0.12))
 	RenderingServer.global_shader_parameter_set("shine_strength", _t("shine", 0.6))
 	RenderingServer.global_shader_parameter_set("wind_strength", _t("wind", 1.0))
+	_wind_set = -1.0                                         # (the weather sets it again with the storm's share)
 	RenderingServer.global_shader_parameter_set("foliage_light", _t("foliage", 0.7))
 	if not on:
 		RenderingServer.global_shader_parameter_set("zone_fill", Vector3.ZERO)
@@ -564,6 +568,7 @@ func set_remastered(on: bool) -> void:
 		if _mist:
 			_mist.visible = false
 		_set_extras(false)
+		_weather_off()
 		return
 	environment.tonemap_mode = Environment.TONE_MAPPER_AGX
 	environment.tonemap_exposure = _t("exposure", 0.85)
@@ -752,3 +757,83 @@ func _set_extras(on: bool) -> void:
 		(zl as ZoneLoader).set_remastered_lights(on)
 	if _follow and _follow.has_method("set_lantern"):
 		_follow.set_lantern(on)
+
+
+# ---------------------------------------------------------------- remastered weather (claude 2026-10-30)
+## The sky's ray-marched clouds (sky.gdshader), thickening and darkening with the storm; the wind in the trees rising
+## with it; lightning in heavy storms; the ground and stone getting wet in the rain and drying after. All tunable in the
+## look panel (WEATHER); none of it in the classic look.
+var _cloud_clock := 0.0
+var _wet := 0.0
+var _wet_set := -1.0
+var _wind_set := -1.0
+var _flash := 0.0
+var _flash_next := 6.0
+var _flash_pulses := 0
+var _flash_rng := RandomNumberGenerator.new()
+
+
+func _weather_fx(delta: float, sun_dir: Vector3) -> void:
+	if dungeon or _sky_mat == null:
+		_weather_off()
+		return
+	var on := _t("clouds", 1.0) > 0.5
+	_sky_mat.set_shader_parameter("remaster_clouds", 1.0 if on else 0.0)
+	_sky_mat.set_shader_parameter("cloud_full", _t("cloud_full", 0.0))
+	_sky_mat.set_shader_parameter("cloud_jitter", _t("cloud_jitter", 1.0))
+	if on:
+		_sky_mat.set_shader_parameter("cloud_cover", lerpf(_t("cloud_cover", 0.5), 0.97, storm))
+		_sky_mat.set_shader_parameter("cloud_storm", storm)
+		_cloud_clock += delta * (1.0 + 2.5 * storm) * _t("cloud_speed", 1.0)
+		_sky_mat.set_shader_parameter("cloud_clock", _cloud_clock)
+		var lit_dir := sun_dir if sun_dir.y > -0.05 else -sun_dir     # the moon at night (the light the sun node carries)
+		_sky_mat.set_shader_parameter("cloud_light_dir", lit_dir)
+		var light := Color(0, 0, 0)
+		var day := clampf((sun_dir.y + 0.05) * 6.0, 0.0, 1.0)
+		if sun:                                                   # (moonlit clouds dimmer than the moonlit ground)
+			light = sun.light_color * clampf(sun.light_energy, 0.0, 3.0) * _t("cloud_sun", 0.9) * lerpf(0.4, 1.0, day)
+		_sky_mat.set_shader_parameter("cloud_sun", Vector3(light.r, light.g, light.b))
+		var zen: Color = _sky_mat.get_shader_parameter("canopy_zenith") if _sky_mat.get_shader_parameter("canopy_zenith") is Color else Color(0.5, 0.6, 0.7)
+		var grey := zen.get_luminance()
+		var amb := zen.lerp(Color(grey, grey, grey), 0.45) * _t("cloud_shade", 1.1) * lerpf(0.6, 1.0, day)
+		_sky_mat.set_shader_parameter("cloud_amb", Vector3(amb.r, amb.g, amb.b))
+	# lightning: a heavy storm's flashes, one to three flickers each
+	var bolts := _t("lightning", 1.0)
+	if storm > 0.6 and bolts > 0.0:
+		_flash_next -= delta
+		if _flash_next <= 0.0:
+			_flash_pulses = _flash_rng.randi_range(1, 3)
+			_flash = _flash_rng.randf_range(0.6, 1.0)
+			_flash_next = _flash_rng.randf_range(5.0, 16.0) / maxf(storm, 0.6)
+	if _flash > 0.0:
+		_flash = maxf(_flash - delta * 7.0, 0.0)
+		if _flash == 0.0 and _flash_pulses > 1:
+			_flash_pulses -= 1
+			_flash = _flash_rng.randf_range(0.4, 0.9)
+	_sky_mat.set_shader_parameter("flash", _flash * bolts)
+	if _flash > 0.0:
+		environment.ambient_light_energy += _flash * bolts * 0.9
+	# the wind picks up with the storm
+	var wind := _t("wind", 1.0) * (1.0 + _t("storm_wind", 1.5) * storm)
+	if absf(wind - _wind_set) > 0.01:
+		_wind_set = wind
+		RenderingServer.global_shader_parameter_set("wind_strength", wind)
+	# wet in the rain (a minute to soak), dry after it (three minutes)
+	var raining := _rain.amount_ratio if _rain and _rain.emitting else 0.0
+	var target := clampf(raining * 1.6, 0.0, 1.0)
+	_wet = move_toward(_wet, target, delta / (60.0 if target > _wet else 180.0))
+	var wet := _wet * _t("wet", 1.0)
+	if absf(wet - _wet_set) > 0.004:
+		_wet_set = wet
+		RenderingServer.global_shader_parameter_set("wetness", wet)
+
+
+func _weather_off() -> void:
+	if _sky_mat:
+		_sky_mat.set_shader_parameter("remaster_clouds", 0.0)
+		_sky_mat.set_shader_parameter("flash", 0.0)
+	_flash = 0.0
+	if _wet_set != 0.0:
+		_wet_set = 0.0
+		RenderingServer.global_shader_parameter_set("wetness", 0.0)
+	_wind_set = -1.0
