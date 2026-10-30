@@ -182,6 +182,16 @@ func on_line(text: String) -> void:
 			var ui = viewer.get("ui") if viewer else null
 			if ui and ui.windows.has("poisons"):
 				ui.windows["poisons"].refresh()
+		"styles":                                        # styles|slot|picked|id~name... / styles|end (the styles window)
+			if f.size() > 1 and f[1] != "end":
+				var opts := []
+				for i in range(3, f.size()):
+					var kv := String(f[i]).split("~")
+					opts.append({"id": int(kv[0]), "name": String(kv[1]) if kv.size() > 1 else ""})
+				Server.ac_styles[String(f[1])] = {"picked": int(f[2]) if f.size() > 2 else 0, "options": opts}
+			var ui2 = viewer.get("ui") if viewer else null
+			if ui2 and ui2.windows.has("ac_styles"):
+				ui2.windows["ac_styles"].refresh()
 		"fumble":
 			_flash("STUMBLE", Color(1.0, 0.35, 0.3))
 			var p := _player()
@@ -254,13 +264,22 @@ var _parry_ready_at := 0
 func _parry_ok(now: int, parry_only := false) -> bool:
 	if now < _parry_ready_at:
 		return false
+	if _press_window(parry_only) <= 0:                 # (never learned: casters - the server's window is 0)
+		_flash("YOU CAN'T PARRY", Color(0.8, 0.8, 0.8))
+		_parry_ready_at = now + 800
+		return false
 	_parry_ready_at = now + _press_window(parry_only) + _win_cool
 	return true
 
 
 ## The window a parry / block press opens now (ms).
 func _press_window(parry_only := false) -> int:
-	return _win_block if _has_shield() and not parry_only else _win_parry
+	return _win_block if _blocks() and not parry_only else _win_parry
+
+
+## A shield carried and the skill to use it (the server's block window is 0 without Shields).
+func _blocks() -> bool:
+	return _has_shield() and _win_block > 0
 
 
 func _defended(kind: String, dmg: int, saved: int) -> void:
@@ -449,7 +468,7 @@ func _input(event: InputEvent) -> void:
 				_draw_weapon()                                 # sheathed: the first press draws, the next parries
 			elif event.is_pressed() and _parry_ok(now):
 				Server.command("/ac parry")
-				p.action_defend("block" if _has_shield() else "parry")   # the move plays now, hit or miss
+				p.action_defend("block" if _blocks() else "parry")   # the move plays now, hit or miss
 			get_viewport().set_input_as_handled()
 			return
 	if mouse and not p.action_cursor and event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
@@ -665,6 +684,10 @@ func _dodge(_dir: Vector3) -> void:
 	var now := Time.get_ticks_msec()
 	var p := _player()
 	if p == null or now < _dodge_ready_at or not p.grounded:
+		return
+	if _win_dodge <= 0:                                    # (no Evade: the server's window is 0)
+		_flash("YOU CAN'T DODGE", Color(0.8, 0.8, 0.8))
+		_dodge_ready_at = now + 800
 		return
 	_dodge_ready_at = now + _win_dodge + _win_cool
 	if _drawing:

@@ -51,6 +51,13 @@ namespace DOL.GS.Commands
 				case "poison":                       // the poison bag (PoisonBag.cs) - classic mode too
 					PoisonBag.Command(player, args);
 					return;
+				case "styles":                       // the Action Combat Styles window's lists
+					ActionCombat.SendStyles(player);
+					return;
+				case "pick":                         // /ac pick <slot> <style id | auto>
+					if (args.Length > 3)
+						ActionCombat.SetPick(player, args[2].ToLowerInvariant(), args[3]);
+					return;
 			}
 
 			if (!state.Enabled)

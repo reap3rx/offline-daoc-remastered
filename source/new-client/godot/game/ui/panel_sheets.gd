@@ -216,6 +216,10 @@ static func _server_magic(list: VBoxContainer) -> void:
 
 
 static func _server_combat(list: VBoxContainer) -> void:
+	# which style each action-combat move fires (owner 2026-10-30: AcStylesWindow)
+	var b := UiArt.button("ACTION COMBAT STYLES", Vector2(150, 15), 8)
+	b.pressed.connect(func(): PlayerData.window_toggle.emit("ac_styles"))
+	list.add_child(b)
 	var first := _first_skill()
 	for i in Server.skills.size():
 		var sk: Dictionary = Server.skills[i]

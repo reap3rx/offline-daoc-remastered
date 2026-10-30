@@ -21,6 +21,7 @@
  * The client and server talk through "#AC|..." system lines the Godot client takes out of the chat.
  */
 using System;
+using System.Collections.Generic;
 using System.Text;
 using DOL.Database;
 using DOL.GS.PacketHandler;
@@ -68,6 +69,8 @@ namespace DOL.GS
 		public bool Overdrawing;
 		public ECSGameTimer DrawTimer;
 		public long NextShotAt;                // shots are at least ShotDelayMs apart
+		// The player's own style picks per slot (ActionCombat.StyleSlots): style ID; a slot not here is "best usable".
+		public Dictionary<string, int> StylePicks;
 	}
 
 	public static class ActionCombat
@@ -239,6 +242,9 @@ namespace DOL.GS
 				if (IsOpeningSpent(player, style))
 					continue;
 
+				if (!PickAllows(player, style, weapon))
+					continue;
+
 				int score = style.SpecLevelRequirement * 10;
 
 				// A chain that follows the very style just landed beats a generic "after any hit" follow-up.
@@ -383,8 +389,15 @@ namespace DOL.GS
 			if (now < state.ParryReadyAt || !player.attackComponent.AttackState || !player.IsAlive)
 				return;                            // (a sheathed weapon parries nothing: the client draws it first)
 
-			bool block = HasShield(player) && !parryOnly;
+			bool block = HasShield(player) && !parryOnly && CanDefend(player, eActionDefense.Block);
 			eActionDefense kind = block ? eActionDefense.Block : eActionDefense.Parry;
+
+			if (!CanDefend(player, kind))
+			{
+				state.ParryReadyAt = now + ParryCooldownMs;
+				player.Out.SendMessage("You have not learned to parry.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
 			// In combat a press that catches nothing costs endurance (owner 2026-10-27) - so there has to be enough
 			// for it up front. One that catches a blow costs nothing.
@@ -416,6 +429,13 @@ namespace DOL.GS
 
 			if (now < state.DodgeReadyAt || !player.IsAlive || player.IsIncapacitated || !player.attackComponent.AttackState)
 				return;
+
+			if (!CanDefend(player, eActionDefense.Dodge))
+			{
+				state.DodgeReadyAt = now + ParryCooldownMs;
+				player.Out.SendMessage("You have not learned to evade.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
 
 			int cost = player.InCombat ? MissedDefenseCost(player, eActionDefense.Dodge) : 0;
 
@@ -455,11 +475,28 @@ namespace DOL.GS
 		}
 
 		/// <summary>How long a parry / block / dodge press stays open for this player (ms).</summary>
-		public static int Window(GamePlayer player, eActionDefense kind) => kind switch
+		/// 0: this character can't do it at all (owner 2026-10-30: classes that never learn parry, evade or shields -
+		/// casters - can't parry, dodge or block in action combat either).
+		public static int Window(GamePlayer player, eActionDefense kind)
 		{
-			eActionDefense.Block => BlockWindowFor(player.GetModifiedSpecLevel(Specs.Shields), RealmAbilityLevel<RealmAbilities.MasteryOfBlocking>(player)),
-			eActionDefense.Dodge => DodgeWindowFor(player.GetAbilityLevel(Abilities.Evade), RealmAbilityLevel<RealmAbilities.AtlasOF_Dodger>(player)),
-			_ => ParryWindowFor(player.GetModifiedSpecLevel(Specs.Parry), RealmAbilityLevel<RealmAbilities.MasteryOfParrying>(player))
+			if (!CanDefend(player, kind))
+				return 0;
+
+			return kind switch
+			{
+				eActionDefense.Block => BlockWindowFor(player.GetModifiedSpecLevel(Specs.Shields), RealmAbilityLevel<RealmAbilities.MasteryOfBlocking>(player)),
+				eActionDefense.Dodge => DodgeWindowFor(player.GetAbilityLevel(Abilities.Evade), RealmAbilityLevel<RealmAbilities.AtlasOF_Dodger>(player)),
+				_ => ParryWindowFor(player.GetModifiedSpecLevel(Specs.Parry), RealmAbilityLevel<RealmAbilities.MasteryOfParrying>(player))
+			};
+		}
+
+		/// <summary>Whether the character has the skill at all: Parry spec, Shields spec, the Evade ability.</summary>
+		public static bool CanDefend(GamePlayer player, eActionDefense kind) => kind switch
+		{
+			eActionDefense.Block => player.GetBaseSpecLevel(Specs.Shields) > 0,
+			eActionDefense.Dodge => player.GetAbilityLevel(Abilities.Evade) > 0,
+			eActionDefense.Parry => player.GetBaseSpecLevel(Specs.Parry) > 0,
+			_ => true
 		};
 
 		public static int ParryWindowFor(int spec, int realmAbility) =>
@@ -1049,6 +1086,136 @@ namespace DOL.GS
 		public static void SendWindup(GamePlayer player, GameNPC attacker, int ms)
 		{
 			Send(player, $"windup|{attacker.ObjectID}|{ms}");
+		}
+
+		// ------------------------------------------------------------------ style picks (owner 2026-10-30)
+		// The Action Combat Styles window: which style each button / reaction fires. Unpicked slots fire the best
+		// usable style of their kind, as before. A pick stands only while the weapon in hand can do it.
+
+		public const string PicksKey = "ActionCombatStyles";
+		public static readonly string[] StyleSlots = { "anytime", "parry", "block", "dodge", "front", "side", "back" };
+
+		/// <summary>Which pick slot a style belongs to, or null (chains, reactions to your own avoided blows).</summary>
+		public static string SlotOf(Style style)
+		{
+			if (style.OpeningRequirementType is Style.eOpening.Positional)
+			{
+				return (Style.eOpeningPosition) style.OpeningRequirementValue switch
+				{
+					Style.eOpeningPosition.Back => "back",
+					Style.eOpeningPosition.Side => "side",
+					_ => "front"
+				};
+			}
+
+			if (style.OpeningRequirementType is Style.eOpening.Defensive)
+			{
+				return style.AttackResultRequirement switch
+				{
+					Style.eAttackResultRequirement.Parry => "parry",
+					Style.eAttackResultRequirement.Block => "block",
+					Style.eAttackResultRequirement.Evade => "dodge",
+					_ => null
+				};
+			}
+
+			return KindOf(style) == "anytime" ? "anytime" : null;
+		}
+
+		private static Dictionary<string, int> Picks(GamePlayer player)
+		{
+			ActionCombatState state = Get(player);
+
+			if (state.StylePicks != null)
+				return state.StylePicks;
+
+			state.StylePicks = new Dictionary<string, int>();
+			DbCoreCharacterXCustomParam record = DOLDB<DbCoreCharacterXCustomParam>.SelectObject(
+				DB.Column("DOLCharactersObjectId").IsEqualTo(player.ObjectId).And(DB.Column("KeyName").IsEqualTo(PicksKey)));
+
+			foreach (string pair in (record?.Value ?? "").Split(';', StringSplitOptions.RemoveEmptyEntries))
+			{
+				string[] kv = pair.Split('=');
+
+				if (kv.Length == 2 && int.TryParse(kv[1], out int id) && id > 0)
+					state.StylePicks[kv[0]] = id;
+			}
+
+			return state.StylePicks;
+		}
+
+		/// <summary>False when the player picked another style for this style's slot (and can use that one with this weapon).</summary>
+		public static bool PickAllows(GamePlayer player, Style style, DbInventoryItem weapon)
+		{
+			string slot = SlotOf(style);
+
+			if (slot == null || !Picks(player).TryGetValue(slot, out int id) || id == style.ID)
+				return true;
+
+			foreach (Style known in player.styleComponent.GetStyleList())
+			{
+				if (known.ID != id)
+					continue;
+
+				DbInventoryItem w = (eObjectType) known.WeaponTypeRequirement is eObjectType.Shield ? player.ActiveLeftWeapon : player.ActiveWeapon;
+				return w == null || !StyleProcessor.IsStyleForWeapon(known, player, w);   // the pick can't be done now: any will do
+			}
+
+			return true;                                    // the picked style is no longer known
+		}
+
+		public static void SetPick(GamePlayer player, string slot, string value)
+		{
+			if (Array.IndexOf(StyleSlots, slot) < 0)
+				return;
+
+			Dictionary<string, int> picks = Picks(player);
+
+			if (int.TryParse(value, out int id) && id > 0)
+				picks[slot] = id;
+			else
+				picks.Remove(slot);
+
+			StringBuilder sb = new();
+
+			foreach (KeyValuePair<string, int> kv in picks)
+				sb.Append(kv.Key).Append('=').Append(kv.Value).Append(';');
+
+			DbCoreCharacterXCustomParam record = DOLDB<DbCoreCharacterXCustomParam>.SelectObject(
+				DB.Column("DOLCharactersObjectId").IsEqualTo(player.ObjectId).And(DB.Column("KeyName").IsEqualTo(PicksKey)));
+
+			if (record == null)
+				GameServer.Database.AddObject(new DbCoreCharacterXCustomParam(player.ObjectId, PicksKey, sb.ToString()));
+			else
+			{
+				record.Value = sb.ToString();
+				GameServer.Database.SaveObject(record);
+			}
+
+			SendStyleSlot(player, slot);
+		}
+
+		/// <summary>The window's contents: per slot, the pick (0 = best usable) and the styles you know for it.</summary>
+		public static void SendStyles(GamePlayer player)
+		{
+			foreach (string slot in StyleSlots)
+				SendStyleSlot(player, slot);
+
+			Send(player, "styles|end");
+		}
+
+		private static void SendStyleSlot(GamePlayer player, string slot)
+		{
+			Picks(player).TryGetValue(slot, out int picked);
+			StringBuilder sb = new($"styles|{slot}|{picked}");
+
+			foreach (Style style in player.styleComponent.GetStyleList())
+			{
+				if (SlotOf(style) == slot)
+					sb.Append('|').Append(style.ID).Append('~').Append(style.Name.Replace("|", "/").Replace("~", "-"));
+			}
+
+			Send(player, sb.ToString());
 		}
 
 		public static string Describe(GamePlayer player)

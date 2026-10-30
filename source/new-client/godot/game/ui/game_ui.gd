@@ -359,6 +359,7 @@ func _build() -> void:
 	_build_quiver()
 	_build_poisons()
 	_build_potions()
+	_build_ac_styles()
 	_build_guild()
 	PlayerData.window_toggle.connect(func(id: String):
 		if windows.has(id):
@@ -892,6 +893,26 @@ func _build_poisons() -> void:
 	poisons.setup("poisons", "interact", Rect2(), at)
 	_add(poisons, at, false)
 	poisons.build()
+
+
+const AcStylesWindow := preload("res://game/ui/ac_styles_window.gd")
+var ac_styles: ClassicWindow
+
+
+## Action Combat Styles (owner 2026-10-30): the COMBAT sheet's button opens it.
+func _build_ac_styles() -> void:
+	if not Server.active:
+		return
+	ac_styles = AcStylesWindow.new()
+	ac_styles.resizable = true
+	ac_styles.patch = [6, 19, 13, 33]
+	ac_styles.min_size = AcStylesWindow.BODY
+	ac_styles.max_size = AcStylesWindow.BODY
+	ac_styles.size = AcStylesWindow.BODY
+	var at := Vector2(area().x * 0.5 + 120, area().y * 0.5 - 160)
+	ac_styles.setup("ac_styles", "interact", Rect2(), at)
+	_add(ac_styles, at, false)
+	ac_styles.build()
 
 
 const PotionWindow := preload("res://game/ui/potion_window.gd")

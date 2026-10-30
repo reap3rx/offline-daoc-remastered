@@ -1266,6 +1266,7 @@ var info := {}                           # VariousUpdate 3: level, class, titles
 var weapon_set := "standard"
 var active_quiver := 0                   # 1-4: the quiver slot your arrows come from (0 none)
 var poison_bag := {}                     # the server's poison bag: {set, slots: [{slot, count, name}]} (PoisonWindow)
+var ac_styles := {}                      # the Action Combat Styles picks: slot -> {picked, options: [{id, name}]}
 var gear := {}                           # hood up, cloak / helm hidden (inventory packet)
 var quests := {}                         # journal index -> {name, text} (QuestEntry)
 var weight_now := -1                     # Encumberance: what you carry / can carry (-1: not sent yet)
