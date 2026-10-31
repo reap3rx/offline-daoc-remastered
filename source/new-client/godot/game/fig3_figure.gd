@@ -201,8 +201,6 @@ func apply(changes: Dictionary) -> void:
 		m.set_shader_parameter("albedo_tex", _tex(faces[clampi(int(look.get("face", 0)), 0, faces.size() - 1)].tex))
 		m.set_shader_parameter("tint", skin)
 		m.set_shader_parameter("tint_mode", 1)
-		m.set_shader_parameter("skin", 1.0)
-		m.set_shader_parameter("relief", 0.03)
 		var eyes: Array = meta.get("eyes", [])
 		if eyes.size() > 0:
 			m.set_shader_parameter("eye_tex", _tex(eyes[clampi(int(look.get("eyes", 0)), 0, eyes.size() - 1)]))
@@ -700,7 +698,6 @@ uniform bool has_logo = false;
 uniform float relief = 0.0;
 uniform float metal = 0.0;
 uniform float sheen = 0.0;
-uniform float skin = 0.0;                    // the face (and the bare skin of tint mode 2 parts): soft light through it
 global uniform float remaster_fx;
 // hair away from the skull (a ponytail, long hair down the back) trails behind as the figure moves (Fig3Figure.Sway):
 // the further from the skull's middle the more, only the part behind the head (never forward into the face)
@@ -776,15 +773,6 @@ void fragment() {
 			ROUGHNESS = mix(0.85, 0.42, m);
 			SPECULAR = mix(0.3, 0.5, m);
 			ALBEDO = col * (1.0 + 0.25 * m);              // (metal's colour is its reflection: a little lighter base)
-		}
-		float sk = skin;
-		if (tint_mode == 2) sk = 1.0 - smoothstep(0.90, 0.99, c.a);   // (the bare skin under the clothes' mask)
-		if (sk > 0.0) {
-			// skin: light carried a little way under it (warm, soft shadow edges) and a faint sheen; the face's own
-			// painted detail raised a touch
-			SSS_STRENGTH = 0.25 * sk;
-			ROUGHNESS = mix(ROUGHNESS, 0.62, sk);
-			SPECULAR = mix(SPECULAR, 0.36, sk);
 		}
 		if (sheen > 0.0) {                                // hair: a soft sheen, not a doll's gloss
 			ROUGHNESS = mix(ROUGHNESS, 0.68, sheen);
