@@ -534,6 +534,7 @@ static func _t(key: String, v: float) -> float:
 func _world_look(on: bool) -> void:
 	NifMaterials.ensure_globals()
 	RenderingServer.global_shader_parameter_set("remaster_fx", 1.0 if on else 0.0)
+	Fig3Figure.sway_on = on                                  # (cloaks and ponytails: Fig3Figure.Sway)
 	RenderingServer.global_shader_parameter_set("relief_strength", _t("relief", 0.12))
 	RenderingServer.global_shader_parameter_set("shine_strength", _t("shine", 0.6))
 	RenderingServer.global_shader_parameter_set("wind_strength", _t("wind", 1.0))
@@ -825,6 +826,7 @@ func _weather_fx(delta: float, sun_dir: Vector3) -> void:
 	if absf(wind - _wind_set) > 0.01:
 		_wind_set = wind
 		RenderingServer.global_shader_parameter_set("wind_strength", wind)
+		Fig3Figure.wind = wind
 	# wet in the rain (a minute to soak), dry after it (three minutes)
 	var raining := _rain.amount_ratio if _rain and _rain.emitting else 0.0
 	var target := clampf(raining * 1.6, 0.0, 1.0)

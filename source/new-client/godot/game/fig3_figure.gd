@@ -173,6 +173,13 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 		add_rest_reset(anim)
 		if anim.has_animation("idle"):
 			anim.play("idle")
+	var skels := model.find_children("*", "Skeleton3D", true, false)
+	if skels.size() > 0:
+		var sway := Sway.new()
+		sway.name = "Sway"
+		sway.model = model
+		sway.fig = self
+		(skels[0] as Skeleton3D).add_child(sway)
 	apply({})
 	_apply_cloak()
 	return true
@@ -212,6 +219,7 @@ func apply(changes: Dictionary) -> void:
 			continue
 		var m := _material(false)
 		m.set_shader_parameter("albedo_tex", _tex(String(c.tex)))
+		_finish(m, String(c.tex))
 		var tinted := bool(tint_parts.get(part, false)) and String(c.get("chan", "")) == "a"
 		m.set_shader_parameter("tint", skin)
 		m.set_shader_parameter("tint_mode", 2 if tinted else 0)
@@ -232,6 +240,8 @@ func apply(changes: Dictionary) -> void:
 				var col: Dictionary = colours[clampi(int(look.get("hair_color", 0)), 0, colours.size() - 1)]
 				var m := _material(true)
 				m.set_shader_parameter("albedo_tex", _tex(String(col.tex)))
+				m.set_shader_parameter("sheen", 1.0)
+				_hair_mat = m
 				m.set_shader_parameter("tint", Color(col.tint[0], col.tint[1], col.tint[2]))
 				m.set_shader_parameter("tint_mode", 1)
 				for mi in _parts(node):
@@ -287,6 +297,7 @@ func _apply_cloak() -> void:
 		# fought and streaked it)
 		var m := _material(false, true)
 		m.set_shader_parameter("albedo_tex", _tex(String(cloak[1])))
+		m.set_shader_parameter("relief", 0.05)
 		var dyed: Color = armor_tints.get("cloak", Color.WHITE)
 		m.set_shader_parameter("tint", dyed)
 		m.set_shader_parameter("tint_mode", 1 if dyed != Color.WHITE else 0)
@@ -451,6 +462,7 @@ func _apply_armor() -> void:
 			continue
 		var m := _material(false)
 		m.set_shader_parameter("albedo_tex", _tex(tex))
+		_finish(m, tex)
 		# the starter clothes keep the skin tone on their bare skin (Tint Chan 'a' on the parts the race tints): this
 		# ran after apply() and drew them untinted - dark-skinned figures had pale arms, hands and Kobold legs under a
 		# tinted head (owner 2026-10-11, "red-faced Celts"); real armour has no skin to tint
@@ -614,6 +626,30 @@ func _tex(base: String) -> Texture2D:
 	return _textures[key]
 
 
+## Remastered: how an armour / clothing texture is finished - relief and metal by its kind (the texture names start
+## with it: plt plate, scl scale, chn chain, std studded, lea leather, cth cloth, rob robe).
+static func _finish(m: ShaderMaterial, tex: String) -> void:
+	var t := tex.get_file().to_lower()
+	var relief := 0.06
+	var metal := 0.0
+	if t.begins_with("plt") or t.contains("plate"):
+		relief = 0.05
+		metal = 1.0
+	elif t.begins_with("scl") or t.contains("scale"):
+		relief = 0.12
+		metal = 0.9
+	elif t.begins_with("chn") or t.contains("chain"):
+		relief = 0.14
+		metal = 0.85
+	elif t.begins_with("std") or t.contains("studded"):
+		relief = 0.1
+		metal = 0.45
+	elif t.begins_with("lea"):
+		relief = 0.08
+	m.set_shader_parameter("relief", relief)
+	m.set_shader_parameter("metal", metal)
+
+
 static func _material(cutout: bool, single_sided := false) -> ShaderMaterial:
 	var key := ("cutout" if cutout else "solid") + ("_cull" if single_sided else "")
 	if not _shaders.has(key):
@@ -655,10 +691,26 @@ uniform sampler2D pattern_tex : filter_linear, repeat_enable;
 uniform sampler2D logo_tex : filter_linear_mipmap, repeat_disable;
 uniform bool has_emblem = false;
 uniform bool has_logo = false;
+// remastered (claude 2026-10-31): relief from the texture itself (as the world's stone) and metal that shines like
+// metal - set per part from its armour texture (Fig3Figure._finish); hair a soft sheen
+uniform float relief = 0.0;
+uniform float metal = 0.0;
+uniform float sheen = 0.0;
+global uniform float remaster_fx;
+// hair hanging below the nape trails behind as the figure moves (Fig3Figure.Sway): only the part behind the neck
+uniform vec3 sway_dir = vec3(0.0);
+uniform vec3 sway_neck = vec3(0.0);
+uniform vec3 sway_back = vec3(0.0, 0.0, -1.0);
 varying vec2 logo_uv;
 
 void vertex() {
 	logo_uv = CUSTOM0.xy;
+	if (dot(sway_dir, sway_dir) > 1e-6) {
+		vec3 wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+		float below = clamp((sway_neck.y - wp.y) / 0.45, 0.0, 1.0);
+		float behind = smoothstep(-0.02, 0.06, dot(wp - sway_neck, sway_back));
+		VERTEX += inverse(mat3(MODEL_MATRIX)) * (sway_dir * below * below * behind);
+	}
 }
 
 void fragment() {
@@ -679,6 +731,154 @@ void fragment() {
 	ALBEDO = col;
 	ROUGHNESS = 0.85;
 	SPECULAR = 0.3;
+	if (remaster_fx > 0.5) {
+		float lum = dot(col, vec3(0.3, 0.59, 0.11));
+		if (relief > 0.0) {
+			// the texture's light parts raised, its dark seams sunk: the surface gradient bump (no tangents needed)
+			float lod = max(textureQueryLod(albedo_tex, UV).x, 0.0) + 1.0;
+			vec2 stp = exp2(lod) / vec2(textureSize(albedo_tex, 0));
+			vec3 luma = vec3(0.3, 0.59, 0.11);
+			float h0 = dot(textureLod(albedo_tex, UV, lod).rgb, luma);
+			vec2 dh = vec2(dot(textureLod(albedo_tex, UV + vec2(stp.x, 0.0), lod).rgb, luma) - h0,
+					dot(textureLod(albedo_tex, UV + vec2(0.0, stp.y), lod).rgb, luma) - h0) / stp;
+			float dhdx = dot(dh, dFdx(UV));
+			float dhdy = dot(dh, dFdy(UV));
+			vec3 dpdx = dFdx(VERTEX);
+			vec3 dpdy = dFdy(VERTEX);
+			vec3 r1 = cross(dpdy, NORMAL);
+			vec3 r2 = cross(NORMAL, dpdx);
+			float det = dot(dpdx, r1);
+			vec3 grad = sign(det) * (dhdx * r1 + dhdy * r2);
+			NORMAL = normalize(abs(det) * NORMAL - grad * relief);
+		}
+		if (metal > 0.0) {
+			// the metal is the grey, unsaturated, not-too-dark part of the picture (rings, plates, rivets); leather
+			// straps, cloth and gold trim keep their own look
+			float mx = max(col.r, max(col.g, col.b));
+			float mn = min(col.r, min(col.g, col.b));
+			float sat = (mx - mn) / max(mx, 0.001);
+			float m = metal * (1.0 - smoothstep(0.1, 0.28, sat)) * smoothstep(0.1, 0.3, lum);
+			METALLIC = m * 0.6;
+			ROUGHNESS = mix(0.85, 0.42, m);
+			SPECULAR = mix(0.3, 0.5, m);
+			ALBEDO = col * (1.0 + 0.25 * m);              // (metal's colour is its reflection: a little lighter base)
+		}
+		if (sheen > 0.0) {
+			ROUGHNESS = mix(ROUGHNESS, 0.5, sheen);
+			SPECULAR = mix(SPECULAR, 0.5, sheen);
+		}
+	}
 	//CUTOUT
 }
 """
+
+
+# ---------------------------------------------------------------- cloak and hair sway (claude 2026-10-31)
+## Remastered: the cloak and a ponytail trail behind as the figure moves and stir in the wind, on top of what the
+## animation does (owner 2026-10-31: "keep in mind clipping"). They only ever swing back, away from the body, and a
+## little to the side - never forward into the legs; backing up or standing still they hang as animated. Springs, so
+## they settle after a stop. Figures beyond SWAY_RANGE_M are left alone.
+static var sway_on := false                  # SkySystem: remastered
+var _hair_mat: ShaderMaterial                # the hair's material (its sway uniforms)
+static var wind := 1.0                       # SkySystem: the storm's wind (as the trees')
+const SWAY_RANGE_M := 35.0
+
+
+class Sway extends SkeletonModifier3D:
+	var model: Node3D
+	var fig: Fig3Figure
+	var _neck := -1
+	var _hair_live := false
+	var _cloaks: Array[int] = []
+	var _cloaks_mid: Array[int] = []
+	var _tails: Array[int] = []
+	var _last := Vector3.INF
+	var _back := 0.0
+	var _back_v := 0.0
+	var _side := 0.0
+	var _side_v := 0.0
+	var _phase := 0.0
+	var _ready_bones := false
+
+	func _bones(sk: Skeleton3D) -> void:
+		_ready_bones = true
+		for side in ["C", "L", "R"]:
+			var b := sk.find_bone("Bip01 %s Cloak01" % side)
+			if b >= 0:
+				_cloaks.append(b)
+			var mid := sk.find_bone("Bip01 %s Cloak03" % side)
+			if mid >= 0:
+				_cloaks_mid.append(mid)
+		_neck = sk.find_bone("Bip01 Neck")
+		var t := sk.find_bone("Bip01 Ponytail1")
+		if t >= 0:
+			_tails.append(t)
+		_phase = float(get_instance_id() % 997) * 0.37
+
+	func _process_modification_with_delta(delta: float) -> void:
+		var sk := get_skeleton()
+		if sk == null or not Fig3Figure.sway_on or model == null:
+			_last = Vector3.INF
+			_still_hair()
+			return
+		if not _ready_bones:
+			_bones(sk)
+		var pos := sk.global_position
+		var cam := get_viewport().get_camera_3d() if is_inside_tree() else null
+		if cam and cam.global_position.distance_to(pos) > SWAY_RANGE_M:
+			_last = Vector3.INF
+			_still_hair()
+			return
+		var dt := maxf(delta, 0.001)
+		var vel := Vector3.ZERO if _last == Vector3.INF else (pos - _last) / dt
+		_last = pos
+		if vel.length() > 25.0:
+			vel = Vector3.ZERO                                 # (a teleport, a zone change)
+		# the model faces +Z in its own space (as the converted figures do); in the skeleton's space:
+		var to_skel := sk.global_basis.orthonormalized().inverse() * model.global_basis.orthonormalized()
+		var fwd := (to_skel * Vector3(0, 0, 1)).normalized()
+		var up := (to_skel * Vector3.UP).normalized()
+		var right := up.cross(fwd).normalized()
+		var v := model.global_basis.orthonormalized().inverse() * vel
+		var t := Time.get_ticks_msec() / 1000.0
+		var breeze := Fig3Figure.wind * (0.03 + 0.025 * sin(t * 1.3 + _phase) + 0.015 * sin(t * 3.1 + _phase * 2.0))
+		var want_back := clampf(v.z * 0.05, 0.0, 0.35) + maxf(breeze, 0.0)
+		var want_side := clampf(-v.x * 0.03, -0.15, 0.15) + Fig3Figure.wind * 0.02 * sin(t * 0.9 + _phase)
+		# springs (a little under-damped: one soft overshoot as it settles)
+		_back_v += ((want_back - _back) * 40.0 - _back_v * 9.0) * dt
+		_back += _back_v * dt
+		_side_v += ((want_side - _side) * 30.0 - _side_v * 8.0) * dt
+		_side += _side_v * dt
+		var back := clampf(_back, 0.0, 0.45)                   # never forward, into the legs
+		var side_ang := clampf(_side, -0.2, 0.2)
+		var axis_back := up.cross(fwd).normalized()           # + swings the lower end back (away from the body)
+		for b in _cloaks:
+			_turn(sk, b, axis_back, back, fwd, side_ang)
+		for b in _cloaks_mid:
+			_turn(sk, b, axis_back, back * 0.35, fwd, side_ang * 0.5)
+		for b in _tails:
+			_turn(sk, b, axis_back, back * 0.8, fwd, side_ang * 1.2)
+		# long hair (the Catacombs hair is rigid on the head: its lower part bent in the shader)
+		var hm: ShaderMaterial = fig._hair_mat if fig else null
+		if hm and _neck >= 0:
+			var back_w := -(model.global_basis * Vector3(0, 0, 1)).normalized()
+			var side_w := (model.global_basis * Vector3(1, 0, 0)).normalized()
+			var neck_w := sk.global_transform * sk.get_bone_global_pose(_neck).origin
+			hm.set_shader_parameter("sway_neck", neck_w)
+			hm.set_shader_parameter("sway_back", back_w)
+			hm.set_shader_parameter("sway_dir", back_w * sin(back) * 0.35 + side_w * sin(side_ang) * 0.3)
+			_hair_live = true
+
+	func _still_hair() -> void:
+		if _hair_live and fig and fig._hair_mat:
+			fig._hair_mat.set_shader_parameter("sway_dir", Vector3.ZERO)
+		_hair_live = false
+
+	func _turn(sk: Skeleton3D, b: int, axis_back: Vector3, back: float, axis_side: Vector3, side: float) -> void:
+		var g := sk.get_bone_global_pose(b)
+		var p := sk.get_bone_parent(b)
+		var pg := sk.get_bone_global_pose(p) if p >= 0 else Transform3D.IDENTITY
+		var turn := Basis(axis_back, back) * Basis(axis_side, side)
+		var ng := Transform3D(turn * g.basis, g.origin)
+		var local := pg.affine_inverse() * ng
+		sk.set_bone_pose_rotation(b, local.basis.get_rotation_quaternion())
