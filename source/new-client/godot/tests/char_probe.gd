@@ -93,4 +93,13 @@ func _ready() -> void:
 	await _shot("cloak_stopping")
 	await get_tree().create_timer(2.0).timeout
 	await _shot("cloak_settled")
+	if v.args.has("hidden"):                               # stealth: the whole figure fades alike
+		v.player.set_hidden_look(true)
+		var q: Vector3 = v.player.global_position
+		for i in 3:
+			var a := float(i) * 1.6
+			cam.global_position = q + (side * cos(a) + face * sin(a)) * 2.6 + Vector3(0, 1.6, 0)
+			cam.look_at(q + Vector3(0, 1.2, 0))
+			await get_tree().create_timer(0.5).timeout
+			await _shot("hidden_%d" % i)
 	get_tree().quit()

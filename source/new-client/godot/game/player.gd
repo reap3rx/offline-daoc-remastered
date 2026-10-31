@@ -527,6 +527,15 @@ func _apply_hidden_look() -> void:
 	# meshes only (particles hide themselves by their own transparency - NifScene), each one's own value kept to restore
 	for g in find_children("*", "MeshInstance3D", true, false):
 		var mi := g as MeshInstance3D
+		# the figure's own parts dither (Fig3Figure SHADER "fade"): blended, the head and hair sorted against the body
+		# and stayed solid or vanished with the camera (owner 2026-10-31)
+		var fm := mi.material_override as ShaderMaterial
+		if fm and fm.shader and fm.shader.code.contains("uniform float fade"):
+			fm.set_shader_parameter("fade", 0.35 if hidden_look else 1.0)
+			if mi.has_meta("_hid_t"):
+				mi.transparency = float(mi.get_meta("_hid_t"))
+				mi.remove_meta("_hid_t")
+			continue
 		if hidden_look:
 			if not mi.has_meta("_hid_t"):
 				mi.set_meta("_hid_t", mi.transparency)

@@ -241,6 +241,7 @@ func apply(changes: Dictionary) -> void:
 				var m := _material(true)
 				m.set_shader_parameter("albedo_tex", _tex(String(col.tex)))
 				m.set_shader_parameter("sheen", 1.0)
+				m.set_shader_parameter("relief", 0.16)          # (its strands, raised)
 				_hair_mat = m
 				m.set_shader_parameter("tint", Color(col.tint[0], col.tint[1], col.tint[2]))
 				m.set_shader_parameter("tint_mode", 1)
@@ -697,23 +698,32 @@ uniform float relief = 0.0;
 uniform float metal = 0.0;
 uniform float sheen = 0.0;
 global uniform float remaster_fx;
-// hair hanging below the nape trails behind as the figure moves (Fig3Figure.Sway): only the part behind the neck
+// hair away from the skull (a ponytail, long hair down the back) trails behind as the figure moves (Fig3Figure.Sway):
+// the further from the skull's middle the more, only the part behind the head (never forward into the face)
 uniform vec3 sway_dir = vec3(0.0);
-uniform vec3 sway_neck = vec3(0.0);
+uniform vec3 sway_head = vec3(0.0);
 uniform vec3 sway_back = vec3(0.0, 0.0, -1.0);
+// stealth (Player hidden look): a dither instead of blending - the head, the hair and the body fade alike, with no
+// sorting between the parts (owner 2026-10-31: the head and hair stayed solid or vanished as the camera moved)
+uniform float fade = 1.0;
 varying vec2 logo_uv;
 
 void vertex() {
 	logo_uv = CUSTOM0.xy;
 	if (dot(sway_dir, sway_dir) > 1e-6) {
 		vec3 wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
-		float below = clamp((sway_neck.y - wp.y) / 0.45, 0.0, 1.0);
-		float behind = smoothstep(-0.02, 0.06, dot(wp - sway_neck, sway_back));
-		VERTEX += inverse(mat3(MODEL_MATRIX)) * (sway_dir * below * below * behind);
+		float away = smoothstep(0.13, 0.42, distance(wp, sway_head));
+		float behind = smoothstep(-0.03, 0.05, dot(wp - sway_head, sway_back));
+		VERTEX += inverse(mat3(MODEL_MATRIX)) * (sway_dir * away * behind);
 	}
 }
 
 void fragment() {
+	if (fade < 0.999) {
+		vec2 px = floor(FRAGCOORD.xy);
+		float ign = fract(52.9829189 * fract(dot(px, vec2(0.06711056, 0.00583715))));
+		if (ign >= fade) discard;
+	}
 	vec4 c = texture(albedo_tex, UV);
 	vec3 col = c.rgb;
 	if (has_emblem) {
@@ -763,9 +773,9 @@ void fragment() {
 			SPECULAR = mix(0.3, 0.5, m);
 			ALBEDO = col * (1.0 + 0.25 * m);              // (metal's colour is its reflection: a little lighter base)
 		}
-		if (sheen > 0.0) {
-			ROUGHNESS = mix(ROUGHNESS, 0.5, sheen);
-			SPECULAR = mix(SPECULAR, 0.5, sheen);
+		if (sheen > 0.0) {                                // hair: a soft sheen, not a doll's gloss
+			ROUGHNESS = mix(ROUGHNESS, 0.68, sheen);
+			SPECULAR = mix(SPECULAR, 0.34, sheen);
 		}
 	}
 	//CUTOUT
@@ -787,7 +797,7 @@ const SWAY_RANGE_M := 35.0
 class Sway extends SkeletonModifier3D:
 	var model: Node3D
 	var fig: Fig3Figure
-	var _neck := -1
+	var _neck := -1                              # the head bone (the hair's sway is measured from the skull)
 	var _hair_live := false
 	var _cloaks: Array[int] = []
 	var _cloaks_mid: Array[int] = []
@@ -809,7 +819,7 @@ class Sway extends SkeletonModifier3D:
 			var mid := sk.find_bone("Bip01 %s Cloak03" % side)
 			if mid >= 0:
 				_cloaks_mid.append(mid)
-		_neck = sk.find_bone("Bip01 Neck")
+		_neck = sk.find_bone("Bip01 Head")
 		var t := sk.find_bone("Bip01 Ponytail1")
 		if t >= 0:
 			_tails.append(t)
@@ -863,10 +873,18 @@ class Sway extends SkeletonModifier3D:
 		if hm and _neck >= 0:
 			var back_w := -(model.global_basis * Vector3(0, 0, 1)).normalized()
 			var side_w := (model.global_basis * Vector3(1, 0, 0)).normalized()
-			var neck_w := sk.global_transform * sk.get_bone_global_pose(_neck).origin
-			hm.set_shader_parameter("sway_neck", neck_w)
+			var up_w := (model.global_basis * Vector3.UP).normalized()
+			var hb := sk.get_bone_global_pose(_neck)
+			# the skull's middle: a little above the head bone (which sits at the top of the neck)
+			var head_w := sk.global_transform * (hb.origin + (to_skel * Vector3.UP).normalized() * 0.1 / maxf(sk.global_basis.get_scale().y, 0.01))
+			var speed := Vector2(v.x, v.z).length()
+			# running: the hair swings back and bounces / swishes with the stride (owner 2026-10-31: too subtle)
+			var bob := sin(t * 10.0 + _phase) * minf(speed, 8.0) * 0.006
+			var swish := sin(t * 5.0 + _phase) * minf(speed, 8.0) * 0.008
+			hm.set_shader_parameter("sway_head", head_w)
 			hm.set_shader_parameter("sway_back", back_w)
-			hm.set_shader_parameter("sway_dir", back_w * sin(back) * 0.35 + side_w * sin(side_ang) * 0.3)
+			hm.set_shader_parameter("sway_dir", back_w * (sin(back) * 0.75 + absf(bob)) + side_w * (sin(side_ang) * 0.6 + swish)
+					+ up_w * bob)
 			_hair_live = true
 
 	func _still_hair() -> void:
