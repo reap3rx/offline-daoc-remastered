@@ -756,6 +756,7 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 		var vis := (state.alive or state.corpse_left > 0.0) and not state.stealthed
 		if visible != vis:
 			visible = vis
+	_pace(delta)
 	_animate_lod(delta, cam)
 	if _swim_fit > 0:
 		_swim_fit -= 1
@@ -813,6 +814,29 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 
 
 var _action_left := 0.0
+
+
+## A race figure's run / walk keeps pace with how fast it really moves (Fig3Figure.natural_speed; owner 2026-10-31).
+var _pace_from := Vector3.INF
+var _pace_mps := 0.0
+
+
+func _pace(delta: float) -> void:
+	if anim == null or not (model is Fig3Figure) or delta <= 0.0:
+		return
+	var here := global_position
+	if _pace_from != Vector3.INF:
+		var v := Vector2(here.x - _pace_from.x, here.z - _pace_from.z).length() / delta
+		_pace_mps = lerpf(_pace_mps, minf(v, 20.0), clampf(delta * 6.0, 0.0, 1.0))
+	_pace_from = here
+	var clip := String(anim.current_animation)
+	var want := 1.0
+	if (clip == "run" or clip == "walk") and _pace_mps > 0.3:
+		var nat := (model as Fig3Figure).natural_speed(clip)
+		if nat > 0.0:
+			want = clampf(_pace_mps / nat, 0.5, 2.5)
+	if absf(anim.speed_scale - want) > 0.01:
+		anim.speed_scale = want
 
 
 ## A swimmer half in the water (owner 2026-10-15: the sjoalf waverunners - and companions, their pets - lay on top of the

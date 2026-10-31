@@ -1097,7 +1097,8 @@ func _physics_step(delta: float) -> void:
 	if zone and not zone.city and global_position.y < _ground_h(global_position.x, global_position.z, global_position.y) - 2.0:
 		global_position.y = _ground_h(global_position.x, global_position.z) + 0.5   # fell through: recover
 
-	_animate(ahead, strafe, speed, delta)
+	# the legs keep pace with how fast you really go - sprint, speed buffs, snares, wounds (owner 2026-10-31)
+	_animate(ahead, strafe, Vector2(wish.x, wish.z).length() if not swimming else speed, delta)
 	cam_kick = move_toward(cam_kick, 0.0, delta * 0.5)
 	if camera:
 		var want := shoulder if action_mode else Vector2.ZERO
@@ -1355,6 +1356,10 @@ func _floor_below(p: Vector3, feet_before: float) -> float:
 
 ## Playback rate that makes a clip's feet match the ground: movement speed / (stride per cycle / cycle length).
 func _sync(clip: String, stride_key: String, speed_mps: float) -> float:
+	if _model is Fig3Figure and clip in ["run", "walk"]:      # a race figure: its own clip's measured pace
+		var nat := (_model as Fig3Figure).natural_speed(clip)
+		if nat > 0.0:
+			return clampf(speed_mps / nat, 0.4, 3.0)
 	var stride := float(_strides.get(stride_key, 0.0))
 	var length := float(_clip_len.get(clip, 0.0))
 	if stride <= 0.0 or length <= 0.0:

@@ -149,6 +149,7 @@ static func loops(clip: String) -> bool:
 	return clip in LOOPING or clip.begins_with("combat_idle") or (clip.begins_with("cast_") and clip.ends_with("_mid"))
 
 func load_figure(prefix: String, texture_set := "x4plus") -> bool:
+	race = prefix
 	var dir := "%s/races/%s" % [ROOT, prefix]
 	meta = NpcManager._metas[prefix] if NpcManager._metas.has(prefix) and not (NpcManager._metas[prefix] as Dictionary).is_empty() 			else JSON.parse_string(FileAccess.get_file_as_string(dir + "/figure.json"))   # (read only: shared)
 	_texture_dir = texture_dir(texture_set)
@@ -200,6 +201,8 @@ func apply(changes: Dictionary) -> void:
 		m.set_shader_parameter("albedo_tex", _tex(faces[clampi(int(look.get("face", 0)), 0, faces.size() - 1)].tex))
 		m.set_shader_parameter("tint", skin)
 		m.set_shader_parameter("tint_mode", 1)
+		m.set_shader_parameter("skin", 1.0)
+		m.set_shader_parameter("relief", 0.03)
 		var eyes: Array = meta.get("eyes", [])
 		if eyes.size() > 0:
 			m.set_shader_parameter("eye_tex", _tex(eyes[clampi(int(look.get("eyes", 0)), 0, eyes.size() - 1)]))
@@ -697,6 +700,7 @@ uniform bool has_logo = false;
 uniform float relief = 0.0;
 uniform float metal = 0.0;
 uniform float sheen = 0.0;
+uniform float skin = 0.0;                    // the face (and the bare skin of tint mode 2 parts): soft light through it
 global uniform float remaster_fx;
 // hair away from the skull (a ponytail, long hair down the back) trails behind as the figure moves (Fig3Figure.Sway):
 // the further from the skull's middle the more, only the part behind the head (never forward into the face)
@@ -772,6 +776,15 @@ void fragment() {
 			ROUGHNESS = mix(0.85, 0.42, m);
 			SPECULAR = mix(0.3, 0.5, m);
 			ALBEDO = col * (1.0 + 0.25 * m);              // (metal's colour is its reflection: a little lighter base)
+		}
+		float sk = skin;
+		if (tint_mode == 2) sk = 1.0 - smoothstep(0.90, 0.99, c.a);   // (the bare skin under the clothes' mask)
+		if (sk > 0.0) {
+			// skin: light carried a little way under it (warm, soft shadow edges) and a faint sheen; the face's own
+			// painted detail raised a touch
+			SSS_STRENGTH = 0.25 * sk;
+			ROUGHNESS = mix(ROUGHNESS, 0.62, sk);
+			SPECULAR = mix(SPECULAR, 0.36, sk);
 		}
 		if (sheen > 0.0) {                                // hair: a soft sheen, not a doll's gloss
 			ROUGHNESS = mix(ROUGHNESS, 0.68, sheen);
@@ -900,3 +913,63 @@ class Sway extends SkeletonModifier3D:
 		var ng := Transform3D(turn * g.basis, g.origin)
 		var local := pg.affine_inverse() * ng
 		sk.set_bone_pose_rotation(b, local.basis.get_rotation_quaternion())
+
+
+# ---------------------------------------------------------------- run / walk pace (claude 2026-10-31)
+## How fast this figure moves when its run or walk clip plays at normal speed, measured from the clip itself: how far
+## the feet sweep forward and back (owner 2026-10-31: "the running animation speed feels off compared to how fast
+## they're moving ... especially female characters"). The client's own figures (monnifs.csv strides) said the
+## women's run covered 5.9 m a cycle to the men's 4.5 m - the women's legs ran in slow motion. Measured, both clips
+## sweep the feet about as far (0.76 / 0.78 m), the women's cycle is quicker (0.8 s to 1.0 s). Playing the clip at
+## speed / natural_speed keeps the legs with the ground for every race and sex alike.
+## Calibrated so a man's run plays 1.4x at the base run speed (191 units/s) - a runner's cadence, the feet slipping
+## a little less than the old client's; walking has no flight, its feet sweep the ground's distance.
+const RUN_PACE_K := 4.37
+const WALK_PACE_K := 2.0
+var race := ""
+static var _paces := {}                      # race prefix -> {run: m/s, walk: m/s} at scale 1
+
+
+func natural_speed(clip: String) -> float:
+	if not _paces.has(race):
+		_paces[race] = _measure_paces()
+	return float((_paces[race] as Dictionary).get(clip, 0.0)) * scale.x
+
+
+func _measure_paces() -> Dictionary:
+	var out := {}
+	if anim == null or model == null:
+		return out
+	var sks := model.find_children("*", "Skeleton3D", true, false)
+	if sks.is_empty():
+		return out
+	var sk: Skeleton3D = sks[0]
+	var feet := [sk.find_bone("Bip01 L Foot"), sk.find_bone("Bip01 R Foot")]
+	if feet[0] < 0 or feet[1] < 0:
+		return out
+	var was := anim.current_animation
+	var was_at := anim.current_animation_position if was != "" else 0.0
+	if not sk.is_inside_tree():
+		return out
+	var to_model := model.global_transform.affine_inverse() * sk.global_transform   # (skeleton space into the model's own)
+	for clip in ["run", "walk"]:
+		if not anim.has_animation(clip):
+			continue
+		var length := anim.get_animation(clip).length
+		anim.play(clip)
+		var lo := [INF, INF]
+		var hi := [-INF, -INF]
+		for i in 40:
+			anim.seek(length * float(i) / 40.0, true)
+			sk.force_update_all_bone_transforms()
+			for k in 2:
+				var z: float = (to_model * sk.get_bone_global_pose(feet[k]).origin).z
+				lo[k] = minf(lo[k], z)
+				hi[k] = maxf(hi[k], z)
+		var sweep: float = ((hi[0] - lo[0]) + (hi[1] - lo[1])) * 0.5
+		if length > 0.0 and sweep > 0.05:
+			out[clip] = sweep * (RUN_PACE_K if clip == "run" else WALK_PACE_K) / length
+	if was != "":
+		anim.play(was)
+		anim.seek(was_at, true)
+	return out

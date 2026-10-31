@@ -68,7 +68,17 @@ func _ready() -> void:
 	v.sky.set_remastered(false)
 	await get_tree().create_timer(1.0).timeout
 	await _shot("armor_classic")
+	# the face, close
+	var head_y := 1.62 * fig.scale.y
+	cam.global_position = p + face * 0.75 + Vector3(0, head_y, 0) + side * 0.15
+	cam.look_at(p + Vector3(0, head_y - 0.02, 0))
+	await get_tree().create_timer(0.8).timeout
+	await _shot("face_classic")
 	v.sky.set_remastered(true)
+	await get_tree().create_timer(1.0).timeout
+	await _shot("face_remastered")
+	print("[char] natural run %.2f m/s walk %.2f m/s (scale %.2f): run plays %.2fx at the base run speed" % [fig.natural_speed("run"),
+			fig.natural_speed("walk"), fig.scale.x, (191.0 * 0.025) / maxf(fig.natural_speed("run"), 0.01)])
 	# standing, from the side (the cloak at rest)
 	cam.global_position = p + side * 3.5 + Vector3(0, 1.3, 0)
 	cam.look_at(p + Vector3(0, 1.0, 0))
