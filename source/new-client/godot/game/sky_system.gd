@@ -827,6 +827,7 @@ func _weather_fx(delta: float, sun_dir: Vector3) -> void:
 		_wind_set = wind
 		RenderingServer.global_shader_parameter_set("wind_strength", wind)
 		Fig3Figure.wind = wind
+	_water_fx(sun_dir)
 	# wet in the rain (a minute to soak), dry after it (three minutes)
 	var raining := _rain.amount_ratio if _rain and _rain.emitting else 0.0
 	var target := clampf(raining * 1.6, 0.0, 1.0)
@@ -837,11 +838,72 @@ func _weather_fx(delta: float, sun_dir: Vector3) -> void:
 		RenderingServer.global_shader_parameter_set("wetness", wet)
 
 
+## The remastered water (owner 2026-10-31): its sky, rain rings and light, and the murk when the camera is under it.
+const UNDERWATER_SHADER := preload("res://game/underwater.gdshader")
+var _under: MeshInstance3D
+var _under_mat: ShaderMaterial
+
+
+func _water_fx(sun_dir: Vector3) -> void:
+	var zen: Color = _sky_mat.get_shader_parameter("canopy_zenith") if _sky_mat.get_shader_parameter("canopy_zenith") is Color else Color(0.35, 0.5, 0.7)
+	var day := clampf((sun_dir.y + 0.05) * 6.0, 0.0, 1.0)
+	var lit := lerpf(_t("water_night", 0.22), 1.0, day) * lerpf(1.0, 0.6, storm)
+	var murk := Color(0.08, 0.19, 0.19).lerp(Color(0.05, 0.09, 0.1), storm) * lit * _t("murk", 1.0)
+	var rain := rain_amount() * _t("ripples", 1.0)
+	for zl in _zones():
+		(zl as ZoneLoader).set_water_weather(zen, rain, lit, storm, murk)
+	_underwater(murk)
+
+
+## The murk veil in front of the camera while it is below the surface of the water it is in.
+func _underwater(murk: Color) -> void:
+	var cam := get_viewport().get_camera_3d() if is_inside_tree() else null
+	if _under and not is_instance_valid(_under):           # (it went with a camera that was freed)
+		_under = null
+	var under := false
+	var level := 0.0
+	if cam and remastered and not dungeon:
+		var p := cam.global_position
+		for zl in _zones():
+			var z := zl as ZoneLoader
+			var lx := p.x - z.global_position.x
+			var lz := p.z - z.global_position.z
+			var size := float(z.info.get("size_m", 0.0))
+			if lx >= 0.0 and lz >= 0.0 and lx < size and lz < size:
+				level = z.water_level_at(lx, lz) + z.global_position.y
+				under = p.y < level - 0.05
+				break
+	if under and _under == null:
+		_under_mat = ShaderMaterial.new()
+		_under_mat.shader = UNDERWATER_SHADER
+		_under_mat.render_priority = 100
+		_under = MeshInstance3D.new()
+		var q := QuadMesh.new()
+		q.size = Vector2(1, 1)
+		_under.mesh = q
+		_under.material_override = _under_mat
+		_under.extra_cull_margin = 16384.0
+		_under.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	if _under:
+		if under and _under.get_parent() != cam:
+			if _under.get_parent():
+				_under.get_parent().remove_child(_under)
+			cam.add_child(_under)
+			_under.position = Vector3(0, 0, -0.5)
+		_under.visible = under
+		if under:
+			_under_mat.set_shader_parameter("murk_color", murk)
+			_under_mat.set_shader_parameter("surface_y", level)
+			_under_mat.set_shader_parameter("visibility_m", _t("underwater_m", 14.0) * lerpf(1.0, 0.6, storm))
+
+
 func _weather_off() -> void:
 	if _sky_mat:
 		_sky_mat.set_shader_parameter("remaster_clouds", 0.0)
 		_sky_mat.set_shader_parameter("flash", 0.0)
 	_flash = 0.0
+	if _under and is_instance_valid(_under):
+		_under.visible = false
 	if _wet_set != 0.0:
 		_wet_set = 0.0
 		RenderingServer.global_shader_parameter_set("wetness", 0.0)

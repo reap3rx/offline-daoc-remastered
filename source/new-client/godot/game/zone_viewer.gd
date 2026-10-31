@@ -1951,9 +1951,14 @@ func _shots(spec: String, prefix: String) -> void:
 		var dist := float(v[3]) if v.size() > 3 else 25.0
 		var aim := float(v[4]) if v.size() > 4 else 3.0      # optional 5th value: aim height above the ground (m)
 		var dir := Vector3(sin(face), 0.0, -cos(face))       # compass heading: 0 north (-z), 90 east (+x)
-		var target := Vector3(x, zone.height_at(x, z) + aim, z)
+		# (on water: from its surface, not the bottom - and --under-water puts the camera 1.5 m below it)
+		var wl := zone.water_level_at(x, z)
+		var target := Vector3(x, maxf(zone.height_at(x, z), wl) + aim, z)
 		var eye := target - dir * dist
-		eye.y = maxf(zone.height_at(eye.x, eye.z) + 1.8, target.y + dist * 0.12)
+		eye.y = maxf(maxf(zone.height_at(eye.x, eye.z), zone.water_level_at(eye.x, eye.z)) + 1.8, target.y + dist * 0.12)
+		if args.has("under-water") and wl > -INF:
+			eye.y = wl - 1.5
+			target.y = eye.y + aim - 3.0                  # (aim 3: level; more looks up at the surface)
 		if player.visible:
 			player.global_position = Vector3(x, zone.height_at(x, z), z)
 			player.face(face + PI)                           # facing the camera

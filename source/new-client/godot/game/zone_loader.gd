@@ -440,6 +440,17 @@ func set_water_light(sun_dir: Vector3, sun_color: Color, sky: Color) -> void:
 		mat.set_shader_parameter("sky_color", sky)
 
 
+## The remastered water's weather (SkySystem, every frame): the sky's top colour it mirrors, the rain's rings, how lit
+## it is (day 1 .. night), the storm's chop, and the murk seen from below.
+func set_water_weather(sky_top: Color, rain: float, lit: float, storm: float, murk: Color) -> void:
+	for mat in _water_mats:
+		mat.set_shader_parameter("sky_top", sky_top)
+		mat.set_shader_parameter("rain", rain)
+		mat.set_shader_parameter("lit", lit)
+		mat.set_shader_parameter("storm", storm)
+		mat.set_shader_parameter("murk_color", murk)
+
+
 func _bind_water_textures() -> void:
 	var maps: Dictionary = info.get("water_maps", {})
 	for key in maps:                                  # client water data maps, loaded as-is (never upscaled)
