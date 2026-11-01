@@ -400,6 +400,44 @@ def _dungeon_piece(base, v, files, mdir, index, models, placements, tex_names, c
                        'yaw': 0.0, 'scale': 1.0, 'collide': True, 'id': len(placements)})
 
 
+# sector.dat [dungeonfix] catacombs_material_emittance=1 (the Catacombs zones built on the new engine): the pieces carry
+# their light in the vertex colours - a flat 60 / 255 everywhere with brighter spots where lights were baked - and the
+# client drew them self-lit by those colours instead of under the dungeon's ambient light. Ours lit them like the
+# classic dungeons (vertex colour x a dim ambient), so Hibernia's Underground Forest came out near black (owner
+# 2026-11-01: "fix the sky and lighting"). The colours go in as the materials' emissive at Gamebryo's modulate-2x.
+CATACOMBS_EMITTANCE = 2.0
+
+
+def catacombs_emittance(sector, out, models):
+    """Self-lit vertex colours for a [dungeonfix] catacombs_material_emittance zone: the level used, or 0."""
+    if sector.getint('dungeonfix', 'catacombs_material_emittance', fallback=0) != 1:
+        return 0
+    for m in models:
+        path = out / m['file']
+        g = json.loads(path.read_text(encoding='utf-8'))
+        changed = False
+        for spec in (g.get('extras') or {}).get('nif_materials', []):
+            if spec.get('vertex_colors') and not spec.get('unlit') and not any(spec.get('emissive', [0, 0, 0])):
+                spec['emissive'] = [CATACOMBS_EMITTANCE] * 3
+                changed = True
+        if changed:
+            path.write_text(json.dumps(g, separators=(',', ':')), encoding='utf-8')
+    return CATACOMBS_EMITTANCE
+
+
+def cave_sky_textures(sector):
+    """A cavern's own sky (sector.dat [sky] NoSkyFlag=1 with its own [terrain] clouds / horizon, from zones/sky - the
+    Underground Forests' rock roof u_forest_sky and walls u_forest_sky_horizon): {'ceiling', 'walls'} texture names."""
+    if sector.getint('sky', 'NoSkyFlag', fallback=0) != 1:
+        return {}
+    out = {}
+    for key, slot in (('clouds', 'ceiling'), ('horizon', 'walls')):
+        name = sector.get('terrain', key, fallback='').strip().rsplit('.', 1)[0].lower()
+        if name and name not in ('clouds', 'horizon'):
+            out[slot] = name
+    return out
+
+
 def build_dungeon(zone_id, upscale, zdir, out, dat, sector, patches=False):
     """A dungeon: its pieces placed by dungeon.place in the dungeon frame (see DUNGEON_ORIGIN). Each placement is a
     fixture with a full basis (a few pieces carry tiny tilts). patches: each piece's <name>_pNN.npk collision patches
@@ -426,9 +464,13 @@ def build_dungeon(zone_id, upscale, zdir, out, dat, sector, patches=False):
                                  and n[len(base) + 2:-4].isdigit()) if patches else [])
         for part in parts:
             _dungeon_piece(part, v, files, mdir, index, models, placements, tex_names, conv, turn, origin)
+    emittance = catacombs_emittance(sector, out, models)
+    cave_sky = cave_sky_textures(sector)
+    tex_names |= set(cave_sky.values())
     lights = zone_lights(dat)
     exits = zone_exits(dat)
     idx = TextureIndex()
+    idx.first = ['zones/dnifs']                          # the pieces' own folder first (zones/nifs has same names)
     odir = out / 'textures/original'
     odir.mkdir(parents=True, exist_ok=True)
     missing = []
@@ -463,7 +505,8 @@ def build_dungeon(zone_id, upscale, zdir, out, dat, sector, patches=False):
             'fixtures': placements, 'jump_points': {}, 'exits': exits, 'spots': spots,
             'texture_sets': {'original': 'textures/original',
                              **({'x4plus': 'textures/x4plus'} if upscale or (out / 'textures/x4plus').exists() else {})},
-            'lights': lights, 'missing_textures': missing, 'warnings': warnings}
+            'lights': lights, 'missing_textures': missing, 'warnings': warnings,
+            **({'catacombs_emittance': emittance} if emittance else {}), **({'cave_sky': cave_sky} if cave_sky else {})}
     (out / 'zone.json').write_text(json.dumps(zone, indent=1), encoding='utf-8')
     print(f"{zone['name']} (dungeon): {len(models)} pieces, {len(placements)} placed, {len(lights)} lights, "
           f"{len(exits)} exits, {len(tex_names)} textures ({len(missing)} missing: {missing[:8]})")

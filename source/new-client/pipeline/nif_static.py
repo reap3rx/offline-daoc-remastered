@@ -16,7 +16,7 @@ Collision follows the client (game.dll 0x45f865 + 0x483ac6): the FIRST node, dep
 hidden "collision_<n>" nodes, textured or not. Door leaves carry their own "collideeNN" nodes, which the door system
 handles. Other untextured, unmapped shapes are hidden and are not walls.
 """
-import argparse, base64, json, sys
+import argparse, base64, json, re, sys
 from pathlib import Path
 import numpy as np
 
@@ -30,6 +30,8 @@ DAOC_TO_GODOT = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]], dtype=np.float64)  
 BILLBOARD_FLIP = np.diag([1.0, -1.0, -1.0, 1.0])     # half a turn about the card's x (its right stays right)
 SKIP_TYPES = ('NiParticles', 'NiParticleSystem', 'NiCamera', 'NiLight', 'NiTextureEffect')
 
+
+MOSS_CARD = re.compile(r'^(!_distbld@\d+@\d+_)?moss\d+(:\d+)?$', re.I)
 
 def local_matrix(b):
     """Row-vector 4x4 (p' = p @ M) from translation, rotation and scale."""
@@ -704,6 +706,11 @@ def collect(nif, node_anims=False):
         if b is collidee:                                  # walls only, never drawn (see collidee_shapes)
             return
         if b.get('flags', 0) & 1 and not (node_anims and _controller(b, 'NiVisController') is not None):   # hidden
+            return
+        # the Catacombs underground forests' hanging moss cards ("moss01".. and their "!_distbld@2000@5000_moss01"
+        # far copies): flat 20 m sheets of an opaque grey 32 x 128 moss texture under the canopy. Drawn, they hung as
+        # grey-blue slabs in the air (owner 2026-11-01: "the bugged canopy"); left out, the roots and vines remain
+        if MOSS_CARD.match(b.get('name') or ''):
             return
         m = local_matrix(b) @ parent_m
         if np.isnan(m).any():                              # a few scene nodes carry broken transforms (charscreen Box02)
