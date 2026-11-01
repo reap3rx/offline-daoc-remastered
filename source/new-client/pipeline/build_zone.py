@@ -404,8 +404,110 @@ def _dungeon_piece(base, v, files, mdir, index, models, placements, tex_names, c
 # their light in the vertex colours - a flat 60 / 255 everywhere with brighter spots where lights were baked - and the
 # client drew them self-lit by those colours instead of under the dungeon's ambient light. Ours lit them like the
 # classic dungeons (vertex colour x a dim ambient), so Hibernia's Underground Forest came out near black (owner
-# 2026-11-01: "fix the sky and lighting"). The colours go in as the materials' emissive at Gamebryo's modulate-2x.
-CATACOMBS_EMITTANCE = 2.0
+# 2026-11-01: "fix the sky and lighting"). The colours go in as the materials' emissive - a little under Gamebryo's
+# modulate-2x (2.0 lit it evenly; owner, same day: "more immersive lighting ... ambient lights doing a lot of the work"),
+# so the glow lights below (catacombs_glow_lights) carry the colour.
+CATACOMBS_EMITTANCE = 1.5
+# Light from the cavern's own living things (owner 2026-11-01: "maybe things like those flowers can emit light ...
+# mushrooms ... kind of like Blackreach in Skyrim"): base texture -> (zone light name, colour, range m, energy, cell m).
+# One light per cell of that texture's vertices, at their middle, lifted a little: the pitcher plants' pink, the glowing
+# mushrooms' cyan, and a faint teal pool at the foot of the great roots.
+CATACOMBS_GLOWS = {
+    'u_forest_plant01': ('bloom glow', [1.0, 0.42, 0.62], 8.0, 2.4, 20.0, 0.8),
+    'fungiglow': ('fungus glow', [0.3, 0.8, 1.0], 10.0, 3.2, 6.0, 0.6),
+    'fungitex1': ('fungus glow', [0.3, 0.8, 1.0], 10.0, 3.2, 6.0, 0.6),
+    'fungitex2': ('fungus glow', [0.35, 0.9, 0.85], 10.0, 3.2, 6.0, 0.6),
+    'u_vines': ('root glow', [0.2, 0.85, 0.7], 16.0, 2.2, 32.0, 1.5),
+}
+# The pitcher plants' heads glow themselves (a glow map from the texture: its pale pink windows between the red veins,
+# not the green stalks): texture -> the glow map's name, made by plant_glow_map
+CATACOMBS_GLOW_MAPS = {'u_forest_plant01': 'u_forest_plant01_glow'}
+
+
+def plant_glow_map(img):
+    """The pitcher head's glow: the head (right half above the stalk band, and the top rim) where it is pale."""
+    a = np.asarray(img.convert('RGBA'), dtype=np.float32) / 255.0
+    h, w = a.shape[:2]
+    yy, xx = np.mgrid[0:h, 0:w]
+    head = ((xx >= w // 2) & (yy < int(h * 0.66))) | (yy < int(h * 0.1))
+    lum = a[..., :3].mean(axis=2)
+    k = head * np.clip((lum - 0.35) / 0.4, 0.0, 1.0) * (a[..., 3] > 0.5)
+    out = np.zeros_like(a)
+    out[..., :3] = a[..., :3] * 0.9
+    out[..., 3] = k
+    return Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8), 'RGBA')
+
+
+def catacombs_glow_lights(out, models, placements):
+    """Zone lights from CATACOMBS_GLOWS: the placed models' vertices drawn with those textures, one light per cell."""
+    cells = {}
+    cache = {}
+    for f in placements:
+        m = models[f['m']]
+        if m['file'] not in cache:
+            cache[m['file']] = gltf_vertices_by_texture(out / m['file'], set(CATACOMBS_GLOWS))
+        B = np.array(f['basis'], float).reshape(3, 3).T
+        for tex, v in cache[m['file']].items():
+            w = v @ B.T + np.array(f['pos'])
+            cell = CATACOMBS_GLOWS[tex][4]
+            if tex == 'u_vines':                         # the roots' feet only: their lowest few metres
+                w = w[w[:, 1] < w[:, 1].min() + 3.0] if len(w) else w
+            for key, p in zip(map(tuple, np.floor(w[:, [0, 2]] / cell).astype(int)), w):
+                cells.setdefault((tex, key), []).append(p)
+    lights = []
+    for (tex, _), pts in cells.items():
+        if len(pts) < 6:
+            continue
+        name, color, rng, energy, _, lift = CATACOMBS_GLOWS[tex]
+        c = np.mean(pts, axis=0)
+        c[1] = min(p[1] for p in pts) + lift if tex == 'u_vines' else c[1] + lift
+        lights.append({'pos': [round(float(x), 3) for x in c], 'type': 0, 'name': name, 'color': color,
+                       'range_m': rng, 'energy': energy})
+    return lights
+
+
+def gltf_vertices_by_texture(path, textures):
+    """{base texture: [n, 3] vertices in the model's frame} for the drawn meshes using those textures."""
+    import base64
+    g = json.loads(Path(path).read_text())
+    specs = (g.get('extras') or {}).get('nif_materials', [])
+    buf = g['buffers'][0]['uri']
+    data = base64.b64decode(buf.split(',', 1)[1]) if buf.startswith('data:') else (Path(path).parent / buf).read_bytes()
+
+    def acc(i):
+        a = g['accessors'][i]
+        bv = g['bufferViews'][a['bufferView']]
+        return np.frombuffer(data, dtype=np.float32, count=a['count'] * 3,
+                             offset=bv.get('byteOffset', 0) + a.get('byteOffset', 0)).reshape(-1, 3).astype(np.float64)
+
+    def local(nd):
+        if 'matrix' in nd:
+            return np.array(nd['matrix'], float).reshape(4, 4).T
+        x, y, z, w = nd.get('rotation', [0, 0, 0, 1])
+        R = np.array([[1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w)],
+                      [2 * (x * y + z * w), 1 - 2 * (x * x + z * z), 2 * (y * z - x * w)],
+                      [2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y)]])
+        L = np.identity(4)
+        L[:3, :3] = R * np.array(nd.get('scale', [1, 1, 1]))
+        L[:3, 3] = nd.get('translation', [0, 0, 0])
+        return L
+    found = {}
+
+    def walk(i, M):
+        nd = g['nodes'][i]
+        W = M @ local(nd)
+        if 'mesh' in nd:
+            for pr in g['meshes'][nd['mesh']]['primitives']:
+                mi = pr.get('material')
+                tex = specs[mi]['slots'].get('base', {}).get('tex') if mi is not None and mi < len(specs) else None
+                if tex in textures:
+                    v = acc(pr['attributes']['POSITION'])
+                    found.setdefault(tex, []).append(v @ W[:3, :3].T + W[:3, 3])
+        for c in nd.get('children', []):
+            walk(c, W)
+    for r in g['scenes'][0]['nodes']:
+        walk(r, np.identity(4))
+    return {k: np.concatenate(v) for k, v in found.items()}
 
 
 def catacombs_emittance(sector, out, models):
@@ -419,6 +521,10 @@ def catacombs_emittance(sector, out, models):
         for spec in (g.get('extras') or {}).get('nif_materials', []):
             if spec.get('vertex_colors') and not spec.get('unlit') and not any(spec.get('emissive', [0, 0, 0])):
                 spec['emissive'] = [CATACOMBS_EMITTANCE] * 3
+                changed = True
+            glow = CATACOMBS_GLOW_MAPS.get(spec.get('slots', {}).get('base', {}).get('tex'))
+            if glow and 'glow' not in spec['slots']:
+                spec['slots']['glow'] = dict(spec['slots']['base'], tex=glow)
                 changed = True
         if changed:
             path.write_text(json.dumps(g, separators=(',', ':')), encoding='utf-8')
@@ -465,9 +571,10 @@ def build_dungeon(zone_id, upscale, zdir, out, dat, sector, patches=False):
         for part in parts:
             _dungeon_piece(part, v, files, mdir, index, models, placements, tex_names, conv, turn, origin)
     emittance = catacombs_emittance(sector, out, models)
+    glow_lights = catacombs_glow_lights(out, models, placements) if emittance else []
     cave_sky = cave_sky_textures(sector)
     tex_names |= set(cave_sky.values())
-    lights = zone_lights(dat)
+    lights = zone_lights(dat) + glow_lights
     exits = zone_exits(dat)
     idx = TextureIndex()
     idx.first = ['zones/dnifs']                          # the pieces' own folder first (zones/nifs has same names)
@@ -484,6 +591,10 @@ def build_dungeon(zone_id, upscale, zdir, out, dat, sector, patches=False):
             rgb = np.asarray(img.convert('RGB'), dtype=np.float32) * 2.0
             img = Image.fromarray(np.clip(rgb, 0, 255).astype(np.uint8))
         save_if_changed(img, odir / f'{n}.png')
+    if emittance:
+        for src, glow in CATACOMBS_GLOW_MAPS.items():
+            if (odir / f'{src}.png').exists():
+                save_if_changed(plant_glow_map(Image.open(odir / f'{src}.png')), odir / f'{glow}.png')
     if upscale:
         upscale_dir(odir, out / 'textures/x4plus')
     # the fallback height grid: the dungeon's highest floor per point (the engine casts from a reference height)

@@ -43,7 +43,6 @@ var _rain_ceiling := 10.0              # metres above the player that drops star
 var _follow: Node3D
 var dungeon := false                   # zone.json "dungeon": no sky, sun, day/night or weather (see _setup_dungeon)
 var _world: WorldEnvironment
-var _cave_dome: MeshInstance3D         # a cavern's rock roof and walls (zone.json cave_sky), round the camera
 
 
 ## Zone-only sun shadow splits (owner 2026-10-15: the Grove of Domnann's ground shadows flickered under the canopy as
@@ -199,6 +198,11 @@ func _setup_dungeon() -> void:
 	var clip := float(zone.info.fog.get("clip_m", 400.0))
 	environment.background_mode = Environment.BG_COLOR
 	environment.background_color = fog_color.darkened(0.5)
+	# a cavern with its own sky (zone.json cave_sky: the Underground Forests): past the fog is the fog's own colour,
+	# so nothing far away pops against the background as the pieces stream in (owner 2026-11-01: a rock dome round
+	# the camera faded in and out as the terrain loaded - "maybe it should just be pure black")
+	if zone and zone.info.get("cave_sky") is Dictionary:
+		environment.background_color = fog_color
 	environment.reflected_light_source = Environment.REFLECTION_SOURCE_DISABLED
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	environment.ambient_light_color = Color(0.82, 0.8, 0.86).lerp(fog_color, 0.12 + 0.2 * amount)
@@ -210,75 +214,9 @@ func _setup_dungeon() -> void:
 	environment.fog_depth_curve = 1.0
 	if zone:
 		zone.set_light_level(1.0)                            # the client's lights burn all day underground
-	_build_cave_dome(fog_color)
 	if remastered:
 		_remaster_frame()
 
-
-## A cavern's own sky (zone.json cave_sky, sector.dat NoSkyFlag with its own clouds / horizon textures): the client
-## drew the Underground Forests' rock roof (u_forest_sky) and walls (u_forest_sky_horizon) where we showed an empty
-## black (owner 2026-11-01: "fix the sky"). A big inside-out sphere round the camera, drawn behind everything, the
-## rock tiled across the roof and round the walls, dimmed toward the cavern's own fog colour; the fog leaves it alone
-## (it stands for what lies past the fog).
-const CAVE_DOME_M := 450.0                  # (inside the far clip; past the fog, where nothing shows anyway)
-const CAVE_SHADER := """
-shader_type spatial;
-render_mode unshaded, cull_front, depth_draw_never, fog_disabled, skip_vertex_transform;
-uniform sampler2D ceiling_tex : source_color, filter_linear_mipmap, repeat_enable;
-uniform sampler2D walls_tex : source_color, filter_linear_mipmap, repeat_enable;
-uniform vec3 tint = vec3(0.3);
-varying vec3 dir;
-void vertex() {
-	dir = VERTEX;                                       // (the sphere's own direction: it never turns)
-	VERTEX = (MODELVIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	NORMAL = normalize((MODELVIEW_MATRIX * vec4(NORMAL, 0.0)).xyz);
-}
-void fragment() {
-	vec3 d = normalize(dir);
-	vec2 roof = d.xz / max(d.y + 0.25, 0.05) * 3.0;     // the roof spread overhead like the client's cloud layer
-	float ang = atan(d.z, d.x) / 6.2832;
-	vec2 wall = vec2(ang * 8.0, d.y * 3.0);             // the walls wrapped round the horizon
-	vec3 c = mix(texture(walls_tex, wall).rgb, texture(ceiling_tex, roof).rgb, smoothstep(0.05, 0.45, d.y));
-	ALBEDO = c * tint * mix(0.35, 1.0, smoothstep(-0.3, 0.3, d.y));
-}
-"""
-
-
-func _build_cave_dome(fog_color: Color) -> void:
-	if _cave_dome:
-		_cave_dome.queue_free()
-		_cave_dome = null
-	var cs = zone.info.get("cave_sky") if zone else null
-	if not (cs is Dictionary) or (cs as Dictionary).is_empty():
-		return
-	var mat := ShaderMaterial.new()
-	var sh := Shader.new()
-	sh.code = CAVE_SHADER
-	mat.shader = sh
-	mat.render_priority = -100
-	for slot in ["ceiling", "walls"]:
-		var name := String((cs as Dictionary).get(slot, (cs as Dictionary).get("ceiling", "")))
-		var path := ProjectSettings.globalize_path(zone.dir.path_join("textures/original/%s.png" % name))
-		var img := Image.load_from_file(path) if FileAccess.file_exists(path) else null
-		if img:
-			img.generate_mipmaps()
-			mat.set_shader_parameter(slot + "_tex", ImageTexture.create_from_image(img))
-	# the rock lit faintly in the cavern's own colour (the forest's dark teal), never brighter than a dim roof
-	var t := Color(0.32, 0.36, 0.36).lerp(fog_color.lightened(0.35), 0.5)
-	mat.set_shader_parameter("tint", Vector3(t.r, t.g, t.b))
-	var sphere := SphereMesh.new()
-	sphere.radius = CAVE_DOME_M
-	sphere.height = CAVE_DOME_M * 2.0
-	sphere.radial_segments = 48
-	sphere.rings = 24
-	_cave_dome = MeshInstance3D.new()
-	_cave_dome.name = "CaveDome"
-	_cave_dome.mesh = sphere
-	_cave_dome.material_override = mat
-	_cave_dome.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	_cave_dome.extra_cull_margin = 16384.0
-	_cave_dome.top_level = true
-	add_child(_cave_dome)
 
 
 func set_hour(h: float) -> void:
@@ -305,10 +243,6 @@ func clock_text() -> String:
 func _process(delta: float) -> void:
 	if zone and int(zone.info.get("id", -1)) != _look_zone:
 		apply_look()
-	if _cave_dome:
-		var cam := get_viewport().get_camera_3d()
-		if cam:
-			_cave_dome.global_position = cam.global_position
 	if dungeon:                                              # the clock still runs (camp timers, night NPCs)
 		game_seconds = fposmod(game_seconds + delta * day_increment * time_scale, 86400.0)
 		if remastered:

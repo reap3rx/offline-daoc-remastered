@@ -503,7 +503,7 @@ func _build_lights() -> void:
 		o.distance_fade_enabled = true                      # keep dozens of town lights cheap
 		o.distance_fade_begin = 120.0
 		o.distance_fade_length = 40.0
-		o.set_meta("base_energy", 2.2)
+		o.set_meta("base_energy", float(l.get("energy", 2.2)))   # (the Catacombs glows: their own, softer)
 		var nm := String(l.get("name", "")).to_lower()
 		# remastered: fires flicker hard, torches / braziers (orange, red) a little, the magic colours only breathe
 		o.set_meta("flicker", 0.2 if nm.contains("fire") else (0.1 if nm.contains("orange") or nm.contains("red") else 0.04))

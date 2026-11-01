@@ -1003,6 +1003,18 @@ def material_spec(props, uv_count, has_colors, warnings, shape_name, shape=None)
         spec['uv_anim'] = timed_uv                         # played by NifScene's effect timeline
     if aa is not None:
         spec['alpha_anim'] = aa                            # played by NifScene's effect timeline
+    base = spec['slots'].get('base', {}).get('tex')
+    # a dark map that is the base texture itself (the Catacombs underground forests' ground seams, "ground01:6"):
+    # the rock multiplied by itself drew near-black 3 m strips in a grid across the floor (owner 2026-11-01: "more
+    # like seams ... they should probably go") - drawn like the ground beside them
+    if base and spec['slots'].get('dark', {}).get('tex') == base:
+        del spec['slots']['dark']
+    # "waterproxy": the Catacombs pieces' stand-in for a puddle's water (the client drew its own water there), an
+    # opaque mucky texture here that read as mud - a dark, glossy, see-through surface drifting slowly instead
+    if shape_name.lower().split(':')[0] == 'waterproxy' and base:
+        spec.update(alpha='blend', opacity=0.72, specular=True, double_sided=True)
+        spec['tint'] = [0.55, 0.7, 0.75]
+        spec['uv_scroll'] = {'base': [0.06, 0.03, 20.0]}
     return spec, sets, names
 
 
