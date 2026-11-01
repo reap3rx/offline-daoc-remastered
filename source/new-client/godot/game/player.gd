@@ -618,22 +618,38 @@ func _faces_camera() -> bool:
 ## faces the target - standing still, weapon out, casting - and is snapped to it before any spell / ability goes to
 ## the server, so a caster never has to turn by hand (owner 2026-11-01).
 var lock_target: Node3D = null
+## The target of the spell / ability just used (ActionCombatMode.before_use): faced while the cast lasts, locked on or
+## not - the server checks the heading at the start and the end of a cast (owner 2026-11-01).
+var cast_target: Node3D = null
+var cast_target_until := 0
 
 
 func _lock_yaw() -> float:
-	if lock_target == null or not is_instance_valid(lock_target) or not lock_target.is_inside_tree():
+	var t: Node3D = lock_target
+	if t != null and (not is_instance_valid(t) or not t.is_inside_tree()):
 		lock_target = null
+		t = null
+	if t == null and cast_target != null:
+		if not is_instance_valid(cast_target) or not cast_target.is_inside_tree():
+			cast_target = null
+		elif casting_spell or Time.get_ticks_msec() < cast_target_until:
+			t = cast_target
+	if t == null:
 		return NAN
-	var d := lock_target.global_position - global_position
+	var d := t.global_position - global_position
 	if Vector2(d.x, d.z).length() < 0.3:
 		return NAN
 	return atan2(-d.x, -d.z)
 
 
-## Turn to the locked target at once (before a cast / ability request: the server checks the heading it is sent).
-func face_lock() -> void:
+## Turn at once to the lock target - or `t`, the target of a spell / ability being used - before the request goes
+## to the server (it checks the heading it is sent).
+func face_lock(t: Node3D = null) -> void:
 	if not action_mode or dead or sitting:
 		return
+	if t != null and t != self:
+		cast_target = t
+		cast_target_until = Time.get_ticks_msec() + 900
 	var y := _lock_yaw()
 	if not is_nan(y):
 		char_yaw = y

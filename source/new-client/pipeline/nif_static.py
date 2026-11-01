@@ -27,6 +27,7 @@ UNITS_TO_METRES = 0.025
 # NIF model space is right-handed Z-up; DAoC's map frame has Y pointing south, so model Y is flipped on the way
 # in. Checked against Lough Derg: signpost text reads correctly and docks run from the shore out over the water.
 DAOC_TO_GODOT = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]], dtype=np.float64)   # (x, y, z) -> (x, z, -y)
+BILLBOARD_FLIP = np.diag([1.0, -1.0, -1.0, 1.0])     # half a turn about the card's x (its right stays right)
 SKIP_TYPES = ('NiParticles', 'NiParticleSystem', 'NiCamera', 'NiLight', 'NiTextureEffect')
 
 
@@ -732,7 +733,7 @@ def collect(nif, node_anims=False):
             # camera-facing cards (grass, leaves): mode from the node flags (bits 5-6: 0 face camera, 1 rotate about
             # up, 2 rigid face camera, 3 face centre); the client also tags them "billboardUp" / "billboardFace"
             mode = (int(b.get('flags', 0)) >> 5) & 3
-            props['_billboard'] = ('up' if mode == 1 else 'face', m)
+            props['_billboard'] = ('up' if mode == 1 else 'face', m, local_matrix(b))
             if '_bb_outer' not in props:                   # the outermost one: a pivot for animated parts below it
                 props['_bb_outer'] = (b, m, 'up' if mode == 1 else 'face')
         if node_anims:
@@ -1472,6 +1473,12 @@ def convert(raw, out_path, texture_uri='textures', node_anims=False):
         if '_billboard' in props and not chain:
             m_bb = props['_billboard'][1]
             m = m @ np.linalg.inv(m_bb)                    # in the billboard node's frame; the engine turns it
+            if props['_billboard'][0] == 'face' and props['_billboard'][2][1, 2] < -0.5:
+                # the card was authored with its own +y pointing DOWN in the scene (the node turned so it stands
+                # upright in the artist's view): the engine shows it upright - our billboard takes the card's +y as
+                # up, so it is turned half round about its x (owner 2026-11-01: the Thane's lightning strokes ran
+                # down into the ground from the target, only the sky flashes showed; the relic beam the same)
+                m = m @ BILLBOARD_FLIP
             pivot = (DAOC_TO_GODOT @ m_bb[3, :3]) * UNITS_TO_METRES
         pos, nrm, uv, col, tri = shape_arrays(data, m)
         if not len(tri):

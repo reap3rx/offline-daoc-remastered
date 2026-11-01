@@ -46,6 +46,14 @@ public sealed class UT_ActionCombat
     }
 
     [Test]
+    public void PowerAttackAboutASecondAfterTheLastBlow()
+    {
+        Assert.That(ActionCombat.AnytimeSoonestMs(2600), Is.EqualTo(1000));    // a sword: 1 s
+        Assert.That(ActionCombat.AnytimeSoonestMs(1500), Is.EqualTo(1000));
+        Assert.That(ActionCombat.AnytimeSoonestMs(5500), Is.EqualTo(1750));    // never sooner than a plain swing
+    }
+
+    [Test]
     public void QuickSwingDamageRampsToFull()
     {
         Assert.That(ActionCombat.QuickDamageFor(1000, 4000), Is.EqualTo(0.25).Within(1e-9));

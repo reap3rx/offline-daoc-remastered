@@ -51,6 +51,34 @@ static func spell(id: int) -> Dictionary:
 	return _spells.get(str(id), {})
 
 
+static var _spell_names := {}
+static var _pulsing_effects := {}
+
+
+## Does any spell drawn with this client effect pulse (songs, pulsing chants)? Their pulses play the cast motion;
+## an instant or a proc doesn't (owner 2026-11-01).
+static func effect_pulses(client_effect: int) -> bool:
+	_load()
+	if _pulsing_effects.is_empty():
+		_pulsing_effects[-1] = true
+		for k in _spells:
+			var s: Dictionary = _spells[k]
+			if int(s.get("pulse", 0)) > 0 or int(s.get("frequency", 0)) > 0:
+				_pulsing_effects[int(s.get("clienteffect", 0))] = true
+	return _pulsing_effects.has(client_effect)
+
+
+## The first spell of that name (the server's spell ids aren't always the client data's).
+static func spell_by_name(nm: String) -> Dictionary:
+	_load()
+	if _spell_names.is_empty():
+		for k in _spells:
+			var n := String((_spells[k] as Dictionary).get("name", ""))
+			if n != "" and not _spell_names.has(n):
+				_spell_names[n] = k
+	return _spells.get(_spell_names.get(nm, ""), {})
+
+
 static func style(id: int) -> Dictionary:
 	_load()
 	return _styles.get(str(id), {})

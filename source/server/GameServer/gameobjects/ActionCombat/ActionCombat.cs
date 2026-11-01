@@ -106,6 +106,12 @@ namespace DOL.GS
 		public const int QuickMinFastMs = 750;
 		public const int QuickMinSlowMs = 1750;
 
+		// The power attack (an anytime style) about 1 s after the last blow (owner 2026-11-01: holding the button is the
+		// wait), never sooner than a plain swing could go; its damage grows over the swing time like a plain swing's.
+		public const int AnytimeMinMs = 1000;
+
+		public static int AnytimeSoonestMs(int fullMs) => Math.Max(AnytimeMinMs, QuickMinMs(fullMs));
+
 		public static int QuickMinMs(int fullMs) =>
 			Math.Clamp(QuickMinFastMs + (int) ((fullMs - 2000) * (QuickMinSlowMs - QuickMinFastMs) / 3500.0), QuickMinFastMs, QuickMinSlowMs);
 
@@ -139,7 +145,7 @@ namespace DOL.GS
 			ActionCombatState state = Get(player);
 			state.LastSwingAt = GameLoop.GameLoopTime;
 			state.LastSwingFullMs = Math.Max(1, fullMs);
-			Send(player, $"timer|{state.LastSwingFullMs}|{QuickMinMs(state.LastSwingFullMs)}");
+			Send(player, $"timer|{state.LastSwingFullMs}|{QuickMinMs(state.LastSwingFullMs)}|{AnytimeSoonestMs(state.LastSwingFullMs)}");
 		}
 
 		public static bool IsActive(GameLiving living)
@@ -272,8 +278,13 @@ namespace DOL.GS
 		}
 
 		/// <summary>A style of this kind could go now: the weapon recovered (a reactive answers its opening at once).</summary>
-		public static bool StyleReady(GamePlayer player, string kind) =>
-			kind == "reactive" ? GameLoop.GameLoopTime >= Get(player).FumbledUntil : Recovered(player);
+		public static bool StyleReady(GamePlayer player, string kind) => kind switch
+		{
+			"reactive" => GameLoop.GameLoopTime >= Get(player).FumbledUntil,
+			"anytime" => GameLoop.GameLoopTime >= Get(player).FumbledUntil
+				&& SinceLastSwing(player) >= AnytimeSoonestMs(Math.Min(Get(player).LastSwingFullMs, FullSwingMs(player))),
+			_ => Recovered(player)
+		};
 
 		public static Style Resolve(GamePlayer player, string kind)
 		{

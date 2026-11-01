@@ -68,6 +68,7 @@ func _ready() -> void:
 			["ac_dodge", "Action: Dodge", ["Middle Mouse"]], ["ac_cursor", "Action: Show Cursor (hold)", ["LAlt"]],
 			["ac_interact", "Action: Interact (doors, NPCs, loot)", ["F"]],
 			["ac_lock", "Action: Lock On (tap; hold + mouse to switch)", ["Mouse4"]],
+			["ac_ally", "Action: Target Allies (hold: the reticle picks your realm and pets)", ["LCtrl"]],
 			["ac_hud", "Action: Arrange Combat HUD", ["Ctrl+F9"]],
 			["weapon_cycle", "Cycle Weapons (one hand / two hand / ranged)", ["Z"]],
 			["show_quiver", "Quiver Window", ["Ctrl+Q"]],
@@ -91,12 +92,19 @@ func _ready() -> void:
 	load_bindings()
 
 
-## Key bindings are shared by all characters; a character can opt into its own set (Options > CONTROLS,
-## "CHARACTER-SPECIFIC KEY BINDINGS", like WoW's). Called by PlayerData when a character enters the world.
+## Every character keeps its own key bindings (owner 2026-11-01: casters free the style / defence keys without
+## changing anyone else's) - a new one starts as a copy of Arthur's (TEMPLATE_CHARACTER), or of the shared keys before
+## Arthur has his own. Options > CONTROLS "CHARACTER-SPECIFIC KEY BINDINGS" off puts a character back on the shared
+## set (user://keybinds.cfg). Called by PlayerData when a character enters the world.
+const TEMPLATE_CHARACTER := "arthur"
+
+
 func use_character(c: Dictionary) -> void:
 	_character = c
-	character_specific = bool(c.get("own_keybinds", false))
+	character_specific = bool(c.get("own_keybinds", true))
 	path = _character_path() if character_specific else PATH
+	if character_specific and not FileAccess.file_exists(path):
+		_seed_character_file()
 	load_bindings()
 	changed.emit()
 
@@ -110,12 +118,38 @@ func set_character_specific(on: bool) -> void:
 	if on:
 		path = _character_path()
 		if not FileAccess.file_exists(path):
-			DirAccess.make_dir_recursive_absolute(path.get_base_dir())
-			save_bindings()                                # starts as a copy of the shared keys
+			_seed_character_file()
 	else:
 		path = PATH
 	load_bindings()
 	changed.emit()
+
+
+## This character's first own key file: Arthur's (this account's, else any account's), else the shared keys, else
+## the defaults.
+func _seed_character_file() -> void:
+	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+	var src := ""
+	var own := path.get_base_dir().path_join("%s_%s.cfg" % [String(Accounts.account if Accounts.account != "" else "local").to_lower().validate_filename(), TEMPLATE_CHARACTER])
+	if own != path and FileAccess.file_exists(own):
+		src = own
+	else:
+		var d := DirAccess.open(path.get_base_dir())
+		if d:
+			for f in d.get_files():
+				if f.to_lower().ends_with("_%s.cfg" % TEMPLATE_CHARACTER) and path.get_base_dir().path_join(f) != path:
+					src = path.get_base_dir().path_join(f)
+					break
+	if src == "" and FileAccess.file_exists(PATH):
+		src = PATH
+	if src != "":
+		DirAccess.copy_absolute(ProjectSettings.globalize_path(src), ProjectSettings.globalize_path(path))
+	else:
+		var keep := path
+		path = PATH
+		load_bindings()                                    # (the defaults)
+		path = keep
+		save_bindings()
 
 
 func _character_path() -> String:

@@ -1337,10 +1337,11 @@ func _spell_effect(d: Dictionary) -> void:
 			(caster as Player).cast_end(true)
 		elif caster is Npc:
 			(caster as Npc).cast_end(true)
-	elif caster and not repeat and not instant and not _revive_sickness(d, now):
-		# no cast before it (a song's pulse, an instant spell): the caster plays the spell's own cast motion and, for
-		# an instrument song, its music (owner 2026-10-11: a minstrel's regeneration song had no animation or sound -
-		# the Lute set's only sound is the instrument's, played when a cast starts)
+	elif caster and not repeat and not instant and not _revive_sickness(d, now) and ClassDb.effect_pulses(ce):
+		# no cast before it, a song's pulse: the caster plays the spell's own cast motion and, for an instrument song,
+		# its music (owner 2026-10-11: a minstrel's regeneration song had no animation or sound - the Lute set's only
+		# sound is the instrument's, played when a cast starts). An instant spell or a proc (a style's PBAoE) shows no
+		# casting motion at all (owner 2026-11-01)
 		var anims: Array = SpellFx.effect(ce).get("anims", [])
 		var clip := ""
 		for c in [1, 0, 2]:

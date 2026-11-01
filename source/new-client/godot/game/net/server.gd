@@ -1252,12 +1252,18 @@ func reuse_left(id: String) -> float:
 func use_entry(id: String, player: Node3D, zone_id: int, target_in_view: bool) -> bool:
 	if client == null or not id.begins_with("srv:"):
 		return false
-	if player.has_method("face_lock"):
+	var parts := id.split(":")
+	var v := viewer()
+	var ac = v.get("action_combat") if v else null
+	if parts.size() >= 4 and parts[1] == "spell" and _heal_target(int(parts[2]), int(parts[3]), player):
+		pass                                             # (a heal: on whoever needs it most - no facing needed)
+	elif ac != null and ac.has_method("before_use"):
+		ac.before_use()                                  # (action combat: the reticle's target, faced)
+	elif player.has_method("face_lock"):
 		player.face_lock()                               # (locked on: turn to the target before the server checks)
 	var r := to_region(zone_id, player.global_position)
 	var heading := heading_of(fposmod(-rad_to_deg(player.facing()), 360.0))
 	var speed := Vector2(player.velocity.x, player.velocity.z).length() / 0.025
-	var parts := id.split(":")
 	if parts.size() >= 3 and parts[1] == "skill":
 		client.call("UseSkill", r.x, r.y, r.z, speed, heading, target_in_view, int(parts[2]), 1)
 	elif parts.size() >= 3 and parts[1] == "spec":            # a specialization used as an ability (Stealth): type 0,
@@ -1268,6 +1274,66 @@ func use_entry(id: String, player: Node3D, zone_id: int, target_in_view: bool) -
 		client.call("UseSlot", r.x, r.y, r.z, speed, heading, target_in_view, int(parts[1]), 1)
 	else:
 		return false
+	return true
+
+
+## Single-target heals pick their own target (owner 2026-11-01): the group member or pet with the least health
+## (as a share of their maximum) within the spell's reach, else you - never anyone outside your group, and no facing
+## needed. Returns true when the spell was such a heal (its target is now selected).
+const SMART_HEAL_TYPES := ["Heal", "HealOverTime"]
+
+
+func _heal_target(line: int, level: int, player: Node3D) -> bool:
+	if line < 0 or line >= spell_lines.size():
+		return false
+	var sp := {}
+	for e in (spell_lines[line].spells as Array):
+		if int(e.get("level", -1)) == level and String(e.get("kind", "spell")) == "spell":
+			sp = e
+			break
+	if sp.is_empty():
+		return false
+	var s := ClassDb.spell(int(sp.get("id", 0)))
+	if s.is_empty() or String(s.get("name", "")) != String(sp.get("name", "")):
+		s = ClassDb.spell_by_name(String(sp.get("name", "")))
+	if not (String(s.get("type", "")) in SMART_HEAL_TYPES and String(s.get("target", "")) == "Realm" \
+			and int(s.get("radius", 0)) == 0):
+		return false
+	var v := viewer()
+	var world = v.npcs if v else null
+	if world == null or not ("by_oid" in world):
+		return false
+	var reach := float(s.get("range", 0)) * 0.025
+	var best_oid := -1                                   # -1: you
+	var best := clampf(float(PlayerData.hp) / maxf(1.0, float(PlayerData.max_hp)), 0.0, 1.0)
+	var cands := {}                                      # oid -> health share
+	for g in PlayerData.group:
+		cands[int(g.get("oid", 0))] = float(g.get("hp", 1.0))
+	if int(world.get("pet_oid")) > 0:
+		cands[int(world.pet_oid)] = -1.0                 # (its NpcState says)
+	for oid in cands:
+		var st = world.by_oid.get(oid)
+		if st == null or not st.alive:
+			continue
+		var node = world.active.get(st.index)
+		var at: Vector3 = (node as Node3D).global_position if node != null and is_instance_valid(node) else st.pos
+		if reach > 0.0 and at.distance_to(player.global_position) > reach:
+			continue
+		var frac: float = float(cands[oid]) if float(cands[oid]) >= 0.0 else float(st.health)
+		if frac < best - 0.001:
+			best = frac
+			best_oid = int(oid)
+	if best_oid < 0:
+		if v.has_method("target_self"):
+			v.target_self()
+		return true
+	var st2 = world.by_oid.get(best_oid)
+	var n = world.active.get(st2.index)
+	var ac = v.get("action_combat")
+	if n != null and is_instance_valid(n) and ac != null:
+		ac._select_quiet(n)
+	elif client:
+		client.call("Target", best_oid, 0x8000 | 0x6000)
 	return true
 
 

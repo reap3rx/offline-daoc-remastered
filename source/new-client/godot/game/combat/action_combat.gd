@@ -23,7 +23,7 @@ extends Node
 ## Ctrl+F9 (Arrange Combat HUD): drag its parts where you like, switch any of them off; kept in settings.cfg.
 ## The server talks to it in "#AC|..." system lines (ServerWorld takes them out of the chat).
 
-const HOLD_S := 0.45                   # an attack held this long is an anytime style (owner 2026-10-28: 0.3 too quick, 0.6 too long)
+const HOLD_S := 1.0                    # an attack held this long is an anytime style (owner 2026-10-28: 0.3 too quick, 0.6 too long; 2026-11-01: about 1 s)
 const DOUBLE_TAP_MS := 260
 const SOFT_RANGE_M := 12.0             # soft targeting: the monster nearest your aim within this ...
 const SOFT_ANGLE := 40.0               # ... and this many degrees of it
@@ -57,6 +57,7 @@ var _dodge_ready_at := 0
 var _ready := "0000"
 var _has_anytime := false                 # an anytime style has lit this session (a held attack is then a charge)
 var _timer_until := 0
+var _style_at := 0                       # when the power attack can go (the server's timer: about 1 s after the last blow)
 var _timer_len := 1
 var _quick_at := 0                       # when a plain swing can go again (the server's timer|full|soonest)
 # Lock on (owner 2026-11-01): the target you keep facing; the button held (cycling with the mouse)
@@ -158,6 +159,7 @@ func on_line(text: String) -> void:
 				_timer_len = maxi(1, int(f[1]))
 				_timer_until = now + _timer_len
 				_quick_at = now + (int(f[2]) if f.size() > 2 else _timer_len)
+				_style_at = now + (int(f[3]) if f.size() > 3 else _timer_len)
 		"whiff":
 			_whiff()                                         # out of reach: the blow cuts air
 		"windows":                                       # windows|parry|block|dodge|cooldown (ActionCombat.SendWindows)
@@ -709,10 +711,10 @@ func _attack_up(now: int) -> void:
 	_soft_target()
 	var held := now - _atk_at >= int(HOLD_S * 1000.0)
 	var heavy := held and _anytime_ready()
-	# A held attack let go while the weapon is still recovering for the style does nothing (owner 2026-11-01: it
-	# used to go as a quick swing, which restarted the recovery - so the next hold was too soon again, and again).
-	# The ring round the crosshair fills with the recovery and turns gold when a release would fire the style.
-	if held and not heavy and _has_anytime and now < _timer_until + 300:   # (+ the lights' lag)
+	# A held attack let go before the power attack can go does nothing (owner 2026-11-01: it used to go as a quick
+	# swing, which restarted the clock - so the next hold was too soon again, and again). The ring round the crosshair
+	# fills as you hold and turns gold when a release would fire the style.
+	if held and not heavy and _has_anytime and now < _style_at + 300:   # (+ the lights' lag)
 		return
 	if not _has_target():
 		_whiff()                                           # nothing there: a swing at the air, with its sound
@@ -946,14 +948,14 @@ func _reticle_tick(p: Player, now: int) -> void:
 	var cam := p.camera
 	var centre := get_viewport().get_visible_rect().size * 0.5
 	var hit: Npc = npcs.pick(cam, centre)
-	var best: Npc = hit if hit and _hostile(hit) and hit.global_position.distance_to(p.global_position) <= RETICLE_RANGE_M else null
+	var best: Npc = hit if hit and _aimable(hit) and hit.global_position.distance_to(p.global_position) <= RETICLE_RANGE_M else null
 	if best == null:
 		var from := cam.project_ray_origin(centre)
 		var fwd := cam.project_ray_normal(centre)
 		var best_ang := INF
 		for i in npcs.active:
 			var n: Npc = npcs.active[i]
-			if not is_instance_valid(n) or not _hostile(n):
+			if not is_instance_valid(n) or not _aimable(n):
 				continue
 			var mid := n.global_position + Vector3(0, n.height * 0.5, 0)
 			var to := mid - from
@@ -973,6 +975,26 @@ func _reticle_tick(p: Player, now: int) -> void:
 		return
 	if not is_instance_valid(cur) or not cur.state.alive or now - _aim_since >= RETICLE_DWELL_MS:
 		_select_quiet(_aim)
+
+
+## Ally targeting (owner 2026-11-01): while the Target Allies key is held (Left Ctrl) the reticle and the lock look for
+## your own realm's people and pets instead of enemies - for heals and buffs. Locking on works the same.
+func _ally_scan() -> bool:
+	return Keybinds.held("ac_ally") and not _typing()
+
+
+## Your realm's people (the server's bots and players come as NPCs with their realm) and pets, alive and targetable;
+## not peaceful townsfolk (merchants, trainers).
+func _ally(n: Npc) -> bool:
+	if n == null or not is_instance_valid(n):
+		return false
+	var flags := int(n.spawn.get("flags", 0))
+	return n.state.alive and not n.state.stealthed and int(n.spawn.get("realm", 0)) == PlayerData.realm_id() \
+			and PlayerData.realm_id() != 0 and not (flags & Npc.FLAG_CANTTARGET) and not (flags & Npc.FLAG_PEACE)
+
+
+func _aimable(n: Npc) -> bool:
+	return _ally(n) if _ally_scan() else _hostile(n)
 
 
 ## What the reticle picks: monsters, and anyone of an enemy realm - the server's Midgard / Albion "players" (its
@@ -1006,7 +1028,7 @@ func _lock_press() -> void:
 		var npcs: NpcManager = viewer.npcs if viewer else null
 		var cur = npcs.target if npcs else null
 		var pick: Npc = _aim if is_instance_valid(_aim) else null
-		if pick == null and is_instance_valid(cur) and cur is Npc and _hostile(cur as Npc):
+		if pick == null and is_instance_valid(cur) and cur is Npc and (_hostile(cur as Npc) or _ally(cur as Npc)):
 			pick = cur as Npc
 		if pick == null:
 			pick = _lock_candidates(_player()).front() if not _lock_candidates(_player()).is_empty() else null
@@ -1036,7 +1058,7 @@ func _lock_candidates(p: Player) -> Array:
 	var mid := get_viewport().get_visible_rect().size * 0.5
 	for i in npcs.active:
 		var n: Npc = npcs.active[i]
-		if not is_instance_valid(n) or not _hostile(n):
+		if not is_instance_valid(n) or not _aimable(n):
 			continue
 		var at := n.global_position + Vector3(0, n.height * 0.6, 0)
 		if at.distance_to(p.global_position) > LOCK_MAX_M or cam.is_position_behind(at):
@@ -1172,6 +1194,25 @@ func _draw_lock(p: Player, now: int) -> void:
 
 
 ## Target without the "You target [x]" chat line (the reticle changes targets often).
+## A spell / ability is about to go to the server (Server.use_entry): what the reticle points at becomes the target
+## at once (no dwell), and the character turns to the target - locked on or not (owner 2026-11-01: casters had to
+## turn by hand). Not while the cursor is out (a click on a window) - then the target stays as it is.
+func before_use() -> void:
+	var p := _player()
+	if p == null:
+		return
+	if not on:
+		p.face_lock()
+		return
+	var npcs: NpcManager = viewer.npcs if viewer else null
+	if not _locked() and not p.action_cursor and is_instance_valid(_aim) and _aim.state.alive and npcs and npcs.target != _aim:
+		_select_quiet(_aim)
+	var t: Node3D = npcs.target if npcs and is_instance_valid(npcs.target) else null
+	if t != null and t.global_position.distance_to(p.global_position) > LOCK_MAX_M:
+		t = null
+	p.face_lock(t)
+
+
 func _select_quiet(n: Npc) -> void:
 	var npcs: NpcManager = viewer.npcs if viewer else null
 	if npcs == null or not is_instance_valid(n) or not n.state.alive:
@@ -1349,7 +1390,9 @@ func _draw_hud() -> void:
 	if _locked() and not _editing:
 		_draw_lock(p, now)
 	elif _show.get("crosshair", true) and (not p.action_cursor or _editing):
-		var cross := Color(1.0, 0.35, 0.3, 0.95) if is_instance_valid(_aim) else Color(1, 1, 1, 0.85)
+		var cross := Color(1, 1, 1, 0.85)
+		if is_instance_valid(_aim):
+			cross = Color(0.35, 1.0, 0.45, 0.95) if _ally(_aim) else Color(1.0, 0.35, 0.3, 0.95)
 		hud.draw_circle(c, 1.6, cross)
 		for d in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
 			hud.draw_line(c + d * 6.0, c + d * 12.0, cross, 1.5)
@@ -1358,10 +1401,9 @@ func _draw_hud() -> void:
 		var f := clampf((now - _atk_at) / (HOLD_S * 1000.0), 0.0, 1.0)
 		hud.draw_arc(c, 16.0, -PI * 0.5, -PI * 0.5 + TAU * f, 40,
 				Color(1.0, 0.82, 0.3) if f >= 1.0 else Color(1, 1, 1, 0.7), 2.5 if f >= 1.0 else 2.0)
-	elif _show.get("charge", true) and _atk_down and _has_anytime and now < _timer_until \
-			and now - _atk_at >= int(HOLD_S * 1000.0):
-		# held while the weapon recovers: a dim ring fills with the recovery (gold above once the style is ready)
-		var r := 1.0 - clampf(float(_timer_until - now) / float(maxi(1, _timer_len)), 0.0, 1.0)
+	elif _show.get("charge", true) and _atk_down and _has_anytime and now < _style_at:
+		# held before the power attack can go: a dim ring fills toward it (gold above once the style is ready)
+		var r := clampf(float(now - _atk_at) / float(maxi(1, _style_at - _atk_at)), 0.0, 1.0)
 		hud.draw_arc(c, 16.0, 0.0, TAU, 40, Color(0, 0, 0, 0.3), 2.0)
 		hud.draw_arc(c, 16.0, -PI * 0.5, -PI * 0.5 + TAU * r, 40, Color(1, 1, 1, 0.45), 2.0)
 	# the bow's draw: a ring filling around the crosshair - gold when fully drawn, then red as it overdraws

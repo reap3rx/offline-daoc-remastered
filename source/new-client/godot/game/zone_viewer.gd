@@ -734,6 +734,8 @@ var _click_placed := false
 
 
 func _input(event: InputEvent) -> void:
+	if _gt_hold_at > 0 and not event.is_pressed() and Keybinds.matches(event, "ground_target"):
+		_gt_release()
 	# Ctrl+F12: the debug text, for issue screenshots - here, ahead of the interface's keybinds (which took it)
 	if event is InputEventKey and event.pressed and not event.echo and event.ctrl_pressed 			and event.physical_keycode == KEY_F12 and hud and BootSettings.dev:
 		hud.visible = not hud.visible
@@ -822,7 +824,9 @@ func _input(event: InputEvent) -> void:
 		Server.command("/sprint")                          # the Sprint key: the client's &sprint
 		get_viewport().set_input_as_handled()              # (not Abilities' offline sprint as well)
 	elif Keybinds.pressed(event, "ground_target") and Server.active and npcs is ServerWorld and not player._ui_typing():
-		_server_ground_target(get_viewport().get_mouse_position())
+		_server_ground_target(_gt_screen())
+		_gt_hold_at = Time.get_ticks_msec()               # (held: the target follows the cursor - _gt_follow)
+		_gt_drag = Vector3.INF
 	elif Keybinds.pressed(event, "bot_report") and Server.active and npcs is ServerWorld and not player._ui_typing():
 		# the unseen-characters report (owner 2026-10-17): why nearby gamebots / pets aren't drawn, to bot_report.log
 		PlayerData.message.emit((npcs as ServerWorld).write_bot_report(player.global_position), "system")
@@ -1083,20 +1087,96 @@ func _cap(t: String) -> String:
 ## The server's game: the ground target under the mouse goes to the server (PlayerGroundTargetHandler) - ground-target
 ## spells, and a siege weapon you control rolls there (MOVE) or a catapult / trebuchet aims at it (owner 2026-10-14).
 func _server_ground_target(screen_pos: Vector2) -> void:
+	var hit = _gt_ray(screen_pos)
+	if hit == null:
+		PlayerData.message.emit("Your ground target is not visible!", "system")
+		return
+	_send_gt(hit)
+
+
+func _send_gt(at: Vector3) -> void:
+	var r := Server.to_region((npcs as ServerWorld)._current_zone(), at)
+	Server.client.call("GroundTarget", int(r.x), int(r.y), int(r.z), 0x100)
+	_server_gt = at
+	show_ground_target(at)
+
+
+var _server_gt := Vector3.INF                    # your ground target on the server (for the position packets' flag)
+
+## Hold the Ground Target key (owner 2026-11-01): the target follows the cursor (the crosshair in action combat) over
+## the ground and is placed where you let go - never further than your longest-reaching ground-target spell. A tap
+## places it at once, as before.
+const GT_HOLD_MS := 180
+var _gt_hold_at := 0
+var _gt_drag := Vector3.INF
+var _gt_reach := 0.0
+var _gt_reach_at := 0
+
+
+func _gt_screen() -> Vector2:
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		return get_viewport().get_visible_rect().size * 0.5
+	return get_viewport().get_mouse_position()
+
+
+func _gt_ray(screen_pos: Vector2) -> Variant:
+	if player == null or player.camera == null:
+		return null
 	var from := player.camera.project_ray_origin(screen_pos)
 	var to := from + player.camera.project_ray_normal(screen_pos) * 250.0
 	var q := PhysicsRayQueryParameters3D.create(from, to, ZoneLoader.LAYER_FLOOR | ZoneLoader.LAYER_WALL)
 	var hit := get_world_3d().direct_space_state.intersect_ray(q)
-	if hit.is_empty():
-		PlayerData.message.emit("Your ground target is not visible!", "system")
+	return null if hit.is_empty() else hit.position
+
+
+## The longest reach (m) of your ground-target spells (target "Area"); 0 = none known (no limit).
+func _gt_reach_m() -> float:
+	var now := Time.get_ticks_msec()
+	if now < _gt_reach_at:
+		return _gt_reach
+	_gt_reach_at = now + 3000
+	var best := 0
+	for line in Server.spell_lines:
+		for sp in (line.spells as Array):
+			if String(sp.get("kind", "spell")) != "spell":
+				continue
+			var s := ClassDb.spell(int(sp.get("id", 0)))
+			if s.is_empty() or String(s.get("name", "")) != String(sp.get("name", "")):
+				s = ClassDb.spell_by_name(String(sp.get("name", "")))
+			if String(s.get("target", "")) == "Area":
+				best = maxi(best, int(s.get("range", 0)))
+	_gt_reach = float(best) * 0.025
+	return _gt_reach
+
+
+func _gt_follow() -> void:
+	if not Keybinds.held("ground_target"):
+		_gt_release()
 		return
-	var r := Server.to_region((npcs as ServerWorld)._current_zone(), hit.position)
-	Server.client.call("GroundTarget", int(r.x), int(r.y), int(r.z), 0x100)
-	_server_gt = hit.position
-	show_ground_target(hit.position)
+	if Time.get_ticks_msec() - _gt_hold_at < GT_HOLD_MS or player == null:
+		return
+	var hit = _gt_ray(_gt_screen())
+	if hit == null:
+		return
+	var pos: Vector3 = hit
+	var reach := _gt_reach_m()
+	var flat := pos - player.global_position
+	flat.y = 0.0
+	if reach > 0.0 and flat.length() > reach:
+		var xz := player.global_position + flat.normalized() * reach
+		var q := PhysicsRayQueryParameters3D.create(Vector3(xz.x, xz.y + 60.0, xz.z), Vector3(xz.x, xz.y - 120.0, xz.z),
+				ZoneLoader.LAYER_FLOOR)
+		var down := get_world_3d().direct_space_state.intersect_ray(q)
+		pos = down.position if not down.is_empty() else Vector3(xz.x, pos.y, xz.z)
+	_gt_drag = pos
+	show_ground_target(pos)
 
 
-var _server_gt := Vector3.INF                    # your ground target on the server (for the position packets' flag)
+func _gt_release() -> void:
+	var held := Time.get_ticks_msec() - _gt_hold_at
+	_gt_hold_at = 0
+	if held >= GT_HOLD_MS and _gt_drag != Vector3.INF and Server.client:
+		_send_gt(_gt_drag)
 
 
 ## The ground target marker (pipeline/build_gtarget.py; owner 2026-10-14: "yellow and black with a black dot in the
@@ -1246,6 +1326,8 @@ func _watch_npc_windows() -> void:
 
 func _process_inner(delta: float) -> void:
 	_watch_npc_windows()
+	if _gt_hold_at > 0:
+		_gt_follow()
 	if sky and zone:                                       # (zone-only sun shadow splits: SkySystem.set_shadow_zone)
 		sky.set_shadow_zone(int(region.current.info.id) if region and region.current else int(zone.info.id))
 	if PlayerData.target.get("self", false):             # your own target: your health as it changes

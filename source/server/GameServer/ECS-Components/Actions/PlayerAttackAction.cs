@@ -1,4 +1,4 @@
-using DOL.Database;
+﻿using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Styles;
 using DOL.Language;
@@ -87,7 +87,10 @@ namespace DOL.GS
             // Action Combat: a plain swing lands for the share of the weapon's swing time since the last blow.
             _quickSwing = action is { Enabled: true } && _combatStyle == null;
 
-            if (_quickSwing)
+            // ... and so does a power attack (an anytime style goes about 1 s after the last blow: its share of the swing time)
+            bool powerAttack = action is { Enabled: true } && _combatStyle != null && ActionCombat.KindOf(_combatStyle) == "anytime";
+
+            if (_quickSwing || powerAttack)
                 _effectiveness *= ActionCombat.QuickDamageFor(ActionCombat.SinceLastSwing(_playerOwner), ActionCombat.FullSwingMs(_playerOwner));
 
             return base.PrepareMeleeAttack();
