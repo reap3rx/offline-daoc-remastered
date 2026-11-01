@@ -3,9 +3,14 @@
  *
  * Classic DAoC rules stay for everyone else - mobs, gamebots, companions, and any player who leaves it off.
  * With it on (/ac on, the Godot client's F9):
- *   - No auto-attack. Every swing is a click (/ac swing), gated by the weapon's own timer; one swing buffers.
- *   - Holding the attack button fires the best anytime style (/ac style anytime); the Position, Reactive and
- *     Chain buttons fire the best usable style of that kind. A reactive skips the swing timer.
+ *   - No auto-attack, and nothing queues (owner 2026-11-01): a click does something only if it can right now.
+ *     A plain swing (/ac swing) can come as soon as QuickMinMs after the last one - 0.75 s for the quickest weapons
+ *     to 1.75 s for the slowest - and lands for the share of its damage the weapon has recovered: full damage once
+ *     its whole classic swing time has passed, less before (damage per second is the classic game's either way).
+ *   - Styles want the whole swing time since the last blow (a reactive excepted: it answers its opening at once).
+ *     Their lights (and the held attack's glow) come on only when a press would fire one; a press while dark does
+ *     nothing. Holding the attack button and letting go fires the best anytime style (/ac style anytime); the
+ *     Position, Reactive and Chain buttons fire the best usable style of that kind.
  *   - Your swings never miss in range (no miss, no level fumble) and always whiff out of range. Monsters still
  *     evade, parry and block at random; if they turn aside one of your STYLES you stumble (double recovery).
  *   - Your own defense is timing, not dice (owner 2026-10-28): a parry press (/ac parry) opens a short window -
@@ -59,6 +64,8 @@ namespace DOL.GS
 		public AttackData SpentEnemyOpening;
 		public AttackData SpentOwnOpening;
 		public long FumbledUntil;
+		public long LastSwingAt = -100000;     // when your last blow (or whiff) went
+		public int LastSwingFullMs = 1;         // that weapon's whole swing time then (full damage, styles ready)
 		public string LastReady = "";
 		public long NextReadyCheck;
 		// Archery: a drawn shot (normal or critical), held until it is loosed.
@@ -94,8 +101,46 @@ namespace DOL.GS
 		public const int IdlePollMs = 50;          // how often an idle attack action checks for a click
 		public const double GuardFactor = 0.75;    // damage taken while holding guard
 		public const double GuardShieldFactor = 0.6;
-		public const double QuickSwingSpeed = 0.75;  // a plain swing recovers in 75% of the weapon's time ...
-		public const double QuickSwingDamage = 0.7;  // ... for 70% of its damage (a little less damage per second)
+		// A plain swing's soonest (owner 2026-11-01): 0.75 s for the quickest weapons (a 2.0 s swing time or less) to
+		// 1.75 s for the slowest (5.5 s and up), in between by the weapon's swing time now (quickness, haste in it).
+		public const int QuickMinFastMs = 750;
+		public const int QuickMinSlowMs = 1750;
+
+		public static int QuickMinMs(int fullMs) =>
+			Math.Clamp(QuickMinFastMs + (int) ((fullMs - 2000) * (QuickMinSlowMs - QuickMinFastMs) / 3500.0), QuickMinFastMs, QuickMinSlowMs);
+
+		/// <summary>The share of a plain swing's damage after this long since the last blow (full at the whole swing time).</summary>
+		public static double QuickDamageFor(long elapsedMs, int fullMs) =>
+			fullMs <= 0 ? 1.0 : Math.Clamp(elapsedMs / (double) fullMs, 0.0, 1.0);
+
+		/// <summary>The weapon's whole swing time now (ms).</summary>
+		public static int FullSwingMs(GamePlayer player) =>
+			Math.Max(1, player.attackComponent.AttackSpeed(player.ActiveWeapon, player.ActiveLeftWeapon));
+
+		public static long SinceLastSwing(GamePlayer player) => GameLoop.GameLoopTime - Get(player).LastSwingAt;
+
+		/// <summary>A plain swing could go now (its soonest time past, not stumbling).</summary>
+		public static bool SwingReady(GamePlayer player)
+		{
+			ActionCombatState state = Get(player);
+			return GameLoop.GameLoopTime >= state.FumbledUntil && SinceLastSwing(player) >= QuickMinMs(FullSwingMs(player));
+		}
+
+		/// <summary>The weapon has recovered fully: a style could go now (not stumbling).</summary>
+		public static bool Recovered(GamePlayer player)
+		{
+			ActionCombatState state = Get(player);
+			return GameLoop.GameLoopTime >= state.FumbledUntil && SinceLastSwing(player) >= Math.Min(state.LastSwingFullMs, FullSwingMs(player));
+		}
+
+		/// <summary>A blow (or a whiff) just went: the clocks for the next swing and the next style start now.</summary>
+		public static void MarkSwing(GamePlayer player, int fullMs)
+		{
+			ActionCombatState state = Get(player);
+			state.LastSwingAt = GameLoop.GameLoopTime;
+			state.LastSwingFullMs = Math.Max(1, fullMs);
+			Send(player, $"timer|{state.LastSwingFullMs}|{QuickMinMs(state.LastSwingFullMs)}");
+		}
 
 		public static bool IsActive(GameLiving living)
 		{
@@ -182,11 +227,18 @@ namespace DOL.GS
 		{
 			ActionCombatState state = Get(player);
 
+			// Too soon after the last blow: nothing (no queue - press again when it can go).
+			if (!SwingReady(player))
+				return;
+
 			if (!EnsureAttacking(player))
 				return;
 
 			state.Guarding = false;
 			state.SwingQueued = true;
+			player.styleComponent.NextCombatStyle = null;
+			player.styleComponent.NextCombatBackupStyle = null;
+			player.attackComponent.attackAction?.ExpediteMeleeTick();
 		}
 
 		/// <summary>"anytime", "position", "reactive" or "chain": queue the best usable style of that kind.</summary>
@@ -199,26 +251,29 @@ namespace DOL.GS
 			if (style == null && kind != "anytime")
 				return;
 
-			if (!EnsureAttacking(player))
-				return;
-
-			if (style == null)
+			// No anytime style ready (none known, or the weapon not recovered): the release is a plain swing if one
+			// can go now (the client sends the style only while its glow is on; this covers a race with the lights).
+			if (style == null || !StyleReady(player, kind))
 			{
-				state.Guarding = false;
-				state.SwingQueued = true;          // no anytime style known: a plain swing
+				if (kind == "anytime")
+					QueueSwing(player);
 				return;
 			}
+
+			if (!EnsureAttacking(player))
+				return;
 
 			state.Guarding = false;
 			state.SwingQueued = true;
 			player.styleComponent.NextCombatStyle = style;
 			player.styleComponent.NextCombatBackupStyle = null;
 			player.styleComponent.NextCombatStyleTime = GameLoop.GameLoopTime;
-
-			// A reaction is immediate: it doesn't wait for the swing timer (unless you're still stumbling).
-			if (kind == "reactive" && GameLoop.GameLoopTime >= state.FumbledUntil)
-				player.attackComponent.attackAction?.ExpediteMeleeTick();
+			player.attackComponent.attackAction?.ExpediteMeleeTick();   // it goes now - nothing waits
 		}
+
+		/// <summary>A style of this kind could go now: the weapon recovered (a reactive answers its opening at once).</summary>
+		public static bool StyleReady(GamePlayer player, string kind) =>
+			kind == "reactive" ? GameLoop.GameLoopTime >= Get(player).FumbledUntil : Recovered(player);
 
 		public static Style Resolve(GamePlayer player, string kind)
 		{
@@ -337,11 +392,12 @@ namespace DOL.GS
 			if (!force && now < state.NextReadyCheck)
 				return;
 
-			state.NextReadyCheck = now + 150;
+			state.NextReadyCheck = now + 100;
 			StringBuilder sb = new("ready|");
 
+			// lit only when a press would fire it right now (owner 2026-11-01: no queue - the light is the go)
 			foreach (string kind in new[] { "position", "reactive", "chain", "anytime" })
-				sb.Append(Resolve(player, kind) != null ? '1' : '0');
+				sb.Append(StyleReady(player, kind) && Resolve(player, kind) != null ? '1' : '0');
 
 			string ready = sb.ToString();
 			SendWindows(player);                  // (spec / level / realm abilities change them)
@@ -368,7 +424,7 @@ namespace DOL.GS
 		public static void OnStyleAvoided(GamePlayer player, AttackData ad)
 		{
 			ActionCombatState state = Get(player);
-			state.FumblePending = true;
+			state.FumblePending = true;                   // (PlayerAttackAction: the stumble - twice the swing time)
 			string how = ad.AttackResult switch
 			{
 				eAttackResult.Evaded => "dodges",

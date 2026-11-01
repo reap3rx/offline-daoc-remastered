@@ -2,8 +2,10 @@ extends Node
 ## Action Combat (owner 2026-10-26): an opt-in way to fight in melee on the server (game/../server ActionCombat.cs),
 ## for you only - monsters, gamebots and companions keep the classic rules, and F9 puts you back on them.
 ##   The mouse always looks and you face where you look (Alt held: the cursor, for the interface); A/D strafe.
-##   Attack (left mouse): tap = one quick swing (the weapon's timer paces it; one tap buffers). Hold past HOLD_S and
-##     let go = your best anytime style. With the weapon sheathed, the first tap only draws it.
+##   Attack (left mouse): tap = a plain swing - nothing queues (owner 2026-11-01): it goes if it can right now (0.75 s
+##     after the last for the quickest weapons, 1.75 s for the slowest), for the share of its damage the weapon has
+##     recovered (full at its whole swing time). Hold past HOLD_S while the weapon glows (an anytime style ready) and
+##     let go = your best anytime style, at once. With the weapon sheathed, the first tap only draws it.
 ##   Parry (right mouse): press = a timed parry (a block with a shield) - the window opens at the press: 0.2 s for a
 ##     parry, 0.15 s for a block, wider with skill (the server's numbers: "windows"). The parry / block plays at once
 ##     (half speed while it does); only a parry that catches a blow rings out.
@@ -51,6 +53,7 @@ var _dodge_ready_at := 0
 var _ready := "0000"
 var _timer_until := 0
 var _timer_len := 1
+var _quick_at := 0                       # when a plain swing can go again (the server's timer|full|soonest)
 var _windups: Array = []               # [{oid, start, end}]
 var _flash_text := ""
 var _flash_color := Color.WHITE
@@ -135,6 +138,7 @@ func on_line(text: String) -> void:
 			if f.size() > 1:
 				_timer_len = maxi(1, int(f[1]))
 				_timer_until = now + _timer_len
+				_quick_at = now + (int(f[2]) if f.size() > 2 else _timer_len)
 		"whiff":
 			_whiff()                                         # out of reach: the blow cuts air
 		"windows":                                       # windows|parry|block|dodge|cooldown (ActionCombat.SendWindows)
@@ -669,11 +673,16 @@ func _attack_down(now: int) -> void:
 func _attack_up(now: int) -> void:
 	_atk_down = false
 	_soft_target()
-	var heavy := now - _atk_at >= int(HOLD_S * 1000.0)
+	var heavy := now - _atk_at >= int(HOLD_S * 1000.0) and _anytime_ready()
 	if not _has_target():
 		_whiff()                                           # nothing there: a swing at the air, with its sound
 		return
 	Server.command("/ac style anytime" if heavy else "/ac swing")
+
+
+## An anytime style would fire now (its light from the server: known, usable, the weapon recovered).
+func _anytime_ready() -> bool:
+	return _ready.length() > 3 and _ready[3] == "1"
 
 
 func _held_dir() -> Vector3:
@@ -744,6 +753,7 @@ func _loose() -> void:
 	_shot_ready_at = Time.get_ticks_msec() + SHOT_DELAY_MS
 	_timer_len = SHOT_DELAY_MS                             # (the recovery arc under the crosshair)
 	_timer_until = _shot_ready_at
+	_quick_at = _shot_ready_at
 
 
 ## The draw over: loosed (the server's BowShoot plays the release) or lowered.
@@ -840,7 +850,7 @@ func _process(_delta: float) -> void:
 	if _drawing and not _ranged():
 		Server.command("/ac cancel")
 		_end_draw(false)
-	p.charge_glow(_atk_down and now - _atk_at >= int(HOLD_S * 1000.0))
+	p.charge_glow(_atk_down and now - _atk_at >= int(HOLD_S * 1000.0) and _anytime_ready())   # (no glow: nothing to fire)
 	p.shoulder = Vector2(cam_side, cam_up)
 	hud.queue_redraw()
 
@@ -1110,7 +1120,7 @@ func _draw_hud() -> void:
 		for d in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
 			hud.draw_line(c + d * 6.0, c + d * 12.0, cross, 1.5)
 	# a held attack charging toward the anytime style
-	if _show.get("charge", true) and _atk_down:
+	if _show.get("charge", true) and _atk_down and _anytime_ready():
 		var f := clampf((now - _atk_at) / (HOLD_S * 1000.0), 0.0, 1.0)
 		hud.draw_arc(c, 16.0, -PI * 0.5, -PI * 0.5 + TAU * f, 40,
 				Color(1.0, 0.82, 0.3) if f >= 1.0 else Color(1, 1, 1, 0.7), 2.5 if f >= 1.0 else 2.0)
@@ -1142,10 +1152,12 @@ func _draw_hud() -> void:
 			if dist > reach:
 				hud.draw_string(font, c + Vector2(-80, r + 36.0), "OUT OF RANGE  %d / %d" % [roundi(dist), roundi(reach)],
 						HORIZONTAL_ALIGNMENT_CENTER, 160.0, 11, Color(1.0, 0.4, 0.3, 0.95))
-	# the swing timer: the arc under the crosshair empties as your weapon recovers
+	# the swing timer: the arc under the crosshair empties as your weapon recovers - grey until a plain swing can go,
+	# then white (a swing now lands for part of its damage) until it's whole (full damage, styles ready)
 	if _show.get("timer", true) and now < _timer_until:
 		var r := float(_timer_until - now) / float(_timer_len)
-		hud.draw_arc(c, 24.0, PI * 0.5 - PI * 0.35 * r, PI * 0.5 + PI * 0.35 * r, 24, Color(1, 1, 1, 0.45), 2.0)
+		var col := Color(0.6, 0.6, 0.6, 0.35) if now < _quick_at else Color(1, 1, 1, 0.6)
+		hud.draw_arc(c, 24.0, PI * 0.5 - PI * 0.35 * r, PI * 0.5 + PI * 0.35 * r, 24, col, 2.0)
 	# monsters winding up a blow at you: a ring closing in on each of them (an arrow at the screen's edge when one is
 	# off screen or behind you) - gold while a parry would catch it
 	if _show.get("windup", true):

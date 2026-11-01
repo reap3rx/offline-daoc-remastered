@@ -36,6 +36,28 @@ public sealed class UT_ActionCombat
     }
 
     [Test]
+    public void QuickSwingSoonestByWeaponSpeed()
+    {
+        Assert.That(ActionCombat.QuickMinMs(1500), Is.EqualTo(750));       // quicker than a dagger: the floor
+        Assert.That(ActionCombat.QuickMinMs(2000), Is.EqualTo(750));
+        Assert.That(ActionCombat.QuickMinMs(5500), Is.EqualTo(1750));
+        Assert.That(ActionCombat.QuickMinMs(7000), Is.EqualTo(1750));      // the ceiling
+        Assert.That(ActionCombat.QuickMinMs(3750), Is.EqualTo(1250));      // halfway
+    }
+
+    [Test]
+    public void QuickSwingDamageRampsToFull()
+    {
+        Assert.That(ActionCombat.QuickDamageFor(1000, 4000), Is.EqualTo(0.25).Within(1e-9));
+        Assert.That(ActionCombat.QuickDamageFor(4000, 4000), Is.EqualTo(1.0).Within(1e-9));
+        Assert.That(ActionCombat.QuickDamageFor(9000, 4000), Is.EqualTo(1.0).Within(1e-9));   // never above full
+        // damage per second stays the classic one: a swing at the soonest does the same per second as a full one
+        int full = 3000;
+        int soon = ActionCombat.QuickMinMs(full);
+        Assert.That(ActionCombat.QuickDamageFor(soon, full) / soon, Is.EqualTo(1.0 / full).Within(1e-9));
+    }
+
+    [Test]
     public void ParrySpecReducesWhatGetsThrough()
     {
         Assert.That(ActionCombat.ParryFactorForSpec(0), Is.EqualTo(0.8).Within(1e-9));

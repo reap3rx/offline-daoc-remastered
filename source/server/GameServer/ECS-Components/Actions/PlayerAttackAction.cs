@@ -1,4 +1,4 @@
-﻿using DOL.Database;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Styles;
 using DOL.Language;
@@ -8,7 +8,7 @@ namespace DOL.GS
     public class PlayerAttackAction : AttackAction
     {
         private GamePlayer _playerOwner;
-        private bool _quickSwing;               // Action Combat: this round is a plain (faster, lighter) swing
+        private bool _quickSwing;               // Action Combat: this round is a plain swing (its damage by the time since the last)
         private Style _reactiveStyle;           // Action Combat: the reactive style this round uses ...
         private AttackData _reactiveOpening;    // ... and the opening it answers (spent once it lands)
 
@@ -84,11 +84,11 @@ namespace DOL.GS
                     _weapon = styleWeapon;
             }
 
-            // Action Combat: a plain swing is quicker and lighter than a styled one.
+            // Action Combat: a plain swing lands for the share of the weapon's swing time since the last blow.
             _quickSwing = action is { Enabled: true } && _combatStyle == null;
 
             if (_quickSwing)
-                _effectiveness *= ActionCombat.QuickSwingDamage;
+                _effectiveness *= ActionCombat.QuickDamageFor(ActionCombat.SinceLastSwing(_playerOwner), ActionCombat.FullSwingMs(_playerOwner));
 
             return base.PrepareMeleeAttack();
         }
@@ -135,28 +135,30 @@ namespace DOL.GS
                 StyleComponent.NextCombatStyle = null;
                 StyleComponent.NextCombatBackupStyle = null;
 
+                int full = AttackComponent.AttackSpeed(_weapon, _leftWeapon);
+
                 if (!attacked)
                 {
-                    _interval = AttackComponent.AttackSpeed(_weapon, _leftWeapon) / 2;   // a whiff still costs a moment
+                    ActionCombat.MarkSwing(_playerOwner, full / 2);                // a whiff still costs a moment
                     ActionCombat.Send(_playerOwner, "whiff");
-                    ActionCombat.Send(_playerOwner, "timer|" + _interval);
+                    _interval = ActionCombat.IdlePollMs;
                     return false;
                 }
 
                 if (_reactiveStyle != null)
                     ActionCombat.SpendOpening(_playerOwner, _reactiveStyle, _reactiveOpening);
 
-                if (_quickSwing)
-                    _interval = (int) (_interval * ActionCombat.QuickSwingSpeed);
+                ActionCombat.MarkSwing(_playerOwner, full);
 
                 if (action.FumblePending)
                 {
                     action.FumblePending = false;
-                    _interval *= 2;
-                    action.FumbledUntil = GameLoop.GameLoopTime + _interval;
+                    action.FumbledUntil = GameLoop.GameLoopTime + full * 2;
+                    ActionCombat.Send(_playerOwner, "timer|" + (full * 2) + "|" + (full * 2));
                 }
 
-                ActionCombat.Send(_playerOwner, "timer|" + _interval);
+                // the action only polls from here: the next click (QueueSwing / QueueStyle) brings its round forward
+                _interval = ActionCombat.IdlePollMs;
                 ActionCombat.PollReady(_playerOwner, true);
             }
 
