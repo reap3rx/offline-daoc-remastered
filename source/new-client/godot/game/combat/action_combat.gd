@@ -9,6 +9,10 @@ extends Node
 ##   Parry (right mouse): press = a timed parry (a block with a shield) - the window opens at the press: 0.2 s for a
 ##     parry, 0.15 s for a block, wider with skill (the server's numbers: "windows"). The parry / block plays at once
 ##     (half speed while it does); only a parry that catches a blow rings out.
+##   Lock On (Mouse4): tap = lock onto your target (or what you aim at) - you and the camera keep facing it until it
+##     dies or you tap again; hold and move the mouse left / right = the next target that way. The crosshair becomes
+##     four triangles closing in on it: green when all your spells (and the bow, with it out) reach it, yellow when
+##     some do, red when none do (melee doesn't count).
 ## Floating combat text: the damage you deal and take, over who took it (and what a parry / block saved).
 ##   Q / E / R: your best usable Position / Reactive / Chain style. A reactive answers one parry / block / dodge.
 ##   Dodge: double-tap a strafe / back direction (or the Dodge key) - the dodge animation and an evade window (0.1 s,
@@ -54,6 +58,18 @@ var _ready := "0000"
 var _timer_until := 0
 var _timer_len := 1
 var _quick_at := 0                       # when a plain swing can go again (the server's timer|full|soonest)
+# Lock on (owner 2026-11-01): the target you keep facing; the button held (cycling with the mouse)
+const LOCK_MAX_M := 60.0                 # it lets go past this
+const LOCK_CYCLE_PX := 90.0              # mouse travel (held) to the next target
+const LOCK_TAP_MS := 300
+var _lock: Npc = null
+var _lock_down := false
+var _lock_down_at := 0
+var _lock_moved := false                 # the hold cycled (so letting go doesn't unlock)
+var _lock_was := false                   # locked when the press began
+var _lock_acc := 0.0
+var _ranges: Array = []                  # your spells' reaches (DAoC units), refreshed now and then
+var _ranges_at := 0
 var _windups: Array = []               # [{oid, start, end}]
 var _flash_text := ""
 var _flash_color := Color.WHITE
@@ -436,6 +452,21 @@ func _input(event: InputEvent) -> void:
 		_set_editing(not _editing)
 		get_viewport().set_input_as_handled()
 		return
+	if not _editing and not p.action_cursor:
+		if Keybinds.matches(event, "ac_lock") and not event.is_echo():
+			if event.is_pressed():
+				_lock_press()
+			else:
+				_lock_release()
+			get_viewport().set_input_as_handled()
+			return
+		if _lock_down and event is InputEventMouseMotion:
+			_lock_acc += (event as InputEventMouseMotion).relative.x
+			if absf(_lock_acc) >= LOCK_CYCLE_PX:
+				_lock_cycle(1 if _lock_acc > 0.0 else -1)
+				_lock_acc = 0.0
+			get_viewport().set_input_as_handled()        # (the camera stays on the lock while you pick)
+			return
 	if _editing:
 		if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 			_set_editing(false)
@@ -771,6 +802,8 @@ func _end_draw(loosed: bool) -> void:
 
 ## Soft targeting: keep your target while you look at it; otherwise the monster nearest your aim, close by.
 func _soft_target() -> void:
+	if _locked():
+		return                                             # (locked on: that's your target)
 	var p := _player()
 	var npcs: NpcManager = viewer.npcs if viewer else null
 	if p == null or npcs == null or p.camera == null:
@@ -841,6 +874,7 @@ func _process(_delta: float) -> void:
 			_marks.erase(oid)
 		elif int((m as Label3D).get_meta("until", 0)) < now:
 			(m as Label3D).visible = false
+	_lock_tick(p, _delta)
 	_reticle_tick(p, now)
 	if _draw_pending != "" and now >= _shot_ready_at:
 		var pend := _draw_pending
@@ -890,6 +924,9 @@ func quiet_sprint_line(text: String) -> bool:
 ## target (at once when you have none) - so spells, pet commands and ranged attacks follow your aim; looking away
 ## at nothing keeps the target you had.
 func _reticle_tick(p: Player, now: int) -> void:
+	if _locked():
+		_aim = _lock
+		return
 	if now < _aim_check_at:
 		return
 	_aim_check_at = now + 80
@@ -937,6 +974,189 @@ func _hostile(n: Npc) -> bool:
 	var flags := int(n.spawn.get("flags", 0))
 	return n.state.alive and not n.state.stealthed and (realm == 0 or realm != PlayerData.realm_id()) \
 			and not (flags & Npc.FLAG_CANTTARGET) and not (flags & Npc.FLAG_PEACE)
+
+
+# ---------------------------------------------------------------- lock on
+
+func _locked() -> bool:
+	if _lock == null:
+		return false
+	if not is_instance_valid(_lock) or not _lock.state.alive or not _lock.is_inside_tree():
+		_lock = null
+		return false
+	return true
+
+
+func _lock_press() -> void:
+	_lock_down = true
+	_lock_down_at = Time.get_ticks_msec()
+	_lock_moved = false
+	_lock_acc = 0.0
+	_lock_was = _locked()
+	if not _lock_was:
+		var npcs: NpcManager = viewer.npcs if viewer else null
+		var cur = npcs.target if npcs else null
+		var pick: Npc = _aim if is_instance_valid(_aim) else null
+		if pick == null and is_instance_valid(cur) and cur is Npc and _hostile(cur as Npc):
+			pick = cur as Npc
+		if pick == null:
+			pick = _lock_candidates(_player()).front() if not _lock_candidates(_player()).is_empty() else null
+		if pick:
+			_set_lock(pick)
+
+
+func _lock_release() -> void:
+	_lock_down = false
+	# a tap on a lock you already had lets go of it; a hold that picked another target keeps the new one
+	if _lock_was and not _lock_moved and Time.get_ticks_msec() - _lock_down_at <= LOCK_TAP_MS * 3:
+		_lock = null
+
+
+func _set_lock(n: Npc) -> void:
+	_lock = n
+	_select_quiet(n)
+
+
+## The targets worth locking: hostile, alive, within LOCK_MAX_M and in front of the camera - sorted nearest the middle.
+func _lock_candidates(p: Player) -> Array:
+	var out: Array = []
+	var npcs: NpcManager = viewer.npcs if viewer else null
+	if p == null or npcs == null or p.camera == null:
+		return out
+	var cam := p.camera
+	var mid := get_viewport().get_visible_rect().size * 0.5
+	for i in npcs.active:
+		var n: Npc = npcs.active[i]
+		if not is_instance_valid(n) or not _hostile(n):
+			continue
+		var at := n.global_position + Vector3(0, n.height * 0.6, 0)
+		if at.distance_to(p.global_position) > LOCK_MAX_M or cam.is_position_behind(at):
+			continue
+		out.append(n)
+	out.sort_custom(func(a, b): return cam.unproject_position(a.global_position).distance_to(mid) \
+			< cam.unproject_position(b.global_position).distance_to(mid))
+	return out
+
+
+## Held + the mouse moved: the next target that way across the screen (wrapping round).
+func _lock_cycle(dir: int) -> void:
+	var p := _player()
+	var c := _lock_candidates(p)
+	if c.is_empty():
+		return
+	_lock_moved = true
+	var cam := p.camera
+	c.sort_custom(func(a, b): return cam.unproject_position(a.global_position).x < cam.unproject_position(b.global_position).x)
+	var i := c.find(_lock) if _locked() else -1
+	if i < 0:
+		_set_lock(c[0])
+		return
+	_set_lock(c[(i + dir + c.size()) % c.size()])
+
+
+## Locked on: you and the camera turn to it (smoothly); it lets go when it dies or gets too far.
+func _lock_tick(p: Player, delta: float) -> void:
+	if not _locked():
+		return
+	if _lock.global_position.distance_to(p.global_position) > LOCK_MAX_M:
+		_lock = null
+		return
+	var npcs: NpcManager = viewer.npcs if viewer else null
+	if npcs and npcs.target != _lock:
+		if is_instance_valid(npcs.target) and npcs.target != _lock and npcs.target is Npc:
+			_lock = npcs.target as Npc                     # (you picked another target by hand: the lock moves to it)
+		else:
+			_select_quiet(_lock)
+	if p.camera == null:
+		return
+	var fwd := -p.camera.global_basis.z
+	fwd.y = 0.0
+	var to := _lock.global_position - p.global_position
+	to.y = 0.0
+	if fwd.length() < 0.01 or to.length() < 0.3:
+		return
+	var a := fwd.normalized().signed_angle_to(to.normalized(), Vector3.UP)
+	p.cam_yaw += a * minf(1.0, delta * 10.0)
+
+
+## Your spells' reaches (and nothing for melee): from the server's spell list (or the class data offline).
+func _spell_ranges() -> Array:
+	var now := Time.get_ticks_msec()
+	if now < _ranges_at:
+		return _ranges
+	_ranges_at = now + 3000
+	var seen := {}
+	if Server.active:
+		for line in Server.spell_lines:
+			for sp in (line.spells as Array):
+				var r := _spell_range(sp as Dictionary)
+				if r > 0:
+					seen[r] = true
+	else:
+		for line in ClassDb.spell_lines(PlayerData.class_id(), PlayerData.level, PlayerData.specs):
+			for sid in line.spells:
+				var r := int(ClassDb.spell(int(sid)).get("range", 0))
+				if r > 0:
+					seen[r] = true
+	_ranges = seen.keys()
+	return _ranges
+
+
+static var _range_by_name := {}
+
+
+static func _spell_range(sp: Dictionary) -> int:
+	var nm := String(sp.get("name", ""))
+	var s := ClassDb.spell(int(sp.get("id", 0)))
+	if not s.is_empty() and String(s.get("name", "")) == nm:
+		return int(s.get("range", 0))
+	if _range_by_name.is_empty():
+		for k in ClassDb._spells:
+			var o: Dictionary = ClassDb._spells[k]
+			var n := String(o.get("name", ""))
+			if n != "" and not _range_by_name.has(n):
+				_range_by_name[n] = int(o.get("range", 0))
+	return int(_range_by_name.get(nm, 0))
+
+
+## The lock's colour: green when every reach you have (spells; the bow too when it's out) gets there, yellow when some
+## do, red when none do; white when you have none to measure.
+func _lock_color(p: Player) -> Color:
+	var reaches: Array = _spell_ranges().duplicate()
+	if _ranged():
+		reaches.append(_draw_reach if _draw_reach > 0 else 1500)
+	if reaches.is_empty():
+		return Color(1, 1, 1)
+	var dist := _lock.global_position.distance_to(p.global_position) / 0.025
+	var n := 0
+	for r in reaches:
+		if dist <= float(r):
+			n += 1
+	if n == reaches.size():
+		return Color(0.35, 1.0, 0.4)
+	if n == 0:
+		return Color(1.0, 0.3, 0.25)
+	return Color(1.0, 0.85, 0.25)
+
+
+## The lock reticle: the crosshair grown four times over, its four lines now small see-through triangles pointing in at
+## the target, breathing in and out.
+func _draw_lock(p: Player, now: int) -> void:
+	if p.camera == null:
+		return
+	var at := _lock.global_position + Vector3(0, _lock.height * 0.6, 0)
+	if p.camera.is_position_behind(at):
+		return
+	var c := p.camera.unproject_position(at)
+	var col := _lock_color(p)
+	col.a = 0.6
+	var r := 34.0 + 5.0 * sin(now * 0.006)
+	for d in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
+		var side := Vector2(-d.y, d.x)
+		var tip: Vector2 = c + d * (r - 11.0)
+		var base: Vector2 = c + d * (r + 5.0)
+		hud.draw_colored_polygon(PackedVector2Array([tip, base + side * 7.0, base - side * 7.0]), col)
+	hud.draw_circle(c, 1.6, Color(col.r, col.g, col.b, 0.9))
 
 
 ## Target without the "You target [x]" chat line (the reticle changes targets often).
@@ -1114,7 +1334,9 @@ func _draw_hud() -> void:
 	var now := Time.get_ticks_msec()
 	var c := hud.size * 0.5
 	var font := ThemeDB.fallback_font
-	if _show.get("crosshair", true) and (not p.action_cursor or _editing):
+	if _locked() and not _editing:
+		_draw_lock(p, now)
+	elif _show.get("crosshair", true) and (not p.action_cursor or _editing):
 		var cross := Color(1.0, 0.35, 0.3, 0.95) if is_instance_valid(_aim) else Color(1, 1, 1, 0.85)
 		hud.draw_circle(c, 1.6, cross)
 		for d in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
