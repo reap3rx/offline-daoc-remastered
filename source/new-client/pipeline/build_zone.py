@@ -350,6 +350,10 @@ CITY_ORIGIN = {209: (23808, 23808, 8000), 26: (23808, 23808, 8000), 50: (23808, 
 # the old DB's 296 NPC positions (288 within 8 units of a floor at 23808, 23808, 16000; the exit box sits at 16000).
 # The same origin as the cities' X / Y. Other dungeons: check with the fit (scratch dungeon_fit.py) when built.
 DUNGEON_ORIGIN = (23808, 23808, 16000)
+# Catacombs "sky city" zones (dat<id>.mpk skycity.chunk / skycity.place: the Underground Forests, Deadlands, Frontlines,
+# Otherworld, Aerus) are the dungeon layout under another name, in the same frame: Hibernia's Underground Forest (96)
+# fitted to the public DB's 1201 NPC positions at region (32000, 32000, 16000) = DUNGEON_ORIGIN in its zone (offset
+# 1, 1 blocks) - 1104 NPCs within 40 units of a floor (scratch skycity_fit.py, 2026-11-01).
 
 
 def _axis_angle(angle, ax):
@@ -365,9 +369,41 @@ def _axis_angle(angle, ax):
                      [z * x * C - y * s_, z * y * C + x * s_, c + z * z * C]])
 
 
-def build_dungeon(zone_id, upscale, zdir, out, dat, sector):
+def _dungeon_piece(base, v, files, mdir, index, models, placements, tex_names, conv, turn, origin):
+    """One dungeon.place line (v) for one piece or collision patch: converted once, then placed in the frame."""
+    if base not in index:
+        src = files.get(base + '.npk')
+        if src is None:
+            print('missing dungeon piece', base)
+            index[base] = None
+            return
+        raw = next(x for k, x in read_mpk(str(src)).items() if k.endswith('.nif'))
+        try:
+            info = nif_static.convert(raw, str(mdir / f'{base}.gltf'), '../textures/original')
+        except Exception as e:
+            print('dungeon piece failed', base, type(e).__name__, e)
+            index[base] = None
+            return
+        tex_names |= info['textures']
+        index[base] = len(models)
+        models.append({'nif': base, 'name': base, 'file': f'models/{base}.gltf', 'triangles': info['triangles'],
+                       'collision_triangles': info['collision_triangles'],
+                       'warnings': [f'{base}: {w}' for w in info['warnings']]})
+    if index[base] is None:
+        return
+    # the angle turns the other way round (NetImmerse's row-vector rotations): with -angle 288 of the 296 NPCs
+    # stand within 8 units of a floor, with +angle only 192
+    R = turn @ conv @ _axis_angle(-v[4], v[5:8]) @ conv.T
+    pos = turn @ (conv @ np.array(v[1:4]) * M) + origin
+    placements.append({'m': index[base], 'name': base, 'pos': [round(float(x), 4) for x in pos],
+                       'basis': [round(float(x), 6) for x in R.T.reshape(-1)],     # columns x, y, z
+                       'yaw': 0.0, 'scale': 1.0, 'collide': True, 'id': len(placements)})
+
+
+def build_dungeon(zone_id, upscale, zdir, out, dat, sector, patches=False):
     """A dungeon: its pieces placed by dungeon.place in the dungeon frame (see DUNGEON_ORIGIN). Each placement is a
-    fixture with a full basis (a few pieces carry tiny tilts)."""
+    fixture with a full basis (a few pieces carry tiny tilts). patches: each piece's <name>_pNN.npk collision patches
+    (extra wall geometry, like the cities' chunks) go in with it."""
     ox, oy, oz = DUNGEON_ORIGIN
     files = {p.name.lower(): p for p in (CLIENT / 'zones/Dnifs').iterdir()}
     mdir = out / 'models'
@@ -386,33 +422,10 @@ def build_dungeon(zone_id, upscale, zdir, out, dat, sector):
         if ci >= len(chunks):
             continue
         base = chunks[ci].rsplit('.', 1)[0].lower()
-        if base not in index:
-            src = files.get(base + '.npk')
-            if src is None:
-                print('missing dungeon piece', base)
-                index[base] = None
-                continue
-            raw = next(x for k, x in read_mpk(str(src)).items() if k.endswith('.nif'))
-            try:
-                info = nif_static.convert(raw, str(mdir / f'{base}.gltf'), '../textures/original')
-            except Exception as e:
-                print('dungeon piece failed', base, type(e).__name__, e)
-                index[base] = None
-                continue
-            tex_names |= info['textures']
-            index[base] = len(models)
-            models.append({'nif': base, 'name': base, 'file': f'models/{base}.gltf', 'triangles': info['triangles'],
-                           'collision_triangles': info['collision_triangles'],
-                           'warnings': [f'{base}: {w}' for w in info['warnings']]})
-        if index[base] is None:
-            continue
-        # the angle turns the other way round (NetImmerse's row-vector rotations): with -angle 288 of the 296 NPCs
-        # stand within 8 units of a floor, with +angle only 192
-        R = turn @ conv @ _axis_angle(-v[4], v[5:8]) @ conv.T
-        pos = turn @ (conv @ np.array(v[1:4]) * M) + origin
-        placements.append({'m': index[base], 'name': base, 'pos': [round(float(x), 4) for x in pos],
-                           'basis': [round(float(x), 6) for x in R.T.reshape(-1)],     # columns x, y, z
-                           'yaw': 0.0, 'scale': 1.0, 'collide': True, 'id': len(placements)})
+        parts = [base] + (sorted(n[:-4] for n in files if n.startswith(base + '_p') and n.endswith('.npk')
+                                 and n[len(base) + 2:-4].isdigit()) if patches else [])
+        for part in parts:
+            _dungeon_piece(part, v, files, mdir, index, models, placements, tex_names, conv, turn, origin)
     lights = zone_lights(dat)
     exits = zone_exits(dat)
     idx = TextureIndex()
@@ -743,7 +756,12 @@ def entrance_spots(zone_id):
 
 
 def dungeon_fog(sector):
-    """sector.dat [fog]: colour, clip (units -> m), amount (0-100)."""
+    """sector.dat [fog]: colour, clip (units -> m), amount (0-100). The Catacombs underground forests' [forest] section
+    (dark teal, clip 8000, fog 50 over a rect covering the whole zone) is the fog the client draws there instead."""
+    if sector.has_section('forest'):
+        return {'color': [sector.getint('forest', c, fallback=0) / 255.0 for c in ('red', 'green', 'blue')],
+                'clip_m': sector.getfloat('forest', 'clip', fallback=8000) * M,
+                'amount': sector.getint('forest', 'fog', fallback=50)}
     return {'color': [sector.getint('fog', c, fallback=0) / 255.0 for c in ('red', 'green', 'blue')],
             'clip_m': sector.getfloat('fog', 'clip', fallback=16000) * M, 'amount': sector.getint('fog', 'amount', fallback=0)}
 
@@ -785,6 +803,9 @@ def build(zone_id, upscale=True):
         return build_city(zone_id, upscale, zdir, out, dat, sector)
     if 'dungeon.place' in dat:
         return build_dungeon(zone_id, upscale, zdir, out, dat, sector)
+    if 'skycity.place' in dat:
+        dat['dungeon.chunk'], dat['dungeon.place'] = dat['skycity.chunk'], dat['skycity.place']
+        return build_dungeon(zone_id, upscale, zdir, out, dat, sector, patches=True)
 
     # terrain
     h = heights(dat, sector)

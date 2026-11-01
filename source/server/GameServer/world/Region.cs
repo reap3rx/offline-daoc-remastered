@@ -241,15 +241,37 @@ namespace DOL.GS
                 }
             }
 
+            // disabled_expansions holds client expansion ids (eClientExpansion: 3 = Trials of Atlantis, 4 = Catacombs,
+            // 5 = Darkness Rising), which is the region's Expansion property (database value + 1). The raw database
+            // value was compared here before (2026-11-01), which left Atlantis open and closed Catacombs / DR one early.
+            bool expansionDisabled = false;
             list = Util.SplitCSV(ServerProperties.Properties.DISABLED_EXPANSIONS, true);
             foreach (string expansion in list)
             {
-                if (expansion.ToString() == m_regionData.Expansion.ToString())
+                if (expansion.ToString() == Expansion.ToString())
                 {
-                    m_isDisabled = true;
+                    expansionDisabled = true;
                     break;
                 }
             }
+
+            // enabled_regions: single regions of a disabled expansion opened one at a time as their zones are built for
+            // the new client (the Catacombs pilot, 2026-11-01: 96 = Hibernia's Underground Forest); disabled_regions
+            // still wins
+            if (expansionDisabled)
+            {
+                foreach (string region in Util.SplitCSV(ServerProperties.Properties.ENABLED_REGIONS, true))
+                {
+                    if (region.ToString() == ID.ToString())
+                    {
+                        expansionDisabled = false;
+                        break;
+                    }
+                }
+            }
+
+            if (expansionDisabled)
+                m_isDisabled = true;
         }
 
 

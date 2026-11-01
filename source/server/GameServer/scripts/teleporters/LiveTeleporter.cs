@@ -141,7 +141,8 @@ namespace DOL.GS.Scripts
                               "[Domnann] Grove in the [Shrouded Isles],\n" +
                               "[Tir na Nog] our glorious capital,\n" +
                               "[Entrance] to the areas of [Housing]\n\n" +
-                              "or one of the many [towns] throughout Hibernia.";
+                              "or one of the many [towns] throughout Hibernia.\n\n" +
+                              "Beneath the land lies the [Underground Forest] of the Catacombs.";
                     break;
 
                 default:

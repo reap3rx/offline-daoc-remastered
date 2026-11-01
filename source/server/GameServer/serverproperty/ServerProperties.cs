@@ -620,6 +620,12 @@ namespace DOL.GS.ServerProperties
 		public static string DISABLED_REGIONS = string.Empty;
 
 		/// <summary>
+		/// Regions to open although their expansion is disabled (disabled_regions still wins)
+		/// </summary>
+		[ServerProperty("world", "enabled_regions", "Serialized list of region IDs to open although their expansion is in disabled_expansions, separated by semi-colon or a range with a dash (ie 96;97)", "")]
+		public static string ENABLED_REGIONS = string.Empty;
+
+		/// <summary>
 		/// Should the server disable the tutorial zone
 		/// </summary>
 		[ServerProperty("world", "disable_tutorial", "should the server disable the tutorial zone", false)]
