@@ -5,7 +5,27 @@ extends RefCounted
 
 
 ## One NetImmerse particle system (nif_static.particle_systems spec) as GPU particles at `at`.
+## Always made on the main thread (owner 2026-11-01: the game crashed loading Mongfar - his spells' effects, prefetched
+## at login on several workers while the zones' fires were built on others, made particle materials at once and
+## corrupted the engine's lists: "~List size_cache" in here, then gone). A worker hands it over and waits its turn.
 static func build(spec: Dictionary, at: Transform3D, far: float, materials: NifMaterials) -> GPUParticles3D:
+	if OS.get_thread_caller_id() == OS.get_main_thread_id():
+		return _build(spec, at, far, materials)
+	var out := []
+	var done := Semaphore.new()
+	(func():
+		out.append(NifParticles._build(spec, at, far, materials))
+		done.post()).call_deferred()
+	var waited := 0
+	while not done.try_wait():
+		OS.delay_msec(2)
+		waited += 2
+		if waited > 10000:                                  # (the main loop has stopped - quitting): no particles
+			return GPUParticles3D.new()
+	return out[0]
+
+
+static func _build(spec: Dictionary, at: Transform3D, far: float, materials: NifMaterials) -> GPUParticles3D:
 	var e: Dictionary = spec.emitter
 	var b: Array = e.basis
 	var emitter := Transform3D(Basis(Vector3(b[0][0], b[1][0], b[2][0]), Vector3(b[0][1], b[1][1], b[2][1]),
