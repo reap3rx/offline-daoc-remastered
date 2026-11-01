@@ -452,7 +452,10 @@ func _apply_armor() -> void:
 		var default_v := int(clothes.get(slot, {}).get("variant", 1))
 		var want: Array = parts.get(slot, [])
 		var v := int(want[0]) if want.size() > 0 else default_v
-		if not (variants.get(slot, []) as Array).has(v):
+		# (as whole numbers: figure.json's lists parse as floats, and has(5) never matched 5.0 - every armour piece
+		# fell back to the starter clothes' mesh, no pauldrons on any armour; owner 2026-11-01)
+		var have: Array = (variants.get(slot, []) as Array).map(func(x): return int(x))
+		if not have.has(v):
 			v = default_v                                    # this race lacks that mesh: keep the default shape
 		for k in (variants.get(slot, []) as Array):
 			var node: String = slot if int(k) == default_v else "%s_v%d" % [slot, int(k)]
@@ -502,13 +505,14 @@ func _skin() -> Color:
 ## own plaid - the Catacombs armour sets carry no lower-body texture (pskins "Cata Chain" etc.), so the client keeps
 ## the kilt texture. Showing every kilt variant at once gave white, half-plaid skirts (owner 2026-10-10).
 func _apply_kilt() -> void:
-	var kilts: Array = meta.get("variants", {}).get("lbody", [])
+	var kilts: Array = (meta.get("variants", {}).get("lbody", []) as Array).map(func(x): return int(x))
 	var kilt: Dictionary = meta.get("clothes", {}).get("lbody", {})
 	if kilts.is_empty() or kilt.is_empty():
 		return
 	var body_default := int(meta.get("clothes", {}).get("body", {}).get("variant", 1))
 	var want: Array = armor.get("body", [])
-	var bv := int(want[0]) if want.size() > 0 and (meta.get("variants", {}).get("body", []) as Array).has(int(want[0])) else body_default
+	var bodies: Array = (meta.get("variants", {}).get("body", []) as Array).map(func(x): return int(x))
+	var bv := int(want[0]) if want.size() > 0 and bodies.has(int(want[0])) else body_default
 	var kilt_default := int(kilt.get("variant", 1))
 	var kv := bv if kilts.has(bv) else kilt_default
 	var m := _material(false)
