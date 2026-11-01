@@ -971,7 +971,7 @@ func on_spell_line(d: Dictionary) -> void:
 			for sp in (line.spells as Array):
 				var ce := _own_effect(sp as Dictionary)
 				if ce > 0:
-					SpellFx.prefetch(ce)
+					SpellFx.prefetch(ce, false)                 # (behind anything being cast now)
 		skills_changed.emit()
 		return
 	if int(d.line) == 0:

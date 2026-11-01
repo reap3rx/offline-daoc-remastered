@@ -42,6 +42,7 @@ const KNOBS := [
 	["wet", "Wet ground in the rain", 0.0, 1.5, 1.0],
 	["LIFE IN THE AIR / NIGHT SKY"],
 	["fireflies", "Fireflies on clear nights", 0.0, 1.0, 1.0],
+	["fairy", "Hibernian fairies (chance)", 0.0, 3.0, 1.0],
 	["leaves", "Falling leaves", 0.0, 1.0, 1.0],
 	["snow", "Snow in snow-zone storms", 0.0, 1.0, 1.0],
 	["dust", "Dust in dungeons", 0.0, 1.0, 1.0],

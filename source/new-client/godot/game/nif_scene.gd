@@ -111,7 +111,8 @@ static func loading(gltf_path: String) -> bool:
 	return _loading.has(gltf_path)
 
 
-static func prefetch(gltf_path: String) -> void:
+## urgent: wanted now (a spell being cast) - ahead of the background ones (your spell list's, loaded at login).
+static func prefetch(gltf_path: String, urgent := false) -> void:
 	if gltf_path == "" or _packed.has(gltf_path) or _loading.has(gltf_path):
 		return
 	_loading[gltf_path] = true
@@ -119,7 +120,7 @@ static func prefetch(gltf_path: String) -> void:
 		var ps := NifScene.pack_copy(gltf_path)
 		(func():
 			NifScene._packed[gltf_path] = ps
-			NifScene._loading.erase(gltf_path)).call_deferred())
+			NifScene._loading.erase(gltf_path)).call_deferred(), urgent)
 
 
 static func copy_of(gltf_path: String) -> NifScene:

@@ -52,7 +52,7 @@ static func _instance(path: String) -> NifScene:
 			(p as NifScene).restart()
 			return p
 	if not NifScene.is_loaded(path):                   # never loaded: a worker loads it - nothing now (see _play)
-		NifScene.prefetch(path)
+		NifScene.prefetch(path, true)
 		return null
 	var c := NifScene.copy_of(path)
 	if c == null:
@@ -110,7 +110,7 @@ static func _live_count() -> int:
 ## when a crowd started casting). Returns how many effect models were made ready.
 ## A spell's effect files loading in the background as its cast begins (the cast time is their head start): its
 ## gathering glows, cast effects, bolt, hit and resist.
-static func prefetch(client_effect: int) -> void:
+static func prefetch(client_effect: int, urgent := true) -> void:
 	var e := effect(client_effect)
 	if e.is_empty():
 		return
@@ -122,7 +122,7 @@ static func prefetch(client_effect: int) -> void:
 	for id in ids:
 		var f: Dictionary = fx.get(str(id), {})
 		if not f.is_empty():
-			NifScene.prefetch(String(f.nif))
+			NifScene.prefetch(String(f.nif), urgent)
 
 
 static func preload_effects(client_effects: Array) -> int:
@@ -197,6 +197,30 @@ static func size_of(on: Node3D) -> float:
 	return float(_heights[key]) * absf(model.scale.y) / STANDARD_HEIGHT
 
 
+## Where a bolt leaves its caster (owner 2026-10-31: bolts didn't come out at the right height for every race - a
+## fixed 1.3 m): between the casting hands when the figure has them, else 70% of its height (size_of x 1.85 m).
+static func launch_point(caster: Node3D) -> Vector3:
+	var sk := _skeleton(caster)
+	if sk:
+		var pts: Array[Vector3] = []
+		for b in ["Bip01 R Hand", "Bip01 L Hand"]:
+			var i := sk.find_bone(b)
+			if i >= 0:
+				pts.append(sk.global_transform * sk.get_bone_global_pose(i).origin)
+		if pts.size() == 2:
+			return (pts[0] + pts[1]) * 0.5
+		if pts.size() == 1:
+			return pts[0]
+	return caster.global_position + Vector3(0, STANDARD_HEIGHT * 0.7 * size_of(caster), 0)
+
+
+## Where a bolt meets its target: its chest - 60% of its height.
+static func aim_point(target: Node3D) -> Vector3:
+	var h = target.get("height")
+	var height: float = float(h) if h != null and float(h) > 0.0 else STANDARD_HEIGHT * size_of(target)
+	return target.global_position + Vector3(0, height * 0.6, 0)
+
+
 ## Keeps a tracking effect turned toward its target (speffects Track Angle) while its bone moves.
 class _Track extends Node:
 	var fx: Node3D
@@ -265,7 +289,16 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 			return null
 	var node: Node3D = _instance(String(f.nif))
 	if node == null:
-		if not keep and NifScene.loading(String(f.nif)):
+		if NifScene.loading(String(f.nif)):
+			if keep:
+				# a held effect (the casting hands' glow) still loading: a stand-in the caller holds and drops as usual;
+				# the glow goes into it once its files are in (owner 2026-10-31: the first spell after loading in
+				# showed no art - its files were still loading when it was cast)
+				var stand := Node3D.new()
+				stand.name = "FxPending"
+				on.add_child(stand)
+				_fill_when_loaded(stand, fx_id, on, height, target, String(f.nif))
+				return stand
 			_play_when_loaded(fx_id, on, height, target, String(f.nif))   # a moment late, not a frozen frame
 		return null
 	_live[node.get_instance_id()] = node
@@ -314,6 +347,24 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 	else:
 		FxLight.attach(fx, 1.4, 4.5 * clampf(lk, 0.5, 2.0))   # a held glow (the caster's hands while gathering)
 	return node
+
+
+## A held effect's stand-in (see _play): once the files are in (up to 5 s), the effect plays held on the character,
+## released with the stand-in when the caller drops it.
+static func _fill_when_loaded(stand: Node3D, fx_id: int, on: Node3D, height: float, target: Node3D, path: String) -> void:
+	var tree := on.get_tree()
+	var until := Time.get_ticks_msec() + 5000
+	while NifScene.loading(path) and Time.get_ticks_msec() < until:
+		await tree.process_frame
+	if not is_instance_valid(stand) or not stand.is_inside_tree() or not is_instance_valid(on):
+		return
+	var n := _play(fx_id, on, height, true, target if is_instance_valid(target) else null)
+	if n == null:
+		return
+	if not is_instance_valid(stand) or not stand.is_inside_tree():
+		release(n)
+		return
+	stand.tree_exiting.connect(func(): release(n), CONNECT_ONE_SHOT)
 
 
 ## An effect whose files were still loading: played once they are in (up to 3 s), if its character is still there.
@@ -419,10 +470,18 @@ static func fire(client_effect: int, handles: Array, caster: Node3D, snd: Charac
 	if pid > 0 and target and is_instance_valid(target) and caster.is_inside_tree():
 		var f: Dictionary = (data().get("fx", {}) as Dictionary).get(str(pid), {})
 		var bolt: Node3D = _instance(String(f.get("nif", ""))) if not f.is_empty() else null
+		if bolt == null and not f.is_empty() and NifScene.loading(String(f.nif)):
+			# the bolt's files still loading (the first cast after loading in): it flies once they are in, up to 1.5 s
+			var tree := caster.get_tree()
+			var until := Time.get_ticks_msec() + 1500
+			while NifScene.loading(String(f.nif)) and Time.get_ticks_msec() < until:
+				await tree.process_frame
+			if is_instance_valid(caster) and caster.is_inside_tree() and is_instance_valid(target):
+				bolt = _instance(String(f.nif))
 		if bolt:
 			caster.get_tree().current_scene.add_child(bolt)
-			var from := caster.global_position + Vector3(0, 1.3, 0)
-			var to := target.global_position + Vector3(0, 1.1, 0)
+			var from := launch_point(caster)
+			var to := aim_point(target)
 			bolt.global_position = from
 			bolt.look_at(to, Vector3.UP, true) if from.distance_to(to) > 0.01 else null
 			var secs := from.distance_to(to) / BOLT_SPEED_M

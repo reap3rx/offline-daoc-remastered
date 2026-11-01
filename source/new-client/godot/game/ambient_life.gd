@@ -1,5 +1,6 @@
 extends Node3D
-## Life in the air (owner 2026-10-31, the remastered look only): fireflies over the grass on clear nights, leaves
+## Life in the air (owner 2026-10-31, the remastered look only): fireflies over the grass on clear nights (each its
+## own little light - firefly_lights.gd; in Hibernia now and then a fairy among them), leaves
 ## drifting down from the broadleaf trees around you (more in the wind), snow instead of rain in the snowy zones'
 ## storms, and dust motes hanging in the air underground, glinting where a torch lights them. All GPU particles round
 ## the player, left in the world as you move (they don't follow you about). SkySystem owns it and calls tick().
@@ -8,7 +9,8 @@ extends Node3D
 ## mostly snow - content/zones/*/zone.json), Gripklosa and the Tuscaran Glacier in Aegirhamn.
 const SNOW_ZONES := [12, 102, 108, 111, 112, 113, 115, 152, 160]
 
-var fireflies: GPUParticles3D
+const FlyLights := preload("res://game/firefly_lights.gd")
+var fireflies: FlyLights
 var leaves: GPUParticles3D
 var snow: GPUParticles3D
 var dust: GPUParticles3D
@@ -22,26 +24,26 @@ static func snowy(zone_id: int) -> bool:
 
 
 func _ready() -> void:
-	fireflies = _fireflies()
+	fireflies = FlyLights.new()
+	fireflies.name = "Fireflies"
+	add_child(fireflies)
 	leaves = _leaves()
 	snow = _snow()
 	dust = _dust()
-	for p in [fireflies, leaves, snow, dust]:
+	for p in [leaves, snow, dust]:
 		p.emitting = false
 		add_child(p)
 
 
 ## Every frame: where you are, the hour, the weather. tune: SkySystem._t (the /look panel and --tune keys).
 func tick(at: Vector3, zones: Array, zone_id: int, dungeon: bool, night: float, storm: float, wind: float,
-		daylight: float, tune: Callable) -> void:
+		daylight: float, tune: Callable, realm := "") -> void:
 	var snowing := snowy(zone_id) and not dungeon
 	# fireflies: clear, calm nights outdoors, not in the snow
 	var ff := 0.0
 	if not dungeon and not snowing:
 		ff = smoothstep(0.55, 0.9, night) * clampf(1.0 - storm * 3.0, 0.0, 1.0) * float(tune.call("fireflies", 1.0))
-	_run(fireflies, ff)
-	if ff > 0.0:
-		fireflies.global_position = at + Vector3(0.0, 1.2, 0.0)
+	fireflies.tick(at, ff, realm == "hib", float(tune.call("fairy", 1.0)))
 	# leaves from the broadleaf trees within reach (gathered again every 15 m you move)
 	if not dungeon and at.distance_to(_leaf_at) > 15.0:
 		_leaf_at = at
@@ -68,7 +70,8 @@ func tick(at: Vector3, zones: Array, zone_id: int, dungeon: bool, night: float, 
 
 
 func off() -> void:
-	for p in [fireflies, leaves, snow, dust]:
+	fireflies.tick(Vector3.ZERO, 0.0, false, 0.0)
+	for p in [leaves, snow, dust]:
 		_run(p, 0.0)
 
 
@@ -146,54 +149,6 @@ static func _ramp(points: Array) -> GradientTexture1D:
 	var t := GradientTexture1D.new()
 	t.gradient = g
 	return t
-
-
-func _fireflies() -> GPUParticles3D:
-	var p := GPUParticles3D.new()
-	p.name = "Fireflies"
-	p.amount = 90
-	p.lifetime = 7.0
-	p.randomness = 0.6
-	p.local_coords = false
-	p.visibility_aabb = AABB(Vector3(-30, -10, -30), Vector3(60, 20, 60))
-	var pm := ParticleProcessMaterial.new()
-	pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
-	pm.emission_box_extents = Vector3(22.0, 1.0, 22.0)
-	pm.direction = Vector3(0, 0.2, 0)
-	pm.spread = 180.0
-	pm.initial_velocity_min = 0.05
-	pm.initial_velocity_max = 0.35
-	pm.gravity = Vector3.ZERO
-	pm.damping_min = 0.1
-	pm.damping_max = 0.3
-	pm.turbulence_enabled = true
-	pm.turbulence_noise_strength = 1.2
-	pm.turbulence_noise_scale = 3.0
-	pm.turbulence_noise_speed_random = 0.4
-	pm.turbulence_influence_min = 0.05
-	pm.turbulence_influence_max = 0.15
-	# the glow: slow pulses, each firefly at its own time (the ramp over its life)
-	var on := Color(1, 1, 1, 1)
-	var dim := Color(1, 1, 1, 0.0)
-	pm.color_ramp = _ramp([[0.0, dim], [0.12, on], [0.24, dim], [0.42, dim], [0.52, on], [0.62, dim], [0.8, dim],
-			[0.88, on], [1.0, dim]])
-	pm.scale_min = 0.7
-	pm.scale_max = 1.2
-	p.process_material = pm
-	var q := QuadMesh.new()
-	q.size = Vector2(0.13, 0.13)
-	var m := StandardMaterial3D.new()
-	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	m.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
-	m.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
-	m.vertex_color_use_as_albedo = true
-	m.albedo_texture = _soft_dot(32)
-	m.albedo_color = Color(2.2, 2.8, 0.7)          # above 1: the bloom picks them out
-	m.disable_fog = true
-	q.material = m
-	p.draw_pass_1 = q
-	return p
 
 
 func _leaves() -> GPUParticles3D:

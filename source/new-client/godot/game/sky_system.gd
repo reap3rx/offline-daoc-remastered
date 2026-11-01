@@ -868,7 +868,7 @@ func _life_tick(sun_dir: Vector3) -> void:
 	if "--life-log" in OS.get_cmdline_user_args() and Engine.get_process_frames() % 120 == 0:
 		print("[life] zone %s storm %.2f snowing %s night %.2f at %s" % [zone.info.get("id"), storm, _snowing(), night_level, at])
 	_life.tick(at, _zones(), int(zone.info.get("id", -1)), dungeon, night_level, storm,
-			_wind_set if _wind_set > 0.0 else 1.0, daylight, Callable(self, "_t"))
+			_wind_set if _wind_set > 0.0 else 1.0, daylight, Callable(self, "_t"), _realm())
 
 
 ## The night sky (remastered): the moon's phases - a cycle of eight game days, its light waxing and waning with it -

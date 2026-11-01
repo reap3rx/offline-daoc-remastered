@@ -131,7 +131,7 @@ var cam_kick := 0.0                      # a landed blow's small camera jolt (de
 var shoulder := Vector2.ZERO             # action combat's over-the-shoulder view: metres right / up (Camera3D offsets)
 var _dash := Vector3.ZERO               # a dodge's burst (world velocity, decays)
 const AC_BUTTONS := ["ac_attack", "ac_parry", "ac_position", "ac_reactive", "ac_chain", "ac_dodge", "ac_cursor", "ac_hud",
-		"ac_interact", "ac_shot", "ac_crit_shot", "ac_parry_only"]
+		"ac_interact", "ac_shot", "ac_crit_shot", "ac_parry_only", "ac_lock"]
 var _charge_fx: Node3D = null            # the heavy attack's charge: a glow on the weapon (the game's weapon effects)
 var _dash_left := 0.0
 var grounded := false
@@ -948,9 +948,30 @@ func _offset_room(dir: Vector3, dist: float) -> float:
 	return maxf(0.0, dist * float(r[0]) - 0.05)
 
 
+## The camera's height follows the body smoothly on the ground (owner 2026-10-31: the camera jittered up and down
+## stairs - each step lifts the body a few centimetres at once, and the camera hung on it rigidly); in the air it
+## keeps up closely (jumps and falls stay tight). Snaps after a teleport or a big drop.
+var _cam_y := INF
+
+
+func _smooth_camera_height(delta: float) -> void:
+	var y := global_position.y
+	if _cam_y == INF or absf(y - _cam_y) > 2.5:
+		_cam_y = y
+	else:
+		var rate := 14.0 if grounded else 40.0
+		_cam_y += (y - _cam_y) * minf(1.0, delta * rate)
+	_pivot.position.y = 1.55 + (_cam_y - y)
+
+
 func _process(_delta: float) -> void:
-	if camera == null or flying or riding or (zone == null and region == null):
+	if camera == null or (zone == null and region == null):
 		return
+	if flying or riding:
+		_cam_y = INF
+		_pivot.position.y = 1.55
+		return
+	_smooth_camera_height(_delta)
 	var g := camera.global_position
 	var lim := _water_h(g.x, g.z)
 	if zone and not zone.city:

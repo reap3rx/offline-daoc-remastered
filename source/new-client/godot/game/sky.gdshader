@@ -202,7 +202,10 @@ float cloud_density(vec3 p, bool detail) {
 	float d = shape * profile;
 	if (d <= 0.0 || !detail) return d;
 	float det = vn3(p * 0.0035 + vec3(cloud_wind.x, 0.1, cloud_wind.y) * cloud_clock * 0.02 + vec3(13.7, 5.3, 29.1));
-	det = det * 0.65 + vn3(p * 0.011 + vec3(71.3, 3.9, 47.7)) * 0.35;
+	// the fine detail (90 m) fades out with distance: far off, the march steps are longer than it, and sampled that
+	// sparsely it broke into streaks and dotted edges (owner 2026-11-01: "still some lines or sharp edges in clouds")
+	float far_k = 1.0 - smoothstep(4000.0, 12000.0, length(p));
+	det = det * (0.65 + 0.35 * (1.0 - far_k)) + vn3(p * 0.011 + vec3(71.3, 3.9, 47.7)) * 0.35 * far_k;
 	return clamp(d - (1.0 - det) * 0.45 * (1.0 - d * 0.6), 0.0, 1.0);
 }
 
@@ -214,15 +217,17 @@ vec4 clouds(vec3 dir, float jitter) {
 	// edges - owner 2026-10-30; far off they thin away instead)
 	float t1 = min(CLOUD_HI / dir.y, 45000.0);
 	if (t0 >= t1) return vec4(0.0);
-	const int STEPS = 28;
-	float dt = (t1 - t0) / float(STEPS);
+	// more steps the longer the path through the slab (low in the sky): about one every 140 m, 28 to 72 - the
+	// banding (slices) and the jitter's grain both come from steps too far apart
+	int steps = int(clamp((t1 - t0) / 140.0, 28.0, 72.0));
+	float dt = (t1 - t0) / float(steps);
 	vec3 L = normalize(cloud_light_dir);
 	float mu = dot(dir, L);
 	float phase = 0.6 + 0.9 * pow(max(mu, 0.0), 6.0);         // brighter toward the sun (forward scattering)
 	float sigma = mix(0.010, 0.022, cloud_storm);
 	float tr = 1.0;
 	vec3 acc = vec3(0.0);
-	for (int i = 0; i < STEPS; i++) {
+	for (int i = 0; i < steps; i++) {
 		vec3 p = dir * (t0 + (float(i) + jitter) * dt);
 		float d = cloud_density(p, true) * (1.0 - smoothstep(18000.0, 42000.0, length(p.xz)));
 		if (d < 0.01) continue;
