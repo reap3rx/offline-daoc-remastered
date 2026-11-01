@@ -252,7 +252,9 @@ class _Upright extends Node:
 		if not is_instance_valid(fx) or not is_instance_valid(body):
 			queue_free()
 			return
-		fx.global_basis = body.global_basis.orthonormalized().scaled(Vector3.ONE * k)
+		# (turned half round: these effects are made facing the figure's -z - the sword over the head came out behind
+		# the character, in the old client it's in front; owner 2026-11-01)
+		fx.global_basis = (body.global_basis.orthonormalized() * Basis(Vector3.UP, PI)).scaled(Vector3.ONE * k)
 
 
 static func _skeleton(root: Node) -> Skeleton3D:

@@ -38,6 +38,12 @@ static func _fixed(spec: Dictionary, fix: Dictionary) -> Dictionary:
 	var s := spec.duplicate(true)
 	if String(s.get("alpha", "")) in ["add", "blend", "destcolor"] and (s.get("slots", {}) as Dictionary).has("dark"):
 		s["dark_plain"] = true
+	# a solid part with no material light and no glow of its own (Decree of Steel's sword: mat_light 0) drew black;
+	# the client lights it with the sun on its white diffuse (owner 2026-11-01: the old client's sword is bright steel)
+	var em: Array = s.get("emissive", [0, 0, 0])
+	if not String(s.get("alpha", "")) in ["add", "destcolor"] and float(s.get("mat_light", 1.0)) < 0.02 \
+			and maxf(float(em[0]), maxf(float(em[1]), float(em[2]))) < 0.01 and not bool(fix.get("sunlit", false)):
+		s["mat_light"] = 1.0
 	if bool(fix.get("sunlit", false)) and not String(s.get("alpha", "")) in ["add", "destcolor"] and float(s.get("mat_light", 1.0)) < 1.0:
 		var k := 1.0 / maxf(float(s.mat_light), 0.05)       # the sun at the white diffuse, over the ambient-darkened albedo
 		s["ambient_only"] = true

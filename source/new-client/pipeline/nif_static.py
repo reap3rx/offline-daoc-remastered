@@ -860,7 +860,10 @@ def material_spec(props, uv_count, has_colors, warnings, shape_name, shape=None)
         if slot == 'detail':
             spec['detail_x2'] = True
         clamp = int(tp[field].get('clamp_mode', 3))                  # 3 = wrap both ways; decals usually clamp
-        spec['slots'][slot] = {'tex': tex, 'uv': sets.index(uvset), 'wrap': clamp == 3}
+        # 0 clamps both ways; 1 / 2 wrap one way (CLAMP_S_WRAP_T, WRAP_S_CLAMP_T): drawn wrapping (owner 2026-11-01: the
+        # Thane's lightning strokes, v -5..1 along a 15 m strip, clamp_mode 1 - as 'clamp' only the first sixth was drawn,
+        # a short crumpled bolt under the sky flashes)
+        spec['slots'][slot] = {'tex': tex, 'uv': sets.index(uvset), 'wrap': clamp != 0}
         names.append(tex)
     blend = shader_slots(shape, tp)
     # Blend direction, fitted to the owner's client screenshots (2026-10-09): Texture1 shows at vertex alpha 1

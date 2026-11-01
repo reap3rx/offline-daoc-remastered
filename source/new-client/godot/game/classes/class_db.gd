@@ -55,15 +55,16 @@ static var _spell_names := {}
 static var _pulsing_effects := {}
 
 
-## Does any spell drawn with this client effect pulse (songs, pulsing chants)? Their pulses play the cast motion;
-## an instant or a proc doesn't (owner 2026-11-01).
+## Is any spell drawn with this client effect an instrument song? A song's pulses play the cast motion (and its music);
+## an instant, a proc or a chant's pulse doesn't (owner 2026-11-01: Decree of Steel - its effect shared with a pulsing
+## chant - still played a casting motion).
 static func effect_pulses(client_effect: int) -> bool:
 	_load()
 	if _pulsing_effects.is_empty():
 		_pulsing_effects[-1] = true
 		for k in _spells:
 			var s: Dictionary = _spells[k]
-			if int(s.get("pulse", 0)) > 0 or int(s.get("frequency", 0)) > 0:
+			if int(s.get("instrumentrequirement", 0)) > 0:
 				_pulsing_effects[int(s.get("clienteffect", 0))] = true
 	return _pulsing_effects.has(client_effect)
 
