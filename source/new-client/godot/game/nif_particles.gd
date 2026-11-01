@@ -37,7 +37,15 @@ static func _build(spec: Dictionary, at: Transform3D, far: float, materials: Nif
 	p.local_coords = false
 	var life := maxf(float(spec.lifetime), 0.05)
 	p.lifetime = life
-	p.amount = clampi(maxi(int(spec.max_particles), int(ceil(float(spec.emit_rate) * (life + float(spec.lifetime_random))))), 1, 512)
+	# how many are alive at once: the client's Emit Flags (pipeline 'rate_mode') - 'rate': the emit rate x the lifetime,
+	# never past the system's size; 'auto': the system's size (owner 2026-11-01: a Thane's hand glow kept 85 additive
+	# glows alive where the client's 30 a second keeps about 5 - a white bubble instead of a flickering spark). Models
+	# converted before the flag was kept: the larger of the two, as before.
+	var by_rate := int(ceil(float(spec.emit_rate) * (life + float(spec.lifetime_random))))
+	match String(spec.get("rate_mode", "")):
+		"rate": p.amount = clampi(mini(int(spec.max_particles), by_rate) if int(spec.max_particles) > 0 else by_rate, 1, 512)
+		"auto": p.amount = clampi(int(spec.max_particles), 1, 512)
+		_: p.amount = clampi(maxi(int(spec.max_particles), by_rate), 1, 512)
 	p.preprocess = life + float(spec.lifetime_random)    # already burning when it comes into view
 	p.visibility_range_end = far
 	var reach := (float(spec.speed) + float(spec.speed_random)) * (life + float(spec.lifetime_random))

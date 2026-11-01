@@ -9,6 +9,9 @@ extends Node3D
 
 var materials: NifMaterials
 var info := {}
+## Winding down (SpellFx.drop: a caster's hand glow once the spell goes off): no new particles, the live ones play
+## out their lives - the client's sparks flicker out of the hands instead of vanishing (owner 2026-11-01).
+var winding_down := false
 var timeline := false                       # set before adding to the tree: play the effect's timeline from 0
 var _bound_for := 0                         # the instance the animation tables belong to (copies rebind in _ready)
 var _anims: Array = []                      # {meshes, a}: nif_node_anims
@@ -214,6 +217,7 @@ func _bind() -> void:
 ## A pooled copy is used again (SpellFx): its timeline from the start, its particles emptied.
 func restart() -> void:
 	_time = 0.0
+	winding_down = false
 	for e in _emitters:
 		var p: GPUParticles3D = e.p
 		p.preprocess = 0.0
@@ -378,7 +382,8 @@ func _step(delta: float) -> void:
 				p.transparency = 0.0 if shown else 1.0
 		if timeline:
 			var tc := fposmod(now, maxf(float(spec.get("cycle", 0.0)), 0.0001)) if float(spec.get("cycle", 0.0)) > 0.0 else now
-			var on := tc >= float(spec.emit_start) and tc < maxf(float(spec.emit_stop), float(spec.emit_start) + 1.0 / 30.0)
+			var on := tc >= float(spec.emit_start) and tc < maxf(float(spec.emit_stop), float(spec.emit_start) + 1.0 / 30.0) \
+					and not winding_down
 			# our own flag: reading GPUParticles3D.emitting asks the render thread and waits (with the separate
 			# render thread a crowd's 400 effects stalled every frame - ~1 fps while casting)
 			if bool(e.get("on", false)) != on:

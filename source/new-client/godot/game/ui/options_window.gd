@@ -436,8 +436,8 @@ func _controls() -> void:
 		_status.text = "THIS CHARACTER NOW HAS ITS OWN KEYS" if v else "THIS CHARACTER USES THE SHARED KEYS"))
 	var presets := HBoxContainer.new()
 	presets.add_theme_constant_override("separation", 6)
-	for p in [["rpg", "RPG DEFAULT"], ["fps", "FPS DEFAULT"], ["mmo", "MMO DEFAULT"]]:
-		var b := UiArt.button(p[1], Vector2(110, 18), 9)
+	for p in [["default", "DEFAULT"], ["rpg", "RPG"], ["fps", "FPS"], ["mmo", "MMO"]]:
+		var b := UiArt.button(p[1], Vector2(82, 18), 9)
 		b.pressed.connect(func():
 			Keybinds.use_preset(p[0])
 			show_page("controls")

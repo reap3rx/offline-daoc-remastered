@@ -1368,6 +1368,9 @@ def particle_systems(nif, textures, warnings, node_anims=False):
                     'lifetime_random': float(c.get('lifetime_random', 0.0)),
                     'box': (np.abs(np.array(_gvec(sr))) * UNITS_TO_METRES).tolist(),
                     'max_particles': int(c.get('num_particles', 0) or 0),
+                    # Emit Flags bit 0: 1 = the Emit Rate as given, 0 = auto (the rate keeps max_particles alive) - owner
+                    # 2026-11-01: hand glows drew 85 overlapping glows at once where the client's 30 a second keeps ~5
+                    'rate_mode': 'rate' if int(c.get('emit_flags', 0) or 0) & 1 else 'auto',
                     'emit_start': float(c.get('emit_start_time', 0.0)), 'emit_stop': float(c.get('emit_stop_time', 0.0)),
                     'cycle': float(c.get('stop_time', 0.0)) - float(c.get('start_time', 0.0)),
                     'modifiers': mods})

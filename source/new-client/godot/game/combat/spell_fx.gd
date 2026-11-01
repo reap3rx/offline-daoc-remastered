@@ -80,7 +80,7 @@ static func release(node: Node) -> void:
 	_live.erase(fx.get_instance_id())
 	FxLight.detach(fx)
 	for c in fx.get_children():
-		if c is _Track:
+		if c is _Track or c is _Upright:
 			c.queue_free()
 	if fx.get_parent():
 		fx.get_parent().remove_child(fx)
@@ -238,6 +238,23 @@ class _Track extends Node:
 			fx.global_basis = Basis.looking_at(dir, Vector3.UP).scaled(k)
 
 
+## A bone-held effect stands upright with the character, at the bone (owner 2026-11-01: Decree of Steel's sword over
+## the head - "Paladin Group Strength hit" on Bip01 Head - lay flat and flew off sideways; the old client draws it
+## upright, dancing over the head and coming down like a knighting). Our skeleton's bone frames aren't the client's
+## Biped frames (a head bone's x runs up the neck), so the effect takes the bone's place and the character's turn.
+## Hand glows keep the hand's (Held / Hand bones).
+class _Upright extends Node:
+	var fx: Node3D
+	var body: Node3D
+	var k := 1.0
+
+	func _process(_d: float) -> void:
+		if not is_instance_valid(fx) or not is_instance_valid(body):
+			queue_free()
+			return
+		fx.global_basis = body.global_basis.orthonormalized().scaled(Vector3.ONE * k)
+
+
 static func _skeleton(root: Node) -> Skeleton3D:
 	if root == null:
 		return null
@@ -315,6 +332,14 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 		# the bone's world scale (the model's) cancelled, then the effect's own size: the character's for Auto Scale
 		var want := size_of(on) if bool(f.get("autoscale", false)) else 1.0
 		fx.scale = Vector3.ONE * want / maxf(at.global_basis.get_scale().x, 0.001)
+		if not (bone.ends_with("Held") or bone.ends_with("Hand")):
+			var up := _Upright.new()
+			up.fx = fx
+			var m = on.get("_model") if on is Player else on.get("model")
+			up.body = m if m is Node3D else on              # (the figure turns, not the player's root)
+			up.k = want                                   # (its size in the world, as set above)
+			fx.add_child(up)
+			up._process(0.0)
 	else:
 		on.add_child(node)
 		var k := size_of(on) if bool(f.get("autoscale", false)) else 1.0
@@ -442,8 +467,31 @@ static func begin(client_effect: int, caster: Node3D, snd: CharacterSounds) -> A
 
 static func drop(handles: Array) -> void:
 	for n in handles:
-		release(n)
+		_wind_down(n)
 	handles.clear()
+
+
+## A held effect let go (the gathering glow as the spell goes off, or the cast broken): its particles stop being made
+## and the live ones finish their short lives before it goes back to the pool - the old client's hand sparks flicker
+## out after the cast (owner 2026-11-01).
+static func _wind_down(node: Node) -> void:
+	if not is_instance_valid(node) or not node.is_inside_tree():
+		release(node)
+		return
+	var fx: NifScene = node as NifScene
+	if fx == null:
+		for c in node.get_children():
+			if c is NifScene:
+				fx = c
+				break
+	if fx == null or fx.particles().is_empty():
+		release(node)
+		return
+	var longest := 0.0
+	for gp in fx.particles():
+		longest = maxf(longest, (gp as GPUParticles3D).lifetime)
+	fx.winding_down = true
+	node.get_tree().create_timer(clampf(longest, 0.05, 1.0)).timeout.connect(func(): release(node))
 
 
 static func fizzle(client_effect: int, handles: Array, snd: CharacterSounds) -> void:

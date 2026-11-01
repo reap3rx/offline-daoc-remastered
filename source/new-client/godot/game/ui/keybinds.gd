@@ -11,6 +11,9 @@ signal changed
 
 const PATH := "user://keybinds.cfg"
 const DATA := "res://content/ui/keybinds.json"
+## The game's own default keys (owner 2026-11-01: Arthur's bindings as they were that day): new characters start with
+## them and Options > CONTROLS "DEFAULT" puts them back. Actions it doesn't name take the RPG preset's keys.
+const DEFAULTS := "res://game/ui/keybinds_default.cfg"
 const SLOTS := 2
 const QUICKBARS := 3
 const QUICKBAR_SLOTS := 10
@@ -18,7 +21,7 @@ const QUICKBAR_SLOTS := 10
 var actions: Array = []                 # [{id, label, category, presets:{rpg,fps,mmo}}]
 var categories: Array = []
 var bindings := {}                      # id -> [binding string, ...]
-var preset := "rpg"
+var preset := "default"
 var path := PATH                        # the shared file, or this character's own (character-specific key bindings)
 var character_specific := false
 var _character := {}
@@ -89,14 +92,19 @@ func _ready() -> void:
 		var key := "Shift+" + str(bank % 10)
 		actions.append({"id": "qbank_%d" % bank, "label": "Quickbar Bank %d" % bank, "category": "Quickbars",
 				"presets": {"rpg": [key], "fps": [key], "mmo": [key]}})
+	var dcfg := ConfigFile.new()
+	var have_defaults := dcfg.load(DEFAULTS) == OK
+	for a in actions:
+		var presets: Dictionary = a.presets
+		var v = dcfg.get_value("bindings", a.id) if have_defaults and dcfg.has_section_key("bindings", a.id) else null
+		presets["default"] = (v as Array).duplicate() if v is Array else (presets.get("rpg", []) as Array).duplicate()
 	load_bindings()
 
 
 ## Every character keeps its own key bindings (owner 2026-11-01: casters free the style / defence keys without
-## changing anyone else's) - a new one starts as a copy of Arthur's (TEMPLATE_CHARACTER), or of the shared keys before
-## Arthur has his own. Options > CONTROLS "CHARACTER-SPECIFIC KEY BINDINGS" off puts a character back on the shared
-## set (user://keybinds.cfg). Called by PlayerData when a character enters the world.
-const TEMPLATE_CHARACTER := "arthur"
+## changing anyone else's) - a new one starts with the game's defaults (DEFAULTS). Options > CONTROLS
+## "CHARACTER-SPECIFIC KEY BINDINGS" off puts a character back on the shared set (user://keybinds.cfg). Called by
+## PlayerData when a character enters the world.
 
 
 func use_character(c: Dictionary) -> void:
@@ -125,31 +133,14 @@ func set_character_specific(on: bool) -> void:
 	changed.emit()
 
 
-## This character's first own key file: Arthur's (this account's, else any account's), else the shared keys, else
-## the defaults.
+## This character's first own key file: the game's default keys.
 func _seed_character_file() -> void:
 	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
-	var src := ""
-	var own := path.get_base_dir().path_join("%s_%s.cfg" % [String(Accounts.account if Accounts.account != "" else "local").to_lower().validate_filename(), TEMPLATE_CHARACTER])
-	if own != path and FileAccess.file_exists(own):
-		src = own
-	else:
-		var d := DirAccess.open(path.get_base_dir())
-		if d:
-			for f in d.get_files():
-				if f.to_lower().ends_with("_%s.cfg" % TEMPLATE_CHARACTER) and path.get_base_dir().path_join(f) != path:
-					src = path.get_base_dir().path_join(f)
-					break
-	if src == "" and FileAccess.file_exists(PATH):
-		src = PATH
-	if src != "":
-		DirAccess.copy_absolute(ProjectSettings.globalize_path(src), ProjectSettings.globalize_path(path))
-	else:
-		var keep := path
-		path = PATH
-		load_bindings()                                    # (the defaults)
-		path = keep
-		save_bindings()
+	preset = "default"
+	for a in actions:
+		bindings[a.id] = (a.presets.get("default", []) as Array).duplicate()
+	_apply()
+	save_bindings()
 
 
 func _character_path() -> String:
@@ -160,7 +151,7 @@ func _character_path() -> String:
 func load_bindings() -> void:
 	var cfg := ConfigFile.new()
 	var ok := cfg.load(path) == OK
-	preset = String(cfg.get_value("keybinds", "preset", "rpg")) if ok else "rpg"
+	preset = String(cfg.get_value("keybinds", "preset", "default")) if ok else "default"
 	# version 2 (2026-10-09): quickbars 2 / 3 gained their Alt / Ctrl keys and the Shift bank keys; older saves kept
 	# those empty, so they take the new defaults once
 	var old := int(cfg.get_value("keybinds", "version", 1)) < 2 if ok else false
