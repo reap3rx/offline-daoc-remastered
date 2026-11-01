@@ -376,7 +376,7 @@ func _dress(f: Fig3Figure) -> void:
 		_weapon_colors[slot] = int(e.get("color", 0))
 		_weapon_emblems[slot] = int(e.get("emblem", 0))
 		if slot in [22, 23, 25, 27, 28]:
-			var p := Fig3Figure.armor_parts(int(e.model), female)
+			var p := Fig3Figure.armor_parts(int(e.model), female, int(e.get("extension", 0)))
 			parts.merge(p, true)
 			for k in p:                                             # the server's colour for it (EquipmentUpdate)
 				tints[k] = Fig3Figure.dye(int(e.get("color", 0)))

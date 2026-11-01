@@ -696,7 +696,7 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 		for slot in [22, 23, 25, 27, 28]:
 			var it: Dictionary = item_at.call(slot)
 			if not it.is_empty():
-				var p := Fig3Figure.armor_parts(int(it.get("model", 0)), female)
+				var p := Fig3Figure.armor_parts(int(it.get("model", 0)), female, int(it.get("extension", 0)))
 				parts.merge(p, true)
 				for k in p:                                         # its dye on the parts it draws
 					tints[k] = Fig3Figure.dye(int(it.get("color", 0)))

@@ -531,11 +531,22 @@ static var _armor := {}
 
 
 ## The armour parts an item model gives a figure of this gender, or {} (pipeline/build_armor.py).
-static func armor_parts(model: int, female: bool) -> Dictionary:
+## extension: the item's (the server sends it with the model) picks the torso's Catacombs mesh, as the old client does:
+## extension 4 = body mesh 4 (with pauldrons), 0 = mesh 1 - never the number in the texture's name, which is only a
+## texture family (owner 2026-11-01: Lancelot's plate and Rian's scale, extension 4, wore mesh 1 here and mesh 4 there;
+## Fridwulf's chain hauberk chnbody05, extension 0, wore mesh 5 here and mesh 1 there). Gloves and boots keep theirs.
+static func armor_parts(model: int, female: bool, extension := 0) -> Dictionary:
 	if _armor.is_empty():
 		var parsed = JSON.parse_string(FileAccess.get_file_as_string(ROOT + "/armor.json"))
 		_armor = parsed.get("models", {}) if parsed is Dictionary else {"_": {}}
-	return _armor.get(str(model), {}).get("f" if female else "m", {})
+	var parts: Dictionary = _armor.get(str(model), {}).get("f" if female else "m", {})
+	if not parts.has("body"):
+		return parts
+	var out := parts.duplicate()
+	var p: Array = (out.body as Array).duplicate()
+	p[0] = maxi(1, extension)                                  # (a mesh the race lacks: _apply_armor keeps its default)
+	out.body = p
+	return out
 
 
 ## Every animated character (player, NPC, monster, bot) gets this: a "RESET" animation holding every bone at its
