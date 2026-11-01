@@ -1252,6 +1252,8 @@ func reuse_left(id: String) -> float:
 func use_entry(id: String, player: Node3D, zone_id: int, target_in_view: bool) -> bool:
 	if client == null or not id.begins_with("srv:"):
 		return false
+	if player.has_method("face_lock"):
+		player.face_lock()                               # (locked on: turn to the target before the server checks)
 	var r := to_region(zone_id, player.global_position)
 	var heading := heading_of(fposmod(-rad_to_deg(player.facing()), 360.0))
 	var speed := Vector2(player.velocity.x, player.velocity.z).length() / 0.025

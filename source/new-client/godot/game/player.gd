@@ -614,6 +614,31 @@ func _faces_camera() -> bool:
 	return action_mode and (in_combat or casting_spell or aiming)
 
 
+## Action combat's lock-on target (ActionCombatMode sets it; null when nothing is locked). While locked, the character
+## faces the target - standing still, weapon out, casting - and is snapped to it before any spell / ability goes to
+## the server, so a caster never has to turn by hand (owner 2026-11-01).
+var lock_target: Node3D = null
+
+
+func _lock_yaw() -> float:
+	if lock_target == null or not is_instance_valid(lock_target) or not lock_target.is_inside_tree():
+		lock_target = null
+		return NAN
+	var d := lock_target.global_position - global_position
+	if Vector2(d.x, d.z).length() < 0.3:
+		return NAN
+	return atan2(-d.x, -d.z)
+
+
+## Turn to the locked target at once (before a cast / ability request: the server checks the heading it is sent).
+func face_lock() -> void:
+	if not action_mode or dead or sitting:
+		return
+	var y := _lock_yaw()
+	if not is_nan(y):
+		char_yaw = y
+
+
 func sit(on: bool) -> void:
 	sitting = on
 	if on:
@@ -843,7 +868,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		var ady: float = event.relative.y * (-1.0 if invert_mouse else 1.0) * mouse_sensitivity
 		cam_yaw -= event.relative.x * MOUSE_TURN * mouse_sensitivity
 		cam_pitch = clampf(cam_pitch - ady * 0.004, -CAM_PITCH, CAM_PITCH)
-		if _faces_camera() and not sitting:
+		if _faces_camera() and not sitting and is_nan(_lock_yaw()):
 			char_yaw = cam_yaw                          # action combat, weapon out: you face where you look
 		return
 	if action_mode and not action_cursor and event is InputEventMouseButton \
@@ -1058,7 +1083,10 @@ func _physics_step(delta: float) -> void:
 	# turn it to see your character's face - and the character turns to run where you steer, relative to the camera.
 	# Weapon out, casting or aiming: you face where you look, as before. Sitting: you stay put either way.
 	var free_dir := Vector3.ZERO
-	if action_mode and not dead and cc == "":
+	var lock_yaw := _lock_yaw() if action_mode and not dead and cc == "" and not sitting else NAN
+	if not is_nan(lock_yaw) and (_faces_camera() or (ahead == 0.0 and strafe == 0.0)):
+		char_yaw = lerp_angle(char_yaw, lock_yaw, minf(1.0, delta * 18.0))   # locked on: face the target
+	elif action_mode and not dead and cc == "":
 		if not _faces_camera():
 			if ahead != 0.0 or strafe != 0.0:
 				free_dir = Vector3(strafe, 0.0, -ahead).normalized().rotated(Vector3.UP, cam_yaw)

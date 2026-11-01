@@ -55,6 +55,7 @@ var _par_at := 0
 var _taps := {}
 var _dodge_ready_at := 0
 var _ready := "0000"
+var _has_anytime := false                 # an anytime style has lit this session (a held attack is then a charge)
 var _timer_until := 0
 var _timer_len := 1
 var _quick_at := 0                       # when a plain swing can go again (the server's timer|full|soonest)
@@ -150,6 +151,8 @@ func on_line(text: String) -> void:
 		"ready":
 			if f.size() > 1:
 				_ready = String(f[1])
+				if _anytime_ready():
+					_has_anytime = true
 		"timer":
 			if f.size() > 1:
 				_timer_len = maxi(1, int(f[1]))
@@ -704,7 +707,13 @@ func _attack_down(now: int) -> void:
 func _attack_up(now: int) -> void:
 	_atk_down = false
 	_soft_target()
-	var heavy := now - _atk_at >= int(HOLD_S * 1000.0) and _anytime_ready()
+	var held := now - _atk_at >= int(HOLD_S * 1000.0)
+	var heavy := held and _anytime_ready()
+	# A held attack let go while the weapon is still recovering for the style does nothing (owner 2026-11-01: it
+	# used to go as a quick swing, which restarted the recovery - so the next hold was too soon again, and again).
+	# The ring round the crosshair fills with the recovery and turns gold when a release would fire the style.
+	if held and not heavy and _has_anytime and now < _timer_until + 300:   # (+ the lights' lag)
+		return
 	if not _has_target():
 		_whiff()                                           # nothing there: a swing at the air, with its sound
 		return
@@ -1057,9 +1066,11 @@ func _lock_cycle(dir: int) -> void:
 ## Locked on: you and the camera turn to it (smoothly); it lets go when it dies or gets too far.
 func _lock_tick(p: Player, delta: float) -> void:
 	if not _locked():
+		p.lock_target = null
 		return
 	if _lock.global_position.distance_to(p.global_position) > LOCK_MAX_M:
 		_lock = null
+		p.lock_target = null
 		return
 	var npcs: NpcManager = viewer.npcs if viewer else null
 	if npcs and npcs.target != _lock:
@@ -1067,6 +1078,7 @@ func _lock_tick(p: Player, delta: float) -> void:
 			_lock = npcs.target as Npc                     # (you picked another target by hand: the lock moves to it)
 		else:
 			_select_quiet(_lock)
+	p.lock_target = _lock                                  # (the character faces it too: Player._lock_yaw)
 	if p.camera == null:
 		return
 	var fwd := -p.camera.global_basis.z
@@ -1346,6 +1358,12 @@ func _draw_hud() -> void:
 		var f := clampf((now - _atk_at) / (HOLD_S * 1000.0), 0.0, 1.0)
 		hud.draw_arc(c, 16.0, -PI * 0.5, -PI * 0.5 + TAU * f, 40,
 				Color(1.0, 0.82, 0.3) if f >= 1.0 else Color(1, 1, 1, 0.7), 2.5 if f >= 1.0 else 2.0)
+	elif _show.get("charge", true) and _atk_down and _has_anytime and now < _timer_until \
+			and now - _atk_at >= int(HOLD_S * 1000.0):
+		# held while the weapon recovers: a dim ring fills with the recovery (gold above once the style is ready)
+		var r := 1.0 - clampf(float(_timer_until - now) / float(maxi(1, _timer_len)), 0.0, 1.0)
+		hud.draw_arc(c, 16.0, 0.0, TAU, 40, Color(0, 0, 0, 0.3), 2.0)
+		hud.draw_arc(c, 16.0, -PI * 0.5, -PI * 0.5 + TAU * r, 40, Color(1, 1, 1, 0.45), 2.0)
 	# the bow's draw: a ring filling around the crosshair - gold when fully drawn, then red as it overdraws
 	if _drawing and _show.get("draw", true):
 		var held := now - _draw_at
