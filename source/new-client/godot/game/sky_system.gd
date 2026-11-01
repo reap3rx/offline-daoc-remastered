@@ -790,7 +790,7 @@ func _weather_fx(delta: float, sun_dir: Vector3) -> void:
 	var on := _t("clouds", 1.0) > 0.5
 	_sky_mat.set_shader_parameter("remaster_clouds", 1.0 if on else 0.0)
 	_sky_mat.set_shader_parameter("cloud_full", _t("cloud_full", 0.0))
-	_sky_mat.set_shader_parameter("cloud_jitter", _t("cloud_jitter", 1.0))
+	_sky_mat.set_shader_parameter("cloud_jitter", _t("cloud_jitter", 0.4))
 	if on:
 		_sky_mat.set_shader_parameter("cloud_cover", lerpf(_t("cloud_cover", 0.5), 0.97, storm))
 		_sky_mat.set_shader_parameter("cloud_storm", storm)

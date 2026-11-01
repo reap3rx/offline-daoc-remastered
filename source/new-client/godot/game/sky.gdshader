@@ -192,21 +192,32 @@ const float CLOUD_HI = 2600.0;
 float cloud_density(vec3 p, bool detail) {
 	float ht = (p.y - CLOUD_LO) / (CLOUD_HI - CLOUD_LO);
 	if (ht < 0.0 || ht > 1.0) return 0.0;
-	vec2 q = p.xz * 0.00032 + cloud_wind * cloud_clock * 0.004 + vec2(37.37, 91.71);
+	// (leaning a little with height, so their sides aren't straight up and down)
+	vec2 q = p.xz * 0.00032 + cloud_wind * cloud_clock * 0.004 + vec2(37.37, 91.71) + vec2(0.11, -0.07) * ht;
 	float base = fbm2(q);
-	float thr = mix(0.66, 0.30, cloud_cover);
-	float shape = smoothstep(thr, thr + 0.22, base);
+	float thr = mix(0.6, 0.26, cloud_cover);         // (a little lower than before the softer edges: the same cover)
+	float shape = smoothstep(thr, thr + 0.3, base);
 	// flat bellies, rounded tops; storm clouds reach higher
 	float top = mix(0.55, 0.95, cloud_storm);
-	float profile = smoothstep(0.0, 0.12, ht) * (1.0 - smoothstep(top * shape, top * shape + 0.25, ht));
+	// (a soft belly: a thin hard base, seen from below at a slant, broke into dots from step to step)
+	float profile = smoothstep(0.0, 0.3, ht) * (1.0 - smoothstep(top * shape, top * shape + 0.25, ht));
 	float d = shape * profile;
 	if (d <= 0.0 || !detail) return d;
-	float det = vn3(p * 0.0035 + vec3(cloud_wind.x, 0.1, cloud_wind.y) * cloud_clock * 0.02 + vec3(13.7, 5.3, 29.1));
-	// the fine detail (90 m) fades out with distance: far off, the march steps are longer than it, and sampled that
-	// sparsely it broke into streaks and dotted edges (owner 2026-11-01: "still some lines or sharp edges in clouds")
+	// 3D detail eroding the billows (the weather map alone is the same all the way up: straight-sided columns, which
+	// far off read as vertical streaks and hard edges - owner 2026-11-01: "still some lines or sharp edges in
+	// clouds"). Near: 285 m and 130 m noise; far off, where the march steps are longer than those, coarser noise
+	// (830 m) in their place - fine detail sampled that sparsely broke into dotted edges.
+	vec3 drift = vec3(cloud_wind.x, 0.1, cloud_wind.y) * cloud_clock * 0.02;
 	float far_k = 1.0 - smoothstep(4000.0, 12000.0, length(p));
-	det = det * (0.65 + 0.35 * (1.0 - far_k)) + vn3(p * 0.011 + vec3(71.3, 3.9, 47.7)) * 0.35 * far_k;
-	return clamp(d - (1.0 - det) * 0.45 * (1.0 - d * 0.6), 0.0, 1.0);
+	float mid = vn3(p * 0.0035 + drift + vec3(13.7, 5.3, 29.1));
+	float det = mid;
+	if (far_k > 0.001) {
+		det = mix(det, mid * 0.65 + vn3(p * 0.0075 + vec3(71.3, 3.9, 47.7)) * 0.35, far_k);
+	}
+	if (far_k < 0.999) {
+		det = mix(vn3(p * 0.0012 + drift * 0.3 + vec3(5.1, 17.3, 2.9)) * 0.6 + mid * 0.4, det, far_k);
+	}
+	return clamp(d - (1.0 - det) * 0.5 * (1.0 - d * 0.6), 0.0, 1.0);
 }
 
 // the cloud layer seen along dir: premultiplied colour and coverage
@@ -217,9 +228,9 @@ vec4 clouds(vec3 dir, float jitter) {
 	// edges - owner 2026-10-30; far off they thin away instead)
 	float t1 = min(CLOUD_HI / dir.y, 45000.0);
 	if (t0 >= t1) return vec4(0.0);
-	// more steps the longer the path through the slab (low in the sky): about one every 140 m, 28 to 72 - the
+	// more steps the longer the path through the slab (low in the sky): about one every 100 m, 32 to 80 - the
 	// banding (slices) and the jitter's grain both come from steps too far apart
-	int steps = int(clamp((t1 - t0) / 140.0, 28.0, 72.0));
+	int steps = int(clamp((t1 - t0) / 100.0, 32.0, 80.0));
 	float dt = (t1 - t0) / float(steps);
 	vec3 L = normalize(cloud_light_dir);
 	float mu = dot(dir, L);
@@ -227,15 +238,31 @@ vec4 clouds(vec3 dir, float jitter) {
 	float sigma = mix(0.010, 0.022, cloud_storm);
 	float tr = 1.0;
 	vec3 acc = vec3(0.0);
+	bool outside = true;
 	for (int i = 0; i < steps; i++) {
 		vec3 p = dir * (t0 + (float(i) + jitter) * dt);
-		float d = cloud_density(p, true) * (1.0 - smoothstep(18000.0, 42000.0, length(p.xz)));
-		if (d < 0.01) continue;
+		float fade = 1.0 - smoothstep(18000.0, 42000.0, length(p.xz));
+		float d = cloud_density(p, true) * fade;
+		if (d < 0.01) {
+			outside = true;
+			continue;
+		}
+		if (outside) {
+			// the step that enters a cloud: the edge lies somewhere in it - three more samples back along the step,
+			// so one long step's sample doesn't make a hard dot (low in the sky a step is hundreds of metres, and
+			// the cloud edges broke into rows of bright dots - owner 2026-11-01)
+			d = (d + (cloud_density(p - dir * dt * 0.25, true) + cloud_density(p - dir * dt * 0.5, true)
+					+ cloud_density(p - dir * dt * 0.75, true)) * fade) * 0.25;
+			outside = false;
+		}
 		// light reaching this point: two samples toward the light
 		float ld = cloud_density(p + L * 180.0, false) + cloud_density(p + L * 520.0, false) * 1.4;
 		float sun_t = exp(-ld * mix(2.2, 3.5, cloud_storm));
 		float ht = (p.y - CLOUD_LO) / (CLOUD_HI - CLOUD_LO);
-		vec3 lit = cloud_sun * sun_t * phase + cloud_amb * (0.45 + 0.55 * ht);
+		// the "powder" darkening: thin wisps at a cloud's edge catch less light than their sun term says (and seen
+		// against the sun they glow anyway) - without it the rims lit up as rows of bright dots
+		float powder = mix(1.0 - exp(-d * 6.0), 1.0, smoothstep(0.4, 1.0, mu));
+		vec3 lit = cloud_sun * sun_t * phase * powder + cloud_amb * (0.45 + 0.55 * ht);
 		lit *= 1.0 - 0.55 * cloud_storm * (1.0 - ht);              // dark storm bellies
 		lit += vec3(0.75, 0.8, 1.0) * flash * (0.4 + d);
 		float a = 1.0 - exp(-sigma * d * dt);
