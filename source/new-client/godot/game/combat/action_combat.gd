@@ -55,6 +55,7 @@ var _par_at := 0
 var _taps := {}
 var _dodge_ready_at := 0
 var _ready := "0000"
+var _counter_cost := 0                   # a caster with a staff: the held attack is the staff counter (its power cost; 0 = none)
 var _has_anytime := false                 # an anytime style has lit this session (a held attack is then a charge)
 var _timer_until := 0
 var _style_at := 0                       # when the power attack can go (the server's timer: about 1 s after the last blow)
@@ -168,6 +169,7 @@ func on_line(text: String) -> void:
 				_win_block = int(f[2])
 				_win_dodge = int(f[3])
 				_win_cool = int(f[4])
+				_counter_cost = int(f[5]) if f.size() > 5 else 0
 		"windup":
 			if f.size() > 2:
 				_windup(int(f[1]), int(f[2]))
@@ -710,6 +712,11 @@ func _attack_up(now: int) -> void:
 	_atk_down = false
 	_soft_target()
 	var held := now - _atk_at >= int(HOLD_S * 1000.0)
+	if held and _counter_cost > 0:
+		# a caster's staff counter (owner 2026-11-01, CasterCounter): released just before a blow lands - 0.25 s
+		# snares, 0.15 s roots, 0.10 s stuns the attacker; 10% power either way
+		Server.command("/ac counter")
+		return
 	var heavy := held and _anytime_ready()
 	# A held attack let go before the power attack can go does nothing (owner 2026-11-01: it used to go as a quick
 	# swing, which restarted the clock - so the next hold was too soon again, and again). The ring round the crosshair
@@ -723,6 +730,11 @@ func _attack_up(now: int) -> void:
 
 
 ## An anytime style would fire now (its light from the server: known, usable, the weapon recovered).
+## The staff counter could go: a caster with a staff out and the power for it.
+func _counter_ready() -> bool:
+	return _counter_cost > 0 and float(PlayerData.power) >= 0.099          # (a tenth of the power bar)
+
+
 func _anytime_ready() -> bool:
 	return _ready.length() > 3 and _ready[3] == "1"
 
@@ -895,7 +907,7 @@ func _process(_delta: float) -> void:
 	if _drawing and not _ranged():
 		Server.command("/ac cancel")
 		_end_draw(false)
-	p.charge_glow(_atk_down and now - _atk_at >= int(HOLD_S * 1000.0) and _anytime_ready())   # (no glow: nothing to fire)
+	p.charge_glow(_atk_down and now - _atk_at >= int(HOLD_S * 1000.0) and (_anytime_ready() or _counter_ready()))   # (no glow: nothing to fire)
 	p.shoulder = Vector2(cam_side, cam_up)
 	hud.queue_redraw()
 
@@ -1397,7 +1409,7 @@ func _draw_hud() -> void:
 		for d in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
 			hud.draw_line(c + d * 6.0, c + d * 12.0, cross, 1.5)
 	# a held attack charging toward the anytime style
-	if _show.get("charge", true) and _atk_down and _anytime_ready():
+	if _show.get("charge", true) and _atk_down and (_anytime_ready() or _counter_ready()):
 		var f := clampf((now - _atk_at) / (HOLD_S * 1000.0), 0.0, 1.0)
 		hud.draw_arc(c, 16.0, -PI * 0.5, -PI * 0.5 + TAU * f, 40,
 				Color(1.0, 0.82, 0.3) if f >= 1.0 else Color(1, 1, 1, 0.7), 2.5 if f >= 1.0 else 2.0)

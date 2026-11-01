@@ -56,6 +56,8 @@ namespace DOL.GS
 		public int DodgeWindowMs;
 		public long DodgeReadyAt;
 		public bool DodgeAnswered;
+		public long CounterAt = -100000;       // a caster's staff counter released (CasterCounter)
+		public bool CounterAnswered;
 		public string LastWindows = "";
 		public bool Guarding;
 		public bool FumblePending;
@@ -636,7 +638,7 @@ namespace DOL.GS
 			if (state == null)
 				return;
 
-			string line = $"windows|{Window(player, eActionDefense.Parry)}|{Window(player, eActionDefense.Block)}|{Window(player, eActionDefense.Dodge)}|{ParryCooldownMs}";
+			string line = $"windows|{Window(player, eActionDefense.Parry)}|{Window(player, eActionDefense.Block)}|{Window(player, eActionDefense.Dodge)}|{ParryCooldownMs}|{(CasterCounter.CanCounter(player) ? CasterCounter.Cost(player) : 0)}";
 
 			if (!force && line == state.LastWindows)
 				return;
@@ -693,6 +695,7 @@ namespace DOL.GS
 				return eAttackResult.Any;
 
 			long now = GameLoop.GameLoopTime;
+			CasterCounter.OnBlow(player, state, ad, now);      // (a caster's staff counter: the blow still lands)
 			bool inFront = player.IsObjectInFront(ad.Attacker, 180);
 
 			if (now - state.DodgeAt <= state.DodgeWindowMs)

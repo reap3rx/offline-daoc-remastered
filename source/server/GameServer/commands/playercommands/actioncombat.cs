@@ -81,6 +81,9 @@ namespace DOL.GS.Commands
 				case "dodge":
 					ActionCombat.PressDodge(player);
 					break;
+				case "counter":
+					CasterCounter.Release(player);
+					break;
 				case "draw":
 					ActionCombat.StartDraw(player, args.Length > 2 && args[2].ToLowerInvariant() == "crit");
 					break;
