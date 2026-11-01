@@ -734,6 +734,8 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 			continue
 		WeaponModels.dye(w, int(it.get("color", 0)))           # its luster / enamel
 		WeaponModels.set_emblem(w, model_id, int(it.get("emblem", 0)))   # a shield's guild emblem
+		if bone == "Bip01 R Back" and (slot == 12 or WeaponModels.stance(model_id) in ["2h", "pole", "staff", "scy"]):
+			_raise_on_back(w)
 		var at := BoneAttachment3D.new()
 		at.bone_name = bone
 		skel.add_child(at)
@@ -741,6 +743,38 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 		WeaponModels.add_effect(w, int(it.get("effect", 0)))   # its glow / flame (an item's weapon effect)
 		made.append(at)
 	return made
+
+
+## A two-hander slung on the back sits higher (owner 2026-10-31: "too low ... the hilt of the greatsword should sit
+## around the shoulders"): the weapon slides along its own length toward its grip end - about a quarter of its length,
+## 6 to 16 units (15-40 cm) - so the hilt comes up over the shoulder and the blade or head off the legs. Its length and
+## which end is the blade come from its meshes' box in the holder's frame (NIF units), the grip at the origin.
+static func _raise_on_back(holder: Node3D) -> void:
+	if "--back-low" in OS.get_cmdline_user_args():       # (tests: the old hang, to compare)
+		return
+	var box := AABB()
+	var first := true
+	for mi in holder.find_children("*", "MeshInstance3D", true, false):
+		var xf := Transform3D.IDENTITY
+		var n: Node = mi
+		while n != null and n != holder:
+			if n is Node3D:
+				xf = (n as Node3D).transform * xf
+			n = n.get_parent()
+		var b: AABB = xf * (mi as MeshInstance3D).get_aabb()
+		box = b if first else box.merge(b)
+		first = false
+	if first:
+		return
+	var k := 0
+	for i in 3:
+		if box.size[i] > box.size[k]:
+			k = i
+	var lo := box.position[k]
+	var hi := box.end[k]
+	var toward_blade := Vector3.ZERO
+	toward_blade[k] = 1.0 if absf(hi) >= absf(lo) else -1.0
+	holder.position = -toward_blade * clampf(box.size[k] * 0.24, 6.0, 16.0)
 
 
 ## /follow /stick /face: false (and the reason in chat) when the target can't be tracked.

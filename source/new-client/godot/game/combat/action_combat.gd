@@ -386,7 +386,16 @@ func _float_text(oid: int, text: String, color: Color, size: int, lift: float) -
 	t.chain().tween_callback(l.queue_free)
 
 
+## A shield in use: worn in the left hand with the one-handed set out - a two-hander or a bow in hand leaves it on
+## the back (owner 2026-10-31: right click blocked with a two-hander out; it parries unless a shield is in use).
+## The server's own test is the same (ActionCombat.HasShield: the active left weapon).
 func _has_shield() -> bool:
+	if PlayerData.active_weapon == "twohand":
+		var th: Dictionary = PlayerData.item_at(12) if PlayerData.has_method("item_at") else {}
+		if not th.is_empty() and int(th.get("hand", 0)) == 1:   # (a one-hander there keeps the shield, as the server)
+			return false
+	elif PlayerData.active_weapon != "standard":
+		return false
 	var s: Dictionary = PlayerData.item_at(11) if PlayerData.has_method("item_at") else {}
 	return not s.is_empty() and int(s.get("object_type", 0)) == 42
 

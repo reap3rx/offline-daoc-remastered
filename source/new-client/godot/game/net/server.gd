@@ -941,11 +941,37 @@ func _refresh_bar_icons() -> void:
 				e["border"] = int(ic[1])
 
 
+## A listed spell's client effect: the class data's spell by the id the server sent, if its name agrees - else the
+## first spell of that name (the list's id can be the server's internal one).
+var _ce_by_name := {}
+
+
+func _own_effect(sp: Dictionary) -> int:
+	var nm := String(sp.get("name", ""))
+	var s := ClassDb.spell(int(sp.get("id", 0)))
+	if not s.is_empty() and String(s.get("name", "")) == nm:
+		return int(s.get("clienteffect", 0))
+	if _ce_by_name.is_empty():
+		for k in ClassDb._spells:
+			var o: Dictionary = ClassDb._spells[k]
+			var n := String(o.get("name", ""))
+			if n != "" and not _ce_by_name.has(n) and int(o.get("clienteffect", 0)) > 0:
+				_ce_by_name[n] = int(o.clienteffect)
+	return int(_ce_by_name.get(nm, 0))
+
+
 func on_spell_line(d: Dictionary) -> void:
 	if bool(d.done):
 		spell_lines = _lines_building
 		_lines_building = []
 		_forget_details("sk:")
+		# every spell you know: its effect files load now in the background (owner 2026-10-31: a spell's art didn't
+		# show the first time it was cast in a session - its files only started loading at that cast)
+		for line in spell_lines:
+			for sp in (line.spells as Array):
+				var ce := _own_effect(sp as Dictionary)
+				if ce > 0:
+					SpellFx.prefetch(ce)
 		skills_changed.emit()
 		return
 	if int(d.line) == 0:
