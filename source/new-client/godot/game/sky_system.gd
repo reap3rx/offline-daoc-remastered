@@ -367,7 +367,7 @@ func _update(_delta: float) -> void:
 		for zl in _zones():
 			(zl as ZoneLoader).set_water_light(up, sun.light_color, Color(fog).lightened(0.15))
 	if _rain:
-		_rain.amount_ratio = clampf(storm * 1.2 - 0.15, 0.0, 1.0)
+		_rain.amount_ratio = 0.0 if _snowing() else clampf(storm * 1.2 - 0.15, 0.0, 1.0)   # (snow zones: AmbientLife's snow)
 		_rain.emitting = _rain.amount_ratio > 0.01
 		if _follow:
 			# emit from the client's rain ceiling above the player (following the feet put the emitter at ground
@@ -570,6 +570,8 @@ func set_remastered(on: bool) -> void:
 			_mist.visible = false
 		_set_extras(false)
 		_weather_off()
+		if _life:
+			_life.off()
 		return
 	environment.tonemap_mode = Environment.TONE_MAPPER_AGX
 	environment.tonemap_exposure = _t("exposure", 0.85)
@@ -703,6 +705,7 @@ func _remaster_frame(w: Dictionary = {}, sun_dir := Vector3.UP) -> void:
 	if fill != _fill_now:
 		_fill_now = fill
 		RenderingServer.global_shader_parameter_set("zone_fill", fill)
+	_life_tick(sun_dir)
 
 
 func _update_grade(night: float, twilight: float) -> void:
@@ -806,7 +809,7 @@ func _weather_fx(delta: float, sun_dir: Vector3) -> void:
 		_sky_mat.set_shader_parameter("cloud_amb", Vector3(amb.r, amb.g, amb.b))
 	# lightning: a heavy storm's flashes, one to three flickers each
 	var bolts := _t("lightning", 1.0)
-	if storm > 0.6 and bolts > 0.0:
+	if storm > 0.6 and bolts > 0.0 and not _snowing():
 		_flash_next -= delta
 		if _flash_next <= 0.0:
 			_flash_pulses = _flash_rng.randi_range(1, 3)
@@ -828,6 +831,7 @@ func _weather_fx(delta: float, sun_dir: Vector3) -> void:
 		RenderingServer.global_shader_parameter_set("wind_strength", wind)
 		Fig3Figure.wind = wind
 	_water_fx(sun_dir)
+	_night_sky(sun_dir)
 	# wet in the rain (a minute to soak), dry after it (three minutes)
 	var raining := _rain.amount_ratio if _rain and _rain.emitting else 0.0
 	var target := clampf(raining * 1.6, 0.0, 1.0)
@@ -836,6 +840,64 @@ func _weather_fx(delta: float, sun_dir: Vector3) -> void:
 	if absf(wet - _wet_set) > 0.004:
 		_wet_set = wet
 		RenderingServer.global_shader_parameter_set("wetness", wet)
+
+
+## Life in the air (AmbientLife): fireflies, falling leaves, snow, dungeon dust round the player.
+const AmbientLife := preload("res://game/ambient_life.gd")
+var _life: AmbientLife
+
+
+func _snowing() -> bool:
+	return remastered and zone != null and not dungeon and AmbientLife.snowy(int(zone.info.get("id", -1)))
+
+
+func _life_tick(sun_dir: Vector3) -> void:
+	if _life == null:
+		_life = AmbientLife.new()
+		_life.name = "AmbientLife"
+		add_child(_life)
+	var at: Vector3                                          # round the camera (what sees them), else the player
+	var cam := get_viewport().get_camera_3d()
+	if cam:
+		at = cam.global_position
+	elif _follow:
+		at = _follow.global_position
+	else:
+		return
+	var daylight := clampf((sun_dir.y + 0.05) * 6.0, 0.0, 1.0)
+	if "--life-log" in OS.get_cmdline_user_args() and Engine.get_process_frames() % 120 == 0:
+		print("[life] zone %s storm %.2f snowing %s night %.2f at %s" % [zone.info.get("id"), storm, _snowing(), night_level, at])
+	_life.tick(at, _zones(), int(zone.info.get("id", -1)), dungeon, night_level, storm,
+			_wind_set if _wind_set > 0.0 else 1.0, daylight, Callable(self, "_t"))
+
+
+## The night sky (remastered): the moon's phases - a cycle of eight game days, its light waxing and waning with it -
+## and in Midgard (and Snowdonia) the northern lights on some clear nights, stronger on some than others.
+var moon_illumination := 1.0
+
+
+func _night_sky(sun_dir: Vector3) -> void:
+	var days := Time.get_unix_time_from_system() * day_increment / 86400.0
+	var ph := fposmod(days / _t("moon_cycle", 8.0) + 0.5, 1.0)
+	if _t("moon_phase", -1.0) >= 0.0:                         # tests: --tune=moon_phase:0.25
+		ph = _t("moon_phase", 0.5)
+	moon_illumination = (1.0 - cos(ph * TAU)) * 0.5
+	_sky_mat.set_shader_parameter("moon_phase_on", 1.0)
+	_sky_mat.set_shader_parameter("moon_phase", ph)
+	if sun and sun_dir.y <= -0.05:                            # the moon lights the night: less of it, less light
+		sun.light_energy *= lerpf(_t("newmoon_light", 0.4), 1.0, moon_illumination)
+	# the northern lights: Midgard's, or a snow zone's, clear nights; how strong is the night's own (hashed by date)
+	var a := 0.0
+	if _realm() == "mid" or AmbientLife.snowy(int(zone.info.get("id", -1))):
+		var night_no := roundf(days - fposmod(hour() - 12.0, 24.0) / 24.0)   # (one number from noon to the next noon)
+		var h := fposmod(sin(night_no * 12.9898) * 43758.5453, 1.0)
+		var strength := smoothstep(0.3, 0.85, h)
+		if _t("aurora_force", -1.0) >= 0.0:
+			strength = _t("aurora_force", 1.0)
+		var dark := clampf(-sun_dir.y * 6.0, 0.0, 1.0)
+		a = strength * dark * clampf(1.0 - storm * 2.5, 0.0, 1.0) * _t("aurora", 1.0)
+	_sky_mat.set_shader_parameter("aurora", a)
+	_sky_mat.set_shader_parameter("aurora_time", Time.get_ticks_msec() / 1000.0)
 
 
 ## The remastered water (owner 2026-10-31): its sky, rain rings and light, and the murk when the camera is under it.
@@ -899,6 +961,8 @@ func _underwater(murk: Color) -> void:
 
 func _weather_off() -> void:
 	if _sky_mat:
+		_sky_mat.set_shader_parameter("aurora", 0.0)
+		_sky_mat.set_shader_parameter("moon_phase_on", 0.0)
 		_sky_mat.set_shader_parameter("remaster_clouds", 0.0)
 		_sky_mat.set_shader_parameter("flash", 0.0)
 	_flash = 0.0

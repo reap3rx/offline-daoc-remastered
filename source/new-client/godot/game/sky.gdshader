@@ -99,6 +99,17 @@ vec4 sprite(sampler2D tex, vec3 dir, vec3 center, float size) {
 	return texture(tex, uv);
 }
 
+// the sprite's own coordinates (0..1 across it) for a direction (sprite() above)
+vec2 sprite_uv(vec3 dir, vec3 center, float size) {
+	vec3 c = normalize(center);
+	float d = max(dot(dir, c), 1e-4);
+	vec3 up = abs(c.y) > 0.99 ? vec3(1.0, 0.0, 0.0) : vec3(0.0, 1.0, 0.0);
+	vec3 right = normalize(cross(up, c));
+	vec3 up2 = cross(c, right);
+	vec3 p = dir / d - c;
+	return vec2(dot(p, right), dot(p, up2)) * (1000.0 / size) * 0.5 + 0.5;
+}
+
 float hash(vec3 p) {
 	return fract(sin(dot(p, vec3(12.9898, 78.233, 37.719))) * 43758.5453);
 }
@@ -108,6 +119,39 @@ float h21(vec2 p) {
 	p += dot(p, p + 45.32);
 	return fract(p.x * p.y);
 }
+
+float vn1(float x) {
+	float i = floor(x);
+	float f = fract(x);
+	f = f * f * (3.0 - 2.0 * f);
+	return mix(h21(vec2(i, 3.7)), h21(vec2(i + 1.0, 3.7)), f);
+}
+
+// The northern lights (remastered, Midgard's clear nights): curtains along a wavy line low across the northern sky
+// (-z), green at their foot fading up into violet, with fine rays down them, drifting slowly. Each of the layers is a
+// height up the curtain; a ray meets a layer at the point under it on the ground plane scaled by the height.
+uniform float aurora = 0.0;
+uniform float aurora_time = 0.0;
+vec3 aurora_glow(vec3 dir) {
+	vec3 acc = vec3(0.0);
+	if (dir.y < 0.02) return acc;
+	for (int i = 0; i < 24; i++) {
+		float fi = float(i) / 24.0;
+		float h = 1.0 + fi * 1.8;
+		vec2 q = dir.xz / dir.y * h;
+		float line = -2.2 - 0.55 * sin(q.x * 0.45 + aurora_time * 0.025) - 0.7 * vn1(q.x * 0.7 + aurora_time * 0.018);
+		float d = q.y - line;
+		float band = exp(-d * d * 6.0);
+		float rays = 0.45 + 0.55 * vn1(q.x * 9.0 + aurora_time * 0.12 + fi * 1.5);
+		vec3 c = mix(vec3(0.12, 1.0, 0.42), vec3(0.6, 0.18, 0.85), smoothstep(0.3, 1.0, fi));
+		float patch = smoothstep(0.15, 0.85, vn1(q.x * 0.22 + aurora_time * 0.01 + 7.0));   // brighter and fainter stretches
+		acc += c * band * rays * patch * exp(-fi * 2.0);
+	}
+	return acc / 24.0 * 4.0 * smoothstep(0.02, 0.15, dir.y);
+}
+
+uniform float moon_phase = 0.5;           // 0 new .. 0.5 full .. 1 new again
+uniform float moon_phase_on = 0.0;        // remastered: the moon waxes and wanes
 
 float vn2(vec2 p) {
 	vec2 i = floor(p);
@@ -232,11 +276,23 @@ void sky() {
 		}
 	}
 
+	if (aurora > 0.001 && dir.y > 0.0) {
+		col += aurora_glow(dir) * aurora;
+	}
+
 	// moon over its dark backing disk
 	vec4 mb = sprite(moonback_tex, dir, moon_dir, moon_size);
 	col = mix(col, moonback_color.rgb * mb.rgb, mb.a * moonback_color.a * star_visibility);
 	vec4 mn = sprite(moon_tex, dir, moon_dir, moon_size);
-	col += mn.rgb * moon_color.rgb * mn.a * moon_color.a * max(star_visibility, 0.15);
+	float mlit = 1.0;
+	if (moon_phase_on > 0.5 && mn.a > 0.0) {
+		// the lit part of the moon's ball for the phase (the dark part keeps a faint earthshine over the backing)
+		vec2 m = (sprite_uv(dir, moon_dir, moon_size) * 2.0 - 1.0) / 0.9;
+		float z = sqrt(max(1.0 - dot(m, m), 0.0));
+		float ph = moon_phase * 6.2831853;
+		mlit = max(smoothstep(-0.05, 0.12, dot(vec3(m.x, m.y, z), vec3(sin(ph), 0.0, -cos(ph)))), 0.05);
+	}
+	col += mn.rgb * moon_color.rgb * mn.a * moon_color.a * max(star_visibility, 0.15) * mlit;
 
 	// sun glow, flare and disk (additive, alpha = strength from the file)
 	vec4 gl = sprite(sun_glow_tex, dir, sun_dir, sizes.y);

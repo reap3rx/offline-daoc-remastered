@@ -28,6 +28,19 @@ var city := false                       # zone.json "city": the chunks are the g
 var materials: NifMaterials
 var _terrain_mats: Array[ShaderMaterial] = []
 var _water_mats: Array[ShaderMaterial] = []
+## The broadleaf trees' crowns (x, y, z in the zone's frame, w = reach): where AmbientLife's falling leaves start.
+var tree_crowns: Array[Vector4] = []
+## Trees that keep their needles (no falling leaves): by model name.
+const EVERGREEN := ["pine", "evergreen", "fir", "yew", "spruce", "cedar", "holly", "dead", "conifer"]
+
+
+static func evergreen(model_name: String) -> bool:
+	var n := model_name.to_lower()
+	for w in EVERGREEN:
+		if w in n:
+			return true
+	return false
+
 var _lights: Array[OmniLight3D] = []
 var prof := {}                          # load_zone: microseconds by part (printed with "built in")
 var _terrain_textures := {}     # terrain set -> Texture2D
@@ -802,12 +815,23 @@ func _build_fixtures() -> void:
 		if parts.is_empty() or (parts.meshes.is_empty() and parts.particles.is_empty() and parts.doors.is_empty()):
 			continue
 		var xforms: Array[Transform3D] = []
+		var crowns := bool(model.get("ambient_only", false)) and not evergreen(String(model.get("name", "")))
 		for f in per_model[m]:
 			var basis := Basis(Vector3.UP, deg_to_rad(float(f.yaw))).scaled(Vector3.ONE * float(f.scale))
 			if f.has("basis"):                                 # dungeon pieces: a full rotation (columns x, y, z)
 				var bb: Array = f.basis
 				basis = Basis(Vector3(bb[0], bb[1], bb[2]), Vector3(bb[3], bb[4], bb[5]), Vector3(bb[6], bb[7], bb[8]))
 			xforms.append(Transform3D(basis, Vector3(f.pos[0], f.pos[1], f.pos[2])))
+		if crowns and not parts.meshes.is_empty():
+			var box := AABB()
+			for k in parts.meshes.size():
+				var pb: AABB = parts.meshes[k][1] * (parts.meshes[k][0] as Mesh).get_aabb()
+				box = pb if k == 0 else box.merge(pb)
+			if box.size.y > 3.0:                              # (trees, not bushes)
+				var crown := box.position + box.size * Vector3(0.5, 0.72, 0.5)
+				for x in xforms:
+					tree_crowns.append(Vector4((x * crown).x, (x * crown).y, (x * crown).z,
+							maxf(box.size.x, box.size.z) * 0.3 * x.basis.get_scale().x))
 		# one batch per model part per map cell, so the renderer can skip cells that are off screen or far away
 		var cells := {}
 		for i in xforms.size():
