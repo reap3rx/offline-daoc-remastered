@@ -36,6 +36,8 @@ import tone_restore
 
 M = nif_static.UNITS_TO_METRES
 ESRGAN = ROOT / 'tools/realesrgan/realesrgan-ncnn-vulkan.exe'
+if not ESRGAN.exists():                       # the release zip unpacked as it comes (one folder deeper)
+    ESRGAN = next(iter(sorted((ROOT / 'tools/realesrgan').glob('*/realesrgan-ncnn-vulkan.exe'))), ESRGAN)
 BOM = '\N{ZERO WIDTH NO-BREAK SPACE}\xef\xbb\xbf'
 
 
@@ -859,8 +861,8 @@ def zone_exits(dat):
         if row:
             tx, ty, tz, region, heading, label = row
             zone = zone_of(region, tx, ty)
-            if zone and zone[0] in HOUSING_ZONES:
-                continue                                   # player housing came after 1.65: no way in
+            # (player housing came after 1.65 and these exits were left out until its zones were built - owner
+            # 2026-11-02: "make the entrance from classic zones into the housing zones work")
             if zone:
                 zid, ox, oy = zone
                 zid = ZONE_COPIES.get(zid, zid)
@@ -944,19 +946,42 @@ def zone_lights(dat):
     return lights
 
 
-def build(zone_id, upscale=True):
+def zone_dir(zone_id):
     zdir = CLIENT / f'zones/zone{zone_id:03d}'
     if not zdir.exists():                                  # the Albion epic dungeons (233, 244) ship in frontiers/zones
         zdir = CLIENT / f'frontiers/zones/zone{zone_id:03d}'
     if not zdir.exists():                                  # player housing (regions 2 / 102 / 202) ships in phousing/zones
         zdir = CLIENT / f'phousing/zones/zone{zone_id:03d}'
-    out = ROOT / f'godot/content/zones/zone{zone_id:03d}'
-    out.mkdir(parents=True, exist_ok=True)
-    (ROOT / 'godot/content/.gdignore').touch()             # runtime-loaded content: keep it out of the editor import
+    return zdir
+
+
+def zone_dat(zdir, zone_id):
     dat = read_mpk(str(zdir / f'dat{zone_id:03d}.mpk'))
     jump = client_zonejump(zdir, zone_id)
     if jump is not None:
         dat['zonejump.csv'] = jump
+    return dat
+
+
+def refresh_exits(zone_id, out_root=None):
+    """--exits-only: a built zone's zone.json 'exits' written again (the ZonePoints read anew), nothing else rebuilt."""
+    f = (out_root or ROOT / 'godot/content/zones') / f'zone{zone_id:03d}' / 'zone.json'
+    info = json.loads(f.read_text(encoding='utf-8'))
+    old = {e['name'] for e in info.get('exits', [])}
+    info['exits'] = zone_exits(zone_dat(zone_dir(zone_id), zone_id))
+    f.write_text(json.dumps(info, indent=1), encoding='utf-8')
+    for e in info['exits']:
+        if e['name'] not in old:
+            print('zone', zone_id, 'new exit', e['name'], '->', e.get('label'), 'zone', e.get('to_zone'))
+    return info['exits']
+
+
+def build(zone_id, upscale=True):
+    zdir = zone_dir(zone_id)
+    out = ROOT / f'godot/content/zones/zone{zone_id:03d}'
+    out.mkdir(parents=True, exist_ok=True)
+    (ROOT / 'godot/content/.gdignore').touch()             # runtime-loaded content: keep it out of the editor import
+    dat = zone_dat(zdir, zone_id)
     sector = sector_ini(dat['sector.dat'])
     if 'city.csv' in dat:
         return build_city(zone_id, upscale, zdir, out, dat, sector)
@@ -1249,7 +1274,11 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('zone', type=int)
     ap.add_argument('--no-upscale', action='store_true')
+    ap.add_argument('--exits-only', action='store_true')
     a = ap.parse_args()
+    if a.exits_only:
+        refresh_exits(a.zone)
+        return
     build(a.zone, not a.no_upscale)
 
 

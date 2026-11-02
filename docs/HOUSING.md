@@ -6,8 +6,15 @@ Hibernia 202), 1,800 lots per realm, the deed and furniture shops. The new clien
 
 ## Getting there
 
-Talk to a capital teleporter (Master Visur, Stor Gothi Annark, Channeler Glasny) and say **[Housing]**, then
-**[entrance]**. Each realm's housing is nine zones built from the old client's `phousing/zones`.
+- **Walk in** through the realm's housing gate, as on live: Albion from Camelot Hills (the *Caerwent* exits), Midgard
+  from Vale of Mularn (*Erikstaad*), Hibernia from Connacht (*Meath*). The housing entrance zone's own exit takes you
+  back out to the same spot. (These are the old client's zone jumps and the server's ZonePoints 108-113; the new
+  client had left them out while the housing zones weren't built.)
+- Or talk to a capital teleporter (Master Visur, Stor Gothi Annark, Channeler Glasny) and say **[Housing]**, then
+  **[entrance]**.
+
+Each realm's housing is nine zones built from the old client's `phousing/zones`, with the same Real-ESRGAN texture
+pass as the rest of the world (`pipeline/upscale_built.py`, for content first built with `--no-upscale`).
 
 ## Buying a lot and building
 
@@ -47,7 +54,8 @@ Talk to a capital teleporter (Master Visur, Stor Gothi Annark, Channeler Glasny)
   choosable parts are tagged in the conversion (roofN, wallN, doorN, porch, tent, banners, shields, carpetN, and the
   interiors' placement planes floorpN / wallpN). The hookpoints come from the server database (HouseHookpointOffset,
   read only).
-- `source/new-client/pipeline/build_zone.py <zone> --no-upscale` builds a housing zone like any other.
+- `source/new-client/pipeline/build_zone.py <zone>` builds a housing zone like any other; `--exits-only` rewrites
+  a built zone's exits alone (how Camelot Hills, Vale of Mularn and Connacht got their housing gates).
 - `game/world/housing.gd` builds houses, interiors and objects; `game/net/server_world.gd` handles the packets
   (HouseCreate 0xD1, HouseChangeGarden 0xD2, HouseEnter 0x08, HouseExit 0x0A, HousingItem 0x09) and the clicks and
   drops; `game/net/DaocClient.cs` sends HouseEnterLeave, HouseMenu, HousePlaceItem, HousePickup, HouseRotate,

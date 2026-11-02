@@ -264,14 +264,18 @@ func set_terrain_set(set_name: String) -> void:
 	var painted := set_name
 	if blend:
 		painted = "lod_x4plus" if texture_set == "x4plus" and info.terrain_sets.has("lod_x4plus") else "lod"
-	if not _terrain_textures.has(painted):
+	if not info.terrain_sets.has(painted):
+		# no such painted ground (most housing zones ship none - phousing's tex/lod archives cover only the entrance
+		# zones): any set it has, else none (the splat layers alone)
+		painted = String(info.terrain_sets.keys()[0]) if not info.terrain_sets.is_empty() else ""
+	if painted != "" and not _terrain_textures.has(painted):
 		_terrain_textures[painted] = _load_texture(dir.path_join(info.terrain_sets[painted]))
 	_painted = painted
 	var detail_name: String = String(info.get("terrain_detail", "")) if info.get("terrain_detail") != null else ""   # null in some zones
 	var detail := materials.texture(detail_name) if detail_name != "" else null
 	for mat in _terrain_mats:
 		mat.set_shader_parameter("use_splat", blend)
-		mat.set_shader_parameter("tile_tex", _terrain_textures[painted])
+		mat.set_shader_parameter("tile_tex", _terrain_textures.get(painted))
 		mat.set_shader_parameter("detail_tex", detail)
 		mat.set_shader_parameter("detail_mean", _detail_mean)
 		if blend:
