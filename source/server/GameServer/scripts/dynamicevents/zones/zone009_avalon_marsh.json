@@ -74,7 +74,7 @@
           "success": "The Ghoul Lord of Avalon falls. The way is safe again.",
           "fail": "The Ghoul Lord of Avalon slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -82,6 +82,84 @@
               { "id": "nu9_ghoul_lord_of_avalon_s_band", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Ghouls Hold the Causeway",
+          "objective": "Drive the ghouls off the causeway",
+          "announce": "The ghoul lord's knights have come out of the drowned court and hold the causeway to Caer Witrin.",
+          "center": [544, 733, 47.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12017,
+              "name": "ghoul footman",
+              "level": [17, 17]
+            },
+            {
+              "template": 12018,
+              "name": "ghoul knight",
+              "level": [18, 18]
+            }
+          ],
+          "boss": {
+            "template": 12017,
+            "name": "Ghoul Banneret",
+            "level": 19,
+            "pos": [544, 733, 47.6],
+            "health_mult": 2
+          },
+          "success": "The causeway is clear. The marsh is already pulling at the stones.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Brother Anselm, who is blessing the causeway stones",
+          "announce": "Brother Anselm is blessing the causeway stones. The dead are coming back!",
+          "center": [544, 733, 47.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Brother Anselm",
+            "level": 18,
+            "pos": [544, 733, 47.6],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [464, 704, 60.0],
+              [509, 655, 58.8],
+              [575, 654, 49.1]
+            ],
+            "mobs": [
+              {
+                "template": 12017,
+                "name": "ghoul footman",
+                "level": [17, 17]
+              },
+              {
+                "template": 12018,
+                "name": "ghoul knight",
+                "level": [18, 18]
+              }
+            ]
+          },
+          "thanks": "\"Rest now, all of you. The causeway is holy ground again.\"",
+          "success": "The ghoul footmans break and scatter. The road to Caer Witrin is open again.",
+          "fail": "Brother Anselm falls, and the ghoul footmans take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -210,7 +288,7 @@
           "success": "Mudgrip the Bog-Chief falls. The way is safe again.",
           "fail": "Mudgrip the Bog-Chief slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -218,6 +296,97 @@
               { "id": "nu9_mudgrip_the_bog_chief_s_girdle", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Bogman Gatherers Hold the Road to Adibard's Retreat",
+          "objective": "Drive the bogman gatherers off the road to Adibard's Retreat",
+          "announce": "With The Bogmen lost, the bogman gatherers have spread down onto the road to Adibard's Retreat and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1377, 560, 48.5],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12005,
+              "name": "bogman gatherer",
+              "level": [8, 8]
+            },
+            {
+              "template": 12008,
+              "name": "bogman trapper",
+              "level": [10, 10]
+            },
+            {
+              "template": 12007,
+              "name": "bogman hunter",
+              "level": [11, 11]
+            }
+          ],
+          "boss": {
+            "template": 12005,
+            "name": "Bogman gatherer warleader",
+            "level": 12,
+            "pos": [1377, 560, 48.5],
+            "health_mult": 2
+          },
+          "success": "The bogman gatherers are gone from the road to Adibard's Retreat. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Mabyn has come out to set the road to Adibard's Retreat right. The bogman gatherers are coming back for it!",
+          "center": [1377, 560, 48.5],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Mabyn",
+            "level": 11,
+            "pos": [1377, 560, 48.5],
+            "health_mult": 10,
+            "template": 60161835,
+            "model": 74,
+            "equipment": "9f2bc6dd-5b20-4853-9584-3c393d75f4cd"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1332, 632, 51.7],
+              [1294, 578, 41.0],
+              [1307, 513, 50.5]
+            ],
+            "mobs": [
+              {
+                "template": 12005,
+                "name": "bogman gatherer",
+                "level": [8, 8]
+              },
+              {
+                "template": 12008,
+                "name": "bogman trapper",
+                "level": [10, 10]
+              },
+              {
+                "template": 12007,
+                "name": "bogman hunter",
+                "level": [11, 11]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Adibard's Retreat is safe again. Thank you.\"",
+          "success": "The bogman gatherers break and scatter. The road to Adibard's Retreat is open again.",
+          "fail": "Roadwarden Mabyn falls, and the bogman gatherers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -294,7 +463,7 @@
           "success": "Guardian Sergeant Lyle reaches the sinking causeway. \"There they are. Clear them out!\"",
           "fail": "Guardian Sergeant Lyle falls on the road. The others carry the body home.",
           "on_success": "g2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 10, "copper_per_level": 60 }
         },
         {
@@ -362,7 +531,7 @@
           "success": "The Mire Colossus falls. Caer Witrin will hear of this in the taverns tonight.",
           "fail": "The Mire Colossus slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -370,6 +539,97 @@
               { "id": "nu9_mire_colossus_mantle", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Shamblers Hold the Road to Caer Witrin",
+          "objective": "Drive the shamblers off the road to Caer Witrin",
+          "announce": "With Shamblers of the Marsh lost, the shamblers have spread down onto the road to Caer Witrin and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [447, 1107, 46.7],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12052,
+              "name": "shambler",
+              "level": [12, 13]
+            },
+            {
+              "template": 12032,
+              "name": "mud golem",
+              "level": [14, 14]
+            },
+            {
+              "template": 12026,
+              "name": "marsh scrag",
+              "level": [11, 11]
+            }
+          ],
+          "boss": {
+            "template": 12052,
+            "name": "Shambler warleader",
+            "level": 15,
+            "pos": [447, 1107, 46.7],
+            "health_mult": 2
+          },
+          "success": "The shamblers are gone from the road to Caer Witrin. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hal has come out to set the road to Caer Witrin right. The shamblers are coming back for it!",
+          "center": [447, 1107, 46.7],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hal",
+            "level": 14,
+            "pos": [447, 1107, 46.7],
+            "health_mult": 10,
+            "template": 60161835,
+            "model": 74,
+            "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [532, 1112, 46.0],
+              [503, 1171, 47.2],
+              [440, 1192, 51.0]
+            ],
+            "mobs": [
+              {
+                "template": 12052,
+                "name": "shambler",
+                "level": [12, 13]
+              },
+              {
+                "template": 12032,
+                "name": "mud golem",
+                "level": [14, 14]
+              },
+              {
+                "template": 12026,
+                "name": "marsh scrag",
+                "level": [11, 11]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Caer Witrin is safe again. Thank you.\"",
+          "success": "The shamblers break and scatter. The road to Caer Witrin is open again.",
+          "fail": "Roadwarden Hal falls, and the shamblers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

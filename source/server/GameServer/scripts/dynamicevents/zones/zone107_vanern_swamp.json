@@ -84,7 +84,7 @@
           "success": "Hagbui Thane Ormr falls. The way is safe again.",
           "fail": "Hagbui Thane Ormr slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -92,6 +92,104 @@
               { "id": "nu107_hagbui_thane_ormr_s_bracer", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Hagbui Guards Hold the Road",
+          "objective": "Drive the hagbui guards off the road",
+          "announce": "With The Hagbui Barrow lost, the hagbui guards have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [585, 353, 42.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60161916,
+              "name": "hagbui guard",
+              "level": [40, 42]
+            },
+            {
+              "template": 60161918,
+              "name": "hagbui shaman",
+              "level": [40, 40]
+            },
+            {
+              "template": 60161917,
+              "name": "hagbui runemaster",
+              "level": [42, 42]
+            },
+            {
+              "template": 60161919,
+              "name": "hagbui spiritmaster",
+              "level": [43, 43]
+            }
+          ],
+          "boss": {
+            "template": 60161916,
+            "name": "Hagbui guard warleader",
+            "level": 44,
+            "pos": [585, 353, 42.6],
+            "health_mult": 2
+          },
+          "success": "The hagbui guards are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Sten has come out to set the road right. The hagbui guards are coming back for it!",
+          "center": [585, 353, 42.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Sten",
+            "level": 43,
+            "pos": [585, 353, 42.6],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [516, 402, 38.7],
+              [502, 338, 40.0],
+              [538, 283, 42.4]
+            ],
+            "mobs": [
+              {
+                "template": 60161916,
+                "name": "hagbui guard",
+                "level": [40, 42]
+              },
+              {
+                "template": 60161918,
+                "name": "hagbui shaman",
+                "level": [40, 40]
+              },
+              {
+                "template": 60161917,
+                "name": "hagbui runemaster",
+                "level": [42, 42]
+              },
+              {
+                "template": 60161919,
+                "name": "hagbui spiritmaster",
+                "level": [43, 43]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The hagbui guards break and scatter. The road is open again.",
+          "fail": "Roadwarden Sten falls, and the hagbui guards take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -210,7 +308,7 @@
           "success": "Leirjotun falls. The way is safe again.",
           "fail": "Leirjotun slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -218,6 +316,87 @@
               { "id": "nu107_leirjotun_s_stone", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Clay Jotuns Hold the Road",
+          "objective": "Drive the clay jotuns off the road",
+          "announce": "With The Jotun March lost, the clay jotuns have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [847, 802, 57.5],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60159228,
+              "name": "clay jotun",
+              "level": [40, 42]
+            },
+            {
+              "template": 60164268,
+              "name": "mud crab warrior",
+              "level": [36, 36]
+            }
+          ],
+          "boss": {
+            "template": 60159228,
+            "name": "Clay jotun warleader",
+            "level": 43,
+            "pos": [847, 802, 57.5],
+            "health_mult": 2
+          },
+          "success": "The clay jotuns are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Ylva has come out to set the road right. The clay jotuns are coming back for it!",
+          "center": [847, 802, 57.5],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Ylva",
+            "level": 42,
+            "pos": [847, 802, 57.5],
+            "health_mult": 10,
+            "template": 60167667,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [787, 863, 59.4],
+              [762, 801, 58.2],
+              [788, 741, 58.8]
+            ],
+            "mobs": [
+              {
+                "template": 60159228,
+                "name": "clay jotun",
+                "level": [40, 42]
+              },
+              {
+                "template": 60164268,
+                "name": "mud crab warrior",
+                "level": [36, 36]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The clay jotuns break and scatter. The road is open again.",
+          "fail": "Roadwarden Ylva falls, and the clay jotuns take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

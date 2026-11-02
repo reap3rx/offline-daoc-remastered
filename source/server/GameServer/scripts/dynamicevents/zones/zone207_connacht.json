@@ -74,7 +74,7 @@
           "success": "The Burning Wickerman falls. The way is safe again.",
           "fail": "The Burning Wickerman slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -82,6 +82,84 @@
               { "id": "nu207_burning_wickerman_s_bracer", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Phantom Wickermans Hold the Road to Druim Ligen",
+          "objective": "Drive the phantom wickermans off the road to Druim Ligen",
+          "announce": "With The Phantom Wickermen lost, the phantom wickermans have spread down onto the road to Druim Ligen and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [988, 431, 157.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60164910,
+              "name": "phantom wickerman",
+              "level": [28, 30]
+            },
+            {
+              "template": 60158182,
+              "name": "azure idolater",
+              "level": [24, 25]
+            }
+          ],
+          "boss": {
+            "template": 60164910,
+            "name": "Phantom wickerman warleader",
+            "level": 31,
+            "pos": [988, 431, 157.0],
+            "health_mult": 2
+          },
+          "success": "The phantom wickermans are gone from the road to Druim Ligen. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Aine has come out to set the road to Druim Ligen right. The phantom wickermans are coming back for it!",
+          "center": [988, 431, 157.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Aine",
+            "level": 30,
+            "pos": [988, 431, 157.0],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [908, 458, 155.0],
+              [913, 392, 158.0],
+              [964, 349, 156.3]
+            ],
+            "mobs": [
+              {
+                "template": 60164910,
+                "name": "phantom wickerman",
+                "level": [28, 30]
+              },
+              {
+                "template": 60158182,
+                "name": "azure idolater",
+                "level": [24, 25]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Druim Ligen is safe again. Thank you.\"",
+          "success": "The phantom wickermans break and scatter. The road to Druim Ligen is open again.",
+          "fail": "Roadwarden Aine falls, and the phantom wickermans take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -210,7 +288,7 @@
           "success": "Elder Irewood falls. The way is safe again.",
           "fail": "Elder Irewood slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -218,6 +296,97 @@
               { "id": "nu207_elder_irewood_s_band", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Streaming Wisps Hold the Road to Basar",
+          "objective": "Drive the streaming wisps off the road to Basar",
+          "announce": "With The Woodward lost, the streaming wisps have spread down onto the road to Basar and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [759, 641, 134.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60166584,
+              "name": "streaming wisp",
+              "level": [21, 24]
+            },
+            {
+              "template": 60168131,
+              "name": "young irewood",
+              "level": [24, 28]
+            },
+            {
+              "template": 60159263,
+              "name": "cluricaun",
+              "level": [22, 24]
+            }
+          ],
+          "boss": {
+            "template": 60166584,
+            "name": "Streaming wisp warleader",
+            "level": 29,
+            "pos": [759, 641, 134.6],
+            "health_mult": 2
+          },
+          "success": "The streaming wisps are gone from the road to Basar. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cormac has come out to set the road to Basar right. The streaming wisps are coming back for it!",
+          "center": [759, 641, 134.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cormac",
+            "level": 28,
+            "pos": [759, 641, 134.6],
+            "health_mult": 10,
+            "template": 60163820,
+            "model": 561,
+            "equipment": "MasterRanger"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [682, 678, 146.0],
+              [679, 612, 144.4],
+              [725, 564, 133.9]
+            ],
+            "mobs": [
+              {
+                "template": 60166584,
+                "name": "streaming wisp",
+                "level": [21, 24]
+              },
+              {
+                "template": 60168131,
+                "name": "young irewood",
+                "level": [24, 28]
+              },
+              {
+                "template": 60159263,
+                "name": "cluricaun",
+                "level": [22, 24]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Basar is safe again. Thank you.\"",
+          "success": "The streaming wisps break and scatter. The road to Basar is open again.",
+          "fail": "Roadwarden Cormac falls, and the streaming wisps take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -291,7 +460,7 @@
           "success": "Sentinel Andreasa reaches the ghoul moor. \"There they are. Clear them out!\"",
           "fail": "Sentinel Andreasa falls on the road. The others carry the body home.",
           "on_success": "g2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 10, "copper_per_level": 60 }
         },
         {
@@ -359,7 +528,7 @@
           "success": "Cathal of the Four Winds falls. Basar will hear of this in the taverns tonight.",
           "fail": "Cathal of the Four Winds slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -367,6 +536,97 @@
               { "id": "nu207_cathal_of_the_four_winds_jewel", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Wind Ghouls Hold the Road to Basar",
+          "objective": "Drive the wind ghouls off the road to Basar",
+          "announce": "With The Wind Ghouls lost, the wind ghouls have spread down onto the road to Basar and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1050, 863, 129.1],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60167968,
+              "name": "wind ghoul",
+              "level": [7, 7]
+            },
+            {
+              "template": 60163467,
+              "name": "lugradan whelp",
+              "level": [4, 6]
+            },
+            {
+              "template": 60164276,
+              "name": "mudman",
+              "level": [3, 4]
+            }
+          ],
+          "boss": {
+            "template": 60167968,
+            "name": "Wind ghoul warleader",
+            "level": 8,
+            "pos": [1050, 863, 129.1],
+            "health_mult": 2
+          },
+          "success": "The wind ghouls are gone from the road to Basar. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Ruadh has come out to set the road to Basar right. The wind ghouls are coming back for it!",
+          "center": [1050, 863, 129.1],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Ruadh",
+            "level": 7,
+            "pos": [1050, 863, 129.1],
+            "health_mult": 10,
+            "template": 60165770,
+            "model": 389,
+            "equipment": "d8359758-1be0-4703-95f9-4e17bbb88a2b"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1113, 806, 127.6],
+              [1135, 869, 127.6],
+              [1104, 928, 127.6]
+            ],
+            "mobs": [
+              {
+                "template": 60167968,
+                "name": "wind ghoul",
+                "level": [7, 7]
+              },
+              {
+                "template": 60163467,
+                "name": "lugradan whelp",
+                "level": [4, 6]
+              },
+              {
+                "template": 60164276,
+                "name": "mudman",
+                "level": [3, 4]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Basar is safe again. Thank you.\"",
+          "success": "The wind ghouls break and scatter. The road to Basar is open again.",
+          "fail": "Roadwarden Ruadh falls, and the wind ghouls take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

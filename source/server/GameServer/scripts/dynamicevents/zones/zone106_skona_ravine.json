@@ -74,7 +74,7 @@
           "success": "Grimgar Fenris-born falls. The way is safe again.",
           "fail": "Grimgar Fenris-born slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -82,6 +82,84 @@
               { "id": "nu106_grimgar_fenris_born_s_mantle", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Werewolf Warders Hold the Road",
+          "objective": "Drive the werewolf warders off the road",
+          "announce": "With The Werewolf Warders lost, the werewolf warders have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1348, 793, 125.8],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60167872,
+              "name": "werewolf warder",
+              "level": [27, 30]
+            },
+            {
+              "template": 60167861,
+              "name": "werewolf guard",
+              "level": [31, 33]
+            }
+          ],
+          "boss": {
+            "template": 60167872,
+            "name": "Werewolf warder warleader",
+            "level": 34,
+            "pos": [1348, 793, 125.8],
+            "health_mult": 2
+          },
+          "success": "The werewolf warders are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Gunnar has come out to set the road right. The werewolf warders are coming back for it!",
+          "center": [1348, 793, 125.8],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Gunnar",
+            "level": 33,
+            "pos": [1348, 793, 125.8],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1368, 875, 133.7],
+              [1303, 865, 116.1],
+              [1265, 811, 125.8]
+            ],
+            "mobs": [
+              {
+                "template": 60167872,
+                "name": "werewolf warder",
+                "level": [27, 30]
+              },
+              {
+                "template": 60167861,
+                "name": "werewolf guard",
+                "level": [31, 33]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The werewolf warders break and scatter. The road is open again.",
+          "fail": "Roadwarden Gunnar falls, and the werewolf warders take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -210,7 +288,7 @@
           "success": "Mother Oak falls. The way is safe again.",
           "fail": "Mother Oak slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -218,6 +296,97 @@
               { "id": "nu106_mother_oak_s_belt", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Dryad Blossoms Hold the Road",
+          "objective": "Drive the dryad blossoms off the road",
+          "announce": "With The Dryad Grove lost, the dryad blossoms have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1461, 1062, 126.4],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60160196,
+              "name": "dryad blossom",
+              "level": [20, 20]
+            },
+            {
+              "template": 60160197,
+              "name": "dryad greenthumb",
+              "level": [21, 21]
+            },
+            {
+              "template": 60167248,
+              "name": "treekeep",
+              "level": [22, 22]
+            }
+          ],
+          "boss": {
+            "template": 60160196,
+            "name": "Dryad blossom warleader",
+            "level": 23,
+            "pos": [1461, 1062, 126.4],
+            "health_mult": 2
+          },
+          "success": "The dryad blossoms are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Ylva has come out to set the road right. The dryad blossoms are coming back for it!",
+          "center": [1461, 1062, 126.4],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Ylva",
+            "level": 22,
+            "pos": [1461, 1062, 126.4],
+            "health_mult": 10,
+            "template": 60167667,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1520, 1124, 122.6],
+              [1458, 1147, 124.5],
+              [1398, 1119, 127.4]
+            ],
+            "mobs": [
+              {
+                "template": 60160196,
+                "name": "dryad blossom",
+                "level": [20, 20]
+              },
+              {
+                "template": 60160197,
+                "name": "dryad greenthumb",
+                "level": [21, 21]
+              },
+              {
+                "template": 60167248,
+                "name": "treekeep",
+                "level": [22, 22]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The dryad blossoms break and scatter. The road is open again.",
+          "fail": "Roadwarden Ylva falls, and the dryad blossoms take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

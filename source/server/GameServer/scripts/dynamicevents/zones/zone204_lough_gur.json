@@ -74,7 +74,7 @@
           "success": "Gurite Warchief Donnan falls. The way is safe again.",
           "fail": "Gurite Warchief Donnan slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -82,6 +82,84 @@
               { "id": "nu204_gurite_warchief_donnan_s_pendant", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Gurite Raiders Hold the Road",
+          "objective": "Drive the gurite raiders off the road",
+          "announce": "With The Gurite Raiders lost, the gurite raiders have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [354, 1221, 125.4],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60161871,
+              "name": "gurite raider",
+              "level": [37, 39]
+            },
+            {
+              "template": 60161869,
+              "name": "gurite lookout",
+              "level": [37, 37]
+            }
+          ],
+          "boss": {
+            "template": 60161871,
+            "name": "Gurite raider warleader",
+            "level": 40,
+            "pos": [354, 1221, 125.4],
+            "health_mult": 2
+          },
+          "success": "The gurite raiders are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Aine has come out to set the road right. The gurite raiders are coming back for it!",
+          "center": [354, 1221, 125.4],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Aine",
+            "level": 39,
+            "pos": [354, 1221, 125.4],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [390, 1298, 132.2],
+              [324, 1301, 133.3],
+              [276, 1255, 136.6]
+            ],
+            "mobs": [
+              {
+                "template": 60161871,
+                "name": "gurite raider",
+                "level": [37, 39]
+              },
+              {
+                "template": 60161869,
+                "name": "gurite lookout",
+                "level": [37, 37]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The gurite raiders break and scatter. The road is open again.",
+          "fail": "Roadwarden Aine falls, and the gurite raiders take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -200,7 +278,7 @@
           "success": "The Great Luch falls. The way is safe again.",
           "fail": "The Great Luch slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -208,6 +286,87 @@
               { "id": "nu204_great_luch_s_eye", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Greater Luches Hold the Road",
+          "objective": "Drive the greater luches off the road",
+          "announce": "With The Luch Swarm lost, the greater luches have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [176, 647, 158.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60161603,
+              "name": "greater luch",
+              "level": [24, 27]
+            },
+            {
+              "template": 60163448,
+              "name": "luch catcher",
+              "level": [25, 28]
+            }
+          ],
+          "boss": {
+            "template": 60161603,
+            "name": "Greater luch warleader",
+            "level": 29,
+            "pos": [176, 647, 158.6],
+            "health_mult": 2
+          },
+          "success": "The greater luches are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Ruadh has come out to set the road right. The greater luches are coming back for it!",
+          "center": [176, 647, 158.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Ruadh",
+            "level": 28,
+            "pos": [176, 647, 158.6],
+            "health_mult": 10,
+            "template": 60161797,
+            "model": 388,
+            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [244, 697, 161.4],
+              [188, 731, 161.8],
+              [124, 714, 165.2]
+            ],
+            "mobs": [
+              {
+                "template": 60161603,
+                "name": "greater luch",
+                "level": [24, 27]
+              },
+              {
+                "template": 60163448,
+                "name": "luch catcher",
+                "level": [25, 28]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The greater luches break and scatter. The road is open again.",
+          "fail": "Roadwarden Ruadh falls, and the greater luches take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -281,7 +440,7 @@
           "success": "Old Cluricaun Ruadh falls. The way is safe again.",
           "fail": "Old Cluricaun Ruadh slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -289,6 +448,84 @@
               { "id": "nu204_old_cluricaun_ruadh_s_stone", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Cluricauns Hold the Road",
+          "objective": "Drive the cluricauns off the road",
+          "announce": "With The Cluricaun Revel lost, the cluricauns have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1097, 517, 111.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60159264,
+              "name": "cluricaun",
+              "level": [22, 24]
+            },
+            {
+              "template": 60164845,
+              "name": "parthanan",
+              "level": [17, 18]
+            }
+          ],
+          "boss": {
+            "template": 60159264,
+            "name": "Cluricaun warleader",
+            "level": 25,
+            "pos": [1097, 517, 111.6],
+            "health_mult": 2
+          },
+          "success": "The cluricauns are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cormac has come out to set the road right. The cluricauns are coming back for it!",
+          "center": [1097, 517, 111.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cormac",
+            "level": 24,
+            "pos": [1097, 517, 111.6],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1099, 432, 119.9],
+              [1160, 459, 120.9],
+              [1182, 521, 118.4]
+            ],
+            "mobs": [
+              {
+                "template": 60159264,
+                "name": "cluricaun",
+                "level": [22, 24]
+              },
+              {
+                "template": 60164845,
+                "name": "parthanan",
+                "level": [17, 18]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The cluricauns break and scatter. The road is open again.",
+          "fail": "Roadwarden Cormac falls, and the cluricauns take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

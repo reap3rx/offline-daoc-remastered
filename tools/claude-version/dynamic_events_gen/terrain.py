@@ -46,3 +46,10 @@ class Terrain:
             if prev is not None and abs(zz-prev)/(L/n)>maxgrade: return False
             prev=zz
         return True
+
+    def ok_area_nofix(self, x, y):
+        """A spot to stand on (a giver, a quartermaster): dry and nearly flat, buildings allowed nearby."""
+        if self.wet(x, y):
+            return False
+        zs = [self.z(x + dx, y + dy) for dx, dy in ((0, 0), (4, 0), (-4, 0), (0, 4), (0, -4))]
+        return max(zs) - min(zs) < 2.0

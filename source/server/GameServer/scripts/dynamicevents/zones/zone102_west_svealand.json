@@ -79,7 +79,7 @@
           "success": "Hjalmar Blood-Oath falls. The way is safe again.",
           "fail": "Hjalmar Blood-Oath slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -87,6 +87,94 @@
               { "id": "nu102_hjalmar_blood_oath_s_bracer", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Blodfelag Drengs Hold the Road to Vindsaul Faste",
+          "objective": "Drive the blodfelag drengs off the road to Vindsaul Faste",
+          "announce": "With The Blodfelag Camp lost, the blodfelag drengs have spread down onto the road to Vindsaul Faste and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [676, 808, 145.5],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60158514,
+              "name": "blodfelag dreng",
+              "level": [14, 16]
+            },
+            {
+              "template": 60158526,
+              "name": "blodfelag svard",
+              "level": [16, 17]
+            },
+            {
+              "template": 20015,
+              "name": "blodfelag windcaller",
+              "level": [17, 18]
+            }
+          ],
+          "boss": {
+            "template": 60158514,
+            "name": "Blodfelag dreng warleader",
+            "level": 19,
+            "pos": [676, 808, 145.5],
+            "health_mult": 2
+          },
+          "success": "The blodfelag drengs are gone from the road to Vindsaul Faste. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Gunnar has come out to set the road to Vindsaul Faste right. The blodfelag drengs are coming back for it!",
+          "center": [676, 808, 145.5],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Gunnar",
+            "level": 18,
+            "pos": [676, 808, 145.5],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [692, 891, 145.2],
+              [627, 878, 146.0],
+              [592, 822, 149.9]
+            ],
+            "mobs": [
+              {
+                "template": 60158514,
+                "name": "blodfelag dreng",
+                "level": [14, 16]
+              },
+              {
+                "template": 60158526,
+                "name": "blodfelag svard",
+                "level": [16, 17]
+              },
+              {
+                "template": 20015,
+                "name": "blodfelag windcaller",
+                "level": [17, 18]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Vindsaul Faste is safe again. Thank you.\"",
+          "success": "The blodfelag drengs break and scatter. The road to Vindsaul Faste is open again.",
+          "fail": "Roadwarden Gunnar falls, and the blodfelag drengs take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -215,7 +303,7 @@
           "success": "Ulf the Faithless falls. The way is safe again.",
           "fail": "Ulf the Faithless slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -223,6 +311,97 @@
               { "id": "nu102_ulf_the_faithless_stone", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Blodfelag Oathbreakers Hold the Road to Vindsaul Faste",
+          "objective": "Drive the blodfelag oathbreakers off the road to Vindsaul Faste",
+          "announce": "With The Oathbreakers' Raid lost, the blodfelag oathbreakers have spread down onto the road to Vindsaul Faste and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [997, 750, 142.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60158520,
+              "name": "blodfelag oathbreaker",
+              "level": [10, 12]
+            },
+            {
+              "template": 60158516,
+              "name": "blodfelag henchman",
+              "level": [12, 13]
+            },
+            {
+              "template": 60158521,
+              "name": "blodfelag partisan",
+              "level": [13, 15]
+            }
+          ],
+          "boss": {
+            "template": 60158520,
+            "name": "Blodfelag oathbreaker warleader",
+            "level": 16,
+            "pos": [997, 750, 142.6],
+            "health_mult": 2
+          },
+          "success": "The blodfelag oathbreakers are gone from the road to Vindsaul Faste. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hild has come out to set the road to Vindsaul Faste right. The blodfelag oathbreakers are coming back for it!",
+          "center": [997, 750, 142.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hild",
+            "level": 15,
+            "pos": [997, 750, 142.6],
+            "health_mult": 10,
+            "template": 60167654,
+            "model": 156,
+            "equipment": "b8af41f2-b48a-4422-959f-35b359a42914"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1038, 824, 146.1],
+              [972, 832, 142.4],
+              [921, 789, 144.3]
+            ],
+            "mobs": [
+              {
+                "template": 60158520,
+                "name": "blodfelag oathbreaker",
+                "level": [10, 12]
+              },
+              {
+                "template": 60158516,
+                "name": "blodfelag henchman",
+                "level": [12, 13]
+              },
+              {
+                "template": 60158521,
+                "name": "blodfelag partisan",
+                "level": [13, 15]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Vindsaul Faste is safe again. Thank you.\"",
+          "success": "The blodfelag oathbreakers break and scatter. The road to Vindsaul Faste is open again.",
+          "fail": "Roadwarden Hild falls, and the blodfelag oathbreakers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -304,7 +483,7 @@
           "success": "Huscarl Bjorn reaches the skogsfru wood. \"There they are. Clear them out!\"",
           "fail": "Huscarl Bjorn falls on the road. The others carry the body home.",
           "on_success": "g2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 10, "copper_per_level": 60 }
         },
         {
@@ -372,7 +551,7 @@
           "success": "The Elder Skogsfru falls. Vindsaul Faste will hear of this in the taverns tonight.",
           "fail": "The Elder Skogsfru slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -380,6 +559,97 @@
               { "id": "nu102_elder_skogsfru_s_stone", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Skogsfrus Hold the Road to Vindsaul Faste",
+          "objective": "Drive the skogsfrus off the road to Vindsaul Faste",
+          "announce": "With Into Skogsfru Wood lost, the skogsfrus have spread down onto the road to Vindsaul Faste and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [868, 181, 147.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60166190,
+              "name": "skogsfru",
+              "level": [13, 14]
+            },
+            {
+              "template": 20007,
+              "name": "water sprite",
+              "level": [13, 14]
+            },
+            {
+              "template": 60161682,
+              "name": "grizzled sveawolf",
+              "level": [13, 13]
+            }
+          ],
+          "boss": {
+            "template": 60166190,
+            "name": "Skogsfru warleader",
+            "level": 15,
+            "pos": [868, 181, 147.6],
+            "health_mult": 2
+          },
+          "success": "The skogsfrus are gone from the road to Vindsaul Faste. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Ylva has come out to set the road to Vindsaul Faste right. The skogsfrus are coming back for it!",
+          "center": [868, 181, 147.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Ylva",
+            "level": 14,
+            "pos": [868, 181, 147.6],
+            "health_mult": 10,
+            "template": 60167654,
+            "model": 156,
+            "equipment": "b8af41f2-b48a-4422-959f-35b359a42914"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [837, 260, 145.6],
+              [790, 213, 147.4],
+              [790, 147, 152.8]
+            ],
+            "mobs": [
+              {
+                "template": 60166190,
+                "name": "skogsfru",
+                "level": [13, 14]
+              },
+              {
+                "template": 20007,
+                "name": "water sprite",
+                "level": [13, 14]
+              },
+              {
+                "template": 60161682,
+                "name": "grizzled sveawolf",
+                "level": [13, 13]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Vindsaul Faste is safe again. Thank you.\"",
+          "success": "The skogsfrus break and scatter. The road to Vindsaul Faste is open again.",
+          "fail": "Roadwarden Ylva falls, and the skogsfrus take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

@@ -33,6 +33,9 @@ namespace DOL.GS.DynamicEvents
         [JsonProperty("interval_s")] public int[] IntervalS = { 1800, 2700 };
         [JsonProperty("rest_s")] public int RestS = 30;                  // between stages: time to sit and recover
         [JsonProperty("wake_m")] public double WakeM;                    // how near wakes it (0: its first stage's radius + 60 m)
+        [JsonProperty("auto_fail_s")] public int AutoFailS;              // a disturbance nobody answers in this long is lost
+                                                                          // (its first stage's on_fail starts: a tower falls)
+        public MerchantDef Merchant;               // stands at the place while it is held (not while an occupation runs)
         public string Start;
         public GiverDef Giver;                     // set: started by talking to this NPC, not by the timer
         public List<NpcDef> Guards = new();        // the giver's party (with a giver): they follow and fight with them
@@ -47,6 +50,7 @@ namespace DOL.GS.DynamicEvents
         public string Reply;                       // said when they set off
         public string Busy = "Not now - we've only just come back. Find me again a little later.";
         [JsonProperty("cooldown_s")] public int CooldownS = 600;
+        public string Occupied;                    // said on a click while the chain's monsters occupy the land
         public string Thanks;                      // said when the chain is won (default: a word of thanks)
         public string Regret;                      // said when it is lost
     }
@@ -54,7 +58,7 @@ namespace DOL.GS.DynamicEvents
     public class StageDef
     {
         public string Id;
-        public string Type;                        // cull | defend | boss | escort
+        public string Type;                        // cull | defend | boss | escort | occupy
         public string Name;
         public string Objective;
         public string Announce;
@@ -72,6 +76,12 @@ namespace DOL.GS.DynamicEvents
         public WavesDef Adds;                      // boss: help it calls
         public List<double[]> Path = new();        // escort: the giver's way, point by point
         public List<AmbushDef> Ambushes = new();   // escort: who waits along it
+        public int Count = 10;                     // occupy: the garrison
+        [JsonProperty("reinforce_s")] public int ReinforceS = 90;      // occupy: a fallen one replaced this often - only
+                                                                        // while nobody is near (a siege has to be pressed)
+        [JsonProperty("displace_m")] public double DisplaceM;          // occupy: the realm's NPCs this near are driven off
+                                                                        // until the chain is won (a captured tower's guards)
+        [JsonProperty("health_mult")] public double HealthMult = 1;     // the stage's monsters (an elite garrison)
         public int Flag;                           // defend (protect_leader): the leader plants a banner (item model: 464 Albion, 465 Midgard, 466 Hibernian pennant) at center
         [JsonProperty("flag_name")] public string FlagName;
         public string Thanks;                      // defend: what the one you kept alive says when it's over
@@ -106,6 +116,13 @@ namespace DOL.GS.DynamicEvents
         public int Count = 1;                      // guards: how many of this kind
     }
 
+    /// <summary>A merchant at an event's place (a tower's quartermaster): sells for event marks (EventTokenMerchant).</summary>
+    public class MerchantDef : NpcDef
+    {
+        public string Stock;                       // the MerchantItem list (ItemListID)
+        public string Greet = "Marks of Valor buy what coin can't. Have a look.";
+    }
+
     public class WavesDef
     {
         [JsonProperty("every_s")] public int EveryS = 30;
@@ -126,6 +143,7 @@ namespace DOL.GS.DynamicEvents
     {
         [JsonProperty("xp_pct")] public double XpPct;            // of the level's experience, at gold
         [JsonProperty("copper_per_level")] public int CopperPerLevel;
+        public int Tokens;                         // event marks at gold (silver 70%, bronze 40%); 0: xp_pct / 4
         public ItemRewardDef Item;
         public List<ItemRewardDef> Items = new();
     }

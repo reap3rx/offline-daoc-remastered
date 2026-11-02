@@ -74,7 +74,7 @@
           "success": "Varg-Jarl Ulfhedinn falls. The way is safe again.",
           "fail": "Varg-Jarl Ulfhedinn slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -82,6 +82,84 @@
               { "id": "nu105_varg_jarl_ulfhedinn_s_torc", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Werewolfs Hold the Road to Galplen",
+          "objective": "Drive the werewolfs off the road to Galplen",
+          "announce": "With The Werewolf Den lost, the werewolfs have spread down onto the road to Galplen and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [657, 799, 125.3],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60167849,
+              "name": "werewolf",
+              "level": [17, 17]
+            },
+            {
+              "template": 60164060,
+              "name": "minor werewolf noble",
+              "level": [19, 21]
+            }
+          ],
+          "boss": {
+            "template": 60167849,
+            "name": "Werewolf warleader",
+            "level": 22,
+            "pos": [657, 799, 125.3],
+            "health_mult": 2
+          },
+          "success": "The werewolfs are gone from the road to Galplen. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Gunnar has come out to set the road to Galplen right. The werewolfs are coming back for it!",
+          "center": [657, 799, 125.3],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Gunnar",
+            "level": 21,
+            "pos": [657, 799, 125.3],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [709, 867, 121.7],
+              [645, 884, 125.8],
+              [588, 849, 133.1]
+            ],
+            "mobs": [
+              {
+                "template": 60167849,
+                "name": "werewolf",
+                "level": [17, 17]
+              },
+              {
+                "template": 60164060,
+                "name": "minor werewolf noble",
+                "level": [19, 21]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Galplen is safe again. Thank you.\"",
+          "success": "The werewolfs break and scatter. The road to Galplen is open again.",
+          "fail": "Roadwarden Gunnar falls, and the werewolfs take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -210,7 +288,7 @@
           "success": "The Arachite High Priestess falls. The way is safe again.",
           "fail": "The Arachite High Priestess slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -218,6 +296,97 @@
               { "id": "nu105_arachite_high_priestess_girdle", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Arachite Shadowslinkers Hold the Road to Galplen",
+          "objective": "Drive the arachite shadowslinkers off the road to Galplen",
+          "announce": "With The Arachite Brood lost, the arachite shadowslinkers have spread down onto the road to Galplen and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [550, 575, 121.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60157981,
+              "name": "arachite shadowslinker",
+              "level": [13, 15]
+            },
+            {
+              "template": 60157985,
+              "name": "arachite weblasher",
+              "level": [14, 16]
+            },
+            {
+              "template": 20012,
+              "name": "arachite priest",
+              "level": [15, 16]
+            }
+          ],
+          "boss": {
+            "template": 60157981,
+            "name": "Arachite shadowslinker warleader",
+            "level": 17,
+            "pos": [550, 575, 121.0],
+            "health_mult": 2
+          },
+          "success": "The arachite shadowslinkers are gone from the road to Galplen. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Ylva has come out to set the road to Galplen right. The arachite shadowslinkers are coming back for it!",
+          "center": [550, 575, 121.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Ylva",
+            "level": 16,
+            "pos": [550, 575, 121.0],
+            "health_mult": 10,
+            "template": 60167290,
+            "model": 138,
+            "equipment": "1c0869f4-c816-4b50-a873-0d0fd104dac2"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [486, 632, 122.2],
+              [465, 569, 121.1],
+              [496, 510, 121.2]
+            ],
+            "mobs": [
+              {
+                "template": 60157981,
+                "name": "arachite shadowslinker",
+                "level": [13, 15]
+              },
+              {
+                "template": 60157985,
+                "name": "arachite weblasher",
+                "level": [14, 16]
+              },
+              {
+                "template": 20012,
+                "name": "arachite priest",
+                "level": [15, 16]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Galplen is safe again. Thank you.\"",
+          "success": "The arachite shadowslinkers break and scatter. The road to Galplen is open again.",
+          "fail": "Roadwarden Ylva falls, and the arachite shadowslinkers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -299,7 +468,7 @@
           "success": "Flayer Thrand reaches the rotting hollow. \"There they are. Clear them out!\"",
           "fail": "Flayer Thrand falls on the road. The others carry the body home.",
           "on_success": "g2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 10, "copper_per_level": 60 }
         },
         {
@@ -367,7 +536,7 @@
           "success": "Rotgut the Undying falls. Galplen will hear of this in the taverns tonight.",
           "fail": "Rotgut the Undying slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -375,6 +544,267 @@
               { "id": "nu105_rotgut_the_undying_s_shroud", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Decaying Trolls Hold the Road to Galplen",
+          "objective": "Drive the decaying trolls off the road to Galplen",
+          "announce": "With The Undying Trolls lost, the decaying trolls have spread down onto the road to Galplen and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1333, 994, 118.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60159827,
+              "name": "decaying troll",
+              "level": [10, 10]
+            },
+            {
+              "template": 60161576,
+              "name": "gray worg",
+              "level": [10, 10]
+            },
+            {
+              "template": 60165311,
+              "name": "ridgeback worg",
+              "level": [11, 13]
+            }
+          ],
+          "boss": {
+            "template": 60159827,
+            "name": "Decaying troll warleader",
+            "level": 14,
+            "pos": [1333, 994, 118.6],
+            "health_mult": 2
+          },
+          "success": "The decaying trolls are gone from the road to Galplen. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Sten has come out to set the road to Galplen right. The decaying trolls are coming back for it!",
+          "center": [1333, 994, 118.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Sten",
+            "level": 13,
+            "pos": [1333, 994, 118.6],
+            "health_mult": 10,
+            "template": 60167290,
+            "model": 138,
+            "equipment": "1c0869f4-c816-4b50-a873-0d0fd104dac2"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1393, 1054, 114.4],
+              [1332, 1079, 118.6],
+              [1272, 1053, 119.0]
+            ],
+            "mobs": [
+              {
+                "template": 60159827,
+                "name": "decaying troll",
+                "level": [10, 10]
+              },
+              {
+                "template": 60161576,
+                "name": "gray worg",
+                "level": [10, 10]
+              },
+              {
+                "template": 60165311,
+                "name": "ridgeback worg",
+                "level": [11, 13]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Galplen is safe again. Thank you.\"",
+          "success": "The decaying trolls break and scatter. The road to Galplen is open again.",
+          "fail": "Roadwarden Sten falls, and the decaying trolls take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
+    },
+    {
+      "id": "tower_sentry_tower",
+      "title": "The Siege of Sentry Tower",
+      "levels": [10, 13],
+      "tower": "Sentry Tower",
+      "hint": "The dead are stirring around the Sentry Tower...",
+      "rest_s": 45,
+      "first_delay_s": [1800, 3600],
+      "interval_s": [5400, 9000],
+      "wake_m": 180,
+      "auto_fail_s": 600,
+      "start": "t1",
+      "merchant": {
+        "model": 141,
+        "equipment": "MidTownGuard6",
+        "template": 60165798,
+        "name": "Quartermaster Hrefna",
+        "level": 18,
+        "pos": [892, 1000, 118.4],
+        "stock": "tower_sentry_tower",
+        "guild": "Marks of Valor",
+        "greet": "While Sentry Tower stands, I can sell you what coin won't buy. Marks of Valor only."
+      },
+      "stages": [
+        {
+          "id": "t1",
+          "type": "defend",
+          "name": "Hold Sentry Tower",
+          "objective": "Keep Sentry Crush alive while the walking dead attack the tower",
+          "announce": "The walking dead are attacking Sentry Tower! Sentry Crush calls for every sword nearby.",
+          "center": [883, 1005, 118.2],
+          "radius": 60,
+          "duration_s": 240,
+          "protect": {
+            "model": 141,
+            "equipment": "MidTownGuard6",
+            "template": 60165798,
+            "name": "Sentry Crush",
+            "level": 15,
+            "pos": [888, 1014, 117.9],
+            "health_mult": 15
+          },
+          "waves": {
+            "every_s": 25,
+            "count": 3,
+            "from": [
+              [966, 1040, 119.1],
+              [811, 1059, 118.6],
+              [873, 916, 118.6]
+            ],
+            "mobs": [
+              {
+                "template": 60159827,
+                "name": "decaying troll",
+                "level": [10, 13]
+              },
+              {
+                "template": 60159826,
+                "name": "decaying norseman",
+                "level": [10, 13]
+              },
+              {
+                "template": 60159427,
+                "name": "corpse eater",
+                "level": [10, 13]
+              }
+            ]
+          },
+          "thanks": "\"The tower holds! Drinks are on me when the quartermaster isn't looking.\"",
+          "success": "The walking dead break off the attack. Sentry Tower holds.",
+          "fail": "Sentry Tower has fallen to the walking dead.",
+          "on_success": "end",
+          "on_fail": "c1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 8 }
+        },
+        {
+          "id": "c1",
+          "type": "occupy",
+          "name": "Retake Sentry Tower",
+          "objective": "Drive the walking dead out of Sentry Tower",
+          "announce": "The walking dead hold Sentry Tower. Its guards are gone, its quartermaster fled. It will take a war-band to win it back.",
+          "center": [883, 1005, 118.2],
+          "radius": 50,
+          "count": 14,
+          "reinforce_s": 45,
+          "displace_m": 45,
+          "health_mult": 2.5,
+          "mobs": [
+            {
+              "template": 60159827,
+              "name": "decaying troll",
+              "level": [14, 16]
+            },
+            {
+              "template": 60159826,
+              "name": "decaying norseman",
+              "level": [14, 16]
+            },
+            {
+              "template": 60159427,
+              "name": "corpse eater",
+              "level": [14, 16]
+            }
+          ],
+          "boss": {
+            "template": 60159827,
+            "name": "The Corpse-King",
+            "level": 17,
+            "pos": [883, 1005, 118.2],
+            "health_mult": 6
+          },
+          "success": "The Corpse-King is dead and the tower is ours - for now. They will be back.",
+          "fail": "",
+          "on_success": "c2",
+          "on_fail": "c1",
+          "reward": { "xp_pct": 30, "copper_per_level": 250, "tokens": 25 }
+        },
+        {
+          "id": "c2",
+          "type": "defend",
+          "name": "Hold the Gate",
+          "objective": "Keep Sentry Crush alive until the garrison is back",
+          "announce": "Sentry Crush is raising the realm's colours again - and the walking dead are coming back for the tower!",
+          "center": [883, 1005, 118.2],
+          "radius": 60,
+          "duration_s": 150,
+          "protect": {
+            "model": 141,
+            "equipment": "MidTownGuard6",
+            "template": 60165798,
+            "name": "Sentry Crush",
+            "level": 15,
+            "pos": [888, 1014, 117.9],
+            "health_mult": 15
+          },
+          "waves": {
+            "every_s": 25,
+            "count": 3,
+            "from": [
+              [966, 1040, 119.1],
+              [811, 1059, 118.6],
+              [873, 916, 118.6]
+            ],
+            "mobs": [
+              {
+                "template": 60159827,
+                "name": "decaying troll",
+                "level": [10, 13]
+              },
+              {
+                "template": 60159826,
+                "name": "decaying norseman",
+                "level": [10, 13]
+              },
+              {
+                "template": 60159427,
+                "name": "corpse eater",
+                "level": [10, 13]
+              }
+            ]
+          },
+          "thanks": "\"Sentry Tower is ours again. The quartermaster will be glad to see you.\"",
+          "success": "Sentry Tower is held by the realm again. Its garrison and quartermaster are back.",
+          "fail": "Sentry Crush falls, and the walking dead take the tower back.",
+          "on_success": "end",
+          "on_fail": "c1",
+          "reward": { "xp_pct": 15, "copper_per_level": 120, "tokens": 10 }
         }
       ]
     }

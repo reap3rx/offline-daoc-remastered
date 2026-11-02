@@ -79,7 +79,7 @@
           "success": "Gnarn Bone-Crown falls. The way is safe again.",
           "fail": "Gnarn Bone-Crown slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -87,6 +87,94 @@
               { "id": "nu100_gnarn_bone_crown_s_girdle", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Vendo Hold the Veldon Road",
+          "objective": "Drive the vendo off the road to Fort Veldon",
+          "announce": "The vendo have come down from the barrow and hold the road to Fort Veldon. They are hanging bones from the trees.",
+          "center": [894, 631, 117.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60167590,
+              "name": "vendo shaman",
+              "level": [10, 10]
+            },
+            {
+              "template": 60167594,
+              "name": "vendo warrior",
+              "level": [11, 11]
+            },
+            {
+              "template": 60167576,
+              "name": "vendo bone-collector",
+              "level": [13, 13]
+            }
+          ],
+          "boss": {
+            "template": 60167590,
+            "name": "Gnarn's Bone-Bearer",
+            "level": 14,
+            "pos": [894, 631, 117.0],
+            "health_mult": 2
+          },
+          "success": "The vendo are gone. The bone charms still hang from the trees.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Skald Orm, who is cutting down the vendo bone charms",
+          "announce": "Skald Orm is cutting down the vendo bone charms. The vendo want them back!",
+          "center": [894, 631, 117.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Skald Orm",
+            "level": 13,
+            "pos": [894, 631, 117.0],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [809, 620, 121.3],
+              [842, 563, 126.5],
+              [906, 547, 141.5]
+            ],
+            "mobs": [
+              {
+                "template": 60167590,
+                "name": "vendo shaman",
+                "level": [10, 10]
+              },
+              {
+                "template": 60167594,
+                "name": "vendo warrior",
+                "level": [11, 11]
+              },
+              {
+                "template": 60167576,
+                "name": "vendo bone-collector",
+                "level": [13, 13]
+              }
+            ]
+          },
+          "thanks": "\"Burn them all. The road to Fort Veldon is clean again.\"",
+          "success": "The vendo shamans break and scatter. The road is open again.",
+          "fail": "Skald Orm falls, and the vendo shamans take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -215,7 +303,7 @@
           "success": "The Huldu Queen falls. The way is safe again.",
           "fail": "The Huldu Queen slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -223,6 +311,97 @@
               { "id": "nu100_huldu_queen_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Huldu Hunters Hold the Road",
+          "objective": "Drive the huldu hunters off the road",
+          "announce": "With The Huldu in the Hills lost, the huldu hunters have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [466, 1454, 117.3],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60162259,
+              "name": "huldu hunter",
+              "level": [4, 4]
+            },
+            {
+              "template": 60162266,
+              "name": "huldu stalker",
+              "level": [5, 5]
+            },
+            {
+              "template": 60162261,
+              "name": "huldu lurker",
+              "level": [2, 2]
+            }
+          ],
+          "boss": {
+            "template": 60162259,
+            "name": "Huldu hunter warleader",
+            "level": 6,
+            "pos": [466, 1454, 117.3],
+            "health_mult": 2
+          },
+          "success": "The huldu hunters are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Sten has come out to set the road right. The huldu hunters are coming back for it!",
+          "center": [466, 1454, 117.3],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Sten",
+            "level": 5,
+            "pos": [466, 1454, 117.3],
+            "health_mult": 10,
+            "template": 60167667,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [524, 1392, 117.5],
+              [551, 1452, 118.3],
+              [527, 1514, 123.3]
+            ],
+            "mobs": [
+              {
+                "template": 60162259,
+                "name": "huldu hunter",
+                "level": [4, 4]
+              },
+              {
+                "template": 60162266,
+                "name": "huldu stalker",
+                "level": [5, 5]
+              },
+              {
+                "template": 60162261,
+                "name": "huldu lurker",
+                "level": [2, 2]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The huldu hunters break and scatter. The road is open again.",
+          "fail": "Roadwarden Sten falls, and the huldu hunters take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -306,7 +485,7 @@
           "success": "Karl Thorvald reaches the wood-eater hive. \"There they are. Clear them out!\"",
           "fail": "Karl Thorvald falls on the road. The others carry the body home.",
           "on_success": "g2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 10, "copper_per_level": 60 }
         },
         {
@@ -379,7 +558,7 @@
           "success": "The Wood-Eater Matriarch falls. The guard post will hear of this in the taverns tonight.",
           "fail": "The Wood-Eater Matriarch slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -387,6 +566,262 @@
               { "id": "nu100_wood_eater_matriarch_s_girdle", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Wood-Eaters Hold the Road",
+          "objective": "Drive the wood-eaters off the road",
+          "announce": "With The Wood-Eater Hive lost, the wood-eaters have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [743, 824, 117.8],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60168015,
+              "name": "wood-eater",
+              "level": [3, 3]
+            },
+            {
+              "template": 60168025,
+              "name": "wood-eater worker",
+              "level": [4, 4]
+            },
+            {
+              "template": 60168019,
+              "name": "wood-eater hunter",
+              "level": [5, 5]
+            },
+            {
+              "template": 60168024,
+              "name": "wood-eater soldier",
+              "level": [6, 6]
+            }
+          ],
+          "boss": {
+            "template": 60168015,
+            "name": "Wood-eater warleader",
+            "level": 7,
+            "pos": [743, 824, 117.8],
+            "health_mult": 2
+          },
+          "success": "The wood-eaters are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hild has come out to set the road right. The wood-eaters are coming back for it!",
+          "center": [743, 824, 117.8],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hild",
+            "level": 6,
+            "pos": [743, 824, 117.8],
+            "health_mult": 10,
+            "template": 60167667,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [826, 810, 118.1],
+              [811, 875, 133.7],
+              [754, 908, 123.9]
+            ],
+            "mobs": [
+              {
+                "template": 60168015,
+                "name": "wood-eater",
+                "level": [3, 3]
+              },
+              {
+                "template": 60168025,
+                "name": "wood-eater worker",
+                "level": [4, 4]
+              },
+              {
+                "template": 60168019,
+                "name": "wood-eater hunter",
+                "level": [5, 5]
+              },
+              {
+                "template": 60168024,
+                "name": "wood-eater soldier",
+                "level": [6, 6]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The wood-eaters break and scatter. The road is open again.",
+          "fail": "Roadwarden Hild falls, and the wood-eaters take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
+    },
+    {
+      "id": "tower_veldon_watch",
+      "title": "The Siege of Veldon Watchtower",
+      "levels": [10, 13],
+      "tower": "Veldon Watchtower",
+      "hint": "Something is moving in the hills around the Veldon Watchtower...",
+      "rest_s": 45,
+      "first_delay_s": [1800, 3600],
+      "interval_s": [5400, 9000],
+      "wake_m": 180,
+      "auto_fail_s": 600,
+      "start": "t1",
+      "merchant": {
+        "model": 217,
+        "equipment": "45c56400-0b99-40cb-aba1-ec3ef45b4df1",
+        "template": 60167669,
+        "name": "Quartermaster Tove",
+        "level": 18,
+        "pos": [1116, 117, 144.4],
+        "stock": "tower_veldon_watch",
+        "guild": "Marks of Valor",
+        "greet": "While Veldon Watchtower stands, I can sell you what coin won't buy. Marks of Valor only."
+      },
+      "stages": [
+        {
+          "id": "t1",
+          "type": "defend",
+          "name": "Hold Veldon Watchtower",
+          "objective": "Keep Dreng Oddnaug alive while the hobyahs attack the tower",
+          "announce": "The hobyahs are attacking Veldon Watchtower! Dreng Oddnaug calls for every sword nearby.",
+          "center": [1107, 122, 144.4],
+          "radius": 60,
+          "duration_s": 240,
+          "protect": {
+            "model": 217,
+            "equipment": "45c56400-0b99-40cb-aba1-ec3ef45b4df1",
+            "template": 60167669,
+            "name": "Dreng Oddnaug",
+            "level": 15,
+            "pos": [1112, 131, 144.4],
+            "health_mult": 15
+          },
+          "waves": {
+            "every_s": 25,
+            "count": 3,
+            "from": [
+              [1190, 157, 131.5],
+              [1035, 176, 132.4],
+              [1097, 33, 221.9]
+            ],
+            "mobs": [
+              {
+                "template": 60162181,
+                "name": "hobyah",
+                "level": [10, 13]
+              },
+              {
+                "template": 60162142,
+                "name": "hill cat",
+                "level": [10, 13]
+              }
+            ]
+          },
+          "thanks": "\"The tower holds! Drinks are on me when the quartermaster isn't looking.\"",
+          "success": "The hobyahs break off the attack. Veldon Watchtower holds.",
+          "fail": "Veldon Watchtower has fallen to the hobyahs.",
+          "on_success": "end",
+          "on_fail": "c1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 8 }
+        },
+        {
+          "id": "c1",
+          "type": "occupy",
+          "name": "Retake Veldon Watchtower",
+          "objective": "Drive the hobyahs out of Veldon Watchtower",
+          "announce": "The hobyahs hold Veldon Watchtower. Its guards are gone, its quartermaster fled. It will take a war-band to win it back.",
+          "center": [1107, 122, 144.4],
+          "radius": 50,
+          "count": 14,
+          "reinforce_s": 45,
+          "displace_m": 45,
+          "health_mult": 2.5,
+          "mobs": [
+            {
+              "template": 60162181,
+              "name": "hobyah",
+              "level": [14, 16]
+            },
+            {
+              "template": 60162142,
+              "name": "hill cat",
+              "level": [14, 16]
+            }
+          ],
+          "boss": {
+            "template": 60162181,
+            "name": "The Hobyah Nightmother",
+            "level": 17,
+            "pos": [1107, 122, 144.4],
+            "health_mult": 6
+          },
+          "success": "The Hobyah Nightmother is dead and the tower is ours - for now. They will be back.",
+          "fail": "",
+          "on_success": "c2",
+          "on_fail": "c1",
+          "reward": { "xp_pct": 30, "copper_per_level": 250, "tokens": 25 }
+        },
+        {
+          "id": "c2",
+          "type": "defend",
+          "name": "Hold the Gate",
+          "objective": "Keep Dreng Oddnaug alive until the garrison is back",
+          "announce": "Dreng Oddnaug is raising the realm's colours again - and the hobyahs are coming back for the tower!",
+          "center": [1107, 122, 144.4],
+          "radius": 60,
+          "duration_s": 150,
+          "protect": {
+            "model": 217,
+            "equipment": "45c56400-0b99-40cb-aba1-ec3ef45b4df1",
+            "template": 60167669,
+            "name": "Dreng Oddnaug",
+            "level": 15,
+            "pos": [1112, 131, 144.4],
+            "health_mult": 15
+          },
+          "waves": {
+            "every_s": 25,
+            "count": 3,
+            "from": [
+              [1190, 157, 131.5],
+              [1035, 176, 132.4],
+              [1097, 33, 221.9]
+            ],
+            "mobs": [
+              {
+                "template": 60162181,
+                "name": "hobyah",
+                "level": [10, 13]
+              },
+              {
+                "template": 60162142,
+                "name": "hill cat",
+                "level": [10, 13]
+              }
+            ]
+          },
+          "thanks": "\"Veldon Watchtower is ours again. The quartermaster will be glad to see you.\"",
+          "success": "Veldon Watchtower is held by the realm again. Its garrison and quartermaster are back.",
+          "fail": "Dreng Oddnaug falls, and the hobyahs take the tower back.",
+          "on_success": "end",
+          "on_fail": "c1",
+          "reward": { "xp_pct": 15, "copper_per_level": 120, "tokens": 10 }
         }
       ]
     }

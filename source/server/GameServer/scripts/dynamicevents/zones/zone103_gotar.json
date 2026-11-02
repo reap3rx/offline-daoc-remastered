@@ -79,7 +79,7 @@
           "success": "Captain Hrafn of the Drowned falls. The way is safe again.",
           "fail": "Captain Hrafn of the Drowned slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -87,6 +87,94 @@
               { "id": "nu103_captain_hrafn_of_the_drowned_s_stone", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Skeletal Seafarers Hold the Road to Fort Atla",
+          "objective": "Drive the skeletal seafarers off the road to Fort Atla",
+          "announce": "With The Drowned Ship lost, the skeletal seafarers have spread down onto the road to Fort Atla and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [813, 674, 112.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60166181,
+              "name": "skeletal seafarer",
+              "level": [4, 4]
+            },
+            {
+              "template": 60166175,
+              "name": "skeletal oarsman",
+              "level": [5, 5]
+            },
+            {
+              "template": 60160165,
+              "name": "drowned soul",
+              "level": [3, 3]
+            }
+          ],
+          "boss": {
+            "template": 60166181,
+            "name": "Skeletal seafarer warleader",
+            "level": 6,
+            "pos": [813, 674, 112.6],
+            "health_mult": 2
+          },
+          "success": "The skeletal seafarers are gone from the road to Fort Atla. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hild has come out to set the road to Fort Atla right. The skeletal seafarers are coming back for it!",
+          "center": [813, 674, 112.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hild",
+            "level": 5,
+            "pos": [813, 674, 112.6],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [848, 597, 111.2],
+              [893, 645, 98.7],
+              [890, 711, 109.6]
+            ],
+            "mobs": [
+              {
+                "template": 60166181,
+                "name": "skeletal seafarer",
+                "level": [4, 4]
+              },
+              {
+                "template": 60166175,
+                "name": "skeletal oarsman",
+                "level": [5, 5]
+              },
+              {
+                "template": 60160165,
+                "name": "drowned soul",
+                "level": [3, 3]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Fort Atla is safe again. Thank you.\"",
+          "success": "The skeletal seafarers break and scatter. The road to Fort Atla is open again.",
+          "fail": "Roadwarden Hild falls, and the skeletal seafarers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -214,7 +302,7 @@
           "success": "Snaggletooth falls. The way is safe again.",
           "fail": "Snaggletooth slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -222,6 +310,96 @@
               { "id": "nu103_snaggletooth_s_mantle", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Hobgoblin Prowlers Hold the Road to Nalliten",
+          "objective": "Drive the hobgoblin prowlers off the road to Nalliten",
+          "announce": "With The Hobgoblin Raid lost, the hobgoblin prowlers have spread down onto the road to Nalliten and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1351, 1013, 115.4],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60162172,
+              "name": "hobgoblin prowler",
+              "level": [8, 8]
+            },
+            {
+              "template": 60162168,
+              "name": "hobgoblin pincher",
+              "level": [4, 4]
+            },
+            {
+              "template": 60162170,
+              "name": "hobgoblin prankster",
+              "level": [3, 3]
+            }
+          ],
+          "boss": {
+            "template": 60162172,
+            "name": "Hobgoblin prowler warleader",
+            "level": 9,
+            "pos": [1351, 1013, 115.4],
+            "health_mult": 2
+          },
+          "success": "The hobgoblin prowlers are gone from the road to Nalliten. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Sten has come out to set the road to Nalliten right. The hobgoblin prowlers are coming back for it!",
+          "center": [1351, 1013, 115.4],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Sten",
+            "level": 8,
+            "pos": [1351, 1013, 115.4],
+            "health_mult": 10,
+            "model": 138,
+            "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1311, 1088, 109.0],
+              [1270, 1036, 112.0],
+              [1278, 970, 117.3]
+            ],
+            "mobs": [
+              {
+                "template": 60162172,
+                "name": "hobgoblin prowler",
+                "level": [8, 8]
+              },
+              {
+                "template": 60162168,
+                "name": "hobgoblin pincher",
+                "level": [4, 4]
+              },
+              {
+                "template": 60162170,
+                "name": "hobgoblin prankster",
+                "level": [3, 3]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Nalliten is safe again. Thank you.\"",
+          "success": "The hobgoblin prowlers break and scatter. The road to Nalliten is open again.",
+          "fail": "Roadwarden Sten falls, and the hobgoblin prowlers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -296,7 +474,7 @@
           "success": "Flayer Kegnar reaches the wildling camp. \"There they are. Clear them out!\"",
           "fail": "Flayer Kegnar falls on the road. The others carry the body home.",
           "on_success": "g2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 10, "copper_per_level": 60 }
         },
         {
@@ -364,7 +542,7 @@
           "success": "Wildling Chieftain Skarn falls. Fort Atla will hear of this in the taverns tonight.",
           "fail": "Wildling Chieftain Skarn slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -372,6 +550,96 @@
               { "id": "nu103_wildling_chieftain_skarn_s_shroud", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Wildlings Hold the Road to Fort Atla",
+          "objective": "Drive the wildlings off the road to Fort Atla",
+          "announce": "With The Wildlings lost, the wildlings have spread down onto the road to Fort Atla and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [533, 429, 119.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60167946,
+              "name": "wildling",
+              "level": [13, 14]
+            },
+            {
+              "template": 60168000,
+              "name": "wolf nipper",
+              "level": [12, 13]
+            },
+            {
+              "template": 12238,
+              "name": "water snake",
+              "level": [14, 15]
+            }
+          ],
+          "boss": {
+            "template": 60167946,
+            "name": "Wildling warleader",
+            "level": 16,
+            "pos": [533, 429, 119.0],
+            "health_mult": 2
+          },
+          "success": "The wildlings are gone from the road to Fort Atla. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Sten has come out to set the road to Fort Atla right. The wildlings are coming back for it!",
+          "center": [533, 429, 119.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Sten",
+            "level": 15,
+            "pos": [533, 429, 119.0],
+            "health_mult": 10,
+            "model": 138,
+            "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [528, 514, 117.9],
+              [469, 485, 118.4],
+              [448, 422, 118.6]
+            ],
+            "mobs": [
+              {
+                "template": 60167946,
+                "name": "wildling",
+                "level": [13, 14]
+              },
+              {
+                "template": 60168000,
+                "name": "wolf nipper",
+                "level": [12, 13]
+              },
+              {
+                "template": 12238,
+                "name": "water snake",
+                "level": [14, 15]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Fort Atla is safe again. Thank you.\"",
+          "success": "The wildlings break and scatter. The road to Fort Atla is open again.",
+          "fail": "Roadwarden Sten falls, and the wildlings take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

@@ -111,7 +111,7 @@ namespace DOL.GS.Scripts
             GamePlayer player = source as GamePlayer;
             if (player != null)
             {
-                switch (item.Id_nb)
+                switch (item.Id_nb.StartsWith("tw_") ? item.Id_nb.Substring(3) : item.Id_nb)   // (tw_: a tower quartermaster's, bought for marks)
                 {
                     //case "token_solo":
                     //    {

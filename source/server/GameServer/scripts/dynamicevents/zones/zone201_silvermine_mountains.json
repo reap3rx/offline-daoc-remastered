@@ -79,7 +79,7 @@
           "success": "Dubhan the Sheevra Chief falls. The way is safe again.",
           "fail": "Dubhan the Sheevra Chief slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -87,6 +87,94 @@
               { "id": "nu201_dubhan_the_sheevra_chief_s_cloak", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Sheevra Swordsmans Hold the Road to Howth",
+          "objective": "Drive the sheevra swordsmans off the road to Howth",
+          "announce": "With The Sheevra Warband lost, the sheevra swordsmans have spread down onto the road to Howth and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [663, 906, 128.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60165949,
+              "name": "sheevra swordsman",
+              "level": [12, 13]
+            },
+            {
+              "template": 60165945,
+              "name": "sheevra archer",
+              "level": [14, 14]
+            },
+            {
+              "template": 60165948,
+              "name": "sheevra skirmisher",
+              "level": [13, 15]
+            }
+          ],
+          "boss": {
+            "template": 60165949,
+            "name": "Sheevra swordsman warleader",
+            "level": 16,
+            "pos": [663, 906, 128.0],
+            "health_mult": 2
+          },
+          "success": "The sheevra swordsmans are gone from the road to Howth. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Aine has come out to set the road to Howth right. The sheevra swordsmans are coming back for it!",
+          "center": [663, 906, 128.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Aine",
+            "level": 15,
+            "pos": [663, 906, 128.0],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [735, 860, 99.5],
+              [745, 926, 92.1],
+              [706, 979, 101.3]
+            ],
+            "mobs": [
+              {
+                "template": 60165949,
+                "name": "sheevra swordsman",
+                "level": [12, 13]
+              },
+              {
+                "template": 60165945,
+                "name": "sheevra archer",
+                "level": [14, 14]
+              },
+              {
+                "template": 60165948,
+                "name": "sheevra skirmisher",
+                "level": [13, 15]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Howth is safe again. Thank you.\"",
+          "success": "The sheevra swordsmans break and scatter. The road to Howth is open again.",
+          "fail": "Roadwarden Aine falls, and the sheevra swordsmans take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -205,7 +293,7 @@
           "success": "The Gray Lady of Silvermine falls. The way is safe again.",
           "fail": "The Gray Lady of Silvermine slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -213,6 +301,87 @@
               { "id": "nu201_gray_lady_of_silvermine_s_armband", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Gray Spectres Hold the Road to Howth",
+          "objective": "Drive the gray spectres off the road to Howth",
+          "announce": "With The Gray Spectres lost, the gray spectres have spread down onto the road to Howth and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [633, 1342, 124.5],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60161575,
+              "name": "gray spectre",
+              "level": [22, 24]
+            },
+            {
+              "template": 60159811,
+              "name": "deamhan creig",
+              "level": [17, 18]
+            }
+          ],
+          "boss": {
+            "template": 60161575,
+            "name": "Gray spectre warleader",
+            "level": 25,
+            "pos": [633, 1342, 124.5],
+            "health_mult": 2
+          },
+          "success": "The gray spectres are gone from the road to Howth. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Fiona has come out to set the road to Howth right. The gray spectres are coming back for it!",
+          "center": [633, 1342, 124.5],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Fiona",
+            "level": 24,
+            "pos": [633, 1342, 124.5],
+            "health_mult": 10,
+            "template": 60165767,
+            "model": 365,
+            "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [554, 1372, 164.5],
+              [556, 1306, 143.2],
+              [606, 1262, 127.7]
+            ],
+            "mobs": [
+              {
+                "template": 60161575,
+                "name": "gray spectre",
+                "level": [22, 24]
+              },
+              {
+                "template": 60159811,
+                "name": "deamhan creig",
+                "level": [17, 18]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Howth is safe again. Thank you.\"",
+          "success": "The gray spectres break and scatter. The road to Howth is open again.",
+          "fail": "Roadwarden Fiona falls, and the gray spectres take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -283,7 +452,7 @@
           "success": "Sentinel Aodh reaches the spraggon warren. \"There they are. Clear them out!\"",
           "fail": "Sentinel Aodh falls on the road. The others carry the body home.",
           "on_success": "g2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 10, "copper_per_level": 60 }
         },
         {
@@ -341,7 +510,7 @@
           "success": "Spraggon Chief Nuadh falls. Ardagh will hear of this in the taverns tonight.",
           "fail": "Spraggon Chief Nuadh slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -349,6 +518,77 @@
               { "id": "nu201_spraggon_chief_nuadh_s_pendant", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Spraggonilts Hold the Road to Ardagh",
+          "objective": "Drive the spraggonilts off the road to Ardagh",
+          "announce": "With The Spraggon Warren lost, the spraggonilts have spread down onto the road to Ardagh and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [820, 408, 126.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60166484,
+              "name": "spraggonilt",
+              "level": [15, 19]
+            }
+          ],
+          "boss": {
+            "template": 60166484,
+            "name": "Spraggonilt warleader",
+            "level": 20,
+            "pos": [820, 408, 126.0],
+            "health_mult": 2
+          },
+          "success": "The spraggonilts are gone from the road to Ardagh. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Fiona has come out to set the road to Ardagh right. The spraggonilts are coming back for it!",
+          "center": [820, 408, 126.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Fiona",
+            "level": 19,
+            "pos": [820, 408, 126.0],
+            "health_mult": 10,
+            "template": 60165767,
+            "model": 365,
+            "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [736, 423, 126.2],
+              [751, 358, 147.2],
+              [808, 324, 124.7]
+            ],
+            "mobs": [
+              {
+                "template": 60166484,
+                "name": "spraggonilt",
+                "level": [15, 19]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Ardagh is safe again. Thank you.\"",
+          "success": "The spraggonilts break and scatter. The road to Ardagh is open again.",
+          "fail": "Roadwarden Fiona falls, and the spraggonilts take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

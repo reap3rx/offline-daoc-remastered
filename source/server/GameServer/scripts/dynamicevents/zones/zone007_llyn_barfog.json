@@ -74,7 +74,7 @@
           "success": "Captain Madog the Turncoat falls. The way is safe again.",
           "fail": "Captain Madog the Turncoat slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -82,6 +82,84 @@
               { "id": "nu7_captain_madog_the_turncoat_s_torc", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Renegade Guards Hold the Road",
+          "objective": "Drive the renegade guards off the road",
+          "announce": "With The Renegade Guards lost, the renegade guards have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1186, 411, 141.4],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 13028,
+              "name": "renegade guard",
+              "level": [19, 20]
+            },
+            {
+              "template": 13014,
+              "name": "gwr-drwgiaid",
+              "level": [15, 17]
+            }
+          ],
+          "boss": {
+            "template": 13028,
+            "name": "Renegade guard warleader",
+            "level": 21,
+            "pos": [1186, 411, 141.4],
+            "health_mult": 2
+          },
+          "success": "The renegade guards are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cuthbert has come out to set the road right. The renegade guards are coming back for it!",
+          "center": [1186, 411, 141.4],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cuthbert",
+            "level": 20,
+            "pos": [1186, 411, 141.4],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1258, 367, 154.6],
+              [1268, 432, 147.6],
+              [1228, 485, 128.2]
+            ],
+            "mobs": [
+              {
+                "template": 13028,
+                "name": "renegade guard",
+                "level": [19, 20]
+              },
+              {
+                "template": 13014,
+                "name": "gwr-drwgiaid",
+                "level": [15, 17]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The renegade guards break and scatter. The road is open again.",
+          "fail": "Roadwarden Cuthbert falls, and the renegade guards take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -200,7 +278,7 @@
           "success": "The Huntsman of Annwn falls. The way is safe again.",
           "fail": "The Huntsman of Annwn slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -208,6 +286,87 @@
               { "id": "nu7_huntsman_of_annwn_s_cloak", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Cwn Annwns Hold the Road",
+          "objective": "Drive the cwn annwns off the road",
+          "announce": "With The Hounds of Annwn lost, the cwn annwns have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [577, 1271, 107.3],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12999,
+              "name": "cwn annwn",
+              "level": [20, 22]
+            },
+            {
+              "template": 13001,
+              "name": "cythraul",
+              "level": [20, 21]
+            }
+          ],
+          "boss": {
+            "template": 12999,
+            "name": "Cwn annwn warleader",
+            "level": 23,
+            "pos": [577, 1271, 107.3],
+            "health_mult": 2
+          },
+          "success": "The cwn annwns are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cuthbert has come out to set the road right. The cwn annwns are coming back for it!",
+          "center": [577, 1271, 107.3],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cuthbert",
+            "level": 22,
+            "pos": [577, 1271, 107.3],
+            "health_mult": 10,
+            "template": 60167630,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [537, 1346, 119.8],
+              [495, 1295, 129.9],
+              [503, 1229, 134.1]
+            ],
+            "mobs": [
+              {
+                "template": 12999,
+                "name": "cwn annwn",
+                "level": [20, 22]
+              },
+              {
+                "template": 13001,
+                "name": "cythraul",
+                "level": [20, 21]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The cwn annwns break and scatter. The road is open again.",
+          "fail": "Roadwarden Cuthbert falls, and the cwn annwns take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -281,7 +440,7 @@
           "success": "Abbot Idwal the Unshriven falls. The way is safe again.",
           "fail": "Abbot Idwal the Unshriven slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -289,6 +448,84 @@
               { "id": "nu7_abbot_idwal_the_unshriven_s_mantle", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Undead Monks Hold the Road",
+          "objective": "Drive the undead monks off the road",
+          "announce": "With The Unshriven lost, the undead monks have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1328, 707, 168.3],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 13034,
+              "name": "undead monk",
+              "level": [29, 30]
+            },
+            {
+              "template": 12998,
+              "name": "bwgwl",
+              "level": [28, 29]
+            }
+          ],
+          "boss": {
+            "template": 13034,
+            "name": "Undead monk warleader",
+            "level": 31,
+            "pos": [1328, 707, 168.3],
+            "health_mult": 2
+          },
+          "success": "The undead monks are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cuthbert has come out to set the road right. The undead monks are coming back for it!",
+          "center": [1328, 707, 168.3],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cuthbert",
+            "level": 30,
+            "pos": [1328, 707, 168.3],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1250, 673, 149.5],
+              [1298, 627, 160.2],
+              [1364, 630, 142.3]
+            ],
+            "mobs": [
+              {
+                "template": 13034,
+                "name": "undead monk",
+                "level": [29, 30]
+              },
+              {
+                "template": 12998,
+                "name": "bwgwl",
+                "level": [28, 29]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The undead monks break and scatter. The road is open again.",
+          "fail": "Roadwarden Cuthbert falls, and the undead monks take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

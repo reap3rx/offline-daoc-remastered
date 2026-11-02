@@ -74,7 +74,7 @@
           "success": "Glimmer Warden Faelan falls. The way is safe again.",
           "fail": "Glimmer Warden Faelan slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -82,6 +82,84 @@
               { "id": "nu216_glimmer_warden_faelan_s_belt", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Glimmer Wards Hold the Road",
+          "objective": "Drive the glimmer wards off the road",
+          "announce": "With The Glimmer Wardens lost, the glimmer wards have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [496, 496, 90.8],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 44038,
+              "name": "glimmer ward",
+              "level": [42, 46]
+            },
+            {
+              "template": 44011,
+              "name": "glimmer ghoul",
+              "level": [39, 43]
+            }
+          ],
+          "boss": {
+            "template": 44038,
+            "name": "Glimmer ward warleader",
+            "level": 47,
+            "pos": [496, 496, 90.8],
+            "health_mult": 2
+          },
+          "success": "The glimmer wards are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cormac has come out to set the road right. The glimmer wards are coming back for it!",
+          "center": [496, 496, 90.8],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cormac",
+            "level": 46,
+            "pos": [496, 496, 90.8],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [411, 496, 93.3],
+              [437, 435, 92.1],
+              [499, 411, 90.1]
+            ],
+            "mobs": [
+              {
+                "template": 44038,
+                "name": "glimmer ward",
+                "level": [42, 46]
+              },
+              {
+                "template": 44011,
+                "name": "glimmer ghoul",
+                "level": [39, 43]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The glimmer wards break and scatter. The road is open again.",
+          "fail": "Roadwarden Cormac falls, and the glimmer wards take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -200,7 +278,7 @@
           "success": "The Azure Grand Inquisitor falls. The way is safe again.",
           "fail": "The Azure Grand Inquisitor slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -208,6 +286,87 @@
               { "id": "nu216_azure_grand_inquisitor_s_girdle", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Azure Cleansers Hold the Road",
+          "objective": "Drive the azure cleansers off the road",
+          "announce": "With The Azure Crusade lost, the azure cleansers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [998, 142, 121.8],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 44008,
+              "name": "azure cleanser",
+              "level": [45, 49]
+            },
+            {
+              "template": 44007,
+              "name": "azure banisher",
+              "level": [48, 52]
+            }
+          ],
+          "boss": {
+            "template": 44008,
+            "name": "Azure cleanser warleader",
+            "level": 53,
+            "pos": [998, 142, 121.8],
+            "health_mult": 2
+          },
+          "success": "The azure cleansers are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cormac has come out to set the road right. The azure cleansers are coming back for it!",
+          "center": [998, 142, 121.8],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cormac",
+            "level": 52,
+            "pos": [998, 142, 121.8],
+            "health_mult": 10,
+            "template": 60161797,
+            "model": 388,
+            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1001, 227, 117.7],
+              [939, 203, 121.0],
+              [913, 142, 126.3]
+            ],
+            "mobs": [
+              {
+                "template": 44008,
+                "name": "azure cleanser",
+                "level": [45, 49]
+              },
+              {
+                "template": 44007,
+                "name": "azure banisher",
+                "level": [48, 52]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The azure cleansers break and scatter. The road is open again.",
+          "fail": "Roadwarden Cormac falls, and the azure cleansers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

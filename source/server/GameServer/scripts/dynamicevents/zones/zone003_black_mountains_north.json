@@ -79,7 +79,7 @@
           "success": "Cadarn of the Hills falls. The way is safe again.",
           "fail": "Cadarn of the Hills slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -87,6 +87,94 @@
               { "id": "nu3_cadarn_of_the_hills_sash", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Hill Warriors Hold the Road to Swanton Keep",
+          "objective": "Drive the hill warriors off the road to Swanton Keep",
+          "announce": "With The Hill Folk Rising lost, the hill warriors have spread down onto the road to Swanton Keep and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [539, 773, 97.9],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12110,
+              "name": "hill warrior",
+              "level": [10, 10]
+            },
+            {
+              "template": 12108,
+              "name": "hill guard",
+              "level": [11, 11]
+            },
+            {
+              "template": 12105,
+              "name": "hill avenger",
+              "level": [12, 12]
+            }
+          ],
+          "boss": {
+            "template": 12110,
+            "name": "Hill warrior warleader",
+            "level": 13,
+            "pos": [539, 773, 97.9],
+            "health_mult": 2
+          },
+          "success": "The hill warriors are gone from the road to Swanton Keep. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Edith has come out to set the road to Swanton Keep right. The hill warriors are coming back for it!",
+          "center": [539, 773, 97.9],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Edith",
+            "level": 12,
+            "pos": [539, 773, 97.9],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [510, 853, 107.0],
+              [461, 808, 100.6],
+              [460, 742, 135.0]
+            ],
+            "mobs": [
+              {
+                "template": 12110,
+                "name": "hill warrior",
+                "level": [10, 10]
+              },
+              {
+                "template": 12108,
+                "name": "hill guard",
+                "level": [11, 11]
+              },
+              {
+                "template": 12105,
+                "name": "hill avenger",
+                "level": [12, 12]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Swanton Keep is safe again. Thank you.\"",
+          "success": "The hill warriors break and scatter. The road to Swanton Keep is open again.",
+          "fail": "Roadwarden Edith falls, and the hill warriors take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -215,7 +303,7 @@
           "success": "The Foreman's Shade falls. The way is safe again.",
           "fail": "The Foreman's Shade slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -223,6 +311,97 @@
               { "id": "nu3_foreman_s_shade_s_jewel", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Ghost Miners Hold the Road to Swanton Keep",
+          "objective": "Drive the ghost miners off the road to Swanton Keep",
+          "announce": "With Ghosts of the Old Mine lost, the ghost miners have spread down onto the road to Swanton Keep and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [497, 144, 342.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12095,
+              "name": "ghost miner",
+              "level": [11, 12]
+            },
+            {
+              "template": 12121,
+              "name": "rock elemental",
+              "level": [11, 12]
+            },
+            {
+              "template": 12113,
+              "name": "large boulderling",
+              "level": [11, 12]
+            }
+          ],
+          "boss": {
+            "template": 12095,
+            "name": "Ghost miner warleader",
+            "level": 13,
+            "pos": [497, 144, 342.0],
+            "health_mult": 2
+          },
+          "success": "The ghost miners are gone from the road to Swanton Keep. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Edith has come out to set the road to Swanton Keep right. The ghost miners are coming back for it!",
+          "center": [497, 144, 342.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Edith",
+            "level": 12,
+            "pos": [497, 144, 342.0],
+            "health_mult": 10,
+            "template": 60167624,
+            "model": 28,
+            "equipment": "3663a9bf-6ed9-4dff-96c3-f1915ba77331"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [577, 173, 340.8],
+              [532, 222, 305.0],
+              [466, 223, 297.8]
+            ],
+            "mobs": [
+              {
+                "template": 12095,
+                "name": "ghost miner",
+                "level": [11, 12]
+              },
+              {
+                "template": 12121,
+                "name": "rock elemental",
+                "level": [11, 12]
+              },
+              {
+                "template": 12113,
+                "name": "large boulderling",
+                "level": [11, 12]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Swanton Keep is safe again. Thank you.\"",
+          "success": "The ghost miners break and scatter. The road to Swanton Keep is open again.",
+          "fail": "Roadwarden Edith falls, and the ghost miners take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -303,7 +482,7 @@
           "success": "Watch Captain Bryce reaches the smugglers' cache. \"There they are. Clear them out!\"",
           "fail": "Watch Captain Bryce falls on the road. The others carry the body home.",
           "on_success": "g2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 10, "copper_per_level": 60 }
         },
         {
@@ -366,7 +545,7 @@
           "success": "Maud the Smuggler Queen falls. Swanton Keep will hear of this in the taverns tonight.",
           "fail": "Maud the Smuggler Queen slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -374,6 +553,87 @@
               { "id": "nu3_maud_the_smuggler_queen_s_torc", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Forest Smugglers Hold the Road to Swanton Keep",
+          "objective": "Drive the forest smugglers off the road to Swanton Keep",
+          "announce": "With The Smugglers' Road lost, the forest smugglers have spread down onto the road to Swanton Keep and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1277, 354, 254.1],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12092,
+              "name": "forest smuggler",
+              "level": [17, 17]
+            },
+            {
+              "template": 12093,
+              "name": "forest tracker",
+              "level": [15, 15]
+            }
+          ],
+          "boss": {
+            "template": 12092,
+            "name": "Forest smuggler warleader",
+            "level": 18,
+            "pos": [1277, 354, 254.1],
+            "health_mult": 2
+          },
+          "success": "The forest smugglers are gone from the road to Swanton Keep. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cuthbert has come out to set the road to Swanton Keep right. The forest smugglers are coming back for it!",
+          "center": [1277, 354, 254.1],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cuthbert",
+            "level": 17,
+            "pos": [1277, 354, 254.1],
+            "health_mult": 10,
+            "template": 60167624,
+            "model": 28,
+            "equipment": "3663a9bf-6ed9-4dff-96c3-f1915ba77331"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1311, 431, 234.0],
+              [1245, 433, 261.6],
+              [1198, 386, 271.9]
+            ],
+            "mobs": [
+              {
+                "template": 12092,
+                "name": "forest smuggler",
+                "level": [17, 17]
+              },
+              {
+                "template": 12093,
+                "name": "forest tracker",
+                "level": [15, 15]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Swanton Keep is safe again. Thank you.\"",
+          "success": "The forest smugglers break and scatter. The road to Swanton Keep is open again.",
+          "fail": "Roadwarden Cuthbert falls, and the forest smugglers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

@@ -26,6 +26,51 @@ namespace DOL.GS.DynamicEvents
         static readonly HashSet<GamePlayer> _told = new();
 
         static long Now => Environment.TickCount64;
+        public static long StartedAt;
+
+        // ---------------------------------------------------------------- what outlasts a restart: occupations
+
+        static string StatePath => Path.Combine(GameServer.Instance.Configuration.RootDirectory, "dynamic-events-state.json");
+        static bool _loading;
+
+        /// <summary>The occupations running (a captured tower, a road the siog hold - or a tower being retaken): written
+        /// whenever a stage starts or a chain ends, read at start-up - an occupation is still there when the server
+        /// comes back.</summary>
+        public static void SaveState()
+        {
+            if (_loading)
+                return;
+            try
+            {
+                var held = Chains.Where(c => c.Occupied || c.Displaced.Count > 0 || c.ResumeStage != null)
+                    .ToDictionary(c => c.Def.Id, c => c.ResumeStage ?? c.Stage?.Def.Id ?? c.PendingId);
+                File.WriteAllText(StatePath, JsonConvert.SerializeObject(held, Formatting.Indented));
+            }
+            catch (Exception ex)
+            {
+                log.Warn("Dynamic events: can't save the occupations", ex);
+            }
+        }
+
+        static void LoadState()
+        {
+            try
+            {
+                if (!File.Exists(StatePath))
+                    return;
+                var held = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(StatePath));
+                foreach (var (id, stage) in held ?? new())
+                    if (Chains.FirstOrDefault(c => c.Def.Id == id) is ChainRuntime c && c.Def.Stages.Any(s => s.Id == stage))
+                    {
+                        c.ResumeStage = stage;
+                        Trace($"{c.Def.Title}: still occupied ({stage})");
+                    }
+            }
+            catch (Exception ex)
+            {
+                log.Warn("Dynamic events: can't read the occupations", ex);
+            }
+        }
 
         public static void Trace(string line) => log.Info("Dynamic events: " + line);
 
@@ -34,7 +79,11 @@ namespace DOL.GS.DynamicEvents
         {
             try
             {
+                StartedAt = Now;
+                _loading = true;
                 Load();
+                LoadState();
+                _loading = false;
                 _timer = new ECSGameTimer(null, Tick, 1000);
             }
             catch (Exception ex)
@@ -170,7 +219,7 @@ namespace DOL.GS.DynamicEvents
                     id = c.Def.Id, title = c.Def.Title, stage = s.Def.Name, kind = s.Def.Type, objective = s.Def.Objective,
                     line = s.ProgressLine, progress = Math.Round(s.Progress, 3), time_left = s.TimeLeft,
                     x = Math.Round(c.ZoneMetresX(s.Center.X), 1), y = Math.Round(c.ZoneMetresY(s.Center.Y), 1),
-                    r = s.Def.Radius, zone, levels = c.Def.Levels, near, state = "active"
+                    r = s.Def.Radius, zone, levels = c.Def.Levels, near, state = s.Def.Type == "occupy" ? "occupied" : "active"
                 };
             }
             if (c.PendingId != null)

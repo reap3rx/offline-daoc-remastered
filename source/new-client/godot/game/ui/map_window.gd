@@ -480,6 +480,8 @@ class MapView extends Control:
 			var st := String(e.get("state", "active"))
 			var col := Color(1.0, 0.55, 0.1) if st in ["active", "next"] else (Color(0.4, 0.95, 0.35) if st == "success"
 					else (Color(0.95, 0.85, 0.45) if st == "dormant" else (Color(0.35, 0.85, 1.0) if st == "giver" else Color(0.95, 0.3, 0.25))))
+			if st == "occupied":
+				col = Color(0.9, 0.12, 0.1)                     # a failed event's monsters hold the place
 			var rad := maxf(6.0, float(e.get("r", 60.0)) / 0.025 / mr.size.x * size.x)
 			if st == "giver":
 				rad = 4.0

@@ -79,7 +79,7 @@
           "success": "The Gan Ceanach Prince falls. The way is safe again.",
           "fail": "The Gan Ceanach Prince slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -87,6 +87,94 @@
               { "id": "nu208_gan_ceanach_prince_s_cloak", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Levian-Als Hold the Road",
+          "objective": "Drive the levian-als off the road",
+          "announce": "With The Levian-al Circle lost, the levian-als have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [382, 368, 124.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60163254,
+              "name": "levian-al",
+              "level": [50, 54]
+            },
+            {
+              "template": 60161197,
+              "name": "gan ceanach",
+              "level": [50, 53]
+            },
+            {
+              "template": 60166425,
+              "name": "spectral manslayer",
+              "level": [50, 53]
+            }
+          ],
+          "boss": {
+            "template": 60163254,
+            "name": "Levian-al warleader",
+            "level": 55,
+            "pos": [382, 368, 124.6],
+            "health_mult": 2
+          },
+          "success": "The levian-als are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Fiona has come out to set the road right. The levian-als are coming back for it!",
+          "center": [382, 368, 124.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Fiona",
+            "level": 54,
+            "pos": [382, 368, 124.6],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [418, 291, 128.0],
+              [462, 340, 126.7],
+              [459, 406, 114.9]
+            ],
+            "mobs": [
+              {
+                "template": 60163254,
+                "name": "levian-al",
+                "level": [50, 54]
+              },
+              {
+                "template": 60161197,
+                "name": "gan ceanach",
+                "level": [50, 53]
+              },
+              {
+                "template": 60166425,
+                "name": "spectral manslayer",
+                "level": [50, 53]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The levian-als break and scatter. The road is open again.",
+          "fail": "Roadwarden Fiona falls, and the levian-als take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -205,7 +293,7 @@
           "success": "Seamus the Crock-Keeper falls. The way is safe again.",
           "fail": "Seamus the Crock-Keeper slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -213,6 +301,87 @@
               { "id": "nu208_seamus_the_crock_keeper_s_sash", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Leprechauns Hold the Road",
+          "objective": "Drive the leprechauns off the road",
+          "announce": "With Leprechaun Gold lost, the leprechauns have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1090, 462, 130.3],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60163224,
+              "name": "leprechaun",
+              "level": [48, 50]
+            },
+            {
+              "template": 60161034,
+              "name": "forest poacher",
+              "level": [53, 55]
+            }
+          ],
+          "boss": {
+            "template": 60163224,
+            "name": "Leprechaun warleader",
+            "level": 56,
+            "pos": [1090, 462, 130.3],
+            "health_mult": 2
+          },
+          "success": "The leprechauns are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cormac has come out to set the road right. The leprechauns are coming back for it!",
+          "center": [1090, 462, 130.3],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cormac",
+            "level": 55,
+            "pos": [1090, 462, 130.3],
+            "health_mult": 10,
+            "template": 60161797,
+            "model": 388,
+            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1012, 495, 134.1],
+              [1012, 429, 127.4],
+              [1060, 383, 124.4]
+            ],
+            "mobs": [
+              {
+                "template": 60163224,
+                "name": "leprechaun",
+                "level": [48, 50]
+              },
+              {
+                "template": 60161034,
+                "name": "forest poacher",
+                "level": [53, 55]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The leprechauns break and scatter. The road is open again.",
+          "fail": "Roadwarden Cormac falls, and the leprechauns take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

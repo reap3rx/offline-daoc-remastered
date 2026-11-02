@@ -79,7 +79,7 @@
           "success": "The Dergan Matron falls. The way is safe again.",
           "fail": "The Dergan Matron slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -87,6 +87,94 @@
               { "id": "nu200_dergan_matron_s_pendant", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Dergan Furys Hold the Road to Mag Mell",
+          "objective": "Drive the dergan furys off the road to Mag Mell",
+          "announce": "With The Dergan Furies lost, the dergan furys have spread down onto the road to Mag Mell and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1078, 145, 119.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60159913,
+              "name": "dergan fury",
+              "level": [13, 15]
+            },
+            {
+              "template": 30000,
+              "name": "dergan enchanter",
+              "level": [12, 12]
+            },
+            {
+              "template": 60167883,
+              "name": "whistler",
+              "level": [13, 13]
+            }
+          ],
+          "boss": {
+            "template": 60159913,
+            "name": "Dergan fury warleader",
+            "level": 16,
+            "pos": [1078, 145, 119.0],
+            "health_mult": 2
+          },
+          "success": "The dergan furys are gone from the road to Mag Mell. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Fiona has come out to set the road to Mag Mell right. The dergan furys are coming back for it!",
+          "center": [1078, 145, 119.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Fiona",
+            "level": 15,
+            "pos": [1078, 145, 119.0],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1133, 81, 120.7],
+              [1163, 140, 115.3],
+              [1141, 203, 90.2]
+            ],
+            "mobs": [
+              {
+                "template": 60159913,
+                "name": "dergan fury",
+                "level": [13, 15]
+              },
+              {
+                "template": 30000,
+                "name": "dergan enchanter",
+                "level": [12, 12]
+              },
+              {
+                "template": 60167883,
+                "name": "whistler",
+                "level": [13, 13]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Mag Mell is safe again. Thank you.\"",
+          "success": "The dergan furys break and scatter. The road to Mag Mell is open again.",
+          "fail": "Roadwarden Fiona falls, and the dergan furys take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -205,7 +293,7 @@
           "success": "The Siabra Revenant falls. The way is safe again.",
           "fail": "The Siabra Revenant slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -213,6 +301,87 @@
               { "id": "nu200_siabra_revenant_s_band", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Ghostly Siabras Hold the Road to Tir na mBeo",
+          "objective": "Drive the ghostly siabras off the road to Tir na mBeo",
+          "announce": "With The Ghostly Siabra lost, the ghostly siabras have spread down onto the road to Tir na mBeo and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [394, 1149, 130.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60161305,
+              "name": "ghostly siabra",
+              "level": [11, 12]
+            },
+            {
+              "template": 60161282,
+              "name": "ghastly siabra",
+              "level": [13, 15]
+            }
+          ],
+          "boss": {
+            "template": 60161305,
+            "name": "Ghostly siabra warleader",
+            "level": 16,
+            "pos": [394, 1149, 130.0],
+            "health_mult": 2
+          },
+          "success": "The ghostly siabras are gone from the road to Tir na mBeo. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Ruadh has come out to set the road to Tir na mBeo right. The ghostly siabras are coming back for it!",
+          "center": [394, 1149, 130.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Ruadh",
+            "level": 15,
+            "pos": [394, 1149, 130.0],
+            "health_mult": 10,
+            "template": 60161797,
+            "model": 388,
+            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [445, 1217, 137.7],
+              [381, 1233, 138.6],
+              [325, 1197, 134.9]
+            ],
+            "mobs": [
+              {
+                "template": 60161305,
+                "name": "ghostly siabra",
+                "level": [11, 12]
+              },
+              {
+                "template": 60161282,
+                "name": "ghastly siabra",
+                "level": [13, 15]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Tir na mBeo is safe again. Thank you.\"",
+          "success": "The ghostly siabras break and scatter. The road to Tir na mBeo is open again.",
+          "fail": "Roadwarden Ruadh falls, and the ghostly siabras take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -297,7 +466,7 @@
           "success": "Guardian Fionn reaches the curmudgeons' store. \"There they are. Clear them out!\"",
           "fail": "Guardian Fionn falls on the road. The others carry the body home.",
           "on_success": "g2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 10, "copper_per_level": 60 }
         },
         {
@@ -360,7 +529,7 @@
           "success": "Grogan the Curmudgeon King falls. Mag Mell will hear of this in the taverns tonight.",
           "fail": "Grogan the Curmudgeon King slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -368,6 +537,86 @@
               { "id": "nu200_grogan_the_curmudgeon_king_s_amulet", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Curmudgeons Hold the Mill Road",
+          "objective": "Drive the curmudgeons off the mill road",
+          "announce": "The curmudgeons have the whole mill road now, and every cart that comes down it.",
+          "center": [792, 604, 121.7],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60159539,
+              "name": "curmudgeon harvester",
+              "level": [9, 11]
+            },
+            {
+              "template": 60159548,
+              "name": "curmudgeon trapper",
+              "level": [11, 12]
+            }
+          ],
+          "boss": {
+            "template": 60159539,
+            "name": "Grogan's Nephew",
+            "level": 13,
+            "pos": [792, 604, 121.7],
+            "health_mult": 2
+          },
+          "success": "The mill road is free. The miller will want her carts back.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Miller Brigid, who is righting the overturned carts",
+          "announce": "Miller Brigid is righting the overturned carts. The curmudgeons are coming back!",
+          "center": [792, 604, 121.7],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Miller Brigid",
+            "level": 12,
+            "pos": [792, 604, 121.7],
+            "health_mult": 10,
+            "model": 700,
+            "equipment": "ab492f98-cfbf-455d-beda-c1461200e021"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [826, 526, 92.0],
+              [872, 574, 90.1],
+              [869, 640, 94.3]
+            ],
+            "mobs": [
+              {
+                "template": 60159539,
+                "name": "curmudgeon harvester",
+                "level": [9, 11]
+              },
+              {
+                "template": 60159548,
+                "name": "curmudgeon trapper",
+                "level": [11, 12]
+              }
+            ]
+          },
+          "thanks": "\"The carts are rolling again - and not to the curmudgeons' store this time!\"",
+          "success": "The curmudgeon harvesters break and scatter. The road to Mag Mell is open again.",
+          "fail": "Miller Brigid falls, and the curmudgeon harvesters take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

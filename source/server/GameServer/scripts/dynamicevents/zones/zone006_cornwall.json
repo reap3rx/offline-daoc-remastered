@@ -74,7 +74,7 @@
           "success": "Old Tregeagle falls. The way is safe again.",
           "fail": "Old Tregeagle slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -82,6 +82,84 @@
               { "id": "nu6_old_tregeagle_s_signet", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Muryans Hold the Road",
+          "objective": "Drive the muryans off the road",
+          "announce": "With The Muryan Mounds lost, the muryans have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [426, 1048, 151.5],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12862,
+              "name": "muryan",
+              "level": [18, 20]
+            },
+            {
+              "template": 12874,
+              "name": "bucca",
+              "level": [23, 24]
+            }
+          ],
+          "boss": {
+            "template": 12862,
+            "name": "Muryan warleader",
+            "level": 25,
+            "pos": [426, 1048, 151.5],
+            "health_mult": 2
+          },
+          "success": "The muryans are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Edith has come out to set the road right. The muryans are coming back for it!",
+          "center": [426, 1048, 151.5],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Edith",
+            "level": 24,
+            "pos": [426, 1048, 151.5],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [464, 972, 161.3],
+              [507, 1023, 147.8],
+              [500, 1089, 142.6]
+            ],
+            "mobs": [
+              {
+                "template": 12862,
+                "name": "muryan",
+                "level": [18, 20]
+              },
+              {
+                "template": 12874,
+                "name": "bucca",
+                "level": [23, 24]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The muryans break and scatter. The road is open again.",
+          "fail": "Roadwarden Edith falls, and the muryans take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -210,7 +288,7 @@
           "success": "Greyjaw of the Moor falls. The way is safe again.",
           "fail": "Greyjaw of the Moor slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -218,6 +296,97 @@
               { "id": "nu6_greyjaw_of_the_moor_s_mantle", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Moor Wolfs Hold the Road",
+          "objective": "Drive the moor wolfs off the road",
+          "announce": "With The Moor Wolves lost, the moor wolfs have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [945, 765, 137.3],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12831,
+              "name": "moor wolf",
+              "level": [14, 14]
+            },
+            {
+              "template": 12830,
+              "name": "moor pack leader",
+              "level": [15, 15]
+            },
+            {
+              "template": 12829,
+              "name": "moor den mother",
+              "level": [17, 17]
+            }
+          ],
+          "boss": {
+            "template": 12831,
+            "name": "Moor wolf warleader",
+            "level": 18,
+            "pos": [945, 765, 137.3],
+            "health_mult": 2
+          },
+          "success": "The moor wolfs are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hal has come out to set the road right. The moor wolfs are coming back for it!",
+          "center": [945, 765, 137.3],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hal",
+            "level": 17,
+            "pos": [945, 765, 137.3],
+            "health_mult": 10,
+            "template": 60167630,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1027, 743, 136.2],
+              [1018, 808, 142.8],
+              [965, 848, 144.4]
+            ],
+            "mobs": [
+              {
+                "template": 12831,
+                "name": "moor wolf",
+                "level": [14, 14]
+              },
+              {
+                "template": 12830,
+                "name": "moor pack leader",
+                "level": [15, 15]
+              },
+              {
+                "template": 12829,
+                "name": "moor den mother",
+                "level": [17, 17]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The moor wolfs break and scatter. The road is open again.",
+          "fail": "Roadwarden Hal falls, and the moor wolfs take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -291,7 +460,7 @@
           "success": "The Boneheap Rooter falls. The way is safe again.",
           "fail": "The Boneheap Rooter slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -299,6 +468,84 @@
               { "id": "nu6_boneheap_rooter_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Giant Rooters Hold the Road",
+          "objective": "Drive the giant rooters off the road",
+          "announce": "With The Rooters' Dig lost, the giant rooters have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [500, 1400, 145.3],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12825,
+              "name": "giant rooter",
+              "level": [30, 34]
+            },
+            {
+              "template": 12688,
+              "name": "giant skeleton",
+              "level": [27, 28]
+            }
+          ],
+          "boss": {
+            "template": 12825,
+            "name": "Giant rooter warleader",
+            "level": 35,
+            "pos": [500, 1400, 145.3],
+            "health_mult": 2
+          },
+          "success": "The giant rooters are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hal has come out to set the road right. The giant rooters are coming back for it!",
+          "center": [500, 1400, 145.3],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hal",
+            "level": 34,
+            "pos": [500, 1400, 145.3],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [538, 1324, 140.0],
+              [581, 1374, 147.5],
+              [575, 1440, 158.8]
+            ],
+            "mobs": [
+              {
+                "template": 12825,
+                "name": "giant rooter",
+                "level": [30, 34]
+              },
+              {
+                "template": 12688,
+                "name": "giant skeleton",
+                "level": [27, 28]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The giant rooters break and scatter. The road is open again.",
+          "fail": "Roadwarden Hal falls, and the giant rooters take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

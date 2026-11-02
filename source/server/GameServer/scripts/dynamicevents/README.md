@@ -21,6 +21,8 @@ who takes part, and scale with the people there. A zone's events are one JSON fi
    until the party goes home. A defend's protected NPC stays a little after a win to thank you (`thanks`); a giver
    has the last word when the chain ends (`thanks` / `regret` on the giver, a default otherwise).
 
+   | `occupy` | drive out a garrison that holds a place (no time limit; the fallen are replaced every `reinforce_s` while nobody presses them) | `mobs`, `count`, `boss` (their leader), `displace_m` (the realm's NPCs that near are driven off until the chain is won), `health_mult` |
+
    `on_success` / `on_fail` name the next stage (or `end`); `rest_s` (default 30) is the breather before it.
    `reward`: `xp_pct` (of a level, at gold), `copper_per_level`, and `items`, each with gold and silver chances.
 3. Places are zone metres, as the new client's map shows them: `center`, `pos`, `from`, `path` are `[x, y]`.
@@ -31,6 +33,29 @@ who takes part, and scale with the people there. A zone's events are one JSON fi
    per zone, applied with `named_uniques.py --apply` while the server is closed).
 6. Build the server (the JSON is embedded). A file in `runtime/server/dynamic-events/` replaces the built-in one for
    its zone without a rebuild.
+
+## When an event fails
+
+(Owner 2026-11-02: failure should have "real world consequence" - GW2's Queensdale bandits taking the pipes.) Every
+chain's boss, march and hold leads, when lost, to `o1`: an `occupy` stage on the way to the nearest town (its monsters
+and a leader hold the road, a red area on the map, until driven out), then `o2`: a `defend` while a roadwarden (or
+someone of the chain's own) sets the place right - lost, they hold it again. Occupations outlast a restart
+(`runtime/server/dynamic-events-state.json`). Built by `tools/claude-version/dynamic_events_gen/occupations.py`
+(hand-written words for some chains in its CUSTOM, the rest from the chain's monsters and the town's name).
+
+## Towers
+
+A pilot of two guard towers per realm (`dynamic_events_gen/towers.py`): every hour and a half or so the tower is
+attacked (`t1`, defend its sergeant for four minutes); nobody comes within ten minutes of the alarm (`auto_fail_s`)
+or the sergeant falls, and it is captured (`c1`: its guards and quartermaster gone, an elite garrison and captain hold
+it - a group's fight); retaken, it must be held while they counter-attack (`c2`). While the realm holds it, a
+quartermaster (`merchant`, `EventTokenMerchant.cs`) sells for Marks of Valor: armour of each of the realm's types and
+its weapons at the tower's level, the tower's own cloak, potions and respec stones (`tools/claude-version/tower_stock.py`).
+
+## Marks of Valor
+
+Every stage won pays Marks of Valor (`event_mark`) to players: `reward.tokens` at gold (silver 70%, bronze 40%), or a
+quarter of `xp_pct` when not set. Occupations and towers pay more.
 
 ## The classic zones
 

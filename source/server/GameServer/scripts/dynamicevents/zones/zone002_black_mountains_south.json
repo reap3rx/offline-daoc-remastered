@@ -79,7 +79,7 @@
           "success": "Gruk the Net-Master falls. The way is safe again.",
           "fail": "Gruk the Net-Master slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -87,6 +87,94 @@
               { "id": "nu2_gruk_the_net_master_s_armband", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Goblin Fishermans Hold the Road to Humberton Village",
+          "objective": "Drive the goblin fishermans off the road to Humberton Village",
+          "announce": "With The Goblin Fishers lost, the goblin fishermans have spread down onto the road to Humberton Village and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [446, 779, 58.1],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12171,
+              "name": "goblin fisherman",
+              "level": [4, 6]
+            },
+            {
+              "template": 12235,
+              "name": "undead goblin fisherman",
+              "level": [4, 4]
+            },
+            {
+              "template": 12236,
+              "name": "undead goblin warrior",
+              "level": [5, 5]
+            }
+          ],
+          "boss": {
+            "template": 12171,
+            "name": "Goblin fisherman warleader",
+            "level": 7,
+            "pos": [446, 779, 58.1],
+            "health_mult": 2
+          },
+          "success": "The goblin fishermans are gone from the road to Humberton Village. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hal has come out to set the road to Humberton Village right. The goblin fishermans are coming back for it!",
+          "center": [446, 779, 58.1],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hal",
+            "level": 6,
+            "pos": [446, 779, 58.1],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [382, 724, 42.4],
+              [441, 695, 36.1],
+              [503, 716, 54.8]
+            ],
+            "mobs": [
+              {
+                "template": 12171,
+                "name": "goblin fisherman",
+                "level": [4, 6]
+              },
+              {
+                "template": 12235,
+                "name": "undead goblin fisherman",
+                "level": [4, 4]
+              },
+              {
+                "template": 12236,
+                "name": "undead goblin warrior",
+                "level": [5, 5]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Humberton Village is safe again. Thank you.\"",
+          "success": "The goblin fishermans break and scatter. The road to Humberton Village is open again.",
+          "fail": "Roadwarden Hal falls, and the goblin fishermans take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -205,7 +293,7 @@
           "success": "Brannoc Redbeard falls. The way is safe again.",
           "fail": "Brannoc Redbeard slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -213,6 +301,87 @@
               { "id": "nu2_brannoc_redbeard_s_eye", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Red Dwarf Thiefs Hold the Road to Humberton Village",
+          "objective": "Drive the red dwarf thiefs off the road to Humberton Village",
+          "announce": "With The Red Dwarf Raid lost, the red dwarf thiefs have spread down onto the road to Humberton Village and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1216, 779, 158.5],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12205,
+              "name": "red dwarf thief",
+              "level": [5, 7]
+            },
+            {
+              "template": 12199,
+              "name": "red dwarf bandit",
+              "level": [6, 8]
+            }
+          ],
+          "boss": {
+            "template": 12205,
+            "name": "Red dwarf thief warleader",
+            "level": 9,
+            "pos": [1216, 779, 158.5],
+            "health_mult": 2
+          },
+          "success": "The red dwarf thiefs are gone from the road to Humberton Village. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Edith has come out to set the road to Humberton Village right. The red dwarf thiefs are coming back for it!",
+          "center": [1216, 779, 158.5],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Edith",
+            "level": 8,
+            "pos": [1216, 779, 158.5],
+            "health_mult": 10,
+            "template": 60167629,
+            "model": 28,
+            "equipment": "dfb0d504-70ce-4eed-8764-1bb80036b3e3"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1197, 697, 134.5],
+              [1262, 708, 92.8],
+              [1300, 763, 111.5]
+            ],
+            "mobs": [
+              {
+                "template": 12205,
+                "name": "red dwarf thief",
+                "level": [5, 7]
+              },
+              {
+                "template": 12199,
+                "name": "red dwarf bandit",
+                "level": [6, 8]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Humberton Village is safe again. Thank you.\"",
+          "success": "The red dwarf thiefs break and scatter. The road to Humberton Village is open again.",
+          "fail": "Roadwarden Edith falls, and the red dwarf thiefs take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -289,7 +458,7 @@
           "success": "Veteran Guard Osric reaches the highwaymen's camp. \"There they are. Clear them out!\"",
           "fail": "Veteran Guard Osric falls on the road. The others carry the body home.",
           "on_success": "g2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 10, "copper_per_level": 60 }
         },
         {
@@ -357,7 +526,7 @@
           "success": "Black Tom the Highwayman falls. Humberton will hear of this in the taverns tonight.",
           "fail": "Black Tom the Highwayman slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -365,6 +534,97 @@
               { "id": "nu2_black_tom_the_highwayman_s_amulet", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Highwaymans Hold the Road to Humberton Village",
+          "objective": "Drive the highwaymans off the road to Humberton Village",
+          "announce": "With Highway Robbery lost, the highwaymans have spread down onto the road to Humberton Village and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [686, 769, 58.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12361,
+              "name": "highwayman",
+              "level": [7, 7]
+            },
+            {
+              "template": 12076,
+              "name": "cutpurse",
+              "level": [4, 4]
+            },
+            {
+              "template": 12447,
+              "name": "bandit",
+              "level": [5, 8]
+            }
+          ],
+          "boss": {
+            "template": 12361,
+            "name": "Highwayman warleader",
+            "level": 9,
+            "pos": [686, 769, 58.0],
+            "health_mult": 2
+          },
+          "success": "The highwaymans are gone from the road to Humberton Village. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cuthbert has come out to set the road to Humberton Village right. The highwaymans are coming back for it!",
+          "center": [686, 769, 58.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cuthbert",
+            "level": 8,
+            "pos": [686, 769, 58.0],
+            "health_mult": 10,
+            "template": 60167625,
+            "model": 27,
+            "equipment": "afbf0cbc-36a3-4471-b32a-057ae99619db"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [748, 710, 57.4],
+              [771, 772, 58.7],
+              [743, 832, 56.8]
+            ],
+            "mobs": [
+              {
+                "template": 12361,
+                "name": "highwayman",
+                "level": [7, 7]
+              },
+              {
+                "template": 12076,
+                "name": "cutpurse",
+                "level": [4, 4]
+              },
+              {
+                "template": 12447,
+                "name": "bandit",
+                "level": [5, 8]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Humberton Village is safe again. Thank you.\"",
+          "success": "The highwaymans break and scatter. The road to Humberton Village is open again.",
+          "fail": "Roadwarden Cuthbert falls, and the highwaymans take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

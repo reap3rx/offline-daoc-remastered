@@ -74,7 +74,7 @@
           "success": "Gorm the Cairn-Builder falls. The way is safe again.",
           "fail": "Gorm the Cairn-Builder slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -82,6 +82,84 @@
               { "id": "nu4_gorm_the_cairn_builder_s_armband", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Granite Giant Herdsmans Hold the Road",
+          "objective": "Drive the granite giant herdsmans off the road",
+          "announce": "With The Herdsmen's Cairn lost, the granite giant herdsmans have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [884, 284, 39.5],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 770003,
+              "name": "granite giant herdsman",
+              "level": [39, 43]
+            },
+            {
+              "template": 770005,
+              "name": "granite giant gatherer",
+              "level": [42, 46]
+            }
+          ],
+          "boss": {
+            "template": 770003,
+            "name": "Granite giant herdsman warleader",
+            "level": 47,
+            "pos": [884, 284, 39.5],
+            "health_mult": 2
+          },
+          "success": "The granite giant herdsmans are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cuthbert has come out to set the road right. The granite giant herdsmans are coming back for it!",
+          "center": [884, 284, 39.5],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cuthbert",
+            "level": 46,
+            "pos": [884, 284, 39.5],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [964, 257, 58.8],
+              [959, 323, 40.6],
+              [908, 365, 35.2]
+            ],
+            "mobs": [
+              {
+                "template": 770003,
+                "name": "granite giant herdsman",
+                "level": [39, 43]
+              },
+              {
+                "template": 770005,
+                "name": "granite giant gatherer",
+                "level": [42, 46]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The granite giant herdsmans break and scatter. The road is open again.",
+          "fail": "Roadwarden Cuthbert falls, and the granite giant herdsmans take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -200,7 +278,7 @@
           "success": "Stonelord Vaurn falls. The way is safe again.",
           "fail": "Stonelord Vaurn slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -208,6 +286,87 @@
               { "id": "nu4_stonelord_vaurn_s_ring", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Granite Giant Stonecallers Hold the Road",
+          "objective": "Drive the granite giant stonecallers off the road",
+          "announce": "With The Stonecallers' Rite lost, the granite giant stonecallers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [380, 790, 7.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 770006,
+              "name": "granite giant stonecaller",
+              "level": [45, 49]
+            },
+            {
+              "template": 770014,
+              "name": "granite giant stoneshaper",
+              "level": [48, 52]
+            }
+          ],
+          "boss": {
+            "template": 770006,
+            "name": "Granite giant stonecaller warleader",
+            "level": 53,
+            "pos": [380, 790, 7.0],
+            "health_mult": 2
+          },
+          "success": "The granite giant stonecallers are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Edith has come out to set the road right. The granite giant stonecallers are coming back for it!",
+          "center": [380, 790, 7.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Edith",
+            "level": 52,
+            "pos": [380, 790, 7.0],
+            "health_mult": 10,
+            "template": 60167630,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [444, 734, 77.3],
+              [465, 797, 62.5],
+              [434, 855, 52.3]
+            ],
+            "mobs": [
+              {
+                "template": 770006,
+                "name": "granite giant stonecaller",
+                "level": [45, 49]
+              },
+              {
+                "template": 770014,
+                "name": "granite giant stoneshaper",
+                "level": [48, 52]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The granite giant stonecallers break and scatter. The road is open again.",
+          "fail": "Roadwarden Edith falls, and the granite giant stonecallers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

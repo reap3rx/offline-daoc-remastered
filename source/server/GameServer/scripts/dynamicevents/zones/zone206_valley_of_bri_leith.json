@@ -121,7 +121,7 @@
           "success": "Gelbhan falls. The lurikeen will have their mine back.",
           "fail": "Gelbhan slips away into the hills with the camp's takings.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -129,6 +129,96 @@
               { "id": "nu206_gelbhan_s_footpad_boots", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Siog Hold the Mine",
+          "objective": "Drive the siog out of the Coruscating Mine",
+          "announce": "Gelbhan's footpads have taken the Coruscating Mine itself. The lurikeen won't get their ore back until someone throws them out.",
+          "center": [318, 160, 186.1],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60166070,
+              "name": "siog footpad",
+              "level": [15, 17]
+            },
+            {
+              "template": 60166071,
+              "name": "siog piller",
+              "level": [16, 18]
+            },
+            {
+              "template": 60166076,
+              "name": "siog lookout",
+              "level": [17, 18]
+            }
+          ],
+          "boss": {
+            "template": 60166070,
+            "name": "Gelbhan's Second",
+            "level": 21,
+            "pos": [318, 160, 186.1],
+            "health_mult": 2
+          },
+          "success": "The mine is clear. Tobar is already coming up the road with a cart.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Tobar the Miner, who is shoring up the mine entrance",
+          "announce": "Tobar is shoring up the mine entrance. The siog want it back!",
+          "center": [318, 160, 186.1],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Tobar the Miner",
+            "level": 20,
+            "pos": [318, 160, 186.1],
+            "health_mult": 10,
+            "model": 346,
+            "equipment": "4348af51-9904-4145-acab-8008e07e7575"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [351, 238, 156.9],
+              [285, 238, 161.2],
+              [239, 190, 170.3]
+            ],
+            "mobs": [
+              {
+                "template": 60166070,
+                "name": "siog footpad",
+                "level": [15, 17]
+              },
+              {
+                "template": 60166071,
+                "name": "siog piller",
+                "level": [16, 18]
+              },
+              {
+                "template": 60166076,
+                "name": "siog lookout",
+                "level": [17, 18]
+              }
+            ]
+          },
+          "thanks": "\"She'll hold now. The Coruscating Mine is ours again!\"",
+          "success": "The siog footpads break and scatter. The road to Druim Cain is open again.",
+          "fail": "Tobar the Miner falls, and the siog footpads take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ],
       "hint": "Something stirs at the Coruscating Mine...",
@@ -251,7 +341,7 @@
           "success": "Fuamnach's wind dies on the lake. The scarlet fly circles you once, and is gone.",
           "fail": "Fuamnach laughs and is gone with the wind.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 200,
@@ -260,6 +350,85 @@
               { "id": "nu206_etain_s_scarlet_wing", "gold_chance": 25, "silver_chance": 10 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Gale Wisps Hold the Road to Druim Cain",
+          "objective": "Drive the gale wisps off the road to Druim Cain",
+          "announce": "With The Scarlet Fly lost, the gale wisps have spread down onto the road to Druim Cain and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [967, 1383, 156.8],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60160478,
+              "name": "gale wisp",
+              "level": [26, 29]
+            },
+            {
+              "template": 60167560,
+              "name": "gale wisp",
+              "level": [27, 30]
+            }
+          ],
+          "boss": {
+            "template": 60160478,
+            "name": "Gale wisp warleader",
+            "level": 39,
+            "pos": [967, 1383, 156.8],
+            "health_mult": 2
+          },
+          "success": "The gale wisps are gone from the road to Druim Cain. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Fiona has come out to set the road to Druim Cain right. The gale wisps are coming back for it!",
+          "center": [967, 1383, 156.8],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Fiona",
+            "level": 38,
+            "pos": [967, 1383, 156.8],
+            "health_mult": 10,
+            "model": 633
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1035, 1331, 157.3],
+              [1052, 1395, 159.5],
+              [1018, 1451, 159.8]
+            ],
+            "mobs": [
+              {
+                "template": 60160478,
+                "name": "gale wisp",
+                "level": [26, 29]
+              },
+              {
+                "template": 60167560,
+                "name": "gale wisp",
+                "level": [27, 30]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Druim Cain is safe again. Thank you.\"",
+          "success": "The gale wisps break and scatter. The road to Druim Cain is open again.",
+          "fail": "Roadwarden Fiona falls, and the gale wisps take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ],
       "hint": "A cold wind is rising over the southern lake...",
@@ -334,7 +503,7 @@
           "success": "The Doorward falls and the rings close. Bri Leith is quiet again.",
           "fail": "The Doorward withdraws and the rings close behind him.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 250,
@@ -343,6 +512,86 @@
               { "id": "nu206_midir_s_rowan_spear", "gold_chance": 30, "silver_chance": 12 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Outrider Of Bri Leiths Hold the Road to Druim Cain",
+          "objective": "Drive the outrider of Bri Leiths off the road to Druim Cain",
+          "announce": "With The Fairy Rade lost, the outrider of Bri Leiths have spread down onto the road to Druim Cain and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1440, 581, 160.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60160678,
+              "name": "outrider of Bri Leith",
+              "level": [36, 38],
+              "size": 72
+            },
+            {
+              "template": 60160468,
+              "name": "host of Bri Leith",
+              "level": [36, 39]
+            }
+          ],
+          "boss": {
+            "template": 60160678,
+            "name": "Outrider of bri leith warleader",
+            "level": 46,
+            "pos": [1440, 581, 160.0],
+            "health_mult": 2
+          },
+          "success": "The outrider of Bri Leiths are gone from the road to Druim Cain. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Fiona has come out to set the road to Druim Cain right. The outrider of Bri Leiths are coming back for it!",
+          "center": [1440, 581, 160.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Fiona",
+            "level": 45,
+            "pos": [1440, 581, 160.0],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1471, 661, 157.1],
+              [1405, 658, 158.1],
+              [1360, 609, 146.7]
+            ],
+            "mobs": [
+              {
+                "template": 60160678,
+                "name": "outrider of Bri Leith",
+                "level": [36, 38],
+                "size": 72
+              },
+              {
+                "template": 60160468,
+                "name": "host of Bri Leith",
+                "level": [36, 39]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Druim Cain is safe again. Thank you.\"",
+          "success": "The outrider of Bri Leiths break and scatter. The road to Druim Cain is open again.",
+          "fail": "Roadwarden Fiona falls, and the outrider of Bri Leiths take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ],
       "hint": "The fairy rings east of Caille are glowing...",
@@ -423,7 +672,7 @@
           "success": "The fold is in sight. Captain Ronan draws his sword.",
           "fail": "Captain Ronan has fallen on the road. The rangers carry him back to Druim Cain.",
           "on_success": "d2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 8, "copper_per_level": 70 }
         },
         {
@@ -486,7 +735,7 @@
           "success": "Daol falls. Ronan takes back the ranger's cloak and plants the banner of Druim Cain in the fold.",
           "fail": "Daol drives the rangers out of the fold.",
           "on_success": "d4",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 15, "copper_per_level": 150 }
         },
         {
@@ -523,7 +772,7 @@
           "success": "The siog break and scatter into the hills. The fold belongs to Hibernia again.",
           "fail": "Captain Ronan falls under the banner. The siog take back the fold.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 200,
@@ -533,6 +782,240 @@
           },
           "flag": 466,
           "flag_name": "Banner of Druim Cain"
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Siog Hold the South Road",
+          "objective": "Drive the siog off the south road",
+          "announce": "With Ronan's rangers beaten back, the siog have come down out of the fold and hold the south road. No herder can get past them. Drive them off.",
+          "center": [872, 320, 42.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60166074,
+              "name": "siog seeker",
+              "level": [28, 31]
+            },
+            {
+              "template": 60166077,
+              "name": "siog waylayer",
+              "level": [27, 29]
+            }
+          ],
+          "boss": {
+            "template": 60166074,
+            "name": "Ferdiad Road-Thief",
+            "level": 37,
+            "pos": [872, 320, 42.0],
+            "health_mult": 2
+          },
+          "success": "The south road is clear of siog. The herders' road-mender is on his way.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Herder Dallan, who is mending the fold gate the siog broke",
+          "announce": "Herder Dallan has come out to mend the broken fold gate. The siog are coming back for it!",
+          "center": [872, 320, 42.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Herder Dallan",
+            "level": 36,
+            "pos": [872, 320, 42.0],
+            "health_mult": 10,
+            "template": 60163818
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [952, 348, 73.5],
+              [908, 397, 60.0],
+              [841, 399, 42.6]
+            ],
+            "mobs": [
+              {
+                "template": 60166074,
+                "name": "siog seeker",
+                "level": [28, 31]
+              },
+              {
+                "template": 60166077,
+                "name": "siog waylayer",
+                "level": [27, 29]
+              }
+            ]
+          },
+          "thanks": "\"That will hold them. Thank you - the flocks can come home tonight.\"",
+          "success": "The siog seekers break and scatter. The road to Druim Cain is open again.",
+          "fail": "Herder Dallan falls, and the siog seekers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
+    },
+    {
+      "id": "tower_giolladhe",
+      "title": "The Siege of Giolladhe's Tower",
+      "levels": [19, 24],
+      "tower": "Giolladhe's Tower",
+      "hint": "Horns of the Wild Hunt sound around Giolladhe's Tower...",
+      "rest_s": 45,
+      "first_delay_s": [1800, 3600],
+      "interval_s": [5400, 9000],
+      "wake_m": 180,
+      "auto_fail_s": 600,
+      "start": "t1",
+      "merchant": {
+        "model": 365,
+        "equipment": "d7bc34fd-68b6-48f4-9b2d-67e30aa46453",
+        "template": 60165768,
+        "name": "Quartermaster Maudalin",
+        "level": 29,
+        "pos": [131, 1294, 129.8],
+        "stock": "tower_giolladhe",
+        "guild": "Marks of Valor",
+        "greet": "While Giolladhe's Tower stands, I can sell you what coin won't buy. Marks of Valor only."
+      },
+      "stages": [
+        {
+          "id": "t1",
+          "type": "defend",
+          "name": "Hold Giolladhe's Tower",
+          "objective": "Keep Sentinel Giolladhe alive while the Wild Hunt attack the tower",
+          "announce": "The Wild Hunt are attacking Giolladhe's Tower! Sentinel Giolladhe calls for every sword nearby.",
+          "center": [122, 1299, 129.8],
+          "radius": 60,
+          "duration_s": 240,
+          "protect": {
+            "model": 365,
+            "equipment": "d7bc34fd-68b6-48f4-9b2d-67e30aa46453",
+            "template": 60165768,
+            "name": "Sentinel Giolladhe",
+            "level": 26,
+            "pos": [127, 1308, 129.8],
+            "health_mult": 15
+          },
+          "waves": {
+            "every_s": 25,
+            "count": 3,
+            "from": [
+              [205, 1334, 114.0],
+              [50, 1353, 132.1],
+              [112, 1210, 129.4]
+            ],
+            "mobs": [
+              {
+                "template": 60160678,
+                "name": "faerie steed",
+                "level": [19, 24]
+              },
+              {
+                "template": 60160674,
+                "name": "faerie drake",
+                "level": [19, 24]
+              }
+            ]
+          },
+          "thanks": "\"The tower holds! Drinks are on me when the quartermaster isn't looking.\"",
+          "success": "The Wild Hunt break off the attack. Giolladhe's Tower holds.",
+          "fail": "Giolladhe's Tower has fallen to the Wild Hunt.",
+          "on_success": "end",
+          "on_fail": "c1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 8 }
+        },
+        {
+          "id": "c1",
+          "type": "occupy",
+          "name": "Retake Giolladhe's Tower",
+          "objective": "Drive the Wild Hunt out of Giolladhe's Tower",
+          "announce": "The Wild Hunt hold Giolladhe's Tower. Its guards are gone, its quartermaster fled. It will take a war-band to win it back.",
+          "center": [122, 1299, 129.8],
+          "radius": 50,
+          "count": 14,
+          "reinforce_s": 45,
+          "displace_m": 45,
+          "health_mult": 2.5,
+          "mobs": [
+            {
+              "template": 60160678,
+              "name": "faerie steed",
+              "level": [25, 27]
+            },
+            {
+              "template": 60160674,
+              "name": "faerie drake",
+              "level": [25, 27]
+            }
+          ],
+          "boss": {
+            "template": 60160678,
+            "name": "The Huntsman of the Sidhe",
+            "level": 28,
+            "pos": [122, 1299, 129.8],
+            "health_mult": 6
+          },
+          "success": "The Huntsman of the Sidhe is dead and the tower is ours - for now. They will be back.",
+          "fail": "",
+          "on_success": "c2",
+          "on_fail": "c1",
+          "reward": { "xp_pct": 30, "copper_per_level": 250, "tokens": 25 }
+        },
+        {
+          "id": "c2",
+          "type": "defend",
+          "name": "Hold the Gate",
+          "objective": "Keep Sentinel Giolladhe alive until the garrison is back",
+          "announce": "Sentinel Giolladhe is raising the realm's colours again - and the Wild Hunt are coming back for the tower!",
+          "center": [122, 1299, 129.8],
+          "radius": 60,
+          "duration_s": 150,
+          "protect": {
+            "model": 365,
+            "equipment": "d7bc34fd-68b6-48f4-9b2d-67e30aa46453",
+            "template": 60165768,
+            "name": "Sentinel Giolladhe",
+            "level": 26,
+            "pos": [127, 1308, 129.8],
+            "health_mult": 15
+          },
+          "waves": {
+            "every_s": 25,
+            "count": 3,
+            "from": [
+              [205, 1334, 114.0],
+              [50, 1353, 132.1],
+              [112, 1210, 129.4]
+            ],
+            "mobs": [
+              {
+                "template": 60160678,
+                "name": "faerie steed",
+                "level": [19, 24]
+              },
+              {
+                "template": 60160674,
+                "name": "faerie drake",
+                "level": [19, 24]
+              }
+            ]
+          },
+          "thanks": "\"Giolladhe's Tower is ours again. The quartermaster will be glad to see you.\"",
+          "success": "Giolladhe's Tower is held by the realm again. Its garrison and quartermaster are back.",
+          "fail": "Sentinel Giolladhe falls, and the Wild Hunt take the tower back.",
+          "on_success": "end",
+          "on_fail": "c1",
+          "reward": { "xp_pct": 15, "copper_per_level": 120, "tokens": 10 }
         }
       ]
     }

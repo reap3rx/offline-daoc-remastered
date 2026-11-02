@@ -79,7 +79,7 @@
           "success": "Corwin the Graverobber falls. The way is safe again.",
           "fail": "Corwin the Graverobber slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -87,6 +87,94 @@
               { "id": "nu1_corwin_the_graverobber_s_sash", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Tomb Raider Diggers Hold the Road",
+          "objective": "Drive the tomb raider diggers off the road",
+          "announce": "With The Tomb Robbers lost, the tomb raider diggers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [129, 1158, 56.8],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12737,
+              "name": "tomb raider digger",
+              "level": [10, 13]
+            },
+            {
+              "template": 12738,
+              "name": "tomb raider scout",
+              "level": [13, 15]
+            },
+            {
+              "template": 12734,
+              "name": "tomb raider",
+              "level": [16, 17]
+            }
+          ],
+          "boss": {
+            "template": 12737,
+            "name": "Tomb raider digger warleader",
+            "level": 18,
+            "pos": [129, 1158, 56.8],
+            "health_mult": 2
+          },
+          "success": "The tomb raider diggers are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Mabyn has come out to set the road right. The tomb raider diggers are coming back for it!",
+          "center": [129, 1158, 56.8],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Mabyn",
+            "level": 17,
+            "pos": [129, 1158, 56.8],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [118, 1074, 56.3],
+              [182, 1092, 59.3],
+              [213, 1150, 52.9]
+            ],
+            "mobs": [
+              {
+                "template": 12737,
+                "name": "tomb raider digger",
+                "level": [10, 13]
+              },
+              {
+                "template": 12738,
+                "name": "tomb raider scout",
+                "level": [13, 15]
+              },
+              {
+                "template": 12734,
+                "name": "tomb raider",
+                "level": [16, 17]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The tomb raider diggers break and scatter. The road is open again.",
+          "fail": "Roadwarden Mabyn falls, and the tomb raider diggers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -215,7 +303,7 @@
           "success": "The Hollow King falls. The way is safe again.",
           "fail": "The Hollow King slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -223,6 +311,97 @@
               { "id": "nu1_hollow_king_s_cloak", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Disturbed Presences Hold the Road",
+          "objective": "Drive the disturbed presences off the road",
+          "announce": "With The Restless Plain lost, the disturbed presences have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [673, 1007, 54.0],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12735,
+              "name": "disturbed presence",
+              "level": [12, 14]
+            },
+            {
+              "template": 12744,
+              "name": "wandering spirit",
+              "level": [9, 11]
+            },
+            {
+              "template": 12690,
+              "name": "green ghast",
+              "level": [12, 14]
+            }
+          ],
+          "boss": {
+            "template": 12735,
+            "name": "Disturbed presence warleader",
+            "level": 15,
+            "pos": [673, 1007, 54.0],
+            "health_mult": 2
+          },
+          "success": "The disturbed presences are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cuthbert has come out to set the road right. The disturbed presences are coming back for it!",
+          "center": [673, 1007, 54.0],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cuthbert",
+            "level": 14,
+            "pos": [673, 1007, 54.0],
+            "health_mult": 10,
+            "template": 60161738,
+            "model": 28,
+            "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [588, 1019, 53.5],
+              [606, 955, 56.9],
+              [664, 923, 59.0]
+            ],
+            "mobs": [
+              {
+                "template": 12735,
+                "name": "disturbed presence",
+                "level": [12, 14]
+              },
+              {
+                "template": 12744,
+                "name": "wandering spirit",
+                "level": [9, 11]
+              },
+              {
+                "template": 12690,
+                "name": "green ghast",
+                "level": [12, 14]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The disturbed presences break and scatter. The road is open again.",
+          "fail": "Roadwarden Cuthbert falls, and the disturbed presences take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -295,7 +474,7 @@
           "success": "Guard Eiddef reaches the spriggarn thicket. \"There they are. Clear them out!\"",
           "fail": "Guard Eiddef falls on the road. The others carry the body home.",
           "on_success": "g2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 10, "copper_per_level": 60 }
         },
         {
@@ -363,7 +542,7 @@
           "success": "Gnarlroot the Howler falls. The watch post will hear of this in the taverns tonight.",
           "fail": "Gnarlroot the Howler slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -371,6 +550,97 @@
               { "id": "nu1_gnarlroot_the_howler_s_torc", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Spriggarn Waylayers Hold the Road",
+          "objective": "Drive the spriggarn waylayers off the road",
+          "announce": "With The Spriggarn Ambush lost, the spriggarn waylayers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [122, 1459, 72.4],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12731,
+              "name": "spriggarn waylayer",
+              "level": [14, 14]
+            },
+            {
+              "template": 12729,
+              "name": "spriggarn ambusher",
+              "level": [15, 15]
+            },
+            {
+              "template": 12730,
+              "name": "spriggarn howler",
+              "level": [16, 16]
+            }
+          ],
+          "boss": {
+            "template": 12731,
+            "name": "Spriggarn waylayer warleader",
+            "level": 17,
+            "pos": [122, 1459, 72.4],
+            "health_mult": 2
+          },
+          "success": "The spriggarn waylayers are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cuthbert has come out to set the road right. The spriggarn waylayers are coming back for it!",
+          "center": [122, 1459, 72.4],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cuthbert",
+            "level": 16,
+            "pos": [122, 1459, 72.4],
+            "health_mult": 10,
+            "template": 60161738,
+            "model": 28,
+            "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [171, 1390, 60.2],
+              [206, 1446, 52.5],
+              [189, 1511, 82.3]
+            ],
+            "mobs": [
+              {
+                "template": 12731,
+                "name": "spriggarn waylayer",
+                "level": [14, 14]
+              },
+              {
+                "template": 12729,
+                "name": "spriggarn ambusher",
+                "level": [15, 15]
+              },
+              {
+                "template": 12730,
+                "name": "spriggarn howler",
+                "level": [16, 16]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The spriggarn waylayers break and scatter. The road is open again.",
+          "fail": "Roadwarden Cuthbert falls, and the spriggarn waylayers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

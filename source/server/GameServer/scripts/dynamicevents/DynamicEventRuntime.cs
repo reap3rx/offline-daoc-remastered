@@ -63,6 +63,7 @@ namespace DOL.GS.DynamicEvents
     public class EventMobBrain : StandardMobBrain
     {
         public GameLiving Goal;
+        public Point3D Post;                         // an occupation's garrison: they go back to their post after a fight
 
         public override void Think()
         {
@@ -71,7 +72,7 @@ namespace DOL.GS.DynamicEvents
                 base.Think();
                 return;
             }
-            Body.SpawnPoint = new Point3D(Body.X, Body.Y, Body.Z);
+            Body.SpawnPoint = Post ?? new Point3D(Body.X, Body.Y, Body.Z);
             if (Goal != null && (!Goal.IsAlive || Goal.ObjectState != GameObject.eObjectState.Active || Goal.CurrentRegion != Body.CurrentRegion))
                 Goal = null;
             if (Goal != null && !HasAggro)
@@ -154,7 +155,13 @@ namespace DOL.GS.DynamicEvents
         public long GiverReadyAt;
         public ushort GiverHeading;
         bool _running;
-        public readonly List<(GameObject obj, long until)> Lingering = new();   // gone after a while (a thank-you, a banner)                               // between Begin and End (stages and rests)
+        public readonly List<(GameObject obj, long until)> Lingering = new();   // gone after a while (a thank-you, a banner)
+        public readonly List<GameNPC> Displaced = new();   // the realm's NPCs an occupation drove off (back when it's won)
+        public EventTokenMerchant Merchant;
+        public string ResumeStage;                   // an occupation that was running when the server stopped
+        public long DormantSince;
+        public bool Occupied => Stage?.Def.Type == "occupy" ||
+            (PendingId != null && Def.Stages.FirstOrDefault(s => s.Id == PendingId)?.Type == "occupy");                               // between Begin and End (stages and rests)
 
         public ChainRuntime(ChainDef def, Region region, Zone zone, long now)
         {
@@ -212,8 +219,17 @@ namespace DOL.GS.DynamicEvents
                         Lingering[i].obj.RemoveFromWorld();
                     Lingering.RemoveAt(i);
                 }
+            if (ResumeStage != null && now - DynamicEventManager.StartedAt > 15_000)
+            {
+                string id = ResumeStage;
+                ResumeStage = null;
+                if (Def.Stages.Any(st => st.Id == id))
+                    Begin(id, now);
+            }
             if (Def.Giver != null)
                 KeepGiver(now);
+            if (Def.Merchant != null)
+                KeepMerchant();
             if (Stage == null)
             {
                 if (PendingId != null)
@@ -238,6 +254,23 @@ namespace DOL.GS.DynamicEvents
                         return;
                     }
                     Dormant = true;                         // a disturbance: it waits for someone to come
+                    DormantSince = now;
+                    return;
+                }
+                if (Def.AutoFailS > 0 && now - DormantSince > 1000L * Def.AutoFailS)
+                {
+                    // nobody answered: it goes the enemy's way (owner 2026-11-02: failure with "real world consequence")
+                    StageDef first = Def.Stages.First(st => st.Id == Def.Start);
+                    Dormant = false;
+                    foreach (GamePlayer pl in PlayersInZone())
+                        pl.Out.SendMessage($"{Def.Title}: no one answered the call. {first.Fail}", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                    if (!string.IsNullOrEmpty(first.OnFail) && first.OnFail != "end" && Def.Stages.Any(st => st.Id == first.OnFail))
+                    {
+                        _running = true;
+                        Begin(first.OnFail, now);
+                    }
+                    else
+                        End("fail", now);
                     return;
                 }
                 Vector3 w = WakePoint;
@@ -272,8 +305,11 @@ namespace DOL.GS.DynamicEvents
                     SetOut();
             }
             StageDef sd = Def.Stages.First(s => s.Id == stageId);
+            if (sd.Type == "occupy" && Def.Giver != null)
+                PartyHome();                            // the march is over: the land is the enemy's until it's taken back
             Stage = new StageRuntime(this, sd, now);
             Stage.Start();
+            DynamicEventManager.SaveState();
         }
 
         public void End(string outcome, long now)
@@ -281,6 +317,8 @@ namespace DOL.GS.DynamicEvents
             Stage?.Finish(false);
             Stage = null;
             PendingId = null;
+            RestoreDisplaced();
+            DynamicEventManager.SaveState();
             Dormant = false;
             _running = false;
             LastOutcome = outcome;
@@ -317,6 +355,12 @@ namespace DOL.GS.DynamicEvents
 
         public void Greet(GamePlayer player)
         {
+            if (Occupied)
+            {
+                StageDef occ = Stage?.Def ?? Def.Stages.First(s => s.Id == PendingId);
+                NpcSpeech.SayTo(Giver, player, Def.Giver.Occupied ?? $"We lost that fight, and now they've dug in - {occ.Objective.ToLowerInvariant()}. Gather more swords and drive them out, then we'll talk.");
+                return;
+            }
             if (Active)
             {
                 NpcSpeech.SayTo(Giver, player, "We're already on our way - keep up!");
@@ -381,6 +425,84 @@ namespace DOL.GS.DynamicEvents
 
         /// <summary>The chain is over: the guards go back to the garrison, the giver walks back to their post (or, fallen,
         /// is back there after the cooldown).</summary>
+        /// <summary>The giver's party goes home (an occupation began): the guards back to the garrison, the giver to their
+        /// post. The chain goes on (it isn't over until the land is taken back).</summary>
+        void PartyHome()
+        {
+            foreach (EventNpc g in Guards)
+                if (g.ObjectState == GameObject.eObjectState.Active)
+                    g.RemoveFromWorld();
+            Guards.Clear();
+            if (Leader != null && Giver.Brain is EventAllyBrain b)
+            {
+                b.Steered = false;
+                b.Follow = null;
+                b.ClearAggroList();
+                Vector3 home = ToWorld(Def.Giver.Pos);
+                b.Home = new Point3D((int) home.X, (int) home.Y, (int) home.Z);
+            }
+        }
+
+        /// <summary>The place's merchant stands there while the realm holds it.</summary>
+        void KeepMerchant()
+        {
+            bool want = !Occupied && Displaced.Count == 0;
+            bool there = Merchant != null && Merchant.ObjectState == GameObject.eObjectState.Active;
+            if (want == there)
+                return;
+            if (!want)
+            {
+                Merchant.RemoveFromWorld();
+                return;
+            }
+            MerchantDef d = Def.Merchant;
+            Vector3 at = ToWorld(d.Pos);
+            Merchant = new EventTokenMerchant { Greet = d.Greet };
+            if (d.Template > 0 && NpcTemplateMgr.GetTemplate(d.Template) is NpcTemplate tpl)
+                Merchant.LoadTemplate(tpl);
+            Merchant.Name = d.Name;
+            Merchant.GuildName = d.Guild ?? "Marks of Valor";
+            Merchant.Level = (byte) Math.Max(1, d.Level);
+            if (d.Model > 0) Merchant.Model = d.Model;
+            if (!string.IsNullOrEmpty(d.Equipment))
+                Merchant.LoadEquipmentTemplateFromDatabase(d.Equipment);
+            Merchant.TradeItems = new MerchantTradeItems(d.Stock);
+            Merchant.X = (int) at.X;
+            Merchant.Y = (int) at.Y;
+            Merchant.Z = (int) at.Z;
+            Merchant.Heading = d.Pos != null && d.Pos.Length > 3 ? (ushort) d.Pos[3] : (ushort) 0;
+            Merchant.CurrentRegion = Region;
+            Merchant.Realm = HomeRealm;
+            Merchant.Flags |= GameNPC.eFlags.PEACE;
+            Merchant.RespawnInterval = -1;
+            Merchant.LoadedFromScript = true;
+            Merchant.AddToWorld();
+        }
+
+        /// <summary>An occupation drives off the realm's NPCs near its spot (a captured tower's guards and merchants).</summary>
+        public void Displace(Vector3 center, double units)
+        {
+            foreach (GameNPC n in Region.GetNPCsInRadius(new Point3D((int) center.X, (int) center.Y, (int) center.Z), (ushort) Math.Min(65000, units)).ToList())
+            {
+                if (n is EventNpc || n is GameBot || n is EventTokenMerchant || n.Realm == eRealm.None || !n.IsAlive ||
+                    n.Brain is IControlledBrain || Displaced.Contains(n))
+                    continue;
+                n.RemoveFromWorld();
+                Displaced.Add(n);
+            }
+        }
+
+        public void RestoreDisplaced()
+        {
+            foreach (GameNPC n in Displaced)
+                if (n.ObjectState != GameObject.eObjectState.Active)
+                {
+                    n.Health = n.MaxHealth;
+                    n.AddToWorld();
+                }
+            Displaced.Clear();
+        }
+
         void ComeHome(long now)
         {
             foreach (var (obj, _) in Lingering.Where(l => l.obj is GameStaticItem).ToList())
@@ -564,6 +686,21 @@ namespace DOL.GS.DynamicEvents
                     if (Chain.Leader?.Brain is EventAllyBrain lb)
                         lb.Steered = true;
                     break;
+                case "occupy":
+                    // (owner 2026-11-02: failed events should have a "real world consequence" - like GW2's Queensdale
+                    // bandits taking the pipes: they hold the place, and stay until they are driven out)
+                    if (Def.DisplaceM > 0)
+                        Chain.Displace(Center, Def.DisplaceM * 40);
+                    for (int i = 0; i < Math.Max(1, Def.Count); i++)
+                        Garrison(Pick(Def.Mobs));
+                    if (Def.Boss != null)
+                    {
+                        Boss = SpawnNpc(Def.Boss, EventRole.Boss);
+                        if (Boss?.Brain is EventMobBrain bb)
+                            bb.Post = new Point3D(Boss.X, Boss.Y, Boss.Z);
+                    }
+                    _nextWave = _now + 1000L * Math.Max(20, Def.ReinforceS);
+                    break;
             }
             LeadPartyHere();
             Announce(Def.Announce, true);
@@ -632,7 +769,29 @@ namespace DOL.GS.DynamicEvents
                 case "escort":
                     TickEscort();
                     break;
+                case "occupy":
+                    int holding = Spawned.Count(n => n.IsAlive && n.IsEnemy);
+                    if (holding == 0) { Outcome = StageOutcome.Success; return; }
+                    // they dig in: the fallen are replaced, but only while nobody is pressing them
+                    if (now >= _nextWave)
+                    {
+                        _nextWave = now + 1000L * Math.Max(20, Def.ReinforceS);
+                        int garrison = Spawned.Count(n => n.IsAlive && n.Role == EventRole.Hostile);
+                        if (garrison < Def.Count && !Chain.PeopleNear(CenterPoint, RadiusUnits * 2.5).Any())
+                            Garrison(Pick(Def.Mobs));
+                    }
+                    break;
             }
+        }
+
+        /// <summary>One of an occupation's garrison, at a post in the area that they keep.</summary>
+        EventNpc Garrison(MobDef m)
+        {
+            Vector3 at = Chain.Around(Center, RadiusUnits * 0.8);
+            EventNpc npc = SpawnHostile(m, at, null);
+            if (npc?.Brain is EventMobBrain b)
+                b.Post = new Point3D((int) at.X, (int) at.Y, (int) at.Z);
+            return npc;
         }
 
         /// <summary>The giver walks the path, a point at a time - only while someone is with them, and never in the middle
@@ -781,10 +940,11 @@ namespace DOL.GS.DynamicEvents
             "defend" => Math.Min(1.0, Elapsed / (double) Math.Max(1, Def.DurationS)),
             "boss" => Boss == null ? 1.0 : 1.0 - Boss.Health / (double) Math.Max(1, Boss.MaxHealth),
             "escort" => Math.Min(1.0, _pathIndex / (double) Math.Max(1, Def.Path.Count)),
+            "occupy" => 1.0 - Math.Min(1.0, Spawned.Count(n => n.IsAlive && n.IsEnemy) / (double) Math.Max(1, Def.Count + (Def.Boss != null ? 1 : 0))),
             _ => 0
         };
 
-        public int TimeLeft => Math.Max(0, (Def.Type == "defend" ? Def.DurationS : Def.TimeS) - Elapsed);
+        public int TimeLeft => Def.Type == "occupy" ? 0 : Math.Max(0, (Def.Type == "defend" ? Def.DurationS : Def.TimeS) - Elapsed);
 
         public string ProgressLine => Def.Type switch
         {
@@ -792,6 +952,7 @@ namespace DOL.GS.DynamicEvents
             "defend" => Protect != null ? $"{Protect.Name}: {Protect.HealthPercent}% health" : "",
             "boss" => Boss != null ? $"{Boss.Name}: {Boss.HealthPercent}% health" : "",
             "escort" => Chain.Leader != null ? $"{Chain.Leader.Name}: {Chain.Leader.HealthPercent}% health" : "",
+            "occupy" => $"{Spawned.Count(n => n.IsAlive && n.IsEnemy)} still hold it" + (Boss != null && Boss.IsAlive ? $" - {Boss.Name} among them" : ""),
             _ => ""
         };
 
@@ -816,6 +977,11 @@ namespace DOL.GS.DynamicEvents
             if (npc == null)
                 return null;
             Spawned.Add(npc);
+            if (Def.HealthMult > 1)
+            {
+                npc.HealthMult = Def.HealthMult;
+                npc.Health = npc.MaxHealth;
+            }
             if (target != null && npc.Brain is EventMobBrain brain)
                 brain.Goal = target;
             return npc;
@@ -909,6 +1075,13 @@ namespace DOL.GS.DynamicEvents
                 if (who is not GamePlayer p)
                     continue;
                 p.Out.SendMessage($"{Chain.Def.Title}: {Def.Name} complete - {medal} contribution.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                int marks = (int) Math.Round((r.Tokens > 0 ? r.Tokens : Math.Max(1, r.XpPct / 4)) * mult);
+                if (marks > 0 && GameServer.Database.FindObjectByKey<DbItemTemplate>(EventTokenMerchant.MarkId) is DbItemTemplate mark)
+                {
+                    DbInventoryItem m = GameInventoryItem.Create(mark);
+                    if (p.Inventory.AddTemplate(m, marks, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                        p.Out.SendMessage($"You receive {marks} {mark.Name}{(marks > 1 ? "s" : "")}.", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                }
                 if (xp > 0 && p.Level < 50)
                     p.GainExperience(eXPSource.Quest, xp, false);
                 if (copper > 0)

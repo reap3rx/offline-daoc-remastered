@@ -2,7 +2,8 @@ extends Control
 ## Dynamic events (owner 2026-11-01: GW2-style events in every zone). The server (scripts/dynamicevents) sends the
 ## events of your zone every two seconds as a "#EV|" system line: a JSON list of
 ##   {id, title, stage, kind, objective, line, progress 0..1, time_left s, x, y (zone metres), r (m), zone, levels,
-##    near, scaled (the level its monsters came at), state: active | next (resting before the next stage) | dormant
+##    near, state: active | next (resting before the next stage) | occupied (a failed event's monsters hold the land
+##    until driven out: an "occupy" stage, no time limit) | dormant
 ##    (a disturbance: hint, waiting for someone to come near) | giver (giver: an NPC who'd lead you) | success | fail}.
 ## The tracker (top right) shows the events you are at - title, stage, objective, a progress bar and the time left -
 ## and below them one line for each other event in the zone with its distance and direction; a finished one shows its
@@ -76,14 +77,14 @@ func _draw() -> void:
 	var far: Array = []
 	for e in events:
 		var st := String(e.get("state", "active"))
-		if st in ["success", "fail"] or (st in ["active", "next"] and bool(e.get("near", false))):
+		if st in ["success", "fail"] or (st in ["active", "next", "occupied"] and bool(e.get("near", false))):
 			near.append(e)
 		else:
 			far.append(e)
 	var h := 0.0
 	for e in near:
 		var st := String(e.get("state", "active"))
-		h += 74.0 if st == "active" else (60.0 if st == "next" else 34.0)
+		h += 74.0 if st in ["active", "occupied"] else (60.0 if st == "next" else 34.0)
 	if not far.is_empty():
 		h += 16.0 + far.size() * 13.0
 	draw_rect(Rect2(0, 0, W, h + 6), Color(0.02, 0.02, 0.03, 0.62))
@@ -91,7 +92,7 @@ func _draw() -> void:
 	y = 4.0
 	for e in near:
 		var st := String(e.get("state", "active"))
-		_text(font, Vector2(8, y + 11), String(e.get("title", "")), 10, GOLD)
+		_text(font, Vector2(8, y + 11), String(e.get("title", "")), 10, LOSE if st == "occupied" else GOLD)
 		if st in ["success", "fail"]:
 			_text(thin, Vector2(8, y + 25), "Event complete" if st == "success" else "Event failed", 9, WIN if st == "success" else LOSE)
 			y += 34.0
@@ -99,11 +100,9 @@ func _draw() -> void:
 		var lv: Array = e.get("levels", [])
 		if lv.size() == 2:
 			var tag := "%d-%d" % [int(lv[0]), int(lv[1])]
-			if int(e.get("scaled", 0)) > int(lv[1]):
-				tag = "scaled to %d" % int(e.scaled)       # its monsters came up to the people here
 			_text(thin, Vector2(W - 8 - thin.get_string_size(tag, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x, y + 11), tag, 8, DIM)
 		var t := int(e.get("time_left", 0))
-		var clock := "%d:%02d" % [t / 60, t % 60]
+		var clock := "OCCUPIED" if st == "occupied" else "%d:%02d" % [t / 60, t % 60]
 		if st == "next":
 			_text(font, Vector2(8, y + 25), "Next: " + String(e.get("stage", "")), 9, CREAM)
 			_text(thin, Vector2(8, y + 38), _fit(thin, String(e.get("objective", "")), 8, W - 16), 8, DIM)
@@ -116,9 +115,9 @@ func _draw() -> void:
 		var p := clampf(float(e.get("progress", 0.0)), 0.0, 1.0)
 		var bar := Rect2(8, y + 44, W - 16, 8)
 		draw_rect(bar, Color(0.1, 0.08, 0.05, 0.9))
-		draw_rect(Rect2(bar.position, Vector2(bar.size.x * p, bar.size.y)), BAR)
+		draw_rect(Rect2(bar.position, Vector2(bar.size.x * p, bar.size.y)), LOSE if st == "occupied" else BAR)
 		draw_rect(bar, Color(0.6, 0.5, 0.3, 0.9), false, 1.0)
-		_text(thin, Vector2(8, y + 65), _fit(thin, String(e.get("line", "")), 8, W - 50), 8, CREAM)
+		_text(thin, Vector2(8, y + 65), _fit(thin, String(e.get("line", "")), 8, W - 24 - thin.get_string_size(clock, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x), 8, CREAM)
 		_text(thin, Vector2(W - 8 - thin.get_string_size(clock, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x, y + 65), clock, 8, CREAM)
 		y += 74.0
 	if not far.is_empty():
@@ -132,7 +131,7 @@ func _draw() -> void:
 				where = "%d m %s" % [int(d.length()), _dir(d)]
 			# a running one by its title; a disturbance by what you'd notice; a giver by who is asking
 			var line := String(e.get("hint", "")) if st in ["dormant", "giver"] else String(e.get("title", ""))
-			var col := HINT if st == "dormant" else (GIVER if st == "giver" else CREAM)
+			var col := HINT if st == "dormant" else (GIVER if st == "giver" else (LOSE if st == "occupied" else CREAM))
 			_text(thin, Vector2(10, y + 9), _fit(thin, line, 8, W - 70), 8, col)
 			_text(thin, Vector2(W - 8 - thin.get_string_size(where, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x, y + 9), where, 8, GOLD)
 			y += 13.0

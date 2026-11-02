@@ -79,7 +79,7 @@
           "success": "Ranulf Blackhand falls. The way is safe again.",
           "fail": "Ranulf Blackhand slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -87,6 +87,94 @@
               { "id": "nu0_ranulf_blackhand_s_pendant", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "Ranulf's Men Hold the Cotswold Road",
+          "objective": "Drive the bandits off the Cotswold road",
+          "announce": "Ranulf Blackhand's bandits have come down out of the hollow and set a toll on the Cotswold road. Nobody passes without paying - in coin or in blood.",
+          "center": [1066, 990, 51.1],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12447,
+              "name": "bandit",
+              "level": [5, 8]
+            },
+            {
+              "template": 12308,
+              "name": "bandit henchman",
+              "level": [9, 9]
+            },
+            {
+              "template": 12311,
+              "name": "bandit lieutenant",
+              "level": [9, 9]
+            }
+          ],
+          "boss": {
+            "template": 12447,
+            "name": "Toll-Keeper Wat",
+            "level": 10,
+            "pos": [1066, 990, 51.1],
+            "health_mult": 2
+          },
+          "success": "The bandits are gone from the road. The watch will want their toll gate down.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Wainwright Godric, who is pulling down the bandits' toll gate",
+          "announce": "Wainwright Godric is pulling down the toll gate. The bandits are coming back for it!",
+          "center": [1066, 990, 51.1],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Wainwright Godric",
+            "level": 9,
+            "pos": [1066, 990, 51.1],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1072, 906, 51.8],
+              [1131, 936, 53.7],
+              [1150, 1000, 55.0]
+            ],
+            "mobs": [
+              {
+                "template": 12447,
+                "name": "bandit",
+                "level": [5, 8]
+              },
+              {
+                "template": 12308,
+                "name": "bandit henchman",
+                "level": [9, 9]
+              },
+              {
+                "template": 12311,
+                "name": "bandit lieutenant",
+                "level": [9, 9]
+              }
+            ]
+          },
+          "thanks": "\"Down it comes! Cotswold's road is free again.\"",
+          "success": "The bandits break and scatter. The road to Prydwen Keep is open again.",
+          "fail": "Wainwright Godric falls, and the bandits take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -215,7 +303,7 @@
           "success": "The Barrow-Wight falls. The way is safe again.",
           "fail": "The Barrow-Wight slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -223,6 +311,97 @@
               { "id": "nu0_barrow_wight_s_signet", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Large Skeletons Hold the Road to Prydwen Keep",
+          "objective": "Drive the large skeletons off the road to Prydwen Keep",
+          "announce": "With The Barrow Wakes lost, the large skeletons have spread down onto the road to Prydwen Keep and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1258, 1167, 80.5],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12368,
+              "name": "large skeleton",
+              "level": [5, 5]
+            },
+            {
+              "template": 12128,
+              "name": "undead filidh",
+              "level": [5, 7]
+            },
+            {
+              "template": 12388,
+              "name": "rotting zombie",
+              "level": [5, 6]
+            }
+          ],
+          "boss": {
+            "template": 12368,
+            "name": "Large skeleton warleader",
+            "level": 8,
+            "pos": [1258, 1167, 80.5],
+            "health_mult": 2
+          },
+          "success": "The large skeletons are gone from the road to Prydwen Keep. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Mabyn has come out to set the road to Prydwen Keep right. The large skeletons are coming back for it!",
+          "center": [1258, 1167, 80.5],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Mabyn",
+            "level": 7,
+            "pos": [1258, 1167, 80.5],
+            "health_mult": 10,
+            "template": 60167630,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1338, 1139, 62.1],
+              [1334, 1205, 76.3],
+              [1283, 1248, 61.9]
+            ],
+            "mobs": [
+              {
+                "template": 12368,
+                "name": "large skeleton",
+                "level": [5, 5]
+              },
+              {
+                "template": 12128,
+                "name": "undead filidh",
+                "level": [5, 7]
+              },
+              {
+                "template": 12388,
+                "name": "rotting zombie",
+                "level": [5, 6]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Prydwen Keep is safe again. Thank you.\"",
+          "success": "The large skeletons break and scatter. The road to Prydwen Keep is open again.",
+          "fail": "Roadwarden Mabyn falls, and the large skeletons take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -301,7 +480,7 @@
           "success": "Sergeant Wystan reaches the dragon ant nest. \"There they are. Clear them out!\"",
           "fail": "Sergeant Wystan falls on the road. The others carry the body home.",
           "on_success": "g2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 10, "copper_per_level": 60 }
         },
         {
@@ -369,7 +548,7 @@
           "success": "The Hive Champion falls. Cotswold will hear of this in the taverns tonight.",
           "fail": "The Hive Champion slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -377,6 +556,97 @@
               { "id": "nu0_hive_champion_s_band", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Dragon Ant Workers Hold the Road to Cotswold Village",
+          "objective": "Drive the dragon ant workers off the road to Cotswold Village",
+          "announce": "With The Dragon Ant Nest lost, the dragon ant workers have spread down onto the road to Cotswold Village and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [766, 496, 57.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12082,
+              "name": "dragon ant worker",
+              "level": [5, 5]
+            },
+            {
+              "template": 12081,
+              "name": "dragon ant soldier",
+              "level": [7, 7]
+            },
+            {
+              "template": 12337,
+              "name": "dragon ant drone",
+              "level": [8, 8]
+            }
+          ],
+          "boss": {
+            "template": 12082,
+            "name": "Dragon ant worker warleader",
+            "level": 9,
+            "pos": [766, 496, 57.6],
+            "health_mult": 2
+          },
+          "success": "The dragon ant workers are gone from the road to Cotswold Village. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Edith has come out to set the road to Cotswold Village right. The dragon ant workers are coming back for it!",
+          "center": [766, 496, 57.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Edith",
+            "level": 8,
+            "pos": [766, 496, 57.6],
+            "health_mult": 10,
+            "template": 60167630,
+            "model": 28,
+            "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [848, 477, 58.0],
+              [837, 543, 70.9],
+              [782, 579, 64.5]
+            ],
+            "mobs": [
+              {
+                "template": 12082,
+                "name": "dragon ant worker",
+                "level": [5, 5]
+              },
+              {
+                "template": 12081,
+                "name": "dragon ant soldier",
+                "level": [7, 7]
+              },
+              {
+                "template": 12337,
+                "name": "dragon ant drone",
+                "level": [8, 8]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Cotswold Village is safe again. Thank you.\"",
+          "success": "The dragon ant workers break and scatter. The road to Cotswold Village is open again.",
+          "fail": "Roadwarden Edith falls, and the dragon ant workers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

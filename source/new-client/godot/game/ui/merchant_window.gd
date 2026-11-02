@@ -23,6 +23,7 @@ var _rows: Array = []
 var _title: Label
 var _page_label: Label
 var _coins: Array = []
+var _count_note: Label                      # a merchant paid in tokens or seals (window type 2, "Count"): the price as a count
 var _buy: Button
 
 
@@ -69,6 +70,12 @@ func build() -> void:
 	nxt.position = Vector2(96, 426)
 	nxt.pressed.connect(func(): show_page(page + 1))
 	add_child(nxt)
+	_count_note = UiArt.label("", 8, UiArt.GOLD_HI)
+	_count_note.position = Vector2(COIN_BOX_X[0], 377)
+	_count_note.size = Vector2(COIN_BOX_X[4] + 33 - COIN_BOX_X[0], 12)
+	_count_note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_count_note.visible = false
+	add_child(_count_note)
 	_buy = UiArt.button("BUY", Vector2(80, 18), 10)
 	_buy.position = Vector2(250, 424)
 	_buy.pressed.connect(buy_selected)
@@ -83,6 +90,7 @@ func _place_top_center() -> void:
 
 
 func open_for(merchant: String, items_list: String) -> void:
+	server_window = -1
 	if not visible:
 		_place_top_center()
 	npc_name = merchant
@@ -141,6 +149,15 @@ func select_item(id: String) -> void:
 
 func _show_price() -> void:
 	var price := int(ItemDb.item(selected).get("price", 0)) if selected != "" else 0
+	# (a merchant who takes tokens - Marks of Valor at a tower's quartermaster - or seals: the price is a count of them,
+	# not coin; the server's window type 2)
+	_count_note.visible = server_window == 2 and selected != ""
+	if server_window == 2:
+		for i in 5:
+			_coins[i].text = ""
+		_count_note.text = "PRICE: %d TOKENS" % price if selected != "" else ""
+		_buy.disabled = selected == ""
+		return
 	var parts := PlayerData.split_money(price)
 	var keys := ["mithril", "platinum", "gold", "silver", "copper"]
 	for i in 5:

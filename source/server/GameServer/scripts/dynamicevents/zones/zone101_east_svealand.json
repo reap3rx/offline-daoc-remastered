@@ -118,7 +118,7 @@
           "success": "Grimfang falls. The way is safe again.",
           "fail": "Grimfang slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -126,6 +126,86 @@
               { "id": "nu101_grimfang_s_eye", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Sveawolf Mothers Hold the Road to Dvalin",
+          "objective": "Drive the sveawolf mothers off the road to Dvalin",
+          "announce": "With Wolves of Svealand lost, the sveawolf mothers have spread down onto the road to Dvalin and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [534, 727, 116.4],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60166676,
+              "name": "sveawolf mother",
+              "level": [5, 5]
+            },
+            {
+              "template": 60163487,
+              "name": "lupine gnawer",
+              "level": [7, 8]
+            }
+          ],
+          "boss": {
+            "template": 60166676,
+            "name": "Sveawolf mother warleader",
+            "level": 9,
+            "pos": [534, 727, 116.4],
+            "health_mult": 2
+          },
+          "success": "The sveawolf mothers are gone from the road to Dvalin. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hild has come out to set the road to Dvalin right. The sveawolf mothers are coming back for it!",
+          "center": [534, 727, 116.4],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hild",
+            "level": 8,
+            "pos": [534, 727, 116.4],
+            "health_mult": 10,
+            "model": 159,
+            "equipment": "a0bb02af-37b1-428c-9023-fdf6afdea19f"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [471, 670, 114.8],
+              [530, 642, 113.2],
+              [592, 665, 115.3]
+            ],
+            "mobs": [
+              {
+                "template": 60166676,
+                "name": "sveawolf mother",
+                "level": [5, 5]
+              },
+              {
+                "template": 60163487,
+                "name": "lupine gnawer",
+                "level": [7, 8]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Dvalin is safe again. Thank you.\"",
+          "success": "The sveawolf mothers break and scatter. The road to Dvalin is open again.",
+          "fail": "Roadwarden Hild falls, and the sveawolf mothers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -204,7 +284,7 @@
           "success": "The Barrow Draugr falls. The way is safe again.",
           "fail": "The Barrow Draugr slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -212,6 +292,94 @@
               { "id": "nu101_barrow_draugr_s_signet", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Nordic Dirges Hold the Road to Dvalin",
+          "objective": "Drive the nordic dirges off the road to Dvalin",
+          "announce": "With The Restless Dead lost, the nordic dirges have spread down onto the road to Dvalin and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [868, 869, 116.9],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 20001,
+              "name": "nordic dirge",
+              "level": [6, 6]
+            },
+            {
+              "template": 20003,
+              "name": "roaming dirge",
+              "level": [8, 8]
+            },
+            {
+              "template": 60160248,
+              "name": "dwarf bone skeleton",
+              "level": [5, 5]
+            }
+          ],
+          "boss": {
+            "template": 20001,
+            "name": "Nordic dirge warleader",
+            "level": 9,
+            "pos": [868, 869, 116.9],
+            "health_mult": 2
+          },
+          "success": "The nordic dirges are gone from the road to Dvalin. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Ylva has come out to set the road to Dvalin right. The nordic dirges are coming back for it!",
+          "center": [868, 869, 116.9],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Ylva",
+            "level": 8,
+            "pos": [868, 869, 116.9],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [789, 836, 118.6],
+              [837, 790, 118.6],
+              [903, 791, 118.4]
+            ],
+            "mobs": [
+              {
+                "template": 20001,
+                "name": "nordic dirge",
+                "level": [6, 6]
+              },
+              {
+                "template": 20003,
+                "name": "roaming dirge",
+                "level": [8, 8]
+              },
+              {
+                "template": 60160248,
+                "name": "dwarf bone skeleton",
+                "level": [5, 5]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Dvalin is safe again. Thank you.\"",
+          "success": "The nordic dirges break and scatter. The road to Dvalin is open again.",
+          "fail": "Roadwarden Ylva falls, and the nordic dirges take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -283,7 +451,7 @@
           "success": "Dreng Haldor reaches the tomte hideout. \"There they are. Clear them out!\"",
           "fail": "Dreng Haldor falls on the road. The others carry the body home.",
           "on_success": "g2",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": { "xp_pct": 10, "copper_per_level": 60 }
         },
         {
@@ -351,7 +519,7 @@
           "success": "Tomte King Nisse falls. Dvalin will hear of this in the taverns tonight.",
           "fail": "Tomte King Nisse slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -359,6 +527,96 @@
               { "id": "nu101_tomte_king_nisse_s_belt", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Tomte Thugs Hold the Road to Dvalin",
+          "objective": "Drive the tomte thugs off the road to Dvalin",
+          "announce": "With The Tomte Raiders lost, the tomte thugs have spread down onto the road to Dvalin and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [464, 1482, 117.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60167145,
+              "name": "tomte thug",
+              "level": [5, 5]
+            },
+            {
+              "template": 60167142,
+              "name": "tomte skirmisher",
+              "level": [7, 7]
+            },
+            {
+              "template": 60167133,
+              "name": "tomte pillager",
+              "level": [8, 8]
+            }
+          ],
+          "boss": {
+            "template": 60167145,
+            "name": "Tomte thug warleader",
+            "level": 9,
+            "pos": [464, 1482, 117.6],
+            "health_mult": 2
+          },
+          "success": "The tomte thugs are gone from the road to Dvalin. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hild has come out to set the road to Dvalin right. The tomte thugs are coming back for it!",
+          "center": [464, 1482, 117.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hild",
+            "level": 8,
+            "pos": [464, 1482, 117.6],
+            "health_mult": 10,
+            "model": 159,
+            "equipment": "a0bb02af-37b1-428c-9023-fdf6afdea19f"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [468, 1397, 96.9],
+              [527, 1425, 98.1],
+              [549, 1488, 116.8]
+            ],
+            "mobs": [
+              {
+                "template": 60167145,
+                "name": "tomte thug",
+                "level": [5, 5]
+              },
+              {
+                "template": 60167142,
+                "name": "tomte skirmisher",
+                "level": [7, 7]
+              },
+              {
+                "template": 60167133,
+                "name": "tomte pillager",
+                "level": [8, 8]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Dvalin is safe again. Thank you.\"",
+          "success": "The tomte thugs break and scatter. The road to Dvalin is open again.",
+          "fail": "Roadwarden Hild falls, and the tomte thugs take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

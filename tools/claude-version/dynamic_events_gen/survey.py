@@ -1,7 +1,7 @@
 import sqlite3, collections, json, math, re
 import sys
 c=sqlite3.connect(sys.argv[1])
-ZONES=[0,1,2,3,4,6,7,8,9,10,100,101,102,103,104,105,106,107,108,116,200,201,202,203,204,205,207,208,216]
+ZONES=[0,1,2,3,4,6,7,8,9,10,100,101,102,103,104,105,106,107,108,116,200,201,202,203,204,205,206,207,208,216]
 zones={r[0]:r for r in c.execute('select ZoneID,RegionID,Name,OffsetX,OffsetY,Width,Height from Zones')}
 T={r[0]:r for r in c.execute('select TemplateId,Name,Level,Model,Size,ClassType,EquipmentTemplateID from NpcTemplate')}
 byname={}

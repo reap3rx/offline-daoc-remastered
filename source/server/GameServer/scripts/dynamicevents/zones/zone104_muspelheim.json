@@ -79,7 +79,7 @@
           "success": "Surtling Brann falls. The way is safe again.",
           "fail": "Surtling Brann slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -87,6 +87,94 @@
               { "id": "nu104_surtling_brann_s_belt", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Fire Giant Lookouts Hold the Road",
+          "objective": "Drive the fire giant lookouts off the road",
+          "announce": "With The Fire Giant Outpost lost, the fire giant lookouts have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1314, 253, 128.4],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60160878,
+              "name": "fire giant lookout",
+              "level": [27, 27]
+            },
+            {
+              "template": 60160881,
+              "name": "fire giant watchman",
+              "level": [29, 29]
+            },
+            {
+              "template": 60160903,
+              "name": "flaming raukomaz",
+              "level": [30, 30]
+            }
+          ],
+          "boss": {
+            "template": 60160878,
+            "name": "Fire giant lookout warleader",
+            "level": 31,
+            "pos": [1314, 253, 128.4],
+            "health_mult": 2
+          },
+          "success": "The fire giant lookouts are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hild has come out to set the road right. The fire giant lookouts are coming back for it!",
+          "center": [1314, 253, 128.4],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hild",
+            "level": 30,
+            "pos": [1314, 253, 128.4],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1378, 197, 174.5],
+              [1398, 260, 186.3],
+              [1368, 318, 148.5]
+            ],
+            "mobs": [
+              {
+                "template": 60160878,
+                "name": "fire giant lookout",
+                "level": [27, 27]
+              },
+              {
+                "template": 60160881,
+                "name": "fire giant watchman",
+                "level": [29, 29]
+              },
+              {
+                "template": 60160903,
+                "name": "flaming raukomaz",
+                "level": [30, 30]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The fire giant lookouts break and scatter. The road is open again.",
+          "fail": "Roadwarden Hild falls, and the fire giant lookouts take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -205,7 +293,7 @@
           "success": "The Ember Marshal falls. The way is safe again.",
           "fail": "The Ember Marshal slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -213,6 +301,87 @@
               { "id": "nu104_ember_marshal_s_pendant", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Burnt Skeletal Sentrys Hold the Road",
+          "objective": "Drive the burnt skeletal sentrys off the road",
+          "announce": "With The Burnt Sentries lost, the burnt skeletal sentrys have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [519, 771, 63.7],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60158804,
+              "name": "burnt skeletal sentry",
+              "level": [21, 21]
+            },
+            {
+              "template": 60159105,
+              "name": "charred skeletal warrior",
+              "level": [23, 25]
+            }
+          ],
+          "boss": {
+            "template": 60158804,
+            "name": "Burnt skeletal sentry warleader",
+            "level": 26,
+            "pos": [519, 771, 63.7],
+            "health_mult": 2
+          },
+          "success": "The burnt skeletal sentrys are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Gunnar has come out to set the road right. The burnt skeletal sentrys are coming back for it!",
+          "center": [519, 771, 63.7],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Gunnar",
+            "level": 25,
+            "pos": [519, 771, 63.7],
+            "health_mult": 10,
+            "template": 60167667,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [440, 739, 114.8],
+              [487, 692, 78.7],
+              [553, 693, 129.6]
+            ],
+            "mobs": [
+              {
+                "template": 60158804,
+                "name": "burnt skeletal sentry",
+                "level": [21, 21]
+              },
+              {
+                "template": 60159105,
+                "name": "charred skeletal warrior",
+                "level": [23, 25]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The burnt skeletal sentrys break and scatter. The road is open again.",
+          "fail": "Roadwarden Gunnar falls, and the burnt skeletal sentrys take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -286,7 +455,7 @@
           "success": "Glodr the Cinder Drake falls. The way is safe again.",
           "fail": "Glodr the Cinder Drake slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -294,6 +463,84 @@
               { "id": "nu104_glodr_the_cinder_drake_s_ring", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Young Fire Wyrms Hold the Road",
+          "objective": "Drive the young fire wyrms off the road",
+          "announce": "With The Wyrm's Nest lost, the young fire wyrms have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [862, 357, 158.2],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 20022,
+              "name": "young fire wyrm",
+              "level": [25, 27]
+            },
+            {
+              "template": 60159218,
+              "name": "cinder drake",
+              "level": [28, 28]
+            }
+          ],
+          "boss": {
+            "template": 20022,
+            "name": "Young fire wyrm warleader",
+            "level": 29,
+            "pos": [862, 357, 158.2],
+            "health_mult": 2
+          },
+          "success": "The young fire wyrms are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hild has come out to set the road right. The young fire wyrms are coming back for it!",
+          "center": [862, 357, 158.2],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hild",
+            "level": 28,
+            "pos": [862, 357, 158.2],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [789, 401, 163.3],
+              [779, 335, 196.6],
+              [820, 283, 175.8]
+            ],
+            "mobs": [
+              {
+                "template": 20022,
+                "name": "young fire wyrm",
+                "level": [25, 27]
+              },
+              {
+                "template": 60159218,
+                "name": "cinder drake",
+                "level": [28, 28]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The young fire wyrms break and scatter. The road is open again.",
+          "fail": "Roadwarden Hild falls, and the young fire wyrms take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }

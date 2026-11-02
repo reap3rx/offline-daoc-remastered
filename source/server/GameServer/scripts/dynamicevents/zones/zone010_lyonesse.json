@@ -79,7 +79,7 @@
           "success": "The Black Knight of Lyonesse falls. The way is safe again.",
           "fail": "The Black Knight of Lyonesse slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -87,6 +87,94 @@
               { "id": "nu10_black_knight_of_lyonesse_s_cloak", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Footmans Hold the Road",
+          "objective": "Drive the footmans off the road",
+          "announce": "With The Drowned Knights lost, the footmans have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [822, 1076, 69.3],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12957,
+              "name": "footman",
+              "level": [45, 45]
+            },
+            {
+              "template": 12932,
+              "name": "archer",
+              "level": [45, 45]
+            },
+            {
+              "template": 50015,
+              "name": "knight",
+              "level": [49, 49]
+            }
+          ],
+          "boss": {
+            "template": 12957,
+            "name": "Footman warleader",
+            "level": 50,
+            "pos": [822, 1076, 69.3],
+            "health_mult": 2
+          },
+          "success": "The footmans are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hal has come out to set the road right. The footmans are coming back for it!",
+          "center": [822, 1076, 69.3],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hal",
+            "level": 49,
+            "pos": [822, 1076, 69.3],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [899, 1038, 68.9],
+              [903, 1104, 65.6],
+              [858, 1153, 64.8]
+            ],
+            "mobs": [
+              {
+                "template": 12957,
+                "name": "footman",
+                "level": [45, 45]
+              },
+              {
+                "template": 12932,
+                "name": "archer",
+                "level": [45, 45]
+              },
+              {
+                "template": 50015,
+                "name": "knight",
+                "level": [49, 49]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The footmans break and scatter. The road is open again.",
+          "fail": "Roadwarden Hal falls, and the footmans take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -205,7 +293,7 @@
           "success": "The Drowned Peallaidh falls. The way is safe again.",
           "fail": "The Drowned Peallaidh slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -213,6 +301,87 @@
               { "id": "nu10_drowned_peallaidh_s_eye", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Peallaidhs Hold the Road",
+          "objective": "Drive the peallaidhs off the road",
+          "announce": "With The Peallaidh Flood lost, the peallaidhs have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [953, 712, 72.2],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12974,
+              "name": "peallaidh",
+              "level": [35, 39]
+            },
+            {
+              "template": 12965,
+              "name": "hamadryad",
+              "level": [30, 34]
+            }
+          ],
+          "boss": {
+            "template": 12974,
+            "name": "Peallaidh warleader",
+            "level": 40,
+            "pos": [953, 712, 72.2],
+            "health_mult": 2
+          },
+          "success": "The peallaidhs are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Edith has come out to set the road right. The peallaidhs are coming back for it!",
+          "center": [953, 712, 72.2],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Edith",
+            "level": 39,
+            "pos": [953, 712, 72.2],
+            "health_mult": 10,
+            "template": 60167630,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [989, 635, 67.7],
+              [1033, 684, 67.3],
+              [1030, 750, 70.0]
+            ],
+            "mobs": [
+              {
+                "template": 12974,
+                "name": "peallaidh",
+                "level": [35, 39]
+              },
+              {
+                "template": 12965,
+                "name": "hamadryad",
+                "level": [30, 34]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The peallaidhs break and scatter. The road is open again.",
+          "fail": "Roadwarden Edith falls, and the peallaidhs take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     },
@@ -286,7 +455,7 @@
           "success": "The Lich of the Sunken Moor falls. The way is safe again.",
           "fail": "The Lich of the Sunken Moor slips away - for now.",
           "on_success": "end",
-          "on_fail": "end",
+          "on_fail": "o1",
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 150,
@@ -294,6 +463,84 @@
               { "id": "nu10_lich_of_the_sunken_moor_s_amulet", "gold_chance": 40, "silver_chance": 20 }
             ]
           }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Moorliches Hold the Road",
+          "objective": "Drive the moorliches off the road",
+          "announce": "With The Moorlich Mire lost, the moorliches have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [643, 910, 74.4],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 10142,
+              "name": "moorlich",
+              "level": [48, 48]
+            },
+            {
+              "template": 12979,
+              "name": "pygmy goblin tangler",
+              "level": [45, 45]
+            }
+          ],
+          "boss": {
+            "template": 10142,
+            "name": "Moorlich warleader",
+            "level": 49,
+            "pos": [643, 910, 74.4],
+            "health_mult": 2
+          },
+          "success": "The moorliches are gone from the road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cuthbert has come out to set the road right. The moorliches are coming back for it!",
+          "center": [643, 910, 74.4],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cuthbert",
+            "level": 48,
+            "pos": [643, 910, 74.4],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [705, 853, 67.5],
+              [728, 915, 72.4],
+              [698, 974, 72.8]
+            ],
+            "mobs": [
+              {
+                "template": 10142,
+                "name": "moorlich",
+                "level": [48, 48]
+              },
+              {
+                "template": 12979,
+                "name": "pygmy goblin tangler",
+                "level": [45, 45]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road is safe again. Thank you.\"",
+          "success": "The moorliches break and scatter. The road is open again.",
+          "fail": "Roadwarden Cuthbert falls, and the moorliches take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
     }
