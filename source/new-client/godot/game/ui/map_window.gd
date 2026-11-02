@@ -466,6 +466,31 @@ class MapView extends Control:
 			draw_circle(at, 2.6, Color(0, 0, 0, 0.85))
 			draw_circle(at, 1.8, Color(1, 1, 1))
 
+	## Dynamic events (EventTracker): an orange ring over each one's area and a marker with its name; green / red a
+	## little while after it ends.
+	func _draw_events(zone_id: int) -> void:
+		var mr := window.map_rect(zone_id)
+		var font := UiArt.font(true)
+		var fs := maxi(7, int(size.x / 40.0))
+		for e in preload("res://game/ui/event_tracker.gd").in_zone(zone_id):
+			var f := _mark_frac(Vector2(float(e.x), float(e.y)) / 0.025)
+			var at := f * size
+			if f.x < 0 or not Rect2(Vector2.ZERO, size).has_point(at):
+				continue
+			var st := String(e.get("state", "active"))
+			var col := Color(1.0, 0.55, 0.1) if st == "active" else (Color(0.4, 0.95, 0.35) if st == "success" else Color(0.95, 0.3, 0.25))
+			var rad := maxf(6.0, float(e.get("r", 60.0)) / 0.025 / mr.size.x * size.x)
+			draw_circle(at, rad, Color(col.r, col.g, col.b, 0.18))
+			draw_arc(at, rad, 0.0, TAU, 40, Color(col.r, col.g, col.b, 0.9), 1.5)
+			var pts := PackedVector2Array([at + Vector2(0, -5), at + Vector2(5, 0), at + Vector2(0, 5), at + Vector2(-5, 0)])
+			draw_colored_polygon(pts, col)
+			draw_polyline(PackedVector2Array([pts[0], pts[1], pts[2], pts[3], pts[0]]), Color(0.1, 0.05, 0.0), 1.0)
+			var text := String(e.get("title", ""))
+			var tw := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+			var base := at + Vector2(-tw * 0.5, -rad - 4.0)
+			draw_string_outline(font, base, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 2, Color(0, 0, 0, 0.85))
+			draw_string(font, base, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col.lightened(0.3))
+
 	func _draw() -> void:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0, 0, 0))
 		if texture:
@@ -509,6 +534,8 @@ class MapView extends Control:
 						continue
 					draw_circle(cpt, 3.0, Color(0.0, 0.03, 0.1))
 					draw_circle(cpt, 2.2, Color8(70, 150, 255))
+		if String(w.shown.get("kind", "")) != "region":
+			_draw_events(int(w.shown.get("id", -1)))
 		# the roadside inns are shelved (owner 2026-10-11: 0.36c is the Claude version's world 1:1 - no inns on Avalon
 		# Marsh / Myrkwood / Shannon Estuary); the drawing stays for if they come back ("INNS AND CUSTOM SYSTEMS (SHELVED).md")
 		if SHOW_INNS and String(w.shown.get("kind", "")) == "zone":

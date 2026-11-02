@@ -1,0 +1,330 @@
+{
+  "zone": 206,
+  "region": 200,
+  "name": "Valley of Bri Leith",
+  "lore": "Bri Leith is the sidhe mound of Midir. His first wife Fuamnach turned his second, Etain, into a scarlet fly and raised a wind to blow her across Erin; Midir's host still rides out of the fairy rings, and the siog have taken the lurikeen miners' camp by the Coruscating Mine.",
+  "chains": [
+    {
+      "id": "bri_coruscating_mine",
+      "title": "The Coruscating Mine",
+      "levels": [13, 20],
+      "first_delay_s": [120, 420],
+      "interval_s": [1500, 2400],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "defend",
+          "name": "The Last Cart Out",
+          "objective": "Protect Tobar while he loads the last ore cart",
+          "announce": "Siog footpads gather in the north-west. Tobar the miner is loading the last cart at the Coruscating Mine - he will not leave without it.",
+          "center": [318, 160, 186.1],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Tobar the Miner",
+            "level": 16,
+            "model": 346,
+            "equipment": "4348af51-9904-4145-acab-8008e07e7575",
+            "pos": [318, 150, 187.6],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [252, 300, 160.0],
+              [380, 232, 155.9],
+              [236, 196, 166.7]
+            ],
+            "mobs": [
+              {
+                "template": 60166070,
+                "name": "siog footpad",
+                "level": [15, 17]
+              },
+              {
+                "template": 60166071,
+                "name": "siog piller",
+                "level": [16, 18]
+              }
+            ]
+          },
+          "success": "Tobar heaves the last cart onto the road. \"Now let's see about that camp of theirs.\"",
+          "fail": "Tobar falls and the siog drag the ore away. The mine is lost - for now.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "a2",
+          "type": "cull",
+          "name": "Clear the Footpad Den",
+          "objective": "Drive the siog out of the lurikeen camp",
+          "announce": "The siog have dug in at the old lurikeen camp below the mine. Clear them out.",
+          "center": [250, 296, 160.0],
+          "radius": 60,
+          "time_s": 600,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60166070,
+              "name": "siog footpad",
+              "level": [15, 17]
+            },
+            {
+              "template": 60166071,
+              "name": "siog piller",
+              "level": [16, 18]
+            },
+            {
+              "template": 60166076,
+              "name": "siog lookout",
+              "level": [17, 18]
+            }
+          ],
+          "success": "The den is broken. From the barracks comes a roar: Gelbhan has come out to fight.",
+          "fail": "The siog hold the camp. They will be bolder next time.",
+          "on_success": "a3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a3",
+          "type": "boss",
+          "name": "Gelbhan the Footpad Chief",
+          "objective": "Defeat Gelbhan the Footpad Chief",
+          "announce": "Gelbhan the Footpad Chief stands at the barracks door. Bring friends.",
+          "center": [258, 300, 160.0],
+          "radius": 70,
+          "time_s": 600,
+          "boss": {
+            "template": 60166076,
+            "name": "Gelbhan the Footpad Chief",
+            "level": 20,
+            "size": 62,
+            "pos": [258, 300, 160.0],
+            "health_mult": 4
+          },
+          "adds": {
+            "every_s": 40,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60166070,
+                "name": "siog footpad",
+                "level": [15, 17]
+              }
+            ]
+          },
+          "success": "Gelbhan falls. The lurikeen will have their mine back.",
+          "fail": "Gelbhan slips away into the hills with the camp's takings.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": { "xp_pct": 20, "copper_per_level": 150 }
+        }
+      ]
+    },
+    {
+      "id": "bri_scarlet_fly",
+      "title": "The Scarlet Fly",
+      "levels": [26, 38],
+      "first_delay_s": [300, 900],
+      "interval_s": [1800, 2700],
+      "start": "b1",
+      "stages": [
+        {
+          "id": "b1",
+          "type": "cull",
+          "name": "Fuamnach's Gale",
+          "objective": "Break the gale wisps sweeping the lakeshore",
+          "announce": "A cold gale rises over the lake. Fuamnach's wind is hunting something along the southern shore.",
+          "center": [1330, 1430, 120.9],
+          "radius": 120,
+          "time_s": 480,
+          "kill": 16,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60160478,
+              "name": "gale wisp",
+              "level": [26, 29]
+            },
+            {
+              "template": 60167560,
+              "name": "gale wisp",
+              "level": [27, 30]
+            }
+          ],
+          "success": "The gale breaks. Something small and scarlet drifts down onto the menhir by the shore.",
+          "fail": "The gale passes over the lake and on into the hills.",
+          "on_success": "b2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 70 }
+        },
+        {
+          "id": "b2",
+          "type": "defend",
+          "name": "Shelter the Scarlet Fly",
+          "objective": "Keep the scarlet fly safe on the menhir",
+          "announce": "Etain, Midir's beloved, rests on the menhir as a scarlet fly. Fuamnach's thralls are coming for her.",
+          "center": [1418, 1446, 137.5],
+          "radius": 80,
+          "duration_s": 210,
+          "protect": {
+            "name": "the scarlet fly",
+            "level": 30,
+            "model": 633,
+            "size": 24,
+            "pos": [1418, 1446, 137.5],
+            "health_mult": 8
+          },
+          "waves": {
+            "every_s": 35,
+            "count": 2,
+            "from": [
+              [1300, 1500, 157.3],
+              [1500, 1380, 163.3],
+              [1520, 1540, 184.7]
+            ],
+            "mobs": [
+              {
+                "template": 60163541,
+                "name": "wind-touched changeling",
+                "level": [28, 31]
+              },
+              {
+                "template": 60168048,
+                "name": "wrath sprite",
+                "level": [28, 30]
+              },
+              {
+                "template": 60160478,
+                "name": "gale wisp",
+                "level": [27, 30]
+              }
+            ]
+          },
+          "success": "The thralls are scattered - and the wind turns. Fuamnach herself comes to the menhir.",
+          "fail": "The wind tears the scarlet fly from the stone and carries her away across Erin.",
+          "on_success": "b3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 90 }
+        },
+        {
+          "id": "b3",
+          "type": "boss",
+          "name": "Fuamnach, the Jealous Wife",
+          "objective": "Defeat Fuamnach",
+          "announce": "Fuamnach, first wife of Midir, stands at the menhir in a storm of her own making. This is a fight for a group.",
+          "center": [1418, 1446, 137.5],
+          "radius": 90,
+          "time_s": 900,
+          "boss": {
+            "template": 60163260,
+            "name": "Fuamnach",
+            "level": 38,
+            "size": 58,
+            "pos": [1424, 1452, 144.0],
+            "health_mult": 7
+          },
+          "adds": {
+            "every_s": 30,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60160478,
+                "name": "gale wisp",
+                "level": [30, 32]
+              }
+            ]
+          },
+          "success": "Fuamnach's wind dies on the lake. The scarlet fly circles you once, and is gone.",
+          "fail": "Fuamnach laughs and is gone with the wind.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 200,
+            "item": { "id": "nu206_etain_s_scarlet_wing", "gold_chance": 35, "silver_chance": 15 }
+          }
+        }
+      ]
+    },
+    {
+      "id": "bri_fairy_rade",
+      "title": "The Fairy Rade",
+      "levels": [35, 45],
+      "first_delay_s": [600, 1200],
+      "interval_s": [2100, 3000],
+      "start": "c1",
+      "stages": [
+        {
+          "id": "c1",
+          "type": "cull",
+          "name": "The Rade Rides Out",
+          "objective": "Turn back Midir's host between the fairy rings",
+          "announce": "The fairy rings east of Caille are open. Midir's host rides out of Bri Leith - turn them back before they reach the road.",
+          "center": [1280, 850, 152.7],
+          "radius": 130,
+          "time_s": 600,
+          "kill": 14,
+          "alive": 6,
+          "mobs": [
+            {
+              "template": 60160678,
+              "name": "outrider of Bri Leith",
+              "level": [36, 38],
+              "size": 72
+            },
+            {
+              "template": 60160468,
+              "name": "host of Bri Leith",
+              "level": [36, 39]
+            }
+          ],
+          "success": "The rade falters. At the largest ring, Midir's doorward steps out to hold the way open.",
+          "fail": "The host rides back into the mound, laughing.",
+          "on_success": "c2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 100 }
+        },
+        {
+          "id": "c2",
+          "type": "boss",
+          "name": "Midir's Doorward",
+          "objective": "Defeat Midir's Doorward",
+          "announce": "Midir's Doorward guards the open ring. None enter Bri Leith uninvited - and none leave it while he stands.",
+          "center": [1312, 858, 156.9],
+          "radius": 90,
+          "time_s": 900,
+          "boss": {
+            "template": 30006,
+            "name": "Midir's Doorward",
+            "level": 44,
+            "size": 80,
+            "pos": [1312, 858, 156.9],
+            "health_mult": 9
+          },
+          "adds": {
+            "every_s": 35,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60160468,
+                "name": "host of Bri Leith",
+                "level": [38, 40]
+              }
+            ]
+          },
+          "success": "The Doorward falls and the rings close. Bri Leith is quiet again.",
+          "fail": "The Doorward withdraws and the rings close behind him.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": { "xp_pct": 20, "copper_per_level": 250 }
+        }
+      ]
+    }
+  ]
+}

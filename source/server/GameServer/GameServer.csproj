@@ -84,4 +84,8 @@
         <Copy SourceFiles="@(APIDocs)" DestinationFiles="@(APIDocs->'$(MSBuildProjectDirectory)\..\$(Configuration)\wwwroot\docs\%(RecursiveDir)%(Filename)%(Extension)')" />
     </Target>
     <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+    <ItemGroup>
+        <!-- dynamic events: the zones' event files, read at start-up (scripts/dynamicevents) -->
+        <EmbeddedResource Include="scripts\dynamicevents\zones\*.json" LogicalName="DynamicEvents.%(Filename)%(Extension)" />
+    </ItemGroup>
 </Project>

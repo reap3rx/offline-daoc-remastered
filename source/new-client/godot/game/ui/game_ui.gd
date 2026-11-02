@@ -57,6 +57,8 @@ var guide: ClassicWindow
 var quest_abandon: Callable                               # QuestEngine.abandon (set by the zone viewer)
 signal item_dropped_on_world(slot: int, screen_pos: Vector2)   # zone viewer: an NPC under it (smith repair, sell)
 var map_window: MapWindow
+const EventTrackerScript := preload("res://game/ui/event_tracker.gd")
+var event_tracker: Control
 var casting: Casting
 var _cast_bar: Control
 var _cast_fill: ColorRect
@@ -96,6 +98,13 @@ func _rescale() -> void:
 	var s := vp.y / BASE_H * 0.78 * ui_scale             # the client at 800x600 = 1:1; readable default at 1080p
 	root.scale = Vector2(s, s)
 	root.size = vp / s
+	_place_event_tracker()
+
+
+func _place_event_tracker() -> void:
+	if event_tracker:
+		event_tracker.position = Vector2(area().x - EventTrackerScript.W - 8.0, 46.0)
+		event_tracker.size = Vector2(EventTrackerScript.W, 300)
 
 
 ## Virtual (client-unit) size of the screen.
@@ -355,6 +364,9 @@ func _build() -> void:
 	_build_minipet()
 	_build_conc()
 	_build_benefits()
+	event_tracker = EventTrackerScript.new()                       # dynamic events: top right, under the window buttons
+	root.add_child(event_tracker)
+	_place_event_tracker()
 	_build_warmap()
 	_build_quiver()
 	_build_poisons()
@@ -1765,6 +1777,10 @@ func _process_inner(_delta: float) -> void:
 	_tick_conc()
 	if not PlayerData.self_effects.is_valid() and (casting or Server.active):
 		PlayerData.self_effects = _player_effects          # the group page's own effects too
+	if event_tracker:
+		event_tracker.set("player", player)
+		event_tracker.set("current_zone", map_window.current_zone if map_window else -1)
+		event_tracker.visible = not hidden_all
 	if Engine.get_process_frames() % 10 == 0:              # the group windows' live bars
 		_tick_minigroup()
 		_tick_benefits()

@@ -459,6 +459,11 @@ namespace DOL.GS.ServerRules
                 if (npcAttacker is GameSummonedPet || npcAttacker.Brain is ControlledMobBrain || npcAttacker.Brain is BotBrain)
                     return true;
 
+                // A dynamic event's monsters attack the people its stage asks you to protect (DynamicEventRuntime.cs).
+                if (npcAttacker is DynamicEvents.EventNpc evAttacker && npcDefender is DynamicEvents.EventNpc evDefender &&
+                    evDefender.Role == DynamicEvents.EventRole.Protect && evAttacker.Stage != null && evAttacker.Stage == evDefender.Stage)
+                    return true;
+
                 // Mobs can attack mobs only if they both have a faction or if any is confused.
                 if ((npcDefender.Faction == null || npcAttacker.Faction == null) && !npcDefender.IsConfused && !npcAttacker.IsConfused)
                     return false;

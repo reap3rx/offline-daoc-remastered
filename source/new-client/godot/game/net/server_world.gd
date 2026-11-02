@@ -909,6 +909,9 @@ func update_views(max_build: int) -> void:
 
 func _message(d: Dictionary) -> void:
 	var t := int(d.type)
+	if String(d.text).begins_with("#EV|"):                # the dynamic events of this zone (DynamicEventManager.cs)
+		preload("res://game/ui/event_tracker.gd").receive(String(d.text).substr(4))
+		return
 	if String(d.text).begins_with("#AC|"):                # Action Combat's own lines (ActionCombat.cs): not chat
 		var ac: Node = viewer.get("action_combat") if viewer else null
 		if ac:
