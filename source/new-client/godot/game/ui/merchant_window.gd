@@ -170,6 +170,11 @@ func buy_selected() -> void:
 		return
 	if Server.active and selected.begins_with("srvm:"):   # the server's merchant: PlayerBuyRequest (page * 30 + index)
 		var parts := selected.split(":")
+		if server_window in [4, 11]:
+			# a house's looks (HousingOutsideMenu / HousingInsideMenu: roof, walls, door, carpets ...) are bought with
+			# HouseEdit - the house you are at changes, no item is given
+			Server.client.call("HouseEdit", int(parts[1]) * 30 + int(parts[2]))
+			return
 		var v: Node = Server.viewer()
 		if v:
 			var r: Vector3 = Server.to_region(Server.current_zone_id(), v.player.global_position)

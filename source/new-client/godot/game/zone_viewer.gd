@@ -788,6 +788,8 @@ func _input(event: InputEvent) -> void:
 					WorldLink.target_bot(bv)
 				elif loot and loot.click(_click_from):
 					pass                                         # picked up something lying on the ground
+				elif npcs is ServerWorld and (npcs as ServerWorld).house_click(player.camera, _click_from, false):
+					pass                                         # a house's door: in / out (housing)
 				elif npcs is ServerWorld and (npcs as ServerWorld).click_object(player.camera, _click_from):
 					pass                                         # the server's: something on the ground, targeted
 				elif not _click_door(_click_from) and npcs:
@@ -807,6 +809,10 @@ func _input(event: InputEvent) -> void:
 				if rn:
 					npcs.select(rn)
 					npcs.interact(rn)
+				elif npcs is ServerWorld and (npcs as ServerWorld).use_object_at(player.camera, _rclick_from):
+					pass                                         # a lot marker / relic: used (buy the lot, its deeds)
+				elif npcs is ServerWorld and (npcs as ServerWorld).house_click(player.camera, _rclick_from, true):
+					pass                                         # a house, a furniture / garden piece: its menu
 				elif companions:
 					var rb: Node3D = WorldLink.pick_bot(player.camera, _rclick_from)
 					if rb and bool(rb.get("companion")):       # your companion: its window (gear, training, tactics, stance)
@@ -928,6 +934,8 @@ func _on_item_dropped(slot: int, screen_pos: Vector2) -> void:
 			var h = sw.objects.get(oid)
 			if oid > 0 and h is Node3D and is_instance_valid(h) and Housing.is_lot_marker(int((h as Node3D).get_meta("model", 0))):
 				to = 1000 + oid
+			elif sw.housing_drop(slot, player.camera, screen_pos):
+				return                                       # housing: furniture, hookpoint and garden pieces, deeds
 		Server.client.call("MoveItem", slot, to, count)
 		return
 	if n == null:

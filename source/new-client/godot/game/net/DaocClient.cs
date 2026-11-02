@@ -263,6 +263,93 @@ public partial class DaocClient : Node
 		Send(0x7A, w);
 	}
 
+	// ---- housing (owner 2026-11-02: interiors, purchasing and decorating) ----
+
+	// HouseEnterLeaveHandler: go into a house (1) / leave the one you are in (0).
+	public void HouseEnterLeave(int houseNumber, int enter)
+	{
+		var w = new Writer();
+		w.Short((ushort)SessionId);
+		w.Short((ushort)houseNumber);
+		w.Byte((byte)enter);
+		Send(0x0B, w);
+	}
+
+	// HousingMenuRequestHandler (1127 menu ids): 0 garden shop, 1 furniture shop, 2 deeds, 3 exterior looks, 4 NPC,
+	// 5 vault, 6 crafting, 7 bindstone hookpoint shops, 8 interior looks, 9 the house's information.
+	public void HouseMenu(int houseNumber, int menu)
+	{
+		var w = new Writer();
+		w.Short((ushort)houseNumber);
+		w.Byte((byte)menu);
+		w.Byte(0);
+		Send(0x00, w);
+	}
+
+	// HousingPlaceItemHandler: an item (or money: slot 244-248, position = the amount) put on the house - method 1 garden
+	// (position = the garden point), 2 wall / 3 floor (position = the placement plane, x / y where on it), 4 porch,
+	// 5 hookpoint (position = the hookpoint), 6 guild emblem pieces; deeds go the same way (the server decides by item).
+	public void HousePlaceItem(int slot, int houseNumber, int position, int method, int rotation, int x, int y)
+	{
+		PlaceItem(false, slot, houseNumber, position, method, rotation, x, y);
+	}
+
+	// Money into the house's lockbox (rent): slot 246 gold (245 platinum, 247 silver, 248 copper), amount <= 255.
+	public void HousePayIn(int houseNumber, int slot, int amount)
+	{
+		PlaceItem(true, slot, houseNumber, amount, 0, 0, 0, 0);
+	}
+
+	void PlaceItem(bool money, int slot, int houseNumber, int position, int method, int rotation, int x, int y)
+	{
+		var w = new Writer();
+		w.Byte((byte)(money ? 1 : 0));
+		w.Byte((byte)slot);
+		w.Short((ushort)houseNumber);
+		w.Byte(0);
+		w.Byte((byte)position);
+		w.Byte((byte)method);
+		w.Byte((byte)rotation);
+		w.Short((ushort)(short)x);
+		w.Short((ushort)(short)y);
+		Send(0x0C, w);
+	}
+
+	// HousingPickupItemHandler: take back a garden item (method 1, position = its garden point) or a furniture piece
+	// (2 wall / 3 floor, position = its index).
+	public void HousePickup(int houseNumber, int position, int method)
+	{
+		var w = new Writer();
+		w.Byte(0);
+		w.Byte((byte)position);
+		w.Short((ushort)houseNumber);
+		w.Byte((byte)method);
+		Send(0x0D, w);
+	}
+
+	// HousingDecorationRotateHandler: turn a furniture piece (its index) by angle (its rotation units, added mod 360).
+	public void HouseRotate(int houseNumber, int index, int angle)
+	{
+		var w = new Writer();
+		w.Byte(0);
+		w.Byte((byte)index);
+		w.Short((ushort)houseNumber);
+		w.Short((ushort)((angle % 360 + 360) % 360));
+		w.Short(0);
+		Send(0x0E, w);
+	}
+
+	// HouseEditHandler: buy a look from the exterior / interior looks window (its place: page * 30 + slot) - roof, walls,
+	// door, supports, porch, awning, carpets, guild banner / shield. The house is the one you are at (CurrentHouse).
+	public void HouseEdit(int slot)
+	{
+		var w = new Writer();
+		w.Short((ushort)SessionId);
+		w.Byte(0); w.Byte((byte)slot);
+		for (int i = 1; i < 10; i++) { w.Byte(255); w.Byte(0); }
+		Send(0x01, w);
+	}
+
 	// PlayerAttackRequestHandler: attack mode on / off (user action).
 	public void Attack(bool start)
 	{
@@ -808,6 +895,68 @@ public partial class DaocClient : Node
 				d["kind"] = "remove";
 				d["oid"] = r.Short(); d["type"] = 9;
 				return d;
+			case 0xD2:                                    // HouseChangeGarden (189): a house's garden items (count, 0x80 all /
+			{                                             // 0x00 changed ones) - or, with no items, whether someone is in it
+				d["kind"] = "garden";
+				d["number"] = r.Short(); r.Short();
+				int n = r.Byte();
+				int flag = r.Byte();
+				d["full"] = flag == 0x80;
+				if (n == 0 && flag != 0x80)
+				{
+					d["kind"] = "house_occupied";
+					d["occupied"] = flag == 1;
+					return d;
+				}
+				var items = new Godot.Collections.Array();
+				for (int i = 0; i < n && r.Left >= 5; i++)
+					items.Add(new Godot.Collections.Dictionary { ["index"] = (int)r.Byte(), ["model"] = r.Short(),
+						["position"] = (int)r.Byte(), ["rotation"] = (int)r.Byte() });
+				d["items"] = items;
+				return d;
+			}
+			case 0x08:                                    // HouseEnter (189): you are inside - the interior to draw
+				d["kind"] = "house_enter";
+				d["number"] = r.Short(); d["z"] = r.Short();
+				d["x"] = (long)r.Int(); d["y"] = (long)r.Int();
+				d["heading"] = r.Short(); r.Byte();
+				d["emblem_flags"] = (int)r.Byte(); d["emblem"] = r.Short(); r.Byte(); r.Byte();
+				d["model"] = (int)r.Byte(); d["door"] = (int)r.Byte(); r.Byte(); r.Byte();
+				d["rug1"] = (int)r.Byte(); d["rug2"] = (int)r.Byte(); d["rug3"] = (int)r.Byte(); d["rug4"] = (int)r.Byte();
+				return d;
+			case 0x0A:                                    // HouseExit: you left the house
+				d["kind"] = "house_exit";
+				d["number"] = r.Short();
+				return d;
+			case 0x09:                                    // HousingItem (1125, little-endian): the furniture inside (count,
+			{                                             // 0x80 all / 0x00 changed; model 0 = taken away)
+				d["kind"] = "furniture";
+				d["number"] = r.ShortLE();
+				int n = r.Byte();
+				d["full"] = r.Byte() == 0x80;
+				var items = new Godot.Collections.Array();
+				for (int i = 0; i < n && r.Left >= 2; i++)
+				{
+					var it = new Godot.Collections.Dictionary();
+					it["index"] = (int)r.Byte();
+					int type = r.Byte();
+					it["model"] = r.ShortLE();
+					int color = 0;
+					if ((type & 1) == 1) color = r.Byte();
+					else if ((type & 6) == 2 || (type & 6) == 6) color = r.ShortLE();
+					it["color"] = color;
+					it["emblem"] = (type & 6) != 0 && (type & 1) == 0;
+					it["x"] = (int)(short)r.ShortLE(); it["y"] = (int)(short)r.ShortLE(); it["rotation"] = r.ShortLE();
+					it["size"] = (type & 8) == 8 ? r.Byte() : 100;
+					it["position"] = (int)r.Byte();
+					it["method"] = (int)r.Byte() + 2;
+					if ((int)it["model"] == 0 && r.Left > 0 && r.Left <= 11)
+						r.Skip(r.Left);                       // (a removal: the rest is padding)
+					items.Add(it);
+				}
+				d["items"] = items;
+				return d;
+			}
 			case 0xD1:                                    // HouseCreate (189): a house on its lot (model 0: taken down)
 				d["kind"] = "house";
 				d["number"] = r.Short(); d["z"] = r.Short();

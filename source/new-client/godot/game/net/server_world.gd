@@ -97,6 +97,11 @@ func _on_world(kind: String, d: Dictionary) -> void:
 		"npc": _add_npc(d)
 		"object": _add_object(d)
 		"house": _house(d)
+		"garden": _garden(d)
+		"house_occupied": _house_occupied(d)
+		"house_enter": _house_enter(d)
+		"house_exit": _house_exit(d)
+		"furniture": _furniture(d)
 		"move": _move(d)
 		"remove": _remove(int(d.oid), true, int(d.get("type", 1)))
 		"equipment": _equip(d)
@@ -1570,33 +1575,440 @@ func rebase(d: Vector3) -> void:
 		var h = houses[num]
 		if h is Node3D and is_instance_valid(h):
 			(h as Node3D).position -= d
+	if interior and is_instance_valid(interior):
+		interior.position -= d
 
 
-## A house on its lot (HouseCreate 0xD1, owner 2026-11-02 housing's first pass): drawn with its collision where the
-## server puts it; model 0 takes it down (SendRemoveHouse, a lot given up / repossessed). The lot marker is a separate
-## ground object (GameLotMarker) the server removes itself when the house goes up.
+# ---------------------------------------------------------------- housing (owner 2026-11-02)
+# Houses (HouseCreate 0xD1) with their looks and gardens (0xD2); the interior you are in (HouseEnter 0x08 / HouseExit
+# 0x0A) with its furniture (HousingItem 0x09). Left click a house's door to go in, the door inside to go out; right
+# click a house (or the door inside) for its menu - its shops (garden, furniture, deeds, hookpoint pieces), its looks
+# (roof, walls, door, supports, porch, awning, carpets: HouseEdit), its information, its lockbox. Decorating: drag an
+# item onto the floor or a wall inside (HousePlaceItem: the placement plane under it), onto a hookpoint (the house menu
+# shows them), or onto your garden outside (the nearest free garden spot); right click a piece to turn or take it back.
+
+const HouseMenu := preload("res://game/ui/house_menu.gd")
+const GARDEN_REACH := 6.0                      # metres from the drop to a garden spot
+const HOOK_REACH := 4.0                        # metres from the drop to a hookpoint
+const ROTATE_STEP := 45                        # a furniture turn (the server's rotation units: degrees)
+const LAYER_FLOOR_MASK := 2                    # the ground / floors (ZoneLoader.LAYER_FLOOR)
+
+var interior: Node3D = null                   # the house you are in (HouseEnter), its furniture under it
+var inside_house := 0                         # its number (0: outside)
+var furniture := {}                           # index -> {node, d}
+var gardens := {}                             # house number -> {index -> node}
+var _hook_markers: Node3D = null
+
+
+## A house on its lot: model 0 takes it down (SendRemoveHouse, a lot given up / repossessed). The same model again only
+## changes its looks (a roof bought); a new one (a deed: an upgrade) rebuilds it. The lot marker is a separate ground
+## object (GameLotMarker) the server removes itself when the house goes up.
 func _house(d: Dictionary) -> void:
 	var num := int(d.number)
-	if houses.has(num):
-		var old: Node3D = houses[num]
-		if is_instance_valid(old):
-			old.queue_free()
-		houses.erase(num)
 	var model := int(d.model)
+	var old: Node3D = houses.get(num)
+	if old and is_instance_valid(old) and model > 0 and int(old.get_meta("model", 0)) == model:
+		Housing.apply_look(old, d)
+		old.set_meta("look", d)
+		old.set_meta("name", String(d.get("name", "")))
+		return
+	if old and is_instance_valid(old):
+		old.queue_free()
+	houses.erase(num)
+	gardens.erase(num)
 	if model <= 0:
 		return
-	var m := Housing.make_house(model)
+	var m := Housing.make_house(model, d)
 	if m == null:
 		push_warning("house %d: no model %d" % [num, model])
 		return
-	var p := scene_pos(float(d.x), float(d.y), float(d.z))
-	m.position = p
-	m.rotation.y = Server.yaw_of(int(d.heading))
+	m.position = scene_pos(float(d.x), float(d.y), float(d.z))
+	m.rotation.y = Housing.house_yaw(int(d.heading))
 	m.name = "House_%d" % num
 	m.set_meta("name", String(d.get("name", "")))
 	m.set_meta("model", model)
+	m.set_meta("house_number", num)
+	m.set_meta("look", d)
 	add_child(m)
 	houses[num] = m
+
+
+## Someone is in the house (the client lit its windows): nothing to draw yet.
+func _house_occupied(_d: Dictionary) -> void:
+	pass
+
+
+## A house's garden pieces (HouseChangeGarden): each stands on its garden spot (the house NIF's GPointN: Position),
+## turned by its Rotation (0-255 = a full turn). A full list replaces them all.
+func _garden(d: Dictionary) -> void:
+	var num := int(d.number)
+	var house: Node3D = houses.get(num)
+	if house == null or not is_instance_valid(house):
+		return
+	var g: Dictionary = gardens.get(num, {})
+	if bool(d.full):
+		for k in g:
+			if is_instance_valid(g[k]):
+				(g[k] as Node3D).queue_free()
+		g = {}
+	var pts := Housing.garden_points(int(house.get_meta("model", 0)))
+	for it in d.get("items", []):
+		var idx := int(it.index)
+		if g.has(idx) and is_instance_valid(g[idx]):
+			(g[idx] as Node3D).queue_free()
+		g.erase(idx)
+		if int(it.model) <= 0 or not pts.has(int(it.position)):
+			continue
+		var n := Housing.make_object(int(it.model))
+		if n == null:
+			n = WeaponModels.make_world(int(it.model))
+		if n == null:
+			continue
+		n.position = pts[int(it.position)]
+		n.rotation.y = float(int(it.rotation)) * TAU / 256.0
+		n.set_meta("garden_position", int(it.position))
+		_pick_sphere(n, 0.8).set_meta("house_part", "garden")
+		house.add_child(n)
+		g[idx] = n
+	gardens[num] = g
+
+
+## You are inside (HouseEnter): the interior, unturned, at the house's spot 25000 units up (the server moves you to
+## its entry next, a jump in the same region).
+func _house_enter(d: Dictionary) -> void:
+	_drop_interior()
+	var model := int(d.model)
+	var n := Housing.make_interior(model, d)
+	if n == null:
+		PlayerData.message.emit("This house's inside isn't built yet (content/housing: interior %d)." % model, "error")
+		return
+	n.position = scene_pos(float(d.x), float(d.y), float(Housing.INTERIOR_Z))
+	n.name = "Interior_%d" % int(d.number)
+	n.set_meta("house_number", int(d.number))
+	n.set_meta("model", model)
+	n.set_meta("look", d)
+	add_child(n)
+	interior = n
+	inside_house = int(d.number)
+
+
+func _house_exit(_d: Dictionary) -> void:
+	_drop_interior()
+
+
+func _drop_interior() -> void:
+	if interior and is_instance_valid(interior):
+		interior.queue_free()
+	interior = null
+	inside_house = 0
+	furniture.clear()
+	_hook_markers = null
+
+
+## The furniture inside (HousingItem): floor pieces (method 3) stand on their floor plane (Position) at X / Y (DAoC
+## units from the house's spot: east / south), turned by Rotation (the server's: your heading / 10); wall pieces
+## (method 2) hang on their wall plane (Position) X units along it and Y up (Housing.wall_frame), facing out of it.
+## Model 0: taken away.
+func _furniture(d: Dictionary) -> void:
+	if interior == null or not is_instance_valid(interior) or int(d.number) != inside_house:
+		return
+	if bool(d.full):
+		for k in furniture:
+			if is_instance_valid(furniture[k].node):
+				(furniture[k].node as Node3D).queue_free()
+		furniture.clear()
+	for it in d.get("items", []):
+		var idx := int(it.index)
+		if furniture.has(idx) and is_instance_valid(furniture[idx].node):
+			(furniture[idx].node as Node3D).queue_free()
+		furniture.erase(idx)
+		if int(it.model) <= 0:
+			continue
+		var n := Housing.make_object(int(it.model))
+		if n == null:
+			n = WeaponModels.make_world(int(it.model))
+		if n == null:
+			continue
+		var planes: Dictionary = interior.get_meta("planes", {})
+		var method := int(it.method)
+		if method == 2:
+			var fr := Housing.wall_frame(planes.get("wallp%d" % int(it.position), PackedVector3Array()))
+			if fr.is_empty():
+				n.position = Vector3(float(it.x) * 0.025, 1.5, float(it.y) * 0.025)
+			else:
+				n.position = (fr.origin as Vector3) + (fr.u as Vector3) * float(it.x) * 0.025 + Vector3.UP * float(it.y) * 0.025
+				var nn: Vector3 = fr.normal
+				n.rotation.y = atan2(nn.x, nn.z)
+		else:
+			var x := float(it.x) * 0.025
+			var z := float(it.y) * 0.025
+			var y := Housing.plane_height(planes.get("floorp%d" % int(it.position), PackedVector3Array()), x, z)
+			if is_nan(y):
+				y = _interior_floor(x, z)
+			n.position = Vector3(x, y, z)
+			n.rotation.y = Server.yaw_of(int(it.rotation) * 10)
+		n.scale = Vector3.ONE * clampf(float(it.size) / 100.0, 0.1, 2.55)
+		if int(it.color) > 0 and not bool(it.emblem):
+			WeaponModels.dye(n, int(it.color))
+		var body := _pick_sphere(n, 0.6)
+		body.set_meta("house_part", "item")
+		body.set_meta("index", idx)
+		body.set_meta("method", method)
+		interior.add_child(n)
+		furniture[idx] = {"node": n, "d": it}
+
+
+## The highest floor plane under (x, z) in the interior (a piece whose own plane isn't known).
+func _interior_floor(x: float, z: float) -> float:
+	var best := NAN
+	var planes: Dictionary = interior.get_meta("planes", {})
+	for k in planes:
+		if String(k).begins_with("floorp"):
+			var y := Housing.plane_height(planes[k], x, z)
+			if not is_nan(y) and (is_nan(best) or y > best):
+				best = y
+	return 0.0 if is_nan(best) else best
+
+
+func _pick_sphere(n: Node3D, r: float) -> StaticBody3D:
+	var body := StaticBody3D.new()
+	body.collision_layer = OBJECT_PICK
+	body.collision_mask = 0
+	var shape := CollisionShape3D.new()
+	var sphere := SphereShape3D.new()
+	sphere.radius = r
+	shape.shape = sphere
+	shape.position.y = r
+	body.add_child(shape)
+	n.add_child(body)
+	return body
+
+
+## The house part under the cursor: {number, part ("door" / "body" / "exit" / "item" / "garden"), body}, or {}.
+func house_at(cam: Camera3D, screen_pos: Vector2) -> Dictionary:
+	var from := cam.project_ray_origin(screen_pos)
+	var q := PhysicsRayQueryParameters3D.create(from, from + cam.project_ray_normal(screen_pos) * 80.0, OBJECT_PICK)
+	var hit := get_world_3d().direct_space_state.intersect_ray(q)
+	if hit.is_empty() or not hit.collider.has_meta("house_part"):
+		return {}
+	var n: Node = hit.collider
+	while n and not n.has_meta("house_number"):
+		n = n.get_parent()
+	if n == null:
+		return {}
+	return {"number": int(n.get_meta("house_number")), "part": String(hit.collider.get_meta("house_part")),
+			"body": hit.collider, "at": hit.position}
+
+
+## A click on a house. Left: its door goes in, the door inside goes out. Right: its menu (a piece's, inside / in the
+## garden). True when it was a house's.
+func house_click(cam: Camera3D, screen_pos: Vector2, right: bool) -> bool:
+	if Server.client == null:
+		return false
+	var h := house_at(cam, screen_pos)
+	if h.is_empty():
+		return false
+	var num := int(h.number)
+	match String(h.part):
+		"door":
+			if right:
+				house_menu(num)
+			else:
+				Server.client.call("HouseEnterLeave", num, 1)
+		"exit":
+			if right:
+				house_menu(num)
+			else:
+				Server.client.call("HouseEnterLeave", num, 0)
+		"body":
+			if right:
+				house_menu(num)
+			else:
+				return false
+		"item":
+			if right:
+				_item_menu(num, int(h.body.get_meta("index")), int(h.body.get_meta("method")))
+		"garden":
+			if right:
+				var pos := int((h.body.get_parent() as Node).get_meta("garden_position", -1))
+				HouseMenu.open(viewer.ui.root, "Garden", [
+					["Take it back", func(): Server.client.call("HousePickup", num, pos, 1)],
+					["Close", Callable()]])
+	return true
+
+
+## The house's menu: outside - go in, the garden shop, its looks, deeds, information, lockbox; inside - go out, the
+## furniture shop, the interior's looks, the hookpoint shops, show the hookpoints, information, lockbox.
+func house_menu(num: int) -> void:
+	if viewer == null or viewer.ui == null:
+		return
+	var c = Server.client
+	var house: Node3D = houses.get(num)
+	var title := "House %d" % num
+	if house and is_instance_valid(house) and String(house.get_meta("name", "")) != "":
+		title = "%s's house" % String(house.get_meta("name"))
+	var e := []
+	if inside_house == num:
+		e.append(["Leave the house", func(): c.call("HouseEnterLeave", num, 0)])
+		e.append(["Furniture shop", func(): c.call("HouseMenu", num, 1)])
+		e.append(["Interior: carpets, emblems", func(): c.call("HouseMenu", num, 8)])
+		e.append(["Hookpoint: servants", func(): c.call("HouseMenu", num, 4)])
+		e.append(["Hookpoint: vaults", func(): c.call("HouseMenu", num, 5)])
+		e.append(["Hookpoint: crafting", func(): c.call("HouseMenu", num, 6)])
+		e.append(["Hookpoint: bindstones", func(): c.call("HouseMenu", num, 7)])
+		e.append(["Hide hookpoints" if _hook_markers else "Show hookpoints", func(): _toggle_hookpoints()])
+	else:
+		e.append(["Enter", func(): c.call("HouseEnterLeave", num, 1)])
+		e.append(["Garden shop", func(): c.call("HouseMenu", num, 0)])
+		e.append(["Exterior: roof, walls, door ...", func(): c.call("HouseMenu", num, 3)])
+	e.append(["Deeds", func(): c.call("HouseMenu", num, 2)])
+	e.append(["House information", func(): c.call("HouseMenu", num, 9)])
+	e.append(["Lockbox: add 10 gold", func(): c.call("HousePayIn", num, 246, 10)])
+	e.append(["Lockbox: add 100 gold", func(): c.call("HousePayIn", num, 246, 100)])
+	e.append(["Close", Callable()])
+	HouseMenu.open(viewer.ui.root, title, e)
+
+
+func _item_menu(num: int, index: int, method: int) -> void:
+	var c = Server.client
+	var nm := "Furniture"
+	if furniture.has(index):
+		nm = String(Housing.info().get("objects", {}).get(str(int(furniture[index].d.model)), {}).get("name", nm))
+	var e := []
+	if method == 3:
+		e.append(["Turn left", func(): c.call("HouseRotate", num, index, -ROTATE_STEP)])
+		e.append(["Turn right", func(): c.call("HouseRotate", num, index, ROTATE_STEP)])
+	e.append(["Take it back", func(): c.call("HousePickup", num, index, method)])
+	e.append(["Close", Callable()])
+	HouseMenu.open(viewer.ui.root, nm, e)
+
+
+## The interior's hookpoints shown (glowing markers): drop a hookpoint piece (a servant, vault, crafting table,
+## bindstone - from the hookpoint shops) onto one.
+func _toggle_hookpoints() -> void:
+	if _hook_markers and is_instance_valid(_hook_markers):
+		_hook_markers.queue_free()
+		_hook_markers = null
+		return
+	if interior == null:
+		return
+	_hook_markers = Node3D.new()
+	var mat := StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.albedo_color = Color(0.4, 0.9, 1.0, 0.7)
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.no_depth_test = true
+	var hp := Housing.hookpoints(int(interior.get_meta("model", 0)))
+	for id in hp:
+		var mi := MeshInstance3D.new()
+		var sm := SphereMesh.new()
+		sm.radius = 0.25
+		sm.height = 0.5
+		sm.material = mat
+		mi.mesh = sm
+		mi.position = hp[id][0]
+		var lb := Label3D.new()
+		lb.text = "hookpoint %d" % int(id)
+		lb.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		lb.fixed_size = true
+		lb.pixel_size = 0.0012
+		lb.no_depth_test = true
+		lb.position = Vector3(0, 0.45, 0)
+		mi.add_child(lb)
+		_hook_markers.add_child(mi)
+	interior.add_child(_hook_markers)
+	if hp.is_empty():
+		PlayerData.message.emit("This house has no hookpoints.", "system")
+
+
+## An inventory item let go over the world, in housing: inside - onto a floor / wall plane (furniture), near a
+## hookpoint (a hookpoint piece); outside - onto a house (deeds: an upgrade, a porch, a consignment merchant, guild
+## pieces) or into its garden (a garden piece: the nearest free garden spot). True when housing took it.
+func housing_drop(slot: int, cam: Camera3D, screen_pos: Vector2) -> bool:
+	if Server.client == null:
+		return false
+	var it: Dictionary = PlayerData.item_at(slot)
+	var ot := int(it.get("object_type", 0))
+	var from := cam.project_ray_origin(screen_pos)
+	var dir := cam.project_ray_normal(screen_pos)
+	var space := get_world_3d().direct_space_state
+	if inside_house > 0 and interior and is_instance_valid(interior):
+		var origin := interior.global_position
+		if ot in [53, 54, 55, 68]:                     # a hookpoint piece: the nearest hookpoint to where it fell
+			var hit := space.intersect_ray(PhysicsRayQueryParameters3D.create(from, from + dir * 60.0, LAYER_FLOOR_MASK | Housing.PLACE_PICK))
+			var at: Vector3 = hit.position if not hit.is_empty() else player.global_position
+			var best := -1
+			var bd := HOOK_REACH
+			var hp := Housing.hookpoints(int(interior.get_meta("model", 0)))
+			for id in hp:
+				var dd := (origin + (hp[id][0] as Vector3)).distance_to(at)
+				if dd < bd:
+					bd = dd
+					best = int(id)
+			if best < 0:
+				PlayerData.message.emit("Drop it onto a hookpoint (the house menu shows them).", "system")
+			else:
+				Server.client.call("HousePlaceItem", slot, inside_house, best, 5, 0, 0, 0)
+			return true
+		var hit2 := space.intersect_ray(PhysicsRayQueryParameters3D.create(from, from + dir * 60.0, Housing.PLACE_PICK))
+		if hit2.is_empty():
+			# (deeds and the like inside: the server decides by the item)
+			Server.client.call("HousePlaceItem", slot, inside_house, 0, 3, 0, 0, 0)
+			return true
+		var plane := String(hit2.collider.get_meta("plane", ""))
+		var local: Vector3 = (hit2.position as Vector3) - origin
+		if plane.begins_with("wallp"):
+			var fr := Housing.wall_frame((interior.get_meta("planes", {}) as Dictionary).get(plane, PackedVector3Array()))
+			var u := 0.0
+			var v := 0.0
+			if not fr.is_empty():
+				u = (local - (fr.origin as Vector3)).dot(fr.u as Vector3)
+				v = local.y - (fr.origin as Vector3).y
+			Server.client.call("HousePlaceItem", slot, inside_house, int(plane.substr(5)), 2, 0, int(round(u / 0.025)), int(round(v / 0.025)))
+		else:
+			Server.client.call("HousePlaceItem", slot, inside_house, int(plane.substr(6)), 3, 0,
+					int(round(local.x / 0.025)), int(round(local.z / 0.025)))
+		return true
+	# outside: a house under the cursor, or the one whose garden it fell into
+	var h := house_at(cam, screen_pos)
+	var ground := space.intersect_ray(PhysicsRayQueryParameters3D.create(from, from + dir * 80.0, LAYER_FLOOR_MASK))
+	var num := int(h.get("number", 0))
+	var at2: Vector3 = ground.position if not ground.is_empty() else (h.get("at", Vector3.INF) as Vector3)
+	if at2 == Vector3.INF and player:
+		at2 = player.global_position                  # (nothing under the cursor: by you)
+	if num == 0 and at2 != Vector3.INF:
+		var bd2 := 30.0
+		for k in houses:
+			var hn: Node3D = houses[k]
+			if is_instance_valid(hn) and hn.global_position.distance_to(at2) < bd2:
+				bd2 = hn.global_position.distance_to(at2)
+				num = int(k)
+	if num == 0:
+		return false
+	if ot == 49:                                      # a garden piece: the nearest free garden spot
+		var house: Node3D = houses[num]
+		var taken := {}
+		for k in gardens.get(num, {}):
+			var gn = gardens[num][k]
+			if is_instance_valid(gn):
+				taken[int((gn as Node3D).get_meta("garden_position", -1))] = true
+		var best2 := -1
+		var bd3 := GARDEN_REACH
+		var pts := Housing.garden_points(int(house.get_meta("model", 0)))
+		for p in pts:
+			if taken.has(p):
+				continue
+			var dd2 := (house.global_transform * (pts[p] as Vector3)).distance_to(at2)
+			if dd2 < bd3:
+				bd3 = dd2
+				best2 = int(p)
+		if best2 < 0:
+			PlayerData.message.emit("Drop it on a free spot of the garden, near the house.", "system")
+		else:
+			Server.client.call("HousePlaceItem", slot, num, best2, 1, 0, 0, 0)
+		return true
+	Server.client.call("HousePlaceItem", slot, num, 0, 0, 0, 0, 0)    # deeds, porch, guild pieces: the server's call
+	return true
 
 
 var target_object := 0                       # the targeted ground object's id (loot, a gravestone, a relic)
@@ -1611,6 +2023,20 @@ func click_object(cam: Camera3D, screen_pos: Vector2) -> bool:
 	if oid == 0:
 		return false
 	_target_ground(oid)
+	return true
+
+
+## A right click on a lot marker (or a relic): targeted and used, as the use key does. True when it was one.
+func use_object_at(cam: Camera3D, screen_pos: Vector2) -> bool:
+	var oid := object_at(cam, screen_pos)
+	var h = objects.get(oid)
+	if oid == 0 or not (h is Node3D) or not is_instance_valid(h):
+		return false
+	var model := int((h as Node3D).get_meta("model", 0))
+	if not (Housing.is_lot_marker(model) or model in RELIC_MODELS):
+		return false
+	_target_ground(oid)
+	get_object()
 	return true
 
 

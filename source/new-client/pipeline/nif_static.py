@@ -28,9 +28,13 @@ UNITS_TO_METRES = 0.025
 # in. Checked against Lough Derg: signpost text reads correctly and docks run from the shore out over the water.
 DAOC_TO_GODOT = np.array([[1, 0, 0], [0, 0, 1], [0, -1, 0]], dtype=np.float64)   # (x, y, z) -> (x, z, -y)
 BILLBOARD_FLIP = np.diag([1.0, -1.0, -1.0, 1.0])     # half a turn about the card's x (its right stays right)
+# housing (build_housing.py): a function of a shape's node-name path (root first) -> a group tag or None; the shape's
+# mesh is then named grp_<tag>__<n> (the house's roof / wall / door choices, porch, carpets, placement planes ...)
+GROUP_TAG = None
 SKIP_TYPES = ('NiParticles', 'NiParticleSystem', 'NiCamera', 'NiLight', 'NiTextureEffect')
 
-
+
+
 MOSS_CARD = re.compile(r'^(!_distbld@\d+@\d+_)?moss\d+(:\d+)?$', re.I)
 
 def local_matrix(b):
@@ -733,7 +737,10 @@ def collect(nif, node_anims=False):
         if b is collidee or id(b) in walls:                # walls only, never drawn (see collidee_shapes)
             return
         if b.get('flags', 0) & 1 and not (node_anims and _controller(b, 'NiVisController') is not None):   # hidden
-            return
+            keep = GROUP_TAG is not None and str(GROUP_TAG(tuple(inherited.get('_names', ())) + (b.get('name') or '',))
+                                                     or '').startswith(('floorp', 'wallp'))
+            if not keep:                                   # (housing's placement planes: kept, never drawn)
+                return
         # the Catacombs underground forests' hanging moss cards ("moss01".. and their "!_distbld@2000@5000_moss01"
         # far copies): flat 20 m sheets of an opaque grey 32 x 128 moss texture under the canopy. Drawn, they hung as
         # grey-blue slabs in the air (owner 2026-11-01: "the bugged canopy"); left out, the roots and vines remain
@@ -744,6 +751,8 @@ def collect(nif, node_anims=False):
             return
         props = dict(inherited)
         props.update(props_of(b))
+        if GROUP_TAG is not None:
+            props['_names'] = tuple(inherited.get('_names', ())) + (b.get('name') or '',)
         if node_anims:
             # a spell / monster effect: everything in it runs on the effect's timeline - its material fades and colour
             # keys too, not only those of the parts under an animated node (2026-10-13: the earth fingers, a morphing
@@ -1537,6 +1546,13 @@ def convert(raw, out_path, texture_uri='textures', node_anims=False):
             continue
         name = shape.get('name') or f'shape{i}'
         tp = props.get('NiTexturingProperty')
+        tag = GROUP_TAG(props.get('_names', ())) if GROUP_TAG is not None else None
+        if tag:
+            name = f'grp_{tag}__{i}'
+            if tag.startswith(('floorp', 'wallp')):
+                # a placement surface (housing: the floor / wall planes furniture goes on) - kept, never drawn
+                g.mesh(name, pos, nrm, [], None, tri, None)
+                continue
         if not uv and texture_name(tp) is None:
             hidden += len(tri)                            # untextured helper geometry (e.g. door 'collideeNN'): not drawn
             continue

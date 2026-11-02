@@ -611,7 +611,7 @@ func _on_world_inner(kind: String, d: Dictionary) -> void:
 			if not playing:
 				_backlog.append([kind, d])
 				return
-		"house":                                          # a house on its lot (housing): drawn once the zone is in
+		"house", "garden", "house_occupied":              # a house on its lot / its garden (housing): drawn once the zone is in
 			if not playing:
 				_backlog.append([kind, d])
 				return
