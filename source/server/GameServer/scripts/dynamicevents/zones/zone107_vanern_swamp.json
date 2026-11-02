@@ -65,7 +65,7 @@
           "boss": {
             "template": 60161921,
             "name": "Hagbui Thane Ormr",
-            "level": 46,
+            "level": 45,
             "size": 66,
             "pos": [153, 272, 80.8],
             "health_mult": 2.5
@@ -191,7 +191,7 @@
           "boss": {
             "template": 60159228,
             "name": "Leirjotun",
-            "level": 45,
+            "level": 44,
             "size": 70,
             "pos": [587, 800, 47.6],
             "health_mult": 2.5

@@ -60,7 +60,7 @@
           "boss": {
             "template": 12310,
             "name": "Ranulf Blackhand",
-            "level": 12,
+            "level": 11,
             "size": 70,
             "pos": [1243, 844, 63.3],
             "health_mult": 2.5
@@ -196,7 +196,7 @@
           "boss": {
             "template": 12128,
             "name": "The Barrow-Wight",
-            "level": 10,
+            "level": 9,
             "size": 71,
             "pos": [1490, 1283, 90.8],
             "health_mult": 2.5
@@ -235,7 +235,7 @@
       "giver": {
         "name": "Sergeant Wystan",
         "template": 60167630,
-        "level": 16,
+        "level": 9,
         "model": 28,
         "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
         "guild": "Cotswold Watch",
@@ -251,7 +251,7 @@
         {
           "name": "Veteran Guardsman",
           "template": 60167630,
-          "level": 10,
+          "level": 8,
           "model": 28,
           "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
           "guild": "Cotswold Watch",
@@ -350,7 +350,7 @@
           "boss": {
             "template": 12337,
             "name": "The Hive Champion",
-            "level": 11,
+            "level": 10,
             "size": 45,
             "pos": [958, 622, 53.0],
             "health_mult": 2.5

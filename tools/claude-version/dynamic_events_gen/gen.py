@@ -125,7 +125,7 @@ class ZoneGen:
         bname, bfoe = spec['boss']
         t = self.foe(bfoe)
         sizes = [int(x) for x in re.findall(r'\d+', str(self.size_of(t)))] or [50]
-        return {'template': t['tpl'], 'name': bname, 'level': lv[1] + 3, 'size': min(110, int(max(sizes) * 1.3)),
+        return {'template': t['tpl'], 'name': bname, 'level': lv[1] + 2, 'size': min(110, int(max(sizes) * 1.3)),
                 'pos': [round(at[0]), round(at[1])], 'health_mult': 2.5}
 
     def size_of(self, t):
@@ -232,13 +232,13 @@ class ZoneGen:
             at, gp, path = res
             self.used.append(at)
             gname, gguild, greet = spec['giver']
-            giver = self.npc_from_guard(town, gname, min(lv[1] + 8, 65), guild=gguild, health=4)
+            giver = self.npc_from_guard(town, gname, lv[1] + 1, guild=gguild, health=4)
             giver['pos'] = [round(gp[0]), round(gp[1])]
             giver.update({'greet': greet, 'accept': 'ready',
                           'reply': 'Good. Stay close - they will have watchers out. With me!',
                           'busy': "We've only just come back. Give my people a while to rest, then find me again.",
                           'cooldown_s': 900})
-            guard = self.npc_from_guard(town, guard_name(gguild, town), lv[1] + 2, guild=gguild, health=2)
+            guard = self.npc_from_guard(town, guard_name(gguild, town), lv[1], guild=gguild, health=2)
             guard['count'] = 3
             mid = max(1, len(path) // 2)
             c.update(giver=giver, guards=[guard], start='g1')

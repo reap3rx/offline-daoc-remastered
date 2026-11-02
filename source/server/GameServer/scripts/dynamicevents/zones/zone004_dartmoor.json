@@ -55,7 +55,7 @@
           "boss": {
             "template": 770005,
             "name": "Gorm the Cairn-Builder",
-            "level": 49,
+            "level": 48,
             "size": 110,
             "pos": [1154, 425, 5.0],
             "health_mult": 2.5
@@ -181,7 +181,7 @@
           "boss": {
             "template": 770001,
             "name": "Stonelord Vaurn",
-            "level": 55,
+            "level": 54,
             "size": 110,
             "pos": [654, 812, 6.3],
             "health_mult": 2.5

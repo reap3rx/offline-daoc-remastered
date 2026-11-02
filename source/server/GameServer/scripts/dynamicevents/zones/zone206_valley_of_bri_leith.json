@@ -364,7 +364,9 @@
         "accept": "ready",
         "reply": "Good. Stay close to me - the siog will have watchers on the road. Rangers, with me!",
         "busy": "We've only just come back from the fold. Give my rangers a while to rest, then find me again.",
-        "cooldown_s": 900
+        "cooldown_s": 900,
+        "thanks": "The fold is ours again, and the herders can bring their flocks home. Druim Cain owes you - I won't forget who rode with us today.",
+        "regret": "Back to Druim Cain! We'll come for the fold again when we've licked our wounds."
       },
       "guards": [
         {
@@ -528,7 +530,9 @@
             "items": [
               { "id": "nu206_druim_cain_ranger_s_mantle", "gold_chance": 45, "silver_chance": 20 }
             ]
-          }
+          },
+          "flag": 555,
+          "flag_name": "Banner of Druim Cain"
         }
       ]
     }

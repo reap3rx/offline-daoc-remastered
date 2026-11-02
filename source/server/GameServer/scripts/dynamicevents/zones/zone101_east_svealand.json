@@ -99,7 +99,7 @@
           "boss": {
             "template": 60166676,
             "name": "Grimfang",
-            "level": 11,
+            "level": 10,
             "size": 70,
             "pos": [515, 287, 119.2],
             "health_mult": 2.5
@@ -185,7 +185,7 @@
           "boss": {
             "template": 20001,
             "name": "The Barrow Draugr",
-            "level": 11,
+            "level": 10,
             "size": 65,
             "pos": [772, 627, 118.8],
             "health_mult": 2.5
@@ -223,7 +223,7 @@
       "rest_s": 45,
       "giver": {
         "name": "Dreng Haldor",
-        "level": 16,
+        "level": 9,
         "model": 159,
         "equipment": "a0bb02af-37b1-428c-9023-fdf6afdea19f",
         "guild": "Dvalin Guard",
@@ -238,7 +238,7 @@
       "guards": [
         {
           "name": "Viking",
-          "level": 10,
+          "level": 8,
           "model": 159,
           "equipment": "a0bb02af-37b1-428c-9023-fdf6afdea19f",
           "guild": "Dvalin Guard",
@@ -332,7 +332,7 @@
           "boss": {
             "template": 60167116,
             "name": "Tomte King Nisse",
-            "level": 11,
+            "level": 10,
             "size": 50,
             "pos": [647, 1319, 116.6],
             "health_mult": 2.5

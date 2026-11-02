@@ -55,7 +55,7 @@
           "boss": {
             "template": 60168002,
             "name": "Grimgar Fenris-born",
-            "level": 36,
+            "level": 35,
             "size": 110,
             "pos": [1211, 1014, 138.8],
             "health_mult": 2.5
@@ -191,7 +191,7 @@
           "boss": {
             "template": 60167248,
             "name": "Mother Oak",
-            "level": 25,
+            "level": 24,
             "size": 66,
             "pos": [1451, 1307, 142.7],
             "health_mult": 2.5

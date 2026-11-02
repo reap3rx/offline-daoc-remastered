@@ -55,7 +55,7 @@
           "boss": {
             "template": 44038,
             "name": "Glimmer Warden Faelan",
-            "level": 49,
+            "level": 48,
             "size": 65,
             "pos": [336, 331, 92.5],
             "health_mult": 2.5
@@ -181,7 +181,7 @@
           "boss": {
             "template": 44006,
             "name": "The Azure Grand Inquisitor",
-            "level": 55,
+            "level": 54,
             "size": 65,
             "pos": [838, 307, 123.9],
             "health_mult": 2.5

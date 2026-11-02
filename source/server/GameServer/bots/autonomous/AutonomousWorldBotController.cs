@@ -729,6 +729,9 @@ namespace DOL.GS
                     if (FollowDarknessFallsCampRoute(bot)) return true;
                 }
                 if (_camp == null) return true; // the route step above may abandon the camp
+                // A dynamic event moves (a march, the next stage) and has rests between its stages: follow it, and stay
+                // with it until it is over (RefreshEventCamp).
+                if (_camp.Id.StartsWith("event:", StringComparison.Ordinal) && !RefreshEventCamp(bot)) return true;
                 int campDistance = Distance(bot.X, bot.Y, _camp.X, _camp.Y);
                 // Intercept before walking onto the spawn's camp coordinate.
                 // The old arrival-first order placed melee tanks inside packs
@@ -2703,8 +2706,65 @@ namespace DOL.GS
             return false;
         }
 
+        // ---------------------------------------------------------------- dynamic events (scripts/dynamicevents)
+
+        /// <summary>The event camp follows its chain: where it is now (the stage's spot, the marching giver) and what to
+        /// fight there. False (and the camp dropped) once the chain is over.</summary>
+        private bool RefreshEventCamp(GameBot bot)
+        {
+            string id = _camp.Id.Substring("event:".Length);
+            if (!DynamicEvents.DynamicEventManager.BotEventFocus(id, bot, out Vector3 at, out GameNPC foe, out string doing))
+            {
+                AutonomousGoalDiagnostics.End(bot, GoalAttemptEnd.Expired, "The event is over");
+                SetStatus(bot, "Event over", GoalText(), "The event this bot was helping with has ended", string.Empty, _camp.ZoneName);
+                _camp = null;
+                _campStartedTick = 0;
+                _nextPlanTick = 0;
+                if (bot.PersistentRecord != null)
+                    bot.PersistentRecord.CurrentCampId = string.Empty;
+                return false;
+            }
+            _camp = _camp with { X = (int) at.X, Y = (int) at.Y, Z = (int) at.Z, MonsterName = foe?.Name ?? _camp.MonsterName };
+            _eventDoing = doing;
+            return true;
+        }
+
+        private string _eventDoing = string.Empty;
+
+        /// <summary>At an event: fight its nearest monster; otherwise (a rest, a march) stay with it and recover.</summary>
+        private bool WorkEventCamp(BotBrain brain, GameBot bot)
+        {
+            if (brain.CheckHeals())
+                return true;
+            string id = _camp.Id.Substring("event:".Length);
+            if (!DynamicEvents.DynamicEventManager.BotEventFocus(id, bot, out Vector3 at, out GameNPC foe, out string doing))
+            {
+                RefreshEventCamp(bot);
+                return true;
+            }
+            AutonomousStuckWatchdog.MarkProgress(bot, eAutonomousProgressKind.Objective);
+            if (foe != null)
+            {
+                if (brain.HasAggro)
+                    return false;                                // already fighting: the brain carries on
+                bot.StopMovingOnPath();
+                bot.StopMoving();
+                bot.TargetObject = foe;
+                brain.AddToAggroList(foe, Math.Max(25, foe.EffectiveLevel * 10));
+                brain.FSM.SetCurrentState(eFSMStateType.AGGRO);
+                SetStatus(bot, $"Fighting {foe.Name}", GoalText(), doing, foe.Name, _camp.ZoneName);
+                return false;
+            }
+            if (HandleCampRecovery(bot, false))
+                return true;
+            SetStatus(bot, "With the event", GoalText(), doing, _camp.MonsterName, _camp.ZoneName);
+            return true;
+        }
+
         private bool WorkCamp(BotBrain brain, GameBot bot)
         {
+            if (_camp.Id.StartsWith("event:", StringComparison.Ordinal))
+                return WorkEventCamp(brain, bot);
             if (HoldBeforeNewGroupPull(brain, bot)) return true;
             if (bot.GoalDiagnosticAttempt is { ArrivedUtc: null } attempt)
                 attempt.Arrive(DateTime.UtcNow);

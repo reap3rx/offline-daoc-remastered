@@ -55,7 +55,7 @@
           "boss": {
             "template": 12874,
             "name": "Old Tregeagle",
-            "level": 27,
+            "level": 26,
             "size": 32,
             "pos": [674, 971, 139.2],
             "health_mult": 2.5
@@ -191,7 +191,7 @@
           "boss": {
             "template": 12830,
             "name": "Greyjaw of the Moor",
-            "level": 20,
+            "level": 19,
             "size": 91,
             "pos": [1221, 927, 126.3],
             "health_mult": 2.5
@@ -272,7 +272,7 @@
           "boss": {
             "template": 12825,
             "name": "The Boneheap Rooter",
-            "level": 37,
+            "level": 36,
             "size": 84,
             "pos": [776, 1311, 168.8],
             "health_mult": 2.5

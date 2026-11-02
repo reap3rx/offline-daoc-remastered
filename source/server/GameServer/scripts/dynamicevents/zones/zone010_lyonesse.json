@@ -60,7 +60,7 @@
           "boss": {
             "template": 50015,
             "name": "The Black Knight of Lyonesse",
-            "level": 52,
+            "level": 51,
             "size": 78,
             "pos": [1124, 1183, 74.6],
             "health_mult": 2.5
@@ -186,7 +186,7 @@
           "boss": {
             "template": 12974,
             "name": "The Drowned Peallaidh",
-            "level": 42,
+            "level": 41,
             "size": 71,
             "pos": [1269, 600, 81.1],
             "health_mult": 2.5
@@ -267,7 +267,7 @@
           "boss": {
             "template": 10142,
             "name": "The Lich of the Sunken Moor",
-            "level": 51,
+            "level": 50,
             "size": 110,
             "pos": [1037, 933, 68.9],
             "health_mult": 2.5

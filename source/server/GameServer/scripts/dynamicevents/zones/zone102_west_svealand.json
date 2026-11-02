@@ -60,7 +60,7 @@
           "boss": {
             "template": 60158532,
             "name": "Hjalmar Blood-Oath",
-            "level": 21,
+            "level": 20,
             "size": 74,
             "pos": [417, 1182, 114.2],
             "health_mult": 2.5
@@ -196,7 +196,7 @@
           "boss": {
             "template": 60158521,
             "name": "Ulf the Faithless",
-            "level": 18,
+            "level": 17,
             "size": 70,
             "pos": [893, 1100, 139.7],
             "health_mult": 2.5
@@ -235,7 +235,7 @@
       "giver": {
         "name": "Huscarl Bjorn",
         "template": 60167654,
-        "level": 22,
+        "level": 15,
         "model": 156,
         "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
         "guild": "Vindsaul Faste",
@@ -251,7 +251,7 @@
         {
           "name": "Viking",
           "template": 60167654,
-          "level": 16,
+          "level": 14,
           "model": 156,
           "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
           "guild": "Vindsaul Faste",
@@ -353,7 +353,7 @@
           "boss": {
             "template": 60166190,
             "name": "The Elder Skogsfru",
-            "level": 17,
+            "level": 16,
             "size": 70,
             "pos": [642, 275, 146.9],
             "health_mult": 2.5

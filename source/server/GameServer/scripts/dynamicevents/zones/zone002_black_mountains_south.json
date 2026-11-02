@@ -60,7 +60,7 @@
           "boss": {
             "template": 12171,
             "name": "Gruk the Net-Master",
-            "level": 9,
+            "level": 8,
             "size": 57,
             "pos": [426, 460, 56.2],
             "health_mult": 2.5
@@ -186,7 +186,7 @@
           "boss": {
             "template": 12199,
             "name": "Brannoc Redbeard",
-            "level": 11,
+            "level": 10,
             "size": 58,
             "pos": [1463, 397, 49.7],
             "health_mult": 2.5
@@ -225,7 +225,7 @@
       "giver": {
         "name": "Veteran Guard Osric",
         "template": 60167625,
-        "level": 16,
+        "level": 9,
         "model": 27,
         "equipment": "afbf0cbc-36a3-4471-b32a-057ae99619db",
         "guild": "Humberton Guard",
@@ -241,7 +241,7 @@
         {
           "name": "Veteran Guard",
           "template": 60167625,
-          "level": 10,
+          "level": 8,
           "model": 27,
           "equipment": "afbf0cbc-36a3-4471-b32a-057ae99619db",
           "guild": "Humberton Guard",
@@ -338,7 +338,7 @@
           "boss": {
             "template": 12361,
             "name": "Black Tom the Highwayman",
-            "level": 11,
+            "level": 10,
             "size": 65,
             "pos": [916, 777, 58.4],
             "health_mult": 2.5

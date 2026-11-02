@@ -60,7 +60,7 @@
           "boss": {
             "template": 60166181,
             "name": "Captain Hrafn of the Drowned",
-            "level": 8,
+            "level": 7,
             "size": 67,
             "pos": [1057, 584, 118.9],
             "health_mult": 2.5
@@ -195,7 +195,7 @@
           "boss": {
             "template": 60162172,
             "name": "Snaggletooth",
-            "level": 11,
+            "level": 10,
             "size": 70,
             "pos": [842, 1159, 114.6],
             "health_mult": 2.5
@@ -233,7 +233,7 @@
       "rest_s": 45,
       "giver": {
         "name": "Flayer Kegnar",
-        "level": 23,
+        "level": 16,
         "model": 138,
         "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b",
         "guild": "Fort Atla",
@@ -248,7 +248,7 @@
       "guards": [
         {
           "name": "Flayer",
-          "level": 17,
+          "level": 15,
           "model": 138,
           "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b",
           "guild": "Fort Atla",
@@ -345,7 +345,7 @@
           "boss": {
             "template": 60167946,
             "name": "Wildling Chieftain Skarn",
-            "level": 18,
+            "level": 17,
             "size": 83,
             "pos": [360, 581, 118.9],
             "health_mult": 2.5

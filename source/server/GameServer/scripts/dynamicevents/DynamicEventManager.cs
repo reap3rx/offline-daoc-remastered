@@ -170,7 +170,7 @@ namespace DOL.GS.DynamicEvents
                     id = c.Def.Id, title = c.Def.Title, stage = s.Def.Name, kind = s.Def.Type, objective = s.Def.Objective,
                     line = s.ProgressLine, progress = Math.Round(s.Progress, 3), time_left = s.TimeLeft,
                     x = Math.Round(c.ZoneMetresX(s.Center.X), 1), y = Math.Round(c.ZoneMetresY(s.Center.Y), 1),
-                    r = s.Def.Radius, zone, levels = c.Def.Levels, scaled = s.TargetLevel, near, state = "active"
+                    r = s.Def.Radius, zone, levels = c.Def.Levels, near, state = "active"
                 };
             }
             if (c.PendingId != null)
@@ -261,6 +261,52 @@ namespace DOL.GS.DynamicEvents
             return true;
         }
 
+        /// <summary>Where a bot helping a chain should be now and what it should fight (owner 2026-11-02: a bot "left just
+        /// before the last event ... during one of the resting period. They might need a bit more awareness that events
+        /// have stages"). False when the chain is over: the bot may go. While it runs - a stage, the rest between
+        /// stages, a march - the bot stays with it: the stage's spot (or the giver), the nearest of its monsters.</summary>
+        public static bool BotEventFocus(string chainId, GameBot bot, out Vector3 at, out GameNPC foe, out string doing)
+        {
+            at = default;
+            foe = null;
+            doing = "";
+            ChainRuntime c = Chains.FirstOrDefault(x => x.Def.Id == chainId);
+            if (c == null || bot == null || c.Region != bot.CurrentRegion)
+                return false;
+            long now = Now;
+            if (c.Stage != null)
+            {
+                at = c.Def.Giver != null && c.Leader != null && c.Stage.Def.Type is "escort" or "defend"
+                    ? new Vector3(c.Leader.X, c.Leader.Y, c.Leader.Z) : c.Stage.Center;
+                foe = c.Stage.Spawned.Where(n => n.IsEnemy && n.IsAlive && n.ObjectState == GameObject.eObjectState.Active &&
+                        bot.IsWithinRadius(n, 3000))
+                    .OrderBy(n => n.GetDistanceTo(bot)).FirstOrDefault();
+                doing = $"{c.Def.Title}: {c.Stage.Def.Objective}";
+            }
+            else if (c.PendingId != null)
+            {
+                StageDef next = c.Def.Stages.First(st => st.Id == c.PendingId);
+                at = c.Leader != null ? new Vector3(c.Leader.X, c.Leader.Y, c.Leader.Z)
+                    : next.Center != null ? c.ToWorld(next.Center, false) : c.WakePoint;
+                doing = $"{c.Def.Title}: resting before {next.Name}";
+            }
+            else if (c.Dormant)
+            {
+                at = c.WakePoint;
+                doing = $"{c.Def.Title}: looking into the disturbance";
+            }
+            else if (c.Def.Giver != null && c.Leader != null && now >= c.GiverReadyAt)
+            {
+                at = new Vector3(c.Giver.X, c.Giver.Y, c.Giver.Z);
+                doing = $"{c.Def.Title}: going to {c.Giver.Name}";
+            }
+            else
+                return false;
+            if (_botsAt.TryGetValue(c, out var mine))
+                mine[bot] = now + 10 * 60_000;                  // still with it
+            return true;
+        }
+
         /// <summary>A bot sent to a waiting giver that has got there takes them up on it.</summary>
         static void BotsAtGivers()
         {
@@ -296,8 +342,9 @@ namespace DOL.GS.DynamicEvents
 
     [CmdAttribute("&events", ePrivLevel.Player,
         "Dynamic events in your zone",
-        "/events - what's happening in this zone",
-        "/events start <id> - start an event now (testing)",
+        "/events - the events window: this zone's events, to start, wake or stop (testing)",
+        "/events list - what's happening in this zone, in the chat",
+        "/events start <id> [stage] - start an event now, at a stage if given (testing)",
         "/events stop <id> - end an event now (testing)",
         "/events wake <id> - make it a disturbance now, waiting for someone to come near (testing)")]
     public class DynamicEventsCommandHandler : Commands.AbstractCommandHandler, Commands.ICommandHandler
@@ -324,11 +371,36 @@ namespace DOL.GS.DynamicEvents
                 if (args[1] == "start")
                 {
                     if (c.Active) { DisplayMessage(client, $"{c.Def.Title} is already running."); return; }
-                    c.Begin(c.Def.Start, now);
+                    // (a stage id after the event's: start there - testing a chain's later stages)
+                    string from = args.Length >= 4 && c.Def.Stages.Any(st => st.Id == args[3]) ? args[3] : c.Def.Start;
+                    c.Begin(from, now);
                 }
                 else
+                {
+                    if (!c.Active && !c.Dormant) { DisplayMessage(client, $"{c.Def.Title} isn't running."); return; }
                     c.End("fail", now);
+                }
                 DisplayMessage(client, $"{c.Def.Title}: {(args[1] == "start" ? "started" : "stopped")}.");
+                return;
+            }
+            if (args.Length < 2 || args[1] == "window")
+            {
+                // (owner 2026-11-02: "a window that comes up when I type /events where I can just click on an event and
+                // spawn it in the region I'm in") - the new client opens it from this line (game/ui/events_window.gd)
+                long t = Environment.TickCount64;
+                var rows = here.Select(c => new
+                {
+                    id = c.Def.Id, title = c.Def.Title, levels = c.Def.Levels, giver = c.Def.Giver?.Name ?? "",
+                    stages = c.Def.Stages.Count,
+                    state = c.Stage != null ? "running: " + c.Stage.Def.Name
+                        : c.PendingId != null ? "resting"
+                        : c.Dormant ? "disturbance"
+                        : c.Def.Giver != null ? (c.Leader != null && t >= c.GiverReadyAt ? "giver waiting" : "giver resting")
+                        : $"quiet ({Math.Max(0, (c.NextStart - t) / 60000)} min)",
+                    active = c.Active
+                }).ToList();
+                p.Out.SendMessage("#EVL|" + JsonConvert.SerializeObject(new { zone = p.CurrentZone?.Description ?? "", events = rows }),
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
             }
             if (here.Count == 0) { DisplayMessage(client, "No events in this zone."); return; }

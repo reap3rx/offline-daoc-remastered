@@ -60,7 +60,7 @@
           "boss": {
             "template": 60165946,
             "name": "Dubhan the Sheevra Chief",
-            "level": 18,
+            "level": 17,
             "size": 70,
             "pos": [1134, 1020, 185.6],
             "health_mult": 2.5
@@ -186,7 +186,7 @@
           "boss": {
             "template": 60161575,
             "name": "The Gray Lady of Silvermine",
-            "level": 27,
+            "level": 26,
             "size": 41,
             "pos": [466, 1263, 130.8],
             "health_mult": 2.5
@@ -225,7 +225,7 @@
       "giver": {
         "name": "Sentinel Aodh",
         "template": 60165767,
-        "level": 27,
+        "level": 20,
         "model": 365,
         "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
         "guild": "Sentinels of Ardagh",
@@ -241,7 +241,7 @@
         {
           "name": "Sentinel",
           "template": 60165767,
-          "level": 21,
+          "level": 19,
           "model": 365,
           "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
           "guild": "Sentinels of Ardagh",
@@ -322,7 +322,7 @@
           "boss": {
             "template": 60166484,
             "name": "Spraggon Chief Nuadh",
-            "level": 22,
+            "level": 21,
             "size": 44,
             "pos": [451, 142, 130.3],
             "health_mult": 2.5

@@ -55,7 +55,7 @@
           "boss": {
             "template": 60164910,
             "name": "The Burning Wickerman",
-            "level": 33,
+            "level": 32,
             "size": 67,
             "pos": [784, 325, 131.2],
             "health_mult": 2.5
@@ -191,7 +191,7 @@
           "boss": {
             "template": 60168131,
             "name": "Elder Irewood",
-            "level": 31,
+            "level": 30,
             "size": 67,
             "pos": [501, 546, 166.8],
             "health_mult": 2.5
@@ -230,7 +230,7 @@
       "giver": {
         "name": "Sentinel Andreasa",
         "template": 60165770,
-        "level": 15,
+        "level": 8,
         "model": 389,
         "equipment": "d8359758-1be0-4703-95f9-4e17bbb88a2b",
         "guild": "Sentinels of Basar",
@@ -246,7 +246,7 @@
         {
           "name": "Sentinel",
           "template": 60165770,
-          "level": 9,
+          "level": 7,
           "model": 389,
           "equipment": "d8359758-1be0-4703-95f9-4e17bbb88a2b",
           "guild": "Sentinels of Basar",
@@ -340,7 +340,7 @@
           "boss": {
             "template": 60167968,
             "name": "Cathal of the Four Winds",
-            "level": 10,
+            "level": 9,
             "size": 67,
             "pos": [1324, 883, 126.0],
             "health_mult": 2.5

@@ -372,6 +372,7 @@ func _build() -> void:
 	_build_poisons()
 	_build_potions()
 	_build_ac_styles()
+	_build_events()
 	_build_guild()
 	PlayerData.window_toggle.connect(func(id: String):
 		if windows.has(id):
@@ -925,6 +926,26 @@ func _build_ac_styles() -> void:
 	ac_styles.setup("ac_styles", "interact", Rect2(), at)
 	_add(ac_styles, at, false)
 	ac_styles.build()
+
+
+const EventsWindow := preload("res://game/ui/events_window.gd")
+var events_window: ClassicWindow
+
+
+## The /events window: the zone's events to start, wake or stop (testing).
+func _build_events() -> void:
+	if not Server.active:
+		return
+	events_window = EventsWindow.new()
+	events_window.resizable = true
+	events_window.patch = [6, 19, 13, 33]
+	events_window.min_size = EventsWindow.BODY
+	events_window.max_size = EventsWindow.BODY
+	events_window.size = EventsWindow.BODY
+	var at := Vector2(area().x * 0.5 - 210, area().y * 0.5 - 150)
+	events_window.setup("events", "interact", Rect2(), at)
+	_add(events_window, at, false)
+	events_window.build()
 
 
 const PotionWindow := preload("res://game/ui/potion_window.gd")

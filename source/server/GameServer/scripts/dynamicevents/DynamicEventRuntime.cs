@@ -153,7 +153,8 @@ namespace DOL.GS.DynamicEvents
         public readonly List<EventNpc> Guards = new();
         public long GiverReadyAt;
         public ushort GiverHeading;
-        bool _running;                               // between Begin and End (stages and rests)
+        bool _running;
+        public readonly List<(GameObject obj, long until)> Lingering = new();   // gone after a while (a thank-you, a banner)                               // between Begin and End (stages and rests)
 
         public ChainRuntime(ChainDef def, Region region, Zone zone, long now)
         {
@@ -204,6 +205,13 @@ namespace DOL.GS.DynamicEvents
 
         public void Tick(long now)
         {
+            for (int i = Lingering.Count - 1; i >= 0; i--)
+                if (now >= Lingering[i].until)
+                {
+                    if (Lingering[i].obj.ObjectState == GameObject.eObjectState.Active)
+                        Lingering[i].obj.RemoveFromWorld();
+                    Lingering.RemoveAt(i);
+                }
             if (Def.Giver != null)
                 KeepGiver(now);
             if (Stage == null)
@@ -279,7 +287,13 @@ namespace DOL.GS.DynamicEvents
             LastOutcomeUntil = now + 30_000;
             NextStart = now + 1000L * Util.Random(Def.IntervalS[0], Def.IntervalS[Math.Min(1, Def.IntervalS.Length - 1)]);
             if (Def.Giver != null)
+            {
+                if (Leader != null)
+                    NpcSpeech.Say(Leader, outcome == "success"
+                        ? Def.Giver.Thanks ?? $"We did it - well fought, all of you. {(string.IsNullOrEmpty(Leader.GuildName) ? "Everyone" : "The " + Leader.GuildName)} will hear what you did today."
+                        : Def.Giver.Regret ?? "Fall back! We'll try again another day.");
                 ComeHome(now);
+            }
         }
 
         // ---------------------------------------------------------------- the giver and their party
@@ -349,12 +363,11 @@ namespace DOL.GS.DynamicEvents
                 if (g.ObjectState == GameObject.eObjectState.Active)
                     g.RemoveFromWorld();
             Guards.Clear();
-            int lvl = Math.Max(Def.Giver.Level, StageRuntime.TargetLevelAround(this, new Point3D(Giver.X, Giver.Y, Giver.Z), 1500));
             foreach (NpcDef gd in Def.Guards)
                 for (int i = 0; i < Math.Max(1, gd.Count); i++)
                 {
                     var at = Around(new Vector3(Giver.X, Giver.Y, Giver.Z), 250);
-                    EventNpc g = MakeNpc(gd, EventRole.Ally, at, Math.Max(gd.Level, lvl - 1));
+                    EventNpc g = MakeNpc(gd, EventRole.Ally, at, gd.Level);
                     if (g == null)
                         continue;
                     g.HealthMult = Math.Max(1, gd.HealthMult);
@@ -362,11 +375,6 @@ namespace DOL.GS.DynamicEvents
                     ((EventAllyBrain) g.Brain).Follow = Giver;
                     Guards.Add(g);
                 }
-            if (Giver.Level < lvl)
-            {
-                Giver.Level = (byte) lvl;
-                Giver.Health = Giver.MaxHealth;
-            }
             if (Giver.Brain is EventAllyBrain b)
                 b.Home = null;
         }
@@ -375,6 +383,12 @@ namespace DOL.GS.DynamicEvents
         /// is back there after the cooldown).</summary>
         void ComeHome(long now)
         {
+            foreach (var (obj, _) in Lingering.Where(l => l.obj is GameStaticItem).ToList())
+            {
+                if (obj.ObjectState == GameObject.eObjectState.Active)
+                    obj.RemoveFromWorld();
+                Lingering.RemoveAll(l => l.obj == obj);
+            }
             foreach (EventNpc g in Guards)
                 if (g.ObjectState == GameObject.eObjectState.Active)
                     g.RemoveFromWorld();
@@ -500,7 +514,6 @@ namespace DOL.GS.DynamicEvents
         Vector3? _leadTo;                            // the giver's party is on its way to this stage's spot
         long _leadNext;
         public double Scale = 1;
-        public int TargetLevel;                      // the level of the people here: the stage's monsters scale up to it
         public static bool DEBUG_TRACE = false;      // (the defend stage logs its monsters every 10 s)
 
         public StageRuntime(ChainRuntime chain, StageDef def, long now)
@@ -522,7 +535,6 @@ namespace DOL.GS.DynamicEvents
                 : Def.Center != null ? Chain.ToWorld(Def.Center)
                 : Chain.Leader != null ? LeaderSpot : Vector3.Zero;
             Scale = ComputeScale();
-            TargetLevel = TargetLevelAround(Chain, CenterPoint, RadiusUnits * 1.5 + 2400);
             switch (Def.Type)
             {
                 case "cull":
@@ -532,10 +544,13 @@ namespace DOL.GS.DynamicEvents
                 case "defend":
                     if (Def.ProtectLeader && Chain.Leader != null)
                     {
+                        // (owner 2026-11-02: the ranger "stood still during the defend the flag portion ... no flag was
+                        // placed": the walk was one order a fight could cancel) - kept walking to the spot, then the banner
                         Protect = Chain.Leader;
                         if (Protect.Brain is EventAllyBrain b)
                             b.Steered = true;
-                        Protect.PathTo(Center, (short) Math.Max(120, Protect.MaxSpeed * 0.8));
+                        _leadTo = Center;
+                        _leadNext = 0;
                     }
                     else
                         Protect = SpawnNpc(Def.Protect, EventRole.Protect);
@@ -560,7 +575,6 @@ namespace DOL.GS.DynamicEvents
             if (Def.Type == "escort" && Chain.Leader != null)
                 Center = LeaderSpot;
             Scale = ComputeScale();
-            TargetLevel = Math.Max(TargetLevel, TargetLevelAround(Chain, CenterPoint, RadiusUnits * 1.5 + 2400));
             foreach (GameLiving p in Chain.PeopleNear(CenterPoint, RadiusUnits * 1.3))
                 _presence[p] = _presence.TryGetValue(p, out int s) ? s + 1 : 1;
             Spawned.RemoveAll(n => n == null || n.ObjectState == GameObject.eObjectState.Deleted);
@@ -687,12 +701,26 @@ namespace DOL.GS.DynamicEvents
         /// "did not move at all ... did not help us with the boss").</summary>
         void LeadPartyHere()
         {
-            if (Chain.Leader is not EventNpc lead || lead == Protect || Def.Type == "escort")
+            if (Chain.Leader is not EventNpc lead || Def.Type == "escort" || (Def.Type == "defend" && Def.ProtectLeader))
                 return;
             if (lead.Brain is EventAllyBrain b)
                 b.Steered = true;
             _leadTo = Chain.Around(Center, Math.Min(RadiusUnits * 0.4, 600));
             _leadNext = 0;
+        }
+
+        /// <summary>The leader plants the stage's banner where they stand: it stays until the party goes home.</summary>
+        void PlantFlag(EventNpc lead)
+        {
+            var flag = new GameStaticItem
+            {
+                Model = (ushort) Def.Flag,
+                Name = Def.FlagName ?? $"Banner of {lead.GuildName}",
+                X = lead.X + 40, Y = lead.Y, Z = lead.Z, Heading = lead.Heading, CurrentRegion = lead.CurrentRegion
+            };
+            if (flag.AddToWorld())
+                Chain.Lingering.Add((flag, long.MaxValue));
+            NpcSpeech.Say(lead, "The banner stands! Hold here - don't let them reach it!");
         }
 
         void KeepLeading()
@@ -703,6 +731,8 @@ namespace DOL.GS.DynamicEvents
             if (lead.IsWithinRadius(new Point3D((int) to.X, (int) to.Y, (int) to.Z), 250))
             {
                 _leadTo = null;                         // there: they stand and fight (the brain still takes on foes)
+                if (Def.Flag > 0 && lead == Protect)
+                    PlantFlag(lead);
                 return;
             }
             if (!lead.InCombat && (lead.Brain as StandardMobBrain)?.HasAggro != true && !lead.IsMoving)
@@ -722,6 +752,12 @@ namespace DOL.GS.DynamicEvents
             foreach (EventNpc n in Spawned.ToList())
             {
                 n.Stage = null;
+                if (won && n == Protect && n.IsAlive && n.Role == EventRole.Protect)
+                {
+                    NpcSpeech.Say(n, Def.Thanks ?? "Thank you - I'd never have lived through that on my own.");
+                    Chain.Lingering.Add((n, _now + 20_000));
+                    continue;
+                }
                 if (n.IsAlive && n.ObjectState == GameObject.eObjectState.Active)
                     n.RemoveFromWorld();
             }
@@ -761,24 +797,13 @@ namespace DOL.GS.DynamicEvents
 
         // ---------------------------------------------------------------- spawning (scaled to who is here)
 
-        /// <summary>The level of the people at an event: the middle of the players' and bots' levels near it (0: nobody).
-        /// Its monsters come at that level when it is above theirs (owner 2026-11-02: every event worth doing at any
-        /// level - rewards and drops at your level).</summary>
-        public static int TargetLevelAround(ChainRuntime chain, Point3D p, double r)
-        {
-            int[] levels = chain.PeopleNear(p, r).Select(l => (int) l.Level).OrderBy(l => l).ToArray();
-            return levels.Length == 0 ? 0 : levels[levels.Length / 2];
-        }
-
         int MobLevel(int[] range)
         {
             int lo = range == null || range.Length == 0 ? 1 : range[0];
             int hi = range == null || range.Length < 2 ? lo : range[1];
-            int roll = Util.Random(lo, hi);
-            if (TargetLevel <= hi)
-                return roll;
-            // above the event's own levels: the same spread, ending just under the people here
-            return Math.Max(roll, TargetLevel - 1 - (hi - roll) / 2);
+            // the event's own level, always (owner 2026-11-02: an event "scaled up" to a level-42 bot was too hard for the
+            // lower players there - higher people are scaled down instead: gameutils/LevelScaling.cs)
+            return Util.Random(lo, hi);
         }
 
         static MobDef Pick(List<MobDef> mobs) => mobs[Util.Random(mobs.Count - 1)];
@@ -801,7 +826,7 @@ namespace DOL.GS.DynamicEvents
             if (d == null)
                 return null;
             Vector3 at = d.Pos != null ? Chain.ToWorld(d.Pos) : Center;
-            int level = role == EventRole.Boss ? Math.Max(d.Level, TargetLevel + 1) : Math.Max(d.Level, TargetLevel);
+            int level = d.Level;
             var npc = Chain.MakeNpc(d, role, at, level, this);
             if (npc == null)
                 return null;

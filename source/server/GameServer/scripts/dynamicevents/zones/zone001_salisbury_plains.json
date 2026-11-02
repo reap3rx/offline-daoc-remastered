@@ -60,7 +60,7 @@
           "boss": {
             "template": 12734,
             "name": "Corwin the Graverobber",
-            "level": 20,
+            "level": 19,
             "size": 67,
             "pos": [273, 979, 55.6],
             "health_mult": 2.5
@@ -196,7 +196,7 @@
           "boss": {
             "template": 12690,
             "name": "The Hollow King",
-            "level": 17,
+            "level": 16,
             "size": 65,
             "pos": [492, 865, 55.2],
             "health_mult": 2.5
@@ -235,7 +235,7 @@
       "giver": {
         "name": "Guard Eiddef",
         "template": 60161738,
-        "level": 24,
+        "level": 17,
         "model": 28,
         "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f",
         "guild": "Salisbury Watch",
@@ -251,7 +251,7 @@
         {
           "name": "Guard",
           "template": 60161738,
-          "level": 18,
+          "level": 16,
           "model": 28,
           "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f",
           "guild": "Salisbury Watch",
@@ -344,7 +344,7 @@
           "boss": {
             "template": 12730,
             "name": "Gnarlroot the Howler",
-            "level": 19,
+            "level": 18,
             "size": 65,
             "pos": [349, 1425, 54.5],
             "health_mult": 2.5

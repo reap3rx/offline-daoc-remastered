@@ -60,7 +60,7 @@
           "boss": {
             "template": 12105,
             "name": "Cadarn of the Hills",
-            "level": 15,
+            "level": 14,
             "size": 75,
             "pos": [329, 867, 102.0],
             "health_mult": 2.5
@@ -196,7 +196,7 @@
           "boss": {
             "template": 12095,
             "name": "The Foreman's Shade",
-            "level": 15,
+            "level": 14,
             "size": 62,
             "pos": [726, 655, 165.3],
             "health_mult": 2.5
@@ -235,7 +235,7 @@
       "giver": {
         "name": "Watch Captain Bryce",
         "template": 60167624,
-        "level": 25,
+        "level": 18,
         "model": 28,
         "equipment": "3663a9bf-6ed9-4dff-96c3-f1915ba77331",
         "guild": "Swanton Watch",
@@ -251,7 +251,7 @@
         {
           "name": "Veteran Guard",
           "template": 60167624,
-          "level": 19,
+          "level": 17,
           "model": 28,
           "equipment": "3663a9bf-6ed9-4dff-96c3-f1915ba77331",
           "guild": "Swanton Watch",
@@ -347,7 +347,7 @@
           "boss": {
             "template": 12092,
             "name": "Maud the Smuggler Queen",
-            "level": 20,
+            "level": 19,
             "size": 75,
             "pos": [1180, 595, 304.5],
             "health_mult": 2.5

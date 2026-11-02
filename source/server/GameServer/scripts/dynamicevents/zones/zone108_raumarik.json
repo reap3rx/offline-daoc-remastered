@@ -55,7 +55,7 @@
           "boss": {
             "template": 60162362,
             "name": "Icestrider Hrimfaxi",
-            "level": 49,
+            "level": 48,
             "size": 68,
             "pos": [1304, 374, 116.4],
             "health_mult": 2.5
@@ -181,7 +181,7 @@
           "boss": {
             "template": 60161108,
             "name": "Frore Lich Vetrarr",
-            "level": 56,
+            "level": 55,
             "size": 67,
             "pos": [303, 146, 221.8],
             "health_mult": 2.5

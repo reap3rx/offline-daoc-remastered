@@ -55,7 +55,7 @@
           "boss": {
             "template": 12019,
             "name": "The Ghoul Lord of Avalon",
-            "level": 21,
+            "level": 20,
             "size": 70,
             "pos": [444, 509, 63.8],
             "health_mult": 2.5
@@ -191,7 +191,7 @@
           "boss": {
             "template": 12007,
             "name": "Mudgrip the Bog-Chief",
-            "level": 14,
+            "level": 13,
             "size": 74,
             "pos": [1064, 626, 48.2],
             "health_mult": 2.5
@@ -230,7 +230,7 @@
       "giver": {
         "name": "Guardian Sergeant Lyle",
         "template": 60161835,
-        "level": 22,
+        "level": 15,
         "model": 74,
         "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
         "guild": "Guardians of Caer Witrin",
@@ -246,7 +246,7 @@
         {
           "name": "Guardian",
           "template": 60161835,
-          "level": 16,
+          "level": 14,
           "model": 74,
           "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
           "guild": "Guardians of Caer Witrin",
@@ -343,7 +343,7 @@
           "boss": {
             "template": 12032,
             "name": "The Mire Colossus",
-            "level": 17,
+            "level": 16,
             "size": 96,
             "pos": [608, 1292, 44.8],
             "health_mult": 2.5

@@ -16,7 +16,10 @@ who takes part, and scale with the people there. A zone's events are one JSON fi
    | `boss` | defeat `boss` within `time_s`; `adds` join while it fights | `boss`, `adds` |
    | `escort` | go with the chain's giver along `path`; they walk only while someone is with them | `path`, `ambushes` (`at`: the path point, `say`) |
 
-   A `defend` stage with `"protect_leader": true` protects the giver instead of a spawned NPC.
+   A `defend` stage with `"protect_leader": true` protects the giver instead of a spawned NPC: they walk to its
+   `center` (the party with them) and, with `"flag": <item model>` (`flag_name`), plant a banner there that stands
+   until the party goes home. A defend's protected NPC stays a little after a win to thank you (`thanks`); a giver
+   has the last word when the chain ends (`thanks` / `regret` on the giver, a default otherwise).
 
    `on_success` / `on_fail` name the next stage (or `end`); `rest_s` (default 30) is the breather before it.
    `reward`: `xp_pct` (of a level, at gold), `copper_per_level`, and `items`, each with gold and silver chances.
@@ -50,26 +53,35 @@ spec and run it again, or edit the zone's JSON by hand.
 
 ## Levels
 
-`levels` is who the chain is meant for. Its monsters come at that level, or, when the players and bots taking part
-are higher, just under theirs (the middle of their levels); bosses two above. Rewards are a share of your level's
-experience and money by your level; reward items (`items`) come in the version for your level: `named_uniques.py`
-makes level versions (`<id>_l10` ... `_l50`) of every item marked `"scaled": true`.
+`levels` is who the chain is meant for, and it stays that way: its monsters, boss, giver and guards come at their
+own levels whoever turns up. What grows is the size of it: more monsters at once, bigger waves, more boss health
+with more people. Anyone above its top level is scaled down to that level + 1 against its monsters
+(`gameutils/LevelScaling.cs`: less damage out, more in - bots too), as in GW2; lower players are not lifted.
+Rewards are a share of your own level's experience and money; reward items (`items`) come in the version for your
+level: `named_uniques.py` makes level versions (`<id>_l10` ... `_l50`) of every item marked `"scaled": true`.
 
-## Scaling down
+The giver and their guards support, they don't carry: half damage to the event's monsters and half damage from them,
+so they hold out long enough for you to see they're in trouble.
 
-A player far above a zone fights its ordinary monsters as if only five levels above them (`gameutils/LevelScaling.cs`):
-less damage out, more in. Kills like that pay a tenth of their experience and keep one drop in five. An event's
-monsters pay in full and its rewards are paid at your level, so events are where an outleveled zone still pays.
+## Scaling down in the open world
+
+The same rule away from events: above a zone's top ordinary monster level (the level 95% of its monsters are at or
+under) you fight as that level + 1. Kills like that pay a tenth of their experience and keep one drop in five; an
+event's monsters and rewards pay in full.
 
 ## Bots
 
 Autonomous bots within about a zone of an event (running, resting, a disturbance or a giver) usually go and help
-(six to an event); they are paid in experience and money like players, and wake disturbances and accept givers.
+(six to an event); they are paid in experience and money like players, and wake disturbances and accept givers. A bot
+stays with its event until the chain is over - through the rests between stages and along a march - fighting its
+nearest monster and recovering in between (`AutonomousWorldBotController.RefreshEventCamp`).
 
 ## In game
 
-- `/events` lists the zone's events; `/events start <id>` and `/events stop <id>` run one now, `/events wake <id>`
-  makes it a disturbance now (for testing).
+- `/events` opens the events window (new client): your zone's events, each with START, WAKE and STOP. Typed:
+  `/events list`; `/events start <id> [stage]` (at a later stage, to test it), `/events stop <id>`, `/events wake <id>`
+  (a disturbance now).
+- Event NPCs speak in bubbles over their heads (`#SAY|` lines, `NpcSpeech.cs`); clicking a giver opens the NPC window.
 - The server sends the zone's events to the new client every 2 s (`#EV|` lines). The tracker (top right) shows the
   ones you are at; the map shows all of them. An event's monsters carry its title under their name.
 

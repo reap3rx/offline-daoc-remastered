@@ -60,7 +60,7 @@
           "boss": {
             "template": 60159247,
             "name": "Fomhor the Cliff Chief",
-            "level": 43,
+            "level": 42,
             "size": 67,
             "pos": [268, 755, 38.4],
             "health_mult": 2.5
@@ -186,7 +186,7 @@
           "boss": {
             "template": 60160937,
             "name": "The Fog Banshee",
-            "level": 33,
+            "level": 32,
             "size": 70,
             "pos": [524, 1122, 130.5],
             "health_mult": 2.5
@@ -225,7 +225,7 @@
       "giver": {
         "name": "Sentinel Cathal",
         "template": 60165764,
-        "level": 31,
+        "level": 24,
         "model": 387,
         "equipment": "8ff82eba-56ee-4e7b-b447-0fb4d488fe42",
         "guild": "Sentinels of Tir Urphost",
@@ -241,7 +241,7 @@
         {
           "name": "Sentinel",
           "template": 60165764,
-          "level": 25,
+          "level": 23,
           "model": 387,
           "equipment": "8ff82eba-56ee-4e7b-b447-0fb4d488fe42",
           "guild": "Sentinels of Tir Urphost",
@@ -335,7 +335,7 @@
           "boss": {
             "template": 60164135,
             "name": "The Great Distorter",
-            "level": 26,
+            "level": 25,
             "size": 70,
             "pos": [1213, 681, 130.0],
             "health_mult": 2.5

@@ -60,7 +60,7 @@
           "boss": {
             "template": 60167576,
             "name": "Gnarn Bone-Crown",
-            "level": 16,
+            "level": 15,
             "size": 76,
             "pos": [673, 340, 119.1],
             "health_mult": 2.5
@@ -196,7 +196,7 @@
           "boss": {
             "template": 60162266,
             "name": "The Huldu Queen",
-            "level": 8,
+            "level": 7,
             "size": 67,
             "pos": [1026, 1441, 118.2],
             "health_mult": 2.5
@@ -235,7 +235,7 @@
       "giver": {
         "name": "Karl Thorvald",
         "template": 60167667,
-        "level": 14,
+        "level": 7,
         "model": 158,
         "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
         "guild": "Mularn Guard",
@@ -251,7 +251,7 @@
         {
           "name": "Viking",
           "template": 60167667,
-          "level": 8,
+          "level": 6,
           "model": 158,
           "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
           "guild": "Mularn Guard",
@@ -360,7 +360,7 @@
           "boss": {
             "template": 60168024,
             "name": "The Wood-Eater Matriarch",
-            "level": 9,
+            "level": 8,
             "size": 50,
             "pos": [1072, 1068, 117.9],
             "health_mult": 2.5

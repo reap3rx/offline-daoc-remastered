@@ -55,7 +55,7 @@
           "boss": {
             "template": 13028,
             "name": "Captain Madog the Turncoat",
-            "level": 23,
+            "level": 22,
             "size": 71,
             "pos": [1365, 457, 158.5],
             "health_mult": 2.5
@@ -181,7 +181,7 @@
           "boss": {
             "template": 13001,
             "name": "The Huntsman of Annwn",
-            "level": 25,
+            "level": 24,
             "size": 71,
             "pos": [385, 1327, 158.7],
             "health_mult": 2.5
@@ -262,7 +262,7 @@
           "boss": {
             "template": 13034,
             "name": "Abbot Idwal the Unshriven",
-            "level": 33,
+            "level": 32,
             "size": 97,
             "pos": [1146, 225, 139.8],
             "health_mult": 2.5

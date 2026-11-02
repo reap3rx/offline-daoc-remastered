@@ -47,6 +47,8 @@ namespace DOL.GS.DynamicEvents
         public string Reply;                       // said when they set off
         public string Busy = "Not now - we've only just come back. Find me again a little later.";
         [JsonProperty("cooldown_s")] public int CooldownS = 600;
+        public string Thanks;                      // said when the chain is won (default: a word of thanks)
+        public string Regret;                      // said when it is lost
     }
 
     public class StageDef
@@ -70,6 +72,9 @@ namespace DOL.GS.DynamicEvents
         public WavesDef Adds;                      // boss: help it calls
         public List<double[]> Path = new();        // escort: the giver's way, point by point
         public List<AmbushDef> Ambushes = new();   // escort: who waits along it
+        public int Flag;                           // defend (protect_leader): the leader plants a banner (item model) at center
+        [JsonProperty("flag_name")] public string FlagName;
+        public string Thanks;                      // defend: what the one you kept alive says when it's over
         public string Success;
         public string Fail;
         [JsonProperty("on_success")] public string OnSuccess = "end";

@@ -55,7 +55,7 @@
           "boss": {
             "template": 12485,
             "name": "Sir Brennus the Forsworn",
-            "level": 13,
+            "level": 12,
             "size": 68,
             "pos": [1151, 440, 53.8],
             "health_mult": 2.5
@@ -191,7 +191,7 @@
           "boss": {
             "template": 12628,
             "name": "Mog the Ogre-Mystic",
-            "level": 18,
+            "level": 17,
             "size": 71,
             "pos": [401, 957, 45.4],
             "health_mult": 2.5
@@ -230,7 +230,7 @@
       "giver": {
         "name": "Magister Ithel",
         "template": 60163241,
-        "level": 20,
+        "level": 13,
         "model": 9,
         "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19",
         "guild": "Lethantis Association",
@@ -246,7 +246,7 @@
         {
           "name": "Lethantis Guard",
           "template": 60163241,
-          "level": 14,
+          "level": 12,
           "model": 9,
           "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19",
           "guild": "Lethantis Association",
@@ -342,7 +342,7 @@
           "boss": {
             "template": 12606,
             "name": "Chief Grubnose",
-            "level": 15,
+            "level": 14,
             "size": 68,
             "pos": [896, 432, 44.2],
             "health_mult": 2.5

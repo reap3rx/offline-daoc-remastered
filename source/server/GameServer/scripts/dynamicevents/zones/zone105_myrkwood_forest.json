@@ -55,7 +55,7 @@
           "boss": {
             "template": 60164060,
             "name": "Varg-Jarl Ulfhedinn",
-            "level": 24,
+            "level": 23,
             "size": 106,
             "pos": [624, 1027, 125.6],
             "health_mult": 2.5
@@ -191,7 +191,7 @@
           "boss": {
             "template": 20012,
             "name": "The Arachite High Priestess",
-            "level": 19,
+            "level": 18,
             "size": 39,
             "pos": [261, 553, 126.7],
             "health_mult": 2.5
@@ -230,7 +230,7 @@
       "giver": {
         "name": "Flayer Thrand",
         "template": 60167290,
-        "level": 21,
+        "level": 14,
         "model": 138,
         "equipment": "1c0869f4-c816-4b50-a873-0d0fd104dac2",
         "guild": "Galplen Guard",
@@ -246,7 +246,7 @@
         {
           "name": "Troll Flayer",
           "template": 60167290,
-          "level": 15,
+          "level": 13,
           "model": 138,
           "equipment": "1c0869f4-c816-4b50-a873-0d0fd104dac2",
           "guild": "Galplen Guard",
@@ -348,7 +348,7 @@
           "boss": {
             "template": 60159827,
             "name": "Rotgut the Undying",
-            "level": 16,
+            "level": 15,
             "size": 76,
             "pos": [1331, 1239, 118.6],
             "health_mult": 2.5

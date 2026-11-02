@@ -60,7 +60,7 @@
           "boss": {
             "template": 60161197,
             "name": "The Gan Ceanach Prince",
-            "level": 57,
+            "level": 56,
             "size": 70,
             "pos": [599, 291, 126.5],
             "health_mult": 2.5
@@ -186,7 +186,7 @@
           "boss": {
             "template": 60163224,
             "name": "Seamus the Crock-Keeper",
-            "level": 58,
+            "level": 57,
             "size": 70,
             "pos": [851, 361, 126.7],
             "health_mult": 2.5

@@ -55,7 +55,7 @@
           "boss": {
             "template": 60161871,
             "name": "Gurite Warchief Donnan",
-            "level": 42,
+            "level": 41,
             "size": 70,
             "pos": [272, 1436, 161.4],
             "health_mult": 2.5
@@ -181,7 +181,7 @@
           "boss": {
             "template": 60161603,
             "name": "The Great Luch",
-            "level": 31,
+            "level": 30,
             "size": 67,
             "pos": [214, 919, 161.4],
             "health_mult": 2.5
@@ -262,7 +262,7 @@
           "boss": {
             "template": 60159264,
             "name": "Old Cluricaun Ruadh",
-            "level": 27,
+            "level": 26,
             "size": 70,
             "pos": [1277, 350, 131.2],
             "health_mult": 2.5

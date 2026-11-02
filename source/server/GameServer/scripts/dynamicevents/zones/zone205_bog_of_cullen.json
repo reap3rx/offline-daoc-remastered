@@ -55,7 +55,7 @@
           "boss": {
             "template": 30007,
             "name": "The Siabra Marsh-Lord",
-            "level": 55,
+            "level": 54,
             "size": 65,
             "pos": [730, 516, 122.2],
             "health_mult": 2.5
@@ -191,7 +191,7 @@
           "boss": {
             "template": 60158590,
             "name": "The Cullen Bog-Horror",
-            "level": 50,
+            "level": 49,
             "size": 54,
             "pos": [500, 1303, 125.9],
             "health_mult": 2.5
@@ -230,7 +230,7 @@
       "giver": {
         "name": "Sentinel Muirne",
         "template": 60165763,
-        "level": 52,
+        "level": 45,
         "model": 383,
         "equipment": "05c1b6ca-3822-42b7-b457-1c2da8e8e306",
         "guild": "Sentinels of Siopa",
@@ -246,7 +246,7 @@
         {
           "name": "Sentinel",
           "template": 60165763,
-          "level": 46,
+          "level": 44,
           "model": 383,
           "equipment": "05c1b6ca-3822-42b7-b457-1c2da8e8e306",
           "guild": "Sentinels of Siopa",
@@ -337,7 +337,7 @@
           "boss": {
             "template": 60165995,
             "name": "Wayguard Captain Fiach",
-            "level": 47,
+            "level": 46,
             "size": 70,
             "pos": [258, 1237, 123.6],
             "health_mult": 2.5

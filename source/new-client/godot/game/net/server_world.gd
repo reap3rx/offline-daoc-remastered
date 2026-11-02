@@ -912,6 +912,11 @@ func _message(d: Dictionary) -> void:
 	if String(d.text).begins_with("#EV|"):                # the dynamic events of this zone (DynamicEventManager.cs)
 		preload("res://game/ui/event_tracker.gd").receive(String(d.text).substr(4))
 		return
+	if String(d.text).begins_with("#EVL|"):               # the /events window's list (DynamicEventsCommandHandler)
+		var ew = viewer.ui.get("events_window") if viewer and viewer.ui else null
+		if ew:
+			ew.receive(String(d.text).substr(5))
+		return
 	if String(d.text).begins_with("#SAY|"):               # an NPC speaking aloud (NpcSpeech.cs): a bubble over its head
 		_speech(String(d.text).substr(5))
 		return

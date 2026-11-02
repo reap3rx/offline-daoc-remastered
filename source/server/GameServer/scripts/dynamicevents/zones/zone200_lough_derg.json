@@ -60,7 +60,7 @@
           "boss": {
             "template": 60159913,
             "name": "The Dergan Matron",
-            "level": 18,
+            "level": 17,
             "size": 70,
             "pos": [1472, 121, 128.4],
             "health_mult": 2.5
@@ -186,7 +186,7 @@
           "boss": {
             "template": 60161282,
             "name": "The Siabra Revenant",
-            "level": 18,
+            "level": 17,
             "size": 70,
             "pos": [335, 1509, 134.6],
             "health_mult": 2.5
@@ -224,7 +224,7 @@
       "rest_s": 45,
       "giver": {
         "name": "Guardian Fionn",
-        "level": 20,
+        "level": 13,
         "model": 700,
         "equipment": "ab492f98-cfbf-455d-beda-c1461200e021",
         "guild": "Guardians of Mag Mell",
@@ -239,7 +239,7 @@
       "guards": [
         {
           "name": "Guardian",
-          "level": 14,
+          "level": 12,
           "model": 700,
           "equipment": "ab492f98-cfbf-455d-beda-c1461200e021",
           "guild": "Guardians of Mag Mell",
@@ -341,7 +341,7 @@
           "boss": {
             "template": 60159536,
             "name": "Grogan the Curmudgeon King",
-            "level": 15,
+            "level": 14,
             "size": 72,
             "pos": [1302, 412, 124.8],
             "health_mult": 2.5

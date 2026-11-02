@@ -60,7 +60,7 @@
           "boss": {
             "template": 60160881,
             "name": "Surtling Brann",
-            "level": 33,
+            "level": 32,
             "size": 53,
             "pos": [1498, 268, 188.5],
             "health_mult": 2.5
@@ -186,7 +186,7 @@
           "boss": {
             "template": 60159105,
             "name": "The Ember Marshal",
-            "level": 28,
+            "level": 27,
             "size": 68,
             "pos": [394, 460, 145.9],
             "health_mult": 2.5
@@ -267,7 +267,7 @@
           "boss": {
             "template": 60159218,
             "name": "Glodr the Cinder Drake",
-            "level": 31,
+            "level": 30,
             "size": 110,
             "pos": [334, 220, 123.2],
             "health_mult": 2.5

@@ -55,7 +55,7 @@
           "boss": {
             "template": 60160117,
             "name": "High Sacrificer Draknir",
-            "level": 55,
+            "level": 54,
             "size": 110,
             "pos": [1439, 940, 75.4],
             "health_mult": 2.5
@@ -181,7 +181,7 @@
           "boss": {
             "template": 60160110,
             "name": "Warlord Skuld",
-            "level": 49,
+            "level": 48,
             "size": 110,
             "pos": [265, 337, 67.8],
             "health_mult": 2.5
