@@ -832,6 +832,14 @@ func _input(event: InputEvent) -> void:
 		# handled here: Abilities' own Sit key (_unhandled_input) saw it too and stood you straight back up (owner
 		# 2026-10-15: "my sit hotkey of x doesn't do anything at all")
 		get_viewport().set_input_as_handled()
+	elif Keybinds.pressed(event, "mount") and Server.active and not player._ui_typing():
+		# your horse (mounts, owner 2026-11-02): called (the server's /summon - a five-second whistle, standing still,
+		# out of combat; it takes a horse from your backpack if none is ready) or got off
+		if player.mount:
+			player.leave_mount()
+		else:
+			Server.command("/summon")
+		get_viewport().set_input_as_handled()
 	elif Keybinds.pressed(event, "sprint") and Server.active and not player._ui_typing():
 		Server.command("/sprint")                          # the Sprint key: the client's &sprint
 		get_viewport().set_input_as_handled()              # (not Abilities' offline sprint as well)
@@ -1565,6 +1573,8 @@ func _server_mount(steed: int) -> void:
 func _server_dismount() -> void:
 	if _server_steed != 0:
 		Server.client.call("Dismount")
+	elif Server.active:
+		Server.command("/dismount")                       # your own horse (Player.leave_mount)
 
 
 ## On the server's steed: you sit in its saddle and face its way (the server moves it).

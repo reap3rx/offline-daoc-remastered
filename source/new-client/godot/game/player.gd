@@ -14,6 +14,7 @@ extends CharacterBody3D
 ## Strafing is full run speed. Animations are the client's own clips at the client's rates (nif_character.py).
 ## Fly mode (set_flying, F6 in the viewer): free flight where the camera points, Space up, Ctrl down, Shift fast.
 
+const Mounts := preload("res://game/world/mounts.gd")
 const RUN_SPEED := 191.0 * 0.025       # DAoC base run speed (191 units/s) in metres per second
 const BACK_SPEED := RUN_SPEED * 0.65   # backpedal, as in WoW
 const WALK_SPEED := RUN_SPEED * 0.35
@@ -92,6 +93,7 @@ var cc := ""                           # "stun" / "mez" / "root" from monster sp
 var snare_mult := 1.0                  # snares: the run speed's share left
 var shade := false                       # a Necromancer with a servant up (Pets)
 var riding := false                     # on a stable horse (HorseRoutes moves you; jump gets you off)
+var mount: Node3D = null                # your own horse under you (the server's ControlledHorse: Mounts) - you still steer
 var ride_clip := "ride_horse"          # the rider's pose: ride_horse, or a flight's ride_griffon / _amphitere / _dragonfly
 var stealth_mult := 1.0                 # hidden: Abilities.toggle_stealth's speed share
 var encumbrance := 1.0                  # PlayerData.encumbrance_mult (refreshed when the inventory changes)
@@ -401,6 +403,7 @@ func set_combat(on: bool, stance: String) -> void:
 ## One swing: a random high / medium / low attack clip for the weapon's stance; hand "left" / "dual" a dual
 ## wielder's off-hand / both-weapons blow (the server's OneDualWeaponHit / BothDualWeaponHit). Returns the clip played.
 func swing(stance: String, hand := "") -> String:
+	leave_mount()
 	combat_stance = stance
 	var clip := WeaponModels.attack_clip(_anim, combat_stance, hand)
 	_one_shot(clip)
@@ -451,6 +454,7 @@ static func style_clips() -> Dictionary:
 ## The bow (canims Bow Ready / Bow Aim / Bow Fire; a crossbow's Xbow, a thrown weapon's Throw clips): draw, hold the
 ## aim, loose.
 func bow_draw() -> void:
+	leave_mount()
 	_one_shot(_ranged() + "_ready")
 	_bow_hold = true
 
@@ -475,6 +479,7 @@ func _ranged() -> String:
 ## Action Combat: the parry / block / evade you try plays at once, hit or miss (owner 2026-10-26) - whatever was
 ## playing gives way to it - and you move at half speed while it does. A blow that gets through cuts it off (flinch).
 func action_defend(kind: String) -> void:
+	leave_mount()
 	if dead or _anim == null:
 		return
 	var clip := WeaponModels.defend_clip(_anim, combat_stance, kind)
@@ -867,6 +872,33 @@ func face(yaw_radians: float) -> void:
 func _apply_model_yaw() -> void:
 	if _model:
 		_model.rotation.y = char_yaw + PI + _body_offset   # the converted model faces +Z
+	if mount and is_instance_valid(mount):
+		mount.rotation.y = char_yaw + PI + _body_offset    # (the horse model faces +Z too)
+
+
+## A fight from the saddle gets you off it (as the server does on an attack - AttackComponent.StartAttack - and on a
+## hostile cast): off at once here, so Action Combat's swing / dodge / parry / draw plays on foot, and the server told.
+func leave_mount() -> void:
+	if mount and is_instance_valid(mount):
+		set_mount(null)
+		PlayerData.dismount_requested.emit()
+
+
+## Your own horse (mounts' first pass, owner 2026-11-02): the server says you are on it (ControlledHorse) and how fast
+## you go (MaxSpeed); the movement - modern or classic, the keys, the mouse, jumping - stays yours. The horse walks
+## under you and you sit in its saddle (the figure's ride_horse pose). null: off it.
+func set_mount(n: Node3D) -> void:
+	if mount and is_instance_valid(mount):
+		mount.queue_free()
+	mount = n
+	if n:
+		add_child(n)
+		_body_offset = 0.0
+		_apply_model_yaw()
+	else:
+		if _model:
+			_model.position.y = 0.0
+		_play("idle")
 
 
 ## The pointer is over an interface window (owner 2026-10-11: scrolling a long server menu also zoomed the camera -
@@ -1012,7 +1044,7 @@ func _smooth_camera_height(delta: float) -> void:
 	else:
 		var rate := 14.0 if grounded else 40.0
 		_cam_y += (y - _cam_y) * minf(1.0, delta * rate)
-	_pivot.position.y = 1.55 + (_cam_y - y)
+	_pivot.position.y = 1.55 + (_cam_y - y) + (_model.position.y if mount and _model else 0.0)
 
 
 func _process(_delta: float) -> void:
@@ -1228,6 +1260,7 @@ func _physics_step(delta: float) -> void:
 func dodge(local_dir: Vector3) -> void:
 	if dead or cc != "" or not grounded:
 		return
+	leave_mount()
 	var d := local_dir
 	d.y = 0.0
 	if d.length() < 0.1:
@@ -1237,6 +1270,17 @@ func dodge(local_dir: Vector3) -> void:
 
 
 func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
+	if mount and is_instance_valid(mount) and not dead:
+		# on your horse: you sit (ride_horse) - no lean, no run cycle - and the horse's legs follow the ground speed
+		_body_offset = 0.0
+		_apply_model_yaw()
+		if _anim and _anim.has_animation("ride_horse") and _anim.current_animation != "ride_horse":
+			_anim.get_animation("ride_horse").loop_mode = Animation.LOOP_LINEAR
+			_anim.play("ride_horse", 0.2)
+		if _model:
+			_model.position.y = Mounts.seat(mount)
+		Mounts.animate(mount, Vector2(velocity.x, velocity.z).length())
+		return
 	# diagonal movement leans the body toward the travel direction (WoW turns the legs 45 degrees)
 	# pure strafing turns the body most of the way toward the side and keeps the run cycle going: the client's own
 	# side-step clips are DAoC's slow shuffle, which looked frozen at full strafe speed (owner, 2026-10-09)

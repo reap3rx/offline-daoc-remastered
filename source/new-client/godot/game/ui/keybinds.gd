@@ -55,6 +55,9 @@ func _ready() -> void:
 	# the unseen-characters report (owner 2026-10-17: invisible gamebots / pets): F12, free in every preset
 	actions.append({"id": "bot_report", "label": "Report Unseen Characters (log)", "category": "Misc",
 			"presets": {"rpg": ["F12"], "fps": ["F12"], "mmo": ["F12"]}})
+	# your horse (mounts, owner 2026-11-02): call it / get off - Shift+H, free in every preset
+	actions.append({"id": "mount", "label": "Mount / Dismount", "category": "Movement",
+			"presets": {"rpg": ["Shift+H"], "fps": ["Shift+H"], "mmo": ["Shift+H"]}})
 	# the guild window (owner 2026-10-17, a roster window beyond 1.65 - GuildWindow): Shift+G, free in every preset
 	actions.append({"id": "show_guild", "label": "Guild Window", "category": "Show",
 			"presets": {"rpg": ["Shift+G"], "fps": ["Shift+G"], "mmo": ["Shift+G"]}})

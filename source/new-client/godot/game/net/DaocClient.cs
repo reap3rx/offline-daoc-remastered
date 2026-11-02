@@ -867,6 +867,7 @@ public partial class DaocClient : Node
 				r.Skip(3);
 				d["name"] = r.Pascal(); d["guild"] = r.Pascal(); d["last_name"] = r.Pascal();
 				d["prefix"] = r.Pascal(); d["title"] = r.Pascal();
+				d["horse"] = r.Left > 0 ? (int)r.Byte() : 0;        // on their horse (PacketLib1124: its id, else 0)
 				return d;
 			case 0xA1:                                    // ObjectUpdate (168): a living's position (zone offsets), speed, health
 			{
@@ -894,6 +895,11 @@ public partial class DaocClient : Node
 			case 0xE1:                                    // ObjectDelete
 				d["kind"] = "remove";
 				d["oid"] = r.Short(); d["type"] = 9;
+				return d;
+			case 0x4E:                                    // ControlledHorse (180): someone on their own horse (or off it -
+				d["kind"] = "mount";                      // horse 0); object id 0 = your horse's details (SetControlledHorse)
+				d["oid"] = r.Short(); d["horse"] = (int)r.Byte(); d["barding"] = (int)r.Byte();
+				d["barding_color"] = r.Short(); d["saddle"] = (int)r.Byte(); d["saddle_color"] = (int)r.Byte();
 				return d;
 			case 0xD2:                                    // HouseChangeGarden (189): a house's garden items (count, 0x80 all /
 			{                                             // 0x00 changed ones) - or, with no items, whether someone is in it

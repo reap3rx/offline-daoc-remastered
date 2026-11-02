@@ -1220,6 +1220,7 @@ namespace DOL.AI.Brain
             AutonomousSummonActivity.RecoverOwner(BotBody);
             BotAnimistPolicy.RestoreEncounterTarget(BotBody);
             ObserveLeaderActivity();
+            AutonomousBotMounts.PulseCompanion(BotBody);       // a companion rides when its player rides
             BotBody?.WakeRecoveryRestIfCombatBlocked();
             BotBody?.EnsureAutonomousRecoveryTimers();
 

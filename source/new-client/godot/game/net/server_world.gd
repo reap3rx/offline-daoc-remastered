@@ -9,6 +9,7 @@ extends NpcManager
 
 const ActionCombatMode := preload("res://game/combat/action_combat.gd")
 const Housing := preload("res://game/world/housing.gd")      # player housing: houses, lot markers (no class cache needed)
+const Mounts := preload("res://game/world/mounts.gd")        # personal horses (ControlledHorse)
 const RUN_UNITS := 150.0                     # a mover faster than this (units / s) runs, slower walks
 const SNAP_M := 6.0                          # an update this far from where it is drawn: jump there
 # eChatType -> the chat window's kinds
@@ -97,6 +98,7 @@ func _on_world(kind: String, d: Dictionary) -> void:
 		"npc": _add_npc(d)
 		"object": _add_object(d)
 		"house": _house(d)
+		"mount": _mount(d)
 		"garden": _garden(d)
 		"house_occupied": _house_occupied(d)
 		"house_enter": _house_enter(d)
@@ -653,6 +655,7 @@ func _remove(oid: int, park := true, kind := 1, why := "") -> void:
 		if is_instance_valid(o):
 			o.queue_free()
 		return
+	_mounts.erase(oid)                                        # (back in view: the server's refresh says again)
 	var st: NpcState = by_oid.get(oid)
 	if st == null:
 		return
@@ -827,6 +830,7 @@ func _physics_body(delta: float) -> void:
 		s.running = speed >= RUN_UNITS
 		s.fighting = int(mv.target) != 0 or now_ms < s.combat_until   # chasing its target: weapons stay drawn
 	_seat_riders()
+	_dress_mounts()
 
 
 ## A ridden steed between the server's updates (owner 2026-10-17: stable horses jittered beside their riders, flights
@@ -2345,6 +2349,73 @@ func _riding(d: Dictionary) -> void:
 ## dismount we never got (out of range), a horse whose updates stopped at a zone edge - and the rider goes on alone;
 ## the riderless horse then lasts only as long as the server keeps sending it (STALE_MS).
 const RIDE_LOST_M := 12.0
+
+
+## Personal horses (mounts' first pass, owner 2026-11-02): who rides what - ControlledHorse (0x4E, also the bots':
+## AutonomousBotMounts). You: Player.set_mount (you keep steering). Others (bots, NPC views): a horse under their view,
+## their figure in its saddle (ride_horse), its legs at their pace - dressed each frame (views come and go).
+var _mounts := {}                             # object id -> horse id
+var _mounted_views := {}                      # object id -> the view that has its horse
+
+
+func _mount(d: Dictionary) -> void:
+	var oid := int(d.oid)
+	var horse := int(d.horse)
+	if oid == 0:
+		return                                                 # (your horse's details: its look comes with the ride)
+	if oid == Server.me_oid:
+		if viewer == null or viewer.player == null:
+			return
+		var p: Player = viewer.player
+		if horse <= 0:
+			if p.mount:
+				p.set_mount(null)
+		elif p.mount == null or int(p.mount.get_meta("horse", 0)) != horse:
+			p.set_mount(Mounts.make(horse, self, models))
+		return
+	if horse <= 0:
+		_mounts.erase(oid)
+	else:
+		_mounts[oid] = horse
+
+
+func _dress_mounts() -> void:
+	for oid in _mounted_views.keys():
+		var v = _mounted_views[oid]
+		var st: NpcState = by_oid.get(oid)
+		var still: bool = _mounts.has(oid) and st != null and st.view == v and is_instance_valid(v) \
+				and (v as Node).has_meta("mount") and int(((v as Node).get_meta("mount") as Node3D).get_meta("horse", 0)) == int(_mounts[oid])
+		if still:
+			continue
+		if is_instance_valid(v) and (v as Node).has_meta("mount"):
+			var m = (v as Node).get_meta("mount")
+			if is_instance_valid(m):
+				(m as Node3D).queue_free()
+			(v as Node).remove_meta("mount")
+			if (v as Npc).model:
+				(v as Npc).model.position.y = 0.0
+		if st and st.ride_clip == "ride_horse" and not _riders.has(oid):
+			st.ride_clip = ""
+		_mounted_views.erase(oid)
+	for oid in _mounts:
+		var st: NpcState = by_oid.get(oid)
+		if st == null or st.view == null or not is_instance_valid(st.view):
+			continue
+		var v: Npc = st.view as Npc
+		if not v.has_meta("mount"):
+			var m := Mounts.make(int(_mounts[oid]), self, models)
+			if m == null:
+				continue
+			v.add_child(m)
+			v.set_meta("mount", m)
+			_mounted_views[oid] = v
+		var mn: Node3D = v.get_meta("mount")
+		st.ride_clip = "ride_horse"
+		if v.model:
+			v.model.position.y = Mounts.seat(mn)
+		var mv: Dictionary = _mover.get(st, {})
+		var spd := float(mv.get("speed", 0.0)) * 0.025 if st.mode == NpcState.Mode.WALK else 0.0
+		Mounts.animate(mn, spd)
 
 
 func _seat_riders() -> void:

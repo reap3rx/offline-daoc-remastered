@@ -580,6 +580,13 @@ namespace DOL.GS
 
         public ControlledHorse ActiveHorse => null;
 
+        // A world bot's own horse (owner 2026-11-02: "Bots will need to want to purchase and use mounts too"): the horse
+        // item in its Horse slot (bought from a horse dealer beside a stable master), ridden on long walks out of
+        // combat - AutonomousBotMounts. Kept apart from IsOnHorse, which is the stable master's route.
+        public bool IsOnPersonalMount { get; set; }
+        public byte PersonalMountId { get; set; }
+        public double PersonalMountSpeedFactor { get; set; } = 1.0;
+
         private bool _isOnHorse;
         public virtual bool IsOnHorse
         {
@@ -604,6 +611,8 @@ namespace DOL.GS
                 return false;
 
             WakeRecoveryRest();
+            AutonomousBotMounts.TryBuyFromNearbyDealer(this);   // (the horse dealer stands beside the stable master)
+            AutonomousBotMounts.Dismount(this);
             CleanupStableRouteMount();
             StopAttack();
             StopFollowing();

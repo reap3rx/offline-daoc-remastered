@@ -261,6 +261,7 @@ namespace DOL.GS
             try
             {
                 long nowTick = GameLoop.GameLoopTime;
+                AutonomousBotMounts.Pulse(bot);                 // its own horse: buy one at a dealer, ride long walks
                 if (nowTick >= _nextPocketCheckTick)
                 {
                     _nextPocketCheckTick = nowTick + 5_000 + bot.ObjectID % 1_000;

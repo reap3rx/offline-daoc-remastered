@@ -143,6 +143,10 @@ namespace DOL.GS.PropertyCalc
                     speedIncrease *= 0.2 + healthPercent * (0.8 / 0.33); // 33% HP = full speed, 0% HP = 20% speed
             }
 
+            // a world bot on its own horse: the horse's speed (and the out-of-combat run a player has), not stacking
+            // with a faster speed buff - as a player's horse (AutonomousBotMounts)
+            if (living is GameBot mountedBot && mountedBot.IsOnPersonalMount && speedIncrease < mountedBot.PersonalMountSpeedFactor)
+                speedIncrease = mountedBot.PersonalMountSpeedFactor;
             if (living is GameBot && GameRelic.IsPlayerCarryingRelic(living))
                 speedIncrease = Math.Min(speedIncrease, 1.0);
             return (int) Math.Round(maxSpeedBase * speedIncrease);
