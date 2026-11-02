@@ -72,7 +72,7 @@ namespace DOL.GS.DynamicEvents
         public WavesDef Adds;                      // boss: help it calls
         public List<double[]> Path = new();        // escort: the giver's way, point by point
         public List<AmbushDef> Ambushes = new();   // escort: who waits along it
-        public int Flag;                           // defend (protect_leader): the leader plants a banner (item model) at center
+        public int Flag;                           // defend (protect_leader): the leader plants a banner (item model: 464 Albion, 465 Midgard, 466 Hibernian pennant) at center
         [JsonProperty("flag_name")] public string FlagName;
         public string Thanks;                      // defend: what the one you kept alive says when it's over
         public string Success;
