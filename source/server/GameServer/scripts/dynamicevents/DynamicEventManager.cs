@@ -94,7 +94,7 @@ namespace DOL.GS.DynamicEvents
             try
             {
                 var z = JsonConvert.DeserializeObject<ZoneEventsDef>(json);
-                if (z != null && z.Zone > 0)
+                if (z != null && z.Zone >= 0 && z.Chains.Count > 0)      // (zone 0 is Camelot Hills)
                     byZone[z.Zone] = z;
             }
             catch (Exception ex)
