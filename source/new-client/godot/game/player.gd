@@ -52,6 +52,11 @@ const FALL_HEIGHT := 16.0 * 0.025       # client: only more than 16 units above 
 # this same value (BotSim reads it from here - bots and players share rules, owner).
 const COLLIDER_LIFT := 0.62
 const STEP_LEAD := 0.25                 # the wall collider's radius: where the leading-edge floor pick looks
+# Too steep to stand on (owner 2026-11-01: "I was able to run up the side of the walls" - a keep's battered walls are
+# floors to the pick): ground steeper than this can't be walked up, and standing on it you slide down off it. Stairs
+# are unaffected (their treads are flat; the step-up lifts you over the risers).
+const MAX_SLOPE_DEG := 55.0
+const SLIDE_MPS := 7.0                   # sliding down ground too steep to stand on
 # Ladders (game.dll RE 2026-10-10): touching a 'climb' wall (ZoneLoader ClimbBodies) puts the client in move state 7
 # ("You start climbing."): forward climbs at 85 units/s x min(1, speed / 100), back climbs down at the same rate
 # (0x439d19); landing while climbing down, or a jump, ends it ("You are no longer climbing.", 0x436b20 / 0x438731).
@@ -138,6 +143,7 @@ var _dash_left := 0.0
 var grounded := false
 var _air_time := 0.0                   # seconds off the ground (the falling pose waits a moment)
 var hold_frames := 12                   # after a spawn / teleport: stand still until the floors are in the physics world
+var _floor_n := Vector3.UP               # the last floor pick's surface normal (_floor_below)
 var _last_footing := Vector3.ZERO       # the last spot stood on (a fall into the void comes back here)
 var free_camera := false               # test runs only: zoom out past the client's limit
 var torch: OmniLight3D
@@ -1355,6 +1361,7 @@ func set_torch(on: bool) -> void:
 ## The client's order (see PICK_LIFT): vertical integrate, floor pick at the new spot (lift onto anything within the
 ## pick range), slide along walls at that height, then stand on a floor within 1 unit or fall.
 func _client_move(delta: float) -> void:
+	var start_pos := global_position
 	var feet_before := global_position.y
 	var vy := velocity.y
 	var y := feet_before + vy * delta
@@ -1387,6 +1394,22 @@ func _client_move(delta: float) -> void:
 			global_position = Vector3(was_at.x, y, was_at.z) if edges.allows(was_at) else now
 	velocity.y = vy
 	floor_y = _floor_below(global_position, feet_before)
+	if not climbing and not swimming and not flying and global_position.y - floor_y <= FALL_HEIGHT + 0.025 \
+			and _floor_n.y < cos(deg_to_rad(MAX_SLOPE_DEG)):
+		# too steep: no further up it, and it lets you down - slide off along its fall line
+		var down := Vector2(_floor_n.x, _floor_n.z).normalized()
+		var moved := Vector2(global_position.x - start_pos.x, global_position.z - start_pos.z)
+		if floor_y > feet_before + 0.005 and moved.dot(down) < 0.0:
+			global_position = Vector3(start_pos.x, feet_before, start_pos.z)
+		global_position.x += down.x * SLIDE_MPS * delta
+		global_position.z += down.y * SLIDE_MPS * delta
+		var under := _floor_below(global_position, global_position.y)
+		if global_position.y - under <= 1.5:
+			global_position.y = under               # held to it while sliding (not a fall: no fall damage on the way)
+			grounded = true
+			velocity.y = 0.0
+			return
+		floor_y = under
 	var was_grounded := grounded
 	# (+1 unit: the client's "more than 16 units" - a 16-unit stair riser measures 16.0x in floats and must not fall)
 	if climbing and vy >= 0.0:
@@ -1449,18 +1472,23 @@ func rebase(d: Vector3) -> void:
 func _floor_below(p: Vector3, feet_before: float) -> float:
 	var start := p.y + maxf(PICK_LIFT, feet_before - p.y)
 	var best := -INF
+	_floor_n = Vector3.UP
 	if zone and not zone.city:
 		# (a city's grid is the HIGHEST floor at each point - roofs, wall tops: as a floor its slopes between a street
 		# and a wall lifted you up onto the wall, owner 2026-10-10 "an invisible bowl" in Camelot; cities use the pick)
 		var t := _ground_h(p.x, p.z)
 		if t <= start:
 			best = t
+			var e := 0.8
+			_floor_n = Vector3(_ground_h(p.x - e, p.z) - _ground_h(p.x + e, p.z), 2.0 * e,
+					_ground_h(p.x, p.z - e) - _ground_h(p.x, p.z + e)).normalized()
 	var q := PhysicsRayQueryParameters3D.create(Vector3(p.x, start, p.z), Vector3(p.x, start - 500.0, p.z),
 			ZoneLoader.LAYER_FLOOR)
 	q.hit_back_faces = false
 	var hit := get_world_3d().direct_space_state.intersect_ray(q)
 	if hit and hit.position.y > best:
 		best = hit.position.y
+		_floor_n = hit.normal if hit.normal.y > 0.0 else -hit.normal
 	return best
 
 

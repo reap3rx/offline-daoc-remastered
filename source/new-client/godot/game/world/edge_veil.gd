@@ -10,6 +10,10 @@ extends Node
 ##     region (each built zone's edge heights carried outward, the highest wins; read from the zones' files, so it is
 ##     the same whatever has loaded): neighbouring zones' skirts meet exactly, gaps between zones fill as saddles.
 ##     Drawn with each zone's ground (painted colours + detail) and its water for higher lakes; no collision.
+##   - a fog bank along it (owner 2026-11-01: "a dense fog near the barriers ... thicker as you approach ... invisible
+##     once you're far enough away"): volumetric fog thickening over the last FOG_RAMP_M before an outer edge and
+##     thick beyond it; it is drawn only within the volumetric fog's reach round the camera (110 m), so from farther
+##     off there is none, and it hides the seams where the land beyond meets the zone. Remastered look only.
 ## Zone sides shared with another built zone of the region are left alone: the land goes on there.
 
 const BLOCK_M := 204.8                       # one zones.dat block (8192 units)
@@ -17,6 +21,8 @@ const MARGIN_M := 28.0                       # how far short of the edge you sto
 const ALONG_M := 6.4                         # skirt sample spacing along the edge (2 ground cells)
 const OUT_M := [0.0, 3.2, 8.0, 16.0, 28.0, 45.0, 68.0, 98.0, 135.0, 180.0, 235.0, 300.0, 380.0, 470.0, 580.0, 720.0, 900.0]
 const SEA_DEPTH := 18.0                      # how far under the sea the skirt ends
+const FOG_RAMP_M := 90.0                     # the fog bank thickens over this far before an outer edge
+const FOG_DENSITY := 0.08                    # ... to this beyond it (about 40 m of it hides everything)
 const LAKE_OUT_M := 60.0                     # a lake higher than the sea goes on this far before the land falls
 
 var region: RegionWorld
@@ -25,6 +31,8 @@ var _region_id := -1
 var _sea_y := INF                            # the region's sea level
 var _sea: MeshInstance3D                     # the sea: a plane round the camera, cut away over the built blocks
 var _sea_mat: ShaderMaterial
+var _fog: FogVolume                          # the fog bank: a box round the camera, thick only near outer edges
+var _fog_mat: ShaderMaterial
 var _mask_min := Vector2i.ZERO               # the built-blocks mask's first block
 var _zones := []                             # the region's built outdoor zones: their rectangles and ground (_load_zones)
 
@@ -36,18 +44,26 @@ func setup(r: RegionWorld) -> void:
 
 
 func _process(_dt: float) -> void:
-	if region == null or region.current == null or _sea == null:
+	if region == null or region.current == null or _sea == null or _fog == null:
 		return
 	var z := region.current
 	var me := region.entry(int(z.info.id))
 	var on := not z.city and not bool(z.info.get("dungeon", false)) and not me.is_empty() \
 			and int(me.get("region", -1)) == _region_id and _sea_y < INF
 	_sea.visible = on
+	_fog.visible = on
 	var cam := get_viewport().get_camera_3d()
 	if not on or cam == null:
 		return
 	# the current zone's corner sits at the scene origin: the region's blocks from there
 	_sea_mat.set_shader_parameter("origin_m", -Vector2(float(me.x), float(me.y)) * BLOCK_M)
+	_fog_mat.set_shader_parameter("origin_m", -Vector2(float(me.x), float(me.y)) * BLOCK_M)
+	_fog.global_position = cam.global_position
+	var env := cam.get_world_3d().environment
+	if env == null and cam.environment:
+		env = cam.environment
+	if env:
+		_fog_mat.set_shader_parameter("glow", env.fog_light_color)
 	var reach := cam.far + 400.0
 	_sea_mat.set_shader_parameter("fade_r", cam.far)
 	var pm := _sea.mesh as PlaneMesh
@@ -90,6 +106,49 @@ void fragment() {
 """
 
 
+const FOG_SHADER := """
+shader_type fog;
+uniform sampler2D built : filter_nearest;
+uniform ivec2 mask_min;
+uniform ivec2 mask_size;
+uniform vec2 origin_m;
+uniform float block_m;
+uniform float ramp_m;
+uniform float density;
+uniform vec3 albedo : source_color = vec3(0.82, 0.86, 0.9);
+uniform float fog_glow = 0.2;
+uniform vec3 glow : source_color = vec3(0.6, 0.7, 0.8);   // the scene's fog colour: lit evenly, it matches the distance
+bool is_built(ivec2 b) {
+	ivec2 m = b - mask_min;
+	return m.x >= 0 && m.y >= 0 && m.x < mask_size.x && m.y < mask_size.y && texelFetch(built, m, 0).r > 0.5;
+}
+void fog() {
+	vec2 p = (WORLD_POSITION.xz - origin_m) / block_m;
+	ivec2 cell = ivec2(floor(p));
+	float d = 0.0;
+	if (is_built(cell)) {
+		// metres to the nearest block with nothing built (the ramp is shorter than a block: the 8 round it)
+		d = 1e9;
+		for (int dy = -1; dy <= 1; dy++) {
+			for (int dx = -1; dx <= 1; dx++) {
+				ivec2 c = cell + ivec2(dx, dy);
+				if ((dx == 0 && dy == 0) || is_built(c)) continue;
+				vec2 lo = vec2(c);
+				vec2 gap = max(lo - p, vec2(0.0)) + max(p - (lo + 1.0), vec2(0.0));
+				d = min(d, length(gap) * block_m);
+			}
+		}
+	}
+	float k = 1.0 - smoothstep(0.0, ramp_m, d);
+	// softened at the box's top and bottom (it rides with the camera)
+	k *= smoothstep(0.0, 0.15, UVW.y) * (1.0 - smoothstep(0.85, 1.0, UVW.y));
+	DENSITY = density * k;
+	ALBEDO = albedo;
+	EMISSION = glow * (fog_glow * k);
+}
+"""
+
+
 ## The region's sea: made once its level is known, its mask of built blocks kept with the region.
 func _make_sea() -> void:
 	if _sea_y == INF:
@@ -110,6 +169,19 @@ func _make_sea() -> void:
 		_sea.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_sea.extra_cull_margin = 16384.0
 		region.viewer.add_child(_sea)
+		_fog_mat = ShaderMaterial.new()
+		var fs := Shader.new()
+		fs.code = FOG_SHADER
+		_fog_mat.shader = fs
+		_fog_mat.set_shader_parameter("block_m", BLOCK_M)
+		_fog_mat.set_shader_parameter("ramp_m", FOG_RAMP_M)
+		_fog_mat.set_shader_parameter("density", FOG_DENSITY)
+		_fog = FogVolume.new()
+		_fog.name = "EdgeFog"
+		_fog.shape = RenderingServer.FOG_VOLUME_SHAPE_BOX
+		_fog.size = Vector3(300.0, 500.0, 300.0)            # past the volumetric fog's 110 m reach all round
+		_fog.material = _fog_mat
+		region.viewer.add_child(_fog)
 	var lo := Vector2i(1 << 20, 1 << 20)
 	var hi := Vector2i(-(1 << 20), -(1 << 20))
 	for b in _blocks:
@@ -126,6 +198,9 @@ func _make_sea() -> void:
 	_sea_mat.set_shader_parameter("built", ImageTexture.create_from_image(img))
 	_sea_mat.set_shader_parameter("mask_min", lo)
 	_sea_mat.set_shader_parameter("mask_size", sz)
+	_fog_mat.set_shader_parameter("built", _sea_mat.get_shader_parameter("built"))
+	_fog_mat.set_shader_parameter("mask_min", lo)
+	_fog_mat.set_shader_parameter("mask_size", sz)
 
 
 ## The region's built outdoor zones from their files (so the land beyond is the same whichever zone you came in by):
