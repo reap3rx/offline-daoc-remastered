@@ -266,6 +266,7 @@ func set_terrain_set(set_name: String) -> void:
 		painted = "lod_x4plus" if texture_set == "x4plus" and info.terrain_sets.has("lod_x4plus") else "lod"
 	if not _terrain_textures.has(painted):
 		_terrain_textures[painted] = _load_texture(dir.path_join(info.terrain_sets[painted]))
+	_painted = painted
 	var detail_name: String = String(info.get("terrain_detail", "")) if info.get("terrain_detail") != null else ""   # null in some zones
 	var detail := materials.texture(detail_name) if detail_name != "" else null
 	for mat in _terrain_mats:
@@ -275,6 +276,37 @@ func set_terrain_set(set_name: String) -> void:
 		mat.set_shader_parameter("detail_mean", _detail_mean)
 		if blend:
 			_bind_splat(mat)
+
+
+var _painted := ""
+
+
+## The ground beyond the region's edge (EdgeVeil): the zone's painted ground and its detail grain, no splat layers.
+func skirt_material() -> ShaderMaterial:
+	var mat := ShaderMaterial.new()
+	mat.shader = TERRAIN_SHADER
+	mat.set_shader_parameter("use_splat", false)
+	if _painted != "" and _terrain_textures.has(_painted):
+		mat.set_shader_parameter("tile_tex", _terrain_textures[_painted])
+	var detail_name: String = String(info.get("terrain_detail", "")) if info.get("terrain_detail") != null else ""
+	if detail_name != "":
+		mat.set_shader_parameter("detail_tex", materials.texture(detail_name))
+	mat.set_shader_parameter("detail_mean", _detail_mean)
+	return mat
+
+
+## The drawn water body covering a point (its material), or null when dry.
+func water_material_at(x: float, z: float) -> Material:
+	if water_mask == null:
+		return null
+	var n := water_mask.get_width()
+	var px := clampi(int(x / float(info.size_m) * n), 0, n - 1)
+	var pz := clampi(int(z / float(info.size_m) * n), 0, n - 1)
+	var id := roundi(water_mask.get_pixel(px, pz).r * 255.0)
+	return _water_by_body.get(id)
+
+
+var _water_by_body := {}                     # water body id -> its material (EdgeVeil carries it past the edge)
 
 
 func _bind_splat(mat: ShaderMaterial) -> void:
@@ -375,6 +407,7 @@ func _build_water() -> void:
 		var speed := 0.004 + float(body.get("flow", 0.0)) * 0.0009
 		mat.set_shader_parameter("drift", Vector2(speed, speed * 0.4))
 		_water_mats.append(mat)
+		_water_by_body[id] = mat
 		var mi := MeshInstance3D.new()
 		mi.name = "Water_%s" % body.name
 		mi.mesh = st.commit()

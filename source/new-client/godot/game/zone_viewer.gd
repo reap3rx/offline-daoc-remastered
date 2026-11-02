@@ -119,6 +119,11 @@ func _ready() -> void:
 		region.zone_added.connect(_on_zone_added)
 		region.zone_removing.connect(_on_zone_removing)
 		player.region = region
+		var edges: Node = preload("res://game/world/edge_veil.gd").new()   # the world's edge: a barrier, and land beyond it
+		edges.name = "EdgeVeil"
+		add_child(edges)
+		edges.setup(region)
+		player.edges = edges
 		if loading:
 			region.set_process(false)                       # (the loading screen builds the first neighbours itself)
 	# the owner's camera is locked to the client's zoom range; my test runs (and --free-camera) keep it unlocked

@@ -74,6 +74,7 @@ const FLY_FAST := 70.0
 
 var zone: ZoneLoader
 var region: RegionWorld                  # seamless zones: the ground / water of whichever loaded zone you stand over
+var edges: Node                          # the world's edge (world/edge_veil.gd): you stop short of it (allows)
 var in_combat := false                 # attack mode: weapon drawn, combat idle (Combat)
 var combat_stance := ""                 # "" one-hand, "2h", "staff", "pole" (WeaponModels.stance)
 var dead := false
@@ -1372,8 +1373,18 @@ func _client_move(delta: float) -> void:
 			y = lead_y
 	global_position.y = y
 	velocity = Vector3(velocity.x, 0.0, velocity.z)
+	var was_at := global_position
 	move_and_slide()                                    # 3. walls only, horizontal
 	global_position.y = y                               # flattened normals: walls never push up or down
+	if edges and not edges.allows(global_position):
+		# the world's edge (EdgeVeil): no nearer - slide along it on whichever axis still may, else stay put
+		var now := global_position
+		if edges.allows(Vector3(now.x, y, was_at.z)):
+			global_position = Vector3(now.x, y, was_at.z)
+		elif edges.allows(Vector3(was_at.x, y, now.z)):
+			global_position = Vector3(was_at.x, y, now.z)
+		elif edges.allows(was_at) or not edges.allows(now):
+			global_position = Vector3(was_at.x, y, was_at.z) if edges.allows(was_at) else now
 	velocity.y = vy
 	floor_y = _floor_below(global_position, feet_before)
 	var was_grounded := grounded

@@ -66,7 +66,8 @@ func _exit_tree() -> void:
 ## offline npcs.json spawns here - client-only fakes on top of the real ones, the Raumerik bounty hunter that only
 ## said "you target", a second Wretch of Winter, Sheeroe Hills / Malmohus littered - and simulated them every tick.)
 func add_zone(_z: ZoneLoader) -> void:
-	pass
+	for id in doors:                                     # the server's doors whose zone just came in (keep gates)
+		_bind_door(int(id))
 
 
 func remove_zone(_zone_id: int) -> void:
@@ -1488,8 +1489,10 @@ func _add_object(d: Dictionary) -> void:
 	if int(d.door) >= 0:
 		# a door (GameDoor / GameKeepDoor / GameRelicDoor): the zone draws it - this is the server's object for it, the
 		# one to target (keep doors are attacked) and whose health the server's updates carry
-		doors[int(d.door)] = {"oid": oid, "name": String(d.name), "health": 100, "realm": (int(d.flags) >> 4) & 3}
+		doors[int(d.door)] = {"oid": oid, "name": String(d.name), "health": 100, "realm": (int(d.flags) >> 4) & 3,
+				"pos": scene_pos(float(d.x), float(d.y), float(d.z))}
 		door_oids[oid] = int(d.door)
+		_bind_door(int(d.door))
 		return
 	var model := int(d.model) & 0x7FFF
 	var p := scene_pos(float(d.x), float(d.y), float(d.z))
@@ -1707,6 +1710,54 @@ func request_door(door: ZoneDoor) -> void:
 				"con_color": Color.WHITE, "health": float(info.health) / 100.0})
 		Server.client.call("Target", int(info.oid), 0x8000 | 0x6000)
 	Server.client.call("DoorRequest", door.door_id, 0 if door.is_open else 1)
+
+
+## The server's door ids name the zone's fixtures by the server's own fixtures table, which numbers some fixtures
+## differently from the zone's (owner 2026-11-01: Breifine's keeps are fixtures 59-62 here and 61-64 to the server,
+## Emain Macha's portal keeps 122-124 here and 156-158 there): no leaf had the server's id, so a keep gate could not be
+## clicked, targeted or seen to open. A server door no loaded leaf answers to takes the leaves of the same piece
+## (door001 = piece 1 ...) nearest its position (within DOOR_BIND_M) - their id becomes the server's.
+const DOOR_BIND_M := 40.0
+
+
+func _bind_door(id: int) -> void:
+	var info: Dictionary = doors.get(id, {})
+	if info.is_empty() or not info.has("pos"):
+		return
+	var loaders: Array = (viewer.region.zones.values() if viewer and viewer.get("region") and viewer.region else [])
+	if loaders.is_empty() and zone:
+		loaders = [zone]
+	for zl in loaders:
+		if zl and (zl as ZoneLoader).door_by_id.has(id):
+			return                                           # (the zone already knows it by that id)
+	var at: Vector3 = info.pos
+	var best: ZoneDoor = null
+	var bd := DOOR_BIND_M
+	for zl in loaders:
+		if zl == null:
+			continue
+		for dd in (zl as ZoneLoader).doors:
+			var door := dd as ZoneDoor
+			if door == null or door.door_id < 0 or door.door_id % 100 != id % 100 or doors.has(door.door_id):
+				continue                                     # (another piece, or a door the server already named)
+			var w := door.doorway()
+			if w == Vector3.INF:
+				w = door.global_position
+			var dist := Vector2(w.x - at.x, w.z - at.z).length()
+			if dist < bd:
+				bd = dist
+				best = door
+	if best == null:
+		return
+	var old := best.door_id
+	for zl in loaders:
+		var by: Dictionary = (zl as ZoneLoader).door_by_id
+		if by.has(old):
+			var leaves: Array = by[old]
+			by.erase(old)
+			for leaf in leaves:
+				(leaf as ZoneDoor).door_id = id
+			by[id] = leaves
 
 
 ## DoorState: open / shut a door of a loaded zone (both leaves of a double door).

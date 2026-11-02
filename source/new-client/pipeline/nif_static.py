@@ -289,10 +289,9 @@ def climb_shapes(nif):
 
 
 def collidee_shapes(nif):
-    """[(shape, data, model matrix)] under the collidee node: every shape, hidden or not (the client hides the whole
+    """[(shape, data, model matrix)] under the collidee nodes: every shape, hidden or not (the client hides the whole
     subtree for drawing and tests it for collision)."""
     sp = spec()
-    node, parent_m = find_collidee(nif)
     out = []
 
     def walk(b, pm):
@@ -306,9 +305,36 @@ def collidee_shapes(nif):
             return
         for c in b.get('children') or []:
             walk(c, m)
-    if node is not None:
+    for node, parent_m in collidee_nodes(nif):
         walk(node, parent_m)
     return out
+
+
+def collidee_nodes(nif):
+    """[(node, parent world matrix)]: the model's wall geometry. Every 'collidee' node outside the ladders ('climbs'
+    > 'sclimbNNN' > 'collidee': climb_shapes) and the door leaves ('doorNNN' > leaf > 'collidee': the doors' own), or
+    the first one anywhere when that is all there is. The frontier keeps (hfrontkeep, bfrontkeep1, nfrontkeep1 ...)
+    hold their ladders first: the first 'collidee' found was a ladder's, so the walls had 5 triangles of collision
+    and could be walked through (owner 2026-11-01: "none of the wall collision seems to work at all")."""
+    found = []
+
+    def dfs(b, parent_m, skip):
+        if b is None:
+            return
+        name = (b.get('name') or '').lower()
+        if name == 'collidee' and not skip:
+            found.append((b, parent_m))
+            return
+        under = skip or name == 'climbs' or name.startswith('sclimb') or bool(re.match(r'door\d', name))
+        m = local_matrix(b) @ parent_m
+        for c in b.get('children') or []:
+            dfs(c, m, under)
+    for r in nif.roots:
+        dfs(r, np.identity(4), False)
+    if found:
+        return found
+    hit = find_collidee(nif)
+    return [hit] if hit and hit[0] is not None else []
 
 
 def _controller(b, kind):
@@ -699,11 +725,12 @@ def collect(nif, node_anims=False):
     sp = spec()
     shapes, doors = [], []
     collidee, _ = find_collidee(nif)
+    walls = {id(n) for n, _ in collidee_nodes(nif)}       # (every wall node: collidee_nodes)
 
     def walk(b, parent_m, inherited):
         if b is None or any(sp.is_a(b.type, t) for t in SKIP_TYPES):
             return
-        if b is collidee:                                  # walls only, never drawn (see collidee_shapes)
+        if b is collidee or id(b) in walls:                # walls only, never drawn (see collidee_shapes)
             return
         if b.get('flags', 0) & 1 and not (node_anims and _controller(b, 'NiVisController') is not None):   # hidden
             return
