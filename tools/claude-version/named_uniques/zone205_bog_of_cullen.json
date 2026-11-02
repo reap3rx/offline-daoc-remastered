@@ -1,0 +1,60 @@
+{
+ "zone": 205,
+ "region": 200,
+ "realm": 3,
+ "prefix": "nu205",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "bog_of_cullen_waterwalkers",
+   "scaled": true,
+   "name": "Siabra Marsh-Lord's Jewel",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Cha": 15,
+    "Emp": 12,
+    "Qui": 9,
+    "Hits": 30
+   },
+   "lore": "Won from the Siabra Marsh-Lord when The Siabra Waterwalkers was ended."
+  },
+  {
+   "event_reward": "bog_of_cullen_bog_creepers",
+   "scaled": true,
+   "name": "Cullen Bog-Horror's Wristguard",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Cha": 15,
+    "Emp": 12,
+    "Qui": 9,
+    "Hits": 30
+   },
+   "lore": "Won from the Cullen Bog-Horror when The Bog Creepers was ended."
+  },
+  {
+   "event_reward": "bog_of_cullen_wayguards",
+   "scaled": true,
+   "name": "Wayguard Captain Fiach's Jewel",
+   "base": [
+    41,
+    24
+   ],
+   "level": 47,
+   "bonuses": {
+    "Str": 14,
+    "Con": 14,
+    "Dex": 8,
+    "Hits": 38
+   },
+   "lore": "Won from Wayguard Captain Fiach when The Siabra Wayguards was ended."
+  }
+ ]
+}

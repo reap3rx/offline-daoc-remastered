@@ -1,0 +1,43 @@
+{
+ "zone": 107,
+ "region": 100,
+ "realm": 2,
+ "prefix": "nu107",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "vanern_swamp_hagbui_barrow",
+   "scaled": true,
+   "name": "Hagbui Thane Ormr's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 46,
+   "bonuses": {
+    "Dex": 14,
+    "Qui": 14,
+    "Str": 8,
+    "Hits": 28
+   },
+   "lore": "Won from Hagbui Thane Ormr when The Hagbui Barrow was ended."
+  },
+  {
+   "event_reward": "vanern_swamp_clay_jotun",
+   "scaled": true,
+   "name": "Leirjotun's Stone",
+   "base": [
+    41,
+    24
+   ],
+   "level": 45,
+   "bonuses": {
+    "Pie": 14,
+    "Con": 8,
+    "Power": 5,
+    "Hits": 27
+   },
+   "lore": "Won from Leirjotun when The Jotun March was ended."
+  }
+ ]
+}

@@ -1,0 +1,372 @@
+{
+  "zone": 2,
+  "region": 1,
+  "name": "Black Mtns. South",
+  "lore": "The southern Black Mountains: Humberton Castle and Ludlow, goblin fishers on the river and red dwarf thieves in the high passes.",
+  "chains": [
+    {
+      "id": "black_mountains_south_goblin_fishers",
+      "title": "The Goblin Fishers",
+      "levels": [4, 6],
+      "hint": "Nets are strung across the river...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Goblin Weir",
+          "objective": "Clear the goblin weir",
+          "announce": "The goblin fishers have dammed the river with nets and stakes, and the mill below has run dry. Clear the weir.",
+          "center": [426, 460, 56.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12171,
+              "name": "goblin fisherman",
+              "level": [4, 6]
+            },
+            {
+              "template": 12235,
+              "name": "undead goblin fisherman",
+              "level": [4, 4]
+            },
+            {
+              "template": 12236,
+              "name": "undead goblin warrior",
+              "level": [5, 5]
+            }
+          ],
+          "success": "You have cleared the goblin weir. Gruk the Net-Master comes out to fight.",
+          "fail": "They hold the goblin weir. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Gruk the Net-Master",
+          "objective": "Defeat Gruk the Net-Master",
+          "announce": "Gruk the Net-Master stands at the goblin weir. Bring friends.",
+          "center": [426, 460, 56.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12171,
+            "name": "Gruk the Net-Master",
+            "level": 9,
+            "size": 57,
+            "pos": [426, 460, 56.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12171,
+                "name": "goblin fisherman",
+                "level": [4, 6]
+              }
+            ]
+          },
+          "success": "Gruk the Net-Master falls. The way is safe again.",
+          "fail": "Gruk the Net-Master slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu2_gruk_the_net_master_s_armband", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "black_mountains_south_red_dwarf_raid",
+      "title": "The Red Dwarf Raid",
+      "levels": [5, 8],
+      "hint": "Red dwarves have been seen above the road...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Edwin the Carter",
+          "objective": "Protect Edwin the Carter, who is mending a broken wheel",
+          "announce": "Edwin the carter's wheel has broken on the pass road, and the red dwarves are coming down for his load.",
+          "center": [1226, 277, 77.6],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Edwin the Carter",
+            "template": 60167629,
+            "level": 8,
+            "model": 28,
+            "equipment": "dfb0d504-70ce-4eed-8764-1bb80036b3e3",
+            "health_mult": 10,
+            "pos": [1226, 277, 77.6]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1306, 250, 78.4],
+              [1276, 301, 80.0],
+              [1251, 358, 71.7]
+            ],
+            "mobs": [
+              {
+                "template": 12205,
+                "name": "red dwarf thief",
+                "level": [5, 7]
+              },
+              {
+                "template": 12199,
+                "name": "red dwarf bandit",
+                "level": [6, 8]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Edwin the Carter. \"They came from over there - let's finish this.\"",
+          "fail": "Edwin the Carter falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Carter's Road",
+          "objective": "Clear the carter's road",
+          "announce": "They came from the carter's road. Follow them back and clear it out.",
+          "center": [1463, 397, 49.7],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12205,
+              "name": "red dwarf thief",
+              "level": [5, 7]
+            },
+            {
+              "template": 12199,
+              "name": "red dwarf bandit",
+              "level": [6, 8]
+            }
+          ],
+          "success": "You have cleared the carter's road. Brannoc Redbeard comes out to fight.",
+          "fail": "They hold the carter's road. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Brannoc Redbeard",
+          "objective": "Defeat Brannoc Redbeard",
+          "announce": "Brannoc Redbeard stands at the carter's road. Bring friends.",
+          "center": [1463, 397, 49.7],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12199,
+            "name": "Brannoc Redbeard",
+            "level": 11,
+            "size": 58,
+            "pos": [1463, 397, 49.7],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12205,
+                "name": "red dwarf thief",
+                "level": [5, 7]
+              }
+            ]
+          },
+          "success": "Brannoc Redbeard falls. The way is safe again.",
+          "fail": "Brannoc Redbeard slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu2_brannoc_redbeard_s_eye", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "black_mountains_south_highway_robbery",
+      "title": "Highway Robbery",
+      "levels": [4, 8],
+      "hint": "Veteran Guard Osric is looking for help in Humberton.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Veteran Guard Osric",
+        "template": 60167625,
+        "level": 16,
+        "model": 27,
+        "equipment": "afbf0cbc-36a3-4471-b32a-057ae99619db",
+        "guild": "Humberton Guard",
+        "health_mult": 4,
+        "pos": [593, 1040, 57.1],
+        "greet": "Black Tom and his highwaymen robbed the Ludlow coach again. I know where they camp. Ride with me and we'll end it. Tell me when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Veteran Guard",
+          "template": 60167625,
+          "level": 10,
+          "model": 27,
+          "equipment": "afbf0cbc-36a3-4471-b32a-057ae99619db",
+          "guild": "Humberton Guard",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Highwaymen's Camp",
+          "objective": "Go with Veteran Guard Osric to the highwaymen's camp",
+          "announce": "Osric of the Humberton guard rides out after Black Tom's highwaymen.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [701, 1037, 59.9],
+            [749, 1037, 62.6],
+            [821, 965, 73.4],
+            [821, 901, 63.5],
+            [893, 821, 59.6],
+            [917, 781, 57.8]
+          ],
+          "ambushes": [
+            {
+              "at": 3,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 12361,
+                  "name": "highwayman",
+                  "level": [7, 7]
+                },
+                {
+                  "template": 12076,
+                  "name": "cutpurse",
+                  "level": [4, 4]
+                }
+              ]
+            }
+          ],
+          "success": "Veteran Guard Osric reaches the highwaymen's camp. \"There they are. Clear them out!\"",
+          "fail": "Veteran Guard Osric falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Highwaymen's Camp",
+          "objective": "Clear the highwaymen's camp",
+          "announce": "Clear the highwaymen's camp!",
+          "center": [916, 777, 58.4],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12361,
+              "name": "highwayman",
+              "level": [7, 7]
+            },
+            {
+              "template": 12076,
+              "name": "cutpurse",
+              "level": [4, 4]
+            },
+            {
+              "template": 12447,
+              "name": "bandit",
+              "level": [5, 8]
+            }
+          ],
+          "success": "You have cleared the highwaymen's camp. Black Tom the Highwayman comes out to fight.",
+          "fail": "They hold the highwaymen's camp. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Black Tom the Highwayman",
+          "objective": "Defeat Black Tom the Highwayman",
+          "announce": "Black Tom the Highwayman stands at the highwaymen's camp. Bring friends.",
+          "center": [916, 777, 58.4],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12361,
+            "name": "Black Tom the Highwayman",
+            "level": 11,
+            "size": 65,
+            "pos": [916, 777, 58.4],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12361,
+                "name": "highwayman",
+                "level": [7, 7]
+              }
+            ]
+          },
+          "success": "Black Tom the Highwayman falls. Humberton will hear of this in the taverns tonight.",
+          "fail": "Black Tom the Highwayman slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu2_black_tom_the_highwayman_s_amulet", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

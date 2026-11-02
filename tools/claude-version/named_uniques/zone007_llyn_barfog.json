@@ -1,0 +1,60 @@
+{
+ "zone": 7,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu7",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "llyn_barfog_renegades",
+   "scaled": true,
+   "name": "Captain Madog the Turncoat's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 23,
+   "bonuses": {
+    "Pie": 7,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "Won from Captain Madog the Turncoat when The Renegade Guards was ended."
+  },
+  {
+   "event_reward": "llyn_barfog_hounds_of_annwn",
+   "scaled": true,
+   "name": "Huntsman of Annwn's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 25,
+   "bonuses": {
+    "Cha": 8,
+    "Emp": 6,
+    "Qui": 4,
+    "Hits": 15
+   },
+   "lore": "Won from the Huntsman of Annwn when The Hounds of Annwn was ended."
+  },
+  {
+   "event_reward": "llyn_barfog_unshriven",
+   "scaled": true,
+   "name": "Abbot Idwal the Unshriven's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 33,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 6,
+    "Hits": 26
+   },
+   "lore": "Won from Abbot Idwal the Unshriven when The Unshriven was ended."
+  }
+ ]
+}

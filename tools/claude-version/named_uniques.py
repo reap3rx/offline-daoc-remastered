@@ -4,7 +4,7 @@
   python tools\\claude-version\\named_uniques.py named_uniques\\zone206_valley_of_bri_leith.json --apply    (server closed)
   python tools\\claude-version\\named_uniques.py named_uniques\\zone206_valley_of_bri_leith.json --undo
 
-A zone's spec (named_uniques/zoneNNN_*.json) lists one curated item per named monster: its name, slot (an existing
+A zone's spec (named_uniques/zoneNNN_*.json; "realm": 1 Albion, 2 Midgard, 3 Hibernia, the default) lists one curated item per named monster: its name, slot (an existing
 item's [Object_Type, Item_Type] to take the look, speed and hand from), level, bonuses, an optional weapon proc and a
 line of lore. --apply (after a backup next to the database):
   * writes each item template (Id_nb <prefix>_<slug>): the base item's model, speed and hand at the item's level, 100%
@@ -53,10 +53,10 @@ def proc_for(level, element):
     return spell + ELEMENT[element]
 
 
-def base_item(db, obj, slot, level):
-    rows = db.execute("select * from ItemTemplate where Object_Type=? and Item_Type=? and Realm in (3, 0) and Model>0 "
+def base_item(db, obj, slot, level, realm=3):
+    rows = db.execute("select * from ItemTemplate where Object_Type=? and Item_Type=? and Realm in (?, 0) and Model>0 "
                       "and Level between ? and ? and Id_nb not like 'nu%' order by abs(Level-?), Realm desc, "
-                      "Quality desc limit 1", (obj, slot, level - 12, level + 12, level)).fetchone()
+                      "Quality desc limit 1", (obj, slot, realm, level - 12, level + 12, level)).fetchone()
     if not rows:
         rows = db.execute("select * from ItemTemplate where Object_Type=? and Item_Type=? and Model>0 "
                           "order by abs(Level-?) limit 1", (obj, slot, level)).fetchone()
@@ -98,13 +98,13 @@ def plan(db, spec):
                          bonuses=scaled_bonuses(it['bonuses'], it['level'], lv), scaled_of=idnb)
                 todo.append((v, lv, v['bonuses'], '%s_l%d' % (idnb, lv)))
     for it, lvl, bonuses, idnb in todo:
-        b = base_item(db, it['base'][0], it['base'][1], it['level'])
+        b = base_item(db, it['base'][0], it['base'][1], it['level'], spec.get('realm', 3))
         if b is None:
             raise SystemExit('no base item for %s %s' % (it['name'], it['base']))
         row = dict(zip(cols, b))
         row.update(Id_nb=idnb, ItemTemplate_ID=idnb, TranslationId='', Name=it['name'], Level=lvl, Quality=100,
                    Condition=50000, MaxCondition=50000, Durability=50000, MaxDurability=50000, IsNotLosingDur=0,
-                   Realm=3, Bonus=35, BonusLevel=0, LevelRequirement=0, ExtraBonus=0, ExtraBonusType=0,
+                   Realm=spec.get('realm', 3), Bonus=35, BonusLevel=0, LevelRequirement=0, ExtraBonus=0, ExtraBonusType=0,
                    SpellID=0, Charges=0, MaxCharges=0, SpellID1=0, Charges1=0, MaxCharges1=0, CanUseEvery=0,
                    ProcSpellID=0, ProcSpellID1=0, ProcChance=0, PoisonSpellID=0, PoisonCharges=0, PoisonMaxCharges=0,
                    IsPickable=1, IsDropable=1, CanDropAsLoot=1, IsTradable=1, IsIndestructible=0, MaxCount=1,
@@ -188,6 +188,7 @@ def main():
     ap.add_argument('--apply', action='store_true')
     ap.add_argument('--undo', action='store_true')
     ap.add_argument('--db', default=str(DB))
+    ap.add_argument('--no-backup', action='store_true', help='(a batch of specs: back up once yourself first)')
     a = ap.parse_args()
     spec_path = Path(a.spec) if Path(a.spec).is_absolute() else Path(__file__).parent / a.spec
     spec = json.loads(spec_path.read_text(encoding='utf-8'))
@@ -209,14 +210,15 @@ def main():
     if not (a.apply or a.undo):
         print('\n(dry run - nothing written)')
         return
-    stamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-    # one backup only (owner): the new one replaces any earlier '<db>.before-*' backup
-    new = Path(a.db + '.before-%s-%s' % (spec['prefix'], stamp))
-    shutil.copy2(a.db, new)
-    for old in Path(a.db).parent.glob(Path(a.db).name + '.before-*'):
-        if old != new:
-            old.unlink()
-    print('backup', new)
+    if not a.no_backup:
+        stamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+        # one backup only (owner): the new one replaces any earlier '<db>.before-*' backup
+        new = Path(a.db + '.before-%s-%s' % (spec['prefix'], stamp))
+        shutil.copy2(a.db, new)
+        for old in Path(a.db).parent.glob(Path(a.db).name + '.before-*'):
+            if old != new:
+                old.unlink()
+        print('backup', new)
     if a.undo:
         undo(db, spec, spec_path)
     else:

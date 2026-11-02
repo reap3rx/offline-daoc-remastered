@@ -1,0 +1,61 @@
+{
+ "zone": 103,
+ "region": 100,
+ "realm": 2,
+ "prefix": "nu103",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "gotar_drowned_ship",
+   "scaled": true,
+   "name": "Captain Hrafn of the Drowned's Stone",
+   "base": [
+    41,
+    24
+   ],
+   "level": 8,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 8,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Won from Captain Hrafn of the Drowned when The Drowned Ship was ended."
+  },
+  {
+   "event_reward": "gotar_hobgoblins",
+   "scaled": true,
+   "name": "Snaggletooth's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 11,
+   "bonuses": {
+    "Pie": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 7
+   },
+   "lore": "Won from Snaggletooth when The Hobgoblin Raid was ended."
+  },
+  {
+   "event_reward": "gotar_wildlings",
+   "scaled": true,
+   "name": "Wildling Chieftain Skarn's Shroud",
+   "base": [
+    41,
+    26
+   ],
+   "level": 18,
+   "bonuses": {
+    "Pie": 5,
+    "Con": 3,
+    "Power": 2,
+    "Hits": 11
+   },
+   "lore": "Won from Wildling Chieftain Skarn when The Wildlings was ended."
+  }
+ ]
+}

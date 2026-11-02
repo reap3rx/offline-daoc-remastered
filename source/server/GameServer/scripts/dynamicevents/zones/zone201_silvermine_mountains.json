@@ -1,0 +1,356 @@
+{
+  "zone": 201,
+  "region": 200,
+  "name": "Silvermine Mts.",
+  "lore": "The Silvermine Mountains: Ardagh, Howth and the silver mines the sheevra fight for.",
+  "chains": [
+    {
+      "id": "silvermine_mountains_sheevra_warband",
+      "title": "The Sheevra Warband",
+      "levels": [12, 15],
+      "hint": "The sheevra are sharpening their blades...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Sheevra Camp",
+          "objective": "Clear the sheevra camp",
+          "announce": "The sheevra have mustered to take the silver mines. Break the warband.",
+          "center": [1134, 1020, 185.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60165949,
+              "name": "sheevra swordsman",
+              "level": [12, 13]
+            },
+            {
+              "template": 60165945,
+              "name": "sheevra archer",
+              "level": [14, 14]
+            },
+            {
+              "template": 60165948,
+              "name": "sheevra skirmisher",
+              "level": [13, 15]
+            }
+          ],
+          "success": "You have cleared the sheevra camp. Dubhan the Sheevra Chief comes out to fight.",
+          "fail": "They hold the sheevra camp. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Dubhan the Sheevra Chief",
+          "objective": "Defeat Dubhan the Sheevra Chief",
+          "announce": "Dubhan the Sheevra Chief stands at the sheevra camp. Bring friends.",
+          "center": [1134, 1020, 185.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60165946,
+            "name": "Dubhan the Sheevra Chief",
+            "level": 18,
+            "size": 70,
+            "pos": [1134, 1020, 185.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60165949,
+                "name": "sheevra swordsman",
+                "level": [12, 13]
+              }
+            ]
+          },
+          "success": "Dubhan the Sheevra Chief falls. The way is safe again.",
+          "fail": "Dubhan the Sheevra Chief slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu201_dubhan_the_sheevra_chief_s_cloak", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "silvermine_mountains_gray_spectres",
+      "title": "The Gray Spectres",
+      "levels": [17, 24],
+      "hint": "Grey shapes drift through the high passes...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Brother Cillian",
+          "objective": "Protect Brother Cillian, who is blessing the miners' shrine",
+          "announce": "Brother Cillian is blessing the shrine of the miners who died in the passes. Their spectres are coming for him.",
+          "center": [901, 1263, 128.4],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Brother Cillian",
+            "template": 60165767,
+            "level": 24,
+            "model": 365,
+            "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
+            "health_mult": 10,
+            "pos": [901, 1263, 128.4]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [842, 1324, 127.9],
+              [816, 1263, 125.4],
+              [842, 1202, 125.4]
+            ],
+            "mobs": [
+              {
+                "template": 60161575,
+                "name": "gray spectre",
+                "level": [22, 24]
+              },
+              {
+                "template": 60159811,
+                "name": "deamhan creig",
+                "level": [17, 18]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Brother Cillian. \"They came from over there - let's finish this.\"",
+          "fail": "Brother Cillian falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Miners' Shrine",
+          "objective": "Clear the miners' shrine",
+          "announce": "They came from the miners' shrine. Follow them back and clear it out.",
+          "center": [466, 1263, 130.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60161575,
+              "name": "gray spectre",
+              "level": [22, 24]
+            },
+            {
+              "template": 60159811,
+              "name": "deamhan creig",
+              "level": [17, 18]
+            }
+          ],
+          "success": "You have cleared the miners' shrine. The Gray Lady of Silvermine comes out to fight.",
+          "fail": "They hold the miners' shrine. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Gray Lady of Silvermine",
+          "objective": "Defeat the Gray Lady of Silvermine",
+          "announce": "The Gray Lady of Silvermine stands at the miners' shrine. Bring friends.",
+          "center": [466, 1263, 130.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60161575,
+            "name": "The Gray Lady of Silvermine",
+            "level": 27,
+            "size": 41,
+            "pos": [466, 1263, 130.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60161575,
+                "name": "gray spectre",
+                "level": [22, 24]
+              }
+            ]
+          },
+          "success": "The Gray Lady of Silvermine falls. The way is safe again.",
+          "fail": "The Gray Lady of Silvermine slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu201_gray_lady_of_silvermine_s_armband", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "silvermine_mountains_spraggon_warren",
+      "title": "The Spraggon Warren",
+      "levels": [15, 19],
+      "hint": "Sentinel Aodh is looking for help in Ardagh.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Sentinel Aodh",
+        "template": 60165767,
+        "level": 27,
+        "model": 365,
+        "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
+        "guild": "Sentinels of Ardagh",
+        "health_mult": 4,
+        "pos": [771, 111, 128.0],
+        "greet": "The spraggons have dug a warren under the west road, and the road is falling in. We're going to collapse it on them. Come with us? Tell me when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Sentinel",
+          "template": 60165767,
+          "level": 21,
+          "model": 365,
+          "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
+          "guild": "Sentinels of Ardagh",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Spraggon Warren",
+          "objective": "Go with Sentinel Aodh to the spraggon warren",
+          "announce": "Sentinel Aodh leads the sentinels of Ardagh to the spraggon warren.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [743, 124, 126.8],
+            [695, 124, 128.2],
+            [591, 132, 129.7],
+            [487, 132, 130.1],
+            [455, 140, 130.2]
+          ],
+          "ambushes": [
+            {
+              "at": 2,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 60166484,
+                  "name": "spraggonilt",
+                  "level": [15, 19]
+                }
+              ]
+            }
+          ],
+          "success": "Sentinel Aodh reaches the spraggon warren. \"There they are. Clear them out!\"",
+          "fail": "Sentinel Aodh falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Spraggon Warren",
+          "objective": "Clear the spraggon warren",
+          "announce": "Clear the spraggon warren!",
+          "center": [451, 142, 130.3],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60166484,
+              "name": "spraggonilt",
+              "level": [15, 19]
+            }
+          ],
+          "success": "You have cleared the spraggon warren. Spraggon Chief Nuadh comes out to fight.",
+          "fail": "They hold the spraggon warren. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Spraggon Chief Nuadh",
+          "objective": "Defeat Spraggon Chief Nuadh",
+          "announce": "Spraggon Chief Nuadh stands at the spraggon warren. Bring friends.",
+          "center": [451, 142, 130.3],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60166484,
+            "name": "Spraggon Chief Nuadh",
+            "level": 22,
+            "size": 44,
+            "pos": [451, 142, 130.3],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60166484,
+                "name": "spraggonilt",
+                "level": [15, 19]
+              }
+            ]
+          },
+          "success": "Spraggon Chief Nuadh falls. Ardagh will hear of this in the taverns tonight.",
+          "fail": "Spraggon Chief Nuadh slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu201_spraggon_chief_nuadh_s_pendant", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

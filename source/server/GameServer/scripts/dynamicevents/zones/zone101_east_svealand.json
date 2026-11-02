@@ -1,0 +1,366 @@
+{
+  "zone": 101,
+  "region": 100,
+  "name": "East Svealand",
+  "lore": "East Svealand: Audliten, Dvalin and Vasudheim, wolf country, where the tomte raid the farms and the dirges walk the old roads.",
+  "chains": [
+    {
+      "id": "east_svealand_sveawolves",
+      "title": "Wolves of Svealand",
+      "levels": [5, 8],
+      "hint": "The wolves are hunting in packs...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Hrolf the Trapper",
+          "objective": "Protect Hrolf the Trapper, who is skinning the winter catch",
+          "announce": "The sveawolves have smelled Hrolf the trapper's winter catch. Keep them off him while he bundles it.",
+          "center": [249, 131, 184.4],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Hrolf the Trapper",
+            "level": 8,
+            "model": 159,
+            "equipment": "a0bb02af-37b1-428c-9023-fdf6afdea19f",
+            "health_mult": 10,
+            "pos": [249, 131, 184.4]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [336, 111, 166.8],
+              [319, 169, 143.2],
+              [269, 190, 175.1]
+            ],
+            "mobs": [
+              {
+                "template": 60166676,
+                "name": "sveawolf mother",
+                "level": [5, 5]
+              },
+              {
+                "template": 60163487,
+                "name": "lupine gnawer",
+                "level": [7, 8]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Hrolf the Trapper. \"They came from over there - let's finish this.\"",
+          "fail": "Hrolf the Trapper falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Trapper's Camp",
+          "objective": "Clear the trapper's camp",
+          "announce": "They came from the trapper's camp. Follow them back and clear it out.",
+          "center": [515, 287, 119.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60166676,
+              "name": "sveawolf mother",
+              "level": [5, 5]
+            },
+            {
+              "template": 60163487,
+              "name": "lupine gnawer",
+              "level": [7, 8]
+            }
+          ],
+          "success": "You have cleared the trapper's camp. Grimfang comes out to fight.",
+          "fail": "They hold the trapper's camp. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Grimfang",
+          "objective": "Defeat Grimfang",
+          "announce": "Grimfang stands at the trapper's camp. Bring friends.",
+          "center": [515, 287, 119.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60166676,
+            "name": "Grimfang",
+            "level": 11,
+            "size": 70,
+            "pos": [515, 287, 119.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60166676,
+                "name": "sveawolf mother",
+                "level": [5, 5]
+              }
+            ]
+          },
+          "success": "Grimfang falls. The way is safe again.",
+          "fail": "Grimfang slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu101_grimfang_s_eye", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "east_svealand_restless_dead",
+      "title": "The Restless Dead",
+      "levels": [5, 8],
+      "hint": "The dirges are singing on the old road...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Old Road",
+          "objective": "Clear the old road",
+          "announce": "A draugr has risen from its barrow, and the dirges sing for it. Send it back.",
+          "center": [772, 627, 118.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 20001,
+              "name": "nordic dirge",
+              "level": [6, 6]
+            },
+            {
+              "template": 20003,
+              "name": "roaming dirge",
+              "level": [8, 8]
+            },
+            {
+              "template": 60160248,
+              "name": "dwarf bone skeleton",
+              "level": [5, 5]
+            }
+          ],
+          "success": "You have cleared the old road. The Barrow Draugr comes out to fight.",
+          "fail": "They hold the old road. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Barrow Draugr",
+          "objective": "Defeat the Barrow Draugr",
+          "announce": "The Barrow Draugr stands at the old road. Bring friends.",
+          "center": [772, 627, 118.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 20001,
+            "name": "The Barrow Draugr",
+            "level": 11,
+            "size": 65,
+            "pos": [772, 627, 118.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 20001,
+                "name": "nordic dirge",
+                "level": [6, 6]
+              }
+            ]
+          },
+          "success": "The Barrow Draugr falls. The way is safe again.",
+          "fail": "The Barrow Draugr slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu101_barrow_draugr_s_signet", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "east_svealand_tomte",
+      "title": "The Tomte Raiders",
+      "levels": [5, 8],
+      "hint": "Dreng Haldor is looking for help in Dvalin.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Dreng Haldor",
+        "level": 16,
+        "model": 159,
+        "equipment": "a0bb02af-37b1-428c-9023-fdf6afdea19f",
+        "guild": "Dvalin Guard",
+        "health_mult": 4,
+        "pos": [398, 1321, 119.3],
+        "greet": "The tomte have stolen the winter stores from three farms now, and they're getting bolder. I've found their hideout. Come with us? Tell me when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Viking",
+          "level": 10,
+          "model": 159,
+          "equipment": "a0bb02af-37b1-428c-9023-fdf6afdea19f",
+          "guild": "Dvalin Guard",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Tomte Hideout",
+          "objective": "Go with Dreng Haldor to the tomte hideout",
+          "announce": "Dreng Haldor leads the Dvalin guard out after the tomte.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [506, 1323, 118.8],
+            [610, 1323, 117.3],
+            [650, 1323, 116.5]
+          ],
+          "ambushes": [
+            {
+              "at": 1,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 60167145,
+                  "name": "tomte thug",
+                  "level": [5, 5]
+                },
+                {
+                  "template": 60167142,
+                  "name": "tomte skirmisher",
+                  "level": [7, 7]
+                }
+              ]
+            }
+          ],
+          "success": "Dreng Haldor reaches the tomte hideout. \"There they are. Clear them out!\"",
+          "fail": "Dreng Haldor falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Tomte Hideout",
+          "objective": "Clear the tomte hideout",
+          "announce": "Clear the tomte hideout!",
+          "center": [647, 1319, 116.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60167145,
+              "name": "tomte thug",
+              "level": [5, 5]
+            },
+            {
+              "template": 60167142,
+              "name": "tomte skirmisher",
+              "level": [7, 7]
+            },
+            {
+              "template": 60167133,
+              "name": "tomte pillager",
+              "level": [8, 8]
+            }
+          ],
+          "success": "You have cleared the tomte hideout. Tomte King Nisse comes out to fight.",
+          "fail": "They hold the tomte hideout. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Tomte King Nisse",
+          "objective": "Defeat Tomte King Nisse",
+          "announce": "Tomte King Nisse stands at the tomte hideout. Bring friends.",
+          "center": [647, 1319, 116.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60167116,
+            "name": "Tomte King Nisse",
+            "level": 11,
+            "size": 50,
+            "pos": [647, 1319, 116.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60167145,
+                "name": "tomte thug",
+                "level": [5, 5]
+              }
+            ]
+          },
+          "success": "Tomte King Nisse falls. Dvalin will hear of this in the taverns tonight.",
+          "fail": "Tomte King Nisse slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu101_tomte_king_nisse_s_belt", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

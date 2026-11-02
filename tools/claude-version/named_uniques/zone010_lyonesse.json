@@ -1,0 +1,60 @@
+{
+ "zone": 10,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu10",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "lyonesse_drowned_knights",
+   "scaled": true,
+   "name": "Black Knight of Lyonesse's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 9,
+    "Hits": 30
+   },
+   "lore": "Won from the Black Knight of Lyonesse when The Drowned Knights was ended."
+  },
+  {
+   "event_reward": "lyonesse_peallaidh_flood",
+   "scaled": true,
+   "name": "Drowned Peallaidh's Eye",
+   "base": [
+    41,
+    24
+   ],
+   "level": 42,
+   "bonuses": {
+    "Str": 13,
+    "Con": 13,
+    "Dex": 8,
+    "Hits": 34
+   },
+   "lore": "Won from the Drowned Peallaidh when The Peallaidh Flood was ended."
+  },
+  {
+   "event_reward": "lyonesse_moorlich",
+   "scaled": true,
+   "name": "Lich of the Sunken Moor's Amulet",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 15,
+    "Con": 9,
+    "Power": 6,
+    "Hits": 30
+   },
+   "lore": "Won from the Lich of the Sunken Moor when The Moorlich Mire was ended."
+  }
+ ]
+}

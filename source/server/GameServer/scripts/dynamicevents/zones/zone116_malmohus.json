@@ -1,0 +1,215 @@
+{
+  "zone": 116,
+  "region": 100,
+  "name": "Malmohus",
+  "lore": "Malmohus, where the drakulv worship the dragon and offer up whoever they catch on the roads.",
+  "chains": [
+    {
+      "id": "malmohus_drakulv_rite",
+      "title": "The Drakulv Rite",
+      "levels": [45, 52],
+      "hint": "Drums beat at the sacrifice stones...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Sacrifice Stones",
+          "objective": "Clear the sacrifice stones",
+          "announce": "The drakulv are preparing a great sacrifice to the dragon. Stop the rite.",
+          "center": [1439, 940, 75.4],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60160117,
+              "name": "drakulv sacrificer",
+              "level": [45, 49]
+            },
+            {
+              "template": 60160112,
+              "name": "drakulv axehand",
+              "level": [48, 52]
+            }
+          ],
+          "success": "You have cleared the sacrifice stones. High Sacrificer Draknir comes out to fight.",
+          "fail": "They hold the sacrifice stones. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "High Sacrificer Draknir",
+          "objective": "Defeat High Sacrificer Draknir",
+          "announce": "High Sacrificer Draknir stands at the sacrifice stones. Bring friends.",
+          "center": [1439, 940, 75.4],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60160117,
+            "name": "High Sacrificer Draknir",
+            "level": 55,
+            "size": 110,
+            "pos": [1439, 940, 75.4],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60160117,
+                "name": "drakulv sacrificer",
+                "level": [45, 49]
+              }
+            ]
+          },
+          "success": "High Sacrificer Draknir falls. The way is safe again.",
+          "fail": "High Sacrificer Draknir slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu116_high_sacrificer_draknir_s_band", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "malmohus_drakulv_patrols",
+      "title": "The Drakulv Patrols",
+      "levels": [39, 46],
+      "hint": "Drakulv patrols are sweeping the west...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Torvald the Cartographer",
+          "objective": "Protect Torvald the Cartographer, who is packing up his maps",
+          "announce": "Torvald has mapped the drakulv strongholds, and their patrols have found him. Keep him alive while he packs up the maps.",
+          "center": [154, 110, 119.8],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Torvald the Cartographer",
+            "template": 60167667,
+            "level": 46,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+            "health_mult": 10,
+            "pos": [154, 110, 119.8]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [235, 136, 119.5],
+              [191, 186, 131.1],
+              [131, 190, 148.7]
+            ],
+            "mobs": [
+              {
+                "template": 60164855,
+                "name": "patrolling drakulv",
+                "level": [39, 43]
+              },
+              {
+                "template": 60160110,
+                "name": "drakulv armguard",
+                "level": [42, 46]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Torvald the Cartographer. \"They came from over there - let's finish this.\"",
+          "fail": "Torvald the Cartographer falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Cartographer's Camp",
+          "objective": "Clear the cartographer's camp",
+          "announce": "They came from the cartographer's camp. Follow them back and clear it out.",
+          "center": [265, 337, 67.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60164855,
+              "name": "patrolling drakulv",
+              "level": [39, 43]
+            },
+            {
+              "template": 60160110,
+              "name": "drakulv armguard",
+              "level": [42, 46]
+            }
+          ],
+          "success": "You have cleared the cartographer's camp. Warlord Skuld comes out to fight.",
+          "fail": "They hold the cartographer's camp. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Warlord Skuld",
+          "objective": "Defeat Warlord Skuld",
+          "announce": "Warlord Skuld stands at the cartographer's camp. Bring friends.",
+          "center": [265, 337, 67.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60160110,
+            "name": "Warlord Skuld",
+            "level": 49,
+            "size": 110,
+            "pos": [265, 337, 67.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60164855,
+                "name": "patrolling drakulv",
+                "level": [39, 43]
+              }
+            ]
+          },
+          "success": "Warlord Skuld falls. The way is safe again.",
+          "fail": "Warlord Skuld slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu116_warlord_skuld_s_sash", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

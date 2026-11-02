@@ -1,0 +1,61 @@
+{
+ "zone": 9,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu9",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "avalon_marsh_ghoul_court",
+   "scaled": true,
+   "name": "Ghoul Lord of Avalon's Band",
+   "base": [
+    41,
+    35
+   ],
+   "level": 21,
+   "bonuses": {
+    "Int": 6,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "Won from the Ghoul Lord of Avalon when The Ghoul Court was ended."
+  },
+  {
+   "event_reward": "avalon_marsh_bogmen",
+   "scaled": true,
+   "name": "Mudgrip the Bog-Chief's Girdle",
+   "base": [
+    41,
+    32
+   ],
+   "level": 14,
+   "bonuses": {
+    "Cha": 4,
+    "Emp": 3,
+    "Qui": 3,
+    "Hits": 8
+   },
+   "lore": "Won from Mudgrip the Bog-Chief when The Bogmen was ended."
+  },
+  {
+   "event_reward": "avalon_marsh_shamblers",
+   "scaled": true,
+   "name": "Mire Colossus' Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 17,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 17,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Won from the Mire Colossus when Shamblers of the Marsh was ended."
+  }
+ ]
+}

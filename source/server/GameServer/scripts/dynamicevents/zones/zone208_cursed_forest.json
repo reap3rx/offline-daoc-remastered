@@ -1,0 +1,220 @@
+{
+  "zone": 208,
+  "region": 200,
+  "name": "Cursed Forest",
+  "lore": "The Cursed Forest, where the gan ceanach whisper to the lost and the leprechauns guard gold that was never theirs.",
+  "chains": [
+    {
+      "id": "cursed_forest_levian_al",
+      "title": "The Levian-al Circle",
+      "levels": [50, 54],
+      "hint": "Whispers call from the northern woods...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Dark Circle",
+          "objective": "Clear the dark circle",
+          "announce": "The gan ceanach prince is calling the lost into his circle. Break it.",
+          "center": [599, 291, 126.5],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60163254,
+              "name": "levian-al",
+              "level": [50, 54]
+            },
+            {
+              "template": 60161197,
+              "name": "gan ceanach",
+              "level": [50, 53]
+            },
+            {
+              "template": 60166425,
+              "name": "spectral manslayer",
+              "level": [50, 53]
+            }
+          ],
+          "success": "You have cleared the dark circle. The Gan Ceanach Prince comes out to fight.",
+          "fail": "They hold the dark circle. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Gan Ceanach Prince",
+          "objective": "Defeat the Gan Ceanach Prince",
+          "announce": "The Gan Ceanach Prince stands at the dark circle. Bring friends.",
+          "center": [599, 291, 126.5],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60161197,
+            "name": "The Gan Ceanach Prince",
+            "level": 57,
+            "size": 70,
+            "pos": [599, 291, 126.5],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60163254,
+                "name": "levian-al",
+                "level": [50, 54]
+              }
+            ]
+          },
+          "success": "The Gan Ceanach Prince falls. The way is safe again.",
+          "fail": "The Gan Ceanach Prince slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu208_gan_ceanach_prince_s_cloak", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "cursed_forest_leprechaun_gold",
+      "title": "Leprechaun Gold",
+      "levels": [48, 55],
+      "hint": "Gold glints in the heart of the forest...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Ruadhan the Treasure-Hunter",
+          "objective": "Protect Ruadhan the Treasure-Hunter, who is digging up a crock of gold",
+          "announce": "Ruadhan has found a leprechaun's crock, and every poacher and leprechaun in the forest wants it. Keep him alive while he digs.",
+          "center": [892, 592, 134.6],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Ruadhan the Treasure-Hunter",
+            "template": 60161797,
+            "level": 55,
+            "model": 388,
+            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
+            "health_mult": 10,
+            "pos": [892, 592, 134.6]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [822, 544, 141.9],
+              [877, 508, 144.9],
+              [942, 523, 135.9]
+            ],
+            "mobs": [
+              {
+                "template": 60163224,
+                "name": "leprechaun",
+                "level": [48, 50]
+              },
+              {
+                "template": 60161034,
+                "name": "forest poacher",
+                "level": [53, 55]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Ruadhan the Treasure-Hunter. \"They came from over there - let's finish this.\"",
+          "fail": "Ruadhan the Treasure-Hunter falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Treasure Cairn",
+          "objective": "Clear the treasure cairn",
+          "announce": "They came from the treasure cairn. Follow them back and clear it out.",
+          "center": [851, 361, 126.7],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60163224,
+              "name": "leprechaun",
+              "level": [48, 50]
+            },
+            {
+              "template": 60161034,
+              "name": "forest poacher",
+              "level": [53, 55]
+            }
+          ],
+          "success": "You have cleared the treasure cairn. Seamus the Crock-Keeper comes out to fight.",
+          "fail": "They hold the treasure cairn. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Seamus the Crock-Keeper",
+          "objective": "Defeat Seamus the Crock-Keeper",
+          "announce": "Seamus the Crock-Keeper stands at the treasure cairn. Bring friends.",
+          "center": [851, 361, 126.7],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60163224,
+            "name": "Seamus the Crock-Keeper",
+            "level": 58,
+            "size": 70,
+            "pos": [851, 361, 126.7],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60163224,
+                "name": "leprechaun",
+                "level": [48, 50]
+              }
+            ]
+          },
+          "success": "Seamus the Crock-Keeper falls. The way is safe again.",
+          "fail": "Seamus the Crock-Keeper slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu208_seamus_the_crock_keeper_s_sash", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

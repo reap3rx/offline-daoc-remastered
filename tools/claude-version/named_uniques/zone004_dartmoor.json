@@ -1,0 +1,43 @@
+{
+ "zone": 4,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu4",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "dartmoor_herdsmen_cairn",
+   "scaled": true,
+   "name": "Gorm the Cairn-Builder's Armband",
+   "base": [
+    41,
+    33
+   ],
+   "level": 49,
+   "bonuses": {
+    "Cha": 15,
+    "Emp": 12,
+    "Qui": 9,
+    "Hits": 29
+   },
+   "lore": "Won from Gorm the Cairn-Builder when The Herdsmen's Cairn was ended."
+  },
+  {
+   "event_reward": "dartmoor_stonecallers",
+   "scaled": true,
+   "name": "Stonelord Vaurn's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 9,
+    "Hits": 40
+   },
+   "lore": "Won from Stonelord Vaurn when The Stonecallers' Rite was ended."
+  }
+ ]
+}

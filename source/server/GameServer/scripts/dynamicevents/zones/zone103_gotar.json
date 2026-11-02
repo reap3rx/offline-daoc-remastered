@@ -1,0 +1,379 @@
+{
+  "zone": 103,
+  "region": 100,
+  "name": "Gotar",
+  "lore": "Gotar: Fort Atla and Nalliten on the fjords, where a drowned ship lies on the shore and its crew have not stopped rowing.",
+  "chains": [
+    {
+      "id": "gotar_drowned_ship",
+      "title": "The Drowned Ship",
+      "levels": [3, 5],
+      "hint": "Oars creak on the shore where no ship floats...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Wreck",
+          "objective": "Clear the wreck",
+          "announce": "Captain Hrafn's crew have climbed out of the wreck to find a new ship. Send them back to the sea.",
+          "center": [1057, 584, 118.9],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60166181,
+              "name": "skeletal seafarer",
+              "level": [4, 4]
+            },
+            {
+              "template": 60166175,
+              "name": "skeletal oarsman",
+              "level": [5, 5]
+            },
+            {
+              "template": 60160165,
+              "name": "drowned soul",
+              "level": [3, 3]
+            }
+          ],
+          "success": "You have cleared the wreck. Captain Hrafn of the Drowned comes out to fight.",
+          "fail": "They hold the wreck. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Captain Hrafn of the Drowned",
+          "objective": "Defeat Captain Hrafn of the Drowned",
+          "announce": "Captain Hrafn of the Drowned stands at the wreck. Bring friends.",
+          "center": [1057, 584, 118.9],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60166181,
+            "name": "Captain Hrafn of the Drowned",
+            "level": 8,
+            "size": 67,
+            "pos": [1057, 584, 118.9],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60166181,
+                "name": "skeletal seafarer",
+                "level": [4, 4]
+              }
+            ]
+          },
+          "success": "Captain Hrafn of the Drowned falls. The way is safe again.",
+          "fail": "Captain Hrafn of the Drowned slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu103_captain_hrafn_of_the_drowned_s_stone", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "gotar_hobgoblins",
+      "title": "The Hobgoblin Raid",
+      "levels": [3, 8],
+      "hint": "Hobgoblins are giggling in the hills...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Asa the Net-Mender",
+          "objective": "Protect Asa the Net-Mender, who is saving the village nets",
+          "announce": "The hobgoblins are coming to cut the village nets again. Asa won't leave them - keep the hobgoblins off her.",
+          "center": [617, 1245, 118.0],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Asa the Net-Mender",
+            "level": 8,
+            "model": 138,
+            "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b",
+            "health_mult": 10,
+            "pos": [617, 1245, 118.0]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [651, 1167, 116.6],
+              [697, 1215, 115.9],
+              [695, 1281, 119.3]
+            ],
+            "mobs": [
+              {
+                "template": 60162172,
+                "name": "hobgoblin prowler",
+                "level": [8, 8]
+              },
+              {
+                "template": 60162168,
+                "name": "hobgoblin pincher",
+                "level": [4, 4]
+              },
+              {
+                "template": 60162170,
+                "name": "hobgoblin prankster",
+                "level": [3, 3]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Asa the Net-Mender. \"They came from over there - let's finish this.\"",
+          "fail": "Asa the Net-Mender falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Net-drying Racks",
+          "objective": "Clear the net-drying racks",
+          "announce": "They came from the net-drying racks. Follow them back and clear it out.",
+          "center": [842, 1159, 114.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60162172,
+              "name": "hobgoblin prowler",
+              "level": [8, 8]
+            },
+            {
+              "template": 60162168,
+              "name": "hobgoblin pincher",
+              "level": [4, 4]
+            },
+            {
+              "template": 60162170,
+              "name": "hobgoblin prankster",
+              "level": [3, 3]
+            }
+          ],
+          "success": "You have cleared the net-drying racks. Snaggletooth comes out to fight.",
+          "fail": "They hold the net-drying racks. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Snaggletooth",
+          "objective": "Defeat Snaggletooth",
+          "announce": "Snaggletooth stands at the net-drying racks. Bring friends.",
+          "center": [842, 1159, 114.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60162172,
+            "name": "Snaggletooth",
+            "level": 11,
+            "size": 70,
+            "pos": [842, 1159, 114.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60162172,
+                "name": "hobgoblin prowler",
+                "level": [8, 8]
+              }
+            ]
+          },
+          "success": "Snaggletooth falls. The way is safe again.",
+          "fail": "Snaggletooth slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu103_snaggletooth_s_mantle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "gotar_wildlings",
+      "title": "The Wildlings",
+      "levels": [12, 15],
+      "hint": "Flayer Kegnar is looking for help in Fort Atla.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Flayer Kegnar",
+        "level": 23,
+        "model": 138,
+        "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b",
+        "guild": "Fort Atla",
+        "health_mult": 4,
+        "pos": [703, 405, 110.7],
+        "greet": "The wildlings have been setting their wolves on our hunters. I'm going to have a word with their chieftain - with my axe. Coming? Tell me when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Flayer",
+          "level": 17,
+          "model": 138,
+          "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b",
+          "guild": "Fort Atla",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Wildling Camp",
+          "objective": "Go with Flayer Kegnar to the wildling camp",
+          "announce": "Flayer Kegnar marches out of Fort Atla to the wildling camp.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [628, 481, 112.5],
+            [596, 489, 112.9],
+            [524, 561, 117.9],
+            [500, 585, 119.3],
+            [396, 585, 118.8],
+            [356, 585, 118.7]
+          ],
+          "ambushes": [
+            {
+              "at": 3,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 60167946,
+                  "name": "wildling",
+                  "level": [13, 14]
+                },
+                {
+                  "template": 60168000,
+                  "name": "wolf nipper",
+                  "level": [12, 13]
+                }
+              ]
+            }
+          ],
+          "success": "Flayer Kegnar reaches the wildling camp. \"There they are. Clear them out!\"",
+          "fail": "Flayer Kegnar falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Wildling Camp",
+          "objective": "Clear the wildling camp",
+          "announce": "Clear the wildling camp!",
+          "center": [360, 581, 118.9],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60167946,
+              "name": "wildling",
+              "level": [13, 14]
+            },
+            {
+              "template": 60168000,
+              "name": "wolf nipper",
+              "level": [12, 13]
+            },
+            {
+              "template": 12238,
+              "name": "water snake",
+              "level": [14, 15]
+            }
+          ],
+          "success": "You have cleared the wildling camp. Wildling Chieftain Skarn comes out to fight.",
+          "fail": "They hold the wildling camp. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Wildling Chieftain Skarn",
+          "objective": "Defeat Wildling Chieftain Skarn",
+          "announce": "Wildling Chieftain Skarn stands at the wildling camp. Bring friends.",
+          "center": [360, 581, 118.9],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60167946,
+            "name": "Wildling Chieftain Skarn",
+            "level": 18,
+            "size": 83,
+            "pos": [360, 581, 118.9],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60167946,
+                "name": "wildling",
+                "level": [13, 14]
+              }
+            ]
+          },
+          "success": "Wildling Chieftain Skarn falls. Fort Atla will hear of this in the taverns tonight.",
+          "fail": "Wildling Chieftain Skarn slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu103_wildling_chieftain_skarn_s_shroud", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

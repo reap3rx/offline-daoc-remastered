@@ -1387,6 +1387,7 @@ namespace DOL.GS.ServerRules
 
             long xpCap = CalculateXpCap();
             baseXpReward = Math.Min(baseXpReward, xpCap);
+            baseXpReward = LevelScaling.KillExperience(playerToAward, killedNpc, baseXpReward);   // scaled down: very little
 
             if (baseXpReward <= 0)
                 return;
@@ -1673,6 +1674,9 @@ namespace DOL.GS.ServerRules
 
             foreach (DbItemTemplate itemTemplate in LootMgr.GetLoot(killedNpc, killer))
             {
+                if (!LevelScaling.KeepDrop(killer, killedNpc))
+                    continue;   // scaled down: grinding low monsters pays little (LevelScaling.cs)
+
                 if (GameMoney.IsItemMoney(itemTemplate.Name))
                     CreateMoney(killedNpc, itemTemplate, itemOwners, playersInRadius);
                 else

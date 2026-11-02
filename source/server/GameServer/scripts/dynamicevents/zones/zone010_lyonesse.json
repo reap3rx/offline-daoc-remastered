@@ -1,0 +1,301 @@
+{
+  "zone": 10,
+  "region": 1,
+  "name": "Lyonesse",
+  "lore": "Lyonesse, the drowned land, where the knights of a sunken kingdom still keep their watch and the moor-liches rise from the bog.",
+  "chains": [
+    {
+      "id": "lyonesse_drowned_knights",
+      "title": "The Drowned Knights",
+      "levels": [45, 49],
+      "hint": "Armour glints in the drowned keep...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Sunken Keep",
+          "objective": "Clear the sunken keep",
+          "announce": "The Black Knight has mustered the drowned garrison. Break it before it marches inland.",
+          "center": [1124, 1183, 74.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12957,
+              "name": "footman",
+              "level": [45, 45]
+            },
+            {
+              "template": 12932,
+              "name": "archer",
+              "level": [45, 45]
+            },
+            {
+              "template": 50015,
+              "name": "knight",
+              "level": [49, 49]
+            }
+          ],
+          "success": "You have cleared the sunken keep. The Black Knight of Lyonesse comes out to fight.",
+          "fail": "They hold the sunken keep. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Black Knight of Lyonesse",
+          "objective": "Defeat the Black Knight of Lyonesse",
+          "announce": "The Black Knight of Lyonesse stands at the sunken keep. Bring friends.",
+          "center": [1124, 1183, 74.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 50015,
+            "name": "The Black Knight of Lyonesse",
+            "level": 52,
+            "size": 78,
+            "pos": [1124, 1183, 74.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12957,
+                "name": "footman",
+                "level": [45, 45]
+              }
+            ]
+          },
+          "success": "The Black Knight of Lyonesse falls. The way is safe again.",
+          "fail": "The Black Knight of Lyonesse slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu10_black_knight_of_lyonesse_s_cloak", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lyonesse_peallaidh_flood",
+      "title": "The Peallaidh Flood",
+      "levels": [30, 39],
+      "hint": "The water is rising in the north...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Old Tamsin",
+          "objective": "Protect Old Tamsin, who is driving her flock to higher ground",
+          "announce": "The peallaidh are raising the water. Old Tamsin is driving her flock to higher ground - keep them off her.",
+          "center": [1178, 378, 74.1],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Old Tamsin",
+            "template": 60167630,
+            "level": 39,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+            "health_mult": 10,
+            "pos": [1178, 378, 74.1]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1257, 410, 76.1],
+              [1211, 457, 77.7],
+              [1145, 456, 76.5]
+            ],
+            "mobs": [
+              {
+                "template": 12974,
+                "name": "peallaidh",
+                "level": [35, 39]
+              },
+              {
+                "template": 12965,
+                "name": "hamadryad",
+                "level": [30, 34]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Old Tamsin. \"They came from over there - let's finish this.\"",
+          "fail": "Old Tamsin falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Shepherd's Fold",
+          "objective": "Clear the shepherd's fold",
+          "announce": "They came from the shepherd's fold. Follow them back and clear it out.",
+          "center": [1269, 600, 81.1],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12974,
+              "name": "peallaidh",
+              "level": [35, 39]
+            },
+            {
+              "template": 12965,
+              "name": "hamadryad",
+              "level": [30, 34]
+            }
+          ],
+          "success": "You have cleared the shepherd's fold. The Drowned Peallaidh comes out to fight.",
+          "fail": "They hold the shepherd's fold. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Drowned Peallaidh",
+          "objective": "Defeat the Drowned Peallaidh",
+          "announce": "The Drowned Peallaidh stands at the shepherd's fold. Bring friends.",
+          "center": [1269, 600, 81.1],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12974,
+            "name": "The Drowned Peallaidh",
+            "level": 42,
+            "size": 71,
+            "pos": [1269, 600, 81.1],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12974,
+                "name": "peallaidh",
+                "level": [35, 39]
+              }
+            ]
+          },
+          "success": "The Drowned Peallaidh falls. The way is safe again.",
+          "fail": "The Drowned Peallaidh slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu10_drowned_peallaidh_s_eye", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lyonesse_moorlich",
+      "title": "The Moorlich Mire",
+      "levels": [45, 48],
+      "hint": "A green light burns over the mire...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Moorlich Mire",
+          "objective": "Clear the moorlich mire",
+          "announce": "The moorliches have gathered in the mire around their master. Put him down.",
+          "center": [1037, 933, 68.9],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 10142,
+              "name": "moorlich",
+              "level": [48, 48]
+            },
+            {
+              "template": 12979,
+              "name": "pygmy goblin tangler",
+              "level": [45, 45]
+            }
+          ],
+          "success": "You have cleared the moorlich mire. The Lich of the Sunken Moor comes out to fight.",
+          "fail": "They hold the moorlich mire. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Lich of the Sunken Moor",
+          "objective": "Defeat the Lich of the Sunken Moor",
+          "announce": "The Lich of the Sunken Moor stands at the moorlich mire. Bring friends.",
+          "center": [1037, 933, 68.9],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 10142,
+            "name": "The Lich of the Sunken Moor",
+            "level": 51,
+            "size": 110,
+            "pos": [1037, 933, 68.9],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 10142,
+                "name": "moorlich",
+                "level": [48, 48]
+              }
+            ]
+          },
+          "success": "The Lich of the Sunken Moor falls. The way is safe again.",
+          "fail": "The Lich of the Sunken Moor slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu10_lich_of_the_sunken_moor_s_amulet", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

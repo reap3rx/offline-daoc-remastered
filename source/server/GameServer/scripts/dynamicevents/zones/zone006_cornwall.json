@@ -1,0 +1,306 @@
+{
+  "zone": 6,
+  "region": 1,
+  "name": "Cornwall",
+  "lore": "Cornwall: moor, sea-cliff and tin mine, where the muryan dwindle in their mounds and the bucca demand their share of every catch.",
+  "chains": [
+    {
+      "id": "cornwall_muryan_mounds",
+      "title": "The Muryan Mounds",
+      "levels": [18, 24],
+      "hint": "Small lights dance over the mounds...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Muryan Mounds",
+          "objective": "Clear the muryan mounds",
+          "announce": "The bucca have stirred the muryan against the tinners. Old Tregeagle, who should be bailing his pool for eternity, is behind it.",
+          "center": [674, 971, 139.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12862,
+              "name": "muryan",
+              "level": [18, 20]
+            },
+            {
+              "template": 12874,
+              "name": "bucca",
+              "level": [23, 24]
+            }
+          ],
+          "success": "You have cleared the muryan mounds. Old Tregeagle comes out to fight.",
+          "fail": "They hold the muryan mounds. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Old Tregeagle",
+          "objective": "Defeat Old Tregeagle",
+          "announce": "Old Tregeagle stands at the muryan mounds. Bring friends.",
+          "center": [674, 971, 139.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12874,
+            "name": "Old Tregeagle",
+            "level": 27,
+            "size": 32,
+            "pos": [674, 971, 139.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12862,
+                "name": "muryan",
+                "level": [18, 20]
+              }
+            ]
+          },
+          "success": "Old Tregeagle falls. The way is safe again.",
+          "fail": "Old Tregeagle slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu6_old_tregeagle_s_signet", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "cornwall_moor_wolves",
+      "title": "The Moor Wolves",
+      "levels": [14, 17],
+      "hint": "Wolves howl across the moor...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Jenefer the Tinner",
+          "objective": "Protect Jenefer the Tinner, who is loading tin onto her mule",
+          "announce": "The moor wolves have Jenefer the tinner and her mule cornered. Keep them off her while she gets the load on.",
+          "center": [1164, 678, 128.6],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Jenefer the Tinner",
+            "template": 60167630,
+            "level": 17,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+            "health_mult": 10,
+            "pos": [1164, 678, 128.6]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1236, 722, 135.4],
+              [1183, 761, 132.6],
+              [1117, 750, 135.4]
+            ],
+            "mobs": [
+              {
+                "template": 12831,
+                "name": "moor wolf",
+                "level": [14, 14]
+              },
+              {
+                "template": 12830,
+                "name": "moor pack leader",
+                "level": [15, 15]
+              },
+              {
+                "template": 12829,
+                "name": "moor den mother",
+                "level": [17, 17]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Jenefer the Tinner. \"They came from over there - let's finish this.\"",
+          "fail": "Jenefer the Tinner falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Tinners' Track",
+          "objective": "Clear the tinners' track",
+          "announce": "They came from the tinners' track. Follow them back and clear it out.",
+          "center": [1221, 927, 126.3],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12831,
+              "name": "moor wolf",
+              "level": [14, 14]
+            },
+            {
+              "template": 12830,
+              "name": "moor pack leader",
+              "level": [15, 15]
+            },
+            {
+              "template": 12829,
+              "name": "moor den mother",
+              "level": [17, 17]
+            }
+          ],
+          "success": "You have cleared the tinners' track. Greyjaw of the Moor comes out to fight.",
+          "fail": "They hold the tinners' track. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Greyjaw of the Moor",
+          "objective": "Defeat Greyjaw of the Moor",
+          "announce": "Greyjaw of the Moor stands at the tinners' track. Bring friends.",
+          "center": [1221, 927, 126.3],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12830,
+            "name": "Greyjaw of the Moor",
+            "level": 20,
+            "size": 91,
+            "pos": [1221, 927, 126.3],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12831,
+                "name": "moor wolf",
+                "level": [14, 14]
+              }
+            ]
+          },
+          "success": "Greyjaw of the Moor falls. The way is safe again.",
+          "fail": "Greyjaw of the Moor slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu6_greyjaw_of_the_moor_s_mantle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "cornwall_rooters_dig",
+      "title": "The Rooters' Dig",
+      "levels": [27, 34],
+      "hint": "The ground heaves over the old battlefield...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Old Battlefield",
+          "objective": "Clear the old battlefield",
+          "announce": "The giant rooters are tearing up the old battlefield, and the dead they uncover are getting up.",
+          "center": [776, 1311, 168.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12825,
+              "name": "giant rooter",
+              "level": [30, 34]
+            },
+            {
+              "template": 12688,
+              "name": "giant skeleton",
+              "level": [27, 28]
+            }
+          ],
+          "success": "You have cleared the old battlefield. The Boneheap Rooter comes out to fight.",
+          "fail": "They hold the old battlefield. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Boneheap Rooter",
+          "objective": "Defeat the Boneheap Rooter",
+          "announce": "The Boneheap Rooter stands at the old battlefield. Bring friends.",
+          "center": [776, 1311, 168.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12825,
+            "name": "The Boneheap Rooter",
+            "level": 37,
+            "size": 84,
+            "pos": [776, 1311, 168.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12825,
+                "name": "giant rooter",
+                "level": [30, 34]
+              }
+            ]
+          },
+          "success": "The Boneheap Rooter falls. The way is safe again.",
+          "fail": "The Boneheap Rooter slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu6_boneheap_rooter_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

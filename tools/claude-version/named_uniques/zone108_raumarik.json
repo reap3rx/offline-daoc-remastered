@@ -1,0 +1,43 @@
+{
+ "zone": 108,
+ "region": 100,
+ "realm": 2,
+ "prefix": "nu108",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "raumarik_icestriders",
+   "scaled": true,
+   "name": "Icestrider Hrimfaxi's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 49,
+   "bonuses": {
+    "Int": 15,
+    "Dex": 9,
+    "Power": 6,
+    "Hits": 29
+   },
+   "lore": "Won from Icestrider Hrimfaxi when The Icestriders was ended."
+  },
+  {
+   "event_reward": "raumarik_white_wights",
+   "scaled": true,
+   "name": "Frore Lich Vetrarr's Stone",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 9,
+    "Hits": 30
+   },
+   "lore": "Won from Frore Lich Vetrarr when Wights of the White Waste was ended."
+  }
+ ]
+}

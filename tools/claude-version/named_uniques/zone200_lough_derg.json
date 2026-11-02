@@ -1,0 +1,61 @@
+{
+ "zone": 200,
+ "region": 200,
+ "realm": 3,
+ "prefix": "nu200",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "lough_derg_dergan_furies",
+   "scaled": true,
+   "name": "Dergan Matron's Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 18,
+   "bonuses": {
+    "Int": 5,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 11
+   },
+   "lore": "Won from the Dergan Matron when The Dergan Furies was ended."
+  },
+  {
+   "event_reward": "lough_derg_ghostly_siabra",
+   "scaled": true,
+   "name": "Siabra Revenant's Band",
+   "base": [
+    41,
+    35
+   ],
+   "level": 18,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 18,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Won from the Siabra Revenant when The Ghostly Siabra was ended."
+  },
+  {
+   "event_reward": "lough_derg_curmudgeon_harvest",
+   "scaled": true,
+   "name": "Grogan the Curmudgeon King's Amulet",
+   "base": [
+    41,
+    29
+   ],
+   "level": 15,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 3,
+    "Hits": 12
+   },
+   "lore": "Won from Grogan the Curmudgeon King when The Curmudgeon Harvest was ended."
+  }
+ ]
+}

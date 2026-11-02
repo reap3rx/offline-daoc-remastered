@@ -1,0 +1,61 @@
+{
+ "zone": 202,
+ "region": 200,
+ "realm": 3,
+ "prefix": "nu202",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "shannon_estuary_giant_ants",
+   "scaled": true,
+   "name": "Ant Queen of the Shannon's Jewel",
+   "base": [
+    41,
+    24
+   ],
+   "level": 27,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 27,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Won from the Ant Queen of the Shannon when The Giant Ants was ended."
+  },
+  {
+   "event_reward": "shannon_estuary_eriu_hunters",
+   "scaled": true,
+   "name": "Eriu Huntmaster's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 25,
+   "bonuses": {
+    "Cha": 8,
+    "Emp": 6,
+    "Qui": 4,
+    "Hits": 15
+   },
+   "lore": "Won from the Eriu Huntmaster when The Eriu Hunters was ended."
+  },
+  {
+   "event_reward": "shannon_estuary_sheerie_ring",
+   "scaled": true,
+   "name": "Queen Aoibheall's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 15,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 3,
+    "Hits": 9
+   },
+   "lore": "Won from Queen Aoibheall when The Sheerie Ring was ended."
+  }
+ ]
+}

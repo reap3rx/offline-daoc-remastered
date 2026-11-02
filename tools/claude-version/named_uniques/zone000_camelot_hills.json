@@ -1,0 +1,60 @@
+{
+ "zone": 0,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu0",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "camelot_hills_bandit_hollow",
+   "scaled": true,
+   "name": "Ranulf Blackhand's Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 12,
+   "bonuses": {
+    "Cha": 4,
+    "Emp": 3,
+    "Qui": 2,
+    "Hits": 7
+   },
+   "lore": "Won from Ranulf Blackhand when The Bandit Hollow was ended."
+  },
+  {
+   "event_reward": "camelot_hills_barrow_wakes",
+   "scaled": true,
+   "name": "Barrow-Wight's Signet",
+   "base": [
+    41,
+    35
+   ],
+   "level": 10,
+   "bonuses": {
+    "Pie": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "Won from the Barrow-Wight when The Barrow Wakes was ended."
+  },
+  {
+   "event_reward": "camelot_hills_ant_nest",
+   "scaled": true,
+   "name": "Hive Champion's Band",
+   "base": [
+    41,
+    35
+   ],
+   "level": 11,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 2,
+    "Hits": 7
+   },
+   "lore": "Won from the Hive Champion when The Dragon Ant Nest was ended."
+  }
+ ]
+}

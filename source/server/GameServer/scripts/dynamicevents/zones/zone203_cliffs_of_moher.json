@@ -1,0 +1,369 @@
+{
+  "zone": 203,
+  "region": 200,
+  "name": "Cliffs of Moher",
+  "lore": "The Cliffs of Moher, where the sea-fog hides wraiths and the cliff dwellers hold the high ground above Tir Urphost.",
+  "chains": [
+    {
+      "id": "cliffs_of_moher_cliff_dwellers",
+      "title": "The Cliff Dwellers' Hold",
+      "levels": [36, 40],
+      "hint": "Spears glint along the cliff tops...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Cliff Dwellers' Hold",
+          "objective": "Clear the cliff dwellers' hold",
+          "announce": "The cliff dwellers are raiding the coast from their hold. Fomhor leads them - bring him down.",
+          "center": [268, 755, 38.4],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60159245,
+              "name": "cliff dweller",
+              "level": [36, 38]
+            },
+            {
+              "template": 60159246,
+              "name": "cliff dweller hunter",
+              "level": [37, 38]
+            },
+            {
+              "template": 60159247,
+              "name": "cliff dweller spearman",
+              "level": [38, 40]
+            }
+          ],
+          "success": "You have cleared the cliff dwellers' hold. Fomhor the Cliff Chief comes out to fight.",
+          "fail": "They hold the cliff dwellers' hold. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Fomhor the Cliff Chief",
+          "objective": "Defeat Fomhor the Cliff Chief",
+          "announce": "Fomhor the Cliff Chief stands at the cliff dwellers' hold. Bring friends.",
+          "center": [268, 755, 38.4],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60159247,
+            "name": "Fomhor the Cliff Chief",
+            "level": 43,
+            "size": 67,
+            "pos": [268, 755, 38.4],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60159245,
+                "name": "cliff dweller",
+                "level": [36, 38]
+              }
+            ]
+          },
+          "success": "Fomhor the Cliff Chief falls. The way is safe again.",
+          "fail": "Fomhor the Cliff Chief slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu203_fomhor_the_cliff_chief_s_cloak", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "cliffs_of_moher_fog_wraiths",
+      "title": "Fog on the Cliffs",
+      "levels": [27, 30],
+      "hint": "A thick fog is rolling in from the sea...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Sorcha the Beacon-Keeper",
+          "objective": "Protect Sorcha the Beacon-Keeper, who is keeping the beacon alight",
+          "announce": "The fog wraiths have come in with the fog to put out the beacon. Sorcha won't let it go out - help her.",
+          "center": [744, 1277, 135.6],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Sorcha the Beacon-Keeper",
+            "template": 60165764,
+            "level": 30,
+            "model": 328,
+            "equipment": "ca535672-1cb0-4c0f-8c39-cfa0eb1ae470",
+            "health_mult": 10,
+            "pos": [744, 1277, 135.6]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [660, 1293, 137.5],
+              [675, 1228, 137.1],
+              [731, 1193, 134.8]
+            ],
+            "mobs": [
+              {
+                "template": 60160937,
+                "name": "fog wraith",
+                "level": [28, 30]
+              },
+              {
+                "template": 60164102,
+                "name": "mist wraith",
+                "level": [27, 28]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Sorcha the Beacon-Keeper. \"They came from over there - let's finish this.\"",
+          "fail": "Sorcha the Beacon-Keeper falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Beacon",
+          "objective": "Clear the beacon",
+          "announce": "They came from the beacon. Follow them back and clear it out.",
+          "center": [524, 1122, 130.5],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60160937,
+              "name": "fog wraith",
+              "level": [28, 30]
+            },
+            {
+              "template": 60164102,
+              "name": "mist wraith",
+              "level": [27, 28]
+            }
+          ],
+          "success": "You have cleared the beacon. The Fog Banshee comes out to fight.",
+          "fail": "They hold the beacon. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Fog Banshee",
+          "objective": "Defeat the Fog Banshee",
+          "announce": "The Fog Banshee stands at the beacon. Bring friends.",
+          "center": [524, 1122, 130.5],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60160937,
+            "name": "The Fog Banshee",
+            "level": 33,
+            "size": 70,
+            "pos": [524, 1122, 130.5],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60160937,
+                "name": "fog wraith",
+                "level": [28, 30]
+              }
+            ]
+          },
+          "success": "The Fog Banshee falls. The way is safe again.",
+          "fail": "The Fog Banshee slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu203_fog_banshee_s_girdle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "cliffs_of_moher_distorters",
+      "title": "The Moheran Distorters",
+      "levels": [17, 23],
+      "hint": "Sentinel Cathal is looking for help in Tir Urphost.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Sentinel Cathal",
+        "template": 60165764,
+        "level": 31,
+        "model": 387,
+        "equipment": "8ff82eba-56ee-4e7b-b447-0fb4d488fe42",
+        "guild": "Sentinels of Tir Urphost",
+        "health_mult": 4,
+        "pos": [693, 537, 142.1],
+        "greet": "The air out east is twisting - the distorters have opened a rift, and things are coming through. We're going to close it. With us? Tell me when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Sentinel",
+          "template": 60165764,
+          "level": 25,
+          "model": 387,
+          "equipment": "8ff82eba-56ee-4e7b-b447-0fb4d488fe42",
+          "guild": "Sentinels of Tir Urphost",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Distorters' Rift",
+          "objective": "Go with Sentinel Cathal to the distorters' rift",
+          "announce": "Sentinel Cathal leads the sentinels of Tir Urphost to the distorters' rift.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [769, 469, 131.2],
+            [817, 421, 134.1],
+            [921, 421, 130.9],
+            [961, 429, 130.0],
+            [1033, 501, 131.4],
+            [1105, 573, 130.0],
+            [1177, 645, 130.0],
+            [1217, 685, 130.0]
+          ],
+          "ambushes": [
+            {
+              "at": 4,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 60164135,
+                  "name": "moheran distorter",
+                  "level": [17, 19]
+                },
+                {
+                  "template": 60160935,
+                  "name": "fog phantom",
+                  "level": [21, 23]
+                }
+              ]
+            }
+          ],
+          "success": "Sentinel Cathal reaches the distorters' rift. \"There they are. Clear them out!\"",
+          "fail": "Sentinel Cathal falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Distorters' Rift",
+          "objective": "Clear the distorters' rift",
+          "announce": "Clear the distorters' rift!",
+          "center": [1213, 681, 130.0],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60164135,
+              "name": "moheran distorter",
+              "level": [17, 19]
+            },
+            {
+              "template": 60160935,
+              "name": "fog phantom",
+              "level": [21, 23]
+            }
+          ],
+          "success": "You have cleared the distorters' rift. The Great Distorter comes out to fight.",
+          "fail": "They hold the distorters' rift. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "The Great Distorter",
+          "objective": "Defeat the Great Distorter",
+          "announce": "The Great Distorter stands at the distorters' rift. Bring friends.",
+          "center": [1213, 681, 130.0],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60164135,
+            "name": "The Great Distorter",
+            "level": 26,
+            "size": 70,
+            "pos": [1213, 681, 130.0],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60164135,
+                "name": "moheran distorter",
+                "level": [17, 19]
+              }
+            ]
+          },
+          "success": "The Great Distorter falls. Tir Urphost will hear of this in the taverns tonight.",
+          "fail": "The Great Distorter slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu203_great_distorter_s_belt", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

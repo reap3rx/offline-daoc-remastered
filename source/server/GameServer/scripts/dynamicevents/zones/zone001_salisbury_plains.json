@@ -1,0 +1,378 @@
+{
+  "zone": 1,
+  "region": 1,
+  "name": "Salisbury Plains",
+  "lore": "The wide downs of Salisbury, where the old kings lie under their mounds and the stones stand in their rings, and where tomb raiders dig by night.",
+  "chains": [
+    {
+      "id": "salisbury_plains_tomb_robbers",
+      "title": "The Tomb Robbers",
+      "levels": [10, 17],
+      "hint": "Lanterns move among the mounds by night...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Robbers' Diggings",
+          "objective": "Clear the robbers' diggings",
+          "announce": "Corwin's tomb raiders have broken into a king's mound and are hauling the grave goods away. Stop them.",
+          "center": [273, 979, 55.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12737,
+              "name": "tomb raider digger",
+              "level": [10, 13]
+            },
+            {
+              "template": 12738,
+              "name": "tomb raider scout",
+              "level": [13, 15]
+            },
+            {
+              "template": 12734,
+              "name": "tomb raider",
+              "level": [16, 17]
+            }
+          ],
+          "success": "You have cleared the robbers' diggings. Corwin the Graverobber comes out to fight.",
+          "fail": "They hold the robbers' diggings. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Corwin the Graverobber",
+          "objective": "Defeat Corwin the Graverobber",
+          "announce": "Corwin the Graverobber stands at the robbers' diggings. Bring friends.",
+          "center": [273, 979, 55.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12734,
+            "name": "Corwin the Graverobber",
+            "level": 20,
+            "size": 67,
+            "pos": [273, 979, 55.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12737,
+                "name": "tomb raider digger",
+                "level": [10, 13]
+              }
+            ]
+          },
+          "success": "Corwin the Graverobber falls. The way is safe again.",
+          "fail": "Corwin the Graverobber slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu1_corwin_the_graverobber_s_sash", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "salisbury_plains_restless_plain",
+      "title": "The Restless Plain",
+      "levels": [9, 14],
+      "hint": "A cold wind blows across the plain...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Druid Morwen",
+          "objective": "Protect Druid Morwen, who is singing the dead back to sleep",
+          "announce": "The robbed mound has woken its dead. Druid Morwen is singing them back to sleep - keep them off her until she is done.",
+          "center": [518, 610, 58.6],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Druid Morwen",
+            "template": 60161738,
+            "level": 14,
+            "model": 28,
+            "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f",
+            "health_mult": 10,
+            "pos": [518, 610, 58.6]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [572, 676, 57.6],
+              [509, 695, 52.5],
+              [451, 663, 55.9]
+            ],
+            "mobs": [
+              {
+                "template": 12735,
+                "name": "disturbed presence",
+                "level": [12, 14]
+              },
+              {
+                "template": 12744,
+                "name": "wandering spirit",
+                "level": [9, 11]
+              },
+              {
+                "template": 12690,
+                "name": "green ghast",
+                "level": [12, 14]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Druid Morwen. \"They came from over there - let's finish this.\"",
+          "fail": "Druid Morwen falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Robbed Mound",
+          "objective": "Clear the robbed mound",
+          "announce": "They came from the robbed mound. Follow them back and clear it out.",
+          "center": [492, 865, 55.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12735,
+              "name": "disturbed presence",
+              "level": [12, 14]
+            },
+            {
+              "template": 12744,
+              "name": "wandering spirit",
+              "level": [9, 11]
+            },
+            {
+              "template": 12690,
+              "name": "green ghast",
+              "level": [12, 14]
+            }
+          ],
+          "success": "You have cleared the robbed mound. The Hollow King comes out to fight.",
+          "fail": "They hold the robbed mound. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Hollow King",
+          "objective": "Defeat the Hollow King",
+          "announce": "The Hollow King stands at the robbed mound. Bring friends.",
+          "center": [492, 865, 55.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12690,
+            "name": "The Hollow King",
+            "level": 17,
+            "size": 65,
+            "pos": [492, 865, 55.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12735,
+                "name": "disturbed presence",
+                "level": [12, 14]
+              }
+            ]
+          },
+          "success": "The Hollow King falls. The way is safe again.",
+          "fail": "The Hollow King slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu1_hollow_king_s_cloak", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "salisbury_plains_spriggarn_ambush",
+      "title": "The Spriggarn Ambush",
+      "levels": [14, 16],
+      "hint": "Guard Eiddef is looking for help in the watch post.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Guard Eiddef",
+        "template": 60161738,
+        "level": 24,
+        "model": 28,
+        "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f",
+        "guild": "Salisbury Watch",
+        "health_mult": 4,
+        "pos": [245, 1328, 53.2],
+        "greet": "Spriggarn have been waylaying travellers on the south road, and the last patrol never came back. I'm going to find them. Come with me? Say when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Guard",
+          "template": 60161738,
+          "level": 18,
+          "model": 28,
+          "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f",
+          "guild": "Salisbury Watch",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Spriggarn Thicket",
+          "objective": "Go with Guard Eiddef to the spriggarn thicket",
+          "announce": "Guard Eiddef sets out to find the lost patrol and the spriggarn that took it.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [324, 1404, 50.2],
+            [348, 1428, 55.7]
+          ],
+          "ambushes": [
+            {
+              "at": 1,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 12731,
+                  "name": "spriggarn waylayer",
+                  "level": [14, 14]
+                },
+                {
+                  "template": 12729,
+                  "name": "spriggarn ambusher",
+                  "level": [15, 15]
+                }
+              ]
+            }
+          ],
+          "success": "Guard Eiddef reaches the spriggarn thicket. \"There they are. Clear them out!\"",
+          "fail": "Guard Eiddef falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Spriggarn Thicket",
+          "objective": "Clear the spriggarn thicket",
+          "announce": "Clear the spriggarn thicket!",
+          "center": [349, 1425, 54.5],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12731,
+              "name": "spriggarn waylayer",
+              "level": [14, 14]
+            },
+            {
+              "template": 12729,
+              "name": "spriggarn ambusher",
+              "level": [15, 15]
+            },
+            {
+              "template": 12730,
+              "name": "spriggarn howler",
+              "level": [16, 16]
+            }
+          ],
+          "success": "You have cleared the spriggarn thicket. Gnarlroot the Howler comes out to fight.",
+          "fail": "They hold the spriggarn thicket. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Gnarlroot the Howler",
+          "objective": "Defeat Gnarlroot the Howler",
+          "announce": "Gnarlroot the Howler stands at the spriggarn thicket. Bring friends.",
+          "center": [349, 1425, 54.5],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12730,
+            "name": "Gnarlroot the Howler",
+            "level": 19,
+            "size": 65,
+            "pos": [349, 1425, 54.5],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12731,
+                "name": "spriggarn waylayer",
+                "level": [14, 14]
+              }
+            ]
+          },
+          "success": "Gnarlroot the Howler falls. The watch post will hear of this in the taverns tonight.",
+          "fail": "Gnarlroot the Howler slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu1_gnarlroot_the_howler_s_torc", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

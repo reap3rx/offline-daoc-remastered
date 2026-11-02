@@ -1,0 +1,382 @@
+{
+  "zone": 105,
+  "region": 100,
+  "name": "Myrkwood Forest",
+  "lore": "Myrkwood: the dark forest round Galplen and Gna Faste, where the werewolves hold their courts and the arachites spin in the high branches.",
+  "chains": [
+    {
+      "id": "myrkwood_forest_werewolf_den",
+      "title": "The Werewolf Den",
+      "levels": [17, 21],
+      "hint": "Howling rises from the western woods...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Werewolf Den",
+          "objective": "Clear the werewolf den",
+          "announce": "Varg-Jarl Ulfhedinn holds court in the den and his werewolves hunt the roads. Bring him down.",
+          "center": [624, 1027, 125.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60167849,
+              "name": "werewolf",
+              "level": [17, 17]
+            },
+            {
+              "template": 60164060,
+              "name": "minor werewolf noble",
+              "level": [19, 21]
+            }
+          ],
+          "success": "You have cleared the werewolf den. Varg-Jarl Ulfhedinn comes out to fight.",
+          "fail": "They hold the werewolf den. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Varg-Jarl Ulfhedinn",
+          "objective": "Defeat Varg-Jarl Ulfhedinn",
+          "announce": "Varg-Jarl Ulfhedinn stands at the werewolf den. Bring friends.",
+          "center": [624, 1027, 125.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60164060,
+            "name": "Varg-Jarl Ulfhedinn",
+            "level": 24,
+            "size": 106,
+            "pos": [624, 1027, 125.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60167849,
+                "name": "werewolf",
+                "level": [17, 17]
+              }
+            ]
+          },
+          "success": "Varg-Jarl Ulfhedinn falls. The way is safe again.",
+          "fail": "Varg-Jarl Ulfhedinn slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu105_varg_jarl_ulfhedinn_s_torc", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "myrkwood_forest_arachite_brood",
+      "title": "The Arachite Brood",
+      "levels": [13, 16],
+      "hint": "Webs are thick in the trees...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Sven the Webcutter",
+          "objective": "Protect Sven the Webcutter, who is cutting the woodcutters free",
+          "announce": "The arachites have webbed the woodcutters to the trees. Sven is cutting them free - hold the spiders off.",
+          "center": [298, 326, 120.0],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Sven the Webcutter",
+            "template": 60167290,
+            "level": 16,
+            "model": 138,
+            "equipment": "1c0869f4-c816-4b50-a873-0d0fd104dac2",
+            "health_mult": 10,
+            "pos": [298, 326, 120.0]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [349, 394, 119.0],
+              [284, 409, 129.1],
+              [229, 374, 126.1]
+            ],
+            "mobs": [
+              {
+                "template": 60157981,
+                "name": "arachite shadowslinker",
+                "level": [13, 15]
+              },
+              {
+                "template": 60157985,
+                "name": "arachite weblasher",
+                "level": [14, 16]
+              },
+              {
+                "template": 20012,
+                "name": "arachite priest",
+                "level": [15, 16]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Sven the Webcutter. \"They came from over there - let's finish this.\"",
+          "fail": "Sven the Webcutter falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Woodcutters' Clearing",
+          "objective": "Clear the woodcutters' clearing",
+          "announce": "They came from the woodcutters' clearing. Follow them back and clear it out.",
+          "center": [261, 553, 126.7],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60157981,
+              "name": "arachite shadowslinker",
+              "level": [13, 15]
+            },
+            {
+              "template": 60157985,
+              "name": "arachite weblasher",
+              "level": [14, 16]
+            },
+            {
+              "template": 20012,
+              "name": "arachite priest",
+              "level": [15, 16]
+            }
+          ],
+          "success": "You have cleared the woodcutters' clearing. The Arachite High Priestess comes out to fight.",
+          "fail": "They hold the woodcutters' clearing. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Arachite High Priestess",
+          "objective": "Defeat the Arachite High Priestess",
+          "announce": "The Arachite High Priestess stands at the woodcutters' clearing. Bring friends.",
+          "center": [261, 553, 126.7],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 20012,
+            "name": "The Arachite High Priestess",
+            "level": 19,
+            "size": 39,
+            "pos": [261, 553, 126.7],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60157981,
+                "name": "arachite shadowslinker",
+                "level": [13, 15]
+              }
+            ]
+          },
+          "success": "The Arachite High Priestess falls. The way is safe again.",
+          "fail": "The Arachite High Priestess slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu105_arachite_high_priestess_girdle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "myrkwood_forest_decaying_trolls",
+      "title": "The Undying Trolls",
+      "levels": [10, 13],
+      "hint": "Flayer Thrand is looking for help in Galplen.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Flayer Thrand",
+        "template": 60167290,
+        "level": 21,
+        "model": 138,
+        "equipment": "1c0869f4-c816-4b50-a873-0d0fd104dac2",
+        "guild": "Galplen Guard",
+        "health_mult": 4,
+        "pos": [1112, 641, 118.6],
+        "greet": "Dead trolls are walking south of Galplen, and the worgs follow them for scraps. They have to be burned, all of them. Will you come? Say when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Troll Flayer",
+          "template": 60167290,
+          "level": 15,
+          "model": 138,
+          "equipment": "1c0869f4-c816-4b50-a873-0d0fd104dac2",
+          "guild": "Galplen Guard",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Rotting Hollow",
+          "objective": "Go with Flayer Thrand to the rotting hollow",
+          "announce": "Flayer Thrand leads the Galplen guard out to burn the undying trolls.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [1140, 661, 118.6],
+            [1172, 661, 118.6],
+            [1204, 685, 118.6],
+            [1236, 709, 118.6],
+            [1316, 781, 117.8],
+            [1348, 813, 117.8],
+            [1348, 917, 118.6],
+            [1348, 1021, 118.9],
+            [1348, 1069, 118.6],
+            [1332, 1165, 118.6],
+            [1332, 1237, 118.6]
+          ],
+          "ambushes": [
+            {
+              "at": 5,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 60159827,
+                  "name": "decaying troll",
+                  "level": [10, 10]
+                },
+                {
+                  "template": 60161576,
+                  "name": "gray worg",
+                  "level": [10, 10]
+                }
+              ]
+            }
+          ],
+          "success": "Flayer Thrand reaches the rotting hollow. \"There they are. Clear them out!\"",
+          "fail": "Flayer Thrand falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Rotting Hollow",
+          "objective": "Clear the rotting hollow",
+          "announce": "Clear the rotting hollow!",
+          "center": [1331, 1239, 118.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60159827,
+              "name": "decaying troll",
+              "level": [10, 10]
+            },
+            {
+              "template": 60161576,
+              "name": "gray worg",
+              "level": [10, 10]
+            },
+            {
+              "template": 60165311,
+              "name": "ridgeback worg",
+              "level": [11, 13]
+            }
+          ],
+          "success": "You have cleared the rotting hollow. Rotgut the Undying comes out to fight.",
+          "fail": "They hold the rotting hollow. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Rotgut the Undying",
+          "objective": "Defeat Rotgut the Undying",
+          "announce": "Rotgut the Undying stands at the rotting hollow. Bring friends.",
+          "center": [1331, 1239, 118.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60159827,
+            "name": "Rotgut the Undying",
+            "level": 16,
+            "size": 76,
+            "pos": [1331, 1239, 118.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60159827,
+                "name": "decaying troll",
+                "level": [10, 10]
+              }
+            ]
+          },
+          "success": "Rotgut the Undying falls. Galplen will hear of this in the taverns tonight.",
+          "fail": "Rotgut the Undying slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu105_rotgut_the_undying_s_shroud", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

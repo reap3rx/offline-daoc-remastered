@@ -1,0 +1,61 @@
+{
+ "zone": 204,
+ "region": 200,
+ "realm": 3,
+ "prefix": "nu204",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "lough_gur_gurite_raiders",
+   "scaled": true,
+   "name": "Gurite Warchief Donnan's Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 42,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 42,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Won from Gurite Warchief Donnan when The Gurite Raiders was ended."
+  },
+  {
+   "event_reward": "lough_gur_luch_swarm",
+   "scaled": true,
+   "name": "Great Luch's Eye",
+   "base": [
+    41,
+    24
+   ],
+   "level": 31,
+   "bonuses": {
+    "Cha": 9,
+    "Emp": 7,
+    "Qui": 6,
+    "Hits": 19
+   },
+   "lore": "Won from the Great Luch when The Luch Swarm was ended."
+  },
+  {
+   "event_reward": "lough_gur_cluricaun_revel",
+   "scaled": true,
+   "name": "Old Cluricaun Ruadh's Stone",
+   "base": [
+    41,
+    24
+   ],
+   "level": 27,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 5,
+    "Hits": 22
+   },
+   "lore": "Won from Old Cluricaun Ruadh when The Cluricaun Revel was ended."
+  }
+ ]
+}

@@ -1,0 +1,215 @@
+{
+  "zone": 216,
+  "region": 200,
+  "name": "Sheeroe Hills",
+  "lore": "The Sheeroe Hills, where the glimmer host walks and the azure order hunts whatever it calls unclean.",
+  "chains": [
+    {
+      "id": "sheeroe_hills_glimmer_wardens",
+      "title": "The Glimmer Wardens",
+      "levels": [39, 46],
+      "hint": "A cold glimmer burns in the north-west...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Glimmer Gate",
+          "objective": "Clear the glimmer gate",
+          "announce": "The glimmer wardens are holding a gate open for the rest of the host. Close it.",
+          "center": [336, 331, 92.5],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 44038,
+              "name": "glimmer ward",
+              "level": [42, 46]
+            },
+            {
+              "template": 44011,
+              "name": "glimmer ghoul",
+              "level": [39, 43]
+            }
+          ],
+          "success": "You have cleared the glimmer gate. Glimmer Warden Faelan comes out to fight.",
+          "fail": "They hold the glimmer gate. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Glimmer Warden Faelan",
+          "objective": "Defeat Glimmer Warden Faelan",
+          "announce": "Glimmer Warden Faelan stands at the glimmer gate. Bring friends.",
+          "center": [336, 331, 92.5],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 44038,
+            "name": "Glimmer Warden Faelan",
+            "level": 49,
+            "size": 65,
+            "pos": [336, 331, 92.5],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 44038,
+                "name": "glimmer ward",
+                "level": [42, 46]
+              }
+            ]
+          },
+          "success": "Glimmer Warden Faelan falls. The way is safe again.",
+          "fail": "Glimmer Warden Faelan slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu216_glimmer_warden_faelan_s_belt", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sheeroe_hills_azure_crusade",
+      "title": "The Azure Crusade",
+      "levels": [45, 52],
+      "hint": "The azure order is on the march...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Riona the Seer",
+          "objective": "Protect Riona the Seer, who is reading the omens at her stone",
+          "announce": "The azure order has named Riona the seer unclean. Hold them off while she finishes her reading.",
+          "center": [1046, 449, 119.1],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Riona the Seer",
+            "template": 60161797,
+            "level": 52,
+            "model": 388,
+            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
+            "health_mult": 10,
+            "pos": [1046, 449, 119.1]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [947, 475, 164.9],
+              [976, 401, 117.5],
+              [1031, 365, 114.6]
+            ],
+            "mobs": [
+              {
+                "template": 44008,
+                "name": "azure cleanser",
+                "level": [45, 49]
+              },
+              {
+                "template": 44007,
+                "name": "azure banisher",
+                "level": [48, 52]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Riona the Seer. \"They came from over there - let's finish this.\"",
+          "fail": "Riona the Seer falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Seer's Stone",
+          "objective": "Clear the seer's stone",
+          "announce": "They came from the seer's stone. Follow them back and clear it out.",
+          "center": [838, 307, 123.9],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 44008,
+              "name": "azure cleanser",
+              "level": [45, 49]
+            },
+            {
+              "template": 44007,
+              "name": "azure banisher",
+              "level": [48, 52]
+            }
+          ],
+          "success": "You have cleared the seer's stone. The Azure Grand Inquisitor comes out to fight.",
+          "fail": "They hold the seer's stone. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Azure Grand Inquisitor",
+          "objective": "Defeat the Azure Grand Inquisitor",
+          "announce": "The Azure Grand Inquisitor stands at the seer's stone. Bring friends.",
+          "center": [838, 307, 123.9],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 44006,
+            "name": "The Azure Grand Inquisitor",
+            "level": 55,
+            "size": 65,
+            "pos": [838, 307, 123.9],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 44008,
+                "name": "azure cleanser",
+                "level": [45, 49]
+              }
+            ]
+          },
+          "success": "The Azure Grand Inquisitor falls. The way is safe again.",
+          "fail": "The Azure Grand Inquisitor slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu216_azure_grand_inquisitor_s_girdle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

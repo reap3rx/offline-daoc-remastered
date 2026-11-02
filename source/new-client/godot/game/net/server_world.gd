@@ -912,6 +912,9 @@ func _message(d: Dictionary) -> void:
 	if String(d.text).begins_with("#EV|"):                # the dynamic events of this zone (DynamicEventManager.cs)
 		preload("res://game/ui/event_tracker.gd").receive(String(d.text).substr(4))
 		return
+	if String(d.text).begins_with("#SAY|"):               # an NPC speaking aloud (NpcSpeech.cs): a bubble over its head
+		_speech(String(d.text).substr(5))
+		return
 	if String(d.text).begins_with("#AC|"):                # Action Combat's own lines (ActionCombat.cs): not chat
 		var ac: Node = viewer.get("action_combat") if viewer else null
 		if ac:
@@ -938,6 +941,18 @@ func _message(d: Dictionary) -> void:
 			return
 		kind = "system"
 	PlayerData.message.emit(text, kind)
+
+
+## "<object id>|<name>|<text>": the words float over the NPC (ui/speech_bubbles.gd) and go into the chat.
+func _speech(line: String) -> void:
+	var f := line.split("|", true, 2)
+	if f.size() < 3:
+		return
+	var st = by_oid.get(int(f[0]))
+	var v = st.view if st != null else null
+	if v != null and is_instance_valid(v) and v is Node3D:
+		preload("res://game/ui/speech_bubbles.gd").show(v, f[2], float(v.get("height")) if v.get("height") != null else 1.8)
+	PlayerData.message.emit("%s says, \"%s\"" % [f[1], f[2]], "say")
 
 
 ## The server's social-window lines (CT_SocialInterface - the old client filled its social window with them; they were

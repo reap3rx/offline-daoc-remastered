@@ -1,0 +1,394 @@
+{
+  "zone": 100,
+  "region": 100,
+  "name": "Vale of Mularn",
+  "lore": "The Vale of Mularn: Haggerfel, Mularn and Fort Veldon, with the vendo in the north and the huldu in the woods to the south.",
+  "chains": [
+    {
+      "id": "vale_of_mularn_vendo_barrow",
+      "title": "The Vendo Barrow",
+      "levels": [10, 13],
+      "hint": "Bone-rattles sound in the northern hills...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Vendo Barrow",
+          "objective": "Clear the vendo barrow",
+          "announce": "The vendo are digging up the barrow of Fort Veldon's dead for their bone-shrine. Stop them.",
+          "center": [673, 340, 119.1],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60167590,
+              "name": "vendo shaman",
+              "level": [10, 10]
+            },
+            {
+              "template": 60167594,
+              "name": "vendo warrior",
+              "level": [11, 11]
+            },
+            {
+              "template": 60167576,
+              "name": "vendo bone-collector",
+              "level": [13, 13]
+            }
+          ],
+          "success": "You have cleared the vendo barrow. Gnarn Bone-Crown comes out to fight.",
+          "fail": "They hold the vendo barrow. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Gnarn Bone-Crown",
+          "objective": "Defeat Gnarn Bone-Crown",
+          "announce": "Gnarn Bone-Crown stands at the vendo barrow. Bring friends.",
+          "center": [673, 340, 119.1],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60167576,
+            "name": "Gnarn Bone-Crown",
+            "level": 16,
+            "size": 76,
+            "pos": [673, 340, 119.1],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60167590,
+                "name": "vendo shaman",
+                "level": [10, 10]
+              }
+            ]
+          },
+          "success": "Gnarn Bone-Crown falls. The way is safe again.",
+          "fail": "Gnarn Bone-Crown slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu100_gnarn_bone_crown_s_girdle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vale_of_mularn_huldu",
+      "title": "The Huldu in the Hills",
+      "levels": [2, 5],
+      "hint": "Hollow-backed women dance in the woods...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Ingrid the Herder",
+          "objective": "Protect Ingrid the Herder, who is gathering her goats",
+          "announce": "The huldu have come out of the woods for Ingrid's goats - and for Ingrid.",
+          "center": [787, 1185, 117.7],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Ingrid the Herder",
+            "template": 60167667,
+            "level": 5,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+            "health_mult": 10,
+            "pos": [787, 1185, 117.7]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [872, 1187, 117.6],
+              [845, 1247, 118.0],
+              [783, 1270, 117.9]
+            ],
+            "mobs": [
+              {
+                "template": 60162259,
+                "name": "huldu hunter",
+                "level": [4, 4]
+              },
+              {
+                "template": 60162266,
+                "name": "huldu stalker",
+                "level": [5, 5]
+              },
+              {
+                "template": 60162261,
+                "name": "huldu lurker",
+                "level": [2, 2]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Ingrid the Herder. \"They came from over there - let's finish this.\"",
+          "fail": "Ingrid the Herder falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Herder's Pasture",
+          "objective": "Clear the herder's pasture",
+          "announce": "They came from the herder's pasture. Follow them back and clear it out.",
+          "center": [1026, 1441, 118.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60162259,
+              "name": "huldu hunter",
+              "level": [4, 4]
+            },
+            {
+              "template": 60162266,
+              "name": "huldu stalker",
+              "level": [5, 5]
+            },
+            {
+              "template": 60162261,
+              "name": "huldu lurker",
+              "level": [2, 2]
+            }
+          ],
+          "success": "You have cleared the herder's pasture. The Huldu Queen comes out to fight.",
+          "fail": "They hold the herder's pasture. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Huldu Queen",
+          "objective": "Defeat the Huldu Queen",
+          "announce": "The Huldu Queen stands at the herder's pasture. Bring friends.",
+          "center": [1026, 1441, 118.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60162266,
+            "name": "The Huldu Queen",
+            "level": 8,
+            "size": 67,
+            "pos": [1026, 1441, 118.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60162259,
+                "name": "huldu hunter",
+                "level": [4, 4]
+              }
+            ]
+          },
+          "success": "The Huldu Queen falls. The way is safe again.",
+          "fail": "The Huldu Queen slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu100_huldu_queen_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vale_of_mularn_wood_eaters",
+      "title": "The Wood-Eater Hive",
+      "levels": [3, 6],
+      "hint": "Karl Thorvald is looking for help in the guard post.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Karl Thorvald",
+        "template": 60167667,
+        "level": 14,
+        "model": 158,
+        "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+        "guild": "Mularn Guard",
+        "health_mult": 4,
+        "pos": [467, 1231, 129.8],
+        "greet": "The wood-eaters are chewing through the Mularn woods faster than we can cut them back. We're going to burn the hive. Are you with us? Say when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Viking",
+          "template": 60167667,
+          "level": 8,
+          "model": 158,
+          "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+          "guild": "Mularn Guard",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Wood-eater Hive",
+          "objective": "Go with Karl Thorvald to the wood-eater hive",
+          "announce": "Karl Thorvald leads the Mularn guard out to the wood-eater hive.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [503, 1224, 120.3],
+            [607, 1224, 120.0],
+            [647, 1224, 118.7],
+            [743, 1208, 117.3],
+            [823, 1208, 117.2],
+            [855, 1176, 117.0],
+            [879, 1160, 116.8],
+            [911, 1160, 116.8],
+            [943, 1144, 117.0],
+            [983, 1120, 117.4],
+            [1015, 1096, 119.0],
+            [1039, 1080, 119.5],
+            [1071, 1072, 117.9]
+          ],
+          "ambushes": [
+            {
+              "at": 6,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 60168015,
+                  "name": "wood-eater",
+                  "level": [3, 3]
+                },
+                {
+                  "template": 60168025,
+                  "name": "wood-eater worker",
+                  "level": [4, 4]
+                }
+              ]
+            }
+          ],
+          "success": "Karl Thorvald reaches the wood-eater hive. \"There they are. Clear them out!\"",
+          "fail": "Karl Thorvald falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Wood-eater Hive",
+          "objective": "Clear the wood-eater hive",
+          "announce": "Clear the wood-eater hive!",
+          "center": [1072, 1068, 117.9],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60168015,
+              "name": "wood-eater",
+              "level": [3, 3]
+            },
+            {
+              "template": 60168025,
+              "name": "wood-eater worker",
+              "level": [4, 4]
+            },
+            {
+              "template": 60168019,
+              "name": "wood-eater hunter",
+              "level": [5, 5]
+            },
+            {
+              "template": 60168024,
+              "name": "wood-eater soldier",
+              "level": [6, 6]
+            }
+          ],
+          "success": "You have cleared the wood-eater hive. The Wood-Eater Matriarch comes out to fight.",
+          "fail": "They hold the wood-eater hive. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "The Wood-Eater Matriarch",
+          "objective": "Defeat the Wood-Eater Matriarch",
+          "announce": "The Wood-Eater Matriarch stands at the wood-eater hive. Bring friends.",
+          "center": [1072, 1068, 117.9],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60168024,
+            "name": "The Wood-Eater Matriarch",
+            "level": 9,
+            "size": 50,
+            "pos": [1072, 1068, 117.9],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60168015,
+                "name": "wood-eater",
+                "level": [3, 3]
+              }
+            ]
+          },
+          "success": "The Wood-Eater Matriarch falls. The guard post will hear of this in the taverns tonight.",
+          "fail": "The Wood-Eater Matriarch slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu100_wood_eater_matriarch_s_girdle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

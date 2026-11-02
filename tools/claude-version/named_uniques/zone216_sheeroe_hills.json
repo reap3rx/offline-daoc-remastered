@@ -1,0 +1,43 @@
+{
+ "zone": 216,
+ "region": 200,
+ "realm": 3,
+ "prefix": "nu216",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "sheeroe_hills_glimmer_wardens",
+   "scaled": true,
+   "name": "Glimmer Warden Faelan's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 49,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 9,
+    "Hits": 39
+   },
+   "lore": "Won from Glimmer Warden Faelan when The Glimmer Wardens was ended."
+  },
+  {
+   "event_reward": "sheeroe_hills_azure_crusade",
+   "scaled": true,
+   "name": "Azure Grand Inquisitor's Girdle",
+   "base": [
+    41,
+    32
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 15,
+    "Con": 9,
+    "Power": 6,
+    "Hits": 30
+   },
+   "lore": "Won from the Azure Grand Inquisitor when The Azure Crusade was ended."
+  }
+ ]
+}

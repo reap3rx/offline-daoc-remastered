@@ -1,0 +1,60 @@
+{
+ "zone": 2,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu2",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "black_mountains_south_goblin_fishers",
+   "scaled": true,
+   "name": "Gruk the Net-Master's Armband",
+   "base": [
+    41,
+    33
+   ],
+   "level": 9,
+   "bonuses": {
+    "Cha": 3,
+    "Emp": 2,
+    "Qui": 2,
+    "Hits": 5
+   },
+   "lore": "Won from Gruk the Net-Master when The Goblin Fishers was ended."
+  },
+  {
+   "event_reward": "black_mountains_south_red_dwarf_raid",
+   "scaled": true,
+   "name": "Brannoc Redbeard's Eye",
+   "base": [
+    41,
+    24
+   ],
+   "level": 11,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 9
+   },
+   "lore": "Won from Brannoc Redbeard when The Red Dwarf Raid was ended."
+  },
+  {
+   "event_reward": "black_mountains_south_highway_robbery",
+   "scaled": true,
+   "name": "Black Tom the Highwayman's Amulet",
+   "base": [
+    41,
+    29
+   ],
+   "level": 11,
+   "bonuses": {
+    "Cha": 3,
+    "Emp": 3,
+    "Qui": 2,
+    "Hits": 7
+   },
+   "lore": "Won from Black Tom the Highwayman when Highway Robbery was ended."
+  }
+ ]
+}

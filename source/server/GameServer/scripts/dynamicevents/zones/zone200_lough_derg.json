@@ -1,0 +1,375 @@
+{
+  "zone": 200,
+  "region": 200,
+  "name": "Lough Derg",
+  "lore": "Lough Derg: Mag Mell, Tir na mBeo and Mardagh round the red lake, where the ghostly siabra still walk the shore and the curmudgeons rob the harvest.",
+  "chains": [
+    {
+      "id": "lough_derg_dergan_furies",
+      "title": "The Dergan Furies",
+      "levels": [12, 15],
+      "hint": "Shrieks carry over the eastern hills...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Furies' Ring",
+          "objective": "Clear the furies' ring",
+          "announce": "The dergan furies have gathered at their ring to curse the lake. Break the gathering.",
+          "center": [1472, 121, 128.4],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60159913,
+              "name": "dergan fury",
+              "level": [13, 15]
+            },
+            {
+              "template": 30000,
+              "name": "dergan enchanter",
+              "level": [12, 12]
+            },
+            {
+              "template": 60167883,
+              "name": "whistler",
+              "level": [13, 13]
+            }
+          ],
+          "success": "You have cleared the furies' ring. The Dergan Matron comes out to fight.",
+          "fail": "They hold the furies' ring. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Dergan Matron",
+          "objective": "Defeat the Dergan Matron",
+          "announce": "The Dergan Matron stands at the furies' ring. Bring friends.",
+          "center": [1472, 121, 128.4],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60159913,
+            "name": "The Dergan Matron",
+            "level": 18,
+            "size": 70,
+            "pos": [1472, 121, 128.4],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60159913,
+                "name": "dergan fury",
+                "level": [13, 15]
+              }
+            ]
+          },
+          "success": "The Dergan Matron falls. The way is safe again.",
+          "fail": "The Dergan Matron slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu200_dergan_matron_s_pendant", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lough_derg_ghostly_siabra",
+      "title": "The Ghostly Siabra",
+      "levels": [11, 15],
+      "hint": "Grey shapes walk the southern shore...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Niamh the Lorekeeper",
+          "objective": "Protect Niamh the Lorekeeper, who is reading the names on the cairn",
+          "announce": "Niamh the lorekeeper is reading the names of the dead on the old cairn, to lay them. The siabra dead are not willing.",
+          "center": [639, 1427, 130.0],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Niamh the Lorekeeper",
+            "template": 60161797,
+            "level": 15,
+            "model": 388,
+            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
+            "health_mult": 10,
+            "pos": [639, 1427, 130.0]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [598, 1502, 133.6],
+              [557, 1449, 131.5],
+              [566, 1384, 138.6]
+            ],
+            "mobs": [
+              {
+                "template": 60161305,
+                "name": "ghostly siabra",
+                "level": [11, 12]
+              },
+              {
+                "template": 60161282,
+                "name": "ghastly siabra",
+                "level": [13, 15]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Niamh the Lorekeeper. \"They came from over there - let's finish this.\"",
+          "fail": "Niamh the Lorekeeper falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Lakeshore Cairn",
+          "objective": "Clear the lakeshore cairn",
+          "announce": "They came from the lakeshore cairn. Follow them back and clear it out.",
+          "center": [335, 1509, 134.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60161305,
+              "name": "ghostly siabra",
+              "level": [11, 12]
+            },
+            {
+              "template": 60161282,
+              "name": "ghastly siabra",
+              "level": [13, 15]
+            }
+          ],
+          "success": "You have cleared the lakeshore cairn. The Siabra Revenant comes out to fight.",
+          "fail": "They hold the lakeshore cairn. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Siabra Revenant",
+          "objective": "Defeat the Siabra Revenant",
+          "announce": "The Siabra Revenant stands at the lakeshore cairn. Bring friends.",
+          "center": [335, 1509, 134.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60161282,
+            "name": "The Siabra Revenant",
+            "level": 18,
+            "size": 70,
+            "pos": [335, 1509, 134.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60161305,
+                "name": "ghostly siabra",
+                "level": [11, 12]
+              }
+            ]
+          },
+          "success": "The Siabra Revenant falls. The way is safe again.",
+          "fail": "The Siabra Revenant slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu200_siabra_revenant_s_band", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lough_derg_curmudgeon_harvest",
+      "title": "The Curmudgeon Harvest",
+      "levels": [9, 12],
+      "hint": "Guardian Fionn is looking for help in Mag Mell.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Guardian Fionn",
+        "level": 20,
+        "model": 700,
+        "equipment": "ab492f98-cfbf-455d-beda-c1461200e021",
+        "guild": "Guardians of Mag Mell",
+        "health_mult": 4,
+        "pos": [684, 180, 130.0],
+        "greet": "The curmudgeons have stripped the north fields bare and carted the harvest off to their store. We're going to take it back. Will you come? Say when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Guardian",
+          "level": 14,
+          "model": 700,
+          "equipment": "ab492f98-cfbf-455d-beda-c1461200e021",
+          "guild": "Guardians of Mag Mell",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Curmudgeons' Store",
+          "objective": "Go with Guardian Fionn to the curmudgeons' store",
+          "announce": "Guardian Fionn leads the guardians of Mag Mell out after the stolen harvest.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [728, 180, 131.1],
+            [784, 228, 136.5],
+            [832, 228, 131.7],
+            [936, 220, 127.3],
+            [1008, 220, 121.8],
+            [1048, 204, 119.5],
+            [1096, 156, 118.0],
+            [1128, 132, 117.8],
+            [1176, 100, 117.4],
+            [1280, 100, 117.3],
+            [1368, 100, 121.3],
+            [1400, 132, 119.3],
+            [1400, 236, 125.0],
+            [1384, 268, 125.3],
+            [1312, 348, 124.3],
+            [1304, 412, 125.0]
+          ],
+          "ambushes": [
+            {
+              "at": 8,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 60159539,
+                  "name": "curmudgeon harvester",
+                  "level": [9, 11]
+                },
+                {
+                  "template": 60159548,
+                  "name": "curmudgeon trapper",
+                  "level": [11, 12]
+                }
+              ]
+            }
+          ],
+          "success": "Guardian Fionn reaches the curmudgeons' store. \"There they are. Clear them out!\"",
+          "fail": "Guardian Fionn falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Curmudgeons' Store",
+          "objective": "Clear the curmudgeons' store",
+          "announce": "Clear the curmudgeons' store!",
+          "center": [1302, 412, 124.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60159539,
+              "name": "curmudgeon harvester",
+              "level": [9, 11]
+            },
+            {
+              "template": 60159548,
+              "name": "curmudgeon trapper",
+              "level": [11, 12]
+            }
+          ],
+          "success": "You have cleared the curmudgeons' store. Grogan the Curmudgeon King comes out to fight.",
+          "fail": "They hold the curmudgeons' store. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Grogan the Curmudgeon King",
+          "objective": "Defeat Grogan the Curmudgeon King",
+          "announce": "Grogan the Curmudgeon King stands at the curmudgeons' store. Bring friends.",
+          "center": [1302, 412, 124.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60159536,
+            "name": "Grogan the Curmudgeon King",
+            "level": 15,
+            "size": 72,
+            "pos": [1302, 412, 124.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60159539,
+                "name": "curmudgeon harvester",
+                "level": [9, 11]
+              }
+            ]
+          },
+          "success": "Grogan the Curmudgeon King falls. Mag Mell will hear of this in the taverns tonight.",
+          "fail": "Grogan the Curmudgeon King slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu200_grogan_the_curmudgeon_king_s_amulet", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

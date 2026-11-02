@@ -1,0 +1,61 @@
+{
+ "zone": 201,
+ "region": 200,
+ "realm": 3,
+ "prefix": "nu201",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "silvermine_mountains_sheevra_warband",
+   "scaled": true,
+   "name": "Dubhan the Sheevra Chief's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 18,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "Won from Dubhan the Sheevra Chief when The Sheevra Warband was ended."
+  },
+  {
+   "event_reward": "silvermine_mountains_gray_spectres",
+   "scaled": true,
+   "name": "Gray Lady of Silvermine's Armband",
+   "base": [
+    41,
+    33
+   ],
+   "level": 27,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 27,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Won from the Gray Lady of Silvermine when The Gray Spectres was ended."
+  },
+  {
+   "event_reward": "silvermine_mountains_spraggon_warren",
+   "scaled": true,
+   "name": "Spraggon Chief Nuadh's Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 22,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 4,
+    "Hits": 13
+   },
+   "lore": "Won from Spraggon Chief Nuadh when The Spraggon Warren was ended."
+  }
+ ]
+}

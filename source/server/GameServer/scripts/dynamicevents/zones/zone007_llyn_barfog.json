@@ -1,0 +1,296 @@
+{
+  "zone": 7,
+  "region": 1,
+  "name": "Llyn Barfog",
+  "lore": "Llyn Barfog, the bearded lake, where the fairy cattle came up out of the water and Arthur's horse left its hoof-print in the stone.",
+  "chains": [
+    {
+      "id": "llyn_barfog_renegades",
+      "title": "The Renegade Guards",
+      "levels": [15, 20],
+      "hint": "Deserters have been seen by the lake...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Renegades' Camp",
+          "objective": "Clear the renegades' camp",
+          "announce": "Captain Madog has turned his company renegade and sold them to the gwr-drwgiaid. Bring him to justice.",
+          "center": [1365, 457, 158.5],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 13028,
+              "name": "renegade guard",
+              "level": [19, 20]
+            },
+            {
+              "template": 13014,
+              "name": "gwr-drwgiaid",
+              "level": [15, 17]
+            }
+          ],
+          "success": "You have cleared the renegades' camp. Captain Madog the Turncoat comes out to fight.",
+          "fail": "They hold the renegades' camp. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Captain Madog the Turncoat",
+          "objective": "Defeat Captain Madog the Turncoat",
+          "announce": "Captain Madog the Turncoat stands at the renegades' camp. Bring friends.",
+          "center": [1365, 457, 158.5],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 13028,
+            "name": "Captain Madog the Turncoat",
+            "level": 23,
+            "size": 71,
+            "pos": [1365, 457, 158.5],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 13028,
+                "name": "renegade guard",
+                "level": [19, 20]
+              }
+            ]
+          },
+          "success": "Captain Madog the Turncoat falls. The way is safe again.",
+          "fail": "Captain Madog the Turncoat slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu7_captain_madog_the_turncoat_s_torc", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "llyn_barfog_hounds_of_annwn",
+      "title": "The Hounds of Annwn",
+      "levels": [20, 22],
+      "hint": "Hounds bay where no hounds should be...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Elen of the Lake",
+          "objective": "Protect Elen of the Lake, who is calling the fairy cattle home",
+          "announce": "Elen of the Lake is calling the fairy cattle home, and the Hunt of Annwn has smelled them.",
+          "center": [732, 1384, 164.3],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Elen of the Lake",
+            "template": 60167630,
+            "level": 22,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+            "health_mult": 10,
+            "pos": [732, 1384, 164.3]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [663, 1435, 170.3],
+              [648, 1370, 150.7],
+              [683, 1314, 143.8]
+            ],
+            "mobs": [
+              {
+                "template": 12999,
+                "name": "cwn annwn",
+                "level": [20, 22]
+              },
+              {
+                "template": 13001,
+                "name": "cythraul",
+                "level": [20, 21]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Elen of the Lake. \"They came from over there - let's finish this.\"",
+          "fail": "Elen of the Lake falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Lakeshore",
+          "objective": "Clear the lakeshore",
+          "announce": "They came from the lakeshore. Follow them back and clear it out.",
+          "center": [385, 1327, 158.7],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12999,
+              "name": "cwn annwn",
+              "level": [20, 22]
+            },
+            {
+              "template": 13001,
+              "name": "cythraul",
+              "level": [20, 21]
+            }
+          ],
+          "success": "You have cleared the lakeshore. The Huntsman of Annwn comes out to fight.",
+          "fail": "They hold the lakeshore. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Huntsman of Annwn",
+          "objective": "Defeat the Huntsman of Annwn",
+          "announce": "The Huntsman of Annwn stands at the lakeshore. Bring friends.",
+          "center": [385, 1327, 158.7],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 13001,
+            "name": "The Huntsman of Annwn",
+            "level": 25,
+            "size": 71,
+            "pos": [385, 1327, 158.7],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12999,
+                "name": "cwn annwn",
+                "level": [20, 22]
+              }
+            ]
+          },
+          "success": "The Huntsman of Annwn falls. The way is safe again.",
+          "fail": "The Huntsman of Annwn slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu7_huntsman_of_annwn_s_cloak", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "llyn_barfog_unshriven",
+      "title": "The Unshriven",
+      "levels": [28, 30],
+      "hint": "Bells toll from the ruined chapel...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Ruined Chapel",
+          "objective": "Clear the ruined chapel",
+          "announce": "The monks of the ruined chapel died unshriven, and their abbot has called them to vespers again.",
+          "center": [1146, 225, 139.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 13034,
+              "name": "undead monk",
+              "level": [29, 30]
+            },
+            {
+              "template": 12998,
+              "name": "bwgwl",
+              "level": [28, 29]
+            }
+          ],
+          "success": "You have cleared the ruined chapel. Abbot Idwal the Unshriven comes out to fight.",
+          "fail": "They hold the ruined chapel. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Abbot Idwal the Unshriven",
+          "objective": "Defeat Abbot Idwal the Unshriven",
+          "announce": "Abbot Idwal the Unshriven stands at the ruined chapel. Bring friends.",
+          "center": [1146, 225, 139.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 13034,
+            "name": "Abbot Idwal the Unshriven",
+            "level": 33,
+            "size": 97,
+            "pos": [1146, 225, 139.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 13034,
+                "name": "undead monk",
+                "level": [29, 30]
+              }
+            ]
+          },
+          "success": "Abbot Idwal the Unshriven falls. The way is safe again.",
+          "fail": "Abbot Idwal the Unshriven slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu7_abbot_idwal_the_unshriven_s_mantle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

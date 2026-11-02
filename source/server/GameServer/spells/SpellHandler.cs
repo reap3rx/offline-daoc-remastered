@@ -3201,6 +3201,8 @@ namespace DOL.GS.Spells
 			if (finalDamage < 0)
 				finalDamage = 0;
 
+			finalDamage *= LevelScaling.DamageFactor(m_caster, ad.Target);   // GW2-style scaling down (LevelScaling.cs)
+
 			// DoTs can only crit with Wild Arcana. This is handled by the DoTSpellHandler directly.
 			int criticalDamage = 0;
 			int criticalChance = this is not DoTSpellHandler ? Math.Min(50, m_caster.SpellCriticalChance) : 0;

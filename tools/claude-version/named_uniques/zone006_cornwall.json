@@ -1,0 +1,61 @@
+{
+ "zone": 6,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu6",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "cornwall_muryan_mounds",
+   "scaled": true,
+   "name": "Old Tregeagle's Signet",
+   "base": [
+    41,
+    35
+   ],
+   "level": 27,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 27,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Won from Old Tregeagle when The Muryan Mounds was ended."
+  },
+  {
+   "event_reward": "cornwall_moor_wolves",
+   "scaled": true,
+   "name": "Greyjaw of the Moor's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 20,
+   "bonuses": {
+    "Int": 6,
+    "Dex": 4,
+    "Power": 2,
+    "Hits": 12
+   },
+   "lore": "Won from Greyjaw of the Moor when The Moor Wolves was ended."
+  },
+  {
+   "event_reward": "cornwall_rooters_dig",
+   "scaled": true,
+   "name": "Boneheap Rooter's Wristguard",
+   "base": [
+    41,
+    33
+   ],
+   "level": 37,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 7,
+    "Hits": 30
+   },
+   "lore": "Won from the Boneheap Rooter when The Rooters' Dig was ended."
+  }
+ ]
+}

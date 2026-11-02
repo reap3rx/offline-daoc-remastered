@@ -1,0 +1,215 @@
+{
+  "zone": 4,
+  "region": 1,
+  "name": "Dartmoor",
+  "lore": "Dartmoor: bleak granite moorland where the giants raise their cairns and call the stones to walk.",
+  "chains": [
+    {
+      "id": "dartmoor_herdsmen_cairn",
+      "title": "The Herdsmen's Cairn",
+      "levels": [39, 46],
+      "hint": "Stones are being piled high on the moor...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Herdsmen's Cairn",
+          "objective": "Clear the herdsmen's cairn",
+          "announce": "The granite giants are raising a great cairn on the moor, and every stone of it was torn from an Albion wall.",
+          "center": [1154, 425, 5.0],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 770003,
+              "name": "granite giant herdsman",
+              "level": [39, 43]
+            },
+            {
+              "template": 770005,
+              "name": "granite giant gatherer",
+              "level": [42, 46]
+            }
+          ],
+          "success": "You have cleared the herdsmen's cairn. Gorm the Cairn-Builder comes out to fight.",
+          "fail": "They hold the herdsmen's cairn. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Gorm the Cairn-Builder",
+          "objective": "Defeat Gorm the Cairn-Builder",
+          "announce": "Gorm the Cairn-Builder stands at the herdsmen's cairn. Bring friends.",
+          "center": [1154, 425, 5.0],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 770005,
+            "name": "Gorm the Cairn-Builder",
+            "level": 49,
+            "size": 110,
+            "pos": [1154, 425, 5.0],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 770003,
+                "name": "granite giant herdsman",
+                "level": [39, 43]
+              }
+            ]
+          },
+          "success": "Gorm the Cairn-Builder falls. The way is safe again.",
+          "fail": "Gorm the Cairn-Builder slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu4_gorm_the_cairn_builder_s_armband", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "dartmoor_stonecallers",
+      "title": "The Stonecallers' Rite",
+      "levels": [45, 52],
+      "hint": "The tors hum with a low, grinding song...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Warden Ysolde",
+          "objective": "Protect Warden Ysolde, who is breaking the ward-stones before the rite",
+          "announce": "The stonecallers are waking the tors. Warden Ysolde knows how to break their ward-stones - if she lives long enough.",
+          "center": [776, 573, 5.0],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Warden Ysolde",
+            "template": 60167630,
+            "level": 52,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+            "health_mult": 10,
+            "pos": [776, 573, 5.0]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [804, 648, 6.5],
+              [738, 655, 96.1],
+              [695, 586, 8.9]
+            ],
+            "mobs": [
+              {
+                "template": 770006,
+                "name": "granite giant stonecaller",
+                "level": [45, 49]
+              },
+              {
+                "template": 770014,
+                "name": "granite giant stoneshaper",
+                "level": [48, 52]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Warden Ysolde. \"They came from over there - let's finish this.\"",
+          "fail": "Warden Ysolde falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Standing Stones",
+          "objective": "Clear the standing stones",
+          "announce": "They came from the standing stones. Follow them back and clear it out.",
+          "center": [654, 812, 6.3],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 770006,
+              "name": "granite giant stonecaller",
+              "level": [45, 49]
+            },
+            {
+              "template": 770014,
+              "name": "granite giant stoneshaper",
+              "level": [48, 52]
+            }
+          ],
+          "success": "You have cleared the standing stones. Stonelord Vaurn comes out to fight.",
+          "fail": "They hold the standing stones. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Stonelord Vaurn",
+          "objective": "Defeat Stonelord Vaurn",
+          "announce": "Stonelord Vaurn stands at the standing stones. Bring friends.",
+          "center": [654, 812, 6.3],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 770001,
+            "name": "Stonelord Vaurn",
+            "level": 55,
+            "size": 110,
+            "pos": [654, 812, 6.3],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 770006,
+                "name": "granite giant stonecaller",
+                "level": [45, 49]
+              }
+            ]
+          },
+          "success": "Stonelord Vaurn falls. The way is safe again.",
+          "fail": "Stonelord Vaurn slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu4_stonelord_vaurn_s_ring", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,296 @@
+{
+  "zone": 204,
+  "region": 200,
+  "name": "Lough Gur",
+  "lore": "Lough Gur, the enchanted lake, where the gurite bandits lurk in the hills and the luch swarm the fields.",
+  "chains": [
+    {
+      "id": "lough_gur_gurite_raiders",
+      "title": "The Gurite Raiders",
+      "levels": [37, 39],
+      "hint": "Gurite lookouts watch from the southern hills...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Gurite Camp",
+          "objective": "Clear the gurite camp",
+          "announce": "The gurite have a raiding camp in the southern hills. Break it.",
+          "center": [272, 1436, 161.4],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60161871,
+              "name": "gurite raider",
+              "level": [37, 39]
+            },
+            {
+              "template": 60161869,
+              "name": "gurite lookout",
+              "level": [37, 37]
+            }
+          ],
+          "success": "You have cleared the gurite camp. Gurite Warchief Donnan comes out to fight.",
+          "fail": "They hold the gurite camp. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Gurite Warchief Donnan",
+          "objective": "Defeat Gurite Warchief Donnan",
+          "announce": "Gurite Warchief Donnan stands at the gurite camp. Bring friends.",
+          "center": [272, 1436, 161.4],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60161871,
+            "name": "Gurite Warchief Donnan",
+            "level": 42,
+            "size": 70,
+            "pos": [272, 1436, 161.4],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60161871,
+                "name": "gurite raider",
+                "level": [37, 39]
+              }
+            ]
+          },
+          "success": "Gurite Warchief Donnan falls. The way is safe again.",
+          "fail": "Gurite Warchief Donnan slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu204_gurite_warchief_donnan_s_pendant", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lough_gur_luch_swarm",
+      "title": "The Luch Swarm",
+      "levels": [24, 28],
+      "hint": "The fields are alive with luch...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Eithne the Miller",
+          "objective": "Protect Eithne the Miller, who is sealing the grain store",
+          "announce": "The luch are swarming the mill. Eithne the miller must seal the grain store - hold them off her.",
+          "center": [534, 799, 106.8],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Eithne the Miller",
+            "template": 60161797,
+            "level": 28,
+            "model": 388,
+            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
+            "health_mult": 10,
+            "pos": [534, 799, 106.8]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [500, 877, 108.7],
+              [455, 829, 123.6],
+              [458, 763, 123.1]
+            ],
+            "mobs": [
+              {
+                "template": 60161603,
+                "name": "greater luch",
+                "level": [24, 27]
+              },
+              {
+                "template": 60163448,
+                "name": "luch catcher",
+                "level": [25, 28]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Eithne the Miller. \"They came from over there - let's finish this.\"",
+          "fail": "Eithne the Miller falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Mill",
+          "objective": "Clear the mill",
+          "announce": "They came from the mill. Follow them back and clear it out.",
+          "center": [214, 919, 161.4],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60161603,
+              "name": "greater luch",
+              "level": [24, 27]
+            },
+            {
+              "template": 60163448,
+              "name": "luch catcher",
+              "level": [25, 28]
+            }
+          ],
+          "success": "You have cleared the mill. The Great Luch comes out to fight.",
+          "fail": "They hold the mill. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Great Luch",
+          "objective": "Defeat the Great Luch",
+          "announce": "The Great Luch stands at the mill. Bring friends.",
+          "center": [214, 919, 161.4],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60161603,
+            "name": "The Great Luch",
+            "level": 31,
+            "size": 67,
+            "pos": [214, 919, 161.4],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60161603,
+                "name": "greater luch",
+                "level": [24, 27]
+              }
+            ]
+          },
+          "success": "The Great Luch falls. The way is safe again.",
+          "fail": "The Great Luch slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu204_great_luch_s_eye", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lough_gur_cluricaun_revel",
+      "title": "The Cluricaun Revel",
+      "levels": [17, 24],
+      "hint": "Drunken singing drifts over the eastern hills...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Revel",
+          "objective": "Clear the revel",
+          "announce": "The cluricauns have stolen a whole cellar and their revel is turning nasty. Break it up.",
+          "center": [1277, 350, 131.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60159264,
+              "name": "cluricaun",
+              "level": [22, 24]
+            },
+            {
+              "template": 60164845,
+              "name": "parthanan",
+              "level": [17, 18]
+            }
+          ],
+          "success": "You have cleared the revel. Old Cluricaun Ruadh comes out to fight.",
+          "fail": "They hold the revel. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Old Cluricaun Ruadh",
+          "objective": "Defeat Old Cluricaun Ruadh",
+          "announce": "Old Cluricaun Ruadh stands at the revel. Bring friends.",
+          "center": [1277, 350, 131.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60159264,
+            "name": "Old Cluricaun Ruadh",
+            "level": 27,
+            "size": 70,
+            "pos": [1277, 350, 131.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60159264,
+                "name": "cluricaun",
+                "level": [22, 24]
+              }
+            ]
+          },
+          "success": "Old Cluricaun Ruadh falls. The way is safe again.",
+          "fail": "Old Cluricaun Ruadh slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu204_old_cluricaun_ruadh_s_stone", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -29,6 +29,16 @@ who takes part, and scale with the people there. A zone's events are one JSON fi
 6. Build the server (the JSON is embedded). A file in `runtime/server/dynamic-events/` replaces the built-in one for
    its zone without a rebuild.
 
+## The classic zones
+
+Every classic PvE zone has two or three chains (2026-11-02): one camp (`cull` then `boss`), one `defend` (a local
+to keep alive, then their attackers' camp and its leader), and, where the zone has a guarded town, a giver who leads
+an `escort` out of town to a camp. They were built by `tools/claude-version/dynamic_events_gen/`: `specs.py` is
+the hand-written part (foes, bosses, people, places, lore) and `gen.py` fills in the rest from the database (the
+monsters' templates and levels, where they live, the towns' guards for givers and their parties) and the client's
+terrain (dry, gentle ground away from towns and buildings; an A* road for escorts, no deep water or cliffs). Edit a
+spec and run it again, or edit the zone's JSON by hand.
+
 ## How a chain starts
 
 - **On its own** (no `giver`): after `first_delay_s`, then every `interval_s`, it becomes a disturbance: the map and
@@ -44,6 +54,12 @@ who takes part, and scale with the people there. A zone's events are one JSON fi
 are higher, just under theirs (the middle of their levels); bosses two above. Rewards are a share of your level's
 experience and money by your level; reward items (`items`) come in the version for your level: `named_uniques.py`
 makes level versions (`<id>_l10` ... `_l50`) of every item marked `"scaled": true`.
+
+## Scaling down
+
+A player far above a zone fights its ordinary monsters as if only five levels above them (`gameutils/LevelScaling.cs`):
+less damage out, more in. Kills like that pay a tenth of their experience and keep one drop in five. An event's
+monsters pay in full and its rewards are paid at your level, so events are where an outleveled zone still pays.
 
 ## Bots
 

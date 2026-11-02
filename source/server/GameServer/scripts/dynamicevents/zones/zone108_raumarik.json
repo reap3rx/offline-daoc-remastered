@@ -1,0 +1,215 @@
+{
+  "zone": 108,
+  "region": 100,
+  "name": "Raumarik",
+  "lore": "Raumarik, the white waste, where the icestriders stalk the snow and the wights of the cold walk the frozen barrows.",
+  "chains": [
+    {
+      "id": "raumarik_icestriders",
+      "title": "The Icestriders",
+      "levels": [43, 46],
+      "hint": "Frost is spreading across the northern waste...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Icestrider Camp",
+          "objective": "Clear the icestrider camp",
+          "announce": "The icestriders are weaving a frost to bury the passes. Break their camp.",
+          "center": [1304, 374, 116.4],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60162353,
+              "name": "icestrider chiller",
+              "level": [43, 45]
+            },
+            {
+              "template": 60162357,
+              "name": "icestrider frostweaver",
+              "level": [44, 46]
+            }
+          ],
+          "success": "You have cleared the icestrider camp. Icestrider Hrimfaxi comes out to fight.",
+          "fail": "They hold the icestrider camp. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Icestrider Hrimfaxi",
+          "objective": "Defeat Icestrider Hrimfaxi",
+          "announce": "Icestrider Hrimfaxi stands at the icestrider camp. Bring friends.",
+          "center": [1304, 374, 116.4],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60162362,
+            "name": "Icestrider Hrimfaxi",
+            "level": 49,
+            "size": 68,
+            "pos": [1304, 374, 116.4],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60162353,
+                "name": "icestrider chiller",
+                "level": [43, 45]
+              }
+            ]
+          },
+          "success": "Icestrider Hrimfaxi falls. The way is safe again.",
+          "fail": "Icestrider Hrimfaxi slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu108_icestrider_hrimfaxi_s_cloak", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "raumarik_white_wights",
+      "title": "Wights of the White Waste",
+      "levels": [50, 53],
+      "hint": "The wind carries voices across the waste...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Skald Arnbjorn",
+          "objective": "Protect Skald Arnbjorn, who is singing the death-song over the cairn",
+          "announce": "Skald Arnbjorn is singing the death-song that keeps the wights in their cairns. They have come to silence him.",
+          "center": [164, 384, 177.9],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Skald Arnbjorn",
+            "template": 60167667,
+            "level": 53,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+            "health_mult": 10,
+            "pos": [164, 384, 177.9]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [142, 302, 194.0],
+              [207, 310, 188.3],
+              [262, 389, 128.8]
+            ],
+            "mobs": [
+              {
+                "template": 60167978,
+                "name": "windswept wraith",
+                "level": [50, 53]
+              },
+              {
+                "template": 60159159,
+                "name": "chillsome wight",
+                "level": [51, 52]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Skald Arnbjorn. \"They came from over there - let's finish this.\"",
+          "fail": "Skald Arnbjorn falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Skald's Cairn",
+          "objective": "Clear the skald's cairn",
+          "announce": "They came from the skald's cairn. Follow them back and clear it out.",
+          "center": [303, 146, 221.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60167978,
+              "name": "windswept wraith",
+              "level": [50, 53]
+            },
+            {
+              "template": 60159159,
+              "name": "chillsome wight",
+              "level": [51, 52]
+            }
+          ],
+          "success": "You have cleared the skald's cairn. Frore Lich Vetrarr comes out to fight.",
+          "fail": "They hold the skald's cairn. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Frore Lich Vetrarr",
+          "objective": "Defeat Frore Lich Vetrarr",
+          "announce": "Frore Lich Vetrarr stands at the skald's cairn. Bring friends.",
+          "center": [303, 146, 221.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60161108,
+            "name": "Frore Lich Vetrarr",
+            "level": 56,
+            "size": 67,
+            "pos": [303, 146, 221.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60167978,
+                "name": "windswept wraith",
+                "level": [50, 53]
+              }
+            ]
+          },
+          "success": "Frore Lich Vetrarr falls. The way is safe again.",
+          "fail": "Frore Lich Vetrarr slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu108_frore_lich_vetrarr_s_stone", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

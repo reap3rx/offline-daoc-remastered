@@ -1,0 +1,60 @@
+{
+ "zone": 203,
+ "region": 200,
+ "realm": 3,
+ "prefix": "nu203",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "cliffs_of_moher_cliff_dwellers",
+   "scaled": true,
+   "name": "Fomhor the Cliff Chief's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 43,
+   "bonuses": {
+    "Cha": 13,
+    "Emp": 10,
+    "Qui": 8,
+    "Hits": 26
+   },
+   "lore": "Won from Fomhor the Cliff Chief when The Cliff Dwellers' Hold was ended."
+  },
+  {
+   "event_reward": "cliffs_of_moher_fog_wraiths",
+   "scaled": true,
+   "name": "Fog Banshee's Girdle",
+   "base": [
+    41,
+    32
+   ],
+   "level": 33,
+   "bonuses": {
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 6,
+    "Hits": 20
+   },
+   "lore": "Won from the Fog Banshee when Fog on the Cliffs was ended."
+  },
+  {
+   "event_reward": "cliffs_of_moher_distorters",
+   "scaled": true,
+   "name": "Great Distorter's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 26,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 5,
+    "Hits": 21
+   },
+   "lore": "Won from the Great Distorter when The Moheran Distorters was ended."
+  }
+ ]
+}

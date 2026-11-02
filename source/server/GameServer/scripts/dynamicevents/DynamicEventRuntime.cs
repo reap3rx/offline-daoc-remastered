@@ -106,13 +106,15 @@ namespace DOL.GS.DynamicEvents
             Body.SpawnPoint = new Point3D(Body.X, Body.Y, Body.Z);
             if (!HasAggro && me.Chain != null)
             {
-                EventNpc foe = me.Chain.EnemiesNear(me, 1200).OrderBy(n => n.GetDistanceTo(me)).FirstOrDefault();
+                // the chain's monsters near them, or near the one they follow (a guard runs to the giver's aid)
+                EventNpc foe = me.Chain.EnemiesNear(me, 1600).OrderBy(n => n.GetDistanceTo(me)).FirstOrDefault()
+                    ?? (Follow != null && Follow.IsAlive ? me.Chain.EnemiesNear(Follow, 1200).OrderBy(n => n.GetDistanceTo(Follow)).FirstOrDefault() : null);
                 if (foe != null)
                 {
                     AddToAggroList(foe, 100);
                     FSM.SetCurrentState(eFSMStateType.AGGRO);
                 }
-                else if (!Steered && Follow != null && Follow.IsAlive && !Body.IsWithinRadius(Follow, 320))
+                else if (!Steered && Follow != null && Follow.IsAlive && !Body.IsWithinRadius(Follow, 260))
                 {
                     if (!Body.IsMoving)
                         Body.PathTo(new Vector3(Follow.X, Follow.Y, Follow.Z), Body.MaxSpeed);
@@ -303,12 +305,12 @@ namespace DOL.GS.DynamicEvents
         {
             if (Active)
             {
-                Giver.SayTo(player, "We're already on our way - keep up!");
+                NpcSpeech.SayTo(Giver, player, "We're already on our way - keep up!");
                 return;
             }
             if (Environment.TickCount64 < GiverReadyAt)
             {
-                Giver.SayTo(player, Def.Giver.Busy);
+                NpcSpeech.SayTo(Giver, player, Def.Giver.Busy);
                 return;
             }
             string greet = Def.Giver.Greet ?? $"Will you come with us? Say when you're [{Def.Giver.Accept}].";
@@ -324,7 +326,7 @@ namespace DOL.GS.DynamicEvents
                 return;
             }
             if (!string.IsNullOrEmpty(Def.Giver.Reply))
-                Giver.SayTo(player, Def.Giver.Reply);
+                NpcSpeech.Say(Giver, Def.Giver.Reply);
             Begin(Def.Start, now);
         }
 
@@ -491,10 +493,12 @@ namespace DOL.GS.DynamicEvents
         public readonly List<EventNpc> Spawned = new();
         readonly Dictionary<GameLiving, double> _credit = new();
         readonly Dictionary<GameLiving, int> _presence = new();
-        long _nextWave, _nextAdds;
+        long _nextWave, _nextAdds, _bossFightFrom;
         long _now;
         int _pathIndex;
-        bool _waitSaid;
+        long _waitSaidAt;
+        Vector3? _leadTo;                            // the giver's party is on its way to this stage's spot
+        long _leadNext;
         public double Scale = 1;
         public int TargetLevel;                      // the level of the people here: the stage's monsters scale up to it
         public static bool DEBUG_TRACE = false;      // (the defend stage logs its monsters every 10 s)
@@ -546,6 +550,7 @@ namespace DOL.GS.DynamicEvents
                         lb.Steered = true;
                     break;
             }
+            LeadPartyHere();
             Announce(Def.Announce, true);
         }
 
@@ -559,6 +564,7 @@ namespace DOL.GS.DynamicEvents
             foreach (GameLiving p in Chain.PeopleNear(CenterPoint, RadiusUnits * 1.3))
                 _presence[p] = _presence.TryGetValue(p, out int s) ? s + 1 : 1;
             Spawned.RemoveAll(n => n == null || n.ObjectState == GameObject.eObjectState.Deleted);
+            KeepLeading();
             switch (Def.Type)
             {
                 case "cull":
@@ -588,14 +594,25 @@ namespace DOL.GS.DynamicEvents
                 case "boss":
                     if (Boss == null || !Boss.IsAlive) { Outcome = StageOutcome.Success; return; }
                     if (Elapsed >= Def.TimeS) { Outcome = StageOutcome.Fail; return; }
-                    if (Def.Adds != null && now >= _nextAdds && Boss.InCombat)
+                    // adds (owner 2026-11-02: "the minute we killed one of them, a few more would spawn in"): the first call
+                    // a while into the fight, then every so often, and only while fewer than a call's worth are still up
+                    if (Def.Adds != null && Boss.InCombat)
                     {
-                        _nextAdds = now + 1000L * Def.Adds.EveryS;
-                        GameLiving target = Chain.PeopleNear(CenterPoint, RadiusUnits * 1.5).OrderBy(p => p.GetDistanceTo(Boss)).FirstOrDefault();
-                        int n = (int) Math.Round(Def.Adds.Count * Math.Min(Scale, 2.0));
-                        var at = new Vector3(Boss.X, Boss.Y, Boss.Z);
-                        for (int i = 0; i < n; i++)
-                            SpawnHostile(Pick(Def.Adds.Mobs), Chain.Around(at, 350), target);
+                        if (_bossFightFrom == 0)
+                        {
+                            _bossFightFrom = now;
+                            _nextAdds = now + 1000L * Math.Max(25, Def.Adds.EveryS / 2);
+                        }
+                        int cap = Math.Max(1, (int) Math.Round(Def.Adds.Count * Math.Min(Scale, 1.6)));
+                        int up = Spawned.Count(x => x.IsAlive && x.Role == EventRole.Hostile);
+                        if (now >= _nextAdds && up < cap)
+                        {
+                            _nextAdds = now + 1000L * Math.Max(60, Def.Adds.EveryS);
+                            GameLiving target = Chain.PeopleNear(CenterPoint, RadiusUnits * 1.5).OrderBy(p => p.GetDistanceTo(Boss)).FirstOrDefault();
+                            var at = new Vector3(Boss.X, Boss.Y, Boss.Z);
+                            for (int i = up; i < cap; i++)
+                                SpawnHostile(Pick(Def.Adds.Mobs), Chain.Around(at, 350), target);
+                        }
                     }
                     break;
                 case "escort":
@@ -610,41 +627,86 @@ namespace DOL.GS.DynamicEvents
         {
             EventNpc lead = Chain.Leader;
             if (lead == null) { Outcome = StageOutcome.Fail; return; }
-            if (_pathIndex >= Def.Path.Count) { Outcome = StageOutcome.Success; return; }
             if (Elapsed >= Def.TimeS) { Outcome = StageOutcome.Fail; return; }
-            if (lead.InCombat || (lead.Brain as StandardMobBrain)?.HasAggro == true || Chain.EnemiesNear(lead, 1000).Any())
+            // never in the middle of a fight - and the road is not done until its ambushers are (owner 2026-11-02: the
+            // last ambush "spawned and then was just gone instantly": the stage ended on reaching the last point)
+            bool fighting = lead.InCombat || (lead.Brain as StandardMobBrain)?.HasAggro == true || Chain.EnemiesNear(lead, 1400).Any()
+                || Spawned.Any(n => n.IsAlive && n.Role == EventRole.Hostile);
+            if (fighting)
+            {
+                if (lead.IsMoving && !lead.InCombat)
+                    lead.StopMoving();
                 return;
+            }
+            if (_pathIndex >= Def.Path.Count) { Outcome = StageOutcome.Success; return; }
             Vector3 target = Chain.ToWorld(Def.Path[_pathIndex]);
             if (lead.IsWithinRadius(new Point3D((int) target.X, (int) target.Y, (int) target.Z), 200))
             {
+                bool sprung = false;
                 foreach (AmbushDef a in Def.Ambushes.Where(a => a.At == _pathIndex))
                 {
+                    sprung = true;
                     if (!string.IsNullOrEmpty(a.Say))
-                        foreach (GamePlayer p in Chain.PlayersInZone().Where(p => p.IsWithinRadius(lead, 3000)))
-                            lead.SayTo(p, a.Say);
+                        NpcSpeech.Say(lead, a.Say);
                     int n = Math.Max(1, (int) Math.Round(a.Count * Math.Min(Scale, 2.0)));
                     for (int i = 0; i < n; i++)
                         SpawnHostile(Pick(a.Mobs), Chain.Around(target, 700), lead);
                 }
                 _pathIndex++;
-                lead.StopMoving();
+                if (sprung)
+                {
+                    lead.StopMoving();
+                    return;
+                }
+                if (_pathIndex >= Def.Path.Count)
+                    return;
+                target = Chain.ToWorld(Def.Path[_pathIndex]);
+                lead.PathTo(target, EscortSpeed(lead));     // straight on to the next point (no stop at each one)
                 return;
             }
             bool company = Chain.PeopleNear(new Point3D(lead.X, lead.Y, lead.Z), 1400).Any();
             if (!company)
             {
                 lead.StopMoving();
-                if (!_waitSaid)
+                if (_now >= _waitSaidAt)                // (once in a while, not every time someone lags a step)
                 {
-                    _waitSaid = true;
-                    foreach (GamePlayer p in Chain.PlayersInZone().Where(p => p.IsWithinRadius(lead, 6000)))
-                        lead.SayTo(p, "Don't fall behind - I'll wait for you.");
+                    _waitSaidAt = _now + 45_000;
+                    NpcSpeech.Say(lead, "Don't fall behind - I'll wait for you.", 6000);
                 }
                 return;
             }
-            _waitSaid = false;
             if (!lead.IsMoving)
-                lead.PathTo(target, (short) Math.Max(110, lead.MaxSpeed * 0.65));
+                lead.PathTo(target, EscortSpeed(lead));
+        }
+
+        /// <summary>A brisk walk (owner 2026-11-02: "a little too slow"): about a player's run, never slower than 170.</summary>
+        static short EscortSpeed(GameNPC lead) => (short) Math.Max(170, Math.Min((int) lead.MaxSpeed, 200));
+
+        /// <summary>A giver's party goes where a stage is (a cull or a boss after the march): the giver walks there and
+        /// the guards follow; they fight the chain's monsters on the way and at the spot (owner 2026-11-02: the rangers
+        /// "did not move at all ... did not help us with the boss").</summary>
+        void LeadPartyHere()
+        {
+            if (Chain.Leader is not EventNpc lead || lead == Protect || Def.Type == "escort")
+                return;
+            if (lead.Brain is EventAllyBrain b)
+                b.Steered = true;
+            _leadTo = Chain.Around(Center, Math.Min(RadiusUnits * 0.4, 600));
+            _leadNext = 0;
+        }
+
+        void KeepLeading()
+        {
+            if (_leadTo is not Vector3 to || Chain.Leader is not EventNpc lead || _now < _leadNext)
+                return;
+            _leadNext = _now + 3000;
+            if (lead.IsWithinRadius(new Point3D((int) to.X, (int) to.Y, (int) to.Z), 250))
+            {
+                _leadTo = null;                         // there: they stand and fight (the brain still takes on foes)
+                return;
+            }
+            if (!lead.InCombat && (lead.Brain as StandardMobBrain)?.HasAggro != true && !lead.IsMoving)
+                lead.PathTo(to, EscortSpeed(lead));
         }
 
         /// <summary>The stage is over: rewards on a win, its text to the zone, its leftovers taken away.</summary>
@@ -666,6 +728,13 @@ namespace DOL.GS.DynamicEvents
             Spawned.Clear();
             if (Chain.Leader?.Brain is EventAllyBrain lb)
                 lb.Steered = false;
+            foreach (EventNpc ally in Chain.Guards.Append(Chain.Leader).Where(a => a != null && a.IsAlive))
+                if (ally.Brain is StandardMobBrain ab)
+                {
+                    ab.ClearAggroList();
+                    ally.attackComponent?.StopAttack();
+                    ab.FSM?.SetCurrentState(eFSMStateType.IDLE);
+                }
         }
 
         // ---------------------------------------------------------------- progress (the tracker)
@@ -732,12 +801,13 @@ namespace DOL.GS.DynamicEvents
             if (d == null)
                 return null;
             Vector3 at = d.Pos != null ? Chain.ToWorld(d.Pos) : Center;
-            int level = role == EventRole.Boss ? Math.Max(d.Level, TargetLevel + 2) : Math.Max(d.Level, TargetLevel);
+            int level = role == EventRole.Boss ? Math.Max(d.Level, TargetLevel + 1) : Math.Max(d.Level, TargetLevel);
             var npc = Chain.MakeNpc(d, role, at, level, this);
             if (npc == null)
                 return null;
             Spawned.Add(npc);
-            npc.HealthMult = Math.Max(1, d.HealthMult) * (role == EventRole.Boss ? Scale : 1);
+            // (owner 2026-11-02: a boss was too much for eight bots and a hero - health 4x times the crowd scale, up to 12x)
+            npc.HealthMult = Math.Max(1, Math.Min(3.0, d.HealthMult)) * (role == EventRole.Boss ? 1 + (Scale - 1) * 0.5 : 1);
             npc.Health = npc.MaxHealth;
             return npc;
         }

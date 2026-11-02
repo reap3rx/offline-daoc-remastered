@@ -1,0 +1,361 @@
+{
+  "zone": 202,
+  "region": 200,
+  "name": "Shannon Estuary",
+  "lore": "The Shannon Estuary: Connla and Ceannoi on the river mouth, where the eriu hunt the shallows and giant ants swarm the eastern shore.",
+  "chains": [
+    {
+      "id": "shannon_estuary_giant_ants",
+      "title": "The Giant Ants",
+      "levels": [21, 24],
+      "hint": "The ground crawls on the eastern shore...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Ant Hills",
+          "objective": "Clear the ant hills",
+          "announce": "The giant ants are swarming out of their hills. Their queen has come up with them - kill her.",
+          "center": [914, 865, 137.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12353,
+              "name": "giant ant",
+              "level": [21, 24]
+            }
+          ],
+          "success": "You have cleared the ant hills. The Ant Queen of the Shannon comes out to fight.",
+          "fail": "They hold the ant hills. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Ant Queen of the Shannon",
+          "objective": "Defeat the Ant Queen of the Shannon",
+          "announce": "The Ant Queen of the Shannon stands at the ant hills. Bring friends.",
+          "center": [914, 865, 137.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12353,
+            "name": "The Ant Queen of the Shannon",
+            "level": 27,
+            "size": 65,
+            "pos": [914, 865, 137.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12353,
+                "name": "giant ant",
+                "level": [21, 24]
+              }
+            ]
+          },
+          "success": "The Ant Queen of the Shannon falls. The way is safe again.",
+          "fail": "The Ant Queen of the Shannon slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu202_ant_queen_of_the_shannon_s_jewel", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "shannon_estuary_eriu_hunters",
+      "title": "The Eriu Hunters",
+      "levels": [19, 22],
+      "hint": "Hunting horns sound on the river...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Fiachra the Ferryman",
+          "objective": "Protect Fiachra the Ferryman, who is mending his ferry",
+          "announce": "The eriu are hunting along the river, and Fiachra the ferryman is stuck mending his boat. Keep them off him.",
+          "center": [1303, 1218, 157.6],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Fiachra the Ferryman",
+            "template": 60161797,
+            "level": 22,
+            "model": 378,
+            "equipment": "a4467770-ab83-4fc8-ba4f-08b41de96d74",
+            "health_mult": 10,
+            "pos": [1303, 1218, 157.6]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1228, 1177, 141.8],
+              [1281, 1136, 126.5],
+              [1346, 1145, 156.0]
+            ],
+            "mobs": [
+              {
+                "template": 60160565,
+                "name": "eriu henter",
+                "level": [19, 22]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Fiachra the Ferryman. \"They came from over there - let's finish this.\"",
+          "fail": "Fiachra the Ferryman falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Ferry Landing",
+          "objective": "Clear the ferry landing",
+          "announce": "They came from the ferry landing. Follow them back and clear it out.",
+          "center": [1233, 957, 158.7],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60160565,
+              "name": "eriu henter",
+              "level": [19, 22]
+            }
+          ],
+          "success": "You have cleared the ferry landing. The Eriu Huntmaster comes out to fight.",
+          "fail": "They hold the ferry landing. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Eriu Huntmaster",
+          "objective": "Defeat the Eriu Huntmaster",
+          "announce": "The Eriu Huntmaster stands at the ferry landing. Bring friends.",
+          "center": [1233, 957, 158.7],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60160565,
+            "name": "The Eriu Huntmaster",
+            "level": 25,
+            "size": 70,
+            "pos": [1233, 957, 158.7],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60160565,
+                "name": "eriu henter",
+                "level": [19, 22]
+              }
+            ]
+          },
+          "success": "The Eriu Huntmaster falls. The way is safe again.",
+          "fail": "The Eriu Huntmaster slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu202_eriu_huntmaster_s_bracer", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "shannon_estuary_sheerie_ring",
+      "title": "The Sheerie Ring",
+      "levels": [7, 12],
+      "hint": "Sentinel Ronnat is looking for help in Ceannoi.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Sentinel Ronnat",
+        "template": 60165769,
+        "level": 20,
+        "model": 328,
+        "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+        "guild": "Sentinels of Ceannoi",
+        "health_mult": 4,
+        "pos": [964, 1567, 126.3],
+        "greet": "Three children followed the sheerie lights into the bog last night. I'm going to the sheerie ring to fetch them back. Will you come? Say when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Sentinel",
+          "template": 60165769,
+          "level": 14,
+          "model": 328,
+          "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+          "guild": "Sentinels of Ceannoi",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Sheerie Ring",
+          "objective": "Go with Sentinel Ronnat to the sheerie ring",
+          "announce": "Sentinel Ronnat sets out for the sheerie ring to fetch the lost children home.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [949, 1542, 126.0],
+            [933, 1510, 128.4],
+            [877, 1446, 157.8],
+            [877, 1358, 131.7],
+            [861, 1334, 126.5],
+            [829, 1302, 126.0],
+            [829, 1254, 126.3],
+            [813, 1230, 128.4],
+            [797, 1198, 129.1],
+            [749, 1142, 142.4],
+            [677, 1078, 146.2],
+            [661, 1062, 128.4],
+            [645, 1038, 136.2],
+            [613, 1022, 152.4],
+            [605, 998, 158.3]
+          ],
+          "ambushes": [
+            {
+              "at": 7,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 30002,
+                  "name": "moss sheerie",
+                  "level": [9, 12]
+                },
+                {
+                  "template": 60163477,
+                  "name": "lunantishee",
+                  "level": [8, 9]
+                }
+              ]
+            }
+          ],
+          "success": "Sentinel Ronnat reaches the sheerie ring. \"There they are. Clear them out!\"",
+          "fail": "Sentinel Ronnat falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Sheerie Ring",
+          "objective": "Clear the sheerie ring",
+          "announce": "Clear the sheerie ring!",
+          "center": [601, 994, 158.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 30002,
+              "name": "moss sheerie",
+              "level": [9, 12]
+            },
+            {
+              "template": 60163477,
+              "name": "lunantishee",
+              "level": [8, 9]
+            },
+            {
+              "template": 60159274,
+              "name": "cluricaun trip",
+              "level": [7, 9]
+            }
+          ],
+          "success": "You have cleared the sheerie ring. Queen Aoibheall comes out to fight.",
+          "fail": "They hold the sheerie ring. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Queen Aoibheall",
+          "objective": "Defeat Queen Aoibheall",
+          "announce": "Queen Aoibheall stands at the sheerie ring. Bring friends.",
+          "center": [601, 994, 158.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 30002,
+            "name": "Queen Aoibheall",
+            "level": 15,
+            "size": 65,
+            "pos": [601, 994, 158.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 30002,
+                "name": "moss sheerie",
+                "level": [9, 12]
+              }
+            ]
+          },
+          "success": "Queen Aoibheall falls. Ceannoi will hear of this in the taverns tonight.",
+          "fail": "Queen Aoibheall slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu202_queen_aoibheall_s_torc", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

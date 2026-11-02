@@ -1,0 +1,374 @@
+{
+  "zone": 207,
+  "region": 200,
+  "name": "Connacht",
+  "lore": "Connacht: Druim Ligen, Basar and Ardee, where the wickermen burn in the north and the wind ghouls haunt the moors.",
+  "chains": [
+    {
+      "id": "connacht_wickermen",
+      "title": "The Phantom Wickermen",
+      "levels": [24, 30],
+      "hint": "Fires burn in the northern hills...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Wicker Circle",
+          "objective": "Clear the wicker circle",
+          "announce": "The azure idolaters are building a great wickerman. It must not be lit.",
+          "center": [784, 325, 131.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60164910,
+              "name": "phantom wickerman",
+              "level": [28, 30]
+            },
+            {
+              "template": 60158182,
+              "name": "azure idolater",
+              "level": [24, 25]
+            }
+          ],
+          "success": "You have cleared the wicker circle. The Burning Wickerman comes out to fight.",
+          "fail": "They hold the wicker circle. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Burning Wickerman",
+          "objective": "Defeat the Burning Wickerman",
+          "announce": "The Burning Wickerman stands at the wicker circle. Bring friends.",
+          "center": [784, 325, 131.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60164910,
+            "name": "The Burning Wickerman",
+            "level": 33,
+            "size": 67,
+            "pos": [784, 325, 131.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60164910,
+                "name": "phantom wickerman",
+                "level": [28, 30]
+              }
+            ]
+          },
+          "success": "The Burning Wickerman falls. The way is safe again.",
+          "fail": "The Burning Wickerman slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu207_burning_wickerman_s_bracer", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "connacht_streaming_wisps",
+      "title": "The Woodward",
+      "levels": [21, 28],
+      "hint": "Lights stream through the western woods...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Grainne the Woodward",
+          "objective": "Protect Grainne the Woodward, who is tending the oak saplings",
+          "announce": "Grainne the woodward is saving the oak saplings from the irewood blight. The wood itself is coming for her.",
+          "center": [226, 561, 125.2],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Grainne the Woodward",
+            "template": 60163820,
+            "level": 28,
+            "model": 561,
+            "equipment": "MasterRanger",
+            "health_mult": 10,
+            "pos": [226, 561, 125.2]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [282, 497, 122.1],
+              [311, 556, 126.3],
+              [289, 619, 127.0]
+            ],
+            "mobs": [
+              {
+                "template": 60166584,
+                "name": "streaming wisp",
+                "level": [21, 24]
+              },
+              {
+                "template": 60168131,
+                "name": "young irewood",
+                "level": [24, 28]
+              },
+              {
+                "template": 60159263,
+                "name": "cluricaun",
+                "level": [22, 24]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Grainne the Woodward. \"They came from over there - let's finish this.\"",
+          "fail": "Grainne the Woodward falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Woodward's Grove",
+          "objective": "Clear the woodward's grove",
+          "announce": "They came from the woodward's grove. Follow them back and clear it out.",
+          "center": [501, 546, 166.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60166584,
+              "name": "streaming wisp",
+              "level": [21, 24]
+            },
+            {
+              "template": 60168131,
+              "name": "young irewood",
+              "level": [24, 28]
+            },
+            {
+              "template": 60159263,
+              "name": "cluricaun",
+              "level": [22, 24]
+            }
+          ],
+          "success": "You have cleared the woodward's grove. Elder Irewood comes out to fight.",
+          "fail": "They hold the woodward's grove. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Elder Irewood",
+          "objective": "Defeat Elder Irewood",
+          "announce": "Elder Irewood stands at the woodward's grove. Bring friends.",
+          "center": [501, 546, 166.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60168131,
+            "name": "Elder Irewood",
+            "level": 31,
+            "size": 67,
+            "pos": [501, 546, 166.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60166584,
+                "name": "streaming wisp",
+                "level": [21, 24]
+              }
+            ]
+          },
+          "success": "Elder Irewood falls. The way is safe again.",
+          "fail": "Elder Irewood slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu207_elder_irewood_s_band", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "connacht_wind_ghouls",
+      "title": "The Wind Ghouls",
+      "levels": [3, 7],
+      "hint": "Sentinel Andreasa is looking for help in Basar.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Sentinel Andreasa",
+        "template": 60165770,
+        "level": 15,
+        "model": 389,
+        "equipment": "d8359758-1be0-4703-95f9-4e17bbb88a2b",
+        "guild": "Sentinels of Basar",
+        "health_mult": 4,
+        "pos": [1314, 714, 127.5],
+        "greet": "The wind ghouls are getting bold - they took a shepherd off the moor last night. I'm going after them. Will you come? Tell me when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Sentinel",
+          "template": 60165770,
+          "level": 9,
+          "model": 389,
+          "equipment": "d8359758-1be0-4703-95f9-4e17bbb88a2b",
+          "guild": "Sentinels of Basar",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Ghoul Moor",
+          "objective": "Go with Sentinel Andreasa to the ghoul moor",
+          "announce": "Sentinel Andreasa leads the sentinels of Basar out onto the ghoul moor.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [1318, 822, 126.9],
+            [1318, 862, 126.0],
+            [1326, 886, 126.0]
+          ],
+          "ambushes": [
+            {
+              "at": 1,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 60167968,
+                  "name": "wind ghoul",
+                  "level": [7, 7]
+                },
+                {
+                  "template": 60163467,
+                  "name": "lugradan whelp",
+                  "level": [4, 6]
+                }
+              ]
+            }
+          ],
+          "success": "Sentinel Andreasa reaches the ghoul moor. \"There they are. Clear them out!\"",
+          "fail": "Sentinel Andreasa falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Ghoul Moor",
+          "objective": "Clear the ghoul moor",
+          "announce": "Clear the ghoul moor!",
+          "center": [1324, 883, 126.0],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60167968,
+              "name": "wind ghoul",
+              "level": [7, 7]
+            },
+            {
+              "template": 60163467,
+              "name": "lugradan whelp",
+              "level": [4, 6]
+            },
+            {
+              "template": 60164276,
+              "name": "mudman",
+              "level": [3, 4]
+            }
+          ],
+          "success": "You have cleared the ghoul moor. Cathal of the Four Winds comes out to fight.",
+          "fail": "They hold the ghoul moor. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Cathal of the Four Winds",
+          "objective": "Defeat Cathal of the Four Winds",
+          "announce": "Cathal of the Four Winds stands at the ghoul moor. Bring friends.",
+          "center": [1324, 883, 126.0],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60167968,
+            "name": "Cathal of the Four Winds",
+            "level": 10,
+            "size": 67,
+            "pos": [1324, 883, 126.0],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60167968,
+                "name": "wind ghoul",
+                "level": [7, 7]
+              }
+            ]
+          },
+          "success": "Cathal of the Four Winds falls. Basar will hear of this in the taverns tonight.",
+          "fail": "Cathal of the Four Winds slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu207_cathal_of_the_four_winds_jewel", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

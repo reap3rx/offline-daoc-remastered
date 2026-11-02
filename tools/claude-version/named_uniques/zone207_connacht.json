@@ -1,0 +1,60 @@
+{
+ "zone": 207,
+ "region": 200,
+ "realm": 3,
+ "prefix": "nu207",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "connacht_wickermen",
+   "scaled": true,
+   "name": "Burning Wickerman's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 33,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 6,
+    "Hits": 26
+   },
+   "lore": "Won from the Burning Wickerman when The Phantom Wickermen was ended."
+  },
+  {
+   "event_reward": "connacht_streaming_wisps",
+   "scaled": true,
+   "name": "Elder Irewood's Band",
+   "base": [
+    41,
+    35
+   ],
+   "level": 31,
+   "bonuses": {
+    "Dex": 9,
+    "Qui": 9,
+    "Str": 6,
+    "Hits": 19
+   },
+   "lore": "Won from Elder Irewood when The Woodward was ended."
+  },
+  {
+   "event_reward": "connacht_wind_ghouls",
+   "scaled": true,
+   "name": "Cathal of the Four Winds' Jewel",
+   "base": [
+    41,
+    24
+   ],
+   "level": 10,
+   "bonuses": {
+    "Cha": 3,
+    "Emp": 2,
+    "Qui": 2,
+    "Hits": 6
+   },
+   "lore": "Won from Cathal of the Four Winds when The Wind Ghouls was ended."
+  }
+ ]
+}

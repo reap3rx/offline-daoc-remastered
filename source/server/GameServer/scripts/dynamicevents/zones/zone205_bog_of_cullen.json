@@ -1,0 +1,371 @@
+{
+  "zone": 205,
+  "region": 200,
+  "name": "Bog of Cullen",
+  "lore": "The Bog of Cullen: Siopa and Alainn Bin on the edges of a bog where the siabra walk on the water and things grow that should not.",
+  "chains": [
+    {
+      "id": "bog_of_cullen_waterwalkers",
+      "title": "The Siabra Waterwalkers",
+      "levels": [47, 52],
+      "hint": "Siabra are crossing the bog...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Siabra Camp",
+          "objective": "Clear the siabra camp",
+          "announce": "The siabra waterwalkers are massing in the bog for a raid. Strike first.",
+          "center": [730, 516, 122.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 30007,
+              "name": "siabra waterwalker",
+              "level": [49, 52]
+            },
+            {
+              "template": 60165983,
+              "name": "siabra lookout",
+              "level": [47, 47]
+            }
+          ],
+          "success": "You have cleared the siabra camp. The Siabra Marsh-Lord comes out to fight.",
+          "fail": "They hold the siabra camp. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Siabra Marsh-Lord",
+          "objective": "Defeat the Siabra Marsh-Lord",
+          "announce": "The Siabra Marsh-Lord stands at the siabra camp. Bring friends.",
+          "center": [730, 516, 122.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 30007,
+            "name": "The Siabra Marsh-Lord",
+            "level": 55,
+            "size": 65,
+            "pos": [730, 516, 122.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 30007,
+                "name": "siabra waterwalker",
+                "level": [49, 52]
+              }
+            ]
+          },
+          "success": "The Siabra Marsh-Lord falls. The way is safe again.",
+          "fail": "The Siabra Marsh-Lord slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu205_siabra_marsh_lord_s_jewel", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "bog_of_cullen_bog_creepers",
+      "title": "The Bog Creepers",
+      "levels": [41, 47],
+      "hint": "Something stirs under the peat...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Ciaran the Peat-Cutter",
+          "objective": "Protect Ciaran the Peat-Cutter, who is loading his peat cart",
+          "announce": "Ciaran has cut too deep into the bog, and what was under the peat is crawling out. Hold it off while he loads his cart.",
+          "center": [606, 1090, 122.2],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Ciaran the Peat-Cutter",
+            "template": 60165763,
+            "level": 47,
+            "model": 355,
+            "equipment": "0ed6c49b-8e49-4a08-bcda-4d19b519422d",
+            "health_mult": 10,
+            "pos": [606, 1090, 122.2]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [634, 1170, 122.2],
+              [568, 1166, 122.7],
+              [525, 1116, 123.6]
+            ],
+            "mobs": [
+              {
+                "template": 60158591,
+                "name": "bog creeper",
+                "level": [42, 44]
+              },
+              {
+                "template": 60164164,
+                "name": "morass leech",
+                "level": [41, 43]
+              },
+              {
+                "template": 60158590,
+                "name": "bog crawler",
+                "level": [46, 47]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Ciaran the Peat-Cutter. \"They came from over there - let's finish this.\"",
+          "fail": "Ciaran the Peat-Cutter falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Peat Cuttings",
+          "objective": "Clear the peat cuttings",
+          "announce": "They came from the peat cuttings. Follow them back and clear it out.",
+          "center": [500, 1303, 125.9],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60158591,
+              "name": "bog creeper",
+              "level": [42, 44]
+            },
+            {
+              "template": 60164164,
+              "name": "morass leech",
+              "level": [41, 43]
+            },
+            {
+              "template": 60158590,
+              "name": "bog crawler",
+              "level": [46, 47]
+            }
+          ],
+          "success": "You have cleared the peat cuttings. The Cullen Bog-Horror comes out to fight.",
+          "fail": "They hold the peat cuttings. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Cullen Bog-Horror",
+          "objective": "Defeat the Cullen Bog-Horror",
+          "announce": "The Cullen Bog-Horror stands at the peat cuttings. Bring friends.",
+          "center": [500, 1303, 125.9],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60158590,
+            "name": "The Cullen Bog-Horror",
+            "level": 50,
+            "size": 54,
+            "pos": [500, 1303, 125.9],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60158591,
+                "name": "bog creeper",
+                "level": [42, 44]
+              }
+            ]
+          },
+          "success": "The Cullen Bog-Horror falls. The way is safe again.",
+          "fail": "The Cullen Bog-Horror slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu205_cullen_bog_horror_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "bog_of_cullen_wayguards",
+      "title": "The Siabra Wayguards",
+      "levels": [40, 44],
+      "hint": "Sentinel Muirne is looking for help in Siopa.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Sentinel Muirne",
+        "template": 60165763,
+        "level": 52,
+        "model": 383,
+        "equipment": "05c1b6ca-3822-42b7-b457-1c2da8e8e306",
+        "guild": "Sentinels of Siopa",
+        "health_mult": 4,
+        "pos": [230, 966, 123.6],
+        "greet": "The siabra have set a wayguard post on our road and let their hounds loose on anyone who passes. We're going to clear it. Will you come? Say when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Sentinel",
+          "template": 60165763,
+          "level": 46,
+          "model": 383,
+          "equipment": "05c1b6ca-3822-42b7-b457-1c2da8e8e306",
+          "guild": "Sentinels of Siopa",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Wayguard Post",
+          "objective": "Go with Sentinel Muirne to the wayguard post",
+          "announce": "Sentinel Muirne leads the sentinels of Siopa out to the siabra wayguard post.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [228, 1018, 123.6],
+            [244, 1090, 123.6],
+            [252, 1194, 123.6],
+            [252, 1226, 123.6],
+            [260, 1234, 123.6]
+          ],
+          "ambushes": [
+            {
+              "at": 2,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 60165995,
+                  "name": "siabra wayguard",
+                  "level": [43, 44]
+                },
+                {
+                  "template": 60159814,
+                  "name": "deamhan hound",
+                  "level": [40, 42]
+                }
+              ]
+            }
+          ],
+          "success": "Sentinel Muirne reaches the wayguard post. \"There they are. Clear them out!\"",
+          "fail": "Sentinel Muirne falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Wayguard Post",
+          "objective": "Clear the wayguard post",
+          "announce": "Clear the wayguard post!",
+          "center": [258, 1237, 123.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60165995,
+              "name": "siabra wayguard",
+              "level": [43, 44]
+            },
+            {
+              "template": 60159814,
+              "name": "deamhan hound",
+              "level": [40, 42]
+            }
+          ],
+          "success": "You have cleared the wayguard post. Wayguard Captain Fiach comes out to fight.",
+          "fail": "They hold the wayguard post. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Wayguard Captain Fiach",
+          "objective": "Defeat Wayguard Captain Fiach",
+          "announce": "Wayguard Captain Fiach stands at the wayguard post. Bring friends.",
+          "center": [258, 1237, 123.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60165995,
+            "name": "Wayguard Captain Fiach",
+            "level": 47,
+            "size": 70,
+            "pos": [258, 1237, 123.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60165995,
+                "name": "siabra wayguard",
+                "level": [43, 44]
+              }
+            ]
+          },
+          "success": "Wayguard Captain Fiach falls. Siopa will hear of this in the taverns tonight.",
+          "fail": "Wayguard Captain Fiach slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu205_wayguard_captain_fiach_s_jewel", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

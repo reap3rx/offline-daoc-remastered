@@ -1,0 +1,61 @@
+{
+ "zone": 102,
+ "region": 100,
+ "realm": 2,
+ "prefix": "nu102",
+ "respawn_s": 900,
+ "items": [
+  {
+   "event_reward": "west_svealand_blodfelag_camp",
+   "scaled": true,
+   "name": "Hjalmar Blood-Oath's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 21,
+   "bonuses": {
+    "Dex": 6,
+    "Qui": 6,
+    "Str": 4,
+    "Hits": 13
+   },
+   "lore": "Won from Hjalmar Blood-Oath when The Blodfelag Camp was ended."
+  },
+  {
+   "event_reward": "west_svealand_oathbreakers",
+   "scaled": true,
+   "name": "Ulf the Faithless' Stone",
+   "base": [
+    41,
+    24
+   ],
+   "level": 18,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 3,
+    "Hits": 11
+   },
+   "lore": "Won from Ulf the Faithless when The Oathbreakers' Raid was ended."
+  },
+  {
+   "event_reward": "west_svealand_skogsfru",
+   "scaled": true,
+   "name": "Elder Skogsfru's Stone",
+   "base": [
+    41,
+    24
+   ],
+   "level": 17,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 17,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Won from the Elder Skogsfru when Into Skogsfru Wood was ended."
+  }
+ ]
+}

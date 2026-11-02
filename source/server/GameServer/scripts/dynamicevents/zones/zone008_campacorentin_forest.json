@@ -1,0 +1,376 @@
+{
+  "zone": 8,
+  "region": 1,
+  "name": "Campacorentin Forest",
+  "lore": "Campacorentin: the deep old forest between Camelot and the Lethantis scholars, full of goblins, ogres and the restless knights of a forgotten order.",
+  "chains": [
+    {
+      "id": "campacorentin_forest_restless_knights",
+      "title": "The Knights Who Do Not Rest",
+      "levels": [8, 10],
+      "hint": "Spectral horns sound deep in the forest...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Haunted Lists",
+          "objective": "Clear the haunted lists",
+          "announce": "Sir Brennus broke his oath, and his knights ride still. Lay them to rest.",
+          "center": [1151, 440, 53.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12485,
+              "name": "ghostly knight",
+              "level": [8, 10]
+            },
+            {
+              "template": 12619,
+              "name": "undead druid",
+              "level": [8, 10]
+            }
+          ],
+          "success": "You have cleared the haunted lists. Sir Brennus the Forsworn comes out to fight.",
+          "fail": "They hold the haunted lists. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Sir Brennus the Forsworn",
+          "objective": "Defeat Sir Brennus the Forsworn",
+          "announce": "Sir Brennus the Forsworn stands at the haunted lists. Bring friends.",
+          "center": [1151, 440, 53.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12485,
+            "name": "Sir Brennus the Forsworn",
+            "level": 13,
+            "size": 68,
+            "pos": [1151, 440, 53.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12485,
+                "name": "ghostly knight",
+                "level": [8, 10]
+              }
+            ]
+          },
+          "success": "Sir Brennus the Forsworn falls. The way is safe again.",
+          "fail": "Sir Brennus the Forsworn slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu8_sir_brennus_the_forsworn_s_signet", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "campacorentin_forest_wood_ogres",
+      "title": "The Wood Ogre Raid",
+      "levels": [12, 15],
+      "hint": "Trees crash in the southern woods...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Forester Hale",
+          "objective": "Protect Forester Hale, who is barring the lodge shutters",
+          "announce": "The wood ogres have come for Forester Hale's lodge. Hold them off while he bars it.",
+          "center": [471, 698, 44.5],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Forester Hale",
+            "template": 60163241,
+            "level": 15,
+            "model": 9,
+            "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19",
+            "health_mult": 10,
+            "pos": [471, 698, 44.5]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [520, 771, 57.0],
+              [449, 780, 58.0],
+              [397, 739, 44.6]
+            ],
+            "mobs": [
+              {
+                "template": 12630,
+                "name": "wood ogre scourge",
+                "level": [12, 13]
+              },
+              {
+                "template": 12066,
+                "name": "wood ogre berserker",
+                "level": [14, 15]
+              },
+              {
+                "template": 12631,
+                "name": "wood ogre seer",
+                "level": [14, 14]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Forester Hale. \"They came from over there - let's finish this.\"",
+          "fail": "Forester Hale falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Forester's Lodge",
+          "objective": "Clear the forester's lodge",
+          "announce": "They came from the forester's lodge. Follow them back and clear it out.",
+          "center": [401, 957, 45.4],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12630,
+              "name": "wood ogre scourge",
+              "level": [12, 13]
+            },
+            {
+              "template": 12066,
+              "name": "wood ogre berserker",
+              "level": [14, 15]
+            },
+            {
+              "template": 12631,
+              "name": "wood ogre seer",
+              "level": [14, 14]
+            }
+          ],
+          "success": "You have cleared the forester's lodge. Mog the Ogre-Mystic comes out to fight.",
+          "fail": "They hold the forester's lodge. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Mog the Ogre-Mystic",
+          "objective": "Defeat Mog the Ogre-Mystic",
+          "announce": "Mog the Ogre-Mystic stands at the forester's lodge. Bring friends.",
+          "center": [401, 957, 45.4],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12628,
+            "name": "Mog the Ogre-Mystic",
+            "level": 18,
+            "size": 71,
+            "pos": [401, 957, 45.4],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12630,
+                "name": "wood ogre scourge",
+                "level": [12, 13]
+              }
+            ]
+          },
+          "success": "Mog the Ogre-Mystic falls. The way is safe again.",
+          "fail": "Mog the Ogre-Mystic slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu8_mog_the_ogre_mystic_s_band", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "campacorentin_forest_goblin_warband",
+      "title": "The Goblin Warband",
+      "levels": [6, 12],
+      "hint": "Magister Ithel is looking for help in Lethantis.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Magister Ithel",
+        "template": 60163241,
+        "level": 20,
+        "model": 9,
+        "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19",
+        "guild": "Lethantis Association",
+        "health_mult": 4,
+        "pos": [354, 189, 46.0],
+        "greet": "The sylvan goblins stole our star-charts - years of work! - and my guards have tracked them to a warcamp in the woods. Will you help us take them back? Say when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Lethantis Guard",
+          "template": 60163241,
+          "level": 14,
+          "model": 9,
+          "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19",
+          "guild": "Lethantis Association",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Goblin Warcamp",
+          "objective": "Go with Magister Ithel to the goblin warcamp",
+          "announce": "Magister Ithel and the Lethantis guards set out for the goblin warcamp.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [372, 220, 46.0],
+            [420, 276, 51.1],
+            [468, 332, 45.7],
+            [476, 388, 46.2],
+            [492, 412, 46.1],
+            [516, 436, 46.8],
+            [620, 436, 46.7],
+            [724, 436, 47.3],
+            [820, 436, 45.0],
+            [892, 428, 44.3]
+          ],
+          "ambushes": [
+            {
+              "at": 5,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 12604,
+                  "name": "sylvan goblin hunter",
+                  "level": [6, 8]
+                },
+                {
+                  "template": 12606,
+                  "name": "sylvan goblin warrior",
+                  "level": [9, 12]
+                }
+              ]
+            }
+          ],
+          "success": "Magister Ithel reaches the goblin warcamp. \"There they are. Clear them out!\"",
+          "fail": "Magister Ithel falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Goblin Warcamp",
+          "objective": "Clear the goblin warcamp",
+          "announce": "Clear the goblin warcamp!",
+          "center": [896, 432, 44.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12604,
+              "name": "sylvan goblin hunter",
+              "level": [6, 8]
+            },
+            {
+              "template": 12606,
+              "name": "sylvan goblin warrior",
+              "level": [9, 12]
+            }
+          ],
+          "success": "You have cleared the goblin warcamp. Chief Grubnose comes out to fight.",
+          "fail": "They hold the goblin warcamp. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Chief Grubnose",
+          "objective": "Defeat Chief Grubnose",
+          "announce": "Chief Grubnose stands at the goblin warcamp. Bring friends.",
+          "center": [896, 432, 44.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12606,
+            "name": "Chief Grubnose",
+            "level": 15,
+            "size": 68,
+            "pos": [896, 432, 44.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12604,
+                "name": "sylvan goblin hunter",
+                "level": [6, 8]
+              }
+            ]
+          },
+          "success": "Chief Grubnose falls. Lethantis will hear of this in the taverns tonight.",
+          "fail": "Chief Grubnose slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu8_chief_grubnose_s_girdle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

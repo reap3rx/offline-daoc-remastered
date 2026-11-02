@@ -1,0 +1,225 @@
+{
+  "zone": 106,
+  "region": 100,
+  "name": "Skona Ravine",
+  "lore": "Skona Ravine, where the seithkona keep their circle and the wolfaur guard the passes for their werewolf masters.",
+  "chains": [
+    {
+      "id": "skona_ravine_werewolf_warders",
+      "title": "The Werewolf Warders",
+      "levels": [27, 33],
+      "hint": "The warders are gathering in the pass...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Warders' Pass",
+          "objective": "Clear the warders' pass",
+          "announce": "Grimgar has closed the pass with his warders. Open it.",
+          "center": [1211, 1014, 138.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60167872,
+              "name": "werewolf warder",
+              "level": [27, 30]
+            },
+            {
+              "template": 60167861,
+              "name": "werewolf guard",
+              "level": [31, 33]
+            }
+          ],
+          "success": "You have cleared the warders' pass. Grimgar Fenris-born comes out to fight.",
+          "fail": "They hold the warders' pass. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Grimgar Fenris-born",
+          "objective": "Defeat Grimgar Fenris-born",
+          "announce": "Grimgar Fenris-born stands at the warders' pass. Bring friends.",
+          "center": [1211, 1014, 138.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60168002,
+            "name": "Grimgar Fenris-born",
+            "level": 36,
+            "size": 110,
+            "pos": [1211, 1014, 138.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60167872,
+                "name": "werewolf warder",
+                "level": [27, 30]
+              }
+            ]
+          },
+          "success": "Grimgar Fenris-born falls. The way is safe again.",
+          "fail": "Grimgar Fenris-born slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu106_grimgar_fenris_born_s_mantle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "skona_ravine_dryad_grove",
+      "title": "The Dryad Grove",
+      "levels": [20, 22],
+      "hint": "The trees are moving in the southern ravine...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Runa the Herbalist",
+          "objective": "Protect Runa the Herbalist, who is cutting rare herbs",
+          "announce": "Runa the herbalist is cutting the ravine's rarest herbs, and the dryads want her rooted to the spot - forever.",
+          "center": [1238, 1405, 130.6],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Runa the Herbalist",
+            "template": 60167667,
+            "level": 22,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+            "health_mult": 10,
+            "pos": [1238, 1405, 130.6]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1267, 1325, 133.9],
+              [1316, 1369, 135.7],
+              [1318, 1436, 138.6]
+            ],
+            "mobs": [
+              {
+                "template": 60160196,
+                "name": "dryad blossom",
+                "level": [20, 20]
+              },
+              {
+                "template": 60160197,
+                "name": "dryad greenthumb",
+                "level": [21, 21]
+              },
+              {
+                "template": 60167248,
+                "name": "treekeep",
+                "level": [22, 22]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Runa the Herbalist. \"They came from over there - let's finish this.\"",
+          "fail": "Runa the Herbalist falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Herb Garden",
+          "objective": "Clear the herb garden",
+          "announce": "They came from the herb garden. Follow them back and clear it out.",
+          "center": [1451, 1307, 142.7],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60160196,
+              "name": "dryad blossom",
+              "level": [20, 20]
+            },
+            {
+              "template": 60160197,
+              "name": "dryad greenthumb",
+              "level": [21, 21]
+            },
+            {
+              "template": 60167248,
+              "name": "treekeep",
+              "level": [22, 22]
+            }
+          ],
+          "success": "You have cleared the herb garden. Mother Oak comes out to fight.",
+          "fail": "They hold the herb garden. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Mother Oak",
+          "objective": "Defeat Mother Oak",
+          "announce": "Mother Oak stands at the herb garden. Bring friends.",
+          "center": [1451, 1307, 142.7],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60167248,
+            "name": "Mother Oak",
+            "level": 25,
+            "size": 66,
+            "pos": [1451, 1307, 142.7],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60160196,
+                "name": "dryad blossom",
+                "level": [20, 20]
+              }
+            ]
+          },
+          "success": "Mother Oak falls. The way is safe again.",
+          "fail": "Mother Oak slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu106_mother_oak_s_belt", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

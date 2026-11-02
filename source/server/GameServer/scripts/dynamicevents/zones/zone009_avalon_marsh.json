@@ -1,0 +1,377 @@
+{
+  "zone": 9,
+  "region": 1,
+  "name": "Avalon Marsh",
+  "lore": "Avalon Marsh, where Caer Witrin stands on its island of apples, and the ghouls hold court in the drowned ruins to the west.",
+  "chains": [
+    {
+      "id": "avalon_marsh_ghoul_court",
+      "title": "The Ghoul Court",
+      "levels": [17, 18],
+      "hint": "Torches burn in the drowned ruins...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Drowned Court",
+          "objective": "Clear the drowned court",
+          "announce": "The ghoul lord holds court in the drowned ruins and sends his knights to raid the causeway. End his court.",
+          "center": [444, 509, 63.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12017,
+              "name": "ghoul footman",
+              "level": [17, 17]
+            },
+            {
+              "template": 12018,
+              "name": "ghoul knight",
+              "level": [18, 18]
+            }
+          ],
+          "success": "You have cleared the drowned court. The Ghoul Lord of Avalon comes out to fight.",
+          "fail": "They hold the drowned court. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Ghoul Lord of Avalon",
+          "objective": "Defeat the Ghoul Lord of Avalon",
+          "announce": "The Ghoul Lord of Avalon stands at the drowned court. Bring friends.",
+          "center": [444, 509, 63.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12019,
+            "name": "The Ghoul Lord of Avalon",
+            "level": 21,
+            "size": 70,
+            "pos": [444, 509, 63.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12017,
+                "name": "ghoul footman",
+                "level": [17, 17]
+              }
+            ]
+          },
+          "success": "The Ghoul Lord of Avalon falls. The way is safe again.",
+          "fail": "The Ghoul Lord of Avalon slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu9_ghoul_lord_of_avalon_s_band", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "avalon_marsh_bogmen",
+      "title": "The Bogmen",
+      "levels": [8, 11],
+      "hint": "Something squelches through the reeds...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Sister Enid",
+          "objective": "Protect Sister Enid, who is gathering healing herbs",
+          "announce": "Sister Enid of Caer Witrin is gathering herbs for the sick, and the bogmen have smelled her.",
+          "center": [990, 970, 44.3],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Sister Enid",
+            "template": 60161835,
+            "level": 11,
+            "model": 74,
+            "equipment": "9f2bc6dd-5b20-4853-9584-3c393d75f4cd",
+            "health_mult": 10,
+            "pos": [990, 970, 44.3]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [948, 900, 61.7],
+              [1007, 887, 46.5],
+              [1062, 925, 47.5]
+            ],
+            "mobs": [
+              {
+                "template": 12005,
+                "name": "bogman gatherer",
+                "level": [8, 8]
+              },
+              {
+                "template": 12008,
+                "name": "bogman trapper",
+                "level": [10, 10]
+              },
+              {
+                "template": 12007,
+                "name": "bogman hunter",
+                "level": [11, 11]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Sister Enid. \"They came from over there - let's finish this.\"",
+          "fail": "Sister Enid falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Herb Beds",
+          "objective": "Clear the herb beds",
+          "announce": "They came from the herb beds. Follow them back and clear it out.",
+          "center": [1064, 626, 48.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12005,
+              "name": "bogman gatherer",
+              "level": [8, 8]
+            },
+            {
+              "template": 12008,
+              "name": "bogman trapper",
+              "level": [10, 10]
+            },
+            {
+              "template": 12007,
+              "name": "bogman hunter",
+              "level": [11, 11]
+            }
+          ],
+          "success": "You have cleared the herb beds. Mudgrip the Bog-Chief comes out to fight.",
+          "fail": "They hold the herb beds. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Mudgrip the Bog-Chief",
+          "objective": "Defeat Mudgrip the Bog-Chief",
+          "announce": "Mudgrip the Bog-Chief stands at the herb beds. Bring friends.",
+          "center": [1064, 626, 48.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12007,
+            "name": "Mudgrip the Bog-Chief",
+            "level": 14,
+            "size": 74,
+            "pos": [1064, 626, 48.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12005,
+                "name": "bogman gatherer",
+                "level": [8, 8]
+              }
+            ]
+          },
+          "success": "Mudgrip the Bog-Chief falls. The way is safe again.",
+          "fail": "Mudgrip the Bog-Chief slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu9_mudgrip_the_bog_chief_s_girdle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "avalon_marsh_shamblers",
+      "title": "Shamblers of the Marsh",
+      "levels": [11, 14],
+      "hint": "Guardian Sergeant Lyle is looking for help in Caer Witrin.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Guardian Sergeant Lyle",
+        "template": 60161835,
+        "level": 22,
+        "model": 74,
+        "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
+        "guild": "Guardians of Caer Witrin",
+        "health_mult": 4,
+        "pos": [483, 936, 60.5],
+        "greet": "Shamblers have risen out of the mire and broken the west causeway. I'm taking my guardians out to clear them. Will you come? Tell me when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Guardian",
+          "template": 60161835,
+          "level": 16,
+          "model": 74,
+          "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
+          "guild": "Guardians of Caer Witrin",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Sinking Causeway",
+          "objective": "Go with Guardian Sergeant Lyle to the sinking causeway",
+          "announce": "Sergeant Lyle leads the guardians of Caer Witrin out onto the marsh.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [511, 972, 51.9],
+            [575, 1052, 45.3],
+            [591, 1148, 44.8],
+            [591, 1236, 45.2],
+            [599, 1276, 45.0],
+            [607, 1292, 44.8]
+          ],
+          "ambushes": [
+            {
+              "at": 3,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 12052,
+                  "name": "shambler",
+                  "level": [12, 13]
+                },
+                {
+                  "template": 12032,
+                  "name": "mud golem",
+                  "level": [14, 14]
+                }
+              ]
+            }
+          ],
+          "success": "Guardian Sergeant Lyle reaches the sinking causeway. \"There they are. Clear them out!\"",
+          "fail": "Guardian Sergeant Lyle falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Sinking Causeway",
+          "objective": "Clear the sinking causeway",
+          "announce": "Clear the sinking causeway!",
+          "center": [608, 1292, 44.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12052,
+              "name": "shambler",
+              "level": [12, 13]
+            },
+            {
+              "template": 12032,
+              "name": "mud golem",
+              "level": [14, 14]
+            },
+            {
+              "template": 12026,
+              "name": "marsh scrag",
+              "level": [11, 11]
+            }
+          ],
+          "success": "You have cleared the sinking causeway. The Mire Colossus comes out to fight.",
+          "fail": "They hold the sinking causeway. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "The Mire Colossus",
+          "objective": "Defeat the Mire Colossus",
+          "announce": "The Mire Colossus stands at the sinking causeway. Bring friends.",
+          "center": [608, 1292, 44.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12032,
+            "name": "The Mire Colossus",
+            "level": 17,
+            "size": 96,
+            "pos": [608, 1292, 44.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12052,
+                "name": "shambler",
+                "level": [12, 13]
+              }
+            ]
+          },
+          "success": "The Mire Colossus falls. Caer Witrin will hear of this in the taverns tonight.",
+          "fail": "The Mire Colossus slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu9_mire_colossus_mantle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

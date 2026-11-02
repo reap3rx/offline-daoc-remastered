@@ -1,0 +1,384 @@
+{
+  "zone": 0,
+  "region": 1,
+  "name": "Camelot Hills",
+  "lore": "The green hills below Camelot: Cotswold's farms, Prydwen Keep on the river, and the old barrows where the filidh were buried long before Arthur.",
+  "chains": [
+    {
+      "id": "camelot_hills_bandit_hollow",
+      "title": "The Bandit Hollow",
+      "levels": [5, 9],
+      "hint": "Smoke rises from a hollow in the southern hills...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Bandit Hollow",
+          "objective": "Clear the bandit hollow",
+          "announce": "Ranulf Blackhand's band has made camp in the hollow and robs every cart bound for Prydwen. Break the camp.",
+          "center": [1243, 844, 63.3],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12447,
+              "name": "bandit",
+              "level": [5, 8]
+            },
+            {
+              "template": 12308,
+              "name": "bandit henchman",
+              "level": [9, 9]
+            },
+            {
+              "template": 12311,
+              "name": "bandit lieutenant",
+              "level": [9, 9]
+            }
+          ],
+          "success": "You have cleared the bandit hollow. Ranulf Blackhand comes out to fight.",
+          "fail": "They hold the bandit hollow. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Ranulf Blackhand",
+          "objective": "Defeat Ranulf Blackhand",
+          "announce": "Ranulf Blackhand stands at the bandit hollow. Bring friends.",
+          "center": [1243, 844, 63.3],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12310,
+            "name": "Ranulf Blackhand",
+            "level": 12,
+            "size": 70,
+            "pos": [1243, 844, 63.3],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12447,
+                "name": "bandit",
+                "level": [5, 8]
+              }
+            ]
+          },
+          "success": "Ranulf Blackhand falls. The way is safe again.",
+          "fail": "Ranulf Blackhand slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu0_ranulf_blackhand_s_pendant", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "camelot_hills_barrow_wakes",
+      "title": "The Barrow Wakes",
+      "levels": [5, 7],
+      "hint": "The dead are restless in the eastern barrows...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Brother Aelred",
+          "objective": "Protect Brother Aelred, who is sealing the barrow door with holy water",
+          "announce": "Brother Aelred has come to seal the old barrow before the dead walk again. They are already walking.",
+          "center": [1368, 1481, 91.0],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Brother Aelred",
+            "template": 60167630,
+            "level": 7,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+            "health_mult": 10,
+            "pos": [1368, 1481, 91.0]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1347, 1399, 79.9],
+              [1413, 1409, 87.6],
+              [1451, 1463, 90.8]
+            ],
+            "mobs": [
+              {
+                "template": 12368,
+                "name": "large skeleton",
+                "level": [5, 5]
+              },
+              {
+                "template": 12128,
+                "name": "undead filidh",
+                "level": [5, 7]
+              },
+              {
+                "template": 12388,
+                "name": "rotting zombie",
+                "level": [5, 6]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Brother Aelred. \"They came from over there - let's finish this.\"",
+          "fail": "Brother Aelred falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Old Barrows",
+          "objective": "Clear the old barrows",
+          "announce": "They came from the old barrows. Follow them back and clear it out.",
+          "center": [1490, 1283, 90.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12368,
+              "name": "large skeleton",
+              "level": [5, 5]
+            },
+            {
+              "template": 12128,
+              "name": "undead filidh",
+              "level": [5, 7]
+            },
+            {
+              "template": 12388,
+              "name": "rotting zombie",
+              "level": [5, 6]
+            }
+          ],
+          "success": "You have cleared the old barrows. The Barrow-Wight comes out to fight.",
+          "fail": "They hold the old barrows. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Barrow-Wight",
+          "objective": "Defeat the Barrow-Wight",
+          "announce": "The Barrow-Wight stands at the old barrows. Bring friends.",
+          "center": [1490, 1283, 90.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12128,
+            "name": "The Barrow-Wight",
+            "level": 10,
+            "size": 71,
+            "pos": [1490, 1283, 90.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12368,
+                "name": "large skeleton",
+                "level": [5, 5]
+              }
+            ]
+          },
+          "success": "The Barrow-Wight falls. The way is safe again.",
+          "fail": "The Barrow-Wight slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu0_barrow_wight_s_signet", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "camelot_hills_ant_nest",
+      "title": "The Dragon Ant Nest",
+      "levels": [5, 8],
+      "hint": "Sergeant Wystan is looking for help in Cotswold.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Sergeant Wystan",
+        "template": 60167630,
+        "level": 16,
+        "model": 28,
+        "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+        "guild": "Cotswold Watch",
+        "health_mult": 4,
+        "pos": [396, 702, 58.7],
+        "greet": "The dragon ants have dug into the farmers' fields again - they took a whole flock last night. I'm taking the watch out to burn the nest. Will you come? Tell me when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Veteran Guardsman",
+          "template": 60167630,
+          "level": 10,
+          "model": 28,
+          "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+          "guild": "Cotswold Watch",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Dragon Ant Nest",
+          "objective": "Go with Sergeant Wystan to the dragon ant nest",
+          "announce": "Sergeant Wystan leads the Cotswold watch out towards the dragon ant nest.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [504, 706, 51.8],
+            [608, 706, 55.8],
+            [712, 706, 54.8],
+            [816, 706, 58.3],
+            [856, 666, 58.5],
+            [880, 650, 57.5],
+            [912, 642, 55.4],
+            [960, 626, 53.6]
+          ],
+          "ambushes": [
+            {
+              "at": 4,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 12082,
+                  "name": "dragon ant worker",
+                  "level": [5, 5]
+                },
+                {
+                  "template": 12081,
+                  "name": "dragon ant soldier",
+                  "level": [7, 7]
+                }
+              ]
+            }
+          ],
+          "success": "Sergeant Wystan reaches the dragon ant nest. \"There they are. Clear them out!\"",
+          "fail": "Sergeant Wystan falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Dragon Ant Nest",
+          "objective": "Clear the dragon ant nest",
+          "announce": "Clear the dragon ant nest!",
+          "center": [958, 622, 53.0],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12082,
+              "name": "dragon ant worker",
+              "level": [5, 5]
+            },
+            {
+              "template": 12081,
+              "name": "dragon ant soldier",
+              "level": [7, 7]
+            },
+            {
+              "template": 12337,
+              "name": "dragon ant drone",
+              "level": [8, 8]
+            }
+          ],
+          "success": "You have cleared the dragon ant nest. The Hive Champion comes out to fight.",
+          "fail": "They hold the dragon ant nest. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "The Hive Champion",
+          "objective": "Defeat the Hive Champion",
+          "announce": "The Hive Champion stands at the dragon ant nest. Bring friends.",
+          "center": [958, 622, 53.0],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12337,
+            "name": "The Hive Champion",
+            "level": 11,
+            "size": 45,
+            "pos": [958, 622, 53.0],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12082,
+                "name": "dragon ant worker",
+                "level": [5, 5]
+              }
+            ]
+          },
+          "success": "The Hive Champion falls. Cotswold will hear of this in the taverns tonight.",
+          "fail": "The Hive Champion slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu0_hive_champion_s_band", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

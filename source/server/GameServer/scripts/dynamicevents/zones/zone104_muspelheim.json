@@ -1,0 +1,301 @@
+{
+  "zone": 104,
+  "region": 100,
+  "name": "Muspelheim",
+  "lore": "Muspelheim, the realm of fire, where Surt's giants keep watch over burning plains and the dead of old wars smoulder in their armour.",
+  "chains": [
+    {
+      "id": "muspelheim_fire_giant_outpost",
+      "title": "The Fire Giant Outpost",
+      "levels": [27, 30],
+      "hint": "Beacon-fires are burning on the heights...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Giant Outpost",
+          "objective": "Clear the giant outpost",
+          "announce": "Surt's giants have built a new outpost and lit its beacon. Throw it down before the host answers.",
+          "center": [1498, 268, 188.5],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60160878,
+              "name": "fire giant lookout",
+              "level": [27, 27]
+            },
+            {
+              "template": 60160881,
+              "name": "fire giant watchman",
+              "level": [29, 29]
+            },
+            {
+              "template": 60160903,
+              "name": "flaming raukomaz",
+              "level": [30, 30]
+            }
+          ],
+          "success": "You have cleared the giant outpost. Surtling Brann comes out to fight.",
+          "fail": "They hold the giant outpost. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Surtling Brann",
+          "objective": "Defeat Surtling Brann",
+          "announce": "Surtling Brann stands at the giant outpost. Bring friends.",
+          "center": [1498, 268, 188.5],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60160881,
+            "name": "Surtling Brann",
+            "level": 33,
+            "size": 53,
+            "pos": [1498, 268, 188.5],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60160878,
+                "name": "fire giant lookout",
+                "level": [27, 27]
+              }
+            ]
+          },
+          "success": "Surtling Brann falls. The way is safe again.",
+          "fail": "Surtling Brann slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu104_surtling_brann_s_belt", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "muspelheim_burnt_sentries",
+      "title": "The Burnt Sentries",
+      "levels": [21, 25],
+      "hint": "The dead march across the ash fields...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Runecaster Hafr",
+          "objective": "Protect Runecaster Hafr, who is carving a ward-rune into the ash",
+          "announce": "Runecaster Hafr is cutting a ward-rune to hold back the burnt dead. Keep them off him until it is finished.",
+          "center": [331, 703, 130.0],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Runecaster Hafr",
+            "template": 60167667,
+            "level": 25,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+            "health_mult": 10,
+            "pos": [331, 703, 130.0]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [287, 631, 139.9],
+              [352, 621, 120.8],
+              [405, 661, 110.5]
+            ],
+            "mobs": [
+              {
+                "template": 60158804,
+                "name": "burnt skeletal sentry",
+                "level": [21, 21]
+              },
+              {
+                "template": 60159105,
+                "name": "charred skeletal warrior",
+                "level": [23, 25]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Runecaster Hafr. \"They came from over there - let's finish this.\"",
+          "fail": "Runecaster Hafr falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Runecaster's Circle",
+          "objective": "Clear the runecaster's circle",
+          "announce": "They came from the runecaster's circle. Follow them back and clear it out.",
+          "center": [394, 460, 145.9],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60158804,
+              "name": "burnt skeletal sentry",
+              "level": [21, 21]
+            },
+            {
+              "template": 60159105,
+              "name": "charred skeletal warrior",
+              "level": [23, 25]
+            }
+          ],
+          "success": "You have cleared the runecaster's circle. The Ember Marshal comes out to fight.",
+          "fail": "They hold the runecaster's circle. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Ember Marshal",
+          "objective": "Defeat the Ember Marshal",
+          "announce": "The Ember Marshal stands at the runecaster's circle. Bring friends.",
+          "center": [394, 460, 145.9],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60159105,
+            "name": "The Ember Marshal",
+            "level": 28,
+            "size": 68,
+            "pos": [394, 460, 145.9],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60158804,
+                "name": "burnt skeletal sentry",
+                "level": [21, 21]
+              }
+            ]
+          },
+          "success": "The Ember Marshal falls. The way is safe again.",
+          "fail": "The Ember Marshal slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu104_ember_marshal_s_pendant", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "muspelheim_wyrm_nest",
+      "title": "The Wyrm's Nest",
+      "levels": [25, 28],
+      "hint": "The ground is hot over the nest...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Wyrm's Nest",
+          "objective": "Clear the wyrm's nest",
+          "announce": "A cinder drake is raising a brood of fire wyrms. Break the nest before they fly.",
+          "center": [334, 220, 123.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 20022,
+              "name": "young fire wyrm",
+              "level": [25, 27]
+            },
+            {
+              "template": 60159218,
+              "name": "cinder drake",
+              "level": [28, 28]
+            }
+          ],
+          "success": "You have cleared the wyrm's nest. Glodr the Cinder Drake comes out to fight.",
+          "fail": "They hold the wyrm's nest. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Glodr the Cinder Drake",
+          "objective": "Defeat Glodr the Cinder Drake",
+          "announce": "Glodr the Cinder Drake stands at the wyrm's nest. Bring friends.",
+          "center": [334, 220, 123.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60159218,
+            "name": "Glodr the Cinder Drake",
+            "level": 31,
+            "size": 110,
+            "pos": [334, 220, 123.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 20022,
+                "name": "young fire wyrm",
+                "level": [25, 27]
+              }
+            ]
+          },
+          "success": "Glodr the Cinder Drake falls. The way is safe again.",
+          "fail": "Glodr the Cinder Drake slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu104_glodr_the_cinder_drake_s_ring", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

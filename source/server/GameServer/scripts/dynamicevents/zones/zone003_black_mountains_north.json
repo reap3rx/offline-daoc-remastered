@@ -1,0 +1,381 @@
+{
+  "zone": 3,
+  "region": 1,
+  "name": "Black Mtns. North",
+  "lore": "The northern Black Mountains: Swanton Keep, the hill clans who never bent the knee to Camelot, and the old mines where something still digs.",
+  "chains": [
+    {
+      "id": "black_mountains_north_hill_folk",
+      "title": "The Hill Folk Rising",
+      "levels": [10, 12],
+      "hint": "War drums sound in the western hills...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Hill Clan Muster",
+          "objective": "Clear the hill clan muster",
+          "announce": "Cadarn has called the hill clans to war. Break the muster before they march on Swanton.",
+          "center": [329, 867, 102.0],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12110,
+              "name": "hill warrior",
+              "level": [10, 10]
+            },
+            {
+              "template": 12108,
+              "name": "hill guard",
+              "level": [11, 11]
+            },
+            {
+              "template": 12105,
+              "name": "hill avenger",
+              "level": [12, 12]
+            }
+          ],
+          "success": "You have cleared the hill clan muster. Cadarn of the Hills comes out to fight.",
+          "fail": "They hold the hill clan muster. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Cadarn of the Hills",
+          "objective": "Defeat Cadarn of the Hills",
+          "announce": "Cadarn of the Hills stands at the hill clan muster. Bring friends.",
+          "center": [329, 867, 102.0],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12105,
+            "name": "Cadarn of the Hills",
+            "level": 15,
+            "size": 75,
+            "pos": [329, 867, 102.0],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12110,
+                "name": "hill warrior",
+                "level": [10, 10]
+              }
+            ]
+          },
+          "success": "Cadarn of the Hills falls. The way is safe again.",
+          "fail": "Cadarn of the Hills slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu3_cadarn_of_the_hills_sash", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "black_mountains_north_old_mine",
+      "title": "Ghosts of the Old Mine",
+      "levels": [11, 12],
+      "hint": "Picks ring out from the abandoned mine...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Prospector Gilbey",
+          "objective": "Protect Prospector Gilbey, who is shoring up the mine entrance",
+          "announce": "Prospector Gilbey means to reopen the old mine. The miners who died in it do not want him there.",
+          "center": [657, 910, 91.8],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Prospector Gilbey",
+            "template": 60167624,
+            "level": 12,
+            "model": 28,
+            "equipment": "3663a9bf-6ed9-4dff-96c3-f1915ba77331",
+            "health_mult": 10,
+            "pos": [657, 910, 91.8]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [614, 837, 95.1],
+              [679, 828, 95.0],
+              [731, 869, 124.3]
+            ],
+            "mobs": [
+              {
+                "template": 12095,
+                "name": "ghost miner",
+                "level": [11, 12]
+              },
+              {
+                "template": 12121,
+                "name": "rock elemental",
+                "level": [11, 12]
+              },
+              {
+                "template": 12113,
+                "name": "large boulderling",
+                "level": [11, 12]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Prospector Gilbey. \"They came from over there - let's finish this.\"",
+          "fail": "Prospector Gilbey falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Old Mine",
+          "objective": "Clear the old mine",
+          "announce": "They came from the old mine. Follow them back and clear it out.",
+          "center": [726, 655, 165.3],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12095,
+              "name": "ghost miner",
+              "level": [11, 12]
+            },
+            {
+              "template": 12121,
+              "name": "rock elemental",
+              "level": [11, 12]
+            },
+            {
+              "template": 12113,
+              "name": "large boulderling",
+              "level": [11, 12]
+            }
+          ],
+          "success": "You have cleared the old mine. The Foreman's Shade comes out to fight.",
+          "fail": "They hold the old mine. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Foreman's Shade",
+          "objective": "Defeat the Foreman's Shade",
+          "announce": "The Foreman's Shade stands at the old mine. Bring friends.",
+          "center": [726, 655, 165.3],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12095,
+            "name": "The Foreman's Shade",
+            "level": 15,
+            "size": 62,
+            "pos": [726, 655, 165.3],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12095,
+                "name": "ghost miner",
+                "level": [11, 12]
+              }
+            ]
+          },
+          "success": "The Foreman's Shade falls. The way is safe again.",
+          "fail": "The Foreman's Shade slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu3_foreman_s_shade_s_jewel", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "black_mountains_north_smugglers_road",
+      "title": "The Smugglers' Road",
+      "levels": [15, 17],
+      "hint": "Watch Captain Bryce is looking for help in Swanton Keep.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Watch Captain Bryce",
+        "template": 60167624,
+        "level": 25,
+        "model": 28,
+        "equipment": "3663a9bf-6ed9-4dff-96c3-f1915ba77331",
+        "guild": "Swanton Watch",
+        "health_mult": 4,
+        "pos": [728, 341, 199.5],
+        "greet": "Smugglers are running goods past the keep under our noses, and their trackers know these woods better than we do. I've found their cache. Will you come? Say when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Veteran Guard",
+          "template": 60167624,
+          "level": 19,
+          "model": 28,
+          "equipment": "3663a9bf-6ed9-4dff-96c3-f1915ba77331",
+          "guild": "Swanton Watch",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Smugglers' Cache",
+          "objective": "Go with Watch Captain Bryce to the smugglers' cache",
+          "announce": "Captain Bryce leads the Swanton watch out to the smugglers' cache.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [756, 324, 197.9],
+            [780, 340, 193.8],
+            [820, 340, 194.2],
+            [868, 356, 199.6],
+            [940, 428, 218.7],
+            [996, 484, 232.4],
+            [1060, 484, 255.4],
+            [1124, 548, 289.5],
+            [1156, 588, 304.2],
+            [1180, 596, 304.4]
+          ],
+          "ambushes": [
+            {
+              "at": 5,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 12092,
+                  "name": "forest smuggler",
+                  "level": [17, 17]
+                },
+                {
+                  "template": 12093,
+                  "name": "forest tracker",
+                  "level": [15, 15]
+                }
+              ]
+            }
+          ],
+          "success": "Watch Captain Bryce reaches the smugglers' cache. \"There they are. Clear them out!\"",
+          "fail": "Watch Captain Bryce falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Smugglers' Cache",
+          "objective": "Clear the smugglers' cache",
+          "announce": "Clear the smugglers' cache!",
+          "center": [1180, 595, 304.5],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12092,
+              "name": "forest smuggler",
+              "level": [17, 17]
+            },
+            {
+              "template": 12093,
+              "name": "forest tracker",
+              "level": [15, 15]
+            }
+          ],
+          "success": "You have cleared the smugglers' cache. Maud the Smuggler Queen comes out to fight.",
+          "fail": "They hold the smugglers' cache. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Maud the Smuggler Queen",
+          "objective": "Defeat Maud the Smuggler Queen",
+          "announce": "Maud the Smuggler Queen stands at the smugglers' cache. Bring friends.",
+          "center": [1180, 595, 304.5],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12092,
+            "name": "Maud the Smuggler Queen",
+            "level": 20,
+            "size": 75,
+            "pos": [1180, 595, 304.5],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12092,
+                "name": "forest smuggler",
+                "level": [17, 17]
+              }
+            ]
+          },
+          "success": "Maud the Smuggler Queen falls. Swanton Keep will hear of this in the taverns tonight.",
+          "fail": "Maud the Smuggler Queen slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu3_maud_the_smuggler_queen_s_torc", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

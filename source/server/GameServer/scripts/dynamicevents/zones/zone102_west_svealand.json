@@ -1,0 +1,387 @@
+{
+  "zone": 102,
+  "region": 100,
+  "name": "West Svealand",
+  "lore": "West Svealand: Huginfel and the fortress of Vindsaul Faste, where the outlawed Blodfelag swear their blood-oaths in the hills.",
+  "chains": [
+    {
+      "id": "west_svealand_blodfelag_camp",
+      "title": "The Blodfelag Camp",
+      "levels": [14, 18],
+      "hint": "Oath-fires burn in the southern hills...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Blodfelag Camp",
+          "objective": "Clear the Blodfelag camp",
+          "announce": "Hjalmar has sworn the Blodfelag to march on Huginfel. Break his camp first.",
+          "center": [417, 1182, 114.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60158514,
+              "name": "blodfelag dreng",
+              "level": [14, 16]
+            },
+            {
+              "template": 60158526,
+              "name": "blodfelag svard",
+              "level": [16, 17]
+            },
+            {
+              "template": 20015,
+              "name": "blodfelag windcaller",
+              "level": [17, 18]
+            }
+          ],
+          "success": "You have cleared the Blodfelag camp. Hjalmar Blood-Oath comes out to fight.",
+          "fail": "They hold the Blodfelag camp. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Hjalmar Blood-Oath",
+          "objective": "Defeat Hjalmar Blood-Oath",
+          "announce": "Hjalmar Blood-Oath stands at the Blodfelag camp. Bring friends.",
+          "center": [417, 1182, 114.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60158532,
+            "name": "Hjalmar Blood-Oath",
+            "level": 21,
+            "size": 74,
+            "pos": [417, 1182, 114.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60158514,
+                "name": "blodfelag dreng",
+                "level": [14, 16]
+              }
+            ]
+          },
+          "success": "Hjalmar Blood-Oath falls. The way is safe again.",
+          "fail": "Hjalmar Blood-Oath slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu102_hjalmar_blood_oath_s_bracer", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "west_svealand_oathbreakers",
+      "title": "The Oathbreakers' Raid",
+      "levels": [10, 15],
+      "hint": "Riders have been seen on the hill roads...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Runner Eydis",
+          "objective": "Protect Runner Eydis, who is binding her horse's leg",
+          "announce": "Runner Eydis carries word to Vindsaul Faste, and the oathbreakers mean to stop her. Her horse is lame - hold them off.",
+          "center": [1117, 1033, 144.7],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Runner Eydis",
+            "template": 60167654,
+            "level": 15,
+            "model": 156,
+            "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
+            "health_mult": 10,
+            "pos": [1117, 1033, 144.7]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1078, 1108, 142.8],
+              [1036, 1057, 139.2],
+              [1043, 991, 144.9]
+            ],
+            "mobs": [
+              {
+                "template": 60158520,
+                "name": "blodfelag oathbreaker",
+                "level": [10, 12]
+              },
+              {
+                "template": 60158516,
+                "name": "blodfelag henchman",
+                "level": [12, 13]
+              },
+              {
+                "template": 60158521,
+                "name": "blodfelag partisan",
+                "level": [13, 15]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Runner Eydis. \"They came from over there - let's finish this.\"",
+          "fail": "Runner Eydis falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Runner's Rest",
+          "objective": "Clear the runner's rest",
+          "announce": "They came from the runner's rest. Follow them back and clear it out.",
+          "center": [893, 1100, 139.7],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60158520,
+              "name": "blodfelag oathbreaker",
+              "level": [10, 12]
+            },
+            {
+              "template": 60158516,
+              "name": "blodfelag henchman",
+              "level": [12, 13]
+            },
+            {
+              "template": 60158521,
+              "name": "blodfelag partisan",
+              "level": [13, 15]
+            }
+          ],
+          "success": "You have cleared the runner's rest. Ulf the Faithless comes out to fight.",
+          "fail": "They hold the runner's rest. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Ulf the Faithless",
+          "objective": "Defeat Ulf the Faithless",
+          "announce": "Ulf the Faithless stands at the runner's rest. Bring friends.",
+          "center": [893, 1100, 139.7],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60158521,
+            "name": "Ulf the Faithless",
+            "level": 18,
+            "size": 70,
+            "pos": [893, 1100, 139.7],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60158520,
+                "name": "blodfelag oathbreaker",
+                "level": [10, 12]
+              }
+            ]
+          },
+          "success": "Ulf the Faithless falls. The way is safe again.",
+          "fail": "Ulf the Faithless slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu102_ulf_the_faithless_stone", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "west_svealand_skogsfru",
+      "title": "Into Skogsfru Wood",
+      "levels": [13, 14],
+      "hint": "Huscarl Bjorn is looking for help in Vindsaul Faste.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Huscarl Bjorn",
+        "template": 60167654,
+        "level": 22,
+        "model": 156,
+        "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
+        "guild": "Vindsaul Faste",
+        "health_mult": 4,
+        "pos": [1184, 49, 142.6],
+        "greet": "Two of my men walked into the skogsfru wood after a pretty voice, and they haven't walked out. I'm going in after them. Will you come? Say when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Viking",
+          "template": 60167654,
+          "level": 16,
+          "model": 156,
+          "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
+          "guild": "Vindsaul Faste",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Skogsfru Wood",
+          "objective": "Go with Huscarl Bjorn to the skogsfru wood",
+          "announce": "Huscarl Bjorn goes into the skogsfru wood after his lost men.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [1126, 116, 142.6],
+            [1094, 140, 142.6],
+            [1022, 148, 145.2],
+            [934, 164, 148.5],
+            [902, 188, 149.5],
+            [838, 188, 148.7],
+            [806, 204, 147.0],
+            [782, 220, 147.0],
+            [726, 260, 147.8],
+            [702, 276, 148.4],
+            [646, 276, 146.9]
+          ],
+          "ambushes": [
+            {
+              "at": 5,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 60166190,
+                  "name": "skogsfru",
+                  "level": [13, 14]
+                },
+                {
+                  "template": 20007,
+                  "name": "water sprite",
+                  "level": [13, 14]
+                }
+              ]
+            }
+          ],
+          "success": "Huscarl Bjorn reaches the skogsfru wood. \"There they are. Clear them out!\"",
+          "fail": "Huscarl Bjorn falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Skogsfru Wood",
+          "objective": "Clear the skogsfru wood",
+          "announce": "Clear the skogsfru wood!",
+          "center": [642, 275, 146.9],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60166190,
+              "name": "skogsfru",
+              "level": [13, 14]
+            },
+            {
+              "template": 20007,
+              "name": "water sprite",
+              "level": [13, 14]
+            },
+            {
+              "template": 60161682,
+              "name": "grizzled sveawolf",
+              "level": [13, 13]
+            }
+          ],
+          "success": "You have cleared the skogsfru wood. The Elder Skogsfru comes out to fight.",
+          "fail": "They hold the skogsfru wood. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "The Elder Skogsfru",
+          "objective": "Defeat the Elder Skogsfru",
+          "announce": "The Elder Skogsfru stands at the skogsfru wood. Bring friends.",
+          "center": [642, 275, 146.9],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60166190,
+            "name": "The Elder Skogsfru",
+            "level": 17,
+            "size": 70,
+            "pos": [642, 275, 146.9],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60166190,
+                "name": "skogsfru",
+                "level": [13, 14]
+              }
+            ]
+          },
+          "success": "The Elder Skogsfru falls. Vindsaul Faste will hear of this in the taverns tonight.",
+          "fail": "The Elder Skogsfru slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu102_elder_skogsfru_s_stone", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

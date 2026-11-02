@@ -1,0 +1,225 @@
+{
+  "zone": 107,
+  "region": 100,
+  "name": "Vanern Swamp",
+  "lore": "Vanern Swamp, where the hagbui lie in their barrows and the clay jotun walk out of the mud.",
+  "chains": [
+    {
+      "id": "vanern_swamp_hagbui_barrow",
+      "title": "The Hagbui Barrow",
+      "levels": [40, 43],
+      "hint": "Runes glow on the barrow stones...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Hagbui Barrow",
+          "objective": "Clear the hagbui barrow",
+          "announce": "Thane Ormr has woken in his barrow and called his housecarls to him. Put them back in the earth.",
+          "center": [153, 272, 80.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60161916,
+              "name": "hagbui guard",
+              "level": [40, 42]
+            },
+            {
+              "template": 60161918,
+              "name": "hagbui shaman",
+              "level": [40, 40]
+            },
+            {
+              "template": 60161917,
+              "name": "hagbui runemaster",
+              "level": [42, 42]
+            },
+            {
+              "template": 60161919,
+              "name": "hagbui spiritmaster",
+              "level": [43, 43]
+            }
+          ],
+          "success": "You have cleared the hagbui barrow. Hagbui Thane Ormr comes out to fight.",
+          "fail": "They hold the hagbui barrow. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Hagbui Thane Ormr",
+          "objective": "Defeat Hagbui Thane Ormr",
+          "announce": "Hagbui Thane Ormr stands at the hagbui barrow. Bring friends.",
+          "center": [153, 272, 80.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60161921,
+            "name": "Hagbui Thane Ormr",
+            "level": 46,
+            "size": 66,
+            "pos": [153, 272, 80.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60161916,
+                "name": "hagbui guard",
+                "level": [40, 42]
+              }
+            ]
+          },
+          "success": "Hagbui Thane Ormr falls. The way is safe again.",
+          "fail": "Hagbui Thane Ormr slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu107_hagbui_thane_ormr_s_bracer", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vanern_swamp_clay_jotun",
+      "title": "The Jotun March",
+      "levels": [36, 42],
+      "hint": "The mud heaves in the swamp...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Kjell the Bog-Warden",
+          "objective": "Protect Kjell the Bog-Warden, who is raising the warning flag",
+          "announce": "The clay jotun are walking out of the swamp. Kjell the bog-warden must raise the warning flag - hold them off.",
+          "center": [758, 1018, 50.5],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Kjell the Bog-Warden",
+            "template": 60167667,
+            "level": 42,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+            "health_mult": 10,
+            "pos": [758, 1018, 50.5]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [674, 1009, 48.2],
+              [682, 951, 50.0],
+              [770, 933, 52.9]
+            ],
+            "mobs": [
+              {
+                "template": 60159228,
+                "name": "clay jotun",
+                "level": [40, 42]
+              },
+              {
+                "template": 60164268,
+                "name": "mud crab warrior",
+                "level": [36, 36]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Kjell the Bog-Warden. \"They came from over there - let's finish this.\"",
+          "fail": "Kjell the Bog-Warden falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Bog-warden's Hut",
+          "objective": "Clear the bog-warden's hut",
+          "announce": "They came from the bog-warden's hut. Follow them back and clear it out.",
+          "center": [587, 800, 47.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60159228,
+              "name": "clay jotun",
+              "level": [40, 42]
+            },
+            {
+              "template": 60164268,
+              "name": "mud crab warrior",
+              "level": [36, 36]
+            }
+          ],
+          "success": "You have cleared the bog-warden's hut. Leirjotun comes out to fight.",
+          "fail": "They hold the bog-warden's hut. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Leirjotun",
+          "objective": "Defeat Leirjotun",
+          "announce": "Leirjotun stands at the bog-warden's hut. Bring friends.",
+          "center": [587, 800, 47.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60159228,
+            "name": "Leirjotun",
+            "level": 45,
+            "size": 70,
+            "pos": [587, 800, 47.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60159228,
+                "name": "clay jotun",
+                "level": [40, 42]
+              }
+            ]
+          },
+          "success": "Leirjotun falls. The way is safe again.",
+          "fail": "Leirjotun slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu107_leirjotun_s_stone", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

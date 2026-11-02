@@ -1261,6 +1261,7 @@ namespace DOL.GS
                     if (damage < 0)
                         damage = 0;
 
+                    damage *= LevelScaling.DamageFactor(ad.Attacker, ad.Target);   // GW2-style scaling down (LevelScaling.cs)
                     ad.Damage = (int) damage;
                     ad.Modifier = (int) Math.Floor(resistModifier);
                     ad.CriticalChance = CalculateCriticalChance(action);

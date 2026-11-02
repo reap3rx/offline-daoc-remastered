@@ -105,10 +105,10 @@
             "level": 20,
             "size": 62,
             "pos": [258, 300, 160.0],
-            "health_mult": 4
+            "health_mult": 2.5
           },
           "adds": {
-            "every_s": 40,
+            "every_s": 60,
             "count": 2,
             "mobs": [
               {
@@ -235,10 +235,10 @@
             "level": 38,
             "size": 58,
             "pos": [1424, 1452, 144.0],
-            "health_mult": 7
+            "health_mult": 2.5
           },
           "adds": {
-            "every_s": 30,
+            "every_s": 60,
             "count": 2,
             "mobs": [
               {
@@ -318,10 +318,10 @@
             "level": 44,
             "size": 80,
             "pos": [1312, 858, 156.9],
-            "health_mult": 9
+            "health_mult": 2.5
           },
           "adds": {
-            "every_s": 35,
+            "every_s": 60,
             "count": 2,
             "mobs": [
               {
@@ -468,10 +468,10 @@
             "level": 34,
             "size": 64,
             "pos": [1015, 625, 96.7],
-            "health_mult": 6
+            "health_mult": 2.5
           },
           "adds": {
-            "every_s": 35,
+            "every_s": 60,
             "count": 2,
             "mobs": [
               {
