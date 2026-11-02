@@ -22,6 +22,7 @@ var ui: GameUI
 var npcs: NpcManager
 var combat: Combat
 const ActionCombatMode := preload("res://game/combat/action_combat.gd")   # (preloaded: no class cache needed)
+const Housing := preload("res://game/world/housing.gd")
 var action_combat: ActionCombatMode = null      # Action Combat (the server's game only): F9
 var quests: QuestEngine
 var emissaries: Emissaries                 # the three faction emissaries (the only custom NPCs)
@@ -919,7 +920,15 @@ func _on_item_dropped(slot: int, screen_pos: Vector2) -> void:
 	var n: Npc = npcs.pick(player.camera, screen_pos) if npcs else null
 	if Server.active:                                       # the server: onto an NPC = give it (slot 1000 + its id), else
 		var count := int(PlayerData.entry(slot).get("count", 1))   # onto the ground (slot 1) - PlayerMoveItem
-		Server.client.call("MoveItem", slot, 1000 + int(n.spawn.get("oid", 0)) if n else 1, count)
+		var to := 1000 + int(n.spawn.get("oid", 0)) if n else 1
+		if n == null and npcs is ServerWorld:
+			# a ground object under it: given to it (a house deed onto your lot's marker - GameLotMarker.ReceiveItem)
+			var sw := npcs as ServerWorld
+			var oid := sw.object_at(player.camera, screen_pos)
+			var h = sw.objects.get(oid)
+			if oid > 0 and h is Node3D and is_instance_valid(h) and Housing.is_lot_marker(int((h as Node3D).get_meta("model", 0))):
+				to = 1000 + oid
+		Server.client.call("MoveItem", slot, to, count)
 		return
 	if n == null:
 		if loot:

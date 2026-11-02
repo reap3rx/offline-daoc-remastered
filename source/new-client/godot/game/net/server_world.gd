@@ -8,6 +8,7 @@ extends NpcManager
 ## Also the server's chat lines, your health / power / endurance, swings, casts, emotes and deaths.
 
 const ActionCombatMode := preload("res://game/combat/action_combat.gd")
+const Housing := preload("res://game/world/housing.gd")      # player housing: houses, lot markers (no class cache needed)
 const RUN_UNITS := 150.0                     # a mover faster than this (units / s) runs, slower walks
 const SNAP_M := 6.0                          # an update this far from where it is drawn: jump there
 # eChatType -> the chat window's kinds
@@ -95,6 +96,7 @@ func _on_world(kind: String, d: Dictionary) -> void:
 	match kind:
 		"npc": _add_npc(d)
 		"object": _add_object(d)
+		"house": _house(d)
 		"move": _move(d)
 		"remove": _remove(int(d.oid), true, int(d.get("type", 1)))
 		"equipment": _equip(d)
@@ -1522,7 +1524,9 @@ func _add_object(d: Dictionary) -> void:
 	if not (model in RELIC_MODELS) and _baked_prop_near(p):
 		return                                                     # the zone already has it (baked, with its fixes)
 		# (never a relic: it lies on its pad - a baked world object right under it)
-	var m := WeaponModels.make_world(model)
+	var m: Node3D = Housing.make_object(model) if Housing.has_object(model) else null   # lot markers (housing)
+	if m == null:
+		m = WeaponModels.make_world(model)
 	if m == null:
 		m = WeaponModels.make_world(BAG_MODEL)                     # loot without a world model: the brown bag
 	if m == null:
@@ -1551,6 +1555,50 @@ func _add_object(d: Dictionary) -> void:
 	objects[oid] = holder
 
 
+var houses := {}                             # house number -> its node (housing regions: HouseCreate)
+
+
+## Crossing into the next zone of the region moves the scene's origin (ZoneViewer._cross): the ground objects and the
+## houses move with it like the NPCs (they are placed once, from the server's region spots).
+func rebase(d: Vector3) -> void:
+	super.rebase(d)
+	for oid in objects:
+		var h = objects[oid]
+		if h is Node3D and is_instance_valid(h):
+			(h as Node3D).position -= d
+	for num in houses:
+		var h = houses[num]
+		if h is Node3D and is_instance_valid(h):
+			(h as Node3D).position -= d
+
+
+## A house on its lot (HouseCreate 0xD1, owner 2026-11-02 housing's first pass): drawn with its collision where the
+## server puts it; model 0 takes it down (SendRemoveHouse, a lot given up / repossessed). The lot marker is a separate
+## ground object (GameLotMarker) the server removes itself when the house goes up.
+func _house(d: Dictionary) -> void:
+	var num := int(d.number)
+	if houses.has(num):
+		var old: Node3D = houses[num]
+		if is_instance_valid(old):
+			old.queue_free()
+		houses.erase(num)
+	var model := int(d.model)
+	if model <= 0:
+		return
+	var m := Housing.make_house(model)
+	if m == null:
+		push_warning("house %d: no model %d" % [num, model])
+		return
+	var p := scene_pos(float(d.x), float(d.y), float(d.z))
+	m.position = p
+	m.rotation.y = Server.yaw_of(int(d.heading))
+	m.name = "House_%d" % num
+	m.set_meta("name", String(d.get("name", "")))
+	m.set_meta("model", model)
+	add_child(m)
+	houses[num] = m
+
+
 var target_object := 0                       # the targeted ground object's id (loot, a gravestone, a relic)
 
 
@@ -1559,13 +1607,21 @@ var target_object := 0                       # the targeted ground object's id (
 ## gravestone asked the server to pick it up ("too far away to pick up" / "You can't get that!") instead of targeting
 ## it for /pray (GamePlayer.Pray: the target must be your gravestone). True when the click hit one.
 func click_object(cam: Camera3D, screen_pos: Vector2) -> bool:
+	var oid := object_at(cam, screen_pos)
+	if oid == 0:
+		return false
+	_target_ground(oid)
+	return true
+
+
+## The ground object under the cursor (its server id), 0 for none.
+func object_at(cam: Camera3D, screen_pos: Vector2) -> int:
 	var from := cam.project_ray_origin(screen_pos)
 	var q := PhysicsRayQueryParameters3D.create(from, from + cam.project_ray_normal(screen_pos) * 60.0, OBJECT_PICK)
 	var hit := get_world_3d().direct_space_state.intersect_ray(q)
 	if hit.is_empty() or not hit.collider.has_meta("server_object"):
-		return false
-	_target_ground(int(hit.collider.get_meta("server_object")))
-	return true
+		return 0
+	return int(hit.collider.get_meta("server_object"))
 
 
 func _target_ground(oid: int) -> void:
@@ -1609,7 +1665,9 @@ func get_object() -> void:
 		return
 	var r := Server.to_region(_current_zone(), player.global_position)
 	var holder: Node3D = objects.get(target_object)
-	if holder and int(holder.get_meta("model", 0)) in RELIC_MODELS:
+	if holder and (int(holder.get_meta("model", 0)) in RELIC_MODELS or Housing.is_lot_marker(int(holder.get_meta("model", 0)))):
+		# a relic is carried off with a use; a lot marker is used too (GameLotMarker.Interact: buy the lot, or the
+		# deeds to build on it when it is yours)
 		Server.client.call("Interact", target_object, int(r.x), int(r.y))
 	else:
 		Server.client.call("PickUp", int(r.x), int(r.y), target_object)

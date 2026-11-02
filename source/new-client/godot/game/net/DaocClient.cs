@@ -808,6 +808,17 @@ public partial class DaocClient : Node
 				d["kind"] = "remove";
 				d["oid"] = r.Short(); d["type"] = 9;
 				return d;
+			case 0xD1:                                    // HouseCreate (189): a house on its lot (model 0: taken down)
+				d["kind"] = "house";
+				d["number"] = r.Short(); d["z"] = r.Short();
+				d["x"] = (long)r.Int(); d["y"] = (long)r.Int();
+				d["heading"] = r.Short(); d["porch_roof_color"] = r.Short(); d["porch_flags"] = r.Short();
+				d["emblem"] = r.Short(); r.Short();
+				d["model"] = (int)r.Byte(); d["roof"] = (int)r.Byte(); d["wall"] = (int)r.Byte(); d["door"] = (int)r.Byte();
+				d["truss"] = (int)r.Byte(); d["porch"] = (int)r.Byte(); d["window"] = (int)r.Byte();
+				r.Byte(); r.Short();
+				d["name"] = r.Left > 0 ? r.Pascal() : "";
+				return d;
 			case 0xD9:                                    // ObjectCreate (176): world objects, items on the ground, doors
 				d["kind"] = "object";
 				d["oid"] = r.Short(); d["emblem"] = r.Short(); d["heading"] = r.Short(); d["z"] = r.Short();

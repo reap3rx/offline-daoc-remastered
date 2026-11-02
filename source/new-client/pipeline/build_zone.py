@@ -85,6 +85,8 @@ def clutter_realm(zone_id):
     region = int(reg.group(1)) if reg else -1
     if region in SI_REGIONS:
         return SI_REGIONS[region], True
+    if region in HOUSING_REGIONS:                          # housing zones 260-274 aren't zone_id // 100's realm
+        return HOUSING_REGIONS[region], False
     exp_match = re.search(r'expansion\s*=\s*(\d+)', zone_section(zone_id))
     return {0: 'alb', 1: 'mid', 2: 'hib'}.get(zone_id // 100), bool(exp_match and int(exp_match.group(1)) == 1)
 
@@ -812,6 +814,7 @@ def city_heights(out, mdir, models, origin, rot_deg):
 # the old DB sends some exits to a second copy of a dungeon (the client ships both with identical dat files: same
 # map, same coordinates) - the copy that is built: Hall of the Corrupt 277 -> 245, Marfach Caverns 276 -> 247
 ZONE_COPIES = {277: 245, 276: 247}
+HOUSING_REGIONS = {2: 'alb', 102: 'mid', 202: 'hib'}       # player housing: phousing/zones, built since 2026-11-02
 HOUSING_ZONES = {13, 114, 213}                         # Caerwent / Erikstaad / Meath housing (post-1.65)
 
 
@@ -945,6 +948,8 @@ def build(zone_id, upscale=True):
     zdir = CLIENT / f'zones/zone{zone_id:03d}'
     if not zdir.exists():                                  # the Albion epic dungeons (233, 244) ship in frontiers/zones
         zdir = CLIENT / f'frontiers/zones/zone{zone_id:03d}'
+    if not zdir.exists():                                  # player housing (regions 2 / 102 / 202) ships in phousing/zones
+        zdir = CLIENT / f'phousing/zones/zone{zone_id:03d}'
     out = ROOT / f'godot/content/zones/zone{zone_id:03d}'
     out.mkdir(parents=True, exist_ok=True)
     (ROOT / 'godot/content/.gdignore').touch()             # runtime-loaded content: keep it out of the editor import
@@ -1065,10 +1070,16 @@ def build(zone_id, upscale=True):
     nifs = {int(r[0]): r for r in read_csv(dat['nifs.csv']) if r and r[0].strip().isdigit()}
     fixtures = [r for r in read_csv(dat['fixtures.csv'])[2:] if len(r) > 11 and r[1].strip().isdigit()]
     npk_files = {p.name.lower(): p for p in (CLIENT / 'zones/Nifs').iterdir()}
+    if (CLIENT / 'phousing/nifs').is_dir():                # housing zones' own pieces (market, gates, signs)
+        for p in (CLIENT / 'phousing/nifs').iterdir():
+            npk_files.setdefault(p.name.lower(), p)
     mdir = out / 'models'
     mdir.mkdir(exist_ok=True)
     tex_names, models, model_index = set(), [], {}
     for nif_id in sorted({int(r[1]) for r in fixtures}):
+        if nif_id not in nifs:                             # (Aylesbury, zone 64: fixtures of a NIF row it doesn't have)
+            print('missing nifs.csv row', nif_id)
+            continue
         filename = nifs[nif_id][2].strip()
         base = filename.rsplit('.', 1)[0].lower()
         npk = npk_files.get(base + '.npk')

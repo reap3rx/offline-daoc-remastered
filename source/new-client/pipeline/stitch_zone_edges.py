@@ -48,7 +48,7 @@ def _zones_dat():
 
 def _raw(zone_id):
     """The zone's 256 x 256 client samples in units (row = y, column = x), or None (no terrain: city / dungeon)."""
-    for base in (CLIENT / 'zones', CLIENT / 'frontiers/zones'):
+    for base in (CLIENT / 'zones', CLIENT / 'frontiers/zones', CLIENT / 'phousing/zones'):
         p = base / f'zone{zone_id:03d}/dat{zone_id:03d}.mpk'
         if p.exists():
             break

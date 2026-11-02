@@ -21,9 +21,18 @@ from daoc_mpk import read_mpk
 from assets_pipeline import CLIENT
 
 
+def _zdir(zone_id):
+    """The zone's folder: zones/, else frontiers/zones/ (Albion epic dungeons) or phousing/zones/ (player housing)."""
+    for base in ('zones', 'frontiers/zones', 'phousing/zones'):
+        d = CLIENT / f'{base}/zone{zone_id:03d}'
+        if d.exists():
+            return d
+    return CLIENT / f'zones/zone{zone_id:03d}'
+
+
 def decode(zone_id):
     """{(px, py): [{'tex', 'tiles', 'tileable', 'weight': 128x128 float 0..1}]} for every patch."""
-    ter = read_mpk(str(CLIENT / f'zones/zone{zone_id:03d}/ter{zone_id:03d}.mpk'))
+    ter = read_mpk(str(_zdir(zone_id) / f'ter{zone_id:03d}.mpk'))
     layers = defaultdict(list)
     for r in list(csv.reader(io.StringIO(ter['textures.csv'].decode('latin1'))))[1:]:
         if len(r) > 10 and r[0].strip().isdigit():
@@ -58,7 +67,7 @@ def check(zone_id):
     from texture_index import TextureIndex
     idx = TextureIndex()
     patches = decode(zone_id)
-    lod = read_mpk(str(CLIENT / f'zones/zone{zone_id:03d}/lod{zone_id:03d}.mpk'))
+    lod = read_mpk(str(_zdir(zone_id) / f'lod{zone_id:03d}.mpk'))
     colors = {}
     for p in patches.values():
         for layer in p:

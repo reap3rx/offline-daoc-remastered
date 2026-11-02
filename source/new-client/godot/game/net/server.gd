@@ -611,6 +611,10 @@ func _on_world_inner(kind: String, d: Dictionary) -> void:
 			if not playing:
 				_backlog.append([kind, d])
 				return
+		"house":                                          # a house on its lot (housing): drawn once the zone is in
+			if not playing:
+				_backlog.append([kind, d])
+				return
 		"inventory":
 			on_inventory(d)
 		"market_open":                                    # [Browse the exchange]: the market search window
