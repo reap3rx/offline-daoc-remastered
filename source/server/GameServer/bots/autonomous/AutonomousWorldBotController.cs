@@ -3181,6 +3181,26 @@ namespace DOL.GS
                 _camp = FromSharedCamp(raid.Camp);
                 return;
             }
+            // A dynamic event nearby (scripts/dynamicevents): go and help - most of the time (owner 2026-11-02: "bots
+            // should seek out events, and want to help out with them, and want the rewards"). The event is the camp: its
+            // place, and its current monsters to fight; a waiting disturbance wakes when the bot gets there.
+            if (Random.Shared.Next(100) < 70 && DynamicEvents.DynamicEventManager.TryBotTarget(bot, out var ev))
+            {
+                _nextPlanTick = GameLoop.GameLoopTime + 30_000 + bot.ObjectID % 8_000;
+                _camp = new CampDestination("event:" + ev.Id, ev.MonsterName, ev.ZoneName, ev.RegionId, ev.X, ev.Y, ev.Z,
+                    6, false, false);
+                BeginCampDiagnostics(bot);
+                _lastFailedCampId = string.Empty;
+                _lastFailedTargetName = string.Empty;
+                _campStartedTick = GameLoop.GameLoopTime;
+                _emptyCampSinceTick = 0;
+                _patrolDestination = null;
+                _pendingStableChoice = null;
+                bot.PersistentRecord.CurrentCampId = _camp.Id;
+                SetStatus(bot, $"Heading to {ev.Title}", GoalText(), $"Helping with the event {ev.Title} in {ev.ZoneName}",
+                    ev.MonsterName, ev.ZoneName, true);
+                return;
+            }
             if (!_hasCampCatalog)
             {
                 _nextPlanTick = GameLoop.GameLoopTime + 250;

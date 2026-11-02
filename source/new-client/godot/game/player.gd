@@ -54,9 +54,12 @@ const COLLIDER_LIFT := 0.62
 const STEP_LEAD := 0.25                 # the wall collider's radius: where the leading-edge floor pick looks
 # Too steep to stand on (owner 2026-11-01: "I was able to run up the side of the walls" - a keep's battered walls are
 # floors to the pick): ground steeper than this can't be walked up, and standing on it you slide down off it. Stairs
-# are unaffected (their treads are flat; the step-up lifts you over the risers).
+# are unaffected (their treads are flat; the step-up lifts you over the risers), and so is a short steep face - the
+# owner's 2026-11-02 video: a hut's stone footing, 0.7 m of sloped stones, stopped you at the door. Only ground that
+# stays steep for STEEP_RUN_M counts (a wall's face does; a footing, a sill or a bevel doesn't).
 const MAX_SLOPE_DEG := 55.0
 const SLIDE_MPS := 7.0                   # sliding down ground too steep to stand on
+const STEEP_RUN_M := 1.2                 # how far up the slope it must keep rising that steeply
 # Ladders (game.dll RE 2026-10-10): touching a 'climb' wall (ZoneLoader ClimbBodies) puts the client in move state 7
 # ("You start climbing."): forward climbs at 85 units/s x min(1, speed / 100), back climbs down at the same rate
 # (0x439d19); landing while climbing down, or a jump, ends it ("You are no longer climbing.", 0x436b20 / 0x438731).
@@ -1395,7 +1398,7 @@ func _client_move(delta: float) -> void:
 	velocity.y = vy
 	floor_y = _floor_below(global_position, feet_before)
 	if not climbing and not swimming and not flying and global_position.y - floor_y <= FALL_HEIGHT + 0.025 \
-			and _floor_n.y < cos(deg_to_rad(MAX_SLOPE_DEG)):
+			and _floor_n.y < cos(deg_to_rad(MAX_SLOPE_DEG)) and _steep_run(_floor_n, floor_y):
 		# too steep: no further up it, and it lets you down - slide off along its fall line
 		var down := Vector2(_floor_n.x, _floor_n.z).normalized()
 		var moved := Vector2(global_position.x - start_pos.x, global_position.z - start_pos.z)
@@ -1429,6 +1432,17 @@ func _client_move(delta: float) -> void:
 		grounded = false
 		if swimming and global_position.y < floor_y:
 			global_position.y = floor_y                 # swimming along the lake bed
+
+
+## Is the ground here (surface normal n, floor height y) the face of something tall - does it go on rising that steeply
+## for STEEP_RUN_M uphill? (_floor_n is the last pick's: kept round the probe.)
+func _steep_run(n: Vector3, y: float) -> bool:
+	var keep := _floor_n
+	var up := -Vector2(n.x, n.z).normalized()
+	var p := global_position + Vector3(up.x, 0.0, up.y) * STEEP_RUN_M
+	var ahead := _floor_below(Vector3(p.x, y, p.z), y + 1.9)   # (picked from 1.9 m up: under a doorway's lintel)
+	_floor_n = keep
+	return ahead - y > 1.4                                          # (1.2 m on: rising more than ~50 degrees)
 
 
 ## A ladder's climb wall right in front of the character (ZoneLoader's ClimbBodies), at the collider's bottom (0.5 m)

@@ -7,17 +7,20 @@ who takes part, and scale with the people there. A zone's events are one JSON fi
 
 1. Copy `zones/zone206_valley_of_bri_leith.json` to `zones/zoneNNN_<name>.json` and set `zone`, `region`, `name`
    and `lore`.
-2. Write the chains. Each stage is one of three types, given its own text, monsters and places:
+2. Write the chains. Each stage is one of four types, given its own text, monsters and places:
 
    | Type | The players must | Keys |
    | --- | --- | --- |
    | `cull` | defeat `kill` monsters in the area within `time_s` (`alive` about at once) | `mobs` |
    | `defend` | keep `protect` alive for `duration_s` while `waves` come for it | `protect`, `waves` (`from`: where they come from) |
    | `boss` | defeat `boss` within `time_s`; `adds` join while it fights | `boss`, `adds` |
+   | `escort` | go with the chain's giver along `path`; they walk only while someone is with them | `path`, `ambushes` (`at`: the path point, `say`) |
 
-   `on_success` / `on_fail` name the next stage (or `end`). `reward`: `xp_pct` (of a level, at gold),
-   `copper_per_level`, and an optional `item` with gold and silver chances.
-3. Places are zone metres, as the new client's map shows them: `center`, `pos`, `from` are `[x, y]`.
+   A `defend` stage with `"protect_leader": true` protects the giver instead of a spawned NPC.
+
+   `on_success` / `on_fail` name the next stage (or `end`); `rest_s` (default 30) is the breather before it.
+   `reward`: `xp_pct` (of a level, at gold), `copper_per_level`, and `items`, each with gold and silver chances.
+3. Places are zone metres, as the new client's map shows them: `center`, `pos`, `from`, `path` are `[x, y]`.
    `python tools/claude-version/dynamic_events_fill_z.py <file>` adds the ground height to each.
 4. Monsters are `NpcTemplate` ids (look, gear, spells) with your own `name`, `level` range and `size`, so the same
    template can be a different creature in another zone.
@@ -26,11 +29,33 @@ who takes part, and scale with the people there. A zone's events are one JSON fi
 6. Build the server (the JSON is embedded). A file in `runtime/server/dynamic-events/` replaces the built-in one for
    its zone without a rebuild.
 
+## How a chain starts
+
+- **On its own** (no `giver`): after `first_delay_s`, then every `interval_s`, it becomes a disturbance: the map and
+  the tracker show its `hint` ("A cold wind is rising over the southern lake..."). It starts when a player or a bot
+  comes within `wake_m` of its first stage (default: that stage's radius + 60 m).
+- **From a giver** (`giver`: an NPC with `greet`, `accept`, `reply`, `busy`, `cooldown_s`): they stand at `pos` with
+  a cyan ring under their feet and a cyan marker on the map. Talk to them and answer the bracketed keyword and they
+  set out with their `guards` (who follow them and fight the chain's monsters). A bot that comes by accepts too.
+
+## Levels
+
+`levels` is who the chain is meant for. Its monsters come at that level, or, when the players and bots taking part
+are higher, just under theirs (the middle of their levels); bosses two above. Rewards are a share of your level's
+experience and money by your level; reward items (`items`) come in the version for your level: `named_uniques.py`
+makes level versions (`<id>_l10` ... `_l50`) of every item marked `"scaled": true`.
+
+## Bots
+
+Autonomous bots within about a zone of an event (running, resting, a disturbance or a giver) usually go and help
+(six to an event); they are paid in experience and money like players, and wake disturbances and accept givers.
+
 ## In game
 
-- `/events` lists the zone's events; `/events start <id>` and `/events stop <id>` run one now (for testing).
+- `/events` lists the zone's events; `/events start <id>` and `/events stop <id>` run one now, `/events wake <id>`
+  makes it a disturbance now (for testing).
 - The server sends the zone's events to the new client every 2 s (`#EV|` lines). The tracker (top right) shows the
-  ones you are at; the map shows all of them.
+  ones you are at; the map shows all of them. An event's monsters carry its title under their name.
 
 ## Contribution
 

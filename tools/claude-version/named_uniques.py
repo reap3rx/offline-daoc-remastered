@@ -63,16 +63,45 @@ def base_item(db, obj, slot, level):
     return rows
 
 
+def scaled_bonuses(bonuses, base_level, level):
+    """An item's bonuses at another level: in proportion, within what an item of that level carries."""
+    f = level / float(base_level)
+    out = {}
+    for name, val in bonuses.items():
+        t = STATS[name]
+        v = max(1, int(round(val * f)))
+        if t <= 9:
+            v = min(v, max(1, level // 2))                       # stats and power
+        elif t == 10:
+            v = min(v, int(level * 1.2))                         # hits
+        elif t <= 19:
+            v = min(v, max(1, level // 5))                       # resists
+        elif t >= 128:
+            v = min(v, level)                                    # focus
+        else:
+            v = min(v, max(1, level // 15))                      # skills
+        out[name] = v
+    return out
+
+
 def plan(db, spec):
     cols = [d[0] for d in db.execute('select * from ItemTemplate limit 0').description]
     out = []
+    todo = []
     for it in spec['items']:
+        idnb = '%s_%s' % (spec['prefix'], slug(it['name']))
+        todo.append((it, it['level'], it['bonuses'], idnb))
+        # an event reward comes at the taker's level: versions every 5 levels (<id>_lNN, DynamicEventRuntime.ItemAtLevel)
+        if it.get('scaled'):
+            for lv in range(10, 51, 5):
+                v = dict({k: x for k, x in it.items() if k != 'mob'}, level=lv,
+                         bonuses=scaled_bonuses(it['bonuses'], it['level'], lv), scaled_of=idnb)
+                todo.append((v, lv, v['bonuses'], '%s_l%d' % (idnb, lv)))
+    for it, lvl, bonuses, idnb in todo:
         b = base_item(db, it['base'][0], it['base'][1], it['level'])
         if b is None:
             raise SystemExit('no base item for %s %s' % (it['name'], it['base']))
         row = dict(zip(cols, b))
-        lvl = it['level']
-        idnb = '%s_%s' % (spec['prefix'], slug(it['name']))
         row.update(Id_nb=idnb, ItemTemplate_ID=idnb, TranslationId='', Name=it['name'], Level=lvl, Quality=100,
                    Condition=50000, MaxCondition=50000, Durability=50000, MaxDurability=50000, IsNotLosingDur=0,
                    Realm=3, Bonus=35, BonusLevel=0, LevelRequirement=0, ExtraBonus=0, ExtraBonusType=0,
@@ -92,7 +121,7 @@ def plan(db, spec):
         for k in range(1, 11):
             row['Bonus%d' % k] = 0
             row['Bonus%dType' % k] = 0
-        for k, (name, val) in enumerate(it['bonuses'].items(), 1):
+        for k, (name, val) in enumerate(bonuses.items(), 1):
             row['Bonus%d' % k] = val
             row['Bonus%dType' % k] = STATS[name]
         if it.get('proc'):
@@ -164,7 +193,10 @@ def main():
     spec = json.loads(spec_path.read_text(encoding='utf-8'))
     db = sqlite3.connect(a.db)
     cols, items = plan(db, spec)
+    variants = sum(1 for it, _, _ in items if it.get('scaled_of'))
     for it, row, b in items:
+        if it.get('scaled_of'):
+            continue
         bon = ', '.join('%s %+d' % (k, v) for k, v in it['bonuses'].items())
         who = it.get('mob') or ('event reward ' + it.get('event_reward', ''))
         spawns = '' if it.get('event') or not it.get('mob') else ' (%d spawn%s)' % (
@@ -172,6 +204,8 @@ def main():
         print('%-34s L%-2d %-28s %s%s  [look of %s]%s' % (row['Name'], row['Level'], who + spawns, bon,
               ', proc %d' % row['ProcSpellID'] if row['ProcSpellID'] else '', b[2],
               ', DPS/AF %d' % row['DPS_AF'] if row['DPS_AF'] else ''))
+    if variants:
+        print('(+ %d level versions of the event rewards, every 5 levels from 10 to 50)' % variants)
     if not (a.apply or a.undo):
         print('\n(dry run - nothing written)')
         return

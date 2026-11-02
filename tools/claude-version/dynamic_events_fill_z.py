@@ -38,7 +38,7 @@ def walk(o, at):
         for k, v in o.items():
             if k in ('center', 'pos') and isinstance(v, list) and len(v) in (2, 3):
                 o[k] = [v[0], v[1], at(v[0], v[1])]
-            elif k == 'from':
+            elif k in ('from', 'path'):
                 o[k] = [[p[0], p[1], at(p[0], p[1])] for p in v]
             else:
                 walk(v, at)

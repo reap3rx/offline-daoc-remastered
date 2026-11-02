@@ -478,14 +478,18 @@ class MapView extends Control:
 			if f.x < 0 or not Rect2(Vector2.ZERO, size).has_point(at):
 				continue
 			var st := String(e.get("state", "active"))
-			var col := Color(1.0, 0.55, 0.1) if st == "active" else (Color(0.4, 0.95, 0.35) if st == "success" else Color(0.95, 0.3, 0.25))
+			var col := Color(1.0, 0.55, 0.1) if st in ["active", "next"] else (Color(0.4, 0.95, 0.35) if st == "success"
+					else (Color(0.95, 0.85, 0.45) if st == "dormant" else (Color(0.35, 0.85, 1.0) if st == "giver" else Color(0.95, 0.3, 0.25))))
 			var rad := maxf(6.0, float(e.get("r", 60.0)) / 0.025 / mr.size.x * size.x)
+			if st == "giver":
+				rad = 4.0
 			draw_circle(at, rad, Color(col.r, col.g, col.b, 0.18))
 			draw_arc(at, rad, 0.0, TAU, 40, Color(col.r, col.g, col.b, 0.9), 1.5)
 			var pts := PackedVector2Array([at + Vector2(0, -5), at + Vector2(5, 0), at + Vector2(0, 5), at + Vector2(-5, 0)])
 			draw_colored_polygon(pts, col)
 			draw_polyline(PackedVector2Array([pts[0], pts[1], pts[2], pts[3], pts[0]]), Color(0.1, 0.05, 0.0), 1.0)
-			var text := String(e.get("title", ""))
+			# a disturbance shows what you'd notice, not what it is; a giver, who is asking
+			var text := String(e.get("hint", "")) if st == "dormant" else (String(e.get("giver", "")) if st == "giver" else String(e.get("title", "")))
 			var tw := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
 			var base := at + Vector2(-tw * 0.5, -rad - 4.0)
 			draw_string_outline(font, base, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 2, Color(0, 0, 0, 0.85))
@@ -511,7 +515,7 @@ class MapView extends Control:
 				# quest marks in the ground circles' colours: available yellow, turn-in green, in progress orange;
 				# classic step markers / the emissary's hunt in red
 				var col: Color = {"!": Color(1.0, 0.85, 0.15), "?": Color(0.3, 1.0, 0.35), "o": Color(1.0, 0.55, 0.1),
-						"task": Color(0.8, 0.35, 1.0)}.get(
+						"task": Color(0.8, 0.35, 1.0), "event": Color(0.35, 0.85, 1.0)}.get(
 						String(m.kind), Color(0.95, 0.2, 0.15))
 				draw_circle(mp, 3.5, Color(0.08, 0.05, 0.0))
 				draw_circle(mp, 2.5, col)

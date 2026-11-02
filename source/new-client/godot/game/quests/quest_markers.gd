@@ -9,8 +9,9 @@ extends Control
 
 const RANGE_M := 600.0
 const COLORS := {"available": Color(1.0, 0.85, 0.15), "turnin": Color(0.3, 1.0, 0.35), "progress": Color(1.0, 0.55, 0.1),
-		"task": Color(0.8, 0.35, 1.0)}
-const MAP_KIND := {"available": "!", "turnin": "?", "progress": "o", "task": "task"}
+		"task": Color(0.8, 0.35, 1.0), "event": Color(0.35, 0.85, 1.0)}
+const MAP_KIND := {"available": "!", "turnin": "?", "progress": "o", "task": "task", "event": "event"}
+## "event" (cyan, owner 2026-11-02): someone who'd lead you into a dynamic event if you talk to them (EventTracker.givers).
 ## "task" (violet, a QOL addition - 1.65 EXCEPTIONS MADE.txt): your /task's target - the kill task's monsters around
 ## the spot the guard meant, then the guard to return to; a delivery task's receiver. The original gave a direction.
 
@@ -141,6 +142,8 @@ func _server_rebuild() -> void:
 		for s in viewer.npcs.states:
 			var st: NpcState = s
 			var k: String = SERVER_KIND.get(int(st.spawn.get("quest", 0)), "")
+			if k == "" and String(st.spawn.get("name", "")) in preload("res://game/ui/event_tracker.gd").givers():
+				k = "event"
 			if st.alive and k != "":
 				_marked[st] = k
 				marks.append({"at": Vector2(st.pos.x, st.pos.z), "kind": MAP_KIND[k]})

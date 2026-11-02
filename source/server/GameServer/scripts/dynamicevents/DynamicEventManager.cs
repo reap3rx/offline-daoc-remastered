@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Text;
 using DOL.Events;
@@ -119,6 +120,8 @@ namespace DOL.GS.DynamicEvents
             }
             if (++_ticks % 2 == 0)
                 Broadcast(now);
+            if (_ticks % 5 == 0)
+                BotsAtGivers();
             return 1000;
         }
 
@@ -136,10 +139,9 @@ namespace DOL.GS.DynamicEvents
                 {
                     if (c.Zone != p.CurrentZone || c.Region != p.CurrentRegion)
                         continue;
-                    if (c.Stage != null)
-                        list.Add(Describe(c, p));
-                    else if (now < c.LastOutcomeUntil)
-                        list.Add(new { id = c.Def.Id, title = c.Def.Title, state = c.LastOutcome, zone = (int) c.Zone.ID });
+                    object d = Describe(c, p, now);
+                    if (d != null)
+                        list.Add(d);
                 }
                 if (list.Count == 0 && !_told.Contains(p))
                     continue;
@@ -153,37 +155,151 @@ namespace DOL.GS.DynamicEvents
             _told.RemoveWhere(p => !seen.Contains(p) && p.ObjectState != GameObject.eObjectState.Active);
         }
 
-        static object Describe(ChainRuntime c, GamePlayer p)
+        /// <summary>One chain for one player's client: running (its stage), resting before the next stage, a disturbance
+        /// waiting for someone, a giver who would lead you, or how it ended (a little while). Nothing when quiet.</summary>
+        static object Describe(ChainRuntime c, GamePlayer p, long now)
         {
-            StageRuntime s = c.Stage;
-            double dx = p.X - s.Center.X, dy = p.Y - s.Center.Y;
-            bool near = Math.Sqrt(dx * dx + dy * dy) <= s.RadiusUnits + 2400;    // within 60 m of its edge
-            return new
+            int zone = c.Zone.ID;
+            if (c.Stage != null)
             {
-                id = c.Def.Id,
-                title = c.Def.Title,
-                stage = s.Def.Name,
-                kind = s.Def.Type,
-                objective = s.Def.Objective,
-                line = s.ProgressLine,
-                progress = Math.Round(s.Progress, 3),
-                time_left = s.TimeLeft,
-                x = Math.Round(c.ZoneMetresX(s.Center.X), 1),
-                y = Math.Round(c.ZoneMetresY(s.Center.Y), 1),
-                r = s.Def.Radius,
-                zone = (int) c.Zone.ID,
-                levels = c.Def.Levels,
-                near,
-                state = "active"
+                StageRuntime s = c.Stage;
+                double dx = p.X - s.Center.X, dy = p.Y - s.Center.Y;
+                bool near = Math.Sqrt(dx * dx + dy * dy) <= s.RadiusUnits + 2400;    // within 60 m of its edge
+                return new
+                {
+                    id = c.Def.Id, title = c.Def.Title, stage = s.Def.Name, kind = s.Def.Type, objective = s.Def.Objective,
+                    line = s.ProgressLine, progress = Math.Round(s.Progress, 3), time_left = s.TimeLeft,
+                    x = Math.Round(c.ZoneMetresX(s.Center.X), 1), y = Math.Round(c.ZoneMetresY(s.Center.Y), 1),
+                    r = s.Def.Radius, zone, levels = c.Def.Levels, scaled = s.TargetLevel, near, state = "active"
+                };
+            }
+            if (c.PendingId != null)
+            {
+                StageDef next = c.Def.Stages.First(st => st.Id == c.PendingId);
+                Vector3 at = next.Center != null ? c.ToWorld(next.Center, false)
+                    : c.Leader != null ? new Vector3(c.Leader.X, c.Leader.Y, c.Leader.Z) : c.WakePoint;
+                double dx = p.X - at.X, dy = p.Y - at.Y;
+                return new
+                {
+                    id = c.Def.Id, title = c.Def.Title, stage = next.Name, objective = next.Objective, line = "Catch your breath",
+                    time_left = (int) Math.Max(0, (c.PendingAt - now) / 1000), x = Math.Round(c.ZoneMetresX(at.X), 1),
+                    y = Math.Round(c.ZoneMetresY(at.Y), 1), r = next.Radius, zone, levels = c.Def.Levels,
+                    near = Math.Sqrt(dx * dx + dy * dy) <= next.Radius * 40 + 4000, state = "next"
+                };
+            }
+            if (c.Dormant)
+            {
+                Vector3 w = c.WakePoint;
+                return new
+                {
+                    id = c.Def.Id, title = c.Def.Title, hint = c.Def.Hint, x = Math.Round(c.ZoneMetresX(w.X), 1),
+                    y = Math.Round(c.ZoneMetresY(w.Y), 1), r = c.WakeUnits / 40, zone, levels = c.Def.Levels, state = "dormant"
+                };
+            }
+            if (c.Def.Giver != null && c.Leader != null && now >= c.GiverReadyAt)
+                return new
+                {
+                    id = c.Def.Id, title = c.Def.Title, giver = c.Giver.Name, hint = $"{c.Giver.Name} is looking for help",
+                    x = Math.Round(c.ZoneMetresX(c.Giver.X), 1), y = Math.Round(c.ZoneMetresY(c.Giver.Y), 1), r = 0,
+                    zone, levels = c.Def.Levels, state = "giver"
+                };
+            if (now < c.LastOutcomeUntil)
+                return new { id = c.Def.Id, title = c.Def.Title, state = c.LastOutcome, zone };
+            return null;
+        }
+
+        // ---------------------------------------------------------------- bots
+
+        static readonly Dictionary<ChainRuntime, Dictionary<GameBot, long>> _botsAt = new();
+        public const int BotsPerEvent = 6;
+
+        /// <summary>Somewhere an autonomous bot can help (owner 2026-11-02: "bots should seek out events ... and want the
+        /// rewards"): a running event, one resting between stages, a disturbance or a giver waiting, within about a zone
+        /// (1.6 km) in the bot's region, that the bot is not too low for and that hasn't its fill of bots already. Gives
+        /// where to go and what to fight there (its current monsters).</summary>
+        public static bool TryBotTarget(GameBot bot, out BotEventTarget target)
+        {
+            target = null;
+            if (bot?.CurrentRegion == null || Chains.Count == 0)
+                return false;
+            long now = Now;
+            ChainRuntime best = null;
+            double bestD = double.MaxValue;
+            Vector3 bestAt = default;
+            foreach (ChainRuntime c in Chains)
+            {
+                if (c.Region != bot.CurrentRegion || c.Def.Levels == null || bot.Level < c.Def.Levels[0] - 2)
+                    continue;
+                Vector3 at;
+                if (c.Stage != null)
+                    at = c.Stage.Center;
+                else if (c.PendingId != null || c.Dormant)
+                    at = c.Leader != null ? new Vector3(c.Leader.X, c.Leader.Y, c.Leader.Z) : c.WakePoint;
+                else if (c.Def.Giver != null && c.Leader != null && now >= c.GiverReadyAt)
+                    at = new Vector3(c.Giver.X, c.Giver.Y, c.Giver.Z);
+                else
+                    continue;
+                var mine = _botsAt.TryGetValue(c, out var m) ? m : _botsAt[c] = new Dictionary<GameBot, long>();
+                foreach (GameBot old in mine.Where(kv => kv.Value < now || !kv.Key.IsAlive).Select(kv => kv.Key).ToList())
+                    mine.Remove(old);
+                if (mine.Count >= BotsPerEvent && !mine.ContainsKey(bot))
+                    continue;
+                double dx = bot.X - at.X, dy = bot.Y - at.Y, d = Math.Sqrt(dx * dx + dy * dy);
+                if (d > 65000 || d >= bestD)
+                    continue;
+                best = c;
+                bestD = d;
+                bestAt = at;
+            }
+            if (best == null)
+                return false;
+            if (!_botsAt[best].ContainsKey(bot))
+                Trace($"{bot.Name} (level {bot.Level}) sets out to help with {best.Def.Title}");
+            _botsAt[best][bot] = now + 10 * 60_000;
+            target = new BotEventTarget(best.Def.Id, best.Def.Title, CurrentMonster(best), best.Zone.Description,
+                best.Region.ID, (int) bestAt.X, (int) bestAt.Y, (int) bestAt.Z, best);
+            return true;
+        }
+
+        /// <summary>A bot sent to a waiting giver that has got there takes them up on it.</summary>
+        static void BotsAtGivers()
+        {
+            foreach (ChainRuntime c in Chains)
+            {
+                if (c.Def.Giver == null || c.Active || c.Leader == null || !_botsAt.TryGetValue(c, out var mine))
+                    continue;
+                GameBot here = mine.Keys.FirstOrDefault(b => b.IsAlive && b.CurrentRegion == c.Region && b.IsWithinRadius(c.Giver, 600));
+                if (here != null)
+                    c.BotAccepts(here);
+            }
+        }
+
+        /// <summary>What a bot should fight at a chain now: its stage's monsters (the boss, a wave, a cull's first kind),
+        /// else its first stage's.</summary>
+        static string CurrentMonster(ChainRuntime c)
+        {
+            StageDef s = c.Stage?.Def ?? c.Def.Stages.FirstOrDefault(st => st.Id == (c.PendingId ?? c.Def.Start));
+            if (s == null)
+                return "";
+            return s.Type switch
+            {
+                "boss" => s.Boss?.Name ?? "",
+                "defend" => s.Waves?.Mobs.FirstOrDefault()?.Name ?? "",
+                "escort" => s.Ambushes.SelectMany(a => a.Mobs).FirstOrDefault()?.Name ?? "",
+                _ => s.Mobs.FirstOrDefault()?.Name ?? ""
             };
         }
     }
+
+    public sealed record BotEventTarget(string Id, string Title, string MonsterName, string ZoneName, ushort RegionId,
+        int X, int Y, int Z, ChainRuntime Chain);
 
     [CmdAttribute("&events", ePrivLevel.Player,
         "Dynamic events in your zone",
         "/events - what's happening in this zone",
         "/events start <id> - start an event now (testing)",
-        "/events stop <id> - end an event now (testing)")]
+        "/events stop <id> - end an event now (testing)",
+        "/events wake <id> - make it a disturbance now, waiting for someone to come near (testing)")]
     public class DynamicEventsCommandHandler : Commands.AbstractCommandHandler, Commands.ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
@@ -192,6 +308,14 @@ namespace DOL.GS.DynamicEvents
             if (p == null)
                 return;
             var here = DynamicEventManager.Chains.Where(c => c.Zone == p.CurrentZone).ToList();
+            if (args.Length >= 3 && args[1] == "wake")
+            {
+                ChainRuntime w = DynamicEventManager.Chains.FirstOrDefault(x => x.Def.Id.Equals(args[2], StringComparison.OrdinalIgnoreCase));
+                if (w == null || w.Active || w.Def.Giver != null) { DisplayMessage(client, $"Can't wake {args[2]} now."); return; }
+                w.Dormant = true;
+                DisplayMessage(client, $"{w.Def.Title}: waiting for someone to come near.");
+                return;
+            }
             if (args.Length >= 3 && (args[1] == "start" || args[1] == "stop"))
             {
                 ChainRuntime c = DynamicEventManager.Chains.FirstOrDefault(x => x.Def.Id.Equals(args[2], StringComparison.OrdinalIgnoreCase));
@@ -211,7 +335,10 @@ namespace DOL.GS.DynamicEvents
             foreach (ChainRuntime c in here)
             {
                 long now = Environment.TickCount64;
-                string state = c.Active ? $"{c.Stage.Def.Name} - {c.Stage.Def.Objective} ({c.Stage.ProgressLine}, {c.Stage.TimeLeft} s left)"
+                string state = c.Stage != null ? $"{c.Stage.Def.Name} - {c.Stage.Def.Objective} ({c.Stage.ProgressLine}, {c.Stage.TimeLeft} s left)"
+                    : c.PendingId != null ? $"resting before the next stage ({Math.Max(0, (c.PendingAt - now) / 1000)} s)"
+                    : c.Dormant ? $"a disturbance - waiting for someone to come near"
+                    : c.Def.Giver != null ? (c.Leader != null && now >= c.GiverReadyAt ? $"{c.Giver.Name} is looking for help" : "the giver is resting")
                     : $"quiet (next in about {Math.Max(0, (c.NextStart - now) / 60000)} min)";
                 DisplayMessage(client, $"{c.Def.Title} [{c.Def.Id}]: {state}");
             }

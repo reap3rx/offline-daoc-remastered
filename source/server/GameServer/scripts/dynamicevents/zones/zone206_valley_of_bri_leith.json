@@ -64,7 +64,7 @@
           "announce": "The siog have dug in at the old lurikeen camp below the mine. Clear them out.",
           "center": [250, 296, 160.0],
           "radius": 60,
-          "time_s": 600,
+          "time_s": 1200,
           "kill": 12,
           "alive": 7,
           "mobs": [
@@ -98,7 +98,7 @@
           "announce": "Gelbhan the Footpad Chief stands at the barracks door. Bring friends.",
           "center": [258, 300, 160.0],
           "radius": 70,
-          "time_s": 600,
+          "time_s": 1200,
           "boss": {
             "template": 60166076,
             "name": "Gelbhan the Footpad Chief",
@@ -122,9 +122,17 @@
           "fail": "Gelbhan slips away into the hills with the camp's takings.",
           "on_success": "end",
           "on_fail": "end",
-          "reward": { "xp_pct": 20, "copper_per_level": 150 }
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu206_gelbhan_s_footpad_boots", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
         }
-      ]
+      ],
+      "hint": "Something stirs at the Coruscating Mine...",
+      "rest_s": 45
     },
     {
       "id": "bri_scarlet_fly",
@@ -142,7 +150,7 @@
           "announce": "A cold gale rises over the lake. Fuamnach's wind is hunting something along the southern shore.",
           "center": [1330, 1430, 120.9],
           "radius": 120,
-          "time_s": 480,
+          "time_s": 1200,
           "kill": 16,
           "alive": 7,
           "mobs": [
@@ -220,7 +228,7 @@
           "announce": "Fuamnach, first wife of Midir, stands at the menhir in a storm of her own making. This is a fight for a group.",
           "center": [1418, 1446, 137.5],
           "radius": 90,
-          "time_s": 900,
+          "time_s": 1800,
           "boss": {
             "template": 60163260,
             "name": "Fuamnach",
@@ -247,10 +255,15 @@
           "reward": {
             "xp_pct": 20,
             "copper_per_level": 200,
-            "item": { "id": "nu206_etain_s_scarlet_wing", "gold_chance": 35, "silver_chance": 15 }
+            "items": [
+              { "id": "nu206_fuamnach_s_jealous_veil", "gold_chance": 35, "silver_chance": 15 },
+              { "id": "nu206_etain_s_scarlet_wing", "gold_chance": 25, "silver_chance": 10 }
+            ]
           }
         }
-      ]
+      ],
+      "hint": "A cold wind is rising over the southern lake...",
+      "rest_s": 45
     },
     {
       "id": "bri_fairy_rade",
@@ -268,7 +281,7 @@
           "announce": "The fairy rings east of Caille are open. Midir's host rides out of Bri Leith - turn them back before they reach the road.",
           "center": [1280, 850, 152.7],
           "radius": 130,
-          "time_s": 600,
+          "time_s": 1200,
           "kill": 14,
           "alive": 6,
           "mobs": [
@@ -298,7 +311,7 @@
           "announce": "Midir's Doorward guards the open ring. None enter Bri Leith uninvited - and none leave it while he stands.",
           "center": [1312, 858, 156.9],
           "radius": 90,
-          "time_s": 900,
+          "time_s": 1800,
           "boss": {
             "template": 30006,
             "name": "Midir's Doorward",
@@ -322,7 +335,200 @@
           "fail": "The Doorward withdraws and the rings close behind him.",
           "on_success": "end",
           "on_fail": "end",
-          "reward": { "xp_pct": 20, "copper_per_level": 250 }
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 250,
+            "items": [
+              { "id": "nu206_girdle_of_the_sidhe_door", "gold_chance": 30, "silver_chance": 12 },
+              { "id": "nu206_midir_s_rowan_spear", "gold_chance": 30, "silver_chance": 12 }
+            ]
+          }
+        }
+      ],
+      "hint": "The fairy rings east of Caille are glowing...",
+      "rest_s": 45
+    },
+    {
+      "id": "bri_druim_cain_rangers",
+      "title": "The Rangers of Druim Cain",
+      "levels": [25, 36],
+      "rest_s": 45,
+      "giver": {
+        "name": "Captain Ronan",
+        "template": 60163818,
+        "level": 32,
+        "guild": "Rangers of Druim Cain",
+        "pos": [905, 78, 45.6],
+        "health_mult": 4,
+        "greet": "The siog have taken the herders' fold on the meadow south of the road, and they raid our carts from it. I'm taking my rangers down to burn them out. Will you ride with us? Tell me when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close to me - the siog will have watchers on the road. Rangers, with me!",
+        "busy": "We've only just come back from the fold. Give my rangers a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Druim Cain Ranger",
+          "template": 60163818,
+          "level": 28,
+          "guild": "Rangers of Druim Cain",
+          "count": 3,
+          "health_mult": 2
+        }
+      ],
+      "stages": [
+        {
+          "id": "d1",
+          "type": "escort",
+          "name": "The Road South",
+          "objective": "Go with Captain Ronan down the road to the herders' fold",
+          "announce": "Captain Ronan leads the rangers of Druim Cain out of town, bound for the siog in the herders' fold.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [905, 110, 45.6],
+            [895, 210, 43.8],
+            [872, 320, 42.0],
+            [866, 450, 42.2],
+            [930, 560, 53.7]
+          ],
+          "ambushes": [
+            {
+              "at": 2,
+              "count": 3,
+              "say": "Siog in the rocks - ambush! Rangers, to me!",
+              "mobs": [
+                {
+                  "template": 60166077,
+                  "name": "siog waylayer",
+                  "level": [26, 28]
+                }
+              ]
+            },
+            {
+              "at": 4,
+              "count": 3,
+              "say": "Their lookouts have seen us. Cut them down before they warn the fold!",
+              "mobs": [
+                {
+                  "template": 60166074,
+                  "name": "siog lookout",
+                  "level": [27, 29]
+                }
+              ]
+            }
+          ],
+          "success": "The fold is in sight. Captain Ronan draws his sword.",
+          "fail": "Captain Ronan has fallen on the road. The rangers carry him back to Druim Cain.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 70 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Storm the Fold",
+          "objective": "Drive the siog out of the herders' fold",
+          "announce": "Ronan's rangers charge the fold. Clear it of siog!",
+          "center": [1000, 610, 88.7],
+          "radius": 70,
+          "time_s": 1500,
+          "kill": 14,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60166074,
+              "name": "siog seeker",
+              "level": [28, 31]
+            },
+            {
+              "template": 60166077,
+              "name": "siog waylayer",
+              "level": [27, 29]
+            }
+          ],
+          "success": "The fold is clear - but from the far wall a siog in a ranger's stolen cloak steps out.",
+          "fail": "The siog hold the fold. Ronan sounds the retreat.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 10, "copper_per_level": 90 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Daol of the Stolen Cloak",
+          "objective": "Defeat Daol, the siog war-leader",
+          "announce": "Daol, who has worn a dead ranger's cloak these ten years, will not give up the fold. Bring him down.",
+          "center": [1010, 620, 95.1],
+          "radius": 80,
+          "time_s": 1500,
+          "boss": {
+            "template": 60166076,
+            "name": "Daol of the Stolen Cloak",
+            "level": 34,
+            "size": 64,
+            "pos": [1015, 625, 96.7],
+            "health_mult": 6
+          },
+          "adds": {
+            "every_s": 35,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60166074,
+                "name": "siog seeker",
+                "level": [29, 31]
+              }
+            ]
+          },
+          "success": "Daol falls. Ronan takes back the ranger's cloak and plants the banner of Druim Cain in the fold.",
+          "fail": "Daol drives the rangers out of the fold.",
+          "on_success": "d4",
+          "on_fail": "end",
+          "reward": { "xp_pct": 15, "copper_per_level": 150 }
+        },
+        {
+          "id": "d4",
+          "type": "defend",
+          "name": "Hold the Fold",
+          "objective": "Keep Captain Ronan alive while the banner stands",
+          "announce": "The siog are coming back for the fold. Hold it until they break!",
+          "center": [1000, 610, 88.7],
+          "radius": 70,
+          "duration_s": 150,
+          "protect_leader": true,
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1080, 600, 130.5],
+              [1000, 700, 70.8],
+              [930, 650, 62.6]
+            ],
+            "mobs": [
+              {
+                "template": 60166074,
+                "name": "siog seeker",
+                "level": [29, 32]
+              },
+              {
+                "template": 60166077,
+                "name": "siog waylayer",
+                "level": [28, 30]
+              }
+            ]
+          },
+          "success": "The siog break and scatter into the hills. The fold belongs to Hibernia again.",
+          "fail": "Captain Ronan falls under the banner. The siog take back the fold.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 200,
+            "items": [
+              { "id": "nu206_druim_cain_ranger_s_mantle", "gold_chance": 45, "silver_chance": 20 }
+            ]
+          }
         }
       ]
     }

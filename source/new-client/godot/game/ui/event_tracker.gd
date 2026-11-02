@@ -2,7 +2,8 @@ extends Control
 ## Dynamic events (owner 2026-11-01: GW2-style events in every zone). The server (scripts/dynamicevents) sends the
 ## events of your zone every two seconds as a "#EV|" system line: a JSON list of
 ##   {id, title, stage, kind, objective, line, progress 0..1, time_left s, x, y (zone metres), r (m), zone, levels,
-##    near, state: active | success | fail}.
+##    near, scaled (the level its monsters came at), state: active | next (resting before the next stage) | dormant
+##    (a disturbance: hint, waiting for someone to come near) | giver (giver: an NPC who'd lead you) | success | fail}.
 ## The tracker (top right) shows the events you are at - title, stage, objective, a progress bar and the time left -
 ## and below them one line for each other event in the zone with its distance and direction; a finished one shows its
 ## outcome for a few seconds. The map draws them all (MapWindow).
@@ -17,6 +18,8 @@ const DIM := Color(0.75, 0.72, 0.64)
 const BAR := Color(0.95, 0.55, 0.12)
 const WIN := Color(0.45, 0.95, 0.4)
 const LOSE := Color(0.95, 0.35, 0.3)
+const HINT := Color(0.95, 0.85, 0.45)                 # a disturbance, waiting for someone to come near
+const GIVER := Color(0.35, 0.85, 1.0)                 # someone who'd lead you, if you ask
 
 var player: Node3D
 var current_zone := -1
@@ -33,6 +36,13 @@ static func in_zone(zone_id: int) -> Array:
 	if Time.get_ticks_msec() - received_ms > 8000:
 		return []                                       # (the server stopped telling: nothing is running)
 	return events.filter(func(e): return int(e.get("zone", -1)) == zone_id and e.has("x"))
+
+
+## The names of the NPCs who'd lead you into an event now (QuestMarkers rings them).
+static func givers() -> Array:
+	if Time.get_ticks_msec() - received_ms > 8000:
+		return []
+	return events.filter(func(e): return String(e.get("state", "")) == "giver").map(func(e): return String(e.get("giver", "")))
 
 
 func _ready() -> void:
@@ -66,13 +76,14 @@ func _draw() -> void:
 	var far: Array = []
 	for e in events:
 		var st := String(e.get("state", "active"))
-		if st != "active" or bool(e.get("near", false)):
+		if st in ["success", "fail"] or (st in ["active", "next"] and bool(e.get("near", false))):
 			near.append(e)
 		else:
 			far.append(e)
 	var h := 0.0
 	for e in near:
-		h += 74.0 if String(e.get("state", "active")) == "active" else 34.0
+		var st := String(e.get("state", "active"))
+		h += 74.0 if st == "active" else (60.0 if st == "next" else 34.0)
 	if not far.is_empty():
 		h += 16.0 + far.size() * 13.0
 	draw_rect(Rect2(0, 0, W, h + 6), Color(0.02, 0.02, 0.03, 0.62))
@@ -81,14 +92,25 @@ func _draw() -> void:
 	for e in near:
 		var st := String(e.get("state", "active"))
 		_text(font, Vector2(8, y + 11), String(e.get("title", "")), 10, GOLD)
-		if st != "active":
+		if st in ["success", "fail"]:
 			_text(thin, Vector2(8, y + 25), "Event complete" if st == "success" else "Event failed", 9, WIN if st == "success" else LOSE)
 			y += 34.0
 			continue
 		var lv: Array = e.get("levels", [])
 		if lv.size() == 2:
 			var tag := "%d-%d" % [int(lv[0]), int(lv[1])]
+			if int(e.get("scaled", 0)) > int(lv[1]):
+				tag = "scaled to %d" % int(e.scaled)       # its monsters came up to the people here
 			_text(thin, Vector2(W - 8 - thin.get_string_size(tag, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x, y + 11), tag, 8, DIM)
+		var t := int(e.get("time_left", 0))
+		var clock := "%d:%02d" % [t / 60, t % 60]
+		if st == "next":
+			_text(font, Vector2(8, y + 25), "Next: " + String(e.get("stage", "")), 9, CREAM)
+			_text(thin, Vector2(8, y + 38), _fit(thin, String(e.get("objective", "")), 8, W - 16), 8, DIM)
+			_text(thin, Vector2(8, y + 52), String(e.get("line", "")), 8, WIN)
+			_text(thin, Vector2(W - 8 - thin.get_string_size(clock, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x, y + 52), clock, 8, CREAM)
+			y += 60.0
+			continue
 		_text(font, Vector2(8, y + 25), String(e.get("stage", "")), 9, CREAM)
 		_text(thin, Vector2(8, y + 38), _fit(thin, String(e.get("objective", "")), 8, W - 16), 8, DIM)
 		var p := clampf(float(e.get("progress", 0.0)), 0.0, 1.0)
@@ -96,8 +118,6 @@ func _draw() -> void:
 		draw_rect(bar, Color(0.1, 0.08, 0.05, 0.9))
 		draw_rect(Rect2(bar.position, Vector2(bar.size.x * p, bar.size.y)), BAR)
 		draw_rect(bar, Color(0.6, 0.5, 0.3, 0.9), false, 1.0)
-		var t := int(e.get("time_left", 0))
-		var clock := "%d:%02d" % [t / 60, t % 60]
 		_text(thin, Vector2(8, y + 65), _fit(thin, String(e.get("line", "")), 8, W - 50), 8, CREAM)
 		_text(thin, Vector2(W - 8 - thin.get_string_size(clock, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x, y + 65), clock, 8, CREAM)
 		y += 74.0
@@ -105,11 +125,15 @@ func _draw() -> void:
 		_text(font, Vector2(8, y + 11), "EVENTS IN THIS ZONE", 8, DIM)
 		y += 16.0
 		for e in far:
+			var st := String(e.get("state", "active"))
 			var where := ""
-			if me != Vector2.INF and int(e.get("zone", -1)) == current_zone:
+			if me != Vector2.INF and int(e.get("zone", -1)) == current_zone and e.has("x"):
 				var d := Vector2(float(e.x), float(e.y)) - me
 				where = "%d m %s" % [int(d.length()), _dir(d)]
-			_text(thin, Vector2(10, y + 9), _fit(thin, String(e.get("title", "")), 8, W - 70), 8, CREAM)
+			# a running one by its title; a disturbance by what you'd notice; a giver by who is asking
+			var line := String(e.get("hint", "")) if st in ["dormant", "giver"] else String(e.get("title", ""))
+			var col := HINT if st == "dormant" else (GIVER if st == "giver" else CREAM)
+			_text(thin, Vector2(10, y + 9), _fit(thin, line, 8, W - 70), 8, col)
 			_text(thin, Vector2(W - 8 - thin.get_string_size(where, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x, y + 9), where, 8, GOLD)
 			y += 13.0
 
