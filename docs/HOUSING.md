@@ -27,7 +27,10 @@ pass as the rest of the world (`pipeline/upscale_built.py`, for content first bu
 
 ## Your house
 
-- **Left click the door** to go in, the door inside to come out.
+- **Left click the door** to go in, the door inside to come out. In Action Combat, the **interact key** (F) does the
+  same: the door (or the house) under the crosshair, else the nearest door a few metres in front of you.
+- Torches, candles, lamps and hearths give light - the house's own wall sconces and the furniture you place (the four
+  wall torches, the candle tables, the tiki torch, the forge).
 - **Right click the house** (or the door inside) for its menu:
   - outside: Enter, the garden shop, the exterior looks (roof, walls, door, supports, porch, awning, guild banner and
     shield), deeds, house information, lockbox;

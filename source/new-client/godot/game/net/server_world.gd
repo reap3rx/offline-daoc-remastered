@@ -1841,6 +1841,64 @@ func house_click(cam: Camera3D, screen_pos: Vector2, right: bool) -> bool:
 	return true
 
 
+## Action Combat's interact key (owner 2026-11-02: "the interact button needs to allow you to go in the house"): the
+## house under the crosshair - its door or its walls go in, the door inside goes out - else the nearest door within a
+## few metres in front of you (the one inside when you're in). True when it did.
+func house_interact(cam: Camera3D, screen_pos: Vector2, from: Vector3) -> bool:
+	if Server.client == null:
+		return false
+	var h := house_at(cam, screen_pos)
+	if not h.is_empty() and from.distance_to(h.at) <= 8.0:
+		match String(h.part):
+			"door", "body":
+				Server.client.call("HouseEnterLeave", int(h.number), 1)
+				return true
+			"exit":
+				Server.client.call("HouseEnterLeave", int(h.number), 0)
+				return true
+	var best := -1
+	var leave := false
+	var best_d := 6.0
+	var cands := []
+	if interior and is_instance_valid(interior):
+		cands.append([interior, int(interior.get_meta("house_number", -1))])
+	else:
+		for num in houses:
+			var hn: Node3D = houses[num]
+			if hn and is_instance_valid(hn) and hn.global_position.distance_to(from) < 40.0:
+				cands.append([hn, int(num)])
+	for c in cands:
+		var at = _door_at(c[0])
+		if at == null:
+			continue
+		var d := Vector2((at as Vector3).x - from.x, (at as Vector3).z - from.z).length()
+		if d < best_d and absf((at as Vector3).y - from.y) < 4.0:
+			best_d = d
+			best = int(c[1])
+			leave = c[0] == interior
+	if best < 0:
+		return false
+	Server.client.call("HouseEnterLeave", best, 0 if leave else 1)
+	return true
+
+
+## The middle of a house's (or an interior's) door click shape, in world space; null without one.
+func _door_at(house: Node3D):
+	var body := house.find_child("HouseDoor", true, false) as StaticBody3D
+	if body == null:
+		return null
+	if not body.has_meta("door_local"):
+		var mid := Vector3.ZERO
+		var cs := body.get_child(0) as CollisionShape3D if body.get_child_count() > 0 else null
+		var faces: PackedVector3Array = (cs.shape as ConcavePolygonShape3D).get_faces() if cs and cs.shape is ConcavePolygonShape3D else PackedVector3Array()
+		if faces.is_empty():
+			return null
+		for v in faces:
+			mid += v
+		body.set_meta("door_local", cs.transform * (mid / faces.size()))
+	return body.global_transform * (body.get_meta("door_local") as Vector3)
+
+
 ## The house's menu: outside - go in, the garden shop, its looks, deeds, information, lockbox; inside - go out, the
 ## furniture shop, the interior's looks, the hookpoint shops, show the hookpoints, information, lockbox.
 func house_menu(num: int) -> void:
@@ -2393,7 +2451,9 @@ func _dress_mounts() -> void:
 				(m as Node3D).queue_free()
 			(v as Node).remove_meta("mount")
 			if (v as Npc).model:
-				(v as Npc).model.position.y = 0.0
+				(v as Npc).model.position = Vector3.ZERO
+			if (v as Npc).anim:
+				(v as Npc).anim.speed_scale = 1.0
 		if st and st.ride_clip == "ride_horse" and not _riders.has(oid):
 			st.ride_clip = ""
 		_mounted_views.erase(oid)
@@ -2411,11 +2471,12 @@ func _dress_mounts() -> void:
 			_mounted_views[oid] = v
 		var mn: Node3D = v.get_meta("mount")
 		st.ride_clip = "ride_horse"
-		if v.model:
-			v.model.position.y = Mounts.seat(mn)
 		var mv: Dictionary = _mover.get(st, {})
 		var spd := float(mv.get("speed", 0.0)) * 0.025 if st.mode == NpcState.Mode.WALK else 0.0
 		Mounts.animate(mn, spd)
+		if v.model:
+			v.model.position = Mounts.seat_point(mn)
+		Mounts.rider_pose(v.anim, mn, spd)
 
 
 func _seat_riders() -> void:

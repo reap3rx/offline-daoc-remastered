@@ -13,6 +13,7 @@ level 50 (350 gold). A horse's level is also its speed tier (server properties `
   best horse in your backpack you can ride goes into the Horse slot. Calling takes five seconds standing still, out of
   combat; not in dungeons, capitals or instances, and in RvR only a horse above level 35. Shift+H again (or /dismount)
   gets you off.
+- You sit in the horse's saddle; standing still you hold the riding pose, moving you ride in step with its gait.
 - You steer as always - modern or classic movement, mouse and keys, jumping - at the horse's speed. The horse walks,
   trots and gallops under you at your pace and you sit in its saddle.
 - **Action Combat**: a swing, a dodge, a parry / block or drawing a bow gets you off at once and plays on foot (the

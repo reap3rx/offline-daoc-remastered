@@ -897,7 +897,9 @@ func set_mount(n: Node3D) -> void:
 		_apply_model_yaw()
 	else:
 		if _model:
-			_model.position.y = 0.0
+			_model.position = Vector3.ZERO
+		if _anim:
+			_anim.speed_scale = 1.0
 		_play("idle")
 
 
@@ -1274,12 +1276,11 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 		# on your horse: you sit (ride_horse) - no lean, no run cycle - and the horse's legs follow the ground speed
 		_body_offset = 0.0
 		_apply_model_yaw()
-		if _anim and _anim.has_animation("ride_horse") and _anim.current_animation != "ride_horse":
-			_anim.get_animation("ride_horse").loop_mode = Animation.LOOP_LINEAR
-			_anim.play("ride_horse", 0.2)
+		var ground := Vector2(velocity.x, velocity.z).length()
+		Mounts.animate(mount, ground)
+		Mounts.rider_pose(_anim, mount, ground)
 		if _model:
-			_model.position.y = Mounts.seat(mount)
-		Mounts.animate(mount, Vector2(velocity.x, velocity.z).length())
+			_model.position = Mounts.seat_point(mount)
 		return
 	# diagonal movement leans the body toward the travel direction (WoW turns the legs 45 degrees)
 	# pure strafing turns the body most of the way toward the side and keeps the run cycle going: the client's own

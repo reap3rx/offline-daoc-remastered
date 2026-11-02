@@ -581,6 +581,8 @@ func _interact() -> void:
 	if String(picked.get("kind", "")) == "door" and viewer._click_door(centre):
 		return
 	var sw = npcs if npcs and npcs.has_method("click_object") else null
+	if sw and sw.has_method("house_interact") and sw.house_interact(p.camera, centre, p.global_position):
+		return                                         # a house's door: in or out
 	if sw and sw.click_object(p.camera, centre):
 		sw.get_object()
 		return

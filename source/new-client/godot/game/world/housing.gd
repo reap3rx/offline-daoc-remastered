@@ -78,6 +78,24 @@ static func house_yaw(heading_degrees: int) -> float:
 
 # ---------------------------------------------------------------- building
 
+const HouseLight := preload("res://game/world/house_light.gd")
+## The housing models' light sources, by texture (content/housing: the interiors' wall sconces are fireshell3, the
+## Albion / Hibernian lamps lampglow and cndlflame, Midgard's hearths coals_hd / coalstones_hd; the furniture's torches,
+## candle tables, tiki torch and forge the same) -> kind: [colour, range m, energy, flicker]. Indoors there is no sun:
+## these are what light a room.
+const LIGHT_TEXTURES := {
+	"fireshell3": "torch", "tiki_flame": "torch", "cndlflame": "candle", "lampglow": "lantern", "lanterntex1": "lantern",
+	"coals_hd": "fire", "coalstones_hd": "fire", "coals": "fire", "midcoals": "fire", "coalstones": "fire", "a_coals": "fire",
+}
+const LIGHT_KINDS := {
+	"torch": [Color(1.0, 0.64, 0.32), 10.0, 2.6, 0.12],
+	"candle": [Color(1.0, 0.76, 0.48), 4.0, 1.0, 0.1],
+	"lantern": [Color(1.0, 0.72, 0.42), 6.5, 1.6, 0.05],
+	"fire": [Color(1.0, 0.55, 0.25), 11.0, 3.2, 0.3],
+}
+const LIGHT_MERGE_M := 0.9                # a sconce's flame and its glow halo: one light
+
+
 ## A house of this model with its looks (the HouseCreate dictionary), collision and click bodies (meta "house_part":
 ## "door" / "body"). Set the root's meta "house_number" after.
 static func make_house(model: int, look: Dictionary) -> Node3D:
@@ -143,6 +161,7 @@ static func apply_look(root: Node3D, look: Dictionary) -> void:
 		if t == "tent" and v:
 			_tint(mi, int(look.get("porch_roof_color", 0)))
 	_wood(root, int(look.get("truss", 0)))
+	_sync_lights(root)
 
 
 ## The interior's looks: the front door's style, the carpets (Rug1..4Color: 0 none), the indoor banner / shield.
@@ -163,6 +182,19 @@ static func apply_interior_look(root: Node3D, look: Dictionary) -> void:
 		elif t == "shields":
 			v = (int(look.get("emblem_flags", 0)) & 2) != 0
 		mi.visible = v
+	_sync_lights(root)
+
+
+## A lamp that belongs to a style's piece (a tagged mesh) burns only while that piece shows.
+static func _sync_lights(root: Node3D) -> void:
+	var shown := {}
+	for mi in _meshes(root):
+		var t := String(mi.get_meta("tag", ""))
+		if t != "" and mi.visible:
+			shown[t] = true
+	for o in root.find_children("HouseLight*", "OmniLight3D", false, false):
+		var t := String(o.get_meta("tag", ""))
+		o.visible = t == "" or shown.has(t)
 
 
 static func _meshes(root: Node3D) -> Array:
@@ -219,6 +251,7 @@ static func _make(file: String, walls: bool, door_part: String) -> Node3D:
 		mi.set_meta("tag", p.tag)
 		mi.set_meta("specs", p.specs)
 		root.add_child(mi)
+	add_lights(root, parts.get("lights", []))
 	if walls:
 		root.add_child(_body("HouseWalls", LAYER_WALL, parts.walls))
 		root.add_child(_body("HouseFloors", LAYER_FLOOR, parts.floors))
@@ -266,6 +299,7 @@ static func _load(path: String) -> Dictionary:
 	var seen := PackedVector3Array()
 	var door_faces := PackedVector3Array()
 	var planes := {}
+	var lights := []                              # [{at, kind, tag}] (model space)
 	for nd in data.nodes:
 		var nm := String(nd.name)
 		var xf: Transform3D = nd.xform
@@ -308,6 +342,12 @@ static func _load(path: String) -> Dictionary:
 			else:
 				sspecs.append(null)
 		meshes.append({"mesh": mesh, "xform": xf, "tag": tag, "specs": sspecs})
+		for sf in nd.surfaces:
+			var li := int(sf[2])
+			var tex := String((specs[li] as Dictionary).get("slots", {}).get("base", {}).get("tex", "")).to_lower() \
+					if li >= 0 and li < specs.size() and specs[li] is Dictionary else ""
+			if LIGHT_TEXTURES.has(tex):
+				_light_spots(lights, (sf[0] as Array)[Mesh.ARRAY_VERTEX], xf, String(LIGHT_TEXTURES[tex]), tag)
 		if not door and not tag.begins_with("carpet") and not tag.begins_with("door"):
 			seen.append_array(nd.faces)
 	var walls := ConcavePolygonShape3D.new()
@@ -320,7 +360,8 @@ static func _load(path: String) -> Dictionary:
 		door_shape = ConcavePolygonShape3D.new()
 		door_shape.backface_collision = true
 		door_shape.set_faces(door_faces)
-	var out := {"meshes": meshes, "walls": walls, "floors": floors, "door_shape": door_shape, "planes": planes}
+	var out := {"meshes": meshes, "walls": walls, "floors": floors, "door_shape": door_shape, "planes": planes,
+			"lights": lights}
 	_parts[path] = out
 	return out
 
@@ -365,3 +406,68 @@ static func wall_frame(faces: PackedVector3Array) -> Dictionary:
 	var o: Vector3 = faces[0]
 	var origin := u * umin + Vector3.UP * ymin + n * o.dot(n)
 	return {"origin": origin, "u": u, "up": Vector3.UP, "normal": n}
+
+
+# ---------------------------------------------------------------- lights
+
+## The clumps of one surface's vertices (model space) as light spots: a flame's light just above its top, a lantern's
+## in its middle, a hearth's a little above its coals. Spots within LIGHT_MERGE_M of one already found are the same
+## lamp (a sconce's flame and its glow) - the brighter kind wins.
+static func _light_spots(spots: Array, verts: PackedVector3Array, xf: Transform3D, kind: String, tag: String) -> void:
+	var clumps: Array = []                                   # [aabb]
+	for v in verts:
+		var p := xf * v
+		var hit := false
+		for i in clumps.size():
+			var box: AABB = clumps[i]
+			if box.grow(0.5).has_point(p):
+				clumps[i] = box.expand(p)
+				hit = true
+				break
+		if not hit:
+			clumps.append(AABB(p, Vector3.ZERO))
+	var order := ["candle", "lantern", "torch", "fire"]
+	for box in clumps:
+		var b: AABB = box
+		var c := b.get_center()
+		var at := c
+		match kind:
+			"torch", "candle":
+				at = Vector3(c.x, b.end.y + 0.08, c.z)
+			"fire":
+				at = Vector3(c.x, b.end.y + 0.3, c.z)
+		var merged := false
+		for sp in spots:
+			if (sp.at as Vector3).distance_to(at) < LIGHT_MERGE_M:
+				if order.find(kind) > order.find(String(sp.kind)):
+					sp.kind = kind
+					sp.at = at
+				merged = true
+				break
+		if not merged:
+			spots.append({"at": at, "kind": kind, "tag": tag})
+
+
+## The model's lamps as lights under root (a style's own lamp - a tagged piece - shows only with its piece:
+## apply_look hides the light with the mesh, as the light hangs under it).
+static func add_lights(root: Node3D, spots: Array) -> void:
+	var i := 0
+	for sp in spots:
+		var k: Array = LIGHT_KINDS.get(String(sp.kind), LIGHT_KINDS.torch)
+		var o: OmniLight3D = HouseLight.new()
+		o.name = "HouseLight%d" % i
+		i += 1
+		o.position = sp.at
+		o.light_color = k[0]
+		o.omni_range = float(k[1])
+		o.omni_attenuation = 1.2
+		o.light_energy = float(k[2])
+		o.shadow_enabled = false
+		o.distance_fade_enabled = true
+		o.distance_fade_begin = 50.0
+		o.distance_fade_length = 20.0
+		o.set("base", float(k[2]))
+		o.set("flicker", float(k[3]))
+		o.set("flick_seed", randf() * 100.0)
+		o.set_meta("tag", String(sp.get("tag", "")))
+		root.add_child(o)

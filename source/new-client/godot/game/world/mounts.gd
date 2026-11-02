@@ -114,14 +114,41 @@ static func make(horse_id: int, mgr: NpcManager, models: Dictionary) -> Node3D:
 
 ## The saddle's height (metres) above the horse's feet: its model's saddle node once posed, else the default.
 static func seat(holder: Node3D) -> float:
-	if holder == null or not holder.is_inside_tree():
-		return SEAT_DEFAULT
-	var sn := holder.find_child("saddle*", true, false) as Node3D
-	if sn:
-		var y := (holder.global_transform.affine_inverse() * sn.global_position).y
-		if y > 0.5:
-			holder.set_meta("seat", y)
-	return float(holder.get_meta("seat", SEAT_DEFAULT))
+	return seat_point(holder).y
+
+
+## Where the rider sits, in the holder's parent's space (the rider's own space: the horse hangs under the rider's
+## node): the model's saddle node - forward / back as well as up, so the rider sits in the saddle, not on the
+## withers (owner 2026-11-02 clip) - else straight up by the default height.
+static func seat_point(holder: Node3D) -> Vector3:
+	if holder == null:
+		return Vector3(0, SEAT_DEFAULT, 0)
+	if holder.is_inside_tree():
+		var sn := holder.find_child("saddle*", true, false) as Node3D
+		if sn:
+			var local := holder.global_transform.affine_inverse() * sn.global_position
+			if local.y > 0.5:
+				holder.set_meta("seat", local.y)
+				holder.set_meta("seat_local", local)
+	var l: Vector3 = holder.get_meta("seat_local", Vector3(0, float(holder.get_meta("seat", SEAT_DEFAULT)), 0))
+	return holder.transform * l
+
+
+## The rider's ride_horse pose kept in step with the horse: at the horse's own pace while it moves, held still while
+## it stands (owner 2026-11-02: "bouncing around as if they're riding even when standing still").
+static func rider_pose(anim: AnimationPlayer, holder: Node3D, speed_mps: float) -> void:
+	if anim == null or not anim.has_animation("ride_horse"):
+		return
+	if anim.current_animation != "ride_horse":
+		anim.get_animation("ride_horse").loop_mode = Animation.LOOP_LINEAR
+		anim.play("ride_horse", 0.2)
+	if speed_mps <= 0.3:
+		if anim.speed_scale != 0.0:
+			anim.seek(0.0, true)
+			anim.speed_scale = 0.0
+		return
+	var hp: AnimationPlayer = holder.get_meta("anim", null) if holder else null
+	anim.speed_scale = clampf(hp.speed_scale if hp else 1.0, 0.5, 2.0) if speed_mps > 4.5 else 0.6
 
 
 ## The horse's legs: idle, walk or run, the run's pace matched to the ground speed (monsters.json strides).
