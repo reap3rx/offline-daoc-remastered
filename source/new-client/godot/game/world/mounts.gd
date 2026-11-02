@@ -5,18 +5,16 @@ extends RefCounted
 ## tail; the rider keeps moving itself (you: the modern / classic movement as ever, at the server's speed - MaxSpeed's
 ## percent; bots: their server positions) while a horse model walks under it and the rider sits in the saddle.
 ##
-## horsemap.csv names a Catacombs monster model per horse (2033 standard, 2035 heavy, 2037 unicorn ...), which the
-## client hasn't built; until it does, each horse is drawn with the nearest built one: the classic saddled mount
-## (Classic_Body01_Mount_Horse, brown), the old horse figure's colours (black, white, speckled, dark), the unicorns,
-## the nightmare, the flying mounts.
+## horsemap.csv names a Catacombs monster model per horse (2033 standard, 2035 heavy, 2037 unicorn ...) - part horses
+## (Body01_Mount_Horse, its saddle and barding) whose meshes this client doesn't carry; monsters.csv draws them all
+## with the classic saddled horse (Classic_Body01_Mount_Horse), so the standard and heavy horses are that horse in
+## their own coat: pipeline/build_mount_coats.py writes every coat that fits its body (brown, black, white, grey,
+## palomino, spotted, chocolate, clydesdale, appaloosa, dappled grey, leopard, duns, shire dappled, strawberry roan,
+## arboreal) beside it, with mount_coats.json (horse id -> coat), and make() swaps it in. The unicorns, the nightmare,
+## the epic and the flying mounts keep the nearest model of their own.
 
 const SADDLED := "2173"                       # Brown Horse w/ Saddle (Classic_Body01_Mount_Horse)
 const BY_ID := {
-	2: "450", 18: "450",                      # black
-	3: "447", 19: "447", 4: "447", 20: "447", # white, grey
-	6: "448", 22: "448", 9: "448", 25: "448", 11: "448", 26: "448",   # spotted, appaloosa, leopard: speckled
-	10: "448", 14: "448", 15: "448",          # dappled grey, shire dappled, strawberry roan
-	7: "449", 23: "449",                      # chocolate: dark brown
 	33: "463", 35: "463", 36: "463", 37: "463", 38: "463", 39: "463", 40: "463", 41: "463", 55: "463",   # unicorns
 	34: "464",                                # black unicorn
 	49: "2224", 50: "2227", 53: "2231",      # nightmare, undead, flame
@@ -24,11 +22,62 @@ const BY_ID := {
 	56: "2257", 54: "2258",                   # sea horse, earth
 	61: "1207", 62: "1235", 63: "1236",       # dragonfly, wyvern, gryphon
 }
+const COATS_JSON := "res://content/monsters/mount_coats.json"
+const COAT_DIR := "res://content/monsters/classic_body01_mount_horse__horse_medium_brown/coats"
 const SEAT_DEFAULT := 1.35                    # metres up to the saddle when the model has no saddle node
+
+
+static var _coats := {}                      # horse id (String) -> coat name; read once
+static var _coat_tex := {}                   # coat name -> ImageTexture (shared by every horse in that coat)
 
 
 static func model_key(horse_id: int) -> String:
 	return String(BY_ID.get(horse_id, SADDLED))
+
+
+## The coat a horse wears on the saddled horse ("" for its own brown, or for a horse drawn with another model).
+static func coat(horse_id: int) -> String:
+	if BY_ID.has(horse_id):
+		return ""
+	if _coats.is_empty() and FileAccess.file_exists(COATS_JSON):
+		var d = JSON.parse_string(FileAccess.get_file_as_string(COATS_JSON))
+		_coats = d if d is Dictionary else {"": ""}
+	var c := String(_coats.get(str(horse_id), ""))
+	return "" if c == "horse_medium_brown" else c
+
+
+static func _coat_texture(name: String) -> Texture2D:
+	if _coat_tex.has(name):
+		return _coat_tex[name]
+	var tex: Texture2D = null
+	for sub in ["x4plus", "original"]:
+		var path := "%s/%s/%s.png" % [COAT_DIR, sub, name]
+		if FileAccess.file_exists(path):
+			var img := Image.load_from_file(ProjectSettings.globalize_path(path))
+			if img:
+				img.generate_mipmaps()
+				tex = ImageTexture.create_from_image(img)
+				break
+	_coat_tex[name] = tex
+	return tex
+
+
+## Every surface of the horse's model drawn with the coat (its own copy of each material, the shared model's stay).
+static func _dress(model: Node, name: String) -> void:
+	var tex := _coat_texture(name)
+	if tex == null:
+		return
+	for mi in model.find_children("*", "MeshInstance3D", true, false):
+		var m := mi as MeshInstance3D
+		if m.mesh == null:
+			continue
+		for i in m.mesh.get_surface_count():
+			var mat := m.get_active_material(i) as BaseMaterial3D
+			if mat == null:
+				continue
+			var own := mat.duplicate() as BaseMaterial3D
+			own.albedo_texture = tex
+			m.set_surface_override_material(i, own)
 
 
 ## A new horse under a rider: the monster model (monsters.json) in a holder, meta "anim" (its AnimationPlayer),
@@ -40,6 +89,9 @@ static func make(horse_id: int, mgr: NpcManager, models: Dictionary) -> Node3D:
 	var m := mgr.instance_model(String(info.gltf))
 	if m == null:
 		return null
+	var hide := coat(horse_id) if model_key(horse_id) == SADDLED else ""
+	if hide != "":
+		_dress(m, hide)
 	var holder := Node3D.new()
 	holder.name = "Mount"
 	m.scale *= float(info.get("scale", 1.0))
@@ -55,6 +107,7 @@ static func make(horse_id: int, mgr: NpcManager, models: Dictionary) -> Node3D:
 	holder.set_meta("anim", ap)
 	holder.set_meta("info", info)
 	holder.set_meta("horse", horse_id)
+	holder.set_meta("coat", hide)
 	holder.set_meta("seat", SEAT_DEFAULT * float(info.get("scale", 1.0)))
 	return holder
 

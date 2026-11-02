@@ -29,10 +29,20 @@ level 50 (350 gold). A horse's level is also its speed tier (server properties `
 ## How it shows
 
 The server says who rides what with ControlledHorse (0x4E) - the bots' through the same packet. The client
-(`game/world/mounts.gd`) draws each horse with the nearest model it has built: the classic saddled horse, the old horse
-figure's colours, the unicorns, the nightmare, the flying mounts. horsemap.csv's own Catacombs horse models (2033 and
-on) aren't built yet.
+(`game/world/mounts.gd`) draws each horse with the model it has built:
+
+- **Standard and heavy horses**: the classic saddled horse (Classic_Body01_Mount_Horse - what monsters.csv draws the
+  Catacombs horses 2033 / 2035 with) in the horse's own coat. horsemap.csv gives each horse a coat column of
+  fig3haircolormap.csv (rows 48 Standard, 50 Heavy, 52 Unicorn); `pipeline/build_mount_coats.py` writes every coat
+  that fits that body (brown, black, white, grey, palomino, spotted, chocolate, Clydesdale, appaloosa, dappled grey,
+  leopard, primitive and red dun, Shire dappled, strawberry roan, arboreal; Real-ESRGAN x4) beside the horse's model
+  with `content/monsters/mount_coats.json`, and the client paints the horse with it.
+- **Unicorns, nightmare, undead, epic, sea horse, flying mounts**: the nearest model of their own (the classic
+  unicorns, the nightmare ...). Their Catacombs coats (rainbow, nightmare, undead) belong to other bodies.
+- The Catacombs part horses themselves (Body01_Mount_Horse with its Armor01 saddle and Barding01 barding parts) are not
+  in this client - only their `cathorse_*.kfa` clips are - so barding has no mesh to draw yet.
 
 ## Next
 
-Barding and saddles (ControlledHorse carries them), the Catacombs horse models and their colours, saddlebags.
+Barding and saddle colours (ControlledHorse carries them; the part meshes would have to come from a later client),
+saddlebags.
