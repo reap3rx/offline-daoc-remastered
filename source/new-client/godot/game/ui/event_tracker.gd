@@ -66,6 +66,23 @@ static func _dir(v: Vector2) -> String:
 	return ["N", "NE", "E", "SE", "S", "SW", "W", "NW"][int(round(deg / 45.0)) % 8]
 
 
+## The height the tracker draws now (the modern HUD's quest log sits under it).
+func content_height() -> float:
+	if Time.get_ticks_msec() - received_ms > 8000 or events.is_empty():
+		return 0.0
+	var h := 0.0
+	var far := 0
+	for e in events:
+		var st := String(e.get("state", "active"))
+		if st in ["success", "fail"] or (st in ["active", "next", "occupied"] and bool(e.get("near", false))):
+			h += 74.0 if st in ["active", "occupied"] else (60.0 if st == "next" else 34.0)
+		else:
+			far += 1
+	if far > 0:
+		h += 16.0 + far * 13.0
+	return h + 6.0
+
+
 func _draw() -> void:
 	if Time.get_ticks_msec() - received_ms > 8000 or events.is_empty():
 		return

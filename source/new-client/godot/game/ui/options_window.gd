@@ -477,6 +477,12 @@ func _controls() -> void:
 
 func _interface() -> void:
 	_heading("INTERFACE")
+	# the modern HUD (owner 2026-11-02: a GW2-style layout with a DAoC feel) or the 1.65 windows
+	var style := String(settings.get_value("interface", "style", "classic"))
+	_row("STYLE", _choice(["Classic", "Modern"], 1 if style == "modern" else 0, func(i: int):
+		if ui:
+			ui.set_style("modern" if i == 1 else "classic")))
+	_hint("CLASSIC: THE 1.65 WINDOWS. MODERN: THE HEALTH ORB WITH THE ENDURANCE AND POWER ARCS, THE PARTY TOP LEFT, THE EVENTS AND QUESTS TOP RIGHT, THE MINIMAP BOTTOM RIGHT - OVER THE SAME SHEETS AND CHAT.")
 	# the scale applies when the slider is let go (a wheel or key step at once): applied while dragging, the whole
 	# interface - this window and its slider too - grew and shrank under the mouse (a player report 2026-10-17)
 	var dragging := [false]

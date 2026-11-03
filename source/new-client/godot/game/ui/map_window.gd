@@ -142,6 +142,9 @@ func _process(_delta: float) -> void:
 		var want := {"kind": "area", "id": current_zone, "area": i} if i >= 0 else {"kind": "zone", "id": current_zone}
 		if want != shown:
 			_show(want, false)
+		if _view.zoom > 1.0:                                   # zoomed in: keep you in the middle
+			var u := _player_units()
+			_view.centre_on(_view._frac(Vector2(u.x, u.y)))
 	_view.queue_redraw()
 
 
@@ -162,6 +165,8 @@ func _show(what: Dictionary, picked: bool) -> void:
 			title = String(_zone(int(what.id)).get("name", ""))
 			pic = String(_zone(int(what.id)).get("map", ""))
 	_title.text = title.to_upper()
+	if _view.texture != _texture(pic):
+		_view.reset_view()
 	_view.texture = _texture(pic)
 	var idx := _entries.find(what)
 	if idx >= 0 and _pick.selected != idx:
@@ -351,9 +356,79 @@ class MapView extends Control:
 	var window: MapWindow
 	var texture: Texture2D
 	var _hover := -1
+	# the modern map (owner 2026-11-02: "a modern map (zoom, drag, detailed info)"): the wheel zooms about the
+	# pointer up to 6x, the left button drags the zoomed map (a click without a drag still opens a zone on a realm
+	# map), FOLLOW keeps you centred while zoomed, and hovering a mark names it
+	var zoom := 1.0
+	var pan := Vector2.ZERO
+	var _dragging := false
+	var _drag_from := Vector2.ZERO
+	var _moved := false
+	var _info := ""
 
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_STOP
+		clip_contents = true
+
+	func reset_view() -> void:
+		zoom = 1.0
+		pan = Vector2.ZERO
+
+	func _clamp_pan() -> void:
+		pan = pan.clamp(size - size * zoom, Vector2.ZERO)
+
+	## Keeps a fraction of the picture in the middle of the view (FOLLOW while zoomed).
+	func centre_on(frac: Vector2) -> void:
+		if zoom <= 1.0:
+			pan = Vector2.ZERO
+			return
+		pan = size * 0.5 - frac * size * zoom
+		_clamp_pan()
+
+	## A view point as a fraction of the picture.
+	func _view_frac(p: Vector2) -> Vector2:
+		return (p - pan) / (size * zoom)
+
+	## What sits under the pointer: the nearest mark within 8 px - a quest mark, an event, a bot, a companion.
+	func _hover_info(p: Vector2) -> String:
+		var w := window
+		if String(w.shown.get("kind", "")) == "region":
+			return ""
+		var best := [""]                                     # (a lambda captures by value: boxed)
+		var best_d := [8.0]
+		var consider := func(frac: Vector2, what: String) -> void:
+			if frac.x < 0:
+				return
+			var at := pan + frac * size * zoom
+			var d := at.distance_to(p)
+			if d < best_d[0]:
+				best_d[0] = d
+				best[0] = what
+		var z := int(w.shown.get("id", -1))
+		for m in w.zone_quest_marks(z):
+			var kind := String(m.kind)
+			var what: String = {"!": "QUEST AVAILABLE", "?": "QUEST TURN-IN", "o": "QUEST IN PROGRESS", "task": "TASK", "event": "EVENT"}.get(kind, "QUEST STEP")
+			if m.has("name"):
+				what += ": " + String(m.name).to_upper()
+			consider.call(_mark_frac((m.at as Vector2) / 0.025), what)
+		for e in preload("res://game/ui/event_tracker.gd").in_zone(z):
+			var st := String(e.get("state", "active"))
+			var title := String(e.get("hint", "")) if st == "dormant" else (String(e.get("giver", "")) if st == "giver" else String(e.get("title", "")))
+			var line := title.to_upper()
+			if st in ["active", "next", "occupied"]:
+				line += "\n%s" % String(e.get("stage", ""))
+				var t := int(e.get("time_left", 0))
+				line += "  (%d:%02d)" % [t / 60, t % 60] if st != "occupied" else "  (OCCUPIED)"
+			var lv: Array = e.get("levels", [])
+			if lv.size() == 2:
+				line += "\nLEVELS %d-%d" % [int(lv[0]), int(lv[1])]
+			consider.call(_mark_frac(Vector2(float(e.x), float(e.y)) / 0.025), line)
+		if z == w.current_zone:
+			for b in WorldLink.bot_dots():
+				consider.call(_mark_frac(Vector2(b.x, b.z) / 0.025), "A GAMEBOT OF YOUR REALM")
+			for c in WorldLink.companion_dots():
+				consider.call(_mark_frac(Vector2(c.x, c.z) / 0.025), "A COMPANION OF YOURS")
+		return best[0]
 
 	## The fraction (0..1 across the picture) of a spot given in the current zone's units, or (-1, -1) if not shown.
 	func _frac(u: Vector2) -> Vector2:
@@ -411,7 +486,44 @@ class MapView extends Control:
 
 	func _gui_input(event: InputEvent) -> void:
 		var w := window
+		if event is InputEventMouseButton:
+			if event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+				var nz := clampf(zoom * (1.25 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 0.8), 1.0, 6.0)
+				pan = event.position - (event.position - pan) * (nz / zoom)
+				zoom = nz
+				_clamp_pan()
+				queue_redraw()
+				accept_event()
+				return
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				if event.pressed:
+					_dragging = true
+					_moved = false
+					_drag_from = event.position
+					accept_event()
+					return
+				_dragging = false
+				if _moved:
+					accept_event()
+					return
+		if event is InputEventMouseMotion and _dragging and zoom > 1.0:
+			if (event.position - _drag_from).length() > 3.0:
+				_moved = true
+			if _moved:
+				pan += event.relative
+				_clamp_pan()
+				if w.follow:
+					w.follow = false
+					w._follow_btn.set_pressed_no_signal(false)
+				queue_redraw()
+				accept_event()
+				return
 		if String(w.shown.get("kind", "")) != "region":
+			if event is InputEventMouseMotion:
+				var info := _hover_info(event.position)
+				if info != _info:
+					_info = info
+					tooltip_text = info
 			return
 		if event is InputEventMouseMotion:
 			var z := _zone_under(event.position)
@@ -419,14 +531,14 @@ class MapView extends Control:
 				_hover = z
 				tooltip_text = String(w._zone(z).get("name", "")) if z >= 0 else ""
 				queue_redraw()
-		elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		elif event is InputEventMouseButton and not event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			var z := _zone_under(event.position)
 			if z >= 0 and String(w._zone(z).get("map", "")) != "":
 				w._show({"kind": "zone", "id": z}, true)
 				accept_event()
 
 	func _zone_under(p: Vector2) -> int:
-		var at := p / size * 256.0
+		var at := _view_frac(p) * 256.0
 		for q in window._region(int(window.shown.id)).get("zones", []):
 			if Rect2(float(q.left), float(q.top), float(q.width), float(q.height)).has_point(at):
 				return int(q.zone)
@@ -471,7 +583,7 @@ class MapView extends Control:
 	func _draw_events(zone_id: int) -> void:
 		var mr := window.map_rect(zone_id)
 		var font := UiArt.font(true)
-		var fs := maxi(7, int(size.x / 40.0))
+		var fs := maxi(5, int(size.x / 40.0 / zoom))
 		for e in preload("res://game/ui/event_tracker.gd").in_zone(zone_id):
 			var f := _mark_frac(Vector2(float(e.x), float(e.y)) / 0.025)
 			var at := f * size
@@ -499,13 +611,14 @@ class MapView extends Control:
 
 	func _draw() -> void:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0, 0, 0))
+		draw_set_transform(pan, 0.0, Vector2(zoom, zoom))     # the zoomed, dragged picture: everything in its frame
 		if texture:
 			draw_texture_rect(texture, Rect2(Vector2.ZERO, size), false)
 		var w := window
 		if String(w.shown.get("kind", "")) == "region" and _hover >= 0:
 			var sq := w.region_square(int(w.shown.id), _hover)
 			draw_rect(Rect2(sq.position / 256.0 * size, sq.size / 256.0 * size), Color(1.0, 0.85, 0.3), false, 1.5)
-		draw_rect(Rect2(Vector2.ZERO, size), Color(0.45, 0.42, 0.35), false, 1.0)
+		draw_rect(Rect2(Vector2.ZERO, size), Color(0.45, 0.42, 0.35), false, 1.0 / zoom)
 		if String(w.shown.get("kind", "")) == "region":
 			_draw_region_counts()
 		else:

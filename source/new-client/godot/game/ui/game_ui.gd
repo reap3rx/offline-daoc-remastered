@@ -71,6 +71,8 @@ const INFO_W := 160.0                                     # the information wind
 const INFO_WIDE := 320.0                                  # ... for a server text with long lines (/stables routes)
 var _compass_letters: Control
 var _clock: Label
+const ModernHudScript := preload("res://game/ui/modern_hud.gd")
+var modern: Control                          # the modern HUD (Options > INTERFACE > STYLE: MODERN), else null
 var player: Node3D
 var sky: Node                            # SkySystem: the game clock on the time display
 var hidden_all := false
@@ -99,6 +101,8 @@ func _rescale() -> void:
 	root.scale = Vector2(s, s)
 	root.size = vp / s
 	_place_event_tracker()
+	if modern:
+		modern.layout()
 
 
 func _place_event_tracker() -> void:
@@ -473,6 +477,40 @@ func _build() -> void:
 		if player:
 			player.movement_mode = mode)
 	_refresh()
+	set_style(String(_saved("interface", "style", "classic")), false)
+
+
+## CLASSIC: the 1.65 windows. MODERN: the GW2-style HUD (ModernHud) over the shared windows - it parks the classic
+## status, target, mini group and time windows and places the quickbars, compass, effects and event tracker itself;
+## back to CLASSIC they take their saved places again.
+func set_style(style: String, save := true) -> void:
+	if save:
+		var cfg := ConfigFile.new()
+		cfg.load(UiArt.settings_path)
+		cfg.set_value("interface", "style", style)
+		cfg.save(UiArt.settings_path)
+	if style == "modern":
+		if modern == null:
+			modern = ModernHudScript.new()
+			modern.ui = self
+			modern.player = player
+			root.add_child(modern)
+			root.move_child(modern, 1)                     # over the world drop, under the windows
+			if map_window and map_window.visible:
+				map_window.visible = false                 # the minimap takes its corner; M / a click opens it
+		modern.layout()
+		return
+	if modern:
+		modern.queue_free()
+		modern = null
+		for id in ["status", "target", "minigroup", "time", "quickbar1", "quickbar2", "compass"]:
+			if windows.has(id):
+				var w: ClassicWindow = windows[id]
+				w.position = defaults[id][0]
+				w.restore(defaults[id][1])
+		if _effects_bar:
+			_effects_bar.position = client_pos(10, 4)
+		_place_event_tracker()
 
 
 ## The mini group window (default.ini MiniGroup 330,447): a stone strip with one line per member - the power gem
