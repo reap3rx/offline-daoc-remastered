@@ -1162,6 +1162,7 @@ namespace DOL.GS
 
 		/// <summary>The level the database (or the template's roll) gave this monster, before LevelBands; 0 = unbanded.</summary>
 		private byte _unbandedLevel;
+		public byte UnbandedLevel => _unbandedLevel;
 		private byte _bandedTo;                          // the level banding gave it (0: none) - a GM's /mob level since wins
 
 		/// <summary>The zone level bands (gameutils/LevelBands.cs): this monster's level from its original one and its spawn spot.</summary>

@@ -40,7 +40,7 @@ namespace DOL.GS {
                     return loot;
                 }
 
-                int killedcon = owner.GetConLevel(mob);
+                int killedcon = LevelScaling.LootCon(owner, mob);   // by the scaled level (gameutils/LevelScaling.cs)
 
                 //grey con dont drop loot
                 if (killedcon <= -3)

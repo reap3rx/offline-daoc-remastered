@@ -57,14 +57,24 @@ namespace DOL.GS
             public bool Gradient = true;
         }
 
+        public sealed class Start
+        {
+            public string Name;
+            public ushort Region;
+            public int X, Y, Z;
+            public ushort Heading;
+        }
+
         public sealed class Config
         {
             public bool Enabled = true;
+            public Dictionary<string, Start> Starts = new();
             [JsonProperty("gradient_weight")] public double GradientWeight = 0.65;
             [JsonProperty("boss_margin")] public int BossMargin = 8;
             [JsonProperty("boss_extra_max")] public int BossExtraMax = 6;
             [JsonProperty("keep_at_or_above")] public int KeepAtOrAbove = 60;
             [JsonProperty("dungeon_shift_min")] public int DungeonShiftMin = 5;
+            [JsonProperty("dungeon_exclude")] public List<int> DungeonExclude = new();
             public List<Anchor> Anchors = new();
             public Dictionary<string, ZoneBand> Zones = new();
         }
@@ -221,7 +231,8 @@ namespace DOL.GS
             foreach (DbZonePoint zp in GameServer.Database.SelectAllObjects<DbZonePoint>())
             {
                 Region target = WorldMgr.GetRegion(zp.TargetRegion);
-                if (target == null || !target.IsDungeon || _dungeonShift.ContainsKey(zp.TargetRegion))
+                if (target == null || !target.IsDungeon || target.IsCapitalCity || target.IsRvR || _dungeonShift.ContainsKey(zp.TargetRegion) ||
+                    _config.DungeonExclude.Contains(zp.TargetRegion))
                     continue;
                 Zone src = WorldMgr.GetRegion(zp.SourceRegion)?.GetZone(zp.SourceX, zp.SourceY);
                 if (src == null || !_bands.TryGetValue(src.ID, out ZoneBand band) || !_stats.TryGetValue(src.ID, out ZoneStats st))
@@ -241,6 +252,43 @@ namespace DOL.GS
                 log.Info($"Level bands: zone {kv.Key} {b.Name}: was {kv.Value.Levels[0]}-{kv.Value.P50}-{kv.Value.P90} (min/median/p90), " +
                          $"now {b.Min}-{b.Max}{(b.Gradient ? " outward from the towns" : "")}; {kv.Value.Levels.Length} monsters");
             }
+        }
+
+        /// <summary>Where every new character of this realm starts (the realm's hub town), or null: the database's
+        /// StartupLocation as ever.</summary>
+        public static Start StartOf(eRealm realm)
+        {
+            Ensure();
+            return _config?.Enabled == true && _config.Starts != null && _config.Starts.TryGetValue(((int) realm).ToString(), out Start s) &&
+                   s != null && s.Region > 0 ? s : null;
+        }
+
+        /// <summary>A monster's level in the database, before the bands (its live level when not banded).</summary>
+        public static byte UnbandedLevel(GameNPC npc) => npc?.UnbandedLevel > 0 ? npc.UnbandedLevel : npc?.Level ?? 0;
+
+        /// <summary>
+        /// A banded monster's drops at its new level: a named drop with level versions (named_uniques.py's
+        /// &lt;id&gt;_lNN, in fives) comes in the version for the monster's level; other items - period trinkets, quest
+        /// pieces, money - as they are. (ROG drops and money already follow the monster's level.)
+        /// </summary>
+        public static DbItemTemplate[] LootAtLevel(GameNPC mob, DbItemTemplate[] drops)
+        {
+            if (mob == null || drops == null || drops.Length == 0 || !Enabled || mob.UnbandedLevel == 0 || mob.UnbandedLevel == mob.Level)
+                return drops;
+            for (int i = 0; i < drops.Length; i++)
+            {
+                DbItemTemplate d = drops[i];
+                if (d == null || string.IsNullOrEmpty(d.Id_nb))
+                    continue;
+                string id = d.Id_nb;
+                int us = id.LastIndexOf("_l", StringComparison.Ordinal);
+                if (us > 0 && int.TryParse(id[(us + 2)..], out _))
+                    id = id[..us];                       // already a level version: its family
+                DbItemTemplate v = DynamicEvents.StageRuntime.ItemAtLevel(id, mob.Level);
+                if (v != null && v.Id_nb != d.Id_nb)
+                    drops[i] = v;
+            }
+            return drops;
         }
 
         /// <summary>A dynamic event chain's levels mapped as the monsters where it starts.</summary>

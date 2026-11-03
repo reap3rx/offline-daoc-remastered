@@ -85,6 +85,18 @@ namespace DOL.GS.GameEvents
 					break;
 				}
 
+				// the realm's hub town (gameutils/LevelBands.cs: one start per realm, the levels growing outward)
+				if (LevelBands.StartOf((eRealm) ch.Realm) is LevelBands.Start hub && dbStartupLocation?.ClientRegionID != TUTORIAL_REGIONID)
+				{
+					ch.Xpos = hub.X;
+					ch.Ypos = hub.Y;
+					ch.Zpos = hub.Z;
+					ch.Region = hub.Region;
+					ch.Direction = hub.Heading;
+					BindCharacter(ch);
+					return;
+				}
+
 				if (dbStartupLocation == null)
 				{
 					log.WarnFormat("startup location not found: account={0}; char name={1}; region={2}; realm={3}; class={4} ({5}); race={6} ({7}); version={8}",
@@ -213,6 +225,10 @@ namespace DOL.GS.GameEvents
 		{
 			if (locations == null || !IsPlayerRealm(realm))
 				return Array.Empty<StartupLocation>();
+
+			if (LevelBands.StartOf(realm) is LevelBands.Start hub)   // the realm's hub town: new bots start there too
+				return new[] { new StartupLocation { Region = hub.Region, XPos = hub.X, YPos = hub.Y, ZPos = hub.Z, Heading = hub.Heading,
+					RealmID = (int) realm, MinVersion = 0, ClientRegionID = 0 } };
 
 			return locations
 				.Where(location => location != null && location.MinVersion <= (int)GameClient.eClientVersion.Version168)

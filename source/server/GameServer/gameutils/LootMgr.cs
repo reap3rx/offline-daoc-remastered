@@ -429,7 +429,7 @@ namespace DOL.GS
 				}
 			}
 			if (lootList != null)
-				return lootList.GetLoot();
+				return LevelBands.LootAtLevel(mob, lootList.GetLoot());   // a banded monster's named drops at its level
 			else
 				return new DbItemTemplate[0];
 		}
