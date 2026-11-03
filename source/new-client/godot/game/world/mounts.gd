@@ -5,13 +5,12 @@ extends RefCounted
 ## tail; the rider keeps moving itself (you: the modern / classic movement as ever, at the server's speed - MaxSpeed's
 ## percent; bots: their server positions) while a horse model walks under it and the rider sits in the saddle.
 ##
-## horsemap.csv names a Catacombs monster model per horse (2033 standard, 2035 heavy, 2037 unicorn ...) - part horses
-## (Body01_Mount_Horse, its saddle and barding) whose meshes this client doesn't carry; monsters.csv draws them all
-## with the classic saddled horse (Classic_Body01_Mount_Horse), so the standard and heavy horses are that horse in
-## their own coat: pipeline/build_mount_coats.py writes every coat that fits its body (brown, black, white, grey,
-## palomino, spotted, chocolate, clydesdale, appaloosa, dappled grey, leopard, duns, shire dappled, strawberry roan,
-## arboreal) beside it, with mount_coats.json (horse id -> coat), and make() swaps it in. The unicorns, the nightmare,
-## the epic and the flying mounts keep the nearest model of their own.
+## horsemap.csv names a Catacombs monster model per horse (2033 standard, 2035 heavy, 2037 unicorn, 2034 nightmare,
+## 2036 undead): the client's fig3 horse (pipeline/build_cathorse.py: one skeleton, the five bodies, the saddle /
+## armour and the barding, each shape its own node by material id) in the horse's coat (mount_coats.json, from
+## fig3haircolormap) with the saddle shown (horsematerialmap's choice: ControlledHorse's saddle byte, 0 = the
+## plain saddle). Without it (not built yet), the classic saddled horse (Classic_Body01_Mount_Horse) in the coat
+## when it fits that body; the epic, sea horse and flying mounts keep the nearest model of their own (BY_ID).
 
 const SADDLED := "2173"                       # Brown Horse w/ Saddle (Classic_Body01_Mount_Horse)
 const BY_ID := {
@@ -22,13 +21,29 @@ const BY_ID := {
 	56: "2257", 54: "2258",                   # sea horse, earth
 	61: "1207", 62: "1235", 63: "1236",       # dragonfly, wyvern, gryphon
 }
+const CAT_DIR := "res://content/monsters/cathorse"
+## horse id -> [Catacombs body, horsematerialmap row] (horsemap.csv's monster: 2033 / 2035 / 2037 ... 2034 / 2036)
+const CAT_KIND := {
+	1: ["horse", "48"], 2: ["horse", "48"], 3: ["horse", "48"], 4: ["horse", "48"], 5: ["horse", "48"],
+	6: ["horse", "48"], 7: ["horse", "48"], 8: ["horse", "48"], 9: ["horse", "48"], 10: ["horse", "48"],
+	11: ["horse", "48"], 12: ["horse", "48"], 13: ["horse", "48"], 14: ["horse", "48"], 15: ["horse", "48"],
+	57: ["horse", "48"],
+	17: ["clydesdale", "50"], 18: ["clydesdale", "50"], 19: ["clydesdale", "50"], 20: ["clydesdale", "50"],
+	21: ["clydesdale", "50"], 22: ["clydesdale", "50"], 23: ["clydesdale", "50"], 24: ["clydesdale", "50"],
+	25: ["clydesdale", "50"], 26: ["clydesdale", "50"], 27: ["clydesdale", "50"], 28: ["clydesdale", "50"],
+	58: ["clydesdale", "50"],
+	33: ["unicorn", "52"], 34: ["unicorn", "52"], 35: ["unicorn", "52"], 36: ["unicorn", "52"], 37: ["unicorn", "52"],
+	38: ["unicorn", "52"], 39: ["unicorn", "52"], 40: ["unicorn", "52"], 41: ["unicorn", "52"], 55: ["unicorn", "52"],
+	49: ["nightmare", "49"], 50: ["undead", "51"],
+}
 const COATS_JSON := "res://content/monsters/mount_coats.json"
 const COAT_DIR := "res://content/monsters/classic_body01_mount_horse__horse_medium_brown/coats"
 const SEAT_DEFAULT := 1.35                    # metres up to the saddle when the model has no saddle node
 
 
 static var _coats := {}                      # horse id (String) -> coat name; read once
-static var _coat_tex := {}                   # coat name -> ImageTexture (shared by every horse in that coat)
+static var _coat_tex := {}                   # coat path -> ImageTexture (shared by every horse in that coat)
+static var _cat := {}                        # cathorse.json ({} until read; {"missing": true} when not built)
 
 
 static func model_key(horse_id: int) -> String:
@@ -46,19 +61,20 @@ static func coat(horse_id: int) -> String:
 	return "" if c == "horse_medium_brown" else c
 
 
-static func _coat_texture(name: String) -> Texture2D:
-	if _coat_tex.has(name):
-		return _coat_tex[name]
+static func _coat_texture(name: String, dir := COAT_DIR) -> Texture2D:
+	var key := dir + "/" + name
+	if _coat_tex.has(key):
+		return _coat_tex[key]
 	var tex: Texture2D = null
 	for sub in ["x4plus", "original"]:
-		var path := "%s/%s/%s.png" % [COAT_DIR, sub, name]
+		var path := "%s/%s/%s.png" % [dir, sub, name]
 		if FileAccess.file_exists(path):
 			var img := Image.load_from_file(ProjectSettings.globalize_path(path))
 			if img:
 				img.generate_mipmaps()
 				tex = ImageTexture.create_from_image(img)
 				break
-	_coat_tex[name] = tex
+	_coat_tex[key] = tex
 	return tex
 
 
@@ -80,18 +96,82 @@ static func _dress(model: Node, name: String) -> void:
 			m.set_surface_override_material(i, own)
 
 
-## A new horse under a rider: the monster model (monsters.json) in a holder, meta "anim" (its AnimationPlayer),
-## "info" (its monsters.json entry), "horse" (the id). null when the model isn't built.
-static func make(horse_id: int, mgr: NpcManager, models: Dictionary) -> Node3D:
-	var info: Dictionary = models.get(model_key(horse_id), models.get(SADDLED, {}))
-	if not info.has("gltf") or mgr == null:
+## cathorse.json (build_cathorse.py), {} when the Catacombs horse isn't built.
+static func cat_info() -> Dictionary:
+	if _cat.is_empty():
+		var path := CAT_DIR + "/cathorse.json"
+		var d = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
+		_cat = d if d is Dictionary else {"missing": true}
+	return {} if _cat.has("missing") else _cat
+
+
+## The Catacombs horse dressed for this horse: its body (the others hidden), its coat on it, the saddle's shapes
+## (horsematerialmap's armour choice; saddle 0 = the plain saddle) and no barding yet.
+static func _dress_cat(m: Node, horse_id: int, saddle: int) -> String:
+	var kind: Array = CAT_KIND[horse_id]
+	var body := String(kind[0])
+	var choices: Dictionary = (cat_info().get("choices", {}) as Dictionary).get(String(kind[1]), {})
+	var armor_ids := []
+	for ch in choices.get("armor", []):
+		if int(ch.selection) == saddle:
+			armor_ids = ch.ids
+	if armor_ids.is_empty() and saddle != 0:
+		for ch in choices.get("armor", []):
+			if int(ch.selection) == 0:
+				armor_ids = ch.ids
+	var shown := {}
+	for i in armor_ids:
+		if int(i) > 0:
+			shown[int(i)] = true
+	if _coats.is_empty() and FileAccess.file_exists(COATS_JSON):
+		var d = JSON.parse_string(FileAccess.get_file_as_string(COATS_JSON))
+		_coats = d if d is Dictionary else {"": ""}
+	var coat_name := String(_coats.get(str(horse_id), ""))
+	var tex := _coat_texture(coat_name, CAT_DIR) if coat_name != "" else null
+	for mi in m.find_children("*", "MeshInstance3D", true, false):
+		var n := String(mi.name)
+		if n.begins_with("body_"):
+			var on := n.begins_with("body_%s_" % body)
+			mi.visible = on
+			if on and tex:
+				var mesh := (mi as MeshInstance3D).mesh
+				for i in (mesh.get_surface_count() if mesh else 0):
+					var mat := (mi as MeshInstance3D).get_active_material(i) as BaseMaterial3D
+					if mat:
+						var own := mat.duplicate() as BaseMaterial3D
+						own.albedo_texture = tex
+						(mi as MeshInstance3D).set_surface_override_material(i, own)
+		elif n.begins_with("armor_"):
+			mi.visible = shown.has(int(n.trim_prefix("armor_").get_slice("_", 0)))
+		elif n.begins_with("barding_"):
+			mi.visible = false
+	return coat_name
+
+
+## A new horse under a rider: the Catacombs horse in its coat and saddle (else the monster model - monsters.json) in
+## a holder, meta "anim" (its AnimationPlayer), "info" (strides, clip lengths), "horse" (the id). null when no model
+## is built.
+static func make(horse_id: int, mgr: NpcManager, models: Dictionary, saddle := 0) -> Node3D:
+	if mgr == null:
 		return null
-	var m := mgr.instance_model(String(info.gltf))
+	var info: Dictionary = {}
+	var m: Node3D = null
+	var hide := ""
+	if CAT_KIND.has(horse_id) and not cat_info().is_empty():
+		info = cat_info()
+		m = mgr.instance_model(String(info.gltf))
+		if m:
+			hide = _dress_cat(m, horse_id, saddle)
 	if m == null:
-		return null
-	var hide := coat(horse_id) if model_key(horse_id) == SADDLED else ""
-	if hide != "":
-		_dress(m, hide)
+		info = models.get(model_key(horse_id), models.get(SADDLED, {}))
+		if not info.has("gltf"):
+			return null
+		m = mgr.instance_model(String(info.gltf))
+		if m == null:
+			return null
+		hide = coat(horse_id) if model_key(horse_id) == SADDLED else ""
+		if hide != "":
+			_dress(m, hide)
 	var holder := Node3D.new()
 	holder.name = "Mount"
 	m.scale *= float(info.get("scale", 1.0))
@@ -134,6 +214,33 @@ static func seat_point(holder: Node3D) -> Vector3:
 	return holder.transform * l
 
 
+## The moment of ride_horse the rider sits lowest (its pelvis lowest above the feet): the pose held standing still -
+## the clip starts on a frame half out of the saddle (owner 2026-11-02 / probe: standing in the stirrups). Found once
+## per rider by stepping the clip, kept on the AnimationPlayer.
+static func _still_time(anim: AnimationPlayer) -> float:
+	if anim.has_meta("ride_still"):
+		return float(anim.get_meta("ride_still"))
+	var best := 0.0
+	var root := anim.get_node_or_null(anim.root_node)
+	var sk: Skeleton3D = null
+	if root:
+		var found := root.find_children("*", "Skeleton3D", true, false)
+		sk = found[0] if found.size() > 0 else null
+	var bone := sk.find_bone("Bip01 Pelvis") if sk else -1
+	if bone >= 0:
+		var length := anim.get_animation("ride_horse").length
+		var low := INF
+		for k in 16:
+			var t := length * k / 16.0
+			anim.seek(t, true)
+			var y := sk.get_bone_global_pose(bone).origin.y
+			if y < low:
+				low = y
+				best = t
+	anim.set_meta("ride_still", best)
+	return best
+
+
 ## The rider's ride_horse pose kept in step with the horse: at the horse's own pace while it moves, held still while
 ## it stands (owner 2026-11-02: "bouncing around as if they're riding even when standing still").
 static func rider_pose(anim: AnimationPlayer, holder: Node3D, speed_mps: float) -> void:
@@ -144,9 +251,17 @@ static func rider_pose(anim: AnimationPlayer, holder: Node3D, speed_mps: float) 
 		anim.play("ride_horse", 0.2)
 	if speed_mps <= 0.3:
 		if anim.speed_scale != 0.0:
-			anim.seek(0.0, true)
+			# no cross-fade into a held pose: paused mid-blend the fade never finished and the rider stood on the
+			# saddle in the idle pose (probe 2026-11-02)
+			anim.speed_scale = 1.0
+			anim.stop()
+			anim.play("ride_horse", 0.0)
+			anim.advance(0.0)
+			anim.seek(_still_time(anim), true)
 			anim.speed_scale = 0.0
 		return
+	if anim.speed_scale == 0.0:
+		anim.play("ride_horse", 0.0)
 	var hp: AnimationPlayer = holder.get_meta("anim", null) if holder else null
 	anim.speed_scale = clampf(hp.speed_scale if hp else 1.0, 0.5, 2.0) if speed_mps > 4.5 else 0.6
 

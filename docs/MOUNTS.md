@@ -30,20 +30,21 @@ level 50 (350 gold). A horse's level is also its speed tier (server properties `
 ## How it shows
 
 The server says who rides what with ControlledHorse (0x4E) - the bots' through the same packet. The client
-(`game/world/mounts.gd`) draws each horse with the model it has built:
+(`game/world/mounts.gd`) draws the horses as the client's own Catacombs horse, `content/monsters/cathorse`
+(`pipeline/build_cathorse.py`): one skinned figure (figures/fig3/sfig003.mpk horse_medium_skeleton, the parts in
+fig016.mpk, the cathorse_*.kfa clips), with
 
-- **Standard and heavy horses**: the classic saddled horse (Classic_Body01_Mount_Horse - what monsters.csv draws the
-  Catacombs horses 2033 / 2035 with) in the horse's own coat. horsemap.csv gives each horse a coat column of
-  fig3haircolormap.csv (rows 48 Standard, 50 Heavy, 52 Unicorn); `pipeline/build_mount_coats.py` writes every coat
-  that fits that body (brown, black, white, grey, palomino, spotted, chocolate, Clydesdale, appaloosa, dappled grey,
-  leopard, primitive and red dun, Shire dappled, strawberry roan, arboreal; Real-ESRGAN x4) beside the horse's model
-  with `content/monsters/mount_coats.json`, and the client paints the horse with it.
-- **Unicorns, nightmare, undead, epic, sea horse, flying mounts**: the nearest model of their own (the classic
-  unicorns, the nightmare ...). Their Catacombs coats (rainbow, nightmare, undead) belong to other bodies.
-- The Catacombs part horses themselves (Body01_Mount_Horse with its Armor01 saddle and Barding01 barding parts) are not
-  in this client - only their `cathorse_*.kfa` clips are - so barding has no mesh to draw yet.
+- the body for its kind - standard, heavy (Clydesdale), unicorn, nightmare, undead - in the horse's own coat
+  (horsemap.csv -> fig3haircolormap rows 48-53 -> the Horse_Medium_* / Horse_Heavy_* / Horse_nightmare ... skins;
+  `pipeline/build_mount_coats.py` writes `content/monsters/mount_coats.json`);
+- the saddle: the Armor01 part's shapes for horsematerialmap.csv's choice (meshmateriallist: shapes 7, 53, 14). Every
+  shape of the saddle / armour and barding parts is its own node by its material id, so the other choices (light /
+  medium / heavy armour, the barding trims) are a matter of showing other ids.
+
+The epic, sea horse, clockwork / gemstone and flying mounts keep the nearest model the client has (their own monster
+models). Without the Catacombs horse built, the classic saddled horse stands in, in the coat when it fits.
 
 ## Next
 
-Barding and saddle colours (ControlledHorse carries them; the part meshes would have to come from a later client),
-saddlebags.
+Barding and armour choices and their colours (ControlledHorse carries them; the shapes are in the model - the barding's
+skin weights still need its bone list, it is skinned to the root for now), saddlebags.

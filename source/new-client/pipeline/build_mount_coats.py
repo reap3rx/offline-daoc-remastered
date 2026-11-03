@@ -27,8 +27,8 @@ OUT = ROOT / 'godot/content/monsters'
 HORSE = 'classic_body01_mount_horse__horse_medium_brown'
 ROWS = {'2033': '48', '2035': '50', '2037': '52', '2184': '52', '2164': '52', '2223': '52',
         '2034': '49', '2036': '51'}
-# coats drawn for the classic horse's body (its UV layout): the Horse_Medium_* family, the spotted and the heavy
-# Clydesdale / Arboreal sheets share it; the nightmare, undead, sea horse and epic sheets belong to other bodies
+# every horse's coat: the Catacombs bodies (build_cathorse.py) take them all; the classic saddled horse (the fallback)
+# only the Horse_Medium_* family, spotted, Clydesdale and Arboreal (its UV layout - mounts.gd keeps the others off it)
 FITS = ('horse_medium_', 'horse_spotted', 'horse_heavy_clydesdale', 'arboreal_horse')
 
 
@@ -47,7 +47,7 @@ def main():
         cols = hair.get(ROWS[r[2]], [])
         i = int(r[3] or 0)
         name = skins.get(cols[i].strip(), '') if i < len(cols) else ''
-        if name.lower().startswith(FITS):
+        if name:
             coats[int(r[0])] = name.lower()
     idx = TextureIndex()
     idx.figures_first = True

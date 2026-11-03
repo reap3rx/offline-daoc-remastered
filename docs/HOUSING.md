@@ -68,6 +68,21 @@ pass as the rest of the world (`pipeline/upscale_built.py`, for content first bu
   the plane and Y up from its lowest corner; a garden piece's Position is the garden spot (the house NIF's GPointN).
   Houses' headings are degrees (DBHouse.Heading); interiors are never turned and hang 25000 units up.
 
+## Bots' houses
+
+World bots own houses too (`bots/autonomous/AutonomousBotHousing.cs`, every minute from two minutes after start):
+
+- A bot of level 30 or more with no house and enough saved for a lot, a deed, four weeks' rent and a 200 gold reserve
+  buys a free lot in its realm's housing - one of the 80 nearest the gate the classic zone leads in by, so they gather
+  where players arrive - and builds the biggest house it can afford (cottage 1,000 gold, house 5,000, villa 10,000,
+  mansion 25,000), with its own roof, walls, door and wood. Two at most a minute.
+- With 900 gold or more left it adds a porch and a consignment merchant and puts up to six of its better backpack
+  finds on it (the market's suggested prices). Players can buy there (and through the market explorer); the bot
+  collects the takings each minute.
+- Its lockbox is kept topped up from its savings, so the rent doesn't repossess it while it has money.
+- The house is the server's own: OwnerID is the bot's market owner id (`offlinebot:<id>`), the name on it the bot's.
+  Bots don't decorate inside yet.
+
 ## Not done yet
 
 - Permissions (friends, guild access) have no window: only the owner can decorate.

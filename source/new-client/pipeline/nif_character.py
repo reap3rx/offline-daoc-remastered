@@ -619,6 +619,10 @@ def build_cata(skeleton, part_list, clips, out_path, texture_uri):
                 d.g['meshes'].append(mesh)
                 shape_no = sum(1 for nd in d.g['nodes'] if nd.get('name', '').split('__')[0] == (node_name[0] if node_name else ''))
                 label = (node_name[0] + (f'__{shape_no}' if shape_no else '')) if node_name else f'{mname}_mesh'
+                if node_name and '{mat}' in node_name[0]:
+                    # a part whose shapes the client shows by material id ('Barding01_Mount_Horse:38' - the horse
+                    # tables' meshmateriallist): one node per shape, named by its id
+                    label = node_name[0].replace('{mat}', str(shape.get('name') or '').rsplit(':', 1)[-1].strip())
                 d.g['nodes'].append({'name': label,                     # a part's extra shapes: <part>__1, __2 ...
                                      'mesh': len(d.g['meshes']) - 1, 'skin': 0})
                 d.g['nodes'][0]['children'].append(len(d.g['nodes']) - 1)
