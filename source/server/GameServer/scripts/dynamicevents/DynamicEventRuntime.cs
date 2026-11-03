@@ -1110,6 +1110,7 @@ namespace DOL.GS.DynamicEvents
                     int chance = tier == 3 ? it.GoldChance : tier == 2 ? it.SilverChance : 0;
                     if (chance <= 0 || !Util.Chance(chance) || ItemAtLevel(it.Id, p.Level) is not DbItemTemplate tpl)
                         continue;
+                    tpl = SpecialLoot.Enrich(tpl, p, $"{Chain.Def.Title}: {Def.Name}");   // ToA stats, a proc, a glow, for their class
                     DbInventoryItem item = GameInventoryItem.Create(tpl);
                     if (!p.Inventory.AddTemplate(item, 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
                         p.CreateItemOnTheGround(item);

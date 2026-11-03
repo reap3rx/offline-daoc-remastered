@@ -102,7 +102,7 @@ func redress(rec: Dictionary) -> void:
 	for w_ in _weapons:                                    # the weapons it held before (a staff taken back stayed in its
 		if is_instance_valid(w_):                          # hand - owner 2026-10-11)
 			(w_ as Node).queue_free()
-	_weapons = Player.dress(figure, item_at, String(rec.get("active_weapon", "standard")), _drawn)
+	_weapons = Player.dress(figure, item_at, String(rec.get("active_weapon", "standard")), _drawn, true, {"realm": {"alb": 1, "mid": 2, "hib": 3}.get(String(rec.get("realm", "")), 0)})
 	var w: Dictionary = item_at.call({"standard": 10, "twohand": 12, "ranged": 13}.get(String(rec.get("active_weapon", "standard")), 10))
 	_stance = WeaponModels.stance(int(w.get("model", 0))) if not w.is_empty() else ""
 	_ranged = WeaponModels.ranged_kind(int(item_at.call(13).get("model", 0)))
@@ -125,7 +125,7 @@ func set_drawn(on: bool) -> void:
 	for w_ in _weapons:
 		if is_instance_valid(w_):
 			(w_ as Node).queue_free()
-	_weapons = Player.dress(figure, item_at, String(record.get("active_weapon", "standard")), _drawn, false)
+	_weapons = Player.dress(figure, item_at, String(record.get("active_weapon", "standard")), _drawn, false, {"realm": {"alb": 1, "mid": 2, "hib": 3}.get(String(record.get("realm", "")), 0)})
 	if _lod:
 		_lod.refresh_shadow()
 

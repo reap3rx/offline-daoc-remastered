@@ -328,7 +328,7 @@ func _hang_weapons(drawn: bool) -> void:
 	var skel_root: Node3D = (_weapon_root as Fig3Figure).model if _weapon_root is Fig3Figure else _weapon_root
 	var sk := skel_root.find_children("*", "Skeleton3D", true, false)
 	var can_sheathe := sk.size() > 0 and (sk[0] as Skeleton3D).find_bone("Bip01 R Belt") >= 0
-	_weapon_nodes = Player.dress(skel_root, item_at, active, drawn or not can_sheathe, false)
+	_weapon_nodes = Player.dress(skel_root, item_at, active, drawn or not can_sheathe, false, {"realm": int(spawn.get("realm", 0))})
 	if int(spawn.get("flags", 0)) & FLAG_GHOST:                # a spirit's weapons are as ghostly as it is
 		for w in _weapon_nodes:
 			if is_instance_valid(w):

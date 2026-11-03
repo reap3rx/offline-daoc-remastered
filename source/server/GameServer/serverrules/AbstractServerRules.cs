@@ -1689,7 +1689,18 @@ namespace DOL.GS.ServerRules
                 if (GameMoney.IsItemMoney(itemTemplate.Name))
                     CreateMoney(killedNpc, itemTemplate, itemOwners, playersInRadius);
                 else
-                    CreateItem(killedNpc, itemTemplate, itemOwners, playersInRadius);
+                {
+                    DbItemTemplate drop = itemTemplate;
+                    // a named monster's drop or a rare random one, made worth having by its taker (SpecialLoot.cs)
+                    if (SpecialLoot.IsSpecial(itemTemplate))
+                    {
+                        GamePlayer taker = killer as GamePlayer;
+                        foreach (ItemOwnerTotalDamagePair o in itemOwners)
+                            if (o.Owner is GamePlayer p) { taker = p; break; }
+                        drop = SpecialLoot.Enrich(itemTemplate, taker, $"Taken from {killedNpc.Name}");
+                    }
+                    CreateItem(killedNpc, drop, itemOwners, playersInRadius);
+                }
             }
 
             static void CreateMoney(GameNPC killedNpc, DbItemTemplate itemTemplate, SortedSet<ItemOwnerTotalDamagePair> itemOwners, List<GamePlayer> playersInRadius)

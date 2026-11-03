@@ -15,6 +15,7 @@ extends CharacterBody3D
 ## Fly mode (set_flying, F6 in the viewer): free flight where the camera points, Space up, Ctrl down, Shift fast.
 
 const Mounts := preload("res://game/world/mounts.gd")
+const QUIVER_MODELS := {1: 4250, 2: 4251, 3: 4252}   # objects.csv Alb / Mid / Hib Quiver (behind a stowed bow)
 const RUN_SPEED := 191.0 * 0.025       # DAoC base run speed (191 units/s) in metres per second
 const BACK_SPEED := RUN_SPEED * 0.65   # backpedal, as in WoW
 const WALK_SPEED := RUN_SPEED * 0.35
@@ -695,11 +696,11 @@ func revive() -> void:
 	_play("idle")
 
 
-## Draw the active weapons where the client hangs them (objects.csv flags, owner rules): in attack mode the main
-## weapon in the right hand (a left-hand weapon in the left hand); sheathed, one-handers at the belt and two-handers /
-## polearms / staffs on the back. A shield is always on the left arm - the client never slings it on the back, and
-## with a two-hander drawn it simply isn't shown (owner 2026-10-10). Only the active set shows (Standard: right +
-## left, Two Handed: the two-hander, Ranged: the bow - the server's SwitchWeapon rules).
+## Draw the weapons where the client hangs them (objects.csv flags, owner rules): in attack mode the active set's
+## main weapon in the right hand (a left-hand weapon in the left hand); sheathed, one-handers at the belt and
+## two-handers / polearms / staffs on the back. Every set shows (owner 2026-11-02): the ones not in use are stowed -
+## the shield on the back while the two-hander is out, a bow slung over the shoulder with its quiver - and only a
+## weapon in hand carries its effect.
 func refresh_gear() -> void:
 	if in_combat:
 		combat_stance = weapon_stance()                     # another weapon set drawn in attack mode: its stance
@@ -707,8 +708,9 @@ func refresh_gear() -> void:
 		if is_instance_valid(g):
 			g.queue_free()
 	_gear.clear()
-	_gear = dress(_model, PlayerData.item_at, PlayerData.active_weapon, in_combat, true,
-			PlayerData.character.get("gear", {}) if PlayerData.character.get("gear") is Dictionary else {})
+	var gear_opts: Dictionary = (PlayerData.character.get("gear", {}) if PlayerData.character.get("gear") is Dictionary else {}).duplicate()
+	gear_opts["realm"] = {"alb": 1, "mid": 2, "hib": 3}.get(String(PlayerData.character.get("realm", "")), 0)
+	_gear = dress(_model, PlayerData.item_at, PlayerData.active_weapon, in_combat, true, gear_opts)
 	if hidden_look:
 		_apply_hidden_look.call_deferred()
 
@@ -751,27 +753,44 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 	if skel == null:
 		return made
 	var sets := {"standard": [10, 11], "twohand": [12], "ranged": [13]}
-	for slot in sets.get(active_weapon, [10, 11]):
+	var active_slots: Array = sets.get(active_weapon, [10, 11])
+	# every weapon set shows (owner 2026-11-02: "sheathed weapons that you're not actually using ... should still
+	# show up on your back"): the active one in hand in combat, the others stowed - one-handers at the belt, a
+	# two-hander on the back, a bow or crossbow slung over the shoulder with a quiver behind it, a shield on the
+	# back when the two-hander is out. Only a weapon in hand carries its effect (its glow, its flame).
+	var back_taken := {}                                       # "Bip01 R Back" / "Bip01 L Back" -> true
+	var ranged_stowed := false
+	for slot in [12, 13, 10, 11]:                              # the two-hander claims the back first
 		var it: Dictionary = item_at.call(slot)
 		if it.is_empty():
 			continue
 		var model_id := int(it.get("model", 0))
+		var is_active: bool = slot in active_slots
 		# an NPC with a shield model in its right hand too (shield merchants' NPCEquipment lists it in both hands): the
 		# client draws the right hand's one only (owner 2026-10-11: a shield in both hands; the old client: right arm)
 		var shield_model := int(WeaponModels.info(model_id).get("shield", 0)) > 0
 		var right: Dictionary = item_at.call(10)
 		# (not the hand-to-hand greaves: objects.csv marks them Shield too, and a Savage wears one on each arm)
-		if slot == 11 and shield_model and int(WeaponModels.info(model_id).get("stance", 0)) != 13 				and int(WeaponModels.info(int(right.get("model", 0))).get("shield", 0)) > 0:
+		if slot == 11 and shield_model and int(WeaponModels.info(model_id).get("stance", 0)) != 13 \
+				and int(WeaponModels.info(int(right.get("model", 0))).get("shield", 0)) > 0:
 			continue
 		var shield: bool = int(it.get("object_type", 0)) == ItemDb.SHIELD_TYPE or (shield_model and slot == 11)
-		var on_back: bool = int(it.get("hand", 0)) == 1 or slot == 12 or slot == 13 or WeaponModels.stance(model_id) in ["2h", "pole", "staff", "scy"]
-		var bone := ""
+		var stance := WeaponModels.stance(model_id)
+		var ranged: bool = slot == 13 or stance in ["bow", "xbow", "throw"]
+		var on_back: bool = int(it.get("hand", 0)) == 1 or slot == 12 or ranged or stance in ["2h", "pole", "staff", "scy"]
 		# objects.csv "On Belt": only weapons marked sheathable go to the belt / back outside attack mode; the rest -
-		# every staff (stance 4, all 118 marked 0), most polearms and bows - stay in the hand (owner 2026-10-10)
+		# every staff (stance 4, all 118 marked 0), most polearms - stay in the hand (owner 2026-10-10); a set that
+		# isn't the active one is stowed whatever it says (a staff on the back behind a drawn sword)
 		var sheathes := int(WeaponModels.info(model_id).get("belt", 1)) == 1
+		var in_hand: bool = is_active and (combat or not sheathes)
+		var bone := ""
+		var slung := false
 		if shield:
-			bone = "Bip01 L Shield"
-		elif combat or not sheathes:
+			if is_active:
+				bone = "Bip01 L Shield"
+			else:
+				bone = "Bip01 L Back" if not back_taken.has("Bip01 L Back") else "Bip01 R Back"
+		elif in_hand:
 			# the skeleton's "Held" nodes under each hand match the weapon NIF's HELD frame (the client's grip point);
 			# an item objects.csv marks Shield (the hand-to-hand greaves) on the forearm's Shield bone of its hand -
 			# game.dll 0x422806 (owner 2026-10-17: the Savage's right claw floated off its Held bone)
@@ -779,26 +798,125 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 				bone = "Bip01 L Shield" if slot == 11 or slot == 13 else "Bip01 R Shield"
 			else:
 				bone = "Bip01 L Held" if slot == 11 or slot == 13 else "Bip01 R Held"
+		elif ranged:
+			bone = "Bip01 L Back" if not back_taken.has("Bip01 L Back") else "Bip01 R Back"
+			slung = true
+			ranged_stowed = true
 		elif on_back:
-			bone = "Bip01 R Back"
+			bone = "Bip01 R Back" if not back_taken.has("Bip01 R Back") else "Bip01 L Back"
 		else:
 			bone = "Bip01 R Belt" if slot == 11 else "Bip01 L Belt"
+		if bone.ends_with("Back"):
+			if back_taken.has(bone):
+				continue                                       # no third thing on the back
+			back_taken[bone] = true
 		var idx := skel.find_bone(bone)
-		var w := WeaponModels.make(model_id, combat, bone == "Bip01 L Held" or bone == "Bip01 L Shield")
+		var w := WeaponModels.make(model_id, in_hand, bone == "Bip01 L Held" or bone == "Bip01 L Shield")
 		if idx < 0 or w == null:
 			push_warning("gear: no %s (bone %d) or no model %d" % [bone, idx, model_id])
 			continue
 		WeaponModels.dye(w, int(it.get("color", 0)))           # its luster / enamel
 		WeaponModels.set_emblem(w, model_id, int(it.get("emblem", 0)))   # a shield's guild emblem
-		if bone == "Bip01 R Back" and (slot == 12 or WeaponModels.stance(model_id) in ["2h", "pole", "staff", "scy"]):
-			_raise_on_back(w)
+		if bone.ends_with("Back") and not shield:
+			if slung:
+				_sling_on_back(w, bone == "Bip01 L Back")
+			elif slot == 12 or stance in ["2h", "pole", "staff", "scy"]:
+				_raise_on_back(w)
 		var at := BoneAttachment3D.new()
 		at.bone_name = bone
 		skel.add_child(at)
 		at.add_child(w)
-		WeaponModels.add_effect(w, int(it.get("effect", 0)))   # its glow / flame (an item's weapon effect)
+		if in_hand:
+			WeaponModels.add_effect(w, int(it.get("effect", 0)))   # its glow / flame (an item's weapon effect) - in hand only
 		made.append(at)
+	# the quiver behind a stowed bow (owner 2026-11-02: "a quiver model ... on your back right shoulder"): the realm's
+	# quiver model on the right back bone, its arrows up over the shoulder
+	if ranged_stowed and QUIVER_MODELS.has(int(gear.get("realm", 0))):
+		var qbone := "Bip01 R Back"
+		var qi := skel.find_bone(qbone)
+		var q := WeaponModels.make(int(QUIVER_MODELS[int(gear.get("realm", 0))]), false, false)
+		if qi >= 0 and q != null:
+			var qa := BoneAttachment3D.new()
+			qa.bone_name = qbone
+			skel.add_child(qa)
+			qa.add_child(q)
+			_stand_quiver(q)
+			made.append(qa)
 	return made
+
+
+## The quiver on a back bone hangs like a sword - its mouth (the far end from its attachment point) down the legs
+## (walk/sheath_stowed_back.png, 2026-11-02). Turned end for end about its thickness so the arrows stand up over the
+## shoulder, slid back down its length so most of its body lies on the back, and tipped a little the other way from
+## the bow. (The quiver's box: 40 units long, the attachment point 12 in from its closed end.)
+static func _stand_quiver(holder: Node3D) -> void:
+	var box := _holder_box(holder)
+	if box.size == Vector3.ZERO:
+		return
+	var k := 0
+	var thin := 0
+	for i in 3:
+		if box.size[i] > box.size[k]:
+			k = i
+		if box.size[i] < box.size[thin]:
+			thin = i
+	var axis := Vector3.ZERO
+	axis[k] = 1.0 if absf(box.end[k]) >= absf(box.position[k]) else -1.0   # toward its mouth, in its own frame
+	var normal := Vector3.ZERO
+	normal[thin] = 1.0
+	var mid := 3 - k - thin                               # its third axis
+	var mid_axis := Vector3.ZERO
+	mid_axis[mid] = 1.0
+	var down: Vector3 = (holder.basis * axis).normalized()   # where the mouth pointed (the bone's frame)
+	var aside: Vector3 = (holder.basis * normal).normalized()
+	holder.rotate(normal, deg_to_rad(180.0 - 20.0))
+	holder.position += down * box.size[k] * 0.35          # (the back bone sits mid-back: a third of it stands above)
+	# against the back and over the right shoulder blade (walk/sheath_stowed_back*.png: it hung a hand's width off
+	# the back, square behind the spine)
+	holder.position -= aside * 6.0
+	holder.position -= (holder.basis * mid_axis).normalized() * 6.0
+
+
+## A bow or crossbow slung over the shoulder (owner 2026-11-02: "so it looks like they're slung over your shoulder"):
+## on its back bone it would hang like a sword, so it is tipped across the back - about 35 degrees over the shoulder
+## it hangs from (the left bone: tipped one way, the right: the other) and pushed up so the upper limb stands over
+## the shoulder.
+static func _sling_on_back(holder: Node3D, left: bool) -> void:
+	var box := _holder_box(holder)
+	if box.size == Vector3.ZERO:
+		return
+	var k := 0
+	for i in 3:
+		if box.size[i] > box.size[k]:
+			k = i
+	var axis := Vector3.ZERO                                  # the limbs' axis in the holder's frame
+	axis[k] = 1.0
+	# the back bone's outward normal is whichever axis the weapon's thickness lies on
+	var thin := 0
+	for i in 3:
+		if box.size[i] < box.size[thin]:
+			thin = i
+	var normal := Vector3.ZERO
+	normal[thin] = 1.0
+	holder.rotate(normal, deg_to_rad(35.0 if left else -35.0))
+	holder.position += axis * clampf(box.size[k] * 0.18, 4.0, 12.0)
+
+
+## The holder's meshes' box in its own frame (NIF units), the grip at the origin.
+static func _holder_box(holder: Node3D) -> AABB:
+	var box := AABB()
+	var first := true
+	for mi in holder.find_children("*", "MeshInstance3D", true, false):
+		var xf := Transform3D.IDENTITY
+		var n: Node = mi
+		while n != null and n != holder:
+			if n is Node3D:
+				xf = (n as Node3D).transform * xf
+			n = n.get_parent()
+		var b: AABB = xf * (mi as MeshInstance3D).get_aabb()
+		box = b if first else box.merge(b)
+		first = false
+	return box
 
 
 ## A two-hander slung on the back sits higher (owner 2026-10-31: "too low ... the hilt of the greatsword should sit
