@@ -4,11 +4,12 @@ extends Control
 ##   - bottom centre: the health orb, the endurance (left) and power (right) arcs over it, the experience arc under
 ##     it, your name and level; quickbars 1 and 2 either side of it; the target plate above it; your effects above
 ##     the right quickbar;
-##   - top left: the party (click a member to target them);
+##   - top left: the menu bar (owner 2026-11-02: "the 6 orbs ... a transparent one locked to the top left of the screen
+##     like GW2"): the sheets' orbs from control.bmp, then bags, quests, map and options; the party under it;
 ##   - top centre: the compass strip (the classic window, kept);
 ##   - top right: the event tracker (EventTracker), the quest log under it;
 ##   - bottom right: the minimap (the zone's painted map around you, north up, the wheel zooms it, a click opens
-##     the map) with the clock and the zone's name over it, and the window buttons under it.
+##     the map) with the clock and the zone's name over it.
 ## Everything is drawn in GameUI's layout units, so UI SCALE applies to it all. The classic status / target / mini
 ## group / time windows are hidden while it is on; the sheets, chat and the other windows are shared.
 
@@ -66,25 +67,11 @@ func _ready() -> void:
 	layout()
 
 
-## The window buttons under the minimap: the six sheets, the journal, the map and the options.
+## The menu bar, top left.
 func _build_menu() -> void:
-	menu = Control.new()
-	menu.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	menu = HudMenu.new()
+	menu.hud = self
 	add_child(menu)
-	var items := [["CHAR", func(): ui.show_sheet("character")], ["INV", func(): ui.show_sheet("inventory")],
-			["SKILLS", func(): ui.show_sheet("skills")], ["STYLES", func(): ui.show_sheet("combat")],
-			["SPELLS", func(): ui.show_sheet("magic")], ["GROUP", func(): ui.show_sheet("group")],
-			["QUESTS", func(): ui.journal.toggle_window()], ["MAP", func():
-				ui.map_window.player = ui.player
-				ui.map_window.toggle_window()],
-			["OPTIONS", func(): ui.options.toggle_window()]]
-	var bw := floorf((MINI - 2 * 3) / 3.0)
-	for i in items.size():
-		var b := UiArt.button(items[i][0], Vector2(bw, 14), 7)
-		b.position = Vector2((i % 3) * (bw + 3), (i / 3) * 17)
-		b.pressed.connect(items[i][1])
-		menu.add_child(b)
-	menu.size = Vector2(MINI, 3 * 17)
 
 
 ## Places everything for the screen size (GameUI._rescale) and parks the classic windows the modern HUD replaces.
@@ -96,11 +83,12 @@ func layout() -> void:
 	var bottom := a.y - 8.0
 	orb.position = Vector2(cx - ARC_R - 4, bottom - 2 * ARC_R - 30)
 	orb.size = Vector2(2 * ARC_R + 8, 2 * ARC_R + 30)
-	party.position = Vector2(8, 8)
+	menu.position = Vector2(6, 4)
+	menu.size = Vector2(HudMenu.ITEMS.size() * (HudMenu.ICON + HudMenu.GAP), HudMenu.ICON)
+	party.position = Vector2(8, menu.position.y + HudMenu.ICON + 8)
 	party.size = Vector2(PARTY_W, 8 * 24 + 4)
-	minimap.position = Vector2(a.x - MINI - 8, a.y - MINI - 8 - menu.size.y - 4)
+	minimap.position = Vector2(a.x - MINI - 8, a.y - MINI - 8)
 	minimap.size = Vector2(MINI, MINI)
-	menu.position = Vector2(a.x - MINI - 8, a.y - menu.size.y - 6)
 	_zone_label.position = Vector2(minimap.position.x, minimap.position.y - 13)
 	_zone_label.size = Vector2(MINI - 44, 12)
 	_clock.position = Vector2(minimap.position.x + MINI - 44, minimap.position.y - 13)
@@ -142,6 +130,7 @@ func _process(_delta: float) -> void:
 		minimap.queue_redraw()
 	if Engine.get_process_frames() % 10 == 0:
 		party.queue_redraw()
+		menu.queue_redraw()
 		quests.queue_redraw()
 		if ui.map_window:
 			_zone_label.text = String(ui.map_window._zone(ui.map_window.current_zone).get("name", "")).to_upper()
@@ -467,3 +456,127 @@ class Minimap extends Part:
 			draw_polyline(PackedVector2Array([pts[0], pts[1], pts[2], pts[3], pts[0]]), Color(0.1, 0.05, 0.0), 1.0)
 		draw_rect(Rect2(Vector2.ZERO, size), RIM, false, 1.5)
 		text(UiArt.font(true), Vector2(size.x * 0.5 - 10, 10), "N", 8, UiArt.GOLD_HI, HORIZONTAL_ALIGNMENT_CENTER, 20)
+
+
+## The menu bar (top left, no backing - GW2's): the sheets' orbs as the client paints them on control.bmp (character,
+## skills, styles, spells, group), then drawn orbs in the same gold for the bags, quests, map and options. Hover: its
+## name and key; lit while its window is open.
+class HudMenu extends Part:
+	const ICON := 24.0
+	const GAP := 4.0
+	# [id, name, key action, control.bmp tab index or -1]
+	const ITEMS := [["character", "CHARACTER", "show_stats", 0], ["skills", "SKILLS", "show_skills", 2],
+			["combat", "COMBAT STYLES", "show_combat", 3], ["magic", "SPELLS", "show_spells", 4],
+			["group", "GROUP", "show_group", 5], ["bags", "INVENTORY", "show_inventory", -1],
+			["quests", "QUEST JOURNAL", "show_journal", -1], ["map", "MAP", "show_map", -1], ["options", "OPTIONS", "", -1]]
+	const TAB_X := [13, 41, 70, 98, 126, 154]
+	var _hover := -1
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_STOP
+		tooltip_text = "MENU"
+
+	func _index_at(p: Vector2) -> int:
+		var i := int(p.x / (ICON + GAP))
+		return i if i >= 0 and i < ITEMS.size() and p.x - i * (ICON + GAP) <= ICON and p.y >= 0 and p.y <= ICON else -1
+
+	func _get_tooltip(at: Vector2) -> String:
+		var i := _index_at(at)
+		if i < 0:
+			return ""
+		var key := Keybinds.text(String(ITEMS[i][2])) if String(ITEMS[i][2]) != "" else "ESC"
+		return String(ITEMS[i][1]) + ("  (%s)" % key if key != "" else "")
+
+	func _gui_input(event: InputEvent) -> void:
+		if event is InputEventMouseMotion:
+			var i := _index_at(event.position)
+			if i != _hover:
+				_hover = i
+				queue_redraw()
+		elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			var i := _index_at(event.position)
+			if i >= 0:
+				open(String(ITEMS[i][0]))
+				accept_event()
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_MOUSE_EXIT and _hover != -1:
+			_hover = -1
+			queue_redraw()
+
+	func open(id: String) -> void:
+		var ui: GameUI = hud.ui
+		match id:
+			"bags":
+				ui.toggle_bags()
+			"quests":
+				ui.journal.toggle_window()
+			"map":
+				ui.map_window.player = ui.player
+				ui.map_window.toggle_window()
+			"options":
+				ui.options.toggle_window()
+			_:
+				ui.show_sheet(id)
+
+	func _is_open(id: String) -> bool:
+		var ui: GameUI = hud.ui
+		match id:
+			"bags":
+				return ui.bags != null and ui.bags.visible
+			"quests":
+				return ui.journal.visible
+			"map":
+				return ui.map_window.visible
+			"options":
+				return ui.options.visible
+		return ui.right_panel.visible and ui.sheet_tab == id
+
+	func _draw() -> void:
+		for i in ITEMS.size():
+			var r := Rect2(i * (ICON + GAP), 0, ICON, ICON)
+			var c := r.get_center()
+			var lit := _is_open(String(ITEMS[i][0]))
+			draw_circle(c, ICON * 0.52, Color(0, 0, 0, 0.45))     # a soft shadow so the orbs read on bright sky
+			var tab := int(ITEMS[i][3])
+			if tab >= 0:
+				# control.bmp: the normal row at y 3, the hover row 32 below; 25 x 24 art px per orb
+				var src := Rect2(TAB_X[tab], 3 + (32 if i == _hover else (96 if lit else 0)), 25, 24)
+				draw_texture_rect_region(UiArt.tex("control"), r, Rect2(src.position * UiArt.K, src.size * UiArt.K))
+			else:
+				_orb(c, ICON * 0.46, String(ITEMS[i][0]), i == _hover, lit)
+
+	## A drawn orb as control.bmp paints them: a grey stone disc, the glyph cut into it - bright cyan on hover, teal
+	## while its window is open.
+	func _orb(c: Vector2, rad: float, id: String, hover: bool, lit := false) -> void:
+		draw_circle(c, rad + 1.0, Color(0.16, 0.16, 0.17))
+		draw_circle(c, rad, Color(0.42, 0.42, 0.43))
+		draw_arc(c, rad - 1.2, deg_to_rad(200), deg_to_rad(340), 16, Color(0.6, 0.6, 0.62), 1.2, true)   # lit top edge
+		draw_arc(c, rad - 1.2, deg_to_rad(20), deg_to_rad(160), 16, Color(0.25, 0.25, 0.26), 1.2, true)   # shaded foot
+		var g := Color(0.15, 0.95, 1.0) if hover else (Color(0.1, 0.7, 0.75) if lit else Color(0.3, 0.3, 0.31))
+		var k := rad * 0.55
+		match id:
+			"bags":                                          # a pouch: a round sack with a tied neck
+				draw_circle(c + Vector2(0, k * 0.25), k * 0.8, g)
+				draw_rect(Rect2(c + Vector2(-k * 0.35, -k * 0.85), Vector2(k * 0.7, k * 0.45)), g)
+				draw_line(c + Vector2(-k * 0.5, -k * 0.4), c + Vector2(k * 0.5, -k * 0.4), Color(0.42, 0.42, 0.43), 1.2)
+			"quests":                                        # a scroll
+				draw_rect(Rect2(c + Vector2(-k * 0.6, -k * 0.8), Vector2(k * 1.2, k * 1.6)), g)
+				for j in 3:
+					var y := -k * 0.4 + j * k * 0.4
+					draw_line(c + Vector2(-k * 0.35, y), c + Vector2(k * 0.35, y), Color(0.42, 0.42, 0.43), 1.0)
+				draw_circle(c + Vector2(0, -k * 0.85), k * 0.3, g)
+				draw_circle(c + Vector2(0, k * 0.85), k * 0.3, g)
+			"map":                                           # a folded map
+				var pts := PackedVector2Array([c + Vector2(-k, -k * 0.7), c + Vector2(-k * 0.33, -k * 0.9), c + Vector2(k * 0.33, -k * 0.7),
+						c + Vector2(k, -k * 0.9), c + Vector2(k, k * 0.7), c + Vector2(k * 0.33, k * 0.9), c + Vector2(-k * 0.33, k * 0.7),
+						c + Vector2(-k, k * 0.9)])
+				draw_colored_polygon(pts, g)
+				draw_line(c + Vector2(-k * 0.33, -k * 0.9), c + Vector2(-k * 0.33, k * 0.7), Color(0.42, 0.42, 0.43), 1.0)
+				draw_line(c + Vector2(k * 0.33, -k * 0.7), c + Vector2(k * 0.33, k * 0.9), Color(0.42, 0.42, 0.43), 1.0)
+			"options":                                       # a cog
+				for j in 8:
+					var a := j * TAU / 8.0
+					draw_line(c + Vector2(cos(a), sin(a)) * k * 0.6, c + Vector2(cos(a), sin(a)) * k * 1.05, g, 2.2)
+				draw_circle(c, k * 0.7, g)
+				draw_circle(c, k * 0.3, Color(0.42, 0.42, 0.43))

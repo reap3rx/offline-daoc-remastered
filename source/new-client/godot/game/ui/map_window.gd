@@ -23,6 +23,9 @@ var _pick: OptionButton
 var _follow_btn: Button
 var _entries: Array = []                  # dropdown index -> shown dict ({} = header)
 var _tex := {}
+var wide := false                          # the modern style's big map (owner 2026-11-02: "think WoW"): the log beside it
+var _log: LogPanel
+const LOG_W := 300.0
 
 
 func build() -> void:
@@ -45,6 +48,10 @@ func build() -> void:
 	_view = MapView.new()
 	_view.window = self
 	add_child(_view)
+	_log = LogPanel.new()
+	_log.window = self
+	_log.visible = false
+	add_child(_log)
 	_fill_dropdown()
 	_layout()
 	resized.connect(_layout)
@@ -54,16 +61,45 @@ func build() -> void:
 func _layout() -> void:
 	if _view == null:
 		return
-	var w := size.x - 27.0
+	var w := size.x - 27.0 - (LOG_W + 8.0 if wide else 0.0)
 	var h := size.y - TOP - 8.0 - 33.0 + 21.0
 	var side := maxf(64.0, minf(w, h))
+	_log.visible = wide
+	if wide:
+		_log.position = Vector2(size.x - 15.0 - LOG_W, TOP)
+		_log.size = Vector2(LOG_W, h)
 	_title.position = Vector2(12, 3)                       # in the frame's top band (was a gap above it)
 	_title.size = Vector2(size.x - 24.0, 16)
 	_pick.position = Vector2(12, 21)
-	_pick.size = Vector2(size.x - 24.0 - 72.0, 18)
+	_pick.size = Vector2(minf(size.x - 24.0 - 72.0, 320.0), 18)
 	_follow_btn.position = Vector2(size.x - 22.0 - 58.0, 21)  # clear of the frame's right edge
 	_view.position = Vector2(12 + (w - side) * 0.5, TOP)
 	_view.size = Vector2(side, side)
+
+
+## The modern style's big map: most of the screen, centred, the quest and event log beside the picture; off = the
+## classic window's size and place again.
+func set_wide(on: bool, area: Vector2) -> void:
+	if on == wide and not on:
+		return
+	wide = on
+	if on:
+		var sz := Vector2(minf(area.x * 0.86, area.y * 0.92 + LOG_W + 40.0), area.y * 0.92)
+		size = sz
+		position = (area - sz) * 0.5
+	else:
+		var was := visible
+		size = Vector2(MAP_SIZE + 27, MAP_SIZE + TOP + 8 + 12)
+		restore(false)
+		visible = was
+	_fit_frame()
+	_layout()
+
+
+func save_position() -> void:
+	if wide:
+		return                                             # (the big map's place is the screen's middle, not saved)
+	super.save_position()
 
 
 ## The zone the player is in now (zone_viewer at every zone load).
@@ -673,3 +709,130 @@ class MapView extends Control:
 		var pts := PackedVector2Array([tip, at - fwd * 4.0 + side * 4.5, at - fwd * 2.0, at - fwd * 4.0 - side * 4.5])
 		draw_colored_polygon(pts, Color(1.0, 0.85, 0.25))
 		draw_polyline(PackedVector2Array([pts[0], pts[1], pts[2], pts[3], pts[0]]), Color(0.1, 0.05, 0.0), 1.0)
+
+
+## The big map's log (modern style): the zone's events - running, resting, waiting, someone asking for help - then your
+## quests with their current goal. Click an event to look at it on the map.
+class LogPanel extends Control:
+	var window: MapWindow
+	var _rows: Array = []                       # [y0, y1, event dict]
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_STOP
+		clip_contents = true
+
+	func _process(_d: float) -> void:
+		if is_visible_in_tree() and Engine.get_process_frames() % 15 == 0:
+			queue_redraw()
+
+	func _gui_input(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			for r in _rows:
+				if event.position.y >= r[0] and event.position.y < r[1]:
+					var e: Dictionary = r[2]
+					var w := window
+					if int(e.get("zone", -1)) != int(w.shown.get("id", -1)) or String(w.shown.get("kind", "")) != "zone":
+						w._show({"kind": "zone", "id": int(e.get("zone", w.current_zone))}, true)
+					w.follow = false
+					w._follow_btn.set_pressed_no_signal(false)
+					w._view.zoom = 3.0
+					w._view.centre_on(w._view._mark_frac(Vector2(float(e.x), float(e.y)) / 0.025))
+					accept_event()
+					return
+
+	static func quest_entries() -> Array:
+		var out: Array = []
+		if Server.active:
+			var ids := Server.quests.keys()
+			ids.sort()
+			for i in ids:
+				var q: Dictionary = Server.quests[i]
+				var obj := ""
+				for g in q.get("goals", []):
+					if not bool(g.get("done", false)):
+						obj = String(g.get("text", ""))
+						break
+				if obj == "":
+					obj = String(q.get("text", "")).split("\n")[0]
+				out.append([JournalWindow.LEVEL_TAIL.sub(String(q.get("name", "")), ""), obj])
+		else:
+			for id in PlayerData.quests.keys():
+				var q := QuestDb.quest(String(id))
+				var steps: Array = q.get("steps", [])
+				var n := int(PlayerData.quests[id].get("step", 1))
+				var st: Dictionary = steps[n - 1] if n >= 1 and n <= steps.size() else {}
+				out.append([String(q.get("name", id)), String(st.get("text", ""))])
+		return out
+
+	func _text(f: Font, at: Vector2, s: String, fs: int, col: Color) -> void:
+		draw_string_outline(f, at, s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 2, Color(0, 0, 0, 0.8))
+		draw_string(f, at, s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
+
+	func _wrap(f: Font, s: String, fs: int, w: float) -> Array:
+		var lines: Array = []
+		var cur := ""
+		for word in s.split(" ", false):
+			var t := word if cur == "" else cur + " " + word
+			if f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > w and cur != "":
+				lines.append(cur)
+				cur = word
+			else:
+				cur = t
+		if cur != "":
+			lines.append(cur)
+		return lines
+
+	func _draw() -> void:
+		_rows.clear()
+		draw_rect(Rect2(Vector2.ZERO, size), Color(0.02, 0.02, 0.03, 0.8))
+		draw_rect(Rect2(Vector2.ZERO, size), Color(0.45, 0.42, 0.35), false, 1.0)
+		var f := UiArt.font(true)
+		var thin := UiArt.font(false)
+		var y := 6.0
+		var w := size.x - 16.0
+		_text(f, Vector2(8, y + 10), "EVENTS", 12, UiArt.GOLD_HI)
+		y += 20.0
+		var evs: Array = preload("res://game/ui/event_tracker.gd").in_zone(window.current_zone)
+		if evs.is_empty():
+			_text(thin, Vector2(10, y + 9), "Nothing is happening in this zone.", 10, UiArt.DIM)
+			y += 14.0
+		for e in evs:
+			var y0 := y
+			var st := String(e.get("state", "active"))
+			var title := String(e.get("hint", "")) if st == "dormant" else (String(e.get("giver", "")) + " is looking for help" if st == "giver" else String(e.get("title", "")))
+			var col := Color(1.0, 0.65, 0.2) if st in ["active", "next"] else (Color(0.95, 0.85, 0.45) if st == "dormant" else (Color(0.35, 0.85, 1.0) if st == "giver" else (Color(0.95, 0.3, 0.25) if st == "occupied" else UiArt.CREAM)))
+			for ln in _wrap(f, title, 11, w):
+				_text(f, Vector2(8, y + 12), ln, 11, col)
+				y += 14.0
+			var lv: Array = e.get("levels", [])
+			var sub := ""
+			if st in ["active", "next", "occupied"]:
+				sub = String(e.get("stage", ""))
+				if st != "occupied":
+					var t := int(e.get("time_left", 0))
+					sub += "  %d:%02d" % [t / 60, t % 60]
+			if lv.size() == 2:
+				sub += ("  " if sub != "" else "") + "LEVELS %d-%d" % [int(lv[0]), int(lv[1])]
+			if sub != "":
+				_text(thin, Vector2(12, y + 11), sub, 10, UiArt.CREAM)
+				y += 13.0
+			if st in ["active", "occupied"] and String(e.get("objective", "")) != "":
+				for ln in _wrap(thin, String(e.get("objective", "")), 10, w - 4):
+					_text(thin, Vector2(12, y + 11), ln, 10, UiArt.DIM)
+					y += 13.0
+			y += 5.0
+			_rows.append([y0, y, e])
+		y += 6.0
+		_text(f, Vector2(8, y + 10), "QUESTS", 12, UiArt.GOLD_HI)
+		y += 20.0
+		var qs := quest_entries()
+		if qs.is_empty():
+			_text(thin, Vector2(10, y + 9), "You have no quests.", 10, UiArt.DIM)
+		for q in qs:
+			for ln in _wrap(f, String(q[0]).to_upper(), 11, w):
+				_text(f, Vector2(8, y + 12), ln, 11, UiArt.GOLD_HI.darkened(0.1))
+				y += 14.0
+			for ln in _wrap(thin, String(q[1]), 10, w - 4):
+				_text(thin, Vector2(12, y + 11), ln, 10, UiArt.CREAM)
+				y += 13.0
+			y += 5.0

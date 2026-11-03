@@ -16,15 +16,21 @@ map, merchant and every other window with the classic style.
 |---|---|
 | bottom centre | the **health orb** (red glass filling to your health, hit points and percent inside), the **endurance arc** up its left and the **power arc** up its right, the **experience arc** along its bottom, your name and level on a plate under it; the **target plate** over it (name in its con colour, health bar and percent; click it = attack on / off) |
 | either side of the orb | **quickbars 1 and 2**, laid flat; a third bar lying flat stacks over the right one; your **effects** above the right bar |
-| top left | the **party**: a row per member (you first) with level and class, health bar and a thin power bar; click a member to target them |
+| top left | the **menu bar** - no backing, as GW2's: the sheets' own orbs from control.bmp (character, skills, combat styles, spells, group; lit while open, cyan on hover, name and key on hover), then inventory, quest journal, map and options in the same stone; the **party** under it: a row per member (you first) with level and class, health bar and a thin power bar; click a member to target them |
 | top centre | the compass strip |
 | top right | the **event tracker** (EventTracker) and the **quest log** under it: each quest's name and its current goal (the server's journal, or the game's own quests offline) |
-| bottom right | the **minimap**: the zone's painted map around you (the area map inside a town or dungeon wing), north up, with quest marks, events, your realm's bots and companions; the wheel zooms it, a click opens the map; the zone's name and the clock over it; the **window buttons** under it (CHAR, INV, SKILLS, STYLES, SPELLS, GROUP, QUESTS, MAP, OPTIONS) |
+| bottom right | the **minimap**: the zone's painted map around you (the area map inside a town or dungeon wing), north up, with quest marks, events, your realm's bots and companions; the wheel zooms it, a click opens the map; the zone's name and the clock over it |
+| sheets | open beside the party from the menu bar (the same orb again closes it); the panel's painted orbs are covered by a title band with a close cross |
+| inventory | the **modern bags** (`game/ui/modern_bags.gd`): what you wear on the left; the backpack as one grid sorted weapons, shields, armour, jewellery, ammunition, poisons, crafting, the rest - higher level and quality first inside each (the client hears no prices, so level and quality stand for value); every square is still its own backpack place (drag, double-click to equip, right-click then Shift+I / U); a search box dims what doesn't match; the **wallet** under it: coins, realm points and every currency (Marks of Valor, the Darkness Falls seals, aurulite, Atlantean glass, dragon scales ...), which leave the grid |
 
 The classic status, target, mini group and time windows are parked while MODERN is on; switching back to CLASSIC puts
 them, the quickbars and the compass back at their saved places.
 
-## The map (both styles, `game/ui/map_window.gd` MapView)
+## The map (`game/ui/map_window.gd`)
+
+Modern style: the map opens big in the middle of the screen (WoW's), with a log beside it - the zone's events
+(running, resting, waiting, someone asking for help, with stage, time left and levels; click one to look at it on the
+map) and your quests with their current goal. Both styles:
 
 - the wheel zooms about the pointer, up to 6x; the left button drags the zoomed map (a click without a drag still
   opens a zone from a realm map); FOLLOW keeps you centred while zoomed;
@@ -33,7 +39,10 @@ them, the quickbars and the compass back at their saved places.
 
 ## Not yet (next passes)
 
-- a modern skin for the sheets (inventory sorting / search, the character sheet, the spellbook) and the chat;
+- a real wallet (currencies off the backpack, on the server);
+- a modern skin for the character sheet, the spellbook and the chat;
+- sharper maps: `tests/map_render.gd` draws a zone from straight above (orthographic, tile by tile) - the way to
+  maps with every tree and path where it is;
 - the quiver, poison and potion bags as HUD buttons; a pet plate by the orb; the raid window;
 - art: the orb and plates are drawn (gold rim, dark stone) - a painted orb frame from the client's art would look
   better;

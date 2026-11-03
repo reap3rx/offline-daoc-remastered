@@ -35,6 +35,9 @@ var _sheet_bg: TextureRect
 var _sheet_body: Control
 var _strip: TextureRect
 var _tab_lit: Array = []
+var _tab_buttons: Array = []
+var _sheet_header: Control                           # the modern style's title band over the sheet's painted orbs
+var _classic_panel_pos := Vector2.INF                # the sheet panel's place in the classic style (modern moves it)
 var _tab_hover: Array = []
 var _status_bars := {}
 var _status_name: Label
@@ -72,6 +75,8 @@ const INFO_WIDE := 320.0                                  # ... for a server tex
 var _compass_letters: Control
 var _clock: Label
 const ModernHudScript := preload("res://game/ui/modern_hud.gd")
+const ModernBagsScript := preload("res://game/ui/modern_bags.gd")
+var bags: ClassicWindow                      # the modern inventory (STYLE MODERN), built on first use
 var modern: Control                          # the modern HUD (Options > INTERFACE > STYLE: MODERN), else null
 var player: Node3D
 var sky: Node                            # SkySystem: the game clock on the time display
@@ -103,6 +108,8 @@ func _rescale() -> void:
 	_place_event_tracker()
 	if modern:
 		modern.layout()
+		if map_window:
+			map_window.set_wide(true, area())
 
 
 func _place_event_tracker() -> void:
@@ -427,6 +434,7 @@ func _build() -> void:
 		hot.pressed.connect(func():                        # the old client: the open sheet's tab folds it away to the
 			_tab_clicked(TABS[i]))                         # strip of six tabs; any tab opens its sheet again (owner)
 		right_panel.add_child(hot)
+		_tab_buttons.append(hot)
 	_sheet_body = Control.new()
 	_sheet_body.size = right_panel.size
 	_sheet_body.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -498,11 +506,26 @@ func set_style(style: String, save := true) -> void:
 			root.move_child(modern, 1)                     # over the world drop, under the windows
 			if map_window and map_window.visible:
 				map_window.visible = false                 # the minimap takes its corner; M / a click opens it
+		_strip_shown(false)
+		if _classic_panel_pos == Vector2.INF:
+			_classic_panel_pos = right_panel.position
+		right_panel.visible = false                        # (opened again from the menu bar)
+		if map_window:
+			map_window.set_wide(true, area())
 		modern.layout()
 		return
 	if modern:
 		modern.queue_free()
 		modern = null
+		_strip_shown(true)
+		_collapse(_collapsed)
+		right_panel.position = _classic_panel_pos if _classic_panel_pos != Vector2.INF else defaults["panel"][0]
+		right_panel.visible = true
+		right_panel.save_position()
+		if bags:
+			bags.hide_window()
+		if map_window:
+			map_window.set_wide(false, area())
 		for id in ["status", "target", "minigroup", "time", "quickbar1", "quickbar2", "compass"]:
 			if windows.has(id):
 				var w: ClassicWindow = windows[id]
@@ -1687,7 +1710,61 @@ func reset_layout() -> void:
 
 
 func show_sheet(tab: String) -> void:
+	if modern:
+		_modern_sheet(tab)
+		return
 	_tab_clicked(tab)
+
+
+## The modern style's sheets (owner 2026-11-02): the menu bar opens one, the same one again closes it; the inventory is
+## the modern bags window. The panel opens beside the party, its tab strip gone (the menu bar is the strip).
+func _modern_sheet(tab: String) -> void:
+	if tab == "inventory":
+		toggle_bags()
+		return
+	if right_panel.visible and sheet_tab == tab and not _collapsed:
+		right_panel.hide_window()
+		return
+	if sheet_tab != tab:
+		_set_sheet(tab)
+	_collapse(false)
+	_strip_shown(false)
+	right_panel.move_child(_sheet_header, -1)
+	right_panel.position = Vector2(ModernHudScript.PARTY_W + 18.0, 40.0)
+	right_panel.show_window()
+
+
+## The modern inventory: built the first time, then shown / hidden.
+func toggle_bags() -> void:
+	if bags == null:
+		bags = ModernBagsScript.new()
+		bags.resizable = true
+		bags.patch = [6, 6, 6, 6]
+		bags.min_size = ModernBagsScript.SIZE
+		bags.max_size = ModernBagsScript.SIZE
+		bags.size = ModernBagsScript.SIZE
+		var pos := Vector2(area().x - ModernBagsScript.SIZE.x - 190.0, area().y - ModernBagsScript.SIZE.y - 40.0)
+		bags.setup("bags", "leftbot", Rect2(), pos)
+		_add(bags, pos, false)
+		bags.set_window_size(ModernBagsScript.SIZE)
+		bags.build()
+		bags.visible = false
+	bags.toggle_window()
+
+
+## The sheet panel's own strip of six orbs (classic) - hidden under the modern menu bar.
+func _strip_shown(on: bool) -> void:
+	_strip.visible = on
+	if _sheet_header == null:
+		_sheet_header = SheetHeader.new()
+		_sheet_header.ui = self
+		right_panel.add_child(_sheet_header)
+	_sheet_header.visible = not on
+	_sheet_header.queue_redraw()
+	for n in _tab_lit + _tab_hover:
+		n.visible = n.visible and on
+	for b in _tab_buttons:
+		b.visible = on
 
 
 ## A sheet's tab (or its key): the open sheet folds away, leaving the strip of six tabs (the old client's way - the
@@ -1979,6 +2056,36 @@ func handle_input(event: InputEvent) -> bool:
 		return true
 	return false
 
+
+
+## The modern style's band over the top of the sheet panel (its art paints the six orbs there; the menu bar is the
+## strip now): dark stone with the sheet's name, a close cross, drag it to move the panel.
+class SheetHeader extends Control:
+	var ui: GameUI
+	const NAMES := {"character": "CHARACTER", "skills": "SKILLS", "combat": "COMBAT STYLES", "magic": "SPELLS",
+			"group": "GROUP", "inventory": "INVENTORY"}
+
+	func _ready() -> void:
+		position = Vector2(4, 3)
+		size = Vector2(184, 26)
+		mouse_filter = Control.MOUSE_FILTER_PASS              # (the panel underneath takes the drag)
+
+	func _gui_input(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT \
+				and event.position.x > size.x - 20:
+			ui.right_panel.hide_window()
+			accept_event()
+
+	func _draw() -> void:
+		draw_rect(Rect2(Vector2.ZERO, size), Color(0.07, 0.065, 0.06))
+		draw_rect(Rect2(Vector2.ZERO, size), Color(0.45, 0.37, 0.22), false, 1.0)
+		var f := UiArt.font(true)
+		var t := String(NAMES.get(ui.sheet_tab, ui.sheet_tab.to_upper()))
+		draw_string_outline(f, Vector2(10, 17), t, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, 2, Color(0, 0, 0, 0.85))
+		draw_string(f, Vector2(10, 17), t, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UiArt.GOLD_HI)
+		var c := Vector2(size.x - 11, 13)
+		draw_line(c + Vector2(-4, -4), c + Vector2(4, 4), UiArt.CREAM, 1.5)
+		draw_line(c + Vector2(-4, 4), c + Vector2(4, -4), UiArt.CREAM, 1.5)
 
 
 ## The world behind the windows as a drop target, only while something is being dragged (otherwise it lets every

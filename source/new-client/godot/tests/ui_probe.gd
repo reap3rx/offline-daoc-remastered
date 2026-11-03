@@ -1,6 +1,7 @@
 extends Node
-## Debug (claude 2026-11-02): the modern HUD (Options > INTERFACE > STYLE) - the orb with a target and a party, the
-## minimap, the quest log; the map zoomed; then back to classic. Client side only.
+## Debug (claude 2026-11-02): the modern interface (Options > INTERFACE > STYLE) - the HUD with a target and a party,
+## the menu bar opening the character sheet, the modern bags, the big map with its log; then back to classic.
+## Client side only.
 ##   --auto-play=hib:Mongfar --live-probe=ui_probe
 var v: Node
 
@@ -17,36 +18,46 @@ func _wait(s: float) -> void:
 
 
 func _ready() -> void:
-	get_tree().create_timer(120.0).timeout.connect(func(): print("[ui] timed out"); get_tree().quit())
+	get_tree().create_timer(150.0).timeout.connect(func(): print("[ui] timed out"); get_tree().quit())
 	await _wait(25.0)
 	v = get_tree().current_scene
+	var ui = v.ui
 	v.player.cam_distance = 4.0
-	v.ui.map_window.visible = false
-	v.ui.set_style("modern", false)
+	ui.map_window.visible = false
+	ui.set_style("modern", false)
 	PlayerData.target = {"name": "Sentinel Glynis", "con_color": Color(1.0, 0.9, 0.2), "health": 0.72}
 	PlayerData.target_changed.emit()
 	PlayerData.group = [{"name": "Caoimhe", "class_name": "Druid", "level": 14, "hp": 0.82, "power": 0.55, "end": 1.0, "effects": []},
 			{"name": "Fergal", "class_name": "Hero", "level": 15, "hp": 0.4, "power": 0.1, "end": 0.7, "effects": []}]
 	PlayerData.group_changed.emit()
 	await _wait(1.5)
-	PlayerData.health = 0.62
-	PlayerData.endurance = 0.8
-	PlayerData.power = 0.45
-	PlayerData.exp_frac = 0.37
-	print("[ui] modern: %s windows hidden: %s" % [str(v.ui.modern != null), str(["status", "target", "minigroup", "time"].map(func(id): return not v.ui.windows[id].visible))])
+	print("[ui] modern: %s panel shown: %s strip shown: %s" % [str(ui.modern != null), str(ui.right_panel.visible), str(ui._strip.visible)])
 	await _shot("modern")
-	v.ui.map_window.player = v.player
-	v.ui.map_window.show_window()
+	ui.modern.menu.open("character")
 	await _wait(0.5)
-	var view = v.ui.map_window._view
-	view.zoom = 3.0
-	v.ui.map_window.follow = true
-	await _wait(0.5)
-	print("[ui] map zoom %.1f pan %s" % [view.zoom, str(view.pan)])
-	await _shot("map")
-	v.ui.map_window.hide_window()
-	v.ui.set_style("classic", false)
+	print("[ui] sheet: panel %s at %s tab %s" % [str(ui.right_panel.visible), str(ui.right_panel.position), ui.sheet_tab])
+	await _shot("sheet")
+	ui.modern.menu.open("character")
+	ui.modern.menu.open("bags")
+	await _wait(0.8)
+	var order: Array = ui.bags.sorted_slots()
+	var names: Array = []
+	for s in order:
+		var it := PlayerData.item_at(int(s))
+		if not it.is_empty():
+			names.append("%s[%d L%d]" % [String(it.get("name", "")), int(it.get("object_type", 0)), int(it.get("level", 0))])
+	print("[ui] bags: %d places, sorted: %s" % [order.size(), ", ".join(names)])
+	print("[ui] wallet: %s" % ui.bags._wallet.get_parsed_text().replace("\n", " | "))
+	await _shot("bags")
+	ui.toggle_bags()
+	ui.modern.menu.open("map")
 	await _wait(1.0)
-	print("[ui] classic: %s windows shown: %s" % [str(v.ui.modern == null), str(["status", "target", "minigroup", "time"].map(func(id): return v.ui.windows[id].visible))])
+	print("[ui] bigmap: wide %s size %s log %s" % [str(ui.map_window.wide), str(ui.map_window.size), str(ui.map_window._log.visible)])
+	await _shot("bigmap")
+	ui.map_window.hide_window()
+	ui.set_style("classic", false)
+	await _wait(1.0)
+	print("[ui] classic: panel %s strip %s windows shown: %s map wide %s" % [str(ui.right_panel.visible), str(ui._strip.visible),
+			str(["status", "target", "time"].map(func(id): return ui.windows[id].visible)), str(ui.map_window.wide)])
 	await _shot("classic")
 	get_tree().quit()
