@@ -3,6 +3,18 @@
 The newest version is first. For the full detail of every earlier update, see
 [docs/history/CHANGELOG-0.3-to-0.32b.md](docs/history/CHANGELOG-0.3-to-0.32b.md).
 
+## Offline DAoC Remastered Beta v0.1 - 2026-11-03
+
+The mod's first beta, feature complete for a full test: everything since 0.37c - the remastered world and lighting,
+weather, Action Combat, housing, mounts, dynamic events, level bands with GW2-style scaling, special loot, the wallet,
+and the modern interface (GW2 menu bar, Hero panel, modern bags, the big drawn map). See `BETA v0.1 - READ ME.txt`.
+- The launcher and the login screen say "Offline DAoC Remastered - Beta v0.1".
+- `SWITCH WORLD.cmd` (`tools/beta/switch-world.ps1`): switch between the fresh Beta world, your old world and the
+  world you left last (it's always set aside first). `tools/beta/fresh_world.py` makes a fresh world from a copy of
+  the database: no characters or bots, house lots for sale, keeps and relics home, no news or exchange history.
+- The install package (7-Zip parts + INSTALL.cmd, in Google Drive) leaves out the original client, backups, logs
+  and caches.
+
 ## 0.37 / 0.37b / 0.37c — 2026-10-18
 
 The first version that comes as an update to 0.36: the overview is in [docs/RELEASE-0.37.md](docs/RELEASE-0.37.md);

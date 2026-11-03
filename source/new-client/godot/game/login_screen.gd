@@ -350,7 +350,7 @@ func _build_panel() -> void:
 
 ## Top right: the version (Offline DAoC Rebuilt - the launcher runs the server).
 func _show_host() -> void:
-	_host_label.text = "OFFLINE DAOC REBUILT V0.36C"
+	_host_label.text = "OFFLINE DAOC REMASTERED - BETA V0.1"
 	_host_label.add_theme_color_override("font_color", Color(CREAM, 0.55))
 
 
