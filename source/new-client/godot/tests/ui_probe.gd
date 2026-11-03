@@ -54,6 +54,10 @@ func _ready() -> void:
 	await _wait(1.0)
 	print("[ui] bigmap: wide %s size %s log %s" % [str(ui.map_window.wide), str(ui.map_window.size), str(ui.map_window._log.visible)])
 	await _shot("bigmap")
+	ui.map_window._view.zoom = 3.5
+	ui.map_window.follow = true
+	await _wait(1.0)
+	await _shot("bigmap_zoom")
 	ui.map_window.hide_window()
 	ui.set_style("classic", false)
 	await _wait(1.0)

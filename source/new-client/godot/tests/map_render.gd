@@ -3,7 +3,8 @@ extends Node
 ## official ones"): the zone drawn from straight above with an orthographic camera, tile by tile, into one big picture
 ## - every tree, path, building and stream where it really is. Offline zone viewer, noon, no fog, no interface:
 ##   Godot --path godot -- --zone=207 --probe=map_render --time=13 [--map-px=8192] [--map-tiles=8]
-## writes E:/Offline DAOC 036c/claude-work/maps/z<zone>_render.png (and a 2048 copy).
+## writes content/maps/render/z<zone>.jpg (4096 px, what the map and minimap draw when zoomed in) and, with --map-png,
+## the full picture to claude-work/maps.
 var v: Node
 const OUT := "E:/Offline DAOC 036c/claude-work/maps"
 
@@ -51,6 +52,7 @@ func _ready() -> void:
 	var big := Image.create(total_px, total_px, false, Image.FORMAT_RGB8)
 	DirAccess.make_dir_recursive_absolute(OUT)
 	print("[map] zone %d: %.1f m, %d x %d tiles of %d px" % [zone_id, size_m, tiles, tiles, px])
+	var started := Time.get_ticks_msec()
 	for j in tiles:
 		for i in tiles:
 			var cx := (i + 0.5) * tile_m
@@ -73,9 +75,15 @@ func _ready() -> void:
 			img.convert(Image.FORMAT_RGB8)
 			big.blit_rect(img, Rect2i(0, 0, px, px), Vector2i(i * px, j * px))
 		print("[map] row %d of %d" % [j + 1, tiles])
-	big.save_png("%s/z%03d_render.png" % [OUT, zone_id])
+	if _arg("map-png", "") != "":
+		big.save_png("%s/z%03d_render.png" % [OUT, zone_id])
+	var dir := ProjectSettings.globalize_path("res://content/maps/render")
+	DirAccess.make_dir_recursive_absolute(dir)
+	var keep := big.duplicate()
+	keep.resize(4096, 4096, Image.INTERPOLATE_LANCZOS)
+	keep.save_jpg("%s/z%03d.jpg" % [dir, zone_id], 0.9)
 	var small := big.duplicate()
-	small.resize(2048, 2048, Image.INTERPOLATE_LANCZOS)
-	small.save_png("%s/z%03d_render_2048.png" % [OUT, zone_id])
-	print("[map] saved")
+	small.resize(1024, 1024, Image.INTERPOLATE_LANCZOS)
+	small.save_jpg("%s/z%03d_render_1024.jpg" % [OUT, zone_id], 0.9)
+	print("[map] saved in %d s" % ((Time.get_ticks_msec() - started) / 1000))
 	get_tree().quit()

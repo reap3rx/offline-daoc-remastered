@@ -35,14 +35,28 @@ map) and your quests with their current goal. Both styles:
 - the wheel zooms about the pointer, up to 6x; the left button drags the zoomed map (a click without a drag still
   opens a zone from a realm map); FOLLOW keeps you centred while zoomed;
 - hovering a mark names it: a quest mark's kind, an event's name, stage, time left and level range, a bot or a
-  companion.
+  companion;
+- **sharp when zoomed in**: past about 1.3x the painted map fades into the zone drawn from straight above (every tree,
+  path, house and stream where it really is), fully from 2.5x; the painted map's names and markers stay on top at one
+  size however far in you are. The minimap does the same.
+
+### The drawn zones (owner 2026-11-02: "making the maps more high-rez, since there are no official ones")
+
+- `godot/tests/map_render.gd`: the offline zone viewer with an orthographic camera straight down, mid-afternoon sun
+  (shadows give the hills and trees their shape), no fog, no interface; 8 x 8 tiles of 1024 px stitched, saved as
+  `content/maps/render/z<zone>.jpg` (4096 px, about 0.4 m a pixel). About 15 s a zone.
+- `pipeline/render_maps.ps1`: every outdoor zone with a whole-zone painted map (67 of them: the three realms, the
+  frontiers, the battlegrounds), skipping those already drawn (`-redo` draws them all again). Capitals and dungeons keep
+  their painted maps (their map shows part of a zone).
+- `pipeline/build_map_labels.py`: lifts the painted map's white names and markers (with their black edge) and the
+  yellow arrows to the next zones into `z<zone>_labels.png`, and each one's box into `z<zone>_labels.json`.
+- About 410 MB for all of them (content, not in git): run the two scripts after a zone changes.
 
 ## Not yet (next passes)
 
 - a real wallet (currencies off the backpack, on the server);
 - a modern skin for the character sheet, the spellbook and the chat;
-- sharper maps: `tests/map_render.gd` draws a zone from straight above (orthographic, tile by tile) - the way to
-  maps with every tree and path where it is;
+- drawn maps for capitals and dungeon levels; our own names for places the painted maps don't name;
 - the quiver, poison and potion bags as HUD buttons; a pet plate by the orb; the raid window;
 - art: the orb and plates are drawn (gold rim, dark stone) - a painted orb frame from the client's art would look
   better;

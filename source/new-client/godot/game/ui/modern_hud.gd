@@ -408,6 +408,12 @@ class Minimap extends Part:
 		var origin := size * 0.5 - frac * k
 		if tex:
 			draw_texture_rect(tex, Rect2(origin, Vector2(k, k)), false)
+		# the zone drawn from above over it when close in (MapWindow.render_texture), the painted map when far out
+		var mix := MapWindow.render_mix(0.6 / span) if i < 0 else 0.0
+		var rt: Texture2D = w.render_texture(z) if mix > 0.0 else null
+		if rt:
+			draw_texture_rect(rt, Rect2(origin, Vector2(k, k)), false, Color(1, 1, 1, mix))
+			w.draw_render_labels(self, z, origin, k, size.x / 0.55, mix, Rect2(Vector2.ZERO, size))
 		var at := func(uu: Vector2) -> Vector2:
 			return origin + (to_frac.call(uu) as Vector2) * k
 		var inside := func(p: Vector2) -> bool:

@@ -226,6 +226,69 @@ func _texture(name: String) -> Texture2D:
 	return _tex[name]
 
 
+## The zone drawn from straight above (tests/map_render.gd: content/maps/render/z<zone>.jpg) - every tree, path and
+## house where it really is, sharp when zoomed in where the painted map blurs (owner 2026-11-02: "making the maps more
+## high-rez"). null when the zone has none yet. Only for a whole-zone map (its square is the zone's own).
+func render_texture(z: int) -> Texture2D:
+	var key := "render:%d" % z
+	if not _tex.has(key):
+		var path := "res://content/maps/render/z%03d.jpg" % z
+		var img := Image.load_from_file(ProjectSettings.globalize_path(path)) if FileAccess.file_exists(path) else null
+		if img:
+			img.generate_mipmaps()
+		_tex[key] = ImageTexture.create_from_image(img) if img else null
+	var mr := map_rect(z)
+	if mr.position != Vector2.ZERO:
+		return null                                     # (a capital's or dungeon's map shows part of the zone)
+	return _tex[key]
+
+
+## The painted map's names and markers on their own (pipeline/build_map_labels.py), drawn over the render.
+func render_labels(z: int) -> Texture2D:
+	var key := "labels:%d" % z
+	if not _tex.has(key):
+		var path := "res://content/maps/render/z%03d_labels.png" % z
+		var img := Image.load_from_file(ProjectSettings.globalize_path(path)) if FileAccess.file_exists(path) else null
+		if img:
+			img.generate_mipmaps()
+		_tex[key] = ImageTexture.create_from_image(img) if img else null
+	return _tex[key]
+
+
+## The names' and markers' boxes in the labels picture (build_map_labels.py): {size, boxes: [[x, y, w, h]]}.
+func render_label_boxes(z: int) -> Dictionary:
+	var key := "boxes:%d" % z
+	if not _tex.has(key):
+		var path := "res://content/maps/render/z%03d_labels.json" % z
+		var parsed = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
+		_tex[key] = parsed if parsed is Dictionary else {}
+	return _tex[key]
+
+
+## The painted map's names over the drawn picture, each at one size however far in you are (WoW's / GW2's maps):
+## origin and k = where the zone's square is on the canvas and how big; at = the picture size the names are drawn for
+## (the map's own size at its first zoom step), alpha = the render's share. Canvas coordinates, no transform.
+func draw_render_labels(ci: CanvasItem, z: int, origin: Vector2, k: float, at: float, alpha: float, clip: Rect2) -> void:
+	var lt := render_labels(z)
+	var info := render_label_boxes(z)
+	if lt == null or info.is_empty() or alpha <= 0.0:
+		return
+	var n := float(info.get("size", lt.get_width()))
+	var s := at / n                                         # label pixels -> canvas units at the names' own size
+	for b in info.get("boxes", []):
+		var src := Rect2(float(b[0]), float(b[1]), float(b[2]), float(b[3]))
+		var centre := origin + (src.position + src.size * 0.5) / n * k
+		var dst := Rect2(centre - src.size * s * 0.5, src.size * s)
+		if clip.intersects(dst):
+			ci.draw_texture_rect_region(lt, dst, src, Color(1, 1, 1, alpha))
+
+
+## How much of the drawn picture shows over the painted map at a zoom: none at the whole zone (the painted map keeps
+## its names and art), all of it from about 2.5x in.
+static func render_mix(zoom: float) -> float:
+	return clampf((zoom - 1.3) / 1.2, 0.0, 1.0)
+
+
 func _dropdown() -> OptionButton:
 	var o := OptionButton.new()
 	o.focus_mode = Control.FOCUS_NONE
@@ -651,6 +714,14 @@ class MapView extends Control:
 		if texture:
 			draw_texture_rect(texture, Rect2(Vector2.ZERO, size), false)
 		var w := window
+		if String(w.shown.get("kind", "")) == "zone":
+			var mix := MapWindow.render_mix(zoom)
+			var rt := w.render_texture(int(w.shown.id)) if mix > 0.0 else null
+			if rt:
+				draw_texture_rect(rt, Rect2(Vector2.ZERO, size), false, Color(1, 1, 1, mix))
+				draw_set_transform(Vector2.ZERO)
+				w.draw_render_labels(self, int(w.shown.id), pan, size.x * zoom, size.x * 1.3, mix, Rect2(Vector2.ZERO, size))
+				draw_set_transform(pan, 0.0, Vector2(zoom, zoom))
 		if String(w.shown.get("kind", "")) == "region" and _hover >= 0:
 			var sq := w.region_square(int(w.shown.id), _hover)
 			draw_rect(Rect2(sq.position / 256.0 * size, sq.size / 256.0 * size), Color(1.0, 0.85, 0.3), false, 1.5)
