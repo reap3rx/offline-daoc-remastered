@@ -131,6 +131,7 @@ namespace DOL.GS.DynamicEvents
                     c.ZoneDef = z;
                     if (c.Stages.Count == 0)
                         continue;
+                    LevelBands.RemapChain(c, (ushort) z.Region, zone);   // the zone level bands
                     c.Start ??= c.Stages[0].Id;
                     Chains.Add(new ChainRuntime(c, region, zone, Now));
                 }

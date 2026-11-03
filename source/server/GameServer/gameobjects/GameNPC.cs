@@ -1156,6 +1156,26 @@ namespace DOL.GS
 			OwnerID = dbMob.OwnerID;
 
 			LoadTemplate(NpcTemplateMgr.GetTemplate(dbMob.NPCTemplateID)); // Returns a random template if multiple with the same ID exist.);
+			_unbandedLevel = Level;
+			ApplyLevelBand();
+		}
+
+		/// <summary>The level the database (or the template's roll) gave this monster, before LevelBands; 0 = unbanded.</summary>
+		private byte _unbandedLevel;
+		private byte _bandedTo;                          // the level banding gave it (0: none) - a GM's /mob level since wins
+
+		/// <summary>The zone level bands (gameutils/LevelBands.cs): this monster's level from its original one and its spawn spot.</summary>
+		private void ApplyLevelBand()
+		{
+			if (_unbandedLevel == 0 || !LevelBands.Applies(this))
+				return;
+			bool spawned = m_spawnPoint != null && (m_spawnPoint.X != 0 || m_spawnPoint.Y != 0);
+			int x = spawned ? m_spawnPoint.X : m_x;
+			int y = spawned ? m_spawnPoint.Y : m_y;
+			byte banded = LevelBands.Remap(CurrentRegionID, x, y, _unbandedLevel);
+			if (banded != Level)
+				Level = banded;
+			_bandedTo = banded;
 		}
 
 		/// <summary>
@@ -1220,7 +1240,7 @@ namespace DOL.GS
 			mob.Realm = (byte)Realm;
 			mob.Model = Model;
 			mob.Size = Size;
-			mob.Level = Level;
+			mob.Level = _bandedTo != 0 && _bandedTo == Level ? _unbandedLevel : Level;   // a banded monster keeps its original level in the database
 
 			// Stats
 			mob.Constitution = Constitution;
@@ -3257,7 +3277,14 @@ namespace DOL.GS
 			if (IsAlive || ObjectState == eObjectState.Active)
 				return 0;
 
+			if (_unbandedLevel > 0)
+				m_level = _unbandedLevel;                // the template (or its own level) again, then banded anew
 			LoadTemplate(NPCTemplate);
+			if (_unbandedLevel > 0)
+			{
+				_unbandedLevel = Level;
+				ApplyLevelBand();
+			}
 			Health = MaxHealth;
 			Mana = MaxMana;
 			Endurance = MaxEndurance;

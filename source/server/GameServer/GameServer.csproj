@@ -87,5 +87,6 @@
     <ItemGroup>
         <!-- dynamic events: the zones' event files, read at start-up (scripts/dynamicevents) -->
         <EmbeddedResource Include="scripts\dynamicevents\zones\*.json" LogicalName="DynamicEvents.%(Filename)%(Extension)" />
+        <EmbeddedResource Include="gameutils\data\level_bands.json" />
     </ItemGroup>
 </Project>
