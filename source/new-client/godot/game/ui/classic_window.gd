@@ -26,6 +26,13 @@ var _drag := false
 var _resize := ""                            # "", "top", "right", "topright"
 var _drag_from := Vector2.ZERO
 var _start_rect := Rect2()
+# The modern style's corner grip (owner 2026-11-03: "Scalable individual elements by clicking on a corner and dragging,
+# ensuring it stays in ratio"): the whole window scales, its shape kept; kept per window in [modern_zoom].
+var scalable := false
+var zoom := 1.0
+var _grip: Control
+const ZOOM_MIN := 0.6
+const ZOOM_MAX := 2.2
 
 
 func setup(id: String, frame_bitmap: String, frame_rect := Rect2(), pos := Vector2.ZERO) -> ClassicWindow:
@@ -196,3 +203,83 @@ func restore(default_visible: bool) -> void:
 	else:
 		visible = default_visible
 	_clamp_to_screen.call_deferred()
+
+
+## Turn the corner grip on (the modern style) or off (classic: back to the window's own size).
+func set_scalable(on: bool) -> void:
+	scalable = on
+	if on and _grip == null:
+		_grip = Grip.new()
+		_grip.win = self
+		add_child(_grip)
+	if _grip:
+		_grip.visible = on
+		_grip.move_to_front()
+	var z := 1.0
+	if on:
+		var cfg := ConfigFile.new()
+		cfg.load(UiArt.settings_path)
+		z = float(cfg.get_value("modern_zoom", window_id, 1.0))
+	set_zoom(z, false)
+
+
+func set_zoom(z: float, save := true) -> void:
+	zoom = clampf(z, ZOOM_MIN, ZOOM_MAX)
+	scale = Vector2(zoom, zoom)
+	if _grip:
+		_grip.place()
+	if is_inside_tree():
+		_clamp_to_screen()
+	if save and window_id != "":
+		var cfg := ConfigFile.new()
+		cfg.load(UiArt.settings_path)
+		cfg.set_value("modern_zoom", window_id, zoom)
+		cfg.save(UiArt.settings_path)
+
+
+## The grip in the bottom right corner: drag it to scale the window.
+class Grip extends Control:
+	const S := 12.0
+	var win: ClassicWindow
+	var _from := Vector2.ZERO
+	var _start := 1.0
+	var _on := false
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_STOP
+		mouse_default_cursor_shape = Control.CURSOR_FDIAGSIZE
+		tooltip_text = "DRAG TO RESIZE"
+		size = Vector2(S, S)
+
+	func place() -> void:
+		position = win.size - Vector2(S, S)
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_ENTER_TREE or what == NOTIFICATION_RESIZED:
+			if win:
+				place()
+
+	func _draw() -> void:
+		var c := Color(0.86, 0.71, 0.38, 0.85)
+		for i in 3:
+			var k := 3.0 + i * 3.5
+			draw_line(Vector2(S - k, S - 1), Vector2(S - 1, S - k), c, 1.2, true)
+
+	func _process(_d: float) -> void:
+		if win and position != win.size - Vector2(S, S):
+			place()
+
+	func _gui_input(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+			_on = event.pressed
+			_from = get_global_mouse_position()
+			_start = win.zoom
+			if not _on:
+				win.set_zoom(win.zoom)
+			accept_event()
+		elif event is InputEventMouseMotion and _on:
+			var parent_k: float = win.get_global_transform().get_scale().x / maxf(0.01, win.zoom)
+			var d := (get_global_mouse_position() - _from) / maxf(0.01, parent_k)
+			var grow := maxf(d.x / maxf(1.0, win.size.x), d.y / maxf(1.0, win.size.y))
+			win.set_zoom(_start + grow, false)
+			accept_event()

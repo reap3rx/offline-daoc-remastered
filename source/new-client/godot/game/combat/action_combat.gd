@@ -126,9 +126,15 @@ func setup(v: Node) -> void:
 	_layer.add_child(hud)
 	hud.visible = false
 	_load_layout()
+	Server.client_cfg_changed.connect(_server_cfg)
 
 
 func _exit_tree() -> void:
+	if on and _player():
+		ac_distance = _player().cam_distance
+		_save_layout(false)
+		if Server.active and _char_name() != "":
+			Server.store_cfg(SECTION, _packed())
 	if on and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
@@ -236,6 +242,16 @@ func _set_on(v: bool) -> void:
 			p.action_cursor = false
 	_atk_down = false
 	_par_down = false
+	if p and was != on:                                    # the action camera keeps its own distance
+		if on:
+			_classic_distance = p.cam_distance
+			if ac_distance > 0.0:
+				p.cam_distance = ac_distance
+		else:
+			ac_distance = p.cam_distance
+			_save_layout()
+			if _classic_distance > 0.0:
+				p.cam_distance = _classic_distance
 	if not on:
 		_set_editing(false)
 	hud.visible = on
@@ -879,12 +895,15 @@ func _process(_delta: float) -> void:
 		Server.command("/ac poison query")                 # (the poison bag starts putting poisons on)
 	var p := _player()
 	_hold_sprint(p)
+	if Engine.get_process_frames() % 30 == 0:
+		_check_character()
 	if p == null or not on:
 		return
 	var now := Time.get_ticks_msec()
 	var lp = viewer.get("look_panel") if viewer else null
-	var free: bool = _editing or not p.input_enabled or _typing() or p.dead or Keybinds.held("ac_cursor") or _npc_window_open() \
-			or (lp != null and is_instance_valid(lp) and lp.visible)
+	var wanted := _cursor_wanted()                         # (every frame: it watches the key's presses)
+	var free: bool = _editing or not p.input_enabled or _typing() or p.dead or _npc_window_open() \
+			or (lp != null and is_instance_valid(lp) and lp.visible) or wanted
 	p.action_cursor = free
 	if free and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -919,6 +938,59 @@ func _process(_delta: float) -> void:
 ## (its x1.3, its endurance) - "/sprint on" / "off"; its "prepare to sprint" chat lines are kept out of the way.
 var _sprint_held := false
 var _sprint_quiet_until := 0
+
+
+## The cursor key (Alt): held - the cursor while it's down; toggle (Options > CONTROLS, owner 2026-11-03) - a press
+## brings it out, the next press hides it. Either way a window that wants the pointer (bags, the Hero panel, the map,
+## the journal, options ...) brings it out as it opens and lets it go again when the last one closes - unless the key
+## was pressed meanwhile (then the key's state rules: hide it over an open window, or keep it after closing).
+static var cursor_toggle := false
+var _toggle_free := false
+var _win_free := false                 # a window opened and brought the cursor out (not yet answered by the key)
+var _win_was := false
+var _key_was := false
+
+
+func _cursor_wanted() -> bool:
+	var key := Keybinds.held("ac_cursor")
+	var pressed := key and not _key_was
+	_key_was = key
+	var win := _ui_window_open()
+	if win and not _win_was:
+		_win_free = true
+	elif not win:
+		_win_free = false
+	_win_was = win
+	if pressed and not cursor_toggle:
+		_win_free = false                                  # (held: the key rules - a window left open can't keep it out)
+	if cursor_toggle:
+		if pressed:
+			if _toggle_free or _win_free:
+				_toggle_free = false
+				_win_free = false
+			else:
+				_toggle_free = true
+		return _toggle_free or _win_free
+	return key or _win_free
+
+
+## A window that wants the mouse pointer is open (the classic and modern windows alike).
+func _ui_window_open() -> bool:
+	var ui = viewer.get("ui") if viewer else null
+	if ui == null:
+		return false
+	for id in ["bags", "hero", "journal", "options", "events_window", "guild_window", "warmap", "potions", "poisons",
+			"quiver", "ac_styles", "exchange", "emblem_window"]:
+		var w = ui.get(id)
+		if w != null and is_instance_valid(w) and (w as CanvasItem).visible:
+			return true
+	var mw = ui.get("map_window")
+	if mw != null and is_instance_valid(mw) and mw.visible and bool(mw.get("wide")):
+		return true                                        # (the big map, not the classic corner map)
+	var rp = ui.get("right_panel")
+	if ui.get("modern") != null and rp != null and is_instance_valid(rp) and rp.visible:
+		return true                                        # a sheet opened from the modern menu
+	return false
 
 
 func _hold_sprint(p: Player) -> void:
@@ -1242,28 +1314,122 @@ func _select_quiet(n: Npc) -> void:
 
 # ---------------------------------------------------------------- the HUD and its layout
 
+## The combat HUD's layout and the over-the-shoulder camera are kept per character (owner 2026-11-03: "Action
+## Combat Camera: Positions and setting saved per character"): user://char_settings/<name>.cfg [action_hud] - a
+## character without one starts from the shared settings.cfg. The camera's distance in action combat is kept there
+## too, apart from the classic camera's.
+var _layout_for := ""                  # the character whose layout is loaded
+var ac_distance := -1.0                # the action camera's distance (-1: as the classic camera)
+var _classic_distance := -1.0
+
+
+func _char_name() -> String:
+	return String(PlayerData.character.get("name", "")).to_lower()
+
+
+func _layout_path() -> String:
+	var n := _char_name()
+	return "user://char_settings/%s.cfg" % n if n != "" else SETTINGS
+
+
 func _load_layout() -> void:
+	var g := ConfigFile.new()
+	g.load(SETTINGS)
+	cursor_toggle = bool(g.get_value("player", "ac_cursor_toggle", false))
 	var cfg := ConfigFile.new()
-	cfg.load(SETTINGS)
+	_layout_for = _char_name()
+	if cfg.load(_layout_path()) != OK or not cfg.has_section(SECTION):
+		cfg = g                                            # (no layout of its own yet: the shared one)
 	for part in PARTS:
 		_show[part[0]] = bool(cfg.get_value(SECTION, "show_" + String(part[0]), not HIDDEN_BY_DEFAULT.has(part[0])))
 	for id in DEFAULT_OFFSET:
 		var v = cfg.get_value(SECTION, "at_" + String(id), DEFAULT_OFFSET[id])
 		_offset[id] = v if v is Vector2 else DEFAULT_OFFSET[id]
-	cam_side = float(cfg.get_value(SECTION, "cam_side", cam_side))
-	cam_up = float(cfg.get_value(SECTION, "cam_up", cam_up))
+	cam_side = float(cfg.get_value(SECTION, "cam_side", 0.55))
+	cam_up = float(cfg.get_value(SECTION, "cam_up", 0.3))
+	ac_distance = float(cfg.get_value(SECTION, "cam_distance", -1.0))
+	var srv := String(Server.client_cfg.get(_char_name() + ":" + SECTION, "")) if Server.active else ""
+	if srv != "":
+		_apply_packed(srv)                                 # the server's copy goes with the character anywhere
 
 
-func _save_layout() -> void:
+## The layout in one short line for the server: v1;side;up;distance;shown parts (bits);lights x;y;flash x;y.
+func _packed() -> String:
+	var bits := 0
+	for i in PARTS.size():
+		if bool(_show.get(PARTS[i][0], true)):
+			bits |= 1 << i
+	var l: Vector2 = _offset.get("lights", DEFAULT_OFFSET.lights)
+	var f: Vector2 = _offset.get("flash", DEFAULT_OFFSET.flash)
+	return "v1;%.2f;%.2f;%.2f;%d;%d;%d;%d;%d" % [cam_side, cam_up, ac_distance, bits, l.x, l.y, f.x, f.y]
+
+
+func _apply_packed(s: String) -> void:
+	var f := s.split(";")
+	if f.size() < 9 or f[0] != "v1":
+		return
+	cam_side = float(f[1])
+	cam_up = float(f[2])
+	ac_distance = float(f[3])
+	var bits := int(f[4])
+	for i in PARTS.size():
+		_show[PARTS[i][0]] = (bits >> i) & 1 == 1
+	_offset["lights"] = Vector2(float(f[5]), float(f[6]))
+	_offset["flash"] = Vector2(float(f[7]), float(f[8]))
+
+
+## The server's copy arrived (at login): it wins over this PC's.
+func _server_cfg(key: String) -> void:
+	if key != SECTION:
+		return
+	var s := String(Server.client_cfg.get(_char_name() + ":" + SECTION, ""))
+	if s == "":
+		return
+	_apply_packed(s)
+	_layout_for = _char_name()
+	var p := _player()
+	if on and p and ac_distance > 0.0:
+		p.cam_distance = ac_distance
+	_save_layout(false)
+
+
+var _push_ticket := 0
+
+
+func _save_layout(to_server := true) -> void:
+	if on and _player():
+		ac_distance = _player().cam_distance
+	if to_server and Server.active and _char_name() != "":
+		_push_ticket += 1                                  # (a slider drag: once it stops)
+		var mine := _push_ticket
+		get_tree().create_timer(1.0).timeout.connect(func():
+			if mine == _push_ticket and Server.active:
+				var v := _packed()
+				if String(Server.client_cfg.get(_char_name() + ":" + SECTION, "")) != v:
+					Server.store_cfg(SECTION, v))
+	var path := _layout_path()
+	if path != SETTINGS:
+		DirAccess.make_dir_recursive_absolute("user://char_settings")
 	var cfg := ConfigFile.new()
-	cfg.load(SETTINGS)
+	cfg.load(path)
 	for id in _show:
 		cfg.set_value(SECTION, "show_" + String(id), bool(_show[id]))
 	for id in _offset:
 		cfg.set_value(SECTION, "at_" + String(id), _offset[id])
 	cfg.set_value(SECTION, "cam_side", cam_side)
 	cfg.set_value(SECTION, "cam_up", cam_up)
-	cfg.save(SETTINGS)
+	cfg.set_value(SECTION, "cam_distance", ac_distance)
+	cfg.save(path)
+
+
+## Another character came in: its own layout and camera.
+func _check_character() -> void:
+	if _char_name() == _layout_for or _char_name() == "":
+		return
+	_load_layout()
+	var p := _player()
+	if on and p and ac_distance > 0.0:
+		p.cam_distance = ac_distance
 
 
 func _part_rect(id: String) -> Rect2:

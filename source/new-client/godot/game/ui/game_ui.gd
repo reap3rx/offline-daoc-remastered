@@ -76,7 +76,9 @@ var _compass_letters: Control
 var _clock: Label
 const ModernHudScript := preload("res://game/ui/modern_hud.gd")
 const ModernBagsScript := preload("res://game/ui/modern_bags.gd")
+const HeroPanelScript := preload("res://game/ui/hero_panel.gd")
 var bags: ClassicWindow                      # the modern inventory (STYLE MODERN), built on first use
+var hero: ClassicWindow                      # the modern Hero panel (equipment, skills), built on first use
 var modern: Control                          # the modern HUD (Options > INTERFACE > STYLE: MODERN), else null
 var player: Node3D
 var sky: Node                            # SkySystem: the game clock on the time display
@@ -512,6 +514,7 @@ func set_style(style: String, save := true) -> void:
 		right_panel.visible = false                        # (opened again from the menu bar)
 		if map_window:
 			map_window.set_wide(true, area())
+		_set_scalable(true)
 		modern.layout()
 		return
 	if modern:
@@ -524,6 +527,9 @@ func set_style(style: String, save := true) -> void:
 		right_panel.save_position()
 		if bags:
 			bags.hide_window()
+		if hero:
+			hero.hide_window()
+		_set_scalable(false)
 		if map_window:
 			map_window.set_wide(false, area())
 		for id in ["status", "target", "minigroup", "time", "quickbar1", "quickbar2", "compass"]:
@@ -1709,6 +1715,38 @@ func reset_layout() -> void:
 		w.save_position()
 
 
+## The modern style's corner grips (owner 2026-11-03: scale a window by its corner, its shape kept): the modern
+## windows and the shared ones that make sense to scale; classic puts them all back to their own size.
+func _set_scalable(on: bool) -> void:
+	for w in [bags, hero, map_window, journal, events_window]:
+		if w != null and is_instance_valid(w):
+			w.set_scalable(on)
+
+
+## The Hero panel on a page ("equipment" / "skills" / "spec" / "realm"); the same page again closes it.
+func open_hero(p: String, toggle := true) -> void:
+	if hero == null:
+		hero = HeroPanelScript.new()
+		hero.ui = self
+		hero.resizable = true
+		hero.patch = [6, 6, 6, 6]
+		hero.min_size = HeroPanelScript.SIZE
+		hero.max_size = HeroPanelScript.SIZE
+		hero.size = HeroPanelScript.SIZE
+		var pos := ((area() - HeroPanelScript.SIZE) * 0.5).max(Vector2.ZERO)
+		hero.setup("hero", "leftbot", Rect2(), pos)
+		_add(hero, pos, false)
+		hero.set_window_size(HeroPanelScript.SIZE)
+		hero.build()
+		hero.visible = false
+		hero.set_scalable(modern != null)
+	if toggle:
+		hero.open_page(p)
+	else:
+		hero.show_page(p)
+		hero.show_window()
+
+
 func show_sheet(tab: String) -> void:
 	if modern:
 		_modern_sheet(tab)
@@ -1721,6 +1759,9 @@ func show_sheet(tab: String) -> void:
 func _modern_sheet(tab: String) -> void:
 	if tab == "inventory":
 		toggle_bags()
+		return
+	if tab in ["character", "skills", "combat", "magic"]:   # the Hero panel (owner 2026-11-03)
+		open_hero("equipment" if tab == "character" else "skills")
 		return
 	if right_panel.visible and sheet_tab == tab and not _collapsed:
 		right_panel.hide_window()
@@ -1749,6 +1790,7 @@ func toggle_bags() -> void:
 		bags.set_window_size(ModernBagsScript.SIZE)
 		bags.build()
 		bags.visible = false
+		bags.set_scalable(modern != null)
 	bags.toggle_window()
 
 
@@ -2046,6 +2088,14 @@ func handle_input(event: InputEvent) -> bool:
 	for bank in 10:                                        # Shift+1-0: quickbar 1's bank (patch 1.54)
 		if Keybinds.pressed(event, "qbank_%d" % (bank + 1)):
 			quickbars[0].set_bank(bank)
+			return true
+	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE and modern:
+		for w in [hero, bags]:                             # the modern windows close first, the top one
+			if w != null and w.visible:
+				w.hide_window()
+				return true
+		if map_window and map_window.visible and map_window.wide:
+			map_window.hide_window()
 			return true
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		# owner (checked in the client): Esc untargets. Open options close first; with nothing targeted, Esc opens them

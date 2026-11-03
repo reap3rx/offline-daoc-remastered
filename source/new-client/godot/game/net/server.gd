@@ -1209,6 +1209,66 @@ func item_icon(model: int) -> int:
 	return int(_model_icons.get(str(model), 0))
 
 
+## The spellbook roadmap (HeroInfo.cs "/book"): every specialization you can train and all it will teach.
+##   book = {"points": n, "specs": [{index, level, name, skills: [{level, kind, icon, have, group, name}]}]}
+## kind: "ability" / "style" / "spell" / "song". fight_level: the level you fight your target at (#ELV|), 0 = unknown.
+var book := {"points": 0, "specs": []}
+var _book_building := {}
+var fight_level := 0
+## The new client's settings kept on the character (HeroInfo.cs: "/clientcfg set key value", "#CFG|key|value" at
+## login): "<character>:<key>" -> value. The action camera lives there (owner 2026-11-03: "as portable as possible").
+var client_cfg := {}
+signal client_cfg_changed(key: String)
+signal book_changed
+signal fight_level_changed
+
+
+func cfg_line(text: String) -> void:
+	var i := text.find("|")
+	if i <= 0:
+		return
+	var key := String(PlayerData.character.get("name", "")).to_lower() + ":" + text.substr(0, i)
+	client_cfg[key] = text.substr(i + 1)
+	client_cfg_changed.emit(text.substr(0, i))
+
+
+func store_cfg(key: String, value: String) -> void:
+	client_cfg[String(PlayerData.character.get("name", "")).to_lower() + ":" + key] = value
+	command("/clientcfg set %s %s" % [key, value])
+
+
+func request_book() -> void:
+	command("/book")
+
+
+func book_line(text: String) -> void:
+	var f := text.split("|")
+	match String(f[0]):
+		"begin":
+			_book_building = {"points": int(f[1]) if f.size() > 1 else 0, "specs": []}
+		"spec":
+			if f.size() > 3 and not _book_building.is_empty():
+				(_book_building.specs as Array).append({"index": int(f[1]), "level": int(f[2]), "name": String(f[3]), "skills": []})
+		"sk":
+			if f.size() > 7 and not _book_building.is_empty():
+				for sp in _book_building.specs:
+					if int(sp.index) == int(f[1]):
+						(sp.skills as Array).append({"level": int(f[2]),
+								"kind": {"a": "ability", "s": "style", "p": "spell", "g": "song"}.get(String(f[3]), "spell"),
+								"icon": int(f[4]), "have": f[5] == "1", "group": String(f[6]), "name": String(f[7])})
+						break
+		"end":
+			if not _book_building.is_empty():
+				book = _book_building
+				_book_building = {}
+				book_changed.emit()
+
+
+func set_fight_level(text: String) -> void:
+	fight_level = int(text)
+	fight_level_changed.emit()
+
+
 ## Train a realm ability one level (the trainer window's TRAIN on a Realm Skills row): TrainHandler by its place in
 ## the class's list.
 func train_realm_ability(index: int, level: int) -> void:

@@ -37,9 +37,13 @@ var quests: QuestLog
 var menu: Control
 var _zone_label: Label
 var _clock: Label
+var mini := MINI                                         # the minimap's side (its corner grip; [modern_zoom] minimap)
 
 
 func _ready() -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(UiArt.settings_path)
+	mini = clampf(float(cfg.get_value("modern_zoom", "minimap", MINI)), 110.0, 380.0)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	orb = Orb.new()
@@ -87,11 +91,11 @@ func layout() -> void:
 	menu.size = Vector2(HudMenu.ITEMS.size() * (HudMenu.ICON + HudMenu.GAP), HudMenu.ICON)
 	party.position = Vector2(8, menu.position.y + HudMenu.ICON + 8)
 	party.size = Vector2(PARTY_W, 8 * 24 + 4)
-	minimap.position = Vector2(a.x - MINI - 8, a.y - MINI - 8)
-	minimap.size = Vector2(MINI, MINI)
+	minimap.position = Vector2(a.x - mini - 8, a.y - mini - 8)
+	minimap.size = Vector2(mini, mini)
 	_zone_label.position = Vector2(minimap.position.x, minimap.position.y - 13)
-	_zone_label.size = Vector2(MINI - 44, 12)
-	_clock.position = Vector2(minimap.position.x + MINI - 44, minimap.position.y - 13)
+	_zone_label.size = Vector2(mini - 44, 12)
+	_clock.position = Vector2(minimap.position.x + mini - 44, minimap.position.y - 13)
 	_clock.size = Vector2(44, 12)
 	# the quickbars either side of the orb, the compass top centre, the effects over the right bar
 	if ui.quickbars.size() >= 2:
@@ -236,11 +240,18 @@ class Orb extends Part:
 		text(thin, Vector2(c.x - ARC_R - 2, c.y - ARC_R - 2), endt, 7, GREEN, HORIZONTAL_ALIGNMENT_LEFT)
 		text(thin, Vector2(c.x + ARC_R - 14, c.y - ARC_R - 2), powt, 7, YELLOW, HORIZONTAL_ALIGNMENT_RIGHT, 16)
 		# the name plate under the orb
+		# your level, and in brackets the level you fight your target at while scaled down to it (LevelScaling:
+		# owner 2026-11-03 "the effective level ... next to the actual level of the character in parenthesis")
 		var who := "%s  L%d" % [PlayerData.display_name().to_upper(), PlayerData.level]
+		var eff := Server.fight_level if Server.active else 0
+		var scaled := "  (%d)" % eff if eff > 0 and eff < PlayerData.level else ""
 		var tw := f.get_string_size(who, HORIZONTAL_ALIGNMENT_LEFT, -1, 9).x
-		var np := Rect2(c.x - tw * 0.5 - 8, c.y + ARC_R + 6, tw + 16, 14)
+		var sw := f.get_string_size(scaled, HORIZONTAL_ALIGNMENT_LEFT, -1, 9).x if scaled != "" else 0.0
+		var np := Rect2(c.x - (tw + sw) * 0.5 - 8, c.y + ARC_R + 6, tw + sw + 16, 14)
 		plate(np)
 		text(f, Vector2(np.position.x + 8, np.position.y + 10.5), who, 9, UiArt.GOLD_HI)
+		if scaled != "":
+			text(f, Vector2(np.position.x + 8 + tw, np.position.y + 10.5), scaled, 9, Color(1.0, 0.6, 0.25))
 		# the target plate above: name in its con colour, its health
 		var t := PlayerData.target
 		if not t.is_empty():
@@ -366,7 +377,38 @@ class Minimap extends Part:
 		clip_contents = true
 		tooltip_text = "THE MAP (M); THE WHEEL ZOOMS"
 
+	# the grip in its top left corner (it sits in the screen's bottom right): drag to make it bigger or smaller
+	const GRIP := 12.0
+	var _sizing := false
+	var _from := Vector2.ZERO
+	var _start := 0.0
+
 	func _gui_input(event: InputEvent) -> void:
+		if event is InputEventMouseMotion:
+			mouse_default_cursor_shape = Control.CURSOR_FDIAGSIZE if _sizing or Rect2(0, 0, GRIP, GRIP).has_point(event.position) \
+					else Control.CURSOR_ARROW
+			if _sizing:
+				var k: float = get_global_transform().get_scale().x
+				var d := (get_global_mouse_position() - _from) / maxf(0.01, k)
+				hud.mini = clampf(_start - maxf(d.x, d.y), 110.0, 380.0)
+				hud.layout()
+				accept_event()
+			return
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed and Rect2(0, 0, GRIP, GRIP).has_point(event.position):
+				_sizing = true
+				_from = get_global_mouse_position()
+				_start = hud.mini
+				accept_event()
+				return
+			if not event.pressed and _sizing:
+				_sizing = false
+				var cfg := ConfigFile.new()
+				cfg.load(UiArt.settings_path)
+				cfg.set_value("modern_zoom", "minimap", hud.mini)
+				cfg.save(UiArt.settings_path)
+				accept_event()
+				return
 		if event is InputEventMouseButton and event.pressed:
 			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 				span = maxf(0.06, span / 1.25)
@@ -461,6 +503,9 @@ class Minimap extends Part:
 			draw_colored_polygon(pts, Color(1.0, 0.85, 0.25))
 			draw_polyline(PackedVector2Array([pts[0], pts[1], pts[2], pts[3], pts[0]]), Color(0.1, 0.05, 0.0), 1.0)
 		draw_rect(Rect2(Vector2.ZERO, size), RIM, false, 1.5)
+		for j in 3:                                        # the resize grip, top left
+			var gk := 3.0 + j * 3.5
+			draw_line(Vector2(1, gk), Vector2(gk, 1), Color(RIM_HI, 0.85), 1.2, true)
 		text(UiArt.font(true), Vector2(size.x * 0.5 - 10, 10), "N", 8, UiArt.GOLD_HI, HORIZONTAL_ALIGNMENT_CENTER, 20)
 
 
@@ -471,8 +516,8 @@ class HudMenu extends Part:
 	const ICON := 24.0
 	const GAP := 4.0
 	# [id, name, key action, control.bmp tab index or -1]
-	const ITEMS := [["character", "CHARACTER", "show_stats", 0], ["skills", "SKILLS", "show_skills", 2],
-			["combat", "COMBAT STYLES", "show_combat", 3], ["magic", "SPELLS", "show_spells", 4],
+	# (owner 2026-11-03: the Hero panel takes the character, skills, styles and spells sheets - HERO and SKILLS)
+	const ITEMS := [["hero", "HERO", "show_stats", 0], ["skills", "SKILLS", "show_skills", 2],
 			["group", "GROUP", "show_group", 5], ["bags", "INVENTORY", "show_inventory", -1],
 			["quests", "QUEST JOURNAL", "show_journal", -1], ["map", "MAP", "show_map", -1], ["options", "OPTIONS", "", -1]]
 	const TAB_X := [13, 41, 70, 98, 126, 154]
@@ -522,6 +567,10 @@ class HudMenu extends Part:
 				ui.map_window.toggle_window()
 			"options":
 				ui.options.toggle_window()
+			"hero":
+				ui.open_hero("equipment")
+			"skills":
+				ui.open_hero("skills")
 			_:
 				ui.show_sheet(id)
 
@@ -536,6 +585,10 @@ class HudMenu extends Part:
 				return ui.map_window.visible
 			"options":
 				return ui.options.visible
+			"hero":
+				return ui.hero != null and ui.hero.visible and ui.hero.page == "equipment"
+			"skills":
+				return ui.hero != null and ui.hero.visible and ui.hero.page == "skills"
 		return ui.right_panel.visible and ui.sheet_tab == id
 
 	func _draw() -> void:

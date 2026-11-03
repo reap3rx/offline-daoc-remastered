@@ -146,6 +146,11 @@ func _on_world(kind: String, d: Dictionary) -> void:
 				else:
 					viewer.ui.show_lines(String(d.caption), d.lines)
 		"trainer":
+			if viewer and viewer.ui and viewer.ui.modern:      # the modern style trains in the Hero panel
+				var h = viewer.ui.hero
+				if h == null or not (h.visible and h.page == "skills") and not h.asked_trainer():
+					viewer.ui.open_hero("spec", false)
+				return
 			if viewer and viewer.ui and viewer.ui.trainer and not viewer.ui.trainer.visible:
 				viewer.ui.trainer.open()
 		"dialog": _dialog(d)
@@ -922,6 +927,15 @@ func _message(d: Dictionary) -> void:
 	var t := int(d.type)
 	if String(d.text).begins_with("#WAL|"):               # your wallet (PlayerWallet.cs): the modern inventory shows it
 		preload("res://game/ui/modern_bags.gd").receive_wallet(String(d.text).substr(5))
+		return
+	if String(d.text).begins_with("#CFG|"):               # a setting kept on the character (HeroInfo.cs)
+		Server.cfg_line(String(d.text).substr(5))
+		return
+	if String(d.text).begins_with("#BOOK|"):              # the spellbook roadmap (HeroInfo.cs): the modern Hero panel
+		Server.book_line(String(d.text).substr(6))
+		return
+	if String(d.text).begins_with("#ELV|"):               # the level you fight your target at (LevelScaling)
+		Server.set_fight_level(String(d.text).substr(5))
 		return
 	if String(d.text).begins_with("#EV|"):                # the dynamic events of this zone (DynamicEventManager.cs)
 		preload("res://game/ui/event_tracker.gd").receive(String(d.text).substr(4))

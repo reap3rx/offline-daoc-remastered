@@ -428,6 +428,12 @@ func _controls() -> void:
 		_save("player", "invert_mouse", v)
 		if ui and ui.player:
 			ui.player.set("invert_mouse", v)))
+	# owner 2026-11-03: "the option to make the Alt keypress a toggle instead of a hold to use the cursor"
+	var modes := ["hold", "toggle"]
+	_row("ACTION COMBAT CURSOR KEY", _choice(["HOLD (CURSOR WHILE HELD)", "TOGGLE (PRESS FOR CURSOR, PRESS AGAIN TO HIDE)"],
+			1 if bool(settings.get_value("player", "ac_cursor_toggle", false)) else 0, func(i: int):
+		_save("player", "ac_cursor_toggle", modes[i] == "toggle")
+		preload("res://game/combat/action_combat.gd").cursor_toggle = modes[i] == "toggle"))
 	_heading("KEY CONFIGURATION")
 	# shared by every character unless this one has its own (the WoW-style override, off by default)
 	_row("CHARACTER-SPECIFIC KEY BINDINGS", _toggle(Keybinds.character_specific, func(v: bool):

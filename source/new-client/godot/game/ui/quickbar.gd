@@ -206,7 +206,7 @@ class QuickSlot extends Control:
 		# the art already shows 1-10 over each slot; only a rebound key is written in the slot
 		_key.text = k.to_upper() if k != "" and k != str((slot + 1) % 10) else ""
 		# an empty slot shows the bar's own hover text (quickbar number + modifier), as the client's bar does
-		tooltip_text = String(e.get("name", "")).to_upper() if not e.is_empty() else (get_parent() as Quickbar).bar_tooltip()
+		tooltip_text = String(e.get("name", "")).to_upper() if not e.is_empty() else (get_parent().bar_tooltip() if get_parent().has_method("bar_tooltip") else "")
 
 	func use() -> void:
 		var e := entry()
@@ -297,3 +297,4 @@ class QuickSlot extends Control:
 		PlayerData.quickbars[bar][PlayerData.quickbar_bank[bar]][slot] = e
 		PlayerData.save_character()
 		refresh()
+		PlayerData.changed.emit()                          # (the Hero panel's copy of the bars redraws too, and back)
