@@ -48,3 +48,11 @@ models). Without the Catacombs horse built, the classic saddled horse stands in,
 
 Barding and armour choices and their colours (ControlledHorse carries them; the shapes are in the model - the barding's
 skin weights still need its bone list, it is skinned to the root for now), saddlebags.
+
+## 2026-11-03: the Catacombs horse tearing apart at a walk or gallop
+
+Each of the horse's parts is many shapes (one per material id), and each shape's skin lists its bones in its own order
+(its own NiStringsExtraData). The converter (`pipeline/nif_character.py` build_cata) read every shape's bones from the
+part's first list, so most of the horse was bound to the wrong bones: invisible at rest and in the small idle, torn
+apart once the legs swung. It now takes each shape's own list (or the skin's own bone node). The characters' parts are
+one shape each and come out the same. Rebuild: `build_cathorse.py`.

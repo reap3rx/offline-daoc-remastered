@@ -631,7 +631,7 @@ namespace DOL.GS
 
 			lock (player.Inventory.Lock)
 			{
-				if (player.Inventory.CountItemTemplate(m_moneyItem.Item.Id_nb, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) < totalValue)
+				if (PlayerWallet.Total(player, m_moneyItem.Item.Id_nb) < totalValue)   // the backpack and the wallet (PlayerWallet.cs)
 				{
 					player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.YouNeed2", totalValue, MoneyItemName), eChatType.CT_System, eChatLoc.CL_SystemWindow);
 					return;
@@ -651,19 +651,7 @@ namespace DOL.GS
 					message = LanguageMgr.GetTranslation(player.Client.Account.Language, "GameMerchant.OnPlayerBuy.Bought2", template.GetName(1, false), totalValue, MoneyItemName);
 
 				var items = player.Inventory.GetItemRange(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
-				int removed = 0;
-
-				foreach (DbInventoryItem item in items)
-				{
-					if (item.Id_nb != m_moneyItem.Item.Id_nb)
-						continue;
-					int remFromStack = Math.Min(item.Count, (int)(totalValue - removed));
-					player.Inventory.RemoveCountFromStack(item, remFromStack);
-					InventoryLogging.LogInventoryAction(player, this, eInventoryActionType.Merchant, item.Template, remFromStack);
-					removed += remFromStack;
-					if (removed == totalValue)
-						break;
-				}
+				PlayerWallet.Pay(player, m_moneyItem.Item.Id_nb, totalValue, this);
 
 				player.Out.SendInventoryItemsUpdate(items);
 				player.Out.SendMessage(message, eChatType.CT_Merchant, eChatLoc.CL_SystemWindow);

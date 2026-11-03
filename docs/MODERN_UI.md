@@ -26,6 +26,19 @@ map, merchant and every other window with the classic style.
 The classic status, target, mini group and time windows are parked while MODERN is on; switching back to CLASSIC puts
 them, the quickbars and the compass back at their saved places.
 
+## The wallet (server: `gameutils/PlayerWallet.cs`)
+
+Owner 2026-11-03: "I want inventory to not be a pain and currencies taking slots tend to be just that". Every currency
+the game pays in - Marks of Valor (`event_mark`), the Darkness Falls daemon seals (`DiamondSeal`, `SapphireSeal`,
+`EmeraldSeal`, `Fiery_Diamond_Seal`, `FreeEmeraldSeal`), `BloodSeal`, `aurulite`, `atlanteanglass`, `dragonscales` -
+goes into the character's wallet instead of a backpack slot: whatever lands in the backpack (loot, event rewards, a
+trade, an old character's stacks at login) moves there a moment later ("7 Marks of Valor into your wallet."). The
+currency merchants (`GameItemCurrencyMerchant` - the event mark, DF seal and ToA merchants - and the keep guard
+merchants) take their price from the backpack first, then the wallet. It is kept on the character
+(`DOLCharactersXCustomParam` "wallet"), sent to the new client as a `#WAL|` line and shown in the modern inventory's
+wallet; `/wallet` lists it in the chat (either style). There is no way to take a currency back out as an item yet
+(trading currencies between characters would need it).
+
 ## The map (`game/ui/map_window.gd`)
 
 Modern style: the map opens big in the middle of the screen (WoW's), with a log beside it - the zone's events
@@ -54,7 +67,6 @@ map) and your quests with their current goal. Both styles:
 
 ## Not yet (next passes)
 
-- a real wallet (currencies off the backpack, on the server);
 - a modern skin for the character sheet, the spellbook and the chat;
 - drawn maps for capitals and dungeon levels; our own names for places the painted maps don't name;
 - the quiver, poison and potion bags as HUD buttons; a pet plate by the orb; the raid window;

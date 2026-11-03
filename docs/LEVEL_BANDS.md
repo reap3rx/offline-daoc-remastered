@@ -5,7 +5,7 @@ The owner's request: cohesive levels per zone, the lowest monsters by the starti
 with their zone. One starting hub per realm, as in the modern game: **Cotswold**, **Mularn**, **Mag Mell** - every new
 character (and every new bot) starts there (`starts` in the settings; StartupLocations uses them in place of the
 race towns, which stay as towns). Two paths out of the hub at 6-16, then one climb to the realm's dragon zone, with a
-hard dead end off a low zone on the way (Llyn Barfog, Raumarik, Sheeroe Hills next to Mag Mell's own zone). `source/server/GameServer/gameutils/LevelBands.cs`, settings in
+hard dead end off a low zone on the way (Llyn Barfog, Raumarik, the Cliffs of Moher the gentler one). `source/server/GameServer/gameutils/LevelBands.cs`, settings in
 `gameutils/data/level_bands.json` (embedded; a copy at `runtime/server/level-bands.json` overrides it - set
 `"enabled": false` there to turn it off).
 
@@ -44,19 +44,21 @@ saving a banded monster writes its original level back.
 
 | Albion (from Cotswold) | | Midgard (from Mularn) | | Hibernia (from Mag Mell) | |
 |---|---|---|---|---|---|
-| Camelot Hills | 1-10 | Vale of Mularn | 1-10 | Shannon Estuary (Mag Mell's zone) | 1-10 |
-| Salisbury Plains | 8-16 | East Svealand | 6-16 | Silvermine Mts. | 6-16 |
-| Black Mtns. South | 8-16 | West Svealand | 10-20 | Lough Gur | 6-16 |
-| Campacorentin Forest | 14-22 | Gotar | 12-22 | Lough Derg (Tir na mBeo) | 12-22 |
-| Black Mtns. North | 18-28 | Muspelheim | 18-28 | Connacht (Ardee, the housing gate) | 18-28 |
+| Camelot Hills | 1-10 | Vale of Mularn | 1-10 | Lough Derg (Mag Mell, Tir na mBeo) | 1-10 |
+| Salisbury Plains | 8-16 | East Svealand | 6-16 | Connacht (Ardee, Tir na Nog) | 6-16 |
+| Black Mtns. South | 8-16 | West Svealand | 10-20 | Silvermine Mts. | 8-16 |
+| Campacorentin Forest | 14-22 | Gotar | 12-22 | Valley of Bri Leith | 12-22 |
+| Black Mtns. North | 18-28 | Muspelheim | 18-28 | Shannon Estuary (Connla) | 18-28 |
 | Avalon Marsh | 22-32 | Myrkwood Forest | 22-32 | Cliffs of Moher | 24-34 |
-| Llyn Barfog | 28-38 | Skona Ravine | 28-38 | Valley of Bri Leith | 28-38 |
+| Llyn Barfog | 28-38 | Skona Ravine | 28-38 | Lough Gur | 28-38 |
 | Cornwall | 34-44 | Vanern Swamp | 36-46 | Bog of Cullen | 36-46 |
 | Lyonesse | 42-52 | Raumarik | 44-54 | Sheeroe Hills | 42-52 |
 | Dartmoor (elite) | 50-60 | Malmohus (elite) | 50-60 | Cursed Forest (elite) | 50-60 |
 
-(The zone names are the client's zone table's: in this data Mag Mell and the Tir na Nog teleporter stand in zone 202
-"Shannon Estuary", Tir na mBeo in zone 200 "Lough Derg".)
+(2026-11-03: the first pass took Connla's spot - the Hibernian start location in the database for some races - for
+Mag Mell, and built Hibernia's flow outward from Shannon Estuary: a level 11 near Ardee met only grey leftovers and
+purple 18+. Mag Mell is in Lough Derg; each zone now keeps its classic order (the medians: Lough Derg 8, Connacht 6,
+Silvermine 8, Bri Leith 21, Shannon 25, Moher 29, Lough Gur 36, Bog of Cullen 44).)
 
 | Avalon (SI) | | Aegir (SI) | | Hy Brasil (SI) | |
 |---|---|---|---|---|---|

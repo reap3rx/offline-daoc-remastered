@@ -805,6 +805,7 @@ void fragment() {
 ## little to the side - never forward into the legs; backing up or standing still they hang as animated. Springs, so
 ## they settle after a stop. Figures beyond SWAY_RANGE_M are left alone.
 static var sway_on := false                  # SkySystem: remastered
+var back_gear := false                        # something rides on the back (Player.dress): the cloak hangs as animated
 var _hair_mat: ShaderMaterial                # the hair's material (its sway uniforms)
 static var wind := 1.0                       # SkySystem: the storm's wind (as the trees')
 const SWAY_RANGE_M := 35.0
@@ -878,10 +879,13 @@ class Sway extends SkeletonModifier3D:
 		var back := clampf(_back, 0.0, 0.45)                   # never forward, into the legs
 		var side_ang := clampf(_side, -0.2, 0.2)
 		var axis_back := up.cross(fwd).normalized()           # + swings the lower end back (away from the body)
-		for b in _cloaks:
-			_turn(sk, b, axis_back, back, fwd, side_ang)
-		for b in _cloaks_mid:
-			_turn(sk, b, axis_back, back * 0.35, fwd, side_ang * 0.5)
+		# a shield, a two-hander, a slung bow or a quiver on the back: the cloak hangs as the animation has it (owner
+		# 2026-11-03: they clipped through the swinging cloak); it swings again once the back is clear
+		if fig == null or not fig.back_gear:
+			for b in _cloaks:
+				_turn(sk, b, axis_back, back, fwd, side_ang)
+			for b in _cloaks_mid:
+				_turn(sk, b, axis_back, back * 0.35, fwd, side_ang * 0.5)
 		for b in _tails:
 			_turn(sk, b, axis_back, back * 0.8, fwd, side_ang * 1.2)
 		# long hair (the Catacombs hair is rigid on the head: its lower part bent in the shader)

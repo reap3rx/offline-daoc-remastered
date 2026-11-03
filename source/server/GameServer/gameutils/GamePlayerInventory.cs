@@ -1202,14 +1202,21 @@ namespace DOL.GS
         /// </summary>
         protected override void UpdateChangedSlots()
         {
+            bool currency = false;
             lock (Lock)
             {
                 m_player.Out.SendInventorySlotsUpdate(m_changedSlots);
+                foreach (eInventorySlot s in m_changedSlots)        // a currency come into the backpack: to the wallet
+                    if (s >= eInventorySlot.FirstBackpack && s <= eInventorySlot.LastBackpack && m_items.TryGetValue(s, out DbInventoryItem it) &&
+                        PlayerWallet.IsCurrency(it?.Id_nb))
+                        currency = true;
             }
 
             UpdateInventoryWeight();
             m_player.UpdateEncumbrance();
             base.UpdateChangedSlots();
+            if (currency)
+                PlayerWallet.ScheduleSweep(m_player);
         }
 
         #endregion

@@ -759,7 +759,7 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 	# two-hander on the back, a bow or crossbow slung over the shoulder with a quiver behind it, a shield on the
 	# back when the two-hander is out. Only a weapon in hand carries its effect (its glow, its flame).
 	var back_taken := {}                                       # "Bip01 R Back" / "Bip01 L Back" -> true
-	var ranged_stowed := false
+	var frame := BodyFrame.of(skel, model)                     # the figure's own right / up / back (a monster: {})
 	for slot in [12, 13, 10, 11]:                              # the two-hander claims the back first
 		var it: Dictionary = item_at.call(slot)
 		if it.is_empty():
@@ -801,7 +801,6 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 		elif ranged:
 			bone = "Bip01 L Back" if not back_taken.has("Bip01 L Back") else "Bip01 R Back"
 			slung = true
-			ranged_stowed = true
 		elif on_back:
 			bone = "Bip01 R Back" if not back_taken.has("Bip01 R Back") else "Bip01 L Back"
 		else:
@@ -818,63 +817,177 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 		WeaponModels.dye(w, int(it.get("color", 0)))           # its luster / enamel
 		WeaponModels.set_emblem(w, model_id, int(it.get("emblem", 0)))   # a shield's guild emblem
 		if bone.ends_with("Back") and not shield:
-			if slung:
+			if slung and not frame.is_empty():
+				BodyFrame.place_bow(skel, skel.find_bone(bone), w, frame)
+			elif slung:
 				_sling_on_back(w, bone == "Bip01 L Back")
 			elif slot == 12 or stance in ["2h", "pole", "staff", "scy"]:
 				_raise_on_back(w)
 		var at := BoneAttachment3D.new()
 		at.bone_name = bone
+		at.set_meta("shield", shield)
 		skel.add_child(at)
 		at.add_child(w)
 		if in_hand:
 			WeaponModels.add_effect(w, int(it.get("effect", 0)))   # its glow / flame (an item's weapon effect) - in hand only
 		made.append(at)
-	# the quiver behind a stowed bow (owner 2026-11-02: "a quiver model ... on your back right shoulder"): the realm's
-	# quiver model on the right back bone, its arrows up over the shoulder
-	if ranged_stowed and QUIVER_MODELS.has(int(gear.get("realm", 0))):
-		var qbone := "Bip01 R Back"
+	# the quiver (owner 2026-11-03: "the quiver can always be there whether you're holding the bow or not and only goes
+	# away when no bow is equipped"; crossbows none - "bolts ... stored on the hip"): the realm's quiver flat on the
+	# back, its mouth up past the right shoulder (BodyFrame.place_quiver)
+	var bow: Dictionary = item_at.call(13)
+	var has_bow := not bow.is_empty() and WeaponModels.stance(int(bow.get("model", 0))) not in ["xbow", "throw"]
+	var quiver_shown := false
+	if has_bow and QUIVER_MODELS.has(int(gear.get("realm", 0))) and not frame.is_empty():
+		var qbone := "Bip01 Spine2" if skel.find_bone("Bip01 Spine2") >= 0 else "Bip01 Spine1"
 		var qi := skel.find_bone(qbone)
 		var q := WeaponModels.make(int(QUIVER_MODELS[int(gear.get("realm", 0))]), false, false)
 		if qi >= 0 and q != null:
+			BodyFrame.place_quiver(skel, qi, q, frame)
 			var qa := BoneAttachment3D.new()
 			qa.bone_name = qbone
 			skel.add_child(qa)
 			qa.add_child(q)
-			_stand_quiver(q)
 			made.append(qa)
+			quiver_shown = true
+	# a shield on the back stands off the slung bow and the quiver (owner 2026-11-03: "a bit further back from the bow
+	# so they don't clip")
+	if has_bow and not frame.is_empty():
+		for at in made:
+			var a := at as BoneAttachment3D
+			if a and String(a.bone_name).ends_with("Back") and a.get_child_count() > 0 and a.get_meta("shield", false):
+				BodyFrame.push_back(skel, skel.find_bone(a.bone_name), a.get_child(0) as Node3D, frame, 0.07)
+	# the cloak hangs still while something rides on the back (owner 2026-11-03: the shield / two-hander clipped through
+	# the swinging cloak) - Fig3Figure.Sway
+	if model is Fig3Figure:
+		(model as Fig3Figure).back_gear = not back_taken.is_empty() or quiver_shown
 	return made
 
 
-## The quiver on a back bone hangs like a sword - its mouth (the far end from its attachment point) down the legs
-## (walk/sheath_stowed_back.png, 2026-11-02). Turned end for end about its thickness so the arrows stand up over the
-## shoulder, slid back down its length so most of its body lies on the back, and tipped a little the other way from
-## the bow. (The quiver's box: 40 units long, the attachment point 12 in from its closed end.)
-static func _stand_quiver(holder: Node3D) -> void:
-	var box := _holder_box(holder)
-	if box.size == Vector3.ZERO:
-		return
-	var k := 0
-	var thin := 0
-	for i in 3:
-		if box.size[i] > box.size[k]:
-			k = i
-		if box.size[i] < box.size[thin]:
-			thin = i
-	var axis := Vector3.ZERO
-	axis[k] = 1.0 if absf(box.end[k]) >= absf(box.position[k]) else -1.0   # toward its mouth, in its own frame
-	var normal := Vector3.ZERO
-	normal[thin] = 1.0
-	var mid := 3 - k - thin                               # its third axis
-	var mid_axis := Vector3.ZERO
-	mid_axis[mid] = 1.0
-	var down: Vector3 = (holder.basis * axis).normalized()   # where the mouth pointed (the bone's frame)
-	var aside: Vector3 = (holder.basis * normal).normalized()
-	holder.rotate(normal, deg_to_rad(180.0 - 20.0))
-	holder.position += down * box.size[k] * 0.35          # (the back bone sits mid-back: a third of it stands above)
-	# against the back and over the right shoulder blade (walk/sheath_stowed_back*.png: it hung a hand's width off
-	# the back, square behind the spine)
-	holder.position -= aside * 6.0
-	holder.position -= (holder.basis * mid_axis).normalized() * 6.0
+## The figure's own directions in its skeleton's space, from the rest pose: right (the right upper arm from the left),
+## up (pelvis to head), back (behind it - the figure faces +Z in its model's space), the torso's length (L) and the
+## bones' rest positions; {} when the skeleton lacks them (a monster).
+class BodyFrame:
+	static func of(skel: Skeleton3D, model: Node3D) -> Dictionary:
+		var at := func(n: String) -> Vector3:
+			var i := skel.find_bone(n)
+			return skel.get_bone_global_rest(i).origin if i >= 0 else Vector3.INF
+		var ru: Vector3 = at.call("Bip01 R UpperArm")
+		var lu: Vector3 = at.call("Bip01 L UpperArm")
+		var head: Vector3 = at.call("Bip01 Head")
+		var pelvis: Vector3 = at.call("Bip01 Pelvis")
+		var spine: Vector3 = at.call("Bip01 Spine2")
+		if spine == Vector3.INF:
+			spine = at.call("Bip01 Spine1")
+		if Vector3.INF in [ru, lu, head, pelvis, spine]:
+			return {}
+		var right := (ru - lu).normalized()
+		var up0 := head - pelvis
+		var up := (up0 - right * up0.dot(right)).normalized()
+		# the model's +Z (its front) in the skeleton's space
+		var b := Basis.IDENTITY
+		var n: Node = skel
+		while n != null and n != model:
+			if n is Node3D:
+				b = (n as Node3D).transform.basis * b
+			n = n.get_parent()
+		var fwd := (b.inverse() * Vector3(0, 0, 1)).normalized()
+		var back := right.cross(up).normalized()
+		if back.dot(fwd) > 0.0:
+			back = -back
+		return {"right": right, "up": up, "back": back, "L": up0.length(), "ru": ru, "spine": spine,
+				"rback": at.call("Bip01 R Back")}
+
+	## The quiver flat on the upper back, its mouth up and out past the right shoulder (owner 2026-11-03 picture: the
+	## bow slung from the left shoulder to the right hip, the quiver the other way, arrows standing over the right
+	## shoulder), its arrows a third of their length above the shoulders.
+	static func place_quiver(skel: Skeleton3D, bone: int, q: Node3D, f: Dictionary) -> void:
+		var box := Player._holder_box(q)
+		if box.size == Vector3.ZERO:
+			return
+		var k := 0
+		var thin := 0
+		for i in 3:
+			if box.size[i] > box.size[k]:
+				k = i
+			if box.size[i] < box.size[thin]:
+				thin = i
+		var a_k := Vector3.ZERO
+		a_k[k] = 1.0 if absf(box.end[k]) >= absf(box.position[k]) else -1.0     # toward the mouth (the arrows)
+		var a_t := Vector3.ZERO
+		a_t[thin] = 1.0
+		var a_m := a_k.cross(a_t)
+		var right: Vector3 = f.right
+		var up: Vector3 = f.up
+		var back: Vector3 = f.back
+		var L: float = f.L
+		var tilt := deg_to_rad(float(_arg("quiver-tilt", "25")))
+		var mouth := (up * cos(tilt) + right * sin(tilt)).normalized()
+		var t_t := (back - mouth * back.dot(mouth)).normalized()
+		var src := Basis(a_k, a_t, a_m)
+		var dst := Basis(mouth, t_t, mouth.cross(t_t))
+		var sc := q.transform.basis.get_scale()
+		var r := dst * src.inverse()
+		var bs := r * Basis.from_scale(sc)
+		var lq := box.size[k] * sc[k]
+		var spine: Vector3 = f.spine
+		var rb: Vector3 = f.rback
+		var depth := maxf(0.0, (rb - spine).dot(back)) if rb != Vector3.INF else 0.12 * L
+		var shoulder_h := ((f.ru as Vector3) - spine).dot(up)
+		var anchor := spine + up * shoulder_h + right * L * float(_arg("quiver-right", "0.16")) \
+				+ back * (depth + box.size[thin] * sc[thin] * 0.5 + L * float(_arg("quiver-off", "0.02")))
+		var centre := anchor - mouth * lq * float(_arg("quiver-down", "0.2"))
+		var g := Transform3D(bs, centre - bs * box.get_center())
+		q.transform = skel.get_bone_global_rest(bone).affine_inverse() * g
+
+	## A bow or crossbow slung across the back (owner 2026-11-03 picture): its limbs from the left shoulder down to the
+	## right hip, flat on the back, outside the quiver so the two cross.
+	static func place_bow(skel: Skeleton3D, bone: int, w: Node3D, f: Dictionary) -> void:
+		var box := Player._holder_box(w)
+		if box.size == Vector3.ZERO or bone < 0:
+			return
+		var k := 0
+		var thin := 0
+		for i in 3:
+			if box.size[i] > box.size[k]:
+				k = i
+			if box.size[i] < box.size[thin]:
+				thin = i
+		var a_k := Vector3.ZERO
+		a_k[k] = 1.0
+		var a_t := Vector3.ZERO
+		a_t[thin] = 1.0
+		var a_m := a_k.cross(a_t)
+		var right: Vector3 = f.right
+		var up: Vector3 = f.up
+		var back: Vector3 = f.back
+		var L: float = f.L
+		var tilt := deg_to_rad(float(_arg("bow-tilt", "32")))
+		var limbs := (up * cos(tilt) - right * sin(tilt)).normalized()     # the upper limb over the left shoulder
+		var t_t := (back - limbs * back.dot(limbs)).normalized()
+		var r := Basis(limbs, t_t, limbs.cross(t_t)) * Basis(a_k, a_t, a_m).inverse()
+		var sc := w.transform.basis.get_scale()
+		var bs := r * Basis.from_scale(sc)
+		var spine: Vector3 = f.spine
+		var rb: Vector3 = f.rback
+		var depth := maxf(0.0, (rb - spine).dot(back)) if rb != Vector3.INF else 0.12 * L
+		var shoulder_h := ((f.ru as Vector3) - spine).dot(up)
+		var centre := spine + up * shoulder_h * float(_arg("bow-up", "0.15")) \
+				+ back * (depth + box.size[thin] * sc[thin] * 0.5 + L * float(_arg("bow-off", "0.10")))
+		var g := Transform3D(bs, centre - bs * box.get_center())
+		w.transform = skel.get_bone_global_rest(bone).affine_inverse() * g
+
+	## A gear piece on a back bone moved further out behind the figure by share x the torso's length.
+	static func push_back(skel: Skeleton3D, bone: int, w: Node3D, f: Dictionary, share: float) -> void:
+		if bone < 0 or w == null:
+			return
+		var local := skel.get_bone_global_rest(bone).basis.inverse() * ((f.back as Vector3) * float(f.L) * share)
+		w.position += local
+
+	static func _arg(k: String, d: String) -> String:
+		for a in OS.get_cmdline_user_args():
+			if a.begins_with("--%s=" % k):
+				return a.get_slice("=", 1)
+		return d
 
 
 ## A bow or crossbow slung over the shoulder (owner 2026-11-02: "so it looks like they're slung over your shoulder"):
@@ -898,7 +1011,10 @@ static func _sling_on_back(holder: Node3D, left: bool) -> void:
 			thin = i
 	var normal := Vector3.ZERO
 	normal[thin] = 1.0
-	holder.rotate(normal, deg_to_rad(35.0 if left else -35.0))
+	# (owner 2026-11-03 picture: from the left shoulder down to the right hip, crossing the quiver - the first tilt ran
+	# with the quiver, the two stacked)
+	var tilt := float(BodyFrame._arg("bow-tilt", "35"))
+	holder.rotate(normal, deg_to_rad(-tilt if left else tilt))
 	holder.position += axis * clampf(box.size[k] * 0.18, 4.0, 12.0)
 
 

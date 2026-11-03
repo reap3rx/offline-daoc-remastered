@@ -1157,23 +1157,27 @@ namespace DOL.GS
 
 			LoadTemplate(NpcTemplateMgr.GetTemplate(dbMob.NPCTemplateID)); // Returns a random template if multiple with the same ID exist.);
 			_unbandedLevel = Level;
+			_fromDatabase = true;
 			ApplyLevelBand();
 		}
 
 		/// <summary>The level the database (or the template's roll) gave this monster, before LevelBands; 0 = unbanded.</summary>
 		private byte _unbandedLevel;
+		private bool _fromDatabase;                      // loaded from a DbMob (the monsters the level bands move)
 		public byte UnbandedLevel => _unbandedLevel;
 		private byte _bandedTo;                          // the level banding gave it (0: none) - a GM's /mob level since wins
 
 		/// <summary>The zone level bands (gameutils/LevelBands.cs): this monster's level from its original one and its spawn spot.</summary>
 		private void ApplyLevelBand()
 		{
-			if (_unbandedLevel == 0 || !LevelBands.Applies(this))
+			// a template rolling "0" or "0-1" counts as level 1 (owner 2026-11-03: grey level-0 lucradans, badger cubs and
+			// water beetle larvae among the banded level-20 frogs - level 0 was left alone)
+			if (!_fromDatabase || !LevelBands.Applies(this))
 				return;
 			bool spawned = m_spawnPoint != null && (m_spawnPoint.X != 0 || m_spawnPoint.Y != 0);
 			int x = spawned ? m_spawnPoint.X : m_x;
 			int y = spawned ? m_spawnPoint.Y : m_y;
-			byte banded = LevelBands.Remap(CurrentRegionID, x, y, _unbandedLevel);
+			byte banded = LevelBands.Remap(CurrentRegionID, x, y, Math.Max((byte) 1, _unbandedLevel));
 			if (banded != Level)
 				Level = banded;
 			_bandedTo = banded;
@@ -3278,10 +3282,10 @@ namespace DOL.GS
 			if (IsAlive || ObjectState == eObjectState.Active)
 				return 0;
 
-			if (_unbandedLevel > 0)
+			if (_fromDatabase)
 				m_level = _unbandedLevel;                // the template (or its own level) again, then banded anew
 			LoadTemplate(NPCTemplate);
-			if (_unbandedLevel > 0)
+			if (_fromDatabase)
 			{
 				_unbandedLevel = Level;
 				ApplyLevelBand();

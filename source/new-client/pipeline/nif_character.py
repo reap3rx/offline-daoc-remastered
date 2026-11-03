@@ -245,6 +245,9 @@ def embedded_clip(nif):
     return tracks, duration
 
 
+EULER_ORDER = 'zyx'                                       # q = qz * qy * qx (the X turn applied first); 'xyz' the other
+
+
 def euler_track(kd):
     """XYZ rotation keys (rotation type 4) sampled at 30 fps into quaternions."""
     groups = kd.get('xyz_rotations') or []
@@ -262,8 +265,12 @@ def euler_track(kd):
     for t in ts:
         ax, ay, az = (sample(g, t) for g in groups[:3])
         cx, sx, cy, sy, cz, sz = math.cos(ax / 2), math.sin(ax / 2), math.cos(ay / 2), math.sin(ay / 2), math.cos(az / 2), math.sin(az / 2)
-        # rotation = Rz * Ry * Rx
-        out.append([sx * cy * cz - cx * sy * sz, cx * sy * cz + sx * cy * sz, cx * cy * sz - sx * sy * cz, cx * cy * cz + sx * sy * sz])
+        if EULER_ORDER == 'xyz':
+            # rotation = Rx * Ry * Rz
+            out.append([sx * cy * cz + cx * sy * sz, cx * sy * cz - sx * cy * sz, cx * cy * sz + sx * sy * cz, cx * cy * cz - sx * sy * sz])
+        else:
+            # rotation = Rz * Ry * Rx
+            out.append([sx * cy * cz - cx * sy * sz, cx * sy * cz + sx * cy * sz, cx * cy * sz - sx * sy * cz, cx * cy * cz + sx * sy * sz])
     return ts.astype(np.float32), np.array(out, np.float32)
 
 
@@ -549,11 +556,21 @@ def build_cata(skeleton, part_list, clips, out_path, texture_uri):
                 lists = [[] for _ in range(len(v))]
                 si = shape.get('skin_instance')
                 if si is not None:
+                    # the bones' names in THIS shape's order: its own NiStringsExtraData when it carries one (a part
+                    # made of several shapes - the Catacombs horse's material shapes - lists each shape's bones in
+                    # that shape's own order; the part's first list bound most of the horse to the wrong bones, fine
+                    # at rest and torn apart once the legs moved - owner 2026-11-03), else the part's
+                    own = next((x.get('data') for x in (shape.get('extra_data_list') or [])
+                                if x is not None and x.type == 'NiStringsExtraData'), None)
+                    shape_names = own if own else names
+                    bones = si.get('bones') or []
                     for bi, bl in enumerate(si['data']['bone_list']):
-                        bname = names[bi] if bi < len(names) else None
-                        if bname is None:                  # name list shorter than the bone list (hig_f_Hair02):
-                            bones = si.get('bones') or []  # the skin instance's own bone node carries the name
-                            bname = bones[bi].get('name') if bi < len(bones) and bones[bi] is not None else None
+                        bname = shape_names[bi] if bi < len(shape_names) else None
+                        bone_node = bones[bi].get('name') if bi < len(bones) and bones[bi] is not None else None
+                        if bone_node and bone_node in joint_of:
+                            bname = bone_node                # the skin's own bone node: its name is the truth
+                        if bname is None:                  # name list shorter than the bone list (hig_f_Hair02)
+                            bname = bone_node
                         if bname not in joint_of:
                             print('  unknown bone', nif_name, bname)
                             continue

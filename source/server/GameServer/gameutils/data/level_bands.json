@@ -1,5 +1,5 @@
 {
- "comment": "Zone level bands (owner 2026-11-02): one starting hub per realm (Mag Mell, Cotswold, Mularn - the modern game's), two paths out at 6-16, one climb to the realm's dragon zone; one hard dead end off a low zone per realm (Llyn Barfog, Raumarik, Cliffs of Moher is the gentler one). The SI islands flow from their landing town. gameutils/LevelBands.cs: a monster's new level is its zone's band, placed by how far it stands from the nearest hub (gradient_weight) and by where its original level ranked in the zone (the rest). Monsters far above their zone (named, bosses) sit a few levels over the band; level 60 and up are left alone; dungeons follow their zone's change at the entrance. Copy to runtime/server/level-bands.json to change it without a rebuild; enabled: false turns it off.",
+ "comment": "Zone level bands (owner 2026-11-02; Hibernia fixed 2026-11-03 - Mag Mell is in Lough Derg, the first pass hung the realm on Connla in Shannon Estuary): one starting hub per realm (Mag Mell, Cotswold, Mularn - the modern game's), two paths out at 6-16, one climb to the realm's dragon zone; one hard dead end off a low zone per realm (Llyn Barfog, Raumarik, Cliffs of Moher is the gentler one). The SI islands flow from their landing town. gameutils/LevelBands.cs: a monster's new level is its zone's band, placed by how far it stands from the nearest hub (gradient_weight) and by where its original level ranked in the zone (the rest). Monsters far above their zone (named, bosses) sit a few levels over the band; level 60 and up are left alone; dungeons follow their zone's change at the entrance. Copy to runtime/server/level-bands.json to change it without a rebuild; enabled: false turns it off.",
  "enabled": true,
  "gradient_weight": 0.65,
  "boss_margin": 8,
@@ -12,14 +12,14 @@
  "starts": {
   "1": {"name": "Cotswold", "region": 1, "x": 559646, "y": 511301, "z": 2456, "heading": 2064},
   "2": {"name": "Mularn", "region": 100, "x": 805891, "y": 724274, "z": 4680, "heading": 2587},
-  "3": {"name": "Mag Mell", "region": 200, "x": 296475, "y": 641484, "z": 4848, "heading": 2468}
+  "3": {"name": "Mag Mell", "region": 200, "x": 346031, "y": 490867, "z": 5200, "heading": 2978}
  },
  "anchors": [
   {"name": "Cotswold", "region": 1, "x": 559646, "y": 511301},
   {"name": "Isle of Glass", "region": 51, "x": 534583, "y": 548901},
   {"name": "Mularn", "region": 100, "x": 805891, "y": 724274},
   {"name": "Aegir's Landing", "region": 151, "x": 288500, "y": 355600},
-  {"name": "Mag Mell", "region": 200, "x": 296475, "y": 641484},
+  {"name": "Mag Mell", "region": 200, "x": 346100, "y": 491380},
   {"name": "Domnann", "region": 181, "x": 423943, "y": 446276}
  ],
  "zones": {
@@ -61,13 +61,13 @@
   "158": {"name": "Modernagrav", "min": 44, "max": 56},
   "156": {"name": "Iarnwood", "min": 48, "max": 60, "gradient": false},
 
-  "202": {"name": "Shannon Estuary", "min": 1, "max": 10},
-  "201": {"name": "Silvermine Mts.", "min": 6, "max": 16},
-  "204": {"name": "Lough Gur", "min": 6, "max": 16},
-  "200": {"name": "Lough Derg", "min": 12, "max": 22},
-  "207": {"name": "Connacht", "min": 18, "max": 28},
+  "200": {"name": "Lough Derg", "min": 1, "max": 10},
+  "207": {"name": "Connacht", "min": 6, "max": 16},
+  "201": {"name": "Silvermine Mts.", "min": 8, "max": 16},
+  "206": {"name": "Valley of Bri Leith", "min": 12, "max": 22},
+  "202": {"name": "Shannon Estuary", "min": 18, "max": 28},
   "203": {"name": "Cliffs of Moher", "min": 24, "max": 34},
-  "206": {"name": "Valley of Bri Leith", "min": 28, "max": 38},
+  "204": {"name": "Lough Gur", "min": 28, "max": 38},
   "205": {"name": "Bog of Cullen", "min": 36, "max": 46},
   "216": {"name": "Sheeroe Hills", "min": 42, "max": 52},
   "208": {"name": "Cursed Forest", "min": 50, "max": 60, "gradient": false},

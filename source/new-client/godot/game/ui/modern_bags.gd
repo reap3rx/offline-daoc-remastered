@@ -8,8 +8,9 @@ extends ClassicWindow
 ##     item's own backpack place: drag, double-click to equip, right-click to select (then Shift+I / U) work as on
 ##     the classic rows; a search box dims what doesn't match;
 ##   - bottom: the wallet - your coins, realm points and every currency the game uses (Marks of Valor, the Darkness
-##     Falls seals, aurulite, Atlantean glass, dragon scales ...). Currencies sit in the wallet, not the grid (they
-##     still take a backpack place on the server - a real wallet is a server change for later).
+##     Falls seals, aurulite, Atlantean glass, dragon scales ...). The server keeps them off the backpack altogether
+##     (PlayerWallet.cs, 2026-11-03) and tells us the counts as a "#WAL|" line; any still in the backpack (offline, or
+##     an old stack the server hasn't moved yet) are counted too and stay out of the grid.
 
 const SIZE := Vector2(436, 300)
 const CELL := 32.0
@@ -33,6 +34,8 @@ const COINS := [["mithril", "M", Color(0.75, 0.85, 1.0)], ["platinum", "P", Colo
 		["gold", "G", Color(1.0, 0.82, 0.3)], ["silver", "S", Color(0.8, 0.8, 0.82)], ["copper", "C", Color(0.85, 0.5, 0.3)]]
 const SORT_ORDER := ["WEAPONS", "SHIELDS", "ARMOUR", "JEWELLERY", "AMMUNITION", "POISONS", "CRAFTING", "OTHER"]
 
+static var server_wallet := {}                 # currency name -> count (PlayerWallet.cs "#WAL|" line)
+static var _open: Array = []                    # the open bag windows (to refresh when the wallet changes)
 var _cells: Array = []
 var _equip: Array = []
 var _search: LineEdit
@@ -118,6 +121,22 @@ func build() -> void:
 	refresh()
 
 
+static func receive_wallet(text: String) -> void:
+	var parsed = JSON.parse_string(text)
+	server_wallet = parsed if parsed is Dictionary else {}
+	for w in _open:
+		if is_instance_valid(w):
+			w._refresh_wallet()
+
+
+func _enter_tree() -> void:
+	_open.append(self)
+
+
+func _exit_tree() -> void:
+	_open.erase(self)
+
+
 static func _box_style(hi := false) -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
 	s.bg_color = Color(0.04, 0.035, 0.03, 0.85)
@@ -201,6 +220,8 @@ func _refresh_wallet() -> void:
 		parts.append("[color=#%s]%d %s[/color]" % [(c[2] as Color).to_html(false), int(PlayerData.money.get(c[0], 0)), c[1]])
 	var line1 := "   ".join(parts) + "      [color=#c9a85a]%s REALM POINTS[/color]" % _thousands(PlayerData.realm_points)
 	var held := {}
+	for n in server_wallet:
+		held[String(n)] = int(server_wallet[n])
 	for s in range(PlayerData.BACKPACK, PlayerData.BACKPACK_END + 1):
 		var it := PlayerData.item_at(s)
 		if not it.is_empty() and is_currency(it):
