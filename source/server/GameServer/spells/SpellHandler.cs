@@ -1509,8 +1509,52 @@ namespace DOL.GS.Spells
 		/// <summary>
 		/// Select all targets for this spell
 		/// </summary>
+		/// <summary>
+		/// A pulsing chant that helps (a Paladin's, Warden's, Bard's, Skald's ... group pulses: speed, endurance, resists,
+		/// heals) reaches everyone of the realm near the chanter, grouped or not, as far as a standard spell (owner
+		/// 2026-11-02: "pulse around them in a fairly large radius ... everyone near them benefits, not just group
+		/// members"). Stronger chants of a kind still win: the effect list keeps the best and sets the weaker aside.
+		/// </summary>
+		public const int OPEN_PULSE_RANGE = 1500;
+
+		protected bool IsOpenPulse =>
+			Spell.IsPulsing && Spell.Pulse != 0 && HasPositiveEffect && Spell.Target is eSpellTarget.GROUP or eSpellTarget.REALM &&
+			!Spell.IsConcentration && (Caster is GamePlayer || Caster is GameBot);
+
+		/// <summary>The chanter, the realm's players and bots within range, and all their pets.</summary>
+		protected List<GameLiving> OpenPulseTargets()
+		{
+			List<GameLiving> list = GameLoop.GetListForTick<GameLiving>();
+			int range = Math.Max(OPEN_PULSE_RANGE, Spell.Range > 0 ? Spell.CalculateEffectiveRange(Caster) : Spell.Radius);
+			void AddWithPets(GameLiving l)
+			{
+				if (l == null || !l.IsAlive || list.Contains(l))
+					return;
+				list.Add(l);
+				IControlledBrain pet = l.ControlledBrain;
+				if (pet?.Body != null && Caster.IsWithinRadius(pet.Body, range))
+				{
+					list.Add(pet.Body);
+					if (pet.Body.ControlledNpcList != null)
+						foreach (IControlledBrain sub in pet.Body.ControlledNpcList)
+							if (sub?.Body != null && Caster.IsWithinRadius(sub.Body, range))
+								list.Add(sub.Body);
+				}
+			}
+			AddWithPets(Caster);
+			foreach (GamePlayer p in Caster.GetPlayersInRadius((ushort) range))
+				if (p != Caster && p.Realm == Caster.Realm && !GameServer.ServerRules.IsAllowedToAttack(Caster, p, true))
+					AddWithPets(p);
+			foreach (GameNPC n in Caster.GetNPCsInRadius((ushort) range))
+				if (n is GameBot b && b != Caster && b.Realm == Caster.Realm && !GameServer.ServerRules.IsAllowedToAttack(Caster, b, true))
+					AddWithPets(b);
+			return list;
+		}
+
 		public virtual List<GameLiving> SelectTargets(GameObject castTarget)
 		{
+			if (IsOpenPulse)
+				return OpenPulseTargets();
 			List<GameLiving> list = GameLoop.GetListForTick<GameLiving>();
 			GameLiving target = castTarget as GameLiving;
 			eSpellTarget modifiedTarget = Spell.Target;
@@ -2085,6 +2129,7 @@ namespace DOL.GS.Spells
 			};
 
 			if (!isBonedancerSupportMinion
+				&& !IsOpenPulse
 				&& Spell.Target is eSpellTarget.REALM
 				&& (Target == Caster || (Caster is NecromancerPet nPet && Target == nPet.Owner))
 				&& !Spell.IsConcentration

@@ -80,7 +80,12 @@ spec and run it again, or edit the zone's JSON by hand.
 
 `levels` is who the chain is meant for, and it stays that way: its monsters, boss, giver and guards come at their
 own levels whoever turns up. What grows is the size of it: more monsters at once, bigger waves, more boss health
-with more people. Anyone above its top level is scaled down to that level + 1 against its monsters
+with more people - gently (owner 2026-11-02, after a full group was overrun at the Bri Leith tower siege: alone
+you should be overwhelmed, a half group should find it a challenge, a full group little difficulty). The base
+numbers (`alive`, `waves.count`, `adds.count`, an ambush's `count`) are for one or two people; four see about half as
+many again, eight twice as many, never more. A defend stage's next wave waits while two waves' worth still stand,
+so they don't pile up on a group that is holding. An occupation's garrison (`count`) is three fifths for a pair,
+the full count for a group. Anyone above its top level is scaled down to that level + 1 against its monsters
 (`gameutils/LevelScaling.cs`: less damage out, more in - bots too), as in GW2; lower players are not lifted.
 Rewards are a share of your own level's experience and money; reward items (`items`) come in the version for your
 level: `named_uniques.py` makes level versions (`<id>_l10` ... `_l50`) of every item marked `"scaled": true`.
@@ -90,9 +95,9 @@ so they hold out long enough for you to see they're in trouble.
 
 ## Scaling down in the open world
 
-The same rule away from events: above a zone's top ordinary monster level (the level 95% of its monsters are at or
-under) you fight as that level + 1. Kills like that pay a tenth of their experience and keep one drop in five; an
-event's monsters and rewards pay in full.
+The same rule away from events, per monster: above a monster's level + 3 you fight as that level (docs/LEVEL_BANDS.md).
+Kills like that pay a tenth of their experience; their drops are the area's, as if you were that level. An event's
+monsters and rewards pay in full.
 
 ## Bots
 

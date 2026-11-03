@@ -71,3 +71,15 @@ saving a banded monster writes its original level back.
 Not banded: the old frontier zones (Forest Sauvage, Snowdonia, Pennine Mountains, Hadrian's Wall; Uppland, Yggdra
 Forest, Jamtland Mountains, Odin's Gate; Mount Collory, Cruachan Gorge, Breifine, Emain Macha), the capitals and the
 housing zones.
+
+## Playing together (2026-11-02)
+
+- **Open tapping.** Everyone who does a real share of the work on a monster (a twentieth of its health) gets the
+  whole kill's experience, grouped or not; less than that scales up to it. Loot still goes to the one who did most.
+- **Chants reach everyone.** A pulsing chant that helps - a Paladin's, Warden's, Bard's, Skald's, Minstrel's speed,
+  endurance, resists, heals - takes in every player and bot of the realm within standard spell range (1500) of the
+  chanter, grouped or not, and their pets. Stronger chants of a kind win: a Bard's speed sets a Warden's aside
+  while it lasts, a low Bard's gives way to a higher Warden's.
+- **Out of combat you recover fast** (GW2-style): a player or bot who hasn't fought for a few seconds refills health
+  and power in about 12 seconds whatever their level (sitting, 6), endurance in about 6 (walking too; not
+  sprinting). In a fight the classic numbers stand.

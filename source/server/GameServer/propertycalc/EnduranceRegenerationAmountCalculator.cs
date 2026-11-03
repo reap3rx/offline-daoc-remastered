@@ -39,7 +39,12 @@ namespace DOL.GS.PropertyCalc
 
             bool playerRules = living is GamePlayer || living is GameBot;
             if (playerRules)
+            {
                 regen += ClassicRestRegeneration.BaseEndurancePerTick(living.IsSitting, living.InCombat, living.IsMoving);
+                // out of combat: GW2-style, full in seconds (ClassicRestRegeneration) - walking too, not sprinting
+                regen = Math.Max(regen, ClassicRestRegeneration.OutOfCombatEnduranceFloor(living.InCombat,
+                    living is GamePlayer gp ? gp.IsSprinting : living is GameBot gb && gb.IsSprinting, living.MaxEndurance));
+            }
 
             regen *= ServerProperties.Properties.ENDURANCE_REGEN_AMOUNT_MODIFIER;
             return Math.Max(0, (int) regen);

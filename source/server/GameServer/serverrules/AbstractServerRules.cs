@@ -19,6 +19,9 @@ namespace DOL.GS.ServerRules
 {
     public abstract class AbstractServerRules : IServerRules
     {
+        /// <summary>The share of a monster's damage that earns a player the whole kill's experience (open tapping).</summary>
+        public const double OPEN_TAP_SHARE = 0.05;
+
         /// <summary>
         /// Defines a logger for this class.
         /// </summary>
@@ -1393,7 +1396,13 @@ namespace DOL.GS.ServerRules
                 return;
 
             // This has to be done after capping xp, otherwise a very low level player could simply tag any high level mob and hit the cap.
-            baseXpReward = (long) (baseXpReward * damagePercent);
+            // Open tapping (owner 2026-11-02: "no grouping requirement to share EXP ... anyone who takes part in attacking a
+            // mob should get experience"): a real share of the work (a twentieth of its health) earns the whole kill's
+            // experience, as in GW2 - not a slice by damage; less than that still scales up to it (a single tag on a
+            // monster someone else kills is worth a tag).
+            double xpShare = damagePercent >= OPEN_TAP_SHARE ? 1.0 : damagePercent / OPEN_TAP_SHARE;
+            baseXpReward = (long) (baseXpReward * xpShare);
+            modifiedByDamage = xpShare < 1.0;
 
             long campBonus = CalculateCampBonus();
             long groupBonus = CalculateGroupBonus();
@@ -1638,7 +1647,7 @@ namespace DOL.GS.ServerRules
                     playerToAward.Out.SendMessage($"XP needed: {xpNeededForLevel.ToString("N0", format)} | {levelPercent:0.##}% done with current level", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     playerToAward.Out.SendMessage($"# of kills needed to level at this rate: {(double) (playerToAward.ExperienceForNextLevel - playerToAward.Experience) / totalReward:0.##}", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
-                    if (modifiedByDamage && damagePercent < 1.0)
+                    if (modifiedByDamage)
                         playerToAward.Out.SendMessage($"Damage inflicted: {damagePercent * 100:0.##}%", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
                     if (campBonus > 0)

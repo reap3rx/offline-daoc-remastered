@@ -691,7 +691,9 @@ namespace DOL.GS.DynamicEvents
                     // bandits taking the pipes: they hold the place, and stay until they are driven out)
                     if (Def.DisplaceM > 0)
                         Chain.Displace(Center, Def.DisplaceM * 40);
-                    for (int i = 0; i < Math.Max(1, Def.Count); i++)
+                    // the garrison: the full count for a group, three fifths of it for one or two people (they are
+                    // dug in and fight at your pace, but all of them is still a wall to a pair)
+                    for (int i = 0; i < GarrisonSize(); i++)
                         Garrison(Pick(Def.Mobs));
                     if (Def.Boss != null)
                     {
@@ -738,6 +740,11 @@ namespace DOL.GS.DynamicEvents
                         _nextWave = now + 1000L * Def.Waves.EveryS;
                         var from = Def.Waves.From.Count > 0 ? Chain.ToWorld(Def.Waves.From[Util.Random(Def.Waves.From.Count - 1)]) : Center;
                         int n = Math.Max(1, (int) Math.Round(Def.Waves.Count * Scale));
+                        // a wave waits while the last two are still mostly up: they don't pile up on a group that is
+                        // holding but not winning fast (owner 2026-11-02: the siege's second stage overwhelmed a full group)
+                        int standing = Spawned.Count(x => x.IsAlive && x.Role == EventRole.Hostile);
+                        if (standing >= n * 2)
+                            n = 0;
                         for (int i = 0; i < n; i++)
                             SpawnHostile(Pick(Def.Waves.Mobs), Chain.Around(from, 300), Protect);
                     }
@@ -777,12 +784,14 @@ namespace DOL.GS.DynamicEvents
                     {
                         _nextWave = now + 1000L * Math.Max(20, Def.ReinforceS);
                         int garrison = Spawned.Count(n => n.IsAlive && n.Role == EventRole.Hostile);
-                        if (garrison < Def.Count && !Chain.PeopleNear(CenterPoint, RadiusUnits * 2.5).Any())
+                        if (garrison < GarrisonSize() && !Chain.PeopleNear(CenterPoint, RadiusUnits * 2.5).Any())
                             Garrison(Pick(Def.Mobs));
                     }
                     break;
             }
         }
+
+        int GarrisonSize() => Math.Max(1, (int) Math.Round(Math.Max(1, Def.Count) * Math.Clamp(0.6 + 0.06 * (PeopleHere - 1), 0.6, 1.0)));
 
         /// <summary>One of an occupation's garrison, at a post in the area that they keep.</summary>
         EventNpc Garrison(MobDef m)
@@ -1032,11 +1041,19 @@ namespace DOL.GS.DynamicEvents
                 _credit[who] = (_credit.TryGetValue(who, out double c) ? c : 0) + npc.MaxHealth * 0.1;
         }
 
+        /// <summary>How many more come with more people (owner 2026-11-02, the Bri Leith tower siege with a full group:
+        /// "way too many enemies spawned ... if one person tries to take it on, they will be overwhelmed. But a full group
+        /// should be able to take care of it with only little difficulty, and a half group it would be a challenge but
+        /// doable"): the base counts are for one or two; four people see about half as many again, eight twice as many,
+        /// never more - a group's healing and crowd control grow faster than its head count.</summary>
         double ComputeScale()
         {
             int people = Chain.PeopleNear(CenterPoint, RadiusUnits * 1.5).Count();
-            return Math.Min(3.0, 1.0 + 0.35 * Math.Max(0, people - 1));
+            return Math.Min(2.0, 1.0 + 0.15 * Math.Max(0, people - 1));
         }
+
+        /// <summary>The people here, for the stages whose numbers go by head count rather than the scale.</summary>
+        int PeopleHere => Chain.PeopleNear(CenterPoint, RadiusUnits * 1.5).Count();
 
         /// <summary>Gold, silver or bronze by share of the work (damage dealt to the event's monsters, kills), bronze for
         /// being there; experience as a share of your level, money by your level, and the stage's items by chance - each

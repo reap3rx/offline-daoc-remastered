@@ -50,6 +50,11 @@ namespace DOL.GS.PropertyCalc
             }
 
             regen *= ServerProperties.Properties.MANA_REGEN_AMOUNT_MODIFIER;
+
+            if (living is GamePlayer || living is GameBot)       // out of combat: GW2-style, full in seconds (ClassicRestRegeneration)
+                regen = Math.Max(regen, ClassicRestRegeneration.OutOfCombatFloor(living.InCombat, living.MaxMana,
+
+                    ClassicRestRegeneration.HealthAndPowerInterval(living.IsSitting, false)));
             return Math.Max(1, (int) regen);
         }
     }
