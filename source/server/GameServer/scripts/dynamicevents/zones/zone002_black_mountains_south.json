@@ -627,6 +627,150 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "black_mountains_south_spider_hollow",
+      "title": "The Spider Hollow",
+      "levels": [6, 8],
+      "hint": "The woods are strung thick with webs...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Spider Hollow",
+          "objective": "Clear the spider hollow",
+          "announce": "Giant spiders have strung the woods so thick a cart can't pass, and two woodcutters never came home. Burn out their hollow.",
+          "center": [1268, 523, 53.9],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12097,
+              "name": "giant spider",
+              "level": [6, 8]
+            }
+          ],
+          "success": "You have cleared the spider hollow. The Brood-Mother comes out to fight.",
+          "fail": "They hold the spider hollow. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Brood-Mother",
+          "objective": "Defeat the Brood-Mother",
+          "announce": "The Brood-Mother stands at the spider hollow. Bring friends.",
+          "center": [1268, 523, 53.9],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12097,
+            "name": "The Brood-Mother",
+            "level": 10,
+            "size": 70,
+            "pos": [1268, 523, 53.9],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12097,
+                "name": "giant spider",
+                "level": [6, 8]
+              }
+            ]
+          },
+          "success": "The Brood-Mother falls. The way is safe again.",
+          "fail": "The Brood-Mother slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu2_brood_mother_s_cloak", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Giant Spiders Hold the Road to Humberton Village",
+          "objective": "Drive the giant spiders off the road to Humberton Village",
+          "announce": "With The Spider Hollow lost, the giant spiders have spread down onto the road to Humberton Village and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [754, 394, 58.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12097,
+              "name": "giant spider",
+              "level": [6, 8]
+            }
+          ],
+          "boss": {
+            "template": 12097,
+            "name": "Giant spider warleader",
+            "level": 9,
+            "pos": [754, 394, 58.6],
+            "health_mult": 2
+          },
+          "success": "The giant spiders are gone from the road to Humberton Village. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cuthbert has come out to set the road to Humberton Village right. The giant spiders are coming back for it!",
+          "center": [754, 394, 58.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cuthbert",
+            "level": 8,
+            "pos": [754, 394, 58.6],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [826, 350, 59.6],
+              [836, 415, 58.0],
+              [796, 468, 56.7]
+            ],
+            "mobs": [
+              {
+                "template": 12097,
+                "name": "giant spider",
+                "level": [6, 8]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Humberton Village is safe again. Thank you.\"",
+          "success": "The giant spiders break and scatter. The road to Humberton Village is open again.",
+          "fail": "Roadwarden Cuthbert falls, and the giant spiders take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

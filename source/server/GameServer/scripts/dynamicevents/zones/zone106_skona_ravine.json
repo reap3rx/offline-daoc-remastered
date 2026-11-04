@@ -389,6 +389,150 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "skona_ravine_wolfaur_headsmen",
+      "title": "The Wolfaur Headsmen",
+      "levels": [33, 36],
+      "hint": "Severed heads mark a path into the ravine...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Headsmen's Block",
+          "objective": "Clear the headsmen's block",
+          "announce": "The wolfaur headsmen have set up their block in the ravine and taken a hunting party's heads. End them.",
+          "center": [836, 576, 125.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60168002,
+              "name": "wolfaur headsman",
+              "level": [33, 36]
+            }
+          ],
+          "success": "You have cleared the headsmen's block. Grimjaw the Headsman comes out to fight.",
+          "fail": "They hold the headsmen's block. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Grimjaw the Headsman",
+          "objective": "Defeat Grimjaw the Headsman",
+          "announce": "Grimjaw the Headsman stands at the headsmen's block. Bring friends.",
+          "center": [836, 576, 125.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60168002,
+            "name": "Grimjaw the Headsman",
+            "level": 38,
+            "size": 110,
+            "pos": [836, 576, 125.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60168002,
+                "name": "wolfaur headsman",
+                "level": [33, 36]
+              }
+            ]
+          },
+          "success": "Grimjaw the Headsman falls. The way is safe again.",
+          "fail": "Grimjaw the Headsman slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu106_grimjaw_the_headsman_s_band", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Wolfaur Headsmen Hold the Old Road",
+          "objective": "Drive the wolfaur headsmen off the old road",
+          "announce": "With The Wolfaur Headsmen lost, the wolfaur headsmen have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [705, 818, 40.3],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60168002,
+              "name": "wolfaur headsman",
+              "level": [33, 36]
+            }
+          ],
+          "boss": {
+            "template": 60168002,
+            "name": "Wolfaur headsman warleader",
+            "level": 37,
+            "pos": [705, 818, 40.3],
+            "health_mult": 2
+          },
+          "success": "The wolfaur headsmen are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Ylva has come out to set the old road right. The wolfaur headsmen are coming back for it!",
+          "center": [705, 818, 40.3],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Ylva",
+            "level": 36,
+            "pos": [705, 818, 40.3],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [680, 737, 88.6],
+              [746, 743, 86.4],
+              [787, 795, 41.7]
+            ],
+            "mobs": [
+              {
+                "template": 60168002,
+                "name": "wolfaur headsman",
+                "level": [33, 36]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The wolfaur headsmen break and scatter. The old road is open again.",
+          "fail": "Roadwarden Ylva falls, and the wolfaur headsmen take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

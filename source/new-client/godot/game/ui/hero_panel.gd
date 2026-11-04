@@ -767,13 +767,15 @@ class HeroSlot extends InventorySheet.EquipSlot:
 			draw_string(f, Vector2(0, size.y * 0.5 + 3), nm.substr(0, 6), HORIZONTAL_ALIGNMENT_CENTER, size.x, 6, Color(0.6, 0.57, 0.52, 0.6))
 
 
-## A backpack square on the Hero page: with a slot picked, one click wears the item there.
+## A backpack square on the Hero page: with a slot picked, one click (or a right-click) wears the item there; with
+## none, a right-click wears it where it goes (the bags' own rule).
 class HeroCell extends ModernBags.BagCell:
 	var panel
 
 	func _gui_input(event: InputEvent) -> void:
 		if panel and panel.filter_slot >= 0 and event is InputEventMouseButton and event.pressed \
-				and event.button_index == MOUSE_BUTTON_LEFT and not event.double_click and not PlayerData.entry(slot).is_empty():
+				and (event.button_index == MOUSE_BUTTON_RIGHT or (event.button_index == MOUSE_BUTTON_LEFT and not event.double_click)) \
+				and not PlayerData.entry(slot).is_empty():
 			PlayerData.move(slot, panel.filter_slot)
 			accept_event()
 			return

@@ -55,6 +55,23 @@
     "Hits": 7
    },
    "lore": "Won from Black Tom the Highwayman when Highway Robbery was ended."
+  },
+  {
+   "event_reward": "black_mountains_south_spider_hollow",
+   "scaled": true,
+   "name": "Brood-Mother's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 11,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 9
+   },
+   "lore": "Won from the Brood-Mother when The Spider Hollow was ended."
   }
  ]
 }

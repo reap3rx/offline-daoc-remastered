@@ -55,6 +55,23 @@
     "Hits": 6
    },
    "lore": "Won from Cathal of the Four Winds when The Wind Ghouls was ended."
+  },
+  {
+   "event_reward": "connacht_anger_sprites",
+   "scaled": true,
+   "name": "Wrathful One's Jewel",
+   "base": [
+    41,
+    24
+   ],
+   "level": 16,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 3,
+    "Hits": 13
+   },
+   "lore": "Won from the Wrathful One when The Wrathful Sprites was ended."
   }
  ]
 }

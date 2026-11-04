@@ -642,6 +642,165 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "gotar_pine_imps",
+      "title": "The Imp Revel",
+      "levels": [5, 6],
+      "hint": "Shrill laughter and smoke come from the pines...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Imps' Revel",
+          "objective": "Clear the imps' revel",
+          "announce": "The imps are holding a revel in the pines and setting fire to anything that will burn. Break it up.",
+          "center": [731, 953, 119.5],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60168012,
+              "name": "wood imp",
+              "level": [5, 5]
+            },
+            {
+              "template": 60164933,
+              "name": "pine imp",
+              "level": [6, 6]
+            }
+          ],
+          "success": "You have cleared the imps' revel. Kvist the Imp-King comes out to fight.",
+          "fail": "They hold the imps' revel. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Kvist the Imp-King",
+          "objective": "Defeat Kvist the Imp-King",
+          "announce": "Kvist the Imp-King stands at the imps' revel. Bring friends.",
+          "center": [731, 953, 119.5],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60164933,
+            "name": "Kvist the Imp-King",
+            "level": 8,
+            "size": 44,
+            "pos": [731, 953, 119.5],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60168012,
+                "name": "wood imp",
+                "level": [5, 5]
+              }
+            ]
+          },
+          "success": "Kvist the Imp-King falls. The way is safe again.",
+          "fail": "Kvist the Imp-King slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu103_kvist_the_imp_king_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Wood Imps Hold the Road to Nalliten",
+          "objective": "Drive the wood imps off the road to Nalliten",
+          "announce": "With The Imp Revel lost, the wood imps have spread down onto the road to Nalliten and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [974, 987, 115.5],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60168012,
+              "name": "wood imp",
+              "level": [5, 5]
+            },
+            {
+              "template": 60164933,
+              "name": "pine imp",
+              "level": [6, 6]
+            }
+          ],
+          "boss": {
+            "template": 60168012,
+            "name": "Wood imp warleader",
+            "level": 7,
+            "pos": [974, 987, 115.5],
+            "health_mult": 2
+          },
+          "success": "The wood imps are gone from the road to Nalliten. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Sten has come out to set the road to Nalliten right. The wood imps are coming back for it!",
+          "center": [974, 987, 115.5],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Sten",
+            "level": 6,
+            "pos": [974, 987, 115.5],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [907, 1039, 112.6],
+              [889, 975, 116.7],
+              [923, 918, 92.7]
+            ],
+            "mobs": [
+              {
+                "template": 60168012,
+                "name": "wood imp",
+                "level": [5, 5]
+              },
+              {
+                "template": 60164933,
+                "name": "pine imp",
+                "level": [6, 6]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Nalliten is safe again. Thank you.\"",
+          "success": "The wood imps break and scatter. The road to Nalliten is open again.",
+          "fail": "Roadwarden Sten falls, and the wood imps take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

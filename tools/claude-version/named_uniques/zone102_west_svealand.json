@@ -56,6 +56,24 @@
     "Slash": 2
    },
    "lore": "Won from the Elder Skogsfru when Into Skogsfru Wood was ended."
+  },
+  {
+   "event_reward": "west_svealand_svartalf_cairn",
+   "scaled": true,
+   "name": "Ulfhild the Svartalf's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 18,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 18,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Won from Ulfhild the Svartalf when The Svartalf Hunt was ended."
   }
  ]
 }

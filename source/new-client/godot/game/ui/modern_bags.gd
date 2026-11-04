@@ -2,27 +2,21 @@ extends ClassicWindow
 ## The modern inventory (owner 2026-11-02: "a modern inventory that auto sorts based on item type and value and wallet
 ## that contains things like our new event currency, Seals from DF and any other currencies that are in the game").
 ## Opens from the modern menu bar and the inventory key while STYLE is MODERN (docs/MODERN_UI.md):
-##   - left: what you wear, slot by slot (drag on / off, double-click to take off, as the classic paper doll);
-##   - right: the backpack's 40 places as one grid, sorted - weapons, shields, armour, jewellery, ammunition,
+##   - the backpack's 40 places as one grid, sorted - weapons, shields, armour, jewellery, ammunition,
 ##     poisons, crafting, the rest; inside each, the higher level / better quality first. Each square is still the
-##     item's own backpack place: drag, double-click to equip, right-click to select (then Shift+I / U) work as on
-##     the classic rows; a search box dims what doesn't match;
+##     item's own backpack place: drag, double-click or right-click to equip (owner 2026-11-04; what can't be worn is
+##     selected instead, then Shift+I / U), as on the classic rows; a search box dims what doesn't match;
+##   - what you wear is in the Hero panel (owner 2026-11-04: "get rid of that and only be bags");
 ##   - bottom: the wallet - your coins, realm points and every currency the game uses (Marks of Valor, the Darkness
 ##     Falls seals, aurulite, Atlantean glass, dragon scales ...). The server keeps them off the backpack altogether
 ##     (PlayerWallet.cs, 2026-11-03) and tells us the counts as a "#WAL|" line; any still in the backpack (offline, or
 ##     an old stack the server hasn't moved yet) are counted too and stay out of the grid.
 
-const SIZE := Vector2(436, 300)
+const SIZE := Vector2(280, 300)
 const CELL := 32.0
 const COLS := 8
-const GRID_X := 156.0
+const GRID_X := 12.0
 const GRID_Y := 46.0
-const EQUIP_X := 12.0
-const EQUIP_Y := 28.0
-const EQ_CELL := 34.0
-# what you wear, three to a row: helm, neck, cloak / torso, arms, hands / legs, feet, waist / jewel, rings / wrists,
-# mythical / the four weapon slots
-const EQUIP := [21, 29, 26, 25, 28, 22, 27, 23, 32, 24, 35, 36, 33, 34, 37, 10, 11, 12, 13]
 # the currencies (by name: the client only hears an item's name) - GameItemCurrencyMerchant's MoneyKeys and the event
 # merchant's mark (ItemTemplate: event_mark, DiamondSeal, SapphireSeal, EmeraldSeal, aurulite, atlanteanglass,
 # dragonscales ...)
@@ -37,7 +31,6 @@ const SORT_ORDER := ["WEAPONS", "SHIELDS", "ARMOUR", "JEWELLERY", "AMMUNITION", 
 static var server_wallet := {}                 # currency name -> count (PlayerWallet.cs "#WAL|" line)
 static var _open: Array = []                    # the open bag windows (to refresh when the wallet changes)
 var _cells: Array = []
-var _equip: Array = []
 var _search: LineEdit
 var _wallet: RichTextLabel
 var _weight: Label
@@ -54,29 +47,17 @@ func build() -> void:
 	x.position = Vector2(SIZE.x - 24, 6)
 	x.pressed.connect(hide_window)
 	add_child(x)
-	for i in EQUIP.size():
-		var back := Panel.new()
-		back.add_theme_stylebox_override("panel", _box_style())
-		back.position = Vector2(EQUIP_X + (i % 3) * EQ_CELL, EQUIP_Y + (i / 3) * EQ_CELL)
-		back.size = Vector2(EQ_CELL - 2, EQ_CELL - 2)
-		back.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(back)
-		var s := InventorySheet.EquipSlot.new()
-		s.slot = int(EQUIP[i])
-		s.position = back.position + Vector2(1, 1)
-		s.size = Vector2(EQ_CELL - 4, EQ_CELL - 4)
-		add_child(s)
-		_equip.append(s)
 	_weight = UiArt.label("", 8, UiArt.CREAM)
-	_weight.position = Vector2(EQUIP_X, EQUIP_Y + 7 * EQ_CELL + 2)
-	_weight.size = Vector2(3 * EQ_CELL, 12)
+	_weight.position = Vector2(GRID_X + 60, GRID_Y + 5 * CELL + 4)
+	_weight.size = Vector2(COLS * CELL - 60, 12)
+	_weight.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_weight.tooltip_text = "WEIGHT CARRIED / CARRYING CAPACITY"
 	_weight.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(_weight)
 	_search = LineEdit.new()
 	_search.placeholder_text = "SEARCH"
 	_search.position = Vector2(GRID_X, 25)
-	_search.size = Vector2(150, 16)
+	_search.size = Vector2(130, 16)
 	_search.add_theme_font_override("font", UiArt.font(true))
 	_search.add_theme_font_size_override("font_size", 9)
 	_search.add_theme_color_override("font_color", UiArt.CREAM)
@@ -86,9 +67,9 @@ func build() -> void:
 	_search.text_changed.connect(func(_t: String): refresh())
 	_search.text_submitted.connect(func(_t: String): _search.release_focus())
 	add_child(_search)
-	_sorted_by = UiArt.label("SORTED BY TYPE, THEN LEVEL", 7, UiArt.DIM)
-	_sorted_by.position = Vector2(GRID_X + 156, 27)
-	_sorted_by.size = Vector2(COLS * CELL - 156, 12)
+	_sorted_by = UiArt.label("SORTED BY TYPE, LEVEL", 7, UiArt.DIM)
+	_sorted_by.position = Vector2(GRID_X + 134, 27)
+	_sorted_by.size = Vector2(COLS * CELL - 134, 12)
 	_sorted_by.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(_sorted_by)
 	for i in PlayerData.SACK * 5:
@@ -203,8 +184,6 @@ func refresh() -> void:
 		c.refresh()
 		var it := PlayerData.item_at(c.slot)
 		c.modulate.a = 1.0 if q == "" or it.is_empty() or String(it.get("name", "")).to_lower().contains(q) else 0.25
-	for e in _equip:
-		e.refresh()
 	if Server.active:
 		_weight.text = "WEIGHT %d / %d" % [Server.weight_now, Server.weight_max] if Server.weight_max >= 0 else ""
 	elif PlayerData.stats.size() >= 8:
@@ -338,7 +317,11 @@ class BagCell extends Control:
 			return
 		if event is InputEventMouseButton and event.pressed and not PlayerData.entry(slot).is_empty():
 			if event.button_index == MOUSE_BUTTON_RIGHT:
-				PlayerData.select_slot(slot)
+				# right-click wears it (owner 2026-11-04); what can't be worn is picked instead (then Shift+I / U)
+				if PlayerData.slots_for(PlayerData.item_at(slot)).is_empty():
+					PlayerData.select_slot(slot)
+				else:
+					PlayerData.equip(slot)
 				accept_event()
 			elif event.button_index == MOUSE_BUTTON_LEFT and event.double_click:
 				PlayerData.equip(slot)

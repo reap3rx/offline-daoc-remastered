@@ -652,6 +652,213 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "west_svealand_svartalf_cairn",
+      "title": "The Svartalf Hunt",
+      "levels": [14, 15],
+      "hint": "Dark elves have been seen near the old cairn...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Skald Bersi",
+          "objective": "Protect Skald Bersi, who is singing the old wards over the cairn",
+          "announce": "Skald Bersi is renewing the wards on the old cairn, and the svartalfar want what is buried there. Keep them off him.",
+          "center": [874, 1365, 117.2],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Skald Bersi",
+            "template": 60167654,
+            "level": 15,
+            "model": 156,
+            "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
+            "health_mult": 10,
+            "pos": [874, 1365, 117.2]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [780, 1397, 118.9],
+              [792, 1343, 114.6],
+              [833, 1291, 115.2]
+            ],
+            "mobs": [
+              {
+                "template": 60166662,
+                "name": "svartalf hunter",
+                "level": [14, 15]
+              },
+              {
+                "template": 20008,
+                "name": "svartalf chanter",
+                "level": [14, 15]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Skald Bersi. \"They came from over there - let's finish this.\"",
+          "fail": "Skald Bersi falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Svartalf Camp",
+          "objective": "Clear the svartalf camp",
+          "announce": "They came from the svartalf camp. Follow them back and clear it out.",
+          "center": [632, 1301, 121.4],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60166662,
+              "name": "svartalf hunter",
+              "level": [14, 15]
+            },
+            {
+              "template": 20008,
+              "name": "svartalf chanter",
+              "level": [14, 15]
+            }
+          ],
+          "success": "You have cleared the svartalf camp. Ulfhild the Svartalf comes out to fight.",
+          "fail": "They hold the svartalf camp. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Ulfhild the Svartalf",
+          "objective": "Defeat Ulfhild the Svartalf",
+          "announce": "Ulfhild the Svartalf stands at the svartalf camp. Bring friends.",
+          "center": [632, 1301, 121.4],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 20008,
+            "name": "Ulfhild the Svartalf",
+            "level": 17,
+            "size": 65,
+            "pos": [632, 1301, 121.4],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60166662,
+                "name": "svartalf hunter",
+                "level": [14, 15]
+              }
+            ]
+          },
+          "success": "Ulfhild the Svartalf falls. The way is safe again.",
+          "fail": "Ulfhild the Svartalf slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu102_ulfhild_the_svartalf_s_mantle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Svartalf Hunters Hold the Road to Vindsaul Faste",
+          "objective": "Drive the svartalf hunters off the road to Vindsaul Faste",
+          "announce": "With The Svartalf Hunt lost, the svartalf hunters have spread down onto the road to Vindsaul Faste and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [425, 896, 150.3],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60166662,
+              "name": "svartalf hunter",
+              "level": [14, 15]
+            },
+            {
+              "template": 20008,
+              "name": "svartalf chanter",
+              "level": [14, 15]
+            }
+          ],
+          "boss": {
+            "template": 60166662,
+            "name": "Svartalf hunter warleader",
+            "level": 16,
+            "pos": [425, 896, 150.3],
+            "health_mult": 2
+          },
+          "success": "The svartalf hunters are gone from the road to Vindsaul Faste. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Gunnar has come out to set the road to Vindsaul Faste right. The svartalf hunters are coming back for it!",
+          "center": [425, 896, 150.3],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Gunnar",
+            "level": 15,
+            "pos": [425, 896, 150.3],
+            "health_mult": 10,
+            "template": 60167654,
+            "model": 156,
+            "equipment": "b8af41f2-b48a-4422-959f-35b359a42914"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [506, 921, 150.6],
+              [464, 972, 144.4],
+              [398, 976, 143.3]
+            ],
+            "mobs": [
+              {
+                "template": 60166662,
+                "name": "svartalf hunter",
+                "level": [14, 15]
+              },
+              {
+                "template": 20008,
+                "name": "svartalf chanter",
+                "level": [14, 15]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Vindsaul Faste is safe again. Thank you.\"",
+          "success": "The svartalf hunters break and scatter. The road to Vindsaul Faste is open again.",
+          "fail": "Roadwarden Gunnar falls, and the svartalf hunters take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

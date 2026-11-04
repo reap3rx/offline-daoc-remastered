@@ -946,6 +946,165 @@
           "reward": { "xp_pct": 15, "copper_per_level": 120, "tokens": 10 }
         }
       ]
+    },
+    {
+      "id": "campacorentin_forest_bloated_spiders",
+      "title": "The Bloated Nest",
+      "levels": [10, 14],
+      "hint": "Webs as thick as sailcloth hang between the oaks...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Bloated Nest",
+          "objective": "Clear the bloated nest",
+          "announce": "A nest of bloated spiders has grown in the forest, fat on the deer - and lately on travellers. Burn it out.",
+          "center": [1361, 789, 47.7],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12450,
+              "name": "bloated spider",
+              "level": [10, 11]
+            },
+            {
+              "template": 12492,
+              "name": "large bloated spider",
+              "level": [13, 14]
+            }
+          ],
+          "success": "You have cleared the bloated nest. The Bloated Queen comes out to fight.",
+          "fail": "They hold the bloated nest. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Bloated Queen",
+          "objective": "Defeat the Bloated Queen",
+          "announce": "The Bloated Queen stands at the bloated nest. Bring friends.",
+          "center": [1361, 789, 47.7],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12492,
+            "name": "The Bloated Queen",
+            "level": 16,
+            "size": 96,
+            "pos": [1361, 789, 47.7],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12450,
+                "name": "bloated spider",
+                "level": [10, 11]
+              }
+            ]
+          },
+          "success": "The Bloated Queen falls. The way is safe again.",
+          "fail": "The Bloated Queen slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu8_bloated_queen_s_belt", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Bloated Spiders Hold the Old Road",
+          "objective": "Drive the bloated spiders off the old road",
+          "announce": "With The Bloated Nest lost, the bloated spiders have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1148, 938, 42.4],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12450,
+              "name": "bloated spider",
+              "level": [10, 11]
+            },
+            {
+              "template": 12492,
+              "name": "large bloated spider",
+              "level": [13, 14]
+            }
+          ],
+          "boss": {
+            "template": 12450,
+            "name": "Bloated spider warleader",
+            "level": 15,
+            "pos": [1148, 938, 42.4],
+            "health_mult": 2
+          },
+          "success": "The bloated spiders are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Mabyn has come out to set the old road right. The bloated spiders are coming back for it!",
+          "center": [1148, 938, 42.4],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Mabyn",
+            "level": 14,
+            "pos": [1148, 938, 42.4],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1161, 854, 48.4],
+              [1217, 889, 49.5],
+              [1231, 954, 46.0]
+            ],
+            "mobs": [
+              {
+                "template": 12450,
+                "name": "bloated spider",
+                "level": [10, 11]
+              },
+              {
+                "template": 12492,
+                "name": "large bloated spider",
+                "level": [13, 14]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The bloated spiders break and scatter. The old road is open again.",
+          "fail": "Roadwarden Mabyn falls, and the bloated spiders take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

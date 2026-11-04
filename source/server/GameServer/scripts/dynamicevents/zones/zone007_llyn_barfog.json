@@ -528,6 +528,150 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "llyn_barfog_adder_shallows",
+      "title": "The Adder Shallows",
+      "levels": [10, 10],
+      "hint": "The shallows of the lake are boiling with snakes...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Adder Shallows",
+          "objective": "Clear the adder shallows",
+          "announce": "The lake adders have swarmed in the shallows, and no one can draw water or cross the ford. Clear them out.",
+          "center": [956, 1271, 107.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 13018,
+              "name": "lake adder",
+              "level": [10, 10]
+            }
+          ],
+          "success": "You have cleared the adder shallows. The Lake Wyrm comes out to fight.",
+          "fail": "They hold the adder shallows. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Lake Wyrm",
+          "objective": "Defeat the Lake Wyrm",
+          "announce": "The Lake Wyrm stands at the adder shallows. Bring friends.",
+          "center": [956, 1271, 107.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 13018,
+            "name": "The Lake Wyrm",
+            "level": 12,
+            "size": 78,
+            "pos": [956, 1271, 107.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 13018,
+                "name": "lake adder",
+                "level": [10, 10]
+              }
+            ]
+          },
+          "success": "The Lake Wyrm falls. The way is safe again.",
+          "fail": "The Lake Wyrm slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu7_lake_wyrm_s_mantle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Lake Adders Hold the Old Road",
+          "objective": "Drive the lake adders off the old road",
+          "announce": "With The Adder Shallows lost, the lake adders have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1228, 1133, 131.2],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 13018,
+              "name": "lake adder",
+              "level": [10, 10]
+            }
+          ],
+          "boss": {
+            "template": 13018,
+            "name": "Lake adder warleader",
+            "level": 11,
+            "pos": [1228, 1133, 131.2],
+            "health_mult": 2
+          },
+          "success": "The lake adders are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cuthbert has come out to set the old road right. The lake adders are coming back for it!",
+          "center": [1228, 1133, 131.2],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cuthbert",
+            "level": 10,
+            "pos": [1228, 1133, 131.2],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1203, 1214, 116.6],
+              [1152, 1172, 100.3],
+              [1148, 1106, 97.3]
+            ],
+            "mobs": [
+              {
+                "template": 13018,
+                "name": "lake adder",
+                "level": [10, 10]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The lake adders break and scatter. The old road is open again.",
+          "fail": "Roadwarden Cuthbert falls, and the lake adders take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

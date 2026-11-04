@@ -38,6 +38,23 @@
     "Hits": 20
    },
    "lore": "Won from Mother Oak when The Dryad Grove was ended."
+  },
+  {
+   "event_reward": "skona_ravine_wolfaur_headsmen",
+   "scaled": true,
+   "name": "Grimjaw the Headsman's Band",
+   "base": [
+    41,
+    35
+   ],
+   "level": 39,
+   "bonuses": {
+    "Cha": 12,
+    "Emp": 9,
+    "Qui": 7,
+    "Hits": 23
+   },
+   "lore": "Won from Grimjaw the Headsman when The Wolfaur Headsmen was ended."
   }
  ]
 }

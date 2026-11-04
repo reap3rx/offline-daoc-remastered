@@ -56,6 +56,23 @@
     "Hits": 9
    },
    "lore": "Won from Queen Aoibheall when The Sheerie Ring was ended."
+  },
+  {
+   "event_reward": "shannon_estuary_sandmen",
+   "scaled": true,
+   "name": "Tide-Turned's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 7,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 6
+   },
+   "lore": "Won from the Tide-Turned when The Sandmen of the Strand was ended."
   }
  ]
 }

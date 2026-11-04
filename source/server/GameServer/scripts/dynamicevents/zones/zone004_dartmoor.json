@@ -369,6 +369,165 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "dartmoor_pounders",
+      "title": "The Pounders of the Moor",
+      "levels": [51, 58],
+      "hint": "The ground shakes with blows across the moor...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Giants' Quarry",
+          "objective": "Clear the giants' quarry",
+          "announce": "The granite giants have opened a quarry on the moor, and their pounding has brought down the old tor. Stop them before they take the rest.",
+          "center": [724, 1100, 6.5],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 770011,
+              "name": "granite giant outlooker",
+              "level": [51, 55]
+            },
+            {
+              "template": 770002,
+              "name": "granite giant pounder",
+              "level": [54, 58]
+            }
+          ],
+          "success": "You have cleared the giants' quarry. Thunderfist comes out to fight.",
+          "fail": "They hold the giants' quarry. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Thunderfist",
+          "objective": "Defeat Thunderfist",
+          "announce": "Thunderfist stands at the giants' quarry. Bring friends.",
+          "center": [724, 1100, 6.5],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 770001,
+            "name": "Thunderfist",
+            "level": 60,
+            "size": 110,
+            "pos": [724, 1100, 6.5],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 770011,
+                "name": "granite giant outlooker",
+                "level": [51, 55]
+              }
+            ]
+          },
+          "success": "Thunderfist falls. The way is safe again.",
+          "fail": "Thunderfist slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu4_thunderfist_s_pendant", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Granite Giant Outlookers Hold the Old Road",
+          "objective": "Drive the granite giant outlookers off the old road",
+          "announce": "With The Pounders of the Moor lost, the granite giant outlookers have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [433, 1191, 6.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 770011,
+              "name": "granite giant outlooker",
+              "level": [51, 55]
+            },
+            {
+              "template": 770002,
+              "name": "granite giant pounder",
+              "level": [54, 58]
+            }
+          ],
+          "boss": {
+            "template": 770011,
+            "name": "Granite giant outlooker warleader",
+            "level": 59,
+            "pos": [433, 1191, 6.6],
+            "health_mult": 2
+          },
+          "success": "The granite giant outlookers are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hal has come out to set the old road right. The granite giant outlookers are coming back for it!",
+          "center": [433, 1191, 6.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hal",
+            "level": 58,
+            "pos": [433, 1191, 6.6],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [471, 1115, 5.7],
+              [514, 1166, 10.6],
+              [508, 1232, 8.5]
+            ],
+            "mobs": [
+              {
+                "template": 770011,
+                "name": "granite giant outlooker",
+                "level": [51, 55]
+              },
+              {
+                "template": 770002,
+                "name": "granite giant pounder",
+                "level": [54, 58]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The granite giant outlookers break and scatter. The old road is open again.",
+          "fail": "Roadwarden Hal falls, and the granite giant outlookers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

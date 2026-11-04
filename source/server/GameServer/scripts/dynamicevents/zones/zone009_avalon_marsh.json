@@ -632,6 +632,165 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "avalon_marsh_leapers_pool",
+      "title": "The Leapers' Pool",
+      "levels": [8, 15],
+      "hint": "Something drags the marsh-men under at the dark pool...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Leapers' Pool",
+          "objective": "Clear the leapers' pool",
+          "announce": "Water leapers have taken the dark pool in the marsh, and they pull down anyone who comes to fish it. End them.",
+          "center": [979, 1349, 48.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12063,
+              "name": "water leaper",
+              "level": [8, 10]
+            },
+            {
+              "template": 12021,
+              "name": "giant water leaper",
+              "level": [15, 15]
+            }
+          ],
+          "success": "You have cleared the leapers' pool. Grandfather Leaper comes out to fight.",
+          "fail": "They hold the leapers' pool. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Grandfather Leaper",
+          "objective": "Defeat Grandfather Leaper",
+          "announce": "Grandfather Leaper stands at the leapers' pool. Bring friends.",
+          "center": [979, 1349, 48.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12021,
+            "name": "Grandfather Leaper",
+            "level": 17,
+            "size": 110,
+            "pos": [979, 1349, 48.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12063,
+                "name": "water leaper",
+                "level": [8, 10]
+              }
+            ]
+          },
+          "success": "Grandfather Leaper falls. The way is safe again.",
+          "fail": "Grandfather Leaper slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu9_grandfather_leaper_s_torc", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Water Leapers Hold the Road to Caer Witrin",
+          "objective": "Drive the water leapers off the road to Caer Witrin",
+          "announce": "With The Leapers' Pool lost, the water leapers have spread down onto the road to Caer Witrin and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [758, 951, 49.9],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12063,
+              "name": "water leaper",
+              "level": [8, 10]
+            },
+            {
+              "template": 12021,
+              "name": "giant water leaper",
+              "level": [15, 15]
+            }
+          ],
+          "boss": {
+            "template": 12063,
+            "name": "Water leaper warleader",
+            "level": 16,
+            "pos": [758, 951, 49.9],
+            "health_mult": 2
+          },
+          "success": "The water leapers are gone from the road to Caer Witrin. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hal has come out to set the road to Caer Witrin right. The water leapers are coming back for it!",
+          "center": [758, 951, 49.9],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hal",
+            "level": 15,
+            "pos": [758, 951, 49.9],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [840, 974, 41.3],
+              [799, 1026, 38.9],
+              [733, 1033, 38.4]
+            ],
+            "mobs": [
+              {
+                "template": 12063,
+                "name": "water leaper",
+                "level": [8, 10]
+              },
+              {
+                "template": 12021,
+                "name": "giant water leaper",
+                "level": [15, 15]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Caer Witrin is safe again. Thank you.\"",
+          "success": "The water leapers break and scatter. The road to Caer Witrin is open again.",
+          "fail": "Roadwarden Hal falls, and the water leapers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

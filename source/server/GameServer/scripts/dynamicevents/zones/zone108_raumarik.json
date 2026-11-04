@@ -369,6 +369,165 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "raumarik_frost_bears",
+      "title": "The Frost-Bound Bears",
+      "levels": [47, 55],
+      "hint": "Bears and winterwolves hunt together on the ice...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Frozen Den",
+          "objective": "Clear the frozen den",
+          "announce": "Ironpelt and the frost-bound bears hunt with the winterwolves now, and nothing on the ice is safe. Break their den.",
+          "center": [1240, 1360, 118.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60161111,
+              "name": "frost bound bear",
+              "level": [47, 50]
+            },
+            {
+              "template": 60165623,
+              "name": "savage winterwolf",
+              "level": [51, 55]
+            }
+          ],
+          "success": "You have cleared the frozen den. Ironpelt comes out to fight.",
+          "fail": "They hold the frozen den. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Ironpelt",
+          "objective": "Defeat Ironpelt",
+          "announce": "Ironpelt stands at the frozen den. Bring friends.",
+          "center": [1240, 1360, 118.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60161111,
+            "name": "Ironpelt",
+            "level": 57,
+            "size": 109,
+            "pos": [1240, 1360, 118.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60161111,
+                "name": "frost bound bear",
+                "level": [47, 50]
+              }
+            ]
+          },
+          "success": "Ironpelt falls. The way is safe again.",
+          "fail": "Ironpelt slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu108_ironpelt_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Frost Bound Bears Hold the Old Road",
+          "objective": "Drive the frost bound bears off the old road",
+          "announce": "With The Frost-Bound Bears lost, the frost bound bears have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1452, 1270, 117.9],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60161111,
+              "name": "frost bound bear",
+              "level": [47, 50]
+            },
+            {
+              "template": 60165623,
+              "name": "savage winterwolf",
+              "level": [51, 55]
+            }
+          ],
+          "boss": {
+            "template": 60161111,
+            "name": "Frost bound bear warleader",
+            "level": 56,
+            "pos": [1452, 1270, 117.9],
+            "health_mult": 2
+          },
+          "success": "The frost bound bears are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Sten has come out to set the old road right. The frost bound bears are coming back for it!",
+          "center": [1452, 1270, 117.9],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Sten",
+            "level": 55,
+            "pos": [1452, 1270, 117.9],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1421, 1350, 116.4],
+              [1374, 1304, 118.1],
+              [1374, 1237, 102.7]
+            ],
+            "mobs": [
+              {
+                "template": 60161111,
+                "name": "frost bound bear",
+                "level": [47, 50]
+              },
+              {
+                "template": 60165623,
+                "name": "savage winterwolf",
+                "level": [51, 55]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The frost bound bears break and scatter. The old road is open again.",
+          "fail": "Roadwarden Sten falls, and the frost bound bears take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

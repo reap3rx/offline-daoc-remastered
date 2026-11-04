@@ -38,6 +38,24 @@
     "Hits": 30
    },
    "lore": "Won from Frore Lich Vetrarr when Wights of the White Waste was ended."
+  },
+  {
+   "event_reward": "raumarik_frost_bears",
+   "scaled": true,
+   "name": "Ironpelt's Wristguard",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 50,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Won from Ironpelt when The Frost-Bound Bears was ended."
   }
  ]
 }

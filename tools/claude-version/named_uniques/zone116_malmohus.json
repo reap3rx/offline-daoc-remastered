@@ -38,6 +38,23 @@
     "Hits": 29
    },
    "lore": "Won from Warlord Skuld when The Drakulv Patrols was ended."
+  },
+  {
+   "event_reward": "malmohus_svartalf_foisters",
+   "scaled": true,
+   "name": "Bloodbinder Hrok's Stone",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Cha": 15,
+    "Emp": 12,
+    "Qui": 9,
+    "Hits": 30
+   },
+   "lore": "Won from Bloodbinder Hrok when The Svartalf Foisters was ended."
   }
  ]
 }

@@ -55,6 +55,23 @@
     "Hits": 11
    },
    "lore": "Won from Gnarlroot the Howler when The Spriggarn Ambush was ended."
+  },
+  {
+   "event_reward": "salisbury_plains_basilisk_nest",
+   "scaled": true,
+   "name": "Stone-Eyed Mother's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 18,
+   "bonuses": {
+    "Pie": 5,
+    "Con": 3,
+    "Power": 2,
+    "Hits": 11
+   },
+   "lore": "Won from the Stone-Eyed Mother when The Basilisk Nest was ended."
   }
  ]
 }

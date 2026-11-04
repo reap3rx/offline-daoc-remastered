@@ -591,6 +591,213 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "silvermine_mountains_walking_rocks",
+      "title": "The Walking Rocks",
+      "levels": [2, 3],
+      "hint": "Stones roll uphill in the lower passes...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Miner Fiach",
+          "objective": "Protect Miner Fiach, who is clearing the blocked adit",
+          "announce": "Miner Fiach is digging out the blocked adit, and the rocks of the rockfall have got up to stop him. Keep them off.",
+          "center": [323, 474, 187.1],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Miner Fiach",
+            "template": 60165767,
+            "level": 3,
+            "model": 365,
+            "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
+            "health_mult": 10,
+            "pos": [323, 474, 187.1]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [332, 555, 178.1],
+              [273, 543, 183.8],
+              [251, 486, 185.9]
+            ],
+            "mobs": [
+              {
+                "template": 60166253,
+                "name": "small walking rock",
+                "level": [2, 3]
+              },
+              {
+                "template": 60166254,
+                "name": "small walking boulder",
+                "level": [2, 3]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Miner Fiach. \"They came from over there - let's finish this.\"",
+          "fail": "Miner Fiach falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Rockfall",
+          "objective": "Clear the rockfall",
+          "announce": "They came from the rockfall. Follow them back and clear it out.",
+          "center": [162, 694, 129.0],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60166253,
+              "name": "small walking rock",
+              "level": [2, 3]
+            },
+            {
+              "template": 60166254,
+              "name": "small walking boulder",
+              "level": [2, 3]
+            }
+          ],
+          "success": "You have cleared the rockfall. The Grinding Stone comes out to fight.",
+          "fail": "They hold the rockfall. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Grinding Stone",
+          "objective": "Defeat the Grinding Stone",
+          "announce": "The Grinding Stone stands at the rockfall. Bring friends.",
+          "center": [162, 694, 129.0],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60167762,
+            "name": "The Grinding Stone",
+            "level": 5,
+            "size": 70,
+            "pos": [162, 694, 129.0],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60166253,
+                "name": "small walking rock",
+                "level": [2, 3]
+              }
+            ]
+          },
+          "success": "The Grinding Stone falls. The way is safe again.",
+          "fail": "The Grinding Stone slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu201_grinding_stone_s_cloak", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Small Walking Rocks Hold the Road to Howth",
+          "objective": "Drive the small walking rocks off the road to Howth",
+          "announce": "With The Walking Rocks lost, the small walking rocks have spread down onto the road to Howth and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [220, 901, 127.8],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60166253,
+              "name": "small walking rock",
+              "level": [2, 3]
+            },
+            {
+              "template": 60166254,
+              "name": "small walking boulder",
+              "level": [2, 3]
+            }
+          ],
+          "boss": {
+            "template": 60166253,
+            "name": "Small walking rock warleader",
+            "level": 4,
+            "pos": [220, 901, 127.8],
+            "health_mult": 2
+          },
+          "success": "The small walking rocks are gone from the road to Howth. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Fiona has come out to set the road to Howth right. The small walking rocks are coming back for it!",
+          "center": [220, 901, 127.8],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Fiona",
+            "level": 3,
+            "pos": [220, 901, 127.8],
+            "health_mult": 10,
+            "template": 60165767,
+            "model": 365,
+            "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [145, 860, 139.2],
+              [197, 819, 128.5],
+              [263, 827, 129.9]
+            ],
+            "mobs": [
+              {
+                "template": 60166253,
+                "name": "small walking rock",
+                "level": [2, 3]
+              },
+              {
+                "template": 60166254,
+                "name": "small walking boulder",
+                "level": [2, 3]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Howth is safe again. Thank you.\"",
+          "success": "The small walking rocks break and scatter. The road to Howth is open again.",
+          "fail": "Roadwarden Fiona falls, and the small walking rocks take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

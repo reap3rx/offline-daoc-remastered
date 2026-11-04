@@ -55,6 +55,23 @@
     "Hits": 19
    },
    "lore": "Won from Glodr the Cinder Drake when The Wyrm's Nest was ended."
+  },
+  {
+   "event_reward": "muspelheim_fire_ants",
+   "scaled": true,
+   "name": "Ember Queen's Jewel",
+   "base": [
+    41,
+    24
+   ],
+   "level": 25,
+   "bonuses": {
+    "Int": 8,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 15
+   },
+   "lore": "Won from the Ember Queen when The Fire Ant Swarm was ended."
   }
  ]
 }

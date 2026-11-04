@@ -399,6 +399,165 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "vanern_swamp_black_orms",
+      "title": "The Black Orm Wallow",
+      "levels": [35, 38],
+      "hint": "The swamp heaves where the black orms wallow...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Orm Wallow",
+          "objective": "Clear the orm wallow",
+          "announce": "The black orms have made a wallow on the causeway, and the causeway is sinking. Drive them out.",
+          "center": [1187, 490, 44.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60166239,
+              "name": "small black orm",
+              "level": [35, 35]
+            },
+            {
+              "template": 60158453,
+              "name": "black orm",
+              "level": [36, 38]
+            }
+          ],
+          "success": "You have cleared the orm wallow. The Great Black Orm comes out to fight.",
+          "fail": "They hold the orm wallow. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Great Black Orm",
+          "objective": "Defeat the Great Black Orm",
+          "announce": "The Great Black Orm stands at the orm wallow. Bring friends.",
+          "center": [1187, 490, 44.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60158453,
+            "name": "The Great Black Orm",
+            "level": 40,
+            "size": 96,
+            "pos": [1187, 490, 44.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60166239,
+                "name": "small black orm",
+                "level": [35, 35]
+              }
+            ]
+          },
+          "success": "The Great Black Orm falls. The way is safe again.",
+          "fail": "The Great Black Orm slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu107_great_black_orm_s_ring", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Small Black Orms Hold the Old Road",
+          "objective": "Drive the small black orms off the old road",
+          "announce": "With The Black Orm Wallow lost, the small black orms have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1127, 237, 42.8],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60166239,
+              "name": "small black orm",
+              "level": [35, 35]
+            },
+            {
+              "template": 60158453,
+              "name": "black orm",
+              "level": [36, 38]
+            }
+          ],
+          "boss": {
+            "template": 60166239,
+            "name": "Small black orm warleader",
+            "level": 39,
+            "pos": [1127, 237, 42.8],
+            "health_mult": 2
+          },
+          "success": "The small black orms are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hild has come out to set the old road right. The small black orms are coming back for it!",
+          "center": [1127, 237, 42.8],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hild",
+            "level": 38,
+            "pos": [1127, 237, 42.8],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1200, 281, 42.4],
+              [1147, 320, 43.0],
+              [1081, 309, 41.3]
+            ],
+            "mobs": [
+              {
+                "template": 60166239,
+                "name": "small black orm",
+                "level": [35, 35]
+              },
+              {
+                "template": 60158453,
+                "name": "black orm",
+                "level": [36, 38]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The small black orms break and scatter. The old road is open again.",
+          "fail": "Roadwarden Hild falls, and the small black orms take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

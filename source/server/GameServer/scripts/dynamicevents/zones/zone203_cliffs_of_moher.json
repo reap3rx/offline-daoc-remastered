@@ -769,6 +769,165 @@
           "reward": { "xp_pct": 15, "copper_per_level": 120, "tokens": 10 }
         }
       ]
+    },
+    {
+      "id": "cliffs_of_moher_koalinth_raid",
+      "title": "The Koalinth Landing",
+      "levels": [34, 39],
+      "hint": "Strange boats have come ashore below the cliffs...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Koalinth Landing",
+          "objective": "Clear the koalinth landing",
+          "announce": "The koalinth have come ashore below the cliffs and are building a landing. Throw them back into the sea.",
+          "center": [133, 945, 36.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60162948,
+              "name": "koalinth slinker",
+              "level": [34, 38]
+            },
+            {
+              "template": 30004,
+              "name": "tidal sheerie",
+              "level": [35, 39]
+            }
+          ],
+          "success": "You have cleared the koalinth landing. Koalinth Tidecaller comes out to fight.",
+          "fail": "They hold the koalinth landing. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Koalinth Tidecaller",
+          "objective": "Defeat Koalinth Tidecaller",
+          "announce": "Koalinth Tidecaller stands at the koalinth landing. Bring friends.",
+          "center": [133, 945, 36.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60162948,
+            "name": "Koalinth Tidecaller",
+            "level": 41,
+            "size": 70,
+            "pos": [133, 945, 36.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60162948,
+                "name": "koalinth slinker",
+                "level": [34, 38]
+              }
+            ]
+          },
+          "success": "Koalinth Tidecaller falls. The way is safe again.",
+          "fail": "Koalinth Tidecaller slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu203_koalinth_tidecaller_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Koalinth Slinkers Hold the Road to Tir Urphost",
+          "objective": "Drive the koalinth slinkers off the road to Tir Urphost",
+          "announce": "With The Koalinth Landing lost, the koalinth slinkers have spread down onto the road to Tir Urphost and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [538, 818, 90.4],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60162948,
+              "name": "koalinth slinker",
+              "level": [34, 38]
+            },
+            {
+              "template": 30004,
+              "name": "tidal sheerie",
+              "level": [35, 39]
+            }
+          ],
+          "boss": {
+            "template": 60162948,
+            "name": "Koalinth slinker warleader",
+            "level": 40,
+            "pos": [538, 818, 90.4],
+            "health_mult": 2
+          },
+          "success": "The koalinth slinkers are gone from the road to Tir Urphost. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Fiona has come out to set the road to Tir Urphost right. The koalinth slinkers are coming back for it!",
+          "center": [538, 818, 90.4],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Fiona",
+            "level": 39,
+            "pos": [538, 818, 90.4],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [500, 894, 126.8],
+              [457, 843, 89.4],
+              [464, 777, 80.8]
+            ],
+            "mobs": [
+              {
+                "template": 60162948,
+                "name": "koalinth slinker",
+                "level": [34, 38]
+              },
+              {
+                "template": 30004,
+                "name": "tidal sheerie",
+                "level": [35, 39]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Tir Urphost is safe again. Thank you.\"",
+          "success": "The koalinth slinkers break and scatter. The road to Tir Urphost is open again.",
+          "fail": "Roadwarden Fiona falls, and the koalinth slinkers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

@@ -38,6 +38,23 @@
     "Hits": 40
    },
    "lore": "Won from Stonelord Vaurn when The Stonecallers' Rite was ended."
+  },
+  {
+   "event_reward": "dartmoor_pounders",
+   "scaled": true,
+   "name": "Thunderfist's Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 9,
+    "Hits": 40
+   },
+   "lore": "Won from Thunderfist when The Pounders of the Moor was ended."
   }
  ]
 }

@@ -824,6 +824,247 @@
           "reward": { "xp_pct": 15, "copper_per_level": 120, "tokens": 10 }
         }
       ]
+    },
+    {
+      "id": "vale_of_mularn_hobgoblin_pranks",
+      "title": "The Hobgoblin Pranksters",
+      "levels": [1, 3],
+      "hint": "Viking Gudrun is looking for help in Mularn.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Viking Gudrun",
+        "template": 60167667,
+        "level": 4,
+        "model": 158,
+        "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+        "guild": "Mularn Watch",
+        "health_mult": 4,
+        "pos": [463, 1222, 130.1],
+        "greet": "The hobgoblins have been stealing from every house in Mularn - and putting snakes in the beds. It's time they learned. I'm taking some of our new warriors out to their burrow. Coming? Tell me when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Viking",
+          "template": 60167667,
+          "level": 3,
+          "model": 158,
+          "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+          "guild": "Mularn Watch",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Hobgoblins' Burrow",
+          "objective": "Go with Viking Gudrun to the hobgoblins' burrow",
+          "announce": "Viking Gudrun leads Mularn's newest warriors out to the hobgoblins' burrow.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [499, 1218, 124.8],
+            [603, 1226, 119.5],
+            [659, 1226, 118.5],
+            [683, 1210, 117.9],
+            [787, 1210, 117.0],
+            [819, 1202, 117.2],
+            [867, 1154, 116.8],
+            [907, 1154, 116.8],
+            [947, 1146, 117.0],
+            [987, 1114, 117.8],
+            [1067, 1042, 119.8],
+            [1083, 986, 117.7],
+            [1091, 882, 117.2],
+            [1091, 850, 117.2],
+            [1107, 818, 117.4],
+            [1163, 738, 117.2],
+            [1203, 698, 117.0],
+            [1275, 618, 120.1],
+            [1323, 570, 124.8]
+          ],
+          "ambushes": [
+            {
+              "at": 9,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 60162179,
+                  "name": "hobgoblin snake-finder",
+                  "level": [1, 1]
+                },
+                {
+                  "template": 60162171,
+                  "name": "hobgoblin prankster",
+                  "level": [3, 3]
+                }
+              ]
+            }
+          ],
+          "success": "Viking Gudrun reaches the hobgoblins' burrow. \"There they are. Clear them out!\"",
+          "fail": "Viking Gudrun falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Hobgoblins' Burrow",
+          "objective": "Clear the hobgoblins' burrow",
+          "announce": "Clear the hobgoblins' burrow!",
+          "center": [1326, 566, 125.1],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60162179,
+              "name": "hobgoblin snake-finder",
+              "level": [1, 1]
+            },
+            {
+              "template": 60162171,
+              "name": "hobgoblin prankster",
+              "level": [3, 3]
+            }
+          ],
+          "success": "You have cleared the hobgoblins' burrow. Snaggletooth comes out to fight.",
+          "fail": "They hold the hobgoblins' burrow. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Snaggletooth",
+          "objective": "Defeat Snaggletooth",
+          "announce": "Snaggletooth stands at the hobgoblins' burrow. Bring friends.",
+          "center": [1326, 566, 125.1],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60162171,
+            "name": "Snaggletooth",
+            "level": 5,
+            "size": 50,
+            "pos": [1326, 566, 125.1],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60162179,
+                "name": "hobgoblin snake-finder",
+                "level": [1, 1]
+              }
+            ]
+          },
+          "success": "Snaggletooth falls. Mularn will hear of this in the taverns tonight.",
+          "fail": "Snaggletooth slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu100_snaggletooth_s_pendant", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Hobgoblin Snake-finders Hold the Old Road",
+          "objective": "Drive the hobgoblin snake-finders off the old road",
+          "announce": "With The Hobgoblin Pranksters lost, the hobgoblin snake-finders have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1185, 919, 120.1],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60162179,
+              "name": "hobgoblin snake-finder",
+              "level": [1, 1]
+            },
+            {
+              "template": 60162171,
+              "name": "hobgoblin prankster",
+              "level": [3, 3]
+            }
+          ],
+          "boss": {
+            "template": 60162179,
+            "name": "Hobgoblin snake-finder warleader",
+            "level": 4,
+            "pos": [1185, 919, 120.1],
+            "health_mult": 2
+          },
+          "success": "The hobgoblin snake-finders are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Gunnar has come out to set the old road right. The hobgoblin snake-finders are coming back for it!",
+          "center": [1185, 919, 120.1],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Gunnar",
+            "level": 3,
+            "pos": [1185, 919, 120.1],
+            "health_mult": 10,
+            "template": 60167667,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1150, 841, 131.5],
+              [1216, 840, 137.1],
+              [1263, 886, 198.7]
+            ],
+            "mobs": [
+              {
+                "template": 60162179,
+                "name": "hobgoblin snake-finder",
+                "level": [1, 1]
+              },
+              {
+                "template": 60162171,
+                "name": "hobgoblin prankster",
+                "level": [3, 3]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The hobgoblin snake-finders break and scatter. The old road is open again.",
+          "fail": "Roadwarden Gunnar falls, and the hobgoblin snake-finders take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

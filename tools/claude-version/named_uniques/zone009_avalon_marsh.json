@@ -56,6 +56,23 @@
     "Slash": 2
    },
    "lore": "Won from the Mire Colossus when Shamblers of the Marsh was ended."
+  },
+  {
+   "event_reward": "avalon_marsh_leapers_pool",
+   "scaled": true,
+   "name": "Grandfather Leaper's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 18,
+   "bonuses": {
+    "Cha": 5,
+    "Emp": 4,
+    "Qui": 3,
+    "Hits": 11
+   },
+   "lore": "Won from Grandfather Leaper when The Leapers' Pool was ended."
   }
  ]
 }

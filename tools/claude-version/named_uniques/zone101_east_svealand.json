@@ -57,6 +57,24 @@
     "Slash": 1
    },
    "lore": "Won from Tomte King Nisse when The Tomte Raiders was ended."
+  },
+  {
+   "event_reward": "east_svealand_army_ants",
+   "scaled": true,
+   "name": "Ant Queen's Armband",
+   "base": [
+    41,
+    33
+   ],
+   "level": 11,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 11,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Won from the Ant Queen when The Army Ant March was ended."
   }
  ]
 }

@@ -807,6 +807,165 @@
           "reward": { "xp_pct": 15, "copper_per_level": 120, "tokens": 10 }
         }
       ]
+    },
+    {
+      "id": "myrkwood_forest_mora_riders",
+      "title": "The Mora Riders",
+      "levels": [14, 16],
+      "hint": "Riders are seen in the forest at night, and sleepers wake exhausted...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Mora's Ring",
+          "objective": "Clear the mora's ring",
+          "announce": "The mora are riding the sleepers of Myrkwood every night from their dancing ring. Break the ring.",
+          "center": [1010, 1492, 119.7],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60164160,
+              "name": "mora dancer",
+              "level": [14, 16]
+            },
+            {
+              "template": 60164161,
+              "name": "mora rider",
+              "level": [15, 15]
+            }
+          ],
+          "success": "You have cleared the mora's ring. The Mora Mother comes out to fight.",
+          "fail": "They hold the mora's ring. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Mora Mother",
+          "objective": "Defeat the Mora Mother",
+          "announce": "The Mora Mother stands at the mora's ring. Bring friends.",
+          "center": [1010, 1492, 119.7],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60164161,
+            "name": "The Mora Mother",
+            "level": 18,
+            "size": 54,
+            "pos": [1010, 1492, 119.7],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60164160,
+                "name": "mora dancer",
+                "level": [14, 16]
+              }
+            ]
+          },
+          "success": "The Mora Mother falls. The way is safe again.",
+          "fail": "The Mora Mother slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu105_mora_mother_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Mora Dancers Hold the Road to Galplen",
+          "objective": "Drive the mora dancers off the road to Galplen",
+          "announce": "With The Mora Riders lost, the mora dancers have spread down onto the road to Galplen and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1042, 1189, 118.8],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60164160,
+              "name": "mora dancer",
+              "level": [14, 16]
+            },
+            {
+              "template": 60164161,
+              "name": "mora rider",
+              "level": [15, 15]
+            }
+          ],
+          "boss": {
+            "template": 60164160,
+            "name": "Mora dancer warleader",
+            "level": 17,
+            "pos": [1042, 1189, 118.8],
+            "health_mult": 2
+          },
+          "success": "The mora dancers are gone from the road to Galplen. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Sten has come out to set the road to Galplen right. The mora dancers are coming back for it!",
+          "center": [1042, 1189, 118.8],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Sten",
+            "level": 16,
+            "pos": [1042, 1189, 118.8],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1097, 1254, 118.6],
+              [1033, 1273, 118.6],
+              [975, 1241, 123.1]
+            ],
+            "mobs": [
+              {
+                "template": 60164160,
+                "name": "mora dancer",
+                "level": [14, 16]
+              },
+              {
+                "template": 60164161,
+                "name": "mora rider",
+                "level": [15, 15]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Galplen is safe again. Thank you.\"",
+          "success": "The mora dancers break and scatter. The road to Galplen is open again.",
+          "fail": "Roadwarden Sten falls, and the mora dancers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

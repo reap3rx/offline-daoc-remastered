@@ -369,6 +369,213 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "sheeroe_hills_hill_beacon",
+      "title": "The Hill Beacon",
+      "levels": [48, 55],
+      "hint": "The beacon on the hill has gone dark...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Druid Saoirse",
+          "objective": "Protect Druid Saoirse, who is relighting the hill beacon",
+          "announce": "Druid Saoirse is relighting the beacon the glimmer put out, and they are coming back for it. Keep them off her.",
+          "center": [1407, 835, 92.6],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Druid Saoirse",
+            "template": 60161797,
+            "level": 55,
+            "model": 388,
+            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
+            "health_mult": 10,
+            "pos": [1407, 835, 92.6]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1356, 767, 82.9],
+              [1420, 751, 92.3],
+              [1466, 791, 91.2]
+            ],
+            "mobs": [
+              {
+                "template": 44037,
+                "name": "glimmer striker",
+                "level": [51, 55]
+              },
+              {
+                "template": 44030,
+                "name": "glimmer griever",
+                "level": [48, 52]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Druid Saoirse. \"They came from over there - let's finish this.\"",
+          "fail": "Druid Saoirse falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Glimmer Camp",
+          "objective": "Clear the glimmer camp",
+          "announce": "They came from the glimmer camp. Follow them back and clear it out.",
+          "center": [1448, 570, 88.5],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 44037,
+              "name": "glimmer striker",
+              "level": [51, 55]
+            },
+            {
+              "template": 44030,
+              "name": "glimmer griever",
+              "level": [48, 52]
+            }
+          ],
+          "success": "You have cleared the glimmer camp. The Glimmer Warlord comes out to fight.",
+          "fail": "They hold the glimmer camp. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Glimmer Warlord",
+          "objective": "Defeat the Glimmer Warlord",
+          "announce": "The Glimmer Warlord stands at the glimmer camp. Bring friends.",
+          "center": [1448, 570, 88.5],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 44039,
+            "name": "The Glimmer Warlord",
+            "level": 57,
+            "size": 65,
+            "pos": [1448, 570, 88.5],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 44037,
+                "name": "glimmer striker",
+                "level": [51, 55]
+              }
+            ]
+          },
+          "success": "The Glimmer Warlord falls. The way is safe again.",
+          "fail": "The Glimmer Warlord slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu216_glimmer_warlord_s_girdle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Glimmer Strikers Hold the Old Road",
+          "objective": "Drive the glimmer strikers off the old road",
+          "announce": "With The Hill Beacon lost, the glimmer strikers have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1440, 310, 119.8],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 44037,
+              "name": "glimmer striker",
+              "level": [51, 55]
+            },
+            {
+              "template": 44030,
+              "name": "glimmer griever",
+              "level": [48, 52]
+            }
+          ],
+          "boss": {
+            "template": 44037,
+            "name": "Glimmer striker warleader",
+            "level": 56,
+            "pos": [1440, 310, 119.8],
+            "health_mult": 2
+          },
+          "success": "The glimmer strikers are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Ruadh has come out to set the old road right. The glimmer strikers are coming back for it!",
+          "center": [1440, 310, 119.8],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Ruadh",
+            "level": 55,
+            "pos": [1440, 310, 119.8],
+            "health_mult": 10,
+            "template": 60161797,
+            "model": 388,
+            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1503, 368, 110.1],
+              [1443, 395, 103.4],
+              [1381, 371, 116.7]
+            ],
+            "mobs": [
+              {
+                "template": 44037,
+                "name": "glimmer striker",
+                "level": [51, 55]
+              },
+              {
+                "template": 44030,
+                "name": "glimmer griever",
+                "level": [48, 52]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The glimmer strikers break and scatter. The old road is open again.",
+          "fail": "Roadwarden Ruadh falls, and the glimmer strikers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

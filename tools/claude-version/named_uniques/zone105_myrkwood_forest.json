@@ -55,6 +55,23 @@
     "Hits": 13
    },
    "lore": "Won from Rotgut the Undying when The Undying Trolls was ended."
+  },
+  {
+   "event_reward": "myrkwood_forest_mora_riders",
+   "scaled": true,
+   "name": "Mora Mother's Wristguard",
+   "base": [
+    41,
+    33
+   ],
+   "level": 19,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 15
+   },
+   "lore": "Won from the Mora Mother when The Mora Riders was ended."
   }
  ]
 }

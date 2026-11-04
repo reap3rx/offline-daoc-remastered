@@ -21,7 +21,7 @@ map, merchant and every other window with the classic style.
 | top right | the **event tracker** (EventTracker) and the **quest log** under it: each quest's name and its current goal (the server's journal, or the game's own quests offline) |
 | bottom right | the **minimap**: the zone's painted map around you (the area map inside a town or dungeon wing), north up, with quest marks, events, your realm's bots and companions; the wheel zooms it, a click opens the map; the zone's name and the clock over it |
 | sheets | the Hero panel (below) takes the character, skills, styles and spells sheets; the group sheet still opens beside the party (the same orb again closes it), its painted orbs covered by a title band |
-| inventory | the **modern bags** (`game/ui/modern_bags.gd`): what you wear on the left; the backpack as one grid sorted weapons, shields, armour, jewellery, ammunition, poisons, crafting, the rest - higher level and quality first inside each (the client hears no prices, so level and quality stand for value); every square is still its own backpack place (drag, double-click to equip, right-click then Shift+I / U); a search box dims what doesn't match; the **wallet** under it: coins, realm points and every currency (Marks of Valor, the Darkness Falls seals, aurulite, Atlantean glass, dragon scales ...), which leave the grid |
+| inventory | the **modern bags** (`game/ui/modern_bags.gd`): only the bags (owner 2026-11-04 - what you wear is in the Hero panel); the backpack as one grid sorted weapons, shields, armour, jewellery, ammunition, poisons, crafting, the rest - higher level and quality first inside each (the client hears no prices, so level and quality stand for value); every square is still its own backpack place (drag, double-click or **right-click to equip** - what can't be worn is selected instead, then Shift+I / U); a search box dims what doesn't match; the **wallet** under it: coins, realm points and every currency (Marks of Valor, the Darkness Falls seals, aurulite, Atlantean glass, dragon scales ...), which leave the grid |
 
 The classic status, target, mini group and time windows are parked while MODERN is on; switching back to CLASSIC puts
 them, the quickbars and the compass back at their saved places.
@@ -74,7 +74,7 @@ the skills, styles and spells keys; Esc closes it) with its pages down the left:
   the **attributes** always on the right (level - and the level you fight at -, hit points, weapon skill and damage,
   armour factor, the eight stats coloured buffed / lowered / class, resists, realm rank and points, guild, crafting,
   weapon set, weight, money), so they change as you equip. **Click a slot** and the backpack shows only what fits it
-  (offline: what you can't use is red, at the end); click an item then to wear it there; ALL shows everything again.
+  (offline: what you can't use is red, at the end); click (or right-click) an item then to wear it there; with no slot picked a right-click wears it where it goes; ALL shows everything again.
 - **SKILLS > Specialization** - your specializations and abilities on the left (as the classic sheet), a **copy of your
   three quickbars** (the same slots, with their page arrows: drop a skill here and it's on the bar), the **training
   list** (level, next cost; click a line, TRAIN - anywhere, `allow_train_anywhere`), and the **spellbook** on the right:

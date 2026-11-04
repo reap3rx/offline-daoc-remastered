@@ -636,6 +636,132 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "black_mountains_north_warg_pack",
+      "title": "The Warg Pack",
+      "levels": [6, 11],
+      "hint": "Wolves howl above the high pastures...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Shepherd Hywel",
+          "objective": "Protect Shepherd Hywel, who is gathering his scattered flock",
+          "announce": "Greyfang's wargs have scattered Hywel's flock across the hills. He's going after his sheep - keep the pack off him.",
+          "center": [426, 494, 291.5],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Shepherd Hywel",
+            "template": 60167624,
+            "level": 11,
+            "model": 28,
+            "equipment": "3663a9bf-6ed9-4dff-96c3-f1915ba77331",
+            "health_mult": 10,
+            "pos": [426, 494, 291.5]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [338, 476, 250.5],
+              [389, 420, 293.8],
+              [443, 423, 292.1]
+            ],
+            "mobs": [
+              {
+                "template": 12102,
+                "name": "gray warg",
+                "level": [9, 11]
+              },
+              {
+                "template": 12091,
+                "name": "forest lion",
+                "level": [6, 6]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Shepherd Hywel. \"They came from over there - let's finish this.\"",
+          "fail": "Shepherd Hywel falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Wargs' Lair",
+          "objective": "Clear the wargs' lair",
+          "announce": "They came from the wargs' lair. Follow them back and clear it out.",
+          "center": [283, 247, 244.8],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12102,
+              "name": "gray warg",
+              "level": [9, 11]
+            },
+            {
+              "template": 12091,
+              "name": "forest lion",
+              "level": [6, 6]
+            }
+          ],
+          "success": "You have cleared the wargs' lair. Greyfang comes out to fight.",
+          "fail": "They hold the wargs' lair. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Greyfang",
+          "objective": "Defeat Greyfang",
+          "announce": "Greyfang stands at the wargs' lair. Bring friends.",
+          "center": [283, 247, 244.8],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12102,
+            "name": "Greyfang",
+            "level": 13,
+            "size": 61,
+            "pos": [283, 247, 244.8],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12102,
+                "name": "gray warg",
+                "level": [9, 11]
+              }
+            ]
+          },
+          "success": "Greyfang falls. The way is safe again.",
+          "fail": "Greyfang slips away - for now.",
+          "on_success": "end",
+          "on_fail": "end",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu3_greyfang_s_stone", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        }
+      ]
     }
   ]
 }

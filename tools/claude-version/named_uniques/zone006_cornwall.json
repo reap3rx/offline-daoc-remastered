@@ -56,6 +56,23 @@
     "Hits": 30
    },
    "lore": "Won from the Boneheap Rooter when The Rooters' Dig was ended."
+  },
+  {
+   "event_reward": "cornwall_beech_wood",
+   "scaled": true,
+   "name": "Old Beech's Wristguard",
+   "base": [
+    41,
+    33
+   ],
+   "level": 30,
+   "bonuses": {
+    "Cha": 9,
+    "Emp": 7,
+    "Qui": 5,
+    "Hits": 18
+   },
+   "lore": "Won from the Old Beech when The Beech Wood Wakes was ended."
   }
  ]
 }

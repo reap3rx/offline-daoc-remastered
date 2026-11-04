@@ -629,6 +629,165 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "connacht_anger_sprites",
+      "title": "The Wrathful Sprites",
+      "levels": [8, 13],
+      "hint": "Shrieks of rage come from a blackthorn thicket...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Sprites' Blackthorn",
+          "objective": "Clear the sprites' blackthorn",
+          "announce": "Anger sprites have woken the lunantishee in the blackthorn, and nothing that walks near it comes back sane. Cut it down.",
+          "center": [453, 277, 129.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60157888,
+              "name": "anger sprite",
+              "level": [11, 13]
+            },
+            {
+              "template": 60163477,
+              "name": "lunantishee",
+              "level": [8, 9]
+            }
+          ],
+          "success": "You have cleared the sprites' blackthorn. The Wrathful One comes out to fight.",
+          "fail": "They hold the sprites' blackthorn. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Wrathful One",
+          "objective": "Defeat the Wrathful One",
+          "announce": "The Wrathful One stands at the sprites' blackthorn. Bring friends.",
+          "center": [453, 277, 129.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60157888,
+            "name": "The Wrathful One",
+            "level": 15,
+            "size": 68,
+            "pos": [453, 277, 129.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60157888,
+                "name": "anger sprite",
+                "level": [11, 13]
+              }
+            ]
+          },
+          "success": "The Wrathful One falls. The way is safe again.",
+          "fail": "The Wrathful One slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu207_wrathful_one_s_jewel", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Anger Sprites Hold the Road to Druim Ligen",
+          "objective": "Drive the anger sprites off the road to Druim Ligen",
+          "announce": "With The Wrathful Sprites lost, the anger sprites have spread down onto the road to Druim Ligen and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [605, 382, 131.2],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60157888,
+              "name": "anger sprite",
+              "level": [11, 13]
+            },
+            {
+              "template": 60163477,
+              "name": "lunantishee",
+              "level": [8, 9]
+            }
+          ],
+          "boss": {
+            "template": 60157888,
+            "name": "Anger sprite warleader",
+            "level": 14,
+            "pos": [605, 382, 131.2],
+            "health_mult": 2
+          },
+          "success": "The anger sprites are gone from the road to Druim Ligen. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Ruadh has come out to set the road to Druim Ligen right. The anger sprites are coming back for it!",
+          "center": [605, 382, 131.2],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Ruadh",
+            "level": 13,
+            "pos": [605, 382, 131.2],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [522, 398, 155.7],
+              [535, 334, 132.4],
+              [591, 298, 127.8]
+            ],
+            "mobs": [
+              {
+                "template": 60157888,
+                "name": "anger sprite",
+                "level": [11, 13]
+              },
+              {
+                "template": 60163477,
+                "name": "lunantishee",
+                "level": [8, 9]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Druim Ligen is safe again. Thank you.\"",
+          "success": "The anger sprites break and scatter. The road to Druim Ligen is open again.",
+          "fail": "Roadwarden Ruadh falls, and the anger sprites take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

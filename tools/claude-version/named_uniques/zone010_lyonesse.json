@@ -55,6 +55,23 @@
     "Hits": 30
    },
    "lore": "Won from the Lich of the Sunken Moor when The Moorlich Mire was ended."
+  },
+  {
+   "event_reward": "lyonesse_black_hound",
+   "scaled": true,
+   "name": "Black Hound's Signet",
+   "base": [
+    41,
+    35
+   ],
+   "level": 47,
+   "bonuses": {
+    "Cha": 14,
+    "Emp": 11,
+    "Qui": 8,
+    "Hits": 28
+   },
+   "lore": "Won from the Black Hound when The Black Hound of Lyonesse was ended."
   }
  ]
 }

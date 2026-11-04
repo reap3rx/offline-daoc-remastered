@@ -643,6 +643,165 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "salisbury_plains_basilisk_nest",
+      "title": "The Basilisk Nest",
+      "levels": [12, 15],
+      "hint": "Grazing flocks have been found turned to stone...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Basilisk Nest",
+          "objective": "Clear the basilisk nest",
+          "announce": "Basilisks are nesting on the downs, and the shepherds keep finding their flocks frozen in stone. Break the nest.",
+          "center": [1259, 268, 54.4],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12712,
+              "name": "pseudo basilisk",
+              "level": [12, 12]
+            },
+            {
+              "template": 12662,
+              "name": "basilisk",
+              "level": [15, 15]
+            }
+          ],
+          "success": "You have cleared the basilisk nest. The Stone-Eyed Mother comes out to fight.",
+          "fail": "They hold the basilisk nest. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Stone-Eyed Mother",
+          "objective": "Defeat the Stone-Eyed Mother",
+          "announce": "The Stone-Eyed Mother stands at the basilisk nest. Bring friends.",
+          "center": [1259, 268, 54.4],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12659,
+            "name": "The Stone-Eyed Mother",
+            "level": 17,
+            "size": 110,
+            "pos": [1259, 268, 54.4],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12712,
+                "name": "pseudo basilisk",
+                "level": [12, 12]
+              }
+            ]
+          },
+          "success": "The Stone-Eyed Mother falls. The way is safe again.",
+          "fail": "The Stone-Eyed Mother slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu1_stone_eyed_mother_s_torc", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Pseudo Basilisks Hold the Old Road",
+          "objective": "Drive the pseudo basilisks off the old road",
+          "announce": "With The Basilisk Nest lost, the pseudo basilisks have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [874, 538, 63.9],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12712,
+              "name": "pseudo basilisk",
+              "level": [12, 12]
+            },
+            {
+              "template": 12662,
+              "name": "basilisk",
+              "level": [15, 15]
+            }
+          ],
+          "boss": {
+            "template": 12712,
+            "name": "Pseudo basilisk warleader",
+            "level": 16,
+            "pos": [874, 538, 63.9],
+            "health_mult": 2
+          },
+          "success": "The pseudo basilisks are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hal has come out to set the old road right. The pseudo basilisks are coming back for it!",
+          "center": [874, 538, 63.9],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hal",
+            "level": 15,
+            "pos": [874, 538, 63.9],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [888, 454, 58.3],
+              [944, 489, 58.4],
+              [957, 554, 64.2]
+            ],
+            "mobs": [
+              {
+                "template": 12712,
+                "name": "pseudo basilisk",
+                "level": [12, 12]
+              },
+              {
+                "template": 12662,
+                "name": "basilisk",
+                "level": [15, 15]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The pseudo basilisks break and scatter. The old road is open again.",
+          "fail": "Roadwarden Hal falls, and the pseudo basilisks take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

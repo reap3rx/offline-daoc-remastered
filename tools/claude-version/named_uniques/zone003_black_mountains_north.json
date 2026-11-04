@@ -55,6 +55,23 @@
     "Hits": 16
    },
    "lore": "Won from Maud the Smuggler Queen when The Smugglers' Road was ended."
+  },
+  {
+   "event_reward": "black_mountains_north_warg_pack",
+   "scaled": true,
+   "name": "Greyfang's Stone",
+   "base": [
+    41,
+    24
+   ],
+   "level": 14,
+   "bonuses": {
+    "Cha": 4,
+    "Emp": 3,
+    "Qui": 3,
+    "Hits": 8
+   },
+   "lore": "Won from Greyfang when The Warg Pack was ended."
   }
  ]
 }

@@ -55,6 +55,24 @@
     "Hits": 26
    },
    "lore": "Won from Abbot Idwal the Unshriven when The Unshriven was ended."
+  },
+  {
+   "event_reward": "llyn_barfog_adder_shallows",
+   "scaled": true,
+   "name": "Lake Wyrm's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 13,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 13,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Won from the Lake Wyrm when The Adder Shallows was ended."
   }
  ]
 }

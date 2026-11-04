@@ -369,6 +369,165 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "malmohus_svartalf_foisters",
+      "title": "The Svartalf Foisters",
+      "levels": [45, 52],
+      "hint": "Svartalfar slip between the drakulv camps...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Foisters' Hideout",
+          "objective": "Clear the foisters' hideout",
+          "announce": "Svartalf foisters are selling Midgard's patrol routes to the drakulv. Take their hideout.",
+          "center": [1312, 313, 98.3],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 55003,
+              "name": "svartalf infiltrator",
+              "level": [45, 49]
+            },
+            {
+              "template": 55004,
+              "name": "svartalf foister",
+              "level": [48, 52]
+            }
+          ],
+          "success": "You have cleared the foisters' hideout. Bloodbinder Hrok comes out to fight.",
+          "fail": "They hold the foisters' hideout. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "Bloodbinder Hrok",
+          "objective": "Defeat Bloodbinder Hrok",
+          "announce": "Bloodbinder Hrok stands at the foisters' hideout. Bring friends.",
+          "center": [1312, 313, 98.3],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 55002,
+            "name": "Bloodbinder Hrok",
+            "level": 54,
+            "size": 65,
+            "pos": [1312, 313, 98.3],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 55003,
+                "name": "svartalf infiltrator",
+                "level": [45, 49]
+              }
+            ]
+          },
+          "success": "Bloodbinder Hrok falls. The way is safe again.",
+          "fail": "Bloodbinder Hrok slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu116_bloodbinder_hrok_s_stone", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Svartalf Infiltrators Hold the Old Road",
+          "objective": "Drive the svartalf infiltrators off the old road",
+          "announce": "With The Svartalf Foisters lost, the svartalf infiltrators have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1401, 541, 106.5],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 55003,
+              "name": "svartalf infiltrator",
+              "level": [45, 49]
+            },
+            {
+              "template": 55004,
+              "name": "svartalf foister",
+              "level": [48, 52]
+            }
+          ],
+          "boss": {
+            "template": 55003,
+            "name": "Svartalf infiltrator warleader",
+            "level": 53,
+            "pos": [1401, 541, 106.5],
+            "health_mult": 2
+          },
+          "success": "The svartalf infiltrators are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hild has come out to set the old road right. The svartalf infiltrators are coming back for it!",
+          "center": [1401, 541, 106.5],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hild",
+            "level": 52,
+            "pos": [1401, 541, 106.5],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1322, 508, 103.1],
+              [1370, 462, 102.7],
+              [1436, 464, 103.7]
+            ],
+            "mobs": [
+              {
+                "template": 55003,
+                "name": "svartalf infiltrator",
+                "level": [45, 49]
+              },
+              {
+                "template": 55004,
+                "name": "svartalf foister",
+                "level": [48, 52]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The svartalf infiltrators break and scatter. The old road is open again.",
+          "fail": "Roadwarden Hild falls, and the svartalf infiltrators take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

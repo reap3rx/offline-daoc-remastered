@@ -56,6 +56,23 @@
     "Hits": 11
    },
    "lore": "Won from Wildling Chieftain Skarn when The Wildlings was ended."
+  },
+  {
+   "event_reward": "gotar_pine_imps",
+   "scaled": true,
+   "name": "Kvist the Imp-King's Wristguard",
+   "base": [
+    41,
+    33
+   ],
+   "level": 9,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 2,
+    "Hits": 5
+   },
+   "lore": "Won from Kvist the Imp-King when The Imp Revel was ended."
   }
  ]
 }

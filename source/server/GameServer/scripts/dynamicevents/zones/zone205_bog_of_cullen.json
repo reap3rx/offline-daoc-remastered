@@ -616,6 +616,165 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "bog_of_cullen_siabra_raiders",
+      "title": "The Siabra Raiders",
+      "levels": [37, 39],
+      "hint": "Siabra raiders have dug in on the bog road...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Raiders' Camp",
+          "objective": "Clear the raiders' camp",
+          "announce": "Siabra raiders have made a camp on the bog road and rob every traveller between Siopa and Alainn Bin. Clear it.",
+          "center": [770, 207, 123.7],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60165988,
+              "name": "siabra raider",
+              "level": [37, 39]
+            },
+            {
+              "template": 60165986,
+              "name": "siabra mireguard",
+              "level": [38, 38]
+            }
+          ],
+          "success": "You have cleared the raiders' camp. The Mirelord comes out to fight.",
+          "fail": "They hold the raiders' camp. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Mirelord",
+          "objective": "Defeat the Mirelord",
+          "announce": "The Mirelord stands at the raiders' camp. Bring friends.",
+          "center": [770, 207, 123.7],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60165994,
+            "name": "The Mirelord",
+            "level": 41,
+            "size": 70,
+            "pos": [770, 207, 123.7],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60165988,
+                "name": "siabra raider",
+                "level": [37, 39]
+              }
+            ]
+          },
+          "success": "The Mirelord falls. The way is safe again.",
+          "fail": "The Mirelord slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu205_mirelord_s_belt", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Siabra Raiders Hold the Road to Siopa",
+          "objective": "Drive the siabra raiders off the road to Siopa",
+          "announce": "With The Siabra Raiders lost, the siabra raiders have spread down onto the road to Siopa and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [514, 373, 122.2],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60165988,
+              "name": "siabra raider",
+              "level": [37, 39]
+            },
+            {
+              "template": 60165986,
+              "name": "siabra mireguard",
+              "level": [38, 38]
+            }
+          ],
+          "boss": {
+            "template": 60165988,
+            "name": "Siabra raider warleader",
+            "level": 40,
+            "pos": [514, 373, 122.2],
+            "health_mult": 2
+          },
+          "success": "The siabra raiders are gone from the road to Siopa. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Ruadh has come out to set the road to Siopa right. The siabra raiders are coming back for it!",
+          "center": [514, 373, 122.2],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Ruadh",
+            "level": 39,
+            "pos": [514, 373, 122.2],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [531, 289, 125.3],
+              [585, 327, 123.9],
+              [597, 392, 123.6]
+            ],
+            "mobs": [
+              {
+                "template": 60165988,
+                "name": "siabra raider",
+                "level": [37, 39]
+              },
+              {
+                "template": 60165986,
+                "name": "siabra mireguard",
+                "level": [38, 38]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Siopa is safe again. Thank you.\"",
+          "success": "The siabra raiders break and scatter. The road to Siopa is open again.",
+          "fail": "Roadwarden Ruadh falls, and the siabra raiders take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

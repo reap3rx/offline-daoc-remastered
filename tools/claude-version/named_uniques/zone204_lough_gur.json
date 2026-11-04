@@ -56,6 +56,23 @@
     "Hits": 22
    },
    "lore": "Won from Old Cluricaun Ruadh when The Cluricaun Revel was ended."
+  },
+  {
+   "event_reward": "lough_gur_gurite_ferry",
+   "scaled": true,
+   "name": "Gurite Captain Orlagh's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 30,
+   "bonuses": {
+    "Pie": 9,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Won from Gurite Captain Orlagh when The Ferryman's Crossing was ended."
   }
  ]
 }

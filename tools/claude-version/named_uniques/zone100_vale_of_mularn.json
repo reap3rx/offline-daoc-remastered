@@ -55,6 +55,23 @@
     "Hits": 5
    },
    "lore": "Won from the Wood-Eater Matriarch when The Wood-Eater Hive was ended."
+  },
+  {
+   "event_reward": "vale_of_mularn_hobgoblin_pranks",
+   "scaled": true,
+   "name": "Snaggletooth's Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 6,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 4
+   },
+   "lore": "Won from Snaggletooth when The Hobgoblin Pranksters was ended."
   }
  ]
 }

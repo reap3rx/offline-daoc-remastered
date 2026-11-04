@@ -586,6 +586,165 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "shannon_estuary_sandmen",
+      "title": "The Sandmen of the Strand",
+      "levels": [0, 4],
+      "hint": "The sand of the strand is walking...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Strand",
+          "objective": "Clear the strand",
+          "announce": "The sandmen have risen along the strand and drag fishermen into the dunes. Break them back into sand.",
+          "center": [282, 510, 144.3],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60165568,
+              "name": "sand crab",
+              "level": [0, 1]
+            },
+            {
+              "template": 60165575,
+              "name": "sandman",
+              "level": [2, 4]
+            }
+          ],
+          "success": "You have cleared the strand. The Tide-Turned comes out to fight.",
+          "fail": "They hold the strand. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Tide-Turned",
+          "objective": "Defeat the Tide-Turned",
+          "announce": "The Tide-Turned stands at the strand. Bring friends.",
+          "center": [282, 510, 144.3],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60165575,
+            "name": "The Tide-Turned",
+            "level": 6,
+            "size": 37,
+            "pos": [282, 510, 144.3],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60165568,
+                "name": "sand crab",
+                "level": [0, 1]
+              }
+            ]
+          },
+          "success": "The Tide-Turned falls. The way is safe again.",
+          "fail": "The Tide-Turned slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu202_tide_turned_s_mantle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Sand Crabs Hold the Road to Connla",
+          "objective": "Drive the sand crabs off the road to Connla",
+          "announce": "With The Sandmen of the Strand lost, the sand crabs have spread down onto the road to Connla and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [438, 609, 121.2],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60165568,
+              "name": "sand crab",
+              "level": [0, 1]
+            },
+            {
+              "template": 60165575,
+              "name": "sandman",
+              "level": [2, 4]
+            }
+          ],
+          "boss": {
+            "template": 60165568,
+            "name": "Sand crab warleader",
+            "level": 5,
+            "pos": [438, 609, 121.2],
+            "health_mult": 2
+          },
+          "success": "The sand crabs are gone from the road to Connla. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Fiona has come out to set the road to Connla right. The sand crabs are coming back for it!",
+          "center": [438, 609, 121.2],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Fiona",
+            "level": 4,
+            "pos": [438, 609, 121.2],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [355, 629, 121.2],
+              [366, 564, 124.6],
+              [421, 526, 125.2]
+            ],
+            "mobs": [
+              {
+                "template": 60165568,
+                "name": "sand crab",
+                "level": [0, 1]
+              },
+              {
+                "template": 60165575,
+                "name": "sandman",
+                "level": [2, 4]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Connla is safe again. Thank you.\"",
+          "success": "The sand crabs break and scatter. The road to Connla is open again.",
+          "fail": "Roadwarden Fiona falls, and the sand crabs take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

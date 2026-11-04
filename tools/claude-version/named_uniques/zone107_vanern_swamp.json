@@ -38,6 +38,23 @@
     "Hits": 27
    },
    "lore": "Won from Leirjotun when The Jotun March was ended."
+  },
+  {
+   "event_reward": "vanern_swamp_black_orms",
+   "scaled": true,
+   "name": "Great Black Orm's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 41,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 7,
+    "Hits": 33
+   },
+   "lore": "Won from the Great Black Orm when The Black Orm Wallow was ended."
   }
  ]
 }

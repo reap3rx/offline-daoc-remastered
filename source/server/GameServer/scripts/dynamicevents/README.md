@@ -59,13 +59,23 @@ quarter of `xp_pct` when not set. Occupations and towers pay more.
 
 ## The classic zones
 
-Every classic PvE zone has two or three chains (2026-11-02): one camp (`cull` then `boss`), one `defend` (a local
+Every classic PvE zone had two or three chains (2026-11-02; one more each since 2026-11-04, below): one camp (`cull` then `boss`), one `defend` (a local
 to keep alive, then their attackers' camp and its leader), and, where the zone has a guarded town, a giver who leads
 an `escort` out of town to a camp. They were built by `tools/claude-version/dynamic_events_gen/`: `specs.py` is
 the hand-written part (foes, bosses, people, places, lore) and `gen.py` fills in the rest from the database (the
 monsters' templates and levels, where they live, the towns' guards for givers and their parties) and the client's
 terrain (dry, gentle ground away from towns and buildings; an A* road for escorts, no deep water or cliffs). Edit a
 spec and run it again, or edit the zone's JSON by hand.
+
+## One more per zone (2026-11-04)
+
+Every classic zone but the Valley of Bri Leith got one more chain (owner: "add 1 more event chain to each zone, and
+making sure there are at least one that's near the starting zones that are lower level"): `dynamic_events_gen/specs_extra.py`,
+built into the zone files by `gen_extra.py` (the chains already there are left alone; the new one keeps clear of their
+places and gets its occupation stages and a unique reward like the rest). The three starting zones' new chains are
+givers in the hub towns - Guardsman Pell in Cotswold (spriggarn in the orchards), Viking Gudrun in Mularn (hobgoblin
+pranksters), Guardian Niamh in Mag Mell (the opened barrow) - against the zone's weakest monsters, for new characters;
+Silvermine's walking rocks are another low one near the start.
 
 ## How a chain starts
 

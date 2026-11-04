@@ -55,6 +55,23 @@
     "Hits": 21
    },
    "lore": "Won from the Great Distorter when The Moheran Distorters was ended."
+  },
+  {
+   "event_reward": "cliffs_of_moher_koalinth_raid",
+   "scaled": true,
+   "name": "Koalinth Tidecaller's Wristguard",
+   "base": [
+    41,
+    33
+   ],
+   "level": 42,
+   "bonuses": {
+    "Dex": 13,
+    "Qui": 13,
+    "Str": 8,
+    "Hits": 25
+   },
+   "lore": "Won from Koalinth Tidecaller when The Koalinth Landing was ended."
   }
  ]
 }

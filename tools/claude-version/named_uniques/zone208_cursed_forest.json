@@ -38,6 +38,23 @@
     "Hits": 40
    },
    "lore": "Won from Seamus the Crock-Keeper when Leprechaun Gold was ended."
+  },
+  {
+   "event_reward": "cursed_forest_cave_bears",
+   "scaled": true,
+   "name": "Unearthed Sow's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 9,
+    "Hits": 40
+   },
+   "lore": "Won from the Unearthed Sow when The Unearthed was ended."
   }
  ]
 }

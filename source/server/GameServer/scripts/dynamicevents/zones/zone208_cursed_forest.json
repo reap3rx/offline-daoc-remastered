@@ -384,6 +384,150 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "cursed_forest_cave_bears",
+      "title": "The Unearthed",
+      "levels": [49, 51],
+      "hint": "Something huge has dug its way up out of the earth...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Open Cave",
+          "objective": "Clear the open cave",
+          "announce": "The cave bears dug up from under the cursed forest have made a den in the open, and they are hungry. Kill them.",
+          "center": [292, 826, 124.6],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60167436,
+              "name": "unearthed cave bear",
+              "level": [49, 51]
+            }
+          ],
+          "success": "You have cleared the open cave. The Unearthed Sow comes out to fight.",
+          "fail": "They hold the open cave. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Unearthed Sow",
+          "objective": "Defeat the Unearthed Sow",
+          "announce": "The Unearthed Sow stands at the open cave. Bring friends.",
+          "center": [292, 826, 124.6],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60167436,
+            "name": "The Unearthed Sow",
+            "level": 53,
+            "size": 110,
+            "pos": [292, 826, 124.6],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60167436,
+                "name": "unearthed cave bear",
+                "level": [49, 51]
+              }
+            ]
+          },
+          "success": "The Unearthed Sow falls. The way is safe again.",
+          "fail": "The Unearthed Sow slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu208_unearthed_sow_s_bracer", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Unearthed Cave Bears Hold the Old Road",
+          "objective": "Drive the unearthed cave bears off the old road",
+          "announce": "With The Unearthed lost, the unearthed cave bears have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [452, 991, 127.8],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60167436,
+              "name": "unearthed cave bear",
+              "level": [49, 51]
+            }
+          ],
+          "boss": {
+            "template": 60167436,
+            "name": "Unearthed cave bear warleader",
+            "level": 52,
+            "pos": [452, 991, 127.8],
+            "health_mult": 2
+          },
+          "success": "The unearthed cave bears are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Aine has come out to set the old road right. The unearthed cave bears are coming back for it!",
+          "center": [452, 991, 127.8],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Aine",
+            "level": 51,
+            "pos": [452, 991, 127.8],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [367, 991, 127.7],
+              [393, 930, 125.8],
+              [455, 906, 120.7]
+            ],
+            "mobs": [
+              {
+                "template": 60167436,
+                "name": "unearthed cave bear",
+                "level": [49, 51]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The unearthed cave bears break and scatter. The old road is open again.",
+          "fail": "Roadwarden Aine falls, and the unearthed cave bears take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

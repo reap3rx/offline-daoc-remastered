@@ -543,6 +543,213 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "lyonesse_black_hound",
+      "title": "The Black Hound of Lyonesse",
+      "levels": [40, 44],
+      "hint": "Hounds bay across the drowned land at dusk...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Shepherd Elowen",
+          "objective": "Protect Shepherd Elowen, who is driving her flock to the fold",
+          "announce": "The Gabriel hounds are hunting on the moor tonight, and Elowen is still out with her flock. Keep them off her.",
+          "center": [561, 647, 69.4],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Shepherd Elowen",
+            "template": 60167630,
+            "level": 44,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+            "health_mult": 10,
+            "pos": [561, 647, 69.4]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [604, 720, 69.6],
+              [528, 735, 68.5],
+              [505, 688, 68.9]
+            ],
+            "mobs": [
+              {
+                "template": 12959,
+                "name": "gabriel hound",
+                "level": [40, 44]
+              },
+              {
+                "template": 12978,
+                "name": "pygmy goblin",
+                "level": [43, 43]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Shepherd Elowen. \"They came from over there - let's finish this.\"",
+          "fail": "Shepherd Elowen falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Hounds' Den",
+          "objective": "Clear the hounds' den",
+          "announce": "They came from the hounds' den. Follow them back and clear it out.",
+          "center": [452, 1053, 72.2],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12959,
+              "name": "gabriel hound",
+              "level": [40, 44]
+            },
+            {
+              "template": 12978,
+              "name": "pygmy goblin",
+              "level": [43, 43]
+            }
+          ],
+          "success": "You have cleared the hounds' den. The Black Hound comes out to fight.",
+          "fail": "They hold the hounds' den. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Black Hound",
+          "objective": "Defeat the Black Hound",
+          "announce": "The Black Hound stands at the hounds' den. Bring friends.",
+          "center": [452, 1053, 72.2],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12959,
+            "name": "The Black Hound",
+            "level": 46,
+            "size": 71,
+            "pos": [452, 1053, 72.2],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12959,
+                "name": "gabriel hound",
+                "level": [40, 44]
+              }
+            ]
+          },
+          "success": "The Black Hound falls. The way is safe again.",
+          "fail": "The Black Hound slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu10_black_hound_s_signet", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Gabriel Hounds Hold the Old Road",
+          "objective": "Drive the gabriel hounds off the old road",
+          "announce": "With The Black Hound of Lyonesse lost, the gabriel hounds have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [282, 1208, 72.4],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12959,
+              "name": "gabriel hound",
+              "level": [40, 44]
+            },
+            {
+              "template": 12978,
+              "name": "pygmy goblin",
+              "level": [43, 43]
+            }
+          ],
+          "boss": {
+            "template": 12959,
+            "name": "Gabriel hound warleader",
+            "level": 45,
+            "pos": [282, 1208, 72.4],
+            "health_mult": 2
+          },
+          "success": "The gabriel hounds are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Mabyn has come out to set the old road right. The gabriel hounds are coming back for it!",
+          "center": [282, 1208, 72.4],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Mabyn",
+            "level": 44,
+            "pos": [282, 1208, 72.4],
+            "health_mult": 10,
+            "template": 60167630,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [285, 1123, 74.3],
+              [345, 1151, 71.2],
+              [367, 1213, 71.9]
+            ],
+            "mobs": [
+              {
+                "template": 12959,
+                "name": "gabriel hound",
+                "level": [40, 44]
+              },
+              {
+                "template": 12978,
+                "name": "pygmy goblin",
+                "level": [43, 43]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The gabriel hounds break and scatter. The old road is open again.",
+          "fail": "Roadwarden Mabyn falls, and the gabriel hounds take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

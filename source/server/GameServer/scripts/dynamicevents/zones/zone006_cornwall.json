@@ -548,6 +548,193 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "cornwall_beech_wood",
+      "title": "The Beech Wood Wakes",
+      "levels": [23, 27],
+      "hint": "The beech wood creaks though there is no wind...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Woodcutter Jory",
+          "objective": "Protect Woodcutter Jory, who is marking the old trees for the mill",
+          "announce": "Woodcutter Jory has come to mark the old beeches for felling, and the beeches have noticed. Keep them off him.",
+          "center": [956, 437, 135.7],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Woodcutter Jory",
+            "template": 60167630,
+            "level": 27,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+            "health_mult": 10,
+            "pos": [956, 437, 135.7]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [916, 512, 146.4],
+              [874, 460, 140.0],
+              [882, 394, 136.4]
+            ],
+            "mobs": [
+              {
+                "template": 12875,
+                "name": "elder beech",
+                "level": [23, 27]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Woodcutter Jory. \"They came from over there - let's finish this.\"",
+          "fail": "Woodcutter Jory falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Heart of the Beech Wood",
+          "objective": "Clear the heart of the beech wood",
+          "announce": "They came from the heart of the beech wood. Follow them back and clear it out.",
+          "center": [718, 504, 143.4],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12875,
+              "name": "elder beech",
+              "level": [23, 27]
+            }
+          ],
+          "success": "You have cleared the heart of the beech wood. The Old Beech comes out to fight.",
+          "fail": "They hold the heart of the beech wood. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Old Beech",
+          "objective": "Defeat the Old Beech",
+          "announce": "The Old Beech stands at the heart of the beech wood. Bring friends.",
+          "center": [718, 504, 143.4],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12877,
+            "name": "The Old Beech",
+            "level": 29,
+            "size": 52,
+            "pos": [718, 504, 143.4],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12875,
+                "name": "elder beech",
+                "level": [23, 27]
+              }
+            ]
+          },
+          "success": "The Old Beech falls. The way is safe again.",
+          "fail": "The Old Beech slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu6_old_beech_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Elder Beeches Hold the Old Road",
+          "objective": "Drive the elder beeches off the old road",
+          "announce": "With The Beech Wood Wakes lost, the elder beeches have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1200, 450, 139.9],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12875,
+              "name": "elder beech",
+              "level": [23, 27]
+            }
+          ],
+          "boss": {
+            "template": 12875,
+            "name": "Elder beech warleader",
+            "level": 28,
+            "pos": [1200, 450, 139.9],
+            "health_mult": 2
+          },
+          "success": "The elder beeches are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Cuthbert has come out to set the old road right. The elder beeches are coming back for it!",
+          "center": [1200, 450, 139.9],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Cuthbert",
+            "level": 27,
+            "pos": [1200, 450, 139.9],
+            "health_mult": 10,
+            "template": 60167630,
+            "model": 28,
+            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1148, 518, 140.1],
+              [1116, 460, 140.0],
+              [1134, 396, 137.4]
+            ],
+            "mobs": [
+              {
+                "template": 12875,
+                "name": "elder beech",
+                "level": [23, 27]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The elder beeches break and scatter. The old road is open again.",
+          "fail": "Roadwarden Cuthbert falls, and the elder beeches take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

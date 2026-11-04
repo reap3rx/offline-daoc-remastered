@@ -56,6 +56,23 @@
     "Hits": 12
    },
    "lore": "Won from Grogan the Curmudgeon King when The Curmudgeon Harvest was ended."
+  },
+  {
+   "event_reward": "lough_derg_barrow_bones",
+   "scaled": true,
+   "name": "Bone Steward's Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 7,
+   "bonuses": {
+    "Int": 2,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 4
+   },
+   "lore": "Won from the Bone Steward when The Bones by Mag Mell was ended."
   }
  ]
 }

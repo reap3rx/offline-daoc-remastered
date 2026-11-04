@@ -619,6 +619,230 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "lough_derg_barrow_bones",
+      "title": "The Bones by Mag Mell",
+      "levels": [1, 4],
+      "hint": "Guardian Niamh is looking for help in Mag Mell.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Guardian Niamh",
+        "level": 5,
+        "model": 700,
+        "equipment": "ab492f98-cfbf-455d-beda-c1461200e021",
+        "guild": "Mag Mell Guard",
+        "health_mult": 4,
+        "pos": [683, 183, 130.0],
+        "greet": "The old barrow outside Mag Mell has opened, and the dead have been walking the fields at night. I'll not ask farmers to face them. Will you come with me and put them back? Say when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Guardian",
+          "level": 4,
+          "model": 700,
+          "equipment": "ab492f98-cfbf-455d-beda-c1461200e021",
+          "guild": "Mag Mell Guard",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Old Barrow",
+          "objective": "Go with Guardian Niamh to the old barrow",
+          "announce": "Guardian Niamh leads Mag Mell's newest adventurers out to the opened barrow.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [735, 228, 132.3],
+            [783, 260, 128.4],
+            [831, 260, 121.9],
+            [871, 300, 119.4],
+            [911, 300, 118.4]
+          ],
+          "ambushes": [
+            {
+              "at": 2,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 60166177,
+                  "name": "skeletal pawn",
+                  "level": [1, 2]
+                },
+                {
+                  "template": 60166174,
+                  "name": "skeletal minion",
+                  "level": [3, 4]
+                }
+              ]
+            }
+          ],
+          "success": "Guardian Niamh reaches the old barrow. \"There they are. Clear them out!\"",
+          "fail": "Guardian Niamh falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Old Barrow",
+          "objective": "Clear the old barrow",
+          "announce": "Clear the old barrow!",
+          "center": [908, 302, 118.4],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60166177,
+              "name": "skeletal pawn",
+              "level": [1, 2]
+            },
+            {
+              "template": 60166174,
+              "name": "skeletal minion",
+              "level": [3, 4]
+            }
+          ],
+          "success": "You have cleared the old barrow. The Bone Steward comes out to fight.",
+          "fail": "They hold the old barrow. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "The Bone Steward",
+          "objective": "Defeat the Bone Steward",
+          "announce": "The Bone Steward stands at the old barrow. Bring friends.",
+          "center": [908, 302, 118.4],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60166174,
+            "name": "The Bone Steward",
+            "level": 6,
+            "size": 70,
+            "pos": [908, 302, 118.4],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60166177,
+                "name": "skeletal pawn",
+                "level": [1, 2]
+              }
+            ]
+          },
+          "success": "The Bone Steward falls. Mag Mell will hear of this in the taverns tonight.",
+          "fail": "The Bone Steward slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu200_bone_steward_s_pendant", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Skeletal Pawns Hold the Road to Mag Mell",
+          "objective": "Drive the skeletal pawns off the road to Mag Mell",
+          "announce": "With The Bones by Mag Mell lost, the skeletal pawns have spread down onto the road to Mag Mell and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [642, 418, 125.4],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60166177,
+              "name": "skeletal pawn",
+              "level": [1, 2]
+            },
+            {
+              "template": 60166174,
+              "name": "skeletal minion",
+              "level": [3, 4]
+            }
+          ],
+          "boss": {
+            "template": 60166177,
+            "name": "Skeletal pawn warleader",
+            "level": 5,
+            "pos": [642, 418, 125.4],
+            "health_mult": 2
+          },
+          "success": "The skeletal pawns are gone from the road to Mag Mell. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Fiona has come out to set the road to Mag Mell right. The skeletal pawns are coming back for it!",
+          "center": [642, 418, 125.4],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Fiona",
+            "level": 4,
+            "pos": [642, 418, 125.4],
+            "health_mult": 10,
+            "model": 700,
+            "equipment": "ab492f98-cfbf-455d-beda-c1461200e021"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [672, 339, 128.0],
+              [720, 384, 103.6],
+              [721, 450, 99.0]
+            ],
+            "mobs": [
+              {
+                "template": 60166177,
+                "name": "skeletal pawn",
+                "level": [1, 2]
+              },
+              {
+                "template": 60166174,
+                "name": "skeletal minion",
+                "level": [3, 4]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Mag Mell is safe again. Thank you.\"",
+          "success": "The skeletal pawns break and scatter. The road to Mag Mell is open again.",
+          "fail": "Roadwarden Fiona falls, and the skeletal pawns take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

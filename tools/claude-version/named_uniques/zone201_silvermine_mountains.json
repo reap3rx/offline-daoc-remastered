@@ -56,6 +56,23 @@
     "Hits": 13
    },
    "lore": "Won from Spraggon Chief Nuadh when The Spraggon Warren was ended."
+  },
+  {
+   "event_reward": "silvermine_mountains_walking_rocks",
+   "scaled": true,
+   "name": "Grinding Stone's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 6,
+   "bonuses": {
+    "Int": 2,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 4
+   },
+   "lore": "Won from the Grinding Stone when The Walking Rocks was ended."
   }
  ]
 }

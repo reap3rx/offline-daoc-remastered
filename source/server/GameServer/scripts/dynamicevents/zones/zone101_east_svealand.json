@@ -619,6 +619,165 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "east_svealand_army_ants",
+      "title": "The Army Ant March",
+      "levels": [6, 8],
+      "hint": "The fields are moving with ants...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "a1",
+      "stages": [
+        {
+          "id": "a1",
+          "type": "cull",
+          "name": "Clear Ant Hill",
+          "objective": "Clear the ant hill",
+          "announce": "The army ants are on the march out of their hill and stripping the farms in their way. Destroy the hill.",
+          "center": [211, 1499, 118.9],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60158059,
+              "name": "army ant worker",
+              "level": [6, 6]
+            },
+            {
+              "template": 60158058,
+              "name": "army ant soldier",
+              "level": [8, 8]
+            }
+          ],
+          "success": "You have cleared the ant hill. The Ant Queen comes out to fight.",
+          "fail": "They hold the ant hill. They will be bolder next time.",
+          "on_success": "a2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "a2",
+          "type": "boss",
+          "name": "The Ant Queen",
+          "objective": "Defeat the Ant Queen",
+          "announce": "The Ant Queen stands at the ant hill. Bring friends.",
+          "center": [211, 1499, 118.9],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60158058,
+            "name": "The Ant Queen",
+            "level": 10,
+            "size": 53,
+            "pos": [211, 1499, 118.9],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60158059,
+                "name": "army ant worker",
+                "level": [6, 6]
+              }
+            ]
+          },
+          "success": "The Ant Queen falls. The way is safe again.",
+          "fail": "The Ant Queen slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu101_ant_queen_s_armband", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Army Ant Workers Hold the Road to Dvalin",
+          "objective": "Drive the army ant workers off the road to Dvalin",
+          "announce": "With The Army Ant March lost, the army ant workers have spread down onto the road to Dvalin and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [217, 1164, 114.3],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60158059,
+              "name": "army ant worker",
+              "level": [6, 6]
+            },
+            {
+              "template": 60158058,
+              "name": "army ant soldier",
+              "level": [8, 8]
+            }
+          ],
+          "boss": {
+            "template": 60158059,
+            "name": "Army ant worker warleader",
+            "level": 9,
+            "pos": [217, 1164, 114.3],
+            "health_mult": 2
+          },
+          "success": "The army ant workers are gone from the road to Dvalin. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Gunnar has come out to set the road to Dvalin right. The army ant workers are coming back for it!",
+          "center": [217, 1164, 114.3],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Gunnar",
+            "level": 8,
+            "pos": [217, 1164, 114.3],
+            "health_mult": 10
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [277, 1224, 115.2],
+              [216, 1249, 114.8],
+              [155, 1222, 114.7]
+            ],
+            "mobs": [
+              {
+                "template": 60158059,
+                "name": "army ant worker",
+                "level": [6, 6]
+              },
+              {
+                "template": 60158058,
+                "name": "army ant soldier",
+                "level": [8, 8]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Dvalin is safe again. Thank you.\"",
+          "success": "The army ant workers break and scatter. The road to Dvalin is open again.",
+          "fail": "Roadwarden Gunnar falls, and the army ant workers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

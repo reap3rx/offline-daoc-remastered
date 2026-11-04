@@ -528,6 +528,213 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "lough_gur_gurite_ferry",
+      "title": "The Ferryman's Crossing",
+      "levels": [23, 27],
+      "hint": "Gurites watch the ferry crossing...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Ferryman Colm",
+          "objective": "Protect Ferryman Colm, who is caulking his ferry",
+          "announce": "Ferryman Colm's boat is the only way across, and the gurites mean to sink it. Keep them off him while he patches it.",
+          "center": [1370, 1284, 127.3],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Ferryman Colm",
+            "template": 60161797,
+            "level": 27,
+            "model": 388,
+            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
+            "health_mult": 10,
+            "pos": [1370, 1284, 127.3]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1455, 1297, 131.0],
+              [1420, 1354, 134.2],
+              [1355, 1368, 130.5]
+            ],
+            "mobs": [
+              {
+                "template": 60161866,
+                "name": "gurite assailer",
+                "level": [23, 24]
+              },
+              {
+                "template": 60161874,
+                "name": "gurite waylayer",
+                "level": [26, 27]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Ferryman Colm. \"They came from over there - let's finish this.\"",
+          "fail": "Ferryman Colm falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Gurite Camp",
+          "objective": "Clear the gurite camp",
+          "announce": "They came from the gurite camp. Follow them back and clear it out.",
+          "center": [1520, 1493, 153.4],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 60161866,
+              "name": "gurite assailer",
+              "level": [23, 24]
+            },
+            {
+              "template": 60161874,
+              "name": "gurite waylayer",
+              "level": [26, 27]
+            }
+          ],
+          "success": "You have cleared the gurite camp. Gurite Captain Orlagh comes out to fight.",
+          "fail": "They hold the gurite camp. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "Gurite Captain Orlagh",
+          "objective": "Defeat Gurite Captain Orlagh",
+          "announce": "Gurite Captain Orlagh stands at the gurite camp. Bring friends.",
+          "center": [1520, 1493, 153.4],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 60161872,
+            "name": "Gurite Captain Orlagh",
+            "level": 29,
+            "size": 68,
+            "pos": [1520, 1493, 153.4],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 60161866,
+                "name": "gurite assailer",
+                "level": [23, 24]
+              }
+            ]
+          },
+          "success": "Gurite Captain Orlagh falls. The way is safe again.",
+          "fail": "Gurite Captain Orlagh slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu204_gurite_captain_orlagh_s_bracer", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Gurite Assailers Hold the Old Road",
+          "objective": "Drive the gurite assailers off the old road",
+          "announce": "With The Ferryman's Crossing lost, the gurite assailers have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [1506, 1098, 130.9],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 60161866,
+              "name": "gurite assailer",
+              "level": [23, 24]
+            },
+            {
+              "template": 60161874,
+              "name": "gurite waylayer",
+              "level": [26, 27]
+            }
+          ],
+          "boss": {
+            "template": 60161866,
+            "name": "Gurite assailer warleader",
+            "level": 28,
+            "pos": [1506, 1098, 130.9],
+            "health_mult": 2
+          },
+          "success": "The gurite assailers are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Aine has come out to set the old road right. The gurite assailers are coming back for it!",
+          "center": [1506, 1098, 130.9],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Aine",
+            "level": 27,
+            "pos": [1506, 1098, 130.9],
+            "health_mult": 10,
+            "template": 60161797,
+            "model": 388,
+            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [1569, 1155, 126.7],
+              [1509, 1183, 131.2],
+              [1447, 1160, 126.2]
+            ],
+            "mobs": [
+              {
+                "template": 60161866,
+                "name": "gurite assailer",
+                "level": [23, 24]
+              },
+              {
+                "template": 60161874,
+                "name": "gurite waylayer",
+                "level": [26, 27]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The gurite assailers break and scatter. The old road is open again.",
+          "fail": "Roadwarden Aine falls, and the gurite assailers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

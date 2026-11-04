@@ -194,7 +194,7 @@ def build(zone_doc, chain, s, t, used):
     foe = plural(mobs[0]['name'])
     road = 'the road to %s' % town if town else 'the old road'
     boss_name = cu.get('boss', (None,))[0] or ('%s warleader' % mobs[0]['name']).capitalize()
-    title = chain['title']
+    ctitle = chain['title']
     h = int(hashlib.md5(cid.encode()).hexdigest(), 16)
     worker, task = cu.get('worker') or (WARDENS[realm_of(z)][h % 4], 'clearing the road and putting up a new waymarker')
     # who the worker looks like: a protected NPC of the chain, else its giver, else its guards
@@ -219,7 +219,7 @@ def build(zone_doc, chain, s, t, used):
         'name': cu.get('name') or title('the %s hold %s' % (foe, road)),
         'objective': cu.get('objective') or 'Drive the %s off %s' % (foe, road),
         'announce': cu.get('announce') or ('With %s lost, the %s have spread down onto %s and stop anyone who passes. '
-                                           'They will stay until someone drives them out.' % (title, foe, road)),
+                                           'They will stay until someone drives them out.' % (ctitle, foe, road)),
         'center': [round(at[0]), round(at[1])], 'radius': 70, 'count': 10, 'reinforce_s': 90,
         'mobs': mobs,
         'boss': {'template': mobs[0]['template'], 'name': boss_name, 'level': top + 1,

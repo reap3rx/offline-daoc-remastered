@@ -543,6 +543,233 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "muspelheim_fire_ants",
+      "title": "The Fire Ant Swarm",
+      "levels": [20, 22],
+      "hint": "The ash is crawling with fire ants...",
+      "rest_s": 45,
+      "first_delay_s": [120, 900],
+      "interval_s": [1500, 2700],
+      "start": "d1",
+      "stages": [
+        {
+          "id": "d1",
+          "type": "defend",
+          "name": "Protect Dverge Brokk",
+          "objective": "Protect Dverge Brokk, who is tapping a vein of fire-iron",
+          "announce": "Brokk the dverge has found a vein of fire-iron, right beside a fire ant mound. Keep the swarm off him until it's out.",
+          "center": [711, 905, 127.7],
+          "radius": 70,
+          "duration_s": 180,
+          "protect": {
+            "name": "Dverge Brokk",
+            "template": 60167667,
+            "level": 22,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+            "health_mult": 10,
+            "pos": [711, 905, 127.7]
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [713, 1002, 172.2],
+              [656, 968, 141.0],
+              [614, 904, 62.2]
+            ],
+            "mobs": [
+              {
+                "template": 20021,
+                "name": "fire ant gatherer",
+                "level": [21, 21]
+              },
+              {
+                "template": 60160874,
+                "name": "fire ant worker",
+                "level": [22, 22]
+              },
+              {
+                "template": 60160873,
+                "name": "fire ant scavenger",
+                "level": [20, 20]
+              }
+            ]
+          },
+          "success": "\"That's done,\" says Dverge Brokk. \"They came from over there - let's finish this.\"",
+          "fail": "Dverge Brokk falls. The attackers are left to do as they please - for now.",
+          "on_success": "d2",
+          "on_fail": "end",
+          "reward": { "xp_pct": 8, "copper_per_level": 60 }
+        },
+        {
+          "id": "d2",
+          "type": "cull",
+          "name": "Clear Fire Ant Mound",
+          "objective": "Clear the fire ant mound",
+          "announce": "They came from the fire ant mound. Follow them back and clear it out.",
+          "center": [499, 1117, 64.3],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 20021,
+              "name": "fire ant gatherer",
+              "level": [21, 21]
+            },
+            {
+              "template": 60160874,
+              "name": "fire ant worker",
+              "level": [22, 22]
+            },
+            {
+              "template": 60160873,
+              "name": "fire ant scavenger",
+              "level": [20, 20]
+            }
+          ],
+          "success": "You have cleared the fire ant mound. The Ember Queen comes out to fight.",
+          "fail": "They hold the fire ant mound. They will be bolder next time.",
+          "on_success": "d3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "d3",
+          "type": "boss",
+          "name": "The Ember Queen",
+          "objective": "Defeat the Ember Queen",
+          "announce": "The Ember Queen stands at the fire ant mound. Bring friends.",
+          "center": [499, 1117, 64.3],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 20021,
+            "name": "The Ember Queen",
+            "level": 24,
+            "size": 65,
+            "pos": [499, 1117, 64.3],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 20021,
+                "name": "fire ant gatherer",
+                "level": [21, 21]
+              }
+            ]
+          },
+          "success": "The Ember Queen falls. The way is safe again.",
+          "fail": "The Ember Queen slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu104_ember_queen_s_jewel", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Fire Ant Gatherers Hold the Old Road",
+          "objective": "Drive the fire ant gatherers off the old road",
+          "announce": "With The Fire Ant Swarm lost, the fire ant gatherers have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [321, 1208, 112.7],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 20021,
+              "name": "fire ant gatherer",
+              "level": [21, 21]
+            },
+            {
+              "template": 60160874,
+              "name": "fire ant worker",
+              "level": [22, 22]
+            },
+            {
+              "template": 60160873,
+              "name": "fire ant scavenger",
+              "level": [20, 20]
+            }
+          ],
+          "boss": {
+            "template": 20021,
+            "name": "Fire ant gatherer warleader",
+            "level": 23,
+            "pos": [321, 1208, 112.7],
+            "health_mult": 2
+          },
+          "success": "The fire ant gatherers are gone from the old road. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Hild has come out to set the old road right. The fire ant gatherers are coming back for it!",
+          "center": [321, 1208, 112.7],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Hild",
+            "level": 22,
+            "pos": [321, 1208, 112.7],
+            "health_mult": 10,
+            "template": 60167667,
+            "model": 158,
+            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [346, 1127, 82.8],
+              [397, 1170, 131.6],
+              [402, 1236, 173.0]
+            ],
+            "mobs": [
+              {
+                "template": 20021,
+                "name": "fire ant gatherer",
+                "level": [21, 21]
+              },
+              {
+                "template": 60160874,
+                "name": "fire ant worker",
+                "level": [22, 22]
+              },
+              {
+                "template": 60160873,
+                "name": "fire ant scavenger",
+                "level": [20, 20]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+          "success": "The fire ant gatherers break and scatter. The old road is open again.",
+          "fail": "Roadwarden Hild falls, and the fire ant gatherers take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }

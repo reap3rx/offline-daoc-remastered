@@ -649,6 +649,231 @@
           "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
         }
       ]
+    },
+    {
+      "id": "camelot_hills_orchard_spriggarn",
+      "title": "The Orchard Raiders",
+      "levels": [2, 3],
+      "hint": "Guardsman Pell is looking for help in Cotswold.",
+      "rest_s": 45,
+      "giver": {
+        "name": "Guardsman Pell",
+        "template": 60167630,
+        "level": 4,
+        "model": 28,
+        "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+        "guild": "Cotswold Watch",
+        "health_mult": 4,
+        "pos": [396, 705, 58.3],
+        "greet": "Spriggarn have been stripping the Cotswold orchards bare, and the farmers' children are afraid to go out. I could use a few new swords. Will you come? Tell me when you're [ready].",
+        "accept": "ready",
+        "reply": "Good. Stay close - they will have watchers out. With me!",
+        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+        "cooldown_s": 900
+      },
+      "guards": [
+        {
+          "name": "Veteran Guardsman",
+          "template": 60167630,
+          "level": 3,
+          "model": 28,
+          "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+          "guild": "Cotswold Watch",
+          "health_mult": 2,
+          "count": 3
+        }
+      ],
+      "start": "g1",
+      "stages": [
+        {
+          "id": "g1",
+          "type": "escort",
+          "name": "The Road to Spriggarn Thicket",
+          "objective": "Go with Guardsman Pell to the spriggarn thicket",
+          "announce": "Guardsman Pell leads a few of Cotswold's newest adventurers out against the spriggarn.",
+          "radius": 60,
+          "time_s": 1500,
+          "path": [
+            [504, 705, 51.8],
+            [608, 705, 55.7],
+            [648, 705, 54.9]
+          ],
+          "ambushes": [
+            {
+              "at": 1,
+              "count": 3,
+              "say": "Ambush! To me - hold together!",
+              "mobs": [
+                {
+                  "template": 12401,
+                  "name": "spriggarn",
+                  "level": [2, 2]
+                },
+                {
+                  "template": 12226,
+                  "name": "spriggarn elder",
+                  "level": [3, 3]
+                }
+              ]
+            }
+          ],
+          "success": "Guardsman Pell reaches the spriggarn thicket. \"There they are. Clear them out!\"",
+          "fail": "Guardsman Pell falls on the road. The others carry the body home.",
+          "on_success": "g2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 60 }
+        },
+        {
+          "id": "g2",
+          "type": "cull",
+          "name": "Clear Spriggarn Thicket",
+          "objective": "Clear the spriggarn thicket",
+          "announce": "Clear the spriggarn thicket!",
+          "center": [648, 701, 55.0],
+          "radius": 60,
+          "time_s": 1200,
+          "kill": 12,
+          "alive": 7,
+          "mobs": [
+            {
+              "template": 12401,
+              "name": "spriggarn",
+              "level": [2, 2]
+            },
+            {
+              "template": 12226,
+              "name": "spriggarn elder",
+              "level": [3, 3]
+            }
+          ],
+          "success": "You have cleared the spriggarn thicket. Old Knotbark comes out to fight.",
+          "fail": "They hold the spriggarn thicket. They will be bolder next time.",
+          "on_success": "g3",
+          "on_fail": "end",
+          "reward": { "xp_pct": 12, "copper_per_level": 80 }
+        },
+        {
+          "id": "g3",
+          "type": "boss",
+          "name": "Old Knotbark",
+          "objective": "Defeat Old Knotbark",
+          "announce": "Old Knotbark stands at the spriggarn thicket. Bring friends.",
+          "center": [648, 701, 55.0],
+          "radius": 70,
+          "time_s": 1200,
+          "boss": {
+            "template": 12226,
+            "name": "Old Knotbark",
+            "level": 5,
+            "size": 67,
+            "pos": [648, 701, 55.0],
+            "health_mult": 2.5
+          },
+          "adds": {
+            "every_s": 60,
+            "count": 2,
+            "mobs": [
+              {
+                "template": 12401,
+                "name": "spriggarn",
+                "level": [2, 2]
+              }
+            ]
+          },
+          "success": "Old Knotbark falls. Cotswold will hear of this in the taverns tonight.",
+          "fail": "Old Knotbark slips away - for now.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": {
+            "xp_pct": 20,
+            "copper_per_level": 150,
+            "items": [
+              { "id": "nu0_old_knotbark_s_girdle", "gold_chance": 40, "silver_chance": 20 }
+            ]
+          }
+        },
+        {
+          "id": "o1",
+          "type": "occupy",
+          "name": "The Spriggarns Hold the Road to Cotswold Village",
+          "objective": "Drive the spriggarns off the road to Cotswold Village",
+          "announce": "With The Orchard Raiders lost, the spriggarns have spread down onto the road to Cotswold Village and stop anyone who passes. They will stay until someone drives them out.",
+          "center": [480, 919, 61.6],
+          "radius": 70,
+          "count": 10,
+          "reinforce_s": 90,
+          "mobs": [
+            {
+              "template": 12401,
+              "name": "spriggarn",
+              "level": [2, 2]
+            },
+            {
+              "template": 12226,
+              "name": "spriggarn elder",
+              "level": [3, 3]
+            }
+          ],
+          "boss": {
+            "template": 12401,
+            "name": "Spriggarn warleader",
+            "level": 4,
+            "pos": [480, 919, 61.6],
+            "health_mult": 2
+          },
+          "success": "The spriggarns are gone from the road to Cotswold Village. It will need setting right.",
+          "fail": "",
+          "on_success": "o2",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
+        },
+        {
+          "id": "o2",
+          "type": "defend",
+          "name": "Set It Right",
+          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+          "announce": "Roadwarden Edith has come out to set the road to Cotswold Village right. The spriggarns are coming back for it!",
+          "center": [480, 919, 61.6],
+          "radius": 70,
+          "duration_s": 120,
+          "protect": {
+            "name": "Roadwarden Edith",
+            "level": 3,
+            "pos": [480, 919, 61.6],
+            "health_mult": 10,
+            "template": 60167630,
+            "model": 28,
+            "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9"
+          },
+          "waves": {
+            "every_s": 30,
+            "count": 2,
+            "from": [
+              [468, 835, 59.5],
+              [532, 852, 55.9],
+              [565, 909, 54.7]
+            ],
+            "mobs": [
+              {
+                "template": 12401,
+                "name": "spriggarn",
+                "level": [2, 2]
+              },
+              {
+                "template": 12226,
+                "name": "spriggarn elder",
+                "level": [3, 3]
+              }
+            ]
+          },
+          "thanks": "\"That's done - the road to Cotswold Village is safe again. Thank you.\"",
+          "success": "The spriggarns break and scatter. The road to Cotswold Village is open again.",
+          "fail": "Roadwarden Edith falls, and the spriggarns take the road back.",
+          "on_success": "end",
+          "on_fail": "o1",
+          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
+        }
+      ]
     }
   ]
 }
