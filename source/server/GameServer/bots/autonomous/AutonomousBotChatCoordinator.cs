@@ -261,7 +261,7 @@ public static class AutonomousBotChatCoordinator
             .Where(Eligible)
             .Where(bot => bot.Realm == player.Realm)
             .Where(bot => faction || bot.CurrentRegion == player.CurrentRegion && bot.IsWithinRadius(player, WorldMgr.SAY_DISTANCE))
-            .OrderByDescending(bot => Relevance(bot, message))
+            .OrderByDescending(bot => Relevance(bot, message) + (!faction && AutonomousBotPersonas.IsPersona(bot) ? 3 : 0))
             .ThenBy(_ => Random.Shared.Next())
             .ToArray();
         GameBot[] mentioned = eligible.Where(bot => ContainsMention(message, bot.Name)).ToArray();
@@ -276,7 +276,9 @@ public static class AutonomousBotChatCoordinator
         for (int index = 0; index < count; index++)
         {
             GameBot responder = eligible[index];
-            string response = hasKnowledge
+            string response = !hasKnowledge && AutonomousBotPersonas.TryReply(responder, message, player.Name, directed, out string own)
+                ? own
+                : hasKnowledge
                 ? knowledge
                 : directed
                     ? GenerateDirectedReply(message)
@@ -308,7 +310,9 @@ public static class AutonomousBotChatCoordinator
         for (int index = 0; index < count; index++)
         {
             GameBot responder = eligible[index];
-            string response = hasKnowledge ? knowledge : faction ? GenerateFactionReply(opening) : GenerateLocalReply(responder, opening);
+            string response = !hasKnowledge && AutonomousBotPersonas.TryReply(responder, opening, starter.Name, false, out string own)
+                ? own
+                : hasKnowledge ? knowledge : faction ? GenerateFactionReply(opening) : GenerateLocalReply(responder, opening);
             if (!TryAddDistinctResponse(scheduledResponses, response, out response))
                 continue;
             Schedule(responder, 1_700 + scheduledCount++ * 2_100 + Random.Shared.Next(1_300), () =>
@@ -363,6 +367,8 @@ public static class AutonomousBotChatCoordinator
 
     private static string BuildAmbientOpening(GameBot starter, AutonomousBotChat.Context context, bool faction)
     {
+        if (AutonomousBotPersonas.TryAmbient(starter, faction, out string own))
+            return own;                                    // Claude's three have their own small talk
         if (Random.Shared.NextDouble() < 0.18)
         {
             string activity = Clean(starter.PersistentRecord?.Activity, string.Empty);
