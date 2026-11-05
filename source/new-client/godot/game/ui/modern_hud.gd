@@ -40,12 +40,22 @@ var menu: Control
 var _zone_label: Label
 var _clock: Label
 var mini := MINI                                         # the minimap's side (its corner grip; [modern_zoom] minimap)
+## Pieces moved by EDIT UI (owner 2026-11-04: "make sure every new UI element is movable"): id -> its place as a share
+## of the room the screen leaves it (0,0 top left .. 1,1 bottom right), so it keeps its corner at any size or UI scale.
+## Kept in settings.cfg [modern_layout]; a piece not listed sits where layout() puts it.
+var custom := {}
+const LAYOUT_SECTION := "modern_layout"
 
 
 func _ready() -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(UiArt.settings_path)
 	mini = clampf(float(cfg.get_value("modern_zoom", "minimap", MINI)), 110.0, 380.0)
+	if cfg.has_section(LAYOUT_SECTION):
+		for k in cfg.get_section_keys(LAYOUT_SECTION):
+			var v = cfg.get_value(LAYOUT_SECTION, k)
+			if v is Vector2:
+				custom[k] = v
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	orb = Orb.new()
@@ -101,10 +111,6 @@ func layout() -> void:
 	party.size = Vector2(PARTY_W, 8 * 24 + 4)
 	minimap.position = Vector2(a.x - mini - 8, a.y - mini - 8)
 	minimap.size = Vector2(mini, mini)
-	_zone_label.position = Vector2(minimap.position.x, minimap.position.y - 13)
-	_zone_label.size = Vector2(mini - 44, 12)
-	_clock.position = Vector2(minimap.position.x + mini - 44, minimap.position.y - 13)
-	_clock.size = Vector2(44, 12)
 	loot.size = Vector2(LootFeed.W, LootFeed.ROW * LootFeed.MAX_ROWS)
 	loot.position = Vector2(a.x - LootFeed.W - 8, minimap.position.y - 22 - loot.size.y)
 	# the quickbars either side of the orb, the compass top centre, the effects over the right bar
@@ -136,6 +142,59 @@ func layout() -> void:
 	for id in ["status", "target", "minigroup", "time", "minipet"]:
 		if ui.windows.has(id):
 			ui.windows[id].visible = false
+	# what EDIT UI moved goes where it was put
+	for e in movable():
+		var c: Control = e[2]
+		if custom.has(String(e[0])) and c:
+			var room := (a - c.size).max(Vector2.ONE)
+			c.position = ((custom[String(e[0])] as Vector2) * room).round()
+	_zone_label.position = Vector2(minimap.position.x, minimap.position.y - 13)
+	_zone_label.size = Vector2(mini - 44, 12)
+	_clock.position = Vector2(minimap.position.x + mini - 44, minimap.position.y - 13)
+	_clock.size = Vector2(44, 12)
+
+
+## Every piece EDIT UI can move: [id, name, Control].
+func movable() -> Array:
+	var out: Array = [["orb", "HEALTH ORB AND TARGET", orb], ["menu", "MENU BAR", menu], ["party", "PARTY", party],
+			["minimap", "MINIMAP", minimap], ["quests", "QUEST LOG", quests], ["loot", "LOOT FEED", loot],
+			["pet", "PET WINDOW", pet]]
+	if ui == null:
+		return out
+	if ui.event_tracker:
+		out.append(["events", "EVENT TRACKER", ui.event_tracker])
+	for i in ui.quickbars.size():
+		if i < 3 and ui.quickbars[i].visible:
+			out.append(["bar%d" % (i + 1), "QUICKBAR %d" % (i + 1), ui.quickbars[i]])
+	if ui._effects_bar:
+		out.append(["effects", "YOUR EFFECTS", ui._effects_bar])
+	if ui.windows.has("compass"):
+		out.append(["compass", "COMPASS", ui.windows["compass"]])
+	return out
+
+
+## EDIT UI let go of a piece: its place kept.
+func keep_place(id: String, c: Control) -> void:
+	var room := (ui.area() - c.size).max(Vector2.ONE)
+	custom[id] = (c.position / room).clamp(Vector2.ZERO, Vector2.ONE)
+	_save_custom()
+	layout()
+
+
+func reset_places() -> void:
+	custom.clear()
+	_save_custom()
+	layout()
+
+
+func _save_custom() -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(UiArt.settings_path)
+	if cfg.has_section(LAYOUT_SECTION):
+		cfg.erase_section(LAYOUT_SECTION)
+	for k in custom:
+		cfg.set_value(LAYOUT_SECTION, k, custom[k])
+	cfg.save(UiArt.settings_path)
 
 
 func _process(_delta: float) -> void:
@@ -156,9 +215,9 @@ func _process(_delta: float) -> void:
 		else:
 			var t := Time.get_time_dict_from_system()
 			_clock.text = "%02d:%02d" % [t.hour, t.minute]
-	if ui.event_tracker:                                   # the quest log sits under the tracker's own height
+	if ui.event_tracker and not custom.has("quests"):    # the quest log sits under the tracker, at its own height
 		var h: float = ui.event_tracker.content_height()
-		quests.position.y = 46.0 + (h + 8.0 if h > 0.0 else 0.0)
+		quests.position = ui.event_tracker.position + Vector2(ui.event_tracker.size.x - QUEST_W, h + 8.0 if h > 0.0 else 0.0)
 
 
 ## A piece of the HUD: outlined text and stone plates, as every part draws them.

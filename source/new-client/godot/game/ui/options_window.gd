@@ -57,15 +57,34 @@ func build() -> void:
 	_status.size = Vector2(360, 12)
 	_status.clip_text = true
 	add_child(_status)
-	var buttons := [["CHARACTER SELECT", _to_character_select], ["QUIT", _quit_game],
+	var buttons := [["EDIT UI", _edit_ui], ["CHARACTER SELECT", _to_character_select], ["QUIT", _quit_game],
 			["CLOSE", hide_window]]
 	for i in buttons.size():
-		var b := UiArt.button(buttons[i][0], Vector2(114, 20), 10)
-		b.position = Vector2(11 + i * 121, 394)
+		var b := UiArt.button(buttons[i][0], Vector2(86, 20), 9)
+		b.position = Vector2(11 + i * 91, 394)
 		b.pressed.connect(buttons[i][1])
 		add_child(b)
 	apply_saved()
 	show_page(page)
+
+
+## EDIT UI (owner 2026-11-04): the options close and every movable piece of the HUD is framed to be dragged
+## (game/ui/ui_editor.gd).
+func _edit_ui() -> void:
+	var ui := _game_ui()
+	if ui == null:
+		return
+	hide_window()
+	var ed = preload("res://game/ui/ui_editor.gd").new()
+	ui.add_child(ed)
+	ed.open(ui)
+
+
+func _game_ui() -> GameUI:
+	var n: Node = self
+	while n != null and not (n is GameUI):
+		n = n.get_parent()
+	return n as GameUI
 
 
 ## Apply the saved video / audio settings (called once when the world loads).
