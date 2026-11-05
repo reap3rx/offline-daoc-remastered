@@ -747,6 +747,7 @@ func _on_world_inner(kind: String, d: Dictionary) -> void:
 			return
 		"quit":
 			playing = false
+			PlayerData.forget_pet()                       # (leaving the world: the pet goes with the session)
 			if int(d.mode) == 1:
 				get_tree().quit()
 			elif _exit_after_quit:                        # (the ESC menu's QUIT / the window closed: out once saved)

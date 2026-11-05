@@ -88,6 +88,8 @@ func _empty_quickbars() -> Array:
 
 
 func load_character(c: Dictionary) -> void:
+	if String(c.get("name", "")) != String(character.get("name", "")) and not pet.is_empty():
+		forget_pet()                                       # another character: the last one's pet isn't theirs
 	_vault_loaded = false                                  # never write the shared vault before it's read (starter gear saves)
 	var saved = c.get("quickbars")
 	if Server.active:                                      # this PC's quickbars for a server character
@@ -394,6 +396,14 @@ func set_target(t: Dictionary) -> void:
 func set_pet(p: Dictionary) -> void:
 	pet = p
 	pet_changed.emit()
+
+
+## No pet any more on this side (owner 2026-11-05: Arthur's Shieldbearer stayed on the pet window after he logged
+## out, on his next character too): a pet never outlives its owner's session on the server, which sends nothing then.
+func forget_pet() -> void:
+	Server.pet_retinue = []
+	Server.pet_icons = []
+	set_pet({})
 
 
 ## The pet window's commands; the pet AI listens to this when pets exist.
