@@ -6,7 +6,7 @@ options too").
     python build_races.py cel_m tro_f      # only these
     python build_races.py --no-upscale     # skip Real-ESRGAN (textures/original only)
 
-Per figure: figure.gltf (skeleton, the Catacombs animations, the race's default "SS" starter clothes, the head with
+Per figure (smoothed by subdivide_figure.py unless --no-smooth): figure.gltf (skeleton, the Catacombs animations, the race's default "SS" starter clothes, the head with
 its face-slider morph targets, and EVERY hair style as its own node "hair_<n>") and figure.json (every option, below).
 Textures are shared by all figures: godot/content/characters/fig3_textures/{original,x4plus} (x4plus = Real-ESRGAN
 at 4x: characters are viewed close up).
@@ -360,6 +360,9 @@ def build_figure(t, realm, race, gender, fig, upscale_list):
         'open': ['Mood slider: which of the mood targets (codes 21-24) it drives and how is not traced in game.dll yet'],
     }
     (out / 'figure.json').write_text(json.dumps(meta, indent=1), encoding='utf-8')
+    if '--no-smooth' not in sys.argv:                  # the remaster (owner 2026-11-05, "A+B"): rounder heads, hair
+        import subdivide_figure                         # and bodies, morphs and skin weights kept
+        subdivide_figure.smooth_file(str(out / 'figure.gltf'), str(out / 'figure.gltf'))
     upscale_list.update(textures)
     print(f'{prefix}: {race} {gender} fig {fig}, {len(faces)} faces, {len(eyes)} eyes, {len(tones)} tones, '
           f'{len(styles)} hair styles ({sum(1 for s in styles if s["node"])} meshes), {len(tattoos)} tattoos, '

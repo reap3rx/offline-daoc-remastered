@@ -270,7 +270,7 @@ func apply(changes: Dictionary) -> void:
 	var faces: Array = meta.get("faces", [])
 	var head := _part("head")
 	if head and faces.size() > 0:
-		var m := _material(false)
+		var m := _material(false, false, skin_shading)
 		m.set_shader_parameter("albedo_tex", _tex(faces[clampi(int(look.get("face", 0)), 0, faces.size() - 1)].tex))
 		m.set_shader_parameter("tint", skin)
 		m.set_shader_parameter("tint_mode", 1)
@@ -345,6 +345,7 @@ func set_armor(parts: Dictionary, tints: Dictionary = {}) -> void:
 	_apply_armor()
 
 
+var skin_shading := true                    # the remastered skin on the face (tests: false shows the old look)
 var armor := {}                             # the worn armour parts (set_armor)
 var hood_up := false                        # /hood: the cloak's hood up (the server's hood state for this figure)
 var cloak_hidden := false                   # the server's hidden-cloak flag (inventory / equipment packets, bit 0x01)
@@ -740,13 +741,20 @@ static func _finish(m: ShaderMaterial, tex: String) -> void:
 	m.set_shader_parameter("metal", metal)
 
 
-static func _material(cutout: bool, single_sided := false) -> ShaderMaterial:
-	var key := ("cutout" if cutout else "solid") + ("_cull" if single_sided else "")
+## Remastered skin (owner 2026-11-05, the character remaster "A+B"): the face lets a little light through and has a
+## skin's soft sheen instead of the painted face's flat matte - kept faint, as more blurred the eyes and brows.
+const SKIN_SHADING := "if (remaster_fx > 0.5) {\n\t\tSSS_STRENGTH = 0.05;\n\t\tROUGHNESS = 0.55;\n\t\tSPECULAR = 0.4;\n\t}\n\t//CUTOUT"
+
+
+static func _material(cutout: bool, single_sided := false, skin := false) -> ShaderMaterial:
+	var key := ("cutout" if cutout else "solid") + ("_cull" if single_sided else "") + ("_skin" if skin else "")
 	if not _shaders.has(key):
 		var s := Shader.new()
 		var code := SHADER
 		if single_sided:                                     # (cloaks: fig3parts 'Double Sided' empty - the client culls)
 			code = code.replace("cull_disabled", "cull_back")
+		if skin:
+			code = code.replace("//CUTOUT", SKIN_SHADING)
 		if cutout:
 			code = code.replace("//CUTOUT", "ALPHA = c.a;\n\tALPHA_SCISSOR_THRESHOLD = 0.5;")
 		s.code = code

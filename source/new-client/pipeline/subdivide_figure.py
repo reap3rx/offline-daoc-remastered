@@ -4,11 +4,14 @@ shape), skin weights carried to the new points, normals recomputed smooth. Every
 clips, extras - is left as it was. (2026-11-05, owner: "pretty blocky and hurts our lighting system": the comparison
 of texture and geometry remasters.)
 
-    python pipeline/subdivide_figure.py <in figure.gltf> <out figure.gltf> [levels=1] [--hard=<degrees>]
+    python pipeline/subdivide_figure.py <in figure.gltf> <out figure.gltf> [levels=1] [--hard=<degrees>] [--crease=<degrees>]
+
+Creases: an edge whose two faces fold by more than --crease (70) keeps its line (the curve rules) - an ear's rim, the
+tip of a pointed ear, a pauldron's or a boot's edge - so they don't melt away (the first try thinned the ears).
 
 UV seams: the glTF splits a vertex where its UVs (or normals) differ; the surface is welded by position for the
-smoothing so seams don't open, and each side keeps its own UVs. Open edges (the neck hole, a sleeve's end) use the
-boundary rules, so two parts meeting there stay joined. The helm meshes (ADR_*) are left alone.
+smoothing so seams don't open, and each side keeps its own UVs. Open edges (the neck hole, a sleeve's end) stay
+exactly where they were, so two parts meeting there stay joined. The helm meshes (ADR_*) are left alone.
 """
 import base64, json, re, sys
 from collections import defaultdict
@@ -87,7 +90,7 @@ def smooth_normals(pos, tris, weld, nweld, keep=None, hard_cos=None):
     return n / np.maximum(np.linalg.norm(n, axis=1, keepdims=True), 1e-12)
 
 
-def loop_once(pos, uv, joints, weights, targets, tris, normals_in, hard_cos):
+def loop_once(pos, uv, joints, weights, targets, tris, normals_in, hard_cos, crease_cos=None):
     nv = len(pos)
     # weld by position
     key = np.round(pos / 1e-4).astype(np.int64)
@@ -99,25 +102,41 @@ def loop_once(pos, uv, joints, weights, targets, tris, normals_in, hard_cos):
     wt = weld[tris]
     # welded edges, their faces and opposite points
     edge_faces = defaultdict(list)
+    edge_fids = defaultdict(list)
     for f, (a, b, c) in enumerate(wt):
         for u, v, o in ((a, b, c), (b, c, a), (c, a, b)):
             if u != v:
                 edge_faces[(min(u, v), max(u, v))].append(o)
+                edge_fids[(min(u, v), max(u, v))].append(f)
+    Pw0 = pos[first]
+    fn = np.cross(Pw0[wt[:, 1]] - Pw0[wt[:, 0]], Pw0[wt[:, 2]] - Pw0[wt[:, 0]])
+    fn /= np.maximum(np.linalg.norm(fn, axis=1, keepdims=True), 1e-12)
     edges = list(edge_faces)
     eidx = {e: i for i, e in enumerate(edges)}
     nbrs = defaultdict(set)
-    bnbrs = defaultdict(set)
+    bnbrs = defaultdict(set)                       # open edges and creases: the curve rules
+    sharp = set()
+    openv = set()                                  # on an open edge: where two parts meet (neck, wrist, ankle)
     for (u, v), opp in edge_faces.items():
         nbrs[u].add(v)
         nbrs[v].add(u)
-        if len(opp) != 2:
+        crease = False
+        if len(opp) == 2 and crease_cos is not None:
+            f0, f1 = edge_fids[(u, v)]
+            crease = float(np.dot(fn[f0], fn[f1])) < crease_cos   # a sharp fold: an ear's rim, a pauldron's edge
+        if len(opp) != 2 or crease:
             bnbrs[u].add(v)
             bnbrs[v].add(u)
+            sharp.add((u, v))
+        if len(opp) != 2:
+            openv.update((u, v))
 
     def stencils():
         rows_old = []
         for w in range(nw):
-            if w in bnbrs:
+            if w in openv:                         # stays put: the part beside it has the same edge (the first
+                rows_old.append([(w, 1.0)])        # try rounded a shirt's V-neck away from the neck: a black gap)
+            elif w in bnbrs:
                 b = sorted(bnbrs[w])
                 rows_old.append([(w, 1.0)] if len(b) != 2 else [(w, 0.75), (b[0], 0.125), (b[1], 0.125)])
             else:
@@ -130,7 +149,7 @@ def loop_once(pos, uv, joints, weights, targets, tris, normals_in, hard_cos):
         rows_edge = []
         for (u, v) in edges:
             opp = edge_faces[(u, v)]
-            rows_edge.append([(u, .375), (v, .375), (opp[0], .125), (opp[1], .125)] if len(opp) == 2
+            rows_edge.append([(u, .375), (v, .375), (opp[0], .125), (opp[1], .125)] if (u, v) not in sharp
                              else [(u, .5), (v, .5)])
         return rows_old, rows_edge
 
@@ -201,12 +220,16 @@ def loop_once(pos, uv, joints, weights, targets, tris, normals_in, hard_cos):
     return P, UV, J, W, deltas, tris2, N
 
 
-def main():
-    src, dst = sys.argv[1], sys.argv[2]
-    levels = int(sys.argv[3]) if len(sys.argv) > 3 and sys.argv[3].isdigit() else 1
-    hard = next((float(a.split('=')[1]) for a in sys.argv if a.startswith('--hard=')), 60.0)
+def smooth_file(src, dst, levels=1, hard=60.0, crease=70.0):
+    """build_races.py calls this on each figure it writes (the remaster, owner 2026-11-05)."""
     hard_cos = np.cos(np.radians(hard))
+    crease_cos = np.cos(np.radians(crease)) if crease > 0 else None
     G = Gltf(src)
+    extras = G.g.setdefault('asset', {}).setdefault('extras', {})
+    if extras.get('subdivided'):
+        print(src, 'is smoothed already')
+        return
+    extras['subdivided'] = levels
     done = 0
     for mesh in G.g['meshes']:
         if not SMOOTH.search(mesh['name']):
@@ -217,16 +240,24 @@ def main():
             at = prim['attributes']
             pos = G.read(at['POSITION']).astype(np.float64)
             nrm = G.read(at['NORMAL']).astype(np.float64) if 'NORMAL' in at else None
-            uv = G.read(at['TEXCOORD_0']).astype(np.float64)
+            # every other per-vertex attribute (the UV sets - a cloak's pattern and emblem UVs too -, colours)
+            # rides along as one matrix: kept on the old points, averaged on the new
+            lin = [k for k in sorted(at) if k not in ('POSITION', 'NORMAL', 'TANGENT', 'JOINTS_0', 'WEIGHTS_0')]
+            cols = [G.read(at[k]).astype(np.float64).reshape(len(pos), -1) for k in lin]
+            widths = [c.shape[1] for c in cols]
+            uv = np.hstack(cols)
             jo = G.read(at['JOINTS_0']).astype(np.int64)
             we = G.read(at['WEIGHTS_0']).astype(np.float64)
             tg = [G.read(t['POSITION']).astype(np.float64) for t in prim.get('targets', [])]
             tris = G.read(prim['indices']).astype(np.int64).reshape(-1, 3)
             for _ in range(levels):
-                pos, uv, jo, we, tg, tris, nrm = loop_once(pos, uv, jo, we, tg, tris, nrm, hard_cos)
+                pos, uv, jo, we, tg, tris, nrm = loop_once(pos, uv, jo, we, tg, tris, nrm, hard_cos, crease_cos)
             at['POSITION'] = G.write(pos, 5126, 'VEC3', 34962, minmax=True)
             at['NORMAL'] = G.write(nrm, 5126, 'VEC3', 34962)
-            at['TEXCOORD_0'] = G.write(uv, 5126, 'VEC2', 34962)
+            o = 0
+            for k, wdt in zip(lin, widths):
+                at[k] = G.write(uv[:, o:o + wdt], 5126, {1: 'SCALAR', 2: 'VEC2', 3: 'VEC3', 4: 'VEC4'}[wdt], 34962)
+                o += wdt
             at['JOINTS_0'] = G.write(jo, 5123, 'VEC4', 34962)
             at['WEIGHTS_0'] = G.write(we, 5126, 'VEC4', 34962)
             for t, d in zip(prim.get('targets', []), tg):
@@ -237,6 +268,13 @@ def main():
         print(mesh['name'], len(tris), 'triangles')
     G.save(dst)
     print(done, 'primitives smoothed')
+
+
+def main():
+    levels = int(sys.argv[3]) if len(sys.argv) > 3 and sys.argv[3].isdigit() else 1
+    hard = next((float(a.split('=')[1]) for a in sys.argv if a.startswith('--hard=')), 60.0)
+    crease = next((float(a.split('=')[1]) for a in sys.argv if a.startswith('--crease=')), 70.0)
+    smooth_file(sys.argv[1], sys.argv[2], levels, hard, crease)
 
 
 if __name__ == '__main__':
