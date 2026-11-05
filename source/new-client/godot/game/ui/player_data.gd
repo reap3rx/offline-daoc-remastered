@@ -100,6 +100,9 @@ func load_character(c: Dictionary) -> void:
 	quickbar_bank = (banks as Array).map(func(x): return int(x)) if banks is Array and banks.size() == 3 else [0, 0, 0]
 	load_sheet(c)
 	_load_vault()
+	if Server.active:                                      # (the skill list may have come before the bars: each slot is
+		Server.call_deferred("_refresh_bar_icons")         # found again by its name - Server._refresh_bar_icons)
+		Server.call_deferred("_remap_bar_spells")
 	changed.emit()
 	inventory_changed.emit()
 

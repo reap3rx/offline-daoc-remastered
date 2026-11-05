@@ -927,22 +927,81 @@ func on_skills(d: Dictionary) -> void:
 
 ## Abilities, styles and hybrid spells already on your quickbars take their icons again from the list (a bar saved
 ## before 2026-10-13 held an ability's raw icons.csv number - another picture).
+## A slot keeps the skill by its place in the server's list ("srv:skill:<n>"), and that place moves whenever the list
+## changes - a new spell learned at a level, a respec, another order from the server (owner 2026-11-04: "the King's spell
+## icons and the spells themselves not staying where they're supposed to after a log out"; a King's list holds his
+## spells too, so it moves the most). So each slot is found again by the name it was saved with: the nearest skill of
+## that name, its place written back (and the bars saved) when it moved. A slot whose name is gone stays as it was.
 func _refresh_bar_icons() -> void:
 	var first := 0
 	while first < skills.size() and int(skills[first].page) == 0:
 		first += 1
+	var moved := 0
 	for bar in PlayerData.quickbars:
 		for bank in bar:
 			for e in bank:
 				if not (e is Dictionary) or not String(e.get("id", "")).begins_with("srv:skill:"):
 					continue
 				var i := first + int(String(e.id).get_slice(":", 2))
+				var want := String(e.get("name", "")).strip_edges().to_lower()
+				if want != "" and (i >= skills.size() or String(skills[i].get("name", "")).to_lower() != want):
+					var best := -1
+					for j in range(first, skills.size()):
+						if String(skills[j].get("name", "")).to_lower() == want and (best < 0 or absi(j - i) < absi(best - i)):
+							best = j
+					if best >= 0:
+						e["id"] = "srv:skill:%d" % (best - first)
+						i = best
+						moved += 1
 				if i >= skills.size():
 					continue
 				var page := int(skills[i].page)
 				var ic := skill_icon("icon" if page in [1, 5, 6] else ("style" if page == 2 else "spell"), int(skills[i].icon))
 				e["icon"] = int(ic[0])
 				e["border"] = int(ic[1])
+	if moved > 0:
+		print("[bars] %d quickbar slot(s) found again by name" % moved)
+		PlayerData._save_server_quickbars()
+		PlayerData.changed.emit()
+
+
+## The same for list spells ("srv:spell:<line>:<level>"): a line's place can move as lines are learned.
+func _remap_bar_spells() -> void:
+	var moved := 0
+	for bar in PlayerData.quickbars:
+		for bank in bar:
+			for e in bank:
+				if not (e is Dictionary) or not String(e.get("id", "")).begins_with("srv:spell:"):
+					continue
+				var parts := String(e.id).split(":")
+				if parts.size() < 4:
+					continue
+				var li := int(parts[2])
+				var lv := int(parts[3])
+				var want := String(e.get("name", "")).strip_edges().to_lower()
+				if want == "":
+					continue
+				var ok := false
+				if li < spell_lines.size():
+					for sp in spell_lines[li].spells:
+						if int(sp.level) == lv and String(sp.name).to_lower() == want:
+							ok = true
+							break
+				if ok:
+					continue
+				for l2 in spell_lines.size():
+					for sp in spell_lines[l2].spells:
+						if String(sp.name).to_lower() == want:
+							e["id"] = "srv:spell:%d:%d" % [l2, int(sp.level)]
+							moved += 1
+							ok = true
+							break
+					if ok:
+						break
+	if moved > 0:
+		print("[bars] %d quickbar spell(s) found again by name" % moved)
+		PlayerData._save_server_quickbars()
+		PlayerData.changed.emit()
 
 
 ## A listed spell's client effect: the class data's spell by the id the server sent, if its name agrees - else the
@@ -969,6 +1028,7 @@ func on_spell_line(d: Dictionary) -> void:
 		spell_lines = _lines_building
 		_lines_building = []
 		_forget_details("sk:")
+		_remap_bar_spells()
 		# every spell you know: its effect files load now in the background (owner 2026-10-31: a spell's art didn't
 		# show the first time it was cast in a session - its files only started loading at that cast)
 		for line in spell_lines:
