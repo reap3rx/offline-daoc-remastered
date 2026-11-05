@@ -653,7 +653,7 @@ func _on_world_inner(kind: String, d: Dictionary) -> void:
 			if String(d.name) == "":
 				quests.erase(int(d.index))
 			else:
-				quests[int(d.index)] = {"name": String(d.name), "text": String(d.get("text", "")), "goals": d.get("goals", [])}
+				quests[int(d.index)] = {"name": String(d.name), "text": String(d.get("text", "")), "goals": _clean_goals(d.get("goals", []))}
 			PlayerData.quests_changed.emit()
 		"stats":                                          # base + buffs + items, in the sheet's order
 			# the sheet's value, as the client added it up: base + buffs + items (to their cap) + realm abilities
@@ -1062,6 +1062,20 @@ var pet_retinue: Array = []               # your commander's sub-pets ("#PET|", 
 var _item_lines := {}                    # slot (or another key: "x:<n>" an exchange result) -> {caption, lines}
 var _detail_queue: Array = []            # [{key (null = show it), at (ticks msec)}]
 const DETAIL_WAIT_MS := 3000
+
+
+## A RewardQuest goal reads "Quest Goal : <text> (0/1)" (QuestGoal.Description): the text alone, its count when it
+## counts something (a story quest's kill step carries its own "(2/5)").
+static func _clean_goals(goals: Array) -> Array:
+	var out: Array = []
+	for g in goals:
+		var t := String(g.get("text", "")).trim_prefix("Quest Goal : ").strip_edges()
+		var re := RegEx.create_from_string("\\s*\\((\\d+)/(\\d+)\\)$")
+		var m := re.search(t)
+		if m and int(m.get_string(2)) <= 1:
+			t = t.substr(0, m.get_start())
+		out.append({"text": t, "done": bool(g.get("done", false))})
+	return out
 
 
 func prefetch_item(slot: int) -> void:

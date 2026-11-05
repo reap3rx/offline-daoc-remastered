@@ -160,6 +160,12 @@ namespace DOL.GS.DynamicEvents
         public EventTokenMerchant Merchant;
         public string ResumeStage;                   // an occupation that was running when the server stopped
         public long DormantSince;
+        /// <summary>A private chain (a story quest's set-piece, StoryQuests): only these take part - the quester and
+        /// their group. It isn't in DynamicEventManager.Chains (no bots, no map, no tracker); its owner ticks it.</summary>
+        public Func<GameLiving, bool> Allow;
+        public Action<string> OnEnded;               // "success" / "fail", when it ends
+        public bool Private => Allow != null;
+        public bool Quiet;                           // (a private chain called off: no more words)
         public bool Occupied => Stage?.Def.Type == "occupy" ||
             (PendingId != null && Def.Stages.FirstOrDefault(s => s.Id == PendingId)?.Type == "occupy");                               // between Begin and End (stages and rests)
 
@@ -180,17 +186,17 @@ namespace DOL.GS.DynamicEvents
         };
 
         public IEnumerable<GamePlayer> PlayersInZone() =>
-            ClientService.Instance.GetPlayers().Where(p => p.CurrentRegion == Region && p.CurrentZone == Zone);
+            ClientService.Instance.GetPlayers().Where(p => p.CurrentRegion == Region && (p.CurrentZone == Zone || Private) && (Allow == null || Allow(p)));
 
         /// <summary>Players and bots (they take part as players do) within r units of p.</summary>
         public IEnumerable<GameLiving> PeopleNear(Point3D p, double r)
         {
             ushort ur = (ushort) Math.Min(65000, r);
             foreach (GamePlayer pl in Region.GetPlayersInRadius(p, ur))
-                if (pl.IsAlive && pl.ObjectState == GameObject.eObjectState.Active)
+                if (pl.IsAlive && pl.ObjectState == GameObject.eObjectState.Active && (Allow == null || Allow(pl)))
                     yield return pl;
             foreach (GameNPC n in Region.GetNPCsInRadius(p, ur))
-                if (n is GameBot b && b.IsAlive)
+                if (n is GameBot b && b.IsAlive && (Allow == null || Allow(b)))
                     yield return b;
         }
 
@@ -309,7 +315,8 @@ namespace DOL.GS.DynamicEvents
                 PartyHome();                            // the march is over: the land is the enemy's until it's taken back
             Stage = new StageRuntime(this, sd, now);
             Stage.Start();
-            DynamicEventManager.SaveState();
+            if (!Private)
+                DynamicEventManager.SaveState();
         }
 
         public void End(string outcome, long now)
@@ -318,9 +325,11 @@ namespace DOL.GS.DynamicEvents
             Stage = null;
             PendingId = null;
             RestoreDisplaced();
-            DynamicEventManager.SaveState();
+            if (!Private)
+                DynamicEventManager.SaveState();
             Dormant = false;
             _running = false;
+            OnEnded?.Invoke(outcome);
             LastOutcome = outcome;
             LastOutcomeUntil = now + 30_000;
             NextStart = now + 1000L * Util.Random(Def.IntervalS[0], Def.IntervalS[Math.Min(1, Def.IntervalS.Length - 1)]);
@@ -920,7 +929,7 @@ namespace DOL.GS.DynamicEvents
             foreach (EventNpc n in Spawned.ToList())
             {
                 n.Stage = null;
-                if (won && n == Protect && n.IsAlive && n.Role == EventRole.Protect)
+                if (won && n == Protect && n.IsAlive && n.Role == EventRole.Protect && !Chain.Quiet)
                 {
                     NpcSpeech.Say(n, Def.Thanks ?? "Thank you - I'd never have lived through that on my own.");
                     Chain.Lingering.Add((n, _now + 20_000));
@@ -1138,7 +1147,7 @@ namespace DOL.GS.DynamicEvents
 
         void Announce(string text, bool start)
         {
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(text) || Chain.Quiet)
                 return;
             foreach (GamePlayer p in Chain.PlayersInZone())
             {

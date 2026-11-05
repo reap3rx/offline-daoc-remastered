@@ -1,0 +1,629 @@
+{
+  "name": "Camelot Hills",
+  "npcs": [
+    {
+      "id": "maren_hale",
+      "zone": 0,
+      "realm": 1,
+      "name": "Maren Hale",
+      "model": 38,
+      "level": 12,
+      "pos": [
+        300,
+        697,
+        57.0
+      ],
+      "idle": "Have you seen a young man with a lantern and more nerve than sense? No? Then never mind me."
+    },
+    {
+      "id": "hob_tanner",
+      "zone": 0,
+      "realm": 1,
+      "name": "Hob Tanner",
+      "model": 9,
+      "level": 8,
+      "pos": [
+        340,
+        705,
+        59.3
+      ],
+      "idle": "I'm just here. Minding my business. Like a sensible man."
+    },
+    {
+      "id": "brother_eadric",
+      "zone": 21,
+      "realm": 1,
+      "name": "Brother Eadric",
+      "model": 61,
+      "level": 18,
+      "guild": "Church of Albion",
+      "pos": [
+        612,
+        598,
+        406.0
+      ],
+      "idle": "Walk softly. Mithra's faithful have not stopped praying down here - they have only stopped breathing."
+    },
+    {
+      "id": "ysolde_marchant",
+      "zone": 0,
+      "realm": 1,
+      "name": "Ysolde Marchant",
+      "model": 38,
+      "level": 14,
+      "guild": "Weaver",
+      "pos": [
+        306,
+        727,
+        60.8
+      ],
+      "idle": "Mind the loom. Everything else in this house is already unravelling."
+    },
+    {
+      "id": "gerrit_woodcutter",
+      "zone": 0,
+      "realm": 1,
+      "name": "Gerrit the Woodcutter",
+      "model": 9,
+      "level": 11,
+      "pos": [
+        640,
+        300,
+        71.4
+      ],
+      "idle": "Keep your voice down. They sing at night, up the hill, and I'd sooner they didn't hear us."
+    },
+    {
+      "id": "elric_home",
+      "zone": 0,
+      "realm": 1,
+      "name": "Elric Marchant",
+      "model": 9,
+      "level": 9,
+      "pos": [
+        309,
+        729,
+        61.2
+      ],
+      "during": [
+        "pilgrims/s5",
+        "pilgrims/s6"
+      ]
+    },
+    {
+      "id": "tamsin",
+      "zone": 0,
+      "realm": 1,
+      "name": "Tamsin",
+      "model": 257,
+      "level": 3,
+      "size": 38,
+      "pos": [
+        276,
+        712,
+        57.0
+      ],
+      "idle": "Grandad says faeries can't count past three. I can count to a hundred. That's why I'm in charge."
+    },
+    {
+      "id": "wren_herald",
+      "zone": 0,
+      "realm": 1,
+      "name": "Wren, the Bell-Wether's Herald",
+      "model": 603,
+      "level": 9,
+      "size": 40,
+      "guild": "Fair Folk",
+      "pos": [
+        645,
+        432,
+        64.5
+      ],
+      "during": [
+        "bell_price/s3",
+        "bell_price/s4"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "tomb_keeps",
+      "title": "What the Tomb Keeps",
+      "level": 9,
+      "giver": "maren_hale",
+      "offer": "Please - a moment. My brother Caddoc went off four nights ago with a lantern, a shovel and a map he swore was worth a fortune. He said he'd be back by market day. Market day was yesterday.\n\nHe's reckless, not stupid. Mostly. His friend [Hob] knows more than he lets on. Will you [look for him]? I'd go myself, but someone has to keep our mother from going after him.",
+      "accept": "look for him",
+      "topics": {
+        "Hob": "Hob Tanner. They go everywhere together - or did. Hob's been jumping at shadows since Caddoc left. He's by the east road, pretending to work."
+      },
+      "summary": "Maren Hale's brother Caddoc went treasure hunting four nights ago and never came home.",
+      "steps": [
+        {
+          "id": "s1",
+          "type": "talk",
+          "npc": "hob_tanner",
+          "goal": "Ask Hob Tanner where Caddoc went",
+          "say": "Maren sent you? Gods. All right. We bought the map off a pedlar in Ludlow - an old Mithran thing, he said, from the tomb in the eastern hills. Caddoc was set on it. I went with him as far as the [barrows] and then I... I came back. I'm not proud of it.",
+          "keyword": "barrows"
+        },
+        {
+          "id": "s2",
+          "type": "search",
+          "zone": 0,
+          "at": [
+            1335,
+            1003,
+            77.9
+          ],
+          "goal": "Find Caddoc's camp near the old tomb in the eastern hills",
+          "clue": {
+            "name": "a cold campfire and a bedroll",
+            "model": 1882
+          },
+          "text": "The fire is days cold. His bedroll is still here, and beside it, scratched into a stone: 'Gone below. Back by dark.' He never came back for the bedroll."
+        },
+        {
+          "id": "s3",
+          "type": "talk",
+          "npc": "brother_eadric",
+          "goal": "Go into the Tomb of Mithra and look for anyone who saw him",
+          "say": "A young man with a lantern? Yes. He went past me singing, if you can believe it. I warned him the deeper halls belong to the cult - the ones who still keep Mithra's rites over the dead. He laughed and said he'd be quick.\n\nThat was four days ago. If you go after him, look where they bring their [offerings].",
+          "keyword": "offerings"
+        },
+        {
+          "id": "s4",
+          "type": "search",
+          "zone": 21,
+          "at": [
+            426,
+            614,
+            382.0
+          ],
+          "goal": "Search the cult's offering halls deep in the tomb",
+          "clue": {
+            "name": "a dented lantern",
+            "model": 1876
+          },
+          "text": "Caddoc's lantern, dented and dark. The map is folded inside it, and on the back, in a shaking hand: 'They are not dead. They are not dead. They want me to stay.'",
+          "give": {
+            "name": "Caddoc's lantern"
+          }
+        },
+        {
+          "id": "s5",
+          "type": "encounter",
+          "zone": 21,
+          "at": [
+            440,
+            628,
+            388.0
+          ],
+          "wake_m": 25,
+          "goal": "Find what became of Caddoc",
+          "text": "As he falls, the thing that was Caddoc Hale stills. For a heartbeat his eyes are his own. 'Tell Maren,' he whispers, 'I'm sorry. Tell her I found something after all.'",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "The Unquiet Offering",
+              "center": [
+                440,
+                628,
+                388.0
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Put Caddoc Hale to rest",
+              "announce": "Something shambles out of the dark with a familiar face. The cult's whispering rises: another offering, another servant.",
+              "boss": {
+                "template": 12280,
+                "name": "Caddoc Hale, the Unquiet",
+                "level": 11,
+                "model": 110,
+                "health_mult": 2.2
+              },
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 12281,
+                    "name": "malevolent disciple",
+                    "level": [
+                      8,
+                      9
+                    ]
+                  }
+                ]
+              },
+              "success": "Caddoc Hale is at rest.",
+              "fail": "You fall back into the tunnels."
+            }
+          ]
+        },
+        {
+          "id": "s6",
+          "type": "reach",
+          "zone": 0,
+          "at": [
+            300,
+            697,
+            57.0
+          ],
+          "radius": 12,
+          "goal": "Return to Maren Hale in Cotswold",
+          "text": "Maren sees your face before you say a word."
+        },
+        {
+          "id": "s7",
+          "type": "choice",
+          "npc": "maren_hale",
+          "goal": "Tell Maren what you found",
+          "say": "You found him. I can see it. Don't - just tell me. Was it quick? Is he... is he coming home?\n\nYou could tell her [the truth]. Or you could [spare her], and tell her he went south to find work.",
+          "options": [
+            {
+              "keyword": "the truth",
+              "say": "...Raised. By those things. And you gave him rest.\n\nThen he isn't down there in the dark any more. That's - that's something. Thank you for not lying to me. I think I'd have known.",
+              "ending": "truth"
+            },
+            {
+              "keyword": "spare her",
+              "say": "South? To work? Caddoc?\n\nThen he's alive. He's alive and he's a fool, and one day he'll walk through that door with a story. I'll keep his supper warm. Thank you. Thank you.",
+              "ending": "mercy"
+            }
+          ]
+        }
+      ],
+      "endings": {
+        "truth": {
+          "tragic": true,
+          "text": "Our father's ring was meant to go to Caddoc. He'd want it to go to someone brave. And his lantern - keep that too. He'd like it being carried somewhere.",
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 60,
+            "marks": 8,
+            "items": [
+              "sq0_caddoc_s_lantern_charm"
+            ],
+            "choice": [
+              "sq0_hale_family_signet",
+              "sq0_tombwalker_s_girdle"
+            ]
+          }
+        },
+        "mercy": {
+          "tragic": true,
+          "text": "Here - for your trouble. It's not much. When he comes back, I'll tell him who to thank.",
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 60,
+            "marks": 8,
+            "items": [
+              "sq0_caddoc_s_lantern_charm"
+            ],
+            "choice": [
+              "sq0_tombwalker_s_girdle",
+              "sq0_mantle_of_the_kind_lie"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "pilgrims",
+      "title": "The Pilgrim's Letters",
+      "level": 10,
+      "giver": "ysolde_marchant",
+      "offer": "My son Elric went north with a band of pilgrims a month ago. Holy men, he said - dwarves, of all things, from some deep hall. His first letters were full of hymns. The last one... the last one called me 'the woman who raised me' and told me to burn my [loom].\n\nI'm a weaver. I don't know how to go and fetch a boy back from a faith. But you might. Will you [find him]?",
+      "accept": "find him",
+      "topics": {
+        "loom": "His father built it. Elric used to sleep under it when he was small. Now he writes that it's 'a chain of the world above'. He's twenty. He doesn't know what a chain is."
+      },
+      "summary": "Ysolde Marchant's son Elric followed a band of dwarven 'pilgrims' north, and his letters have stopped sounding like him.",
+      "steps": [
+        {
+          "id": "s1",
+          "type": "reach",
+          "zone": 0,
+          "at": [
+            585,
+            330,
+            65.6
+          ],
+          "radius": 18,
+          "goal": "Follow the old north road out of Cotswold",
+          "text": "At the waystone, the road's mud holds a dozen sets of heavy boots - short strides, all in step - and the drag-marks of a cart. Smoke rises from a woodcutter's hut to the east."
+        },
+        {
+          "id": "s2",
+          "type": "talk",
+          "npc": "gerrit_woodcutter",
+          "goal": "Ask the woodcutter about the pilgrims",
+          "say": "Pilgrims? Is that what they call themselves? Short fellows in grey, aye, and a lot of tall young folk walking with them like sleepwalkers. They camp up the hill by the old stones and they sing till dawn. Same three notes. My dog won't go near.\n\nThe young ones throw away everything they brought - I've found purses, boots, [letters] in the bracken.",
+          "keyword": "letters"
+        },
+        {
+          "id": "s3",
+          "type": "search",
+          "zone": 0,
+          "at": [
+            690,
+            236,
+            64.2
+          ],
+          "goal": "Search the bracken below the pilgrims' camp",
+          "clue": {
+            "name": "a bundle of discarded letters",
+            "model": 1347
+          },
+          "text": "Letters, dozens of them, never sent. One in Elric's hand, half-finished: 'Mother - I can't remember the colour of the loom. The Brothers say that's good. Why does it feel like drowning?'",
+          "give": {
+            "name": "Elric's unsent letter"
+          }
+        },
+        {
+          "id": "s4",
+          "type": "encounter",
+          "zone": 0,
+          "at": [
+            703,
+            214,
+            65.2
+          ],
+          "wake_m": 30,
+          "goal": "Bring Elric back to himself - and out of the camp",
+          "text": "Elric stares at the letter in his own hand for a long time. Then he asks, very quietly, whether the loom is still there.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Three Notes",
+              "center": [
+                703,
+                214,
+                65.2
+              ],
+              "radius": 30,
+              "duration_s": 100,
+              "objective": "Keep Elric alive while he wakes",
+              "announce": "You read Elric his own words. He blinks - and the singing stops. Every grey robe turns towards him.",
+              "protect": {
+                "template": 12328,
+                "name": "Elric Marchant",
+                "level": 9,
+                "model": 9
+              },
+              "waves": {
+                "every_s": 22,
+                "count": 2,
+                "from": [
+                  [
+                    724,
+                    202,
+                    66.9
+                  ],
+                  [
+                    688,
+                    196,
+                    74.9
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 12328,
+                    "name": "entranced convert",
+                    "level": [
+                      8,
+                      9
+                    ]
+                  }
+                ]
+              },
+              "thanks": "I... I know you. No. I know the letter. Who are you?",
+              "success": "The converts falter.",
+              "fail": "Elric is dragged back into the singing.",
+              "on_success": "d2",
+              "on_fail": "end"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "The Deep Hall's Voice",
+              "center": [
+                710,
+                206,
+                67.1
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Silence the priest who leads the singing",
+              "announce": "A dwarf in grey steps out of the stones, still humming the three notes. 'The boy is ours. The world above is a lie. Come below.'",
+              "boss": {
+                "template": 12341,
+                "name": "Brother Thrangar of the Deep Hall",
+                "level": 12,
+                "model": 187,
+                "health_mult": 2.0
+              },
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 12341,
+                    "name": "Dwarven Priest",
+                    "level": [
+                      9,
+                      10
+                    ]
+                  }
+                ]
+              },
+              "success": "The singing ends.",
+              "fail": "The hymn swells and you are driven off the hill."
+            }
+          ]
+        },
+        {
+          "id": "s5",
+          "type": "reach",
+          "zone": 0,
+          "at": [
+            306,
+            727,
+            60.8
+          ],
+          "radius": 12,
+          "goal": "Bring word to Ysolde in Cotswold",
+          "text": "Elric took the long way home - through every field he used to play in, he said. He's there before you."
+        },
+        {
+          "id": "s6",
+          "type": "talk",
+          "npc": "ysolde_marchant",
+          "goal": "Speak with Ysolde",
+          "say": "He walked in and sat down under the loom like he was six years old. He hasn't said much. He keeps touching the threads.",
+          "ending": "home"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "His father made this loom. I'd like you to have something from it - I wove this the night you left, hoping. Take whichever suits you.",
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 70,
+            "marks": 10,
+            "choice": [
+              "sq0_weaver_s_hopeful_mantle",
+              "sq0_three_note_band",
+              "sq0_waystone_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bell_price",
+      "title": "The Bell-Wether's Price",
+      "level": 5,
+      "giver": "tamsin",
+      "offer": "You're a hero, aren't you? You've got a sword and everything. The faeries took Grandad's silver pipe - the one he plays for the sheep - and now the sheep won't come home and Grandad sits by the fire doing nothing.\n\nThey live by the [faerie ring] in the woods north of the lake. Will you [get it back]? I'd do it but I'm eight.",
+      "accept": "get it back",
+      "topics": {
+        "faerie ring": "North of the big lake with the lady in it. Don't talk to the lady. Grandad says she's for kings."
+      },
+      "summary": "Little Tamsin's grandfather's silver pipe was stolen by the faeries north of the lake.",
+      "steps": [
+        {
+          "id": "s1",
+          "type": "reach",
+          "zone": 0,
+          "at": [
+            655,
+            440,
+            64.4
+          ],
+          "radius": 15,
+          "goal": "Find the faerie ring north of the lake",
+          "text": "Tiny laughter all around you, and the tinkle of a dozen stolen bells. Something throws an acorn at your head."
+        },
+        {
+          "id": "s2",
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            660,
+            446,
+            64.3
+          ],
+          "radius": 20,
+          "count": 5,
+          "goal": "Teach the mischief-makers some manners",
+          "mob": {
+            "template": 12346,
+            "name": "giggling mischief-maker",
+            "level": 5,
+            "model": 603,
+            "size": 36
+          },
+          "text": "The giggling stops. A faerie in a coat of bluebells drifts down to look at you, clearly unimpressed."
+        },
+        {
+          "id": "s3",
+          "type": "reach",
+          "zone": 0,
+          "at": [
+            645,
+            432,
+            64.5
+          ],
+          "radius": 10,
+          "goal": "Speak with whoever rules this ring"
+        },
+        {
+          "id": "s4",
+          "type": "choice",
+          "npc": "wren_herald",
+          "goal": "Bargain with Wren for the silver pipe",
+          "say": "You've been terribly rude to my cousins. Still, you came all this way for a little pipe. The Bell-Wether likes it - it plays the sheep-song, and sheep-songs are rare.\n\nI could simply [return] it, since you've proved so tiresome. Or we could [bargain]: let us keep it, and the Bell-Wether will owe you a favour. Faerie favours are worth a great deal more than pipes.",
+          "options": [
+            {
+              "keyword": "return",
+              "say": "Oh, very well. Take your pipe. Tell the shepherd his sheep-song is lovely and that he plays it flat.",
+              "next": "s5"
+            },
+            {
+              "keyword": "bargain",
+              "say": "Wise. Hold out your hand - there. Something to remember us by. The shepherd will find other songs. Probably.",
+              "next": "s5b"
+            }
+          ]
+        },
+        {
+          "id": "s5",
+          "type": "talk",
+          "npc": "tamsin",
+          "goal": "Bring the silver pipe home to Tamsin",
+          "say": "You got it! You actually got it! Grandad! GRANDAD! Listen - he's playing - and the sheep are coming! Look at them all!",
+          "ending": "returned"
+        },
+        {
+          "id": "s5b",
+          "type": "talk",
+          "npc": "tamsin",
+          "goal": "Tell Tamsin what you agreed with the faeries",
+          "say": "They're keeping it? For a FAVOUR? That's not fair. That's... that's a grown-up thing to do.\n\n...Grandad says it's all right. He says he'll whittle a new one. He says faeries keep their promises better than most people. I'm still cross.",
+          "ending": "bargained"
+        }
+      ],
+      "endings": {
+        "returned": {
+          "text": "Grandad says to give you this - he says it's for luck, and that you'll need it more than he does now.",
+          "rewards": {
+            "xp_pct": 60,
+            "copper_per_level": 50,
+            "marks": 6,
+            "choice": [
+              "sq0_shepherd_s_lucky_charm",
+              "sq0_sheep_song_sash"
+            ]
+          }
+        },
+        "bargained": {
+          "text": "...You can have this. Grandad says. Hmph.",
+          "rewards": {
+            "xp_pct": 60,
+            "copper_per_level": 50,
+            "marks": 6,
+            "items": [
+              "sq0_bell_wether_s_favour"
+            ],
+            "choice": [
+              "sq0_sheep_song_sash"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

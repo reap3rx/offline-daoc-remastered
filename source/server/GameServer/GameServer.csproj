@@ -87,6 +87,9 @@
     <ItemGroup>
         <!-- dynamic events: the zones' event files, read at start-up (scripts/dynamicevents) -->
         <EmbeddedResource Include="scripts\dynamicevents\zones\*.json" LogicalName="DynamicEvents.%(Filename)%(Extension)" />
+        <!-- story quests: the quest files, read at start-up (scripts/storyquests) -->
+        <EmbeddedResource Include="scripts\storyquests\quests\*.json" LogicalName="StoryQuests.%(Filename)%(Extension)" />
+        <EmbeddedResource Include="scripts\storyquests\items\*.json" LogicalName="StoryItems.%(Filename)%(Extension)" />
         <EmbeddedResource Include="gameutils\data\level_bands.json" />
     </ItemGroup>
 </Project>

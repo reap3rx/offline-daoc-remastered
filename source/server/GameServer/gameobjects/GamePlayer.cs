@@ -11460,7 +11460,7 @@ namespace DOL.GS
         {
             foreach (AbstractQuest questInList in QuestList.Keys)
             {
-                if (questInList.GetType().Equals(quest.GetType()) && questInList.IsDoingQuest())
+                if (questInList.GetType().Equals(quest.GetType()) && questInList.SameQuest(quest) && questInList.IsDoingQuest())
                     return questInList;
             }
 

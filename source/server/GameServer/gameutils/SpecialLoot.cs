@@ -55,7 +55,8 @@ namespace DOL.GS
                 if (Util.Chance((int) Math.Round(Factor(level) * 100)) && (weapon || armor) && level >= 20)
                     BetterLook(u, level);
                 u.Description = string.IsNullOrEmpty(u.Description) ? why : u.Description;
-                u.AllowAdd = false;         // the inventory adds it with the item (DbInventoryItem.UTemplate_Id)
+                u.AllowAdd = true;          // saved with the item (the inventory row's relation, UTemplate_Id): without it
+                                            // the unique is never written and the item is a blank after a restart
                 return u;
             }
             catch (Exception e)

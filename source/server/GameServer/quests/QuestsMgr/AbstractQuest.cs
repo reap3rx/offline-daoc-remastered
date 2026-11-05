@@ -118,6 +118,10 @@ namespace DOL.GS.Quests
 
         public virtual int MaxQuestCount => 1;
 
+        /// <summary>Another quest object of this one's type is the same quest (StoryQuests: many quests share one type
+        /// and tell themselves apart by their id).</summary>
+        public virtual bool SameQuest(AbstractQuest other) => other != null && other.GetType() == GetType();
+
         public GamePlayer QuestPlayer
         {
             get => m_questPlayer;
