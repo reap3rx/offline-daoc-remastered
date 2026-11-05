@@ -229,16 +229,17 @@ class BagCell extends Control:
 	var _icon: TextureRect
 	var _count: Label
 	var _hi: Panel
+	var _bs: StyleBoxFlat
 	var _dragged_slot := -1
 
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_STOP
 		var back := Panel.new()
-		var bs := StyleBoxFlat.new()
-		bs.bg_color = Color(0.04, 0.035, 0.03, 0.85)
-		bs.border_color = Color(0.45, 0.37, 0.22)
-		bs.set_border_width_all(1)
-		back.add_theme_stylebox_override("panel", bs)
+		_bs = StyleBoxFlat.new()
+		_bs.bg_color = Color(0.04, 0.035, 0.03, 0.85)
+		_bs.border_color = Color(0.45, 0.37, 0.22)
+		_bs.set_border_width_all(1)
+		back.add_theme_stylebox_override("panel", _bs)
 		back.set_anchors_preset(Control.PRESET_FULL_RECT)
 		back.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(back)
@@ -277,6 +278,10 @@ class BagCell extends Control:
 		_count.text = str(n) if n > 1 else ""
 		_hi.visible = PlayerData.selected_slot == slot and not e.is_empty()
 		tooltip_text = String(it.get("name", "")).to_upper()
+		# armour and weapons framed in the colour they con to you (owner 2026-11-04)
+		var gear := not it.is_empty() and not PlayerData.slots_for(it).is_empty()
+		_bs.border_color = ItemTooltip.con_color(int(it.get("level", 0)), PlayerData.level) if gear else Color(0.45, 0.37, 0.22)
+		_bs.set_border_width_all(2 if gear else 1)
 
 	func _get_drag_data(_p: Vector2) -> Variant:
 		_dragged_slot = slot
@@ -297,6 +302,9 @@ class BagCell extends Control:
 	func _notification(what: int) -> void:
 		if what == NOTIFICATION_MOUSE_ENTER and Server.active:
 			Server.prefetch_item(slot)
+			var worn := ItemTooltip.worn_slot(PlayerData.item_at(slot))
+			if worn >= 0:
+				Server.prefetch_item(worn)                     # (what you wear there, for the comparison)
 		if what == NOTIFICATION_MOUSE_EXIT or what == NOTIFICATION_DRAG_END:
 			_hi.visible = PlayerData.selected_slot == slot and not PlayerData.entry(slot).is_empty()
 		if what == NOTIFICATION_DRAG_END and _dragged_slot >= 0:
@@ -309,7 +317,7 @@ class BagCell extends Control:
 					ui.item_dropped_on_world.emit(from, get_viewport().get_mouse_position())
 
 	func _make_custom_tooltip(_for_text: String) -> Object:
-		return ItemTooltip.make(PlayerData.item_at(slot))
+		return ItemTooltip.compare(slot)
 
 	func _gui_input(event: InputEvent) -> void:
 		if InventorySheet.click_hold(self, event, slot):

@@ -69,6 +69,7 @@ namespace DOL.GS
 		/// <param name="item">The item or money account traded</param>
 		public static void LogInventoryAction(GameObject source, GameObject destination, eInventoryActionType type, DbItemTemplate item, int count = 1)
 		{
+			LootFeed.FromLog(source, destination, type, item, count);
 			LogInventoryAction(GetGameObjectString(source), GetGameObjectString(destination), type, item, count);
 		}
 
@@ -81,6 +82,7 @@ namespace DOL.GS
 		/// <param name="item">The item or money account traded</param>
 		public static void LogInventoryAction(string source, GameObject destination, eInventoryActionType type, DbItemTemplate item, int count = 1)
 		{
+			LootFeed.FromLog(source, destination, type, item, count);
 			LogInventoryAction(source, GetGameObjectString(destination), type, item, count);
 		}
 
@@ -133,6 +135,7 @@ namespace DOL.GS
 		/// <param name="item">The item or money account traded</param>
 		public static void LogInventoryAction(GameObject source, GameObject destination, eInventoryActionType type, long money)
 		{
+			LootFeed.FromLog(source, destination, type, money);
 			LogInventoryAction(GetGameObjectString(source), GetGameObjectString(destination), type, money);
 		}
 
@@ -145,6 +148,7 @@ namespace DOL.GS
 		/// <param name="item">The item or money account traded</param>
 		public static void LogInventoryAction(string source, GameObject destination, eInventoryActionType type, long money)
 		{
+			LootFeed.FromLog(source, destination, type, money);
 			LogInventoryAction(source, GetGameObjectString(destination), type, money);
 		}
 

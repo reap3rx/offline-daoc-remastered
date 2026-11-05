@@ -928,6 +928,13 @@ func _message(d: Dictionary) -> void:
 	if String(d.text).begins_with("#WAL|"):               # your wallet (PlayerWallet.cs): the modern inventory shows it
 		preload("res://game/ui/modern_bags.gd").receive_wallet(String(d.text).substr(5))
 		return
+	if String(d.text).begins_with("#LOOT|"):              # the loot feed (LootFeed.cs): the modern HUD's, never the chat
+		if viewer and viewer.ui and viewer.ui.modern:
+			viewer.ui.modern.loot.receive(String(d.text).substr(6))
+		return
+	if String(d.text).begins_with("#PET|"):               # your commander's retinue (HeroInfo.cs): the modern pet window
+		preload("res://game/ui/modern_hud.gd").receive_pets(String(d.text).substr(5))
+		return
 	if String(d.text).begins_with("#CFG|"):               # a setting kept on the character (HeroInfo.cs)
 		Server.cfg_line(String(d.text).substr(5))
 		return

@@ -992,6 +992,7 @@ var max_hp := 0                          # the stats packet's maximum hit points
 var resists: Array = []                  # your resists (StatsUpdate's resist form): crush .. energy, in %
 var effects := {}                         # icon index -> {icon, name, negative, until (ticks msec, 0 = none)}
 var pet_icons: Array = []                 # your pet's effect icons (the PetWindow packet: icons only, no times)
+var pet_retinue: Array = []               # your commander's sub-pets ("#PET|", HeroInfo.cs): [{oid, role, health, name}]
 
 
 ## Item delve text for the hover box: asked of the server when the pointer reaches an item (DetailRequest, as a right

@@ -42,6 +42,59 @@ static func make(it: Dictionary) -> Control:
 	return box
 
 
+## A backpack item's hover box beside the one of what you wear in its place (owner 2026-11-04: "the full tool tip ...
+## and then the tool tip beside it of what you currently have equipped in that slot"); just its own when that place
+## is empty or it isn't worn at all.
+static func compare(slot: int) -> Control:
+	var it := PlayerData.item_at(slot)
+	var own := make(it)
+	var worn := worn_slot(it)
+	if own == null or worn < 0 or worn == slot:
+		return own
+	var other := make(PlayerData.item_at(worn))
+	if other == null:
+		return own
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	row.add_child(_headed(own, "IN YOUR BAGS", UiArt.DIM))
+	var bar := ColorRect.new()
+	bar.color = Color(0.55, 0.45, 0.25, 0.7)
+	bar.custom_minimum_size = Vector2(1, 0)
+	bar.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	row.add_child(bar)
+	row.add_child(_headed(other, "EQUIPPED", UiArt.GOLD_HI))
+	return row
+
+
+## Where you wear what this item would replace: the first of its places that holds something (for a weapon the
+## main hand and two-hander places too), else -1.
+static func worn_slot(it: Dictionary) -> int:
+	if it.is_empty() or not is_gear(it):
+		return -1
+	var places: Array = PlayerData.slots_for(it)
+	if places.is_empty():
+		return -1
+	var tries: Array = places.duplicate()
+	if 12 in places or 10 in places:
+		for s in [10, 12]:
+			if not s in tries:
+				tries.append(s)
+	for s in tries:
+		if not PlayerData.item_at(int(s)).is_empty():
+			return int(s)
+	return -1
+
+
+static func _headed(box: Control, caption: String, col: Color) -> Control:
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 2)
+	var l := _line(caption, col)
+	l.add_theme_font_size_override("font_size", 9)
+	v.add_child(l)
+	v.add_child(box)
+	return v
+
+
 ## The con step (-3 grey .. 3 purple) of an item / creature level against the player's.
 static func con_value(item_level: int, player_level: int) -> int:
 	if _con.is_empty():

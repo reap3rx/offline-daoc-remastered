@@ -41,7 +41,10 @@ namespace DOL.AI.Brain
             // Any attack on a subpet is handled as if it was the commander that was attacked.
             // This will propagate the event to every subpet.
             if (ad.CausesCombat && Owner is CommanderPet owner && owner.Brain is CommanderBrain ownerBrain)
+            {
                 ownerBrain.OnAttackedByEnemy(ad);
+                ownerBrain.GuardMinion(ad.Attacker, this);
+            }
         }
 
         public override void UpdatePetWindow() { }

@@ -1097,12 +1097,18 @@ namespace DOL.GS.DynamicEvents
                 {
                     DbInventoryItem m = GameInventoryItem.Create(mark);
                     if (p.Inventory.AddTemplate(m, marks, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                    {
                         p.Out.SendMessage($"You receive {marks} {mark.Name}{(marks > 1 ? "s" : "")}.", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                        LootFeed.Item(p, mark, marks);
+                    }
                 }
                 if (xp > 0 && p.Level < 50)
                     p.GainExperience(eXPSource.Quest, xp, false);
                 if (copper > 0)
+                {
                     p.AddMoney(copper, "You are rewarded {0}.");
+                    LootFeed.Money(p, copper);
+                }
                 foreach (ItemRewardDef it in items)
                 {
                     if (string.IsNullOrEmpty(it.Id))
@@ -1115,6 +1121,7 @@ namespace DOL.GS.DynamicEvents
                     if (!p.Inventory.AddTemplate(item, 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
                         p.CreateItemOnTheGround(item);
                     p.Out.SendMessage($"You receive {tpl.Name}!", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                    LootFeed.Item(p, tpl, 1);
                 }
             }
         }

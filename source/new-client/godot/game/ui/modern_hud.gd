@@ -34,6 +34,8 @@ var orb: Orb
 var party: Party
 var minimap: Minimap
 var quests: QuestLog
+var loot: LootFeed
+var pet: PetPanel
 var menu: Control
 var _zone_label: Label
 var _clock: Label
@@ -58,6 +60,12 @@ func _ready() -> void:
 	quests = QuestLog.new()
 	quests.hud = self
 	add_child(quests)
+	loot = LootFeed.new()
+	loot.hud = self
+	add_child(loot)
+	pet = PetPanel.new()
+	pet.hud = self
+	add_child(pet)
 	_zone_label = UiArt.label("", 9, UiArt.GOLD_HI)
 	_zone_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_zone_label.clip_text = true
@@ -97,6 +105,8 @@ func layout() -> void:
 	_zone_label.size = Vector2(mini - 44, 12)
 	_clock.position = Vector2(minimap.position.x + mini - 44, minimap.position.y - 13)
 	_clock.size = Vector2(44, 12)
+	loot.size = Vector2(LootFeed.W, LootFeed.ROW * LootFeed.MAX_ROWS)
+	loot.position = Vector2(a.x - LootFeed.W - 8, minimap.position.y - 22 - loot.size.y)
 	# the quickbars either side of the orb, the compass top centre, the effects over the right bar
 	if ui.quickbars.size() >= 2:
 		var q1: Quickbar = ui.quickbars[0]
@@ -114,6 +124,8 @@ func layout() -> void:
 			fx_y = q3.position.y - 50
 		if ui._effects_bar:
 			ui._effects_bar.position = Vector2(q2.position.x, fx_y)
+		pet.size = Vector2(PetPanel.W, PetPanel.MAX_H)
+		pet.position = Vector2(maxf(8.0, q1.position.x + q1.size.x - PetPanel.W), q1.position.y - 12.0 - PetPanel.MAX_H)
 	if ui.windows.has("compass"):
 		var comp: Control = ui.windows["compass"]
 		comp.position = Vector2(cx - comp.size.x * 0.5, 4)
@@ -121,7 +133,7 @@ func layout() -> void:
 		ui.event_tracker.position = Vector2(a.x - QUEST_W - 8.0, 46.0)
 	quests.position = Vector2(a.x - QUEST_W - 8.0, 46.0)
 	quests.size = Vector2(QUEST_W, 200)
-	for id in ["status", "target", "minigroup", "time"]:
+	for id in ["status", "target", "minigroup", "time", "minipet"]:
 		if ui.windows.has(id):
 			ui.windows[id].visible = false
 
@@ -134,6 +146,7 @@ func _process(_delta: float) -> void:
 		minimap.queue_redraw()
 	if Engine.get_process_frames() % 10 == 0:
 		party.queue_redraw()
+		pet.queue_redraw()
 		menu.queue_redraw()
 		quests.queue_redraw()
 		if ui.map_window:
@@ -460,12 +473,15 @@ class Minimap extends Part:
 			return origin + (to_frac.call(uu) as Vector2) * k
 		var inside := func(p: Vector2) -> bool:
 			return Rect2(Vector2.ZERO, size).has_point(p)
+		var edges: Array = []                              # [place, colour, is an event] past the minimap's edge
 		for m in w.zone_quest_marks(z):
 			var mp: Vector2 = at.call((m.at as Vector2) / 0.025)
-			if not inside.call(mp):
-				continue
 			var col: Color = {"!": Color(1.0, 0.85, 0.15), "?": Color(0.3, 1.0, 0.35), "o": Color(1.0, 0.55, 0.1),
 					"task": Color(0.8, 0.35, 1.0), "event": Color(0.35, 0.85, 1.0)}.get(String(m.kind), Color(0.95, 0.2, 0.15))
+			if not inside.call(mp):
+				if String(m.kind) in ["?", "step", "task"]:   # your quests' goals and hand-ins (not every giver)
+					edges.append([mp, col, false])
+				continue
 			draw_circle(mp, 3.5, Color(0.08, 0.05, 0.0))
 			draw_circle(mp, 2.5, col)
 		for b in WorldLink.bot_dots():
@@ -486,6 +502,8 @@ class Minimap extends Part:
 			var rad := maxf(5.0, float(e.get("r", 60.0)) / 0.025 / mr.size.x * k)
 			if st == "giver":
 				rad = 4.0
+			if not inside.call(ep) and st in ["active", "next", "giver"]:   # (a giver: one waiting for you to start it)
+				edges.append([ep, col, true])
 			if ep.distance_to(size * 0.5) > size.x + rad:
 				continue
 			draw_circle(ep, rad, Color(col.r, col.g, col.b, 0.16))
@@ -493,6 +511,7 @@ class Minimap extends Part:
 			if inside.call(ep):
 				var pts := PackedVector2Array([ep + Vector2(0, -4), ep + Vector2(4, 0), ep + Vector2(0, 4), ep + Vector2(-4, 0)])
 				draw_colored_polygon(pts, col)
+		_edge_marks(edges)
 		# you, in the middle
 		var p := w.player as Player
 		var c := size * 0.5
@@ -507,6 +526,287 @@ class Minimap extends Part:
 			var gk := 3.0 + j * 3.5
 			draw_line(Vector2(1, gk), Vector2(gk, 1), Color(RIM_HI, 0.85), 1.2, true)
 		text(UiArt.font(true), Vector2(size.x * 0.5 - 10, 10), "N", 8, UiArt.GOLD_HI, HORIZONTAL_ALIGNMENT_CENTER, 20)
+
+
+	## What lies beyond the minimap at this zoom (owner 2026-11-04: "an icon or indicator ... that alerts you to where
+	## an event is if you're not able to see it at your current zoom level ... Same with quest objectives"): a glowing
+	## pointer pinned to the rim in its direction, until it comes into the minimap. Events are diamonds, quest goals dots.
+	func _edge_marks(edges: Array) -> void:
+		var c := size * 0.5
+		var half := c - Vector2(10, 10)
+		var pulse := 0.55 + 0.45 * sin(Time.get_ticks_msec() / 260.0)
+		for e in edges:
+			var d: Vector2 = (e[0] as Vector2) - c
+			if d.length() < 0.001:
+				continue
+			var t := minf(half.x / maxf(absf(d.x), 0.001), half.y / maxf(absf(d.y), 0.001))
+			var at: Vector2 = c + d * t
+			var col: Color = e[1]
+			var dir := d.normalized()
+			var side := Vector2(-dir.y, dir.x)
+			draw_circle(at, 11.0, Color(col.r, col.g, col.b, 0.2 * pulse))
+			draw_circle(at, 7.5, Color(col.r, col.g, col.b, 0.3 * pulse))
+			# the pointer: an arrowhead on the rim side, the mark itself inside it
+			var tip := at + dir * 10.0
+			draw_colored_polygon(PackedVector2Array([tip, at + dir * 4.0 + side * 5.0, at + dir * 4.0 - side * 5.0]), Color(0.08, 0.05, 0.0))
+			draw_colored_polygon(PackedVector2Array([at + dir * 9.0, at + dir * 4.5 + side * 4.0, at + dir * 4.5 - side * 4.0]), col)
+			if bool(e[2]):
+				draw_colored_polygon(PackedVector2Array([at + Vector2(0, -5), at + Vector2(5, 0), at + Vector2(0, 5), at + Vector2(-5, 0)]), Color(0.08, 0.05, 0.0))
+				draw_colored_polygon(PackedVector2Array([at + Vector2(0, -3.8), at + Vector2(3.8, 0), at + Vector2(0, 3.8), at + Vector2(-3.8, 0)]), col)
+			else:
+				draw_circle(at, 4.5, Color(0.08, 0.05, 0.0))
+				draw_circle(at, 3.4, col)
+
+
+## "#PET|oid,role,health,name|..." (HeroInfo.cs) -> Server.pet_retinue.
+static func receive_pets(line: String) -> void:
+	var out: Array = []
+	for part in line.split("|", false):
+		var f := part.split(",", true, 3)
+		if f.size() == 4:
+			out.append({"oid": int(f[0]), "role": f[1], "health": int(f[2]), "name": f[3]})
+	Server.pet_retinue = out
+
+
+## The pet window (owner 2026-11-04: "the new UI [doesn't have] a pet window element"): over the left quickbar - your
+## pet's name, stance and health, its buffs, the commands as a row of plates (click; drag one onto a quickbar as on the
+## classic window), and a commander's retinue under it - each retainer / minion with its role and health. Only while
+## you have a pet; the classic pet window stays out of the way in this style.
+class PetPanel extends Part:
+	const W := 232.0
+	const MAX_H := 150.0
+	const CMDS := [["ATTACK", "attack"], ["FOLLOW", "follow"], ["STAY", "stay"], ["AGGR", "aggressive"],
+			["DEF", "defensive"], ["PASS", "passive"], ["DISMISS", "release"]]
+	const ROLE := {"healer": ["H", Color(0.4, 0.95, 0.45)], "melee": ["M", Color(0.95, 0.4, 0.3)],
+			"caster": ["C", Color(0.45, 0.65, 1.0)], "debuffer": ["D", Color(0.8, 0.45, 1.0)],
+			"archer": ["A", Color(0.95, 0.85, 0.3)], "buffer": ["B", Color(0.4, 0.9, 0.95)]}
+	const BTN_Y := 30.0
+	const BTN_H := 15.0
+	var _hover := -1
+	var _content_h := 0.0
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_STOP
+		clip_contents = false
+
+	## Only the drawn part takes the mouse (nothing at all without a pet).
+	func _has_point(p: Vector2) -> bool:
+		return not PlayerData.pet.is_empty() and p.x >= 0 and p.x <= W and p.y >= 0 and p.y <= _content_h
+
+	func _btn_rect(i: int) -> Rect2:
+		var bw := (W - 8.0 - (CMDS.size() - 1) * 2.0) / CMDS.size()
+		return Rect2(4 + i * (bw + 2.0), BTN_Y, bw, BTN_H)
+
+	func _btn_at(p: Vector2) -> int:
+		for i in CMDS.size():
+			if _btn_rect(i).has_point(p):
+				return i
+		return -1
+
+	func _gui_input(event: InputEvent) -> void:
+		if event is InputEventMouseMotion:
+			var h := _btn_at(event.position)
+			if h != _hover:
+				_hover = h
+				queue_redraw()
+		elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			var i := _btn_at(event.position)
+			if i >= 0:
+				PlayerData.pet_command(String(CMDS[i][1]))
+				queue_redraw()
+				accept_event()
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_MOUSE_EXIT and _hover != -1:
+			_hover = -1
+			queue_redraw()
+
+	## A command dragged onto a quickbar: the slot gives it, as the classic window's buttons do.
+	func _get_drag_data(at: Vector2) -> Variant:
+		var i := _btn_at(at)
+		if i < 0:
+			return null
+		var prev := UiArt.button(String(CMDS[i][0]), _btn_rect(i).size, 8)
+		prev.modulate = Color(1, 1, 1, 0.8)
+		set_drag_preview(prev)
+		return {"kind": "petcmd", "id": String(CMDS[i][1]), "icon": -1, "name": "PET " + String(CMDS[i][1]).to_upper()}
+
+	func _get_tooltip(at: Vector2) -> String:
+		var i := _btn_at(at)
+		return "" if i < 0 else "PET: %s (DRAG ONTO A QUICKBAR)" % String(CMDS[i][1]).to_upper()
+
+	func _draw() -> void:
+		var pd: Dictionary = PlayerData.pet
+		if pd.is_empty():
+			_content_h = 0.0
+			return
+		var f := UiArt.font(true)
+		var thin := UiArt.font(false)
+		var fx: Array = Server.pet_effects_list() if Server.active else []
+		var subs: Array = Server.pet_retinue if Server.active else []
+		var h := BTN_Y + BTN_H + 4.0 + (17.0 if not fx.is_empty() else 0.0) + (subs.size() * 15.0 + 4.0 if not subs.is_empty() else 0.0)
+		_content_h = h
+		draw_rect(Rect2(0, 0, W, h), Color(0.02, 0.02, 0.03, 0.66))
+		draw_rect(Rect2(0, 0, W, h), Color(0.55, 0.45, 0.25, 0.75), false, 1.0)
+		var mode := String(pd.get("mode", "defensive"))
+		text(f, Vector2(6, 12), QuestLog._fit(f, String(pd.get("name", "")).to_upper(), 9, W - 90), 9, UiArt.GOLD_HI)
+		text(thin, Vector2(W - 86, 12), mode.to_upper(), 7, UiArt.DIM, HORIZONTAL_ALIGNMENT_RIGHT, 80)
+		var hp := clampf(float(pd.get("health", 1.0)), 0.0, 1.0)
+		var hb := Rect2(6, 17, W - 12, 7)
+		draw_rect(hb, RED_DARK)
+		draw_rect(Rect2(hb.position, Vector2(hb.size.x * hp, hb.size.y)), RED)
+		draw_rect(hb, Color(0, 0, 0, 0.6), false, 1.0)
+		text(thin, Vector2(hb.position.x, hb.position.y + 6.5), "%d%%" % roundi(hp * 100.0), 6, UiArt.CREAM, HORIZONTAL_ALIGNMENT_CENTER, hb.size.x)
+		for i in CMDS.size():
+			var r := _btn_rect(i)
+			var on := String(CMDS[i][1]) == mode
+			draw_rect(r, Color(0.16, 0.13, 0.09, 0.95) if i == _hover else STONE)
+			draw_rect(r, RIM_HI if on or i == _hover else RIM, false, 1.0)
+			text(f, Vector2(r.position.x, r.position.y + 10.5), String(CMDS[i][0]), 7, UiArt.GOLD_HI if on else UiArt.CREAM,
+					HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
+		var y := BTN_Y + BTN_H + 4.0
+		if not fx.is_empty():
+			var x := 6.0
+			for e in fx.slice(0, 12):
+				var tex: Texture2D = ItemDb.icon(int(e.icon))
+				if tex:
+					draw_texture_rect(tex, Rect2(x, y, 14, 14), false)
+				draw_rect(Rect2(x, y, 14, 14), Color(0, 0, 0, 0.7), false, 1.0)
+				x += 16.0
+			y += 17.0
+		if not subs.is_empty():
+			draw_line(Vector2(6, y), Vector2(W - 6, y), Color(0.55, 0.45, 0.25, 0.45), 1.0)
+			y += 3.0
+			for sp in subs:
+				var role: Array = ROLE.get(String(sp.role), ["?", UiArt.CREAM])
+				var dead := int(sp.health) < 0
+				var c := Vector2(13, y + 6.5)
+				draw_circle(c, 6.0, Color(0, 0, 0, 0.7))
+				draw_arc(c, 6.0, 0, TAU, 20, role[1], 1.2)
+				text(f, Vector2(7, y + 10), String(role[0]), 8, role[1], HORIZONTAL_ALIGNMENT_CENTER, 12)
+				text(thin, Vector2(24, y + 10), QuestLog._fit(thin, String(sp.name), 8, 100), 8, UiArt.DIM if dead else UiArt.CREAM)
+				var sb := Rect2(128, y + 4, W - 134, 5)
+				draw_rect(sb, RED_DARK)
+				if not dead:
+					var k := clampf(int(sp.health) / 100.0, 0.0, 1.0)
+					draw_rect(Rect2(sb.position, Vector2(sb.size.x * k, sb.size.y)), RED if k > 0.35 else Color(1.0, 0.3, 0.1))
+				y += 15.0
+
+
+## The loot feed (owner 2026-11-04, after ESO's LootDrop Reborn: "loot that you pick up appears on a scrolling, and
+## then disappearing graphic on the side of the screen ... the icon of the item, the name, the quality, and the sell
+## value ... bordered by the color the item cons to you ... money, trash, and other currency drops"): over the minimap,
+## the newest row at the bottom pushing the older ones up; each slides in, stays a while and fades. The same item
+## again while its row is still up adds to its count. Fed by the server's "#LOOT|" lines (LootFeed.cs).
+class LootFeed extends Part:
+	const W := 250.0
+	const ROW := 31.0
+	const MAX_ROWS := 8
+	const LIFE := 7.0
+	const COIN_COLS := [Color(0.75, 0.85, 1.0), Color(0.85, 0.9, 0.95), Color(1.0, 0.82, 0.3), Color(0.8, 0.8, 0.82),
+			Color(0.85, 0.5, 0.3)]
+	var rows: Array = []                                 # [{kind, name, count, icon, quality, value, con, t, y}]
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	## One "#LOOT|" line (after the prefix): "i|count|model|quality|value|level|con|kind|name" or "m|copper".
+	func receive(line: String) -> void:
+		var f := line.split("|", true, 8)
+		var now := Time.get_ticks_msec() / 1000.0
+		var r := {}
+		if f.size() >= 2 and f[0] == "m":
+			r = {"kind": "money", "name": "", "count": 1, "icon": 0, "quality": 0, "value": int(f[1]), "con": -99}
+		elif f.size() >= 9 and f[0] == "i":
+			r = {"kind": f[7], "name": f[8], "count": int(f[1]), "icon": Server.item_icon(int(f[2])), "quality": int(f[3]),
+					"value": int(f[4]), "con": int(f[6])}
+		else:
+			return
+		for o in rows:                                     # the same thing again while its row is up: one row
+			if String(o.kind) == String(r.kind) and String(o.name) == String(r.name) and now - float(o.t) < LIFE - 1.0:
+				o.count = int(o.count) + int(r.count)
+				o.value = int(o.value) + int(r.value)
+				o.t = now
+				o.bump = now
+				return
+		r.t = now
+		r.bump = now
+		r.y = size.y
+		rows.append(r)
+		while rows.size() > MAX_ROWS:
+			rows.pop_front()
+
+	func _process(delta: float) -> void:
+		if rows.is_empty():
+			return
+		var now := Time.get_ticks_msec() / 1000.0
+		rows = rows.filter(func(o): return now - float(o.t) < LIFE)
+		for i in rows.size():                              # the newest at the bottom, the others eased up into place
+			var want := size.y - (rows.size() - i) * ROW
+			rows[i].y = lerpf(float(rows[i].y), want, clampf(delta * 12.0, 0.0, 1.0))
+		queue_redraw()
+
+	func _draw() -> void:
+		var now := Time.get_ticks_msec() / 1000.0
+		var f := UiArt.font(true)
+		var thin := UiArt.font(false)
+		for o in rows:
+			var age := now - float(o.t)
+			var a := clampf((LIFE - age) / 1.2, 0.0, 1.0)  # the last second and a bit: fading
+			var slide := clampf((now - float(o.get("bump", o.t))) / 0.22, 0.0, 1.0)
+			var x := (1.0 - ease(slide, 0.4)) * 40.0
+			var y := float(o.y)
+			var con := int(o.con)
+			var edge: Color = ItemTooltip.CON.get(con, RIM) if con > -10 else Color(1.0, 0.82, 0.3)
+			if String(o.kind) == "trash":
+				edge = ItemTooltip.CON[-3]
+			var r := Rect2(x, y + 1, W - x, ROW - 3)
+			draw_rect(r, Color(0.03, 0.03, 0.035, 0.72 * a))
+			draw_rect(Rect2(r.position, Vector2(3, r.size.y)), Color(edge, 0.95 * a))
+			draw_rect(r, Color(edge.r, edge.g, edge.b, 0.55 * a), false, 1.0)
+			var ic := Rect2(x + 7, y + 3, 24, 24)
+			if String(o.kind) == "money":
+				draw_circle(ic.get_center(), 9.0, Color(0.35, 0.22, 0.05, a))
+				draw_circle(ic.get_center(), 7.5, Color(1.0, 0.8, 0.3, a))
+				draw_circle(ic.get_center() + Vector2(-2, -2), 3.0, Color(1.0, 0.95, 0.7, 0.8 * a))
+			else:
+				var tex: Texture2D = ItemDb.icon(int(o.icon)) if int(o.icon) > 0 else null
+				draw_rect(ic.grow(1), Color(0.0, 0.0, 0.0, 0.8 * a))
+				if tex:
+					draw_texture_rect(tex, ic, false, Color(1, 1, 1, a))
+				draw_rect(ic.grow(1), Color(edge, a), false, 2.0)
+			var tx := x + 38
+			if String(o.kind) == "money":
+				text(f, Vector2(tx, y + 19), "COINS", 9, Color(UiArt.DIM, a))
+				_coins(f, W - 6, y + 19, int(o.value), a)
+				continue
+			var nm := ("%dx " % int(o.count) if int(o.count) > 1 else "") + String(o.name)
+			var name_col: Color = Color(edge, a) if String(o.kind) == "item" else (Color(1.0, 0.85, 0.45, a) if String(o.kind) == "currency" else Color(0.75, 0.73, 0.7, a))
+			text(f, Vector2(tx, y + 13), QuestLog._fit(f, nm, 9, W - tx - 8), 9, name_col)
+			var sub := "CURRENCY" if String(o.kind) == "currency" else ("JUNK" if String(o.kind) == "trash" else ("QUA %d%%" % int(o.quality) if int(o.quality) > 0 else ""))
+			text(thin, Vector2(tx, y + 25), sub, 7, Color(UiArt.DIM, a))
+			if int(o.value) > 0:
+				_coins(thin, W - 6, y + 25, int(o.value), a, 8)
+
+	## Copper as "1g 2s 30c", right-aligned at x, each coin in its colour.
+	func _coins(f: Font, right: float, y: float, copper: int, a: float, fs := 9) -> void:
+		var parts: Array = []
+		var m := copper / (100 * 100 * 1000 * 1000)
+		var p := (copper / (100 * 100 * 1000)) % 1000
+		var g := (copper / 10000) % 1000
+		var sv := (copper / 100) % 100
+		var c := copper % 100
+		var vals := [m, p, g, sv, c]
+		var tags := ["m", "p", "g", "s", "c"]
+		for i in 5:
+			if int(vals[i]) > 0 or (i == 4 and parts.is_empty()):
+				parts.append([str(vals[i]) + tags[i], COIN_COLS[i]])
+		var xx := right
+		for i in range(parts.size() - 1, -1, -1):
+			var w := f.get_string_size(String(parts[i][0]), HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
+			xx -= w
+			text(f, Vector2(xx, y), String(parts[i][0]), fs, Color(parts[i][1], a))
+			xx -= 4.0
 
 
 ## The menu bar (top left, no backing - GW2's): the sheets' orbs as the client paints them on control.bmp (character,

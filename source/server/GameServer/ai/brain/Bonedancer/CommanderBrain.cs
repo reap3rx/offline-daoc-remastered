@@ -110,6 +110,60 @@ namespace DOL.AI.Brain
 			Attack(attacker);
 		}
 
+		// ---------------------------------------------------------------- guarding the retinue (owner 2026-11-04)
+		// "it would be cool if the main pet (the Commander) recognized when their sub pets were getting attacked
+		// (especially the healer, but others too, besides the other fighter pets) and did their best to get the aggro
+		// off of them": a foe hitting a healer, caster, debuffer or archer is pulled onto the commander - it goes to the
+		// top of that foe's hate, and the commander turns on it unless it is already guarding the healer from another.
+		// The fighters (BdMeleeBrain) hold their own. Not while the commander is passive.
+		private readonly System.Collections.Generic.Dictionary<GameLiving, long> _guarded = new();
+		private const int GuardRange = 2500;
+		private const long GuardHate = 500;
+
+		public void GuardMinion(GameLiving attacker, BdPetBrain minion)
+		{
+			if (attacker == null || minion == null || minion is BdMeleeBrain || !attacker.IsAlive || !Body.IsAlive)
+				return;
+			if (AggressionState == eAggressionState.Passive || attacker == Body || attacker == Owner)
+				return;
+			if (!Body.IsWithinRadius(attacker, GuardRange) || !GameServer.ServerRules.IsAllowedToAttack(Body, attacker, true))
+				return;
+
+			// to the top of its hate: what its favourite holds now, and a little more
+			if (attacker is GameNPC npc && npc.Brain is StandardMobBrain mob && !(npc.Brain is IControlledBrain))
+			{
+				long top = 0;
+				foreach (StandardMobBrain.OrderedAggroListElement e in mob.GetOrderedAggroList())
+				{
+					if (e.Living != Body && e.AggroAmount > top)
+						top = e.AggroAmount;
+				}
+				long mine = mob.GetBaseAggroAmount(Body);
+				long add = System.Math.Max(GuardHate, top - mine + GuardHate);
+				mob.AddToAggroList(Body, add);
+			}
+
+			// turn on it: unless the commander is already on it, or keeping another foe off the healer
+			if (Body.TargetObject == attacker)
+				return;
+			if (minion is not BdHealerBrain && Body.TargetObject is GameLiving now && now.IsAlive &&
+				now.TargetObject is GameNPC { Brain: BdHealerBrain })
+				return;
+			long t = GameLoop.GameLoopTime;
+			lock (_guarded)
+			{
+				if (_guarded.TryGetValue(attacker, out long last) && t - last < 3000)
+					return;                                       // (once every few seconds a foe, not every blow)
+				_guarded[attacker] = t;
+				if (_guarded.Count > 16)
+					_guarded.Clear();
+			}
+			Attack(attacker);
+			if (Owner is GamePlayer player && minion.Body != null)
+				player.Out.SendMessage($"{Body.GetName(0, true)} moves to protect {minion.Body.GetName(0, false)} from {attacker.GetName(0, false)}!",
+					DOL.GS.PacketHandler.eChatType.CT_System, DOL.GS.PacketHandler.eChatLoc.CL_SystemWindow);
+		}
+
 		/// <summary>
 		/// Make sure the subpets are following the commander
 		/// </summary>

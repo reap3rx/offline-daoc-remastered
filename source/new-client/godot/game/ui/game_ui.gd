@@ -537,6 +537,8 @@ func set_style(style: String, save := true) -> void:
 				var w: ClassicWindow = windows[id]
 				w.position = defaults[id][0]
 				w.restore(defaults[id][1])
+		if windows.has("minipet") and not PlayerData.pet.is_empty():
+			windows["minipet"].show_window()
 		if _effects_bar:
 			_effects_bar.position = client_pos(10, 4)
 		_place_event_tracker()
@@ -1220,7 +1222,7 @@ func _build_minipet() -> void:
 	w.add_child(_pet_buffs)
 	_pet_buffs.visible = bool(_saved("windows", "pet_buffs", true))
 	PlayerData.hook(self, PlayerData.pet_changed, func():
-		if PlayerData.pet.is_empty():
+		if PlayerData.pet.is_empty() or modern != null:   # (the modern style has its own, over the left quickbar)
 			w.hide_window()
 		else:
 			(w.get_node("PetName") as Label).text = String(PlayerData.pet.get("name", "")).to_upper()

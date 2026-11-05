@@ -88,11 +88,55 @@ namespace DOL.GS
 
         private static void Tick(GamePlayer p)
         {
+            PetTick(p);
             int lv = FightingLevel(p);
             if (_sentLevel.TryGetValue(p.ObjectId, out int was) && was == lv)
                 return;
             _sentLevel[p.ObjectId] = lv;
             p.Out?.SendMessage($"{LevelPrefix}{lv}", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+        }
+
+        /// <summary>The modern pet window's retinue (owner 2026-11-04): a commander's sub-pets - a King's retainers, a
+        /// Bonedancer's minions - as "#PET|oid,role,health %,name|..." ("#PET|" for none) when it changes. Role: melee,
+        /// healer, caster, debuffer, archer, buffer; health -1 while it lies dead.</summary>
+        public const string PetPrefix = "#PET|";
+        private static readonly ConcurrentDictionary<string, string> _sentPets = new();
+
+        private static void PetTick(GamePlayer p)
+        {
+            var sb = new System.Text.StringBuilder();
+            try
+            {
+                GameNPC cmd = p.ControlledBrain?.Body;
+                if (cmd?.ControlledNpcList != null)
+                {
+                    foreach (var b in cmd.ControlledNpcList)
+                    {
+                        if (b?.Body is not GameNPC sub || sub.ObjectState != GameObject.eObjectState.Active)
+                            continue;
+                        string role = b switch
+                        {
+                            DOL.AI.Brain.BdHealerBrain => "healer",
+                            DOL.AI.Brain.BdCasterBrain => "caster",
+                            DOL.AI.Brain.BdDebufferBrain => "debuffer",
+                            DOL.AI.Brain.BdArcherBrain => "archer",
+                            DOL.AI.Brain.BdBufferBrain => "buffer",
+                            _ => "melee",
+                        };
+                        sb.Append('|').Append(sub.ObjectID).Append(',').Append(role).Append(',')
+                          .Append(sub.IsAlive ? sub.HealthPercent : -1).Append(',').Append(Clean(sub.Name));
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return;                                             // (a list changing under us: next second)
+            }
+            string line = PetPrefix + (sb.Length > 0 ? sb.ToString(1, sb.Length - 1) : "");
+            if (_sentPets.TryGetValue(p.ObjectId, out string was) && was == line)
+                return;
+            _sentPets[p.ObjectId] = line;
+            p.Out?.SendMessage(line, eChatType.CT_System, eChatLoc.CL_SystemWindow);
         }
 
         [GameServerStartedEvent]
@@ -159,6 +203,7 @@ namespace DOL.GS
                 return;
             SendConfigs(p);
             _sentLevel.TryRemove(p.ObjectId, out _);
+            _sentPets.TryRemove(p.ObjectId, out _);
             new ECSGameTimer(p, _ =>
             {
                 if (p.ObjectState == GameObject.eObjectState.Deleted || p.Client == null || p.Client.Player != p)
@@ -171,7 +216,10 @@ namespace DOL.GS
         private static void PlayerQuit(DOLEvent e, object sender, EventArgs args)
         {
             if (sender is GamePlayer p)
+            {
                 _sentLevel.TryRemove(p.ObjectId, out _);
+                _sentPets.TryRemove(p.ObjectId, out _);
+            }
         }
     }
 }
