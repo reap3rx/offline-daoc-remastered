@@ -827,17 +827,12 @@ namespace DOL.GS
             }
         }
 
-        /// <summary>
-        /// Where a bot walks to use a zone connection: the platform of a Shrouded Isles portal
-        /// (it climbs onto it and crosses there), otherwise the zone point's source spot.
-        /// </summary>
+        /// <summary>Where a bot walks to use a zone connection: the zone point's source spot (the Shrouded Isles
+        /// entrances' are the classic portals since 2026-11-05: ClassicSiEntrancesUpdate).</summary>
         private static Vector3 CrossingApproachPoint(DbZonePoint crossing) =>
-            ShroudedIslesPortals.TryGetPad(crossing.Id, out Vector3 pad)
-                ? pad
-                : new(crossing.SourceX, crossing.SourceY, crossing.SourceZ);
+            new(crossing.SourceX, crossing.SourceY, crossing.SourceZ);
 
-        private static int CrossingApproachRadius(DbZonePoint crossing) =>
-            ShroudedIslesPortals.TryGetPad(crossing.Id, out _) ? ShroudedIslesPortals.PadRadius : ZonePointArrivalRadius;
+        private static int CrossingApproachRadius(DbZonePoint crossing) => ZonePointArrivalRadius;
 
         private bool TravelAcrossRegions(GameBot bot)
         {

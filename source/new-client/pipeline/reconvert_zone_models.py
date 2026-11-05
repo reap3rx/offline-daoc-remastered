@@ -25,6 +25,11 @@ names = [a.lower() for a in sys.argv[2:]]
 out = ROOT / f'godot/content/zones/zone{zone_id:03d}'
 zone = json.loads((out / 'zone.json').read_text(encoding='utf-8'))
 npks = {p.stem.lower(): p for p in (CLIENT / 'zones').rglob('*.npk')}
+# the zone's own nifs folder wins, as in the client and build_zone (rglob's order put the shared copy last for avpier)
+for d in (CLIENT / 'zones').iterdir():
+    if d.is_dir() and d.name.lower() == f'zone{zone_id:03d}':
+        for p in d.rglob('*.npk'):
+            npks[p.stem.lower()] = p
 idx = TextureIndex()
 idx.first = [f'zones/zone{zone_id:03d}/nifs']
 odir = out / 'textures/original'

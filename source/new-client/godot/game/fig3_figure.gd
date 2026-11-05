@@ -220,10 +220,16 @@ static func smoothed(a: Animation) -> Animation:
 	b.length = a.length
 	b.loop_mode = a.loop_mode
 	b.step = a.step
+	# keys up to, not at, the clip's end: a looping cubic track wraps from its last key back to the first, and a key
+	# at the very end is the first one again with no time between them - the curve through it divides by that zero
+	# and throws the bones about for a moment every loop (owner 2026-11-05: a Breton archer's leg kicking out once
+	# a second while she held her bow drawn, bow_aim's 0.93 s)
 	var n := maxi(1, int(ceil(a.length * 15.0 - 0.01)))
 	var times: Array = []
 	for i in n + 1:
-		times.append(minf(a.length, i / 15.0))
+		var tm := i / 15.0
+		if i == 0 or tm < a.length - 0.02:
+			times.append(tm)
 	for t in a.get_track_count():
 		var ty := a.track_get_type(t)
 		var nt := b.add_track(ty)

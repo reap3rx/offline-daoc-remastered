@@ -220,9 +220,6 @@ namespace DOL.GS
 
         private static bool AtRegionCrossing(GameBot bot, DOL.Database.DbZonePoint crossing, int horizontalDistance)
         {
-            // A Shrouded Isles portal is used from its platform, not from the ground beside it.
-            if (ShroudedIslesPortals.TryGetPad(crossing.Id, out Vector3 pad))
-                return ShroudedIslesPortals.IsOnPad(pad, new(bot.X, bot.Y, bot.Z));
             if (CanUseProvenDungeonExit(PathfindingProvider.Instance, bot.CurrentZone,
                     new(bot.X, bot.Y, bot.Z), crossing.Id,
                     new(crossing.SourceX, crossing.SourceY, crossing.SourceZ)))

@@ -1095,6 +1095,14 @@ def build(zone_id, upscale=True):
     nifs = {int(r[0]): r for r in read_csv(dat['nifs.csv']) if r and r[0].strip().isdigit()}
     fixtures = [r for r in read_csv(dat['fixtures.csv'])[2:] if len(r) > 11 and r[1].strip().isdigit()]
     npk_files = {p.name.lower(): p for p in (CLIENT / 'zones/Nifs').iterdir()}
+    shared_npks = dict(npk_files)                          # (the fallback when the zone's own copy can't be read)
+    # the zone's own nifs folder first, as the client does (owner 2026-11-05: Avalon Marsh's SI portal, AVPIER, came
+    # out as the plain white shared pier; Cotswold's and the Black Mountains' road markers the same)
+    own = next((d for d in zdir.iterdir() if d.is_dir() and d.name.lower() == 'nifs'), None) if zdir.is_dir() else None
+    if own is not None:
+        for p in own.iterdir():
+            if p.suffix.lower() == '.npk':
+                npk_files[p.name.lower()] = p
     if (CLIENT / 'phousing/nifs').is_dir():                # housing zones' own pieces (market, gates, signs)
         for p in (CLIENT / 'phousing/nifs').iterdir():
             npk_files.setdefault(p.name.lower(), p)
@@ -1111,11 +1119,17 @@ def build(zone_id, upscale=True):
         if npk is None:
             print('missing model', nif_id, filename)
             continue
-        raw = next(v for k, v in read_mpk(str(npk)).items() if k.endswith('.nif'))
-        try:
-            info = nif_static.convert(raw, str(mdir / f'{base}.gltf'), '../textures/original')
-        except Exception as e:                             # pre-3.3 NIFs are not read yet
-            print('model failed', filename, type(e).__name__, e)
+        info = None
+        for src in dict.fromkeys([npk, shared_npks.get(base + '.npk')]):
+            if src is None:
+                continue
+            raw = next(v for k, v in read_mpk(str(src)).items() if k.endswith('.nif'))
+            try:
+                info = nif_static.convert(raw, str(mdir / f'{base}.gltf'), '../textures/original')
+                break
+            except Exception as e:                         # pre-3.3 NIFs are not read yet (the Black Mountains'
+                print('model failed', src.name, type(e).__name__, e)   # own road markers: the shared ones then)
+        if info is None:
             continue
         tex_names |= info['textures']
         model_index[nif_id] = len(models)
