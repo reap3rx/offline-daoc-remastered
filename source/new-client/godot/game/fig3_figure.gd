@@ -792,6 +792,8 @@ uniform bool has_logo = false;
 // remastered (claude 2026-10-31): relief from the texture itself (as the world's stone) and metal that shines like
 // metal - set per part from its armour texture (Fig3Figure._finish); hair a soft sheen
 uniform float relief = 0.0;
+uniform float relief_bias = 3.0;     // how coarse a mip the relief reads: higher = the broad shapes, not the grain
+uniform float metal_bias = 2.0;      // the same for which parts shine as metal (0: per pixel)
 uniform float metal = 0.0;
 uniform float sheen = 0.0;
 global uniform float remaster_fx;
@@ -842,7 +844,7 @@ void fragment() {
 		float lum = dot(col, vec3(0.3, 0.59, 0.11));
 		if (relief > 0.0) {
 			// the texture's light parts raised, its dark seams sunk: the surface gradient bump (no tangents needed)
-			float lod = max(textureQueryLod(albedo_tex, UV).x, 0.0) + 1.0;
+			float lod = max(textureQueryLod(albedo_tex, UV).x, 0.0) + relief_bias;
 			vec2 stp = exp2(lod) / vec2(textureSize(albedo_tex, 0));
 			vec3 luma = vec3(0.3, 0.59, 0.11);
 			float h0 = dot(textureLod(albedo_tex, UV, lod).rgb, luma);
@@ -861,10 +863,15 @@ void fragment() {
 		if (metal > 0.0) {
 			// the metal is the grey, unsaturated, not-too-dark part of the picture (rings, plates, rivets); leather
 			// straps, cloth and gold trim keep their own look
-			float mx = max(col.r, max(col.g, col.b));
-			float mn = min(col.r, min(col.g, col.b));
+			vec3 mc = col;
+			if (metal_bias > 0.0) {
+				mc = textureLod(albedo_tex, UV, max(textureQueryLod(albedo_tex, UV).x, 0.0) + metal_bias).rgb;
+				if (tint_mode == 1) mc *= tint;
+			}
+			float mx = max(mc.r, max(mc.g, mc.b));
+			float mn = min(mc.r, min(mc.g, mc.b));
 			float sat = (mx - mn) / max(mx, 0.001);
-			float m = metal * (1.0 - smoothstep(0.1, 0.28, sat)) * smoothstep(0.1, 0.3, lum);
+			float m = metal * (1.0 - smoothstep(0.1, 0.28, sat)) * smoothstep(0.1, 0.3, dot(mc, vec3(0.3, 0.59, 0.11)));
 			METALLIC = m * 0.6;
 			ROUGHNESS = mix(0.85, 0.42, m);
 			SPECULAR = mix(0.3, 0.5, m);
