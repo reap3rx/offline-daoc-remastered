@@ -148,6 +148,49 @@ func _replace(fig: Fig3Figure, olds: Array, new_name: String, fit: float) -> voi
 	print("[hair] old box ", box, " up ", up, " fwd ", fwd, " scale ", s, " colour ", colour)
 
 
+## B: the hair's own shape (and its beard), its texture redrawn as strands following the painting's flow
+## (pipeline/hair_strands.py), and a few layers lifted off it whose strands are cut out - a soft, wispy surface
+## instead of a painted shell.
+func _strand_hair(fig: Fig3Figure, olds: Array, layers: int, depth: float) -> void:
+	var m0 := (olds[0] as MeshInstance3D).material_override as ShaderMaterial
+	var key := String((m0.get_shader_parameter("albedo_tex") as Texture2D).resource_path.get_file().get_basename())
+	if key == "":
+		key = String(get_parent().args.get("hairtex", "bri_m_hair02_blonde"))
+	var img := Image.load_from_file(ProjectSettings.globalize_path("res://content/characters/hair_test/%s_strands.png" % key))
+	if img == null:
+		print("[hair] no strands for ", key)
+		return
+	img.generate_mipmaps()
+	var tex := ImageTexture.create_from_image(img)
+	var mimg := Image.load_from_file(ProjectSettings.globalize_path("res://content/characters/hair_test/%s_strands_mask.png" % key))
+	mimg.generate_mipmaps()
+	var mask := ImageTexture.create_from_image(mimg)
+	var code: String = m0.shader.code
+	code = code.replace("varying vec2 logo_uv;", "varying vec2 logo_uv;\nuniform float shell_off = 0.0;\nuniform float shell_cut = 0.0;\nuniform sampler2D shell_mask : filter_linear_mipmap;")
+	code = code.replace("void vertex() {", "void vertex() {\n\tVERTEX += NORMAL * shell_off;")
+	code = code.replace("//CUTOUT", "if (shell_cut > 0.0) {\n\t\tALPHA = c.a * smoothstep(shell_cut, shell_cut + 0.15, texture(shell_mask, UV).r);\n\t\tALPHA_SCISSOR_THRESHOLD = 0.5;\n\t\tALPHA_ANTIALIASING_EDGE = 0.3;\n\t}\n\t//CUTOUT")
+	var shd := Shader.new()
+	shd.code = code
+	for mi in olds:
+		var base_m := ((mi as MeshInstance3D).material_override as ShaderMaterial).duplicate() as ShaderMaterial
+		base_m.shader = shd
+		base_m.set_shader_parameter("albedo_tex", tex)
+		base_m.set_shader_parameter("sheen", 1.0)
+		print("[hair] relief was ", base_m.get_shader_parameter("relief"), " metal ", base_m.get_shader_parameter("metal"))
+		base_m.set_shader_parameter("relief", float(get_parent().args.get("relief", "0.0")))
+		base_m.set_shader_parameter("metal", 0.0)
+		base_m.set_shader_parameter("shell_mask", mask)
+		(mi as MeshInstance3D).material_override = base_m
+		for i in layers:
+			var shell := (mi as MeshInstance3D).duplicate() as MeshInstance3D
+			mi.get_parent().add_child(shell)
+			var sm := base_m.duplicate() as ShaderMaterial
+			sm.set_shader_parameter("shell_off", depth * float(i + 1) / float(layers))
+			sm.set_shader_parameter("shell_cut", 0.2 + 0.5 * float(i) / float(maxi(layers - 1, 1)))
+			shell.material_override = sm
+	print("[hair] strands ", key, " layers ", layers, " depth ", depth)
+
+
 func _ready() -> void:
 	get_tree().create_timer(600.0).timeout.connect(func(): print("[hair] timed out"); get_tree().quit())
 	v = get_parent()
@@ -175,7 +218,7 @@ func _ready() -> void:
 	v.add_child(cam)
 	cam.make_current()
 	var shots := [["face", 0.8, 0.0], ["side", 0.8, 75.0], ["back", 0.9, 150.0]]
-	for way in ["now", "soft", "new"]:
+	for way in String(args.get("ways", "now,new,b")).split(","):
 		var fig := Fig3Figure.new()
 		v.add_child(fig)
 		fig.load_figure(String(args.get("race", "bri_m")))
@@ -187,6 +230,8 @@ func _ready() -> void:
 		if way == "soft":
 			for mi in olds:
 				_soften(mi)
+		elif way == "b":
+			_strand_hair(fig, olds, int(args.get("layers", "3")), float(args.get("depth", "0.18")))
 		elif way == "new":
 			_replace(fig, olds, String(args.get("new", "short04")), float(args.get("fit", "1.04")))
 		fig.play("idle")
