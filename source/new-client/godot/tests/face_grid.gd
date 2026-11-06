@@ -93,6 +93,33 @@ func _ready() -> void:
 	var heads: Array = fig.model.find_children("*", "MeshInstance3D", true, false)
 	var pset := String(args.get("presets", ""))
 	var presets: Array = MOUTH if pset == "mouth" else (SKIN if pset == "skin" else PRESETS)
+	if pset == "new":                               # (owner 2026-11-06's third pass: the new sliders)
+		presets = [["Neutral", {}], ["Squint", {"eye_squint": 1.0}], ["Tip+", {"nose_tip_size": 1.0}],
+			["Cheek+", {"cheek_puff": 1.0}], ["Cheek-", {"cheek_puff": -1.0}], ["Full lips", {"lips": 1.0}],
+			["Thin lips", {"lips": -1.0}], ["Upper", {"upper_lip": 1.0}], ["Lower", {"lower_lip": 1.0}],
+			["Smile", {"smile": 1.0}], ["Frown", {"smile": -1.0}], ["Pout", {"lip_out": 1.0, "mouth_width": -0.6}]]
+	if pset == "paint":                             # the new paints, colours and placement
+		presets = [["Smoke", {"paint": 7}], ["Crown", {"paint": 8, "paint_color": 2}], ["Nose", {"paint": 9}],
+			["Tears", {"paint": 10, "paint_color": 1}], ["Wings", {"paint": 11}], ["Hooks", {"paint": 12, "paint_color": 4}],
+			["Jaw", {"paint": 13, "paint_color": 1}], ["Dots", {"paint": 14, "paint_color": 3}], ["Rune", {"paint": 15}],
+			["Fade", {"paint": 16, "paint_color": 1}], ["Mask up+big", {"paint": 1, "paint_y": 0.3, "paint_size": 1.3}],
+			["Claws turned", {"paint": 2, "paint_turn": 25.0, "paint_color": 2}]]
+	if pset == "colour":                            # custom colours, the nose-band freckles
+		presets = [["Plain", {}], ["Deep skin", {"skin_rgb": [0.3, 0.19, 0.12]}], ["Brown skin", {"skin_rgb": [0.55, 0.37, 0.25]}],
+			["Green eyes", {"eyes_rgb": [0.2, 0.6, 0.3]}], ["Violet eyes", {"eyes_rgb": [0.5, 0.3, 0.8]}],
+			["Red hair", {"hair_color_rgb": [0.6, 0.2, 0.08]}], ["Blue hair", {"hair_color_rgb": [0.15, 0.25, 0.6]}],
+			["Freckle band", {"freckles": 3}], ["Band dark", {"freckles": 3, "freckle_color": 2, "freckle_amt": 1.2}],
+			["Brows black", {"brow_color": 1}], ["Lips custom", {"lip_color_rgb": [0.7, 0.2, 0.35], "lip_amt": 0.6}],
+			["Sparse", {"freckles": 4}]]
+	if pset == "turban":                            # the Saracen men's turban over each hair style, dyed
+		presets = []
+		var k := 0
+		for si in fig.creator_styles():
+			presets.append(["Hair %d" % (si + 1), {"hair": si, "turban": 1, "turban_color": k % 8}])
+			k += 1
+		for si in fig.creator_styles():
+			if presets.size() < 12:
+				presets.append(["Bare %d" % (si + 1), {"hair": si, "turban": 0}])
 	if pset == "beard":                             # every beard on one beardless style, then the styles bare
 		presets = []
 		var styles: Array = fig.meta.get("hair_styles", [])
@@ -111,11 +138,11 @@ func _ready() -> void:
 		names.append(String(p[0]))
 	for i in presets.size():
 		var vals: Dictionary = presets[i][1]
-		if pset == "beard":
+		if pset == "beard" or pset == "turban":
 			fig.look = {"face": 0, "hair_color": 1, "eyes": 2, "skin": 1}
 			fig.apply(vals)
 			vals = {}
-		if pset == "skin":
+		if pset in ["skin", "paint", "colour"]:
 			fig.look = {"face": 0, "hair": int(args.get("hair", "1")), "hair_color": 1, "eyes": 2, "skin": 1}
 			fig.apply(fig.layered_changes())
 			fig.apply(vals)

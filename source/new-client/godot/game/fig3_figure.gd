@@ -161,6 +161,7 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 			push_warning("figure missing: " + prefix)
 			return false
 	model = (_scenes[prefix] as PackedScene).instantiate() as Node3D
+	add_body_bones(model)                           # (before it enters the tree: its skins bind to them)
 	add_child(model)
 	for node in model.find_children("*", "MeshInstance3D", true, false):
 		var part := String(node.name).get_slice("__", 0)    # a part's extra shapes are named <part>__1, __2 ...
@@ -267,9 +268,10 @@ static func smoothed(a: Animation) -> Animation:
 ## Merge `changes` into the current look and redraw.
 func apply(changes: Dictionary) -> void:
 	look.merge(changes, true)
-	var tones: Array = meta.get("skin_tones", [[1, 1, 1]])
-	var tone: Array = tones[clampi(int(look.get("skin", 0)), 0, tones.size() - 1)]
-	var skin := skin_tint(tone)
+	for k in changes:                                  # (null: back to the default - a custom colour dropped)
+		if changes[k] == null:
+			look.erase(k)
+	var skin := _skin()
 	var tint_parts: Dictionary = meta.get("skin_tint_parts", {})
 	# head: face texture x skin tone, eye colour multiplied, tattoo
 	var faces: Array = meta.get("faces", [])
@@ -284,6 +286,8 @@ func apply(changes: Dictionary) -> void:
 		if eyes.size() > 0:
 			m.set_shader_parameter("eye_tex", _tex(eyes[clampi(int(look.get("eyes", 0)), 0, eyes.size() - 1)]))
 			m.set_shader_parameter("has_eye", true)
+			var er = custom_colour("eyes")                 # (the creator's colour wheel: any iris colour)
+			m.set_shader_parameter("eye_tint", Color(pow(er.r, 2.2), pow(er.g, 2.2), pow(er.b, 2.2), 1.0) if er != null else Color(0, 0, 0, 0))
 		var tattoos: Array = meta.get("tattoos", [])
 		var ti := int(look.get("tattoo", 0))
 		var decal: String = tattoos[ti].tex if ti > 0 and ti < tattoos.size() else ""
@@ -318,12 +322,32 @@ func apply(changes: Dictionary) -> void:
 		if i == si:
 			var colours: Array = styles[i].colours
 			if colours.size() > 0:
-				var col: Dictionary = colours[clampi(int(look.get("hair_color", 0)), 0, colours.size() - 1)]
+				var col := hair_colour(colours)
 				var m := _hair_material(col)
 				_hair_mat = m
 				for mi in _parts(node):
 					mi.material_override = m
 				_scalp(si, String(col.tex), Color(col.tint[0], col.tint[1], col.tint[2]))
+	# the turban over the hair: its cloth from the original texture (the remastered one drew strands into it), dyed
+	var tb: Array = meta.get("turbans", [])
+	var ti := turban_index()
+	for k in tb.size():
+		var tn := String(tb[k].node)
+		if not _meshes.has(tn):
+			continue
+		for mi in _parts(tn):
+			mi.visible = k + 1 == ti and not _hair_covered()
+		if k + 1 == ti:
+			var want = custom_colour("turban_color")
+			if want == null:
+				want = TURBAN_COLORS[clampi(int(look.get("turban_color", 0)), 0, TURBAN_COLORS.size() - 1)]
+			var tm := _material(false)
+			tm.set_shader_parameter("albedo_tex", load_texture(texture_dir("original"), String(tb[k].tex).to_lower()))
+			tm.set_shader_parameter("tint", Color(want.r * 1.2, want.g * 1.2, want.b * 1.2))
+			tm.set_shader_parameter("tint_mode", 1)
+			tm.set_shader_parameter("relief", 0.1)
+			for mi in _parts(tn):
+				mi.material_override = tm
 	# the beard (men: split off the hair styles by pipeline/split_beards.py): its own style's texture in the hair's
 	# colour (the same colour index - the styles list their colours alike)
 	var beards: Array = meta.get("beards", [])
@@ -338,9 +362,11 @@ func apply(changes: Dictionary) -> void:
 			var bst: Dictionary = styles[clampi(int(beards[k].style), 0, styles.size() - 1)]
 			var bcols: Array = bst.colours
 			if bcols.size() > 0:
-				var bm := _hair_material(bcols[_beard_colour(styles, bcols)])
+				var bm := _hair_material(hair_colour(bcols) if custom_colour("hair_color") != null else bcols[_beard_colour(styles, bcols)])
 				for mi in _parts(bnode):
 					mi.material_override = bm
+	if not (meta.get("turbans", []) as Array).is_empty():
+		_refresh_hair()                                # (the hair under the turban takes its cap morph)
 	# face sliders: 0..8, 4 neutral; below 4 blends the low target, above 4 the high one
 	if head:
 		var values: Array = look.get("sliders", [])
@@ -369,6 +395,55 @@ const LIP_COLORS := [Color(0, 0, 0), Color(0.62, 0.22, 0.26), Color(0.48, 0.06, 
 ## Scar colours (owner 2026-11-06: "too bright"): healed pale, faint pink, fresh red, dark, silvered.
 const SCAR_COLORS := [Color(0.8, 0.62, 0.56), Color(0.86, 0.58, 0.56), Color(0.66, 0.3, 0.28), Color(0.42, 0.3, 0.26),
 	Color(0.84, 0.8, 0.78)]
+## Headwear that came through as hair styles (owner 2026-11-06, the Saracens: "some hairstyles that are hoods or
+## turbans"): pipeline/split_headwear.py cut the turbans' cloth from their styles (figure.json "turbans"; each style's
+## own "turban", and "hood" on the hood styles). The hoods leave the creator; a turban is worn over any hair style
+## (look turban: 0 none, k = turbans[k-1]; unset: the style's own, as before), dyed (turban_color), and a style of
+## its own hair under it takes the helm morph of a close cap (helm hair type TURBAN_HAIR).
+const TURBAN_HAIR := 2
+const TURBAN_COLORS := [Color(0.92, 0.9, 0.84), Color(0.2, 0.18, 0.16), Color(0.55, 0.12, 0.1), Color(0.16, 0.24, 0.5),
+	Color(0.18, 0.36, 0.2), Color(0.72, 0.56, 0.24), Color(0.42, 0.3, 0.2), Color(0.4, 0.16, 0.42)]
+
+
+## The worn turban: 1-based into figure.json "turbans", 0 none.
+func turban_index() -> int:
+	var tb: Array = meta.get("turbans", [])
+	if tb.is_empty():
+		return 0
+	if look.has("turban"):
+		return clampi(int(look.turban), 0, tb.size())
+	var styles: Array = meta.get("hair_styles", [])
+	if styles.is_empty():
+		return 0
+	return int(styles[clampi(int(look.get("hair", 0)), 0, styles.size() - 1)].get("turban", 0))
+
+
+## The hair styles the creator offers: never the hoods; the hair that sat under a turban only with a turban on.
+func creator_styles() -> Array:
+	var out := []
+	var styles: Array = meta.get("hair_styles", [])
+	var on := turban_index() > 0
+	for i in styles.size():
+		if bool(styles[i].get("hood", false)):
+			continue
+		if int(styles[i].get("turban", 0)) > 0 and not on:
+			continue
+		out.append(i)
+	return out
+
+
+## Freckle colours (owner 2026-11-06: "natural freckle colors that might work with other skin tones") - each
+## multiplies the skin: tan, brown, dark brown, red-brown, deep, faint.
+const FRECKLE_COLORS := [Color(0.66, 0.5, 0.4), Color(0.55, 0.38, 0.28), Color(0.42, 0.28, 0.2), Color(0.7, 0.42, 0.32),
+	Color(0.3, 0.22, 0.18), Color(0.8, 0.68, 0.58)]
+## Brow colours (look brow_color; 0 = the hair's): black, dark brown, brown, auburn, blonde, grey, white, red.
+const BROW_COLORS := [Color(0.06, 0.05, 0.05), Color(0.16, 0.1, 0.07), Color(0.3, 0.2, 0.12), Color(0.4, 0.18, 0.1),
+	Color(0.62, 0.5, 0.3), Color(0.45, 0.43, 0.42), Color(0.82, 0.8, 0.76), Color(0.55, 0.22, 0.1)]
+## War paint placement (owner 2026-11-06: "up, down, scale, and rotation ... clamped to not go off of the face"):
+## look paint_y (eye spacings), paint_size, paint_turn (degrees) within these.
+const PAINT_Y := Vector2(-0.45, 0.45)
+const PAINT_SIZE := Vector2(0.7, 1.35)
+const PAINT_TURN := Vector2(-30.0, 30.0)
 static var _layer_tex := {}                     # path -> the mask texture (shared by every figure of the race)
 
 
@@ -441,6 +516,8 @@ func layered_changes() -> Dictionary:
 		"stubble_style": int(f.get("stubble_style", -1)) + 1, "stubble": 0.9}
 	if not (meta.get("beards", []) as Array).is_empty():
 		out["beard"] = beard_index()                 # pinned: changing the hair no longer changes the beard
+	if not (meta.get("turbans", []) as Array).is_empty():
+		out["turban"] = turban_index()               # (and the turban)
 	return out
 
 
@@ -466,9 +543,17 @@ func _layers(m: ShaderMaterial) -> void:
 		defs[String(d.key)] = d
 	var hair := Color(0.22, 0.16, 0.11)
 	var hrgb: Array = sl.get("hair_rgb", [])
-	if hrgb.size() > 0:
+	if custom_colour("hair_color") != null:
+		hair = custom_colour("hair_color")
+	elif hrgb.size() > 0:
 		var h: Array = hrgb[clampi(int(look.get("hair_color", 0)), 0, hrgb.size() - 1)]
 		hair = Color(h[0], h[1], h[2])
+	# the brows' own colour (owner 2026-11-06: not always the hair's - and a bald man's too): 0 the hair's
+	var brow := hair.darkened(0.3)
+	if custom_colour("brow_color") != null:
+		brow = custom_colour("brow_color")
+	elif int(look.get("brow_color", 0)) > 0:
+		brow = BROW_COLORS[clampi(int(look.brow_color) - 1, 0, BROW_COLORS.size() - 1)]
 	var slots := []                                    # [channel, colour (sRGB), strength, way]
 	var pick := func(key: String, opt: int) -> int:
 		var d: Dictionary = defs.get(key, {})
@@ -477,26 +562,30 @@ func _layers(m: ShaderMaterial) -> void:
 	var layered := is_layered()
 	var c: int = pick.call("brows", int(look.get("brows", 0))) if layered else -1   # (the old faces paint their own)
 	if c >= 0:
-		slots.append([c, hair.darkened(0.3), clampf(float(look.get("brow_amt", 1.0)), 0.0, 1.5) * 0.9, 3])
+		slots.append([c, brow, clampf(float(look.get("brow_amt", 1.0)), 0.0, 1.5) * 0.9, 3])
 	c = pick.call("freckles", int(look.get("freckles", 0)))
 	if c >= 0:
-		slots.append([c, Color(0.66, 0.5, 0.4), 0.9, 2])
+		var fc = custom_colour("freckle_color")
+		if fc == null:
+			fc = FRECKLE_COLORS[clampi(int(look.get("freckle_color", 0)), 0, FRECKLE_COLORS.size() - 1)]
+		slots.append([c, fc, clampf(float(look.get("freckle_amt", 0.9)), 0.0, 1.2), 2])
 	var ast := int(look.get("age_style", 1 if float(look.get("age", 0.0)) > 0.01 else 0))
 	if ast > 0:
 		slots.append([pick.call("age", ast), Color(0.4, 0.34, 0.32), clampf(float(look.get("age", 0.7)), 0.0, 1.0), 2])
 	c = pick.call("scar", int(look.get("scar", 0)))
 	if c >= 0:
-		var sc: Color = SCAR_COLORS[clampi(int(look.get("scar_color", 0)), 0, SCAR_COLORS.size() - 1)]
+		var sc = custom_colour("scar_color")
+		if sc == null:
+			sc = SCAR_COLORS[clampi(int(look.get("scar_color", 0)), 0, SCAR_COLORS.size() - 1)]
 		slots.append([c, sc, clampf(float(look.get("scar_amt", 0.55)), 0.0, 1.0), 1])   # (shaded by the skin under it)
 	var sst := int(look.get("stubble_style", 1 if float(look.get("stubble", 0.0)) > 0.01 else 0))
 	if sst > 0:
 		slots.append([pick.call("stubble", sst), hair.darkened(0.4), clampf(float(look.get("stubble", 0.8)), 0.0, 1.0) * 0.95, 3])
 	var li := int(look.get("lip_color", 0))
-	if li > 0 and li < LIP_COLORS.size():
-		slots.append([pick.call("lips", 1), LIP_COLORS[li], clampf(float(look.get("lip_amt", 0.6)), 0.0, 1.0), 1])
-	c = pick.call("paint", int(look.get("paint", 0)))
-	if c >= 0:
-		slots.append([c, PAINT_COLORS[clampi(int(look.get("paint_color", 0)), 0, PAINT_COLORS.size() - 1)], 0.92, 1])
+	var lc = custom_colour("lip_color")
+	if lc != null or (li > 0 and li < LIP_COLORS.size()):
+		slots.append([pick.call("lips", 1), lc if lc != null else LIP_COLORS[li], clampf(float(look.get("lip_amt", 0.6)), 0.0, 1.0), 1])
+	_paint(m, sl)
 	slots = slots.filter(func(s): return int(s[0]) >= 0)
 	m.set_shader_parameter("layer_count", slots.size())
 	if slots.is_empty():
@@ -528,28 +617,73 @@ func _layers(m: ShaderMaterial) -> void:
 	m.set_shader_parameter("layer_mode", modes)
 
 
+## War paint: looked up in face space (skin_layers.paint: the atlas, and the face map - each texel's face point), so
+## the player places it; the face map's third channel (how much the texel is face) keeps it on the face.
+func _paint(m: ShaderMaterial, sl: Dictionary) -> void:
+	var pd: Dictionary = sl.get("paint", {})
+	var pi := int(look.get("paint", 0))
+	if pd.is_empty() or pi <= 0 or pi > (pd.get("options", []) as Array).size():
+		m.set_shader_parameter("paint_idx", -1)
+		return
+	var ap := "%s/races/%s/%s.png" % [ROOT, race, String(pd.atlas)]
+	if not _layer_tex.has(ap):
+		var img := Image.load_from_file(ap)
+		_layer_tex[ap] = ImageTexture.create_from_image(img) if img else null
+	var mp := "%s/races/%s/%s" % [ROOT, race, String(pd.map)]
+	if not _layer_tex.has(mp):
+		var n := int(pd.get("size", 1024))
+		var bytes := FileAccess.get_file_as_bytes(mp)
+		var img: Image = Image.create_from_data(n, n, false, Image.FORMAT_RGBAH, bytes) if bytes.size() == n * n * 8 else null
+		_layer_tex[mp] = ImageTexture.create_from_image(img) if img else null
+	if _layer_tex[ap] == null or _layer_tex[mp] == null:
+		m.set_shader_parameter("paint_idx", -1)
+		return
+	var pc = custom_colour("paint_color")
+	if pc == null:
+		pc = PAINT_COLORS[clampi(int(look.get("paint_color", 0)), 0, PAINT_COLORS.size() - 1)]
+	var box: Array = pd.box
+	var cen: Array = pd.get("centres", [])
+	var cv := float(cen[pi - 1][1]) if pi - 1 < cen.size() else 0.0
+	m.set_shader_parameter("paint_atlas", _layer_tex[ap])
+	m.set_shader_parameter("paint_map", _layer_tex[mp])
+	m.set_shader_parameter("paint_idx", pi - 1)
+	m.set_shader_parameter("paint_side", int(pd.get("side", 2)))
+	m.set_shader_parameter("paint_box", Vector4(box[0], box[1], box[2], box[3]))
+	m.set_shader_parameter("paint_col", Vector3(pow(pc.r, 2.2), pow(pc.g, 2.2), pow(pc.b, 2.2)))
+	m.set_shader_parameter("paint_amt", clampf(float(look.get("paint_amt", 0.92)), 0.0, 1.0))
+	m.set_shader_parameter("paint_xf", Vector4(clampf(float(look.get("paint_y", 0.0)), PAINT_Y.x, PAINT_Y.y),
+		clampf(float(look.get("paint_size", 1.0)), PAINT_SIZE.x, PAINT_SIZE.y),
+		deg_to_rad(clampf(float(look.get("paint_turn", 0.0)), PAINT_TURN.x, PAINT_TURN.y)), cv))
+
+
 ## The face, feature by feature (owner 2026-11-06: "choose from eye shapes, nose shapes, lip shapes ..."): each a set
 ## of named shapes over its own sliders (look.shape, -1 .. 1; Natural = the race's own). The creator offers these and
 ## keeps the sliders under each for fine tuning.
 const FACE_FEATURES := [
-	["eyes", "Eyes", ["eye_spacing", "eye_height", "eye_size", "eye_depth", "eye_tilt"], [
+	["eyes", "Eyes", ["eye_spacing", "eye_height", "eye_size", "eye_depth", "eye_tilt", "eye_squint"], [
 		["Natural", {}], ["Large", {"eye_size": 0.7}], ["Small", {"eye_size": -0.6}], ["Deep-set", {"eye_depth": 0.8, "eye_size": -0.2}],
 		["Prominent", {"eye_depth": -0.7, "eye_size": 0.3}], ["Wide-set", {"eye_spacing": 0.7}], ["Close-set", {"eye_spacing": -0.7}],
 		["High", {"eye_height": 0.7}], ["Low", {"eye_height": -0.6}], ["Upswept", {"eye_tilt": 0.7}],
-		["Downturned", {"eye_tilt": -0.6}], ["Feline", {"eye_tilt": 0.8, "eye_size": -0.3}]]],
+		["Downturned", {"eye_tilt": -0.6}], ["Feline", {"eye_tilt": 0.8, "eye_size": -0.3}], ["Narrowed", {"eye_squint": 0.7}],
+		["Hooded", {"eye_squint": 0.5, "eye_depth": 0.5}], ["Wide-open", {"eye_squint": -0.6, "eye_size": 0.3}]]],
 	["brow", "Brow", ["brow_height", "brow_depth"], [
 		["Natural", {}], ["Heavy", {"brow_depth": 0.8, "brow_height": -0.3}], ["Smooth", {"brow_depth": -0.7}],
 		["High", {"brow_height": 0.7}], ["Low", {"brow_height": -0.6}]]],
-	["nose", "Nose", ["nose_width", "nose_length", "nose_height", "nose_bridge", "nose_tip"], [
+	["nose", "Nose", ["nose_width", "nose_length", "nose_height", "nose_bridge", "nose_tip", "nose_tip_size"], [
 		["Natural", {}], ["Button", {"nose_length": -0.7, "nose_width": -0.2, "nose_tip": 0.5}], ["Upturned", {"nose_tip": 0.8}],
 		["Hawk", {"nose_bridge": 0.8, "nose_length": 0.5, "nose_tip": -0.6, "nose_width": -0.3}], ["Roman", {"nose_bridge": 0.7, "nose_length": 0.3}],
 		["Broad", {"nose_width": 0.8, "nose_height": -0.2}], ["Narrow", {"nose_width": -0.7}], ["Long", {"nose_length": 0.8, "nose_height": -0.4}],
-		["Flat", {"nose_length": -0.6, "nose_bridge": -0.6, "nose_width": 0.4}]]],
-	["cheeks", "Cheeks", ["cheekbones"], [
-		["Natural", {}], ["High", {"cheekbones": 0.8}], ["Soft", {"cheekbones": -0.5}], ["Hollow", {"cheekbones": -0.9}]]],
-	["mouth", "Mouth", ["mouth_width", "mouth_height", "lips"], [
-		["Natural", {}], ["Full", {"lips": 0.8}], ["Thin", {"lips": -0.7}], ["Wide", {"mouth_width": 0.7}],
-		["Small", {"mouth_width": -0.6, "lips": 0.2}], ["High", {"mouth_height": 0.6}], ["Low", {"mouth_height": -0.6}]]],
+		["Flat", {"nose_length": -0.6, "nose_bridge": -0.6, "nose_width": 0.4}], ["Bulbous", {"nose_tip_size": 0.9, "nose_width": 0.2}],
+		["Pinched", {"nose_tip_size": -0.7, "nose_width": -0.4}]]],
+	["cheeks", "Cheeks", ["cheekbones", "cheek_puff"], [
+		["Natural", {}], ["High", {"cheekbones": 0.8}], ["Soft", {"cheekbones": -0.5, "cheek_puff": 0.3}],
+		["Hollow", {"cheekbones": 0.4, "cheek_puff": -0.9}], ["Gaunt", {"cheekbones": 0.7, "cheek_puff": -0.7}],
+		["Round", {"cheek_puff": 0.8}], ["Chubby", {"cheek_puff": 1.0, "cheekbones": -0.4}]]],
+	["mouth", "Lips", ["lips", "upper_lip", "lower_lip", "mouth_width", "smile", "lip_out", "mouth_height"], [
+		["Natural", {}], ["Full", {"lips": 0.8}], ["Thin", {"lips": -0.7}], ["Pouty", {"lower_lip": 0.8, "lip_out": 0.6}],
+		["Bow", {"upper_lip": 0.8, "mouth_width": -0.3}], ["Heavy Lower", {"lower_lip": 1.0, "upper_lip": -0.3}],
+		["Wide", {"mouth_width": 0.7}], ["Small", {"mouth_width": -0.6, "lips": 0.2}], ["Smiling", {"smile": 0.6}],
+		["Stern", {"smile": -0.6, "lips": -0.3}], ["High", {"mouth_height": 0.6}], ["Low", {"mouth_height": -0.6}]]],
 	["jaw", "Jaw", ["jaw_width", "jaw_height", "jaw_sharp"], [
 		["Natural", {}], ["Square", {"jaw_width": 0.6, "jaw_sharp": 0.5}], ["Strong", {"jaw_width": 0.9, "jaw_sharp": 0.8}],
 		["Chiseled", {"jaw_sharp": 1.0, "jaw_height": 0.3}], ["Soft", {"jaw_sharp": -0.8}], ["Narrow", {"jaw_width": -0.6}],
@@ -557,7 +691,8 @@ const FACE_FEATURES := [
 	["chin", "Chin", ["chin_length", "chin_point", "chin_width"], [
 		["Natural", {}], ["Pointed", {"chin_point": 0.6, "chin_width": -0.8, "chin_length": 0.2}],
 		["Broad", {"chin_width": 0.8}], ["Narrow", {"chin_width": -0.6}], ["Short", {"chin_length": -0.7}],
-		["Long", {"chin_length": 0.8}], ["Jutting", {"chin_point": 1.0}], ["Receding", {"chin_point": -0.8}]]],
+		["Long", {"chin_length": 0.8}], ["Jutting", {"chin_point": 1.0}], ["Receding", {"chin_point": -0.8}],
+		["Sharp", {"chin_width": -1.0, "chin_point": 0.4}]]],
 	["ears", "Ears", ["ear_size", "ear_out", "ear_tilt"], [
 		["Natural", {}], ["Small", {"ear_size": -0.7}], ["Large", {"ear_size": 0.8}], ["Out", {"ear_out": 0.9}],
 		["Swept", {"ear_tilt": 0.9}], ["Large, Swept", {"ear_size": 0.6, "ear_tilt": 0.8}]]],
@@ -609,7 +744,7 @@ func _apply_shape() -> void:
 		for st in styles:
 			if st.node != null and _meshes.has(st.node):
 				meshes.append_array(_parts(st.node))
-		for b in meta.get("beards", []):
+		for b in meta.get("beards", []) + meta.get("turbans", []):
 			if _meshes.has(String(b.node)):
 				meshes.append_array(_parts(String(b.node)))
 		for fs in shapes:
@@ -727,8 +862,16 @@ func _refresh_hair() -> void:
 			# that shows the hair, which stays as it is (owner 2026-10-14: circlets hid the hair - its morph tore the
 			# hair open over the band)
 			var morphs: Dictionary = meta.get("helm_hair", {}).get(String(node), {})
+			var under := _helm_hair if _helm != null else \
+				(TURBAN_HAIR if turban_index() > 0 and int(styles[i].get("turban", 0)) == 0 else 0)
 			for k in morphs:
-				_blend(mi, String(morphs[k]), 1.0 if _helm != null and int(k) == _helm_hair and _helm_hair != 1 else 0.0)
+				_blend(mi, String(morphs[k]), 1.0 if int(k) == under and under != 1 else 0.0)
+	var tb: Array = meta.get("turbans", [])
+	var ti := turban_index()
+	for k in tb.size():
+		if _meshes.has(String(tb[k].node)):
+			for mi in _parts(String(tb[k].node)):
+				mi.visible = k + 1 == ti and not _hair_covered() and _helm == null
 	var beards: Array = meta.get("beards", [])
 	var bi := beard_index()
 	for k in beards.size():
@@ -862,11 +1005,77 @@ static func skin_tint(tone: Array) -> Color:
 	return Color.WHITE.lerp(Color(float(tone[0]), float(tone[1]), float(tone[2])), SKIN_TINT_STRENGTH)
 
 
-## The look's skin tone (the race's fig3skincolormap tints).
+## The look's skin tone (the race's fig3skincolormap tints), or the creator's own skin colour (look.skin_rgb, the
+## colour the skin should come out: the tint is that over the face texture's own skin).
 func _skin() -> Color:
+	var cs = custom_colour("skin")
+	if cs != null:
+		var b := skin_base()
+		return Color(clampf(cs.r / maxf(b.r, 0.05), 0.0, 2.0), clampf(cs.g / maxf(b.g, 0.05), 0.0, 2.0),
+				clampf(cs.b / maxf(b.b, 0.05), 0.0, 2.0))
 	var tones: Array = meta.get("skin_tones", [[1, 1, 1]])
 	var tone: Array = tones[clampi(int(look.get("skin", 0)), 0, tones.size() - 1)]
 	return skin_tint(tone)
+
+
+static var _skin_bases := {}
+
+
+## The face texture's own skin colour (the middle of the face, untinted) - what a custom skin colour is measured from.
+func skin_base() -> Color:
+	if _skin_bases.has(race):
+		return _skin_bases[race]
+	var faces: Array = meta.get("faces", [])
+	var t: Texture2D = _base_face() if is_layered() else null
+	if t == null and faces.size() > 0:
+		t = _tex(String(faces[0].tex))
+	var col := Color(0.75, 0.6, 0.5)
+	var img: Image = t.get_image() if t else null
+	if img:
+		img = img.duplicate()
+		if img.is_compressed():
+			img.decompress()
+		img.convert(Image.FORMAT_RGBA8)
+		img = img.get_region(Rect2i(img.get_width() * 3 / 10, img.get_height() * 3 / 10, img.get_width() * 2 / 5, img.get_height() / 4))
+		img.resize(16, 16, Image.INTERPOLATE_BILINEAR)
+		var sum := Color(0, 0, 0, 0)
+		for yy in 16:
+			for xx in 16:
+				sum += img.get_pixel(xx, yy)
+		col = Color(sum.r / 256.0, sum.g / 256.0, sum.b / 256.0)
+	_skin_bases[race] = col
+	return col
+
+
+## A colour the creator's wheel set (look["<key>_rgb"], sRGB 0..1), else null.
+func custom_colour(key: String):
+	var a = look.get(key + "_rgb")
+	if a is Array and (a as Array).size() >= 3:
+		return Color(float(a[0]), float(a[1]), float(a[2]))
+	return null
+
+
+## A hair style's colour as worn: the chosen one, or - a custom colour - the style's lightest texture tinted to it
+## (figure.json colours' "rgb": each texture x tint's average).
+func hair_colour(colours: Array) -> Dictionary:
+	var col: Dictionary = colours[clampi(int(look.get("hair_color", 0)), 0, colours.size() - 1)]
+	var want = custom_colour("hair_color")
+	if want == null:
+		return col
+	var best := col
+	var bl := -1.0
+	for c in colours:
+		if (c as Dictionary).has("rgb"):
+			var l := float(c.rgb[0]) * 0.3 + float(c.rgb[1]) * 0.59 + float(c.rgb[2]) * 0.11
+			if l > bl:
+				bl = l
+				best = c
+	var rgb: Array = best.get("rgb", [0.5, 0.42, 0.33])
+	var t: Array = best.get("tint", [1, 1, 1])
+	var w: Color = want * 0.85                       # (the strands' sheen lifts it: the bare ratio came out too bright)
+	return {"tex": best.tex, "tint": [clampf(float(t[0]) * w.r / maxf(float(rgb[0]), 0.04), 0.0, 3.0),
+		clampf(float(t[1]) * w.g / maxf(float(rgb[1]), 0.04), 0.0, 3.0),
+		clampf(float(t[2]) * w.b / maxf(float(rgb[2]), 0.04), 0.0, 3.0)], "chan": best.get("chan", "")}
 
 
 ## The Highlander kilt (lbody, one mesh per body mesh): only the one matching the body worn shows, always in the race's
@@ -970,6 +1179,7 @@ static func option_count_of(meta: Dictionary, look: Dictionary, key: String) -> 
 		"skin": return meta.get("skin_tones", []).size()
 		"hair": return meta.get("hair_styles", []).size()
 		"beard": return meta.get("beards", []).size() + 1
+		"turban": return meta.get("turbans", []).size() + 1 if not (meta.get("turbans", []) as Array).is_empty() else 0
 		"hair_color":
 			var styles: Array = meta.get("hair_styles", [])
 			return styles[clampi(int(look.get("hair", 0)), 0, styles.size() - 1)].colours.size() if styles.size() > 0 else 0
@@ -1241,10 +1451,47 @@ uniform int layer_ch[7];
 uniform vec3 layer_col[7];
 uniform float layer_amt[7];
 uniform int layer_mode[7];
+// war paint in face space (Fig3Figure._paint): the face map (each texel's face point u, v and how much it is face),
+// the paints' atlas, which paint, its colour (linear), strength and placement (up, size, turn, its middle's height)
+uniform sampler2D paint_map : filter_linear, repeat_disable;
+uniform sampler2D paint_atlas : filter_linear, repeat_disable;
+uniform int paint_idx = -1;
+uniform int paint_side = 2;
+uniform vec4 paint_box = vec4(-1.7, 1.7, -2.4, 1.7);
+uniform vec3 paint_col = vec3(0.0);
+uniform float paint_amt = 0.0;
+uniform vec4 paint_xf = vec4(0.0, 1.0, 0.0, 0.0);
+// the creator's own iris colour (a = on): the eye texture's iris recoloured, its detail kept
+uniform vec4 eye_tint = vec4(0.0);
 varying vec2 logo_uv;
+// the body sliders' bust / pecs and glutes (Fig3Figure.BodyShape._bulge): two points each (world xyz, radius) and the
+// way they swell (world, times the slider)
+uniform vec4 bulge_a = vec4(0.0);
+uniform vec4 bulge_b = vec4(0.0);
+uniform vec4 bulge_c = vec4(0.0);
+uniform vec4 bulge_d = vec4(0.0);
+uniform vec3 bulge_ab = vec3(0.0);
+uniform vec3 bulge_cd = vec3(0.0);
+uniform vec2 bulge_amt = vec2(0.0);
+
+vec3 bulge(vec3 wp, vec3 wn, vec4 p, vec3 d, float amt) {
+	if (p.w <= 0.0 || abs(amt) < 1e-4) return vec3(0.0);
+	vec3 o = wp - p.xyz;
+	float q = dot(o, o) / (p.w * p.w);
+	if (q > 4.0) return vec3(0.0);
+	float face = smoothstep(-0.2, 0.5, dot(wn, d));      // only the side that faces the way it swells
+	return d * amt * p.w * 0.9 * exp(-q * 1.6) * face;
+}
 
 void vertex() {
 	logo_uv = CUSTOM0.xy;
+	if (bulge_a.w > 0.0 || bulge_c.w > 0.0) {
+		vec3 wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+		vec3 wn = normalize(mat3(MODEL_MATRIX) * NORMAL);
+		vec3 dv = bulge(wp, wn, bulge_a, bulge_ab, bulge_amt.x) + bulge(wp, wn, bulge_b, bulge_ab, bulge_amt.x)
+				+ bulge(wp, wn, bulge_c, bulge_cd, bulge_amt.y) + bulge(wp, wn, bulge_d, bulge_cd, bulge_amt.y);
+		VERTEX += inverse(mat3(MODEL_MATRIX)) * dv;
+	}
 	if (dot(sway_dir, sway_dir) > 1e-6) {
 		vec3 wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 		float away = smoothstep(0.13, 0.42, distance(wp, sway_head));
@@ -1268,6 +1515,7 @@ void fragment() {
 	}
 	else if (tint_mode == 1) col *= tint;
 	else if (tint_mode == 2) col *= mix(tint, vec3(1.0), smoothstep(0.90, 0.99, c.a));
+	float ref = max(dot(tint, vec3(0.3, 0.59, 0.11)) * 0.45, 0.05);
 	if (layer_count > 0) {
 		float ch[28];
 		vec4 t0 = texture(layer_tex0, UV), t1 = texture(layer_tex1, UV), t2 = texture(layer_tex2, UV);
@@ -1277,7 +1525,6 @@ void fragment() {
 			ch[i] = t0[i]; ch[4 + i] = t1[i]; ch[8 + i] = t2[i]; ch[12 + i] = t3[i]; ch[16 + i] = t4[i];
 			ch[20 + i] = t5[i]; ch[24 + i] = t6[i];
 		}
-		float ref = max(dot(tint, vec3(0.3, 0.59, 0.11)) * 0.45, 0.05);
 		for (int i = 0; i < layer_count; i++) {
 			float m = ch[clamp(layer_ch[i], 0, 27)] * layer_amt[i];
 			vec3 lc = layer_col[i];
@@ -1289,7 +1536,36 @@ void fragment() {
 			else col = mix(col, lc, m);
 		}
 	}
-	if (has_eye) col *= texture(eye_tex, UV).rgb;
+	if (paint_idx >= 0) {
+		vec4 fm = texture(paint_map, UV);
+		if (fm.z > 0.01) {
+			float sgn = fm.x < 0.0 ? -1.0 : 1.0;          // (mirrored: each side turns its own way)
+			vec2 c0 = vec2(0.0, paint_xf.w);
+			vec2 q = fm.xy - vec2(0.0, paint_xf.x) - c0;
+			float a = -paint_xf.z * sgn;
+			q = mat2(vec2(cos(a), sin(a)), vec2(-sin(a), cos(a))) * q / paint_xf.y + c0;
+			vec2 t = vec2((q.x - paint_box.x) / (paint_box.y - paint_box.x), (paint_box.w - q.y) / (paint_box.w - paint_box.z));
+			if (t.x > 0.004 && t.y > 0.004 && t.x < 0.996 && t.y < 0.996) {
+				float side = float(paint_side);
+				int tile = paint_idx / 4;
+				vec2 o = vec2(float(tile % paint_side), float(tile / paint_side));
+				vec4 a4 = texture(paint_atlas, (o + t) / side);
+				float pm = a4[paint_idx % 4] * clamp(fm.z, 0.0, 1.0) * paint_amt;
+				float shade = clamp(dot(col, vec3(0.3, 0.59, 0.11)) / ref, 0.55, 1.25);
+				col = mix(col, paint_col * shade, pm);
+			}
+		}
+	}
+	if (has_eye) {
+		vec3 e = texture(eye_tex, UV).rgb;
+		if (eye_tint.a > 0.5) {
+			float mn = min(e.r, min(e.g, e.b));
+			float iris = clamp((0.9 - mn) * 6.0, 0.0, 1.0);
+			float l = dot(e, vec3(0.3, 0.59, 0.11));
+			e = mix(vec3(1.0), eye_tint.rgb * clamp(l * 2.2, 0.25, 1.6), iris);
+		}
+		col *= e;
+	}
 	if (has_decal) {
 		vec4 d = texture(decal_tex, UV);
 		col *= mix(vec3(1.0), d.rgb * 2.0, d.a);
@@ -1366,20 +1642,75 @@ const SWAY_RANGE_M := 35.0
 ## The body sliders (owner 2026-11-06, the creator's BODY page): look.body {name: -1 .. 1}. Height scales the whole
 ## figure; the rest are bones scaled after the animation (BodyShape), each undone below it so only its own part
 ## changes - the arms longer but the hands their size, the chest bigger but the head and arms not.
-const BODY_SLIDERS := [["height", "Height"], ["head", "Head Size"], ["shoulders", "Shoulders"], ["chest", "Chest"],
-	["torso", "Torso Length"], ["arms", "Arm Length"], ["legs", "Leg Length"], ["hands", "Hands"]]
+## The creator's BODY sliders (owner 2026-11-06: chest in three, waist, hips, glutes, thighs, calves; lengths that only
+## lengthen): [key, label, group]. -1..1 each in look.body; "chest_size" reads Bust or Pecs by the figure's sex.
+const BODY_SLIDERS := [["height", "Height", "OVERALL"], ["head", "Head Size", "OVERALL"],
+	["shoulders", "Shoulders", "UPPER BODY"], ["chest_width", "Chest Width", "UPPER BODY"],
+	["chest_depth", "Chest Depth", "UPPER BODY"], ["chest_size", "Chest Size", "UPPER BODY"],
+	["waist", "Waist", "UPPER BODY"], ["torso", "Torso Length", "UPPER BODY"],
+	["arms", "Arm Length", "ARMS"], ["arm_size", "Arm Thickness", "ARMS"], ["hands", "Hands", "ARMS"],
+	["hips", "Hips", "LOWER BODY"], ["glutes", "Glutes", "LOWER BODY"], ["legs", "Leg Length", "LOWER BODY"],
+	["thighs", "Thighs", "LOWER BODY"], ["calves", "Calves", "LOWER BODY"]]
+
+## The bones whose flesh the body sliders reshape. Each gets a leaf "<bone> def" (rest = the bone's own): the skins'
+## weights move to it, so it can be widened or lengthened in its own frame without its children - the arm hanging off
+## the chest, the calf off the thigh - inheriting the stretch (a bone scaled in place widened everything below it:
+## owner 2026-11-06, "Chest is messing with the entire top half ... Leg length seems to be scaling more than ...").
+const BODY_DEFS := ["Pelvis", "Spine", "Spine1", "Spine2", "L Clavicle", "R Clavicle", "L Pauldron", "R Pauldron",
+	"L UpperArm", "R UpperArm", "L BicepTwist", "R BicepTwist", "L Forearm", "R Forearm", "L ForeTwist", "R ForeTwist",
+	"L ForeTwist1", "R ForeTwist1", "L Thigh", "R Thigh", "L ThighTwist", "R ThighTwist", "L Calf", "R Calf"]
+
+
+## The def bones on a fresh figure's skeleton, and its skins' weights moved onto them (once per shared skin: every
+## figure of a race adds the same bones in the same order, so one rewired skin serves them all).
+static func add_body_bones(model: Node3D) -> void:
+	var skels := model.find_children("*", "Skeleton3D", true, false)
+	if skels.is_empty():
+		return
+	var sk := skels[0] as Skeleton3D
+	var defs := {}
+	for n in BODY_DEFS:
+		var b := sk.find_bone("Bip01 " + n)
+		if b < 0 or sk.find_bone("Bip01 %s def" % n) >= 0:
+			continue
+		var i := sk.add_bone("Bip01 %s def" % n)
+		sk.set_bone_parent(i, b)
+		sk.set_bone_rest(i, Transform3D())
+		sk.set_bone_pose_position(i, Vector3.ZERO)
+		sk.set_bone_pose_rotation(i, Quaternion.IDENTITY)
+		sk.set_bone_pose_scale(i, Vector3.ONE)
+		defs["Bip01 " + n] = i
+	for mi in model.find_children("*", "MeshInstance3D", true, false):
+		var skin: Skin = (mi as MeshInstance3D).skin
+		if skin == null or skin.has_meta("body_defs"):
+			continue
+		skin.set_meta("body_defs", true)
+		for k in skin.get_bind_count():
+			var nm := String(skin.get_bind_name(k))
+			if nm == "" and skin.get_bind_bone(k) >= 0:
+				nm = sk.get_bone_name(skin.get_bind_bone(k))
+			if defs.has(nm):
+				if String(skin.get_bind_name(k)) != "":
+					skin.set_bind_name(k, nm + " def")
+				skin.set_bind_bone(k, int(defs[nm]))
 
 
 class BodyShape extends SkeletonModifier3D:
 	var fig: Fig3Figure
 	var _b := {}
+	var _d := {}
 	var _leg := 0.0                              # the leg's rest length (pelvis to ankle), for the lift
 	var _up := Vector3.UP
+	var _bulged := false                         # bust / glute shapes set on the parts (cleared once when they go)
 
 	func _find(sk: Skeleton3D) -> void:
-		for n in ["Head", "Spine1", "Spine2", "Neck", "L Clavicle", "R Clavicle", "L UpperArm", "R UpperArm", "L Hand",
-				"R Hand", "L Thigh", "R Thigh", "L Foot", "R Foot", "Pelvis"]:
+		for n in ["Head", "Pelvis", "Spine", "Spine1", "Spine2", "Neck", "L Clavicle", "R Clavicle", "L UpperArm",
+				"R UpperArm", "L Forearm", "R Forearm", "L ForeTwist", "R ForeTwist", "L ForeTwist1", "R ForeTwist1",
+				"L Hand", "R Hand", "L Thigh", "R Thigh", "L Calf", "R Calf", "L Foot", "R Foot", "L Pauldron",
+				"R Pauldron", "L Back", "R Back"]:
 			_b[n] = sk.find_bone("Bip01 " + n)
+		for n in BODY_DEFS:
+			_d[n] = sk.find_bone("Bip01 %s def" % n)
 		var th: int = _b["L Thigh"]
 		var ft: int = _b["L Foot"]
 		if th >= 0 and ft >= 0:
@@ -1387,6 +1718,18 @@ class BodyShape extends SkeletonModifier3D:
 			var c := sk.get_bone_global_rest(ft).origin
 			_leg = a.distance_to(c)
 			_up = (a - c).normalized()
+
+	## A def bone's shape in the bone's own frame (Biped: x along the bone; on the spine y front-back, z across).
+	func _def(sk: Skeleton3D, n: String, s: Vector3) -> void:
+		var b: int = _d.get(n, -1)
+		if b >= 0:
+			sk.set_bone_pose_scale(b, s)
+
+	## A bone moved along its parent's length (the parent grew), or across (z), or front-back (y).
+	func _move(sk: Skeleton3D, n: String, f: Vector3) -> void:
+		var b: int = _b.get(n, -1)
+		if b >= 0 and not f.is_equal_approx(Vector3.ONE):
+			sk.set_bone_pose_position(b, sk.get_bone_pose_position(b) * f)
 
 	func _scale(sk: Skeleton3D, n: String, f: float) -> void:
 		var b: int = _b.get(n, -1)
@@ -1399,33 +1742,102 @@ class BodyShape extends SkeletonModifier3D:
 			return
 		var body: Dictionary = fig.look.get("body", {})
 		if body.is_empty():
+			if _bulged:
+				_bulge(sk, 0.0, 0.0)
 			return
 		if _b.is_empty():
 			_find(sk)
 		var v := func(k: String) -> float: return clampf(float(body.get(k, 0.0)), -1.0, 1.0)
-		var hd: float = 1.0 + 0.12 * v.call("head")
-		var tor: float = 1.0 + 0.08 * v.call("torso")
-		var ch: float = 1.0 + 0.1 * v.call("chest")
+		var hd: float = 1.0 + 0.09 * v.call("head")
 		var sh: float = 1.0 + 0.2 * v.call("shoulders")
+		var cw: float = 1.0 + 0.16 * v.call("chest_width")
+		var cd: float = 1.0 + 0.2 * v.call("chest_depth")
+		var wa: float = 1.0 + 0.2 * v.call("waist")
+		var tor: float = 1.0 + 0.12 * v.call("torso")
 		var ar: float = 1.0 + 0.08 * v.call("arms")
-		var lg: float = 1.0 + 0.07 * v.call("legs")
+		var at: float = 1.0 + 0.24 * v.call("arm_size")
 		var hn: float = 1.0 + 0.1 * v.call("hands")
-		_scale(sk, "Spine1", tor)                      # each bone's own change, then undone in the next
-		_scale(sk, "Spine2", ch / tor)
-		_scale(sk, "Neck", 1.0 / ch)
+		var hp: float = 1.0 + 0.17 * v.call("hips")
+		var lg: float = 1.0 + 0.07 * v.call("legs")
+		var tt: float = 1.0 + 0.24 * v.call("thighs")
+		var ct: float = 1.0 + 0.24 * v.call("calves")
 		_scale(sk, "Head", hd)
-		for side in ["L", "R"]:
-			_scale(sk, side + " Clavicle", sh / ch)
-			_scale(sk, side + " UpperArm", ar / sh)
-			_scale(sk, side + " Hand", hn / ar)
-			_scale(sk, side + " Thigh", lg)
-			_scale(sk, side + " Foot", 1.0 / lg)
+		# the trunk: the ribcage (Spine2) wide and deep, the belly (Spine1, Spine) the waist, the pelvis the hips
+		_def(sk, "Spine2", Vector3(1.0, cd, cw))
+		_def(sk, "Spine1", Vector3(tor, lerpf(1.0, cd, 0.3) * wa, lerpf(1.0, cw, 0.3) * wa))
+		_def(sk, "Spine", Vector3(1.0, wa, lerpf(wa, hp, 0.5)))
+		_def(sk, "Pelvis", Vector3(1.0, lerpf(1.0, hp, 0.5), hp))
+		_move(sk, "Spine2", Vector3(tor, 1.0, 1.0))
+		_move(sk, "L Back", Vector3(tor, 1.0, 1.0))
+		_move(sk, "R Back", Vector3(tor, 1.0, 1.0))
+		_move(sk, "L Thigh", Vector3(1.0, 1.0, hp))
+		_move(sk, "R Thigh", Vector3(1.0, 1.0, hp))
+		_move(sk, "L Clavicle", Vector3(1.0, 1.0, cw))
+		_move(sk, "R Clavicle", Vector3(1.0, 1.0, cw))
+		var sw := sh * lerpf(1.0, cw, 0.6)                   # the shoulder joint out with the shoulders and the chest
+		for side in ["L ", "R "]:
+			_def(sk, side + "Clavicle", Vector3(sw, 1.0, 1.0))
+			_move(sk, side + "UpperArm", Vector3(sw, 1.0, 1.0))
+			_move(sk, side + "Pauldron", Vector3(sw, 1.0, 1.0))
+			_def(sk, side + "Pauldron", Vector3.ONE * lerpf(1.0, at, 0.6))
+			for n in ["UpperArm", "BicepTwist", "Forearm", "ForeTwist", "ForeTwist1"]:
+				_def(sk, side + n, Vector3(ar, at, at))
+			_move(sk, side + "Forearm", Vector3(ar, 1.0, 1.0))
+			_move(sk, side + "ForeTwist", Vector3(ar, 1.0, 1.0))
+			_move(sk, side + "ForeTwist1", Vector3(ar, 1.0, 1.0))
+			_move(sk, side + "Hand", Vector3(ar, 1.0, 1.0))
+			_scale(sk, side + "Hand", hn)
+			_def(sk, side + "Thigh", Vector3(lg, tt, tt))
+			_def(sk, side + "ThighTwist", Vector3(lg, tt, tt))
+			_def(sk, side + "Calf", Vector3(lg, ct, ct))
+			_move(sk, side + "Calf", Vector3(lg, 1.0, 1.0))
+			_move(sk, side + "Foot", Vector3(lg, 1.0, 1.0))
 		# longer legs: the hips up by what they gained, so the feet stay on the ground
 		var pv: int = _b.get("Pelvis", -1)
 		if pv >= 0 and absf(lg - 1.0) > 0.0005 and _leg > 0.0:
 			var parent := sk.get_bone_parent(pv)
 			var pb := sk.get_bone_global_pose(parent).basis if parent >= 0 else Basis()
 			sk.set_bone_pose_position(pv, sk.get_bone_pose_position(pv) + pb.inverse() * (_up * _leg * (lg - 1.0)))
+		_bulge(sk, v.call("chest_size"), v.call("glutes"))
+
+	## Bust (pecs) and glutes: the parts' vertex shader swells the flesh round two points on the chest and two on the
+	## seat (figure.json "body_marks", pipeline/body_marks.py) - no bone carries them alone. Material uniforms, each
+	## figure's own (instance uniforms would take a slot in every NPC's every part).
+	func _bulge(sk: Skeleton3D, bust: float, glutes: float) -> void:
+		var marks: Dictionary = fig.meta.get("body_marks", {})
+		if marks.is_empty() or (absf(bust) < 0.001 and absf(glutes) < 0.001 and not _bulged):
+			return
+		_bulged = absf(bust) > 0.001 or absf(glutes) > 0.001
+		var g := sk.global_transform
+		var pts: Array[Vector4] = []
+		var dirs: Array[Vector3] = []
+		var amts: Array[float] = []
+		for k in [["bust", "Spine2", bust], ["glute", "Pelvis", glutes]]:
+			var m: Dictionary = marks.get(k[0], {})
+			var b: int = _b.get(k[1], -1)
+			if m.is_empty() or b < 0:
+				pts.append_array([Vector4.ZERO, Vector4.ZERO])
+				dirs.append(Vector3.ZERO)
+				amts.append(0.0)
+				continue
+			var t := g * sk.get_bone_global_pose(b)
+			var r := float(m.r) * g.basis.get_scale().x
+			for p in [m.l, m.rt]:
+				var w := t * Vector3(p[0], p[1], p[2])
+				pts.append(Vector4(w.x, w.y, w.z, r))
+			var d: Array = m.dir
+			dirs.append((t.basis * Vector3(d[0], d[1], d[2])).normalized())
+			amts.append(float(k[2]))
+		var vals := {"bulge_a": pts[0], "bulge_b": pts[1], "bulge_c": pts[2], "bulge_d": pts[3], "bulge_ab": dirs[0],
+			"bulge_cd": dirs[1], "bulge_amt": Vector2(amts[0], amts[1])}
+		for mi in fig.model.find_children("*", "MeshInstance3D", true, false):
+			var mats: Array = [(mi as MeshInstance3D).material_override]
+			for si in (mi as MeshInstance3D).get_surface_override_material_count():
+				mats.append((mi as MeshInstance3D).get_surface_override_material(si))
+			for m in mats:
+				if m is ShaderMaterial:
+					for k in vals:
+						(m as ShaderMaterial).set_shader_parameter(k, vals[k])
 
 
 class Sway extends SkeletonModifier3D:

@@ -24,10 +24,13 @@ NC = {'SCALAR': 1, 'VEC2': 2, 'VEC3': 3, 'VEC4': 4}
 FEATURES = [
     ('nose_width', 'Nose Width'), ('nose_length', 'Nose Length'), ('nose_height', 'Nose Height'),
     ('nose_bridge', 'Nose Bridge'), ('nose_tip', 'Nose Tip'), ('eye_spacing', 'Eye Spacing'), ('eye_height', 'Eye Height'),
-    ('eye_size', 'Eye Size'), ('eye_depth', 'Eye Depth'), ('eye_tilt', 'Eye Slant'), ('brow_height', 'Brow Height'), ('brow_depth', 'Brow Ridge'),
-    ('cheekbones', 'Cheekbones'), ('mouth_width', 'Mouth Width'), ('mouth_height', 'Mouth Height'),
-    ('lips', 'Lip Fullness'), ('jaw_width', 'Jaw Width'), ('jaw_height', 'Jaw Angle'), ('jaw_sharp', 'Jaw Definition'),
-    ('chin_length', 'Chin Length'), ('chin_point', 'Chin Point'), ('chin_width', 'Chin Width'),
+    ('eye_size', 'Eye Size'), ('eye_depth', 'Eye Depth'), ('eye_tilt', 'Eye Slant'), ('eye_squint', 'Eye Squint'),
+    ('brow_height', 'Brow Height'), ('brow_depth', 'Brow Ridge'), ('nose_tip_size', 'Nose Tip Size'),
+    ('cheekbones', 'Cheekbones'), ('cheek_puff', 'Cheek Fullness'), ('mouth_width', 'Mouth Width'),
+    ('mouth_height', 'Mouth Height'), ('lips', 'Lip Fullness'), ('upper_lip', 'Upper Lip'), ('lower_lip', 'Lower Lip'),
+    ('smile', 'Smile'), ('lip_out', 'Lip Pout'),
+    ('jaw_width', 'Jaw Width'), ('jaw_height', 'Jaw Angle'), ('jaw_sharp', 'Jaw Definition'),
+    ('chin_length', 'Chin Length'), ('chin_point', 'Chin Depth'), ('chin_width', 'Chin Width'),
     ('ear_size', 'Ear Size'), ('ear_out', 'Ears Out'), ('ear_tilt', 'Ear Tilt'),
 ]
 
@@ -135,6 +138,28 @@ def open_edge_mask(P, T, grp, fade):
     return np.clip(d / fade, 0, 1) ** 1.5
 
 
+def open_loops(P, T, grp):
+    """The mesh's open edge loops (by position): a list of point arrays."""
+    e = np.sort(np.concatenate([grp[T[:, [0, 1]]], grp[T[:, [1, 2]]], grp[T[:, [2, 0]]]]), axis=1)
+    u, c = np.unique(e, axis=0, return_counts=True)
+    be = u[c == 1]
+    gp = np.zeros((grp.max() + 1, 3))
+    gp[grp] = P
+    parent = {}
+
+    def find(a):
+        while parent.setdefault(a, a) != a:
+            parent[a] = parent[parent[a]]
+            a = parent[a]
+        return a
+    for a, b2 in be:
+        parent[find(a)] = find(b2)
+    loops = {}
+    for v in np.unique(be.reshape(-1)):
+        loops.setdefault(find(v), []).append(v)
+    return [gp[vs] for vs in loops.values()]
+
+
 def space_smooth(w, P, r):
     """A weight averaged over the points within about r in space (crosses the mesh's gaps, e.g. the lips' seam)."""
     out = np.zeros(len(P))
@@ -220,6 +245,10 @@ def build(P, N, T, fm, scale=1.0):
     d[:, 1] = (ry * np.cos(th) - rz * np.sin(th) - ry) * w_tip
     d[:, 2] = (ry * np.sin(th) + rz * np.cos(th) - rz) * w_tip
     D['nose_tip'] = d
+    # the tip's size (owner 2026-11-06): the ball of the nose grown about its own middle, a little inside the tip
+    tipc = nose_tip + [0, 0.035 * H, 0.01 * H]
+    w_ts = w_nose * np.clip(gauss(P, tipc, 0.06 * H) * 1.2, 0, 1)
+    D['nose_tip_size'] = (P - tipc) * 0.45 * w_ts[:, None]
     # eyes (each side about its own centre)
     side = np.sign(P[:, 0])
     d = z.copy(); d[:, 0] = side * 0.18 * s * w_eye; D['eye_spacing'] = d
@@ -235,6 +264,11 @@ def build(P, N, T, fm, scale=1.0):
     d[:, 0] = (rx * np.cos(th) - rz * np.sin(th) - rx) * core
     d[:, 2] = (rx * np.sin(th) + rz * np.cos(th) - rz) * core
     D['eye_tilt'] = d
+    # squint (owner 2026-11-06): the lids drawn toward the eye's middle line, the lower one a little more
+    d = z.copy()
+    dz = P[:, 2] - c[:, 2]
+    d[:, 2] = -dz * 0.32 * core * np.where(dz < 0, 1.25, 1.0)
+    D['eye_squint'] = d
     # brow: the ridge over the eyes, a narrow band (owner 2026-11-06: a round region a quarter of the head across moved
     # the whole upper face) - its height the most forward row above each eye, across the eyes and between them
     E = abs(eyeR[0] - eyeL[0])
@@ -258,12 +292,65 @@ def build(P, N, T, fm, scale=1.0):
     above_mouth = np.clip((P[:, 2] - (mouth[2] + 0.08 * H)) / (0.08 * H), 0, 1)
     w_ck = np.clip(gauss(P, ckL, ck) + gauss(P, ckR, ck), 0, 1) * front * (1 - w_nose) * (1 - core) * above_mouth
     D['cheekbones'] = Nn * (0.3 * s * w_ck)[:, None] + np.stack([np.sign(P[:, 0]) * 0.03 * s * w_ck, z[:, 1], z[:, 2]], 1)
-    # mouth
-    # (w_ls: the lips' weight smoothed through space - see above)
-    d = z.copy(); d[:, 0] = (P[:, 0] - mouth[0]) * 0.3 * w_ls; D['mouth_width'] = d
+    # the cheeks' flesh (owner 2026-11-06: "sunken or puffy"): beside the mouth, under the cheekbones, along the skin
+    cz = mouth[2] + 0.1 * H
+    cx = 0.5 * (abs(eyeL[0]) + abs(eyeR[0])) + 0.02 * H
+    q = ((np.abs(P[:, 0]) - cx) / (0.09 * H)) ** 2 + ((P[:, 2] - cz) / (0.1 * H)) ** 2
+    w_cp = np.exp(-q) * front * (1 - w_nose) * (1 - core)
+    D['cheek_puff'] = Nn * (0.28 * s * w_cp)[:, None]
+    # mouth (owner 2026-11-06: the old moves took the whole mouth area - now the lips themselves): the seam is the
+    # lips' own open edges; each lip a band above / below it, the corners at its ends
+    lps = [q_ for q_ in open_loops(P, T, grp) if np.linalg.norm(q_.mean(0)[[0, 2]] - mouth[[0, 2]]) < 0.12 * H]
+    S = np.concatenate(lps) if lps else mouth[None]
+    mx, zc = mouth[0], 0.5 * (S[:, 2].max() + S[:, 2].min())
+    hm = max((S[:, 0].max() - S[:, 0].min()) / 2, 0.05 * H)
+    sy = S[:, 1].min()
+    dx, dz = P[:, 0] - mx, P[:, 2] - zc
+    along = np.clip((hm * 1.12 - np.abs(dx)) / (0.3 * hm), 0, 1)
+    infront = np.clip((sy + 0.03 * H - P[:, 1]) / (0.03 * H), 0, 1)
+    # (nothing at the seam itself: a lip that grew at its edge parted the mouth)
+    dseam = np.full(len(P), np.inf)
+    for s0 in range(0, len(S), 256):
+        dseam = np.minimum(dseam, np.linalg.norm(P[:, None, :] - S[None, s0:s0 + 256], axis=2).min(1))
+    off_seam = np.clip((dseam - 0.004 * H) / (0.018 * H), 0, 1)
+    w_up = along * infront * off_seam * (dz > 0) * np.clip((0.065 * H - dz) / (0.03 * H), 0, 1)
+    w_lo = along * infront * off_seam * (dz < 0) * np.clip((0.075 * H + dz) / (0.035 * H), 0, 1)
+    # (a lip's height about the seam more than its push out: drawn in along the skin, thin lips showed the mouth's
+    # inside)
+    ms = s * float(np.clip(0.08 * H / hm, 1.0, 1.8))     # (small mouths - the lurikeen's - a bigger move of their own)
+    D['upper_lip'] = Nn * (0.035 * ms * w_up)[:, None] + np.stack([z[:, 0], z[:, 1], 0.5 * dz * w_up], 1)
+    D['lower_lip'] = Nn * (0.04 * ms * w_lo)[:, None] + np.stack([z[:, 0], z[:, 1], 0.5 * dz * w_lo], 1)
+    D['lips'] = D['upper_lip'] + D['lower_lip']
+    # the seam's two edges get the same weight (they sit alike about its middle), so the mouth stays shut
+    w_mw = np.clip((hm * 1.6 - np.abs(dx)) / (0.6 * hm), 0, 1) * np.clip(1 - np.abs(dz) / (0.11 * H), 0, 1) \
+        * np.clip((sy + 0.08 * H - P[:, 1]) / (0.05 * H), 0, 1)
+    d = z.copy(); d[:, 0] = dx * 0.3 * w_mw; D['mouth_width'] = d
     d = z.copy(); d[:, 2] = 0.15 * s * w_ls; D['mouth_height'] = d
-    # fuller lips: forward, both lips alike, so the seam stays shut
-    d = z.copy(); d[:, 1] = -0.14 * s * w_ls ** 2; D['lips'] = d
+    w_cn = np.exp(-((np.abs(dx) - hm) ** 2 + dz ** 2) / (2 * (0.55 * hm) ** 2)) \
+        * np.clip((sy + 0.08 * H - P[:, 1]) / (0.05 * H), 0, 1)
+    d = z.copy(); d[:, 2] = 0.16 * ms * w_cn; d[:, 1] = 0.04 * ms * w_cn; D['smile'] = d
+    w_po = along * np.clip(1 - np.abs(dz) / (0.08 * H), 0, 1) * infront
+    d = z.copy(); d[:, 1] = -0.12 * ms * w_po; D['lip_out'] = d
+    # the seam's two edges (upper lip's, lower lip's) moved as one: each seam point takes the mean of itself and the
+    # other edge's point across from it, so no mouth move opens the mouth
+    if len(lps) >= 2:
+        lps2 = sorted(lps, key=lambda q_: q_[:, 2].mean())[-2:]
+        idx = []
+        for q_ in lps2:
+            dd = np.full(len(P), np.inf)
+            for s0 in range(0, len(q_), 256):
+                dd = np.minimum(dd, np.linalg.norm(P[:, None, :] - q_[None, s0:s0 + 256], axis=2).min(1))
+            idx.append(np.nonzero(dd < 1e-5 * H)[0])
+        a_, b_ = idx
+        if len(a_) and len(b_):
+            pa, pb = P[a_], P[b_]
+            na = b_[np.argmin(np.abs(pa[:, None, 0] - pb[None, :, 0]) + 0.3 * np.abs(pa[:, None, 1] - pb[None, :, 1]), axis=1)]
+            nb = a_[np.argmin(np.abs(pb[:, None, 0] - pa[None, :, 0]) + 0.3 * np.abs(pb[:, None, 1] - pa[None, :, 1]), axis=1)]
+            for k in MOUTH_KEYS:
+                if k in D:
+                    dk = D[k]
+                    va, vb = (dk[a_] + dk[na]) / 2, (dk[b_] + dk[nb]) / 2
+                    dk[a_], dk[b_] = va, vb
     # jaw and chin
     # (from below the lower lip, and never the lips: a jaw or chin that took the lower lip and not the upper opened
     # the mouth)
@@ -321,7 +408,7 @@ def build(P, N, T, fm, scale=1.0):
     D['ear_tilt'] = d
     # every move: gone at the open edges, one value per position; only the mouth's own moves touch the lips
     for k in D:
-        dk = D[k] * (edge if k in ('mouth_width', 'mouth_height', 'lips') else edge * keep_mouth)[:, None] * STRENGTH
+        dk = D[k] * (edge if k in MOUTH_KEYS else edge * keep_mouth)[:, None] * STRENGTH
         g = np.zeros((grp.max() + 1, 3))
         cnt = np.zeros(grp.max() + 1)
         np.add.at(g, grp, dk)
@@ -329,9 +416,12 @@ def build(P, N, T, fm, scale=1.0):
         D[k] = (g / np.maximum(cnt, 1)[:, None])[grp]
     marks = {'eyeL': eyeL, 'eyeR': eyeR, 'nose_tip': nose_tip, 'mouth': mouth, 'chin': chin, 'H': H, 'hw': hw}
     # (for pipeline/skin_layers.py: the regions too; '_' keys are not printed)
-    marks['_w'] = {'eye': w_eye, 'nose': w_nose, 'lip': w_lip, 'lips': w_ls, 'jaw': w_jaw, 'front': front}
+    marks['_w'] = {'eye': w_eye, 'nose': w_nose, 'lip': w_lip, 'lips': w_ls, 'jaw': w_jaw, 'front': front,
+                   'lip_up': w_up, 'lip_lo': w_lo}
     return D, marks
 
+
+MOUTH_KEYS = ('mouth_width', 'mouth_height', 'lips', 'upper_lip', 'lower_lip', 'smile', 'lip_out')
 
 # every slider's full move (owner 2026-11-06: the extremes were the worst - a quarter less, then back up 15%)
 STRENGTH = 0.8625      # (0.75, then owner 2026-11-06 again: 'too aggressive ... increase it 15%')

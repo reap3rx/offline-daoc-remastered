@@ -370,6 +370,10 @@ def build_figure(t, realm, race, gender, fig, upscale_list):
         skin_layers.bake(out)                         # landmarks the face shapes found)
         import split_beards                           # and the men's beards, a choice of their own
         split_beards.run(out)
+        import split_headwear                         # and the Saracens' turbans, worn over any hair
+        split_headwear.run(out)
+        import body_marks                             # and where the body sliders' bust and glutes swell
+        body_marks.run(out)
     upscale_list.update(textures)
     print(f'{prefix}: {race} {gender} fig {fig}, {len(faces)} faces, {len(eyes)} eyes, {len(tones)} tones, '
           f'{len(styles)} hair styles ({sum(1 for s in styles if s["node"])} meshes), {len(tattoos)} tattoos, '

@@ -617,37 +617,65 @@ func _c_key(p: Control, label: String, key: String, values: Array, y: float, def
 		_redraw(), y, key)
 
 
-## A colour bar: the colour itself, arrows through the choices, a click on it opens them all.
-func _c_colour(p: Control, label: String, key: String, colours: Array, y: float) -> float:
+## The hair style row: the race's styles less the headwear that came through as styles (Fig3Figure.creator_styles).
+func _c_hair_style(p: Control, y: float) -> float:
+	var styles: Array = _figure.meta.get("hair_styles", [])
+	var offer: Array = _figure.creator_styles()
+	if offer.is_empty():
+		return y
+	var cur_i := int(draft.look.get("hair", 0))
+	var at := offer.find(cur_i)
+	var label := String(styles[cur_i].label) if cur_i >= 0 and cur_i < styles.size() else "-"
+	return _c_cycle(p, "Hair Style", label, func(d: int):
+		var n: int = offer[(at + d + offer.size()) % offer.size()] if at >= 0 else offer[0]
+		_figure.apply({"hair": n, "hair_color": int(draft.look.get("hair_color", 0))})
+		_redraw(), y, "hair")
+
+
+## A colour bar: the colour itself, arrows through the choices, a click on it opens them all - and, mode "wheel" or
+## "skin" (owner 2026-11-06: "a color wheel ... rather than swatches"), a colour of the player's own (look
+## "<key>_rgb", which the figure prefers to the choice; a swatch or an arrow drops it).
+func _c_colour(p: Control, label: String, key: String, colours: Array, y: float, mode := "wheel") -> float:
 	if colours.is_empty():
 		return y
 	var cur := clampi(int(draft.look.get(key, 0)), 0, colours.size() - 1)
+	var own = _figure.custom_colour(key)
 	_ctext(label.to_upper(), p, 0, y, 112, 26, 14, CREAM, HORIZONTAL_ALIGNMENT_RIGHT)
 	var pick := func(i: int):
-		_figure.apply({key: i})
+		_figure.apply({key: i, key + "_rgb": null})
 		_redraw()
 	_cbutton("<", p, 120, y, 26, 26, func(): pick.call((cur - 1 + colours.size()) % colours.size()), 15)
 	var bar := Button.new()
 	bar.focus_mode = Control.FOCUS_NONE
-	for st in ["normal", "hover", "pressed"]:
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = colours[cur]
-		sb.border_color = Color(1.0, 0.82, 0.4) if st == "hover" else Color(0.05, 0.04, 0.03)
-		sb.set_border_width_all(2)
-		sb.set_corner_radius_all(3)
-		bar.add_theme_stylebox_override(st, sb)
+	var paint_bar := func(c: Color):
+		for st in ["normal", "hover", "pressed"]:
+			var sb := StyleBoxFlat.new()
+			sb.bg_color = c
+			sb.border_color = Color(1.0, 0.82, 0.4) if st == "hover" else Color(0.05, 0.04, 0.03)
+			sb.set_border_width_all(2)
+			sb.set_corner_radius_all(3)
+			bar.add_theme_stylebox_override(st, sb)
+	paint_bar.call(own if own != null else colours[cur])
 	bar.position = Vector2(150, y + 2)
 	bar.size = Vector2(142, 22)
-	bar.tooltip_text = "%d / %d" % [cur + 1, colours.size()]
+	bar.tooltip_text = "custom" if own != null else "%d / %d" % [cur + 1, colours.size()]
 	p.add_child(bar)
-	bar.pressed.connect(func(): _open_picker(colours, cur, pick, bar))
+	var custom := Callable()
+	if mode != "":
+		custom = func(c: Color):                       # (live, as the wheel turns: the figure only - no rebuild)
+			_figure.apply({key + "_rgb": [snappedf(c.r, 0.001), snappedf(c.g, 0.001), snappedf(c.b, 0.001)]})
+			paint_bar.call(c)
+	bar.pressed.connect(func(): _open_picker(colours, -1 if own != null else cur, pick, bar, custom,
+			own if own != null else colours[cur], mode))
 	_cbutton(">", p, 296, y, 26, 26, func(): pick.call((cur + 1) % colours.size()), 15)
 	_c_lock(p, key, y)
 	return y + 32
 
 
-## Every choice of a colour at once, under its bar; a click takes one, a click anywhere else closes it.
-func _open_picker(colours: Array, cur: int, pick: Callable, near: Control = null) -> void:
+## Every choice of a colour at once, under its bar; a click takes one, a click anywhere else closes it. With a
+## custom callback: under them the wheel (any colour) or, mode "skin", the race's own range of skin colours.
+func _open_picker(colours: Array, cur: int, pick: Callable, near: Control = null, custom := Callable(),
+		start := Color.WHITE, mode := "") -> void:
 	if is_instance_valid(_picker):
 		_picker.queue_free()
 	_picker = Control.new()
@@ -655,19 +683,25 @@ func _open_picker(colours: Array, cur: int, pick: Callable, near: Control = null
 	_picker.position = Vector2.ZERO
 	_picker.size = Vector2(_wext, 768)
 	_frame.add_child(_picker)
+	var changed := [false]
 	_picker.gui_input.connect(func(e: InputEvent):
 		if e is InputEventMouseButton and e.pressed:
-			_picker.queue_free())
+			_picker.queue_free()
+			if changed[0]:
+				_redraw())
 	var cols := 8
 	var rows := int(ceil(colours.size() / float(cols)))
 	var w := cols * 34 + 16
-	var h := rows * 30 + 16
+	var extra := 0.0
+	if custom.is_valid():
+		extra = 196.0 if mode == "skin" else 300.0
+	var h := rows * 30 + 16 + extra
 	var at := Vector2(_wext - 24 - w - 8, 124)
 	if near:
 		var local: Vector2 = _frame.get_global_transform().affine_inverse() * near.global_position
 		at = Vector2(minf(local.x + near.size.x - w, _wext - w - 8), local.y + near.size.y + 4)
-		if at.y + h > 690:
-			at.y = local.y - h - 4
+		if at.y + h > 740:
+			at.y = maxf(local.y - h - 4, 8.0)
 	var box := Panel.new()
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(C_PANEL, 0.96)
@@ -696,6 +730,90 @@ func _open_picker(colours: Array, cur: int, pick: Callable, near: Control = null
 		b.pressed.connect(func():
 			_picker.queue_free()
 			pick.call(i))
+	if not custom.is_valid():
+		return
+	var top := rows * 30 + 12.0
+	_ctext("CUSTOM", box, 0, top, w, 18, 12, GOLD, HORIZONTAL_ALIGNMENT_CENTER)
+	if mode == "skin":
+		var field := TextureRect.new()
+		var img := _skin_field(258, 150)
+		field.texture = ImageTexture.create_from_image(img)
+		field.position = Vector2(8, top + 22)
+		field.size = Vector2(w - 16, 150)
+		field.stretch_mode = TextureRect.STRETCH_SCALE
+		field.mouse_filter = Control.MOUSE_FILTER_STOP
+		box.add_child(field)
+		var mark := ColorRect.new()
+		mark.color = Color(1, 1, 1, 0.9)
+		mark.size = Vector2(6, 6)
+		mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		mark.visible = false
+		field.add_child(mark)
+		var take := func(pos: Vector2):
+			var q := Vector2(clampf(pos.x / field.size.x, 0.0, 0.999), clampf(pos.y / field.size.y, 0.0, 0.999))
+			mark.position = Vector2(q.x * field.size.x - 3, q.y * field.size.y - 3)
+			mark.visible = true
+			changed[0] = true
+			custom.call(img.get_pixel(int(q.x * img.get_width()), int(q.y * img.get_height())))
+		field.gui_input.connect(func(e: InputEvent):
+			if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
+				take.call(e.position)
+			elif e is InputEventMouseMotion and (e.button_mask & MOUSE_BUTTON_MASK_LEFT):
+				take.call(e.position))
+		return
+	var cp := ColorPicker.new()
+	cp.edit_alpha = false
+	cp.picker_shape = ColorPicker.SHAPE_HSV_WHEEL
+	cp.sampler_visible = false
+	cp.color_modes_visible = false
+	cp.sliders_visible = false
+	cp.hex_visible = false
+	cp.presets_visible = false
+	cp.can_add_swatches = false
+	cp.color = start
+	cp.position = Vector2(8, top + 20)
+	cp.custom_minimum_size = Vector2(w - 16, 260)
+	cp.size = Vector2(w - 16, 270)
+	box.add_child(cp)
+	cp.color_changed.connect(func(c: Color):
+		changed[0] = true
+		custom.call(c))
+
+
+## The custom skin colours a race takes (owner 2026-11-06: "natural for the race ... darker skin for humans and
+## elves"): across, pale to deep; down, cool (pink) to warm (olive). Human-coloured races get the whole human range
+## (and their own tones within it); the others (trolls, kobolds ...) their own tones, extended lighter and darker.
+func _skin_field(w: int, h: int) -> Image:
+	var tones: Array = _figure.meta.get("skin_tones", [])
+	var base := _figure.skin_base()
+	var own: Array[Color] = []
+	for t in tones:
+		var k := Fig3Figure.skin_tint(t)
+		own.append(Color(base.r * k.r, base.g * k.g, base.b * k.b))
+	own.sort_custom(func(a: Color, b: Color): return a.get_luminance() > b.get_luminance())
+	var human := true
+	for c in own:
+		if not (c.r >= c.g and c.g >= c.b * 0.92):           # (blue, green or grey skins: their own range)
+			human = false
+	var stops: Array[Color] = []
+	if human or own.is_empty():
+		stops = [Color(0.97, 0.86, 0.79), Color(0.88, 0.7, 0.6), Color(0.76, 0.56, 0.42), Color(0.6, 0.41, 0.28),
+			Color(0.44, 0.28, 0.18), Color(0.3, 0.19, 0.12), Color(0.19, 0.12, 0.08)]
+	else:
+		stops.append(own[0].lightened(0.25))
+		stops.append_array(own)
+		stops.append(own[own.size() - 1].darkened(0.35))
+	var img := Image.create(w, h, false, Image.FORMAT_RGB8)
+	for x in w:
+		var t := float(x) / float(w - 1) * float(stops.size() - 1)
+		var i := mini(int(t), stops.size() - 2)
+		var c: Color = stops[i].lerp(stops[i + 1], t - float(i))
+		for y in h:
+			var u := float(y) / float(h - 1)
+			var m: Color = Color(1.05, 0.95, 0.98).lerp(Color(1.0, 1.0, 1.0), u * 2.0) if u < 0.5 \
+				else Color(1.0, 1.0, 1.0).lerp(Color(0.99, 1.0, 0.84), (u - 0.5) * 2.0)
+			img.set_pixel(x, y, Color(clampf(c.r * m.r, 0, 1), clampf(c.g * m.g, 0, 1), clampf(c.b * m.b, 0, 1)))
+	return img
 
 
 ## A slider row (indented under its choice when sub).
@@ -729,9 +847,20 @@ func _c_amount(p: Control, label: String, key: String, def: float, lo: float, hi
 func _c_face(p: Control, y: float) -> float:
 	var f := _figure
 	y = _c_header(p, "APPEARANCE", y)
-	y = _c_colour(p, "Skin Color", "skin", _skin_colours(), y)
+	y = _c_colour(p, "Skin Color", "skin", _skin_colours(), y, "skin")
 	y = _c_colour(p, "Eye Color", "eyes", _eye_colours(), y)
-	y = _c_key(p, "Hair Style", "hair", f.meta.get("hair_styles", []).map(func(x): return String(x.label)), y)
+	y = _c_hair_style(p, y)
+	if f.option_count("turban") > 0:              # (Saracens: a turban worn over any hair style)
+		var tl: Array = ["None"] + f.meta.turbans.map(func(x): return String(x.label))
+		var tcur := f.turban_index()
+		y = _c_cycle(p, "Headwear", String(tl[tcur]), func(d: int):
+			var n := (tcur + d + tl.size()) % tl.size()
+			_figure.apply({"turban": n})
+			if not _figure.creator_styles().has(int(_figure.look.get("hair", 0))) and not _figure.creator_styles().is_empty():
+				_figure.apply({"hair": _figure.creator_styles()[0]})    # (the hair from under a turban, gone with it)
+			_redraw(), y, "turban")
+		if tcur > 0:
+			y = _c_colour(p, "Turban Color", "turban_color", Fig3Figure.TURBAN_COLORS, y)
 	if f.option_count("beard") > 1:                 # (men: the beards split off the hair styles)
 		y = _c_key(p, "Beard", "beard", ["None"] + f.meta.beards.map(func(x): return String(x.label)), y, f.beard_index())
 	if f.option_count("hair_color") > 0 and (_hair_has_mesh() or f.beard_index() > 0):
@@ -807,6 +936,11 @@ func _c_skin(p: Control, y: float) -> float:
 				y = _c_key(p, "Brows", "brows", opts, y)
 				if on.call("brows"):
 					y = _c_amount(p, "Density", "brow_amt", 1.0, 0.3, 1.4, y)
+					var hc: Array = _hair_colours()                 # (0: the hair's colour - for a bald man, his
+					var bc := [hc[clampi(int(draft.look.get("hair_color", 0)), 0, hc.size() - 1)] if hc.size() > 0 \
+						else Color(0.22, 0.16, 0.11)]                 # style's)
+					bc.append_array(Fig3Figure.BROW_COLORS)
+					y = _c_colour(p, "Brow Color", "brow_color", bc, y)
 			"age":
 				y = _c_key(p, "Age Lines", "age_style", opts, y)
 				if on.call("age_style"):
@@ -817,6 +951,9 @@ func _c_skin(p: Control, y: float) -> float:
 					y = _c_amount(p, "Strength", "stubble", 0.8, 0.1, 1.0, y)
 			"freckles":
 				y = _c_key(p, "Freckles", "freckles", opts, y)
+				if on.call("freckles"):
+					y = _c_colour(p, "Freckle Color", "freckle_color", Fig3Figure.FRECKLE_COLORS, y)
+					y = _c_amount(p, "Strength", "freckle_amt", 0.9, 0.1, 1.2, y)
 			"scar":
 				y = _c_key(p, "Scar", "scar", opts, y)
 				if on.call("scar"):
@@ -826,13 +963,18 @@ func _c_skin(p: Control, y: float) -> float:
 				var cols := [Color(0.62, 0.42, 0.4)]   # (the first: the face's own)
 				cols.append_array(Fig3Figure.LIP_COLORS.slice(1))
 				y = _c_colour(p, "Lip Color", "lip_color", cols, y)
-				if on.call("lip_color"):
+				if on.call("lip_color") or _figure.custom_colour("lip_color") != null:
 					y = _c_amount(p, "Strength", "lip_amt", 0.6, 0.1, 1.0, y)
 			"paint":
 				y = _c_header(p, "WAR PAINT", y + 4)
 				y = _c_key(p, "Pattern", "paint", opts, y)
 				if on.call("paint"):
 					y = _c_colour(p, "Paint Color", "paint_color", Fig3Figure.PAINT_COLORS, y)
+					y = _c_amount(p, "Strength", "paint_amt", 0.92, 0.1, 1.0, y)
+					var pyv := Fig3Figure.PAINT_Y                  # (owner 2026-11-06: placed by hand, never off the face)
+					y = _c_amount(p, "Up / Down", "paint_y", 0.0, pyv.x, pyv.y, y)
+					y = _c_amount(p, "Size", "paint_size", 1.0, Fig3Figure.PAINT_SIZE.x, Fig3Figure.PAINT_SIZE.y, y)
+					y = _c_amount(p, "Turn", "paint_turn", 0.0, Fig3Figure.PAINT_TURN.x, Fig3Figure.PAINT_TURN.y, y)
 	if _figure.option_count("hair") > 0:
 		y = _c_header(p, "HAIR", y + 4)
 		y = _c_key(p, "Scalp Shade", "scalp_off", ["On", "Off"], y)
@@ -842,12 +984,19 @@ func _c_skin(p: Control, y: float) -> float:
 # --- BODY: the figure's proportions (Fig3Figure.BODY_SLIDERS: bones scaled after the animation)
 func _c_body(p: Control, y: float) -> float:
 	y = _c_header(p, "BODY", y)
-	y = _c_colour(p, "Skin Color", "skin", _skin_colours(), y)
-	y = _c_header(p, "PROPORTIONS", y + 4)
+	y = _c_colour(p, "Skin Color", "skin", _skin_colours(), y, "skin")
 	var body: Dictionary = draft.look.get("body", {})
+	var group := ""
+	var female := _figure.race.ends_with("_f")
 	for bs in Fig3Figure.BODY_SLIDERS:
 		var key := String(bs[0])
-		y = _c_slider(p, String(bs[1]), float(body.get(key, 0.0)), -1.0, 1.0, func(v: float):
+		if String(bs[2]) != group:
+			group = String(bs[2])
+			y = _c_header(p, group, y + 4)
+		var label := String(bs[1])
+		if key == "chest_size":
+			label = "Bust" if female else "Pecs"
+		y = _c_slider(p, label, float(body.get(key, 0.0)), -1.0, 1.0, func(v: float):
 			var b: Dictionary = (_figure.look.get("body", {}) as Dictionary).duplicate()
 			if absf(v) < 0.001:
 				b.erase(key)
@@ -892,7 +1041,9 @@ func _random_skin(all := false) -> Dictionary:
 		out["brows"] = randi_range(1, count.call("brows"))
 		out["brow_amt"] = snappedf(randf_range(0.7, 1.15), 0.05)
 	if free.call("freckles"):
-		out["freckles"] = 0 if randf() < 0.75 else randi_range(1, 2)
+		out["freckles"] = 0 if randf() < 0.75 else randi_range(1, maxi(count.call("freckles"), 1))
+		out["freckle_color"] = randi() % Fig3Figure.FRECKLE_COLORS.size()
+		out["freckle_color_rgb"] = null
 	if free.call("age_style"):
 		out["age_style"] = 0 if randf() < 0.65 else randi_range(1, count.call("age"))
 		out["age"] = snappedf(randf_range(0.3, 0.9), 0.05)
@@ -902,8 +1053,11 @@ func _random_skin(all := false) -> Dictionary:
 		out["stubble_style"] = randi_range(0, count.call("stubble")) if not _figure.race.ends_with("_f") and randf() < 0.6 else 0
 		out["stubble"] = snappedf(randf_range(0.4, 1.0), 0.05)
 	if free.call("paint"):
-		out["paint"] = 0 if randf() < 0.85 else randi_range(1, 6)
+		out["paint"] = 0 if randf() < 0.85 else randi_range(1, maxi(count.call("paint"), 1))
 		out["paint_color"] = randi() % Fig3Figure.PAINT_COLORS.size()
+		out["paint_color_rgb"] = null
+		for k in ["paint_y", "paint_size", "paint_turn", "paint_amt"]:
+			out[k] = null
 	if free.call("lip_color"):
 		out["lip_color"] = 0 if randf() < 0.8 else randi_range(1, Fig3Figure.LIP_COLORS.size() - 1)
 		out["lip_amt"] = snappedf(randf_range(0.35, 0.7), 0.05)
@@ -1137,6 +1291,18 @@ func _randomize() -> void:
 	for k in ["face", "eyes", "skin", "hair", "tattoo"]:
 		if not locks.get(k, false) and f.option_count(k) > 0:
 			l[k] = randi() % f.option_count(k)
+			l[k + "_rgb"] = null                       # (a colour of the player's own goes with it)
+	if l.has("hair"):
+		if not locks.get("turban", false) and f.option_count("turban") > 0:
+			f.apply({"turban": 0 if randf() < 0.6 else randi_range(1, f.option_count("turban") - 1)})
+		var offer: Array = f.creator_styles()
+		if not offer.is_empty():
+			l["hair"] = offer[randi() % offer.size()]
+	if not locks.get("hair_color", false):
+		l["hair_color_rgb"] = null
+	if not locks.get("turban", false) and f.option_count("turban") > 0:
+		l["turban_color"] = randi() % Fig3Figure.TURBAN_COLORS.size()
+		l["turban_color_rgb"] = null
 	if not locks.get("beard", false) and f.option_count("beard") > 1:
 		l["beard"] = 0 if randf() < 0.35 else randi_range(1, f.option_count("beard") - 1)
 	f.apply(l)
@@ -1399,14 +1565,17 @@ func _swatch(tex: String, tint: Color, kind: String) -> Color:
 		img.convert(Image.FORMAT_RGBA8)
 		if kind == "face":
 			img = img.get_region(Rect2i(img.get_width() * 3 / 10, img.get_height() * 3 / 10, img.get_width() * 2 / 5, img.get_height() / 4))
-		img.resize(32, 32, Image.INTERPOLATE_BILINEAR)
+		# (an iris is a small part of its texture: at 32 x 32 it averaged into the white - the women's eye swatches
+		# all came out alike; owner 2026-11-06)
+		var rs := 128 if kind == "iris" else 32
+		img.resize(rs, rs, Image.INTERPOLATE_BILINEAR)
 		var sum := Color(0, 0, 0, 0)
 		var n := 0.0
-		for yy in 32:
-			for xx in 32:
+		for yy in rs:
+			for xx in rs:
 				var p := img.get_pixel(xx, yy)
 				var lum := (p.r + p.g + p.b) / 3.0
-				if kind == "iris" and lum > 0.85:
+				if kind == "iris" and (lum > 0.8 or lum < 0.06):
 					continue
 				if kind == "hair" and p.a < 0.5:
 					continue
@@ -1699,11 +1868,16 @@ func _shots(folder: String) -> void:
 		_tab = "skin"
 		_show("customize")
 		await save.call("5_skin")
-		_open_picker(Fig3Figure.SCAR_COLORS, 0, func(i): pass)
+		_open_picker(Fig3Figure.SCAR_COLORS, 0, func(i): pass, null, func(c): pass, Color(0.8, 0.6, 0.5))
 		await save.call("5_skin_picker")
+		_open_picker(_skin_colours(), 0, func(i): pass, null, func(c): pass, Color(0.8, 0.6, 0.5), "skin")
+		await save.call("5_skin_field")
+		if is_instance_valid(_picker):
+			_picker.queue_free()
 	_tab = "body"
 	_body_view = true
-	_figure.apply({"body": {"height": 0.5, "shoulders": 0.8, "chest": 0.7, "arms": 0.5, "legs": 0.8, "head": -0.5}})
+	_figure.apply({"body": {"height": 0.5, "shoulders": 0.8, "chest_width": 0.8, "chest_size": 0.8, "waist": -0.7,
+			"arms": 0.5, "arm_size": 0.8, "legs": 0.8, "head": -0.5, "thighs": 0.8, "glutes": 0.8}})
 	draft.look = _figure.look.duplicate(true)
 	_show("customize")
 	await save.call("5_body")

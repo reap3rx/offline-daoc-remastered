@@ -102,7 +102,9 @@ def run(folder, dry=False):
     meta_path = folder / 'figure.json'
     meta = json.loads(meta_path.read_text(encoding='utf-8'))
     if not str(meta.get('prefix', '')).endswith('_m'):
-        print('not male: skipped', folder.name)
+        colour_rgb(folder, meta)                      # (every race's colours measured: the creator's own hair colour)
+        meta_path.write_text(json.dumps(meta, indent=1), encoding='utf-8')
+        print('not male: colours measured', folder.name)
         return
     if meta.get('beards'):
         colour_rgb(folder, meta)

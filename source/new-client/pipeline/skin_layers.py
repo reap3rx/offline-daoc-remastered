@@ -31,12 +31,13 @@ ONE_SIDED = {('scar', 0), ('scar', 1), ('scar', 2), ('scar', 3)}   # drawn on on
 # the layers: look key, label, kind, the options (each one mask) - the client lists them in this order
 LAYERS = [
     ('brows', 'Brows', 'hair', ['Fuller', 'Thick', 'Heavy']),
-    ('freckles', 'Freckles', 'freckle', ['Light', 'Many']),
+    ('freckles', 'Freckles', 'freckle', ['Light', 'Many', 'Nose Band', 'Sparse']),
     ('age', 'Age Lines', 'age', ['Lines']),
     ('scar', 'Scar', 'scar', ['Cheek', 'Eye', 'Lip', 'Brow']),
     ('stubble', 'Stubble', 'hair', ['Stubble']),
     ('lips', 'Lip Colour', 'lip', ['Lips']),
-    ('paint', 'War Paint', 'paint', ['Mask', 'Claws', 'Half', 'Chin', 'Sweep', 'Spirals']),
+    ('paint', 'War Paint', 'paint', ['Mask', 'Claws', 'Band', 'Chin', 'Sweep', 'Spirals', 'Smoke', 'Crown', 'Nose Line',
+                                     'Tears', 'Wings', 'Hooks', 'Jaw', 'Dots', 'Rune', 'Brow Fade']),
 ]
 
 
@@ -121,18 +122,22 @@ def draw(L, rng):
                 cv2.line(c, px(sgn * q[0], q[1]), px(sgn * e[0], e[1]), 0.6 + 0.4 * rng.random(), 1, cv2.LINE_AA)
         M['brows', k] = np.clip(blur(c, 0.012), 0, 1)
     # --- freckles: dots over the nose and cheeks; many: the whole face
-    for k, (n, region) in enumerate([(900, 'cheeks'), (2600, 'face')]):
+    # (owner 2026-11-06, a photo: "the cute pattern that goes across the nose") - nose band: dense across the bridge
+    # and the tops of the cheeks, fading out; sparse: a few, scattered
+    for k, (n, region) in enumerate([(900, 'cheeks'), (2600, 'face'), (3200, 'band'), (300, 'face')]):
         c = canvas()
         for _ in range(n * 4):
             u, v = rng.uniform(-1.3, 1.3), rng.uniform(vc - 0.2, 1.4)
             if region == 'cheeks':
                 d = np.exp(-((abs(u) - 0.5) ** 2 / 0.09 + (v + 0.4) ** 2 / 0.08)) \
                     + np.exp(-(u ** 2 / 0.03 + (v + 0.25) ** 2 / 0.06))
+            elif region == 'band':
+                d = np.exp(-(u ** 2 / 0.6 + (v + 0.3 + 0.12 * u * u) ** 2 / 0.03)) * 3.0
             else:
                 d = 0.35 + 0.65 * np.exp(-((abs(u) - 0.35) ** 2 / 0.4 + (v + 0.3) ** 2 / 0.5))
             if rng.random() > d * 0.25:
                 continue
-            r = rng.uniform(0.008, 0.022)
+            r = rng.uniform(0.008, 0.022) if region != 'band' else rng.uniform(0.006, 0.016)
             cv2.circle(c, px(u, v), max(1, int(r / FS)), float(rng.uniform(0.35, 1.0)), -1, cv2.LINE_AA)
         M['freckles', k] = np.clip(blur(c, 0.008), 0, 1)
     # --- age lines: forehead, frown, crow's feet, under the eyes, nose-to-mouth folds, mouth corners
@@ -214,9 +219,99 @@ def draw(L, rng):
         pts = list(zip(cu + r * np.cos(th), cv_ + r * np.sin(th)))
         line(c, pts, 0.035, 1.0, both=both)
     paints.append(c)
+    # (owner 2026-11-06: more war paints - drawn here, after the kinds in the owner's examples)
+    c = canvas()                                       # smoke: a soft dark band round the eyes, smudged out
+    for sgn in (1, -1):
+        cv2.ellipse(c, px(sgn * 0.5, -0.02), (int(0.42 / FS), int(0.24 / FS)), 0, 0, 360, 1.0, -1, cv2.LINE_AA)
+    cv2.rectangle(c, px(-0.5, 0.12), px(0.5, -0.12), 1.0, -1)
+    paints.append(blur(c, 0.14) * 1.3)
+    c = canvas()                                       # crown: a thorned line over the brows
+    pts = [(u, 0.58 + 0.07 * np.cos(u * 2.4)) for u in np.linspace(-1.05, 1.05, 30)]
+    taper(c, pts[:15], 0.02, 0.05, 1.0)
+    taper(c, pts[14:], 0.05, 0.02, 1.0)
+    for u in (-0.85, -0.5, -0.2, 0.0, 0.2, 0.5, 0.85):
+        v0 = 0.58 + 0.07 * np.cos(u * 2.4)
+        h = 0.28 if u == 0 else 0.16
+        taper(c, [(u, v0), (u * 1.08, v0 + h)], 0.05, 0.008, 1.0)
+    paints.append(c)
+    c = canvas()                                       # nose line: down the forehead and the nose's ridge
+    taper(c, [(0, 1.15), (0, 0.6), (0, 0.15), (0, vn + 0.05)], 0.11, 0.05, 1.0)
+    cv2.circle(c, px(0, 0.95), int(0.07 / FS), 1.0, -1, cv2.LINE_AA)
+    paints.append(c)
+    c = canvas()                                       # tears: streaks from under the eyes down the cheeks
+    for du in (-0.08, 0.06):
+        taper(c, [(0.48 + du, -0.16), (0.5 + du * 1.2, -0.5), (0.53 + du * 1.4, -0.95)], 0.05, 0.012, 1.0, both=True)
+    paints.append(c)
+    c = canvas()                                       # wings: three swept strokes from the eyes out over the temples
+    for i in range(3):
+        a = (0.85, 0.05 - 0.1 * i)
+        b = (1.35 + 0.05 * i, 0.55 - 0.18 * i)
+        taper(c, curve(a, b, 0.12), 0.07, 0.012, 1.0, both=True)
+    paints.append(c)
+    c = canvas()                                       # hooks: a stroke under each eye curling into a spiral
+    for sgn in (1, -1):
+        th = np.linspace(0, 1.6 * np.pi, 40)
+        cu, cv_ = sgn * 0.98, -0.62
+        spiral = [(cu + sgn * 0.1 * (1 - t / th[-1]) * np.cos(t), cv_ + 0.1 * (1 - t / th[-1]) * np.sin(t)) for t in th]
+        stroke = [(sgn * 0.2, -0.22), (sgn * 0.55, -0.3), (sgn * 0.85, -0.45), (cu + sgn * 0.1, cv_)]
+        taper(c, stroke, 0.03, 0.05, 1.0)
+        line(c, spiral, 0.035, 1.0)
+    paints.append(c)
+    c = canvas()                                       # jaw: the lower face dark from the mouth down, ragged above
+    poly = [(-1.15, vm + 0.1), (-0.6, vm + 0.18), (0, vm + 0.12), (0.6, vm + 0.18), (1.15, vm + 0.1), (1.25, vc - 0.1),
+            (0.6, vc - 0.45), (0, vc - 0.55), (-0.6, vc - 0.45), (-1.25, vc - 0.1)]
+    cv2.fillPoly(c, [np.array([px(u, v) for u, v in poly], np.int32)], 1.0, cv2.LINE_AA)
+    paints.append(c)
+    c = canvas()                                       # dots: a row along the brows and down the cheekbones
+    for u in np.linspace(-1.0, 1.0, 13):
+        cv2.circle(c, px(u, 0.5 + 0.12 * np.cos(u * 2.0)), int(0.032 / FS), 1.0, -1, cv2.LINE_AA)
+    for sgn in (1, -1):
+        for t in np.linspace(0, 1, 5):
+            cv2.circle(c, px(sgn * (0.75 + 0.25 * t), -0.3 - 0.35 * t), int(0.028 / FS), 1.0, -1, cv2.LINE_AA)
+    paints.append(c)
+    c = canvas()                                       # rune: a forked mark on the forehead and down the nose
+    taper(c, [(0, 1.35), (0, 0.15)], 0.06, 0.045, 1.0)
+    taper(c, [(0, 0.95), (0.32, 1.32)], 0.05, 0.02, 1.0, both=True)
+    paints.append(c)
+    c = canvas()                                       # brow fade: the forehead dark, fading down to the eyes
+    rows = V1 - FS * np.arange(c.shape[0], dtype=np.float32)
+    cols = U0 + FS * np.arange(c.shape[1], dtype=np.float32)
+    c[:] = (np.clip((rows[:, None] - 0.2) / 0.5, 0, 1) * np.clip((1.35 - np.abs(cols[None, :])) / 0.3, 0, 1)
+            * np.clip((1.6 - rows[:, None]) / 0.2, 0, 1))
+    paints.append(c)
     for k, c in enumerate(paints):
-        M['paint', k] = ragged(c, 100 + k)
+        M['paint', k] = ragged(np.clip(c, 0, 1), 100 + k)
     return M
+
+
+# war paint is looked up in face space at draw time (owner 2026-11-06: placed by the player - up and down, size, turn):
+# the paints' atlas covers this much of the face, each paint a 256 tile, four to a channel set (2 x 2 tiles x RGBA)
+PAINT_BOX = (-1.7, 1.7, -2.4, 1.7)                 # u0, u1, v0, v1
+PAINT_TILE = 256
+
+
+def paint_atlas(M, n):
+    """The paints in face space: an RGBA atlas (paint i: tile i // 4 of 2 x 2, channel i % 4) and each paint's middle."""
+    u0, u1, v0, v1 = PAINT_BOX
+    tiles = (n + 3) // 4
+    side = 2 if tiles > 1 else 1
+    out = np.zeros((side * PAINT_TILE, side * PAINT_TILE, 4), np.float32)
+    xs = np.linspace(u0, u1, PAINT_TILE)
+    ys = np.linspace(v1, v0, PAINT_TILE)
+    mx = ((xs - U0) / FS).astype(np.float32)[None, :].repeat(PAINT_TILE, 0)
+    my = ((V1 - ys) / FS).astype(np.float32)[:, None].repeat(PAINT_TILE, 1)
+    centres = []
+    for i in range(n):
+        m = cv2.remap(M['paint', i], mx, my, cv2.INTER_AREA if False else cv2.INTER_LINEAR, borderValue=0)
+        m[0, :] = m[-1, :] = 0
+        m[:, 0] = m[:, -1] = 0                          # (an empty rim: the shader clamps into the tile)
+        t = i // 4
+        oy, ox = (t // side) * PAINT_TILE, (t % side) * PAINT_TILE
+        out[oy:oy + PAINT_TILE, ox:ox + PAINT_TILE, i % 4] = m
+        w = m.sum()
+        cv_ = float((m.sum(1) * ys).sum() / w) if w > 0 else 0.0
+        centres.append([0.0, round(cv_, 3)])
+    return out, centres
 
 
 def raster(UV, T, attrs, keep, size):
@@ -553,6 +648,8 @@ def bake(folder, preview=None):
         elif key == 'stubble':                     # a shadow (drawn), then the faces' painted beards
             layers.append((key, label, kind, ['Shadow'] + ['Beard %d' % (i + 1) for i in range(len(split['beards']))],
                            [drawn(key, 0)] + split['beards']))
+        elif key == 'paint':                       # (looked up in face space by the shader: paint_atlas, below)
+            continue
         else:
             layers.append((key, label, kind, opts, [drawn(key, k) for k in range(len(opts))]))
     masks = [np.clip(m, 0, 1) for l_ in layers for m in l_[4]]
@@ -581,6 +678,24 @@ def bake(folder, preview=None):
         entry['layers'].append({'key': key, 'label': label, 'kind': kind, 'options': opts,
                                 'chan': list(range(ch, ch + len(opts)))})
         ch += len(opts)
+    # war paint: the face-space atlas, and every texel's face-space point (u, v, how much it is face) for the shader
+    # to look it up by - so the player can move, size and turn it (owner 2026-11-06) and it never leaves the face
+    popts = next(o for k_, _, _, o in LAYERS if k_ == 'paint')
+    atlas, centres = paint_atlas(M, len(popts))
+    cv2.imwrite(str(folder / 'paint_atlas.png'), cv2.cvtColor((atlas * 255 + 0.5).astype(np.uint8), cv2.COLOR_RGBA2BGRA))
+    fmap = np.stack([tex[..., 0], tex[..., 1], front, np.zeros_like(front)], -1).astype(np.float32)
+    c = cov.copy()
+    for _ in range(6):                                 # (bled past the pieces' edges, as the masks)
+        grown = np.stack([cv2.dilate(fmap[..., i], k3) if i == 2 else
+                          cv2.blur(np.where(c, fmap[..., i], 0), (3, 3)) / np.maximum(
+                              cv2.blur(c.astype(np.float32), (3, 3)), 1e-6) for i in range(4)], -1)
+        fmap = np.where(c[..., None], fmap, grown)
+        c = cv2.dilate(c.astype(np.uint8), k3).astype(bool)
+    fmap[~c] = [0, 0, 0, 0]
+    fmap.astype(np.float16).tofile(str(folder / 'face_map.bin'))
+    entry['paint'] = {'options': popts, 'atlas': 'paint_atlas', 'map': 'face_map.bin', 'size': SIZE,
+                      'box': list(PAINT_BOX), 'side': 2 if len(popts) > 4 else 1, 'centres': centres}
+    entry['layers'].append({'key': 'paint', 'label': 'War Paint', 'kind': 'paint', 'options': popts, 'chan': []})
     entry['hair_rgb'] = hair_rgb(meta, tex_dir)
     meta['skin_layers'] = entry
     meta_path.write_text(json.dumps(meta, indent=1), encoding='utf-8')
