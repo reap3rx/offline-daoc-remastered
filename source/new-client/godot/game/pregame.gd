@@ -848,10 +848,23 @@ func _c_amount(p: Control, label: String, key: String, def: float, lo: float, hi
 func _c_hair_fit(p: Control, y: float) -> float:
 	var styles: Array = _figure.meta.get("hair_styles", [])
 	var si := int(draft.look.get("hair", 0))
-	if si < 0 or si >= styles.size() or styles[si].node == null or not bool(styles[si].get("fit", false)):
-		return y
-	var node := String(styles[si].node)
-	y = _c_header(p, "HAIR FIT", y + 4)
+	if si >= 0 and si < styles.size() and styles[si].node != null and bool(styles[si].get("fit", false)):
+		y = _c_fit_rows(p, "HAIR FIT", String(styles[si].node), y)
+	# (owner 2026-11-06: "some of the beards ... are too small. Perhaps some sliders for those")
+	var beards: Array = _figure.meta.get("beards", [])
+	var bi := _figure.beard_index()
+	if bi > 0 and bi <= beards.size() and bool(beards[bi - 1].get("fit", false)):
+		y = _c_fit_rows(p, "BEARD FIT", String(beards[bi - 1].node), y)
+	var musts: Array = _figure.meta.get("moustaches", [])
+	var mu := int(draft.look.get("moustache", 0))
+	if mu > 0 and mu <= musts.size() and bool(musts[mu - 1].get("fit", false)):
+		y = _c_fit_rows(p, "MOUSTACHE FIT", String(musts[mu - 1].node), y)
+	return y
+
+
+## One part's fit sliders (Fig3Figure.HAIR_FIT), kept by its node in look.hair_fit. Right-click: back to as made.
+func _c_fit_rows(p: Control, title: String, node: String, y: float) -> float:
+	y = _c_header(p, title, y + 4)
 	for f in Fig3Figure.HAIR_FIT:
 		var k := String(f[0])
 		y = _c_slider(p, String(f[1]), float(_figure.hair_fit_of(node).get(k, 0.0)), -1.0, 1.0, func(v: float):

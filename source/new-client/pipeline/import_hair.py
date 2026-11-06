@@ -358,7 +358,7 @@ def follow_face(g, node_name, Q, HP, hp, names, H):
 FIT = [('up', 'Up / Down'), ('fwd', 'Forward / Back'), ('size', 'Size'), ('width', 'Width'), ('len', 'Length')]
 
 
-def add_fit_targets(g, node_name, HP, marks):
+def add_fit_targets(g, node_name, HP, marks, face=False):
     """Morph targets the creator's hair sliders drive (owner 2026-11-06: "could we have hair sliders ... placement,
     size, and length"): hf_up / hf_fwd move the style, hf_size scales it about the skull, hf_width across, hf_len
     stretches what hangs below the temples. At 1 each is a little (6% of the head up, 12% bigger, a third longer)."""
@@ -368,6 +368,10 @@ def add_fit_targets(g, node_name, HP, marks):
     cen = np.array([(sk[:, 0].max() + sk[:, 0].min()) / 2, (sk[:, 1].max() + sk[:, 1].min()) / 2,
                     (eye[2] + HP[:, 2].max()) / 2])
     zl = eye[2] + 0.1 * H
+    if face:                                       # (a beard or moustache: about the mouth, its length below it)
+        m = marks['mouth']
+        cen = np.array([m[0], m[1], m[2]])
+        zl = m[2] - 0.02 * H
     node = next(n for n in g.g['nodes'] if n.get('name') == node_name)
     mesh = g.g['meshes'][node['mesh']]
     names = list(mesh.get('extras', {}).get('targetNames', []))
@@ -611,9 +615,14 @@ def run(folder, spec_path, preview=None):
             styles.extend(e for _, e in made)
     for node, Q, T in out:                         # (the face sliders move them as they move the race's own hair)
         follow_face(g, node, Q, HP, hp, names, H)
+    have = {n.get('name') for n in g.g['nodes']}
     for st in styles:                              # (the creator's hair sliders: every style, the race's own too)
-        if st.get('node') and st['node'] in {n.get('name') for n in g.g['nodes']}:
+        if st.get('node') and st['node'] in have:
             add_fit_targets(g, st['node'], HP, marks)
+            st['fit'] = True
+    for st in meta.get('beards', []) + meta.get('moustaches', []):   # (owner 2026-11-06: "some of the beards ...
+        if st.get('node') and st['node'] in have:                    # are too small" - their own sliders)
+            add_fit_targets(g, st['node'], HP, marks, face=True)
             st['fit'] = True
     g.save(folder / 'figure.gltf')
     meta_path.write_text(json.dumps(meta, indent=1), encoding='utf-8')

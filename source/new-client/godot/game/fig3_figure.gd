@@ -498,7 +498,7 @@ func hair_fit_of(node: String) -> Dictionary:
 
 
 func _apply_hair_fit() -> void:
-	var styles: Array = meta.get("hair_styles", [])
+	var styles: Array = meta.get("hair_styles", []) + meta.get("beards", []) + meta.get("moustaches", [])
 	for st in styles:
 		if st.node == null or not _meshes.has(String(st.node)) or not bool(st.get("fit", false)):
 			continue
