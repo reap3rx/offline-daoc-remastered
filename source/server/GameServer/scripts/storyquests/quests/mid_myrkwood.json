@@ -1,0 +1,421 @@
+{
+  "name": "Myrkwood Forest",
+  "npcs": [
+    {
+      "id": "ottar",
+      "zone": 105,
+      "realm": 2,
+      "name": "Ottar Woodcutter",
+      "model": 213,
+      "level": 12,
+      "pos": [
+        1100,
+        640,
+        118.6
+      ],
+      "idle": "I cut trees. That's all. That's all I ever did."
+    },
+    {
+      "id": "sunniva",
+      "zone": 105,
+      "realm": 2,
+      "name": "Sunniva",
+      "model": 168,
+      "level": 4,
+      "pos": [
+        1112,
+        646,
+        118.6
+      ],
+      "idle": "(She opens her mouth, and nothing comes out. Tears roll down her face, silently, and she points west.)",
+      "size": 40
+    },
+    {
+      "id": "asgerd",
+      "zone": 105,
+      "realm": 2,
+      "name": "Asgerd",
+      "model": 168,
+      "level": 16,
+      "pos": [
+        1122,
+        612,
+        118.6
+      ],
+      "idle": "My husband hasn't slept a night through since winter. Something rides him."
+    },
+    {
+      "id": "grimkel",
+      "zone": 105,
+      "realm": 2,
+      "name": "Grimkel the Sleepless",
+      "model": 213,
+      "level": 16,
+      "pos": [
+        1130,
+        618,
+        118.6
+      ],
+      "idle": "Hoofbeats. Every night. On my chest."
+    }
+  ],
+  "quests": [
+    {
+      "id": "willow_voice",
+      "title": "The Willow's Voice",
+      "level": 13,
+      "giver": "ottar",
+      "offer": "I felled a willow in the western wood this spring. A big old weeper. The next morning my daughter Sunniva woke and couldn't speak. She cries all day - no sound, just tears.\n\nThe seeress says the willows took her voice in payment. I'd give them anything. I'd give them my axe. Will you [help her]? Talk to her if you like. She can't answer.",
+      "accept": "help her",
+      "topics": {},
+      "summary": "Ottar felled an old willow, and the next morning his daughter woke unable to speak, only weep.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "sunniva",
+          "goal": "Talk to Sunniva",
+          "say": "(She takes your hand and presses something into it: a willow leaf, still green. Then she points west, toward the weeping grove, and shakes her head hard, and points again.)",
+          "give": {
+            "name": "a green willow leaf"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 105,
+          "at": [
+            680,
+            640,
+            119.1
+          ],
+          "radius": 20,
+          "goal": "Go to the weeping willow grove in the west",
+          "text": "The willows weep sap like rain. Under the sound of it, very faintly, a little girl's voice humming.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            640,
+            611,
+            122.6
+          ],
+          "radius": 25,
+          "goal": "Fight through the weeping willows",
+          "mob": {
+            "template": 60167842,
+            "name": "weeping willow",
+            "level": [
+              11,
+              12
+            ]
+          },
+          "count": 5,
+          "text": "Each one that falls stops humming. The humming moves deeper in.",
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 105,
+          "at": [
+            700,
+            660,
+            118.6
+          ],
+          "goal": "Find the stump of the willow Ottar felled",
+          "clue": {
+            "name": "a stump, still weeping sap",
+            "model": 1347
+          },
+          "text": "Ottar's axe-marks, clean and deep. The sap has run down the stump and set in shapes like letters: GIVE BACK WHAT WAS TAKEN.",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 105,
+          "at": [
+            690,
+            650,
+            118.9
+          ],
+          "wake_m": 30,
+          "goal": "Face the Elder Willow",
+          "text": "The Elder Willow bows, groaning, to the ground. In the hollow of its trunk lies a little knot of heartwood that sings in a child's voice.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "the Elder Willow",
+              "center": [
+                690,
+                650,
+                118.9
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Elder Willow",
+              "announce": "The biggest willow in the grove opens eyes of knotted bark. 'THE AXE-MAN TOOK OUR SISTER. WE TOOK HIS DAUGHTER'S SONG.'",
+              "boss": {
+                "template": 60167842,
+                "name": "the Elder Willow",
+                "level": 16,
+                "health_mult": 2.4
+              },
+              "success": "the Elder Willow falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60167086,
+                    "name": "tingler",
+                    "level": [
+                      11,
+                      12
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "ottar",
+          "goal": "Bring the singing heartwood to Ottar",
+          "say": "That's - that's her voice. In the wood. Gods.\n\nThe seeress says I can [plant the heartwood] at the stump, and swear never to fell a tree again, and the voice comes home. I'd have to find other work. I'm forty. I've only ever cut trees.\n\nOr I [burn it] in the hearth, and the voice comes home tonight, and the willows remember us forever.",
+          "options": [
+            {
+              "keyword": "plant the heartwood",
+              "say": "Then I'll plant it. And swear. And learn to - I don't know. Keep bees. Sunniva always wanted bees.",
+              "ending": "planted"
+            },
+            {
+              "keyword": "burn it",
+              "say": "Burn it. Tonight. I want to hear her laugh tonight, not next spring. Let the trees remember.",
+              "ending": "burned"
+            }
+          ],
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "planted": {
+          "text": "She sang this morning. Take this - she wants you to.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq105_sunniva_s_ribbon"
+            ],
+            "choice": [
+              "sq105_willow_heart_pendant",
+              "sq105_weeping_sap_ring"
+            ]
+          }
+        },
+        "burned": {
+          "text": "She talks now. Doesn't stop. The willows by the house have started to lean toward it. Take this.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq105_sunniva_s_ribbon"
+            ],
+            "choice": [
+              "sq105_woodcutter_s_belt",
+              "sq105_weeping_sap_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "mora",
+      "title": "Hoofbeats in the Night",
+      "level": 17,
+      "giver": "asgerd",
+      "offer": "My Grimkel hasn't slept a night since winter. Something rides him - a mora, the old women say. A night-mare. It sits on his chest and he can't breathe, can't wake. He's wasting.\n\nThe moras dance in the southern wood, by the old shrine. Will you [stop it]? Ask [Grimkel] what he sees, if he's awake enough to tell you.",
+      "accept": "stop it",
+      "topics": {
+        "Grimkel": "He's by the hall. Sitting up. He won't lie down any more."
+      },
+      "summary": "Something rides Asgerd's husband every night - a mora, a night-mare - and he is wasting away.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "grimkel",
+          "goal": "Ask Grimkel what he sees",
+          "say": "A woman. Pale. Riding a black horse that's also her. Every night, on my chest, galloping. She says I'm hers. She has a [bridle] of hair - my hair. She cut it while I slept.",
+          "keyword": "bridle",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 105,
+          "at": [
+            835,
+            1350,
+            127.1
+          ],
+          "radius": 20,
+          "goal": "Go to the moras' dancing grounds in the south",
+          "text": "Women dance in a ring, too light on their feet - and some of them have hooves.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            840,
+            1360,
+            126.6
+          ],
+          "radius": 25,
+          "goal": "Break the mora dance",
+          "mob": {
+            "template": 60164160,
+            "name": "mora dancer",
+            "level": [
+              14,
+              15
+            ]
+          },
+          "count": 6,
+          "text": "They dissolve into black mist. The ring breaks open. Riders on black horses circle further in.",
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 105,
+          "at": [
+            848,
+            1356,
+            127.8
+          ],
+          "goal": "Search the centre of the ring",
+          "clue": {
+            "name": "a bridle of braided hair",
+            "model": 1347
+          },
+          "text": "A bridle of braided hair - several bridles. Each a different colour. One is grey-brown, like Grimkel's.",
+          "give": {
+            "name": "Grimkel's hair-bridle"
+          },
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 105,
+          "at": [
+            838,
+            1352,
+            127.4
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the Mare-Queen",
+          "text": "The Mare-Queen's horse-half crumbles into ash, then her woman-half. Every bridle in the ring goes limp.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "the Mare-Queen",
+              "center": [
+                838,
+                1352,
+                127.4
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Mare-Queen",
+              "announce": "A rider on a horse that is also herself gallops out of the dark. 'Give me back my reins!'",
+              "boss": {
+                "template": 60164161,
+                "name": "the Mare-Queen",
+                "level": 19,
+                "health_mult": 2.4
+              },
+              "success": "the Mare-Queen falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60164161,
+                    "name": "mora rider",
+                    "level": [
+                      15,
+                      16
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "asgerd",
+          "goal": "Bring the bridle back to Asgerd",
+          "say": "Is that his? His hair, in a bridle?\n\nThe old women say whoever holds the bridle can ride the mora's dreams - into anyone's sleep. Grimkel wants it. He wants to ride into the dreams of the man who cheated him at the spring fair. He's never been like this.\n\n[Burn it]. Please. Or [give it to him], if you think he's earned his revenge. I can't stop him.",
+          "options": [
+            {
+              "keyword": "burn it",
+              "say": "Thank you. Oh, thank you. ...Listen. He's snoring. He's SNORING.",
+              "ending": "burned"
+            },
+            {
+              "keyword": "give it to him",
+              "say": "...So be it. He's sleeping now. Smiling. I don't like the smile.",
+              "ending": "given"
+            }
+          ],
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "burned": {
+          "text": "Take this. We'll both sleep tonight.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq105_dreamless_ring"
+            ],
+            "choice": [
+              "sq105_mare_queen_s_veil",
+              "sq105_hoofprint_pendant"
+            ]
+          }
+        },
+        "given": {
+          "text": "Take this.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq105_hair_bridle_bracer"
+            ],
+            "choice": [
+              "sq105_mare_queen_s_veil",
+              "sq105_hoofprint_pendant"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+ "zone": 10,
+ "region": 1,
+ "realm": 1,
+ "prefix": "sq10",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Morvah's Shawl",
+   "base": [
+    41,
+    26
+   ],
+   "level": 40,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 40,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Folded neatly, as if for a stranger. It smells of salt and summer evenings."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned-Net Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 40,
+   "bonuses": {
+    "Dex": 13,
+    "Qui": 13,
+    "Str": 7,
+    "Hits": 34
+   },
+   "lore": "Knotted from a net that has been mended every evening for a thousand years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Salt-Pearl Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 40,
+   "bonuses": {
+    "Int": 13,
+    "Pie": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 24
+   },
+   "lore": "A pearl from the drowned land. It is always wet."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Evening Star Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 40,
+   "bonuses": {
+    "Pie": 13,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 24
+   },
+   "lore": "Silver, set with a pale stone that glows at dusk."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Reliquary Shard",
+   "base": [
+    41,
+    24
+   ],
+   "level": 46,
+   "bonuses": {
+    "Int": 15,
+    "Pie": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "A shard of black glass from an Arawnite reliquary. Something moves inside it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Kendric's Watch-Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 46,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 46,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "A knight's travelling cloak, salt-stained from the Lyonesse wind."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned Knight Signet",
+   "base": [
+    41,
+    35
+   ],
+   "level": 46,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 39
+   },
+   "lore": "The ring of a knight of Lyonesse. He drowned with his king."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tobin's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 46,
+   "bonuses": {
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 8,
+    "Hits": 39
+   },
+   "lore": "A squire's bracer. Tobin insisted."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hierophant's Girdle",
+   "base": [
+    41,
+    32
+   ],
+   "level": 46,
+   "bonuses": {
+    "Pie": 15,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "Bone and black silk, taken from a priest of Arawn. Scrubbed, and blessed, and still not quite clean."
+  }
+ ]
+}

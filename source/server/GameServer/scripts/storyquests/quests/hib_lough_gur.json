@@ -1,0 +1,448 @@
+{
+  "name": "Lough Gur",
+  "npcs": [
+    {
+      "id": "tadhg_inn",
+      "zone": 204,
+      "realm": 3,
+      "name": "Tadhg the Innkeeper",
+      "model": 337,
+      "level": 22,
+      "pos": [
+        1190,
+        1006,
+        107.4
+      ],
+      "idle": "Grandfather's harp hung over the bar sixty years. The luck of the house. Gone."
+    },
+    {
+      "id": "dara",
+      "zone": 204,
+      "realm": 3,
+      "name": "Dara the Potboy",
+      "model": 337,
+      "level": 12,
+      "pos": [
+        1182,
+        1002,
+        107.4
+      ],
+      "idle": "I didn't drink anything. Much."
+    },
+    {
+      "id": "ciaran_bard",
+      "zone": 204,
+      "realm": 3,
+      "name": "Ciaran the Bard",
+      "model": 337,
+      "level": 30,
+      "pos": [
+        312,
+        200,
+        123.7
+      ],
+      "idle": "My brother was the better poet. Ask anyone. Ask him - when he's sane."
+    },
+    {
+      "id": "eoin",
+      "zone": 204,
+      "realm": 3,
+      "name": "Eoin",
+      "model": 337,
+      "level": 30,
+      "pos": [
+        428,
+        1124,
+        120.2
+      ],
+      "during": [
+        "amadan/s5"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "cluricaun",
+      "title": "The Cluricaun's Harp",
+      "level": 23,
+      "giver": "tadhg_inn",
+      "offer": "The cluricauns have been in my cellar every night since spring - drinking, singing, breaking things. I let it go. Every inn has cluricauns.\n\nBut three nights ago they took my grandfather's harp from over the bar. The luck of the house. Since then the ale's gone sour and the roof leaks. Will you [get the harp back]? Dara the [potboy] saw them go.",
+      "accept": "get the harp back",
+      "topics": {
+        "potboy": "Dara. He's wiping tables. He's always wiping tables."
+      },
+      "summary": "Cluricauns stole the harp that has hung over Tadhg's bar for sixty years - the luck of the house.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "dara",
+          "goal": "Ask Dara the potboy what he saw",
+          "say": "They came up out of the cellar riding luch - giant mice! - and one of them had the harp, and they all went north-east singing. I followed a bit. They've a sort of camp out past the luch runs, in the [north-east].",
+          "keyword": "north-east",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            1290,
+            700,
+            119.4
+          ],
+          "radius": 25,
+          "goal": "Deal with the cluricauns' luch mounts",
+          "mob": {
+            "template": 60163146,
+            "name": "large luch",
+            "level": [
+              20,
+              21
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 204,
+          "at": [
+            1236,
+            646,
+            118.4
+          ],
+          "goal": "Search the cluricaun camp",
+          "clue": {
+            "name": "a trail of spilled ale and a harp string",
+            "model": 1347
+          },
+          "text": "A harp string, snapped, and a lake of spilled ale. Drunken singing, very close.",
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            1244,
+            633,
+            118.4
+          ],
+          "radius": 25,
+          "goal": "Fight through the drunken cluricauns",
+          "mob": {
+            "template": 60159264,
+            "name": "cluricaun",
+            "level": [
+              21,
+              22
+            ]
+          },
+          "count": 5,
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 204,
+          "at": [
+            1240,
+            630,
+            118.4
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the cluricaun king",
+          "text": "The cluricaun king sits down, hiccups, and says: 'Fine. Take it. It's ours, though. Ask the innkeeper's grandda.'",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "King Fiachra Ale-Belly",
+              "center": [
+                1240,
+                630,
+                118.4
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat King Fiachra",
+              "announce": "A very fat cluricaun with a harp under one arm and a barrel under the other. 'MY harp! Get yer own!'",
+              "boss": {
+                "template": 60159264,
+                "name": "King Fiachra Ale-Belly",
+                "level": 26,
+                "health_mult": 2.2
+              },
+              "success": "King Fiachra Ale-Belly falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60159264,
+                    "name": "cluricaun",
+                    "level": [
+                      21,
+                      22
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "tadhg_inn",
+          "goal": "Bring the harp back to Tadhg",
+          "say": "The harp! Oh, thank the gods - wait. What did he say? That it was THEIRS?\n\n...Grandfather did say he won it at dice. From a very small man. In a cellar. I thought it was a story.\n\nIf it's theirs, I should [give it back]. The luck of the house goes with it. Or I [keep it], and the cluricauns can sulk. It's been over that bar sixty years.",
+          "options": [
+            {
+              "keyword": "give it back",
+              "say": "Back it goes. I'll leave it in the cellar tonight with a barrel of the good stuff. ...They'll be back for that barrel every week, you know.",
+              "ending": "returned"
+            },
+            {
+              "keyword": "keep it",
+              "say": "It stays. Sixty years is ownership. ...The ale's already sweeter. Listen to that roof - not a drip.",
+              "ending": "kept"
+            }
+          ],
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "returned": {
+          "text": "Take something. The cluricauns left this in the cellar for you - I think it's a thank you.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq204_ale_belly_girdle"
+            ],
+            "choice": [
+              "sq204_luch_rider_bracer",
+              "sq204_cellar_key_ring"
+            ]
+          }
+        },
+        "kept": {
+          "text": "Take something from behind the bar.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq204_inn_luck_harp_charm"
+            ],
+            "choice": [
+              "sq204_luch_rider_bracer",
+              "sq204_cellar_key_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "amadan",
+      "title": "The Amadan's Touch",
+      "level": 33,
+      "giver": "ciaran_bard",
+      "offer": "My brother Eoin was touched by the amadan - the faerie fool - last autumn. One touch, and he walked into the southern woods laughing and never came out.\n\nHe was the better poet. Everyone said so. I want him back, even mad. Will you [find Eoin]? The road south is thick with gurite, so be careful.",
+      "accept": "find Eoin",
+      "topics": {},
+      "summary": "Ciaran's brother, a poet, was touched by the amadan - the faerie fool - and walked laughing into the southern woods.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 204,
+          "at": [
+            440,
+            940,
+            121.2
+          ],
+          "radius": 20,
+          "goal": "Take the road into the southern woods",
+          "text": "Gurite waylayers watch the road from the trees. Further on, someone is laughing.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            465,
+            948,
+            117.5
+          ],
+          "radius": 25,
+          "goal": "Kill the gurite waylayers on the south road",
+          "mob": {
+            "template": 60161874,
+            "name": "gurite waylayer",
+            "level": [
+              30,
+              31
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            290,
+            1079,
+            135.6
+          ],
+          "radius": 25,
+          "goal": "Clear the alp luachra from the sleeping-hollow",
+          "mob": {
+            "template": 60157767,
+            "name": "alp luachra",
+            "level": [
+              30,
+              31
+            ]
+          },
+          "count": 4,
+          "text": "Under the leaves where they nested: a sleeping man's footprints, many nights over. He sleeps here, sometimes.",
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 204,
+          "at": [
+            420,
+            1118,
+            121.5
+          ],
+          "goal": "Search the touched folk's camp",
+          "clue": {
+            "name": "a book of poems, rain-soaked",
+            "model": 1347
+          },
+          "text": "Eoin's book. Every page is full of verse in a dozen hands, all his. The last page: 'The fool says I may go home if someone fetches me. Nobody fetches me.'",
+          "give": {
+            "name": "Eoin's book of poems"
+          },
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "eoin",
+          "goal": "Talk to Eoin",
+          "say": "Ciaran! No - you're not Ciaran. You smell of the road. Ha!\n\nI'm quite mad, you know. It's lovely. Every word I've written since is better than everything before. The fool won't let me go until somebody beats him at his own game. His game is [hitting].",
+          "keyword": "hitting",
+          "id": "s5"
+        },
+        {
+          "type": "encounter",
+          "zone": 204,
+          "at": [
+            430,
+            1130,
+            120.0
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the amadan",
+          "text": "The amadan falls over laughing, and doesn't get up. All around, the touched folk sit down and blink, as if waking.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "the Amadan of the Hollow",
+              "center": [
+                430,
+                1130,
+                120.0
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Amadan",
+              "announce": "A ragged man in a straw crown capers out of the trees. 'A new game! A new player! TOUCH!'",
+              "boss": {
+                "template": 60157791,
+                "name": "the Amadan of the Hollow",
+                "level": 36,
+                "health_mult": 2.5
+              },
+              "success": "the Amadan of the Hollow falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60157791,
+                    "name": "amadan touched",
+                    "level": [
+                      29,
+                      30
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "ciaran_bard",
+          "goal": "Bring Eoin home to Ciaran",
+          "say": "Eoin. EOIN. You're - he's -\n\n...He's sane? He knows me? He's crying. Why is he crying?\n\nHe says the poems stopped when the fool died. He says he's empty. He says he wants to [go back] to the woods with the other touched folk, and look after them. Or I could [keep him home] until he's well. I've waited a year. You decide. I can't trust myself.",
+          "options": [
+            {
+              "keyword": "keep him home",
+              "say": "Then he stays. He'll write again. Plain words, maybe, but his. And I'll be the better poet for once, ha. ...Ha.",
+              "ending": "home"
+            },
+            {
+              "keyword": "go back",
+              "say": "Then go, brother. Go and look after them. I'll bring you paper every new moon. Whatever you write, I'll read.",
+              "ending": "woods"
+            }
+          ],
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "Take something. Eoin wants you to have this.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq204_verse_book_clasp"
+            ],
+            "choice": [
+              "sq204_gurite_waylayer_ring",
+              "sq204_alp_luachra_hide_cloak"
+            ]
+          }
+        },
+        "woods": {
+          "text": "Take something.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq204_amadan_s_straw_crown"
+            ],
+            "choice": [
+              "sq204_gurite_waylayer_ring",
+              "sq204_alp_luachra_hide_cloak"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

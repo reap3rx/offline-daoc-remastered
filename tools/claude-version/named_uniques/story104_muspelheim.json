@@ -1,0 +1,150 @@
+{
+ "zone": 104,
+ "region": 100,
+ "realm": 2,
+ "prefix": "sq104",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dagnar's Journal-Clasp",
+   "base": [
+    41,
+    24
+   ],
+   "level": 25,
+   "bonuses": {
+    "Pie": 8,
+    "Int": 4,
+    "Dex": 4,
+    "Power": 4,
+    "Hits": 15
+   },
+   "lore": "A brass clasp from a mapmaker's journal, engraved with a compass rose."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Battered-Chest Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 25,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 25,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Leather and brass from a chest that crossed Muspelheim."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Forgemaster's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 25,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 21
+   },
+   "lore": "Fire-dwarf work. It glows at the edges when you're angry."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lodestone Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 25,
+   "bonuses": {
+    "Dex": 8,
+    "Qui": 8,
+    "Str": 4,
+    "Hits": 21
+   },
+   "lore": "A sliver of lodestone set in silver. It always points home."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ragnvald's Lay-Harp Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 32,
+   "bonuses": {
+    "Qui": 11,
+    "Con": 5,
+    "Dex": 5,
+    "Hits": 19,
+    "Power": 4
+   },
+   "lore": "A tiny bronze harp. The song it stands for is either true or famous. Not both."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ashbeard Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 32,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 5,
+    "Hits": 27
+   },
+   "lore": "A huscarl's ring, scorched black by giant-fire."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fire-Giant Thane Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 32,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 32,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Broad enough for two men. Cut down, it fits one very well."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cinder-Silk Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 32,
+   "bonuses": {
+    "Pie": 11,
+    "Int": 5,
+    "Dex": 5,
+    "Power": 5,
+    "Hits": 19
+   },
+   "lore": "A cloak that cannot burn. The fire giants weave it from something they will not name."
+  }
+ ]
+}

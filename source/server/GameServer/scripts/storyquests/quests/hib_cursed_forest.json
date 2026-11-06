@@ -1,0 +1,468 @@
+{
+  "name": "Cursed Forest",
+  "npcs": [
+    {
+      "id": "teague",
+      "zone": 208,
+      "realm": 3,
+      "name": "Ranger Teague",
+      "model": 337,
+      "level": 52,
+      "pos": [
+        380,
+        742,
+        125.2
+      ],
+      "guild": "Rangers' Camp",
+      "idle": "The forest's cursed. The poachers make it worse."
+    },
+    {
+      "id": "seamus",
+      "zone": 208,
+      "realm": 3,
+      "name": "Seamus the Leprechaun",
+      "model": 603,
+      "level": 40,
+      "pos": [
+        500,
+        772,
+        112.4
+      ],
+      "during": [
+        "leprechaun/s3",
+        "leprechaun/s7"
+      ],
+      "size": 30
+    },
+    {
+      "id": "druid_mor",
+      "zone": 208,
+      "realm": 3,
+      "name": "Druid Mor",
+      "model": 365,
+      "level": 56,
+      "pos": [
+        386,
+        748,
+        124.1
+      ],
+      "guild": "Rangers' Camp",
+      "idle": "The goborchend have my brother Oisin. They'll have his blood at the dark of the moon."
+    },
+    {
+      "id": "oisin",
+      "zone": 208,
+      "realm": 3,
+      "name": "Oisin the Druid",
+      "model": 337,
+      "level": 50,
+      "pos": [
+        912,
+        1392,
+        169.0
+      ],
+      "during": [
+        "goborchend/s6"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "leprechaun",
+      "title": "The Leprechauns' Cages",
+      "level": 50,
+      "giver": "teague",
+      "offer": "Poachers in the forest are catching leprechauns. Cages of cold iron, so the little folk can't vanish. They sell them to lords who think a caged leprechaun means gold forever.\n\nIt doesn't. A caged leprechaun dies in a month. Will you [free them]? The poachers camp in the middle of the forest.",
+      "accept": "free them",
+      "topics": {},
+      "summary": "Poachers are catching leprechauns in cold-iron cages to sell to greedy lords.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            491,
+            758,
+            111.4
+          ],
+          "radius": 25,
+          "goal": "Kill the forest poachers",
+          "mob": {
+            "template": 60161034,
+            "name": "forest poacher",
+            "level": [
+              50,
+              51
+            ]
+          },
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 208,
+          "at": [
+            500,
+            772,
+            112.4
+          ],
+          "goal": "Search the poachers' camp",
+          "clue": {
+            "name": "a row of cold-iron cages",
+            "model": 1347
+          },
+          "text": "Six cages. Five empty, the leprechauns already dead. In the last, a very small, very angry man in a green coat.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "seamus",
+          "goal": "Free the last leprechaun",
+          "say": "OUT. Get me OUT. ...Ahh. Thank you. Thank you.\n\nSeamus is the name. The others - well. You saw. The poachers' chief has their gold, all five crocks, buried under the cave bears' den to the west. He'll be back for me. Unless you get there [first].",
+          "keyword": "first",
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            320,
+            669,
+            123.8
+          ],
+          "radius": 25,
+          "goal": "Drive the cave bears from their den",
+          "mob": {
+            "template": 60167436,
+            "name": "unearthed cave bear",
+            "level": [
+              49,
+              50
+            ]
+          },
+          "count": 5,
+          "text": "Under the den: five crocks of gold, half-buried. And footsteps behind you.",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 208,
+          "at": [
+            326,
+            672,
+            124.2
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the poachers' chief",
+          "text": "Brannagh falls into his own pit, among the gold.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Brannagh the Poacher-Chief",
+              "center": [
+                326,
+                672,
+                124.2
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Brannagh",
+              "announce": "A big man with an iron net over his shoulder. 'That's MY gold, stranger. Five crocks. Five little dead men. Worth every one.'",
+              "boss": {
+                "template": 60161034,
+                "name": "Brannagh the Poacher-Chief",
+                "level": 55,
+                "health_mult": 2.6
+              },
+              "success": "Brannagh the Poacher-Chief falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60161034,
+                    "name": "forest poacher",
+                    "level": [
+                      50,
+                      51
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "seamus",
+          "goal": "Talk to Seamus",
+          "say": "Five crocks. My cousins' gold.\n\nLeprechaun gold's for leprechauns. Without a leprechaun it goes back into the earth in a year and a day. But you could [take the gold] - all of it - and be rich for a year and a day. Fair's fair, you saved me.\n\nOr let me [bury it with them]. My cousins. They'd like that.",
+          "options": [
+            {
+              "keyword": "take the gold",
+              "say": "Then it's yours, and good luck to you. Spend it fast. ...Mind, every coin you spend, somebody remembers who it belonged to.",
+              "next": "s7"
+            },
+            {
+              "keyword": "bury it with them",
+              "say": "...You're a strange one. Thank you. I'll sing them down. Go on back to Teague. I'll be along.",
+              "next": "s8"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "teague",
+          "goal": "Return to Ranger Teague",
+          "say": "The poachers are done, and you came back with your pockets clinking.\n\nI won't ask. Seamus came by and said you'd earned it. He didn't look happy about it. Take this, from the rangers.",
+          "ending": "gold",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "teague",
+          "goal": "Return to Ranger Teague",
+          "say": "The poachers are done. And Seamus came by and told me what you did with the gold.\n\nThe little folk will remember. That's worth more than gold, in this forest. Take this, from the rangers.",
+          "ending": "buried",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "gold": {
+          "text": "From the rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq208_crock_of_gold_charm"
+            ],
+            "choice": [
+              "sq208_iron_cage_bracer",
+              "sq208_poacher_s_cloak"
+            ]
+          }
+        },
+        "buried": {
+          "text": "From the rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq208_cobbler_s_ring"
+            ],
+            "choice": [
+              "sq208_iron_cage_bracer",
+              "sq208_poacher_s_cloak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "goborchend",
+      "title": "The Goat-Headed Fort",
+      "level": 56,
+      "giver": "druid_mor",
+      "offer": "This is GROUP work, and hard. Bring the best you know.\n\nThe goborchend - goat-headed, Fomorian blood - have a fort in the south of the forest. They have my brother Oisin, a druid. At the dark of the moon they'll pour his blood on their altar to wake something old.\n\nWill you [go after Oisin]?",
+      "accept": "go after Oisin",
+      "topics": {},
+      "summary": "GROUP. The goat-headed goborchend have captured a druid to wake something old with his blood.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 208,
+          "at": [
+            880,
+            1360,
+            167.5
+          ],
+          "radius": 20,
+          "goal": "Go to the goborchend fort in the south",
+          "text": "Goat-skulls on poles. A wall of black stone. Inside, chanting, low and terrible.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            904,
+            1425,
+            169.0
+          ],
+          "radius": 25,
+          "goal": "Break the goborchend gashers on the wall",
+          "mob": {
+            "template": 60161461,
+            "name": "goborchend gasher",
+            "level": [
+              52,
+              53
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            895,
+            1402,
+            169.0
+          ],
+          "radius": 25,
+          "goal": "Cut down the goborchend wounders in the yard",
+          "mob": {
+            "template": 60161466,
+            "name": "goborchend wounder",
+            "level": [
+              53,
+              54
+            ]
+          },
+          "count": 4,
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 208,
+          "at": [
+            920,
+            1395,
+            169.0
+          ],
+          "goal": "Search the fort's altar",
+          "clue": {
+            "name": "a blood-stained altar",
+            "model": 1347
+          },
+          "text": "The altar's carved with Fomorian runes. Mor would read them; you can only see the shape of them: an eye. A huge, closed eye.",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 208,
+          "at": [
+            912,
+            1392,
+            169.0
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Bloodhorn before the rite",
+          "text": "Bloodhorn falls across his own altar. Under it, something huge and old stops stirring.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Bloodhorn, Goborchend Chieftain",
+              "center": [
+                912,
+                1392,
+                169.0
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Bloodhorn",
+              "announce": "A goborchend twice the height of the others, horns dripping. 'The druid's blood opens the eye. Your blood will do as well.'",
+              "boss": {
+                "template": 60161466,
+                "name": "Bloodhorn, Goborchend Chieftain",
+                "level": 60,
+                "health_mult": 3.2
+              },
+              "success": "Bloodhorn, Goborchend Chieftain falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60161461,
+                    "name": "goborchend gasher",
+                    "level": [
+                      52,
+                      53
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "oisin",
+          "goal": "Free Oisin",
+          "say": "Mor sent you? Of course. She's the clever one.\n\nThe eye - they were trying to open Balor's eye. Or one like it. Under the fort. Asleep. Mor needs to know. She'll need to choose what to [do] about it.",
+          "keyword": "do",
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "druid_mor",
+          "goal": "Return to Druid Mor",
+          "say": "Oisin's alive. Thank every god.\n\nAnd under the fort - an eye. A Fomorian eye, sleeping. Oisin says it can be [sealed] forever - the druids' great rite, and it will cost me most of my power. Or [left sleeping], and watched, and studied - and perhaps used, one day, against Albion or Midgard. The Council would like that. I wouldn't.",
+          "options": [
+            {
+              "keyword": "sealed",
+              "say": "Then I'll seal it. Tomorrow. Oisin will help. ...I'll be a hedge-druid after, curing warts. I think I'll like it.",
+              "ending": "sealed"
+            },
+            {
+              "keyword": "left sleeping",
+              "say": "Watched, then. Studied. Gods help us if anyone ever wakes it on purpose.",
+              "ending": "watched"
+            }
+          ],
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "sealed": {
+          "text": "From the druids.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq208_oisin_s_druid_cloak"
+            ],
+            "choice": [
+              "sq208_goborchend_horn_torc",
+              "sq208_fomorian_bone_bracer",
+              "sq208_fort_breaker_s_ring"
+            ]
+          }
+        },
+        "watched": {
+          "text": "From the druids.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq208_bloodhorn_s_altar_stone"
+            ],
+            "choice": [
+              "sq208_goborchend_horn_torc",
+              "sq208_fomorian_bone_bracer",
+              "sq208_fort_breaker_s_ring"
+            ]
+          }
+        }
+      },
+      "group": true
+    }
+  ]
+}

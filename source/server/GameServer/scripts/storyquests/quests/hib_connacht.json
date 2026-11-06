@@ -1,0 +1,478 @@
+{
+  "name": "Connacht",
+  "npcs": [
+    {
+      "id": "aine_mother",
+      "zone": 207,
+      "realm": 3,
+      "name": "Aine",
+      "model": 365,
+      "level": 8,
+      "pos": [
+        1362,
+        1262,
+        130.0
+      ],
+      "idle": "My boys. Both my boys. One I put out, one ran after him."
+    },
+    {
+      "id": "colm_boy",
+      "zone": 207,
+      "realm": 3,
+      "name": "Colm",
+      "model": 337,
+      "level": 4,
+      "pos": [
+        930,
+        1100,
+        143.1
+      ],
+      "during": [
+        "rowdies/s4"
+      ],
+      "size": 42
+    },
+    {
+      "id": "fiachra",
+      "zone": 207,
+      "realm": 3,
+      "name": "Champion Fiachra",
+      "model": 337,
+      "level": 34,
+      "pos": [
+        1176,
+        70,
+        129.6
+      ],
+      "idle": "My patrol went west. One came back. One's going to burn."
+    },
+    {
+      "id": "scout_aine",
+      "zone": 207,
+      "realm": 3,
+      "name": "Scout Niamh",
+      "model": 365,
+      "level": 24,
+      "pos": [
+        1160,
+        64,
+        129.6
+      ],
+      "idle": "Azure robes, wicker men, and a lot of singing. The west's gone strange."
+    },
+    {
+      "id": "ronan",
+      "zone": 207,
+      "realm": 3,
+      "name": "Ronan",
+      "model": 337,
+      "level": 25,
+      "pos": [
+        762,
+        168,
+        130.2
+      ],
+      "during": [
+        "wickerman/s6"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "rowdies",
+      "title": "Two Brothers",
+      "level": 6,
+      "giver": "aine_mother",
+      "offer": "My husband put our eldest, Ruairc, out of the house last spring for thieving. He went to the rowdies in the west - the gang of youths that rob the road.\n\nNow my little one, Colm, has run off after him. He's nine. He thinks it's an adventure. Will you [find Colm]? And - if you see Ruairc - tell him his mother asks after him.",
+      "accept": "find Colm",
+      "topics": {},
+      "summary": "Aine's eldest son was put out of the house and joined the road-gang in the west. Now her youngest has run off after him.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            934,
+            1167,
+            135.5
+          ],
+          "radius": 25,
+          "goal": "Deal with the villainous youths on the road",
+          "mob": {
+            "template": 60167680,
+            "name": "villainous youth",
+            "level": [
+              4,
+              5
+            ]
+          },
+          "count": 5,
+          "text": "'Colm? The little one? He's with Ruairc's lot at the old camp. Ruairc's the boss now.'",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            920,
+            1100,
+            141.4
+          ],
+          "radius": 20,
+          "goal": "Find the rowdies' camp",
+          "text": "A ragged camp of boys and young men. A little lad in a too-big cap is trying very hard to look tough.",
+          "id": "s2"
+        },
+        {
+          "type": "encounter",
+          "zone": 207,
+          "at": [
+            941,
+            1085,
+            153.1
+          ],
+          "wake_m": 30,
+          "goal": "Face the rowdies' leader",
+          "text": "The young man drops his cudgel and sits down in the mud. 'Fine. FINE. Take him home. He's a terrible thief anyway.'",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Ruairc the Rowdy",
+              "center": [
+                941,
+                1085,
+                153.1
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Ruairc",
+              "announce": "A tall young man with his mother's eyes steps in front of the little one. 'He's my brother. He stays with me.'",
+              "boss": {
+                "template": 60165444,
+                "name": "Ruairc the Rowdy",
+                "level": 8,
+                "health_mult": 2.0
+              },
+              "success": "Ruairc the Rowdy falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60165444,
+                    "name": "rowdy",
+                    "level": [
+                      5,
+                      6
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "colm_boy",
+          "goal": "Talk to Colm",
+          "say": "Ruairc said I could be in the gang! I can throw a stone further than anyone! ...Is Mam cross?\n\nRuairc says he can't come home because Da said. But he wants to. He told me. He cries at night. Don't tell him I [told].",
+          "keyword": "told",
+          "id": "s4"
+        },
+        {
+          "type": "choice",
+          "npc": "aine_mother",
+          "goal": "Bring Colm home to Aine",
+          "say": "COLM. You - come here. Come HERE.\n\n...You saw Ruairc? How did he look? Is he thin? Did he ask after me?\n\nHis father swore he'd never set foot in the house again. If I [bring both home], his father and I will have words, and maybe worse. Or I take [only Colm], and keep the peace, and Ruairc stays out there. Tell me what to do. I've been asking the fire all year.",
+          "options": [
+            {
+              "keyword": "bring both home",
+              "say": "Then go back and tell him his mother says come home. And if his father says a word, his father can sleep in the byre.",
+              "ending": "both"
+            },
+            {
+              "keyword": "only Colm",
+              "say": "Only Colm. ...Gods forgive me. I'll leave a loaf on the west road every week. Maybe he'll find it.",
+              "ending": "one"
+            }
+          ],
+          "id": "s5"
+        }
+      ],
+      "endings": {
+        "both": {
+          "text": "Take this. Both my boys are home.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq207_brothers_cord"
+            ],
+            "choice": [
+              "sq207_rowdy_s_sling_bracer",
+              "sq207_hearthstone_ring"
+            ]
+          }
+        },
+        "one": {
+          "text": "Take this.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq207_aine_s_shawl"
+            ],
+            "choice": [
+              "sq207_rowdy_s_sling_bracer",
+              "sq207_hearthstone_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "wickerman",
+      "title": "The Wicker Man",
+      "level": 27,
+      "giver": "fiachra",
+      "offer": "My patrol went west to watch the Azure Order - the idolaters in blue who've been gathering by the old stones. One man came back. He says the rest are dead, except Ronan.\n\nThey've built a wicker man. At the next moon, Ronan goes inside it and they set it alight. Scout [Niamh] has seen their camp. Will you [save Ronan]?",
+      "accept": "save Ronan",
+      "topics": {
+        "Niamh": "My best scout. By the gate."
+      },
+      "summary": "The Azure Order captured a patrol from the keep; the last survivor is to be burned in a wicker man.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "scout_aine",
+          "goal": "Ask Scout Niamh about the Azure camp",
+          "say": "They've idolaters chanting at the stones, west and north. Past them, a wicker man three times my height. Haunted, too - the old wickermen they've burned walk about at night. Go through the [idolaters] first. They'll raise the alarm otherwise.",
+          "keyword": "idolaters",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            684,
+            197,
+            128.4
+          ],
+          "radius": 25,
+          "goal": "Silence the azure idolaters",
+          "mob": {
+            "template": 60158182,
+            "name": "azure idolater",
+            "level": [
+              24,
+              25
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            700,
+            192,
+            128.5
+          ],
+          "goal": "Search the idolaters' altar",
+          "clue": {
+            "name": "a patrol's broken spear",
+            "model": 1347
+          },
+          "text": "A Connacht patrol spear, snapped and laid on the altar as an offering. A blue robe folded beside it - a new one, a recruit's - with Ronan's name pinned to it.",
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            788,
+            153,
+            141.6
+          ],
+          "radius": 25,
+          "goal": "Destroy the phantom wickermen",
+          "mob": {
+            "template": 60164910,
+            "name": "phantom wickerman",
+            "level": [
+              26,
+              27
+            ]
+          },
+          "count": 4,
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 207,
+          "at": [
+            762,
+            168,
+            130.2
+          ],
+          "wake_m": 30,
+          "goal": "Free Ronan from the wicker man",
+          "text": "The idolaters scatter. Ronan climbs down from the wicker man, coughing, a blue robe still over his arm.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Ronan alive",
+              "center": [
+                762,
+                168,
+                130.2
+              ],
+              "radius": 30,
+              "duration_s": 90,
+              "objective": "Keep Ronan alive",
+              "announce": "You hack at the wicker. Ronan yells from inside. Every idolater on the hill turns.",
+              "protect": {
+                "template": 60158182,
+                "name": "Ronan",
+                "level": 25,
+                "model": 337
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    774,
+                    174,
+                    130.5
+                  ],
+                  [
+                    752,
+                    158,
+                    131.9
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60158182,
+                    "name": "azure idolater",
+                    "level": [
+                      25,
+                      26
+                    ]
+                  }
+                ]
+              },
+              "thanks": "I'm out. I'm out. I'm OUT.",
+              "success": "They break off.",
+              "fail": "Ronan falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Maelgwn, Voice of the Azure",
+              "center": [
+                762,
+                168,
+                130.2
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Maelgwn",
+              "announce": "A tall idolater in deep blue. 'The fire wanted him. It will have you instead.'",
+              "boss": {
+                "template": 60167712,
+                "name": "Maelgwn, Voice of the Azure",
+                "level": 30,
+                "health_mult": 2.2
+              },
+              "success": "Maelgwn, Voice of the Azure falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "ronan",
+          "goal": "Talk to Ronan",
+          "say": "They gave me this robe. Said I could take it and live, if I'd join. I didn't. But I could have. I thought about it.\n\nWith it, I could walk into any Azure camp in Hibernia. Find out what they're planning. Tell the Champions. If I [go undercover], nobody can know - not even my mother. Or I [come home], burn the robe, and forget the whole thing.",
+          "options": [
+            {
+              "keyword": "go undercover",
+              "say": "Then I'm dead, as far as anyone knows. Tell Fiachra the truth. Only Fiachra.",
+              "next": "s7"
+            },
+            {
+              "keyword": "come home",
+              "say": "Home. Gods, yes. And the robe goes in the first fire I see.",
+              "next": "s8"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "fiachra",
+          "goal": "Report to Champion Fiachra",
+          "say": "He's gone into the Azure, wearing their robe. His mother's been told he died a hero.\n\nGods. He's braver than I am. If word comes, it'll come to me. Take this - and say nothing to anyone.",
+          "ending": "spy",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "fiachra",
+          "goal": "Report to Champion Fiachra",
+          "say": "Ronan's home. He burned the robe in the courtyard, and the whole keep cheered.\n\nOne man from six. It's not a victory. But it's one man. Take this.",
+          "ending": "home",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "spy": {
+          "text": "Say nothing to anyone.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq207_azure_robe_clasp"
+            ],
+            "choice": [
+              "sq207_champion_s_ring",
+              "sq207_patrol_spear_bracer"
+            ]
+          }
+        },
+        "home": {
+          "text": "Take this.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq207_wicker_ash_charm"
+            ],
+            "choice": [
+              "sq207_champion_s_ring",
+              "sq207_patrol_spear_bracer"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

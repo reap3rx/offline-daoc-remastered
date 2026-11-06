@@ -1,0 +1,147 @@
+{
+ "zone": 106,
+ "region": 100,
+ "realm": 2,
+ "prefix": "sq106",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wolfsbane Sachet",
+   "base": [
+    41,
+    24
+   ],
+   "level": 28,
+   "bonuses": {
+    "Int": 9,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "Dried wolfsbane in a linen bag. Werewolves will not come near it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moonbound Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 28,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 5,
+    "Hits": 24
+   },
+   "lore": "Silver, of course. It grows warm near the full moon."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Warder's Fang Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 28,
+   "bonuses": {
+    "Dex": 9,
+    "Qui": 9,
+    "Str": 5,
+    "Hits": 24
+   },
+   "lore": "A werewolf warder's fangs, set in leather."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cub's Blanket Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 28,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 28,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "A child's blanket, let out into a cloak. Small hands mended it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sidhe Brooch",
+   "base": [
+    41,
+    24
+   ],
+   "level": 34,
+   "bonuses": {
+    "Pie": 11,
+    "Int": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "Hibernian silver, worked in a knot that never ends."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Niamh's Token",
+   "base": [
+    41,
+    29
+   ],
+   "level": 34,
+   "bonuses": {
+    "Int": 11,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "A pendant of green glass, warm as a hand."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Scout's Grey Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 34,
+   "bonuses": {
+    "Dex": 11,
+    "Qui": 11,
+    "Str": 6,
+    "Hits": 29
+   },
+   "lore": "Grey as Skona fog. A scout can lie still in it for a day."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Spymaster's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 34,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 6,
+    "Hits": 29
+   },
+   "lore": "The jarl's spymasters wear these. Thorvald gave you his."
+  }
+ ]
+}

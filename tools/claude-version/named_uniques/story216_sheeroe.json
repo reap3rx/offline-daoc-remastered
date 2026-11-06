@@ -1,0 +1,166 @@
+{
+ "zone": 216,
+ "region": 200,
+ "realm": 3,
+ "prefix": "sq216",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Glimmer-Arrow Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 42,
+   "bonuses": {
+    "Int": 14,
+    "Emp": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 25
+   },
+   "lore": "A glimmer-glass arrowhead. It points toward the Glimmer King's hosts, wherever they are."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Elfshot Ward",
+   "base": [
+    41,
+    24
+   ],
+   "level": 42,
+   "bonuses": {
+    "Emp": 14,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 25
+   },
+   "lore": "A healer's charm against the glimmer folk's arrows."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Madman's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 42,
+   "bonuses": {
+    "Str": 14,
+    "Con": 14,
+    "Dex": 7,
+    "Hits": 36
+   },
+   "lore": "An elfshot man made this, in his madness. It's very good."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Glimmerling Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 42,
+   "bonuses": {
+    "Dex": 14,
+    "Qui": 14,
+    "Str": 7,
+    "Hits": 36
+   },
+   "lore": "It catches the light and throws it back wrong."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lurikeen Hearth-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Qui": 17,
+    "Con": 9,
+    "Dex": 9,
+    "Hits": 31,
+    "Power": 6
+   },
+   "lore": "A little clay figure of a hearth, made by lurikeen children."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cleanser's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 17,
+    "Emp": 9,
+    "Dex": 9,
+    "Power": 7,
+    "Hits": 31
+   },
+   "lore": "An Azure cleanser's torc. Every link has a name scratched into it - the names of the cleansed."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pale Horse Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 17,
+    "Con": 17,
+    "Dex": 9,
+    "Hits": 44
+   },
+   "lore": "Leather from a pale horse of the hills. It never quite warms."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Exile's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 52,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Grey and patched. Cnoc wore it for a year."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Inquisitor's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Dex": 17,
+    "Qui": 17,
+    "Str": 9,
+    "Hits": 44
+   },
+   "lore": "Taken from the Azure inquisitor who held the village."
+  }
+ ]
+}

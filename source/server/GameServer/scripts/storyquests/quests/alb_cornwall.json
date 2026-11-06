@@ -1,0 +1,475 @@
+{
+  "name": "Cornwall",
+  "npcs": [
+    {
+      "id": "kerra_aldar",
+      "zone": 6,
+      "realm": 1,
+      "name": "Kerra Aldar",
+      "model": 38,
+      "level": 15,
+      "pos": [
+        1399,
+        545,
+        123.6
+      ],
+      "idle": "Thirty sheep last spring. Nine now."
+    },
+    {
+      "id": "tregarth",
+      "zone": 6,
+      "realm": 1,
+      "name": "Tregarth the Hunter",
+      "model": 9,
+      "level": 24,
+      "pos": [
+        1252,
+        762,
+        135.3
+      ],
+      "idle": "The moor is wrong this year. Even the wolves know it."
+    },
+    {
+      "id": "tregarth_den",
+      "zone": 6,
+      "realm": 1,
+      "name": "Tregarth the Hunter",
+      "model": 9,
+      "level": 24,
+      "pos": [
+        902,
+        890,
+        148.2
+      ],
+      "during": [
+        "white_wolf/s5"
+      ]
+    },
+    {
+      "id": "hywel",
+      "zone": 6,
+      "realm": 1,
+      "name": "Old Hywel",
+      "model": 9,
+      "level": 30,
+      "pos": [
+        1405,
+        540,
+        123.6
+      ],
+      "idle": "My grandfather's grandfather marched with the legion. Some of it, I think, is still marching."
+    },
+    {
+      "id": "lt_penhale",
+      "zone": 6,
+      "realm": 1,
+      "name": "Lieutenant Penhale",
+      "model": 9,
+      "level": 30,
+      "pos": [
+        1416,
+        546,
+        123.6
+      ],
+      "idle": "Report to the commander if it's official. Report to me if it's strange."
+    },
+    {
+      "id": "kit",
+      "zone": 6,
+      "realm": 1,
+      "name": "Kit Hywel",
+      "model": 9,
+      "level": 20,
+      "pos": [
+        554,
+        1100,
+        141.6
+      ],
+      "during": [
+        "drowned_ninth/s7",
+        "drowned_ninth/s8"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "white_wolf",
+      "title": "The White She-Wolf",
+      "level": 17,
+      "giver": "kerra_aldar",
+      "offer": "Wolves took my flock - a few at a time, all spring, then twenty in one night. A white she-wolf leads them. I've seen her on the ridge, watching the fold.\n\nI want her dead. I want her hide on my floor. Will you [hunt her]? Tregarth the hunter knows the moor - he'll tell you where she dens, even if he won't like it.",
+      "accept": "hunt her",
+      "topics": {},
+      "summary": "Kerra Aldar wants the white she-wolf that led the pack against her flock hunted down.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 6,
+          "at": [
+            1352,
+            498,
+            126.3
+          ],
+          "goal": "Look over Kerra's ruined sheepfold",
+          "clue": {
+            "name": "a bloodied shepherd's crook",
+            "model": 1347
+          },
+          "text": "The fold's torn open. But the tracks are wrong for hunting wolves - they come in running, from the west, as if something were driving them.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "tregarth",
+          "goal": "Ask Tregarth the hunter about the white wolf",
+          "say": "The white bitch? I know her. She's been on this moor eight years and never touched a sheep till this spring. Something's pushing the packs east - the [death stalkers] are out of the woods and hungry. Kill a few of those and see where the wolves go.",
+          "keyword": "death stalkers",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            853,
+            882,
+            140.3
+          ],
+          "radius": 25,
+          "goal": "Hunt the death stalkers on the western moor",
+          "mob": {
+            "template": 12823,
+            "name": "death stalker",
+            "level": [
+              17,
+              18
+            ]
+          },
+          "count": 4,
+          "text": "Gorged, every one of them - and in the last one's den, a pile of small white bones. Wolf cubs. The she-wolf's den is close.",
+          "id": "s3"
+        },
+        {
+          "type": "reach",
+          "zone": 6,
+          "at": [
+            910,
+            897,
+            149.8
+          ],
+          "radius": 15,
+          "goal": "Find the white she-wolf's den",
+          "text": "She's there. Thin as a rake, white fur gone grey with mud, standing over two cubs - all that's left of her litter. She doesn't run. She just watches you.",
+          "id": "s4"
+        },
+        {
+          "type": "choice",
+          "npc": "tregarth_den",
+          "goal": "Decide with Tregarth",
+          "say": "There she is. Followed you up.\n\nShe took Kerra's sheep, right enough. And she took them because the stalkers took her cubs and there was nothing else on the moor. Now the stalkers are dealt with. She'll go back west, or I'm no hunter.\n\nKerra asked for her hide. I won't do it for you. [Kill her], or [let her go].",
+          "options": [
+            {
+              "keyword": "kill her",
+              "say": "...Your call. Make it clean, at least.",
+              "next": "s6"
+            },
+            {
+              "keyword": "let her go",
+              "say": "Good. Go tell Kerra. She'll shout. Let her shout. She'll understand by spring.",
+              "next": "s7"
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            912,
+            900,
+            150.6
+          ],
+          "radius": 25,
+          "goal": "Kill the white she-wolf",
+          "mob": {
+            "template": 12829,
+            "name": "the white she-wolf",
+            "level": [
+              18,
+              18
+            ]
+          },
+          "count": 1,
+          "text": "She doesn't fight much. The cubs run off into the heather.",
+          "next": "s8",
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "kerra_aldar",
+          "goal": "Tell Kerra Aldar",
+          "say": "You LET HER GO? I asked for -\n\n...Death stalkers. Her own cubs. Gods. Tregarth told me the same and I wouldn't hear it.\n\nFine. FINE. If a single sheep goes missing, I'm coming to find you. Here - for the stalkers, if not the wolf.",
+          "ending": "mercy",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "kerra_aldar",
+          "goal": "Tell Kerra Aldar",
+          "say": "She's dead? Good. Good.\n\nThen why do I feel like this. Tregarth told me why she came. I wish he hadn't. Here. Take your reward and the hide - I don't want it on my floor after all.",
+          "ending": "revenge",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "mercy": {
+          "text": "For the stalkers, if not the wolf.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq6_shepherd_s_crook_pin"
+            ],
+            "choice": [
+              "sq6_moor_grass_cloak",
+              "sq6_stalker_bone_ring"
+            ]
+          }
+        },
+        "revenge": {
+          "text": "Take it. Take all of it.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq6_shepherd_s_crook_pin"
+            ],
+            "choice": [
+              "sq6_white_fang_necklace",
+              "sq6_stalker_bone_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "drowned_ninth",
+      "title": "The Drowned Ninth",
+      "level": 24,
+      "giver": "hywel",
+      "offer": "Every autumn the drowned legion marches the old road south - ghosts, skeletons, whatever they are. Every autumn somebody from my family lays a wreath on their road. My grandfather's grandfather was one of them, so they say.\n\nThis year my grandson Kit laid it. He didn't come back. The [lieutenant] says it's not army business. Will you [find Kit]?",
+      "accept": "find Kit",
+      "topics": {
+        "lieutenant": "Penhale. Young. Reads too much. He might listen."
+      },
+      "summary": "Old Hywel's grandson Kit laid a wreath on the road where the drowned legion marches, and did not come home.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "lt_penhale",
+          "goal": "Ask Lieutenant Penhale about the legion",
+          "say": "Not official business, no. But I've read the old reports. The Ninth went into the marshes after a raiding king and never came out. They march the old road south every year, back to the barrow where their [centurion] lies. Anyone on the road goes with them.",
+          "keyword": "centurion",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 6,
+          "at": [
+            1340,
+            1222,
+            126.2
+          ],
+          "radius": 20,
+          "goal": "Walk the legion's old road south",
+          "text": "The road is churned by hundreds of feet that left no prints. Skeletons in rusted mail stand guard along it, still at attention.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            1352,
+            1272,
+            126.2
+          ],
+          "radius": 25,
+          "goal": "Break the legion's rearguard",
+          "mob": {
+            "template": 12884,
+            "name": "skeletal legionnaire",
+            "level": [
+              20,
+              21
+            ]
+          },
+          "count": 6,
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 6,
+          "at": [
+            1366,
+            1292,
+            126.2
+          ],
+          "goal": "Search the legion's camp",
+          "clue": {
+            "name": "a trampled heather wreath",
+            "model": 1347
+          },
+          "text": "Kit's wreath, trodden flat. The tracks of the legion lead west across the moor - to the barrow of the giant dead.",
+          "give": {
+            "name": "Kit's wreath"
+          },
+          "id": "s4"
+        },
+        {
+          "type": "reach",
+          "zone": 6,
+          "at": [
+            560,
+            1090,
+            141.7
+          ],
+          "radius": 20,
+          "goal": "Follow the legion west to the great barrow",
+          "text": "A giant skeleton stands at the barrow mouth holding a legion's eagle - and beside it, in a red cloak, a pale young man holding the standard pole. Kit.",
+          "id": "s5"
+        },
+        {
+          "type": "encounter",
+          "zone": 6,
+          "at": [
+            548,
+            1106,
+            141.7
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the legion's centurion",
+          "text": "The centurion's bones fall into a heap. The legionaries stop where they stand and kneel, waiting for an order.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Centurion of the Drowned Ninth",
+              "center": [
+                548,
+                1106,
+                141.7
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Centurion",
+              "announce": "The giant turns. 'Standard-bearer! Hold the line!' Kit doesn't move. The legion does.",
+              "boss": {
+                "template": 12688,
+                "name": "Centurion of the Drowned Ninth",
+                "level": 27,
+                "health_mult": 2.4
+              },
+              "success": "Centurion of the Drowned Ninth falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 12884,
+                    "name": "skeletal legionnaire",
+                    "level": [
+                      20,
+                      21
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "kit",
+          "goal": "Talk to Kit",
+          "say": "I couldn't put it down. The standard. I tried. They needed someone to carry it and I was there and I just... couldn't put it down.\n\nIt's lighter now. They're waiting. They're waiting for someone to tell them [what to do].",
+          "keyword": "what to do",
+          "id": "s7"
+        },
+        {
+          "type": "choice",
+          "npc": "kit",
+          "goal": "Decide what becomes of the legion's standard",
+          "say": "The standard - the eagle. If we [lay it to rest] in the barrow with the centurion, I think they'll sleep. All of them. No more marching.\n\nOr we [bring it home]. Grandfather would - gods, he'd weep. The Eagle of the Ninth, in our house. It's ours too, isn't it? Our family's?",
+          "options": [
+            {
+              "keyword": "lay it to rest",
+              "say": "You're right. You're right. Here - help me. ... There. Listen. Do you hear that? Nothing. Nothing at all.",
+              "next": "s9"
+            },
+            {
+              "keyword": "bring it home",
+              "say": "Grandfather will never believe it. Come on. Let's go before they change their minds.",
+              "next": "s10"
+            }
+          ],
+          "id": "s8"
+        },
+        {
+          "type": "talk",
+          "npc": "hywel",
+          "goal": "Bring Kit home to Old Hywel",
+          "say": "He's home. And the legion's asleep - he says you laid the eagle down with them.\n\nFour hundred years, that road. My family will still lay a wreath, mind. Out of respect. But we won't be going to find anyone.",
+          "ending": "rest",
+          "id": "s9"
+        },
+        {
+          "type": "talk",
+          "npc": "hywel",
+          "goal": "Bring Kit home to Old Hywel",
+          "say": "The Eagle of the Ninth. In my house.\n\n...I heard marching last night, you know. Faint. Coming up the road from the marsh, where it's never come before. Kit hears it too. Take something, quick, before I change my mind about all of this.",
+          "ending": "home",
+          "id": "s10"
+        }
+      ],
+      "endings": {
+        "rest": {
+          "text": "Kit made this for you.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 80,
+            "marks": 14,
+            "items": [
+              "sq6_kit_s_heather_wreath"
+            ],
+            "choice": [
+              "sq6_legionary_cingulum",
+              "sq6_standard_bearer_s_cape"
+            ]
+          }
+        },
+        "home": {
+          "text": "Take something.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 80,
+            "marks": 14,
+            "items": [
+              "sq6_kit_s_heather_wreath"
+            ],
+            "choice": [
+              "sq6_eagle_of_the_ninth",
+              "sq6_legionary_cingulum"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

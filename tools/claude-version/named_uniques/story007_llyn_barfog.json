@@ -1,0 +1,149 @@
+{
+ "zone": 7,
+ "region": 1,
+ "realm": 1,
+ "prefix": "sq7",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Horn of the Hunt",
+   "base": [
+    41,
+    24
+   ],
+   "level": 21,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 4,
+    "Hits": 18
+   },
+   "lore": "A small, curling horn of black bone. The hounds know whoever carries it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cwn Annwn Collar",
+   "base": [
+    41,
+    29
+   ],
+   "level": 21,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 4,
+    "Hits": 18
+   },
+   "lore": "A red leather collar with a silver bell. The bell does not ring."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Harper's Cord",
+   "base": [
+    41,
+    32
+   ],
+   "level": 21,
+   "bonuses": {
+    "Int": 7,
+    "Pie": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "Strung with old harp strings, each one tuned."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Nest's Shawl",
+   "base": [
+    41,
+    26
+   ],
+   "level": 21,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 21,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Thick Welsh wool, red and black. She made it for Iolo's wedding gift."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Abbot's Psalter Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 28,
+   "bonuses": {
+    "Pie": 9,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "A single vellum page in a silver case. The psalm on it is for the dead."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Vigil Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 28,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 28,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "A monk's heavy brown cloak. Ghosts of soldiers once stood watch over it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Evocatus' Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 28,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 5,
+    "Hits": 24
+   },
+   "lore": "A veteran soldier's ring, bearing the mark of a legion long gone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Copyist's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 28,
+   "bonuses": {
+    "Int": 9,
+    "Pie": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "Ink-stained leather. The abbey's copyists wore them for three hundred years."
+  }
+ ]
+}

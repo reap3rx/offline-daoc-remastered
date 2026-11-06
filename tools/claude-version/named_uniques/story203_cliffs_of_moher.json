@@ -1,0 +1,149 @@
+{
+ "zone": 203,
+ "region": 200,
+ "realm": 3,
+ "prefix": "sq203",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fetch-Glass Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 18,
+   "bonuses": {
+    "Int": 6,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "A little mirror that shows you a moment late. You get used to it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sorcha's Comb-Pin",
+   "base": [
+    41,
+    24
+   ],
+   "level": 18,
+   "bonuses": {
+    "Qui": 6,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 11,
+    "Power": 2
+   },
+   "lore": "A comb of white bone. The fetch carried it; it is the only thing of hers it took."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bocan-Hide Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 18,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 15
+   },
+   "lore": "The bocan are goblins of the cliffs. This one's hide is tough as boot-leather."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cliff-Walker's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 18,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 18,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Grey wool, weighted at the hem against the cliff wind."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Koalinth-Scale Token",
+   "base": [
+    41,
+    24
+   ],
+   "level": 36,
+   "bonuses": {
+    "Int": 12,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 22
+   },
+   "lore": "A blue-green scale, pierced and hung on a cord. The koalinth give them to children they claim."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pact-Breaker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 36,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 31
+   },
+   "lore": "Cut from the koalinth tide-caller's own hand."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tide-Caller Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 36,
+   "bonuses": {
+    "Emp": 12,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 22
+   },
+   "lore": "Woven of kelp and something finer. Water runs off it like off a seal."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Spearman's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 36,
+   "bonuses": {
+    "Dex": 12,
+    "Qui": 12,
+    "Str": 6,
+    "Hits": 31
+   },
+   "lore": "Cliff-dweller work, bone and sinew."
+  }
+ ]
+}

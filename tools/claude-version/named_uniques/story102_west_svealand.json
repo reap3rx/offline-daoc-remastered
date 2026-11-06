@@ -1,0 +1,148 @@
+{
+ "zone": 102,
+ "region": 100,
+ "realm": 2,
+ "prefix": "sq102",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Eyvind's Cut Arm-Ring",
+   "base": [
+    41,
+    33
+   ],
+   "level": 15,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 13
+   },
+   "lore": "Silver, cut through where an oath was broken. It can never be mended."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Oathbreaker's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 15,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 13
+   },
+   "lore": "Ragged and black. Deserters of the blood-fellowship wear them so they can find each other."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Huginfel Hearth-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 15,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 15,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "The kind of ring a mother gives a son who came home."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blood-Fellowship Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 15,
+   "bonuses": {
+    "Pie": 5,
+    "Int": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 9
+   },
+   "lore": "Taken from a svard of the blodfelag. The inside is stained."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Haxa's Binding-Cord",
+   "base": [
+    41,
+    24
+   ],
+   "level": 20,
+   "bonuses": {
+    "Pie": 7,
+    "Int": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "Plaited from wolf hair and a woman's. Cut now. It still twitches sometimes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wolf-Brother Pelt",
+   "base": [
+    41,
+    26
+   ],
+   "level": 20,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 3,
+    "Hits": 17
+   },
+   "lore": "A sveawolf's grey pelt, freely given."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shield-Mate's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 3,
+    "Hits": 17
+   },
+   "lore": "Huscarls who stand together trade rings. Grettir gave you his."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gothi Rune-Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Int": 7,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "Carved with the runes for 'man' and 'return'."
+  }
+ ]
+}

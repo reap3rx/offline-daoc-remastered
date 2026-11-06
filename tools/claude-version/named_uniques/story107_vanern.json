@@ -1,0 +1,167 @@
+{
+ "zone": 107,
+ "region": 100,
+ "realm": 2,
+ "prefix": "sq107",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Clay-Child Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 40,
+   "bonuses": {
+    "Qui": 13,
+    "Con": 7,
+    "Dex": 7,
+    "Hits": 24,
+    "Power": 4
+   },
+   "lore": "A little clay figure, fingerprints still on it. Small fingerprints."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Clay Jotun Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 40,
+   "bonuses": {
+    "Str": 13,
+    "Con": 13,
+    "Dex": 7,
+    "Hits": 34
+   },
+   "lore": "Fired clay, hard as iron. It came from something that was nearly alive."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Swamp-Mother's Shawl",
+   "base": [
+    41,
+    26
+   ],
+   "level": 40,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 40,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Thorgunna's shawl. She wore it to the ford every year."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shaper's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 40,
+   "bonuses": {
+    "Pie": 13,
+    "Int": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 24
+   },
+   "lore": "Taken from the hand of a clay jotun shaper. Everything you touch, for a moment, seems soft."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Leg-Biter Hilt-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 17,
+    "Con": 17,
+    "Dex": 8,
+    "Hits": 42
+   },
+   "lore": "The pommel-ring of an ancient sword, worn now as a ring. It hums when blood is spilled."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Dark Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 50,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "The hagbui sleep in cloaks like this. You don't."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ketil's Rune-Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 17,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "A belt carved with the runes of a family that went into the dark and came out."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hagbui Thane Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 17,
+    "Int": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "Barrow-gold. Cold enough to make your teeth ache."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Runemistress' Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Dex": 17,
+    "Qui": 17,
+    "Str": 8,
+    "Hits": 42
+   },
+   "lore": "Gunnvor's own. Rune-carved and spell-hard."
+  }
+ ]
+}

@@ -1,0 +1,150 @@
+{
+ "zone": 3,
+ "region": 1,
+ "realm": 1,
+ "prefix": "sq3",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mabli's Salt-Pouch",
+   "base": [
+    41,
+    24
+   ],
+   "level": 11,
+   "bonuses": {
+    "Qui": 4,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 7,
+    "Power": 1
+   },
+   "lore": "Salt for circles, salt for ghosts, salt for supper. Mabli never goes anywhere without it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Miner's Lamp-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 11,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 9
+   },
+   "lore": "A ring of blackened iron that a ghost wore for two hundred years. It still smells of lamp-oil."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cockatrice-Shell Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 11,
+   "bonuses": {
+    "Int": 4,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "Speckled shell, set in bronze. Magus Idris was not pleased to see it in your hands."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Foreman's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 11,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 11,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Thick leather, and a ring of keys to tunnels long fallen in."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hill-Chief's Torque",
+   "base": [
+    41,
+    29
+   ],
+   "level": 15,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 13
+   },
+   "lore": "Twisted bronze, scratched with the marks of every chief before Alrek."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Crimson-Thread Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 15,
+   "bonuses": {
+    "Int": 5,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 9
+   },
+   "lore": "Unpicked from an initiate's robe and woven back the other way. The red has dulled to brown."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hrodda's Bone Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 15,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 13
+   },
+   "lore": "Carved with a hill-tribe pattern that means 'guest'."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bounty-Hunter's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 15,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 15,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Captain Mardoc's own. He said you'd earned it. He didn't look at you when he said it."
+  }
+ ]
+}

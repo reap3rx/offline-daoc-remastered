@@ -1,0 +1,458 @@
+{
+  "name": "East Svealand",
+  "npcs": [
+    {
+      "id": "gunnhild",
+      "zone": 101,
+      "realm": 2,
+      "name": "Gunnhild the Freewoman",
+      "model": 168,
+      "level": 10,
+      "pos": [
+        1310,
+        430,
+        115.0
+      ],
+      "idle": "I wore a collar eleven years. I don't wear anything round my neck now. Not even beads."
+    },
+    {
+      "id": "orm_thrallmaster",
+      "zone": 101,
+      "realm": 2,
+      "name": "Orm the Thrall-Master",
+      "model": 213,
+      "level": 14,
+      "pos": [
+        1066,
+        203,
+        113.7
+      ],
+      "idle": "A thrall's a thrall. Gods made them so. Ask me about their prices, not their feelings."
+    },
+    {
+      "id": "ketil",
+      "zone": 101,
+      "realm": 2,
+      "name": "Ketil",
+      "model": 213,
+      "level": 6,
+      "pos": [
+        508,
+        1004,
+        115.4
+      ],
+      "during": [
+        "thrall_price/s5",
+        "thrall_price/s6"
+      ]
+    },
+    {
+      "id": "ragna",
+      "zone": 101,
+      "realm": 2,
+      "name": "Ragna Farmwife",
+      "model": 168,
+      "level": 8,
+      "pos": [
+        240,
+        578,
+        114.7
+      ],
+      "idle": "We forgot. That's all. One winter we forgot to leave the porridge."
+    },
+    {
+      "id": "granny_tomte",
+      "zone": 101,
+      "realm": 2,
+      "name": "Granny Tomte",
+      "model": 213,
+      "level": 10,
+      "pos": [
+        760,
+        1342,
+        114.6
+      ],
+      "during": [
+        "tomte_due/s6"
+      ],
+      "size": 25
+    }
+  ],
+  "quests": [
+    {
+      "id": "thrall_price",
+      "title": "A Thrall's Price",
+      "level": 7,
+      "giver": "gunnhild",
+      "offer": "My brother Ketil is a thrall. I bought my own freedom with eleven years of pennies, and I've been saving for his. I'm nearly there.\n\nAnd he RAN. Three days ago. Orm the [thrall-master] says there's a bounty. If he's caught, they'll brand him, and my money won't buy him back for any price. Will you [find Ketil] first?",
+      "accept": "find Ketil",
+      "topics": {
+        "thrall-master": "Orm. North of here, at the thrall pens. He'll be pleased to see you. He's pleased to see anyone who might bring him coin."
+      },
+      "summary": "Gunnhild had nearly saved her brother's thrall-price when he ran away. If he's caught, he'll be branded.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "orm_thrallmaster",
+          "goal": "Ask Orm the thrall-master about the runaways",
+          "say": "Ketil? Ran with three others. They'll be at the old hideout by the strider pools - runaways always go there first. Then south, to join the roaming thralls - bandits, now, every one. If you find him, there's a [bounty] in it.",
+          "keyword": "bounty",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 101,
+          "at": [
+            918,
+            512,
+            112.2
+          ],
+          "goal": "Search the runaways' hideout by the pools",
+          "clue": {
+            "name": "a cut iron collar",
+            "model": 1347
+          },
+          "text": "Four collars, cut and dropped. On one, scratched with a knife: 'Sorry, sister.' The trail goes south.",
+          "id": "s2"
+        },
+        {
+          "type": "reach",
+          "zone": 101,
+          "at": [
+            520,
+            980,
+            117.1
+          ],
+          "radius": 20,
+          "goal": "Follow the trail south to the roaming thralls",
+          "text": "A ragged camp of escaped thralls, armed with stolen axes. They're not friendly.",
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 101,
+          "at": [
+            505,
+            1000,
+            116.2
+          ],
+          "wake_m": 30,
+          "goal": "Break the roaming thralls' hold",
+          "text": "The bandit leader drops his axe. The others scatter - except one young man, who just sits down in the mud.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Ulfar Broken-Collar",
+              "center": [
+                505,
+                1000,
+                116.2
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Ulfar Broken-Collar",
+              "announce": "A big scarred man with a collar still riveted round his neck strides out. 'Another bounty-hunter. We kill bounty-hunters here.'",
+              "boss": {
+                "template": 60165358,
+                "name": "Ulfar Broken-Collar",
+                "level": 9,
+                "health_mult": 2.0
+              },
+              "success": "Ulfar Broken-Collar falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60165358,
+                    "name": "roaming thrall",
+                    "level": [
+                      6,
+                      7
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "ketil",
+          "goal": "Talk to Ketil",
+          "say": "Gunnhild sent you. Course she did.\n\nShe's been saving eleven years. Eleven years of her life, for me. I couldn't bear it. I thought if I ran, she could spend it on herself for once. I'm not [worth it].",
+          "keyword": "worth it",
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "ketil",
+          "goal": "Decide what Ketil does",
+          "say": "If I go back, Orm brands me as a runaway - but Gunnhild can still buy me, if she pays double. If I run north to the mountains, I'm free, but I can never come down. She'd never see me again.\n\nTell me to [go back], or to [run north]. I'll do it. I'm tired of choosing badly.",
+          "options": [
+            {
+              "keyword": "go back",
+              "say": "Back. All right. Branded and bought. At least I'll be bought by my sister.",
+              "next": "s7"
+            },
+            {
+              "keyword": "run north",
+              "say": "North, then. Tell her - tell her to buy a farm. Tell her I'll be thinking of her every day. Every day.",
+              "next": "s8"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "gunnhild",
+          "goal": "Return to Gunnhild",
+          "say": "He came back. He walked into Orm's yard on his own and held out his arm for the brand.\n\nI paid double. I paid everything. He's free - he's FREE, and he's sitting in my kitchen, and I don't have a penny left. I've never been so rich.",
+          "ending": "back",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "gunnhild",
+          "goal": "Tell Gunnhild",
+          "say": "North. Free, and gone.\n\nEleven years of pennies, and he ran so I'd keep them. The idiot. The dear, stupid idiot. Here. Take some of them. I can't look at them.",
+          "ending": "north",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "back": {
+          "text": "Take this - Ketil insisted.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq101_price_paid_charm"
+            ],
+            "choice": [
+              "sq101_broken_collar_bracer",
+              "sq101_freedman_s_cloak"
+            ]
+          }
+        },
+        "north": {
+          "text": "Take some of them.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq101_price_paid_charm"
+            ],
+            "choice": [
+              "sq101_broken_collar_bracer",
+              "sq101_runaway_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "tomte_due",
+      "title": "The Tomte's Due",
+      "level": 11,
+      "giver": "ragna",
+      "offer": "The tomte took my baby. Our farm's tomte - the little grey men who've kept the barn since my grandmother's day. We forgot to leave out their porridge at Yule, one winter. Just one!\n\nSince then they've been stealing, breaking things, joining the tomte raiders in the east. And three nights ago, my Ulf, out of his cradle. Please. Will you [bring him back]?",
+      "accept": "bring him back",
+      "topics": {},
+      "summary": "The farm's tomte, angry at being forgotten, stole Ragna's baby from his cradle.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 101,
+          "at": [
+            900,
+            640,
+            117.8
+          ],
+          "radius": 20,
+          "goal": "Find the tomte raiders' camp in the east",
+          "text": "Tents of patched sacking. Tiny fires. Tomte everywhere, grey-bearded and red-capped, and every one of them armed.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            880,
+            630,
+            117.8
+          ],
+          "radius": 25,
+          "goal": "Fight through the tomte pillagers",
+          "mob": {
+            "template": 60167133,
+            "name": "tomte pillager",
+            "level": [
+              8,
+              9
+            ]
+          },
+          "count": 6,
+          "text": "Small, quick, and furious. 'Forgotten!' they shout. 'FORGOTTEN!'",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 101,
+          "at": [
+            930,
+            630,
+            117.1
+          ],
+          "goal": "Search the tomte camp",
+          "clue": {
+            "name": "a tiny cradle-quilt",
+            "model": 1347
+          },
+          "text": "Ulf's quilt, folded with care. A tomte scrawl: 'TO THE KING. THE KING DECIDES.' The tomte king holds court on the southern shore.",
+          "id": "s3"
+        },
+        {
+          "type": "reach",
+          "zone": 101,
+          "at": [
+            750,
+            1350,
+            115.0
+          ],
+          "radius": 20,
+          "goal": "Go to the tomte king's court on the south shore",
+          "text": "A little throne of driftwood on the beach. A cradle beside it. And a very loud baby.",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 101,
+          "at": [
+            752,
+            1348,
+            115.0
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the tomte king",
+          "text": "The tomte king drops his sceptre - a soup ladle - and sits down hard in the sand.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Tomte-King Nisse Grumblebeard",
+              "center": [
+                752,
+                1348,
+                115.0
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Nisse Grumblebeard",
+              "announce": "A tomte in a crown of bent nails leaps onto the throne. 'The big folk FORGOT us! Now they will REMEMBER!'",
+              "boss": {
+                "template": 60167116,
+                "name": "Tomte-King Nisse Grumblebeard",
+                "level": 12,
+                "health_mult": 2.0
+              },
+              "success": "Tomte-King Nisse Grumblebeard falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60167142,
+                    "name": "tomte skirmisher",
+                    "level": [
+                      8,
+                      9
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "granny_tomte",
+          "goal": "Speak with Granny Tomte",
+          "say": "Enough, enough. He's a fool, the king - he's my son. Listen to me, big one.\n\nWe kept that farm a hundred years. We were forgotten. Forgotten is worse than hated. We took the babe so somebody would remember us - we'd raise him tomte, and he'd remember.\n\nTake him back. But [promise porridge] - for us, every Yule, forever. Or [no promises], and take him by force. We can't stop you. We'll remember that too.",
+          "options": [
+            {
+              "keyword": "promise porridge",
+              "say": "Every Yule. With butter. Ha! Go on, then, take the noisy thing. Tell the farmwife the barn will be swept by morning.",
+              "next": "s7"
+            },
+            {
+              "keyword": "no promises",
+              "say": "No promises. Then go, and take him, and see how your barn does without us.",
+              "next": "s8"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "ragna",
+          "goal": "Bring Ulf home to Ragna",
+          "say": "ULF. Ulf, my Ulf.\n\nPorridge every Yule, with butter? We'll make it with cream. I don't care. And the barn - the barn's swept. I went out this morning and it's swept, and the cow's milked, and there's a little bundle of herbs on the door.",
+          "ending": "promise",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "ragna",
+          "goal": "Bring Ulf home to Ragna",
+          "say": "My baby. Oh, thank you, thank you.\n\nThe barn burned last night. Nobody hurt. Nobody saw it start. Here - take this. We can rebuild. We have Ulf.",
+          "ending": "forced",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "promise": {
+          "text": "Take this - the tomte left it on the step for you.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq101_tomte_s_porridge_spoon"
+            ],
+            "choice": [
+              "sq101_cradle_quilt_cloak",
+              "sq101_nisse_s_red_cap"
+            ]
+          }
+        },
+        "forced": {
+          "text": "Take this.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq101_cradle_quilt_cloak"
+            ],
+            "choice": [
+              "sq101_barn_beam_bracer",
+              "sq101_nisse_s_red_cap"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

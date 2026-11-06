@@ -1,0 +1,479 @@
+{
+  "name": "Shannon Estuary",
+  "npcs": [
+    {
+      "id": "maeve_widow",
+      "zone": 202,
+      "realm": 3,
+      "name": "Maeve",
+      "model": 365,
+      "level": 9,
+      "pos": [
+        240,
+        690,
+        121.2
+      ],
+      "idle": "Three years. I still set his place at table."
+    },
+    {
+      "id": "harbourmaster",
+      "zone": 202,
+      "realm": 3,
+      "name": "Harbourmaster Cian",
+      "model": 337,
+      "level": 18,
+      "pos": [
+        226,
+        664,
+        121.2
+      ],
+      "idle": "Ships come in, ships go out. Some don't come back. That's the sea."
+    },
+    {
+      "id": "niall_ghost",
+      "zone": 202,
+      "realm": 3,
+      "name": "the ghost of Captain Niall",
+      "model": 337,
+      "level": 12,
+      "pos": [
+        192,
+        574,
+        134.4
+      ],
+      "during": [
+        "false_light/s6"
+      ]
+    },
+    {
+      "id": "brehon_aodh",
+      "zone": 202,
+      "realm": 3,
+      "name": "Brehon Aodh",
+      "model": 337,
+      "level": 30,
+      "pos": [
+        980,
+        1580,
+        126.0
+      ],
+      "idle": "The law is the law. Even when it's ours that broke it."
+    },
+    {
+      "id": "iasc",
+      "zone": 202,
+      "realm": 3,
+      "name": "Iasc the Ferryman",
+      "model": 337,
+      "level": 18,
+      "pos": [
+        970,
+        1572,
+        126.3
+      ],
+      "idle": "Ferry's free, for now. The eriu haven't come down the river yet."
+    },
+    {
+      "id": "orla",
+      "zone": 202,
+      "realm": 3,
+      "name": "Orla",
+      "model": 365,
+      "level": 20,
+      "pos": [
+        1006,
+        1132,
+        143.4
+      ],
+      "during": [
+        "eriu_hostage/s4",
+        "eriu_hostage/s5",
+        "eriu_hostage/s6"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "false_light",
+      "title": "The False Light",
+      "level": 10,
+      "giver": "maeve_widow",
+      "offer": "Three years ago my husband's ship, the Morning Star, went down off the beach in calm weather. Calm! Now the driftwood from her walks the shore at night - it's haunted, the children say.\n\nI'm not a fool. But I'd like to know. Will you [find out] what happened to the Morning Star? The [harbourmaster] might help you, if he's sober.",
+      "accept": "find out",
+      "topics": {
+        "harbourmaster": "Cian, on the quay. He's been harbourmaster thirty years. He drinks."
+      },
+      "summary": "Maeve's husband's ship sank three years ago in calm weather. Its driftwood now walks the shore at night.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            262,
+            725,
+            121.4
+          ],
+          "radius": 25,
+          "goal": "Lay the haunted driftwood to rest",
+          "mob": {
+            "template": 60162022,
+            "name": "haunted driftwood",
+            "level": [
+              7,
+              8
+            ]
+          },
+          "count": 4,
+          "text": "On the last piece, carved deep, the ship's name: MORNING STAR. And scratched below it, fresh: 'LIGHTS. FALSE LIGHTS.'",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "harbourmaster",
+          "goal": "Ask the harbourmaster about the wreck",
+          "say": "False lights? ...Aye, the crew that washed up said they followed a light into the shallows - thought it was the harbour lamp. It wasn't. The moss sheerie on the south shore do that, for sport. Captain Niall's body was never found. The [wreck]'s still on the northern sands.",
+          "keyword": "wreck",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 202,
+          "at": [
+            189,
+            571,
+            133.6
+          ],
+          "goal": "Search the wreck on the northern sands",
+          "clue": {
+            "name": "the Morning Star's figurehead",
+            "model": 1347
+          },
+          "text": "The figurehead, half-buried. A woman with a star on her brow. Maeve's face - he had it carved like her. Behind it, something pale and wet is standing very still.",
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            324,
+            1109,
+            149.2
+          ],
+          "radius": 25,
+          "goal": "Hunt down the moss sheerie on the south shore",
+          "mob": {
+            "template": 30002,
+            "name": "moss sheerie",
+            "level": [
+              8,
+              9
+            ]
+          },
+          "count": 5,
+          "text": "Their lights go out one by one. One is brighter than the rest, bobbing away to the south.",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 202,
+          "at": [
+            330,
+            1120,
+            143.5
+          ],
+          "wake_m": 30,
+          "goal": "Put out the false light",
+          "text": "The false light gutters and goes out. On the northern sands, far behind you, something sighs.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "the False Light",
+              "center": [
+                330,
+                1120,
+                143.5
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Put out the False Light",
+              "announce": "A sheerie brighter than a harbour lamp rises out of the moss. 'Follow me, sailor. Follow me home.'",
+              "boss": {
+                "template": 30002,
+                "name": "the False Light",
+                "level": 12,
+                "health_mult": 2.2
+              },
+              "success": "the False Light falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 30002,
+                    "name": "moss sheerie",
+                    "level": [
+                      8,
+                      9
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "niall_ghost",
+          "goal": "Go back to the wreck",
+          "say": "You put out the light. Thank you. I've been standing here three years waiting for someone to.\n\nI couldn't go to her. Not with the light still burning - it kept calling me back into the water. Is she well? Does she still set my place at [table]?",
+          "keyword": "table",
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "maeve_widow",
+          "goal": "Tell Maeve what you found",
+          "say": "He's there? On the sand? Niall?\n\nWhat does he want? Did he say?\n\n(He asked you to tell her one of two things. That she should [let him go] - put away the shawl, take down his place, and marry again. Or that she should [wait for him] at the wreck on the long nights, and he'll come.)",
+          "options": [
+            {
+              "keyword": "let him go",
+              "say": "Let him go. ...He would say that. He always wanted me to be happy more than he wanted me. I'll take the shawl off tomorrow. Tonight I'll go and say goodbye.",
+              "ending": "go"
+            },
+            {
+              "keyword": "wait for him",
+              "say": "On the long nights. At the wreck. ...Then I'll wait. I'm good at waiting. I've had practice.",
+              "ending": "wait"
+            }
+          ],
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "go": {
+          "text": "Take this. I won't need it now.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq202_widow_s_shawl"
+            ],
+            "choice": [
+              "sq202_morning_star_ring",
+              "sq202_driftwood_bracer"
+            ]
+          }
+        },
+        "wait": {
+          "text": "Take this, from the ship.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq202_false_light_lantern_charm"
+            ],
+            "choice": [
+              "sq202_morning_star_ring",
+              "sq202_driftwood_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "eriu_hostage",
+      "title": "The Eriu Hostage",
+      "level": 20,
+      "giver": "brehon_aodh",
+      "offer": "Five years ago this town made a treaty with the eriu upriver: our boats keep below the ford, theirs above. My daughter Orla went to them as surety - a hostage, by the old law. She was ten.\n\nLast month someone fished above the ford. Now the eriu say the treaty's broken and the hostage forfeit. Will you [bring Orla home]? Ask [Iasc] the ferryman - I think he knows who broke it.",
+      "accept": "bring Orla home",
+      "topics": {
+        "Iasc": "The ferryman, by the river. He hasn't met my eye in a month."
+      },
+      "summary": "Brehon Aodh's daughter has been a hostage with the eriu for five years. Now someone has broken the treaty.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "iasc",
+          "goal": "Ask Iasc the ferryman about the broken treaty",
+          "say": "I know who fished above the ford. Me. The run was poor below and my children were hungry. I didn't think they'd notice one boat. I didn't think - about Orla. Gods forgive me. The eriu camp's up the [river].",
+          "keyword": "river",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            1010,
+            1140,
+            144.7
+          ],
+          "radius": 25,
+          "goal": "Fight through the eriu henters",
+          "mob": {
+            "template": 60160565,
+            "name": "eriu henter",
+            "level": [
+              19,
+              20
+            ]
+          },
+          "count": 5,
+          "text": "They fight hard but they don't hate you. 'The law,' one says as he falls. 'Your people broke the law.'",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 202,
+          "at": [
+            1000,
+            1150,
+            144.3
+          ],
+          "goal": "Search the eriu war-camp",
+          "clue": {
+            "name": "a broken treaty-stick",
+            "model": 1347
+          },
+          "text": "The ogham treaty-stick, snapped clean in two. It was the town's own copy. The eriu will have the other. Beside it, a girl's footprints - free, unchained, pacing.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "orla",
+          "goal": "Find Orla",
+          "say": "Father sent you? Of course he did. He's very proper.\n\nThey've been good to me, you know. Five years. They taught me to weave and to fish and to sing their songs. And now they'll kill me, because the law says so. They don't want to. Their chief will come for me at [dusk].",
+          "keyword": "dusk",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 202,
+          "at": [
+            1006,
+            1128,
+            143.3
+          ],
+          "wake_m": 30,
+          "goal": "Stand against the eriu chief",
+          "text": "The eriu chief kneels. 'Then it's done. The law's been answered with blood. Take her.'",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Chief Dorchadh of the Eriu",
+              "center": [
+                1006,
+                1128,
+                143.3
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Chief Dorchadh",
+              "announce": "An old eriu in a cloak of fish-scale. 'I'm sorry, girl. The law is the law.'",
+              "boss": {
+                "template": 60160566,
+                "name": "Chief Dorchadh of the Eriu",
+                "level": 23,
+                "health_mult": 2.4
+              },
+              "success": "Chief Dorchadh of the Eriu falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60160565,
+                    "name": "eriu henter",
+                    "level": [
+                      19,
+                      20
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "orla",
+          "goal": "Decide with Orla",
+          "say": "He's beaten, but they'll choose another chief by the next moon. And the treaty's still broken.\n\nFather could [renew the treaty] - pay the eriu the old fine for the broken one. It would ruin him. Or we go home and let the eriu come for [war], if they want it. They might not. They might.\n\nWhat should I tell him?",
+          "options": [
+            {
+              "keyword": "renew the treaty",
+              "say": "Then I'll tell him to pay. And I'll go back to them myself, after, to say goodbye properly. They were my family too.",
+              "next": "s7"
+            },
+            {
+              "keyword": "war",
+              "say": "War, then. Gods. I'll tell him. He won't like it either way.",
+              "next": "s8"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "brehon_aodh",
+          "goal": "Return to Brehon Aodh",
+          "say": "She's home. And the treaty is renewed - at a price that's cost me my house and two fields.\n\nIasc came to me and wept and offered his boat. I took it, and gave it back to him. The law is satisfied. So am I.",
+          "ending": "treaty",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "brehon_aodh",
+          "goal": "Return to Brehon Aodh",
+          "say": "She's home. That's what matters.\n\nThe eriu have sent a war-arrow down the river. The town's arming. Orla stands at the window looking upriver, and won't tell me what she's thinking. Here. For bringing her back.",
+          "ending": "war",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "treaty": {
+          "text": "Take this, with the law's thanks.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq202_treaty_stick_charm"
+            ],
+            "choice": [
+              "sq202_brehon_s_ring",
+              "sq202_orla_s_woven_belt"
+            ]
+          }
+        },
+        "war": {
+          "text": "For bringing her back.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq202_eriu_fishing_torc"
+            ],
+            "choice": [
+              "sq202_brehon_s_ring",
+              "sq202_orla_s_woven_belt"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

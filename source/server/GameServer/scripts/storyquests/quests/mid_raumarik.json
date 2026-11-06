@@ -1,0 +1,475 @@
+{
+  "name": "Raumarik",
+  "npcs": [
+    {
+      "id": "einar_trapper",
+      "zone": 108,
+      "realm": 2,
+      "name": "Einar the Trapper",
+      "model": 157,
+      "level": 48,
+      "pos": [
+        1100,
+        902,
+        112.0
+      ],
+      "guild": "Trapper's Camp",
+      "idle": "I've trapped this valley forty years. Never caught anything like her."
+    },
+    {
+      "id": "sigrid",
+      "zone": 108,
+      "realm": 2,
+      "name": "Sigrid",
+      "model": 168,
+      "level": 48,
+      "pos": [
+        1106,
+        906,
+        112.0
+      ],
+      "guild": "Red Dagger",
+      "idle": "Don't stand between me and the door. Habit."
+    },
+    {
+      "id": "hroald",
+      "zone": 108,
+      "realm": 2,
+      "name": "Hroald Horse-Breeder",
+      "model": 213,
+      "level": 52,
+      "pos": [
+        1094,
+        896,
+        112.0
+      ],
+      "guild": "Trapper's Camp",
+      "idle": "Sleipnir's get still run wild in the west. Eight legs, and the gods' own blood."
+    },
+    {
+      "id": "hroald_plain",
+      "zone": 108,
+      "realm": 2,
+      "name": "Hroald Horse-Breeder",
+      "model": 213,
+      "level": 52,
+      "pos": [
+        404,
+        622,
+        175.4
+      ],
+      "during": [
+        "grani/s5"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "red_dagger",
+      "title": "Out of the Red Daggers",
+      "level": 50,
+      "giver": "einar_trapper",
+      "offer": "Two nights ago a woman came to my fire half-dead of cold with a knife in her side. Sigrid. A Red Dagger - an assassin, one of Hagall's.\n\nShe wants out. Nobody gets out of the Red Daggers. Hagall's put bounty hunters on her trail, and they're close. I'm old, and I've got one bow. Will you [help her]?",
+      "accept": "help her",
+      "topics": {},
+      "summary": "A Red Dagger assassin wants out of the guild; her old master has set bounty hunters on her trail.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "sigrid",
+          "goal": "Talk to Sigrid",
+          "say": "Einar asked you? Kind of him. Stupid, but kind.\n\nI've killed eleven people for Hagall. The twelfth was a child. I said no. You don't say no to [Hagall].",
+          "keyword": "Hagall",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 108,
+          "at": [
+            790,
+            1040,
+            132.4
+          ],
+          "radius": 25,
+          "goal": "Kill the bounty hunters on Sigrid's trail",
+          "mob": {
+            "template": 60158666,
+            "name": "bounty hunter",
+            "level": [
+              50,
+              51
+            ]
+          },
+          "count": 4,
+          "text": "Hard men, well paid. The last one carries a bounty notice.",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 108,
+          "at": [
+            790,
+            1048,
+            132.1
+          ],
+          "goal": "Search the bounty hunters' camp",
+          "clue": {
+            "name": "a bounty notice",
+            "model": 1347
+          },
+          "text": "'Sigrid of the Red Daggers. Alive: 500 gold. Dead: 600.' Signed with a red thumbprint. Hagall would rather have her dead.",
+          "give": {
+            "name": "Sigrid's bounty notice"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 108,
+          "at": [
+            1104,
+            904,
+            112.0
+          ],
+          "wake_m": 30,
+          "goal": "Defend the trapper's camp when the Red Daggers come",
+          "text": "The Red Daggers melt back into the snow. Sigrid wipes her knife and doesn't look at the bodies.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Sigrid alive",
+              "center": [
+                1104,
+                904,
+                112.0
+              ],
+              "radius": 30,
+              "duration_s": 100,
+              "objective": "Keep Sigrid alive",
+              "announce": "Shapes in the snow - red-masked, silent. Hagall's sent his own.",
+              "protect": {
+                "template": 60165226,
+                "name": "Sigrid",
+                "level": 48,
+                "model": 168
+              },
+              "waves": {
+                "every_s": 22,
+                "count": 2,
+                "from": [
+                  [
+                    1116,
+                    910,
+                    112.0
+                  ],
+                  [
+                    1094,
+                    894,
+                    112.0
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60165226,
+                    "name": "Red Dagger",
+                    "level": [
+                      47,
+                      48
+                    ]
+                  }
+                ]
+              },
+              "thanks": "That was Bloodnail. He taught me. Gods, he taught me everything.",
+              "success": "They break off.",
+              "fail": "Sigrid falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Bloodnail, Hagall's Second",
+              "center": [
+                1104,
+                904,
+                112.0
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Bloodnail",
+              "announce": "A tall Red Dagger with nails painted red. 'Sigrid. Hagall says come home, or come home in pieces.'",
+              "boss": {
+                "template": 60165226,
+                "name": "Bloodnail, Hagall's Second",
+                "level": 53,
+                "health_mult": 2.6
+              },
+              "success": "Bloodnail, Hagall's Second falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "choice",
+          "npc": "sigrid",
+          "goal": "Talk to Sigrid",
+          "say": "Hagall will send more. He'll never stop.\n\nI could [go back] - into the camp, alone, at night. I know every guard. I could kill him. I probably wouldn't come out. Or I [disappear] south, a new name, a new face, and spend my life looking over my shoulder.\n\nYou've bled for me. You choose.",
+          "options": [
+            {
+              "keyword": "go back",
+              "say": "Then I'll go tonight. Einar, keep the fire lit. If I'm not back by spring, burn my things.",
+              "ending": "back"
+            },
+            {
+              "keyword": "disappear",
+              "say": "South, then. A fishing village. I'll learn to mend nets. I'll be terrible at it. Thank you.",
+              "ending": "gone"
+            }
+          ],
+          "id": "s5"
+        }
+      ],
+      "endings": {
+        "back": {
+          "text": "Take this. I won't need it.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq108_red_dagger_ring"
+            ],
+            "choice": [
+              "sq108_trapper_s_snow_cloak",
+              "sq108_bloodnail_s_belt"
+            ]
+          }
+        },
+        "gone": {
+          "text": "Take this.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq108_bounty_notice_charm"
+            ],
+            "choice": [
+              "sq108_trapper_s_snow_cloak",
+              "sq108_bloodnail_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "grani",
+      "title": "Sleipnir's Get",
+      "level": 54,
+      "giver": "hroald",
+      "offer": "GROUP work, this - the fenrir are no joke.\n\nThe sleipneirsson - Sleipnir's get, eight-legged, the gods' own blood - run wild on the western plain. There's a foal among them this year, grey as smoke. I've watched it all summer.\n\nThe fenrir have seen it too. They want its blood for some rite. Will you [save the foal]?",
+      "accept": "save the foal",
+      "topics": {},
+      "summary": "GROUP. The fenrir hunt a foal of Sleipnir's line on the western plain for its blood.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 108,
+          "at": [
+            420,
+            640,
+            171.5
+          ],
+          "radius": 20,
+          "goal": "Go to the western plain",
+          "text": "Eight-legged horses graze in the snow, wary. The foal is easy to spot: smaller, greyer, and never far from its mother.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 108,
+          "at": [
+            575,
+            815,
+            112.1
+          ],
+          "radius": 25,
+          "goal": "Kill the fenrir soldiers stalking the herd",
+          "mob": {
+            "template": 60160797,
+            "name": "fenrir soldier",
+            "level": [
+              52,
+              53
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 108,
+          "at": [
+            520,
+            700,
+            143.5
+          ],
+          "goal": "Search the fenrir hunting camp",
+          "clue": {
+            "name": "a fenrir blood-bowl",
+            "model": 1347
+          },
+          "text": "A great bowl of black iron, carved with wolves. Runes round the rim: 'The blood of the eight-legged makes the wolf a god.'",
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 108,
+          "at": [
+            400,
+            630,
+            175.5
+          ],
+          "wake_m": 30,
+          "goal": "Protect the foal",
+          "text": "The fenrir break and flee. The foal stands trembling beside its mother - and then, very carefully, comes over to sniff your hand.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep the foal alive",
+              "center": [
+                400,
+                630,
+                175.5
+              ],
+              "radius": 30,
+              "duration_s": 110,
+              "objective": "Keep the foal alive",
+              "announce": "Howls on every side. The fenrir come for the foal in a ring.",
+              "protect": {
+                "template": 60166226,
+                "name": "Grani, Sleipnir's foal",
+                "level": 50
+              },
+              "waves": {
+                "every_s": 22,
+                "count": 2,
+                "from": [
+                  [
+                    412,
+                    636,
+                    173.0
+                  ],
+                  [
+                    390,
+                    620,
+                    177.2
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60160797,
+                    "name": "fenrir soldier",
+                    "level": [
+                      52,
+                      53
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "Grani, Sleipnir's foal falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Fenrir Bloodseer",
+              "center": [
+                400,
+                630,
+                175.5
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat the Fenrir Bloodseer",
+              "announce": "A fenrir in a wolf-skull mask, holding a knife of bone. 'The foal's blood is ours. Wolves will be gods.'",
+              "boss": {
+                "template": 60160797,
+                "name": "Fenrir Bloodseer",
+                "level": 57,
+                "health_mult": 3.0
+              },
+              "success": "Fenrir Bloodseer falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "choice",
+          "npc": "hroald_plain",
+          "goal": "Talk to Hroald on the plain",
+          "say": "Look at him. Look at him. He likes you.\n\nThe jarl would give me a hall for this foal - broken to the saddle, he'd carry a jarl to war like the gods' own. I've wanted to [tame him] my whole life.\n\nOr we [set him free]. He'll run with his mother, and nobody will ever ride him, and someday some other fenrir will come. Your choice. You saved him.",
+          "options": [
+            {
+              "keyword": "tame him",
+              "say": "Then I'll be gentle. I swear on my mother. He'll be the finest horse in Midgard.",
+              "ending": "tamed"
+            },
+            {
+              "keyword": "set him free",
+              "say": "...Go on, then. Go on. Run. ... Look at him go. Gods. Look at him go.",
+              "ending": "free"
+            }
+          ],
+          "id": "s5"
+        }
+      ],
+      "endings": {
+        "tamed": {
+          "text": "Take something. The jarl will pay me back tenfold.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq108_jarl_s_rein_bracer"
+            ],
+            "choice": [
+              "sq108_fenrir_blood_bowl_torc",
+              "sq108_breeder_s_saddle_belt",
+              "sq108_eight_hoof_ring"
+            ]
+          }
+        },
+        "free": {
+          "text": "Take something.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq108_grani_s_mane_braid"
+            ],
+            "choice": [
+              "sq108_fenrir_blood_bowl_torc",
+              "sq108_breeder_s_saddle_belt",
+              "sq108_eight_hoof_ring"
+            ]
+          }
+        }
+      },
+      "group": true
+    }
+  ]
+}

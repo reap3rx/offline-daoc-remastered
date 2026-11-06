@@ -1,0 +1,419 @@
+{
+  "name": "Malmohus",
+  "npcs": [
+    {
+      "id": "halla",
+      "zone": 116,
+      "realm": 2,
+      "name": "Halla Bjornsdottir",
+      "model": 168,
+      "level": 40,
+      "pos": [
+        1000,
+        502,
+        71.3
+      ],
+      "guild": "Hunters' Camp",
+      "idle": "My brother found a god in Malmohus. A dragon one."
+    },
+    {
+      "id": "bjorn_convert",
+      "zone": 116,
+      "realm": 2,
+      "name": "Bjorn the Convert",
+      "model": 213,
+      "level": 36,
+      "pos": [
+        662,
+        280,
+        72.2
+      ],
+      "during": [
+        "missionary/s3"
+      ]
+    },
+    {
+      "id": "svein_smith",
+      "zone": 116,
+      "realm": 2,
+      "name": "Svein Hammerhand",
+      "model": 213,
+      "level": 50,
+      "pos": [
+        1006,
+        494,
+        77.2
+      ],
+      "guild": "Hunters' Camp",
+      "idle": "Svartalfar forging Norse steel. My steel, near enough."
+    }
+  ],
+  "quests": [
+    {
+      "id": "missionary",
+      "title": "The Dragon's Missionary",
+      "level": 40,
+      "giver": "halla",
+      "offer": "My brother Bjorn came to Malmohus to hunt with me. Then the drakulv missionaries got to him - the dragon-worshippers. He's taken their scale and their name. He preaches with them in the northern tents.\n\nHe's soft-hearted. They found the soft place and pressed. Will you [find Bjorn]? Talk to him. He won't listen to me.",
+      "accept": "find Bjorn",
+      "topics": {},
+      "summary": "Halla's brother has joined the drakulv dragon-worshippers and preaches with their missionaries.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 116,
+          "at": [
+            640,
+            290,
+            72.9
+          ],
+          "radius": 20,
+          "goal": "Go to the drakulv missionaries' tents in the north",
+          "text": "Drakulv in robes preach to the air, and a few ragged Norse listen, nodding.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            658,
+            271,
+            71.1
+          ],
+          "radius": 25,
+          "goal": "Scatter the drakulv missionaries",
+          "mob": {
+            "template": 60160115,
+            "name": "drakulv missionary",
+            "level": [
+              37,
+              38
+            ]
+          },
+          "count": 5,
+          "text": "A big Norseman in drakulv robes stands among the fallen, praying for them.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bjorn_convert",
+          "goal": "Talk to Bjorn",
+          "say": "Halla sent you. She worries.\n\nYou don't understand. The dragon is real. She sleeps under the ice in the south and dreams the world. The drakulv were kind to me when nobody else was. They said I could matter. They're taking me south for the [great rite] at the next moon.",
+          "keyword": "great rite",
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            600,
+            520,
+            70.5
+          ],
+          "radius": 25,
+          "goal": "Ambush the drakulv patrol bound for the rite",
+          "mob": {
+            "template": 60164855,
+            "name": "patrolling drakulv",
+            "level": [
+              39,
+              40
+            ]
+          },
+          "count": 5,
+          "text": "One carries orders for the rite: a sacrifice. A Norse convert, 'big and willing'. They mean Bjorn.",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 116,
+          "at": [
+            615,
+            505,
+            69.7
+          ],
+          "wake_m": 30,
+          "goal": "Confront the drakulv preacher who claimed Bjorn",
+          "text": "The preacher falls. Bjorn, who followed you, stands looking at the orders in his hands.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Preacher Vrakulv",
+              "center": [
+                615,
+                505,
+                69.7
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Preacher Vrakulv",
+              "announce": "A drakulv in a mitre of scales. 'The big one is promised. The dragon is hungry. You are... also acceptable.'",
+              "boss": {
+                "template": 60160115,
+                "name": "Preacher Vrakulv",
+                "level": 44,
+                "health_mult": 2.5
+              },
+              "success": "Preacher Vrakulv falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60164855,
+                    "name": "patrolling drakulv",
+                    "level": [
+                      39,
+                      40
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "halla",
+          "goal": "Bring Bjorn back to Halla",
+          "say": "He's here. And he knows, now. He read the orders.\n\nHe still wears the scale. He says the dragon isn't the drakulv's fault - that something is really there, under the ice. I don't care what he believes. I care that he's alive.\n\nShould I [take the scale] from him? Or [let him keep it], and pray to his dragon by himself?",
+          "options": [
+            {
+              "keyword": "take the scale",
+              "say": "Here, Bjorn. Give it here. ...He gave it to me. He's crying. I'm crying. It's ugly. Here - take it. I don't want it near him.",
+              "ending": "taken"
+            },
+            {
+              "keyword": "let him keep it",
+              "say": "Then he'll keep it. He can pray to the moon for all I care, as long as he does it here, with me. Thank you.",
+              "ending": "kept"
+            }
+          ],
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "taken": {
+          "text": "Take it. And this.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq116_convert_s_scale_pendant"
+            ],
+            "choice": [
+              "sq116_halla_s_hunting_cloak",
+              "sq116_sacrificer_s_knife_ring"
+            ]
+          }
+        },
+        "kept": {
+          "text": "Take this, for bringing him back.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq116_halla_s_hunting_cloak"
+            ],
+            "choice": [
+              "sq116_sacrificer_s_knife_ring",
+              "sq116_bjorn_s_prayer_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "svartalf_steel",
+      "title": "Forged in Darkness",
+      "level": 50,
+      "giver": "svein_smith",
+      "offer": "GROUP work. Svartalfar aren't fools, and they don't fight fair.\n\nSomeone's forging blades stamped with my mark - the hammer and anvil - and selling them to the drakulv. Good blades, too good. The svartalfar in the east have a forge in the north-east hills.\n\nI want it shut. I want to know who's been [selling my mark]. Will you [shut the forge]?",
+      "accept": "shut the forge",
+      "topics": {
+        "selling my mark": "My hammer and anvil. Only one man in Midgard has the right to stamp it, and he's standing in front of you."
+      },
+      "summary": "GROUP. Someone is forging blades with Svein Hammerhand's mark and selling them to the drakulv - from a svartalf forge in the north-east.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            1291,
+            421,
+            102.6
+          ],
+          "radius": 25,
+          "goal": "Kill the svartalf infiltrators on the eastern road",
+          "mob": {
+            "template": 55003,
+            "name": "svartalf infiltrator",
+            "level": [
+              46,
+              47
+            ]
+          },
+          "count": 5,
+          "text": "One carries a drakulv purse and a letter: 'Thirty more blades by the new moon. The smith's mark, as before. -E.'",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            1380,
+            470,
+            103.1
+          ],
+          "radius": 25,
+          "goal": "Break the svartalf foisters",
+          "mob": {
+            "template": 55004,
+            "name": "svartalf foister",
+            "level": [
+              48,
+              49
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 116,
+          "at": [
+            1470,
+            150,
+            100.6
+          ],
+          "goal": "Search the svartalf forge in the north-east",
+          "clue": {
+            "name": "a crate of blades stamped with a hammer and anvil",
+            "model": 1347
+          },
+          "text": "Thirty blades. Svein's mark on every one. And a ledger: 'E.' has been paid in svartalf gold for each - E, for Egil, Svein's own apprentice.",
+          "give": {
+            "name": "the forger's ledger"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 116,
+          "at": [
+            1460,
+            160,
+            100.6
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the svartalf forgemaster",
+          "text": "The forge's fires gutter out. Behind the anvil, a young Norse smith in a leather apron raises his hands.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Forgemaster Dvalinn the Black",
+              "center": [
+                1460,
+                160,
+                100.6
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Forgemaster Dvalinn",
+              "announce": "A svartalf in a mask of soot steps out of the forge-smoke, hammer smoking. 'Northmen. You've cost me a customer.'",
+              "boss": {
+                "template": 55002,
+                "name": "Forgemaster Dvalinn the Black",
+                "level": 54,
+                "health_mult": 3.0
+              },
+              "success": "Forgemaster Dvalinn the Black falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 55004,
+                    "name": "svartalf foister",
+                    "level": [
+                      48,
+                      49
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "choice",
+          "npc": "svein_smith",
+          "goal": "Return to Svein Hammerhand",
+          "say": "Egil. My Egil. I taught him to hold tongs. I was going to leave him the forge.\n\nHe's outside, waiting. He says the svartalfar threatened his mother. He says he was going to tell me. Maybe it's true.\n\nThe jarl hangs men who sell steel to the enemy. I could [hand him over]. Or [forgive him], and he works my forge for nothing till he's grey, and I watch him every day. You've seen the ledger. You choose.",
+          "options": [
+            {
+              "keyword": "hand him over",
+              "say": "...The jarl's men are already coming up the road. I'll walk him down myself. Leave me alone a while after.",
+              "ending": "law"
+            },
+            {
+              "keyword": "forgive him",
+              "say": "Forgiven. Not forgotten. He'll work till his arms fall off. ...Thank you. I didn't want to be the man who hanged his own boy.",
+              "ending": "forgiven"
+            }
+          ],
+          "id": "s5"
+        }
+      ],
+      "endings": {
+        "law": {
+          "text": "Take something from the forge. I can't look at any of it.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq116_hammerhand_s_ring"
+            ],
+            "choice": [
+              "sq116_svartalf_steel_bracer",
+              "sq116_alchemist_s_phial_belt",
+              "sq116_foister_s_cloak",
+              "sq116_bloodbinder_torc"
+            ]
+          }
+        },
+        "forgiven": {
+          "text": "Take something from the forge.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq116_hammerhand_s_ring"
+            ],
+            "choice": [
+              "sq116_svartalf_steel_bracer",
+              "sq116_alchemist_s_phial_belt",
+              "sq116_foister_s_cloak",
+              "sq116_bloodbinder_torc"
+            ]
+          }
+        }
+      },
+      "group": true
+    }
+  ]
+}

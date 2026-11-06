@@ -1,0 +1,526 @@
+{
+  "name": "West Svealand",
+  "npcs": [
+    {
+      "id": "asvor",
+      "zone": 102,
+      "realm": 2,
+      "name": "Asvor Eyvindsmother",
+      "model": 168,
+      "level": 15,
+      "pos": [
+        1388,
+        1152,
+        116.8
+      ],
+      "idle": "My son swore an oath to wolves. Now the wolves hunt him for breaking it."
+    },
+    {
+      "id": "halvdan_scout",
+      "zone": 102,
+      "realm": 2,
+      "name": "Halvdan the Scout",
+      "model": 213,
+      "level": 18,
+      "pos": [
+        1378,
+        1132,
+        116.8
+      ],
+      "idle": "The blood-fellowship? Raiders with a creed. Worse than raiders without one."
+    },
+    {
+      "id": "eyvind",
+      "zone": 102,
+      "realm": 2,
+      "name": "Eyvind Asvorsson",
+      "model": 213,
+      "level": 14,
+      "pos": [
+        1172,
+        1344,
+        115.2
+      ],
+      "during": [
+        "oathbreaker/s4",
+        "oathbreaker/s6"
+      ]
+    },
+    {
+      "id": "gothi_valbrand",
+      "zone": 102,
+      "realm": 2,
+      "name": "Gothi Valbrand",
+      "model": 213,
+      "level": 24,
+      "pos": [
+        1222,
+        62,
+        142.6
+      ],
+      "idle": "The gods are listening. Speak carefully."
+    },
+    {
+      "id": "huscarl_grettir",
+      "zone": 102,
+      "realm": 2,
+      "name": "Huscarl Grettir",
+      "model": 213,
+      "level": 22,
+      "pos": [
+        1198,
+        50,
+        142.6
+      ],
+      "idle": "Kolbein was my shield-mate. We don't leave shield-mates."
+    },
+    {
+      "id": "kolbein",
+      "zone": 102,
+      "realm": 2,
+      "name": "Kolbein",
+      "model": 213,
+      "level": 18,
+      "pos": [
+        326,
+        350,
+        138.0
+      ],
+      "during": [
+        "wolf_cord/s6",
+        "wolf_cord/s7"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "oathbreaker",
+      "title": "The Oathbreaker",
+      "level": 15,
+      "giver": "asvor",
+      "offer": "My son Eyvind swore the oath of the blood-fellowship last spring - the blodfelag, raiders who drink each other's blood to bind them. He was sixteen and stupid.\n\nThis winter he tried to leave them. They call deserters 'oathbreakers' and hunt them like wolves. Halvdan the [scout] says they're close. Will you [find Eyvind] before they do?",
+      "accept": "find Eyvind",
+      "topics": {
+        "scout": "Halvdan. By the gate. He's been watching the ridge for days."
+      },
+      "summary": "Asvor's son swore an oath to the blood-fellowship raiders, then deserted. Now they hunt him.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "halvdan_scout",
+          "goal": "Ask Halvdan the scout about the hunt",
+          "say": "The blodfelag have henchmen out on the eastern ridge - deserter-hunters. The deserters, the [oathbreakers], hide in the woods south of here. Kill the hunters first, or they'll follow you straight to him.",
+          "keyword": "oathbreakers",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            1353,
+            910,
+            113.9
+          ],
+          "radius": 25,
+          "goal": "Kill the blood-fellowship henchmen hunting deserters",
+          "mob": {
+            "template": 60158516,
+            "name": "blodfelag henchman",
+            "level": [
+              12,
+              13
+            ]
+          },
+          "count": 5,
+          "text": "One of them carries a list of names. Eyvind's is third. The first two are crossed out.",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 102,
+          "at": [
+            1176,
+            1338,
+            114.8
+          ],
+          "goal": "Search the deserters' hideout in the southern woods",
+          "clue": {
+            "name": "a cut silver arm-ring",
+            "model": 1347
+          },
+          "text": "An oath-ring, cut through. Fresh blood on the ground - not much. A voice from the bracken: 'Mother? ...No. Who are you?'",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "eyvind",
+          "goal": "Talk to Eyvind",
+          "say": "She sent you. Course she did.\n\nI drank the blood. I swore. And then they burned a farm with the children in it and I couldn't - I couldn't. Now I'm an oathbreaker. That's worse than a murderer, to them. They're [coming].",
+          "keyword": "coming",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 102,
+          "at": [
+            1172,
+            1344,
+            115.2
+          ],
+          "wake_m": 30,
+          "goal": "Protect Eyvind from the blood-fellowship",
+          "text": "The last of the fellowship's hunters lies in the bracken. Eyvind is shaking, but alive.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Eyvind alive",
+              "center": [
+                1172,
+                1344,
+                115.2
+              ],
+              "radius": 30,
+              "duration_s": 80,
+              "objective": "Keep Eyvind alive",
+              "announce": "Horns in the woods. The blodfelag are here. 'OATHBREAKER!'",
+              "protect": {
+                "template": 60158514,
+                "name": "Eyvind Asvorsson",
+                "level": 14,
+                "model": 213
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    1184,
+                    1350,
+                    115.4
+                  ],
+                  [
+                    1162,
+                    1334,
+                    114.6
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60158514,
+                    "name": "blodfelag dreng",
+                    "level": [
+                      14,
+                      15
+                    ]
+                  }
+                ]
+              },
+              "thanks": "He was my oath-brother. He taught me to hold an axe.",
+              "success": "They break off.",
+              "fail": "Eyvind Asvorsson falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Hrolf Blood-Axe",
+              "center": [
+                1172,
+                1344,
+                115.2
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Hrolf Blood-Axe",
+              "announce": "A svard with a blood-red axe strides out. 'You drank my blood, boy. I've come to take it back.'",
+              "boss": {
+                "template": 60158526,
+                "name": "Hrolf Blood-Axe",
+                "level": 17,
+                "health_mult": 2.2
+              },
+              "success": "Hrolf Blood-Axe falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "eyvind",
+          "goal": "Help Eyvind decide",
+          "say": "There are others like me in these woods. Boys who ran. If I go [home], the fellowship will come to Huginfel for me one day. If I stay and lead the [other deserters] north, maybe we can live.\n\nMother would want me home. I know that. What do you think?",
+          "options": [
+            {
+              "keyword": "home",
+              "say": "Home. All right. I'll hang up the axe. And if they come, they come.",
+              "next": "s7"
+            },
+            {
+              "keyword": "other deserters",
+              "say": "Then tell her I'm sorry. Tell her I'm doing something right, for once. Tell her I'll write - I can't write. Tell her I'll learn.",
+              "next": "s8"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "asvor",
+          "goal": "Return to Asvor",
+          "say": "He's home. He sleeps with the axe under his bed, and he wakes up shouting, and he's HOME.\n\nWhatever comes for him, it'll have to come through me. Here - take this. You brought my boy back.",
+          "ending": "home",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "asvor",
+          "goal": "Tell Asvor",
+          "say": "Leading the other boys north. My Eyvind. Who couldn't lead a goat to grass.\n\nI'm proud of him. Gods help me, I'm proud of him. Take this. It was meant to be his.",
+          "ending": "north",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "You brought my boy back.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq102_huginfel_hearth_ring"
+            ],
+            "choice": [
+              "sq102_eyvind_s_cut_arm_ring",
+              "sq102_blood_fellowship_torc"
+            ]
+          }
+        },
+        "north": {
+          "text": "It was meant to be his.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq102_huginfel_hearth_ring"
+            ],
+            "choice": [
+              "sq102_oathbreaker_s_cloak",
+              "sq102_blood_fellowship_torc"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "wolf_cord",
+      "title": "The Wolf-Cord",
+      "level": 20,
+      "giver": "gothi_valbrand",
+      "offer": "A huscarl of this keep, Kolbein, vanished on patrol in the west a month ago. Last week a shepherd saw him - running with the sveawolves, on all fours, howling.\n\nThe blood-fellowship's witches, the haxa, bind men to wolf-spirits to make their wolf-warriors. Huscarl [Grettir] was his shield-mate and won't rest. Will you [find Kolbein]? Bring him back a man, if the gods allow it.",
+      "accept": "find Kolbein",
+      "topics": {
+        "Grettir": "By the gate. He's been standing there a month, as if Kolbein might walk back in."
+      },
+      "summary": "A huscarl vanished on patrol and was seen running on all fours with the wolves. The blood-fellowship's witches bind men to wolf-spirits.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "huscarl_grettir",
+          "goal": "Ask Huscarl Grettir about the patrol",
+          "say": "We camped by the north bridge. In the night something sang in the woods - a woman's voice. Kolbein got up and walked toward it, and I couldn't wake. I couldn't WAKE. In the morning there were wolf tracks over his [bedroll].",
+          "keyword": "bedroll",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 102,
+          "at": [
+            510,
+            390,
+            136.0
+          ],
+          "radius": 20,
+          "goal": "Go to the patrol's last camp by the north bridge",
+          "text": "The bedroll's still here, clawed to ribbons. Wolf tracks lead south.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            428,
+            643,
+            143.8
+          ],
+          "radius": 25,
+          "goal": "Hunt the frothing sveawolves",
+          "mob": {
+            "template": 60161138,
+            "name": "frothing sveawolf",
+            "level": [
+              18,
+              19
+            ]
+          },
+          "count": 5,
+          "text": "One of them wears a huscarl's arm-ring on its foreleg - Kolbein's. But it isn't Kolbein. It's just a wolf. He's somewhere else.",
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 102,
+          "at": [
+            450,
+            572,
+            141.3
+          ],
+          "goal": "Search the old longhouse west of the keep",
+          "clue": {
+            "name": "a haxa's binding-cord",
+            "model": 1347
+          },
+          "text": "A cord of plaited hair, wound round a wolf's skull, and the runes for Kolbein's name. A spare. The one that holds him is with the haxa who made it.",
+          "give": {
+            "name": "the haxa's spare cord"
+          },
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 102,
+          "at": [
+            319,
+            342,
+            137.6
+          ],
+          "wake_m": 30,
+          "goal": "Kill the haxa who bound Kolbein",
+          "text": "The haxa falls. Her wolf-warriors drop their weapons, whimpering. One of them - grey, gaunt, wearing a huscarl's ragged tabard - doesn't run.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Haxa Grimhild",
+              "center": [
+                319,
+                342,
+                137.6
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Kill Haxa Grimhild",
+              "announce": "A woman in wolf-skins looks up from her fire and laughs. 'You want the huscarl? He's mine. He likes it.'",
+              "boss": {
+                "template": 20016,
+                "name": "Haxa Grimhild",
+                "level": 21,
+                "health_mult": 2.4
+              },
+              "success": "Haxa Grimhild falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60158532,
+                    "name": "blodfelag wolfwarrior",
+                    "level": [
+                      18,
+                      19
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "kolbein",
+          "goal": "Approach Kolbein",
+          "say": "...Grettir? No. No, you smell different.\n\nI remember. I remember the keep, and the mead, and Grettir's terrible singing. I remember it like a story about someone else. The [cord] - she's dead, but it still holds. I can feel it in my chest.",
+          "keyword": "cord",
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "kolbein",
+          "goal": "Decide what to do with the wolf-cord",
+          "say": "If you [cut the cord], I'm a man again. The wolf goes out of me and something else goes with it - I don't know what. I'll never run like this again. Never smell the rain coming three valleys off.\n\nOr you [let me run]. Tell Grettir I died well. He'd believe that.",
+          "options": [
+            {
+              "keyword": "cut the cord",
+              "say": "Do it. Do it quick. ... Oh. Oh, gods, I'm cold. Is it always this cold?",
+              "next": "s8"
+            },
+            {
+              "keyword": "let me run",
+              "say": "Thank you. Tell the gothi I'm not sorry. Tell Grettir I'll howl for him on the long nights.",
+              "next": "s9"
+            }
+          ],
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "gothi_valbrand",
+          "goal": "Return to the keep",
+          "say": "Kolbein walked through the gate on two feet this morning. Grettir wept like a child.\n\nHe keeps going to the window at night. Standing there, listening. I think he'll do that the rest of his life. But he's ours. The gods were kind, and so were you.",
+          "ending": "man",
+          "id": "s8"
+        },
+        {
+          "type": "talk",
+          "npc": "gothi_valbrand",
+          "goal": "Return to the keep",
+          "say": "He chose the wolves.\n\nGrettir hasn't spoken since you told him. Last night we heard howling from the west, long and low, and Grettir went up on the wall and howled back. I said nothing. Take this.",
+          "ending": "wolf",
+          "id": "s9"
+        }
+      ],
+      "endings": {
+        "man": {
+          "text": "From the keep, with thanks.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq102_haxa_s_binding_cord"
+            ],
+            "choice": [
+              "sq102_shield_mate_s_ring",
+              "sq102_gothi_rune_belt"
+            ]
+          }
+        },
+        "wolf": {
+          "text": "Take this.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq102_haxa_s_binding_cord"
+            ],
+            "choice": [
+              "sq102_wolf_brother_pelt",
+              "sq102_shield_mate_s_ring"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

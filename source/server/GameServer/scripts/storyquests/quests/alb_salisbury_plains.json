@@ -1,0 +1,566 @@
+{
+  "name": "Salisbury Plains",
+  "npcs": [
+    {
+      "id": "wenna_ashby",
+      "zone": 1,
+      "realm": 1,
+      "name": "Wenna Ashby",
+      "model": 38,
+      "level": 10,
+      "pos": [
+        724,
+        213,
+        54.0
+      ],
+      "idle": "If you're going south, mind the barrows. Nothing good's come out of them yet."
+    },
+    {
+      "id": "dunstan_carter",
+      "zone": 1,
+      "realm": 1,
+      "name": "Dunstan the Carter",
+      "model": 9,
+      "level": 14,
+      "pos": [
+        745,
+        213,
+        53.9
+      ],
+      "idle": "Wheels, axles, horses. Ask me about any of 'em. Don't ask me about the road south."
+    },
+    {
+      "id": "aled_ashby",
+      "zone": 1,
+      "realm": 1,
+      "name": "Aled Ashby",
+      "model": 9,
+      "level": 12,
+      "pos": [
+        912,
+        900,
+        52.4
+      ],
+      "during": [
+        "under_stones/s6"
+      ]
+    },
+    {
+      "id": "ysolde_huntington",
+      "zone": 1,
+      "realm": 1,
+      "name": "Ysolde Huntington",
+      "model": 38,
+      "level": 16,
+      "pos": [
+        238,
+        1316,
+        54.4
+      ],
+      "idle": "Rhodri says the old stories are for children. Rhodri says a lot of things."
+    },
+    {
+      "id": "coel_huntsman",
+      "zone": 1,
+      "realm": 1,
+      "name": "Coel the Huntsman",
+      "model": 9,
+      "level": 18,
+      "pos": [
+        229,
+        1302,
+        53.1
+      ],
+      "idle": "Good hunting on the plain this year. Too good. Makes a man careless."
+    },
+    {
+      "id": "rhodri_huntington",
+      "zone": 1,
+      "realm": 1,
+      "name": "Rhodri Huntington",
+      "model": 9,
+      "level": 17,
+      "pos": [
+        1462,
+        1226,
+        51.2
+      ],
+      "during": [
+        "white_horse/s4",
+        "white_horse/s5",
+        "white_horse/s6"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "under_stones",
+      "title": "Under the Stones",
+      "level": 13,
+      "giver": "wenna_ashby",
+      "offer": "My husband Aled took work guarding a wagon for some 'surveyors' bound south. Good coin, he said - too good, I said. That was nine days ago.\n\nDunstan the [carter] saw them go. I'm not asking you to fight anyone. Just - will you [find Aled]? Find him and tell me what kind of fool I married.",
+      "accept": "find Aled",
+      "topics": {
+        "carter": "Dunstan. By the stables. He sees everything that leaves Ludlow, and has an opinion on all of it."
+      },
+      "summary": "Wenna Ashby's husband hired on to guard a wagon of 'surveyors' bound south, and hasn't come home.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "dunstan_carter",
+          "goal": "Ask Dunstan the carter where the wagon went",
+          "say": "Surveyors my eye. Shovels, rope, picks and a strongbox with nothing in it - you don't carry an empty strongbox to fill with *surveys*. They went south past the [barrows], where the tomb raiders dig. Aled knew. He's not a stupid man; he's a poor one.",
+          "keyword": "barrows",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 1,
+          "at": [
+            376,
+            1086,
+            52.0
+          ],
+          "goal": "Find the wagon near the tomb raiders' diggings",
+          "clue": {
+            "name": "an overturned wagon",
+            "model": 1347
+          },
+          "text": "The wagon's on its side, the horses gone. Aled's tally-stick is jammed in the wheel-spokes, as if he wanted it found - and every barrow round about has been opened.",
+          "give": {
+            "name": "Aled's tally-stick"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            363,
+            1103,
+            58.4
+          ],
+          "radius": 25,
+          "goal": "Make the diggers talk",
+          "mob": {
+            "template": 12737,
+            "name": "tomb raider digger",
+            "level": [
+              10,
+              11
+            ]
+          },
+          "count": 6,
+          "text": "The last digger talks fast. 'The drover? He wouldn't open the king's barrow. Said it was a grave and that was that. Foreman Brannoc had him trussed and dragged off to the old stones - for the ritual, he said. Laughed when he said it.'",
+          "id": "s3"
+        },
+        {
+          "type": "reach",
+          "zone": 1,
+          "at": [
+            905,
+            900,
+            52.4
+          ],
+          "radius": 20,
+          "goal": "Go to the great stones",
+          "text": "The ring of stones looms over the plain. Torches - and Aled, bound to a fallen lintel, very much alive and very much shouting.",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 1,
+          "at": [
+            915,
+            905,
+            52.4
+          ],
+          "wake_m": 30,
+          "goal": "Free Aled Ashby",
+          "text": "Aled's ropes are cut. He picks up a digger's shovel and looks almost cheerful about it.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Aled alive while he gets free",
+              "center": [
+                915,
+                905,
+                52.4
+              ],
+              "radius": 30,
+              "duration_s": 80,
+              "objective": "Keep Aled alive while he gets free",
+              "announce": "Brannoc's crew come running from the barrows. 'The drover's loose! Get him!'",
+              "protect": {
+                "template": 12738,
+                "name": "Aled Ashby",
+                "level": 12,
+                "model": 9
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    927,
+                    911,
+                    52.4
+                  ],
+                  [
+                    905,
+                    895,
+                    52.4
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 12738,
+                    "name": "tomb raider scout",
+                    "level": [
+                      12,
+                      13
+                    ]
+                  }
+                ]
+              },
+              "thanks": "Well. That could have gone worse. Mostly for me.",
+              "success": "They break off.",
+              "fail": "Aled Ashby falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Foreman Brannoc",
+              "center": [
+                915,
+                905,
+                52.4
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Foreman Brannoc",
+              "announce": "A big man with a pick shoulders through the stones. 'That's my barrow-king's gold, drover. Mine.'",
+              "boss": {
+                "template": 12734,
+                "name": "Foreman Brannoc",
+                "level": 15,
+                "health_mult": 2.2
+              },
+              "success": "Foreman Brannoc falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "aled_ashby",
+          "goal": "Speak with Aled at the stones",
+          "say": "Wenna sent you? Of course she did. Listen - before we go. I took this off Brannoc. It's from the king's barrow. Old gold. It would feed us for two winters, and I'd never need to take work from men like him again.\n\nI know what it is. I know where it came from. Tell me straight: do I [put it back], or do we [keep it]?",
+          "options": [
+            {
+              "keyword": "put it back",
+              "say": "...Yes. Yes, that's the answer I was waiting for someone to give me. Take it back to the barrow for me? I can't go near the place again. I'll go home to Wenna.",
+              "next": "s7"
+            },
+            {
+              "keyword": "keep it",
+              "say": "Then it's ours, and the dead can complain to me personally. Go on - tell Wenna I'm coming. I'll be the one walking funny under all this gold.",
+              "next": "s9"
+            }
+          ],
+          "id": "s6",
+          "give": {
+            "name": "Torc of the barrow-king"
+          }
+        },
+        {
+          "type": "search",
+          "zone": 1,
+          "at": [
+            1272,
+            790,
+            53.0
+          ],
+          "goal": "Return the torc to the barrow-king's grave in the eastern barrows",
+          "clue": {
+            "name": "the opened barrow",
+            "model": 1347
+          },
+          "text": "You lay the torc back on the bones of a king nobody remembers. The barrow sighs - you'd swear it - and settles.",
+          "take": "Torc of the barrow-king",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "wenna_ashby",
+          "goal": "Tell Wenna Ashby",
+          "say": "He's home. Covered in mud, smelling of a wet dog, and home. He told me about the gold - and that you made him put it back.\n\nGood. I'd rather be poor with him than rich with a curse in the house.",
+          "ending": "honest",
+          "id": "s8"
+        },
+        {
+          "type": "talk",
+          "npc": "wenna_ashby",
+          "goal": "Tell Wenna Ashby",
+          "say": "He's home, and he brought a king's torc into my kitchen. I've hidden it in the flour.\n\nTwo winters, he says. We'll see what the barrows say about it. Thank you - whatever comes of it, you brought him back.",
+          "ending": "gold",
+          "id": "s9"
+        }
+      ],
+      "endings": {
+        "honest": {
+          "text": "Aled carved you this - he says every debt deserves its notch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq1_aled_s_tally_stick_charm"
+            ],
+            "choice": [
+              "sq1_henge_stone_bracer",
+              "sq1_drover_s_oilskin"
+            ]
+          }
+        },
+        "gold": {
+          "text": "Take something from the barrow too. Aled says if there's a curse, it may as well be spread thin.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq1_aled_s_tally_stick_charm"
+            ],
+            "choice": [
+              "sq1_torc_of_the_barrow_king",
+              "sq1_henge_stone_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "white_horse",
+      "title": "The White Horse",
+      "level": 18,
+      "giver": "ysolde_huntington",
+      "offer": "My brother Rhodri's gone after the White Horse. The real one - the one the hill-figure was cut for, before Camelot had a name. A lord in Ludlow will pay its weight in silver for the hide.\n\nCoel says the plain's full of giants this year and Rhodri went alone. I don't care about the silver. Will you [bring him back]? Coel can show you his [tracks].",
+      "accept": "bring him back",
+      "topics": {
+        "tracks": "Coel's by the fire. He taught Rhodri to track. He's not happy about how that turned out."
+      },
+      "summary": "Rhodri Huntington went alone onto the giants' plain to hunt the White Horse of Salisbury.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "coel_huntsman",
+          "goal": "Ask Coel about Rhodri's tracks",
+          "say": "He set a snare line east of the old drovers' road, where the horse comes to drink. Ran it right through the giants' grazing. Said giants were slow. Giants are slow - right up until they [aren't].",
+          "keyword": "aren't",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 1,
+          "at": [
+            822,
+            1196,
+            55.9
+          ],
+          "goal": "Find Rhodri's snare line on the giants' plain",
+          "clue": {
+            "name": "a snapped snare and a broken spear",
+            "model": 1347
+          },
+          "text": "The snare's snapped and the spear's in three pieces. Huge prints all round - and a smear of blood leading east.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            899,
+            1226,
+            59.0
+          ],
+          "radius": 25,
+          "goal": "Drive off the giants who took him",
+          "mob": {
+            "template": 12719,
+            "name": "salisbury giant",
+            "level": [
+              18,
+              19
+            ]
+          },
+          "count": 5,
+          "text": "In the last giant's sack: Rhodri's quiver, empty. Whatever happened to him, he got away. The trail runs east to the old Roman bridge.",
+          "id": "s3"
+        },
+        {
+          "type": "reach",
+          "zone": 1,
+          "at": [
+            1458,
+            1232,
+            52.9
+          ],
+          "radius": 18,
+          "goal": "Follow the trail to the old Roman bridge",
+          "text": "Rhodri's under the bridge arch, white to the knees - grey, rather. A basilisk's glance, half-caught. He's alive, and very cross about it.",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 1,
+          "at": [
+            1440,
+            1240,
+            52.1
+          ],
+          "wake_m": 30,
+          "goal": "Kill the basilisk that hunts him",
+          "text": "The old basilisk sags and its eyes cloud over. The grey creeping up Rhodri's legs stops, and slowly starts to fade.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "the Old Gazer",
+              "center": [
+                1440,
+                1240,
+                52.1
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Kill the Old Gazer",
+              "announce": "Something heavy drags itself out of the reeds, and Rhodri swears. 'It followed me. Don't look at its eyes. Don't LOOK at its EYES.'",
+              "boss": {
+                "template": 12659,
+                "name": "the Old Gazer",
+                "level": 21,
+                "health_mult": 2.4
+              },
+              "success": "the Old Gazer falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 12662,
+                    "name": "basilisk",
+                    "level": [
+                      15,
+                      16
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "rhodri_huntington",
+          "goal": "Talk to Rhodri",
+          "say": "Ysolde sent you, didn't she. Of course.\n\nI saw it, you know. The White Horse. Just before the giants came. It stood there looking at me like it knew my name. I could still have it - it drinks at the giants' pools at dusk. Help me, and the silver's half yours.\n\nOr tell me to [let it be], and I'll limp home and listen to my sister laugh. Or we [hunt it] - now.",
+          "options": [
+            {
+              "keyword": "let it be",
+              "say": "...Yes. All right. I couldn't have loosed anyway, I think. Not with it looking at me. Let's go home.",
+              "next": "s8"
+            },
+            {
+              "keyword": "hunt it",
+              "say": "Ha! Knew you had the stomach for it. Dusk, by the pools. Don't miss.",
+              "next": "s7"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            798,
+            1165,
+            54.0
+          ],
+          "radius": 25,
+          "goal": "Hunt the White Horse at dusk",
+          "mob": {
+            "template": 60167890,
+            "name": "the White Horse",
+            "level": [
+              19,
+              19
+            ]
+          },
+          "count": 1,
+          "text": "It doesn't run. It only looks at you, and then it's down, and the light on the plain goes strange and flat. Far off on the hill, a crack runs through the chalk.",
+          "next": "s9",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "ysolde_huntington",
+          "goal": "Return to Ysolde",
+          "say": "He limped in with grey feet and a face like a wet week, and he said he saw it. The White Horse. And let it go.\n\nYou've no idea what that means to this family. Our grandmother used to say we keep the plain, not the other way round.",
+          "ending": "spared",
+          "id": "s8"
+        },
+        {
+          "type": "talk",
+          "npc": "ysolde_huntington",
+          "goal": "Return to Ysolde",
+          "say": "The hill-figure cracked last night. Everyone in the camp heard it.\n\nRhodri's got his silver. He sits by the fire with it and doesn't say much. Take your share. I don't want it in my tent.",
+          "ending": "hunted",
+          "id": "s9"
+        }
+      ],
+      "endings": {
+        "spared": {
+          "text": "Grandmother's horn. She'd want it to go to someone who listened.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq1_huntington_s_horn"
+            ],
+            "choice": [
+              "sq1_chalk_white_mantle",
+              "sq1_basilisk_eye_ring"
+            ]
+          }
+        },
+        "hunted": {
+          "text": "Take it and go.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq1_huntington_s_horn"
+            ],
+            "choice": [
+              "sq1_hide_of_the_white_horse",
+              "sq1_basilisk_eye_ring"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

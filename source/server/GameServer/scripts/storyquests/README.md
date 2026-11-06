@@ -49,3 +49,12 @@ A spec of items per zone, in the named_uniques format: `tools/claude-version/nam
 - Givers wear the yellow `!`; whoever your current step needs, the green `?`. The journal shows the step's goal, the
   map and minimap its place (the minimap's rim points to it when it's off the edge).
 - `/storyquest list | start <id> [step] | step <id> <step> | done <id> | reset <id> | reload` (testing).
+
+## Written short
+
+Most zones' quests (every zone with dynamic events, beyond Camelot Hills) are written as Python with the helpers in
+`tools/claude-version/story_gen.py` - `story_alb.py`, `story_mid.py`, `story_hib.py` - which writes each zone's
+quest file and reward spec and checks them (people, steps, endings, keywords, reward ids). Then `story_items.py` on
+each spec and `story_quests_fill_z.py` on each quest file, as above:
+
+    python tools/claude-version/story_gen.py story_alb story_mid story_hib

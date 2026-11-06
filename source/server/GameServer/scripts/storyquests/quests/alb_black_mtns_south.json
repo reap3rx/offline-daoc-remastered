@@ -1,0 +1,487 @@
+{
+  "name": "Black Mountains South",
+  "npcs": [
+    {
+      "id": "wren_piper",
+      "zone": 2,
+      "realm": 1,
+      "name": "Wren Piper",
+      "model": 38,
+      "level": 4,
+      "pos": [
+        1199,
+        1103,
+        55.0
+      ],
+      "idle": "Pip's always off somewhere. Usually he comes back.",
+      "size": 40
+    },
+    {
+      "id": "corwen_fisher",
+      "zone": 2,
+      "realm": 1,
+      "name": "Old Corwen",
+      "model": 9,
+      "level": 10,
+      "pos": [
+        1172,
+        1088,
+        55.0
+      ],
+      "idle": "The river gives, the river takes. Mostly it takes, this year."
+    },
+    {
+      "id": "pip_piper",
+      "zone": 2,
+      "realm": 1,
+      "name": "Pip Piper",
+      "model": 9,
+      "level": 2,
+      "pos": [
+        579,
+        566,
+        44.0
+      ],
+      "during": [
+        "singing_bridge/s5"
+      ],
+      "size": 38
+    },
+    {
+      "id": "sister_aldith",
+      "zone": 2,
+      "realm": 1,
+      "name": "Sister Aldith",
+      "model": 38,
+      "level": 14,
+      "pos": [
+        610,
+        1082,
+        57.1
+      ],
+      "idle": "Pray for the filidh, if you pray. Somebody must."
+    },
+    {
+      "id": "hedda_woodcutter",
+      "zone": 2,
+      "realm": 1,
+      "name": "Hedda the Woodcutter",
+      "model": 38,
+      "level": 9,
+      "pos": [
+        985,
+        458,
+        59.0
+      ],
+      "idle": "Wood doesn't cut itself. More's the pity."
+    },
+    {
+      "id": "brother_osric",
+      "zone": 2,
+      "realm": 1,
+      "name": "Brother Osric",
+      "model": 9,
+      "level": 7,
+      "pos": [
+        1062,
+        46,
+        177.9
+      ],
+      "during": [
+        "willing_heart/s5"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "singing_bridge",
+      "title": "The Singing Bridge",
+      "level": 4,
+      "giver": "wren_piper",
+      "offer": "Have you seen my brother? He's this tall, and loud, and he's called Pip. He went to the [singing bridge] last night and he's not back.\n\nOur Da drowned crossing there in the winter. Pip says he can hear Da singing from the water at night. He's ten. Will you [find Pip]? Old Corwen knows the bridge.",
+      "accept": "find Pip",
+      "topics": {
+        "singing bridge": "The magic bridge, up the river to the north. People say it sings. Pip says it sings with Da's voice."
+      },
+      "summary": "Wren Piper's little brother Pip went to the singing bridge where their father drowned.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "corwen_fisher",
+          "goal": "Ask Old Corwen about the singing bridge",
+          "say": "The magic bridge, up the river? Aye, it sings. Or the goblins do, on the north end, when they're fishing. Singing at night with voices they've no right to. I've heard my own mother calling from that water, and she's thirty years buried. Pip went up to the [north end], I'd guess.",
+          "keyword": "north end",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 2,
+          "at": [
+            934,
+            452,
+            60.0
+          ],
+          "goal": "Search the north end of the magic bridge",
+          "clue": {
+            "name": "a small satchel",
+            "model": 1347
+          },
+          "text": "Pip's satchel. Inside: a heel of bread, a wooden whistle, and a drawing of goblins, with an arrow pointing west and 'DA?' in big letters.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            690,
+            672,
+            45.1
+          ],
+          "radius": 25,
+          "goal": "Deal with the goblin fishermen west of the bridge",
+          "mob": {
+            "template": 12171,
+            "name": "goblin fisherman",
+            "level": [
+              4,
+              5
+            ]
+          },
+          "count": 5,
+          "text": "One of the goblins drops a reed whistle. When you blow it, it doesn't sound like a whistle. It sounds like a man calling a boy's name. They took Pip to their singer.",
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 2,
+          "at": [
+            575,
+            560,
+            51.0
+          ],
+          "wake_m": 30,
+          "goal": "Find Pip at the goblins' singing-pool",
+          "text": "The singer's whistles scatter. In the reeds, a very muddy boy is hiding.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Gobble-Eye the Singer",
+              "center": [
+                575,
+                560,
+                51.0
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Silence Gobble-Eye the Singer",
+              "announce": "A goblin with a necklace of whistles stands up out of the pool and sings - in a drowned man's voice. 'Pip! Come here, Pip!'",
+              "boss": {
+                "template": 12171,
+                "name": "Gobble-Eye the Singer",
+                "level": 7,
+                "health_mult": 2.0
+              },
+              "success": "Gobble-Eye the Singer falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 12235,
+                    "name": "undead goblin fisherman",
+                    "level": [
+                      4,
+                      5
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "pip_piper",
+          "goal": "Talk to Pip",
+          "say": "It wasn't Da. Was it. It was him. With the whistles.\n\nI knew, really. I just wanted to hear it again. Don't tell Wren I cried. Let's go [home].",
+          "keyword": "home",
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "wren_piper",
+          "goal": "Bring Pip home to Wren",
+          "say": "PIP! You horrible - come here. Come HERE.\n\n...What was it? What did he hear? You can tell me [the truth]. Or you can say it was [only the river]. I think I know which he needs. I'm not sure which I do.",
+          "options": [
+            {
+              "keyword": "the truth",
+              "say": "A goblin. Using Da's voice. Gods.\n\nI'm glad you said. I'd rather hate a goblin than wonder for the rest of my life. Thank you.",
+              "ending": "truth"
+            },
+            {
+              "keyword": "only the river",
+              "say": "The river. Yes. The river does that.\n\nPip's asleep already. He said Da sang him a song before the goblins came. I'm going to let him keep it.",
+              "ending": "river"
+            }
+          ],
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "truth": {
+          "text": "Pip wants you to have this - it was Da's.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq2_pip_s_bell_charm"
+            ],
+            "choice": [
+              "sq2_river_stone_ring",
+              "sq2_reed_woven_sash"
+            ]
+          }
+        },
+        "river": {
+          "text": "Pip wants you to have this - it was Da's.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq2_pip_s_bell_charm"
+            ],
+            "choice": [
+              "sq2_reed_woven_sash",
+              "sq2_fisherman_s_mantle"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "willing_heart",
+      "title": "One Willing Heart",
+      "level": 9,
+      "giver": "sister_aldith",
+      "offer": "Brother Osric is young and kind and thinks that's armour. He went north to preach to the filidh at their standing stone - to turn them from blood. His letters came every week.\n\nThey stopped a fortnight ago. Hedda the woodcutter works up that way. Will you [go north] and see what's become of him?",
+      "accept": "go north",
+      "topics": {},
+      "summary": "Brother Osric went north to preach to the filidh at their standing stone, and his letters stopped coming.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "hedda_woodcutter",
+          "goal": "Ask Hedda the woodcutter about the friar",
+          "say": "The young monk? Saw him a week back, walking with the filidh. Not tied - walking, smiling, talking with them like old friends. Gave me a blessing on his way past. Odd thing is, they were all smiling. Up at the [stones].",
+          "keyword": "stones",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 2,
+          "at": [
+            1080,
+            140,
+            150.4
+          ],
+          "goal": "Search the path to the northern standing stone",
+          "clue": {
+            "name": "a dropped satchel and a torn page",
+            "model": 1882
+          },
+          "text": "An unfinished letter, in a careful hand: 'Sister - they are kind to me. They say the stone does not want blood, only one willing heart, once in a generation. I think I understand them now. I think I am glad.'",
+          "give": {
+            "name": "Osric's last letter"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            1118,
+            52,
+            176.3
+          ],
+          "radius": 25,
+          "goal": "Fight through the devout filidh at the stone",
+          "mob": {
+            "template": 12675,
+            "name": "devout filidh",
+            "level": [
+              8,
+              9
+            ]
+          },
+          "count": 6,
+          "text": "Garlands of white flowers hang on the menhir. Someone has laid out a friar's habit, folded, on the altar-stone.",
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 2,
+          "at": [
+            1052,
+            40,
+            178.9
+          ],
+          "wake_m": 30,
+          "goal": "Reach Osric before the rite ends",
+          "text": "The rite is broken. The menhir is only a stone again.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Brother Osric alive",
+              "center": [
+                1052,
+                40,
+                178.9
+              ],
+              "radius": 30,
+              "duration_s": 75,
+              "objective": "Keep Brother Osric alive",
+              "announce": "Osric stands by the stone, garlanded, eyes shut. The filidh begin to chant, and the sickles come out.",
+              "protect": {
+                "template": 12675,
+                "name": "Brother Osric",
+                "level": 7,
+                "model": 9
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    1064,
+                    46,
+                    178.0
+                  ],
+                  [
+                    1042,
+                    30,
+                    180.2
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 12675,
+                    "name": "devout filidh",
+                    "level": [
+                      8,
+                      9
+                    ]
+                  }
+                ]
+              },
+              "thanks": "I... I was going to let them. I was GLAD.",
+              "success": "They break off.",
+              "fail": "Brother Osric falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Archfilidh Corra",
+              "center": [
+                1052,
+                40,
+                178.9
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Archfilidh Corra",
+              "announce": "A tall woman in white steps out from behind the stone. 'He came to us willing. You have no right.'",
+              "boss": {
+                "template": 12161,
+                "name": "Archfilidh Corra",
+                "level": 11,
+                "health_mult": 2.2
+              },
+              "success": "Archfilidh Corra falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "choice",
+          "npc": "brother_osric",
+          "goal": "Talk to Brother Osric",
+          "say": "I came to save them and they nearly saved me - that's what it felt like. Being wanted that much.\n\nI don't know what I am now. Sister Aldith will want me [home]. But the filidh who are left - they're frightened now, and lost. Someone kind should [stay] with them. Tell me what to do. I can't trust myself to choose.",
+          "options": [
+            {
+              "keyword": "home",
+              "say": "Home. Yes. I'll walk behind you. Tell her... tell her I'm sorry about the letters.",
+              "next": "s6"
+            },
+            {
+              "keyword": "stay",
+              "say": "Then I'll stay. Not as a sacrifice - as a friar. Take her my letter. All of it. She should know what I nearly did.",
+              "next": "s7"
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "sister_aldith",
+          "goal": "Return to Sister Aldith",
+          "say": "He came in, and knelt, and wouldn't get up until I made him. He's sleeping now, in his old cell.\n\nI have read his last letter. I will burn it, I think. He doesn't need to remember being glad.",
+          "ending": "home",
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "sister_aldith",
+          "goal": "Return to Sister Aldith",
+          "say": "He stayed. With them. After that.\n\nHe was always braver than me, and stupider. I will pray for him every day, and I will write every week, and if one week he doesn't answer, I am going up there myself.",
+          "ending": "stayed",
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "Take this, for bringing him back to us.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq2_menhir_chip_amulet"
+            ],
+            "choice": [
+              "sq2_osric_s_scrip",
+              "sq2_band_of_mercy"
+            ]
+          }
+        },
+        "stayed": {
+          "text": "Take this. He'd want you to have something of his.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq2_menhir_chip_amulet"
+            ],
+            "choice": [
+              "sq2_osric_s_scrip",
+              "sq2_sacrificer_s_sickle_pin"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

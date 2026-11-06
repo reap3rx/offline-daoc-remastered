@@ -1,0 +1,148 @@
+{
+ "zone": 9,
+ "region": 1,
+ "realm": 1,
+ "prefix": "sq9",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Reed Crown Circlet",
+   "base": [
+    41,
+    24
+   ],
+   "level": 9,
+   "bonuses": {
+    "Qui": 3,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 5,
+    "Power": 1
+   },
+   "lore": "A circlet of woven reeds. The bogmen made it for a king."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bog-King's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 9,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Bone and black amber. Too large for a man's hand; it fits anyway."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lily-Pad Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 9,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 9,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Green and slick and strangely warm. The bogmen are better weavers than they look."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Marsh-Warden's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 9,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 2,
+    "Hits": 8
+   },
+   "lore": "Brec's spare. It has a pocket for everything."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Signet of the Vigil",
+   "base": [
+    41,
+    35
+   ],
+   "level": 18,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 18,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "The ring of a drowned order of knights. Their oath is engraved inside: 'Until relieved.'"
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Banner of the Vigil",
+   "base": [
+    41,
+    26
+   ],
+   "level": 18,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 15
+   },
+   "lore": "The order's banner, cut down to a cloak. It is still wet, months later."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Corentin's Sword-Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 18,
+   "bonuses": {
+    "Dex": 6,
+    "Qui": 6,
+    "Str": 3,
+    "Hits": 15
+   },
+   "lore": "A good knight's belt, worn smooth where the sword rode."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Relief-Bell Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 18,
+   "bonuses": {
+    "Pie": 6,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "A tiny bronze bell, the kind that rang the changing of the watch."
+  }
+ ]
+}

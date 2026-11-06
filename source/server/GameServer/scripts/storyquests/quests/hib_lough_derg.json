@@ -1,0 +1,474 @@
+{
+  "name": "Lough Derg",
+  "npcs": [
+    {
+      "id": "eithne",
+      "zone": 200,
+      "realm": 3,
+      "name": "Eithne",
+      "model": 365,
+      "level": 6,
+      "pos": [
+        675,
+        194,
+        130.0
+      ],
+      "idle": "He doesn't cry like my baby. He doesn't smell like my baby. He's not my baby."
+    },
+    {
+      "id": "brid",
+      "zone": 200,
+      "realm": 3,
+      "name": "Wise-Woman Brid",
+      "model": 362,
+      "level": 20,
+      "pos": [
+        692,
+        176,
+        130.0
+      ],
+      "idle": "Brew water in an eggshell in front of a changeling and it'll speak. Ask me how I know."
+    },
+    {
+      "id": "siofra",
+      "zone": 200,
+      "realm": 3,
+      "name": "Siofra of the Blackthorn",
+      "model": 603,
+      "level": 10,
+      "pos": [
+        668,
+        762,
+        149.1
+      ],
+      "during": [
+        "changeling/s5"
+      ],
+      "size": 45
+    },
+    {
+      "id": "fergal",
+      "zone": 200,
+      "realm": 3,
+      "name": "Fergal the Fisher",
+      "model": 337,
+      "level": 13,
+      "pos": [
+        634,
+        1140,
+        136.2
+      ],
+      "idle": "Seven years she was my wife. Seven good years."
+    },
+    {
+      "id": "aoibhe",
+      "zone": 200,
+      "realm": 3,
+      "name": "Aoibhe",
+      "model": 365,
+      "level": 4,
+      "pos": [
+        624,
+        1150,
+        136.2
+      ],
+      "idle": "Mam's coming back. She said she would. She said.",
+      "size": 40
+    },
+    {
+      "id": "muirne",
+      "zone": 200,
+      "realm": 3,
+      "name": "Muirne of the Roane",
+      "model": 365,
+      "level": 14,
+      "pos": [
+        1318,
+        846,
+        131.2
+      ],
+      "during": [
+        "roane/s6",
+        "roane/s7"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "changeling",
+      "title": "The Changeling",
+      "level": 7,
+      "giver": "eithne",
+      "offer": "My son was taken. I know how that sounds. He's in his cradle right now, and he's not him. He's thin, and he's old in the eyes, and he never stops crying, and he never stops eating.\n\nWise-Woman [Brid] says it's a changeling - that the good folk took my Cian and left one of theirs. Will you [find Cian]? Please. Everyone else thinks I'm mad.",
+      "accept": "find Cian",
+      "topics": {
+        "Brid": "Brid lives by the well. She's delivered every baby in this town for forty years. She knows."
+      },
+      "summary": "Eithne believes her baby son was taken by the good folk and a changeling left in his cradle.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "brid",
+          "goal": "Ask Wise-Woman Brid about changelings",
+          "say": "She's not mad. I brewed water in an eggshell by the cradle and the thing in it sat up and said 'I'm three hundred years old, and I've never seen that.' That's a changeling. Her Cian will be with the blackthorn folk, south of town, where the [fairy fort] is.",
+          "keyword": "fairy fort",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            666,
+            734,
+            147.6
+          ],
+          "radius": 20,
+          "goal": "Go to the blackthorn fairy fort in the south",
+          "text": "A ring of blackthorn so thick no light gets through. Pale things move inside it, singing.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            691,
+            748,
+            147.2
+          ],
+          "radius": 25,
+          "goal": "Get past the lunantishee who guard the fort",
+          "mob": {
+            "template": 60163477,
+            "name": "lunantishee",
+            "level": [
+              6,
+              7
+            ]
+          },
+          "count": 5,
+          "text": "They don't die - they wither into thorns. The singing stops. Somewhere inside, a baby starts to cry - a human cry.",
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 200,
+          "at": [
+            668,
+            760,
+            148.9
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the blackthorn warden",
+          "text": "The warden collapses into a heap of black twigs. Behind it, a cradle of woven thorn, and a fat pink baby kicking his legs.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "the Blackthorn Warden",
+              "center": [
+                668,
+                760,
+                148.9
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Blackthorn Warden",
+              "announce": "The thorns heave and stand up into a tall, twisted shape. 'The child stays.'",
+              "boss": {
+                "template": 60158473,
+                "name": "the Blackthorn Warden",
+                "level": 9,
+                "health_mult": 2.0
+              },
+              "success": "the Blackthorn Warden falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60163477,
+                    "name": "lunantishee",
+                    "level": [
+                      6,
+                      7
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "siofra",
+          "goal": "Speak with the faerie mother",
+          "say": "Don't take him. Not yet. Please.\n\nThe one in his cradle is MINE. My son. He was born sick - faerie children sometimes are. Only a human mother's milk can save them. Three months at your breast and he'd live. I took hers so mine could have her. I'm sorry. I'm not sorry. I'd do it again. Ask her - will she [nurse him]?",
+          "keyword": "nurse him",
+          "give": {
+            "name": "Cian"
+          },
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "eithne",
+          "goal": "Bring Cian home to Eithne",
+          "say": "CIAN. Oh - oh, my love, my lamb -\n\n...She said that? That the other one will die? Without me?\n\nI could [swap them back] tonight. Cian's home, and theirs goes back to the fort, and I never think about it again. Or I could [nurse both], until spring, and then give theirs back to her healthy. I have two arms. I don't know if I have the heart.",
+          "options": [
+            {
+              "keyword": "swap them back",
+              "say": "Tonight, then. I'll leave him at the thorns at dusk. ...I'll not think about it. I'll not.",
+              "ending": "swapped"
+            },
+            {
+              "keyword": "nurse both",
+              "say": "Both. Until spring. Gods help me, he's ugly and he bites. ...Tell her. Tell her I'll keep him safe.",
+              "ending": "both"
+            }
+          ],
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "swapped": {
+          "text": "Take this. Brid says it's lucky.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq200_eggshell_charm"
+            ],
+            "choice": [
+              "sq200_blackthorn_ring",
+              "sq200_cradle_song_sash"
+            ]
+          }
+        },
+        "both": {
+          "text": "Take this. The faerie mother left it on my step for you, this morning.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq200_fae_milk_mantle"
+            ],
+            "choice": [
+              "sq200_blackthorn_ring",
+              "sq200_cradle_song_sash"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "roane",
+      "title": "The Roane Wife",
+      "level": 14,
+      "giver": "fergal",
+      "offer": "My wife Muirne was a roane - a seal-woman. Seven years ago I found her skin on the rocks and hid it, and she stayed, and married me, and we had a girl. I told myself she was happy.\n\nA month ago she found the skin in the thatch and went back to the sea. And now Aoibhe says the roane on the north-east shore are being hunted for their skins. Will you [find Muirne]? Aoibhe knows where the [chest] was.",
+      "accept": "find Muirne",
+      "topics": {
+        "chest": "Ask Aoibhe. She's by the nets. She found it first."
+      },
+      "summary": "Fergal hid his selkie wife's skin to keep her. She found it and went back to the sea - and now the roane are being hunted.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "aoibhe",
+          "goal": "Talk to Aoibhe",
+          "say": "Mam's skin was in the chest. In the thatch, in a chest. She found it when the roof leaked. She cried and cried and then she kissed me and went down to the water and didn't come back. Are you going to find her? Tell her the roof's [fixed].",
+          "keyword": "fixed",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            1185,
+            1035,
+            116.5
+          ],
+          "radius": 20,
+          "goal": "Go to the north-east shore where the roane gather",
+          "text": "Seals in the shallows - and too many empty, bloody rocks. Something's been hunting here.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            1266,
+            813,
+            126.1
+          ],
+          "radius": 25,
+          "goal": "Hunt down the siabra skin-hunters",
+          "mob": {
+            "template": 60161282,
+            "name": "ghastly siabra",
+            "level": [
+              12,
+              13
+            ]
+          },
+          "count": 5,
+          "text": "One carries a sack of sealskins. Not Muirne's. They mention 'the big one, the grey-and-silver' - taken alive to their master.",
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 200,
+          "at": [
+            1300,
+            830,
+            129.3
+          ],
+          "goal": "Search the skin-hunters' camp",
+          "clue": {
+            "name": "a stack of stolen sealskins",
+            "model": 1347
+          },
+          "text": "A dozen sealskins, salted and stacked. None of them grey-and-silver. A woman's voice, behind the tents, singing in a language like waves.",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 200,
+          "at": [
+            1320,
+            846,
+            131.3
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the dergan skinner",
+          "text": "The skinner falls on his own knives. Behind him, a woman with her arms bound, and a grey-and-silver skin across his saddle.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Maol the Skinner",
+              "center": [
+                1320,
+                846,
+                131.3
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Maol the Skinner",
+              "announce": "A dergan in an apron of sealskin. 'The grey one's worth twenty. She's mine.'",
+              "boss": {
+                "template": 30000,
+                "name": "Maol the Skinner",
+                "level": 16,
+                "health_mult": 2.2
+              },
+              "success": "Maol the Skinner falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60159913,
+                    "name": "dergan fury",
+                    "level": [
+                      12,
+                      13
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "muirne",
+          "goal": "Talk to Muirne",
+          "say": "Fergal sent you? ...Of course. He's a kind man. He was always a kind man, except for the once.\n\nI loved him, you know. That's the cruel part. I loved him and I loved the sea, and he only gave me the choice of one. Is Aoibhe well? Is the roof [fixed]?",
+          "keyword": "fixed",
+          "give": {
+            "name": "Muirne's sealskin"
+          },
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "muirne",
+          "goal": "Help Muirne choose",
+          "say": "I could [go home] - with my skin in my own keeping this time, and stay because I choose to. Fergal will have to live with knowing I might leave.\n\nOr I take Aoibhe [into the sea]. She's half roane. She'd learn the water in a summer. Fergal would have the house, and the boat, and the empty bed. Tell me. I've only ever been told.",
+          "options": [
+            {
+              "keyword": "go home",
+              "say": "Home. With my skin under my own pillow. ...He'll learn. We both will.",
+              "next": "s8"
+            },
+            {
+              "keyword": "into the sea",
+              "say": "Then I'll come for her at the next tide. Tell him gently. Tell him she'll wave from the rocks.",
+              "next": "s9"
+            }
+          ],
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "fergal",
+          "goal": "Return to Fergal",
+          "say": "She's home. She walked in with her skin over her arm and hung it on the peg by the door, where I can see it every day.\n\nShe says that's the bargain. I'd make it a thousand times.",
+          "ending": "home",
+          "id": "s8"
+        },
+        {
+          "type": "talk",
+          "npc": "fergal",
+          "goal": "Return to Fergal",
+          "say": "She came at the tide and took Aoibhe. I watched from the door. Aoibhe waved.\n\nShe'll wave from the rocks, Muirne said. I'll be on the rocks every morning. Take this. It's from the boat. I won't fish again.",
+          "ending": "sea",
+          "id": "s9"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "Take this. Muirne says it was meant for a friend of the roane.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq200_roane_pearl_pendant"
+            ],
+            "choice": [
+              "sq200_fergal_s_net_knot_bracer",
+              "sq200_skinner_s_ring"
+            ]
+          }
+        },
+        "sea": {
+          "text": "Take this.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq200_sealskin_cloak"
+            ],
+            "choice": [
+              "sq200_fergal_s_net_knot_bracer",
+              "sq200_roane_pearl_pendant"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

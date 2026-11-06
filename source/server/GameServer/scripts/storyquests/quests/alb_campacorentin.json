@@ -1,0 +1,432 @@
+{
+  "name": "Campacorentin Forest",
+  "npcs": [
+    {
+      "id": "elowen",
+      "zone": 8,
+      "realm": 1,
+      "name": "Dame Elowen Marsh",
+      "model": 38,
+      "level": 25,
+      "pos": [
+        970,
+        878,
+        44.9
+      ],
+      "idle": "I'm old. Old women are allowed to sit and look at the road."
+    },
+    {
+      "id": "robin",
+      "zone": 8,
+      "realm": 1,
+      "name": "Robin the Page",
+      "model": 9,
+      "level": 6,
+      "pos": [
+        1162,
+        706,
+        74.8
+      ],
+      "during": [
+        "page/s1",
+        "page/s2",
+        "page/s3",
+        "page/s4",
+        "page/s5"
+      ]
+    },
+    {
+      "id": "ivo_penrose",
+      "zone": 8,
+      "realm": 1,
+      "name": "Scholar Ivo Penrose",
+      "model": 9,
+      "level": 18,
+      "pos": [
+        340,
+        160,
+        46.0
+      ],
+      "idle": "The Lethantis Association does excellent work. Write that down. They read everything."
+    },
+    {
+      "id": "esras",
+      "zone": 8,
+      "realm": 1,
+      "name": "Esras the Hermit",
+      "model": 9,
+      "level": 20,
+      "pos": [
+        152,
+        902,
+        58.0
+      ],
+      "during": [
+        "heretic/s3",
+        "heretic/s4",
+        "heretic/s5"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "page",
+      "title": "A Letter Never Delivered",
+      "level": 7,
+      "giver": "elowen",
+      "offer": "When I was a girl, a page called Robin went to the war with his knight, Sir Aldric. He promised to come back with a letter for me. He never did.\n\nNow the woodsmen say a phantom page walks the east road, asking for a lady called Elowen. Sixty years. I'm too old to walk that road. Will you [find him] for me?",
+      "accept": "find him",
+      "topics": {},
+      "summary": "Dame Elowen's sweetheart Robin went to war sixty years ago as a knight's page. A phantom page now walks the east road asking for her.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 8,
+          "at": [
+            1152,
+            702,
+            70.1
+          ],
+          "radius": 15,
+          "goal": "Walk the east road",
+          "text": "A pale boy in a page's tabard stands in the road. 'Pardon - have you seen my lady? Her name is Elowen.'",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "robin",
+          "goal": "Talk to the phantom page",
+          "say": "Elowen? You know her? Oh - oh, good. I've a letter for her. Only my knight, Sir Aldric - he went off the road when the raiders came, and he took my sword, and I can't leave without my [sword]. A page doesn't.",
+          "keyword": "sword",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 8,
+          "at": [
+            1180,
+            732,
+            74.0
+          ],
+          "goal": "Find Robin's sword along the road",
+          "clue": {
+            "name": "a small rusted sword",
+            "model": 1347
+          },
+          "text": "A boy's short sword, rusted to the scabbard. The scabbard is lined with an old blood-stain. The page was stabbed in the back, and his sword hidden here.",
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 8,
+          "at": [
+            1204,
+            700,
+            88.6
+          ],
+          "wake_m": 30,
+          "goal": "Face Sir Aldric",
+          "text": "Sir Aldric falls and does not get up. Robin comes and stands over him for a while.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Sir Aldric the Faithless",
+              "center": [
+                1204,
+                700,
+                88.6
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Sir Aldric",
+              "announce": "A ghostly knight walks out of the trees. 'The boy saw me run. The boy would have told. I had to.'",
+              "boss": {
+                "template": 12485,
+                "name": "Sir Aldric the Faithless",
+                "level": 9,
+                "health_mult": 2.0
+              },
+              "success": "Sir Aldric the Faithless falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 12499,
+                    "name": "phantom page",
+                    "level": [
+                      4,
+                      5
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "robin",
+          "goal": "Give Robin back his sword",
+          "say": "My sword. Thank you. I'm free to go now. I - would you take the [letter]? I don't think I can go into the town. I don't think I'm meant to.",
+          "keyword": "letter",
+          "give": {
+            "name": "Robin's letter"
+          },
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "elowen",
+          "goal": "Give Dame Elowen the letter",
+          "say": "His letter. His hand - look, he never could make a proper 'E'.\n\n'Wait for me.' That's all it says. 'Wait for me.' Well. I did.\n\nHe's still out there, isn't he. On the road. Should I [go to him]? Or should I [stay], and keep his letter, and let a boy go home?",
+          "options": [
+            {
+              "keyword": "go to him",
+              "say": "Then help me to the gate, and no further. I can manage the rest. I've waited sixty years; I can manage a little walk.",
+              "ending": "went"
+            },
+            {
+              "keyword": "stay",
+              "say": "Yes. He's waited long enough. Let him go home. I'll keep this under my pillow, and that will do.",
+              "ending": "stayed"
+            }
+          ],
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "went": {
+          "text": "Take these. I won't need them.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq8_page_s_ribbon"
+            ],
+            "choice": [
+              "sq8_ring_of_the_faithful_page",
+              "sq8_sealed_letter_sash"
+            ]
+          }
+        },
+        "stayed": {
+          "text": "Take something, for him.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq8_page_s_ribbon"
+            ],
+            "choice": [
+              "sq8_ring_of_the_faithful_page",
+              "sq8_aldric_s_broken_spur"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "heretic",
+      "title": "The Heretic of the Wood",
+      "level": 15,
+      "giver": "ivo_penrose",
+      "offer": "My old master Esras was branded a heretic and driven out by the Association. He claimed the wood ogres in the south were bred - made - by Lethantis mages, as guards. Nonsense, of course. Officially.\n\nHe's hiding somewhere in the western swamps. I need his notes before the Association's seekers find him - I mean, so I can refute them properly. Will you [find Esras]? Discreetly.",
+      "accept": "find Esras",
+      "topics": {},
+      "summary": "The hermit Esras claims the wood ogres were bred by Lethantis mages. His old student wants his notes - before the Association's seekers find him.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            604,
+            1022,
+            70.3
+          ],
+          "radius": 25,
+          "goal": "Find out what the wood ogres are",
+          "mob": {
+            "template": 12630,
+            "name": "wood ogre scourge",
+            "level": [
+              13,
+              14
+            ]
+          },
+          "count": 5,
+          "text": "On the last one's shoulder, under the warpaint: a brand, old and neat. The Lethantis mark.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 8,
+          "at": [
+            612,
+            1046,
+            64.7
+          ],
+          "goal": "Search the ogres' camp",
+          "clue": {
+            "name": "a brand-iron",
+            "model": 1347
+          },
+          "text": "A mage's branding iron, its haft carved with the Association's sigil and a number: 314.",
+          "give": {
+            "name": "a Lethantis brand-iron"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "esras",
+          "goal": "Find the hermit in the western swamps",
+          "say": "Ivo sent you? Ivo. Ha. Good boy, frightened of everything.\n\nYou've seen the brands. Then you know. They made the ogres - bred them from captive giants and wild men - to guard the old tower lands. Then they let them go wild when the work was done. Ogres who remember being something else. I have the [proof] here.",
+          "keyword": "proof",
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 8,
+          "at": [
+            150,
+            905,
+            58.4
+          ],
+          "wake_m": 30,
+          "goal": "Protect Esras from the Association's seekers",
+          "text": "The last seeker falls in the mud. Esras sits down hard and laughs until he coughs.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Esras alive",
+              "center": [
+                150,
+                905,
+                58.4
+              ],
+              "radius": 30,
+              "duration_s": 80,
+              "objective": "Keep Esras alive",
+              "announce": "Robed figures step out of the reeds. 'Esras. You were warned.'",
+              "protect": {
+                "template": 12498,
+                "name": "Esras the Hermit",
+                "level": 18,
+                "model": 9
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    162,
+                    911,
+                    64.5
+                  ],
+                  [
+                    140,
+                    895,
+                    52.5
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 12498,
+                    "name": "Lethantis seeker",
+                    "level": [
+                      13,
+                      14
+                    ]
+                  }
+                ]
+              },
+              "thanks": "Ivo didn't send them. Did he? ...No. No, he wouldn't.",
+              "success": "They break off.",
+              "fail": "Esras the Hermit falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "choice",
+          "npc": "esras",
+          "goal": "Decide what becomes of the proof",
+          "say": "Here it is. Thirty years of notes. Take it to Ivo and he'll take it to the Crown, and the Association will burn - and every ogre in this forest will be hunted down as a crime to be hidden.\n\nOr [burn it]. The ogres live as they are. The mages keep their secret. I stay a madman. Or [take it to Ivo]. I'm too old to choose any more.",
+          "options": [
+            {
+              "keyword": "take it to Ivo",
+              "say": "Go on, then. Tell him I forgive him for being frightened.",
+              "next": "s6"
+            },
+            {
+              "keyword": "burn it",
+              "say": "...There it goes. Thirty years. It burns like any other paper. Go and tell Ivo I'm a madman after all.",
+              "next": "s7"
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "ivo_penrose",
+          "goal": "Bring the notes to Ivo Penrose",
+          "say": "He was right. Every word. Gods help me, I told them where to look for him.\n\nI'll take this to the Crown myself. And then I'll go and find him and say sorry. Here - take this, and don't stay in town too long.",
+          "ending": "truth",
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "ivo_penrose",
+          "goal": "Tell Ivo Penrose",
+          "say": "Burned? All of it? Well - I suppose that settles the matter. A madman's ravings.\n\nYou're looking at me as if you know something. Don't tell me. Here. For your discretion.",
+          "ending": "burned",
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "truth": {
+          "text": "Take this, and don't stay in town too long.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq8_lethantis_brand_ring"
+            ],
+            "choice": [
+              "sq8_heretic_s_satchel",
+              "sq8_seeker_s_bracer"
+            ]
+          }
+        },
+        "burned": {
+          "text": "For your discretion.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq8_lethantis_brand_ring"
+            ],
+            "choice": [
+              "sq8_ogre_hide_wrap",
+              "sq8_seeker_s_bracer"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

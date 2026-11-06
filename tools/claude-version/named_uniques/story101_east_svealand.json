@@ -1,0 +1,149 @@
+{
+ "zone": 101,
+ "region": 100,
+ "realm": 2,
+ "prefix": "sq101",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Broken-Collar Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 7,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 6
+   },
+   "lore": "Iron from a thrall's collar, beaten flat. It was a symbol of one thing. Now it is a symbol of another."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Freedman's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 7,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 7,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Grey wool, plain and new. The first thing Ketil ever owned."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Runaway's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 7,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 6
+   },
+   "lore": "A ring hidden in a thrall's mouth for three years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Price-Paid Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 7,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 4,
+    "Power": 1
+   },
+   "lore": "A little silver coin, holed and hung on a thong: the last coin of a thrall's price."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tomte's Porridge-Spoon",
+   "base": [
+    41,
+    24
+   ],
+   "level": 11,
+   "bonuses": {
+    "Qui": 4,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 7,
+    "Power": 1
+   },
+   "lore": "A tiny wooden spoon. Leave it out at Yule, and something will thank you."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cradle-Quilt Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 11,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 11,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Stitched from a baby's quilt, let out and let out again. It smells of milk and hay."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Nisse's Red Cap",
+   "base": [
+    41,
+    24
+   ],
+   "level": 11,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 9
+   },
+   "lore": "A tomte's pointed red cap, absurdly small. It sits in your pack and somehow helps."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barn-Beam Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 11,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 9
+   },
+   "lore": "Oak from a barn that burned. It is still warm."
+  }
+ ]
+}

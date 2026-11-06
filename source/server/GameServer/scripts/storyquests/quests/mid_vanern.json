@@ -1,0 +1,435 @@
+{
+  "name": "Vanern Swamp",
+  "npcs": [
+    {
+      "id": "thorgunna",
+      "zone": 107,
+      "realm": 2,
+      "name": "Thorgunna",
+      "model": 168,
+      "level": 36,
+      "pos": [
+        1200,
+        1150,
+        50.2
+      ],
+      "idle": "My Alf drowned in the swamp four winters ago. He came to my door last night."
+    },
+    {
+      "id": "clay_boy",
+      "zone": 107,
+      "realm": 2,
+      "name": "the Clay Boy",
+      "model": 213,
+      "level": 20,
+      "pos": [
+        702,
+        942,
+        50.2
+      ],
+      "during": [
+        "clay_child/s5"
+      ],
+      "size": 35
+    },
+    {
+      "id": "gunnvor",
+      "zone": 107,
+      "realm": 2,
+      "name": "Runemistress Gunnvor",
+      "model": 168,
+      "level": 48,
+      "pos": [
+        1210,
+        1140,
+        54.3
+      ],
+      "idle": "My brother went into the hagbui barrows for a sword. The hagbui keep what goes in."
+    }
+  ],
+  "quests": [
+    {
+      "id": "clay_child",
+      "title": "The Clay Child",
+      "level": 40,
+      "giver": "thorgunna",
+      "offer": "My son Alf drowned at the western ford four winters ago. Last night something knocked at my door and called me Mother. It looked like Alf. It was made of mud. Clay. It had his face.\n\nI screamed and slammed the door. It went away crying. Will you [find out what it is]? I can't sleep. I can't stop hearing it cry.",
+      "accept": "find out what it is",
+      "topics": {},
+      "summary": "Something made of clay, with her drowned son's face, knocked at Thorgunna's door and called her Mother.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 107,
+          "at": [
+            1050,
+            1110,
+            42.9
+          ],
+          "radius": 20,
+          "goal": "Go to the western ford where Alf drowned",
+          "text": "Small footprints in the mud. Clay footprints - they dry and crumble as you watch. They lead west.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            935,
+            1400,
+            40.7
+          ],
+          "radius": 25,
+          "goal": "Cut through the forest vipers on the trail",
+          "mob": {
+            "template": 60161042,
+            "name": "forest viper",
+            "level": [
+              39,
+              40
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "reach",
+          "zone": 107,
+          "at": [
+            690,
+            930,
+            50.0
+          ],
+          "radius": 20,
+          "goal": "Follow the trail to the clay jotuns' camp",
+          "text": "Clay jotuns, huge and slow, shaping figures from the swamp mud. Among the half-made giants, a small clay boy sits alone.",
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            656,
+            985,
+            48.8
+          ],
+          "radius": 25,
+          "goal": "Fight through the clay jotuns",
+          "mob": {
+            "template": 60159228,
+            "name": "clay jotun",
+            "level": [
+              40,
+              41
+            ]
+          },
+          "count": 5,
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "clay_boy",
+          "goal": "Approach the clay boy",
+          "say": "Are you from Mother? Did she send you?\n\nThe shaper made me out of the ford-mud. Where the boy fell in. He said the mud remembered the boy, so I do too. I remember Mother's soup. And her hands. I went to see her and she [screamed].",
+          "keyword": "screamed",
+          "id": "s5"
+        },
+        {
+          "type": "encounter",
+          "zone": 107,
+          "at": [
+            700,
+            940,
+            50.2
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the clay jotun shaper",
+          "text": "The shaper slumps into a heap of wet clay. The little clay boy watches it with wide clay eyes.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Leirr the Shaper",
+              "center": [
+                700,
+                940,
+                50.2
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Leirr the Shaper",
+              "announce": "A clay jotun with long fingers rises from its work. 'That one is mine. I made it from a drowned thing. It is for the army.'",
+              "boss": {
+                "template": 60159231,
+                "name": "Leirr the Shaper",
+                "level": 46,
+                "health_mult": 2.6
+              },
+              "success": "Leirr the Shaper falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60159228,
+                    "name": "clay jotun",
+                    "level": [
+                      40,
+                      41
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "thorgunna",
+          "goal": "Bring the clay boy to Thorgunna",
+          "say": "It's - he's - it's standing behind you. In the rain. And he's crumbling a little, at the edges.\n\nIt isn't Alf. I know that. But it remembers my soup. It remembers my hands.\n\nIf I [take him in], he'll fall apart at the next big rain - Ulf the seer says a month, maybe two. I'd have him a month. Or I [send him back] to the swamp, and the mud, and don't have to watch it happen again.",
+          "options": [
+            {
+              "keyword": "take him in",
+              "say": "Come here. Come in. Mind the step. ...There. He's sitting by the fire. He's drying out. He says it's warm.",
+              "ending": "kept"
+            },
+            {
+              "keyword": "send him back",
+              "say": "Go back. Go back to the ford. I'm sorry. I'm sorry. I can't. ...He's going. He's not crying. That's worse.",
+              "ending": "sent"
+            }
+          ],
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "kept": {
+          "text": "Take this. He made it for you, while he could.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq107_clay_child_charm"
+            ],
+            "choice": [
+              "sq107_clay_jotun_bracer",
+              "sq107_shaper_s_ring"
+            ]
+          }
+        },
+        "sent": {
+          "text": "Take this. I can't look at it.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq107_swamp_mother_s_shawl"
+            ],
+            "choice": [
+              "sq107_clay_jotun_bracer",
+              "sq107_shaper_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "barrow_brother",
+      "title": "The Unburied Thane",
+      "level": 50,
+      "giver": "gunnvor",
+      "offer": "This is GROUP work. The hagbui are draugr - barrow-dead - and their thane is old and terrible.\n\nMy brother Ketil went into the hagbui barrows in the north-west for our grandfather's sword, Leg-Biter, buried with the thane who killed him. Ketil didn't come out. Last week my seeing-stones showed him walking among the hagbui. Dead. Still walking.\n\nWill you [go into the barrows]?",
+      "accept": "go into the barrows",
+      "topics": {},
+      "summary": "GROUP. Runemistress Gunnvor's brother went into the hagbui barrows for an ancestral sword and now walks among the draugr.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 107,
+          "at": [
+            245,
+            370,
+            59.2
+          ],
+          "radius": 20,
+          "goal": "Go to the hagbui barrows in the north-west",
+          "text": "Barrow-mounds steaming in the cold. The dead walk between them, armed and patient.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            238,
+            366,
+            63.6
+          ],
+          "radius": 25,
+          "goal": "Cut down the hagbui berserkers",
+          "mob": {
+            "template": 60161914,
+            "name": "hagbui berserker",
+            "level": [
+              48,
+              49
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            246,
+            327,
+            73.8
+          ],
+          "radius": 25,
+          "goal": "Break the hagbui spiritmasters",
+          "mob": {
+            "template": 60161919,
+            "name": "hagbui spiritmaster",
+            "level": [
+              46,
+              47
+            ]
+          },
+          "count": 4,
+          "text": "Among them, one draugr wears a living man's ring - Gunnvor's family rune. Ketil, or what's left. He watches you and doesn't come closer.",
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 107,
+          "at": [
+            272,
+            360,
+            49.4
+          ],
+          "goal": "Search the thane's barrow",
+          "clue": {
+            "name": "a runestone at the barrow mouth",
+            "model": 1347
+          },
+          "text": "'Here lies Ulfhedinn, who slew Gunnar Leg-Biter's-Bearer and took his sword into the dark. Who takes it out takes his place.' Ketil took it out. That's why he walks.",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 107,
+          "at": [
+            272,
+            350,
+            51.6
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Thane Ulfhedinn the Unburied",
+          "text": "The thane falls, and the sword Leg-Biter clatters onto the barrow stones. Every hagbui on the mounds stops and turns towards it.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Thane Ulfhedinn the Unburied",
+              "center": [
+                272,
+                350,
+                51.6
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Thane Ulfhedinn",
+              "announce": "The barrow opens. Something huge and dead in rotten mail climbs out, an empty scabbard at its hip. 'WHO HOLDS MY SWORD?'",
+              "boss": {
+                "template": 60161921,
+                "name": "Thane Ulfhedinn the Unburied",
+                "level": 55,
+                "health_mult": 3.0
+              },
+              "success": "Thane Ulfhedinn the Unburied falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60161914,
+                    "name": "hagbui berserker",
+                    "level": [
+                      48,
+                      49
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "gunnvor",
+          "goal": "Return to Runemistress Gunnvor",
+          "say": "You've seen him. Ketil. And the sword.\n\nThe runes say whoever bears Leg-Biter out of the barrow takes the thane's place, so Ketil walks. If I [burn the barrows], the hagbui burn - all of them, Ketil too, his soul with them. They'll never walk again.\n\nOr we [bury him with honour] - sword and all, in the thane's own barrow. He'll be the new thane. The hagbui will walk on. But he'll be Ketil, in a way. I can't. Tell me.",
+          "options": [
+            {
+              "keyword": "burn the barrows",
+              "say": "Then I'll carve the fire-runes myself. Tonight. ... Goodbye, Ketil. You always were the brave one.",
+              "ending": "burned"
+            },
+            {
+              "keyword": "bury him with honour",
+              "say": "Then he'll be thane. Thane of the barrows. Our grandfather would laugh. ...I'll visit him. Once a year. With mead he can't drink.",
+              "ending": "thane"
+            }
+          ],
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "burned": {
+          "text": "Take something from my grandfather's hoard.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq107_leg_biter_hilt_ring"
+            ],
+            "choice": [
+              "sq107_barrow_dark_cloak",
+              "sq107_ketil_s_rune_belt",
+              "sq107_runemistress_bracer"
+            ]
+          }
+        },
+        "thane": {
+          "text": "Take something from my grandfather's hoard.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq107_hagbui_thane_torc"
+            ],
+            "choice": [
+              "sq107_barrow_dark_cloak",
+              "sq107_ketil_s_rune_belt",
+              "sq107_runemistress_bracer"
+            ]
+          }
+        }
+      },
+      "group": true
+    }
+  ]
+}

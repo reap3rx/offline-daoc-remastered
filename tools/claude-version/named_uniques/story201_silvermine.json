@@ -1,0 +1,149 @@
+{
+ "zone": 201,
+ "region": 200,
+ "realm": 3,
+ "prefix": "sq201",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ogham-Stick Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 8,
+   "bonuses": {
+    "Int": 3,
+    "Emp": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "A stick notched with ogham. It reads 'wake', and then, newly carved beneath, 'sleep'."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mason's Plumb-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 8,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 1,
+    "Hits": 7
+   },
+   "lore": "A mason's plumb-bob, worn as a ring. It always hangs true."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Walking-Stone Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 8,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 8,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Pebbles shed by a walking stone, strung on leather. They shift a little at night."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lough-Water Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 8,
+   "bonuses": {
+    "Emp": 3,
+    "Con": 1,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "Damp, always, but never cold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Silver-Vein Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 15,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 13
+   },
+   "lore": "Silvermine silver, raw and bright, from a vein no Hibernian has seen in a hundred years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Miner's Pick-Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 15,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 15,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "A pick's head, flattened and bent into a bracer."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Deep-Lamp Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 15,
+   "bonuses": {
+    "Int": 5,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 9
+   },
+   "lore": "A tiny lamp that glows faintly underground."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sheevra Chief's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 15,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 13
+   },
+   "lore": "Studded with silver nails pulled from the Silvermine rock."
+  }
+ ]
+}

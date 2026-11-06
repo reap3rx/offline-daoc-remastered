@@ -1,0 +1,166 @@
+{
+ "zone": 4,
+ "region": 1,
+ "realm": 1,
+ "prefix": "sq4",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Quarry-Oath Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 42,
+   "bonuses": {
+    "Con": 14,
+    "Hits": 42,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Every quarryman of Grimspound wears one. It is cut from the same block as the giants' standing stone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Heartstone Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 42,
+   "bonuses": {
+    "Str": 14,
+    "Con": 14,
+    "Dex": 7,
+    "Hits": 36
+   },
+   "lore": "A sliver of the giants' heartstone. It grows heavier when you lie."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Jory's Chisel-Pin",
+   "base": [
+    41,
+    33
+   ],
+   "level": 42,
+   "bonuses": {
+    "Dex": 14,
+    "Qui": 14,
+    "Str": 7,
+    "Hits": 36
+   },
+   "lore": "A mason's chisel, its edge filed down into a bracer-pin. It still bites."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Granite-Weave Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 42,
+   "bonuses": {
+    "Int": 14,
+    "Pie": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 25
+   },
+   "lore": "Grey cloth that falls in stiff folds like rock. Giants will not strike someone who wears it - or so the story goes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Golestandt Scale Brooch",
+   "base": [
+    41,
+    24
+   ],
+   "level": 48,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 41
+   },
+   "lore": "A sliver of dragon scale the size of a thumbnail. It is still warm, weeks later."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "White Hart Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 48,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 48,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Sir Wystan's own cloak, singed at the hem."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ash-Grey Signet",
+   "base": [
+    41,
+    35
+   ],
+   "level": 48,
+   "bonuses": {
+    "Int": 16,
+    "Pie": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "A dragonslayer's ring, its stone gone milky from the heat."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Slayer's Vow-Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 48,
+   "bonuses": {
+    "Dex": 16,
+    "Qui": 16,
+    "Str": 8,
+    "Hits": 41
+   },
+   "lore": "Every notch a vow. Some of them are crossed out."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ember-Heart Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 48,
+   "bonuses": {
+    "Pie": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "A bracer of blackened bronze that the dragon's breath could not melt."
+  }
+ ]
+}

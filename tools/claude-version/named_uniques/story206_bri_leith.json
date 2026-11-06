@@ -1,0 +1,150 @@
+{
+ "zone": 206,
+ "region": 200,
+ "realm": 3,
+ "prefix": "sq206",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Veil-Thread Bracelet",
+   "base": [
+    41,
+    33
+   ],
+   "level": 14,
+   "bonuses": {
+    "Int": 5,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "A thread from the veil between worlds. It's very hard to see."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Otherworld Apple Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 14,
+   "bonuses": {
+    "Qui": 5,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 8,
+    "Power": 2
+   },
+   "lore": "An apple from beyond the veil, cast in gold. Don't eat it. It's gold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seven-Year Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Rian's ring. It fit him when he was ten."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wisp-Light Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 12
+   },
+   "lore": "It glimmers faintly, like a veil wisp at the edge of sight."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Oak-Heart Acorn",
+   "base": [
+    41,
+    24
+   ],
+   "level": 28,
+   "bonuses": {
+    "Emp": 9,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "A golden acorn from the heart of a sacred grove. It's warm, like something sleeping."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Siog Thief's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 28,
+   "bonuses": {
+    "Dex": 9,
+    "Qui": 9,
+    "Str": 5,
+    "Hits": 24
+   },
+   "lore": "The siog steal everything that isn't nailed down. This ring was stolen eleven times."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Renegade Druid Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 28,
+   "bonuses": {
+    "Int": 9,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "A druid's torc, from a druid who forgot what druids are for."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Grove-Keeper's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 28,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 28,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Green and brown, the colours of a grove that lives."
+  }
+ ]
+}

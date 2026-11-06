@@ -1,0 +1,516 @@
+{
+  "name": "Lyonesse",
+  "npcs": [
+    {
+      "id": "wenna_trevose",
+      "zone": 10,
+      "realm": 1,
+      "name": "Wenna Trevose",
+      "model": 38,
+      "level": 38,
+      "pos": [
+        1340,
+        1132,
+        73.6
+      ],
+      "guild": "Castaways' Camp",
+      "idle": "The sea took Lyonesse in a night. It didn't take everyone. It didn't let anyone go, either."
+    },
+    {
+      "id": "morvah",
+      "zone": 10,
+      "realm": 1,
+      "name": "Morvah Trevose",
+      "model": 38,
+      "level": 30,
+      "pos": [
+        403,
+        258,
+        68.1
+      ],
+      "during": [
+        "last_evening/s4",
+        "last_evening/s6"
+      ]
+    },
+    {
+      "id": "sir_kendric",
+      "zone": 10,
+      "realm": 1,
+      "name": "Sir Kendric",
+      "model": 9,
+      "level": 48,
+      "pos": [
+        1347,
+        1138,
+        73.1
+      ],
+      "guild": "Castaways' Camp",
+      "idle": "I watch for the Arawnites. One of us has to."
+    },
+    {
+      "id": "tobin",
+      "zone": 10,
+      "realm": 1,
+      "name": "Tobin",
+      "model": 9,
+      "level": 30,
+      "pos": [
+        928,
+        1046,
+        69.9
+      ],
+      "during": [
+        "arawn_sacrament/s7"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "last_evening",
+      "title": "The Last Evening of Lyonesse",
+      "level": 40,
+      "giver": "wenna_trevose",
+      "offer": "The drowned of Lyonesse - the danaoin - live their last day over and over. Sowing, fishing, mending nets. Waiting for an evening that never comes.\n\nMy sister Morvah wandered off a month ago. Yesterday I saw her from the hill - working the nets with the drowned on the north-west strand. Doing what they do. She didn't know me. Will you [bring her back]?",
+      "accept": "bring her back",
+      "topics": {},
+      "summary": "Wenna Trevose's sister has begun living the drowned folk's endless last day.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 10,
+          "at": [
+            1268,
+            1094,
+            69.2
+          ],
+          "radius": 20,
+          "goal": "Cross the drowned meadows west of the camp",
+          "text": "Pale spirits drift over the meadow - peallaidh, the drowned land's restless dead. They hum as they go, the same four notes over and over.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            1264,
+            1094,
+            68.9
+          ],
+          "radius": 25,
+          "goal": "Lay the meadow's restless dead to rest",
+          "mob": {
+            "template": 12974,
+            "name": "peallaidh",
+            "level": [
+              38,
+              39
+            ]
+          },
+          "count": 5,
+          "text": "As each one fades it sighs, very softly: 'Is it evening yet?' The humming goes on, far off to the north-west, toward the strand.",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 10,
+          "at": [
+            398,
+            276,
+            67.6
+          ],
+          "goal": "Search the path down to the north-west strand",
+          "clue": {
+            "name": "a woman's shawl, neatly folded",
+            "model": 1882
+          },
+          "text": "Morvah's shawl, folded and left on a stone - the way the drowned leave their things before the tide comes. Below, on the strand, a woman sits mending nets among the drowned sailors.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "morvah",
+          "goal": "Find Morvah on the strand",
+          "say": "Mind the nets, please. They must be mended by evening.\n\nWenna? I... I had a sister called Wenna. If I stop, you see, the day ends. And when the day ends, the water comes. They don't want the water to come again. I don't want it to come for them. Do you understand? It's nearly [evening].",
+          "keyword": "evening",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 10,
+          "at": [
+            403,
+            258,
+            68.1
+          ],
+          "wake_m": 30,
+          "goal": "Stand with Morvah as the day breaks",
+          "text": "The drowned sailors stand still in the surf. The sky goes red, then gold, then dark. For the first time in a thousand years, it is evening in Lyonesse.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Morvah alive",
+              "center": [
+                403,
+                258,
+                68.1
+              ],
+              "radius": 30,
+              "duration_s": 100,
+              "objective": "Keep Morvah alive",
+              "announce": "You take the needle from Morvah's hand. Every danaoin on the strand turns its head.",
+              "protect": {
+                "template": 12952,
+                "name": "Morvah Trevose",
+                "level": 30,
+                "model": 38
+              },
+              "waves": {
+                "every_s": 22,
+                "count": 2,
+                "from": [
+                  [
+                    415,
+                    264,
+                    67.3
+                  ],
+                  [
+                    393,
+                    248,
+                    68.2
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 12952,
+                    "name": "danaoin sailor",
+                    "level": [
+                      41,
+                      43
+                    ]
+                  }
+                ]
+              },
+              "thanks": "It's evening. Look. It's evening.",
+              "success": "They break off.",
+              "fail": "Morvah Trevose falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "the Drowned Reeve",
+              "center": [
+                403,
+                258,
+                68.1
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat the Drowned Reeve",
+              "announce": "A drowned man in a reeve's chain stalks up out of the waves. 'THE DAY IS NOT DONE. THE NETS ARE NOT MENDED.'",
+              "boss": {
+                "template": 12953,
+                "name": "the Drowned Reeve",
+                "level": 45,
+                "health_mult": 2.2
+              },
+              "success": "the Drowned Reeve falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "morvah",
+          "goal": "Talk to Morvah",
+          "say": "It's evening. They're going to sleep - all of them, all along the strand. They aren't afraid any more.\n\nWenna. I remember Wenna now. But someone has to stay and mend the nets, or tomorrow it starts again. I could [stay], and they'd sleep every night from now on. Or I could [come home], and they'd wake tomorrow and never know.",
+          "options": [
+            {
+              "keyword": "come home",
+              "say": "Then take me home. Before I change my mind. Before the morning.",
+              "next": "s7"
+            },
+            {
+              "keyword": "stay",
+              "say": "Tell Wenna I remembered her. Tell her I'm the ferrywoman of Lyonesse now. Tell her to come to the strand at evening, sometimes.",
+              "next": "s8"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "wenna_trevose",
+          "goal": "Return to the castaways' camp",
+          "say": "She's here. She's asleep in my tent, holding my hand like when we were small.\n\nShe said the drowned will wake tomorrow and never know they had an evening. I said that's not our trouble. I hope I'm right.",
+          "ending": "home",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "wenna_trevose",
+          "goal": "Return to the castaways' camp",
+          "say": "She stayed. She remembered me, and she stayed.\n\nI went up the hill at dusk and looked. The strand was quiet. And there was one lantern, down at the water, mending nets. I'll go every evening.",
+          "ending": "stayed",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "Take something. You've given me back my sister.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq10_evening_star_pendant"
+            ],
+            "choice": [
+              "sq10_drowned_net_belt",
+              "sq10_salt_pearl_ring"
+            ]
+          }
+        },
+        "stayed": {
+          "text": "She'd want you to have this.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq10_morvah_s_shawl"
+            ],
+            "choice": [
+              "sq10_drowned_net_belt",
+              "sq10_salt_pearl_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "arawn_sacrament",
+      "title": "The Sacrament of Arawn",
+      "level": 46,
+      "giver": "sir_kendric",
+      "offer": "This is work for a GROUP - gather friends before you go.\n\nThe priests of Arawn are gathering at the ruined cathedral in the south. My squire Tobin went to scout and didn't come back. Under the cathedral, the old knights of Lyonesse lie drowned with their king. The Arawnites mean to wake them - as theirs.\n\nWill you [go after Tobin]? Their grove on the eastern cliffs will tell you what they intend.",
+      "accept": "go after Tobin",
+      "topics": {},
+      "summary": "GROUP. The priests of Arawn mean to raise Lyonesse's drowned knights at the ruined cathedral, and Sir Kendric's squire went to scout them.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 10,
+          "at": [
+            1420,
+            760,
+            77.4
+          ],
+          "radius": 20,
+          "goal": "Find the Arawnites' grove on the eastern cliffs",
+          "text": "Arawnite shamanesses dance around a fire of bones. A sealed scroll hangs from a stake in the middle.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            1433,
+            742,
+            84.8
+          ],
+          "radius": 25,
+          "goal": "Scatter the Arawnite shamanesses",
+          "mob": {
+            "template": 12930,
+            "name": "arawnite shamaness",
+            "level": [
+              44,
+              45
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 10,
+          "at": [
+            1442,
+            760,
+            88.4
+          ],
+          "goal": "Take the orders from the grove",
+          "clue": {
+            "name": "orders sealed with Arawn's mark",
+            "model": 1347
+          },
+          "text": "'At the ruined cathedral, on the dark of the moon. The squire will do. His blood will wake the knights, and they will kneel to Arawn.'",
+          "give": {
+            "name": "the Arawnite orders"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            1216,
+            1275,
+            74.7
+          ],
+          "radius": 25,
+          "goal": "Cut down the drowned footmen guarding the southern road",
+          "mob": {
+            "template": 12957,
+            "name": "footman",
+            "level": [
+              45,
+              46
+            ]
+          },
+          "count": 5,
+          "text": "They wear the drowned king's colours, but their eyes are already Arawn's.",
+          "id": "s4"
+        },
+        {
+          "type": "reach",
+          "zone": 10,
+          "at": [
+            930,
+            1050,
+            69.6
+          ],
+          "radius": 20,
+          "goal": "Go to the ruined cathedral",
+          "text": "Priests in black kneel among the broken pillars. Tobin is tied to the altar-stone, white-faced and very angry.",
+          "id": "s5"
+        },
+        {
+          "type": "encounter",
+          "zone": 10,
+          "at": [
+            930,
+            1050,
+            69.6
+          ],
+          "wake_m": 30,
+          "goal": "Stop the sacrament",
+          "text": "The hierophant collapses across the altar. Under the floor, something that was stirring goes still again.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Hierophant Morcant of Arawn",
+              "center": [
+                930,
+                1050,
+                69.6
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Hierophant Morcant",
+              "announce": "A priest in a mask of bone rises from the altar. 'You are too late, and also just in time - Arawn accepts all blood.'",
+              "boss": {
+                "template": 12977,
+                "name": "Hierophant Morcant of Arawn",
+                "level": 51,
+                "health_mult": 3.0
+              },
+              "success": "Hierophant Morcant of Arawn falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 12977,
+                    "name": "priest of arawn",
+                    "level": [
+                      47,
+                      48
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "tobin",
+          "goal": "Untie Tobin",
+          "say": "About time! - sorry. Sorry. Thank you.\n\nThere's a reliquary under the altar, sir - I mean, friend. Black glass. It's what wakes them. Sir Kendric needs to [see it].",
+          "keyword": "see it",
+          "give": {
+            "name": "the black reliquary"
+          },
+          "id": "s7"
+        },
+        {
+          "type": "choice",
+          "npc": "sir_kendric",
+          "goal": "Bring Tobin and the reliquary to Sir Kendric",
+          "say": "Tobin! Thank every god there is.\n\nAnd that - that's the reliquary? With it, a knight of Albion could wake the drowned knights of Lyonesse. As OURS. Two hundred knights for the realm's wars.\n\nOr we [shatter it], and they sleep forever. I know which I should choose. I don't trust myself. You decide: [wake them for Albion], or shatter it.",
+          "options": [
+            {
+              "keyword": "shatter it",
+              "say": "Yes. Yes. Let the dead keep their own. ... There. Did you feel that? Like a held breath going out.",
+              "ending": "shattered"
+            },
+            {
+              "keyword": "wake them for Albion",
+              "say": "Then I'll keep it, and I'll keep it well, and gods help me if I'm wrong. Tobin, don't look at me like that.",
+              "ending": "kept"
+            }
+          ],
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "shattered": {
+          "text": "From the camp. You've earned more than we have.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq10_kendric_s_watch_cloak"
+            ],
+            "choice": [
+              "sq10_drowned_knight_signet",
+              "sq10_tobin_s_bracer",
+              "sq10_hierophant_s_girdle"
+            ]
+          }
+        },
+        "kept": {
+          "text": "From the camp.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq10_reliquary_shard"
+            ],
+            "choice": [
+              "sq10_drowned_knight_signet",
+              "sq10_tobin_s_bracer",
+              "sq10_hierophant_s_girdle"
+            ]
+          }
+        }
+      },
+      "group": true
+    }
+  ]
+}

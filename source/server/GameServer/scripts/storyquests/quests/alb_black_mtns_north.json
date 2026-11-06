@@ -1,0 +1,454 @@
+{
+  "name": "Black Mountains North",
+  "npcs": [
+    {
+      "id": "tomas_fell",
+      "zone": 3,
+      "realm": 1,
+      "name": "Tomas Fell",
+      "model": 9,
+      "level": 8,
+      "pos": [
+        692,
+        343,
+        199.8
+      ],
+      "idle": "I'm an apprentice. Apprentices do as they're told. Mostly."
+    },
+    {
+      "id": "mabli",
+      "zone": 3,
+      "realm": 1,
+      "name": "Mabli Trewin",
+      "model": 38,
+      "level": 9,
+      "pos": [
+        664,
+        603,
+        194.6
+      ],
+      "during": [
+        "last_shift/s3",
+        "last_shift/s4",
+        "last_shift/s5"
+      ]
+    },
+    {
+      "id": "hrodda",
+      "zone": 3,
+      "realm": 1,
+      "name": "Hrodda Alreksdottir",
+      "model": 38,
+      "level": 14,
+      "pos": [
+        985,
+        1030,
+        104.6
+      ],
+      "idle": "Your people think mine are animals. Mine think yours are. Both are mostly right, this season."
+    },
+    {
+      "id": "captain_mardoc",
+      "zone": 3,
+      "realm": 1,
+      "name": "Captain Mardoc",
+      "model": 9,
+      "level": 20,
+      "pos": [
+        1016,
+        1011,
+        104.6
+      ],
+      "idle": "Hill raiders, smugglers, and now red robes. This posting gets better every week."
+    },
+    {
+      "id": "hrodda_camp",
+      "zone": 3,
+      "realm": 1,
+      "name": "Hrodda Alreksdottir",
+      "model": 38,
+      "level": 14,
+      "pos": [
+        158,
+        372,
+        150.9
+      ],
+      "during": [
+        "crimson_bargain/s6"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "last_shift",
+      "title": "The Last Shift",
+      "level": 10,
+      "giver": "tomas_fell",
+      "offer": "My master, Magus Idris, wants a cockatrice egg from the old mine in the hills. I was meant to fetch it. I - didn't. I sat in the tavern instead.\n\nAnd Mabli - she's the miller's girl, she's not afraid of anything - she said she'd go for me so I wouldn't lose my place. That was yesterday morning. Please, will you [go after her]? I'll owe you forever. I already owe her forever.",
+      "accept": "go after her",
+      "topics": {},
+      "summary": "Mabli Trewin went to the haunted mine for a cockatrice egg, in place of the apprentice too frightened to go.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 3,
+          "at": [
+            604,
+            556,
+            244.4
+          ],
+          "goal": "Search the path to the old mine",
+          "clue": {
+            "name": "a broken ring of salt",
+            "model": 1347
+          },
+          "text": "A salt circle, scuffed open. Someone sat in it for a long while. Cockatrice tracks all round, and further up, the sound of picks where nobody has dug for two centuries.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            622,
+            585,
+            216.4
+          ],
+          "radius": 25,
+          "goal": "Clear the cockatrices from the mine mouth",
+          "mob": {
+            "template": 12086,
+            "name": "enraged cockatrice",
+            "level": [
+              10,
+              11
+            ]
+          },
+          "count": 4,
+          "text": "Past the nests, lamplight flickers in the shaft - pale, cold lamplight.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mabli",
+          "goal": "Find Mabli in the mine",
+          "say": "Oh, thank the gods - no, keep your voice down. They're not cruel, the miners. They just don't know they're dead. They gave me a pick and told me to dig, and the foreman won't let anyone leave before the [shift bell].",
+          "keyword": "shift bell",
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 3,
+          "at": [
+            660,
+            610,
+            194.3
+          ],
+          "wake_m": 30,
+          "goal": "End the last shift",
+          "text": "The ghost foreman lets go of the bell-rope. It rings once, very far away, and the miners lay down their picks and walk into the rock, one after another, going home.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Foreman Gethin of the Last Shift",
+              "center": [
+                660,
+                610,
+                194.3
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Make Foreman Gethin ring the bell",
+              "announce": "A great grey man with a lamp comes out of the dark. 'Back to work. No one leaves before the bell.'",
+              "boss": {
+                "template": 12095,
+                "name": "Foreman Gethin of the Last Shift",
+                "level": 13,
+                "health_mult": 2.2
+              },
+              "success": "Foreman Gethin of the Last Shift falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 12095,
+                    "name": "ghost miner",
+                    "level": [
+                      10,
+                      11
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "choice",
+          "npc": "mabli",
+          "goal": "Talk to Mabli",
+          "say": "I got the egg, you know. Before the miners. Here.\n\nOnly - one of the miners told me what the magus does with them. Grinds the shells for a powder that turns men to stone. He sells it to the hill raiders and to whoever fights them. Both sides.\n\nTomas would lose his place if we [break it]. I'd still be glad. Or we [take it] to the magus and keep our heads down. You choose. I've been brave enough for one week.",
+          "options": [
+            {
+              "keyword": "break it",
+              "say": "Good. Gods, good. I'll tell Tomas myself. If he's worth anything he'll thank us.",
+              "next": "s6"
+            },
+            {
+              "keyword": "take it",
+              "say": "All right. It's not ours to change, I suppose. Let's get out of here before the bell rings again.",
+              "next": "s7"
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "tomas_fell",
+          "goal": "Go back to Tomas Fell",
+          "say": "She broke it. She broke it and then she told me why, and then she hit me, which was fair.\n\nThe magus has thrown me out. I'm going to be a miller's boy. I've never been happier.",
+          "ending": "broken",
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "tomas_fell",
+          "goal": "Go back to Tomas Fell",
+          "say": "You brought it! And Mabli! Both! The magus is pleased - he's even smiling.\n\nMabli isn't. She won't tell me why. Here - he says I'm to pay you, from the egg-money.",
+          "ending": "given",
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "broken": {
+          "text": "Mabli says you're to have this.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq3_mabli_s_salt_pouch"
+            ],
+            "choice": [
+              "sq3_miner_s_lamp_ring",
+              "sq3_foreman_s_belt"
+            ]
+          }
+        },
+        "given": {
+          "text": "From the egg-money.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq3_mabli_s_salt_pouch"
+            ],
+            "choice": [
+              "sq3_cockatrice_shell_bracer",
+              "sq3_miner_s_lamp_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "crimson_bargain",
+      "title": "The Crimson Bargain",
+      "level": 15,
+      "giver": "hrodda",
+      "offer": "You will listen to me, because nobody else here will. I am Hrodda, daughter of Alrek, chief of the hill-people west of here.\n\nMen in red robes came to my father's fire this spring. Since then his eyes are red too, and so are his warriors'. They are going to burn this town. I do not love this town. But I love my father, and he would not have done this. Will you [help me]? Ask your [captain] if you don't believe me.",
+      "accept": "help me",
+      "topics": {
+        "captain": "Mardoc. The only one of your soldiers who looked at me when I spoke."
+      },
+      "summary": "Hrodda, daughter of the hill-chief Alrek, says red-robed priests have bewitched her father and his warriors.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "captain_mardoc",
+          "goal": "Ask Captain Mardoc about the hill-folk",
+          "say": "The hill-girl? She came in yesterday and the lads laughed at her. I didn't. My scouts have seen red robes among the huts - Crimson initiates, from the south. Whatever they want with the hill-folk, it isn't [peace].",
+          "keyword": "peace",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 3,
+          "at": [
+            200,
+            625,
+            181.1
+          ],
+          "radius": 20,
+          "goal": "Go to the hill-folk's lands in the west",
+          "text": "Hill warriors stand at their posts without moving, staring east towards the town. Their eyes glow a dull, steady red.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            183,
+            600,
+            135.7
+          ],
+          "radius": 25,
+          "goal": "Break the spell on the hill warriors",
+          "mob": {
+            "template": 12110,
+            "name": "hill warrior",
+            "level": [
+              11,
+              12
+            ]
+          },
+          "count": 6,
+          "text": "As each warrior falls the red goes out of their eyes - and in the last one's belt, a scrap of crimson cloth with a sigil stitched on it.",
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 3,
+          "at": [
+            150,
+            390,
+            157.8
+          ],
+          "goal": "Search Chief Alrek's huts in the north-west",
+          "clue": {
+            "name": "a crimson-sealed letter",
+            "model": 1347
+          },
+          "text": "In a red hand: 'Burn the town by the new moon and the hills are yours forever. Refuse and we take the girl.' Under it, the hill-chief's mark, pressed in blood.",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 3,
+          "at": [
+            145,
+            365,
+            150.6
+          ],
+          "wake_m": 30,
+          "goal": "Confront the Crimson initiate at Alrek's fire",
+          "text": "The initiate's robes burn up from the hem like paper. Alrek drops to his knees and covers his face.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Initiate Vael of the Crimson Hand",
+              "center": [
+                145,
+                365,
+                150.6
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Initiate Vael",
+              "announce": "A thin smiling man in red rises from Alrek's own seat. 'The chief is mine, stranger. So are his people. So, soon, are you.'",
+              "boss": {
+                "template": 12075,
+                "name": "Initiate Vael of the Crimson Hand",
+                "level": 17,
+                "health_mult": 2.5
+              },
+              "success": "Initiate Vael of the Crimson Hand falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 12105,
+                    "name": "hill avenger",
+                    "level": [
+                      12,
+                      13
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "hrodda_camp",
+          "goal": "Speak with Hrodda at her father's fire",
+          "say": "I followed you. Of course I followed you.\n\nHe's himself again. He knows what he signed. He'll carry it. But your captain has a bounty on his head - he's raided your farms for twenty years. You've earned that bounty.\n\nI won't stop you. I'll only ask you to [spare him]. Or take the [bounty], and I'll know what your people are.",
+          "options": [
+            {
+              "keyword": "spare him",
+              "say": "Then the hills owe you, and the hills remember. Go to your captain. Tell him Alrek's war is over, and Hrodda's word on it.",
+              "next": "s7"
+            },
+            {
+              "keyword": "bounty",
+              "say": "...I see. Do it quickly, then. And don't come west again.",
+              "next": "s8"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "captain_mardoc",
+          "goal": "Report to Captain Mardoc",
+          "say": "No bounty, no head, and a hill-girl's word that the raids are done.\n\nYou know what? I'll take that. It's the best deal this post has had in twenty years. Here - from the garrison.",
+          "ending": "peace",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "captain_mardoc",
+          "goal": "Report to Captain Mardoc",
+          "say": "So that's Alrek. Twenty years of raids, and he ends in a sack.\n\nThe girl's gone back to the hills. The lads say she'll make a worse chief than her father ever did. We'll see. Here's your bounty.",
+          "ending": "bounty",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "peace": {
+          "text": "From the garrison - and Hrodda left this for you at the gate.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq3_hrodda_s_bone_bracer"
+            ],
+            "choice": [
+              "sq3_hill_chief_s_torque",
+              "sq3_crimson_thread_cloak"
+            ]
+          }
+        },
+        "bounty": {
+          "text": "The bounty. All of it.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq3_bounty_hunter_s_belt"
+            ],
+            "choice": [
+              "sq3_hill_chief_s_torque",
+              "sq3_crimson_thread_cloak"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+ "zone": 204,
+ "region": 200,
+ "realm": 3,
+ "prefix": "sq204",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Inn-Luck Harp Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 23,
+   "bonuses": {
+    "Qui": 8,
+    "Con": 4,
+    "Dex": 4,
+    "Hits": 14,
+    "Power": 3
+   },
+   "lore": "A tiny harp of bog-oak. The luck of a house sixty years old is in it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ale-Belly Girdle",
+   "base": [
+    41,
+    32
+   ],
+   "level": 23,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 23,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "The cluricaun king's belt. Let out several times."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Luch-Rider Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 23,
+   "bonuses": {
+    "Dex": 8,
+    "Qui": 8,
+    "Str": 4,
+    "Hits": 20
+   },
+   "lore": "Cluricauns ride the giant luch like ponies. This is from a saddle."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cellar-Key Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 23,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "The key to Tadhg's cellar, made into a ring. It opens other cellars too, you suspect."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Amadan's Straw Crown",
+   "base": [
+    41,
+    24
+   ],
+   "level": 33,
+   "bonuses": {
+    "Int": 11,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "A crown of straw that the amadan wore. Whoever wears it hears music nobody else can."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Verse-Book Clasp",
+   "base": [
+    41,
+    32
+   ],
+   "level": 33,
+   "bonuses": {
+    "Emp": 11,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "From Eoin's book of poems. Every page is full, and none of it makes sense, and all of it is beautiful."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gurite Waylayer Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 33,
+   "bonuses": {
+    "Dex": 11,
+    "Qui": 11,
+    "Str": 6,
+    "Hits": 28
+   },
+   "lore": "Taken off a gurite who robbed travellers on the south road."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Alp-Luachra Hide Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 33,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 33,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "The alp luachra are newts that crawl into sleepers' mouths. The hide is very good leather."
+  }
+ ]
+}

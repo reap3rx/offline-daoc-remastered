@@ -1,0 +1,149 @@
+{
+ "zone": 105,
+ "region": 100,
+ "realm": 2,
+ "prefix": "sq105",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Willow-Heart Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 13,
+   "bonuses": {
+    "Int": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "A knot of willow heartwood. It hums when it rains."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Weeping-Sap Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 13,
+   "bonuses": {
+    "Pie": 4,
+    "Int": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "Amber from a weeping willow, a single tear inside."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Woodcutter's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 13,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 11
+   },
+   "lore": "Ottar's own. He won't need it any more."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sunniva's Ribbon",
+   "base": [
+    41,
+    24
+   ],
+   "level": 13,
+   "bonuses": {
+    "Qui": 4,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 8,
+    "Power": 1
+   },
+   "lore": "A child's hair ribbon. Sunniva sang the day she gave it to you."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hair-Bridle Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 17,
+   "bonuses": {
+    "Dex": 6,
+    "Qui": 6,
+    "Str": 3,
+    "Hits": 14
+   },
+   "lore": "Braided from a mare's mane - a nightmare's. It twitches when you sleep."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mare-Queen's Veil",
+   "base": [
+    41,
+    26
+   ],
+   "level": 17,
+   "bonuses": {
+    "Pie": 6,
+    "Int": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "Black gauze, cold as midnight."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dreamless Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 17,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 17,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Whoever wears it sleeps without dreams. Some think that a blessing."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hoofprint Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 17,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "A horseshoe of black iron, small as a coin."
+  }
+ ]
+}

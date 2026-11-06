@@ -1,0 +1,465 @@
+{
+  "name": "Valley of Bri Leith",
+  "npcs": [
+    {
+      "id": "muirenn",
+      "zone": 206,
+      "realm": 3,
+      "name": "Grandmother Muirenn",
+      "model": 362,
+      "level": 14,
+      "pos": [
+        905,
+        95,
+        45.6
+      ],
+      "idle": "Rian went through the veil at Samhain. He was ten. He's still ten, there."
+    },
+    {
+      "id": "rian",
+      "zone": 206,
+      "realm": 3,
+      "name": "Rian",
+      "model": 337,
+      "level": 10,
+      "pos": [
+        266,
+        946,
+        179.4
+      ],
+      "during": [
+        "veil/s6"
+      ],
+      "size": 40
+    },
+    {
+      "id": "druid_ennis",
+      "zone": 206,
+      "realm": 3,
+      "name": "Druid Ennis",
+      "model": 337,
+      "level": 30,
+      "pos": [
+        918,
+        82,
+        45.6
+      ],
+      "idle": "The grove's oaks are dying. Their heart was stolen."
+    },
+    {
+      "id": "ailbhe",
+      "zone": 206,
+      "realm": 3,
+      "name": "Ailbhe",
+      "model": 365,
+      "level": 24,
+      "pos": [
+        448,
+        450,
+        209.5
+      ],
+      "during": [
+        "oak_heart/s6"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "veil",
+      "title": "Beyond the Veil",
+      "level": 14,
+      "giver": "muirenn",
+      "offer": "My grandson Rian went through the veil at Samhain. The veil wisps lit the way and he followed them into the Otherworld, laughing.\n\nIt's thin there still, in the west of the valley. The druids say a strong arm could reach through and pull him back. Will you [bring Rian home]? He's ten. He's always been ten, there.",
+      "accept": "bring Rian home",
+      "topics": {},
+      "summary": "Grandmother Muirenn's grandson followed the veil wisps into the Otherworld at Samhain.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 206,
+          "at": [
+            400,
+            900,
+            160.2
+          ],
+          "radius": 20,
+          "goal": "Go to the thin place in the west of the valley",
+          "text": "Lights drift through the air - veil wisps - and between them, now and then, a glimpse of somewhere else: golden, endless, singing.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            381,
+            916,
+            156.0
+          ],
+          "radius": 25,
+          "goal": "Scatter the veil wisps",
+          "mob": {
+            "template": 60167560,
+            "name": "veil wisp",
+            "level": [
+              11,
+              12
+            ]
+          },
+          "count": 5,
+          "text": "As they go out, the glimpses of the Otherworld get clearer.",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 206,
+          "at": [
+            360,
+            930,
+            152.2
+          ],
+          "goal": "Search the edge of the veil",
+          "clue": {
+            "name": "a small boy's shoe",
+            "model": 1347
+          },
+          "text": "Rian's shoe. Half of it is here, and half of it is somewhere else, and it is very hard to look at.",
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            259,
+            961,
+            178.0
+          ],
+          "radius": 25,
+          "goal": "Break the empyrean orbs that hold the veil open",
+          "mob": {
+            "template": 60160471,
+            "name": "empyrean orb",
+            "level": [
+              11,
+              12
+            ]
+          },
+          "count": 4,
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 206,
+          "at": [
+            270,
+            950,
+            178.0
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the Keeper of the Veil",
+          "text": "The keeper unravels into light. The veil tears open for a moment, and a small boy tumbles out of it into the grass.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Keeper of the Veil",
+              "center": [
+                270,
+                950,
+                178.0
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Keeper of the Veil",
+              "announce": "A tall shape of pale light stands between you and the gap. 'What passes the veil stays. That is the rule.'",
+              "boss": {
+                "template": 60160478,
+                "name": "Keeper of the Veil",
+                "level": 16,
+                "health_mult": 2.2
+              },
+              "success": "Keeper of the Veil falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60167560,
+                    "name": "veil wisp",
+                    "level": [
+                      11,
+                      12
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "rian",
+          "goal": "Talk to Rian",
+          "say": "Is it time to go home? I was only gone a day. Wasn't I?\n\nI ate some apples. They were very good. The lady said if I ate them I'd have to [stay], but I could visit.",
+          "keyword": "stay",
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "muirenn",
+          "goal": "Bring Rian home to Muirenn",
+          "say": "Rian! Rian - you're - oh.\n\nHe's ten. Still ten. And he ate their fruit. The druids say if he crosses back for good, every year he spent there catches up with him by morning. He'll wake up seventeen. His childhood gone in a night.\n\nOr he can [go back], and stay ten forever, and visit me at Samhain. I can't choose. [Bring him back], or let him go.",
+          "options": [
+            {
+              "keyword": "bring him back",
+              "say": "Then he'll be seventeen tomorrow. And he'll be here. I'll teach him what he missed. ...I'll teach him fast.",
+              "ending": "home"
+            },
+            {
+              "keyword": "go back",
+              "say": "Go on, my love. Go back to your apples. Come and see me at Samhain. I'll keep a candle in the window.",
+              "ending": "veil"
+            }
+          ],
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "Take this. It won't fit him tomorrow.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq206_seven_year_ring"
+            ],
+            "choice": [
+              "sq206_veil_thread_bracelet",
+              "sq206_wisp_light_cloak"
+            ]
+          }
+        },
+        "veil": {
+          "text": "Take this.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq206_otherworld_apple_charm"
+            ],
+            "choice": [
+              "sq206_veil_thread_bracelet",
+              "sq206_wisp_light_cloak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "oak_heart",
+      "title": "The Oak-Heart",
+      "level": 28,
+      "giver": "druid_ennis",
+      "offer": "The grove's oak-heart has been stolen - a golden acorn that holds the life of every oak in our sacred grove. Without it they'll die by midwinter.\n\nThe siog took it. Siog take everything. But siog don't keep things - they sell them. Find their camp west of the valley and you'll find who they sold it to. Will you [find the oak-heart]?",
+      "accept": "find the oak-heart",
+      "topics": {},
+      "summary": "The siog stole the golden oak-heart that keeps a sacred grove alive, and sold it on.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 206,
+          "at": [
+            510,
+            630,
+            188.9
+          ],
+          "radius": 20,
+          "goal": "Find the siog camp in the west",
+          "text": "A camp of stolen things - pots, boots, a church bell, a chicken. Siog everywhere, counting.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            500,
+            620,
+            187.6
+          ],
+          "radius": 25,
+          "goal": "Fight through the siog seekers",
+          "mob": {
+            "template": 60166076,
+            "name": "siog seeker",
+            "level": [
+              27,
+              28
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 206,
+          "at": [
+            452,
+            632,
+            182.4
+          ],
+          "goal": "Search the siog's stolen goods",
+          "clue": {
+            "name": "a ledger of stolen things",
+            "model": 1347
+          },
+          "text": "In a careful siog hand: 'One golden acorn. Sold to the druids at the stones, north. Paid: two silver, one goat.' The druids at the stones - renegades.",
+          "give": {
+            "name": "the siog ledger"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            458,
+            448,
+            210.5
+          ],
+          "radius": 25,
+          "goal": "Fight the renegade druids at the stones",
+          "mob": {
+            "template": 10120,
+            "name": "druid",
+            "level": [
+              25,
+              26
+            ]
+          },
+          "count": 4,
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 206,
+          "at": [
+            445,
+            458,
+            205.7
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the renegade archdruid",
+          "text": "The archdruid falls. A young druid in green kneels by the stones, holding the golden acorn, weeping.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Archdruid Ruadh",
+              "center": [
+                445,
+                458,
+                205.7
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Archdruid Ruadh",
+              "announce": "A druid in a cloak of black feathers raises a staff of thorn. 'The grove is ours to move. Ennis is old and blind.'",
+              "boss": {
+                "template": 10120,
+                "name": "Archdruid Ruadh",
+                "level": 31,
+                "health_mult": 2.4
+              },
+              "success": "Archdruid Ruadh falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 10120,
+                    "name": "druid",
+                    "level": [
+                      25,
+                      26
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "ailbhe",
+          "goal": "Talk to the young druid",
+          "say": "I'm Ailbhe. Ennis' apprentice. I - I helped them. I told them where the oak-heart was kept.\n\nRuadh said the old grove was dying anyway and we could plant a new one in the west, away from the keeps and the wars. I believed him. Take it. Take it back to Ennis. And tell him I'm [sorry].",
+          "keyword": "sorry",
+          "give": {
+            "name": "the oak-heart"
+          },
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "druid_ennis",
+          "goal": "Return the oak-heart to Druid Ennis",
+          "say": "The oak-heart! The grove will live!\n\n...Ailbhe. My Ailbhe helped them.\n\nThe druids' law says an apprentice who betrays the grove is [turned out] - cast from the order, forever. Or I could [spare her], and take her back, and watch her every day. She was the best apprentice I ever had. That's why it hurts.",
+          "options": [
+            {
+              "keyword": "spare her",
+              "say": "Then she'll come home, and plant the oak-heart with her own hands, and tend the grove until it forgives her. And I'll forgive her sooner.",
+              "ending": "spared"
+            },
+            {
+              "keyword": "turned out",
+              "say": "...Then she's no druid. I'll tell her myself. It's the law, and the law is older than my heart.",
+              "ending": "turned_out"
+            }
+          ],
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "spared": {
+          "text": "Take this, from the grove.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq206_grove_keeper_s_mantle"
+            ],
+            "choice": [
+              "sq206_siog_thief_s_ring",
+              "sq206_renegade_druid_torc"
+            ]
+          }
+        },
+        "turned_out": {
+          "text": "Take this, from the grove.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq206_oak_heart_acorn"
+            ],
+            "choice": [
+              "sq206_siog_thief_s_ring",
+              "sq206_renegade_druid_torc"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

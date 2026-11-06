@@ -1,0 +1,511 @@
+{
+  "name": "Avalon Marsh",
+  "npcs": [
+    {
+      "id": "tilda_hael",
+      "zone": 9,
+      "realm": 1,
+      "name": "Tilda Hael",
+      "model": 38,
+      "level": 8,
+      "pos": [
+        471,
+        921,
+        61.2
+      ],
+      "idle": "If you see a fisherman with a mole shaped like a crown, kindly drag him home by the ear."
+    },
+    {
+      "id": "warden_brec",
+      "zone": 9,
+      "realm": 1,
+      "name": "Marsh-Warden Brec",
+      "model": 9,
+      "level": 15,
+      "pos": [
+        492,
+        932,
+        61.1
+      ],
+      "idle": "Bogmen don't hurt you if you don't hurt them. Mostly."
+    },
+    {
+      "id": "dai_morrow",
+      "zone": 9,
+      "realm": 1,
+      "name": "Dai Morrow",
+      "model": 9,
+      "level": 8,
+      "pos": [
+        806,
+        1116,
+        41.1
+      ],
+      "during": [
+        "bog_king/s4",
+        "bog_king/s5"
+      ]
+    },
+    {
+      "id": "squire_hamon",
+      "zone": 9,
+      "realm": 1,
+      "name": "Squire Hamon",
+      "model": 9,
+      "level": 15,
+      "pos": [
+        946,
+        481,
+        39.5
+      ],
+      "idle": "My knight died in the north marsh. A squire without a knight is just a boy with a sword."
+    },
+    {
+      "id": "sir_baldwin",
+      "zone": 9,
+      "realm": 1,
+      "name": "Sir Baldwin the Elder",
+      "model": 9,
+      "level": 30,
+      "pos": [
+        1376,
+        344,
+        47.3
+      ],
+      "idle": "I was a knight of the Vigil once. Long before they drowned."
+    },
+    {
+      "id": "last_vigil",
+      "zone": 9,
+      "realm": 1,
+      "name": "Sir Edric of the Vigil",
+      "model": 9,
+      "level": 20,
+      "pos": [
+        356,
+        226,
+        69.8
+      ],
+      "during": [
+        "vigil/s6"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "bog_king",
+      "title": "The Bog King",
+      "level": 9,
+      "giver": "tilda_hael",
+      "offer": "My Dai is a fisherman, and a poor one, and the gentlest man in Avalon. Three days ago the bogmen came and took him off in his own boat - singing! - and they bowed to him.\n\nHe's got a birthmark like a little crown. The Warden says that's why. Will you [bring Dai home]? Brec the [warden] knows where they've taken him.",
+      "accept": "bring Dai home",
+      "topics": {},
+      "summary": "Bogmen carried off Tilda Hael's betrothed, a fisherman with a crown-shaped birthmark, and bowed to him.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "warden_brec",
+          "goal": "Ask the marsh-warden about the bogmen",
+          "say": "Crown-mark, eh? The bogmen have a story about a king who'll come out of the water marked like that. They've been waiting a long while. They'll have him at the bog [towers] in the south.",
+          "keyword": "towers",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            868,
+            1040,
+            38.6
+          ],
+          "radius": 25,
+          "goal": "Get past the bogman gatherers",
+          "mob": {
+            "template": 12005,
+            "name": "bogman gatherer",
+            "level": [
+              8,
+              9
+            ]
+          },
+          "count": 5,
+          "text": "They fight half-heartedly and keep looking south, towards the towers, as if afraid you'll interrupt something.",
+          "id": "s2"
+        },
+        {
+          "type": "reach",
+          "zone": 9,
+          "at": [
+            800,
+            1112,
+            42.1
+          ],
+          "radius": 15,
+          "goal": "Find Dai at the bog towers",
+          "text": "Dai Morrow sits on a throne of reeds and driftwood, wearing a crown of lilies, eating something unidentifiable from a shell. He looks happier than any man you've ever seen.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "dai_morrow",
+          "goal": "Talk to Dai Morrow",
+          "say": "Oh! Hello! Did Tilda send you? She would. Isn't this mad?\n\nThey bow to me. They bring me fish - good fish, better than I ever caught. They listen when I talk. Nobody's ever listened when I talk. I've never been [anything], you understand. Here I'm a king.",
+          "keyword": "anything",
+          "id": "s4"
+        },
+        {
+          "type": "choice",
+          "npc": "dai_morrow",
+          "goal": "Decide what Dai should do",
+          "say": "Tilda's a good woman. Too good for me, everybody said so. Maybe she'd be better off.\n\nI don't know. You tell me. [Come home], or [stay] here and be a king of frogs and mud. I'll do whatever you say. I always do whatever people say. Except here.",
+          "options": [
+            {
+              "keyword": "come home",
+              "say": "Right. Yes. Home. They won't like it - hold on, they REALLY won't like it -",
+              "next": "s6"
+            },
+            {
+              "keyword": "stay",
+              "say": "Really? You think so? Then tell Tilda... tell her I'm sorry. And I'm happy. Both at once. Is that allowed?",
+              "next": "s8"
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "encounter",
+          "zone": 9,
+          "at": [
+            790,
+            1150,
+            38.6
+          ],
+          "wake_m": 30,
+          "goal": "Get Dai out of the bog",
+          "text": "The bogmen fall back into the water. Dai takes his crown off, looks at it, and puts it in his pocket.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Dai alive",
+              "center": [
+                790,
+                1150,
+                38.6
+              ],
+              "radius": 30,
+              "duration_s": 75,
+              "objective": "Keep Dai alive",
+              "announce": "The bogmen howl. 'The king is leaving! The king is leaving!'",
+              "protect": {
+                "template": 12008,
+                "name": "Dai Morrow",
+                "level": 8,
+                "model": 9
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    802,
+                    1156,
+                    38.6
+                  ],
+                  [
+                    780,
+                    1140,
+                    38.6
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 12007,
+                    "name": "bogman hunter",
+                    "level": [
+                      9,
+                      10
+                    ]
+                  }
+                ]
+              },
+              "thanks": "That was horrible. I'm keeping the crown.",
+              "success": "They break off.",
+              "fail": "Dai Morrow falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Bog-Mother Sloe",
+              "center": [
+                790,
+                1150,
+                38.6
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Bog-Mother Sloe",
+              "announce": "A huge old bogwoman rises out of the mere. 'MY king. MINE. Leave him!'",
+              "boss": {
+                "template": 12004,
+                "name": "Bog-Mother Sloe",
+                "level": 12,
+                "health_mult": 2.2
+              },
+              "success": "Bog-Mother Sloe falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "tilda_hael",
+          "goal": "Bring Dai home to Tilda",
+          "say": "DAI MORROW. You absolute -\n\nHe's asleep. He kept the crown, the fool. He says they listened to him. I listen to him! I'll listen better. Here, take something, before I cry.",
+          "ending": "home",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "tilda_hael",
+          "goal": "Tell Tilda Hael",
+          "say": "He's... staying. As a king. Of the bogmen.\n\nYou know, I always knew he'd leave me. I just thought it'd be for a woman. Not for - frogs. Take this. It was meant for him.",
+          "ending": "king",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "Take something, before I cry.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq9_reed_crown_circlet"
+            ],
+            "choice": [
+              "sq9_bog_king_s_ring",
+              "sq9_marsh_warden_s_belt"
+            ]
+          }
+        },
+        "king": {
+          "text": "It was meant for him.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq9_reed_crown_circlet"
+            ],
+            "choice": [
+              "sq9_lily_pad_mantle",
+              "sq9_marsh_warden_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "vigil",
+      "title": "Until Relieved",
+      "level": 18,
+      "giver": "squire_hamon",
+      "offer": "My knight, Sir Corentin, led a patrol into the north marsh to find the old Order of the Vigil. They held these marshes three hundred years ago and drowned in them, still at their posts. Corentin found them. They killed him.\n\nI want to finish what he started. Old Sir [Baldwin] in the abbey town knows the Vigil's story. Will you [help me]?",
+      "accept": "help me",
+      "topics": {
+        "Baldwin": "Sir Baldwin the Elder, in the abbey town east. He's ancient. He was a squire of the Vigil, if you can believe it."
+      },
+      "summary": "Squire Hamon's knight died seeking the drowned Order of the Vigil in the north marsh.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "sir_baldwin",
+          "goal": "Ask old Sir Baldwin about the Vigil",
+          "say": "The Vigil? Gods, I haven't heard that name in fifty years. I was the last squire they took before the marsh rose. They swore to hold the north marsh 'until relieved'. Nobody came to relieve them. The war moved on, and they drowned still standing their [watch].",
+          "keyword": "watch",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 9,
+          "at": [
+            396,
+            420,
+            71.7
+          ],
+          "radius": 20,
+          "goal": "Go into the north marsh",
+          "text": "Torches burn on poles in the water. Figures in rotten plate stand guard at every one.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            371,
+            383,
+            76.9
+          ],
+          "radius": 25,
+          "goal": "Break through the Vigil's footmen",
+          "mob": {
+            "template": 12017,
+            "name": "ghoul footman",
+            "level": [
+              16,
+              17
+            ]
+          },
+          "count": 6,
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 9,
+          "at": [
+            352,
+            252,
+            66.8
+          ],
+          "goal": "Find Sir Corentin",
+          "clue": {
+            "name": "Sir Corentin's body",
+            "model": 1882
+          },
+          "text": "Sir Corentin lies with his sword still in hand and three dead ghouls around him. He died well. His signet is still on his finger.",
+          "give": {
+            "name": "Corentin's signet"
+          },
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 9,
+          "at": [
+            362,
+            218,
+            69.0
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the Ghoul Lord of the Vigil",
+          "text": "The Ghoul Lord kneels in the water. 'Are you... our relief?'",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Lord-Commander of the Vigil",
+              "center": [
+                362,
+                218,
+                69.0
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Lord-Commander",
+              "announce": "A great ghoul in a captain's plate raises a black sword. 'HALT. None pass the Vigil.'",
+              "boss": {
+                "template": 12019,
+                "name": "Lord-Commander of the Vigil",
+                "level": 21,
+                "health_mult": 2.4
+              },
+              "success": "Lord-Commander of the Vigil falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 12018,
+                    "name": "ghoul knight",
+                    "level": [
+                      17,
+                      18
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "last_vigil",
+          "goal": "Speak to the last knight of the Vigil",
+          "say": "Three hundred years at our posts. We could not leave. We are sworn, until relieved.\n\nYou could speak the words - Sir Baldwin will have taught the squire, and the squire you. 'I relieve you.' Then we sleep. Or take our [banner] to Camelot, so they remember we held. But then we stand here until someone else comes.\n\nWill you [relieve us]?",
+          "options": [
+            {
+              "keyword": "relieve us",
+              "say": "...Relieved. Relieved. Thank you. Thank you. Watch - watch is - ended.",
+              "next": "s7"
+            },
+            {
+              "keyword": "banner",
+              "say": "Take it. Let them know. We will hold. We have always held.",
+              "next": "s8"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "squire_hamon",
+          "goal": "Return to Squire Hamon",
+          "say": "You relieved them? All of them? Sir Corentin would've - he'd have wept. He was soft like that.\n\nI'll take his signet to his mother. And then I suppose I'll find another knight. Here - from his things.",
+          "ending": "relieved",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "squire_hamon",
+          "goal": "Return to Squire Hamon",
+          "say": "The banner of the Vigil. In Camelot. Sir Corentin would have been proud.\n\n...They're still standing there, though. Aren't they. Still holding. Waiting. Here - from his things.",
+          "ending": "banner",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "relieved": {
+          "text": "From Sir Corentin's things.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq9_relief_bell_charm"
+            ],
+            "choice": [
+              "sq9_signet_of_the_vigil",
+              "sq9_corentin_s_sword_belt"
+            ]
+          }
+        },
+        "banner": {
+          "text": "From Sir Corentin's things.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq9_relief_bell_charm"
+            ],
+            "choice": [
+              "sq9_banner_of_the_vigil",
+              "sq9_corentin_s_sword_belt"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

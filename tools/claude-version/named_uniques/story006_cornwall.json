@@ -1,0 +1,149 @@
+{
+ "zone": 6,
+ "region": 1,
+ "realm": 1,
+ "prefix": "sq6",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shepherd's Crook-Pin",
+   "base": [
+    41,
+    24
+   ],
+   "level": 17,
+   "bonuses": {
+    "Qui": 6,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 10,
+    "Power": 2
+   },
+   "lore": "A little silver crook. Kerra's mother wore it, and her mother."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "White Fang Necklace",
+   "base": [
+    41,
+    29
+   ],
+   "level": 17,
+   "bonuses": {
+    "Dex": 6,
+    "Qui": 6,
+    "Str": 3,
+    "Hits": 14
+   },
+   "lore": "A long white canine on a leather thong. It was hard won."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moor-Grass Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 17,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 17,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Woven of Cornish wool and dyed the colour of the moor in autumn."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Stalker-Bone Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 17,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "Carved from a death stalker's bone. Cold to wear."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Eagle of the Ninth",
+   "base": [
+    41,
+    29
+   ],
+   "level": 24,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "A legion's bronze eagle, small enough now to wear. It was carried into the marsh four hundred years ago."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Kit's Heather Wreath",
+   "base": [
+    41,
+    24
+   ],
+   "level": 24,
+   "bonuses": {
+    "Qui": 8,
+    "Con": 4,
+    "Dex": 4,
+    "Hits": 14,
+    "Power": 3
+   },
+   "lore": "A wreath of dried heather, bound with red thread. It does not crumble."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Legionary Cingulum",
+   "base": [
+    41,
+    32
+   ],
+   "level": 24,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 24,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "A soldier's belt of bronze plates. The leather is new; the bronze is very old."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Standard-Bearer's Cape",
+   "base": [
+    41,
+    26
+   ],
+   "level": 24,
+   "bonuses": {
+    "Pie": 8,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "A wolfskin cape, of the kind a legion's standard-bearer wore over his helm."
+  }
+ ]
+}

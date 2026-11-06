@@ -1,0 +1,166 @@
+{
+ "zone": 205,
+ "region": 200,
+ "realm": 3,
+ "prefix": "sq205",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Muse's Kiss Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 42,
+   "bonuses": {
+    "Int": 14,
+    "Emp": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 25
+   },
+   "lore": "Cold silver, shaped like lips. It whispers rhymes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Burnt-Verse Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 42,
+   "bonuses": {
+    "Emp": 14,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 25
+   },
+   "lore": "Ash from a burned book of poems, sealed in glass."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wayguard's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 42,
+   "bonuses": {
+    "Str": 14,
+    "Con": 14,
+    "Dex": 7,
+    "Hits": 36
+   },
+   "lore": "Siabra bog-iron, cold and heavy."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bog-Creeper Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 42,
+   "bonuses": {
+    "Con": 14,
+    "Hits": 42,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Woven from the vines of bog creepers. It moves a little on its own."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Keener's Veil",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Emp": 17,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "Sadhbh's own. She has keened for three chieftains in it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Poisoner's Vial Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 17,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "Empty now. The glass is very fine - sidhe glass."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Venator's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Dex": 17,
+    "Qui": 17,
+    "Str": 8,
+    "Hits": 42
+   },
+   "lore": "From the hand of a siabra assassin."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Black Wraith Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 17,
+    "Con": 17,
+    "Dex": 8,
+    "Hits": 42
+   },
+   "lore": "The black wraiths of Cullen are the dead who drowned in the bog. This one wore iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Chieftess Dana's Brooch",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Qui": 17,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 30,
+    "Power": 6
+   },
+   "lore": "The Chieftess' own brooch, given in thanks."
+  }
+ ]
+}

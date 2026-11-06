@@ -1,0 +1,580 @@
+{
+  "name": "Dartmoor",
+  "npcs": [
+    {
+      "id": "mirela",
+      "zone": 4,
+      "realm": 1,
+      "name": "Mirela Stonewright",
+      "model": 38,
+      "level": 40,
+      "pos": [
+        143,
+        323,
+        112.1
+      ],
+      "idle": "Grimspound stands because we keep our oaths. Even the ones we made to giants."
+    },
+    {
+      "id": "jory",
+      "zone": 4,
+      "realm": 1,
+      "name": "Jory Stonewright",
+      "model": 9,
+      "level": 38,
+      "pos": [
+        986,
+        498,
+        9.5
+      ],
+      "during": [
+        "quarry_oath/s2"
+      ]
+    },
+    {
+      "id": "mirela_circle",
+      "zone": 4,
+      "realm": 1,
+      "name": "Mirela Stonewright",
+      "model": 38,
+      "level": 40,
+      "pos": [
+        1286,
+        830,
+        20.8
+      ],
+      "during": [
+        "quarry_oath/s6"
+      ]
+    },
+    {
+      "id": "bryn_asquith",
+      "zone": 4,
+      "realm": 1,
+      "name": "Bryn Asquith",
+      "model": 38,
+      "level": 48,
+      "pos": [
+        158,
+        300,
+        75.5
+      ],
+      "guild": "Dragonslayer",
+      "idle": "Golestandt sleeps. Dragonslayers don't."
+    },
+    {
+      "id": "brother_alun",
+      "zone": 4,
+      "realm": 1,
+      "name": "Brother Alun",
+      "model": 9,
+      "level": 40,
+      "pos": [
+        121,
+        326,
+        124.6
+      ],
+      "idle": "Fire. Fire and a voice in it. Leave me be."
+    },
+    {
+      "id": "sir_wystan",
+      "zone": 4,
+      "realm": 1,
+      "name": "Sir Wystan",
+      "model": 9,
+      "level": 47,
+      "pos": [
+        998,
+        1360,
+        6.9
+      ],
+      "guild": "Dragonslayer",
+      "during": [
+        "dragons_tithe/s6"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "quarry_oath",
+      "title": "The Quarry Oath",
+      "level": 42,
+      "giver": "mirela",
+      "offer": "Grimspound lives because of an oath. Our grandfathers cut stone from the giants' hills, and in return gave the giants a share of every stone cut, and never touched the standing stones in the east.\n\nSomeone has broken it. The heartstone is gone from the eastern circle, and the stonecallers are gathering. Before they come for Grimspound - will you [find the thief]? I think I know where to start. I'm afraid I know.",
+      "accept": "find the thief",
+      "topics": {},
+      "summary": "Someone stole the heartstone from the granite giants' standing stones, breaking the oath that keeps Grimspound safe.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 4,
+          "at": [
+            688,
+            516,
+            5.1
+          ],
+          "goal": "Search the giants' building stores in the west",
+          "clue": {
+            "name": "a quarryman's chisel",
+            "model": 1347
+          },
+          "text": "A Grimspound chisel, dropped in the dirt where the heartstone was dragged. Its haft is marked with a J. Mirela's brother is the only J in the quarry.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "jory",
+          "goal": "Find Jory Stonewright in the brigands' camp",
+          "say": "Mirela sent you. Course she did.\n\nI sold it. All right? The brigands' captain paid me more silver than Grimspound's seen in ten years. He says once the giants flatten the town, the silver under it is his. I thought he was joking. He wasn't joking. He's got the [heartstone] in his tent.",
+          "keyword": "heartstone",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 4,
+          "at": [
+            1004,
+            524,
+            6.0
+          ],
+          "radius": 25,
+          "goal": "Fight through the brigands' camp",
+          "mob": {
+            "template": 5232525,
+            "name": "ruthless brigand",
+            "level": [
+              40,
+              41
+            ]
+          },
+          "count": 5,
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 4,
+          "at": [
+            992,
+            508,
+            6.0
+          ],
+          "wake_m": 30,
+          "goal": "Take back the heartstone from the brigand captain",
+          "text": "Harrow Vane goes down with silver spilling from his purse. In his tent, under a blanket, the heartstone glows like a coal.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Harrow Vane, Brigand-Captain",
+              "center": [
+                992,
+                508,
+                6.0
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Harrow Vane",
+              "announce": "A lean man in good boots steps out of the biggest tent. 'Grimspound's stone? It's mine. Bought and paid.'",
+              "boss": {
+                "template": 5232525,
+                "name": "Harrow Vane, Brigand-Captain",
+                "level": 45,
+                "health_mult": 2.5
+              },
+              "success": "Harrow Vane, Brigand-Captain falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 5232525,
+                    "name": "ruthless brigand",
+                    "level": [
+                      40,
+                      41
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 4,
+          "at": [
+            1290,
+            840,
+            20.8
+          ],
+          "wake_m": 30,
+          "goal": "Return the heartstone to the eastern circle",
+          "text": "The heartstone settles into its socket with a sound like a great breath. The stonecallers lower their arms, and turn, and go back into the hills.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Mirela alive while she sets the heartstone",
+              "center": [
+                1290,
+                840,
+                20.8
+              ],
+              "radius": 30,
+              "duration_s": 90,
+              "objective": "Keep Mirela alive while she sets the heartstone",
+              "announce": "Mirela is waiting at the circle. 'Quickly - they're coming. Hold them while I set it.' Over the ridge: giants.",
+              "protect": {
+                "template": 770005,
+                "name": "Mirela Stonewright",
+                "level": 40,
+                "model": 38
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    1302,
+                    846,
+                    20.8
+                  ],
+                  [
+                    1280,
+                    830,
+                    20.8
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 770005,
+                    "name": "granite giant gatherer",
+                    "level": [
+                      42,
+                      43
+                    ]
+                  }
+                ]
+              },
+              "thanks": "It's set. It's set. Oh, gods, my hands.",
+              "success": "They break off.",
+              "fail": "Mirela Stonewright falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Stonecaller Oruk",
+              "center": [
+                1290,
+                840,
+                20.8
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Stonecaller Oruk",
+              "announce": "A giant with a voice like a landslide: 'OATH-BREAKERS. THE STONE COMES HOME, AND SO DO YOU.'",
+              "boss": {
+                "template": 770006,
+                "name": "Stonecaller Oruk",
+                "level": 47,
+                "health_mult": 2.2
+              },
+              "success": "Stonecaller Oruk falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "mirela_circle",
+          "goal": "Talk to Mirela at the circle",
+          "say": "It's done. And Jory's waiting by the road. He knows what he did.\n\nThe giants have their own way with oath-breakers: they would take him into the hills and he would not come back. Grimspound's way is exile. I can't choose. He's my brother. You choose - give him to [the giants], or to [Grimspound].",
+          "options": [
+            {
+              "keyword": "the giants",
+              "say": "...Yes. It was their stone. It's their right. I'll tell him myself. That much I owe him.",
+              "ending": "giants"
+            },
+            {
+              "keyword": "Grimspound",
+              "say": "Exile. He'll go west, to the coast, and never come back. It's still more mercy than he showed us. Thank you.",
+              "ending": "exile"
+            }
+          ],
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "giants": {
+          "text": "The quarry wanted you to have this. And I - I want you to have his chisel. I can't look at it.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq4_quarry_oath_ring"
+            ],
+            "choice": [
+              "sq4_jory_s_chisel_pin",
+              "sq4_heartstone_pendant"
+            ]
+          }
+        },
+        "exile": {
+          "text": "The quarry's thanks.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq4_quarry_oath_ring"
+            ],
+            "choice": [
+              "sq4_heartstone_pendant",
+              "sq4_granite_weave_mantle"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "dragons_tithe",
+      "title": "The Dragon's Tithe",
+      "level": 48,
+      "giver": "bryn_asquith",
+      "offer": "This is no task for one, so find friends - GROUP work.\n\nMy order sent three slayers to study Golestandt's lair. One came back - Brother Alun, there, who will not stop shaking. One is dead. And Sir Wystan, Alun says, was alive under the rubble when Alun ran.\n\nThe giants on that slope serve the dragon - they bring it a tithe of everything that lives. Will you [go after Wystan]? Ask [Alun] what he saw, if you can bear it.",
+      "accept": "go after Wystan",
+      "topics": {
+        "Alun": "Brother Alun. Over there, by the wall. Be gentle."
+      },
+      "summary": "GROUP. A dragonslayer was left alive under the rubble of Golestandt's lair; the giants that serve the dragon stand between.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "brother_alun",
+          "goal": "Ask Brother Alun what happened",
+          "say": "We were careful. We were so careful. The dragon was asleep. And then the giants came - they serve it, they bring it the dead, a [tithe] - and the rubble came down on Wystan and I ran. I RAN.",
+          "keyword": "tithe",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 4,
+          "at": [
+            880,
+            1180,
+            11.4
+          ],
+          "radius": 20,
+          "goal": "Go to the dragon's road in the south",
+          "text": "The giants watch this road. Cairns line it - each with something that once lived laid on top.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 4,
+          "at": [
+            883,
+            1130,
+            11.9
+          ],
+          "radius": 25,
+          "goal": "Kill the giants who watch the dragon's road",
+          "mob": {
+            "template": 770011,
+            "name": "granite giant outlooker",
+            "level": [
+              50,
+              51
+            ]
+          },
+          "count": 4,
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 4,
+          "at": [
+            1004,
+            1372,
+            5.5
+          ],
+          "goal": "Search the smouldering rubble below the lair",
+          "clue": {
+            "name": "a scorched shield with a white hart",
+            "model": 1347
+          },
+          "text": "Sir Wystan's shield. Under it, a gap in the rubble - and a voice, hoarse with smoke: 'Took your time.'",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 4,
+          "at": [
+            1000,
+            1362,
+            6.6
+          ],
+          "wake_m": 30,
+          "goal": "Dig Sir Wystan out of the rubble",
+          "text": "The last stone comes away. Sir Wystan crawls out, burnt and grinning.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Sir Wystan alive while he is dug out",
+              "center": [
+                1000,
+                1362,
+                6.6
+              ],
+              "radius": 30,
+              "duration_s": 100,
+              "objective": "Keep Sir Wystan alive while he is dug out",
+              "announce": "The rubble shifts under your hands - and the stonelords come down the slope to collect their tithe.",
+              "protect": {
+                "template": 770002,
+                "name": "Sir Wystan",
+                "level": 47,
+                "model": 9
+              },
+              "waves": {
+                "every_s": 22,
+                "count": 2,
+                "from": [
+                  [
+                    1012,
+                    1368,
+                    5.5
+                  ],
+                  [
+                    990,
+                    1352,
+                    7.7
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 770002,
+                    "name": "granite giant pounder",
+                    "level": [
+                      50,
+                      52
+                    ]
+                  }
+                ]
+              },
+              "thanks": "Ha! Ha. Ow. Bryn sent you? Bryn would.",
+              "success": "They break off.",
+              "fail": "Sir Wystan falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Stonelord Gauth, Tithe-Taker",
+              "center": [
+                1000,
+                1362,
+                6.6
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Stonelord Gauth",
+              "announce": "A huge giant with a basket on its back of bones. 'THE SLAYER IS THE DRAGON'S. ALL WHO FALL HERE ARE THE DRAGON'S.'",
+              "boss": {
+                "template": 770001,
+                "name": "Stonelord Gauth, Tithe-Taker",
+                "level": 55,
+                "health_mult": 2.6
+              },
+              "success": "Stonelord Gauth, Tithe-Taker falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "sir_wystan",
+          "goal": "Talk to Sir Wystan",
+          "say": "I saw it. Golestandt. Woke while the rocks were falling, looked right at me. Then looked away, and went back to sleep. Like I was a fly.\n\nI cut this off it - a scale - before the rubble. Bryn will want it. With this she'll have the order's council behind her, and they'll march on the lair by spring.\n\nOr you tell her I said [leave it sleeping]. Because it let us go, and I don't think it will twice. Or give her [the scale]. Your choice. I'm too tired.",
+          "options": [
+            {
+              "keyword": "the scale",
+              "say": "Then take it, and tell her I'll be at the front of the line. Gods help us.",
+              "next": "s7"
+            },
+            {
+              "keyword": "leave it sleeping",
+              "say": "Thank you. Tell her it was my word, not yours. She'll hate it less.",
+              "next": "s8"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "bryn_asquith",
+          "goal": "Return to Bryn Asquith",
+          "say": "A scale. A real scale. The council will have to listen now.\n\nAnd Wystan alive - Alun stopped shaking when he heard. Take what you like from the armoury. Come spring, we'll need everyone.",
+          "ending": "war",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "bryn_asquith",
+          "goal": "Return to Bryn Asquith",
+          "say": "'Leave it sleeping.' From Wystan, of all men.\n\n...He's right, I suppose. He usually isn't. Take what you like. And thank you for bringing him home.",
+          "ending": "peace",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "war": {
+          "text": "From the order's armoury.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq4_golestandt_scale_brooch"
+            ],
+            "choice": [
+              "sq4_slayer_s_vow_belt",
+              "sq4_ember_heart_bracer",
+              "sq4_ash_grey_signet"
+            ]
+          }
+        },
+        "peace": {
+          "text": "From the order's armoury.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq4_white_hart_mantle"
+            ],
+            "choice": [
+              "sq4_slayer_s_vow_belt",
+              "sq4_ember_heart_bracer",
+              "sq4_ash_grey_signet"
+            ]
+          }
+        }
+      },
+      "group": true
+    }
+  ]
+}

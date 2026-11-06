@@ -1,0 +1,150 @@
+{
+ "zone": 200,
+ "region": 200,
+ "realm": 3,
+ "prefix": "sq200",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Eggshell Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 7,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 4,
+    "Power": 1
+   },
+   "lore": "A brewing eggshell, cracked and bound in silver wire. It made a changeling laugh once."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blackthorn Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 7,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 6
+   },
+   "lore": "A ring of blackthorn wood, hard as iron, thorns turned inward. It doesn't prick. Usually."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cradle-Song Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 7,
+   "bonuses": {
+    "Int": 2,
+    "Emp": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 4
+   },
+   "lore": "Embroidered with the words of a Hibernian lullaby, and something under the words, in faerie script."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fae-Milk Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 7,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 7,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Soft as a baby's blanket. It belonged to a faerie child, for a little while."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sealskin Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Grey and silver, softer than any wool. It smells of the sea and it always will."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Roane-Pearl Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 14,
+   "bonuses": {
+    "Int": 5,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "A grey pearl from deep water, the kind the roane give as wedding-gifts."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fergal's Net-Knot Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 14,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 12
+   },
+   "lore": "A fisherman's bracer, knotted the way only Fergal knots."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Skinner's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "Taken from a dergan who skinned the roane for their pelts. Scrub it as you like."
+  }
+ ]
+}

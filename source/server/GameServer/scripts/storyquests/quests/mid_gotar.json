@@ -1,0 +1,485 @@
+{
+  "name": "Gotar",
+  "npcs": [
+    {
+      "id": "torunn",
+      "zone": 103,
+      "realm": 2,
+      "name": "Torunn",
+      "model": 168,
+      "level": 6,
+      "pos": [
+        710,
+        332,
+        110.2
+      ],
+      "idle": "My boy Eilif plays the fiddle. He plays it far too well."
+    },
+    {
+      "id": "skald_hrafn",
+      "zone": 103,
+      "realm": 2,
+      "name": "Old Skald Hrafn",
+      "model": 157,
+      "level": 20,
+      "pos": [
+        720,
+        300,
+        110.2
+      ],
+      "idle": "Every tune worth playing was stolen from somewhere. Most of the best from water."
+    },
+    {
+      "id": "eilif",
+      "zone": 103,
+      "realm": 2,
+      "name": "Eilif",
+      "model": 213,
+      "level": 5,
+      "pos": [
+        392,
+        1248,
+        123.7
+      ],
+      "during": [
+        "nacken/s6",
+        "nacken/s7"
+      ],
+      "size": 40
+    },
+    {
+      "id": "alfdis",
+      "zone": 103,
+      "realm": 2,
+      "name": "Seeress Alfdis",
+      "model": 168,
+      "level": 18,
+      "pos": [
+        1245,
+        870,
+        115.6
+      ],
+      "idle": "I read futures. I couldn't read my own apprentice's heart."
+    },
+    {
+      "id": "flayer_kolr",
+      "zone": 103,
+      "realm": 2,
+      "name": "Flayer Kolr",
+      "model": 213,
+      "level": 16,
+      "pos": [
+        1262,
+        858,
+        115.6
+      ],
+      "idle": "Trolls, witches, gotawitches. I flay what needs flaying."
+    },
+    {
+      "id": "hild",
+      "zone": 103,
+      "realm": 2,
+      "name": "Hild",
+      "model": 168,
+      "level": 11,
+      "pos": [
+        985,
+        1402,
+        117.4
+      ],
+      "during": [
+        "rune_stave/s6"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "nacken",
+      "title": "The Nacken's Tune",
+      "level": 7,
+      "giver": "torunn",
+      "offer": "My son Eilif is eleven and plays the fiddle better than any skald in Gotar. He learned it in a summer. From the water, he says - from a man who sits on a stone in the black pool and plays, with his feet in the water.\n\nLast night Eilif went back to pay for the lessons. Old [Hrafn] says the nacken's price is always a life. Will you [find Eilif]?",
+      "accept": "find Eilif",
+      "topics": {
+        "Hrafn": "Old Hrafn the skald, by the longhouse. He's heard every story twice."
+      },
+      "summary": "Torunn's son learned to fiddle from the nacken in the black pool, and has gone back to pay for the lessons.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "skald_hrafn",
+          "goal": "Ask Old Skald Hrafn about the nacken",
+          "say": "The nacken teaches the best tunes in the world. And there's always one tune at the end - the one that makes people dance till they drop, and drown in his pool. That's how he's paid. He'll be at the black pool in the south-west. Listen for the [fiddle].",
+          "keyword": "fiddle",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 103,
+          "at": [
+            430,
+            1300,
+            121.4
+          ],
+          "radius": 20,
+          "goal": "Go to the black pool in the south-west",
+          "text": "Fiddle-music, faint and wild. The wind is dancing - you'd swear it.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            459,
+            1333,
+            123.6
+          ],
+          "radius": 25,
+          "goal": "Break the nacken's dancers",
+          "mob": {
+            "template": 60162203,
+            "name": "host of the wind",
+            "level": [
+              6,
+              7
+            ]
+          },
+          "count": 5,
+          "text": "The dancing winds blow apart into nothing. The music falters, then starts again, closer to the water.",
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 103,
+          "at": [
+            400,
+            1242,
+            123.2
+          ],
+          "goal": "Search the bank of the black pool",
+          "clue": {
+            "name": "an empty fiddle-case",
+            "model": 1347
+          },
+          "text": "Eilif's fiddle-case, open and empty. Small footprints lead right to the water's edge - and stop.",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 103,
+          "at": [
+            392,
+            1255,
+            123.8
+          ],
+          "wake_m": 30,
+          "goal": "Face the nacken of the black pool",
+          "text": "The nacken sinks back into the pool, still fiddling, more slowly. On the bank, a small boy coughs up water.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "the Nacken of the Black Pool",
+              "center": [
+                392,
+                1255,
+                123.8
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Nacken",
+              "announce": "A pale man rises from the pool, fiddle under his chin, and smiles. 'He came to pay. Don't be rude.'",
+              "boss": {
+                "template": 60164357,
+                "name": "the Nacken of the Black Pool",
+                "level": 9,
+                "health_mult": 2.0
+              },
+              "success": "the Nacken of the Black Pool falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60162203,
+                    "name": "host of the wind",
+                    "level": [
+                      6,
+                      7
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "eilif",
+          "goal": "Talk to Eilif",
+          "say": "He was nice. He was really nice. He taught me everything. And then he played the last tune and I was dancing in the water and I couldn't stop.\n\nI know it, now. The [tune]. I can still hear it.",
+          "keyword": "tune",
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "eilif",
+          "goal": "Help Eilif decide about the tune",
+          "say": "If I play it, people will dance. Kings would pay for that. I'd be the greatest fiddler in Midgard. But they'd dance till they dropped, if I didn't stop. And I don't know if I would.\n\nShould I [burn the fiddle]? Then I'll forget the tune. And all the others. Or should I [keep it], and be careful forever?",
+          "options": [
+            {
+              "keyword": "burn the fiddle",
+              "say": "...Will you hold my hand while it burns? ...Thank you. It's gone. They're all gone. I can't remember a single one.",
+              "next": "s8"
+            },
+            {
+              "keyword": "keep it",
+              "say": "I'll be careful. I'll be so careful. I'll never play the last one. Never.",
+              "next": "s9"
+            }
+          ],
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "torunn",
+          "goal": "Bring Eilif home",
+          "say": "He burned it? His fiddle? He loved that fiddle more than he loves me.\n\nHe can't play a note now. He sat in the kitchen this morning and tried, on his father's old one, and he couldn't. He laughed. He actually laughed. Thank you.",
+          "ending": "burned",
+          "id": "s8"
+        },
+        {
+          "type": "talk",
+          "npc": "torunn",
+          "goal": "Bring Eilif home",
+          "say": "He's home, and he's playing. Better than ever.\n\nLast night at the hall, everybody danced and nobody wanted to stop. He stopped. He did. I saw his face when he did. I'll be watching him every night of my life.",
+          "ending": "kept",
+          "id": "s9"
+        }
+      ],
+      "endings": {
+        "burned": {
+          "text": "Take this, for my boy.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq103_dancing_green_sash"
+            ],
+            "choice": [
+              "sq103_black_pool_ring",
+              "sq103_fiddler_s_bow_bracer"
+            ]
+          }
+        },
+        "kept": {
+          "text": "Take this, for my boy.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq103_nacken_s_fiddle_string"
+            ],
+            "choice": [
+              "sq103_black_pool_ring",
+              "sq103_fiddler_s_bow_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "rune_stave",
+      "title": "The Stolen Rune-Stave",
+      "level": 14,
+      "giver": "alfdis",
+      "offer": "My apprentice Hild stole my rune-stave - the one with the old blood-runes, the ones I swore never to use - and went south to the gotawitches. To learn what I wouldn't teach her.\n\nThe seers' law is clear. A seer who takes the blood-runes is branded and cast out. Will you [find Hild]? Flayer [Kolr] has seen the gotawitches' runestone.",
+      "accept": "find Hild",
+      "topics": {
+        "Kolr": "Flayer Kolr, by the stables. Rude, but he knows the south woods."
+      },
+      "summary": "Seeress Alfdis's apprentice stole her rune-stave of forbidden blood-runes and went to the gotawitches.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "flayer_kolr",
+          "goal": "Ask Flayer Kolr about the gotawitches",
+          "say": "The gotawitches? South, past the woods, at the old runestone. They've seithr orbs floating round it like fireflies - kill those first, or they'll blind you. Your seer's girl went down there two days ago. I didn't stop her. I'm a flayer, not a [nursemaid].",
+          "keyword": "nursemaid",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 103,
+          "at": [
+            1052,
+            1272,
+            111.8
+          ],
+          "radius": 20,
+          "goal": "Go south to the gotawitches' woods",
+          "text": "Lights drift between the trees - orbs of seithr, humming. Beyond them, the runestone glows red.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            995,
+            1422,
+            118.0
+          ],
+          "radius": 25,
+          "goal": "Destroy the seithr orbs",
+          "mob": {
+            "template": 60165740,
+            "name": "seithr orb",
+            "level": [
+              9,
+              10
+            ]
+          },
+          "count": 5,
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 103,
+          "at": [
+            990,
+            1412,
+            118.1
+          ],
+          "goal": "Search the runestone",
+          "clue": {
+            "name": "a rune-stave carved with blood-runes",
+            "model": 1347
+          },
+          "text": "Alfdis's stave, planted in the earth before the stone and hung with fresh blood. Hild's blood, by the size of the cut. The rite's begun.",
+          "give": {
+            "name": "Alfdis's rune-stave"
+          },
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 103,
+          "at": [
+            988,
+            1405,
+            117.7
+          ],
+          "wake_m": 30,
+          "goal": "Stop the gotawitch rite",
+          "text": "The gotawitch falls, and the runestone's light goes out. A girl sits in the circle with her arms bleeding, crying.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Gotawitch Svanhvit",
+              "center": [
+                988,
+                1405,
+                117.7
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Gotawitch Svanhvit",
+              "announce": "A gotawitch with a face like a pretty skull steps out of the stone. 'The girl came to me. The blood's half-poured. You're interrupting.'",
+              "boss": {
+                "template": 20005,
+                "name": "Gotawitch Svanhvit",
+                "level": 14,
+                "health_mult": 2.2
+              },
+              "success": "Gotawitch Svanhvit falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 20005,
+                    "name": "gotawitch",
+                    "level": [
+                      10,
+                      11
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "hild",
+          "goal": "Talk to Hild",
+          "say": "She wouldn't teach me. She said I wasn't ready. I wanted to SEE. I wanted to see the real threads, not the pretty ones.\n\nI saw them. I wish I hadn't. Take me back. Let her [brand me]. I deserve it.",
+          "keyword": "brand me",
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "alfdis",
+          "goal": "Bring Hild back to Alfdis",
+          "say": "She's back. And she used them - I can see it in her eyes.\n\nThe law says brand and exile. The law was written by people like me, for girls like her. I could [keep the law]. Or I could [take the blame] - say I taught her, and be branded myself. I'm old. She isn't. Which? I need someone else to say it.",
+          "options": [
+            {
+              "keyword": "keep the law",
+              "say": "Then the law. I'll do it gently. I'll do it myself. She'll go to Myrkwood; I have friends there. Gods forgive me.",
+              "ending": "law"
+            },
+            {
+              "keyword": "take the blame",
+              "say": "Yes. Yes. It was my stave and my teaching and my fault. I'll go. She'll take my seat. She'll be better than me. She'll have to be.",
+              "ending": "blame"
+            }
+          ],
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "law": {
+          "text": "Take this. You saved her life, whatever comes.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq103_hild_s_rune_stave_charm"
+            ],
+            "choice": [
+              "sq103_seeress_veil",
+              "sq103_flayer_s_hook_ring"
+            ]
+          }
+        },
+        "blame": {
+          "text": "Take this. I won't need it where I'm going.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq103_seeress_veil"
+            ],
+            "choice": [
+              "sq103_unbranded_bracer",
+              "sq103_flayer_s_hook_ring"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

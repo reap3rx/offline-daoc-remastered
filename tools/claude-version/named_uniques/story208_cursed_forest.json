@@ -1,0 +1,166 @@
+{
+ "zone": 208,
+ "region": 200,
+ "realm": 3,
+ "prefix": "sq208",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Crock-of-Gold Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Qui": 17,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 30,
+    "Power": 6
+   },
+   "lore": "A single gold coin from a leprechaun's crock. It's always there when you check."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Iron-Cage Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 17,
+    "Con": 17,
+    "Dex": 8,
+    "Hits": 42
+   },
+   "lore": "Cold iron from a leprechaun cage. Fae folk flinch from it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Poacher's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Dex": 17,
+    "Qui": 17,
+    "Str": 8,
+    "Hits": 42
+   },
+   "lore": "Dull green and very quiet."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cobbler's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 17,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "Leprechauns are cobblers, really. This is a ring of shoe-leather and silver tacks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Goborchend Horn Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 19,
+    "Con": 19,
+    "Dex": 9,
+    "Hits": 48
+   },
+   "lore": "Twisted goat-horn, bound in bronze. The goborchend wear their horns as trophies; you wear theirs."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bloodhorn's Altar-Stone",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 19,
+    "Emp": 9,
+    "Dex": 9,
+    "Power": 8,
+    "Hits": 34
+   },
+   "lore": "A chip from a goborchend altar. Druid Mor cleansed it. It's still red."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Oisin's Druid-Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Emp": 19,
+    "Con": 9,
+    "Power": 8,
+    "Hits": 34
+   },
+   "lore": "Green and brown and full of pockets."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fomorian-Bone Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 19,
+    "Hits": 56,
+    "Body": 7,
+    "Crush": 7,
+    "Slash": 7
+   },
+   "lore": "The goborchend are of the old Fomorian blood. Their bones are heavy and hard."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fort-Breaker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Dex": 19,
+    "Qui": 19,
+    "Str": 9,
+    "Hits": 48
+   },
+   "lore": "Given to whoever first broke into a goborchend fort."
+  }
+ ]
+}

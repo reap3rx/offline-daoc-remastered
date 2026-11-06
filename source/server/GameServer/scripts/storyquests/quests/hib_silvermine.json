@@ -1,0 +1,485 @@
+{
+  "name": "Silvermine Mountains",
+  "npcs": [
+    {
+      "id": "breasal",
+      "zone": 201,
+      "realm": 3,
+      "name": "Breasal the Stonemason",
+      "model": 337,
+      "level": 10,
+      "pos": [
+        570,
+        1074,
+        136.4
+      ],
+      "idle": "My grandfather raised that circle with his own two hands. Now it's walked off."
+    },
+    {
+      "id": "grainne",
+      "zone": 201,
+      "realm": 3,
+      "name": "Grainne",
+      "model": 365,
+      "level": 14,
+      "pos": [
+        552,
+        1093,
+        136.4
+      ],
+      "idle": "Cathal went up the mountain to look for silver. The sheevra found him first."
+    },
+    {
+      "id": "odhran",
+      "zone": 201,
+      "realm": 3,
+      "name": "Ranger Odhran",
+      "model": 337,
+      "level": 20,
+      "pos": [
+        580,
+        1066,
+        136.4
+      ],
+      "idle": "The sheevra mine the east slopes. They take what they need. Lately that includes people."
+    },
+    {
+      "id": "cathal",
+      "zone": 201,
+      "realm": 3,
+      "name": "Cathal",
+      "model": 337,
+      "level": 12,
+      "pos": [
+        1450,
+        1066,
+        142.1
+      ],
+      "during": [
+        "sheevra_mine/s6"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "walking_stones",
+      "title": "The Walking Stones",
+      "level": 8,
+      "giver": "breasal",
+      "offer": "My grandfather's stone circle, up on the northern slopes - every stone of it got up and walked off last week. Seven standing stones, gone. Left their sockets like pulled teeth.\n\nThe little walking rocks have been seen west of here. Stones don't walk on their own. Someone woke them. Will you [find the stones]?",
+      "accept": "find the stones",
+      "topics": {},
+      "summary": "Breasal's grandfather's stone circle got up and walked away. Someone woke the stones.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 201,
+          "at": [
+            630,
+            360,
+            174.4
+          ],
+          "radius": 20,
+          "goal": "Go to the empty stone circle in the north",
+          "text": "Seven sockets in the turf, deep and fresh. Tracks - round, heavy, rolling tracks - going south-west.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            484,
+            706,
+            144.0
+          ],
+          "radius": 25,
+          "goal": "Round up the walking stones",
+          "mob": {
+            "template": 60166254,
+            "name": "small walking rock",
+            "level": [
+              5,
+              6
+            ]
+          },
+          "count": 6,
+          "text": "They topple, and lie still, and are only stones. But there are fresh ogham marks on every one.",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 201,
+          "at": [
+            500,
+            640,
+            126.5
+          ],
+          "goal": "Search where the stones gathered",
+          "clue": {
+            "name": "a freshly carved ogham stick",
+            "model": 1347
+          },
+          "text": "An ogham stick: 'WAKE AND WALK, IN THE NAME OF GRUGOCH.' Spraggon work - bad spelling and all.",
+          "give": {
+            "name": "an ogham stick"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            518,
+            616,
+            123.5
+          ],
+          "radius": 25,
+          "goal": "Fight through the spraggonolls",
+          "mob": {
+            "template": 60166491,
+            "name": "spraggonoll",
+            "level": [
+              7,
+              8
+            ]
+          },
+          "count": 5,
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 201,
+          "at": [
+            470,
+            560,
+            130.4
+          ],
+          "wake_m": 30,
+          "goal": "Confront the spraggon chief",
+          "text": "Grugoch sits down hard. 'Fine! FINE! They wanted to see the lough anyway! They TOLD me!'",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Chief Grugoch",
+              "center": [
+                470,
+                560,
+                130.4
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Chief Grugoch",
+              "announce": "A spraggon in a crown of pebbles hops onto a boulder. 'My stones! I woke them! They're MINE!'",
+              "boss": {
+                "template": 60166485,
+                "name": "Chief Grugoch",
+                "level": 10,
+                "health_mult": 2.0
+              },
+              "success": "Chief Grugoch falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60166491,
+                    "name": "spraggonoll",
+                    "level": [
+                      7,
+                      8
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "breasal",
+          "goal": "Bring the ogham stick to Breasal",
+          "say": "The spraggon said the stones WANTED to walk? To see the lough?\n\nGrandfather used to say they were restless. I thought it was a story.\n\nWith that stick I can [put them to sleep] - back in the circle, standing, forever. Or I could [let them walk] to the lough, and grandfather's circle stands empty. Gods. I'm a mason. I didn't think I'd have to ask stones what they want.",
+          "options": [
+            {
+              "keyword": "put them to sleep",
+              "say": "Back in the circle, then. Sleep well, old ones. You've a job to do.",
+              "ending": "sleep"
+            },
+            {
+              "keyword": "let them walk",
+              "say": "Then I'll carve 'walk on' on the stick and leave it at the circle. ...They'll be at the lough by midsummer, I'd say. Slow walkers.",
+              "ending": "walk"
+            }
+          ],
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "sleep": {
+          "text": "Take this, for your trouble.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq201_ogham_stick_charm"
+            ],
+            "choice": [
+              "sq201_mason_s_plumb_ring",
+              "sq201_walking_stone_belt"
+            ]
+          }
+        },
+        "walk": {
+          "text": "Take this, for your trouble.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq201_ogham_stick_charm"
+            ],
+            "choice": [
+              "sq201_walking_stone_belt",
+              "sq201_lough_water_cloak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sheevra_mine",
+      "title": "The Sheevra's Miners",
+      "level": 15,
+      "giver": "grainne",
+      "offer": "My husband Cathal went up the eastern slopes looking for silver. He found the sheevra instead - or they found him. Ranger [Odhran] says they've been taking men to dig for them.\n\nCathal's no fighter. He's barely a miner. Will you [bring him home]?",
+      "accept": "bring him home",
+      "topics": {
+        "Odhran": "The ranger. He's by the stables. He's been watching the east slopes all season."
+      },
+      "summary": "The sheevra have been taking men to work their silver mines. Grainne's husband is one of them.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "odhran",
+          "goal": "Ask Ranger Odhran about the sheevra",
+          "say": "They've archers on the ridge who'll shoot anything that walks. Get past those and you'll find the miners' tracks east, deep into the hills - the sheevra work their slaves at the far [diggings].",
+          "keyword": "diggings",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            1153,
+            744,
+            126.0
+          ],
+          "radius": 25,
+          "goal": "Kill the sheevra archers on the ridge",
+          "mob": {
+            "template": 60165945,
+            "name": "sheevra archer",
+            "level": [
+              13,
+              14
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 201,
+          "at": [
+            1162,
+            762,
+            139.1
+          ],
+          "goal": "Search the ridge",
+          "clue": {
+            "name": "a miner's broken pick",
+            "model": 1347
+          },
+          "text": "A pick with 'CATHAL' scratched on the handle, snapped in two. Chain-marks in the dirt, heading east.",
+          "id": "s3"
+        },
+        {
+          "type": "reach",
+          "zone": 201,
+          "at": [
+            1440,
+            1050,
+            143.2
+          ],
+          "radius": 20,
+          "goal": "Find the sheevra's far diggings",
+          "text": "A raw hole in the hillside. Men in chains, hauling rock. Sheevra overseers with whips.",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 201,
+          "at": [
+            1450,
+            1060,
+            142.0
+          ],
+          "wake_m": 30,
+          "goal": "Free the miners",
+          "text": "The sheevra break and run. The miners drop their chains and sit down, laughing and crying.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Cathal alive",
+              "center": [
+                1450,
+                1060,
+                142.0
+              ],
+              "radius": 30,
+              "duration_s": 80,
+              "objective": "Keep Cathal alive",
+              "announce": "You strike the first chain off, and every sheevra in the diggings comes running.",
+              "protect": {
+                "template": 60165947,
+                "name": "Cathal",
+                "level": 12,
+                "model": 337
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    1462,
+                    1066,
+                    142.4
+                  ],
+                  [
+                    1440,
+                    1050,
+                    143.2
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60165947,
+                    "name": "sheevra miner",
+                    "level": [
+                      13,
+                      14
+                    ]
+                  }
+                ]
+              },
+              "thanks": "Is it over? Is it really?",
+              "success": "They break off.",
+              "fail": "Cathal falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Chieftain Morc",
+              "center": [
+                1450,
+                1060,
+                142.0
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Chieftain Morc",
+              "announce": "A sheevra in a silver helm. 'My diggers. My silver. MINE.'",
+              "boss": {
+                "template": 60165946,
+                "name": "Chieftain Morc",
+                "level": 17,
+                "health_mult": 2.2
+              },
+              "success": "Chieftain Morc falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "cathal",
+          "goal": "Talk to Cathal",
+          "say": "I found it, you know. The vein. That's why they kept me. Silver like nobody's seen since my grandfather's day - enough to make Grainne and me rich ten times over.\n\nIf we [claim the vein], the sheevra will come back for it. Every year. We'd need guards and walls and we'd never sleep easy. Or we [collapse the mine], and go home poor, and nobody fights over it ever again.",
+          "options": [
+            {
+              "keyword": "claim the vein",
+              "say": "Then I'll stake it today. Grainne will kill me. And then she'll buy a cow. Ten cows.",
+              "next": "s7"
+            },
+            {
+              "keyword": "collapse the mine",
+              "say": "...Help me with the props. There. Listen to it go. ...Let's go home.",
+              "next": "s8"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "grainne",
+          "goal": "Return to Grainne",
+          "say": "He's home, and he's RICH, and he's hired six men with spears to guard a hole in a hill.\n\nThe sheevra will come back. He knows. I know. I married a fool. A rich fool. Here - take a share.",
+          "ending": "claim",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "grainne",
+          "goal": "Return to Grainne",
+          "say": "He brought the mountain down on it. All that silver, and he buried it.\n\nAnd then he came home and slept for two days, and when he woke up he asked me what was for supper, like nothing happened. I've never loved him more.",
+          "ending": "collapse",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "claim": {
+          "text": "Take a share.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq201_silver_vein_ring"
+            ],
+            "choice": [
+              "sq201_miner_s_pick_bracer",
+              "sq201_sheevra_chief_s_belt"
+            ]
+          }
+        },
+        "collapse": {
+          "text": "Take this.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq201_deep_lamp_pendant"
+            ],
+            "choice": [
+              "sq201_miner_s_pick_bracer",
+              "sq201_sheevra_chief_s_belt"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

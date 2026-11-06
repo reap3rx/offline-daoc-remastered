@@ -1,0 +1,149 @@
+{
+ "zone": 103,
+ "region": 100,
+ "realm": 2,
+ "prefix": "sq103",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Nacken's Fiddle-String",
+   "base": [
+    41,
+    24
+   ],
+   "level": 7,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 4,
+    "Power": 1
+   },
+   "lore": "A single string of silver hair. Pluck it and someone, somewhere, starts to dance."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Black-Pool Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 7,
+   "bonuses": {
+    "Pie": 2,
+    "Int": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 4
+   },
+   "lore": "Jet from the bottom of the nacken's pool. It is always faintly damp."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fiddler's Bow-Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 7,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 6
+   },
+   "lore": "A strip of horsehair and pine, worn on the wrist the way Eilif wears his."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dancing-Green Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 7,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 6
+   },
+   "lore": "Green silk, the kind worn at midsummer dances."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hild's Rune-Stave Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 14,
+   "bonuses": {
+    "Pie": 5,
+    "Int": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "A splinter of a gotawitch's stave, its blood-runes sanded off. One rune stayed. It means 'sorry'."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seeress' Veil",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Int": 5,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "A grey veil, worn by the seers of Gotar when they read the threads."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Unbranded Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "A plain leather bracer. Hild wears its twin, over the place a brand would have been."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Flayer's Hook-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "A troll-flayer's ring, hooked like a skinning knife."
+  }
+ ]
+}

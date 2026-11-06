@@ -1,0 +1,464 @@
+{
+  "name": "Cliffs of Moher",
+  "npcs": [
+    {
+      "id": "sorcha",
+      "zone": 203,
+      "realm": 3,
+      "name": "Sorcha",
+      "model": 365,
+      "level": 16,
+      "pos": [
+        664,
+        514,
+        142.8
+      ],
+      "idle": "I saw myself on the cliffs. Myself. Smiling at me."
+    },
+    {
+      "id": "lorcan",
+      "zone": 203,
+      "realm": 3,
+      "name": "Old Lorcan",
+      "model": 362,
+      "level": 30,
+      "pos": [
+        676,
+        500,
+        142.7
+      ],
+      "idle": "A fetch at morning means long life. At evening, death. Nobody wants to say which it was."
+    },
+    {
+      "id": "nuala",
+      "zone": 203,
+      "realm": 3,
+      "name": "Nuala the Net-Mender",
+      "model": 365,
+      "level": 34,
+      "pos": [
+        672,
+        498,
+        142.8
+      ],
+      "idle": "Every seventh year the sea takes a child. We call it the sea. It isn't the sea."
+    },
+    {
+      "id": "fintan",
+      "zone": 203,
+      "realm": 3,
+      "name": "Fintan",
+      "model": 337,
+      "level": 12,
+      "pos": [
+        168,
+        1056,
+        35.3
+      ],
+      "during": [
+        "koalinth_pact/s6"
+      ],
+      "size": 42
+    }
+  ],
+  "quests": [
+    {
+      "id": "fetch",
+      "title": "The Fetch",
+      "level": 18,
+      "giver": "sorcha",
+      "offer": "Three evenings ago I saw myself on the cliff path. My own face, my own shawl - walking toward me, smiling. Then gone.\n\nA fetch, Old [Lorcan] says. At evening, it means death. I'm twenty-two. Will you [find it]? Find it and - I don't know. Make it stop smiling.",
+      "accept": "find it",
+      "topics": {
+        "Lorcan": "Old Lorcan, by the well. He knows every omen there is, and believes in half of them."
+      },
+      "summary": "Sorcha saw her own fetch - her double - on the cliffs at evening. An omen of death.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "lorcan",
+          "goal": "Ask Old Lorcan about fetches",
+          "say": "A fetch is the shape of a death, walking about early. Find it before it finds her, and kill it, and maybe the death goes elsewhere. Maybe. They walk the eastern cliffs where the [bocan] nest - those goblins will warn it you're coming, so deal with them first.",
+          "keyword": "bocan",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            850,
+            1200,
+            129.4
+          ],
+          "radius": 25,
+          "goal": "Clear the bocan from the cliff path",
+          "mob": {
+            "template": 60158578,
+            "name": "bocan",
+            "level": [
+              15,
+              16
+            ]
+          },
+          "count": 5,
+          "text": "One of them chatters something about 'the smiling lady' going east.",
+          "id": "s2"
+        },
+        {
+          "type": "reach",
+          "zone": 203,
+          "at": [
+            1116,
+            1240,
+            123.1
+          ],
+          "radius": 20,
+          "goal": "Follow the cliff path east",
+          "text": "Fetches drift on the clifftops - pale doubles of the living, wearing borrowed faces. None of them is hers. Yet.",
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            1116,
+            1246,
+            122.5
+          ],
+          "radius": 25,
+          "goal": "Destroy the drifting fetches",
+          "mob": {
+            "template": 60160819,
+            "name": "fetch",
+            "level": [
+              16,
+              17
+            ]
+          },
+          "count": 4,
+          "id": "s4"
+        },
+        {
+          "type": "search",
+          "zone": 203,
+          "at": [
+            1130,
+            1252,
+            122.5
+          ],
+          "goal": "Search the cliff edge",
+          "clue": {
+            "name": "a white bone comb",
+            "model": 1347
+          },
+          "text": "Sorcha's comb, still warm. And standing at the very edge of the cliff, looking out to sea: Sorcha. Smiling.",
+          "id": "s5"
+        },
+        {
+          "type": "encounter",
+          "zone": 203,
+          "at": [
+            1124,
+            1250,
+            122.3
+          ],
+          "wake_m": 30,
+          "goal": "Destroy Sorcha's fetch",
+          "text": "The fetch stops smiling. For a moment it looks only tired, and very sad, and then it's mist.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Sorcha's Fetch",
+              "center": [
+                1124,
+                1250,
+                122.3
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Destroy Sorcha's fetch",
+              "announce": "It turns. It has her face exactly, and her voice: 'You're early.'",
+              "boss": {
+                "template": 60160819,
+                "name": "Sorcha's Fetch",
+                "level": 20,
+                "health_mult": 2.2,
+                "model": 365
+              },
+              "success": "Sorcha's Fetch falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60160819,
+                    "name": "fetch",
+                    "level": [
+                      16,
+                      17
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "sorcha",
+          "goal": "Return to Sorcha",
+          "say": "Is it gone? It is, isn't it. I can feel it. Like a weight off.\n\nIt said something. Before. I can see it in your face. What did it say?\n\n(The fetch said: 'You can't kill a death. Only move it. Someone else will walk off this cliff by Samhain.' You could tell her [the truth], or [say nothing].)",
+          "options": [
+            {
+              "keyword": "the truth",
+              "say": "...Someone else. In my place. Gods. Then I'll watch the cliff path every evening until Samhain, and turn back whoever I see. I owe them that.",
+              "ending": "truth"
+            },
+            {
+              "keyword": "say nothing",
+              "say": "Nothing? It just went? ...Then I'm free. I'm free. I'm going to go dancing tonight. Come with me!",
+              "ending": "silent"
+            }
+          ],
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "truth": {
+          "text": "Take this. It's mine to give, now.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq203_sorcha_s_comb_pin"
+            ],
+            "choice": [
+              "sq203_fetch_glass_pendant",
+              "sq203_bocan_hide_bracer"
+            ]
+          }
+        },
+        "silent": {
+          "text": "Take this. And come dancing.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq203_sorcha_s_comb_pin"
+            ],
+            "choice": [
+              "sq203_cliff_walker_s_cloak",
+              "sq203_bocan_hide_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "koalinth_pact",
+      "title": "The Seventh Year",
+      "level": 36,
+      "giver": "nuala",
+      "offer": "Every seventh year, a child of this village is lost to the sea. Swept off the rocks. We mourn them and we say it's the sea.\n\nThis is the seventh year, and last night my son Fintan was gone from his bed. Wet footprints on the floor - not his. Webbed. Will you [find Fintan]? Start at the old fishing camp on the west cliffs. That's where the last one went.",
+      "accept": "find Fintan",
+      "topics": {},
+      "summary": "Every seventh year a child of Nuala's village is lost to the sea. This year it was her son - and the footprints were webbed.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 203,
+          "at": [
+            215,
+            630,
+            42.1
+          ],
+          "radius": 20,
+          "goal": "Go to the old fishing camp on the west cliffs",
+          "text": "The camp's been empty for years. On the door of the hut, scratched faintly: seven lines, and then seven more, and then seven more.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            191,
+            828,
+            38.4
+          ],
+          "radius": 25,
+          "goal": "Fight through the cliff dweller spearmen",
+          "mob": {
+            "template": 60159247,
+            "name": "cliff dweller spearman",
+            "level": [
+              36,
+              37
+            ]
+          },
+          "count": 5,
+          "text": "The cliff dwellers fight like men defending something. When the last one falls, he says: 'The pact. You'll break the pact.'",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 203,
+          "at": [
+            212,
+            636,
+            42.0
+          ],
+          "goal": "Search the fishing camp's hut",
+          "clue": {
+            "name": "a koalinth-scale token",
+            "model": 1347
+          },
+          "text": "A child's token, on a cord: a blue-green scale. Under the floorboards, a ledger in a careful hand - the village elders' hand. A name every seven years. And next to each: 'Good fishing.'",
+          "give": {
+            "name": "the elders' ledger"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            172,
+            1047,
+            35.5
+          ],
+          "radius": 25,
+          "goal": "Fight through the koalinth on the southern rocks",
+          "mob": {
+            "template": 60162948,
+            "name": "koalinth slinker",
+            "level": [
+              35,
+              36
+            ]
+          },
+          "count": 5,
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 203,
+          "at": [
+            160,
+            1060,
+            35.1
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the koalinth tide-caller",
+          "text": "The tide-caller falls back into the surf. On the rocks behind it, a boy in a koalinth's cloak blinks at you.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Tide-Caller Mairgread",
+              "center": [
+                160,
+                1060,
+                35.1
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Tide-Caller",
+              "announce": "A koalinth with a crown of shells rises from the waves. 'The pact is old. The pact is fair. The boy is ours.'",
+              "boss": {
+                "template": 60162948,
+                "name": "Tide-Caller Mairgread",
+                "level": 40,
+                "health_mult": 2.5
+              },
+              "success": "Tide-Caller Mairgread falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60162948,
+                    "name": "koalinth slinker",
+                    "level": [
+                      35,
+                      36
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "fintan",
+          "goal": "Talk to Fintan",
+          "say": "They were nice to me. They said I'd learn to breathe water. They said the other children did. Is Mam angry? Can I go [home]?",
+          "keyword": "home",
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "nuala",
+          "goal": "Bring Fintan home to Nuala",
+          "say": "FINTAN. Oh, my love.\n\n...And this? A ledger? In Old Eoghan's hand? 'Good fishing'?\n\nThey SOLD them. Every seventh year. My grandmother's sister - she's in here. I could [expose the elders] in front of the whole village. Or I could [burn the ledger], and keep my son, and keep the peace. They're old men. Half of them are dying.",
+          "options": [
+            {
+              "keyword": "expose the elders",
+              "say": "In front of everyone. At the harbour, at noon. Let them look at every mother in this village and explain.",
+              "ending": "exposed"
+            },
+            {
+              "keyword": "burn the ledger",
+              "say": "Into the fire. ...There. My son's home. The rest is the sea's business. I'll keep it that way. Gods forgive me.",
+              "ending": "burned"
+            }
+          ],
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "exposed": {
+          "text": "Take something. The village owes you more than it can pay.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq203_pact_breaker_s_ring"
+            ],
+            "choice": [
+              "sq203_tide_caller_mantle",
+              "sq203_spearman_s_bracer"
+            ]
+          }
+        },
+        "burned": {
+          "text": "Take something. And don't speak of it.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq203_koalinth_scale_token"
+            ],
+            "choice": [
+              "sq203_tide_caller_mantle",
+              "sq203_spearman_s_bracer"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

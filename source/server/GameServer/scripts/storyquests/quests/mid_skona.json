@@ -1,0 +1,556 @@
+{
+  "name": "Skona Ravine",
+  "npcs": [
+    {
+      "id": "hallgerd",
+      "zone": 106,
+      "realm": 2,
+      "name": "Hallgerd Rindasdottir",
+      "model": 168,
+      "level": 26,
+      "pos": [
+        1170,
+        812,
+        128.2
+      ],
+      "idle": "My husband Bard was bitten at the new moon. The full moon's in nine days."
+    },
+    {
+      "id": "ulfrun",
+      "zone": 106,
+      "realm": 2,
+      "name": "Seithkona Ulfrun",
+      "model": 168,
+      "level": 34,
+      "pos": [
+        1182,
+        796,
+        126.0
+      ],
+      "idle": "Wolfsbane and warder's blood. I've seen it work. Once."
+    },
+    {
+      "id": "bard",
+      "zone": 106,
+      "realm": 2,
+      "name": "Bard",
+      "model": 213,
+      "level": 28,
+      "pos": [
+        632,
+        1228,
+        88.6
+      ],
+      "during": [
+        "moonbound/s9",
+        "moonbound/s8"
+      ]
+    },
+    {
+      "id": "eyvor",
+      "zone": 106,
+      "realm": 2,
+      "name": "Ranger Eyvor",
+      "model": 168,
+      "level": 34,
+      "pos": [
+        604,
+        588,
+        126.3
+      ],
+      "idle": "Sidhe in Skona. Sidhe! Three days' march from the jarl's hall."
+    },
+    {
+      "id": "thorvald",
+      "zone": 106,
+      "realm": 2,
+      "name": "Thorvald",
+      "model": 213,
+      "level": 34,
+      "pos": [
+        162,
+        1100,
+        42.3
+      ],
+      "during": [
+        "sidhe_maps/s5",
+        "sidhe_maps/s7"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "moonbound",
+      "title": "Moonbound",
+      "level": 28,
+      "giver": "hallgerd",
+      "offer": "My husband Bard was bitten by a werewolf at the new moon. When the moon's full, he'll change - and stay changed. He ran into the ravine so he wouldn't hurt me.\n\nSeithkona [Ulfrun] knows a cure. One cure. Will you [help Bard]? Nine days. We have nine days.",
+      "accept": "help Bard",
+      "topics": {
+        "Ulfrun": "The seithkona. She's just over there, by the fire. She's done this before."
+      },
+      "summary": "Hallgerd's husband was bitten by a werewolf and fled into the ravine. A cure exists, if it can be made before the full moon.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "ulfrun",
+          "goal": "Ask Seithkona Ulfrun about the cure",
+          "say": "Wolfsbane from the old grove the ra guard, west of here - that's the first part. And the blood of a werewolf warder, for the second. Mix them by moonlight and it's one dose. Only one. I'll not lie to you about that. Bring me the [wolfsbane] and the blood and I'll brew it.",
+          "keyword": "wolfsbane",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            735,
+            740,
+            87.9
+          ],
+          "radius": 25,
+          "goal": "Fight through the ra guarding the wolfsbane grove",
+          "mob": {
+            "template": 60165100,
+            "name": "ra of pine",
+            "level": [
+              28,
+              29
+            ]
+          },
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 106,
+          "at": [
+            640,
+            580,
+            126.9
+          ],
+          "goal": "Gather wolfsbane from the old grove",
+          "clue": {
+            "name": "a patch of wolfsbane",
+            "model": 1347
+          },
+          "text": "Purple hoods, nodding in the ash. You gather an armful.",
+          "give": {
+            "name": "a bundle of wolfsbane"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            1024,
+            936,
+            127.0
+          ],
+          "radius": 25,
+          "goal": "Take the blood of werewolf warders",
+          "mob": {
+            "template": 60167872,
+            "name": "werewolf warder",
+            "level": [
+              27,
+              28
+            ]
+          },
+          "count": 5,
+          "text": "You fill Ulfrun's flask. On the last warder's belt: a child's wooden doll.",
+          "id": "s4"
+        },
+        {
+          "type": "reach",
+          "zone": 106,
+          "at": [
+            630,
+            1225,
+            88.5
+          ],
+          "radius": 18,
+          "goal": "Find Bard at the were-hut in the south-west",
+          "text": "Bard is here. Half-changed: hair on his arms, teeth too long. And curled up beside him, asleep, a little girl with ears too pointed.",
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "bard",
+          "goal": "Talk to Bard",
+          "say": "Hallgerd sent you. I knew she would.\n\nThat's Ylfa. They bit her a year ago. She's been living with them. She's eight. She found me the first night and stayed. She thinks I'm her father now. The pack's [coming] for her.",
+          "keyword": "coming",
+          "id": "s6"
+        },
+        {
+          "type": "encounter",
+          "zone": 106,
+          "at": [
+            632,
+            1228,
+            88.6
+          ],
+          "wake_m": 30,
+          "goal": "Protect Bard and the girl",
+          "text": "The pack falls back into the ravine. Bard is bleeding, grinning, and still mostly himself.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Bard alive",
+              "center": [
+                632,
+                1228,
+                88.6
+              ],
+              "radius": 30,
+              "duration_s": 90,
+              "objective": "Keep Bard alive",
+              "announce": "Howls in the ravine. The pack knows you're here.",
+              "protect": {
+                "template": 60167872,
+                "name": "Bard",
+                "level": 28,
+                "model": 213
+              },
+              "waves": {
+                "every_s": 22,
+                "count": 2,
+                "from": [
+                  [
+                    644,
+                    1234,
+                    88.6
+                  ],
+                  [
+                    622,
+                    1218,
+                    88.4
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60167872,
+                    "name": "werewolf warder",
+                    "level": [
+                      27,
+                      28
+                    ]
+                  }
+                ]
+              },
+              "thanks": "I'm still me. For a few more days.",
+              "success": "They break off.",
+              "fail": "Bard falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Grimfang, Wolfaur Headsman",
+              "center": [
+                632,
+                1228,
+                88.6
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Grimfang",
+              "announce": "A huge wolfaur with an executioner's axe. 'The cub is the pack's. And so are you, bitten one.'",
+              "boss": {
+                "template": 60168002,
+                "name": "Grimfang, Wolfaur Headsman",
+                "level": 32,
+                "health_mult": 2.2
+              },
+              "success": "Grimfang, Wolfaur Headsman falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s7"
+        },
+        {
+          "type": "choice",
+          "npc": "bard",
+          "goal": "Decide who takes the cure",
+          "say": "One dose. Ulfrun was clear.\n\nI could [drink it], and go home to Hallgerd, and Ylfa goes back to the pack - or into the ravine alone. Or [Ylfa drinks it]. She's eight. She could go home - she has a mother in Skona, she told me. And I'd stay what I'm becoming.\n\nYou choose. I can't. Every time I try, I see her face.",
+          "options": [
+            {
+              "keyword": "drink it",
+              "say": "...Forgive me, little one. ...It's bitter. Gods, it's bitter. Take me home before I change my mind.",
+              "next": "s9"
+            },
+            {
+              "keyword": "Ylfa drinks it",
+              "say": "Yes. Here, little one. Drink. ...There. Take her home. Tell Hallgerd I love her. Tell her not to come looking at the full moon.",
+              "next": "s10"
+            }
+          ],
+          "id": "s8"
+        },
+        {
+          "type": "talk",
+          "npc": "hallgerd",
+          "goal": "Return to Hallgerd",
+          "say": "He's home. Cured. Ulfrun says it took.\n\nHe told me about the girl. He goes to the edge of the ravine at night and listens. He'll do that for the rest of his life, I think. But he's home.",
+          "ending": "bard",
+          "id": "s9"
+        },
+        {
+          "type": "talk",
+          "npc": "hallgerd",
+          "goal": "Return to Hallgerd",
+          "say": "You brought me a child, and not my husband.\n\nHer mother came from Skona village this morning and fell on her knees in the mud. I watched. I couldn't hate either of them. On the full moon I'll go to the ravine's edge. He told me not to. I'm going anyway.",
+          "ending": "child",
+          "id": "s10"
+        }
+      ],
+      "endings": {
+        "bard": {
+          "text": "Take this, with my thanks.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 80,
+            "marks": 14,
+            "items": [
+              "sq106_wolfsbane_sachet"
+            ],
+            "choice": [
+              "sq106_moonbound_ring",
+              "sq106_warder_s_fang_bracer"
+            ]
+          }
+        },
+        "child": {
+          "text": "Take this. The girl made it for you.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 80,
+            "marks": 14,
+            "items": [
+              "sq106_cub_s_blanket_cloak"
+            ],
+            "choice": [
+              "sq106_moonbound_ring",
+              "sq106_warder_s_fang_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sidhe_maps",
+      "title": "The Sidhe's Maps",
+      "level": 34,
+      "giver": "eyvor",
+      "offer": "There are sidhe in Skona. A camp of them in the far west - Hibernian druids, three days from the jarl's hall. I sent my best scout, Thorvald, to watch them. That was a month ago.\n\nHe's sent no word. Either they caught him or he's found something worth the silence. Will you [find Thorvald]?",
+      "accept": "find Thorvald",
+      "topics": {},
+      "summary": "A Midgard scout sent to watch a sidhe camp in western Skona has sent no word in a month.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 106,
+          "at": [
+            390,
+            960,
+            41.8
+          ],
+          "radius": 20,
+          "goal": "Head west through the timber-cat woods",
+          "text": "Big cats in the undergrowth. And on a tree, a ranger's mark, scratched fresh: Thorvald's sign.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            388,
+            945,
+            44.7
+          ],
+          "radius": 25,
+          "goal": "Get past the timber cats",
+          "mob": {
+            "template": 60167077,
+            "name": "timber cat",
+            "level": [
+              33,
+              34
+            ]
+          },
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 106,
+          "at": [
+            210,
+            1060,
+            41.4
+          ],
+          "goal": "Search Thorvald's last watch-post",
+          "clue": {
+            "name": "a scout's cloak, pinned with a Hibernian brooch",
+            "model": 1347
+          },
+          "text": "Thorvald's cloak, folded, with a sidhe brooch pinned to it - a gift, not a trophy. The post hasn't been used in weeks. He's gone in.",
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            140,
+            1023,
+            41.7
+          ],
+          "radius": 25,
+          "goal": "Fight through the sidhe camp's outer guard",
+          "mob": {
+            "template": 60166006,
+            "name": "sidhe gaoite",
+            "level": [
+              34,
+              35
+            ]
+          },
+          "count": 5,
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "thorvald",
+          "goal": "Find Thorvald in the sidhe camp",
+          "say": "Gods, keep your voice down - you're from Eyvor? ...Listen.\n\nI got in. I got close to one of their seers, Niamh. Close. She trusted me. She showed me their maps - every road from here to the jarl's hall, every ford, every weak wall. I have them. I was waiting for a chance to run. Then she - then I started to [care].",
+          "keyword": "care",
+          "id": "s5"
+        },
+        {
+          "type": "encounter",
+          "zone": 106,
+          "at": [
+            160,
+            1110,
+            42.7
+          ],
+          "wake_m": 30,
+          "goal": "Fight the sidhe druid who comes for Thorvald",
+          "text": "The druid falls. Behind the tents, a woman in green stands very still, looking at Thorvald.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Draoi Fionnbarr",
+              "center": [
+                160,
+                1110,
+                42.7
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Draoi Fionnbarr",
+              "announce": "A sidhe druid steps out of the trees, staff burning green. 'My sister trusted you, Northman. Give back what you stole.'",
+              "boss": {
+                "template": 60166005,
+                "name": "Draoi Fionnbarr",
+                "level": 37,
+                "health_mult": 2.5
+              },
+              "success": "Draoi Fionnbarr falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60166006,
+                    "name": "sidhe gaoite",
+                    "level": [
+                      34,
+                      35
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "thorvald",
+          "goal": "Decide what becomes of the sidhe maps",
+          "say": "That was her brother. And that's her, watching us.\n\nThe maps would save Midgard - with them the jarl knows every road Hibernia means to use. Eyvor will make me a hero. And Niamh will know what I was. [Take the maps].\n\nOr I [give them back]. To her. I go home with nothing, and Eyvor knows I failed, and Niamh knows I chose her. I can't. You do it.",
+          "options": [
+            {
+              "keyword": "take the maps",
+              "say": "...Then let's go. Don't look back at her. I'm not going to.",
+              "next": "s8"
+            },
+            {
+              "keyword": "give them back",
+              "say": "Then I'll walk them over to her myself. ... She took them. She didn't say anything. Let's go home.",
+              "next": "s9"
+            }
+          ],
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "eyvor",
+          "goal": "Return to Ranger Eyvor",
+          "say": "The sidhe maps. All of them. The jarl will give Thorvald a hall for this.\n\nHe hasn't said a word since he got back. He sits looking west. Here - from the jarl's purse.",
+          "ending": "taken",
+          "id": "s8"
+        },
+        {
+          "type": "talk",
+          "npc": "eyvor",
+          "goal": "Return to Ranger Eyvor",
+          "say": "He gave them back. He had the maps of half Hibernia's war in his hands and he gave them back to a sidhe witch.\n\nI should have him whipped. I won't. I've been in love too. Here - take something. Don't tell the jarl.",
+          "ending": "returned",
+          "id": "s9"
+        }
+      ],
+      "endings": {
+        "taken": {
+          "text": "From the jarl's purse.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq106_spymaster_s_ring"
+            ],
+            "choice": [
+              "sq106_scout_s_grey_cloak",
+              "sq106_sidhe_brooch"
+            ]
+          }
+        },
+        "returned": {
+          "text": "Don't tell the jarl.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq106_niamh_s_token"
+            ],
+            "choice": [
+              "sq106_scout_s_grey_cloak",
+              "sq106_sidhe_brooch"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

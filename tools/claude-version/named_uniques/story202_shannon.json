@@ -1,0 +1,148 @@
+{
+ "zone": 202,
+ "region": 200,
+ "realm": 3,
+ "prefix": "sq202",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "False-Light Lantern Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 10,
+   "bonuses": {
+    "Int": 3,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "A little glass ball with a sheerie's light trapped in it. It lies about where it is."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Morning Star Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 10,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Carved from the figurehead of a wrecked ship."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Driftwood Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 10,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 10,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Silver-grey wood that once walked the shore at night."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Widow's Shawl",
+   "base": [
+    41,
+    26
+   ],
+   "level": 10,
+   "bonuses": {
+    "Emp": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "Black wool. Maeve wore it for three years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Treaty-Stick Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 20,
+   "bonuses": {
+    "Int": 7,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "An ogham treaty-stick, mended with silver wire."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Eriu Fishing-Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 20,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 3,
+    "Hits": 17
+   },
+   "lore": "Bronze, twisted like rope, the way the eriu make everything."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Brehon's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Emp": 7,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "A judge's ring. Aodh gave you his spare."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Orla's Woven Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 3,
+    "Hits": 17
+   },
+   "lore": "Eriu weaving, taught to Orla in captivity. She's better at it than they are."
+  }
+ ]
+}

@@ -1,0 +1,465 @@
+{
+  "name": "Llyn Barfog",
+  "npcs": [
+    {
+      "id": "nest",
+      "zone": 7,
+      "realm": 1,
+      "name": "Nest ferch Rhys",
+      "model": 38,
+      "level": 18,
+      "pos": [
+        886,
+        798,
+        52.2
+      ],
+      "idle": "Have you heard them? At night? Don't listen if you do."
+    },
+    {
+      "id": "gwion",
+      "zone": 7,
+      "realm": 1,
+      "name": "Gwion the Harper",
+      "model": 9,
+      "level": 22,
+      "pos": [
+        878,
+        776,
+        52.2
+      ],
+      "idle": "Every song in this valley ends in the lake. I've tried to write one that doesn't."
+    },
+    {
+      "id": "iolo",
+      "zone": 7,
+      "realm": 1,
+      "name": "Iolo ap Rhys",
+      "model": 9,
+      "level": 20,
+      "pos": [
+        838,
+        1312,
+        131.4
+      ],
+      "during": [
+        "hounds/s5",
+        "hounds/s6"
+      ]
+    },
+    {
+      "id": "teilo",
+      "zone": 7,
+      "realm": 1,
+      "name": "Brother Teilo",
+      "model": 9,
+      "level": 24,
+      "pos": [
+        890,
+        796,
+        52.2
+      ],
+      "idle": "Every brother in my house is dead and still walking. I am the only one who stayed dead-tired instead."
+    },
+    {
+      "id": "elfodd",
+      "zone": 7,
+      "realm": 1,
+      "name": "Abbot Elfodd",
+      "model": 9,
+      "level": 30,
+      "pos": [
+        1324,
+        154,
+        135.0
+      ],
+      "during": [
+        "psalter/s4",
+        "psalter/s6"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "hounds",
+      "title": "The Hounds of Annwn",
+      "level": 21,
+      "giver": "nest",
+      "offer": "My husband Iolo heard the hounds of Annwn three nights ago. The white hounds with red ears. Whoever hears them dies within the year - everybody knows that.\n\nIolo isn't one to wait for it. He took his spear and went to hunt them, to break the doom. Gwion the [harper] knows the old stories. Will you [go after Iolo]?",
+      "accept": "go after Iolo",
+      "topics": {
+        "harper": "Gwion. He sits by the smithy, playing to anyone who'll stand still."
+      },
+      "summary": "Iolo heard the hounds of Annwn - a death omen - and went to hunt them rather than wait to die.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "gwion",
+          "goal": "Ask Gwion the harper about the hounds",
+          "say": "The Cwn Annwn hunt from the old stones south of here, on the slopes. Their master is a huntsman of the Otherworld. The story goes, if a living man blows the huntsman's horn, the hunt passes him by - but the doom must fall on someone. They always find someone. Iolo will go to the [stones].",
+          "keyword": "stones",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 7,
+          "at": [
+            915,
+            1185,
+            69.2
+          ],
+          "radius": 25,
+          "goal": "Hunt the hounds of Annwn on the slopes",
+          "mob": {
+            "template": 12999,
+            "name": "cwn annwn",
+            "level": [
+              19,
+              20
+            ]
+          },
+          "count": 5,
+          "text": "They don't bleed. They fade, like breath on cold glass. Further south, a horn calls.",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 7,
+          "at": [
+            868,
+            1342,
+            128.3
+          ],
+          "goal": "Search the old stones in the south",
+          "clue": {
+            "name": "a dropped hunting spear",
+            "model": 1347
+          },
+          "text": "Iolo's spear, the shaft bitten through. A trail of blood to the west - and the hunt's horn calling again, very close.",
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 7,
+          "at": [
+            840,
+            1320,
+            131.1
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the huntsman of Annwn",
+          "text": "The huntsman lowers his horn and looks at you a long while. Then he and his hounds are gone, and only the horn lies on the grass.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Gwyn's Huntsman",
+              "center": [
+                840,
+                1320,
+                131.1
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Gwyn's Huntsman",
+              "announce": "A tall grey figure rides out of nothing on a horse of mist, the white hounds at its heels. It lifts a horn.",
+              "boss": {
+                "template": 13001,
+                "name": "Gwyn's Huntsman",
+                "level": 24,
+                "health_mult": 2.4
+              },
+              "success": "Gwyn's Huntsman falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 12999,
+                    "name": "cwn annwn",
+                    "level": [
+                      19,
+                      20
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "iolo",
+          "goal": "Find Iolo",
+          "say": "You came for me? Nest sent you. Course she did.\n\nI heard it, you know. In the howling. My own name. They've marked me. I'm marked. Unless the [horn]...",
+          "keyword": "horn",
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "iolo",
+          "goal": "Decide what to do with the horn",
+          "say": "If I blow it, the hunt passes me by - and the doom falls on whoever's near. On you, maybe. I won't do that.\n\nIf YOU [blow it], it falls on you. Gods, don't. Or we [break it], and I take what's coming. A year. A year is something.",
+          "options": [
+            {
+              "keyword": "blow it",
+              "say": "No - you - ...\n\nListen. They're going. Far off. They're running the other way. They know your name now, friend. I'm sorry. I'm so sorry, and so grateful I can't stand up.",
+              "next": "s7"
+            },
+            {
+              "keyword": "break it",
+              "say": "Yes. Yes. A year with Nest. That's more than most men get. Come on, help me up.",
+              "next": "s8"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "nest",
+          "goal": "Bring Iolo home to Nest",
+          "say": "He's home, and he says the doom is gone - and he won't tell me where it went.\n\nI can guess. Thank you. I don't know what else to say. Take this. Be careful at night.",
+          "ending": "blown",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "nest",
+          "goal": "Bring Iolo home to Nest",
+          "say": "A year. He told me. He broke the horn and he chose a year with me, and he's smiling like a boy about it.\n\nI'll make it the best year of his life. Here. For bringing him home to have it.",
+          "ending": "broken",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "blown": {
+          "text": "Take this. Be careful at night.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq7_horn_of_the_hunt"
+            ],
+            "choice": [
+              "sq7_cwn_annwn_collar",
+              "sq7_harper_s_cord"
+            ]
+          }
+        },
+        "broken": {
+          "text": "For bringing him home.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq7_nest_s_shawl"
+            ],
+            "choice": [
+              "sq7_cwn_annwn_collar",
+              "sq7_harper_s_cord"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "psalter",
+      "title": "The Last Psalm",
+      "level": 28,
+      "giver": "teilo",
+      "offer": "I'm the last brother of the abbey in the north - the last living one. Thirty years ago our abbot made a pact with the ghosts of an old legion: they would guard our house from raiders. They did. They guarded it from everything.\n\nThis winter my brothers died one by one, and rose again, and went back to their prayers. I ran. I am not proud of it. Will you [go to the abbey]? The abbot's psalter holds the pact. Perhaps it holds a way out.",
+      "accept": "go to the abbey",
+      "topics": {},
+      "summary": "Brother Teilo's abbey made a pact with the ghosts of a Roman legion, and now his dead brothers walk.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 7,
+          "at": [
+            1260,
+            236,
+            144.4
+          ],
+          "radius": 20,
+          "goal": "Climb the road to the abbey in the north",
+          "text": "The abbey bell is ringing for vespers. Hooded monks walk the cloister in pairs. None of them cast a shadow.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 7,
+          "at": [
+            1312,
+            177,
+            135.0
+          ],
+          "radius": 25,
+          "goal": "Free the dead brothers of the abbey",
+          "mob": {
+            "template": 13034,
+            "name": "undead monk",
+            "level": [
+              26,
+              27
+            ]
+          },
+          "count": 6,
+          "text": "Each one says 'thank you' as it falls.",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 7,
+          "at": [
+            1332,
+            162,
+            135.0
+          ],
+          "goal": "Find the abbot's psalter",
+          "clue": {
+            "name": "a chained psalter on a lectern",
+            "model": 1347
+          },
+          "text": "The pact is written in the margin of the psalm for the dead: 'Guard this house until the last brother leaves it.' And Teilo left.",
+          "give": {
+            "name": "the abbot's psalter"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "elfodd",
+          "goal": "Speak with the ghost of Abbot Elfodd",
+          "say": "You have the psalter. Good. I made the pact. I meant it for our protection. The legion took it to the letter, as soldiers do - the last brother left, so the house is theirs, and so are we.\n\nTheir veteran, Decimus, holds the pact. Break him, and I can [read the last psalm].",
+          "keyword": "read the last psalm",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 7,
+          "at": [
+            1318,
+            172,
+            135.0
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Decimus, keeper of the pact",
+          "text": "The old soldier salutes you as he fades. 'Relieved. At last.'",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Evocatus Decimus",
+              "center": [
+                1318,
+                172,
+                135.0
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Evocatus Decimus",
+              "announce": "An old soldier in a red cloak plants himself in the cloister. 'This house is under guard. Stand down.'",
+              "boss": {
+                "template": 13010,
+                "name": "Evocatus Decimus",
+                "level": 30,
+                "health_mult": 2.5
+              },
+              "success": "Evocatus Decimus falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 13034,
+                    "name": "undead monk",
+                    "level": [
+                      26,
+                      27
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "elfodd",
+          "goal": "Choose with the abbot",
+          "say": "Now I can read it - the last psalm, and every brother here goes to his rest, myself among them. The abbey will stand empty, and the raiders will come, and the valley will have no one to shelter it.\n\nOr we [keep watch], the dead brothers and I, without the legion - and the valley keeps its shelter. Teilo would have to live with that. Tell me: do I [read the psalm]?",
+          "options": [
+            {
+              "keyword": "read the psalm",
+              "say": "Then listen. ... It's been a long time since I could hear myself sing.",
+              "next": "s7"
+            },
+            {
+              "keyword": "keep watch",
+              "say": "Then we watch. Tell Teilo we are not angry. Tell him to visit, if he can bear it.",
+              "next": "s8"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "teilo",
+          "goal": "Return to Brother Teilo",
+          "say": "I heard them. All the way down here. Singing - all of them, the old psalm. And then the bell stopped.\n\nI'll go back in the spring and sweep the chapel. Somebody should.",
+          "ending": "rest",
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "teilo",
+          "goal": "Return to Brother Teilo",
+          "say": "They're keeping watch. Still. Without the legion.\n\nI'll visit. I'll bring bread they can't eat and news they can't use. I suppose that's what brothers are for.",
+          "ending": "watch",
+          "id": "s8"
+        }
+      ],
+      "endings": {
+        "rest": {
+          "text": "Take this, from the abbey.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq7_abbot_s_psalter_charm"
+            ],
+            "choice": [
+              "sq7_evocatus_ring",
+              "sq7_copyist_s_bracer"
+            ]
+          }
+        },
+        "watch": {
+          "text": "Take this, from the abbey.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 95,
+            "copper_per_level": 74,
+            "marks": 12,
+            "items": [
+              "sq7_abbot_s_psalter_charm"
+            ],
+            "choice": [
+              "sq7_vigil_cloak",
+              "sq7_evocatus_ring"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

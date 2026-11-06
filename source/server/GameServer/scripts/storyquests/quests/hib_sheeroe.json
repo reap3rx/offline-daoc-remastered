@@ -1,0 +1,438 @@
+{
+  "name": "Sheeroe Hills",
+  "npcs": [
+    {
+      "id": "bebhinn",
+      "zone": 216,
+      "realm": 3,
+      "name": "Healer Bebhinn",
+      "model": 365,
+      "level": 40,
+      "pos": [
+        300,
+        800,
+        168.9
+      ],
+      "guild": "Healers' Camp",
+      "idle": "Elfshot. Every one of them. The glimmer folk's arrows don't kill - they do worse."
+    },
+    {
+      "id": "lochlann",
+      "zone": 216,
+      "realm": 3,
+      "name": "Lochlann",
+      "model": 337,
+      "level": 38,
+      "pos": [
+        304,
+        806,
+        168.6
+      ],
+      "guild": "Healers' Camp",
+      "idle": "(He stares at nothing and hums the same four notes, over and over.)"
+    },
+    {
+      "id": "elder_cnoc",
+      "zone": 216,
+      "realm": 3,
+      "name": "Elder Cnoc",
+      "model": 603,
+      "level": 52,
+      "pos": [
+        600,
+        150,
+        123.6
+      ],
+      "guild": "Lurikeen Exiles",
+      "idle": "The Azure took our village. They say they're cleansing it. Of us.",
+      "size": 35
+    },
+    {
+      "id": "cnoc_village",
+      "zone": 216,
+      "realm": 3,
+      "name": "Elder Cnoc",
+      "model": 603,
+      "level": 52,
+      "pos": [
+        692,
+        96,
+        120.0
+      ],
+      "during": [
+        "azure_village/s6"
+      ],
+      "size": 35
+    }
+  ],
+  "quests": [
+    {
+      "id": "elfshot",
+      "title": "Elfshot",
+      "level": 42,
+      "giver": "bebhinn",
+      "offer": "My husband Lochlann was elfshot - struck by a glimmer folk arrow. It doesn't kill. It takes the mind and leaves the man. He hums. That's all.\n\nThe arrows are glimmer-glass. If I had the arrowhead that struck him - the archer's own - I could draw the madness out. Will you [find the archer]? The madmen of the hills all took his arrows.",
+      "accept": "find the archer",
+      "topics": {},
+      "summary": "Healer Bebhinn's husband was elfshot by a glimmer archer. With the archer's own arrowhead, she could cure him.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            375,
+            711,
+            144.9
+          ],
+          "radius": 25,
+          "goal": "Put the elfshot madmen to rest",
+          "mob": {
+            "template": 44002,
+            "name": "elfshot madman",
+            "level": [
+              37,
+              38
+            ]
+          },
+          "count": 5,
+          "text": "Each one has a glimmer-glass splinter in him. Each splinter points the same way - west.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 216,
+          "at": [
+            365,
+            720,
+            174.8
+          ],
+          "goal": "Search the madmen's camp",
+          "clue": {
+            "name": "a glimmer-glass arrowhead",
+            "model": 1347
+          },
+          "text": "A spent arrowhead, glowing faintly. It tugs westward like a lodestone, toward the glimmerlings' hills.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            171,
+            788,
+            89.0
+          ],
+          "radius": 25,
+          "goal": "Hunt down the glimmerlings",
+          "mob": {
+            "template": 44024,
+            "name": "glimmerling",
+            "level": [
+              38,
+              39
+            ]
+          },
+          "count": 5,
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 216,
+          "at": [
+            190,
+            780,
+            90.0
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the glimmer archer",
+          "text": "The archer shatters like a dropped lamp. Among the shards, an arrowhead brighter than the rest.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Glimmer Archer Saoth",
+              "center": [
+                190,
+                780,
+                90.0
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Glimmer Archer",
+              "announce": "A tall figure of glimmering glass draws a bow of light. 'More madmen for the King's hills.'",
+              "boss": {
+                "template": 44038,
+                "name": "Glimmer Archer Saoth",
+                "level": 45,
+                "health_mult": 2.6
+              },
+              "success": "Glimmer Archer Saoth falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 44024,
+                    "name": "glimmerling",
+                    "level": [
+                      38,
+                      39
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "choice",
+          "npc": "bebhinn",
+          "goal": "Bring the archer's arrowhead to Bebhinn",
+          "say": "That's it. The archer's own. I can feel it pulling.\n\nI can [break the arrow] in a healing rite, and draw the madness out of Lochlann. The arrowhead will be gone.\n\nOr - the Fianna came by this morning. They say an archer's arrowhead points to the Glimmer King's hosts wherever they march. It could save hundreds. They'd want me to [keep it] for them. And Lochlann would hum forever.",
+          "options": [
+            {
+              "keyword": "break the arrow",
+              "say": "Then I'll do it now. ...Lochlann? Lochlann. Look at me. ...He's looking at me.",
+              "ending": "healed"
+            },
+            {
+              "keyword": "keep it",
+              "say": "...The Fianna will have it by morning. I'll sing his four notes with him. He likes it when I do.",
+              "ending": "kept"
+            }
+          ],
+          "id": "s5"
+        }
+      ],
+      "endings": {
+        "healed": {
+          "text": "Take this. Lochlann wants you to have it - he says so. He SAYS so.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq216_elfshot_ward"
+            ],
+            "choice": [
+              "sq216_madman_s_bracer",
+              "sq216_glimmerling_cloak"
+            ]
+          }
+        },
+        "kept": {
+          "text": "Take this.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq216_glimmer_arrow_pendant"
+            ],
+            "choice": [
+              "sq216_madman_s_bracer",
+              "sq216_glimmerling_cloak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "azure_village",
+      "title": "The Cleansed Village",
+      "level": 52,
+      "giver": "elder_cnoc",
+      "offer": "This is GROUP work. The Azure Order are many, and they don't fear death.\n\nThey took our village in the northern hills. 'Cleansing', they call it. Of fae blood. Of us. We fled with what we could carry. Some didn't flee fast enough.\n\nWill you [take back the village]? Some of ours may still be alive inside.",
+      "accept": "take back the village",
+      "topics": {},
+      "summary": "GROUP. The Azure Order took a lurikeen village in the northern hills to 'cleanse' it.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 216,
+          "at": [
+            690,
+            210,
+            120.0
+          ],
+          "radius": 20,
+          "goal": "Go to the lurikeen village in the north",
+          "text": "Lurikeen huts, painted over with blue sigils. Azure cleansers walk between them with censers, chanting.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            700,
+            220,
+            119.8
+          ],
+          "radius": 25,
+          "goal": "Drive out the azure cleansers",
+          "mob": {
+            "template": 44008,
+            "name": "azure cleanser",
+            "level": [
+              47,
+              48
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 216,
+          "at": [
+            690,
+            100,
+            120.0
+          ],
+          "goal": "Search the elder's hut",
+          "clue": {
+            "name": "an Azure ledger",
+            "model": 1347
+          },
+          "text": "A ledger of names: lurikeen, and beside each, 'cleansed' - or 'held'. Seven names say 'held'. The pale horses carry them east, to the inquisitor's camp.",
+          "give": {
+            "name": "the Azure ledger"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            1000,
+            375,
+            116.9
+          ],
+          "radius": 25,
+          "goal": "Kill the pale horses that carry the prisoners east",
+          "mob": {
+            "template": 44001,
+            "name": "pale horse",
+            "level": [
+              50,
+              51
+            ]
+          },
+          "count": 4,
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 216,
+          "at": [
+            700,
+            215,
+            119.9
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the Azure inquisitor",
+          "text": "The inquisitor falls. From a locked hut, seven small voices start calling all at once.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Inquisitor Ceallach of the Azure",
+              "center": [
+                700,
+                215,
+                119.9
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Inquisitor",
+              "announce": "An Azure banisher in a mask of blue glass. 'The fae taint must be cleansed. All of it. Including whoever shelters it.'",
+              "boss": {
+                "template": 44007,
+                "name": "Inquisitor Ceallach of the Azure",
+                "level": 56,
+                "health_mult": 3.0
+              },
+              "success": "Inquisitor Ceallach of the Azure falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 44008,
+                    "name": "azure cleanser",
+                    "level": [
+                      47,
+                      48
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "cnoc_village",
+          "goal": "Speak with Elder Cnoc in the village",
+          "say": "Seven. Seven of ours alive. And the village is ours again.\n\nBut the Azure will come back. They always come back. We could [rebuild] here - make walls, and fight. Or we could [go west], to the Valley of Bri Leith, and start again where the Azure don't go. The village will be empty. My grandfather built that hut.",
+          "options": [
+            {
+              "keyword": "rebuild",
+              "say": "Then we rebuild. Walls first. And this time, a watch-tower. Thank you. The lurikeen of Sheeroe will not forget.",
+              "ending": "rebuild"
+            },
+            {
+              "keyword": "go west",
+              "say": "West, then. We'll take what we can carry. Again. ...But together, this time. All of us.",
+              "ending": "west"
+            }
+          ],
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "rebuild": {
+          "text": "From the village.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq216_lurikeen_hearth_charm"
+            ],
+            "choice": [
+              "sq216_cleanser_s_torc",
+              "sq216_pale_horse_bracer",
+              "sq216_inquisitor_s_ring"
+            ]
+          }
+        },
+        "west": {
+          "text": "Take this. I won't need it in the west.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq216_exile_s_cloak"
+            ],
+            "choice": [
+              "sq216_cleanser_s_torc",
+              "sq216_pale_horse_bracer",
+              "sq216_inquisitor_s_ring"
+            ]
+          }
+        }
+      },
+      "group": true
+    }
+  ]
+}

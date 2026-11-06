@@ -1,0 +1,537 @@
+{
+  "name": "Muspelheim",
+  "npcs": [
+    {
+      "id": "dagny",
+      "zone": 104,
+      "realm": 2,
+      "name": "Dagny Dagnarsdottir",
+      "model": 168,
+      "level": 25,
+      "pos": [
+        1282,
+        130,
+        162.5
+      ],
+      "guild": "Explorer",
+      "idle": "My father mapped half of Muspelheim. I mean to map the other half."
+    },
+    {
+      "id": "hrafnhild",
+      "zone": 104,
+      "realm": 2,
+      "name": "Hrafnhild of the Dverge",
+      "model": 213,
+      "level": 28,
+      "pos": [
+        585,
+        1282,
+        61.4
+      ],
+      "idle": "Cold-folk. You smell of snow.",
+      "size": 40
+    },
+    {
+      "id": "dagnar",
+      "zone": 104,
+      "realm": 2,
+      "name": "Dagnar the Mapmaker",
+      "model": 157,
+      "level": 30,
+      "pos": [
+        598,
+        1294,
+        62.9
+      ],
+      "during": [
+        "dagnar/s7",
+        "dagnar/s8"
+      ]
+    },
+    {
+      "id": "sven_ashbeard",
+      "zone": 104,
+      "realm": 2,
+      "name": "Sven Ashbeard",
+      "model": 213,
+      "level": 32,
+      "pos": [
+        1294,
+        136,
+        155.1
+      ],
+      "guild": "Huscarl",
+      "idle": "Fire giants took my shield-mates. All of them but one."
+    },
+    {
+      "id": "ragnvald",
+      "zone": 104,
+      "realm": 2,
+      "name": "Ragnvald the Skald",
+      "model": 213,
+      "level": 28,
+      "pos": [
+        1256,
+        1148,
+        129.1
+      ],
+      "during": [
+        "ragnvald/s6"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "dagnar",
+      "title": "The Mapmaker's Chest",
+      "level": 25,
+      "giver": "dagny",
+      "offer": "My father Dagnar went into Muspelheim three years ago to map it. He never came out. Last month a huscarl told me he'd seen Dagnar's chest by a giants' bridge in the west - battered, lying open.\n\nI want to know what happened. Will you [find the chest]? I'll go mad sitting here another month.",
+      "accept": "find the chest",
+      "topics": {},
+      "summary": "Dagny's father went into Muspelheim to map it and never returned. His battered chest has been seen in the west.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 104,
+          "at": [
+            810,
+            750,
+            85.4
+          ],
+          "radius": 20,
+          "goal": "Go to the giants' bridge in the west",
+          "text": "Charred skeletons patrol the bridge, back and forth, as if guarding something long gone.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            834,
+            666,
+            146.3
+          ],
+          "radius": 25,
+          "goal": "Destroy the charred skeletal warriors",
+          "mob": {
+            "template": 60159105,
+            "name": "charred skeletal warrior",
+            "level": [
+              23,
+              24
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 104,
+          "at": [
+            452,
+            812,
+            87.9
+          ],
+          "goal": "Search for Dagnar's battered chest",
+          "clue": {
+            "name": "a battered chest",
+            "model": 1347
+          },
+          "text": "Dagnar's chest, burned and scratched, the maps gone. His journal is wedged in the lid. The last entry: 'Going south to the fire-dwarves' mines to trade. The forgemaster wants my maps. I will not give them.'",
+          "give": {
+            "name": "Dagnar's journal"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "reach",
+          "zone": 104,
+          "at": [
+            600,
+            1270,
+            42.8
+          ],
+          "radius": 20,
+          "goal": "Go south to the fire-dwarves' mines",
+          "text": "Furnaces roar. Fire-dwarves - dverge - work the forges and watch you sidelong.",
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "hrafnhild",
+          "goal": "Speak with Hrafnhild of the dverge",
+          "say": "The cold-man with the maps? He's alive. Forgemaster Ulvrik keeps him in the furnace-hall, half-blind from the glow, drawing maps for him. Ulvrik means to sell them to the fire giants. The rest of us don't like it. We'll look away while you [deal with him].",
+          "keyword": "deal with him",
+          "id": "s5"
+        },
+        {
+          "type": "encounter",
+          "zone": 104,
+          "at": [
+            600,
+            1300,
+            64.6
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Forgemaster Ulvrik",
+          "text": "The forgemaster's hammer falls from his hand. In the back of the hall, an old man looks up from a desk of maps.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Forgemaster Ulvrik",
+              "center": [
+                600,
+                1300,
+                64.6
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Forgemaster Ulvrik",
+              "announce": "A dverge in a leather apron glowing with heat shoulders out of the furnace-hall. 'The cold-man's mine. His maps are mine.'",
+              "boss": {
+                "template": 60160247,
+                "name": "Forgemaster Ulvrik",
+                "level": 28,
+                "health_mult": 2.4
+              },
+              "success": "Forgemaster Ulvrik falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60160247,
+                    "name": "dverge sparker",
+                    "level": [
+                      23,
+                      24
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "dagnar",
+          "goal": "Talk to Dagnar",
+          "say": "Dagny? Dagny sent you? My Dagny? She was fourteen when I left.\n\nI can't see well any more. But I finished them. Every road in Muspelheim, every pass to the giants' halls. The [maps].",
+          "keyword": "maps",
+          "id": "s7"
+        },
+        {
+          "type": "choice",
+          "npc": "dagnar",
+          "goal": "Decide what becomes of the maps",
+          "say": "These would let the jarls march an army into Muspelheim - right to the fire giants' doors. War, on their ground for once. Glory, and a great deal of death.\n\nOr fire takes what it's given. [Burn them], and nobody follows my roads. Or [give them to the jarls]. I spent three years and my eyes on them. I can't choose.",
+          "options": [
+            {
+              "keyword": "give them to the jarls",
+              "say": "Then take them. Tell the jarls Dagnar the Mapmaker sends his compliments. And his bill.",
+              "next": "s9"
+            },
+            {
+              "keyword": "burn them",
+              "say": "...In the furnace, then. Fire takes what it's given. ...There. Three years. It burns very prettily.",
+              "next": "s10"
+            }
+          ],
+          "id": "s8"
+        },
+        {
+          "type": "talk",
+          "npc": "dagny",
+          "goal": "Return to Dagny",
+          "say": "He's alive. He's ALIVE. He's asleep in my tent and he's grey and blind and ALIVE.\n\nThe jarls' men are already copying the maps. There'll be war in the fire-lands by summer. He says he doesn't mind. I don't believe him.",
+          "ending": "jarls",
+          "id": "s9"
+        },
+        {
+          "type": "talk",
+          "npc": "dagny",
+          "goal": "Return to Dagny",
+          "say": "He burned them. Three years. He says it was the best thing he ever drew.\n\nHe wants to teach me mapmaking. With his hands on mine, since he can't see. We'll start with Muspelheim, he says. Just the parts no one should follow.",
+          "ending": "burned",
+          "id": "s10"
+        }
+      ],
+      "endings": {
+        "jarls": {
+          "text": "Take something. You gave me my father.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 80,
+            "marks": 14,
+            "items": [
+              "sq104_dagnar_s_journal_clasp"
+            ],
+            "choice": [
+              "sq104_forgemaster_s_bracer",
+              "sq104_lodestone_ring"
+            ]
+          }
+        },
+        "burned": {
+          "text": "Take something. You gave me my father.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 80,
+            "marks": 14,
+            "items": [
+              "sq104_dagnar_s_journal_clasp"
+            ],
+            "choice": [
+              "sq104_battered_chest_belt",
+              "sq104_lodestone_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ragnvald",
+      "title": "The Lay of Ragnvald",
+      "level": 32,
+      "giver": "sven_ashbeard",
+      "offer": "This is GROUP work, friend. Bring axes.\n\nThe fire giants took my patrol. Eight huscarls. I was the only one who got out. The skald who marched with us, Ragnvald, was taken alive - they keep skalds, to sing for their thanes.\n\nHe's the only one who knows how my shield-mates died. I need him alive. I need the [song]. Will you [get him back]?",
+      "accept": "get him back",
+      "topics": {
+        "song": "What he saw. How they died. I was knocked down in the first rush and woke up alone."
+      },
+      "summary": "GROUP. Fire giants captured a huscarl patrol's skald. Sven Ashbeard, the only survivor, needs him alive.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 104,
+          "at": [
+            1320,
+            560,
+            83.8
+          ],
+          "radius": 20,
+          "goal": "Go to the fire giants' lookout posts in the east",
+          "text": "Giants on the ridges, watching the plain. They haven't seen you. Yet.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            1324,
+            567,
+            91.3
+          ],
+          "radius": 25,
+          "goal": "Kill the fire giant lookouts",
+          "mob": {
+            "template": 60160878,
+            "name": "fire giant lookout",
+            "level": [
+              28,
+              29
+            ]
+          },
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 104,
+          "at": [
+            1340,
+            588,
+            134.1
+          ],
+          "goal": "Search the lookout post",
+          "clue": {
+            "name": "a skald's harp, strings snapped",
+            "model": 1347
+          },
+          "text": "Ragnvald's harp. Scratched into the frame in his hand: 'Taken south to the thane's camp. Still singing.' Under it, much smaller: 'Tell Sven I'm sorry.'",
+          "give": {
+            "name": "Ragnvald's harp"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            1221,
+            1012,
+            110.5
+          ],
+          "radius": 25,
+          "goal": "Cut through the flaming raukomaz on the road south",
+          "mob": {
+            "template": 60160903,
+            "name": "flaming raukomaz",
+            "level": [
+              29,
+              30
+            ]
+          },
+          "count": 5,
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 104,
+          "at": [
+            1256,
+            1148,
+            129.1
+          ],
+          "wake_m": 30,
+          "goal": "Free Ragnvald from the fire giants' camp",
+          "text": "The giants fall back to their fires. Ragnvald sits in the ash and doesn't look at you.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Ragnvald alive",
+              "center": [
+                1256,
+                1148,
+                129.1
+              ],
+              "radius": 30,
+              "duration_s": 100,
+              "objective": "Keep Ragnvald alive",
+              "announce": "Ragnvald is chained to a stake, singing hoarsely to a ring of giants. They turn as you come in.",
+              "protect": {
+                "template": 60160879,
+                "name": "Ragnvald the Skald",
+                "level": 28,
+                "model": 213
+              },
+              "waves": {
+                "every_s": 22,
+                "count": 2,
+                "from": [
+                  [
+                    1268,
+                    1154,
+                    128.2
+                  ],
+                  [
+                    1246,
+                    1138,
+                    127.6
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60160879,
+                    "name": "fire giant scout",
+                    "level": [
+                      29,
+                      30
+                    ]
+                  }
+                ]
+              },
+              "thanks": "Sven's alive? Sven? Gods. Then he'll want to know.",
+              "success": "They break off.",
+              "fail": "Ragnvald the Skald falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Thane Surtling",
+              "center": [
+                1256,
+                1148,
+                129.1
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Thane Surtling",
+              "announce": "A fire giant in iron and flame. 'The skald sings for ME. Find your own.'",
+              "boss": {
+                "template": 60160881,
+                "name": "Thane Surtling",
+                "level": 34,
+                "health_mult": 2.8
+              },
+              "success": "Thane Surtling falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "ragnvald",
+          "goal": "Talk to Ragnvald",
+          "say": "I've written the lay, you know. 'The Last Stand of Ashbeard's Eight.' Eight huscarls holding the pass against the giants, to the last man. It's the best thing I've ever made.\n\nIt isn't true. I led them into the ambush. To save myself - I bargained. I bargained with the [giants].",
+          "keyword": "giants",
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "sven_ashbeard",
+          "goal": "Bring Ragnvald to Sven Ashbeard",
+          "say": "Ragnvald. Alive. And he's told you something - I can see it on your face.\n\nHe sold us. Didn't he. ...Then you choose, because I can't. [The truth], and he's outlawed and my men died for nothing. Or [let the song stand], and the lay goes round every hall in Midgard, and my shield-mates are heroes forever. And he walks free.",
+          "options": [
+            {
+              "keyword": "the truth",
+              "say": "The truth. Aye. My men deserve the truth, even if the truth is a coward. ...Get out of my sight, skald. Run. The jarls will hear it before nightfall.",
+              "ending": "truth"
+            },
+            {
+              "keyword": "let the song stand",
+              "say": "Heroes forever. Let him sing it, then. Let him sing it every night, and know. That's punishment enough. It'll have to be.",
+              "ending": "song"
+            }
+          ],
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "truth": {
+          "text": "Take something from the giants' hoard. You earned it more than I did.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq104_ashbeard_ring"
+            ],
+            "choice": [
+              "sq104_fire_giant_thane_belt",
+              "sq104_cinder_silk_cloak"
+            ]
+          }
+        },
+        "song": {
+          "text": "Take something from the giants' hoard.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq104_ragnvald_s_lay_harp_charm"
+            ],
+            "choice": [
+              "sq104_fire_giant_thane_belt",
+              "sq104_cinder_silk_cloak"
+            ]
+          }
+        }
+      },
+      "group": true
+    }
+  ]
+}

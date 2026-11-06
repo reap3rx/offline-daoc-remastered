@@ -1,0 +1,469 @@
+{
+  "name": "Vale of Mularn",
+  "npcs": [
+    {
+      "id": "sigrun",
+      "zone": 100,
+      "realm": 2,
+      "name": "Sigrun Tovesdottir",
+      "model": 168,
+      "level": 6,
+      "pos": [
+        1250,
+        1301,
+        117.0
+      ],
+      "idle": "Hallvard. You haven't seen a big, slow, kind man called Hallvard? No. Of course not."
+    },
+    {
+      "id": "grima",
+      "zone": 100,
+      "realm": 2,
+      "name": "Old Grima",
+      "model": 157,
+      "level": 20,
+      "pos": [
+        1240,
+        1243,
+        117.2
+      ],
+      "idle": "The hidden folk are older than the jarls. Older than the gods, some say. Only fools say it loudly."
+    },
+    {
+      "id": "hallvard",
+      "zone": 100,
+      "realm": 2,
+      "name": "Hallvard",
+      "model": 213,
+      "level": 7,
+      "pos": [
+        262,
+        878,
+        119.0
+      ],
+      "during": [
+        "huldra/s5",
+        "huldra/s6"
+      ]
+    },
+    {
+      "id": "bjarki",
+      "zone": 100,
+      "realm": 2,
+      "name": "Bjarki Houndmaster",
+      "model": 213,
+      "level": 14,
+      "pos": [
+        1158,
+        184,
+        132.6
+      ],
+      "idle": "A good hound is worth three huscarls. Don't tell the huscarls."
+    },
+    {
+      "id": "bjarki_spring",
+      "zone": 100,
+      "realm": 2,
+      "name": "Bjarki Houndmaster",
+      "model": 213,
+      "level": 14,
+      "pos": [
+        704,
+        606,
+        160.7
+      ],
+      "during": [
+        "gormr/s5"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "huldra",
+      "title": "The Huldra's Bargain",
+      "level": 6,
+      "giver": "sigrun",
+      "offer": "Hallvard and I are to be wed at midsummer. Or we were. He went into the western woods to cut timber for our house, and came back once, a week ago - singing, smelling of pine and cream - and went straight back out again.\n\nOld [Grima] says it's a huldra. One of the hidden folk. Will you [find Hallvard]? Before midsummer, if you can.",
+      "accept": "find Hallvard",
+      "topics": {
+        "Grima": "Old Grima, by the well. She knows every story worth knowing."
+      },
+      "summary": "Sigrun's betrothed went into the western woods to cut timber and came back singing - then went back to the hidden folk.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "grima",
+          "goal": "Ask Old Grima about the hidden folk",
+          "say": "A huldra. Fair as morning from the front, and a cow's [tail] behind - that's how you know. She'll have a camp in the west, with her kin. If a huldra weds a man under the gods, she loses the tail and becomes a woman. They want that very much. Some of them want it more than they want the man.",
+          "keyword": "tail",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 100,
+          "at": [
+            450,
+            930,
+            119.7
+          ],
+          "radius": 20,
+          "goal": "Go into the western woods",
+          "text": "Somewhere ahead, someone is singing - a man, badly, and a woman, beautifully.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            330,
+            862,
+            120.9
+          ],
+          "radius": 25,
+          "goal": "Get past the huldu stalkers",
+          "mob": {
+            "template": 60162266,
+            "name": "huldu stalker",
+            "level": [
+              5,
+              6
+            ]
+          },
+          "count": 5,
+          "text": "The hidden folk fade back into the trees, watching. They don't seem to want to fight. They seem to want you to leave.",
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 100,
+          "at": [
+            270,
+            870,
+            117.1
+          ],
+          "goal": "Search the huldu camp",
+          "clue": {
+            "name": "a woodsman's axe, left in a stump",
+            "model": 1347
+          },
+          "text": "Hallvard's axe, its edge rusting. He hasn't cut a tree in a week. Beyond the tents, in the firelight, a big man sits with a beautiful woman's head on his shoulder.",
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "hallvard",
+          "goal": "Talk to Hallvard",
+          "say": "Sigrun sent you? Oh. Oh, Sigrun.\n\nThis is Ylva. Look at her. She says she'll lose her tail if we wed at the temple, and be a woman, and grow old with me. She cried when she said it. Nobody's ever cried over me. I don't know what to [do].",
+          "keyword": "do",
+          "id": "s5"
+        },
+        {
+          "type": "choice",
+          "npc": "hallvard",
+          "goal": "Help Hallvard decide",
+          "say": "I promised Sigrun. I did. But I didn't know there was this. Tell me.\n\nShould I [wed Ylva]? Or should you [break the glamour] and drag me home by the beard? Ylva's father won't let me go easy, if you do.",
+          "options": [
+            {
+              "keyword": "wed Ylva",
+              "say": "...Yes. Yes. Tell Sigrun I'm sorry. Tell her she'll find someone who deserves her. I mean that.",
+              "next": "s9"
+            },
+            {
+              "keyword": "break the glamour",
+              "say": "Then do it quick, before I change my mind - her father's coming. Gods, look at the size of him.",
+              "next": "s7"
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "encounter",
+          "zone": 100,
+          "at": [
+            262,
+            880,
+            119.1
+          ],
+          "wake_m": 30,
+          "goal": "Break the huldra's glamour",
+          "text": "The old hill-man falls. Ylva is gone - only a scent of pine. Hallvard blinks like a man waking up.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Old Grumme of the Hidden Folk",
+              "center": [
+                262,
+                880,
+                119.1
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Old Grumme",
+              "announce": "An old huldu man rises from the fire, horns and all. 'He's promised to my girl. You'll not take him.'",
+              "boss": {
+                "template": 60165095,
+                "name": "Old Grumme of the Hidden Folk",
+                "level": 8,
+                "health_mult": 2.0
+              },
+              "success": "Old Grumme of the Hidden Folk falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60162266,
+                    "name": "huldu stalker",
+                    "level": [
+                      5,
+                      6
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "sigrun",
+          "goal": "Bring Hallvard home",
+          "say": "He's home. He looks like a man who woke up from a lovely dream into a cold morning, and he says sorry every hour.\n\nI'll take him. Sorry and all. Midsummer's still a month off.",
+          "ending": "home",
+          "id": "s8"
+        },
+        {
+          "type": "talk",
+          "npc": "sigrun",
+          "goal": "Tell Sigrun",
+          "say": "He's marrying her. A huldra. At the temple, so she can be a woman.\n\nThen I hope she's a better one than me, because I'm going to hate her for the rest of my life. ...No. That's not fair. Take this. It was meant for the wedding.",
+          "ending": "wed",
+          "id": "s9"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "Take this - for bringing him home.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq100_hallvard_s_axe_ring"
+            ],
+            "choice": [
+              "sq100_birch_bark_sash",
+              "sq100_grima_s_hearth_cloak"
+            ]
+          }
+        },
+        "wed": {
+          "text": "It was meant for the wedding.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq100_huldra_hair_bracelet"
+            ],
+            "choice": [
+              "sq100_hallvard_s_axe_ring",
+              "sq100_grima_s_hearth_cloak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "gormr",
+      "title": "The Houndmaster's Law",
+      "level": 12,
+      "giver": "bjarki",
+      "offer": "My hounds went mad in a night. Foaming, howling, gone west into the moor. Gormr led them - my son's dog. My son's dead two winters, and Gormr's all of him I've got.\n\nGormr bit a child before he ran. The jarl's law says a dog that bites a child is killed. I know the law. Will you [find my hounds] and find out what did this? I'll deal with the law after.",
+      "accept": "find my hounds",
+      "topics": {},
+      "summary": "Bjarki Houndmaster's hounds went mad and ran west, led by his dead son's dog.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 100,
+          "at": [
+            760,
+            640,
+            161.3
+          ],
+          "radius": 20,
+          "goal": "Search the western moor",
+          "text": "Hounds - Bjarki's hounds - roam the heather, foaming at the mouth, savage and lost.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            744,
+            653,
+            161.7
+          ],
+          "radius": 25,
+          "goal": "Put down the worst of the rabid hounds",
+          "mob": {
+            "template": 60165108,
+            "name": "rabid wolfhound",
+            "level": [
+              10,
+              11
+            ]
+          },
+          "count": 5,
+          "text": "Every one wears Bjarki's brass tag. Every one had drunk from the same spring - their muzzles are stained with its grey water.",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 100,
+          "at": [
+            700,
+            600,
+            157.5
+          ],
+          "goal": "Find the fouled spring",
+          "clue": {
+            "name": "a spring fouled with bones",
+            "model": 1347
+          },
+          "text": "Bone fetishes, strung on sinew and sunk in the spring - vendo work. The water is grey with curse. Tracks of clawed feet lead north, to the vendo camps.",
+          "give": {
+            "name": "a vendo bone-fetish"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 100,
+          "at": [
+            604,
+            422,
+            161.9
+          ],
+          "wake_m": 30,
+          "goal": "Kill the vendo shaman who cursed the spring",
+          "text": "The bone-singer's chant chokes off. Far to the south, all at once, the howling stops.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Bone-Singer Grakka",
+              "center": [
+                604,
+                422,
+                161.9
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Kill Bone-Singer Grakka",
+              "announce": "A vendo in a mask of skulls rises out of a pile of bones, rattling and singing. 'Dog-man's dogs! Dog-man's dogs, mad and mine!'",
+              "boss": {
+                "template": 60167576,
+                "name": "Bone-Singer Grakka",
+                "level": 14,
+                "health_mult": 2.2
+              },
+              "success": "Bone-Singer Grakka falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60167594,
+                    "name": "vendo warrior",
+                    "level": [
+                      11,
+                      12
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "choice",
+          "npc": "bjarki_spring",
+          "goal": "Meet Bjarki at the spring",
+          "say": "The fever's broken. Look at them - lying in the grass like puppies, sorry for themselves. And Gormr. Gormr's here.\n\nHe's himself again. But he bit the Sveinsson girl. The jarl's law is the law: you saw it, so you must say. Do I [keep the law]? Or do we [say nothing], and Gormr was never found?",
+          "options": [
+            {
+              "keyword": "keep the law",
+              "say": "...Yes. I'll do it myself. He's my son's dog. He'll not die by a stranger's hand. Go back to Fort Veldon. I'll follow.",
+              "next": "s6"
+            },
+            {
+              "keyword": "say nothing",
+              "say": "Never found. Lost on the moor. Aye. Aye. Gods forgive us both. Come on, boy. Come on, Gormr.",
+              "next": "s7"
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "bjarki",
+          "goal": "Return to Fort Veldon",
+          "say": "It's done. He didn't fight. He licked my hand.\n\nThe jarl thanked me for my loyalty. I nearly hit him. Here. Gormr's collar. I can't keep it in the house.",
+          "ending": "law",
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "bjarki",
+          "goal": "Return to Fort Veldon",
+          "say": "Gormr was never found, if anyone asks. Lost on the moor.\n\nHe's asleep under my bed. Snoring. Here - take something. You've given me back more than a dog.",
+          "ending": "spared",
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "law": {
+          "text": "Gormr's collar. Take it.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq100_gormr_s_collar"
+            ],
+            "choice": [
+              "sq100_broken_bone_fetish",
+              "sq100_houndmaster_s_belt"
+            ]
+          }
+        },
+        "spared": {
+          "text": "Take something.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq100_spring_water_ring"
+            ],
+            "choice": [
+              "sq100_broken_bone_fetish",
+              "sq100_houndmaster_s_belt"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,488 @@
+{
+  "name": "Bog of Cullen",
+  "npcs": [
+    {
+      "id": "fiona_harper",
+      "zone": 205,
+      "realm": 3,
+      "name": "Fiona the Harper",
+      "model": 365,
+      "level": 40,
+      "pos": [
+        232,
+        945,
+        123.6
+      ],
+      "idle": "Lorcan wrote me a poem every day for a year. Then he wrote them for someone else."
+    },
+    {
+      "id": "lorcan_poet",
+      "zone": 205,
+      "realm": 3,
+      "name": "Lorcan the Poet",
+      "model": 337,
+      "level": 40,
+      "pos": [
+        802,
+        1146,
+        122.2
+      ],
+      "during": [
+        "lhiannan/s5",
+        "lhiannan/s7"
+      ]
+    },
+    {
+      "id": "sadhbh",
+      "zone": 205,
+      "realm": 3,
+      "name": "Old Sadhbh",
+      "model": 362,
+      "level": 48,
+      "pos": [
+        1300,
+        1328,
+        123.6
+      ],
+      "guild": "Keener",
+      "idle": "I've keened for three chieftains. The banshee keened first, every time."
+    },
+    {
+      "id": "steward_conn",
+      "zone": 205,
+      "realm": 3,
+      "name": "Steward Conn",
+      "model": 337,
+      "level": 46,
+      "pos": [
+        1318,
+        1334,
+        123.6
+      ],
+      "idle": "The Chieftess is well. Perfectly well. Please don't trouble her."
+    },
+    {
+      "id": "banshee_npc",
+      "zone": 205,
+      "realm": 3,
+      "name": "the Banshee of Cullen",
+      "model": 365,
+      "level": 55,
+      "pos": [
+        1000,
+        1352,
+        122.4
+      ],
+      "during": [
+        "keening/s5"
+      ]
+    }
+  ],
+  "quests": [
+    {
+      "id": "lhiannan",
+      "title": "The Lhiannan-Sidhe",
+      "level": 42,
+      "giver": "fiona_harper",
+      "offer": "Lorcan was my lover and the finest poet in Cullen. Last spring a lhiannan-sidhe found him - a faerie muse. They give a poet the best verses he'll ever write, and they drink his life to do it.\n\nHe wrote to me last month, from somewhere in the bog. The writing was an old man's. He's thirty. Will you [find Lorcan]?",
+      "accept": "find Lorcan",
+      "topics": {},
+      "summary": "A lhiannan-sidhe - a faerie muse who feeds on poets - has taken Fiona's lover into the bog.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 205,
+          "at": [
+            570,
+            810,
+            123.6
+          ],
+          "radius": 20,
+          "goal": "Go into the bog by the siabra tower",
+          "text": "Siabra watch from the tower. Pages of verse are stuck to the reeds, soaked, the ink running.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            503,
+            819,
+            124.9
+          ],
+          "radius": 25,
+          "goal": "Fight through the siabra wayguards",
+          "mob": {
+            "template": 60165995,
+            "name": "siabra wayguard",
+            "level": [
+              42,
+              43
+            ]
+          },
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 205,
+          "at": [
+            560,
+            800,
+            123.6
+          ],
+          "goal": "Gather the scattered verses",
+          "clue": {
+            "name": "pages of verse in a shaking hand",
+            "model": 1347
+          },
+          "text": "Each page better than the last, and each hand older. The last pages are nearly illegible - and nearly perfect.",
+          "give": {
+            "name": "Lorcan's verses"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            555,
+            918,
+            122.2
+          ],
+          "radius": 25,
+          "goal": "Cut through the bog creepers to the east",
+          "mob": {
+            "template": 60158591,
+            "name": "bog creeper",
+            "level": [
+              42,
+              43
+            ]
+          },
+          "count": 5,
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "lorcan_poet",
+          "goal": "Find Lorcan",
+          "say": "Fiona sent you. Fiona. I wrote her a hundred poems and none of them were good enough. Now I write for HER, and every one is perfect.\n\nShe'll come at dusk. Look at me. I'm thirty. I don't care. I don't care. Do you understand - every [word]...",
+          "keyword": "word",
+          "id": "s5"
+        },
+        {
+          "type": "encounter",
+          "zone": 205,
+          "at": [
+            800,
+            1150,
+            122.2
+          ],
+          "wake_m": 30,
+          "goal": "Drive off the lhiannan-sidhe",
+          "text": "The lhiannan-sidhe falls back, hissing, into the mist. Lorcan clutches his chest and breathes like a man surfacing from deep water.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "the Lhiannan-Sidhe",
+              "center": [
+                800,
+                1150,
+                122.2
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Drive off the Lhiannan-Sidhe",
+              "announce": "A woman more beautiful than the moon walks out of the mist. 'He is mine. He is my masterpiece.'",
+              "boss": {
+                "template": 60163259,
+                "name": "the Lhiannan-Sidhe",
+                "level": 46,
+                "health_mult": 2.6
+              },
+              "success": "the Lhiannan-Sidhe falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60158591,
+                    "name": "bog creeper",
+                    "level": [
+                      42,
+                      43
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "lorcan_poet",
+          "goal": "Decide what becomes of the verses",
+          "say": "She's not gone. Not while I have the verses. They're hers as much as mine - she lives in them. If I [burn the verses], I'm free, and I'll go back to Fiona and write bad poems and grow old slowly.\n\nIf I [keep them], she'll come back, and I'll die before winter, and they'll sing these in every hall in Hibernia for a thousand years. Choose. Please. I can't.",
+          "options": [
+            {
+              "keyword": "burn the verses",
+              "say": "...They burn so slowly. ...There. I can't remember a line. Not one. Take me to Fiona.",
+              "next": "s8"
+            },
+            {
+              "keyword": "keep them",
+              "say": "Then I'll keep them. Tell Fiona the best ones are hers. They are. Tell her I'm sorry.",
+              "next": "s9"
+            }
+          ],
+          "id": "s7"
+        },
+        {
+          "type": "talk",
+          "npc": "fiona_harper",
+          "goal": "Return to Fiona",
+          "say": "He's home. He's grey and thin and he can't remember a word he wrote - and he wrote me a poem this morning. It's terrible. It's the best thing I've ever read.",
+          "ending": "burned",
+          "id": "s8"
+        },
+        {
+          "type": "talk",
+          "npc": "fiona_harper",
+          "goal": "Return to Fiona",
+          "say": "He kept them. And he sent me the best ones.\n\nThey're... they're beyond anything. I'll set them to music. I'll play them at his wake, which will be before winter. Take this, and go, before I cry on you.",
+          "ending": "kept",
+          "id": "s9"
+        }
+      ],
+      "endings": {
+        "burned": {
+          "text": "Take this. He wanted you to.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq205_burnt_verse_ring"
+            ],
+            "choice": [
+              "sq205_wayguard_s_bracer",
+              "sq205_bog_creeper_cloak"
+            ]
+          }
+        },
+        "kept": {
+          "text": "Take this, and go.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 100,
+            "copper_per_level": 77,
+            "marks": 13,
+            "items": [
+              "sq205_muse_s_kiss_pendant"
+            ],
+            "choice": [
+              "sq205_wayguard_s_bracer",
+              "sq205_bog_creeper_cloak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "keening",
+      "title": "The Keening",
+      "level": 50,
+      "giver": "sadhbh",
+      "offer": "This is GROUP work, so bring friends you trust.\n\nThe banshee of Cullen has keened under the Chieftess' window every night for a week. A banshee keens for a death in the old families. But nobody is sick. Nobody is old. Nobody's dying.\n\nWhen a banshee keens for a death that hasn't come, it's because someone means to make it come. Will you [find out who]? Start with the [steward]. He's too calm.",
+      "accept": "find out who",
+      "topics": {
+        "steward": "Conn. He runs the Chieftess' household. He's very calm. Far too calm."
+      },
+      "summary": "GROUP. The banshee of Cullen keens nightly for the Chieftess - who isn't sick. Someone means her death.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "steward_conn",
+          "goal": "Question Steward Conn",
+          "say": "The banshee? Old women's stories. The Chieftess is perfectly well. I see to everything - her food, her wine, her guests. I'd know if anything were wrong.\n\nIf you must poke about, the black wraiths in the bog to the [east] have been bold of late. Go and deal with them. That would actually be useful.",
+          "keyword": "east",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            1404,
+            1285,
+            127.9
+          ],
+          "radius": 25,
+          "goal": "Deal with the black wraiths east of town",
+          "mob": {
+            "template": 60158463,
+            "name": "black wraith",
+            "level": [
+              48,
+              49
+            ]
+          },
+          "count": 4,
+          "text": "Among the wraith-mud, a dropped satchel - a steward's satchel, with a steward's seal.",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 205,
+          "at": [
+            1392,
+            1300,
+            127.9
+          ],
+          "goal": "Search the dropped satchel",
+          "clue": {
+            "name": "a steward's satchel",
+            "model": 1347
+          },
+          "text": "A vial of sidhe glass, nearly empty. A letter: 'Half in her wine each night. By the dark moon it will look like a wasting. The venator will finish it if it doesn't. - C.'",
+          "give": {
+            "name": "the poisoner's vial"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "reach",
+          "zone": 205,
+          "at": [
+            1010,
+            1350,
+            122.2
+          ],
+          "radius": 20,
+          "goal": "Find the banshee's keening-stone",
+          "text": "A grey woman sits on a stone in the bog, combing her hair, weeping. She looks up at you.",
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "banshee_npc",
+          "goal": "Speak with the banshee",
+          "say": "You hear me. Good. Few do, before.\n\nThe Chieftess' death is close. The steward pours it. And the siabra hunter waits in the bog to the west of my stone, to finish it if the poison is slow. Stop the [hunter]. I am so tired of keening.",
+          "keyword": "hunter",
+          "id": "s5"
+        },
+        {
+          "type": "encounter",
+          "zone": 205,
+          "at": [
+            990,
+            1340,
+            123.2
+          ],
+          "wake_m": 30,
+          "goal": "Kill the siabra assassin in the bog",
+          "text": "The venator dies in the bog-water. Far off, under the Chieftess' window, the keening stops.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Iuchra the Venator",
+              "center": [
+                990,
+                1340,
+                123.2
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Kill Iuchra the Venator",
+              "announce": "A siabra in mud-grey leathers rises out of the bog with a knife in each hand. 'The steward pays well. You'll do for practice.'",
+              "boss": {
+                "template": 60165994,
+                "name": "Iuchra the Venator",
+                "level": 54,
+                "health_mult": 3.0
+              },
+              "success": "Iuchra the Venator falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60165994,
+                    "name": "siabra venator",
+                    "level": [
+                      47,
+                      48
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "sadhbh",
+          "goal": "Return to Old Sadhbh",
+          "say": "The keening's stopped. I heard it stop at moonrise. And you have the vial. Conn.\n\nConn, who has served her twenty years. He wanted the chieftainship for his son - it's in his letters.\n\nThe Chieftess is too kind. She'll want to [banish him]. The old law says [death] for a poisoner. She'll ask me, and I'll ask you. You've seen more of it than I have.",
+          "options": [
+            {
+              "keyword": "banish him",
+              "say": "Banished. Beyond the Shannon, with nothing but his cloak. ...She'll weep for him. She's like that.",
+              "ending": "banished"
+            },
+            {
+              "keyword": "death",
+              "say": "The old law, then. I'll keen for him myself. Somebody should.",
+              "ending": "death"
+            }
+          ],
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "banished": {
+          "text": "From the Chieftess, with her thanks.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq205_chieftess_dana_s_brooch"
+            ],
+            "choice": [
+              "sq205_keener_s_veil",
+              "sq205_venator_s_ring",
+              "sq205_black_wraith_bracer"
+            ]
+          }
+        },
+        "death": {
+          "text": "From the Chieftess.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq205_poisoner_s_vial_pendant"
+            ],
+            "choice": [
+              "sq205_keener_s_veil",
+              "sq205_venator_s_ring",
+              "sq205_black_wraith_bracer"
+            ]
+          }
+        }
+      },
+      "group": true
+    }
+  ]
+}
