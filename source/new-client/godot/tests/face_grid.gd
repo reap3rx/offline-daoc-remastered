@@ -23,10 +23,10 @@ const PRESETS := [
 
 ## --presets=skin: the skin layers (looks applied, not shapes)
 const SKIN := [
-	["Plain", {}], ["Brows 3", {"brows": 3}], ["Freckles", {"freckles": 2}], ["Age", {"age": 1.0}],
-	["Scars", {"scar": 2}], ["Stubble", {"stubble": 1.0}], ["Lips", {"lip_color": 2}], ["Mask", {"paint": 1, "paint_color": 1}],
-	["Claws", {"paint": 2, "paint_color": 2}], ["Half", {"paint": 3, "paint_color": 0}], ["Sweep", {"paint": 5, "paint_color": 3}],
-	["Spirals", {"paint": 6, "paint_color": 0}],
+	["Plain", {}], ["No brows", {"brows": 0}], ["Brows 3", {"brows": 3}], ["Brows 6", {"brows": 6}],
+	["Age 1", {"age_style": 1, "age": 0.9}], ["Age 2", {"age_style": 2, "age": 0.9}], ["Shadow", {"stubble_style": 1, "stubble": 0.9}],
+	["Beard", {"stubble_style": 2, "stubble": 1.0}], ["Lips", {"lip_color": 2, "lip_amt": 0.6}], ["Freckles", {"freckles": 2}],
+	["Scar", {"scar": 2}], ["Mask", {"paint": 1, "paint_color": 1}],
 ]
 
 ## --presets=mouth: one slider at a time, the mouth and jaw ones (what opened the mouth)
@@ -99,7 +99,8 @@ func _ready() -> void:
 	for i in presets.size():
 		var vals: Dictionary = presets[i][1]
 		if pset == "skin":
-			fig.apply({"brows": 0, "freckles": 0, "age": 0.0, "scar": 0, "stubble": 0.0, "lip_color": 0, "paint": 0})
+			fig.look = {"face": 0, "hair": int(args.get("hair", "1")), "hair_color": 1, "eyes": 2, "skin": 1}
+			fig.apply(fig.layered_changes())
 			fig.apply(vals)
 			vals = {}
 		for mi in heads:

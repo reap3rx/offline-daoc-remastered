@@ -283,6 +283,68 @@ def hair_rgb(meta, tex_dir):
     return []
 
 
+def split_faces(Fs, B4, tex, cov, front, wide, lipw, L, female=False):
+    """The race's faces taken apart (owner 2026-11-06: "the textures on the face are tied to the face ... I'd like to
+    choose ..."): a base face with no brows (the faces' median, the brows lifted out - lightened toward the skin
+    around them, nothing else touched), and from each face what it paints over that base - its brows, its beard or
+    stubble, its age lines - as masks the creator offers on their own. face_map: what each original face was."""
+    lum = lambda x: x[..., :3].mean(-1)
+    tu, tv = tex[..., 0], tex[..., 1]
+    B = B4[..., :3]
+    brow = np.array(L['brow'])
+    kq = np.polyfit(brow[:, 0], brow[:, 1], 2)
+    bv = np.polyval(kq, np.clip(np.abs(tu), 0.1, 1.0))
+    lowv = np.maximum(bv - 0.13, 0.13)                       # (above the eyelids: those are dark too, and stay)
+    band = cov & (np.abs(tu) < 1.15) & (tv > lowv) & (tv < bv + 0.2) & (front > 0.5)
+    fade = (np.clip((tv - lowv) / 0.05, 0, 1) * np.clip((bv + 0.2 - tv) / 0.05, 0, 1)
+            * np.clip((1.15 - np.abs(tu)) / 0.1, 0, 1) * band)
+    band8 = cv2.dilate(band.astype(np.uint8), np.ones((5, 5), np.uint8)).astype(bool)
+    # the skin the brows sit on: the face around the band, spread over it
+    outside = (cov & ~band8).astype(np.float32)
+    num = cv2.GaussianBlur(B * outside[..., None], (0, 0), 18)
+    den = cv2.GaussianBlur(outside, (0, 0), 18)[..., None]
+    est = num / np.maximum(den, 1e-4)
+    dk = np.clip((lum(est) - lum(B)) / (0.25 * lum(est) + 1e-3), 0, 1) * fade
+    dk = cv2.GaussianBlur(dk, (0, 0), 1.5)[..., None]
+    base = B4.copy()
+    base[..., :3] = B * (1 - dk) + est * dk
+    # each face's brows: where it is darker than the bare base, in the band
+    brows = [np.clip((lum(base) - lum(F)) / (0.35 * lum(base) + 1e-3), 0, 1) * fade for F in Fs]
+    # beards / stubble the faces paint: darker than the median under the nose, clearly so over the area
+    lipcut = 1 - np.clip(lipw * 1.6, 0, 1)
+    breg = cov & (wide > 0.3) & (tv < L['v_n'] - 0.02) & (tv > L['v_c'] - 0.6)
+    beards, beard_of = [], []
+    cheeks = cov & (front > 0.6) & (tv > L['v_n'] + 0.05) & (tv < -0.15)
+    for i, F in enumerate(Fs):
+        if female:                                 # (no beards: a darker lower face there is a face's shading)
+            break
+        diff = (lum(B) - lum(F)) / (0.3 * lum(B) + 1e-3)
+        off = float(np.median(diff[cheeks])) if cheeks.any() else 0.0   # (a face darker all over is not a beard)
+        a = np.clip(diff - max(off, 0.0), 0, 1) * breg * lipcut
+        if breg.any() and float(a[breg].mean()) > 0.1:
+            beard_of.append(i)
+            beards.append(cv2.GaussianBlur(a, (3, 3), 0))
+    # age lines: the fine dark detail a face has over the face, well beyond the others'
+    eyes_open = (np.abs(tv) < 0.12) & (np.abs(tu) < 0.95)
+    areg = cov & (front > 0.5) & ~band8 & ~eyes_open & (lipw < 0.3) & (tv > L['v_m'] - 0.4)
+    hf = [lum(F) - cv2.GaussianBlur(lum(F), (0, 0), 6) for F in Fs]
+    upper = areg & (tv > L['v_n'] - 0.1)
+    hB = lum(B) - cv2.GaussianBlur(lum(B), (0, 0), 6)
+    en = np.array([float(np.clip(hB - h, 0, None)[upper].mean()) if upper.any() else 0 for h in hf])   # (darker lines)
+    print('  line detail by face', np.round(en * 1000, 1))
+    ages, age_of = [], []
+    for i in np.argsort(-en):
+        if en[i] > 1.2 * np.median(en) and i not in beard_of and len(ages) < 2:
+            age_of.append(int(i))
+            ages.append(np.clip(-hf[i] / 0.05, 0, 1) * areg)
+    face_map = []
+    for i in range(len(Fs)):
+        face_map.append({'brows': i + 1, 'age_style': age_of.index(i) if i in age_of else -1,
+                         'stubble_style': (beard_of.index(i) + 1) if i in beard_of else -1})
+    print('  faces split: %d brows, beards from %s, age from %s' % (len(brows), [b + 1 for b in beard_of], [a + 1 for a in age_of]))
+    return {'base': base, 'brows': brows, 'beards': beards, 'ages': ages, 'face_map': face_map}
+
+
 def bake(folder, preview=None):
     folder = Path(folder)
     gltf, meta_path = folder / 'figure.gltf', folder / 'figure.json'
@@ -330,11 +392,21 @@ def bake(folder, preview=None):
             one_sided[sel] = 0.0
     attrs = np.c_[fu, fv, ff, marks['_w']['lips'], one_sided]
     tex, cov = raster(UV, T, attrs, keep, SIZE)
-    face0 = meta['faces'][0]['tex'].lower()
-    img = cv2.imread(str(tex_dir / (face0 + '.png')), cv2.IMREAD_COLOR)
-    if img is None:
-        raise SystemExit('no face texture %s' % (tex_dir / (face0 + '.png')))
-    img = cv2.resize(img, (SIZE, SIZE), interpolation=cv2.INTER_AREA).astype(np.float32) / 255
+    # every face texture of the race, and their median: the face they share (what one face alone paints - a beard,
+    # wrinkles, a scar - falls out of it; the brows, which all paint, are taken out below)
+    Fs = []
+    for fc in meta['faces']:
+        im = cv2.imread(str(tex_dir / (fc['tex'].lower() + '.png')), cv2.IMREAD_UNCHANGED)
+        if im is None:
+            raise SystemExit('no face texture %s' % (tex_dir / (fc['tex'].lower() + '.png')))
+        if im.ndim == 2:
+            im = cv2.cvtColor(im, cv2.COLOR_GRAY2BGR)
+        if im.shape[2] == 3:
+            im = np.dstack([im, np.full(im.shape[:2], 255, im.dtype)])
+        Fs.append(cv2.resize(im, (SIZE, SIZE), interpolation=cv2.INTER_AREA).astype(np.float32) / 255)
+    Fs = np.stack(Fs)                                       # (faces, SIZE, SIZE, BGRA)
+    B4 = np.median(Fs, axis=0)
+    img = B4[..., :3].copy()
     # the painted eyes and brows (the morphs' eye region sits a little high, and every race paints its brows at its
     # own height): the face texture seen in face space - the eye opening the darkest row across the eyes, the brow
     # the darkest point above it, column by column
@@ -422,8 +494,12 @@ def bake(folder, preview=None):
         sel_ &= (tv > best[2] - 0.10) & (tv < best[2] + 0.16)   # (not the shadow under the lower lip)
         best = (best[0], sel_, best[2])
     if best:
-        m_ = cv2.dilate(best[1].astype(np.uint8), np.ones((5, 5), np.uint8)).astype(np.float32)
-        lip_raw = cv2.GaussianBlur(m_, (7, 7), 0) * cov
+        # (soft: how lip-like each texel is, near the found lips - owner 2026-11-06: a hard stamped shape looked like a
+        # first try at lipstick)
+        m_ = cv2.dilate(best[1].astype(np.uint8), np.ones((7, 7), np.uint8)).astype(np.float32)
+        near_l = cv2.GaussianBlur(m_, (9, 9), 0)
+        lo_, sd_ = float(zl.mean()), float(zl.std()) + 1e-4
+        lip_raw = np.clip((lipness - lo_ - 0.2 * sd_) / (1.4 * sd_), 0, 1) * near_l * cov
         if abs(best[2] - L['v_m']) > 0.08:                   # the mesh's mouth was off: the chin moves with it
             L['v_m'] = best[2]
             L['v_c'] = min(L['v_c'], best[2] - 0.45)
@@ -433,6 +509,12 @@ def bake(folder, preview=None):
         lip_raw = np.clip((red - skin_red - 0.008) / 0.035, 0, 1) * np.clip((lipw - 0.15) / 0.25, 0, 1)
     lip_mask = cv2.GaussianBlur(lip_raw, (5, 5), 0)
     print('  lips %s, mouth %.2f' % (how, L['v_m']))
+    split = split_faces(Fs, B4, tex, cov, front, wide, lipw, L, folder.name.endswith('_f'))
+    cv2.imwrite(str(folder / 'face_base.png'), (np.clip(split['base'], 0, 1) * 255 + 0.5).astype(np.uint8))
+    import os
+    if os.environ.get('SKIN_DUMP'):
+        np.savez_compressed(os.environ['SKIN_DUMP'], tex=tex, cov=cov, front=front, single=single, lip=lip_mask,
+                            L=json.dumps({k: v for k, v in L.items()}))
     # the face-space drawing, looked up by every texel
     rng = np.random.default_rng(7)
     M = draw(L, rng)
@@ -441,22 +523,32 @@ def bake(folder, preview=None):
     srng = np.random.default_rng(11)
     speck = cv2.GaussianBlur((srng.random((SIZE, SIZE)) < 0.4).astype(np.float32) * srng.uniform(0.6, 1.0, (SIZE, SIZE)).astype(np.float32), (3, 3), 0) * 1.5
     speck = np.clip(speck, 0, 1)
-    masks = []
+    def drawn(key, k):
+        if key == 'lips':
+            return lip_mask
+        m = cv2.remap(M[key, k], mapx, mapy, cv2.INTER_LINEAR, borderValue=0)
+        if key == 'stubble':                       # speckled texel by texel (in face space it smeared on the jaw's
+            return m * wide * (0.3 + 0.7 * speck) * (1 - np.clip(lipw * 1.6, 0, 1))      # stretch)
+        m = m * front
+        if (key, k) in ONE_SIDED:
+            m = m * single
+        if key in ('freckles', 'age'):
+            m = m * (1 - np.clip(lipw * 1.6, 0, 1))      # never on the lips
+        return m
+    layers = []                                    # (key, label, kind, options, masks)
     for key, label, kind, opts in LAYERS:
-        for k in range(len(opts)):
-            if key == 'lips':
-                m = lip_mask
-            elif key == 'stubble':                     # speckled texel by texel (in face space it smeared on the
-                m = cv2.remap(M[key, k], mapx, mapy, cv2.INTER_LINEAR, borderValue=0) * wide   # jaw's stretch)
-                m = m * (0.3 + 0.7 * speck) * (1 - np.clip(lipw * 1.6, 0, 1))
-            else:
-                m = cv2.remap(M[key, k], mapx, mapy, cv2.INTER_LINEAR, borderValue=0)
-                m = m * (wide if key == 'stubble' else front)
-                if (key, k) in ONE_SIDED:
-                    m = m * single
-                if key in ('brows', 'freckles', 'age'):
-                    m = m * (1 - np.clip(lipw * 1.6, 0, 1))      # never on the lips
-            masks.append(np.clip(m, 0, 1))
+        if key == 'brows':                         # the faces' own brows (the base has none)
+            layers.append((key, label, kind, ['Style %d' % (i + 1) for i in range(len(split['brows']))], split['brows']))
+        elif key == 'age':                         # the faces' own lines, then the drawn ones
+            n = len(split['ages'])
+            layers.append((key, label, kind, (['Weathered'] if n == 1 else ['Weathered %d' % (i + 1) for i in range(n)])
+                           + ['Lines'], split['ages'] + [drawn(key, 0)]))
+        elif key == 'stubble':                     # a shadow (drawn), then the faces' painted beards
+            layers.append((key, label, kind, ['Shadow'] + ['Beard %d' % (i + 1) for i in range(len(split['beards']))],
+                           [drawn(key, 0)] + split['beards']))
+        else:
+            layers.append((key, label, kind, opts, [drawn(key, k) for k in range(len(opts))]))
+    masks = [np.clip(m, 0, 1) for l_ in layers for m in l_[4]]
     # bleed the masks a few texels past the pieces' edges (mipmaps and filtering at the seams)
     k3 = np.ones((3, 3), np.uint8)
     out = []
@@ -477,8 +569,8 @@ def bake(folder, preview=None):
         cv2.imwrite(str(folder / (name + '.png')), cv2.cvtColor((rgba * 255 + 0.5).astype(np.uint8), cv2.COLOR_RGBA2BGRA))
         names.append(name)
     ch = 0
-    entry = {'tex': names, 'layers': []}
-    for key, label, kind, opts in LAYERS:
+    entry = {'tex': names, 'layers': [], 'base': 'face_base', 'face_map': split['face_map']}
+    for key, label, kind, opts, _ in layers:
         entry['layers'].append({'key': key, 'label': label, 'kind': kind, 'options': opts,
                                 'chan': list(range(ch, ch + len(opts)))})
         ch += len(opts)
@@ -493,13 +585,18 @@ def bake(folder, preview=None):
         i = 0
         cols = {'hair': (0.18, 0.12, 0.08), 'freckle': None, 'age': None, 'scar': None, 'lip': (0.6, 0.1, 0.15),
                 'paint': (0.1, 0.25, 0.6)}
-        for key, label, kind, opts in LAYERS:
+        p = split['base'][..., 2::-1].copy()
+        for key, label, kind, opts, _ in layers:
             for k in range(len(opts)):
                 m = masks[i][..., None]
                 i += 1
                 if key == 'paint' and k != 4 and k != 5:
                     continue
                 if key == 'brows' and k != 1:
+                    continue
+                if key == 'stubble' and k != len(opts) - 1:
+                    continue
+                if key == 'age' and k != 0:
                     continue
                 if kind == 'freckle':
                     if k == 0:

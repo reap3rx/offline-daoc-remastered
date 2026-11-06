@@ -346,6 +346,9 @@ func _build_customize() -> void:
 	_frame_art("character_customize", 12, 268)
 	_show_figure(draft if editing else _draft_character())
 	var f := _figure
+	if not f.is_layered() and not f.layered_changes().is_empty():   # the face taken apart (brows, beard, lines)
+		f.apply(f.layered_changes())
+		draft.look = f.look.duplicate(true)
 	var shapes: Array = f.meta.get("face_shapes", [])
 	var skin: Array = (f.meta.get("skin_layers", {}) as Dictionary).get("layers", [])
 	var tabs := [["FEATURES", 0]]                           # the pages: the features, the face's shape, the skin
@@ -379,7 +382,8 @@ func _build_customize() -> void:
 
 func _feature_rows(y: float) -> void:
 	var f := _figure
-	y = _stepper_row("FACE", "face", f.meta.get("faces", []).map(func(x): return String(x.label).to_upper()), y)
+	if not f.is_layered():                             # (layered: the face is its parts, on the SKIN page)
+		y = _stepper_row("FACE", "face", f.meta.get("faces", []).map(func(x): return String(x.label).to_upper()), y)
 	var sliders: Array = f.meta.get("sliders", [])
 	for i in sliders.size():
 		_label(String(sliders[i].label).to_upper(), 770, y, 96, 24, 15, CREAM, HORIZONTAL_ALIGNMENT_LEFT, "R")
@@ -410,8 +414,7 @@ func _feature_rows(y: float) -> void:
 	_bar_button("DEFAULT", 892, 606, 108, 28, "R", func():
 		draft.look = {}
 		_figure.look = {}
-		_figure.apply({"sliders": [4, 4, 4, 4], "shape": {}, "brows": 0, "freckles": 0, "age": 0.0, "scar": 0,
-				"stubble": 0.0, "lip_color": 0, "paint": 0})
+		_figure.apply({"sliders": [4, 4, 4, 4], "shape": {}})
 		_show("customize"))
 
 
@@ -453,35 +456,36 @@ func _shape_rows(shapes: Array, y: float) -> void:
 ## The skin layers (pipeline/skin_layers.py, figure.json 'skin_layers'): brows, freckles, scars and war paint as
 ## steppers, age and stubble as sliders, the paint's and the lips' colours as swatches.
 func _skin_rows(layers: Array, y: float) -> void:
+	var on := func(k: String) -> bool: return int(draft.look.get(k, 0)) > 0
 	for d in layers:
 		var key := String(d.key)
 		if key == "stubble" and _figure.race.ends_with("_f"):
 			continue                                   # (owner 2026-11-06: no stubble for women)
 		var label := String(d.label).to_upper()
+		var opts := ["NONE"]
+		opts.append_array((d.options as Array).map(func(o): return String(o).to_upper()))
 		match key:
-			"age", "stubble":
-				_label(label, 770, y, 96, 24, 15, CREAM, HORIZONTAL_ALIGNMENT_LEFT, "R")
-				var s := HSlider.new()
-				s.min_value = 0.0
-				s.max_value = 1.0
-				s.step = 0.05
-				s.value = float(draft.look.get(key, 0.0))
-				s.value_changed.connect(func(v: float):
-					_figure.apply({key: snappedf(v, 0.05)})
-					draft.look[key] = snappedf(v, 0.05))
-				_at(s, 868, y + 2, 118, 20, "R")
-				_lock(key, y)
-				y += 27
+			"brows":
+				y = _stepper_row(label, "brows", opts, y)
+				if on.call("brows"):
+					y = _amount_row("DENSITY", "brow_amt", 1.0, 0.3, 1.4, y)
+			"age":
+				y = _stepper_row(label, "age_style", opts, y)
+				if on.call("age_style"):
+					y = _amount_row("STRENGTH", "age", 0.7, 0.1, 1.0, y)
+			"stubble":
+				y = _stepper_row(label, "stubble_style", opts, y)
+				if on.call("stubble_style"):
+					y = _amount_row("STRENGTH", "stubble", 0.8, 0.1, 1.0, y)
 			"lips":
 				var cols := [Color(0.62, 0.42, 0.4)]           # (the first: the face's own)
 				cols.append_array(Fig3Figure.LIP_COLORS.slice(1))
 				y = _swatch_row(label, "lip_color", cols, y)
+				if on.call("lip_color"):
+					y = _amount_row("STRENGTH", "lip_amt", 0.6, 0.1, 1.0, y)
 			_:
-				var none := "NATURAL" if key == "brows" else "NONE"
-				var opts := [none]
-				opts.append_array((d.options as Array).map(func(o): return String(o).to_upper()))
 				y = _stepper_row(label, key, opts, y)
-				if key == "paint" and int(draft.look.get("paint", 0)) > 0:
+				if key == "paint" and on.call("paint"):
 					y = _swatch_row("PAINT COLOR", "paint_color", Fig3Figure.PAINT_COLORS, y)
 	if _figure.option_count("hair") > 0:                # the darkened scalp under the hair, on or off
 		y = _stepper_row("SCALP SHADE", "scalp_off", ["ON", "OFF"], y)
@@ -490,31 +494,57 @@ func _skin_rows(layers: Array, y: float) -> void:
 		draft.look = _figure.look.duplicate(true)
 		_show("customize"))
 	_bar_button("DEFAULT", 892, 606, 108, 28, "R", func():
-		_figure.apply({"brows": 0, "freckles": 0, "age": 0.0, "scar": 0, "stubble": 0.0, "lip_color": 0, "paint": 0})
+		var ch := _figure.layered_changes()               # the face's own brows, beard, lines; nothing added
+		ch.merge({"freckles": 0, "scar": 0, "lip_color": 0, "paint": 0}, true)
+		_figure.apply(ch)
 		draft.look = _figure.look.duplicate(true)
 		_show("customize"))
 
 
-## A random skin: mostly plain, now and then freckles, a scar, war paint; stubble on men. all: every layer (the SKIN
-## page's own RANDOM), else only those not locked.
+## A strength slider under a layer (indented, its own default).
+func _amount_row(title: String, key: String, def: float, lo: float, hi: float, y: float) -> float:
+	_label(title, 786, y, 80, 24, 13, CREAM, HORIZONTAL_ALIGNMENT_LEFT, "R")
+	var s := HSlider.new()
+	s.min_value = lo
+	s.max_value = hi
+	s.step = 0.05
+	s.value = float(draft.look.get(key, def))
+	s.value_changed.connect(func(v: float):
+		_figure.apply({key: snappedf(v, 0.05)})
+		draft.look[key] = snappedf(v, 0.05))
+	_at(s, 868, y + 2, 118, 20, "R")
+	return y + 27
+
+
+## A random skin: brows always, mostly plain otherwise - now and then freckles, lines, a scar, war paint; beards on
+## men. all: every layer (the SKIN page's own RANDOM), else only those not locked.
 func _random_skin(all := false) -> Dictionary:
 	var out := {}
 	var free := func(k: String) -> bool: return all or not locks.get(k, false)
-	if free.call("brows"):
-		out["brows"] = [0, 0, 1, 2, 3].pick_random()
+	var count := func(k: String) -> int:
+		for d in (_figure.meta.get("skin_layers", {}) as Dictionary).get("layers", []):
+			if String(d.key) == k:
+				return (d.options as Array).size()
+		return 0
+	if free.call("brows") and count.call("brows") > 0:
+		out["brows"] = randi_range(1, count.call("brows"))
+		out["brow_amt"] = snappedf(randf_range(0.7, 1.15), 0.05)
 	if free.call("freckles"):
-		out["freckles"] = 0 if randf() < 0.7 else randi_range(1, 2)
-	if free.call("age"):
-		out["age"] = 0.0 if randf() < 0.6 else snappedf(randf_range(0.2, 0.8), 0.05)
+		out["freckles"] = 0 if randf() < 0.75 else randi_range(1, 2)
+	if free.call("age_style"):
+		out["age_style"] = 0 if randf() < 0.65 else randi_range(1, count.call("age"))
+		out["age"] = snappedf(randf_range(0.3, 0.9), 0.05)
 	if free.call("scar"):
 		out["scar"] = 0 if randf() < 0.8 else randi_range(1, 4)
-	if free.call("stubble"):
-		out["stubble"] = snappedf(randf_range(0.0, 0.9), 0.05) if not _figure.race.ends_with("_f") and randf() < 0.6 else 0.0
+	if free.call("stubble_style"):
+		out["stubble_style"] = randi_range(0, count.call("stubble")) if not _figure.race.ends_with("_f") and randf() < 0.6 else 0
+		out["stubble"] = snappedf(randf_range(0.4, 1.0), 0.05)
 	if free.call("paint"):
-		out["paint"] = 0 if randf() < 0.8 else randi_range(1, 6)
+		out["paint"] = 0 if randf() < 0.85 else randi_range(1, 6)
 		out["paint_color"] = randi() % Fig3Figure.PAINT_COLORS.size()
 	if free.call("lip_color"):
 		out["lip_color"] = 0 if randf() < 0.8 else randi_range(1, Fig3Figure.LIP_COLORS.size() - 1)
+		out["lip_amt"] = snappedf(randf_range(0.35, 0.7), 0.05)
 	return out
 
 
@@ -1375,7 +1405,8 @@ func _shots(folder: String) -> void:
 		await save.call("5_shape")
 		_page = 0
 	if not (_figure.meta.get("skin_layers", {}) as Dictionary).is_empty():
-		_figure.apply({"brows": 2, "freckles": 1, "age": 0.5, "scar": 1, "stubble": 0.7, "paint": 6, "paint_color": 0})
+		_figure.apply({"brows": 2, "freckles": 1, "age_style": 1, "age": 0.6, "scar": 1, "stubble_style": 2, "stubble": 0.9,
+				"lip_color": 2, "lip_amt": 0.5, "paint": 0})
 		draft.look = _figure.look.duplicate(true)
 		_page = 2
 		_show("customize")

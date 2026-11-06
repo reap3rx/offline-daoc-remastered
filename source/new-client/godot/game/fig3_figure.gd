@@ -272,7 +272,8 @@ func apply(changes: Dictionary) -> void:
 	var head := _part("head")
 	if head and faces.size() > 0:
 		var m := _material(false, false, skin_shading)
-		m.set_shader_parameter("albedo_tex", _tex(faces[clampi(int(look.get("face", 0)), 0, faces.size() - 1)].tex))
+		var base: Texture2D = _base_face() if is_layered() else null
+		m.set_shader_parameter("albedo_tex", base if base else _tex(faces[clampi(int(look.get("face", 0)), 0, faces.size() - 1)].tex))
 		m.set_shader_parameter("tint", skin)
 		m.set_shader_parameter("tint_mode", 1)
 		var eyes: Array = meta.get("eyes", [])
@@ -357,6 +358,38 @@ const LIP_COLORS := [Color(0, 0, 0), Color(0.62, 0.22, 0.26), Color(0.48, 0.06, 
 static var _layer_tex := {}                     # path -> the mask texture (shared by every figure of the race)
 
 
+## Whether the look is built from the race's parts (the base face, brows, age, beard as layers - the creator since
+## 2026-11-06) rather than one of the original face textures (old characters, NPCs).
+func is_layered() -> bool:
+	return bool(look.get("v2", false)) and String((meta.get("skin_layers", {}) as Dictionary).get("base", "")) != ""
+
+
+## The changes that turn an original-face look into the layered one wearing the same face's brows, beard and lines
+## (figure.json skin_layers.face_map).
+func layered_changes() -> Dictionary:
+	var fm: Array = (meta.get("skin_layers", {}) as Dictionary).get("face_map", [])
+	if fm.is_empty():
+		return {}
+	var f: Dictionary = fm[clampi(int(look.get("face", 0)), 0, fm.size() - 1)]
+	var out := {"v2": true, "brows": int(f.get("brows", 1)), "brow_amt": 1.0,
+		"age_style": int(f.get("age_style", -1)) + 1, "age": 0.8,
+		"stubble_style": int(f.get("stubble_style", -1)) + 1, "stubble": 0.9}
+	return out
+
+
+static var _base_tex := {}
+
+
+func _base_face() -> Texture2D:
+	var path := "%s/races/%s/%s.png" % [ROOT, race, String(meta.skin_layers.base)]
+	if not _base_tex.has(path):
+		var img := Image.load_from_file(path)
+		if img:
+			img.generate_mipmaps()
+		_base_tex[path] = ImageTexture.create_from_image(img) if img else null
+	return _base_tex[path]
+
+
 ## Which of the layers the look wears, as the head shader's slots. Look keys: brows / freckles / scar / paint (the
 ## option, 0 none), age / stubble (0 .. 1), lip_color (0 the face's own), paint_color.
 func _layers(m: ShaderMaterial) -> void:
@@ -374,22 +407,25 @@ func _layers(m: ShaderMaterial) -> void:
 		var d: Dictionary = defs.get(key, {})
 		var ch: Array = d.get("chan", [])
 		return int(ch[opt - 1]) if opt >= 1 and opt <= ch.size() else -1
-	var c: int = pick.call("brows", int(look.get("brows", 0)))
+	var layered := is_layered()
+	var c: int = pick.call("brows", int(look.get("brows", 0))) if layered else -1   # (the old faces paint their own)
 	if c >= 0:
-		slots.append([c, hair.darkened(0.35), 0.85, 3])
+		slots.append([c, hair.darkened(0.3), clampf(float(look.get("brow_amt", 1.0)), 0.0, 1.5) * 0.9, 3])
 	c = pick.call("freckles", int(look.get("freckles", 0)))
 	if c >= 0:
 		slots.append([c, Color(0.66, 0.5, 0.4), 0.9, 2])
-	if float(look.get("age", 0.0)) > 0.01:
-		slots.append([pick.call("age", 1), Color(0.42, 0.36, 0.34), clampf(float(look.age), 0.0, 1.0), 2])
+	var ast := int(look.get("age_style", 1 if float(look.get("age", 0.0)) > 0.01 else 0))
+	if ast > 0:
+		slots.append([pick.call("age", ast), Color(0.4, 0.34, 0.32), clampf(float(look.get("age", 0.7)), 0.0, 1.0), 2])
 	c = pick.call("scar", int(look.get("scar", 0)))
 	if c >= 0:
 		slots.append([c, Color(0.9, 0.66, 0.62), 0.8, 1])     # (scar tissue: pale and pink, shaded by the skin)
-	if float(look.get("stubble", 0.0)) > 0.01:
-		slots.append([pick.call("stubble", 1), hair.darkened(0.45), clampf(float(look.stubble), 0.0, 1.0) * 0.9, 3])
+	var sst := int(look.get("stubble_style", 1 if float(look.get("stubble", 0.0)) > 0.01 else 0))
+	if sst > 0:
+		slots.append([pick.call("stubble", sst), hair.darkened(0.4), clampf(float(look.get("stubble", 0.8)), 0.0, 1.0) * 0.95, 3])
 	var li := int(look.get("lip_color", 0))
 	if li > 0 and li < LIP_COLORS.size():
-		slots.append([pick.call("lips", 1), LIP_COLORS[li], 0.8, 1])
+		slots.append([pick.call("lips", 1), LIP_COLORS[li], clampf(float(look.get("lip_amt", 0.6)), 0.0, 1.0), 1])
 	c = pick.call("paint", int(look.get("paint", 0)))
 	if c >= 0:
 		slots.append([c, PAINT_COLORS[clampi(int(look.get("paint_color", 0)), 0, PAINT_COLORS.size() - 1)], 0.92, 1])
@@ -398,7 +434,7 @@ func _layers(m: ShaderMaterial) -> void:
 	if slots.is_empty():
 		return
 	var texs: Array = sl.get("tex", [])
-	for i in mini(texs.size(), 5):
+	for i in mini(texs.size(), 7):
 		var path := "%s/races/%s/%s.png" % [ROOT, race, texs[i]]
 		if not _layer_tex.has(path):
 			var img := Image.load_from_file(path)
@@ -1049,6 +1085,8 @@ uniform sampler2D layer_tex1 : filter_linear_mipmap, repeat_enable;
 uniform sampler2D layer_tex2 : filter_linear_mipmap, repeat_enable;
 uniform sampler2D layer_tex3 : filter_linear_mipmap, repeat_enable;
 uniform sampler2D layer_tex4 : filter_linear_mipmap, repeat_enable;
+uniform sampler2D layer_tex5 : filter_linear_mipmap, repeat_enable;
+uniform sampler2D layer_tex6 : filter_linear_mipmap, repeat_enable;
 uniform int layer_count = 0;
 uniform int layer_ch[7];
 uniform vec3 layer_col[7];
@@ -1082,15 +1120,17 @@ void fragment() {
 	else if (tint_mode == 1) col *= tint;
 	else if (tint_mode == 2) col *= mix(tint, vec3(1.0), smoothstep(0.90, 0.99, c.a));
 	if (layer_count > 0) {
-		float ch[20];
+		float ch[28];
 		vec4 t0 = texture(layer_tex0, UV), t1 = texture(layer_tex1, UV), t2 = texture(layer_tex2, UV);
-		vec4 t3 = texture(layer_tex3, UV), t4 = texture(layer_tex4, UV);
+		vec4 t3 = texture(layer_tex3, UV), t4 = texture(layer_tex4, UV), t5 = texture(layer_tex5, UV);
+		vec4 t6 = texture(layer_tex6, UV);
 		for (int i = 0; i < 4; i++) {
 			ch[i] = t0[i]; ch[4 + i] = t1[i]; ch[8 + i] = t2[i]; ch[12 + i] = t3[i]; ch[16 + i] = t4[i];
+			ch[20 + i] = t5[i]; ch[24 + i] = t6[i];
 		}
 		float ref = max(dot(tint, vec3(0.3, 0.59, 0.11)) * 0.45, 0.05);
 		for (int i = 0; i < layer_count; i++) {
-			float m = ch[clamp(layer_ch[i], 0, 19)] * layer_amt[i];
+			float m = ch[clamp(layer_ch[i], 0, 27)] * layer_amt[i];
 			vec3 lc = layer_col[i];
 			if (layer_mode[i] == 1) {
 				float shade = clamp(dot(col, vec3(0.3, 0.59, 0.11)) / ref, 0.55, 1.25);
