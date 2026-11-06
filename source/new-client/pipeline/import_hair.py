@@ -205,23 +205,88 @@ def add_mesh(g, like_node, name, P, N, UV, T, joint):
             sc['nodes'].append(len(g.g['nodes']) - 1)
 
 
-def scalp_mask(HP, HUV, HT, Q, marks, path):
-    """The scalp under a new style (the head shader shades it in the hair's colour - fig3_textures/scalp/<prefix>_<n>):
-    the head's skin within a hair's reach of the style, above the ears."""
-    H = marks['H']
-    eye = (marks['eyeL'] + marks['eyeR']) / 2
-    d, _ = nearest(HP, Q)
-    w = np.clip((0.09 * H - d) / (0.03 * H), 0, 1) * np.clip((HP[:, 2] - (eye[2] - 0.05 * H)) / (0.05 * H), 0, 1)
-    S = 256
-    img = np.zeros((S, S), np.float32)
-    for t in HT:
-        v = float(w[t].mean())
-        if v <= 0.01:
-            continue
-        pts = np.round(HUV[t] % 1.0 * S).astype(np.int32)
-        cv2.fillPoly(img, [pts], v, cv2.LINE_AA)
-    img = cv2.GaussianBlur(cv2.dilate(img, np.ones((3, 3), np.uint8)), (5, 5), 0)
-    cv2.imwrite(str(path), np.clip(img * 1.5 * 255, 0, 255).astype(np.uint8))   # (the shader takes it from 0.7 up)
+def wrap(Q, T, HP, HN, H, off=0.014):
+    """The cap drawn onto the skull: each point moved along the skin's normal until it sits off it by off (head
+    heights), the moves smoothed over the cap so its curve stays the skin's, not the mesh's facets."""
+    grp = weld(Q)
+    idx = np.zeros((len(Q), 6), np.int64)
+    dist = np.zeros((len(Q), 6))
+    for s0 in range(0, len(Q), 256):
+        dd = np.linalg.norm(Q[s0:s0 + 256, None, :] - HP[None], axis=2)
+        ii = np.argpartition(dd, 6, axis=1)[:, :6]
+        idx[s0:s0 + 256] = ii
+        dist[s0:s0 + 256] = np.take_along_axis(dd, ii, 1)
+    w = 1.0 / np.maximum(dist, 1e-5) ** 2
+    w /= w.sum(1, keepdims=True)
+    P0 = (HP[idx] * w[..., None]).sum(1)
+    N0 = (HN[idx] * w[..., None]).sum(1)
+    N0 /= np.maximum(np.linalg.norm(N0, axis=1, keepdims=True), 1e-9)
+    sd = np.einsum('ij,ij->i', Q - P0, N0)
+    D = N0 * (off * H - sd)[:, None]
+    ng = grp.max() + 1
+    e = np.concatenate([grp[T[:, [0, 1]]], grp[T[:, [1, 2]]], grp[T[:, [2, 0]]]])
+    G_ = np.zeros((ng, 3))
+    np.add.at(G_, grp, D)
+    G_ /= np.maximum(np.bincount(grp, minlength=ng), 1)[:, None]
+    for _ in range(2):
+        S = np.zeros_like(G_)
+        C = np.zeros(ng)
+        np.add.at(S, e[:, 0], G_[e[:, 1]])
+        np.add.at(S, e[:, 1], G_[e[:, 0]])
+        np.add.at(C, e[:, 0], 1)
+        np.add.at(C, e[:, 1], 1)
+        G_ = 0.5 * G_ + 0.5 * S / np.maximum(C, 1)[:, None]
+    Q = Q + G_[grp]
+    return push_out(Q, T, HP, HN, H, clear=off * 0.6)      # (nothing left under the skin after the smoothing)
+
+
+def hair_textures(src, tag, tex_dirs, flow_dir, cap=False):
+    """The model's texture made grey (retinted by the hair colours), then redrawn as strands with its flow map
+    (pipeline/hair_strands.py - the race's own hair had it: soft strands, lit as hair, not the raised relief)."""
+    from hair_strands import strands
+    flow_dir.mkdir(parents=True, exist_ok=True)
+    for d in tex_dirs:
+        dst = d / (tag.lower() + '.png')
+        grey_texture(src, dst, cap=cap)
+        im = cv2.imread(str(dst), cv2.IMREAD_UNCHANGED)
+        if im.shape[1] < 1024:                  # (as the race's own: strands drawn at 1024 wide - on the models' 256
+            k = 1024 / im.shape[1]               # the noise came out in blotches)
+            cv2.imwrite(str(dst), cv2.resize(im, (1024, int(round(im.shape[0] * k))), interpolation=cv2.INTER_CUBIC))
+        strands(dst, dst, flow_dir / (tag.lower() + '.png'), L=40 if not cap else 24, keep=0.15)
+
+
+def colours_for(tag, base_cols):
+    """The race's hair colours on a grey texture: each one's measured colour ('rgb', pipeline/split_beards.py) over
+    the grey's 0.55."""
+    return [{'tex': tag, 'chan': '', 'tint': [round(float(x) / 0.55, 4) for x in c_['rgb']], 'rgb': c_['rgb']}
+            for c_ in base_cols]
+
+
+def follow_face(g, node_name, Q, HP, hp, names, H):
+    """The head's face-slider targets (fx_, pipeline/face_morphs.py) on a new mesh: each point takes the moves of the
+    head's nearest points, fading out a little way off the skin (as face_morphs does for the race's own hair)."""
+    fx = [(k, t) for k, t in zip(names, hp.get('targets', [])) if k.startswith('fx_')]
+    if not fx:
+        return
+    node = next(n for n in g.g['nodes'] if n.get('name') == node_name)
+    mesh = g.g['meshes'][node['mesh']]
+    idx = np.zeros((len(Q), 4), np.int64)
+    dist = np.zeros((len(Q), 4))
+    for s0 in range(0, len(Q), 512):
+        dd = np.linalg.norm(Q[s0:s0 + 512, None, :] - HP[None], axis=2)
+        ii = np.argpartition(dd, 4, axis=1)[:, :4]
+        idx[s0:s0 + 512] = ii
+        dist[s0:s0 + 512] = np.take_along_axis(dd, ii, 1)
+    wgt = 1.0 / np.maximum(dist, 1e-4)
+    wgt /= wgt.sum(1, keepdims=True)
+    fall = np.clip(1.0 - (dist.min(1) - 0.01 * H) / (0.06 * H), 0, 1)
+    prim = mesh['primitives'][0]
+    for k, t in fx:
+        D = g.acc(t['POSITION']).astype(np.float64)
+        d = (D[idx] * wgt[..., None]).sum(1) * fall[:, None]
+        prim.setdefault('targets', []).append({'POSITION': g.add_vec3(d), 'NORMAL': g.add_vec3(np.zeros_like(d))})
+    mesh.setdefault('extras', {})['targetNames'] = [k for k, _ in fx]
+    mesh['weights'] = [0.0] * len(fx)
 
 
 def run(folder, spec_path, preview=None):
@@ -250,30 +315,36 @@ def run(folder, spec_path, preview=None):
     base_cols = next(s['colours'] for s in styles if s.get('node') and s['colours'] and 'rgb' in s['colours'][0])
     prefix = meta['prefix']
     tex_dirs = [folder.parent.parent / 'fig3_textures' / d for d in ('x4plus', 'original')]
+    flow_dir = folder.parent.parent / 'fig3_textures' / 'hairflow'
     out = []
     places = {}
-    under = ''
     if spec.get('scalp'):
-        # (owner 2026-11-06: the models' "Var 1" is a cap tight on the scalp, worn under the other styles in their own
-        # colour - it fills the gaps a style leaves over the skin): one per race, under every new style but those
-        # that say not
+        # (owner 2026-11-06: the models' "Var 1" is a cap tight on the scalp - "put on UNDER the hair every time, that
+        # way the player can decide if they like it on or off": one per race, its own toggle in the creator, worn
+        # under any style, the race's own ones too, in the hair's colour). Placed as the styles are, then drawn onto
+        # this race's skull (each point to a hair's breadth off the skin), so it fits every head the same.
+        # (fitted on itself, not on a style's head: placed by a full style it sat back - a receding hairline)
         item = spec['scalp']
         Q, UV, T = load_obj(item['obj'])
         ref = item.get('ref', item['obj'])
-        places[ref] = places.get(ref) or fit(load_obj(ref)[0], HP, HN, marks)
-        Q = push_out(places[ref][0](Q), T, HP, HN, H, clear=0.01)
-        under = 'new_scalp'
-        add_mesh(g, like, under, Q, skin_frame(Q, T), UV, T, jhead)
-        stex = '%s_ns' % meta['prefix']
+        place = fit(load_obj(ref)[0], HP, HN, marks)[0]
+        Q = place(Q)
+        eye = (marks['eyeL'] + marks['eyeR']) / 2
+        sk = HP[HP[:, 2] > eye[2]]
+        cen = np.array([(sk[:, 0].max() + sk[:, 0].min()) / 2, (sk[:, 1].max() + sk[:, 1].min()) / 2, eye[2]])
+        Q = cen + (Q - cen) * float(item.get('grow', 1.0))      # (a little more of the head, if asked)
+        Q = wrap(Q, T, HP, HN, H, off=float(item.get('off', 0.014)))
+        node = 'new_scalp'
+        add_mesh(g, like, node, Q, skin_frame(Q, T), UV, T, jhead)
+        stex = '%s_ns' % prefix
         src = Path(item['obj']).with_name(next(l.split(None, 1)[1].strip() for l in
                                               open(Path(item['obj']).with_suffix('.mtl'), errors='ignore')
                                               if l.startswith('map_Kd') and 'Body' not in l))
-        for d in tex_dirs:
-            grey_texture(src, d / (stex.lower() + '.png'), cap=True)
-        meta['hair_under'] = {'node': under, 'tex': stex}
-        print('%-12s %-28s %d tris' % (under, Path(item['obj']).name, len(T)))
-    HUV = g.acc(hp['attributes']['TEXCOORD_0']).astype(np.float64)
-    scalp_dir = folder.parent.parent / 'fig3_textures' / 'scalp'
+        hair_textures(src, stex, tex_dirs, flow_dir, cap=True)
+        meta['hair_under'] = {'node': node, 'tex': stex, 'label': item.get('label', 'Scalp Cap'),
+                              'colours': colours_for(stex, base_cols)}
+        out.append((node, Q, T))
+        print('%-12s %-28s %d tris' % (node, Path(item['obj']).name, len(T)))
     for kind in ('hair', 'beards'):
         for k, item in enumerate(spec.get(kind, [])):
             Q, UV, T = load_obj(item['obj'])
@@ -291,27 +362,20 @@ def run(folder, spec_path, preview=None):
             tex_src = Path(item['obj']).with_name(next(l.split(None, 1)[1].strip() for l in
                                                        open(Path(item['obj']).with_suffix('.mtl'), errors='ignore')
                                                        if l.startswith('map_Kd') and 'Body' not in l))
-            for d in tex_dirs:
-                grey_texture(tex_src, d / (tag.lower() + '.png'))
-            cols = [{'tex': tag, 'chan': '', 'tint': [round(float(x) / 0.55, 4) for x in c_['rgb']], 'rgb': c_['rgb']}
-                    for c_ in base_cols]
+            hair_textures(tex_src, tag, tex_dirs, flow_dir)
+            cols = colours_for(tag, base_cols)
             entry = {'label': item.get('label', node), 'node': node, 'mesh': Path(item['obj']).name, 'colours': cols,
                      'imported': True}
             if kind == 'hair':
                 entry['beard'] = 0
-                if under and not item.get('no_scalp'):
-                    entry['under'] = under
                 styles.append(entry)
-                # (no scalp shade of the head's own for these: the cap below does it in the hair's own colour - the
-                # shade came out near black - and a shaved style wants the skin)
-                mp = scalp_dir / ('%s_%d.png' % (prefix, len(styles) - 1))
-                if mp.exists():
-                    mp.unlink()
             else:                                      # (a beard carries its own colours: no style of its own)
                 meta.setdefault('beards', []).append({'node': node, 'label': item.get('label', node), 'style': 0,
                                                       'colours': cols, 'imported': True})
             out.append((node, Q, T))
             print('%-12s %-28s scale %.3f  fit %.5f  %d tris' % (node, Path(item['obj']).name, par[0], c, len(T)))
+    for node, Q, T in out:                         # (the face sliders move them as they move the race's own hair)
+        follow_face(g, node, Q, HP, hp, names, H)
     g.save(folder / 'figure.gltf')
     meta_path.write_text(json.dumps(meta, indent=1), encoding='utf-8')
     return HP, HT, out

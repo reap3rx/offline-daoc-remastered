@@ -327,9 +327,8 @@ func apply(changes: Dictionary) -> void:
 				_hair_mat = m
 				for mi in _parts(node):
 					mi.material_override = m
-				_scalp(si, String(col.tex), Color(col.tint[0], col.tint[1], col.tint[2]))
-	# the cap under a new style (figure.json hair_under, pipeline/import_hair.py): in the style's colour
-	_hair_under(styles, si)
+	# the scalp cap under the hair, if worn (figure.json hair_under, pipeline/import_hair.py): in the hair's colour
+	_hair_under()
 	# the turban over the hair: its cloth from the original texture (the remastered one drew strands into it), dyed
 	var tb: Array = meta.get("turbans", [])
 	var ti := turban_index()
@@ -455,21 +454,26 @@ func is_layered() -> bool:
 	return bool(look.get("v2", false)) and String((meta.get("skin_layers", {}) as Dictionary).get("base", "")) != ""
 
 
-## The scalp cap the models' styles wear under them (owner 2026-11-06: "used as a scalp shading solution ... same
-## color as the chosen hair style, and helped with any gaps"): shown under the worn style if it names it.
-func _hair_under(styles: Array, si: int) -> void:
+## The scalp cap (owner 2026-11-06: "put on UNDER the hair every time ... the player can decide if they like it on or
+## off with each hair style"): the race's one cap (figure.json hair_under), worn under any style - bald too - when the
+## look has scalp_cap on, in the hair colour chosen. Not under a helm that flattens hair (it has no helm morphs).
+func _hair_under() -> void:
 	var hu: Dictionary = meta.get("hair_under", {})
 	if hu.is_empty() or not _meshes.has(String(hu.node)):
 		return
-	var st: Dictionary = styles[si] if si >= 0 and si < styles.size() else {}
-	var on := String(st.get("under", "")) == String(hu.node) and not _hair_covered() and not _under_helm(st)
+	var on := scalp_cap_on() and not _hair_covered() and not (_helm != null and _helm_hair >= 2)
 	for mi in _parts(String(hu.node)):
 		mi.visible = on
-	if on and (st.colours as Array).size() > 0:
-		var col := hair_colour(st.colours)
-		var m := _hair_material({"tex": String(hu.tex), "tint": col.tint})
+	var cols: Array = hu.get("colours", [])
+	if on and cols.size() > 0:
+		var m := _hair_material(hair_colour(cols))
+		m.set_shader_parameter("fuzz", 0.0)            # (skin-tight: no strands broken off its outline)
 		for mi in _parts(String(hu.node)):
 			mi.material_override = m
+
+
+func scalp_cap_on() -> bool:
+	return int(look.get("scalp_cap", 0)) == 1 and not (meta.get("hair_under", {}) as Dictionary).is_empty()
 
 
 ## A hair style made from a model of our own (pipeline/import_hair.py) has no helm morphs to flatten it under a
@@ -769,7 +773,7 @@ func _apply_shape() -> void:
 		for st in styles:
 			if st.node != null and _meshes.has(st.node):
 				meshes.append_array(_parts(st.node))
-		for b in meta.get("beards", []) + meta.get("turbans", []):
+		for b in meta.get("beards", []) + meta.get("turbans", []) + [meta.get("hair_under", {"node": ""})]:
 			if _meshes.has(String(b.node)):
 				meshes.append_array(_parts(String(b.node)))
 		for fs in shapes:
@@ -893,9 +897,8 @@ func _refresh_hair() -> void:
 				_blend(mi, String(morphs[k]), 1.0 if int(k) == under and under != 1 else 0.0)
 	if not (meta.get("hair_under", {}) as Dictionary).is_empty():
 		var hu: Dictionary = meta.hair_under
-		var sti: Dictionary = styles[si] if si < styles.size() else {}
 		for mi in _parts(String(hu.node)):
-			mi.visible = String(sti.get("under", "")) == String(hu.node) and not _hair_covered() and not _under_helm(sti)
+			mi.visible = scalp_cap_on() and not _hair_covered() and not (_helm != null and _helm_hair >= 2)
 	var tb: Array = meta.get("turbans", [])
 	var ti := turban_index()
 	for k in tb.size():
@@ -1212,7 +1215,10 @@ static func option_count_of(meta: Dictionary, look: Dictionary, key: String) -> 
 		"turban": return meta.get("turbans", []).size() + 1 if not (meta.get("turbans", []) as Array).is_empty() else 0
 		"hair_color":
 			var styles: Array = meta.get("hair_styles", [])
-			return styles[clampi(int(look.get("hair", 0)), 0, styles.size() - 1)].colours.size() if styles.size() > 0 else 0
+			var n: int = styles[clampi(int(look.get("hair", 0)), 0, styles.size() - 1)].colours.size() if styles.size() > 0 else 0
+			if n == 0 and int(look.get("scalp_cap", 0)) == 1:     # (bald with the scalp cap: the cap's colours)
+				n = (meta.get("hair_under", {}).get("colours", []) as Array).size()
+			return n
 		"tattoo": return meta.get("tattoos", []).size()
 		"size": return 3
 	return 0
@@ -1238,55 +1244,6 @@ func _blend(mi: MeshInstance3D, target: String, w: float) -> void:
 	var i := mi.find_blend_shape_by_name(target)
 	if i >= 0:
 		mi.set_blend_shape_value(i, w)
-
-
-## The head's scalp under hair style si tinted to its colour (the mask and the hair textures' colours from
-## pipeline/scalp_masks.py; none: off).
-func _scalp(si: int, tex: String, tint: Color) -> void:
-	var head := _part("head")
-	if head == null:
-		return
-	var mask := scalp_mask(String(meta.get("prefix", "")), si)
-	var cols: Dictionary = scalp_colors()
-	var on := mask != null and not _hair_covered() and int(look.get("scalp_off", 0)) == 0
-	for mi in _parts("head"):
-		var m := mi.material_override as ShaderMaterial
-		if m == null:
-			continue
-		m.set_shader_parameter("scalp_on", 1.0 if on else 0.0)
-		if on:
-			var c: Array = cols.get(tex.to_lower(), [0.25, 0.2, 0.15])
-			m.set_shader_parameter("scalp_tex", mask)
-			m.set_shader_parameter("scalp_color", Color(c[0], c[1], c[2]) * tint * 0.75)   # (in the hair's shade)
-
-
-static var _scalp_cache := {}
-static var _scalp_colors = null
-
-
-static func scalp_mask(prefix: String, si: int) -> Texture2D:
-	var key := "%s_%d" % [prefix, si]
-	if _scalp_cache.has(key):
-		return _scalp_cache[key]
-	var path := ProjectSettings.globalize_path("%s/fig3_textures/scalp/%s.png" % [ROOT, key])
-	var t: Texture2D = null
-	if FileAccess.file_exists(path):
-		var img := Image.load_from_file(path)
-		if img:
-			t = ImageTexture.create_from_image(img)
-	_scalp_cache[key] = t
-	return t
-
-
-static func scalp_colors() -> Dictionary:
-	if _scalp_colors == null:
-		_scalp_colors = {}
-		var path := ProjectSettings.globalize_path("%s/fig3_textures/scalp/colors.json" % ROOT)
-		if FileAccess.file_exists(path):
-			var d = JSON.parse_string(FileAccess.get_file_as_string(path))
-			if d is Dictionary:
-				_scalp_colors = d
-	return _scalp_colors
 
 
 ## A hair texture's flow map (pipeline/hair_strands.py), or null when the hair wasn't redrawn. Linear (not sRGB, not
@@ -1461,11 +1418,6 @@ uniform vec3 sway_back = vec3(0.0, 0.0, -1.0);
 // stealth (Player hidden look): a dither instead of blending - the head, the hair and the body fade alike, with no
 // sorting between the parts (owner 2026-10-31: the head and hair stayed solid or vanished as the camera moved)
 uniform float fade = 1.0;
-// the scalp under the hair (pipeline/scalp_masks.py): the hair's colour, matte - a gap in the hair shows dark scalp,
-// not lit skin (owner 2026-11-05: a Sorceress's braid crown with a slit of shiny skin under it)
-uniform sampler2D scalp_tex : filter_linear, repeat_disable;
-uniform vec3 scalp_color : source_color = vec3(0.1);
-uniform float scalp_on = 0.0;
 // the creator's skin layers (pipeline/skin_layers.py, Fig3Figure._layers): up to 7 masks over the face - brows, freckles,
 // age lines, a scar, stubble, lip colour, war paint - each a channel of the race's skin_layers_<n> textures, a colour,
 // a strength and a way: 1 paint (the colour, shaded by the skin under it), 2 multiply, 3 hair (the colour itself)
@@ -1646,13 +1598,6 @@ void fragment() {
 		}
 	}
 	//CUTOUT
-	if (scalp_on > 0.0) {
-		// (only well under the hair: owner 2026-11-06, the mask's soft edge showed as a band along the hairline)
-		float sm = smoothstep(0.7, 0.98, texture(scalp_tex, UV).r) * scalp_on;
-		ALBEDO = mix(ALBEDO, scalp_color, sm);
-		ROUGHNESS = mix(ROUGHNESS, 1.0, sm);
-		SPECULAR = mix(SPECULAR, 0.0, sm);
-	}
 }
 """
 

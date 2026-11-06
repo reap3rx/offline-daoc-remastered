@@ -850,6 +850,8 @@ func _c_face(p: Control, y: float) -> float:
 	y = _c_colour(p, "Skin Color", "skin", _skin_colours(), y, "skin")
 	y = _c_colour(p, "Eye Color", "eyes", _eye_colours(), y)
 	y = _c_hair_style(p, y)
+	if not (f.meta.get("hair_under", {}) as Dictionary).is_empty():      # (the scalp cap: on or off under any style)
+		y = _c_key(p, String(f.meta.hair_under.get("label", "Scalp Cap")), "scalp_cap", ["Off", "On"], y)
 	if f.option_count("turban") > 0:              # (Saracens: a turban worn over any hair style)
 		var tl: Array = ["None"] + f.meta.turbans.map(func(x): return String(x.label))
 		var tcur := f.turban_index()
@@ -863,7 +865,7 @@ func _c_face(p: Control, y: float) -> float:
 			y = _c_colour(p, "Turban Color", "turban_color", Fig3Figure.TURBAN_COLORS, y)
 	if f.option_count("beard") > 1:                 # (men: the beards split off the hair styles)
 		y = _c_key(p, "Beard", "beard", ["None"] + f.meta.beards.map(func(x): return String(x.label)), y, f.beard_index())
-	if f.option_count("hair_color") > 0 and (_hair_has_mesh() or f.beard_index() > 0):
+	if f.option_count("hair_color") > 0 and (_hair_has_mesh() or f.beard_index() > 0 or f.scalp_cap_on()):
 		y = _c_colour(p, "Hair Color", "hair_color", _hair_colours(), y)
 	if not f.is_layered():
 		y = _c_key(p, "Face", "face", f.meta.get("faces", []).map(func(x): return String(x.label)), y)
@@ -975,9 +977,6 @@ func _c_skin(p: Control, y: float) -> float:
 					y = _c_amount(p, "Up / Down", "paint_y", 0.0, pyv.x, pyv.y, y)
 					y = _c_amount(p, "Size", "paint_size", 1.0, Fig3Figure.PAINT_SIZE.x, Fig3Figure.PAINT_SIZE.y, y)
 					y = _c_amount(p, "Turn", "paint_turn", 0.0, Fig3Figure.PAINT_TURN.x, Fig3Figure.PAINT_TURN.y, y)
-	if _figure.option_count("hair") > 0:
-		y = _c_header(p, "HAIR", y + 4)
-		y = _c_key(p, "Scalp Shade", "scalp_off", ["On", "Off"], y)
 	return y
 
 
@@ -1547,7 +1546,10 @@ func _skin_colours() -> Array:
 func _hair_colours() -> Array:
 	var styles: Array = _figure.meta.get("hair_styles", [])
 	var i := clampi(int(draft.look.get("hair", 0)), 0, styles.size() - 1)
-	return styles[i].colours.map(func(c): return _swatch(String(c.tex), Color(c.tint[0], c.tint[1], c.tint[2]), "hair"))
+	var cols: Array = styles[i].colours
+	if cols.is_empty() and _figure.scalp_cap_on():          # (bald with the scalp cap: its colours)
+		cols = _figure.meta.hair_under.get("colours", [])
+	return cols.map(func(c): return _swatch(String(c.tex), Color(c.tint[0], c.tint[1], c.tint[2]), "hair"))
 
 
 ## A swatch from the option's own client texture: the iris colour of an eye-colour texture (it is white except the

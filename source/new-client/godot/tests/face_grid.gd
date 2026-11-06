@@ -125,6 +125,42 @@ func _ready() -> void:
 		for b in bs.size():
 			if bool(bs[b].get("imported", false)) and presets.size() < 12:
 				presets.append(["Beard", {"hair": 0, "hair_color": 4, "beard": b + 1}])
+		for si in styles.size():                    # (the sheet filled: the styles over the scalp cap)
+			if bool(styles[si].get("imported", false)) and presets.size() < 12:
+				presets.append(["%s cap" % styles[si].label, {"hair": si, "hair_color": 4, "beard": 0, "scalp_cap": 1}])
+		for si in styles.size():
+			if bool(styles[si].get("imported", false)) and presets.size() < 12:
+				presets.append(["%s cap 8" % styles[si].label, {"hair": si, "hair_color": 8, "beard": 0, "scalp_cap": 1}])
+	if pset == "cap":                               # the scalp cap (figure.json hair_under): bald, under styles, sliders
+		presets = []
+		var styles: Array = fig.meta.get("hair_styles", [])
+		var bald := -1
+		for si in styles.size():
+			if styles[si].node == null:
+				bald = si
+				break
+		var vanilla: Array = []
+		var made: Array = []
+		for si in fig.creator_styles():
+			if styles[si].node != null:
+				(made if bool(styles[si].get("imported", false)) else vanilla).append(si)
+		if bald >= 0:
+			presets.append(["Bald", {"hair": bald, "scalp_cap": 0, "beard": 0}])
+			presets.append(["Bald cap", {"hair": bald, "scalp_cap": 1, "beard": 0}])
+			presets.append(["Bald cap dark", {"hair": bald, "scalp_cap": 1, "hair_color": 4, "beard": 0}])
+			presets.append(["Bald cap Brute", {"hair": bald, "scalp_cap": 1, "beard": 0, "_shape": {"brow_depth": 1.0, "brow_height": -0.6, "jaw_width": 1.0}}])
+			presets.append(["Bald cap Long", {"hair": bald, "scalp_cap": 1, "beard": 0, "_shape": {"brow_height": 1.0, "eye_height": 0.6, "chin_length": 1.0}}])
+		for si in vanilla.slice(0, 3):
+			presets.append(["Hair %d cap" % si, {"hair": si, "scalp_cap": 1, "beard": 0}])
+		for si in made:
+			if presets.size() < 12:
+				presets.append(["%s cap" % styles[si].label, {"hair": si, "scalp_cap": 1, "beard": 0}])
+		for si in made:                             # (fill the sheet: the styles bare, to compare)
+			if presets.size() < 12:
+				presets.append(["%s bare" % styles[si].label, {"hair": si, "scalp_cap": 0, "beard": 0}])
+		for si in vanilla:
+			if presets.size() < 12:
+				presets.append(["Hair %d bare" % si, {"hair": si, "scalp_cap": 0, "beard": 0}])
 	if pset == "turban":                            # the Saracen men's turban over each hair style, dyed
 		presets = []
 		var k := 0
@@ -152,15 +188,35 @@ func _ready() -> void:
 		names.append(String(p[0]))
 	for i in presets.size():
 		var vals: Dictionary = presets[i][1]
-		if pset == "beard" or pset == "turban" or pset == "newhair":
+		if pset == "beard" or pset == "turban" or pset == "newhair" or pset == "cap":
 			fig.look = {"face": 0, "hair_color": 1, "eyes": 2, "skin": 1}
+			var shp: Dictionary = vals.get("_shape", {})
+			vals = vals.duplicate()
+			vals.erase("_shape")
+			fig.apply(fig.layered_changes())
 			fig.apply(vals)
-			vals = {}
+			fig.set_shape(shp)
+			await _frames(2)
+			vals = shp
 		if pset in ["skin", "paint", "colour"]:
 			fig.look = {"face": 0, "hair": int(args.get("hair", "1")), "hair_color": 1, "eyes": 2, "skin": 1}
 			fig.apply(fig.layered_changes())
 			fig.apply(vals)
 			vals = {}
+		if args.has("capred"):                      # (debug: the scalp cap in a plain red material)
+			var red := StandardMaterial3D.new()
+			red.albedo_color = Color(0.8, 0.1, 0.1)
+			for mh in fig._parts("new_scalp"):
+				mh.material_override = red
+			if args.has("headstd"):
+				var hs := StandardMaterial3D.new()
+				hs.albedo_color = Color(0.9, 0.75, 0.65)
+				for mh in fig._parts("head"):
+					mh.material_override = hs
+		if args.has("nohead"):                      # (debug: only the scalp cap drawn)
+			for mh in heads:
+				print("[fg] mesh ", mh.name, " ", mh.get_parent().name, " ", mh.visible)
+				mh.visible = String(mh.name).contains("scalp") or String(mh.get_parent().name).contains("scalp")
 		if args.has("nohair"):                      # (debug: the style itself hidden - what is under it)
 			var sts: Array = fig.meta.get("hair_styles", [])
 			for st in sts:
