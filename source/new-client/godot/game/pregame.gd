@@ -58,6 +58,7 @@ var sel := 0
 var draft := {}                                   # the character being created or customized
 var editing := false                              # customize an existing character (select screen CUSTOMIZE)
 var locks := {}
+var _shape_page := false                           # customize: the FACE SHAPE page (owner 2026-11-06)
 
 var _scene: NifScene
 var _scene_realm := ""
@@ -345,8 +346,30 @@ func _build_customize() -> void:
 	_frame_art("character_customize", 12, 268)
 	_show_figure(draft if editing else _draft_character())
 	var f := _figure
-	_label("FACIAL FEATURES", 760, 64, 248, 30, 22, GOLD, HORIZONTAL_ALIGNMENT_CENTER, "R")
+	var shapes: Array = f.meta.get("face_shapes", [])
+	if shapes.is_empty():
+		_shape_page = false
+		_label("FACIAL FEATURES", 760, 64, 248, 30, 22, GOLD, HORIZONTAL_ALIGNMENT_CENTER, "R")
+	else:                                                   # two pages: the features, and the face's shape
+		var tabs := [["FEATURES", false], ["FACE SHAPE", true]]
+		for i in tabs.size():
+			var page: bool = tabs[i][1]
+			var tb := _bar_button(String(tabs[i][0]), 776 + i * 116, 66, 108, 26, "R", func():
+				draft.look = _figure.look.duplicate(true)
+				_shape_page = page
+				_show("customize"))
+			_selected(tb, page == _shape_page)
 	var y := 100.0
+	if _shape_page:
+		_shape_rows(shapes, y)
+	else:
+		_feature_rows(y)
+	# camera: arrows turn the figure, + / - zoom (the client's customize controls)
+	_customize_frame()
+
+
+func _feature_rows(y: float) -> void:
+	var f := _figure
 	y = _stepper_row("FACE", "face", f.meta.get("faces", []).map(func(x): return String(x.label).to_upper()), y)
 	var sliders: Array = f.meta.get("sliders", [])
 	for i in sliders.size():
@@ -378,8 +401,55 @@ func _build_customize() -> void:
 	_bar_button("DEFAULT", 892, 606, 108, 28, "R", func():
 		draft.look = {}
 		_figure.look = {}
-		_figure.apply({"sliders": [4, 4, 4, 4]})
+		_figure.apply({"sliders": [4, 4, 4, 4], "shape": {}})
 		_show("customize"))
+
+
+## The face's shape (pipeline/face_morphs.py's fx_ targets, figure.json 'face_shapes'): one slider each, -1 .. 1,
+## the middle the race's own face; right-click puts one back to the middle.
+func _shape_rows(shapes: Array, y: float) -> void:
+	for fs in shapes:
+		var key := String(fs[0])
+		_label(String(fs[1]).to_upper(), 770, y, 112, 22, 13, CREAM, HORIZONTAL_ALIGNMENT_LEFT, "R")
+		var s := HSlider.new()
+		s.min_value = -1.0
+		s.max_value = 1.0
+		s.step = 0.05
+		s.value = float((draft.look.get("shape", {}) as Dictionary).get(key, 0.0))
+		s.value_changed.connect(func(v: float):
+			var sh: Dictionary = (_figure.look.get("shape", {}) as Dictionary).duplicate()
+			if absf(v) < 0.001:
+				sh.erase(key)
+			else:
+				sh[key] = snappedf(v, 0.05)
+			draft.look["shape"] = sh
+			_figure.set_shape(sh))
+		s.gui_input.connect(func(e: InputEvent):
+			if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_RIGHT:
+				s.value = 0.0
+				s.accept_event())
+		_at(s, 886, y + 2, 102, 18, "R")
+		y += 24
+	_bar_button("RANDOM", 776, 606, 108, 28, "R", func():
+		_figure.set_shape(_random_shape())
+		draft.look = _figure.look.duplicate(true)
+		_show("customize"))
+	_bar_button("DEFAULT", 892, 606, 108, 28, "R", func():
+		_figure.set_shape({})
+		draft.look = _figure.look.duplicate(true)
+		_show("customize"))
+
+
+## A face of the race's own kind: a few features moved a little, never to the extremes.
+func _random_shape() -> Dictionary:
+	var sh := {}
+	for fs in _figure.meta.get("face_shapes", []):
+		if randf() < 0.6:
+			sh[String(fs[0])] = snappedf(clampf(randfn(0.0, 0.3), -0.7, 0.7), 0.05)
+	return sh
+
+
+func _customize_frame() -> void:
 	# camera: arrows turn the figure, + / - zoom (the client's customize controls)
 	var misc := _small("misc_pieces_new")
 	var cam_buttons := [[Rect2(110, 177, 26, 29), func(): _yaw -= 0.35; _place_camera()],
@@ -626,6 +696,8 @@ func _randomize() -> void:
 		for i in f.meta.get("sliders", []).size():
 			arr.append(randi() % 9)
 		f.apply({"sliders": arr})
+	if not locks.get("shape", false):
+		f.set_shape(_random_shape())
 	draft.look = f.look.duplicate(true)
 	_show("customize")
 
@@ -1215,6 +1287,13 @@ func _shots(folder: String) -> void:
 	_name_edit.text = "Brennan"
 	_create_continue()
 	await save.call("4_customize")
+	if not _figure.meta.get("face_shapes", []).is_empty():
+		_figure.set_shape({"nose_tip": 0.6, "cheekbones": 0.5, "jaw_width": -0.4, "eye_size": 0.3, "chin_point": 0.4})
+		draft.look = _figure.look.duplicate(true)
+		_shape_page = true
+		_show("customize")
+		await save.call("5_shape")
+		_shape_page = false
 	_customize_continue()
 	await save.call("6_select_with_character")
 	CharacterStore.remove(Accounts.account, "Brennan")

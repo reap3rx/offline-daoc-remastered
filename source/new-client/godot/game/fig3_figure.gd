@@ -337,10 +337,34 @@ func apply(changes: Dictionary) -> void:
 			var v := float(values[i]) if i < values.size() else 4.0
 			_blend(head, String(sliders[i].low), clampf((4.0 - v) / 4.0, 0.0, 1.0))
 			_blend(head, String(sliders[i].high), clampf((v - 4.0) / 4.0, 0.0, 1.0))
+	# face shapes (owner 2026-11-06, the creator's sliders): look.shape {name: -1..1} on the fx_<name> targets of the
+	# head and of every hair style (pipeline/face_morphs.py gave the beards the same moves, so they stay on the face)
+	_apply_shape()
 	# size: the race's Catacombs scale x Short 0.95 / Average 1.0 / Tall 1.05
 	var sizes := [0.95, 1.0, 1.05]
 	scale = Vector3.ONE * float(meta.get("scale", 1.0)) * float(sizes[clampi(int(look.get("size", 1)), 0, 2)])
 	_apply_armor()                                         # worn armour over the starter clothes; hides unused variants
+
+
+## The face shapes alone (the creator's sliders call this as they move: no materials rebuilt).
+func set_shape(shape: Dictionary) -> void:
+	look["shape"] = shape
+	_apply_shape()
+
+
+func _apply_shape() -> void:
+	var styles: Array = meta.get("hair_styles", [])
+	var shapes: Array = meta.get("face_shapes", [])
+	if not shapes.is_empty():
+		var shape: Dictionary = look.get("shape", {})
+		var meshes: Array = _parts("head").duplicate()
+		for st in styles:
+			if st.node != null and _meshes.has(st.node):
+				meshes.append_array(_parts(st.node))
+		for fs in shapes:
+			var w := clampf(float(shape.get(String(fs[0]), 0.0)), -1.0, 1.0)
+			for mi in meshes:
+				_blend(mi, "fx_" + String(fs[0]), w)
 
 
 ## Worn armour (content/characters/armor.json from pipeline/build_armor.py): {slot: [variant, texture]} for body /

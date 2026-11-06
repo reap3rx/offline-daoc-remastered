@@ -1,6 +1,6 @@
 """Face shapes (claude 2026-11-06, owner: "how hard would it be to have more detailed facial customization so you're
 not picking between the same 4 or 5 faces?"). For a race figure's head, a set of new morph targets ("fx_<name>"), each
-one feature moved: the nose's width, length, height and bridge; the eyes' spacing, height, size and depth; the brow's
+one feature moved: the nose's width, length, height, bridge and tip (upturned or hooked); the eyes' spacing, height, size and depth; the brow's
 height and depth; the cheekbones; the mouth's width, height and lips; the jaw's width; the chin's length and point;
 the ears' size. One target per slider, used from -1 to 1.
 
@@ -11,6 +11,7 @@ neck seam with the body) and is the same on every copy of a position (the textur
 follow the new shape. The skull and the hairline are not moved: the hair meshes sit on them.
 
     python face_morphs.py <figure.gltf> <out.gltf> [--scale=1.0]
+build_races.py runs it on every figure after the smoothing (skip with --no-face-shapes).
 """
 import base64, json, sys
 from pathlib import Path
@@ -22,7 +23,7 @@ NC = {'SCALAR': 1, 'VEC2': 2, 'VEC3': 3, 'VEC4': 4}
 # name, label, range note (all -1 .. 1)
 FEATURES = [
     ('nose_width', 'Nose Width'), ('nose_length', 'Nose Length'), ('nose_height', 'Nose Height'),
-    ('nose_bridge', 'Nose Bridge'), ('eye_spacing', 'Eye Spacing'), ('eye_height', 'Eye Height'),
+    ('nose_bridge', 'Nose Bridge'), ('nose_tip', 'Nose Tip'), ('eye_spacing', 'Eye Spacing'), ('eye_height', 'Eye Height'),
     ('eye_size', 'Eye Size'), ('eye_depth', 'Eye Depth'), ('brow_height', 'Brow Height'), ('brow_depth', 'Brow Ridge'),
     ('cheekbones', 'Cheekbones'), ('mouth_width', 'Mouth Width'), ('mouth_height', 'Mouth Height'),
     ('lips', 'Lip Fullness'), ('jaw_width', 'Jaw Width'), ('chin_length', 'Chin Length'), ('chin_point', 'Chin Point'),
@@ -133,6 +134,15 @@ def open_edge_mask(P, T, grp, fade):
     return np.clip(d / fade, 0, 1) ** 1.5
 
 
+def space_smooth(w, P, r):
+    """A weight averaged over the points within about r in space (crosses the mesh's gaps, e.g. the lips' seam)."""
+    out = np.zeros(len(P))
+    for s0 in range(0, len(P), 512):
+        k = np.exp(-np.sum((P[s0:s0 + 512, None, :] - P[None]) ** 2, axis=2) / (2 * r * r))
+        out[s0:s0 + 512] = (k * w[None]).sum(1) / k.sum(1)
+    return out
+
+
 def gauss(P, c, r):
     return np.exp(-np.sum((P - c) ** 2, axis=1) / (2 * r * r))
 
@@ -143,7 +153,6 @@ def build(P, N, T, fm, scale=1.0):
     lo, hi = P.min(0), P.max(0)
     H = hi[2] - lo[2]
     hw = max(-lo[0], hi[0])
-    s = H / 10.0 * scale                                   # a feature's move: a tenth of the head, at full slider
 
     def region(a, b):
         w = np.linalg.norm(fm[a], axis=1) + np.linalg.norm(fm[b], axis=1)
@@ -160,13 +169,35 @@ def build(P, N, T, fm, scale=1.0):
     left, right = (P[:, 0] < 0).astype(float), (P[:, 0] > 0).astype(float)
     eyeL, eyeR = centroid(w_eye ** 2, left), centroid(w_eye ** 2, right)
     eye_mid = (eyeL + eyeR) / 2
+    # the face's size: the head mesh's height, unless the mesh carries more than a head's worth (the Shar's horns made
+    # it 2.5x: every move came out 2.5x, a snout instead of a nose) - then five eye spacings, a head's height
+    H = min(H, 5.0 * abs(eyeR[0] - eyeL[0]))
+    hw = min(hw, 0.3 * H)
+    s = H / 10.0 * scale                                   # a feature's move: a tenth of the head, at full slider
     nose_tip = P[np.argmin(np.where(w_nose > 0.5, P[:, 1], np.inf))]
     mouth = centroid(w_lip ** 2)
     chin_sel = w_jaw * gauss(P * [1, 0, 0], 0, 0.25 * hw)
     chin = centroid(chin_sel ** 2)
     front = np.clip((eye_mid[1] + 0.25 * H - P[:, 1]) / (0.25 * H), 0, 1)   # the face half, not the back of the head
+    # not every race's FM7/8 is its jaw (the elves', firbolgs', Shar's, Valkyn's move the ears or the whole head): a
+    # 'chin' found above the mouth or behind the face means the jaw comes from the shape instead - the chin the
+    # midline's low forward corner below the mouth, the jaw the face below the mouth
+    if not (chin[2] < mouth[2] and chin[1] < eye_mid[1] + 0.1 * H):
+        w_jaw = np.clip((mouth[2] + 0.02 * H - P[:, 2]) / (0.1 * H), 0, 1) * front
+        mid = np.abs(P[:, 0] - mouth[0]) < 0.06 * H
+        # (low and forward: the chin's corner, not the lower lip above it nor the neck below and behind it)
+        cand = np.where(mid & (P[:, 2] < mouth[2] - 0.06 * H) & (P[:, 2] > mouth[2] - 0.22 * H),
+                        P[:, 2] + 2.0 * P[:, 1], np.inf)
+        if np.isfinite(cand.min()):
+            chin = P[np.argmin(cand)].copy()
+        print('  (the jaw from the shape: FM7/8 are not this head\'s jaw)')
     Nn = N / np.maximum(np.linalg.norm(N, axis=1, keepdims=True), 1e-12)
 
+    # the lips' weight smoothed through space, not along the mesh: the upper and lower lip are not joined, so a move
+    # that took them differently at their seam opened the mouth (the teeth showed); the mouth's moves use it, every
+    # other move leaves the lips alone (and the area under the nose with them)
+    w_ls = np.clip(space_smooth(w_lip, P, 0.035 * H) * 1.15, 0, 1)
+    keep_mouth = 1 - np.clip(space_smooth(w_lip, P, 0.08 * H) * 2.5, 0, 1)
     D = {}
     z = np.zeros_like(P)
     # nose
@@ -175,6 +206,19 @@ def build(P, N, T, fm, scale=1.0):
     d = z.copy(); d[:, 2] = 0.25 * s * w_nose; D['nose_height'] = d
     up = np.clip((P[:, 2] - nose_tip[2]) / max(eye_mid[2] - nose_tip[2], 1e-6), 0, 1)
     d = z.copy(); d[:, 1] = -0.3 * s * w_nose * up; D['nose_bridge'] = d
+    # the tip (owner: "upturn the tip of the nose"): the lower nose turns up about a point between the eyes and the
+    # tip, the nostrils showing more; -1 hooks it down
+    pivot = nose_tip + (eye_mid - nose_tip) * 0.55
+    pivot[0] = nose_tip[0]
+    pivot[1] = nose_tip[1] + 0.3 * (eye_mid[1] - nose_tip[1])  # on the nose's ridge, so the tip lifts more than it grows
+    w_tip = w_nose * np.clip(gauss(P, nose_tip + [0, 0.01 * H, -0.02 * H], 0.075 * H) * 1.3, 0, 1) \
+        * np.clip((pivot[2] - P[:, 2]) / max(pivot[2] - nose_tip[2], 1e-6), 0, 1)
+    th = -0.34                                              # radians at full slider: the tip swings up
+    ry, rz = P[:, 1] - pivot[1], P[:, 2] - pivot[2]
+    d = z.copy()
+    d[:, 1] = (ry * np.cos(th) - rz * np.sin(th) - ry) * w_tip
+    d[:, 2] = (ry * np.sin(th) + rz * np.cos(th) - rz) * w_tip
+    D['nose_tip'] = d
     # eyes (each side about its own centre)
     side = np.sign(P[:, 0])
     d = z.copy(); d[:, 0] = side * 0.18 * s * w_eye; D['eye_spacing'] = d
@@ -196,11 +240,15 @@ def build(P, N, T, fm, scale=1.0):
     w_ck = np.clip(gauss(P, ckL, ck) + gauss(P, ckR, ck), 0, 1) * front * (1 - w_nose) * (1 - core)
     D['cheekbones'] = Nn * (0.2 * s * w_ck)[:, None] + np.stack([np.sign(P[:, 0]) * 0.08 * s * w_ck, z[:, 1], z[:, 2]], 1)
     # mouth
-    d = z.copy(); d[:, 0] = (P[:, 0] - mouth[0]) * 0.3 * w_lip; D['mouth_width'] = d
-    d = z.copy(); d[:, 2] = 0.15 * s * w_lip; D['mouth_height'] = d
-    D['lips'] = Nn * (0.12 * s * w_lip ** 2)[:, None]
+    # (w_ls: the lips' weight smoothed through space - see above)
+    d = z.copy(); d[:, 0] = (P[:, 0] - mouth[0]) * 0.3 * w_ls; D['mouth_width'] = d
+    d = z.copy(); d[:, 2] = 0.15 * s * w_ls; D['mouth_height'] = d
+    # fuller lips: forward, both lips alike, so the seam stays shut
+    d = z.copy(); d[:, 1] = -0.14 * s * w_ls ** 2; D['lips'] = d
     # jaw and chin
-    low = np.clip((mouth[2] + 0.05 * H - P[:, 2]) / (0.2 * H), 0, 1)
+    # (from below the lower lip, and never the lips: a jaw or chin that took the lower lip and not the upper opened
+    # the mouth)
+    low = np.clip((mouth[2] - 0.03 * H - P[:, 2]) / (0.17 * H), 0, 1) * (1 - w_ls)
     d = z.copy(); d[:, 0] = P[:, 0] * 0.22 * w_jaw * low; D['jaw_width'] = d
     w_chin = np.clip(gauss(P, chin, 0.16 * H), 0, 1) * front * low
     d = z.copy(); d[:, 2] = -0.28 * s * w_chin; D['chin_length'] = d
@@ -212,9 +260,9 @@ def build(P, N, T, fm, scale=1.0):
     w_ear = np.clip(smooth(w_ear, T, grp, 2), 0, 1)
     root = np.stack([np.sign(P[:, 0]) * 0.78 * hw, np.full(len(P), eye_mid[1] + 0.3 * H), np.full(len(P), ear_z)], 1)
     D['ear_size'] = (P - root) * 0.35 * w_ear[:, None]
-    # every move: gone at the open edges, one value per position
+    # every move: gone at the open edges, one value per position; only the mouth's own moves touch the lips
     for k in D:
-        dk = D[k] * edge[:, None]
+        dk = D[k] * (edge if k in ('mouth_width', 'mouth_height', 'lips') else edge * keep_mouth)[:, None]
         g = np.zeros((grp.max() + 1, 3))
         cnt = np.zeros(grp.max() + 1)
         np.add.at(g, grp, dk)
@@ -224,8 +272,19 @@ def build(P, N, T, fm, scale=1.0):
     return D, marks
 
 
+# races whose features need a bigger move to show (the trolls' heads are wide and craggy: at 1.0 the sliders barely read)
+RACE_SCALE = {'tro': 1.5}
+
+
 def main():
-    src, out = sys.argv[1], sys.argv[2]
+    run(sys.argv[1], sys.argv[2], arg('scale', 0) or None)
+
+
+def run(src, out, scale=None):
+    """Adds the fx_ targets to src's head and hair, writes out (may be src) and records the sliders in figure.json
+    'face_shapes' ([name, label] each)."""
+    if scale is None:
+        scale = RACE_SCALE.get(Path(src).resolve().parent.name[:3], 1.0)
     g = G(src)
     node = next(n for n in g.g['nodes'] if n.get('name') == 'head' and 'mesh' in n)
     mesh = g.g['meshes'][node['mesh']]
@@ -239,7 +298,7 @@ def main():
         fm = [g.acc(t['POSITION']).astype(np.float64) for t in prim.get('targets', [])[:8]]
         if len(fm) < 8:
             raise SystemExit('the head has no Catacombs morphs to find its features by')
-        D, marks = build(P, N, T, fm, arg('scale', 1.0))
+        D, marks = build(P, N, T, fm, scale)
         if pi == 0:
             print('landmarks', {k: (np.round(v, 2).tolist() if hasattr(v, 'tolist') else round(v, 2)) for k, v in marks.items()})
         grp = weld(P)
@@ -294,6 +353,11 @@ def main():
         print('hair %-10s follows the face (%d points)' % (n['name'], moved))
     g.save(out)
     print('wrote', out)
+    meta_out = Path(out).with_name('figure.json')
+    if meta_path.exists():
+        meta = json.loads(meta_path.read_text(encoding='utf-8'))
+        meta['face_shapes'] = [[k, lab] for k, lab in FEATURES]
+        meta_out.write_text(json.dumps(meta, indent=1), encoding='utf-8')
 
 
 if __name__ == '__main__':

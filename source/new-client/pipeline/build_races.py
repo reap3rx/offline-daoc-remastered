@@ -363,6 +363,9 @@ def build_figure(t, realm, race, gender, fig, upscale_list):
     if '--no-smooth' not in sys.argv:                  # the remaster (owner 2026-11-05, "A+B"): rounder heads, hair
         import subdivide_figure                         # and bodies, morphs and skin weights kept
         subdivide_figure.smooth_file(str(out / 'figure.gltf'), str(out / 'figure.gltf'))
+    if '--no-face-shapes' not in sys.argv:             # the creator's face sliders (owner 2026-11-06): fx_ targets
+        import face_morphs
+        face_morphs.run(str(out / 'figure.gltf'), str(out / 'figure.gltf'))
     upscale_list.update(textures)
     print(f'{prefix}: {race} {gender} fig {fig}, {len(faces)} faces, {len(eyes)} eyes, {len(tones)} tones, '
           f'{len(styles)} hair styles ({sum(1 for s in styles if s["node"])} meshes), {len(tattoos)} tattoos, '

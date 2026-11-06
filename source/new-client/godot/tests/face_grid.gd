@@ -7,17 +7,26 @@ var v: Node
 
 const PRESETS := [
 	["Neutral", {}],
-	["Hawk", {"nose_length": 1.0, "nose_bridge": 1.0, "nose_width": -0.6, "cheekbones": 0.8, "jaw_width": -0.4, "chin_point": 0.6, "brow_depth": 0.6}],
+	["Hawk", {"nose_tip": -0.7, "nose_length": 1.0, "nose_bridge": 1.0, "nose_width": -0.6, "cheekbones": 0.8, "jaw_width": -0.4, "chin_point": 0.6, "brow_depth": 0.6}],
 	["Brute", {"jaw_width": 1.0, "brow_depth": 1.0, "brow_height": -0.6, "eye_depth": 0.8, "nose_width": 0.8, "chin_length": 0.4, "cheekbones": 0.5, "lips": 0.4}],
 	["Gentle", {"eye_size": 0.8, "nose_length": -0.6, "nose_width": -0.3, "jaw_width": -0.6, "chin_length": -0.4, "lips": 0.6, "cheekbones": -0.3}],
 	["Narrow", {"eye_spacing": -0.8, "nose_width": -0.8, "jaw_width": -0.8, "cheekbones": 0.6, "mouth_width": -0.5, "chin_length": 0.6}],
 	["Wide", {"eye_spacing": 0.8, "nose_width": 0.8, "jaw_width": 0.8, "mouth_width": 0.7, "cheekbones": -0.4, "chin_length": -0.6}],
-	["Snub", {"nose_length": -1.0, "nose_height": 0.6, "nose_width": 0.6, "chin_point": -0.6, "lips": 0.8}],
+	["Snub", {"nose_tip": 1.0, "nose_length": -1.0, "nose_height": 0.6, "nose_width": 0.6, "chin_point": -0.6, "lips": 0.8}],
 	["Long", {"chin_length": 1.0, "nose_length": 0.6, "nose_height": -0.5, "eye_height": 0.5, "brow_height": 0.6, "jaw_width": -0.4}],
 	["Deep-set", {"eye_depth": 1.0, "brow_depth": 0.8, "eye_size": -0.5, "cheekbones": 0.7, "mouth_width": 0.4}],
 	["Big ears", {"ear_size": 1.0, "eye_size": 0.4, "nose_length": -0.3}],
-	["Mixed A", {"nose_bridge": 0.7, "eye_spacing": 0.4, "brow_height": 0.5, "mouth_height": 0.5, "chin_point": 0.8, "jaw_width": 0.3}],
+	["Mixed A", {"nose_tip": 0.6, "nose_bridge": 0.7, "eye_spacing": 0.4, "brow_height": 0.5, "mouth_height": 0.5, "chin_point": 0.8, "jaw_width": 0.3}],
 	["Mixed B", {"nose_width": -0.5, "nose_height": -0.6, "eye_height": -0.5, "lips": -0.8, "chin_length": -0.8, "cheekbones": 1.0}],
+]
+
+
+## --presets=mouth: one slider at a time, the mouth and jaw ones (what opened the mouth)
+const MOUTH := [
+	["Neutral", {}], ["Lips +1", {"lips": 1.0}], ["Lips -1", {"lips": -1.0}], ["Mouth W +1", {"mouth_width": 1.0}],
+	["Mouth W -1", {"mouth_width": -1.0}], ["Mouth H +1", {"mouth_height": 1.0}], ["Jaw +1", {"jaw_width": 1.0}],
+	["Jaw -1", {"jaw_width": -1.0}], ["Chin L -1", {"chin_length": -1.0}], ["Chin L +1", {"chin_length": 1.0}],
+	["Chin P +1", {"chin_point": 1.0}], ["Nose L -1", {"nose_length": -1.0}],
 ]
 
 
@@ -74,11 +83,12 @@ func _ready() -> void:
 	cam.global_position = target + fwd.rotated(Vector3.UP, deg_to_rad(angle)) * 0.85 * fig.scale.x + Vector3(0, 0.03, 0)
 	cam.look_at(target + Vector3(0, 0.02, 0))
 	var heads: Array = fig.model.find_children("*", "MeshInstance3D", true, false)
+	var presets: Array = MOUTH if String(args.get("presets", "")) == "mouth" else PRESETS
 	var names := []
-	for p in PRESETS:
+	for p in presets:
 		names.append(String(p[0]))
-	for i in PRESETS.size():
-		var vals: Dictionary = PRESETS[i][1]
+	for i in presets.size():
+		var vals: Dictionary = presets[i][1]
 		for mi in heads:
 			var m := mi as MeshInstance3D
 			for b in m.get_blend_shape_count():
