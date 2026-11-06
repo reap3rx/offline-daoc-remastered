@@ -93,11 +93,28 @@ func _ready() -> void:
 	var heads: Array = fig.model.find_children("*", "MeshInstance3D", true, false)
 	var pset := String(args.get("presets", ""))
 	var presets: Array = MOUTH if pset == "mouth" else (SKIN if pset == "skin" else PRESETS)
+	if pset == "beard":                             # every beard on one beardless style, then the styles bare
+		presets = []
+		var styles: Array = fig.meta.get("hair_styles", [])
+		var bare := 0
+		for si in styles.size():
+			if styles[si].node != null and int(styles[si].get("beard", 0)) == 0:
+				bare = si
+				break
+		for b in fig.option_count("beard"):
+			presets.append(["Beard %d" % b, {"hair": bare, "beard": b}])
+		for si in styles.size():
+			if presets.size() < 12 and int(styles[si].get("beard", 0)) > 0 and styles[si].node != null:
+				presets.append(["Hair %d bare" % (si + 1), {"hair": si, "beard": 0}])
 	var names := []
 	for p in presets:
 		names.append(String(p[0]))
 	for i in presets.size():
 		var vals: Dictionary = presets[i][1]
+		if pset == "beard":
+			fig.look = {"face": 0, "hair_color": 1, "eyes": 2, "skin": 1}
+			fig.apply(vals)
+			vals = {}
 		if pset == "skin":
 			fig.look = {"face": 0, "hair": int(args.get("hair", "1")), "hair_color": 1, "eyes": 2, "skin": 1}
 			fig.apply(fig.layered_changes())

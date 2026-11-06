@@ -732,7 +732,9 @@ func _c_face(p: Control, y: float) -> float:
 	y = _c_colour(p, "Skin Color", "skin", _skin_colours(), y)
 	y = _c_colour(p, "Eye Color", "eyes", _eye_colours(), y)
 	y = _c_key(p, "Hair Style", "hair", f.meta.get("hair_styles", []).map(func(x): return String(x.label)), y)
-	if f.option_count("hair_color") > 0 and _hair_has_mesh():
+	if f.option_count("beard") > 1:                 # (men: the beards split off the hair styles)
+		y = _c_key(p, "Beard", "beard", ["None"] + f.meta.beards.map(func(x): return String(x.label)), y, f.beard_index())
+	if f.option_count("hair_color") > 0 and (_hair_has_mesh() or f.beard_index() > 0):
 		y = _c_colour(p, "Hair Color", "hair_color", _hair_colours(), y)
 	if not f.is_layered():
 		y = _c_key(p, "Face", "face", f.meta.get("faces", []).map(func(x): return String(x.label)), y)
@@ -1135,6 +1137,8 @@ func _randomize() -> void:
 	for k in ["face", "eyes", "skin", "hair", "tattoo"]:
 		if not locks.get(k, false) and f.option_count(k) > 0:
 			l[k] = randi() % f.option_count(k)
+	if not locks.get("beard", false) and f.option_count("beard") > 1:
+		l["beard"] = 0 if randf() < 0.35 else randi_range(1, f.option_count("beard") - 1)
 	f.apply(l)
 	if not locks.get("hair_color", false) and f.option_count("hair_color") > 0:
 		f.apply({"hair_color": randi() % f.option_count("hair_color")})

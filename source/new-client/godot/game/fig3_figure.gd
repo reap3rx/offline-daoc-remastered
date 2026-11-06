@@ -319,22 +319,28 @@ func apply(changes: Dictionary) -> void:
 			var colours: Array = styles[i].colours
 			if colours.size() > 0:
 				var col: Dictionary = colours[clampi(int(look.get("hair_color", 0)), 0, colours.size() - 1)]
-				var flow := hair_flow(String(col.tex))
-				var m := _material(true, false, false, flow != null)
-				m.set_shader_parameter("albedo_tex", _tex(String(col.tex)))
-				m.set_shader_parameter("sheen", 1.0)
-				if flow:                                         # redrawn as strands: lit as hair, no relief (it carved
-					m.set_shader_parameter("hair_flow", flow)    # the strands into wood grain)
-					m.set_shader_parameter("strand_spec", 0.0)      # matte: the strand highlights blew out white
-					m.set_shader_parameter("fuzz", 1.0)
-				else:
-					m.set_shader_parameter("relief", 0.16)      # (its strands, raised)
+				var m := _hair_material(col)
 				_hair_mat = m
-				m.set_shader_parameter("tint", Color(col.tint[0], col.tint[1], col.tint[2]))
-				m.set_shader_parameter("tint_mode", 1)
 				for mi in _parts(node):
 					mi.material_override = m
 				_scalp(si, String(col.tex), Color(col.tint[0], col.tint[1], col.tint[2]))
+	# the beard (men: split off the hair styles by pipeline/split_beards.py): its own style's texture in the hair's
+	# colour (the same colour index - the styles list their colours alike)
+	var beards: Array = meta.get("beards", [])
+	var bi := beard_index()
+	for k in beards.size():
+		var bnode := String(beards[k].node)
+		if not _meshes.has(bnode):
+			continue
+		for mi in _parts(bnode):
+			mi.visible = k + 1 == bi and not _hair_covered()
+		if k + 1 == bi:
+			var bst: Dictionary = styles[clampi(int(beards[k].style), 0, styles.size() - 1)]
+			var bcols: Array = bst.colours
+			if bcols.size() > 0:
+				var bm := _hair_material(bcols[_beard_colour(styles, bcols)])
+				for mi in _parts(bnode):
+					mi.material_override = bm
 	# face sliders: 0..8, 4 neutral; below 4 blends the low target, above 4 the high one
 	if head:
 		var values: Array = look.get("sliders", [])
@@ -372,6 +378,57 @@ func is_layered() -> bool:
 	return bool(look.get("v2", false)) and String((meta.get("skin_layers", {}) as Dictionary).get("base", "")) != ""
 
 
+## The worn beard: 1-based into figure.json "beards", 0 none. A look that never chose one wears its hair style's own
+## (the beard the original mesh had).
+func beard_index() -> int:
+	var beards: Array = meta.get("beards", [])
+	if beards.is_empty():
+		return 0
+	if look.has("beard"):
+		return clampi(int(look.beard), 0, beards.size())
+	var styles: Array = meta.get("hair_styles", [])
+	if styles.is_empty():
+		return 0
+	return int(styles[clampi(int(look.get("hair", 0)), 0, styles.size() - 1)].get("beard", 0))
+
+
+## The beard style's colour nearest the hair's (figure.json colours' "rgb"), else the same index.
+func _beard_colour(styles: Array, bcols: Array) -> int:
+	var hc := int(look.get("hair_color", 0))
+	var hcols: Array = styles[clampi(int(look.get("hair", 0)), 0, styles.size() - 1)].colours if styles.size() > 0 else []
+	if hcols.is_empty() or not (hcols[clampi(hc, 0, hcols.size() - 1)] as Dictionary).has("rgb"):
+		return clampi(hc, 0, bcols.size() - 1)
+	var want: Array = hcols[clampi(hc, 0, hcols.size() - 1)].rgb
+	var best := clampi(hc, 0, bcols.size() - 1)
+	var bd := INF
+	for i in bcols.size():
+		if not (bcols[i] as Dictionary).has("rgb"):
+			continue
+		var c: Array = bcols[i].rgb
+		var d: float = Vector3(c[0] - want[0], c[1] - want[1], c[2] - want[2]).length_squared() + (0.0 if i == hc else 0.0005)
+		if d < bd:
+			bd = d
+			best = i
+	return best
+
+
+## A hair style colour's material: its texture x tint, lit as hair.
+func _hair_material(col: Dictionary) -> ShaderMaterial:
+	var flow := hair_flow(String(col.tex))
+	var m := _material(true, false, false, flow != null)
+	m.set_shader_parameter("albedo_tex", _tex(String(col.tex)))
+	m.set_shader_parameter("sheen", 1.0)
+	if flow:                                         # redrawn as strands: lit as hair, no relief (it carved
+		m.set_shader_parameter("hair_flow", flow)    # the strands into wood grain)
+		m.set_shader_parameter("strand_spec", 0.0)      # matte: the strand highlights blew out white
+		m.set_shader_parameter("fuzz", 1.0)
+	else:
+		m.set_shader_parameter("relief", 0.16)      # (its strands, raised)
+	m.set_shader_parameter("tint", Color(col.tint[0], col.tint[1], col.tint[2]))
+	m.set_shader_parameter("tint_mode", 1)
+	return m
+
+
 ## The changes that turn an original-face look into the layered one wearing the same face's brows, beard and lines
 ## (figure.json skin_layers.face_map).
 func layered_changes() -> Dictionary:
@@ -382,6 +439,8 @@ func layered_changes() -> Dictionary:
 	var out := {"v2": true, "brows": int(f.get("brows", 1)), "brow_amt": 1.0,
 		"age_style": int(f.get("age_style", -1)) + 1, "age": 0.8,
 		"stubble_style": int(f.get("stubble_style", -1)) + 1, "stubble": 0.9}
+	if not (meta.get("beards", []) as Array).is_empty():
+		out["beard"] = beard_index()                 # pinned: changing the hair no longer changes the beard
 	return out
 
 
@@ -550,6 +609,9 @@ func _apply_shape() -> void:
 		for st in styles:
 			if st.node != null and _meshes.has(st.node):
 				meshes.append_array(_parts(st.node))
+		for b in meta.get("beards", []):
+			if _meshes.has(String(b.node)):
+				meshes.append_array(_parts(String(b.node)))
 		for fs in shapes:
 			var w := clampf(float(shape.get(String(fs[0]), 0.0)), -1.0, 1.0)
 			for mi in meshes:
@@ -667,6 +729,17 @@ func _refresh_hair() -> void:
 			var morphs: Dictionary = meta.get("helm_hair", {}).get(String(node), {})
 			for k in morphs:
 				_blend(mi, String(morphs[k]), 1.0 if _helm != null and int(k) == _helm_hair and _helm_hair != 1 else 0.0)
+	var beards: Array = meta.get("beards", [])
+	var bi := beard_index()
+	for k in beards.size():
+		var bnode := String(beards[k].node)
+		if not _meshes.has(bnode):
+			continue
+		var morphs: Dictionary = meta.get("helm_hair", {}).get(bnode, {})
+		for mi in _parts(bnode):
+			mi.visible = k + 1 == bi and not _hair_covered()
+			for h in morphs:
+				_blend(mi, String(morphs[h]), 1.0 if _helm != null and int(h) == _helm_hair and _helm_hair != 1 else 0.0)
 
 
 ## The helm / hat for this race and gender (content/helms: the item's Catacombs helm, its texture and scale) on the
@@ -896,6 +969,7 @@ static func option_count_of(meta: Dictionary, look: Dictionary, key: String) -> 
 		"eyes": return meta.get("eyes", []).size()
 		"skin": return meta.get("skin_tones", []).size()
 		"hair": return meta.get("hair_styles", []).size()
+		"beard": return meta.get("beards", []).size() + 1
 		"hair_color":
 			var styles: Array = meta.get("hair_styles", [])
 			return styles[clampi(int(look.get("hair", 0)), 0, styles.size() - 1)].colours.size() if styles.size() > 0 else 0
