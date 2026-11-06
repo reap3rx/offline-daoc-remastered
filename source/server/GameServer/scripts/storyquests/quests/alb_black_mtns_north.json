@@ -118,10 +118,7 @@
           "mob": {
             "template": 12086,
             "name": "enraged cockatrice",
-            "level": [
-              10,
-              11
-            ]
+            "level": 11
           },
           "count": 4,
           "text": "Past the nests, lamplight flickers in the shaft - pale, cold lamplight.",
@@ -303,10 +300,7 @@
           "mob": {
             "template": 12110,
             "name": "hill warrior",
-            "level": [
-              11,
-              12
-            ]
+            "level": 12
           },
           "count": 6,
           "text": "As each warrior falls the red goes out of their eyes - and in the last one's belt, a scrap of crimson cloth with a sigil stitched on it.",

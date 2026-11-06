@@ -90,10 +90,7 @@
           "mob": {
             "template": 60161034,
             "name": "forest poacher",
-            "level": [
-              50,
-              51
-            ]
+            "level": 51
           },
           "count": 5,
           "id": "s1"
@@ -135,10 +132,7 @@
           "mob": {
             "template": 60167436,
             "name": "unearthed cave bear",
-            "level": [
-              49,
-              50
-            ]
+            "level": 50
           },
           "count": 5,
           "text": "Under the den: five crocks of gold, half-buried. And footsteps behind you.",
@@ -302,10 +296,7 @@
           "mob": {
             "template": 60161461,
             "name": "goborchend gasher",
-            "level": [
-              52,
-              53
-            ]
+            "level": 53
           },
           "count": 5,
           "id": "s2"
@@ -323,10 +314,7 @@
           "mob": {
             "template": 60161466,
             "name": "goborchend wounder",
-            "level": [
-              53,
-              54
-            ]
+            "level": 54
           },
           "count": 4,
           "id": "s3"

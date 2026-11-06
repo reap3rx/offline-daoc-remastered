@@ -140,10 +140,7 @@
           "mob": {
             "template": 60163477,
             "name": "lunantishee",
-            "level": [
-              6,
-              7
-            ]
+            "level": 7
           },
           "count": 5,
           "text": "They don't die - they wither into thorns. The singing stops. Somewhere inside, a baby starts to cry - a human cry.",
@@ -312,10 +309,7 @@
           "mob": {
             "template": 60161282,
             "name": "ghastly siabra",
-            "level": [
-              12,
-              13
-            ]
+            "level": 13
           },
           "count": 5,
           "text": "One carries a sack of sealskins. Not Muirne's. They mention 'the big one, the grey-and-silver' - taken alive to their master.",

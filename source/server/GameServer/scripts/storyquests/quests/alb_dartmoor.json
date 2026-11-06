@@ -142,10 +142,7 @@
           "mob": {
             "template": 5232525,
             "name": "ruthless brigand",
-            "level": [
-              40,
-              41
-            ]
+            "level": 41
           },
           "count": 5,
           "id": "s3"
@@ -390,10 +387,7 @@
           "mob": {
             "template": 770011,
             "name": "granite giant outlooker",
-            "level": [
-              50,
-              51
-            ]
+            "level": 51
           },
           "count": 4,
           "id": "s3"

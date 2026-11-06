@@ -123,10 +123,7 @@
           "mob": {
             "template": 12005,
             "name": "bogman gatherer",
-            "level": [
-              8,
-              9
-            ]
+            "level": 9
           },
           "count": 5,
           "text": "They fight half-heartedly and keep looking south, towards the towers, as if afraid you'll interrupt something.",
@@ -358,10 +355,7 @@
           "mob": {
             "template": 12017,
             "name": "ghoul footman",
-            "level": [
-              16,
-              17
-            ]
+            "level": 17
           },
           "count": 6,
           "id": "s3"

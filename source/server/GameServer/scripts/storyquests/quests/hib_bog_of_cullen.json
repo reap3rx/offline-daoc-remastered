@@ -115,10 +115,7 @@
           "mob": {
             "template": 60165995,
             "name": "siabra wayguard",
-            "level": [
-              42,
-              43
-            ]
+            "level": 43
           },
           "count": 5,
           "id": "s2"
@@ -155,10 +152,7 @@
           "mob": {
             "template": 60158591,
             "name": "bog creeper",
-            "level": [
-              42,
-              43
-            ]
+            "level": 43
           },
           "count": 5,
           "id": "s4"
@@ -326,10 +320,7 @@
           "mob": {
             "template": 60158463,
             "name": "black wraith",
-            "level": [
-              48,
-              49
-            ]
+            "level": 49
           },
           "count": 4,
           "text": "Among the wraith-mud, a dropped satchel - a steward's satchel, with a steward's seal.",

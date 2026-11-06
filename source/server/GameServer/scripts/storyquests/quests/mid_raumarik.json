@@ -95,10 +95,7 @@
           "mob": {
             "template": 60158666,
             "name": "bounty hunter",
-            "level": [
-              50,
-              51
-            ]
+            "level": 51
           },
           "count": 4,
           "text": "Hard men, well paid. The last one carries a bounty notice.",
@@ -302,10 +299,7 @@
           "mob": {
             "template": 60160797,
             "name": "fenrir soldier",
-            "level": [
-              52,
-              53
-            ]
+            "level": 53
           },
           "count": 5,
           "id": "s2"

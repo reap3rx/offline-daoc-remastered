@@ -85,10 +85,7 @@
           "mob": {
             "template": 60160115,
             "name": "drakulv missionary",
-            "level": [
-              37,
-              38
-            ]
+            "level": 38
           },
           "count": 5,
           "text": "A big Norseman in drakulv robes stands among the fallen, praying for them.",
@@ -115,10 +112,7 @@
           "mob": {
             "template": 60164855,
             "name": "patrolling drakulv",
-            "level": [
-              39,
-              40
-            ]
+            "level": 40
           },
           "count": 5,
           "text": "One carries orders for the rite: a sacrifice. A Norse convert, 'big and willing'. They mean Bjorn.",
@@ -255,10 +249,7 @@
           "mob": {
             "template": 55003,
             "name": "svartalf infiltrator",
-            "level": [
-              46,
-              47
-            ]
+            "level": 47
           },
           "count": 5,
           "text": "One carries a drakulv purse and a letter: 'Thirty more blades by the new moon. The smith's mark, as before. -E.'",
@@ -277,10 +268,7 @@
           "mob": {
             "template": 55004,
             "name": "svartalf foister",
-            "level": [
-              48,
-              49
-            ]
+            "level": 49
           },
           "count": 5,
           "id": "s2"

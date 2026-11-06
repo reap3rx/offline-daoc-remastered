@@ -102,10 +102,7 @@
           "mob": {
             "template": 12974,
             "name": "peallaidh",
-            "level": [
-              38,
-              39
-            ]
+            "level": 39
           },
           "count": 5,
           "text": "As each one fades it sighs, very softly: 'Is it evening yet?' The humming goes on, far off to the north-west, toward the strand.",
@@ -330,10 +327,7 @@
           "mob": {
             "template": 12930,
             "name": "arawnite shamaness",
-            "level": [
-              44,
-              45
-            ]
+            "level": 45
           },
           "count": 5,
           "id": "s2"
@@ -370,10 +364,7 @@
           "mob": {
             "template": 12957,
             "name": "footman",
-            "level": [
-              45,
-              46
-            ]
+            "level": 46
           },
           "count": 5,
           "text": "They wear the drowned king's colours, but their eyes are already Arawn's.",

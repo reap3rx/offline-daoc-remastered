@@ -89,10 +89,7 @@
           "mob": {
             "template": 44002,
             "name": "elfshot madman",
-            "level": [
-              37,
-              38
-            ]
+            "level": 38
           },
           "count": 5,
           "text": "Each one has a glimmer-glass splinter in him. Each splinter points the same way - west.",
@@ -127,10 +124,7 @@
           "mob": {
             "template": 44024,
             "name": "glimmerling",
-            "level": [
-              38,
-              39
-            ]
+            "level": 39
           },
           "count": 5,
           "id": "s3"
@@ -277,10 +271,7 @@
           "mob": {
             "template": 44008,
             "name": "azure cleanser",
-            "level": [
-              47,
-              48
-            ]
+            "level": 48
           },
           "count": 5,
           "id": "s2"
@@ -317,10 +308,7 @@
           "mob": {
             "template": 44001,
             "name": "pale horse",
-            "level": [
-              50,
-              51
-            ]
+            "level": 51
           },
           "count": 4,
           "id": "s4"

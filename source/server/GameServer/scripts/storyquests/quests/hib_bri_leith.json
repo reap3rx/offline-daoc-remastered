@@ -100,10 +100,7 @@
           "mob": {
             "template": 60167560,
             "name": "veil wisp",
-            "level": [
-              11,
-              12
-            ]
+            "level": 12
           },
           "count": 5,
           "text": "As they go out, the glimpses of the Otherworld get clearer.",
@@ -138,10 +135,7 @@
           "mob": {
             "template": 60160471,
             "name": "empyrean orb",
-            "level": [
-              11,
-              12
-            ]
+            "level": 12
           },
           "count": 4,
           "id": "s4"
@@ -296,10 +290,7 @@
           "mob": {
             "template": 60166076,
             "name": "siog seeker",
-            "level": [
-              27,
-              28
-            ]
+            "level": 28
           },
           "count": 5,
           "id": "s2"
@@ -336,10 +327,7 @@
           "mob": {
             "template": 10120,
             "name": "druid",
-            "level": [
-              25,
-              26
-            ]
+            "level": 26
           },
           "count": 4,
           "id": "s4"

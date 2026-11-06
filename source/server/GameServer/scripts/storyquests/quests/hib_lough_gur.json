@@ -94,10 +94,7 @@
           "mob": {
             "template": 60163146,
             "name": "large luch",
-            "level": [
-              20,
-              21
-            ]
+            "level": 21
           },
           "count": 5,
           "id": "s2"
@@ -131,10 +128,7 @@
           "mob": {
             "template": 60159264,
             "name": "cluricaun",
-            "level": [
-              21,
-              22
-            ]
+            "level": 22
           },
           "count": 5,
           "id": "s4"
@@ -281,10 +275,7 @@
           "mob": {
             "template": 60161874,
             "name": "gurite waylayer",
-            "level": [
-              30,
-              31
-            ]
+            "level": 31
           },
           "count": 5,
           "id": "s2"
@@ -302,10 +293,7 @@
           "mob": {
             "template": 60157767,
             "name": "alp luachra",
-            "level": [
-              30,
-              31
-            ]
+            "level": 31
           },
           "count": 4,
           "text": "Under the leaves where they nested: a sleeping man's footprints, many nights over. He sleeps here, sometimes.",

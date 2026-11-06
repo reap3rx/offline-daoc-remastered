@@ -256,10 +256,7 @@
           "mob": {
             "template": 12630,
             "name": "wood ogre scourge",
-            "level": [
-              13,
-              14
-            ]
+            "level": 14
           },
           "count": 5,
           "text": "On the last one's shoulder, under the warpaint: a brand, old and neat. The Lethantis mark.",

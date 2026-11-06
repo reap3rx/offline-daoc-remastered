@@ -200,7 +200,7 @@ def search(zone, at, goal, clue, model, text, give=None, take=None, label=None):
 
 
 def kill(zone, at, goal, name, tpl, lv, count, model=None, text=None, r=25, label=None, next=None):
-    mob = {'template': tpl, 'name': name, 'level': list(lv) if isinstance(lv, (list, tuple)) else [lv, lv]}
+    mob = {'template': tpl, 'name': name, 'level': max(lv) if isinstance(lv, (list, tuple)) else lv}   # (an NpcDef: one level)
     if model:
         mob['model'] = model
     s = {'type': 'kill', 'zone': zone, 'at': list(at), 'radius': r, 'goal': goal, 'mob': mob, 'count': count}

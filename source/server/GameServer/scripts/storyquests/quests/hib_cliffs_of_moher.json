@@ -95,10 +95,7 @@
           "mob": {
             "template": 60158578,
             "name": "bocan",
-            "level": [
-              15,
-              16
-            ]
+            "level": 16
           },
           "count": 5,
           "text": "One of them chatters something about 'the smiling lady' going east.",
@@ -130,10 +127,7 @@
           "mob": {
             "template": 60160819,
             "name": "fetch",
-            "level": [
-              16,
-              17
-            ]
+            "level": 17
           },
           "count": 4,
           "id": "s4"
@@ -297,10 +291,7 @@
           "mob": {
             "template": 60159247,
             "name": "cliff dweller spearman",
-            "level": [
-              36,
-              37
-            ]
+            "level": 37
           },
           "count": 5,
           "text": "The cliff dwellers fight like men defending something. When the last one falls, he says: 'The pact. You'll break the pact.'",
@@ -338,10 +329,7 @@
           "mob": {
             "template": 60162948,
             "name": "koalinth slinker",
-            "level": [
-              35,
-              36
-            ]
+            "level": 36
           },
           "count": 5,
           "id": "s4"

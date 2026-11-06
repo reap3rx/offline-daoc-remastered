@@ -145,10 +145,7 @@
           "mob": {
             "template": 12737,
             "name": "tomb raider digger",
-            "level": [
-              10,
-              11
-            ]
+            "level": 11
           },
           "count": 6,
           "text": "The last digger talks fast. 'The drover? He wouldn't open the king's barrow. Said it was a grave and that was that. Foreman Brannoc had him trussed and dragged off to the old stones - for the ritual, he said. Laughed when he said it.'",
@@ -395,10 +392,7 @@
           "mob": {
             "template": 12719,
             "name": "salisbury giant",
-            "level": [
-              18,
-              19
-            ]
+            "level": 19
           },
           "count": 5,
           "text": "In the last giant's sack: Rhodri's quiver, empty. Whatever happened to him, he got away. The trail runs east to the old Roman bridge.",
@@ -500,10 +494,7 @@
           "mob": {
             "template": 60167890,
             "name": "the White Horse",
-            "level": [
-              19,
-              19
-            ]
+            "level": 19
           },
           "count": 1,
           "text": "It doesn't run. It only looks at you, and then it's down, and the light on the plain goes strange and flat. Far off on the hill, a crack runs through the chalk.",

@@ -106,10 +106,7 @@
           "mob": {
             "template": 60167842,
             "name": "weeping willow",
-            "level": [
-              11,
-              12
-            ]
+            "level": 12
           },
           "count": 5,
           "text": "Each one that falls stops humming. The humming moves deeper in.",
@@ -283,10 +280,7 @@
           "mob": {
             "template": 60164160,
             "name": "mora dancer",
-            "level": [
-              14,
-              15
-            ]
+            "level": 15
           },
           "count": 6,
           "text": "They dissolve into black mist. The ring breaks open. Riders on black horses circle further in.",

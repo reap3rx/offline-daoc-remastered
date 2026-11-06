@@ -118,10 +118,7 @@
           "mob": {
             "template": 60162022,
             "name": "haunted driftwood",
-            "level": [
-              7,
-              8
-            ]
+            "level": 8
           },
           "count": 4,
           "text": "On the last piece, carved deep, the ship's name: MORNING STAR. And scratched below it, fresh: 'LIGHTS. FALSE LIGHTS.'",
@@ -164,10 +161,7 @@
           "mob": {
             "template": 30002,
             "name": "moss sheerie",
-            "level": [
-              8,
-              9
-            ]
+            "level": 9
           },
           "count": 5,
           "text": "Their lights go out one by one. One is brighter than the rest, bobbing away to the south.",
@@ -320,10 +314,7 @@
           "mob": {
             "template": 60160565,
             "name": "eriu henter",
-            "level": [
-              19,
-              20
-            ]
+            "level": 20
           },
           "count": 5,
           "text": "They fight hard but they don't hate you. 'The law,' one says as he falls. 'Your people broke the law.'",

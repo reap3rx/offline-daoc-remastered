@@ -112,10 +112,7 @@
           "mob": {
             "template": 60165100,
             "name": "ra of pine",
-            "level": [
-              28,
-              29
-            ]
+            "level": 29
           },
           "count": 4,
           "id": "s2"
@@ -152,10 +149,7 @@
           "mob": {
             "template": 60167872,
             "name": "werewolf warder",
-            "level": [
-              27,
-              28
-            ]
+            "level": 28
           },
           "count": 5,
           "text": "You fill Ulfrun's flask. On the last warder's belt: a child's wooden doll.",
@@ -377,10 +371,7 @@
           "mob": {
             "template": 60167077,
             "name": "timber cat",
-            "level": [
-              33,
-              34
-            ]
+            "level": 34
           },
           "count": 4,
           "id": "s2"
@@ -414,10 +405,7 @@
           "mob": {
             "template": 60166006,
             "name": "sidhe gaoite",
-            "level": [
-              34,
-              35
-            ]
+            "level": 35
           },
           "count": 5,
           "id": "s4"

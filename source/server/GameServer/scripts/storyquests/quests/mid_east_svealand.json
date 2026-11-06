@@ -294,10 +294,7 @@
           "mob": {
             "template": 60167133,
             "name": "tomte pillager",
-            "level": [
-              8,
-              9
-            ]
+            "level": 9
           },
           "count": 6,
           "text": "Small, quick, and furious. 'Forgotten!' they shout. 'FORGOTTEN!'",

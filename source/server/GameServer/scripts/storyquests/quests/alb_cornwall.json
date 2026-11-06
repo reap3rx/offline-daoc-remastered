@@ -139,10 +139,7 @@
           "mob": {
             "template": 12823,
             "name": "death stalker",
-            "level": [
-              17,
-              18
-            ]
+            "level": 18
           },
           "count": 4,
           "text": "Gorged, every one of them - and in the last one's den, a pile of small white bones. Wolf cubs. The she-wolf's den is close.",
@@ -193,10 +190,7 @@
           "mob": {
             "template": 12829,
             "name": "the white she-wolf",
-            "level": [
-              18,
-              18
-            ]
+            "level": 18
           },
           "count": 1,
           "text": "She doesn't fight much. The cubs run off into the heather.",
@@ -301,10 +295,7 @@
           "mob": {
             "template": 12884,
             "name": "skeletal legionnaire",
-            "level": [
-              20,
-              21
-            ]
+            "level": 21
           },
           "count": 6,
           "id": "s3"

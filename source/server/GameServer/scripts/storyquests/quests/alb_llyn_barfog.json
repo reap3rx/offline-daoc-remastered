@@ -112,10 +112,7 @@
           "mob": {
             "template": 12999,
             "name": "cwn annwn",
-            "level": [
-              19,
-              20
-            ]
+            "level": 20
           },
           "count": 5,
           "text": "They don't bleed. They fade, like breath on cold glass. Further south, a horn calls.",
@@ -303,10 +300,7 @@
           "mob": {
             "template": 13034,
             "name": "undead monk",
-            "level": [
-              26,
-              27
-            ]
+            "level": 27
           },
           "count": 6,
           "text": "Each one says 'thank you' as it falls.",

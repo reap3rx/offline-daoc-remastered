@@ -126,10 +126,7 @@
           "mob": {
             "template": 60158516,
             "name": "blodfelag henchman",
-            "level": [
-              12,
-              13
-            ]
+            "level": 13
           },
           "count": 5,
           "text": "One of them carries a list of names. Eyvind's is third. The first two are crossed out.",
@@ -364,10 +361,7 @@
           "mob": {
             "template": 60161138,
             "name": "frothing sveawolf",
-            "level": [
-              18,
-              19
-            ]
+            "level": 19
           },
           "count": 5,
           "text": "One of them wears a huscarl's arm-ring on its foreleg - Kolbein's. But it isn't Kolbein. It's just a wolf. He's somewhere else.",

@@ -124,10 +124,7 @@
           "mob": {
             "template": 60162266,
             "name": "huldu stalker",
-            "level": [
-              5,
-              6
-            ]
+            "level": 6
           },
           "count": 5,
           "text": "The hidden folk fade back into the trees, watching. They don't seem to want to fight. They seem to want you to leave.",
@@ -315,10 +312,7 @@
           "mob": {
             "template": 60165108,
             "name": "rabid wolfhound",
-            "level": [
-              10,
-              11
-            ]
+            "level": 11
           },
           "count": 5,
           "text": "Every one wears Bjarki's brass tag. Every one had drunk from the same spring - their muzzles are stained with its grey water.",

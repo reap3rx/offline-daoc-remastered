@@ -142,10 +142,7 @@
           "mob": {
             "template": 12171,
             "name": "goblin fisherman",
-            "level": [
-              4,
-              5
-            ]
+            "level": 5
           },
           "count": 5,
           "text": "One of the goblins drops a reed whistle. When you blow it, it doesn't sound like a whistle. It sounds like a man calling a boy's name. They took Pip to their singer.",
@@ -315,10 +312,7 @@
           "mob": {
             "template": 12675,
             "name": "devout filidh",
-            "level": [
-              8,
-              9
-            ]
+            "level": 9
           },
           "count": 6,
           "text": "Garlands of white flowers hang on the menhir. Someone has laid out a friar's habit, folded, on the altar-stone.",

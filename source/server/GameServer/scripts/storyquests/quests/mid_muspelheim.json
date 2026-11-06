@@ -117,10 +117,7 @@
           "mob": {
             "template": 60159105,
             "name": "charred skeletal warrior",
-            "level": [
-              23,
-              24
-            ]
+            "level": 24
           },
           "count": 5,
           "id": "s2"
@@ -333,10 +330,7 @@
           "mob": {
             "template": 60160878,
             "name": "fire giant lookout",
-            "level": [
-              28,
-              29
-            ]
+            "level": 29
           },
           "count": 4,
           "id": "s2"
@@ -373,10 +367,7 @@
           "mob": {
             "template": 60160903,
             "name": "flaming raukomaz",
-            "level": [
-              29,
-              30
-            ]
+            "level": 30
           },
           "count": 5,
           "id": "s4"

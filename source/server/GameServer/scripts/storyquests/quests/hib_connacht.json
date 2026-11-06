@@ -101,10 +101,7 @@
           "mob": {
             "template": 60167680,
             "name": "villainous youth",
-            "level": [
-              4,
-              5
-            ]
+            "level": 5
           },
           "count": 5,
           "text": "'Colm? The little one? He's with Ruairc's lot at the old camp. Ruairc's the boss now.'",
@@ -270,10 +267,7 @@
           "mob": {
             "template": 60158182,
             "name": "azure idolater",
-            "level": [
-              24,
-              25
-            ]
+            "level": 25
           },
           "count": 5,
           "id": "s2"
@@ -307,10 +301,7 @@
           "mob": {
             "template": 60164910,
             "name": "phantom wickerman",
-            "level": [
-              26,
-              27
-            ]
+            "level": 27
           },
           "count": 4,
           "id": "s4"

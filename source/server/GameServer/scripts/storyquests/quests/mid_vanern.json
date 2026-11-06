@@ -84,10 +84,7 @@
           "mob": {
             "template": 60161042,
             "name": "forest viper",
-            "level": [
-              39,
-              40
-            ]
+            "level": 40
           },
           "count": 5,
           "id": "s2"
@@ -118,10 +115,7 @@
           "mob": {
             "template": 60159228,
             "name": "clay jotun",
-            "level": [
-              40,
-              41
-            ]
+            "level": 41
           },
           "count": 5,
           "id": "s4"
@@ -276,10 +270,7 @@
           "mob": {
             "template": 60161914,
             "name": "hagbui berserker",
-            "level": [
-              48,
-              49
-            ]
+            "level": 49
           },
           "count": 5,
           "id": "s2"
@@ -297,10 +288,7 @@
           "mob": {
             "template": 60161919,
             "name": "hagbui spiritmaster",
-            "level": [
-              46,
-              47
-            ]
+            "level": 47
           },
           "count": 4,
           "text": "Among them, one draugr wears a living man's ring - Gunnvor's family rune. Ketil, or what's left. He watches you and doesn't come closer.",

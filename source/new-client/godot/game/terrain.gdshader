@@ -55,7 +55,17 @@ void fragment() {
 			float w = layer_weight(i, puv);
 			if (w <= 0.002) continue;
 			float tiles = layer_tileable[i] > 0.5 ? layer_tiles[i] : 1.0;
-			c = mix(c, textureGrad(layer_tex[i], UV * tiles, dx * tiles, dy * tiles).rgb, w);
+			vec2 luv = UV * tiles;
+			if (layer_tileable[i] <= 0.5) {
+				// a whole-zone colour map is sampled once across the zone: kept off its far edge (the samplers
+				// repeat, so the zone's border blended in the opposite side - owner 2026-11-05: a white line between
+				// Black Mtns. North and South, the top of bmnorth.png being the snow line), at every mip it reads
+				vec2 ts = vec2(textureSize(layer_tex[i], 0));
+				float lod = max(0.0, log2(max(length(dx * ts), length(dy * ts))));
+				vec2 m = exp2(lod + 1.0) / ts;
+				luv = clamp(luv, m, 1.0 - m);
+			}
+			c = mix(c, textureGrad(layer_tex[i], luv, dx * tiles, dy * tiles).rgb, w);
 		}
 		float far = smoothstep(far_fade_m * 0.6, far_fade_m, dist);
 		ALBEDO = mix(c, painted, far);

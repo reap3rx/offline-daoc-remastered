@@ -139,10 +139,7 @@
           "mob": {
             "template": 60162203,
             "name": "host of the wind",
-            "level": [
-              6,
-              7
-            ]
+            "level": 7
           },
           "count": 5,
           "text": "The dancing winds blow apart into nothing. The music falters, then starts again, closer to the water.",
@@ -340,10 +337,7 @@
           "mob": {
             "template": 60165740,
             "name": "seithr orb",
-            "level": [
-              9,
-              10
-            ]
+            "level": 10
           },
           "count": 5,
           "id": "s3"
