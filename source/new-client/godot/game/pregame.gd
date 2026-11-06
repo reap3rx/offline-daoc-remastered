@@ -58,7 +58,6 @@ var sel := 0
 var draft := {}                                   # the character being created or customized
 var editing := false                              # customize an existing character (select screen CUSTOMIZE)
 var locks := {}
-var _page := 0                                     # customize: 0 FEATURES, 1 SHAPE, 2 SKIN (owner 2026-11-06)
 
 var _scene: NifScene
 var _scene_realm := ""
@@ -343,218 +342,510 @@ func _build_create() -> void:
 
 func _build_customize() -> void:
 	_load_realm_scene()
-	_frame_art("character_customize", 12, 268)
+	_bare_frame()
 	_show_figure(draft if editing else _draft_character())
 	var f := _figure
 	if not f.is_layered() and not f.layered_changes().is_empty():   # the face taken apart (brows, beard, lines)
 		f.apply(f.layered_changes())
 		draft.look = f.look.duplicate(true)
-	var shapes: Array = f.meta.get("face_shapes", [])
-	var skin: Array = (f.meta.get("skin_layers", {}) as Dictionary).get("layers", [])
-	var tabs := [["FEATURES", 0]]                           # the pages: the features, the face's shape, the skin
-	if not shapes.is_empty():
-		tabs.append(["SHAPE", 1])
-	if not skin.is_empty():
-		tabs.append(["SKIN", 2])
-	if not tabs.any(func(t): return int(t[1]) == _page):
-		_page = 0
-	if tabs.size() == 1:
-		_label("FACIAL FEATURES", 760, 64, 248, 30, 22, GOLD, HORIZONTAL_ALIGNMENT_CENTER, "R")
-	else:
-		var w := (232.0 - 6.0 * (tabs.size() - 1)) / tabs.size()
-		for i in tabs.size():
-			var page: int = tabs[i][1]
-			var tb := _bar_button(String(tabs[i][0]), 772 + i * (w + 6), 66, w, 26, "R", func():
+	if not _tab in ["face", "skin", "body"] or (_tab == "skin" and (f.meta.get("skin_layers", {}) as Dictionary).is_empty()):
+		_tab = "face"
+	_creator_chrome()
+	var content := _creator_panel()
+	var y := 6.0
+	match _tab:
+		"face": y = _c_face(content, y)
+		"skin": y = _c_skin(content, y)
+		"body": y = _c_body(content, y)
+	content.custom_minimum_size = Vector2(CW, y + 8)
+	_status_line()
+
+
+# ---------------------------------------------------------------- the creator (owner 2026-11-06: WoW's screen as the
+# template - the character in its realm, the choices down the right to cycle through, colour bars, FACE / SKIN / BODY)
+
+const CW := 346.0                                       # the options' width (frame units)
+const C_PANEL := Color(0.05, 0.04, 0.035, 0.78)
+const C_EDGE := Color(0.62, 0.5, 0.26)
+var _tab := "face"
+var _scroll: ScrollContainer
+var _scroll_keep := 0
+var _picker: Control
+
+
+## The window without the client's painted frame: the realm scene fills it.
+func _bare_frame() -> void:
+	var vp := get_viewport().get_visible_rect().size
+	var s := vp.y / 768.0
+	_wext = maxf(vp.x / s, 1024.0)
+	_frame = Control.new()
+	_frame.scale = Vector2(s, s)
+	_frame.size = Vector2(_wext, 768)
+	_frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(_frame)
+
+
+func _cpanel(x: float, y: float, w: float, h: float, anchor: String, alpha := 0.78, edge := C_EDGE, radius := 6) -> Panel:
+	var p := Panel.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(C_PANEL, alpha)
+	sb.border_color = edge
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(radius)
+	sb.shadow_color = Color(0, 0, 0, 0.4)
+	sb.shadow_size = 5
+	p.add_theme_stylebox_override("panel", sb)
+	p.mouse_filter = Control.MOUSE_FILTER_STOP
+	_at(p, x, y, w, h, anchor)
+	return p
+
+
+## A flat gold-edged button (the creator's own look, not the client's stone bars).
+func _cbutton(text: String, parent: Control, x: float, y: float, w: float, h: float, cb: Callable, size := 14,
+		active := false) -> Button:
+	var b := Button.new()
+	b.text = text
+	b.focus_mode = Control.FOCUS_NONE
+	for st in ["normal", "hover", "pressed", "disabled"]:
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.34, 0.24, 0.07, 0.95) if active or st == "pressed" else (Color(0.24, 0.18, 0.07, 0.95) if st == "hover" else Color(0.14, 0.11, 0.06, 0.92))
+		sb.border_color = Color(1.0, 0.82, 0.4) if active or st == "hover" else C_EDGE
+		sb.set_border_width_all(2 if active else 1)
+		sb.set_corner_radius_all(4)
+		sb.set_content_margin_all(1)
+		b.add_theme_stylebox_override(st, sb)
+	b.add_theme_font_size_override("font_size", size)
+	b.add_theme_color_override("font_color", GOLD_HI if active else GOLD)
+	b.add_theme_color_override("font_hover_color", GOLD_HI)
+	b.position = Vector2(x, y)
+	b.size = Vector2(w, h)
+	parent.add_child(b)
+	b.pressed.connect(cb)
+	return b
+
+
+func _ctext(text: String, parent: Control, x: float, y: float, w: float, h: float, size: int, col: Color,
+		align := HORIZONTAL_ALIGNMENT_LEFT) -> Label:
+	var l := Label.new()
+	while size > 9 and _font_bold.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x > w:
+		size -= 1
+	l.text = text
+	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_color_override("font_color", col)
+	l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
+	l.add_theme_constant_override("shadow_offset_x", 1)
+	l.add_theme_constant_override("shadow_offset_y", 1)
+	l.horizontal_alignment = align
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	l.position = Vector2(x, y)
+	l.size = Vector2(w, h)
+	parent.add_child(l)
+	return l
+
+
+## Everything around the options: the character's realm, race and class (top left, with the way back to change
+## them), the camera buttons, the name across the top, FACE / SKIN / BODY and the whole-look die (top right),
+## BACK and FINISH.
+func _creator_chrome() -> void:
+	# the right side darkened a little, where the options sit
+	var shade := ColorRect.new()
+	shade.color = Color(0, 0, 0, 0.22)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_at(shade, 1024 - 380, 0, 380, 768, "R")
+	# realm, race, class
+	var races: Array = RACES[realm]
+	var race := String(races[int(draft.get("race", 0))][0]) if not editing else String(draft.get("race_name", draft.get("race", "")))
+	var cls := _server_class_name() if Server.active and not editing else String(BASE_BUTTON.get(draft.get("base", ""), draft.get("class", "")))
+	var info := _cpanel(20, 18, 270, 66, "L")
+	_ctext(REALM_NAMES.get(realm, ""), info, 12, 6, 246, 16, 12, Color(0.86, 0.4, 0.34))
+	_ctext(("%s  -  %s" % [race, cls]).to_upper() if not editing else String(draft.get("name", "")).to_upper(), info, 12, 22, 246, 22, 17, GOLD_HI)
+	if not editing:
+		var chg := _ctext("CHANGE RACE OR CLASS", info, 12, 44, 160, 16, 11, DIM)
+		chg.mouse_filter = Control.MOUSE_FILTER_STOP
+		chg.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		chg.gui_input.connect(func(e: InputEvent):
+			if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
 				draft.look = _figure.look.duplicate(true)
-				_page = page
-				_show("customize"))
-			_selected(tb, page == _page)
-	var y := 100.0
-	if _page == 1:
-		_shape_rows(shapes, y)
-	elif _page == 2:
-		_skin_rows(skin, y)
-	else:
-		_feature_rows(y)
-	# camera: arrows turn the figure, + / - zoom (the client's customize controls)
-	_customize_frame()
+				_show("create"))
+	# the camera: turn, zoom, face / whole figure
+	var cams := _cpanel(20, 92, 270, 36, "L", 0.6)
+	var cb := [["<", func(): _yaw -= 0.35; _place_camera()], [">", func(): _yaw += 0.35; _place_camera()],
+		["-", func(): _zoom = clampf(_zoom + 0.15, 0.45, 2.0); _place_camera()],
+		["+", func(): _zoom = clampf(_zoom - 0.15, 0.45, 2.0); _place_camera()]]
+	for i in cb.size():
+		_cbutton(String(cb[i][0]), cams, 6 + i * 34, 5, 28, 26, cb[i][1], 16)
+	_cbutton("FACE" if _body_view else "BODY", cams, 150, 5, 112, 26, func():
+		_body_view = not _body_view
+		_zoom = 1.0
+		_show("customize"), 13)
+	# the name, top centre (set on the race screen; shown here, a new one from the die)
+	var nm := _cpanel(512 - 130, 18, 260, 40, "C", 0.85)
+	_ctext(String(draft.get("name", "")).to_upper(), nm, 0, 4, 260, 32, 20, CREAM, HORIZONTAL_ALIGNMENT_CENTER)
+	# FACE / SKIN / BODY, and the die
+	var tabs := [["FACE", "face"]]
+	if not (_figure.meta.get("skin_layers", {}) as Dictionary).is_empty():
+		tabs.append(["SKIN", "skin"])
+	tabs.append(["BODY", "body"])
+	var tb := Control.new()
+	tb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_at(tb, 1024 - 24 - tabs.size() * 76 - 46, 20, tabs.size() * 76 + 46, 52, "R")
+	for i in tabs.size():
+		var key: String = tabs[i][1]
+		_cbutton(String(tabs[i][0]), tb, 46 + i * 76, 0, 70, 44, func():
+			_keep_scroll(false)
+			_tab = key
+			_body_view = key == "body"
+			_zoom = 1.0
+			_show("customize"), 16, _tab == key)
+	var die := _cbutton("?", tb, 0, 6, 36, 32, func():
+		_keep_scroll(true)
+		_randomize(), 18)
+	die.tooltip_text = "RANDOM LOOK (LOCKED CHOICES STAY)"
+	# BACK, FINISH
+	var bar := Control.new()
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_at(bar, 0, 700, _wext, 50, "L")
+	var back := _cbutton("<  BACK", bar, 24, 0, 190, 44, func(): _show("select" if editing else "create"), 18)
+	(back.get_theme_stylebox("normal") as StyleBoxFlat).bg_color = Color(0.45, 0.08, 0.07, 0.95)
+	var fin := _cbutton("SAVE" if editing else "FINISH", bar, _wext - 24 - 230, 0, 230, 44, _customize_continue, 20)
+	(fin.get_theme_stylebox("normal") as StyleBoxFlat).bg_color = Color(0.3, 0.21, 0.06, 0.96)
+	_ctext("DRAG TO TURN  -  RIGHT DRAG OR WHEEL TO ZOOM", bar, 0, 26, _wext, 18, 11, DIM, HORIZONTAL_ALIGNMENT_CENTER)
 
 
-func _feature_rows(y: float) -> void:
-	var f := _figure
-	if not f.is_layered():                             # (layered: the face is its parts, on the SKIN page)
-		y = _stepper_row("FACE", "face", f.meta.get("faces", []).map(func(x): return String(x.label).to_upper()), y)
-	var sliders: Array = f.meta.get("sliders", [])
-	for i in sliders.size():
-		_label(String(sliders[i].label).to_upper(), 770, y, 96, 24, 15, CREAM, HORIZONTAL_ALIGNMENT_LEFT, "R")
-		var s := HSlider.new()
-		s.min_value = 0
-		s.max_value = 8
-		s.step = 1
-		s.value = float((draft.look.get("sliders", [4, 4, 4, 4]) as Array)[i]) if i < (draft.look.get("sliders", []) as Array).size() else 4.0
-		s.value_changed.connect(func(v: float):
-			var arr: Array = (draft.look.get("sliders", [4, 4, 4, 4]) as Array).duplicate()
-			while arr.size() <= i:
-				arr.append(4)
-			arr[i] = int(v)
-			draft.look["sliders"] = arr
-			_figure.apply({"sliders": arr}))
-		_at(s, 868, y + 2, 118, 20, "R")
-		y += 27
-	y += 4
-	y = _swatch_row("EYE COLOR", "eyes", _eye_colours(), y)
-	y = _swatch_row("SKIN TONE", "skin", _skin_colours(), y)
-	y = _stepper_row("HAIR STYLE", "hair", f.meta.get("hair_styles", []).map(func(x): return String(x.label).to_upper()), y)
-	if f.option_count("hair_color") > 0 and _hair_has_mesh():
-		y = _swatch_row("HAIR COLOR", "hair_color", _hair_colours(), y)
-	y = _stepper_row("SIZE", "size", ["SHORT", "AVERAGE", "TALL"], y)
-	if f.option_count("tattoo") > 0:
-		y = _stepper_row("TATTOO", "tattoo", f.meta.get("tattoos", []).map(func(x): return String(x.label).to_upper()), y)
-	_bar_button("RANDOM", 776, 606, 108, 28, "R", _randomize)
-	_bar_button("DEFAULT", 892, 606, 108, 28, "R", func():
-		draft.look = {}
-		_figure.look = {}
-		_figure.apply({"sliders": [4, 4, 4, 4], "shape": {}})
-		_show("customize"))
+var _body_view := false
 
 
-## The face's shape, feature by feature (Fig3Figure.FACE_FEATURES over the fx_ sliders): each feature a named shape
-## to step through; its name toggles its sliders open for fine tuning (right-click one: back to the middle).
-var _tune := ""
+## The options' panel, right side, scrolling; returns the control the rows go in.
+func _creator_panel() -> Control:
+	var p := _cpanel(1024 - 24 - CW - 16, 84, CW + 16, 600, "R", 0.74)
+	_scroll = ScrollContainer.new()
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_scroll.position = Vector2(8, 8)
+	_scroll.size = Vector2(CW + 4, 584)
+	p.add_child(_scroll)
+	var c := Control.new()
+	c.custom_minimum_size = Vector2(CW, 10)
+	c.mouse_filter = Control.MOUSE_FILTER_PASS
+	_scroll.add_child(c)
+	var keep := _scroll_keep
+	var sc := _scroll
+	get_tree().process_frame.connect(func():
+		if is_instance_valid(sc):
+			sc.scroll_vertical = keep, CONNECT_ONE_SHOT)
+	return c
 
-func _shape_rows(shapes: Array, y: float) -> void:
-	var have := {}
-	for fs in shapes:
-		have[String(fs[0])] = String(fs[1])
+
+## Keep the panel where it was scrolled to across the rebuild a choice makes (a new tab starts at the top).
+func _keep_scroll(keep: bool) -> void:
+	_scroll_keep = _scroll.scroll_vertical if keep and is_instance_valid(_scroll) else 0
+
+
+func _redraw() -> void:
+	draft.look = _figure.look.duplicate(true)
+	_keep_scroll(true)
+	_show("customize")
+
+
+func _c_header(p: Control, text: String, y: float) -> float:
+	_ctext(text, p, 0, y + 4, CW, 20, 13, GOLD, HORIZONTAL_ALIGNMENT_CENTER)
+	var line := ColorRect.new()
+	line.color = Color(C_EDGE, 0.6)
+	line.position = Vector2(10, y + 26)
+	line.size = Vector2(CW - 20, 1)
+	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.add_child(line)
+	return y + 32
+
+
+## A lock beside a row: RANDOM leaves it alone.
+func _c_lock(p: Control, key: String, y: float) -> void:
 	var misc := _small("misc_pieces_new")
-	for feat in Fig3Figure.FACE_FEATURES:
-		var keys: Array = (feat[2] as Array).filter(func(k): return have.has(k))
-		if keys.is_empty():
-			continue
-		var fkey := String(feat[0])
-		var shape: Dictionary = _figure.look.get("shape", {})
-		var cur := Fig3Figure.feature_preset(feat, shape)
-		var tb := Button.new()                         # the feature's name: opens / closes its sliders
-		tb.text = ("- " if _tune == fkey else "+ ") + String(feat[1]).to_upper()
-		tb.flat = true
-		tb.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		tb.add_theme_font_size_override("font_size", 15)
-		tb.add_theme_color_override("font_color", CREAM)
-		tb.add_theme_color_override("font_hover_color", GOLD_HI)
-		_at(tb, 766, y, 100, 24, "R")
-		tb.pressed.connect(func():
-			_tune = "" if _tune == fkey else fkey
-			_show("customize"))
-		var n: int = (feat[3] as Array).size()
-		for side in 2:
-			var ab := TextureButton.new()
-			ab.texture_normal = _atlas(misc, Rect2(3 + side * 23, 200, 16, 13), 4)
-			ab.texture_hover = _atlas(misc, Rect2(3 + side * 23, 216, 16, 13), 4)
-			ab.ignore_texture_size = true
-			ab.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-			_at(ab, 866 + side * 104, y + 4, 16, 16, "R")
-			ab.pressed.connect(func():
-				var i: int = (cur + (1 if side == 1 else -1) + n) % n if cur >= 0 else (0 if side == 1 else n - 1)
-				_figure.set_shape(Fig3Figure.with_feature(feat, _figure.look.get("shape", {}), i))
-				draft.look = _figure.look.duplicate(true)
-				_show("customize"))
-		_label(String(feat[3][cur][0]).to_upper() if cur >= 0 else "CUSTOM", 882, y, 88, 24, 15, GOLD_HI,
-				HORIZONTAL_ALIGNMENT_CENTER, "R")
-		_lock("shape_" + fkey, y)
-		y += 27
-		if _tune == fkey:
-			for key in keys:
-				_label(String(have[key]).to_upper(), 786, y, 100, 22, 13, CREAM, HORIZONTAL_ALIGNMENT_LEFT, "R")
-				var s := HSlider.new()
-				s.min_value = -1.0
-				s.max_value = 1.0
-				s.step = 0.05
-				s.value = float(shape.get(key, 0.0))
-				s.value_changed.connect(func(v: float):
-					var sh: Dictionary = (_figure.look.get("shape", {}) as Dictionary).duplicate()
-					if absf(v) < 0.001:
-						sh.erase(key)
-					else:
-						sh[key] = snappedf(v, 0.05)
-					draft.look["shape"] = sh
-					_figure.set_shape(sh))
-				s.gui_input.connect(func(e: InputEvent):
-					if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_RIGHT:
-						s.value = 0.0
-						s.accept_event())
-				_at(s, 886, y + 2, 102, 18, "R")
-				y += 23
-	_bar_button("RANDOM", 776, 606, 108, 28, "R", func():
-		_figure.set_shape(_random_shape(true))
-		draft.look = _figure.look.duplicate(true)
-		_show("customize"))
-	_bar_button("DEFAULT", 892, 606, 108, 28, "R", func():
-		_figure.set_shape({})
-		draft.look = _figure.look.duplicate(true)
-		_show("customize"))
+	var tb := TextureButton.new()
+	tb.toggle_mode = true
+	tb.button_pressed = locks.get(key, false)
+	tb.texture_normal = _atlas(misc, Rect2(226, 209, 10, 11), 4)
+	tb.texture_pressed = _atlas(misc, Rect2(244, 210, 7, 10), 4)
+	tb.ignore_texture_size = true
+	tb.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	tb.tooltip_text = "LOCK (RANDOM LEAVES IT ALONE)"
+	tb.position = Vector2(CW - 16, y + 6)
+	tb.size = Vector2(12, 14)
+	p.add_child(tb)
+	tb.toggled.connect(func(on: bool): locks[key] = on)
 
 
-## The skin layers (pipeline/skin_layers.py, figure.json 'skin_layers'): brows, freckles, scars and war paint as
-## steppers, age and stubble as sliders, the paint's and the lips' colours as swatches.
-func _skin_rows(layers: Array, y: float) -> void:
-	var on := func(k: String) -> bool: return int(draft.look.get(k, 0)) > 0
-	for d in layers:
-		var key := String(d.key)
-		if key == "stubble" and _figure.race.ends_with("_f"):
-			continue                                   # (owner 2026-11-06: no stubble for women)
-		var label := String(d.label).to_upper()
-		var opts := ["NONE"]
-		opts.append_array((d.options as Array).map(func(o): return String(o).to_upper()))
-		match key:
-			"brows":
-				y = _stepper_row(label, "brows", opts, y)
-				if on.call("brows"):
-					y = _amount_row("DENSITY", "brow_amt", 1.0, 0.3, 1.4, y)
-			"age":
-				y = _stepper_row(label, "age_style", opts, y)
-				if on.call("age_style"):
-					y = _amount_row("STRENGTH", "age", 0.7, 0.1, 1.0, y)
-			"stubble":
-				y = _stepper_row(label, "stubble_style", opts, y)
-				if on.call("stubble_style"):
-					y = _amount_row("STRENGTH", "stubble", 0.8, 0.1, 1.0, y)
-			"lips":
-				var cols := [Color(0.62, 0.42, 0.4)]           # (the first: the face's own)
-				cols.append_array(Fig3Figure.LIP_COLORS.slice(1))
-				y = _swatch_row(label, "lip_color", cols, y)
-				if on.call("lip_color"):
-					y = _amount_row("STRENGTH", "lip_amt", 0.6, 0.1, 1.0, y)
-			_:
-				y = _stepper_row(label, key, opts, y)
-				if key == "paint" and on.call("paint"):
-					y = _swatch_row("PAINT COLOR", "paint_color", Fig3Figure.PAINT_COLORS, y)
-	if _figure.option_count("hair") > 0:                # the darkened scalp under the hair, on or off
-		y = _stepper_row("SCALP SHADE", "scalp_off", ["ON", "OFF"], y)
-	_bar_button("RANDOM", 776, 606, 108, 28, "R", func():
-		_figure.apply(_random_skin(true))
-		draft.look = _figure.look.duplicate(true)
-		_show("customize"))
-	_bar_button("DEFAULT", 892, 606, 108, 28, "R", func():
-		var ch := _figure.layered_changes()               # the face's own brows, beard, lines; nothing added
-		ch.merge({"freckles": 0, "scar": 0, "lip_color": 0, "paint": 0}, true)
-		_figure.apply(ch)
-		draft.look = _figure.look.duplicate(true)
-		_show("customize"))
+## [<] value [>]: cycles. label_cb: the label clickable (a feature's fine tuning).
+func _c_cycle(p: Control, label: String, value: String, step: Callable, y: float, lock_key := "",
+		label_cb := Callable()) -> float:
+	var l := _ctext(label.to_upper(), p, 0, y, 112, 26, 14, CREAM, HORIZONTAL_ALIGNMENT_RIGHT)
+	if label_cb.is_valid():
+		l.mouse_filter = Control.MOUSE_FILTER_STOP
+		l.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		l.gui_input.connect(func(e: InputEvent):
+			if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
+				label_cb.call())
+	_cbutton("<", p, 120, y, 26, 26, func(): step.call(-1), 15)
+	var box := Panel.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.03, 0.025, 0.02, 0.85)
+	sb.border_color = Color(C_EDGE, 0.7)
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(3)
+	box.add_theme_stylebox_override("panel", sb)
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.position = Vector2(150, y)
+	box.size = Vector2(142, 26)
+	p.add_child(box)
+	_ctext(value.to_upper(), p, 152, y, 138, 26, 13, GOLD_HI, HORIZONTAL_ALIGNMENT_CENTER)
+	_cbutton(">", p, 296, y, 26, 26, func(): step.call(1), 15)
+	if lock_key != "":
+		_c_lock(p, lock_key, y)
+	return y + 32
 
 
-## A strength slider under a layer (indented, its own default).
-func _amount_row(title: String, key: String, def: float, lo: float, hi: float, y: float) -> float:
-	_label(title, 786, y, 80, 24, 13, CREAM, HORIZONTAL_ALIGNMENT_LEFT, "R")
+## A look key cycled through its values (0 .. n-1).
+func _c_key(p: Control, label: String, key: String, values: Array, y: float, def := 0) -> float:
+	if values.is_empty():
+		return y
+	var cur := clampi(int(draft.look.get(key, def)), 0, values.size() - 1)
+	return _c_cycle(p, label, String(values[cur]), func(d: int):
+		var change := {key: (cur + d + values.size()) % values.size()}
+		if key == "hair":
+			change["hair_color"] = int(draft.look.get("hair_color", 0))
+		_figure.apply(change)
+		_redraw(), y, key)
+
+
+## A colour bar: the colour itself, arrows through the choices, a click on it opens them all.
+func _c_colour(p: Control, label: String, key: String, colours: Array, y: float) -> float:
+	if colours.is_empty():
+		return y
+	var cur := clampi(int(draft.look.get(key, 0)), 0, colours.size() - 1)
+	_ctext(label.to_upper(), p, 0, y, 112, 26, 14, CREAM, HORIZONTAL_ALIGNMENT_RIGHT)
+	var pick := func(i: int):
+		_figure.apply({key: i})
+		_redraw()
+	_cbutton("<", p, 120, y, 26, 26, func(): pick.call((cur - 1 + colours.size()) % colours.size()), 15)
+	var bar := Button.new()
+	bar.focus_mode = Control.FOCUS_NONE
+	for st in ["normal", "hover", "pressed"]:
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = colours[cur]
+		sb.border_color = Color(1.0, 0.82, 0.4) if st == "hover" else Color(0.05, 0.04, 0.03)
+		sb.set_border_width_all(2)
+		sb.set_corner_radius_all(3)
+		bar.add_theme_stylebox_override(st, sb)
+	bar.position = Vector2(150, y + 2)
+	bar.size = Vector2(142, 22)
+	bar.tooltip_text = "%d / %d" % [cur + 1, colours.size()]
+	p.add_child(bar)
+	bar.pressed.connect(func(): _open_picker(colours, cur, pick, bar))
+	_cbutton(">", p, 296, y, 26, 26, func(): pick.call((cur + 1) % colours.size()), 15)
+	_c_lock(p, key, y)
+	return y + 32
+
+
+## Every choice of a colour at once, under its bar; a click takes one, a click anywhere else closes it.
+func _open_picker(colours: Array, cur: int, pick: Callable, near: Control = null) -> void:
+	if is_instance_valid(_picker):
+		_picker.queue_free()
+	_picker = Control.new()
+	_picker.mouse_filter = Control.MOUSE_FILTER_STOP
+	_picker.position = Vector2.ZERO
+	_picker.size = Vector2(_wext, 768)
+	_frame.add_child(_picker)
+	_picker.gui_input.connect(func(e: InputEvent):
+		if e is InputEventMouseButton and e.pressed:
+			_picker.queue_free())
+	var cols := 8
+	var rows := int(ceil(colours.size() / float(cols)))
+	var w := cols * 34 + 16
+	var h := rows * 30 + 16
+	var at := Vector2(_wext - 24 - w - 8, 124)
+	if near:
+		var local: Vector2 = _frame.get_global_transform().affine_inverse() * near.global_position
+		at = Vector2(minf(local.x + near.size.x - w, _wext - w - 8), local.y + near.size.y + 4)
+		if at.y + h > 690:
+			at.y = local.y - h - 4
+	var box := Panel.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(C_PANEL, 0.96)
+	sb.border_color = Color(1.0, 0.82, 0.4)
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(6)
+	sb.shadow_color = Color(0, 0, 0, 0.5)
+	sb.shadow_size = 6
+	box.add_theme_stylebox_override("panel", sb)
+	box.position = at
+	box.size = Vector2(w, h)
+	_picker.add_child(box)
+	for i in colours.size():
+		var b := Button.new()
+		b.focus_mode = Control.FOCUS_NONE
+		for st in ["normal", "hover", "pressed"]:
+			var bs := StyleBoxFlat.new()
+			bs.bg_color = colours[i]
+			bs.border_color = GOLD_HI if i == cur or st == "hover" else Color(0.05, 0.04, 0.03)
+			bs.set_border_width_all(2)
+			bs.set_corner_radius_all(3)
+			b.add_theme_stylebox_override(st, bs)
+		b.position = Vector2(8 + (i % cols) * 34, 8 + (i / cols) * 30)
+		b.size = Vector2(30, 26)
+		box.add_child(b)
+		b.pressed.connect(func():
+			_picker.queue_free()
+			pick.call(i))
+
+
+## A slider row (indented under its choice when sub).
+func _c_slider(p: Control, label: String, value: float, lo: float, hi: float, changed: Callable, y: float,
+		sub := true, reset := 0.0) -> float:
+	_ctext(label.to_upper(), p, 0, y, 140 if sub else 112, 22, 12 if sub else 14, CREAM if not sub else Color(CREAM, 0.85),
+			HORIZONTAL_ALIGNMENT_RIGHT)
 	var s := HSlider.new()
 	s.min_value = lo
 	s.max_value = hi
 	s.step = 0.05
-	s.value = float(draft.look.get(key, def))
-	s.value_changed.connect(func(v: float):
-		_figure.apply({key: snappedf(v, 0.05)})
-		draft.look[key] = snappedf(v, 0.05))
-	_at(s, 868, y + 2, 118, 20, "R")
-	return y + 27
+	s.value = value
+	s.position = Vector2(150, y + 2)
+	s.size = Vector2(142, 18)
+	p.add_child(s)
+	s.value_changed.connect(func(v: float): changed.call(snappedf(v, 0.05)))
+	s.gui_input.connect(func(e: InputEvent):
+		if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_RIGHT:
+			s.value = reset
+			s.accept_event())
+	return y + 25
+
+
+func _c_amount(p: Control, label: String, key: String, def: float, lo: float, hi: float, y: float) -> float:
+	return _c_slider(p, label, float(draft.look.get(key, def)), lo, hi, func(v: float):
+		_figure.apply({key: v})
+		draft.look[key] = v, y, true, def)
+
+
+# --- FACE: skin and eye colour, hair, then the face feature by feature
+func _c_face(p: Control, y: float) -> float:
+	var f := _figure
+	y = _c_header(p, "APPEARANCE", y)
+	y = _c_colour(p, "Skin Color", "skin", _skin_colours(), y)
+	y = _c_colour(p, "Eye Color", "eyes", _eye_colours(), y)
+	y = _c_key(p, "Hair Style", "hair", f.meta.get("hair_styles", []).map(func(x): return String(x.label)), y)
+	if f.option_count("hair_color") > 0 and _hair_has_mesh():
+		y = _c_colour(p, "Hair Color", "hair_color", _hair_colours(), y)
+	if not f.is_layered():
+		y = _c_key(p, "Face", "face", f.meta.get("faces", []).map(func(x): return String(x.label)), y)
+	if f.option_count("tattoo") > 0:
+		y = _c_key(p, "Tattoo", "tattoo", f.meta.get("tattoos", []).map(func(x): return String(x.label)), y)
+	var shapes: Array = f.meta.get("face_shapes", [])
+	if not shapes.is_empty():
+		y = _c_header(p, "FEATURES", y + 4)
+		var have := {}
+		for fs in shapes:
+			have[String(fs[0])] = String(fs[1])
+		for feat in Fig3Figure.FACE_FEATURES:
+			var keys: Array = (feat[2] as Array).filter(func(k): return have.has(k))
+			if keys.is_empty():
+				continue
+			var fkey := String(feat[0])
+			var shape: Dictionary = f.look.get("shape", {})
+			var cur := Fig3Figure.feature_preset(feat, shape)
+			var n: int = (feat[3] as Array).size()
+			var open := _tune == fkey
+			y = _c_cycle(p, ("- " if open else "+ ") + String(feat[1]), String(feat[3][cur][0]) if cur >= 0 else "Custom",
+				func(d: int):
+					var i: int = (cur + d + n) % n if cur >= 0 else (0 if d > 0 else n - 1)
+					_figure.set_shape(Fig3Figure.with_feature(feat, _figure.look.get("shape", {}), i))
+					_redraw(), y, "shape_" + fkey,
+				func():
+					_tune = "" if open else fkey
+					_redraw())
+			if open:
+				for key in keys:
+					y = _c_slider(p, String(have[key]), float(shape.get(key, 0.0)), -1.0, 1.0, func(v: float):
+						var sh: Dictionary = (_figure.look.get("shape", {}) as Dictionary).duplicate()
+						if absf(v) < 0.001:
+							sh.erase(key)
+						else:
+							sh[key] = v
+						draft.look["shape"] = sh
+						_figure.set_shape(sh), y)
+				y += 4
+		_ctext("CLICK A FEATURE'S NAME TO FINE TUNE IT", p, 0, y, CW, 16, 10, DIM, HORIZONTAL_ALIGNMENT_CENTER)
+		y += 20
+	var sliders: Array = f.meta.get("sliders", [])
+	if not sliders.is_empty():
+		y = _c_header(p, "CLASSIC SHAPES", y + 4)
+		for i in sliders.size():
+			var arr: Array = draft.look.get("sliders", [4, 4, 4, 4])
+			y = _c_slider(p, String(sliders[i].label), float(arr[i]) if i < arr.size() else 4.0, 0, 8, func(v: float):
+				var a: Array = (draft.look.get("sliders", [4, 4, 4, 4]) as Array).duplicate()
+				while a.size() <= i:
+					a.append(4)
+				a[i] = int(v)
+				draft.look["sliders"] = a
+				_figure.apply({"sliders": a}), y, false, 4.0)
+	return y
+
+
+# --- SKIN: the face's parts and markings
+func _c_skin(p: Control, y: float) -> float:
+	var on := func(k: String) -> bool: return int(draft.look.get(k, 0)) > 0
+	var layers: Array = (_figure.meta.get("skin_layers", {}) as Dictionary).get("layers", [])
+	y = _c_header(p, "FACE DETAIL", y)
+	for d in layers:
+		var key := String(d.key)
+		if key == "stubble" and _figure.race.ends_with("_f"):
+			continue                                   # (owner 2026-11-06: no stubble for women)
+		var opts := ["None"]
+		opts.append_array(d.options)
+		match key:
+			"brows":
+				y = _c_key(p, "Brows", "brows", opts, y)
+				if on.call("brows"):
+					y = _c_amount(p, "Density", "brow_amt", 1.0, 0.3, 1.4, y)
+			"age":
+				y = _c_key(p, "Age Lines", "age_style", opts, y)
+				if on.call("age_style"):
+					y = _c_amount(p, "Strength", "age", 0.7, 0.1, 1.0, y)
+			"stubble":
+				y = _c_key(p, "Stubble", "stubble_style", opts, y)
+				if on.call("stubble_style"):
+					y = _c_amount(p, "Strength", "stubble", 0.8, 0.1, 1.0, y)
+			"freckles":
+				y = _c_key(p, "Freckles", "freckles", opts, y)
+			"scar":
+				y = _c_key(p, "Scar", "scar", opts, y)
+				if on.call("scar"):
+					y = _c_colour(p, "Scar Color", "scar_color", Fig3Figure.SCAR_COLORS, y)
+					y = _c_amount(p, "Strength", "scar_amt", 0.55, 0.1, 1.0, y)
+			"lips":
+				var cols := [Color(0.62, 0.42, 0.4)]   # (the first: the face's own)
+				cols.append_array(Fig3Figure.LIP_COLORS.slice(1))
+				y = _c_colour(p, "Lip Color", "lip_color", cols, y)
+				if on.call("lip_color"):
+					y = _c_amount(p, "Strength", "lip_amt", 0.6, 0.1, 1.0, y)
+			"paint":
+				y = _c_header(p, "WAR PAINT", y + 4)
+				y = _c_key(p, "Pattern", "paint", opts, y)
+				if on.call("paint"):
+					y = _c_colour(p, "Paint Color", "paint_color", Fig3Figure.PAINT_COLORS, y)
+	if _figure.option_count("hair") > 0:
+		y = _c_header(p, "HAIR", y + 4)
+		y = _c_key(p, "Scalp Shade", "scalp_off", ["On", "Off"], y)
+	return y
+
+
+# --- BODY: size now; the body sliders next (roadmap)
+func _c_body(p: Control, y: float) -> float:
+	y = _c_header(p, "BODY", y)
+	y = _c_colour(p, "Skin Color", "skin", _skin_colours(), y)
+	y = _c_key(p, "Size", "size", ["Short", "Average", "Tall"], y, 1)
+	return y
+
+
+var _tune := ""                                    # the feature whose sliders are open
 
 
 ## A random skin: brows always, mostly plain otherwise - now and then freckles, lines, a scar, war paint; beards on
@@ -599,30 +890,6 @@ func _random_shape(all := false) -> Dictionary:
 		var i := 0 if randf() < 0.5 else randi_range(1, (feat[3] as Array).size() - 1)
 		sh = Fig3Figure.with_feature(feat, sh, i)
 	return sh
-
-
-func _customize_frame() -> void:
-	# camera: arrows turn the figure, + / - zoom (the client's customize controls)
-	var misc := _small("misc_pieces_new")
-	var cam_buttons := [[Rect2(110, 177, 26, 29), func(): _yaw -= 0.35; _place_camera()],
-						[Rect2(173, 178, 26, 29), func(): _yaw += 0.35; _place_camera()],
-						[Rect2(138, 138, 32, 31), func(): _zoom = clampf(_zoom - 0.15, 0.45, 2.0); _place_camera()],
-						[Rect2(106, 138, 32, 31), func(): _zoom = clampf(_zoom + 0.15, 0.45, 2.0); _place_camera()]]
-	for i in cam_buttons.size():
-		var tb := TextureButton.new()
-		tb.texture_normal = _atlas(misc, cam_buttons[i][0], 4)
-		tb.ignore_texture_size = true
-		tb.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		_at(tb, 30 + i * 36, 600, 30, 30, "L")
-		tb.pressed.connect(cam_buttons[i][1])
-	_label("LEFT CLICK DRAG TO ROTATE, RIGHT CLICK DRAG TO ZOOM", 30, 636, 420, 20, 13, DIM, HORIZONTAL_ALIGNMENT_LEFT, "L")
-	_title("CUSTOMIZE YOUR CHARACTER")
-	_medallion("quit", "CANCEL", _wext * 0.095, 726, "L", func(): _show("select" if editing else "create"))
-	_medallion("realm", "REALM", _wext * 0.2975, 726, "L", func(): _show("realm"))
-	if not editing:
-		_medallion("customize", "RACE / CLASS", _wext * 0.7025, 726, "L", func(): _show("create"))
-	_medallion("continue", "SAVE" if editing else "CONTINUE", _wext * 0.905, 726, "L", _customize_continue)
-	_status_line()
 
 
 # ---------------------------------------------------------------- actions
@@ -1017,9 +1284,14 @@ func _place_camera() -> void:
 			# select camera's side so the backdrop stays the same, face centred in the open scene area
 			var head := _head_position()
 			var dir := to_cam.normalized()
-			_cam.position = head + dir * (0.95 * k * _zoom)
-			_cam.look_at(head)
-			var x := (_wext - 268.0) * 0.5
+			if _body_view:                               # the whole figure (BODY)
+				var mid := SPOT + Vector3(0, 0.95 * k, 0)
+				_cam.position = mid + dir * (3.3 * k * _zoom)
+				_cam.look_at(mid)
+			else:
+				_cam.position = head + dir * (0.95 * k * _zoom)
+				_cam.look_at(head)
+			var x := (_wext - 380.0) * 0.5
 			var ndc := (x - _wext * 0.5) / (_wext * 0.5)
 			var vp := get_viewport().get_visible_rect().size
 			var half_h := tan(deg_to_rad(_cam.fov * 0.5)) * (vp.x / maxf(vp.y, 1.0))
@@ -1056,67 +1328,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 # ---------------------------------------------------------------- customize rows
-
-func _stepper_row(title: String, key: String, values: Array, y: float) -> float:
-	if values.is_empty():
-		return y
-	var cur := clampi(int(draft.look.get(key, 1 if key == "size" else 0)), 0, values.size() - 1)
-	_label(title, 770, y, 96, 24, 15, CREAM, HORIZONTAL_ALIGNMENT_LEFT, "R")
-	var misc := _small("misc_pieces_new")
-	for side in 2:
-		var tb := TextureButton.new()
-		tb.texture_normal = _atlas(misc, Rect2(3 + side * 23, 200, 16, 13), 4)
-		tb.texture_hover = _atlas(misc, Rect2(3 + side * 23, 216, 16, 13), 4)
-		tb.ignore_texture_size = true
-		tb.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-		_at(tb, 866 + side * 104, y + 4, 16, 16, "R")
-		tb.pressed.connect(func():
-			var v := (cur + (1 if side == 1 else -1) + values.size()) % values.size()
-			var change := {key: v}
-			if key == "hair":
-				change["hair_color"] = int(draft.look.get("hair_color", 0))
-			_figure.apply(change)
-			draft.look = _figure.look.duplicate(true)
-			_show("customize"))
-	_label(String(values[cur]), 882, y, 88, 24, 15, GOLD_HI, HORIZONTAL_ALIGNMENT_CENTER, "R")
-	_lock(key, y)
-	return y + 27
-
-
-func _swatch_row(title: String, key: String, colours: Array, y: float) -> float:
-	if colours.is_empty():
-		return y
-	_label(title, 770, y, 140, 22, 15, CREAM, HORIZONTAL_ALIGNMENT_LEFT, "R")
-	_lock(key, y)
-	y += 22
-	var cur := int(draft.look.get(key, 0))
-	for i in colours.size():
-		var b := Button.new()
-		var st := _box(colours[i], GOLD_HI if i == cur else Color(0.1, 0.1, 0.1), 2 if i == cur else 1)
-		st.set_content_margin_all(0)
-		for s in ["normal", "hover", "pressed", "focus"]:
-			b.add_theme_stylebox_override(s, st)
-		_at(b, 772 + (i % 8) * 27, y + (i / 8) * 24, 24, 21, "R")
-		b.pressed.connect(func():
-			_figure.apply({key: i})
-			draft.look = _figure.look.duplicate(true)
-			_show("customize"))
-	return y + ceilf(colours.size() / 8.0) * 24 + 4
-
-
-func _lock(key: String, y: float) -> void:
-	var misc := _small("misc_pieces_new")
-	var tb := TextureButton.new()
-	tb.toggle_mode = true
-	tb.button_pressed = locks.get(key, false)
-	tb.texture_normal = _atlas(misc, Rect2(226, 209, 10, 11), 4)
-	tb.texture_pressed = _atlas(misc, Rect2(244, 210, 7, 10), 4)
-	tb.ignore_texture_size = true
-	tb.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	tb.tooltip_text = "LOCK (RANDOM LEAVES IT ALONE)"
-	_at(tb, 990, y + 5, 12, 14, "R")
-	tb.toggled.connect(func(on: bool): locks[key] = on)
-
 
 func _hair_has_mesh() -> bool:
 	var styles: Array = _figure.meta.get("hair_styles", [])
@@ -1441,21 +1652,27 @@ func _shots(folder: String) -> void:
 	_create_continue()
 	await save.call("4_customize")
 	if not _figure.meta.get("face_shapes", []).is_empty():
-		_figure.set_shape({"nose_tip": 0.8, "cheekbones": 0.8, "chin_point": 0.8, "chin_length": 0.2, "eye_size": 0.7})
+		_figure.set_shape({"nose_tip": 0.8, "cheekbones": 0.8, "chin_point": 0.6, "chin_width": -0.8, "chin_length": 0.2, "eye_size": 0.7})
 		draft.look = _figure.look.duplicate(true)
 		_tune = "nose"
-		_page = 1
 		_show("customize")
 		await save.call("5_shape")
-		_page = 0
+		_tune = ""
 	if not (_figure.meta.get("skin_layers", {}) as Dictionary).is_empty():
 		_figure.apply({"brows": 2, "freckles": 1, "age_style": 1, "age": 0.6, "scar": 1, "stubble_style": 2, "stubble": 0.9,
 				"lip_color": 2, "lip_amt": 0.5, "paint": 0})
 		draft.look = _figure.look.duplicate(true)
-		_page = 2
+		_tab = "skin"
 		_show("customize")
 		await save.call("5_skin")
-		_page = 0
+		_open_picker(Fig3Figure.SCAR_COLORS, 0, func(i): pass)
+		await save.call("5_skin_picker")
+	_tab = "body"
+	_body_view = true
+	_show("customize")
+	await save.call("5_body")
+	_tab = "face"
+	_body_view = false
 	_customize_continue()
 	await save.call("6_select_with_character")
 	CharacterStore.remove(Accounts.account, "Brennan")

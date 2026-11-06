@@ -24,9 +24,10 @@ NC = {'SCALAR': 1, 'VEC2': 2, 'VEC3': 3, 'VEC4': 4}
 FEATURES = [
     ('nose_width', 'Nose Width'), ('nose_length', 'Nose Length'), ('nose_height', 'Nose Height'),
     ('nose_bridge', 'Nose Bridge'), ('nose_tip', 'Nose Tip'), ('eye_spacing', 'Eye Spacing'), ('eye_height', 'Eye Height'),
-    ('eye_size', 'Eye Size'), ('eye_depth', 'Eye Depth'), ('brow_height', 'Brow Height'), ('brow_depth', 'Brow Ridge'),
+    ('eye_size', 'Eye Size'), ('eye_depth', 'Eye Depth'), ('eye_tilt', 'Eye Slant'), ('brow_height', 'Brow Height'), ('brow_depth', 'Brow Ridge'),
     ('cheekbones', 'Cheekbones'), ('mouth_width', 'Mouth Width'), ('mouth_height', 'Mouth Height'),
-    ('lips', 'Lip Fullness'), ('jaw_width', 'Jaw Width'), ('chin_length', 'Chin Length'), ('chin_point', 'Chin Point'),
+    ('lips', 'Lip Fullness'), ('jaw_width', 'Jaw Width'), ('jaw_height', 'Jaw Angle'), ('jaw_sharp', 'Jaw Definition'),
+    ('chin_length', 'Chin Length'), ('chin_point', 'Chin Point'), ('chin_width', 'Chin Width'),
     ('ear_size', 'Ear Size'), ('ear_out', 'Ears Out'), ('ear_tilt', 'Ear Tilt'),
 ]
 
@@ -227,6 +228,13 @@ def build(P, N, T, fm, scale=1.0):
     core = w_eye ** 2
     D['eye_size'] = (P - c) * 0.22 * core[:, None] * [1, 0.3, 1]
     d = z.copy(); d[:, 1] = 0.22 * s * core; D['eye_depth'] = d
+    # slant (owner 2026-11-06): each eye turned about its centre, the outer corner up (+) or down
+    th = np.sign(P[:, 0]) * 0.22
+    rx, rz = P[:, 0] - c[:, 0], P[:, 2] - c[:, 2]
+    d = z.copy()
+    d[:, 0] = (rx * np.cos(th) - rz * np.sin(th) - rx) * core
+    d[:, 2] = (rx * np.sin(th) + rz * np.cos(th) - rz) * core
+    D['eye_tilt'] = d
     # brow: the ridge over the eyes, a narrow band (owner 2026-11-06: a round region a quarter of the head across moved
     # the whole upper face) - its height the most forward row above each eye, across the eyes and between them
     E = abs(eyeR[0] - eyeL[0])
@@ -260,10 +268,37 @@ def build(P, N, T, fm, scale=1.0):
     # (from below the lower lip, and never the lips: a jaw or chin that took the lower lip and not the upper opened
     # the mouth)
     low = np.clip((mouth[2] - 0.03 * H - P[:, 2]) / (0.17 * H), 0, 1) * (1 - w_ls)
-    d = z.copy(); d[:, 0] = P[:, 0] * 0.22 * w_jaw * low; D['jaw_width'] = d
+    # the jaw (owner 2026-11-06: the old width moved the neck more than the jaw): its angles - the widest points of the
+    # lower face, each side - and the jawline from them to the chin; nothing below the chin's level (the neck)
+    noneck = np.clip((P[:, 2] - (chin[2] - 0.12 * H)) / (0.08 * H), 0, 1) * (1 - w_ls)
+    gon = {}
+    for sg in (-1, 1):
+        sel = (np.sign(P[:, 0]) == sg) & (P[:, 2] > chin[2]) & (P[:, 2] < mouth[2])
+        if sel.sum() > 5:
+            ax = np.abs(P[sel, 0])
+            top = sel.nonzero()[0][ax >= np.percentile(ax, 90)]
+            gon[sg] = np.median(P[top], axis=0)
+        else:
+            gon[sg] = np.array([sg * 0.8 * hw, eye_mid[1] + 0.3 * H, (chin[2] + mouth[2]) / 2])
+    G_ = np.where((P[:, 0] < 0)[:, None], gon[-1], gon[1])
+    w_ang = np.clip(gauss(P, G_, 0.13 * H) * 1.2, 0, 1) * noneck
+    side = np.sign(P[:, 0])
+    d = z.copy(); d[:, 0] = side * 0.2 * s * w_ang + P[:, 0] * 0.06 * w_jaw * low * noneck; D['jaw_width'] = d
+    d = z.copy(); d[:, 2] = 0.18 * s * w_ang; D['jaw_height'] = d
+    # definition: the jawline's edge (from each angle down to the chin) - its underside drawn in and up, its side out,
+    # so the edge turns crisp (+) or rounds off (-)
+    gx = np.abs(G_[:, 0] - chin[0])
+    edge_z = chin[2] + (G_[:, 2] - chin[2]) * np.clip(np.abs(P[:, 0] - chin[0]) / np.maximum(gx, 1e-6), 0, 1)
+    R = np.exp(-((P[:, 2] - edge_z) / (0.06 * H)) ** 2) * np.clip((G_[:, 1] + 0.06 * H - P[:, 1]) / (0.06 * H), 0, 1) \
+        * (1 - w_ls) * np.clip((P[:, 2] - (chin[2] - 0.2 * H)) / (0.06 * H), 0, 1)
+    w_under = np.clip(-Nn[:, 2] * 1.5, 0, 1)
+    D['jaw_sharp'] = (-Nn * (w_under * 0.14 * s)[:, None] + Nn * ((1 - w_under) * 0.08 * s)[:, None]) * R[:, None]
     w_chin = np.clip(gauss(P, chin, 0.16 * H), 0, 1) * front * low
     d = z.copy(); d[:, 2] = -0.28 * s * w_chin; D['chin_length'] = d
     d = z.copy(); d[:, 1] = -0.25 * s * w_chin; D['chin_point'] = d
+    # width: the chin's sides out from its middle (-: narrowed to a point)
+    w_cw = np.clip(gauss(P, chin, 0.12 * H), 0, 1) * front * low
+    d = z.copy(); d[:, 0] = (P[:, 0] - chin[0]) * 0.45 * w_cw; D['chin_width'] = d
     # ears: the outermost parts at the eyes' height, behind the face
     ear_z = (eye_mid[2] + nose_tip[2]) / 2
     w_ear = np.clip((np.abs(P[:, 0]) - 0.78 * hw) / (0.12 * hw), 0, 1) * gauss(P * [0, 0, 1], [0, 0, ear_z], 0.14 * H) \
@@ -298,8 +333,8 @@ def build(P, N, T, fm, scale=1.0):
     return D, marks
 
 
-# every slider's full move (owner 2026-11-06: the extremes were the worst - a quarter less)
-STRENGTH = 0.75
+# every slider's full move (owner 2026-11-06: the extremes were the worst - a quarter less, then back up 15%)
+STRENGTH = 0.8625      # (0.75, then owner 2026-11-06 again: 'too aggressive ... increase it 15%')
 
 # races whose features need a bigger move to show (the trolls' heads are wide and craggy: at 1.0 the sliders barely read)
 RACE_SCALE = {'tro': 1.5}

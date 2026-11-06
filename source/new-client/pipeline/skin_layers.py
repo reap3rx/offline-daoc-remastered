@@ -174,10 +174,13 @@ def draw(L, rng):
     c = canvas()
     top = min(vn - 0.08, vm + 0.3)                     # (under the nose - or just over the lip, where the nose sits high)
     poly = [(0, top), (0.30, top + 0.04), (0.47, vm + 0.02), (0.75, vm + 0.18), (1.12, -0.18), (1.28, 0.22),
-            (1.42, 0.22), (1.45, -0.4), (1.2, vc - 0.05), (0.6, vc - 0.22), (0, vc - 0.25)]
+            (1.42, 0.22), (1.45, -0.4), (1.3, vc - 0.3), (0.6, vc - 0.55), (0, vc - 0.6)]
     for sgn in (1, -1):
         cv2.fillPoly(c, [np.array([px(sgn * u, v) for u, v in poly], np.int32)], 1.0, cv2.LINE_AA)
-    M['stubble', 0] = blur(c, 0.08)                   # (the area: the hairs are speckled in the texture's own space)
+    # (owner 2026-11-06: it ended in a hard line on the neck) - thinning out from the jaw down instead
+    rows = V1 - FS * np.arange(c.shape[0], dtype=np.float32)
+    ramp = np.clip((rows - (vc - 0.6)) / 0.5, 0, 1)[:, None]
+    M['stubble', 0] = blur(c, 0.08) * ramp ** 1.5      # (the area: the hairs are speckled in the texture's own space)
     # --- war paint (the lips' own mask comes from the texture, below)
     paints = []
     c = canvas()                                       # mask: a band across the eyes, tapering to the temples
@@ -528,7 +531,11 @@ def bake(folder, preview=None):
             return lip_mask
         m = cv2.remap(M[key, k], mapx, mapy, cv2.INTER_LINEAR, borderValue=0)
         if key == 'stubble':                       # speckled texel by texel (in face space it smeared on the jaw's
-            return m * wide * (0.3 + 0.7 * speck) * (1 - np.clip(lipw * 1.6, 0, 1))      # stretch)
+            m = m * wide                               # stretch); where the area fades the hairs thin out, not
+            sparse = np.clip((speck - (1 - m) * 0.9) / 0.25, 0, 1)                     # just grow faint
+            lipcut = 1 - np.clip(cv2.dilate(lip_mask, np.ones((7, 7), np.uint8)) * 1.5, 0, 1)    # (the lips' own outline:
+            return np.clip(m * 1.3, 0, 1) * sparse * (0.4 + 0.6 * speck) * lipcut                # the mesh's lip region
+                                                                                                  # reached the chin)
         m = m * front
         if (key, k) in ONE_SIDED:
             m = m * single

@@ -355,6 +355,9 @@ const PAINT_COLORS := [Color(0.13, 0.24, 0.62), Color(0.06, 0.06, 0.07), Color(0
 	Color(0.16, 0.42, 0.18), Color(0.78, 0.6, 0.18), Color(0.4, 0.16, 0.5), Color(0.42, 0.4, 0.38)]
 const LIP_COLORS := [Color(0, 0, 0), Color(0.62, 0.22, 0.26), Color(0.48, 0.06, 0.1), Color(0.42, 0.1, 0.28),
 	Color(0.3, 0.1, 0.22), Color(0.78, 0.36, 0.3), Color(0.45, 0.3, 0.26), Color(0.08, 0.06, 0.07), Color(0.2, 0.26, 0.45)]
+## Scar colours (owner 2026-11-06: "too bright"): healed pale, faint pink, fresh red, dark, silvered.
+const SCAR_COLORS := [Color(0.8, 0.62, 0.56), Color(0.86, 0.58, 0.56), Color(0.66, 0.3, 0.28), Color(0.42, 0.3, 0.26),
+	Color(0.84, 0.8, 0.78)]
 static var _layer_tex := {}                     # path -> the mask texture (shared by every figure of the race)
 
 
@@ -419,7 +422,8 @@ func _layers(m: ShaderMaterial) -> void:
 		slots.append([pick.call("age", ast), Color(0.4, 0.34, 0.32), clampf(float(look.get("age", 0.7)), 0.0, 1.0), 2])
 	c = pick.call("scar", int(look.get("scar", 0)))
 	if c >= 0:
-		slots.append([c, Color(0.9, 0.66, 0.62), 0.8, 1])     # (scar tissue: pale and pink, shaded by the skin)
+		var sc: Color = SCAR_COLORS[clampi(int(look.get("scar_color", 0)), 0, SCAR_COLORS.size() - 1)]
+		slots.append([c, sc, clampf(float(look.get("scar_amt", 0.55)), 0.0, 1.0), 1])   # (shaded by the skin under it)
 	var sst := int(look.get("stubble_style", 1 if float(look.get("stubble", 0.0)) > 0.01 else 0))
 	if sst > 0:
 		slots.append([pick.call("stubble", sst), hair.darkened(0.4), clampf(float(look.get("stubble", 0.8)), 0.0, 1.0) * 0.95, 3])
@@ -464,10 +468,11 @@ func _layers(m: ShaderMaterial) -> void:
 ## of named shapes over its own sliders (look.shape, -1 .. 1; Natural = the race's own). The creator offers these and
 ## keeps the sliders under each for fine tuning.
 const FACE_FEATURES := [
-	["eyes", "Eyes", ["eye_spacing", "eye_height", "eye_size", "eye_depth"], [
+	["eyes", "Eyes", ["eye_spacing", "eye_height", "eye_size", "eye_depth", "eye_tilt"], [
 		["Natural", {}], ["Large", {"eye_size": 0.7}], ["Small", {"eye_size": -0.6}], ["Deep-set", {"eye_depth": 0.8, "eye_size": -0.2}],
 		["Prominent", {"eye_depth": -0.7, "eye_size": 0.3}], ["Wide-set", {"eye_spacing": 0.7}], ["Close-set", {"eye_spacing": -0.7}],
-		["High", {"eye_height": 0.7}], ["Low", {"eye_height": -0.6}]]],
+		["High", {"eye_height": 0.7}], ["Low", {"eye_height": -0.6}], ["Upswept", {"eye_tilt": 0.7}],
+		["Downturned", {"eye_tilt": -0.6}], ["Feline", {"eye_tilt": 0.8, "eye_size": -0.3}]]],
 	["brow", "Brow", ["brow_height", "brow_depth"], [
 		["Natural", {}], ["Heavy", {"brow_depth": 0.8, "brow_height": -0.3}], ["Smooth", {"brow_depth": -0.7}],
 		["High", {"brow_height": 0.7}], ["Low", {"brow_height": -0.6}]]],
@@ -481,11 +486,13 @@ const FACE_FEATURES := [
 	["mouth", "Mouth", ["mouth_width", "mouth_height", "lips"], [
 		["Natural", {}], ["Full", {"lips": 0.8}], ["Thin", {"lips": -0.7}], ["Wide", {"mouth_width": 0.7}],
 		["Small", {"mouth_width": -0.6, "lips": 0.2}], ["High", {"mouth_height": 0.6}], ["Low", {"mouth_height": -0.6}]]],
-	["jaw", "Jaw", ["jaw_width"], [
-		["Natural", {}], ["Square", {"jaw_width": 0.6}], ["Strong", {"jaw_width": 1.0}], ["Narrow", {"jaw_width": -0.6}],
-		["Delicate", {"jaw_width": -1.0}]]],
-	["chin", "Chin", ["chin_length", "chin_point"], [
-		["Natural", {}], ["Pointed", {"chin_point": 0.8, "chin_length": 0.2}], ["Short", {"chin_length": -0.7}],
+	["jaw", "Jaw", ["jaw_width", "jaw_height", "jaw_sharp"], [
+		["Natural", {}], ["Square", {"jaw_width": 0.6, "jaw_sharp": 0.5}], ["Strong", {"jaw_width": 0.9, "jaw_sharp": 0.8}],
+		["Chiseled", {"jaw_sharp": 1.0, "jaw_height": 0.3}], ["Soft", {"jaw_sharp": -0.8}], ["Narrow", {"jaw_width": -0.6}],
+		["Delicate", {"jaw_width": -0.9, "jaw_sharp": -0.4}], ["High", {"jaw_height": 0.8}], ["Low", {"jaw_height": -0.7}]]],
+	["chin", "Chin", ["chin_length", "chin_point", "chin_width"], [
+		["Natural", {}], ["Pointed", {"chin_point": 0.6, "chin_width": -0.8, "chin_length": 0.2}],
+		["Broad", {"chin_width": 0.8}], ["Narrow", {"chin_width": -0.6}], ["Short", {"chin_length": -0.7}],
 		["Long", {"chin_length": 0.8}], ["Jutting", {"chin_point": 1.0}], ["Receding", {"chin_point": -0.8}]]],
 	["ears", "Ears", ["ear_size", "ear_out", "ear_tilt"], [
 		["Natural", {}], ["Small", {"ear_size": -0.7}], ["Large", {"ear_size": 0.8}], ["Out", {"ear_out": 0.9}],
