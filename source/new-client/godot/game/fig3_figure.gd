@@ -329,6 +329,7 @@ func apply(changes: Dictionary) -> void:
 					mi.material_override = m
 	# the scalp cap under the hair, if worn (figure.json hair_under, pipeline/import_hair.py): in the hair's colour
 	_hair_under()
+	_apply_hair_fit()
 	# the turban over the hair: its cloth from the original texture (the remastered one drew strands into it), dyed
 	var tb: Array = meta.get("turbans", [])
 	var ti := turban_index()
@@ -402,6 +403,10 @@ const SCAR_COLORS := [Color(0.8, 0.62, 0.56), Color(0.86, 0.58, 0.56), Color(0.6
 ## (look turban: 0 none, k = turbans[k-1]; unset: the style's own, as before), dyed (turban_color), and a style of
 ## its own hair under it takes the helm morph of a close cap (helm hair type TURBAN_HAIR).
 const TURBAN_HAIR := 2
+## The creator's hair sliders (owner 2026-11-06: "hair sliders so that way players ... can also try to get the hair
+## placement, size, and length correct"): the hf_ morph targets pipeline/import_hair.py puts on every style, kept per
+## style in look.hair_fit {style node: {key: -1..1}}.
+const HAIR_FIT := [["up", "Up / Down"], ["fwd", "Forward / Back"], ["size", "Size"], ["width", "Width"], ["len", "Length"]]
 const TURBAN_COLORS := [Color(0.92, 0.9, 0.84), Color(0.2, 0.18, 0.16), Color(0.55, 0.12, 0.1), Color(0.16, 0.24, 0.5),
 	Color(0.18, 0.36, 0.2), Color(0.72, 0.56, 0.24), Color(0.42, 0.3, 0.2), Color(0.4, 0.16, 0.42)]
 
@@ -470,6 +475,22 @@ func _hair_under() -> void:
 		m.set_shader_parameter("fuzz", 0.0)            # (skin-tight: no strands broken off its outline)
 		for mi in _parts(String(hu.node)):
 			mi.material_override = m
+
+
+## The worn style's own hair-slider values (look.hair_fit, by style node).
+func hair_fit_of(node: String) -> Dictionary:
+	return (look.get("hair_fit", {}) as Dictionary).get(node, {})
+
+
+func _apply_hair_fit() -> void:
+	var styles: Array = meta.get("hair_styles", [])
+	for st in styles:
+		if st.node == null or not _meshes.has(String(st.node)) or not bool(st.get("fit", false)):
+			continue
+		var fit := hair_fit_of(String(st.node))
+		for mi in _parts(String(st.node)):
+			for f in HAIR_FIT:
+				_blend(mi, "hf_" + String(f[0]), clampf(float(fit.get(String(f[0]), 0.0)), -1.0, 1.0))
 
 
 func scalp_cap_on() -> bool:

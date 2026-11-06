@@ -843,6 +843,28 @@ func _c_amount(p: Control, label: String, key: String, def: float, lo: float, hi
 		draft.look[key] = v, y, true, def)
 
 
+## The worn style's fit (Fig3Figure.HAIR_FIT, owner 2026-11-06): up / down, forward / back, size, width, length - each
+## style keeps its own (look.hair_fit by style node). Right-click a slider: back to as made.
+func _c_hair_fit(p: Control, y: float) -> float:
+	var styles: Array = _figure.meta.get("hair_styles", [])
+	var si := int(draft.look.get("hair", 0))
+	if si < 0 or si >= styles.size() or styles[si].node == null or not bool(styles[si].get("fit", false)):
+		return y
+	var node := String(styles[si].node)
+	y = _c_header(p, "HAIR FIT", y + 4)
+	for f in Fig3Figure.HAIR_FIT:
+		var k := String(f[0])
+		y = _c_slider(p, String(f[1]), float(_figure.hair_fit_of(node).get(k, 0.0)), -1.0, 1.0, func(v: float):
+			var all: Dictionary = (draft.look.get("hair_fit", {}) as Dictionary).duplicate(true)
+			var one: Dictionary = all.get(node, {})
+			one[k] = v
+			all[node] = one
+			draft.look["hair_fit"] = all
+			_figure.look["hair_fit"] = all
+			_figure._apply_hair_fit(), y, true, 0.0)
+	return y
+
+
 # --- FACE: skin and eye colour, hair, then the face feature by feature
 func _c_face(p: Control, y: float) -> float:
 	var f := _figure
@@ -867,6 +889,7 @@ func _c_face(p: Control, y: float) -> float:
 		y = _c_key(p, "Beard", "beard", ["None"] + f.meta.beards.map(func(x): return String(x.label)), y, f.beard_index())
 	if f.option_count("hair_color") > 0 and (_hair_has_mesh() or f.beard_index() > 0 or f.scalp_cap_on()):
 		y = _c_colour(p, "Hair Color", "hair_color", _hair_colours(), y)
+	y = _c_hair_fit(p, y)
 	if not f.is_layered():
 		y = _c_key(p, "Face", "face", f.meta.get("faces", []).map(func(x): return String(x.label)), y)
 	if f.option_count("tattoo") > 0:

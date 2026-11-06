@@ -240,26 +240,92 @@ def wrap(Q, T, HP, HN, H, off=0.014):
     return push_out(Q, T, HP, HN, H, clear=off * 0.6)      # (nothing left under the skin after the smoothing)
 
 
+def upscale(src, out):
+    """The model's small texture made 4x as the race's own hair sources were (Real-ESRGAN x4plus, tools/realesrgan):
+    the strands drawn on a cubic-resized 256 came out blocky ("the texture seems to be rough"). Cubic if the tool
+    isn't there."""
+    import subprocess
+    out.parent.mkdir(parents=True, exist_ok=True)
+    exe = next(Path(__file__).parent.parent.joinpath('tools', 'realesrgan').glob('*/realesrgan-ncnn-vulkan.exe'), None)
+    if exe is not None:
+        tmp = out.with_suffix('.rgb.png')
+        img = cv2.imread(str(src), cv2.IMREAD_UNCHANGED)
+        cv2.imwrite(str(tmp), img[..., :3])
+        r = subprocess.run([str(exe), '-i', str(tmp), '-o', str(out), '-n', 'realesrgan-x4plus', '-s', '4'],
+                           cwd=str(exe.parent), capture_output=True)
+        tmp.unlink(missing_ok=True)
+        if r.returncode == 0 and out.exists():
+            return out
+    img = cv2.imread(str(src), cv2.IMREAD_UNCHANGED)
+    cv2.imwrite(str(out), cv2.resize(img, (img.shape[1] * 4, img.shape[0] * 4), interpolation=cv2.INTER_CUBIC))
+    return out
+
+
+def even_out(path, cap=False):
+    """The texture's middle brightness put at the grey the colours assume (0.55: tint = the race colour / 0.55), so a
+    style - and the cap - comes out in the colour the race's own hair has (owner 2026-11-06: the scalp didn't match
+    the hair colour). The cap's light and dark also evened (a short cut's even colour, no streaks)."""
+    im = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+    rgb = im[..., :3].astype(np.float32) / 255
+    lum = rgb @ np.array([0.11, 0.59, 0.3], np.float32)
+    isl = lum > 0.02
+    if cap:
+        base = cv2.GaussianBlur(lum, (0, 0), 24)
+        rgb = rgb * (0.55 + 0.6 * (lum - base))[..., None] / np.maximum(lum, 1e-3)[..., None]
+        lum = rgb @ np.array([0.11, 0.59, 0.3], np.float32)
+    rgb = rgb * (0.55 / max(float(np.median(lum[isl])), 1e-3))
+    im[..., :3] = np.clip(rgb * 255 + 0.5, 0, 255).astype(np.uint8)
+    cv2.imwrite(str(path), im)
+
+
 def hair_textures(src, tag, tex_dirs, flow_dir, cap=False):
-    """The model's texture made grey (retinted by the hair colours), then redrawn as strands with its flow map
-    (pipeline/hair_strands.py - the race's own hair had it: soft strands, lit as hair, not the raised relief)."""
+    """The model's texture upscaled, made grey (retinted by the hair colours), then redrawn as strands with its flow
+    map (pipeline/hair_strands.py - the race's own hair had it: soft strands, lit as hair, not the raised relief)."""
     from hair_strands import strands
     flow_dir.mkdir(parents=True, exist_ok=True)
+    big = upscale(src, tex_dirs[0].parent / 'hair_src' / (tag.lower() + '.png'))
     for d in tex_dirs:
         dst = d / (tag.lower() + '.png')
-        grey_texture(src, dst, cap=cap)
+        grey_texture(big, dst)
         im = cv2.imread(str(dst), cv2.IMREAD_UNCHANGED)
-        if im.shape[1] < 1024:                  # (as the race's own: strands drawn at 1024 wide - on the models' 256
-            k = 1024 / im.shape[1]               # the noise came out in blotches)
+        if im.shape[1] < 1024:
+            k = 1024 / im.shape[1]
             cv2.imwrite(str(dst), cv2.resize(im, (1024, int(round(im.shape[0] * k))), interpolation=cv2.INTER_CUBIC))
-        strands(dst, dst, flow_dir / (tag.lower() + '.png'), L=40 if not cap else 24, keep=0.15)
+        if cap:                                  # (fine, short, low contrast: a close crop, not painted locks)
+            strands(dst, dst, flow_dir / (tag.lower() + '.png'), L=16, keep=0.0, contrast=0.14)
+        else:
+            strands(dst, dst, flow_dir / (tag.lower() + '.png'), L=40, keep=0.12)
+        even_out(dst, cap)
 
 
-def colours_for(tag, base_cols):
-    """The race's hair colours on a grey texture: each one's measured colour ('rgb', pipeline/split_beards.py) over
-    the grey's 0.55."""
-    return [{'tex': tag, 'chan': '', 'tint': [round(float(x) / 0.55, 4) for x in c_['rgb']], 'rgb': c_['rgb']}
-            for c_ in base_cols]
+def _lin_mean(path):
+    """A texture's mean colour in linear light over its covered pixels (alpha over half, not the atlas's black)."""
+    img = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+    if img is None:
+        return None
+    img = cv2.resize(img, (256, 256), interpolation=cv2.INTER_AREA)
+    rgb = img[..., :3][..., ::-1].astype(np.float64) / 255
+    a = img[..., 3] > 128 if img.shape[2] == 4 else np.ones(img.shape[:2], bool)
+    a &= rgb.max(-1) > 0.02
+    return (rgb[a] ** 2.2).mean(0) if a.any() else None
+
+
+def colours_for(tag, base_cols, tex_dir):
+    """The race's hair colours on a grey texture. The tint is matched in linear light (the shader's tint is a
+    source_color: made linear, then times the texture): the race's own texture x its tint averaged as the GPU sees it,
+    over this texture's own average - the plain ratio of the sRGB averages ('rgb') came out darker and more saturated
+    than the hair beside it (owner 2026-11-06: "the scalp style does not match the hair color")."""
+    ours = _lin_mean(tex_dir / (tag.lower() + '.png'))
+    out = []
+    for c_ in base_cols:
+        theirs = _lin_mean(tex_dir / (str(c_['tex']).lower() + '.png'))
+        if ours is None or theirs is None:
+            tint = [round(float(x) / 0.55, 4) for x in c_['rgb']]
+        else:
+            want = theirs * np.array(c_.get('tint', [1, 1, 1]), np.float64) ** 2.2
+            tint = [round(float(np.clip(x, 0, 3)), 4) for x in (want / np.maximum(ours, 1e-4)) ** (1 / 2.2)]
+        out.append({'tex': tag, 'chan': '', 'tint': tint, 'rgb': c_['rgb']})
+    return out
 
 
 def follow_face(g, node_name, Q, HP, hp, names, H):
@@ -287,6 +353,38 @@ def follow_face(g, node_name, Q, HP, hp, names, H):
         prim.setdefault('targets', []).append({'POSITION': g.add_vec3(d), 'NORMAL': g.add_vec3(np.zeros_like(d))})
     mesh.setdefault('extras', {})['targetNames'] = [k for k, _ in fx]
     mesh['weights'] = [0.0] * len(fx)
+
+
+FIT = [('up', 'Up / Down'), ('fwd', 'Forward / Back'), ('size', 'Size'), ('width', 'Width'), ('len', 'Length')]
+
+
+def add_fit_targets(g, node_name, HP, marks):
+    """Morph targets the creator's hair sliders drive (owner 2026-11-06: "could we have hair sliders ... placement,
+    size, and length"): hf_up / hf_fwd move the style, hf_size scales it about the skull, hf_width across, hf_len
+    stretches what hangs below the temples. At 1 each is a little (6% of the head up, 12% bigger, a third longer)."""
+    H = marks['H']
+    eye = (marks['eyeL'] + marks['eyeR']) / 2
+    sk = HP[HP[:, 2] > eye[2]]
+    cen = np.array([(sk[:, 0].max() + sk[:, 0].min()) / 2, (sk[:, 1].max() + sk[:, 1].min()) / 2,
+                    (eye[2] + HP[:, 2].max()) / 2])
+    zl = eye[2] + 0.1 * H
+    node = next(n for n in g.g['nodes'] if n.get('name') == node_name)
+    mesh = g.g['meshes'][node['mesh']]
+    names = list(mesh.get('extras', {}).get('targetNames', []))
+    if any(n.startswith('hf_') for n in names):
+        return
+    for prim in mesh['primitives']:
+        P = g.acc(prim['attributes']['POSITION']).astype(np.float64)
+        if len(prim.get('targets', [])) != len(names):
+            prim['targets'] = prim.get('targets', [])[:len(names)]
+        z = np.zeros_like(P)
+        ds = {'up': z + [0, 0, 0.06 * H], 'fwd': z + [0, -0.06 * H, 0], 'size': (P - cen) * 0.12,
+              'width': np.c_[(P[:, 0] - cen[0]) * 0.15, np.zeros(len(P)), np.zeros(len(P))],
+              'len': np.c_[np.zeros(len(P)), np.zeros(len(P)), np.minimum(P[:, 2] - zl, 0) * 0.35]}
+        for k, _ in FIT:
+            prim.setdefault('targets', []).append({'POSITION': g.add_vec3(ds[k]), 'NORMAL': g.add_vec3(z)})
+    mesh.setdefault('extras', {})['targetNames'] = names + ['hf_' + k for k, _ in FIT]
+    mesh['weights'] = list(mesh.get('weights', [0.0] * len(names))) + [0.0] * len(FIT)
 
 
 def run(folder, spec_path, preview=None):
@@ -342,7 +440,7 @@ def run(folder, spec_path, preview=None):
                                               if l.startswith('map_Kd') and 'Body' not in l))
         hair_textures(src, stex, tex_dirs, flow_dir, cap=True)
         meta['hair_under'] = {'node': node, 'tex': stex, 'label': item.get('label', 'Scalp Cap'),
-                              'colours': colours_for(stex, base_cols)}
+                              'colours': colours_for(stex, base_cols, tex_dirs[0])}
         out.append((node, Q, T))
         print('%-12s %-28s %d tris' % (node, Path(item['obj']).name, len(T)))
     for kind in ('hair', 'beards'):
@@ -363,7 +461,7 @@ def run(folder, spec_path, preview=None):
                                                        open(Path(item['obj']).with_suffix('.mtl'), errors='ignore')
                                                        if l.startswith('map_Kd') and 'Body' not in l))
             hair_textures(tex_src, tag, tex_dirs, flow_dir)
-            cols = colours_for(tag, base_cols)
+            cols = colours_for(tag, base_cols, tex_dirs[0])
             entry = {'label': item.get('label', node), 'node': node, 'mesh': Path(item['obj']).name, 'colours': cols,
                      'imported': True}
             if kind == 'hair':
@@ -376,6 +474,10 @@ def run(folder, spec_path, preview=None):
             print('%-12s %-28s scale %.3f  fit %.5f  %d tris' % (node, Path(item['obj']).name, par[0], c, len(T)))
     for node, Q, T in out:                         # (the face sliders move them as they move the race's own hair)
         follow_face(g, node, Q, HP, hp, names, H)
+    for st in styles:                              # (the creator's hair sliders: every style, the race's own too)
+        if st.get('node') and st['node'] in {n.get('name') for n in g.g['nodes']}:
+            add_fit_targets(g, st['node'], HP, marks)
+            st['fit'] = True
     g.save(folder / 'figure.gltf')
     meta_path.write_text(json.dumps(meta, indent=1), encoding='utf-8')
     return HP, HT, out

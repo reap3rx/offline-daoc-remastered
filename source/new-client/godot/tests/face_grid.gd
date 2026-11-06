@@ -131,6 +131,19 @@ func _ready() -> void:
 		for si in styles.size():
 			if bool(styles[si].get("imported", false)) and presets.size() < 12:
 				presets.append(["%s cap 8" % styles[si].label, {"hair": si, "hair_color": 8, "beard": 0, "scalp_cap": 1}])
+	if pset == "fit":                               # the hair sliders (hf_ targets) on the first new style
+		presets = []
+		var styles: Array = fig.meta.get("hair_styles", [])
+		var si := 0
+		for i in styles.size():
+			if bool(styles[i].get("imported", false)) and String(styles[i].label).contains(String(args.get("style", ""))):
+				si = i
+				break
+		var nd := String(styles[si].node)
+		for v in [["As made", {}], ["Up +1", {"up": 1.0}], ["Up -1", {"up": -1.0}], ["Fwd +1", {"fwd": 1.0}],
+				["Fwd -1", {"fwd": -1.0}], ["Size +1", {"size": 1.0}], ["Size -1", {"size": -1.0}], ["Width +1", {"width": 1.0}],
+				["Width -1", {"width": -1.0}], ["Len +1", {"len": 1.0}], ["Len -1", {"len": -1.0}], ["Mix", {"size": -0.5, "up": -0.4, "len": 0.6}]]:
+			presets.append([v[0], {"hair": si, "beard": 0, "hair_fit": {nd: v[1]}}])
 	if pset == "cap":                               # the scalp cap (figure.json hair_under): bald, under styles, sliders
 		presets = []
 		var styles: Array = fig.meta.get("hair_styles", [])
@@ -188,7 +201,7 @@ func _ready() -> void:
 		names.append(String(p[0]))
 	for i in presets.size():
 		var vals: Dictionary = presets[i][1]
-		if pset == "beard" or pset == "turban" or pset == "newhair" or pset == "cap":
+		if pset in ["beard", "turban", "newhair", "cap", "fit"]:
 			fig.look = {"face": 0, "hair_color": 1, "eyes": 2, "skin": 1}
 			var shp: Dictionary = vals.get("_shape", {})
 			vals = vals.duplicate()
