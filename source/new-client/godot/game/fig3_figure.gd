@@ -319,7 +319,7 @@ func apply(changes: Dictionary) -> void:
 				m.set_shader_parameter("sheen", 1.0)
 				if flow:                                         # redrawn as strands: lit as hair, no relief (it carved
 					m.set_shader_parameter("hair_flow", flow)    # the strands into wood grain)
-					m.set_shader_parameter("strand_spec", 2.0)
+					m.set_shader_parameter("strand_spec", 0.0)      # matte: the strand highlights blew out white
 					m.set_shader_parameter("fuzz", 1.0)
 				else:
 					m.set_shader_parameter("relief", 0.16)      # (its strands, raised)
@@ -771,9 +771,9 @@ const SKIN_SHADING := "if (remaster_fx > 0.5) {\n\t\tSSS_STRENGTH = 0.05;\n\t\tR
 
 
 ## Remastered hair (owner 2026-11-05: "Let's do all of the vanilla hair styles"): its texture redrawn as strands
-## (pipeline/hair_strands.py), lit as hair - two highlights across the strands, white toward the roots and coloured
-## toward the tips (Kajiya-Kay), the strands' direction from the flow map beside each texture (hairflow/: R, G the
-## doubled angle in UV space, B the strand mask) - and its outline broken into strands where it's seen edge on.
+## (pipeline/hair_strands.py), matte, its outline broken into strands where it's seen edge on (the flow map beside each
+## texture, hairflow/: R, G the strands' doubled angle in UV space, B the strand mask). Strand highlights (Kajiya-Kay,
+## strand_spec) are there but off: on the low-poly shells they blew out white in patches ("too shiny ... plastic").
 const HAIR_UNIFORMS := "uniform sampler2D hair_flow : filter_linear_mipmap;\nuniform float strand_spec = 0.0;\nuniform float fuzz = 0.0;\nvarying vec3 hair_t;"
 const HAIR_FRAGMENT := """vec4 hf = texture(hair_flow, UV);
 	{
@@ -788,7 +788,13 @@ const HAIR_FRAGMENT := """vec4 hf = texture(hair_flow, UV);
 		hair_t = normalize((dp2p * du1.x + dp1p * du2.x) * fl.x + (dp2p * du1.y + dp1p * du2.y) * fl.y + NORMAL * 1e-5);
 	}
 	//CUTOUT"""
-const HAIR_CUTOUT := """ALPHA = c.a;
+const HAIR_CUTOUT := """if (remaster_fx > 0.5) {
+		// matte (owner 2026-11-05: "too shiny ... like a plastic doll head" - a low-poly shell can't carry a strand's
+		// gloss): no sky reflection, no sheen; the light it gets is soft and wrapped (light() below)
+		ROUGHNESS = 1.0;
+		SPECULAR = 0.0;
+	}
+	ALPHA = c.a;
 	if (remaster_fx > 0.5 && fuzz > 0.0) {
 		float edge = 1.0 - smoothstep(0.08, 0.45, abs(dot(NORMAL, VIEW)));
 		ALPHA = c.a * mix(1.0, smoothstep(0.25, 0.55, hf.b), edge * fuzz);
