@@ -202,6 +202,17 @@ namespace DOL.GS.PacketHandler.Client.v168
 					return;
 				}
 
+				// The new client only (owner 2026-11-05): it says hello before logging in (NewClient); the classic client
+				// doesn't, and is told its version is wrong.
+				if (Properties.REQUIRE_NEW_CLIENT && NewClient.Version(client) == 0)
+				{
+					client.Out.SendLoginDenied(eLoginError.IncorrectClientVersion);
+					if (Log.IsInfoEnabled)
+						Log.Info($"{ipAddress} ({username}) turned away: not the new client");
+					success = false;
+					return;
+				}
+
 				if (!GameServer.ServerRules.IsAllowedToConnect(client, username))
 				{
 					if (Log.IsInfoEnabled)

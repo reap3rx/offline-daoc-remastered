@@ -356,6 +356,10 @@ namespace DOL.GS.ServerProperties
 		/// <summary>
 		/// Disable quit timers for players?
 		/// </summary>
+		/// <summary>Only the new (Godot) client may log in (NewClient) - the classic client is turned away.</summary>
+		[ServerProperty("server", "require_new_client", "Only the new client may log in (the classic client is turned away at login)", true)]
+		public static bool REQUIRE_NEW_CLIENT;
+
 		[ServerProperty("server", "disable_quit_timer", "Allow players to log out without waiting?", false)]
 		public static bool DISABLE_QUIT_TIMER;
 

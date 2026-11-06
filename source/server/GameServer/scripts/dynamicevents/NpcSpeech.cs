@@ -19,7 +19,7 @@ namespace DOL.GS
                 return;
             string line = $"#SAY|{npc.ObjectID}|{npc.Name}|{text.Replace('\n', ' ')}";
             foreach (GamePlayer p in npc.GetPlayersInRadius((ushort) range))
-                p.Out.SendMessage(line, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                NewClient.Send(p, line);
         }
 
         /// <summary>To one player only (a reply meant for them), still as a bubble.</summary>
@@ -28,7 +28,7 @@ namespace DOL.GS
             if (npc == null || to == null || string.IsNullOrEmpty(text))
                 return;
             npc.TurnTo(to, 10000);
-            to.Out.SendMessage($"#SAY|{npc.ObjectID}|{npc.Name}|{text.Replace('\n', ' ')}", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            NewClient.Send(to, $"#SAY|{npc.ObjectID}|{npc.Name}|{text.Replace('\n', ' ')}");
         }
     }
 }

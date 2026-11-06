@@ -222,7 +222,7 @@ namespace DOL.GS
                 }
             }
             sb.Append('}');
-            p.Out.SendMessage(Prefix + sb, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            NewClient.Send(p, Prefix + sb);
         }
 
         [GameServerStartedEvent]

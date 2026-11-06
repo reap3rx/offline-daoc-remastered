@@ -200,7 +200,7 @@ namespace DOL.GS.DynamicEvents
                     _told.Add(p);
                 else
                     _told.Remove(p);
-                p.Out.SendMessage(Prefix + JsonConvert.SerializeObject(list), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                NewClient.Send(p, Prefix + JsonConvert.SerializeObject(list));
             }
             _told.RemoveWhere(p => !seen.Contains(p) && p.ObjectState != GameObject.eObjectState.Active);
         }
@@ -449,8 +449,7 @@ namespace DOL.GS.DynamicEvents
                         : $"quiet ({Math.Max(0, (c.NextStart - t) / 60000)} min)",
                     active = c.Active
                 }).ToList();
-                p.Out.SendMessage("#EVL|" + JsonConvert.SerializeObject(new { zone = p.CurrentZone?.Description ?? "", events = rows }),
-                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                NewClient.Send(p, "#EVL|" + JsonConvert.SerializeObject(new { zone = p.CurrentZone?.Description ?? "", events = rows }));
                 return;
             }
             if (here.Count == 0) { DisplayMessage(client, "No events in this zone."); return; }

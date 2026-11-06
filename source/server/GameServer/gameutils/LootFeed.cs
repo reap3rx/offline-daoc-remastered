@@ -34,7 +34,7 @@ namespace DOL.GS
                 int con = ConLevels.GetConLevel(Math.Clamp((int) p.Level, 0, 50), Math.Clamp(level, 0, 99));
                 string kind = PlayerWallet.IsCurrency(t.Id_nb) ? "currency" : value <= 0 ? "trash" : "item";
                 string name = PlayerWallet.IsCurrency(t.Id_nb) ? PlayerWallet.NameOf(t.Id_nb) : t.Name;
-                p.Out.SendMessage($"{Prefix}i|{count}|{t.Model}|{t.Quality}|{value}|{level}|{con}|{kind}|{name}", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                NewClient.Send(p, $"{Prefix}i|{count}|{t.Model}|{t.Quality}|{value}|{level}|{con}|{kind}|{name}");
             }
             catch (Exception)
             {
@@ -46,7 +46,7 @@ namespace DOL.GS
         {
             if (p?.Out == null || copper <= 0 || p.Client == null)
                 return;
-            p.Out.SendMessage($"{Prefix}m|{copper}", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            NewClient.Send(p, $"{Prefix}m|{copper}");
         }
 
         /// <summary>From InventoryLogging: what came to a player from the world (not a trade, a merchant, a house).</summary>

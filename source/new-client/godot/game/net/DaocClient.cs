@@ -20,6 +20,7 @@ public partial class DaocClient : Node
 	public const int Port = 10300;
 	public const byte ClientType = 0x06;          // ClientType & 0x0F: 6 = Labyrinth of the Minotaur client (every expansion on)
 	public static readonly byte[] Version = { 1, 1, 27 };   // 1.127, as game.dll announced it
+	public const ushort ChannelVersion = 1;       // the new client's own channel (server NewClient.cs): 1 = tagged lines
 	static readonly Encoding Text1252 = CodePagesEncodingProvider.Instance.GetEncoding(1252);
 
 	[Signal] public delegate void ConnectedEventHandler();
@@ -73,6 +74,14 @@ public partial class DaocClient : Node
 		w.Byte((byte)'a');
 		w.Short(0);
 		Send(0xF4, w);
+		// NewClient.cs's hello: this is the new client, and the version of its own channel it speaks
+		var h = new Writer();
+		h.Byte(1);
+		h.Short(ChannelVersion);
+		var name = System.Text.Encoding.UTF8.GetBytes("OfflineDAoC Godot");
+		h.Byte((byte)name.Length);
+		h.Bytes(name);
+		Send(0x2E, h);
 		EmitSignal(SignalName.Connected);
 		return true;
 	}
@@ -1016,6 +1025,17 @@ public partial class DaocClient : Node
 				d["items"] = items;
 				return d;
 			}
+			case 0x3E:                                    // NewClient.cs: the server's line for the new client ("#WAL|...") -
+			{                                             // handed on as a system message, which the game reads them as
+				if (r.Byte() != 1) return null;
+				int n = r.Short();
+				d["kind"] = "message";
+				d["type"] = 0;
+				d["popup"] = false;
+				d["chat"] = false;
+				d["text"] = System.Text.Encoding.UTF8.GetString(r.Bytes(n));
+				return d;
+			}
 			case 0xAF:                                    // Message (1127): chat type, "@@" chat window / "##" popup, text
 			{
 				d["kind"] = "message";
@@ -1845,6 +1865,7 @@ public partial class DaocClient : Node
 		public int At(int offset) => _p + offset < _d.Length ? _d[_p + offset] : 0;   // a byte ahead, not read
 		public byte Byte() => _p < _d.Length ? _d[_p++] : (byte)0;
 		public void Skip(int n) => _p = Math.Min(_d.Length, _p + n);
+		public byte[] Bytes(int n) { n = Math.Max(0, Math.Min(n, Left)); var b = new byte[n]; Array.Copy(_d, _p, b, 0, n); _p += n; return b; }
 		public int Short() { int v = (Byte() << 8) | Byte(); return v; }
 		public int ShortLE() { int v = Byte() | (Byte() << 8); return v; }
 		public uint Int() => ((uint)Byte() << 24) | ((uint)Byte() << 16) | ((uint)Byte() << 8) | Byte();

@@ -162,7 +162,7 @@ namespace DOL.GS
 
 		public static void Send(GamePlayer player, string line)
 		{
-			player?.Out.SendMessage(Prefix + line, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+			NewClient.Send(player, Prefix + line);
 		}
 
 		// ------------------------------------------------------------------ the toggle (kept on the character)

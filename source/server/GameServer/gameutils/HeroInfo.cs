@@ -35,13 +35,13 @@ namespace DOL.GS
         {
             if (p?.Out == null)
                 return;
-            p.Out.SendMessage($"{BookPrefix}begin|{p.SkillSpecialtyPoints}", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            NewClient.Send(p, $"{BookPrefix}begin|{p.SkillSpecialtyPoints}");
             var specs = p.GetSpecList().Where(s => s.Trainable).ToList();
             for (int i = 0; i < specs.Count; i++)
             {
                 Specialization spec = specs[i];
                 int lv = spec.GetSpecLevelForLiving(p);
-                p.Out.SendMessage($"{BookPrefix}spec|{i}|{lv}|{Clean(spec.Name)}", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                NewClient.Send(p, $"{BookPrefix}spec|{i}|{lv}|{Clean(spec.Name)}");
                 var rows = new List<(int level, string kind, int icon, bool have, string group, string name)>();
                 try
                 {
@@ -66,10 +66,9 @@ namespace DOL.GS
                     // a spec that can't list itself just shows what it could
                 }
                 foreach (var r in rows.OrderBy(r => r.group == "ABILITIES" ? 0 : r.group == "STYLES" ? 1 : 2).ThenBy(r => r.group).ThenBy(r => r.level))
-                    p.Out.SendMessage($"{BookPrefix}sk|{i}|{r.level}|{r.kind}|{r.icon}|{(r.have ? 1 : 0)}|{Clean(r.group)}|{Clean(r.name)}",
-                        eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    NewClient.Send(p, $"{BookPrefix}sk|{i}|{r.level}|{r.kind}|{r.icon}|{(r.have ? 1 : 0)}|{Clean(r.group)}|{Clean(r.name)}");
             }
-            p.Out.SendMessage($"{BookPrefix}end", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            NewClient.Send(p, $"{BookPrefix}end");
         }
 
         private static string Clean(string s) => (s ?? "").Replace("|", "/");
@@ -93,7 +92,7 @@ namespace DOL.GS
             if (_sentLevel.TryGetValue(p.ObjectId, out int was) && was == lv)
                 return;
             _sentLevel[p.ObjectId] = lv;
-            p.Out?.SendMessage($"{LevelPrefix}{lv}", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            NewClient.Send(p, $"{LevelPrefix}{lv}");
         }
 
         /// <summary>The modern pet window's retinue (owner 2026-11-04): a commander's sub-pets - a King's retainers, a
@@ -136,7 +135,7 @@ namespace DOL.GS
             if (_sentPets.TryGetValue(p.ObjectId, out string was) && was == line)
                 return;
             _sentPets[p.ObjectId] = line;
-            p.Out?.SendMessage(line, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+            NewClient.Send(p, line);
         }
 
         [GameServerStartedEvent]
@@ -190,7 +189,7 @@ namespace DOL.GS
             {
                 var recs = DOLDB<DbCoreCharacterXCustomParam>.SelectObjects(DB.Column("DOLCharactersObjectId").IsEqualTo(p.ObjectId));
                 foreach (var r in recs.Where(r => r.KeyName != null && r.KeyName.StartsWith(CfgKey)))
-                    p.Out.SendMessage($"{CfgPrefix}{r.KeyName.Substring(CfgKey.Length)}|{r.Value}", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                    NewClient.Send(p, $"{CfgPrefix}{r.KeyName.Substring(CfgKey.Length)}|{r.Value}");
             }
             catch (Exception)
             {
