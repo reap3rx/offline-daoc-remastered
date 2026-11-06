@@ -387,6 +387,123 @@ def add_fit_targets(g, node_name, HP, marks):
     mesh['weights'] = list(mesh.get('weights', [0.0] * len(names))) + [0.0] * len(FIT)
 
 
+def tex_of(obj):
+    """The model's own texture (its .mtl's map_Kd, not a body texture)."""
+    obj = Path(obj)
+    return obj.with_name(next(l.split(None, 1)[1].strip() for l in open(obj.with_suffix('.mtl'), errors='ignore')
+                              if l.startswith('map_Kd') and 'Body' not in l))
+
+
+def shared_tag(src, kind):
+    """One game texture per model texture, shared by every race (the models' textures are few: most styles of one
+    WoW head share one) - named by its content: hx<hash> hair, hc<hash> the cap's flavour."""
+    import hashlib
+    return '%s%s' % (kind, hashlib.md5(Path(src).read_bytes()).hexdigest()[:10])
+
+
+def ensure_textures(src, tag, tex_dirs, flow_dir, cap=False):
+    """The shared texture made once (hair_textures), kept while newer than its source."""
+    dst = tex_dirs[0] / (tag.lower() + '.png')
+    if all((d / (tag.lower() + '.png')).exists() for d in tex_dirs) and (flow_dir / (tag.lower() + '.png')).exists() \
+            and dst.stat().st_mtime >= Path(src).stat().st_mtime:
+        return
+    hair_textures(src, tag, tex_dirs, flow_dir, cap=cap)
+
+
+def model_source(obj):
+    """Which WoW model the export came from (its materials' path): exports of one model share its frame."""
+    mats = [l.split(None, 1)[1].strip() for l in open(obj, errors='ignore') if l.startswith('usemtl')]
+    return ' '.join(sorted({re.sub(r'\.m2_.*$', '', m) for m in mats}))
+
+
+def length_label(Q, marks):
+    """Short / Medium / Long by where the hair ends: above the ears' middle, above the chin, below."""
+    H = marks['H']
+    eye = (marks['eyeL'] + marks['eyeR']) / 2
+    lo = Q[:, 2].min()
+    if lo > eye[2] - 0.12 * H:
+        return 'Short'
+    if lo > marks['chin'][2] - 0.1 * H:
+        return 'Medium'
+    return 'Long'
+
+
+def coverage(Q, HP, marks):
+    """How much of the skull a placed style covers (the share of the head's points above the brow with hair near)."""
+    H = marks['H']
+    eye = (marks['eyeL'] + marks['eyeR']) / 2
+    sk = HP[HP[:, 2] > eye[2] + 0.1 * H]
+    d, _ = nearest(sk, Q[np.linspace(0, len(Q) - 1, min(len(Q), 3000)).astype(int)])
+    return float((d < 0.05 * H).mean())
+
+
+def model_frames(frames, HP, HN, marks):
+    """Each WoW model's placing on this head (owner 2026-11-06, the sorted folders): the exports of one model share
+    its frame - its styles, beards and moustaches sit where its head was - so one placing serves them all: the fit of
+    whichever of the model's fuller styles (spec 'frames': candidates per model) covers this skull best. (Each style
+    fitted on itself put a mohawk's cap where the skull is; a top-knot's, a ponytail's, likewise.)"""
+    out = {}
+    for src, cands in frames.items():
+        best = None
+        for c in cands:
+            try:
+                Q, UV, T = load_obj(c)
+            except Exception:
+                continue
+            f_ = fit(Q, HP, HN, marks)
+            cv = coverage(f_[0](Q), HP, marks)
+            if best is None or cv > best[0]:
+                best = (cv, f_, Path(c).parent.name + '/' + Path(c).name)
+        if best:
+            out[src] = best[1] + (best[2],)
+    return out
+
+
+def face_frames(spec, native, HP, HN, marks):
+    """Beards and moustaches of a WoW model whose hair isn't this race's own (a dwarf's beard on a Briton): placed by
+    the face, not the skull - its skull's frame put a dwarf's beard over the eyes (their faces aren't ours). The
+    model's middling moustache sets it: under the nose, as wide as a moustache on this mouth; its beards follow."""
+    from collections import defaultdict
+    H = marks['H']
+    mouth, chin = marks['mouth'], marks['chin']
+    jaw = HP[(HP[:, 2] < mouth[2]) & (HP[:, 2] > chin[2] - 0.05 * H) & (HP[:, 1] < mouth[1] + 0.25 * H)]
+    jw = np.ptp(jaw[:, 0])
+    by = defaultdict(list)
+    for it in spec.get('moustaches', []):
+        src = model_source(it['obj'])
+        if src not in native:
+            by[src].append(it['obj'])
+    out = {}
+    for src, objs in by.items():
+        Qs = [(np.ptp(load_obj(o)[0][:, 0]), o) for o in objs]
+        Qs.sort()
+        w, o = Qs[len(Qs) // 2]
+        Q = load_obj(o)[0]
+        s_ = jw * 0.62 / max(w, 1e-9)
+        c_q = np.array([(Q[:, 0].max() + Q[:, 0].min()) / 2, Q[:, 1].min(), Q[:, 2].max()])
+        c_h = np.array([mouth[0], mouth[1] - 0.03 * H, marks['nose_tip'][2] - 0.035 * H])
+        out[src] = ((lambda pts, c_q=c_q, s_=s_, c_h=c_h: (pts - c_q) * s_ + c_h), np.array([s_, 0, 0]), 0.0,
+                    'face ' + Path(o).name)
+    return out
+
+
+def group_places(items, HP, HN, marks, kind, frames=None):
+    """Each item's placing: its model's frame (model_frames); a model with none - hair: fitted on itself; a beard or
+    moustache: by the jaw (a moustache at a moustache's width)."""
+    frames = frames or {}
+    places = {}
+    for it in items:
+        src = it.get('src') or model_source(it['obj'])
+        if src in frames:
+            places[it['obj']] = frames[src]
+        elif kind == 'hair':
+            places[it['obj']] = fit(load_obj(it['obj'])[0], HP, HN, marks) + ('',)
+        else:
+            Q = load_obj(it['obj'])[0]
+            places[it['obj']] = fit_beard(Q, HP, HN, marks, width=1.08 if it.get('kind') == 'beards' else 0.62) + ('',)
+    return places
+
+
 def run(folder, spec_path, preview=None):
     folder = Path(folder)
     spec = json.loads(Path(spec_path).read_text(encoding='utf-8'))
@@ -406,7 +523,8 @@ def run(folder, spec_path, preview=None):
     joints = g.g['skins'][0]['joints']
     jhead = next(i for i, j in enumerate(joints) if g.g['nodes'][j].get('name') == 'Bip01 Head')
     styles = meta['hair_styles']
-    if any(s_.get('imported') for s_ in styles) or any(b.get('imported') for b in meta.get('beards', [])):
+    if any(s_.get('imported') for s_ in styles) or any(b.get('imported') for b in meta.get('beards', [])) \
+            or meta.get('hair_under'):
         print('already imported:', folder.name)
         return
     like = nodes[next(s['node'] for s in styles if s.get('node') and s['node'] in nodes)]
@@ -434,44 +552,63 @@ def run(folder, spec_path, preview=None):
         Q = wrap(Q, T, HP, HN, H, off=float(item.get('off', 0.014)))
         node = 'new_scalp'
         add_mesh(g, like, node, Q, skin_frame(Q, T), UV, T, jhead)
-        stex = '%s_ns' % prefix
-        src = Path(item['obj']).with_name(next(l.split(None, 1)[1].strip() for l in
-                                              open(Path(item['obj']).with_suffix('.mtl'), errors='ignore')
-                                              if l.startswith('map_Kd') and 'Body' not in l))
-        hair_textures(src, stex, tex_dirs, flow_dir, cap=True)
+        src = tex_of(item['obj'])
+        stex = shared_tag(src, 'hc')
+        ensure_textures(src, stex, tex_dirs, flow_dir, cap=True)
         meta['hair_under'] = {'node': node, 'tex': stex, 'label': item.get('label', 'Scalp Cap'),
                               'colours': colours_for(stex, base_cols, tex_dirs[0])}
         out.append((node, Q, T))
         print('%-12s %-28s %d tris' % (node, Path(item['obj']).name, len(T)))
-    for kind in ('hair', 'beards'):
-        for k, item in enumerate(spec.get(kind, [])):
+    # the styles, beards and moustaches (owner 2026-11-06: sorted by head group - pipeline: claude-work/make_specs.py)
+    counts = {}
+    native = {model_source(it['obj']) for it in spec.get('hair', [])}
+    frames = model_frames({k: v for k, v in spec.get('frames', {}).items() if k in native}, HP, HN, marks)
+    faces = face_frames(spec, native, HP, HN, marks)
+    for src, f_ in frames.items():
+        print('frame %-50s by %s  scale %.3f' % (src[-50:], f_[3], f_[1][0]))
+    for kind in ('hair', 'beards', 'moustaches'):
+        items = [dict(it, kind=kind) for it in spec.get(kind, [])]
+        if not items:
+            continue
+        places = group_places(items, HP, HN, marks, 'hair' if kind == 'hair' else 'face',
+                              frames if kind == 'hair' else dict(frames, **faces))
+        made = []
+        for k, item in enumerate(items):
             Q, UV, T = load_obj(item['obj'])
-            ref = item.get('ref', item['obj'])                 # (the style the model's head is fitted on)
-            if ref not in places:
-                Qr = load_obj(ref)[0]
-                places[ref] = fit(Qr, HP, HN, marks) if kind == 'hair' else fit_beard(Qr, HP, HN, marks)
-            place, par, c = places[ref]
+            place, par, c, by = places[item['obj']]
             Q = place(Q)
             Q = push_out(Q, T, HP, HN, H)
             N = skin_frame(Q, T)
-            tag = '%s_%s%d' % (prefix, 'nh' if kind == 'hair' else 'nb', k + 1)
-            node = 'new_hair_%d' % (k + 1) if kind == 'hair' else 'new_beard_%d' % (k + 1)
+            node = {'hair': 'new_hair_%d', 'beards': 'new_beard_%d', 'moustaches': 'new_must_%d'}[kind] % (k + 1)
             add_mesh(g, like, node, Q, N, UV, T, jhead)
-            tex_src = Path(item['obj']).with_name(next(l.split(None, 1)[1].strip() for l in
-                                                       open(Path(item['obj']).with_suffix('.mtl'), errors='ignore')
-                                                       if l.startswith('map_Kd') and 'Body' not in l))
-            hair_textures(tex_src, tag, tex_dirs, flow_dir)
+            src = tex_of(item['obj'])
+            tag = shared_tag(src, 'hx')
+            ensure_textures(src, tag, tex_dirs, flow_dir)
             cols = colours_for(tag, base_cols, tex_dirs[0])
-            entry = {'label': item.get('label', node), 'node': node, 'mesh': Path(item['obj']).name, 'colours': cols,
-                     'imported': True}
+            if kind == 'hair':
+                lab = item.get('label') or length_label(Q, marks)
+            else:
+                lab = item.get('label') or {'beards': 'Beard', 'moustaches': 'Moustache'}[kind]
+            counts[lab] = counts.get(lab, 0) + 1
+            if not item.get('label'):
+                lab = '%s %d' % (lab, counts[lab])
+            entry = {'label': lab, 'node': node, 'mesh': Path(item['obj']).name, 'colours': cols, 'imported': True,
+                     'model': str(Path(item['obj']).parent.name) + '/' + Path(item['obj']).name}
             if kind == 'hair':
                 entry['beard'] = 0
-                styles.append(entry)
-            else:                                      # (a beard carries its own colours: no style of its own)
-                meta.setdefault('beards', []).append({'node': node, 'label': item.get('label', node), 'style': 0,
-                                                      'colours': cols, 'imported': True})
+                made.append((lab, entry))
+            elif kind == 'beards':                     # (a beard carries its own colours: no style of its own)
+                entry['style'] = 0
+                meta.setdefault('beards', []).append(entry)
+            else:
+                meta.setdefault('moustaches', []).append(entry)
             out.append((node, Q, T))
-            print('%-12s %-28s scale %.3f  fit %.5f  %d tris' % (node, Path(item['obj']).name, par[0], c, len(T)))
+            print('%-12s %-30s %-12s scale %.3f  fit %.5f  %d tris%s' % (node, entry['model'][-30:], lab, par[0], c, len(T),
+                                                                       ('  (frame %s)' % by) if by else ''))
+        if kind == 'hair':                             # (in the creator: short to long, after the race's own)
+            order = {'Short': 0, 'Medium': 1, 'Long': 2}
+            made.sort(key=lambda m: (order.get(m[0].split()[0], 3), int(m[0].split()[-1]) if m[0].split()[-1].isdigit() else 0))
+            styles.extend(e for _, e in made)
     for node, Q, T in out:                         # (the face sliders move them as they move the race's own hair)
         follow_face(g, node, Q, HP, hp, names, H)
     for st in styles:                              # (the creator's hair sliders: every style, the race's own too)
@@ -483,12 +620,12 @@ def run(folder, spec_path, preview=None):
     return HP, HT, out
 
 
-def fit_beard(Q, HP, HN, marks):
-    """A beard by the face: its top (the moustache's line) under the nose, its width the jaw's."""
+def fit_beard(Q, HP, HN, marks, width=1.08):
+    """A beard by the face: its top (the moustache's line) under the nose, its width the jaw's (width: of the jaw)."""
     H = marks['H']
     mouth, chin = marks['mouth'], marks['chin']
     jaw = HP[(HP[:, 2] < mouth[2]) & (HP[:, 2] > chin[2] - 0.05 * H) & (HP[:, 1] < mouth[1] + 0.25 * H)]
-    s = (jaw[:, 0].max() - jaw[:, 0].min()) / max(Q[:, 0].max() - Q[:, 0].min(), 1e-9) * 1.08
+    s = (jaw[:, 0].max() - jaw[:, 0].min()) / max(Q[:, 0].max() - Q[:, 0].min(), 1e-9) * width
     c_q = np.array([(Q[:, 0].max() + Q[:, 0].min()) / 2, Q[:, 1].min(), Q[:, 2].max()])
     c_h = np.array([mouth[0], mouth[1] - 0.02 * H, marks['nose_tip'][2] - 0.04 * H])
     return (lambda pts: (pts - c_q) * s + c_h), np.array([s, 0, 0]), 0.0

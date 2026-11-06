@@ -367,6 +367,21 @@ func apply(changes: Dictionary) -> void:
 				var bm := _hair_material(hair_colour(bcols) if custom_colour("hair_color") != null else bcols[_beard_colour(styles, bcols)])
 				for mi in _parts(bnode):
 					mi.material_override = bm
+	# the moustache (owner 2026-11-06: "a beard and moustache subfolder" - pipeline/import_hair.py): look.moustache,
+	# 1-based into figure.json "moustaches", 0 none; coloured as the beard is
+	var musts: Array = meta.get("moustaches", [])
+	var mu := clampi(int(look.get("moustache", 0)), 0, musts.size())
+	for k in musts.size():
+		var mn := String(musts[k].node)
+		if not _meshes.has(mn):
+			continue
+		for mi in _parts(mn):
+			mi.visible = k + 1 == mu and not _hair_covered()
+		if k + 1 == mu and (musts[k].colours as Array).size() > 0:
+			var mcols: Array = musts[k].colours
+			var mm := _hair_material(hair_colour(mcols) if custom_colour("hair_color") != null else mcols[_beard_colour(styles, mcols)])
+			for mi in _parts(mn):
+				mi.material_override = mm
 	if not (meta.get("turbans", []) as Array).is_empty():
 		_refresh_hair()                                # (the hair under the turban takes its cap morph)
 	# face sliders: 0..8, 4 neutral; below 4 blends the low target, above 4 the high one
@@ -794,7 +809,7 @@ func _apply_shape() -> void:
 		for st in styles:
 			if st.node != null and _meshes.has(st.node):
 				meshes.append_array(_parts(st.node))
-		for b in meta.get("beards", []) + meta.get("turbans", []) + [meta.get("hair_under", {"node": ""})]:
+		for b in meta.get("beards", []) + meta.get("moustaches", []) + meta.get("turbans", []) + [meta.get("hair_under", {"node": ""})]:
 			if _meshes.has(String(b.node)):
 				meshes.append_array(_parts(String(b.node)))
 		for fs in shapes:
@@ -926,6 +941,10 @@ func _refresh_hair() -> void:
 		if _meshes.has(String(tb[k].node)):
 			for mi in _parts(String(tb[k].node)):
 				mi.visible = k + 1 == ti and not _hair_covered() and _helm == null
+	var musts: Array = meta.get("moustaches", [])
+	for k in musts.size():
+		for mi in _parts(String(musts[k].node)):
+			mi.visible = k + 1 == int(look.get("moustache", 0)) and not _hair_covered()
 	var beards: Array = meta.get("beards", [])
 	var bi := beard_index()
 	for k in beards.size():
@@ -1233,6 +1252,7 @@ static func option_count_of(meta: Dictionary, look: Dictionary, key: String) -> 
 		"skin": return meta.get("skin_tones", []).size()
 		"hair": return meta.get("hair_styles", []).size()
 		"beard": return meta.get("beards", []).size() + 1
+		"moustache": return meta.get("moustaches", []).size() + 1 if not (meta.get("moustaches", []) as Array).is_empty() else 0
 		"turban": return meta.get("turbans", []).size() + 1 if not (meta.get("turbans", []) as Array).is_empty() else 0
 		"hair_color":
 			var styles: Array = meta.get("hair_styles", [])

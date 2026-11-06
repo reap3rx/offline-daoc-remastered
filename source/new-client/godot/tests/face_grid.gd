@@ -131,6 +131,29 @@ func _ready() -> void:
 		for si in styles.size():
 			if bool(styles[si].get("imported", false)) and presets.size() < 12:
 				presets.append(["%s cap 8" % styles[si].label, {"hair": si, "hair_color": 8, "beard": 0, "scalp_cap": 1}])
+	if pset == "allnew":                            # every new style, then beards and moustaches (--from, --count)
+		presets = []
+		var styles: Array = fig.meta.get("hair_styles", [])
+		for si in styles.size():
+			if bool(styles[si].get("imported", false)):
+				presets.append(["%s - %s" % [styles[si].label, String(styles[si].get("mesh", "")).get_basename()], {"hair": si, "beard": 0, "hair_color": 1}])
+		var bald := 0
+		for si in styles.size():
+			if styles[si].node == null:
+				bald = si
+		var bs: Array = fig.meta.get("beards", [])
+		for b in bs.size():
+			if bool(bs[b].get("imported", false)):
+				presets.append(["%s - %s" % [bs[b].label, String(bs[b].get("mesh", "")).get_basename()], {"hair": bald, "beard": b + 1, "hair_color": 1, "scalp_cap": 1}])
+		var ms: Array = fig.meta.get("moustaches", [])
+		for m in ms.size():
+			presets.append(["%s - %s" % [ms[m].label, String(ms[m].get("mesh", "")).get_basename()], {"hair": bald, "beard": 0, "moustache": m + 1, "hair_color": 1, "scalp_cap": 1}])
+		var f0 := int(args.get("from", "0"))
+		presets = presets.slice(f0, f0 + int(args.get("count", "999")))
+		var lf := FileAccess.open(out + "_names.txt", FileAccess.WRITE)
+		for pr in presets:
+			lf.store_line(String(pr[0]))
+		lf.close()
 	if pset == "fit":                               # the hair sliders (hf_ targets) on the first new style
 		presets = []
 		var styles: Array = fig.meta.get("hair_styles", [])
@@ -163,6 +186,10 @@ func _ready() -> void:
 			presets.append(["Bald cap dark", {"hair": bald, "scalp_cap": 1, "hair_color": 4, "beard": 0}])
 			presets.append(["Bald cap Brute", {"hair": bald, "scalp_cap": 1, "beard": 0, "_shape": {"brow_depth": 1.0, "brow_height": -0.6, "jaw_width": 1.0}}])
 			presets.append(["Bald cap Long", {"hair": bald, "scalp_cap": 1, "beard": 0, "_shape": {"brow_height": 1.0, "eye_height": 0.6, "chin_length": 1.0}}])
+		if bald < 0 and not vanilla.is_empty():     # (no bald style: the cap alone, the styles hidden)
+			presets.append(["Cap only", {"hair": vanilla[0], "scalp_cap": 1, "beard": 0, "_nohair": true}])
+			presets.append(["Cap only dark", {"hair": vanilla[0], "scalp_cap": 1, "beard": 0, "hair_color": 4, "_nohair": true}])
+			presets.append(["Cap Brute", {"hair": vanilla[0], "scalp_cap": 1, "beard": 0, "_nohair": true, "_shape": {"brow_depth": 1.0, "brow_height": -0.6, "jaw_width": 1.0}}])
 		for si in vanilla.slice(0, 3):
 			presets.append(["Hair %d cap" % si, {"hair": si, "scalp_cap": 1, "beard": 0}])
 		for si in made:
@@ -174,6 +201,11 @@ func _ready() -> void:
 		for si in vanilla:
 			if presets.size() < 12:
 				presets.append(["Hair %d bare" % si, {"hair": si, "scalp_cap": 0, "beard": 0}])
+		var k := 0
+		while presets.size() < 12 and not vanilla.is_empty():    # (a race of few styles: its styles capped, in more colours)
+			var si: int = vanilla[k % vanilla.size()]
+			presets.append(["Hair %d cap c%d" % [si, 3 + k], {"hair": si, "scalp_cap": 1, "beard": 0, "hair_color": 3 + k}])
+			k += 1
 	if pset == "turban":                            # the Saracen men's turban over each hair style, dyed
 		presets = []
 		var k := 0
@@ -201,14 +233,21 @@ func _ready() -> void:
 		names.append(String(p[0]))
 	for i in presets.size():
 		var vals: Dictionary = presets[i][1]
-		if pset in ["beard", "turban", "newhair", "cap", "fit"]:
+		if pset in ["beard", "turban", "newhair", "cap", "fit", "allnew"]:
 			fig.look = {"face": 0, "hair_color": 1, "eyes": 2, "skin": 1}
 			var shp: Dictionary = vals.get("_shape", {})
+			var hide_hair := bool(vals.get("_nohair", false))
 			vals = vals.duplicate()
 			vals.erase("_shape")
+			vals.erase("_nohair")
 			fig.apply(fig.layered_changes())
 			fig.apply(vals)
 			fig.set_shape(shp)
+			if hide_hair:
+				for st in fig.meta.get("hair_styles", []):
+					if st.node != null:
+						for mh in fig._parts(String(st.node)):
+							mh.visible = false
 			await _frames(2)
 			vals = shp
 		if pset in ["skin", "paint", "colour"]:

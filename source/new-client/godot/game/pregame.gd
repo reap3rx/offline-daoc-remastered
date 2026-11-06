@@ -887,7 +887,10 @@ func _c_face(p: Control, y: float) -> float:
 			y = _c_colour(p, "Turban Color", "turban_color", Fig3Figure.TURBAN_COLORS, y)
 	if f.option_count("beard") > 1:                 # (men: the beards split off the hair styles)
 		y = _c_key(p, "Beard", "beard", ["None"] + f.meta.beards.map(func(x): return String(x.label)), y, f.beard_index())
-	if f.option_count("hair_color") > 0 and (_hair_has_mesh() or f.beard_index() > 0 or f.scalp_cap_on()):
+	if f.option_count("moustache") > 1:
+		y = _c_key(p, "Moustache", "moustache", ["None"] + f.meta.moustaches.map(func(x): return String(x.label)), y)
+	if f.option_count("hair_color") > 0 and (_hair_has_mesh() or f.beard_index() > 0 or f.scalp_cap_on() \
+			or int(f.look.get("moustache", 0)) > 0):
 		y = _c_colour(p, "Hair Color", "hair_color", _hair_colours(), y)
 	y = _c_hair_fit(p, y)
 	if not f.is_layered():
@@ -1327,6 +1330,8 @@ func _randomize() -> void:
 		l["turban_color_rgb"] = null
 	if not locks.get("beard", false) and f.option_count("beard") > 1:
 		l["beard"] = 0 if randf() < 0.35 else randi_range(1, f.option_count("beard") - 1)
+	if not locks.get("moustache", false) and f.option_count("moustache") > 1:
+		l["moustache"] = 0 if randf() < 0.6 else randi_range(1, f.option_count("moustache") - 1)
 	f.apply(l)
 	if not locks.get("hair_color", false) and f.option_count("hair_color") > 0:
 		f.apply({"hair_color": randi() % f.option_count("hair_color")})
