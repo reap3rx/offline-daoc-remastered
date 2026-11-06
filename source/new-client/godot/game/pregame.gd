@@ -439,7 +439,7 @@ func _shape_rows(shapes: Array, y: float) -> void:
 				s.value = 0.0
 				s.accept_event())
 		_at(s, 886, y + 2, 102, 18, "R")
-		y += 24
+		y += 23
 	_bar_button("RANDOM", 776, 606, 108, 28, "R", func():
 		_figure.set_shape(_random_shape())
 		draft.look = _figure.look.duplicate(true)
@@ -455,6 +455,8 @@ func _shape_rows(shapes: Array, y: float) -> void:
 func _skin_rows(layers: Array, y: float) -> void:
 	for d in layers:
 		var key := String(d.key)
+		if key == "stubble" and _figure.race.ends_with("_f"):
+			continue                                   # (owner 2026-11-06: no stubble for women)
 		var label := String(d.label).to_upper()
 		match key:
 			"age", "stubble":
@@ -481,6 +483,8 @@ func _skin_rows(layers: Array, y: float) -> void:
 				y = _stepper_row(label, key, opts, y)
 				if key == "paint" and int(draft.look.get("paint", 0)) > 0:
 					y = _swatch_row("PAINT COLOR", "paint_color", Fig3Figure.PAINT_COLORS, y)
+	if _figure.option_count("hair") > 0:                # the darkened scalp under the hair, on or off
+		y = _stepper_row("SCALP SHADE", "scalp_off", ["ON", "OFF"], y)
 	_bar_button("RANDOM", 776, 606, 108, 28, "R", func():
 		_figure.apply(_random_skin(true))
 		draft.look = _figure.look.duplicate(true)

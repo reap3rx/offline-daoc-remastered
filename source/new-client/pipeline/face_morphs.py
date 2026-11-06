@@ -27,7 +27,7 @@ FEATURES = [
     ('eye_size', 'Eye Size'), ('eye_depth', 'Eye Depth'), ('brow_height', 'Brow Height'), ('brow_depth', 'Brow Ridge'),
     ('cheekbones', 'Cheekbones'), ('mouth_width', 'Mouth Width'), ('mouth_height', 'Mouth Height'),
     ('lips', 'Lip Fullness'), ('jaw_width', 'Jaw Width'), ('chin_length', 'Chin Length'), ('chin_point', 'Chin Point'),
-    ('ear_size', 'Ear Size'),
+    ('ear_size', 'Ear Size'), ('ear_out', 'Ears Out'), ('ear_tilt', 'Ear Tilt'),
 ]
 
 
@@ -227,18 +227,29 @@ def build(P, N, T, fm, scale=1.0):
     core = w_eye ** 2
     D['eye_size'] = (P - c) * 0.22 * core[:, None] * [1, 0.3, 1]
     d = z.copy(); d[:, 1] = 0.22 * s * core; D['eye_depth'] = d
-    # brow: above each eye and between them
-    rb = 0.13 * H
-    browL, browR = eyeL + [0, -0.05 * H, 0.12 * H], eyeR + [0, -0.05 * H, 0.12 * H]
-    w_brow = np.clip(gauss(P, browL, rb) + gauss(P, browR, rb) + 0.6 * gauss(P, (browL + browR) / 2, rb), 0, 1) * front * (1 - 0.6 * core)
+    # brow: the ridge over the eyes, a narrow band (owner 2026-11-06: a round region a quarter of the head across moved
+    # the whole upper face) - its height the most forward row above each eye, across the eyes and between them
+    E = abs(eyeR[0] - eyeL[0])
+    zs = []
+    for e in (eyeL, eyeR):
+        sel = (np.abs(P[:, 0] - e[0]) < 0.35 * E) & (P[:, 2] > e[2]) & (P[:, 2] < e[2] + 0.25 * H)
+        if sel.sum() > 3:
+            ys = P[sel, 1]
+            top = sel.nonzero()[0][ys <= np.percentile(ys, 10)]
+            zs.append(float(np.median(P[top, 2])))
+    brow_z = float(np.mean(zs)) if zs else eye_mid[2] + 0.08 * H
+    across = np.clip((abs(eyeR[0]) + 0.55 * E - np.abs(P[:, 0] - eye_mid[0])) / (0.3 * E), 0, 1)
+    w_brow = np.exp(-((P[:, 2] - brow_z) / (0.06 * H)) ** 2) * across * front * (1 - 0.8 * core)
     d = z.copy(); d[:, 2] = 0.15 * s * w_brow; D['brow_height'] = d
     D['brow_depth'] = Nn * (0.18 * s * w_brow)[:, None]
     # cheekbones: below and outside each eye
-    ck = 0.12 * H
-    ckL = eyeL + [-0.35 * abs(eyeL[0]), -0.0, -0.12 * H]
-    ckR = eyeR + [0.35 * abs(eyeR[0]), -0.0, -0.12 * H]
-    w_ck = np.clip(gauss(P, ckL, ck) + gauss(P, ckR, ck), 0, 1) * front * (1 - w_nose) * (1 - core)
-    D['cheekbones'] = Nn * (0.2 * s * w_ck)[:, None] + np.stack([np.sign(P[:, 0]) * 0.08 * s * w_ck, z[:, 1], z[:, 2]], 1)
+    # (owner 2026-11-06: it widened the whole face - now the bone's own ridge, under the outer eye, and mostly forward)
+    ck = 0.075 * H
+    ckL = eyeL + [-0.3 * abs(eyeL[0]), -0.0, -0.11 * H]
+    ckR = eyeR + [0.3 * abs(eyeR[0]), -0.0, -0.11 * H]
+    above_mouth = np.clip((P[:, 2] - (mouth[2] + 0.08 * H)) / (0.08 * H), 0, 1)
+    w_ck = np.clip(gauss(P, ckL, ck) + gauss(P, ckR, ck), 0, 1) * front * (1 - w_nose) * (1 - core) * above_mouth
+    D['cheekbones'] = Nn * (0.3 * s * w_ck)[:, None] + np.stack([np.sign(P[:, 0]) * 0.03 * s * w_ck, z[:, 1], z[:, 2]], 1)
     # mouth
     # (w_ls: the lips' weight smoothed through space - see above)
     d = z.copy(); d[:, 0] = (P[:, 0] - mouth[0]) * 0.3 * w_ls; D['mouth_width'] = d
@@ -260,9 +271,22 @@ def build(P, N, T, fm, scale=1.0):
     w_ear = np.clip(smooth(w_ear, T, grp, 2), 0, 1)
     root = np.stack([np.sign(P[:, 0]) * 0.78 * hw, np.full(len(P), eye_mid[1] + 0.3 * H), np.full(len(P), ear_z)], 1)
     D['ear_size'] = (P - root) * 0.35 * w_ear[:, None]
+    # (owner 2026-11-06: ears that stick out, ears that point up) - each turned about its root
+    pv = root + [0, -0.06 * H, 0]
+    r = P - pv
+    th = -np.sign(P[:, 0]) * 0.35                               # out: the back of the ear swings away from the head
+    d = z.copy()
+    d[:, 0] = (r[:, 0] * np.cos(th) - r[:, 1] * np.sin(th) - r[:, 0]) * w_ear
+    d[:, 1] = (r[:, 0] * np.sin(th) + r[:, 1] * np.cos(th) - r[:, 1]) * w_ear
+    D['ear_out'] = d
+    th = 0.3                                                    # tilt: the back of the ear swings up
+    d = z.copy()
+    d[:, 1] = (r[:, 1] * np.cos(th) - r[:, 2] * np.sin(th) - r[:, 1]) * w_ear
+    d[:, 2] = (r[:, 1] * np.sin(th) + r[:, 2] * np.cos(th) - r[:, 2]) * w_ear
+    D['ear_tilt'] = d
     # every move: gone at the open edges, one value per position; only the mouth's own moves touch the lips
     for k in D:
-        dk = D[k] * (edge if k in ('mouth_width', 'mouth_height', 'lips') else edge * keep_mouth)[:, None]
+        dk = D[k] * (edge if k in ('mouth_width', 'mouth_height', 'lips') else edge * keep_mouth)[:, None] * STRENGTH
         g = np.zeros((grp.max() + 1, 3))
         cnt = np.zeros(grp.max() + 1)
         np.add.at(g, grp, dk)
@@ -273,6 +297,9 @@ def build(P, N, T, fm, scale=1.0):
     marks['_w'] = {'eye': w_eye, 'nose': w_nose, 'lip': w_lip, 'lips': w_ls, 'jaw': w_jaw, 'front': front}
     return D, marks
 
+
+# every slider's full move (owner 2026-11-06: the extremes were the worst - a quarter less)
+STRENGTH = 0.75
 
 # races whose features need a bigger move to show (the trolls' heads are wide and craggy: at 1.0 the sliders barely read)
 RACE_SCALE = {'tro': 1.5}

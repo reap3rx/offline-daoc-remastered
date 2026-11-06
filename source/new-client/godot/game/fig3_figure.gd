@@ -823,7 +823,7 @@ func _scalp(si: int, tex: String, tint: Color) -> void:
 		return
 	var mask := scalp_mask(String(meta.get("prefix", "")), si)
 	var cols: Dictionary = scalp_colors()
-	var on := mask != null and not _hair_covered()
+	var on := mask != null and not _hair_covered() and int(look.get("scalp_off", 0)) == 0
 	for mi in _parts("head"):
 		var m := mi.material_override as ShaderMaterial
 		if m == null:
@@ -1152,7 +1152,8 @@ void fragment() {
 	}
 	//CUTOUT
 	if (scalp_on > 0.0) {
-		float sm = texture(scalp_tex, UV).r * scalp_on;
+		// (only well under the hair: owner 2026-11-06, the mask's soft edge showed as a band along the hairline)
+		float sm = smoothstep(0.7, 0.98, texture(scalp_tex, UV).r) * scalp_on;
 		ALBEDO = mix(ALBEDO, scalp_color, sm);
 		ROUGHNESS = mix(ROUGHNESS, 1.0, sm);
 		SPECULAR = mix(SPECULAR, 0.0, sm);

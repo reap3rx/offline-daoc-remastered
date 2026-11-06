@@ -172,7 +172,8 @@ def draw(L, rng):
         M['scar', k] = np.clip(blur(c, 0.01), 0, 1)
     # --- stubble: the beard's area, speckled; never the lips
     c = canvas()
-    poly = [(0, vn - 0.08), (0.30, vn - 0.04), (0.47, vm + 0.02), (0.75, vm + 0.18), (1.12, -0.18), (1.28, 0.22),
+    top = min(vn - 0.08, vm + 0.3)                     # (under the nose - or just over the lip, where the nose sits high)
+    poly = [(0, top), (0.30, top + 0.04), (0.47, vm + 0.02), (0.75, vm + 0.18), (1.12, -0.18), (1.28, 0.22),
             (1.42, 0.22), (1.45, -0.4), (1.2, vc - 0.05), (0.6, vc - 0.22), (0, vc - 0.25)]
     for sgn in (1, -1):
         cv2.fillPoly(c, [np.array([px(sgn * u, v) for u, v in poly], np.int32)], 1.0, cv2.LINE_AA)
