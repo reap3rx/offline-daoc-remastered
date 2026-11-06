@@ -269,6 +269,8 @@ def build(P, N, T, fm, scale=1.0):
         np.add.at(cnt, grp, 1)
         D[k] = (g / np.maximum(cnt, 1)[:, None])[grp]
     marks = {'eyeL': eyeL, 'eyeR': eyeR, 'nose_tip': nose_tip, 'mouth': mouth, 'chin': chin, 'H': H, 'hw': hw}
+    # (for pipeline/skin_layers.py: the regions too; '_' keys are not printed)
+    marks['_w'] = {'eye': w_eye, 'nose': w_nose, 'lip': w_lip, 'lips': w_ls, 'jaw': w_jaw, 'front': front}
     return D, marks
 
 
@@ -300,7 +302,7 @@ def run(src, out, scale=None):
             raise SystemExit('the head has no Catacombs morphs to find its features by')
         D, marks = build(P, N, T, fm, scale)
         if pi == 0:
-            print('landmarks', {k: (np.round(v, 2).tolist() if hasattr(v, 'tolist') else round(v, 2)) for k, v in marks.items()})
+            print('landmarks', {k: (np.round(v, 2).tolist() if hasattr(v, 'tolist') else round(v, 2)) for k, v in marks.items() if not k.startswith('_')})
         grp = weld(P)
         n0 = vertex_normals(P, T, grp)
         for k, _ in FEATURES:

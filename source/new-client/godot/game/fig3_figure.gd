@@ -285,6 +285,7 @@ func apply(changes: Dictionary) -> void:
 		m.set_shader_parameter("has_decal", decal != "")
 		if decal != "":
 			m.set_shader_parameter("decal_tex", _tex(decal))
+		_layers(m)
 		for mi in _parts("head"):
 			mi.material_override = m
 	# starter clothes: skin tone only through alpha-masked ('a') textures on the parts the race tints
@@ -344,6 +345,83 @@ func apply(changes: Dictionary) -> void:
 	var sizes := [0.95, 1.0, 1.05]
 	scale = Vector3.ONE * float(meta.get("scale", 1.0)) * float(sizes[clampi(int(look.get("size", 1)), 0, 2)])
 	_apply_armor()                                         # worn armour over the starter clothes; hides unused variants
+
+
+# --- the skin layers (the creator's SKIN page; pipeline/skin_layers.py bakes the masks) ---------------------------
+## War paint and lip colours (sRGB): the swatches the SKIN page offers, by index (look paint_color / lip_color - lip 0
+## is the face's own).
+const PAINT_COLORS := [Color(0.13, 0.24, 0.62), Color(0.06, 0.06, 0.07), Color(0.62, 0.12, 0.08), Color(0.9, 0.88, 0.82),
+	Color(0.16, 0.42, 0.18), Color(0.78, 0.6, 0.18), Color(0.4, 0.16, 0.5), Color(0.42, 0.4, 0.38)]
+const LIP_COLORS := [Color(0, 0, 0), Color(0.62, 0.22, 0.26), Color(0.48, 0.06, 0.1), Color(0.42, 0.1, 0.28),
+	Color(0.3, 0.1, 0.22), Color(0.78, 0.36, 0.3), Color(0.45, 0.3, 0.26), Color(0.08, 0.06, 0.07), Color(0.2, 0.26, 0.45)]
+static var _layer_tex := {}                     # path -> the mask texture (shared by every figure of the race)
+
+
+## Which of the layers the look wears, as the head shader's slots. Look keys: brows / freckles / scar / paint (the
+## option, 0 none), age / stubble (0 .. 1), lip_color (0 the face's own), paint_color.
+func _layers(m: ShaderMaterial) -> void:
+	var sl: Dictionary = meta.get("skin_layers", {})
+	var defs := {}
+	for d in sl.get("layers", []):
+		defs[String(d.key)] = d
+	var hair := Color(0.22, 0.16, 0.11)
+	var hrgb: Array = sl.get("hair_rgb", [])
+	if hrgb.size() > 0:
+		var h: Array = hrgb[clampi(int(look.get("hair_color", 0)), 0, hrgb.size() - 1)]
+		hair = Color(h[0], h[1], h[2])
+	var slots := []                                    # [channel, colour (sRGB), strength, way]
+	var pick := func(key: String, opt: int) -> int:
+		var d: Dictionary = defs.get(key, {})
+		var ch: Array = d.get("chan", [])
+		return int(ch[opt - 1]) if opt >= 1 and opt <= ch.size() else -1
+	var c: int = pick.call("brows", int(look.get("brows", 0)))
+	if c >= 0:
+		slots.append([c, hair.darkened(0.35), 0.85, 3])
+	c = pick.call("freckles", int(look.get("freckles", 0)))
+	if c >= 0:
+		slots.append([c, Color(0.66, 0.5, 0.4), 0.9, 2])
+	if float(look.get("age", 0.0)) > 0.01:
+		slots.append([pick.call("age", 1), Color(0.42, 0.36, 0.34), clampf(float(look.age), 0.0, 1.0), 2])
+	c = pick.call("scar", int(look.get("scar", 0)))
+	if c >= 0:
+		slots.append([c, Color(0.9, 0.66, 0.62), 0.8, 1])     # (scar tissue: pale and pink, shaded by the skin)
+	if float(look.get("stubble", 0.0)) > 0.01:
+		slots.append([pick.call("stubble", 1), hair.darkened(0.45), clampf(float(look.stubble), 0.0, 1.0) * 0.9, 3])
+	var li := int(look.get("lip_color", 0))
+	if li > 0 and li < LIP_COLORS.size():
+		slots.append([pick.call("lips", 1), LIP_COLORS[li], 0.8, 1])
+	c = pick.call("paint", int(look.get("paint", 0)))
+	if c >= 0:
+		slots.append([c, PAINT_COLORS[clampi(int(look.get("paint_color", 0)), 0, PAINT_COLORS.size() - 1)], 0.92, 1])
+	slots = slots.filter(func(s): return int(s[0]) >= 0)
+	m.set_shader_parameter("layer_count", slots.size())
+	if slots.is_empty():
+		return
+	var texs: Array = sl.get("tex", [])
+	for i in mini(texs.size(), 5):
+		var path := "%s/races/%s/%s.png" % [ROOT, race, texs[i]]
+		if not _layer_tex.has(path):
+			var img := Image.load_from_file(path)
+			if img:
+				img.generate_mipmaps()
+			_layer_tex[path] = ImageTexture.create_from_image(img) if img else null
+		m.set_shader_parameter("layer_tex%d" % i, _layer_tex[path])
+	var chs := PackedInt32Array()
+	var cols := PackedVector3Array()
+	var amts := PackedFloat32Array()
+	var modes := PackedInt32Array()
+	for i in 7:
+		var s: Array = slots[i] if i < slots.size() else [0, Color.WHITE, 0.0, 2]
+		var col: Color = s[1]
+		var lin := Vector3(col.r, col.g, col.b) if int(s[3]) == 2 else Vector3(pow(col.r, 2.2), pow(col.g, 2.2), pow(col.b, 2.2))
+		chs.append(int(s[0]))
+		cols.append(lin)
+		amts.append(float(s[2]))
+		modes.append(int(s[3]))
+	m.set_shader_parameter("layer_ch", chs)
+	m.set_shader_parameter("layer_col", cols)
+	m.set_shader_parameter("layer_amt", amts)
+	m.set_shader_parameter("layer_mode", modes)
 
 
 ## The face shapes alone (the creator's sliders call this as they move: no materials rebuilt).
@@ -963,6 +1041,19 @@ uniform float fade = 1.0;
 uniform sampler2D scalp_tex : filter_linear, repeat_disable;
 uniform vec3 scalp_color : source_color = vec3(0.1);
 uniform float scalp_on = 0.0;
+// the creator's skin layers (pipeline/skin_layers.py, Fig3Figure._layers): up to 7 masks over the face - brows, freckles,
+// age lines, a scar, stubble, lip colour, war paint - each a channel of the race's skin_layers_<n> textures, a colour,
+// a strength and a way: 1 paint (the colour, shaded by the skin under it), 2 multiply, 3 hair (the colour itself)
+uniform sampler2D layer_tex0 : filter_linear_mipmap, repeat_enable;
+uniform sampler2D layer_tex1 : filter_linear_mipmap, repeat_enable;
+uniform sampler2D layer_tex2 : filter_linear_mipmap, repeat_enable;
+uniform sampler2D layer_tex3 : filter_linear_mipmap, repeat_enable;
+uniform sampler2D layer_tex4 : filter_linear_mipmap, repeat_enable;
+uniform int layer_count = 0;
+uniform int layer_ch[7];
+uniform vec3 layer_col[7];
+uniform float layer_amt[7];
+uniform int layer_mode[7];
 varying vec2 logo_uv;
 
 void vertex() {
@@ -990,6 +1081,25 @@ void fragment() {
 	}
 	else if (tint_mode == 1) col *= tint;
 	else if (tint_mode == 2) col *= mix(tint, vec3(1.0), smoothstep(0.90, 0.99, c.a));
+	if (layer_count > 0) {
+		float ch[20];
+		vec4 t0 = texture(layer_tex0, UV), t1 = texture(layer_tex1, UV), t2 = texture(layer_tex2, UV);
+		vec4 t3 = texture(layer_tex3, UV), t4 = texture(layer_tex4, UV);
+		for (int i = 0; i < 4; i++) {
+			ch[i] = t0[i]; ch[4 + i] = t1[i]; ch[8 + i] = t2[i]; ch[12 + i] = t3[i]; ch[16 + i] = t4[i];
+		}
+		float ref = max(dot(tint, vec3(0.3, 0.59, 0.11)) * 0.45, 0.05);
+		for (int i = 0; i < layer_count; i++) {
+			float m = ch[clamp(layer_ch[i], 0, 19)] * layer_amt[i];
+			vec3 lc = layer_col[i];
+			if (layer_mode[i] == 1) {
+				float shade = clamp(dot(col, vec3(0.3, 0.59, 0.11)) / ref, 0.55, 1.25);
+				col = mix(col, lc * shade, m);
+			}
+			else if (layer_mode[i] == 2) col = mix(col, col * lc, m);
+			else col = mix(col, lc, m);
+		}
+	}
 	if (has_eye) col *= texture(eye_tex, UV).rgb;
 	if (has_decal) {
 		vec4 d = texture(decal_tex, UV);

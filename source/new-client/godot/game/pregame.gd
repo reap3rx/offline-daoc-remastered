@@ -58,7 +58,7 @@ var sel := 0
 var draft := {}                                   # the character being created or customized
 var editing := false                              # customize an existing character (select screen CUSTOMIZE)
 var locks := {}
-var _shape_page := false                           # customize: the FACE SHAPE page (owner 2026-11-06)
+var _page := 0                                     # customize: 0 FEATURES, 1 SHAPE, 2 SKIN (owner 2026-11-06)
 
 var _scene: NifScene
 var _scene_realm := ""
@@ -347,21 +347,30 @@ func _build_customize() -> void:
 	_show_figure(draft if editing else _draft_character())
 	var f := _figure
 	var shapes: Array = f.meta.get("face_shapes", [])
-	if shapes.is_empty():
-		_shape_page = false
+	var skin: Array = (f.meta.get("skin_layers", {}) as Dictionary).get("layers", [])
+	var tabs := [["FEATURES", 0]]                           # the pages: the features, the face's shape, the skin
+	if not shapes.is_empty():
+		tabs.append(["SHAPE", 1])
+	if not skin.is_empty():
+		tabs.append(["SKIN", 2])
+	if not tabs.any(func(t): return int(t[1]) == _page):
+		_page = 0
+	if tabs.size() == 1:
 		_label("FACIAL FEATURES", 760, 64, 248, 30, 22, GOLD, HORIZONTAL_ALIGNMENT_CENTER, "R")
-	else:                                                   # two pages: the features, and the face's shape
-		var tabs := [["FEATURES", false], ["FACE SHAPE", true]]
+	else:
+		var w := (232.0 - 6.0 * (tabs.size() - 1)) / tabs.size()
 		for i in tabs.size():
-			var page: bool = tabs[i][1]
-			var tb := _bar_button(String(tabs[i][0]), 776 + i * 116, 66, 108, 26, "R", func():
+			var page: int = tabs[i][1]
+			var tb := _bar_button(String(tabs[i][0]), 772 + i * (w + 6), 66, w, 26, "R", func():
 				draft.look = _figure.look.duplicate(true)
-				_shape_page = page
+				_page = page
 				_show("customize"))
-			_selected(tb, page == _shape_page)
+			_selected(tb, page == _page)
 	var y := 100.0
-	if _shape_page:
+	if _page == 1:
 		_shape_rows(shapes, y)
+	elif _page == 2:
+		_skin_rows(skin, y)
 	else:
 		_feature_rows(y)
 	# camera: arrows turn the figure, + / - zoom (the client's customize controls)
@@ -401,7 +410,8 @@ func _feature_rows(y: float) -> void:
 	_bar_button("DEFAULT", 892, 606, 108, 28, "R", func():
 		draft.look = {}
 		_figure.look = {}
-		_figure.apply({"sliders": [4, 4, 4, 4], "shape": {}})
+		_figure.apply({"sliders": [4, 4, 4, 4], "shape": {}, "brows": 0, "freckles": 0, "age": 0.0, "scar": 0,
+				"stubble": 0.0, "lip_color": 0, "paint": 0})
 		_show("customize"))
 
 
@@ -438,6 +448,70 @@ func _shape_rows(shapes: Array, y: float) -> void:
 		_figure.set_shape({})
 		draft.look = _figure.look.duplicate(true)
 		_show("customize"))
+
+
+## The skin layers (pipeline/skin_layers.py, figure.json 'skin_layers'): brows, freckles, scars and war paint as
+## steppers, age and stubble as sliders, the paint's and the lips' colours as swatches.
+func _skin_rows(layers: Array, y: float) -> void:
+	for d in layers:
+		var key := String(d.key)
+		var label := String(d.label).to_upper()
+		match key:
+			"age", "stubble":
+				_label(label, 770, y, 96, 24, 15, CREAM, HORIZONTAL_ALIGNMENT_LEFT, "R")
+				var s := HSlider.new()
+				s.min_value = 0.0
+				s.max_value = 1.0
+				s.step = 0.05
+				s.value = float(draft.look.get(key, 0.0))
+				s.value_changed.connect(func(v: float):
+					_figure.apply({key: snappedf(v, 0.05)})
+					draft.look[key] = snappedf(v, 0.05))
+				_at(s, 868, y + 2, 118, 20, "R")
+				_lock(key, y)
+				y += 27
+			"lips":
+				var cols := [Color(0.62, 0.42, 0.4)]           # (the first: the face's own)
+				cols.append_array(Fig3Figure.LIP_COLORS.slice(1))
+				y = _swatch_row(label, "lip_color", cols, y)
+			_:
+				var none := "NATURAL" if key == "brows" else "NONE"
+				var opts := [none]
+				opts.append_array((d.options as Array).map(func(o): return String(o).to_upper()))
+				y = _stepper_row(label, key, opts, y)
+				if key == "paint" and int(draft.look.get("paint", 0)) > 0:
+					y = _swatch_row("PAINT COLOR", "paint_color", Fig3Figure.PAINT_COLORS, y)
+	_bar_button("RANDOM", 776, 606, 108, 28, "R", func():
+		_figure.apply(_random_skin(true))
+		draft.look = _figure.look.duplicate(true)
+		_show("customize"))
+	_bar_button("DEFAULT", 892, 606, 108, 28, "R", func():
+		_figure.apply({"brows": 0, "freckles": 0, "age": 0.0, "scar": 0, "stubble": 0.0, "lip_color": 0, "paint": 0})
+		draft.look = _figure.look.duplicate(true)
+		_show("customize"))
+
+
+## A random skin: mostly plain, now and then freckles, a scar, war paint; stubble on men. all: every layer (the SKIN
+## page's own RANDOM), else only those not locked.
+func _random_skin(all := false) -> Dictionary:
+	var out := {}
+	var free := func(k: String) -> bool: return all or not locks.get(k, false)
+	if free.call("brows"):
+		out["brows"] = [0, 0, 1, 2, 3].pick_random()
+	if free.call("freckles"):
+		out["freckles"] = 0 if randf() < 0.7 else randi_range(1, 2)
+	if free.call("age"):
+		out["age"] = 0.0 if randf() < 0.6 else snappedf(randf_range(0.2, 0.8), 0.05)
+	if free.call("scar"):
+		out["scar"] = 0 if randf() < 0.8 else randi_range(1, 4)
+	if free.call("stubble"):
+		out["stubble"] = snappedf(randf_range(0.0, 0.9), 0.05) if not _figure.race.ends_with("_f") and randf() < 0.6 else 0.0
+	if free.call("paint"):
+		out["paint"] = 0 if randf() < 0.8 else randi_range(1, 6)
+		out["paint_color"] = randi() % Fig3Figure.PAINT_COLORS.size()
+	if free.call("lip_color"):
+		out["lip_color"] = 0 if randf() < 0.8 else randi_range(1, Fig3Figure.LIP_COLORS.size() - 1)
+	return out
 
 
 ## A face of the race's own kind: a few features moved a little, never to the extremes.
@@ -698,6 +772,8 @@ func _randomize() -> void:
 		f.apply({"sliders": arr})
 	if not locks.get("shape", false):
 		f.set_shape(_random_shape())
+	if not (f.meta.get("skin_layers", {}) as Dictionary).is_empty():
+		f.apply(_random_skin())
 	draft.look = f.look.duplicate(true)
 	_show("customize")
 
@@ -1290,10 +1366,17 @@ func _shots(folder: String) -> void:
 	if not _figure.meta.get("face_shapes", []).is_empty():
 		_figure.set_shape({"nose_tip": 0.6, "cheekbones": 0.5, "jaw_width": -0.4, "eye_size": 0.3, "chin_point": 0.4})
 		draft.look = _figure.look.duplicate(true)
-		_shape_page = true
+		_page = 1
 		_show("customize")
 		await save.call("5_shape")
-		_shape_page = false
+		_page = 0
+	if not (_figure.meta.get("skin_layers", {}) as Dictionary).is_empty():
+		_figure.apply({"brows": 2, "freckles": 1, "age": 0.5, "scar": 1, "stubble": 0.7, "paint": 6, "paint_color": 0})
+		draft.look = _figure.look.duplicate(true)
+		_page = 2
+		_show("customize")
+		await save.call("5_skin")
+		_page = 0
 	_customize_continue()
 	await save.call("6_select_with_character")
 	CharacterStore.remove(Accounts.account, "Brennan")

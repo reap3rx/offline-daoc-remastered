@@ -366,6 +366,8 @@ def build_figure(t, realm, race, gender, fig, upscale_list):
     if '--no-face-shapes' not in sys.argv:             # the creator's face sliders (owner 2026-11-06): fx_ targets
         import face_morphs
         face_morphs.run(str(out / 'figure.gltf'), str(out / 'figure.gltf'))
+        import skin_layers                            # and the creator's skin layers (their masks need the
+        skin_layers.bake(out)                         # landmarks the face shapes found)
     upscale_list.update(textures)
     print(f'{prefix}: {race} {gender} fig {fig}, {len(faces)} faces, {len(eyes)} eyes, {len(tones)} tones, '
           f'{len(styles)} hair styles ({sum(1 for s in styles if s["node"])} meshes), {len(tattoos)} tattoos, '

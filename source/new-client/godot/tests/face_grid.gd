@@ -21,6 +21,14 @@ const PRESETS := [
 ]
 
 
+## --presets=skin: the skin layers (looks applied, not shapes)
+const SKIN := [
+	["Plain", {}], ["Brows 3", {"brows": 3}], ["Freckles", {"freckles": 2}], ["Age", {"age": 1.0}],
+	["Scars", {"scar": 2}], ["Stubble", {"stubble": 1.0}], ["Lips", {"lip_color": 2}], ["Mask", {"paint": 1, "paint_color": 1}],
+	["Claws", {"paint": 2, "paint_color": 2}], ["Half", {"paint": 3, "paint_color": 0}], ["Sweep", {"paint": 5, "paint_color": 3}],
+	["Spirals", {"paint": 6, "paint_color": 0}],
+]
+
 ## --presets=mouth: one slider at a time, the mouth and jaw ones (what opened the mouth)
 const MOUTH := [
 	["Neutral", {}], ["Lips +1", {"lips": 1.0}], ["Lips -1", {"lips": -1.0}], ["Mouth W +1", {"mouth_width": 1.0}],
@@ -83,12 +91,17 @@ func _ready() -> void:
 	cam.global_position = target + fwd.rotated(Vector3.UP, deg_to_rad(angle)) * 0.85 * fig.scale.x + Vector3(0, 0.03, 0)
 	cam.look_at(target + Vector3(0, 0.02, 0))
 	var heads: Array = fig.model.find_children("*", "MeshInstance3D", true, false)
-	var presets: Array = MOUTH if String(args.get("presets", "")) == "mouth" else PRESETS
+	var pset := String(args.get("presets", ""))
+	var presets: Array = MOUTH if pset == "mouth" else (SKIN if pset == "skin" else PRESETS)
 	var names := []
 	for p in presets:
 		names.append(String(p[0]))
 	for i in presets.size():
 		var vals: Dictionary = presets[i][1]
+		if pset == "skin":
+			fig.apply({"brows": 0, "freckles": 0, "age": 0.0, "scar": 0, "stubble": 0.0, "lip_color": 0, "paint": 0})
+			fig.apply(vals)
+			vals = {}
 		for mi in heads:
 			var m := mi as MeshInstance3D
 			for b in m.get_blend_shape_count():
