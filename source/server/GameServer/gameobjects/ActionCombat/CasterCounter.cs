@@ -40,7 +40,10 @@ namespace DOL.GS
 			eCharacterClass.Cabalist, eCharacterClass.Necromancer, eCharacterClass.Sorcerer, eCharacterClass.Theurgist,
 			eCharacterClass.Wizard, eCharacterClass.Bonedancer, eCharacterClass.Runemaster, eCharacterClass.Spiritmaster,
 			eCharacterClass.Warlock, eCharacterClass.Animist, eCharacterClass.Bainshee, eCharacterClass.Eldritch,
-			eCharacterClass.Enchanter, eCharacterClass.Mentalist
+			eCharacterClass.Enchanter, eCharacterClass.Mentalist,
+			// and the caster base classes before level 5 (owner 2026-11-05: a new Sorceress - still a Mage - couldn't)
+			eCharacterClass.Mage, eCharacterClass.Elementalist, eCharacterClass.Disciple, eCharacterClass.Mystic,
+			eCharacterClass.Magician, eCharacterClass.Forester
 		};
 
 		public static bool IsCaster(GamePlayer player) =>
