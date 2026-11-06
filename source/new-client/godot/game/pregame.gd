@@ -837,12 +837,40 @@ func _c_skin(p: Control, y: float) -> float:
 	return y
 
 
-# --- BODY: size now; the body sliders next (roadmap)
+# --- BODY: the figure's proportions (Fig3Figure.BODY_SLIDERS: bones scaled after the animation)
 func _c_body(p: Control, y: float) -> float:
 	y = _c_header(p, "BODY", y)
 	y = _c_colour(p, "Skin Color", "skin", _skin_colours(), y)
-	y = _c_key(p, "Size", "size", ["Short", "Average", "Tall"], y, 1)
-	return y
+	y = _c_header(p, "PROPORTIONS", y + 4)
+	var body: Dictionary = draft.look.get("body", {})
+	for bs in Fig3Figure.BODY_SLIDERS:
+		var key := String(bs[0])
+		y = _c_slider(p, String(bs[1]), float(body.get(key, 0.0)), -1.0, 1.0, func(v: float):
+			var b: Dictionary = (_figure.look.get("body", {}) as Dictionary).duplicate()
+			if absf(v) < 0.001:
+				b.erase(key)
+			else:
+				b[key] = v
+			draft.look["body"] = b
+			_figure.set_body(b), y, false)
+	y += 4
+	_cbutton("RANDOM BODY", p, 60, y, 110, 26, func():
+		_figure.apply({"body": _random_body()})
+		_redraw(), 12)
+	_cbutton("RESET BODY", p, 180, y, 110, 26, func():
+		_figure.apply({"body": {}, "size": 1})
+		_redraw(), 12)
+	_c_lock(p, "body", y)
+	return y + 34
+
+
+## A body of the race's own kind, a little either way.
+func _random_body() -> Dictionary:
+	var b := {}
+	for bs in Fig3Figure.BODY_SLIDERS:
+		if randf() < 0.6:
+			b[String(bs[0])] = snappedf(clampf(randfn(0.0, 0.35), -0.8, 0.8), 0.05)
+	return b
 
 
 var _tune := ""                                    # the feature whose sliders are open
@@ -1104,7 +1132,7 @@ func _random_name() -> void:
 func _randomize() -> void:
 	var f := _figure
 	var l := {}
-	for k in ["face", "eyes", "skin", "hair", "size", "tattoo"]:
+	for k in ["face", "eyes", "skin", "hair", "tattoo"]:
 		if not locks.get(k, false) and f.option_count(k) > 0:
 			l[k] = randi() % f.option_count(k)
 	f.apply(l)
@@ -1116,6 +1144,8 @@ func _randomize() -> void:
 			arr.append(randi() % 9)
 		f.apply({"sliders": arr})
 	f.set_shape(_random_shape())
+	if not locks.get("body", false):
+		f.apply({"body": _random_body(), "size": 1})
 	if not (f.meta.get("skin_layers", {}) as Dictionary).is_empty():
 		f.apply(_random_skin())
 	draft.look = f.look.duplicate(true)
@@ -1669,6 +1699,8 @@ func _shots(folder: String) -> void:
 		await save.call("5_skin_picker")
 	_tab = "body"
 	_body_view = true
+	_figure.apply({"body": {"height": 0.5, "shoulders": 0.8, "chest": 0.7, "arms": 0.5, "legs": 0.8, "head": -0.5}})
+	draft.look = _figure.look.duplicate(true)
 	_show("customize")
 	await save.call("5_body")
 	_tab = "face"

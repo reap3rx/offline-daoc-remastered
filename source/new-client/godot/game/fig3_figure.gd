@@ -180,6 +180,10 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 			anim.play("idle")
 	var skels := model.find_children("*", "Skeleton3D", true, false)
 	if skels.size() > 0:
+		var body := BodyShape.new()                 # (first: the sway works on the shaped body)
+		body.name = "BodyShape"
+		body.fig = self
+		(skels[0] as Skeleton3D).add_child(body)
 		var sway := Sway.new()
 		sway.name = "Sway"
 		sway.model = model
@@ -344,7 +348,8 @@ func apply(changes: Dictionary) -> void:
 	_apply_shape()
 	# size: the race's Catacombs scale x Short 0.95 / Average 1.0 / Tall 1.05
 	var sizes := [0.95, 1.0, 1.05]
-	scale = Vector3.ONE * float(meta.get("scale", 1.0)) * float(sizes[clampi(int(look.get("size", 1)), 0, 2)])
+	scale = Vector3.ONE * float(meta.get("scale", 1.0)) * float(sizes[clampi(int(look.get("size", 1)), 0, 2)]) \
+			* (1.0 + 0.07 * clampf(float((look.get("body", {}) as Dictionary).get("height", 0.0)), -1.0, 1.0))
 	_apply_armor()                                         # worn armour over the starter clothes; hides unused variants
 
 
@@ -522,6 +527,13 @@ static func with_feature(feature: Array, shape: Dictionary, i: int) -> Dictionar
 		out.erase(k)
 	out.merge((feature[3][i][1] as Dictionary), true)
 	return out
+
+## The body sliders alone (as they move: the bones read look.body every frame; only the height rescales).
+func set_body(body: Dictionary) -> void:
+	look["body"] = body
+	var sizes := [0.95, 1.0, 1.05]
+	scale = Vector3.ONE * float(meta.get("scale", 1.0)) * float(sizes[clampi(int(look.get("size", 1)), 0, 2)]) \
+			* (1.0 + 0.07 * clampf(float(body.get("height", 0.0)), -1.0, 1.0))
 
 ## The face shapes alone (the creator's sliders call this as they move: no materials rebuilt).
 func set_shape(shape: Dictionary) -> void:
@@ -1275,6 +1287,71 @@ var back_gear := false                        # something rides on the back (Pla
 var _hair_mat: ShaderMaterial                # the hair's material (its sway uniforms)
 static var wind := 1.0                       # SkySystem: the storm's wind (as the trees')
 const SWAY_RANGE_M := 35.0
+
+
+## The body sliders (owner 2026-11-06, the creator's BODY page): look.body {name: -1 .. 1}. Height scales the whole
+## figure; the rest are bones scaled after the animation (BodyShape), each undone below it so only its own part
+## changes - the arms longer but the hands their size, the chest bigger but the head and arms not.
+const BODY_SLIDERS := [["height", "Height"], ["head", "Head Size"], ["shoulders", "Shoulders"], ["chest", "Chest"],
+	["torso", "Torso Length"], ["arms", "Arm Length"], ["legs", "Leg Length"], ["hands", "Hands"]]
+
+
+class BodyShape extends SkeletonModifier3D:
+	var fig: Fig3Figure
+	var _b := {}
+	var _leg := 0.0                              # the leg's rest length (pelvis to ankle), for the lift
+	var _up := Vector3.UP
+
+	func _find(sk: Skeleton3D) -> void:
+		for n in ["Head", "Spine1", "Spine2", "Neck", "L Clavicle", "R Clavicle", "L UpperArm", "R UpperArm", "L Hand",
+				"R Hand", "L Thigh", "R Thigh", "L Foot", "R Foot", "Pelvis"]:
+			_b[n] = sk.find_bone("Bip01 " + n)
+		var th: int = _b["L Thigh"]
+		var ft: int = _b["L Foot"]
+		if th >= 0 and ft >= 0:
+			var a := sk.get_bone_global_rest(th).origin
+			var c := sk.get_bone_global_rest(ft).origin
+			_leg = a.distance_to(c)
+			_up = (a - c).normalized()
+
+	func _scale(sk: Skeleton3D, n: String, f: float) -> void:
+		var b: int = _b.get(n, -1)
+		if b >= 0 and absf(f - 1.0) > 0.0005:
+			sk.set_bone_pose_scale(b, sk.get_bone_pose_scale(b) * f)
+
+	func _process_modification_with_delta(_delta: float) -> void:
+		var sk := get_skeleton()
+		if sk == null or fig == null:
+			return
+		var body: Dictionary = fig.look.get("body", {})
+		if body.is_empty():
+			return
+		if _b.is_empty():
+			_find(sk)
+		var v := func(k: String) -> float: return clampf(float(body.get(k, 0.0)), -1.0, 1.0)
+		var hd: float = 1.0 + 0.12 * v.call("head")
+		var tor: float = 1.0 + 0.08 * v.call("torso")
+		var ch: float = 1.0 + 0.1 * v.call("chest")
+		var sh: float = 1.0 + 0.2 * v.call("shoulders")
+		var ar: float = 1.0 + 0.08 * v.call("arms")
+		var lg: float = 1.0 + 0.07 * v.call("legs")
+		var hn: float = 1.0 + 0.1 * v.call("hands")
+		_scale(sk, "Spine1", tor)                      # each bone's own change, then undone in the next
+		_scale(sk, "Spine2", ch / tor)
+		_scale(sk, "Neck", 1.0 / ch)
+		_scale(sk, "Head", hd)
+		for side in ["L", "R"]:
+			_scale(sk, side + " Clavicle", sh / ch)
+			_scale(sk, side + " UpperArm", ar / sh)
+			_scale(sk, side + " Hand", hn / ar)
+			_scale(sk, side + " Thigh", lg)
+			_scale(sk, side + " Foot", 1.0 / lg)
+		# longer legs: the hips up by what they gained, so the feet stay on the ground
+		var pv: int = _b.get("Pelvis", -1)
+		if pv >= 0 and absf(lg - 1.0) > 0.0005 and _leg > 0.0:
+			var parent := sk.get_bone_parent(pv)
+			var pb := sk.get_bone_global_pose(parent).basis if parent >= 0 else Basis()
+			sk.set_bone_pose_position(pv, sk.get_bone_pose_position(pv) + pb.inverse() * (_up * _leg * (lg - 1.0)))
 
 
 class Sway extends SkeletonModifier3D:
