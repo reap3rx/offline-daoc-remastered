@@ -58,7 +58,12 @@ mask = np.clip((strands - 0.35) / 0.4, 0, 1) * isl
 # the colour keeps the painting's own alpha (the hair's cut-out edges); the strand mask goes beside it
 cv2.imwrite(dst, (np.dstack([out_rgb, alpha0]) * 255 + 0.5).astype(np.uint8))
 cv2.imwrite(dst.replace('.png', '_mask.png'), (mask * 255 + 0.5).astype(np.uint8))
+# the flow for the strands' highlight (anisotropic: a band across the strands): its doubled angle, which has no
+# 'which way along' to flip and so blends smoothly between texels - R cos, G sin (BGR order for cv2)
+flow = np.dstack([np.full_like(theta, 0.5), 0.5 + 0.5 * np.sin(2 * theta), 0.5 + 0.5 * np.cos(2 * theta)])
+cv2.imwrite(dst.replace('.png', '_flow.png'), (flow * 255 + 0.5).astype(np.uint8))
 print('strands', dst, w, h)
+
 
 
 

@@ -166,9 +166,11 @@ func _strand_hair(fig: Fig3Figure, olds: Array, layers: int, depth: float) -> vo
 	mimg.generate_mipmaps()
 	var mask := ImageTexture.create_from_image(mimg)
 	var code: String = m0.shader.code
-	code = code.replace("varying vec2 logo_uv;", "varying vec2 logo_uv;\nuniform float shell_off = 0.0;\nuniform float shell_cut = 0.0;\nuniform sampler2D shell_mask : filter_linear_mipmap;")
+	code = code.replace("varying vec2 logo_uv;", "varying vec2 logo_uv;\nuniform float shell_off = 0.0;\nuniform float shell_cut = 0.0;\nuniform sampler2D shell_mask : filter_linear_mipmap;\nuniform sampler2D hair_flow : filter_linear_mipmap;\nuniform float aniso = 0.0;\nuniform float hair_rough = 0.4;\nuniform float strand_spec = 0.0;\nuniform float fuzz = 0.0;\nvarying vec3 hair_t;")
 	code = code.replace("void vertex() {", "void vertex() {\n\tVERTEX += NORMAL * shell_off;")
-	code = code.replace("//CUTOUT", "if (shell_cut > 0.0) {\n\t\tALPHA = c.a * smoothstep(shell_cut, shell_cut + 0.15, texture(shell_mask, UV).r);\n\t\tALPHA_SCISSOR_THRESHOLD = 0.5;\n\t\tALPHA_ANTIALIASING_EDGE = 0.3;\n\t}\n\t//CUTOUT")
+	code = code.replace("//CUTOUT", ANISO_CODE + "if (shell_cut > 0.0) {\n\t\tALPHA = c.a * smoothstep(shell_cut, shell_cut + 0.15, texture(shell_mask, UV).r);\n\t\tALPHA_SCISSOR_THRESHOLD = 0.5;\n\t\tALPHA_ANTIALIASING_EDGE = 0.3;\n\t}\n\t//CUTOUT")
+	if float(get_parent().args.get("kk", "0")) > 0.0:
+		code += HAIR_LIGHT
 	var shd := Shader.new()
 	shd.code = code
 	for mi in olds:
@@ -180,6 +182,14 @@ func _strand_hair(fig: Fig3Figure, olds: Array, layers: int, depth: float) -> vo
 		base_m.set_shader_parameter("relief", float(get_parent().args.get("relief", "0.0")))
 		base_m.set_shader_parameter("metal", 0.0)
 		base_m.set_shader_parameter("shell_mask", mask)
+		var fimg := Image.load_from_file(ProjectSettings.globalize_path("res://content/characters/hair_test/%s_strands_flow.png" % key))
+		if fimg:
+			fimg.generate_mipmaps()
+			base_m.set_shader_parameter("hair_flow", ImageTexture.create_from_image(fimg))
+			base_m.set_shader_parameter("aniso", float(get_parent().args.get("aniso", "0.8")))
+			base_m.set_shader_parameter("hair_rough", float(get_parent().args.get("rough", "0.4")))
+			base_m.set_shader_parameter("strand_spec", float(get_parent().args.get("kk", "0")))
+			base_m.set_shader_parameter("fuzz", float(get_parent().args.get("fuzz", "0")))
 		(mi as MeshInstance3D).material_override = base_m
 		for i in layers:
 			var shell := (mi as MeshInstance3D).duplicate() as MeshInstance3D
@@ -189,6 +199,63 @@ func _strand_hair(fig: Fig3Figure, olds: Array, layers: int, depth: float) -> vo
 			sm.set_shader_parameter("shell_cut", 0.2 + 0.5 * float(i) / float(maxi(layers - 1, 1)))
 			shell.material_override = sm
 	print("[hair] strands ", key, " layers ", layers, " depth ", depth)
+
+
+## The strands' highlight: a band across them, where real hair catches the light - the surface's own direction along
+## the strands (from the flow map, in UV space) carried into view space through the screen's derivatives.
+const ANISO_CODE := """if (fuzz > 0.0) {
+		// the outline, where the hair is seen edge on, broken into strands
+		float ndv = abs(dot(NORMAL, VIEW));
+		float edge = 1.0 - smoothstep(0.08, 0.45, ndv);
+		ALPHA = c.a * mix(1.0, smoothstep(0.25, 0.55, texture(shell_mask, UV).r), edge * fuzz);
+		ALPHA_SCISSOR_THRESHOLD = 0.5;
+		ALPHA_ANTIALIASING_EDGE = 0.3;
+	}
+	if (aniso != 0.0) {
+		vec2 f2 = texture(hair_flow, UV).rg * 2.0 - 1.0;
+		float th = 0.5 * atan(f2.y, f2.x);
+		vec2 fl = vec2(cos(th), sin(th));
+		vec3 dp1 = dFdx(VERTEX);
+		vec3 dp2 = dFdy(VERTEX);
+		vec2 du1 = dFdx(UV);
+		vec2 du2 = dFdy(UV);
+		vec3 dp2p = cross(dp2, NORMAL);
+		vec3 dp1p = cross(NORMAL, dp1);
+		vec3 tu = dp2p * du1.x + dp1p * du2.x;
+		vec3 tv = dp2p * du1.y + dp1p * du2.y;
+		vec3 t = normalize(tu * fl.x + tv * fl.y + NORMAL * 1e-5);
+		hair_t = t;
+		if (strand_spec <= 0.0) {
+			TANGENT = t;
+			BINORMAL = normalize(cross(NORMAL, t));
+			ANISOTROPY = aniso;
+			ANISOTROPY_FLOW = vec2(1.0, 0.0);
+			ROUGHNESS = hair_rough;
+			SPECULAR = 0.5;
+		}
+	}
+	"""
+
+
+## Kajiya-Kay hair light: soft wrapped diffuse, and two highlights across the strands - a white one shifted toward the
+## roots, a coloured one toward the tips (light that went through the hair).
+const HAIR_LIGHT := """
+void light() {
+	float ndl = dot(NORMAL, LIGHT);
+	DIFFUSE_LIGHT += clamp(ndl * 0.7 + 0.3, 0.0, 1.0) * ATTENUATION * LIGHT_COLOR / PI;
+	if (strand_spec > 0.0) {
+		vec3 h = normalize(LIGHT + VIEW);
+		vec3 t1 = normalize(hair_t + NORMAL * 0.12);
+		vec3 t2 = normalize(hair_t - NORMAL * 0.12);
+		float d1 = dot(t1, h);
+		float d2 = dot(t2, h);
+		float s1 = pow(sqrt(max(0.0, 1.0 - d1 * d1)), 140.0);
+		float s2 = pow(sqrt(max(0.0, 1.0 - d2 * d2)), 36.0);
+		float vis = smoothstep(-0.1, 0.25, ndl) * ATTENUATION;
+		SPECULAR_LIGHT += (vec3(s1) * 0.55 + ALBEDO * s2 * 0.6) * strand_spec * vis * LIGHT_COLOR / PI;
+	}
+}
+"""
 
 
 func _ready() -> void:
