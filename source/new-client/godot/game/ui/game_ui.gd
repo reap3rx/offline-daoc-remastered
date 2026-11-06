@@ -69,7 +69,7 @@ var _cast_name: Label
 var _effects_bar: HBoxContainer
 var npc_dialog: NpcDialog
 var trainer: TrainerWindow
-const TRANSIENT := ["npc_dialog", "trainer", "merchant", "vault", "exchange", "guide", "info", "release", "siege", "emblem"]
+const TRANSIENT := ["npc_dialog", "story_dialog", "trainer", "merchant", "vault", "exchange", "guide", "info", "release", "siege", "emblem"]
 const INFO_W := 160.0                                     # the information window's width (interact.bmp is 300)
 const INFO_WIDE := 320.0                                  # ... for a server text with long lines (/stables routes)
 var _compass_letters: Control
@@ -386,6 +386,7 @@ func _build() -> void:
 	_build_potions()
 	_build_ac_styles()
 	_build_events()
+	_build_story_dialog()
 	_build_guild()
 	PlayerData.window_toggle.connect(func(id: String):
 		if windows.has(id):
@@ -995,6 +996,26 @@ func _build_ac_styles() -> void:
 	ac_styles.setup("ac_styles", "interact", Rect2(), at)
 	_add(ac_styles, at, false)
 	ac_styles.build()
+
+
+const StoryDialogScript := preload("res://game/ui/story_dialog.gd")
+var story_dialog: ClassicWindow
+
+
+## The story quests' dialogue and quest window (StoryDialog.cs's "#DLG|" lines).
+func _build_story_dialog() -> void:
+	if not Server.active:
+		return
+	story_dialog = StoryDialogScript.new()
+	story_dialog.resizable = true
+	story_dialog.patch = [6, 19, 13, 33]
+	story_dialog.min_size = StoryDialogScript.BODY
+	story_dialog.max_size = StoryDialogScript.BODY
+	story_dialog.size = StoryDialogScript.BODY
+	var at := Vector2(area().x * 0.5 - StoryDialogScript.BODY.x * 0.5, area().y * 0.5 - StoryDialogScript.BODY.y * 0.5)
+	story_dialog.setup("story_dialog", "interact", Rect2(), at)
+	_add(story_dialog, at, false)
+	story_dialog.build()
 
 
 const EventsWindow := preload("res://game/ui/events_window.gd")

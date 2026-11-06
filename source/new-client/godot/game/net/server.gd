@@ -1503,6 +1503,13 @@ var poison_bag := {}                     # the server's poison bag: {set, slots:
 var ac_styles := {}                      # the Action Combat Styles picks: slot -> {picked, options: [{id, name}]}
 var gear := {}                           # hood up, cloak / helm hidden (inventory packet)
 var quests := {}                         # journal index -> {name, text} (QuestEntry)
+var story_info := {}                     # a story quest's title (lower case) -> its lore and rewards (StoryDialog "#QLOG|")
+
+
+func story_line(json: String) -> void:
+	var d = JSON.parse_string(json)
+	if d is Dictionary:
+		story_info[String(d.get("title", "")).to_lower()] = d
 var weight_now := -1                     # Encumberance: what you carry / can carry (-1: not sent yet)
 var weight_max := -1
 var game_time_ms := -1                   # the server's last time of day (ms into the game day; Time packet), -1 none yet

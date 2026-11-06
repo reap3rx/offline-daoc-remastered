@@ -137,6 +137,27 @@ func _server_list() -> void:
 		var lines := ["[b]%s[/b]" % esc.call(String(q.get("name", "")).to_upper()), "", esc.call(String(q.get("text", "")))]
 		for g in q.get("goals", []):                       # a reward quest's goals, done ones ticked
 			lines.append(("[color=#7fd17f]DONE[/color]  " if bool(g.done) else "-  ") + esc.call(String(g.text)))
+		var si: Dictionary = Server.story_info.get(String(q.get("name", "")).to_lower(), {})
+		if not si.is_empty():                              # a story quest: its lore and what it can give
+			lines.append("")
+			lines.append("[color=#d9b560]THE STORY[/color]")
+			lines.append("[color=#c8bfae]%s[/color]" % esc.call(String(si.get("lore", ""))).replace("\n", "\n\n").replace("\n\n\n\n", "\n\n"))
+			var rw: Dictionary = si.get("rewards", {}) if si.get("rewards") is Dictionary else {}
+			var names := []
+			for it in rw.get("items", []):
+				names.append(String(it.get("name", "")))
+			var pick := []
+			for it in rw.get("choice", []):
+				pick.append(String(it.get("name", "")))
+			if not names.is_empty() or not pick.is_empty() or int(rw.get("marks", 0)) > 0:
+				lines.append("")
+				lines.append("[color=#d9b560]REWARDS[/color]")
+				if int(rw.get("marks", 0)) > 0:
+					lines.append("%d Marks of Valor" % int(rw.marks))
+				if not names.is_empty():
+					lines.append(esc.call(", ".join(names)))
+				if not pick.is_empty():
+					lines.append("Choose one: " + esc.call(", ".join(pick)))
 		_body.text = "\n".join(lines)
 
 

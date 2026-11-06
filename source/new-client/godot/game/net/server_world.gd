@@ -952,6 +952,14 @@ func _message(d: Dictionary) -> void:
 		if ew:
 			ew.receive(String(d.text).substr(5))
 		return
+	if String(d.text).begins_with("#DLG|"):               # a story NPC talking to you (StoryDialog.cs): its window
+		var sd = viewer.ui.get("story_dialog") if viewer and viewer.ui else null
+		if sd:
+			sd.receive(String(d.text).substr(5))
+		return
+	if String(d.text).begins_with("#QLOG|"):              # a story quest's lore and rewards, for the journal
+		Server.story_line(String(d.text).substr(6))
+		return
 	if String(d.text).begins_with("#SAY|"):               # an NPC speaking aloud (NpcSpeech.cs): a bubble over its head
 		_speech(String(d.text).substr(5))
 		return

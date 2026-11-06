@@ -49,6 +49,7 @@ namespace DOL.GS.StoryQuests
             Load();
             GameEventMgr.AddHandler(GameLivingEvent.Dying, new DOLEventHandler(OnDying));
             GameEventMgr.AddHandler(GamePlayerEvent.Quit, new DOLEventHandler(OnQuit));
+            GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, new DOLEventHandler(OnEntered));
             _ = new ECSGameTimer(null, Tick, 5000);
         }
 
@@ -229,7 +230,7 @@ namespace DOL.GS.StoryQuests
                 StepDef st = s.Step_;
                 if (st == null || st.Type is not ("talk" or "choice") || !Same(st.Npc, npc.Def.Id))
                     continue;
-                npc.SayTo(p, Words(st.Say, p));
+                StoryDialog.Say(p, npc, Words(st.Say, p), st.Type == "choice" ? "choice" : "talk", null, s);
                 if (st.Type == "talk" && string.IsNullOrEmpty(st.Keyword))
                     StepDone(p, s);
                 return;
@@ -238,18 +239,19 @@ namespace DOL.GS.StoryQuests
             StoryQuestDef offer = _quests.Values.FirstOrDefault(q => Same(q.Giver, npc.Def.Id) && CanTake(p, q));
             if (offer != null)
             {
-                npc.SayTo(p, Words(offer.Offer, p) + (offer.Group ? "\n\n(This is a task for a group - you may want help with it.)" : ""));
+                StoryDialog.Say(p, npc, Words(offer.Offer, p) + (offer.Group ? "\n\n(This is a task for a group - you may want help with it.)" : ""),
+                    "offer", offer);
                 return;
             }
             // one under way that they gave
             StoryQuest mine = Active(p).FirstOrDefault(s => Same(s.Def.Giver, npc.Def.Id));
             if (mine?.Step_ != null)
             {
-                npc.SayTo(p, $"{mine.Step_.Goal}. I'm counting on you.");
+                StoryDialog.Say(p, npc, $"{mine.Step_.Goal}. I'm counting on you.", "talk", null, mine);
                 return;
             }
             if (!string.IsNullOrEmpty(npc.Def.Idle))
-                npc.SayTo(p, Words(npc.Def.Idle, p));
+                StoryDialog.Say(p, npc, Words(npc.Def.Idle, p), "idle");
         }
 
         public static void OnWhisper(GamePlayer p, StoryNpc npc, string text)
@@ -281,7 +283,7 @@ namespace DOL.GS.StoryQuests
                     if (o == null)
                         continue;
                     if (!string.IsNullOrEmpty(o.Say))
-                        npc.SayTo(p, Words(o.Say, p));
+                        StoryDialog.Say(p, npc, Words(o.Say, p), "talk", null, s);
                     Advance(p, s, o.Next, o.Ending);
                     return;
                 }
@@ -296,13 +298,14 @@ namespace DOL.GS.StoryQuests
                     sq.QuestGiver = npc;
                     sq.RebuildGoals();
                     p.Out.SendQuestUpdate(sq);
+                    StoryDialog.Log(p, sq);
                     RefreshIndicators(p);
                     StepEntered(p, sq);
                     return;
                 }
                 if (q.Topics.FirstOrDefault(kv => Same(kv.Key, text)) is var t && t.Value != null)
                 {
-                    npc.SayTo(p, Words(t.Value, p));
+                    StoryDialog.Say(p, npc, Words(t.Value, p), "topic", q);
                     return;
                 }
             }
@@ -357,6 +360,7 @@ namespace DOL.GS.StoryQuests
             }
             s.SetStep(next);
             p.Out.SendMessage($"{s.Name}: {s.Step_?.Goal}", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+            StoryDialog.Log(p, s);
             RefreshIndicators(p);
             StepEntered(p, s);
         }
@@ -374,18 +378,16 @@ namespace DOL.GS.StoryQuests
             RewardsDef r = e?.Rewards ?? s.Def.Rewards;
             if (r != null && r.Choice.Count > 1 && Npc(s.Step_?.Npc) is StoryNpc npc)
             {
-                if (!string.IsNullOrEmpty(e?.Text))
-                    npc.SayTo(p, Words(e.Text, p));
                 s.SetChoosing(ending);
                 s.RebuildGoals();
                 p.Out.SendQuestUpdate(s);
-                OfferChoice(p, npc, s, ending);
+                OfferChoice(p, npc, s, ending, Words(e?.Text, p));
                 return;
             }
             if (!string.IsNullOrEmpty(e?.Text))
             {
                 if (Npc(s.Step_?.Npc) is StoryNpc by)
-                    by.SayTo(p, Words(e.Text, p));
+                    StoryDialog.Say(p, by, Words(e.Text, p), "end", null, s, ending);
                 else
                     p.Out.SendMessage(Words(e.Text, p), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
             }
@@ -405,10 +407,11 @@ namespace DOL.GS.StoryQuests
             return l;
         }
 
-        static void OfferChoice(GamePlayer p, StoryNpc npc, StoryQuest s, string ending)
+        static void OfferChoice(GamePlayer p, StoryNpc npc, StoryQuest s, string ending, string said = null)
         {
             var names = Choices(s, ending).Select(t => $"[{t.Name}]");
-            npc.SayTo(p, "Take what will serve you best: " + string.Join(", ", names) + ".");
+            string pick = "Take what will serve you best: " + string.Join(", ", names) + ".";
+            StoryDialog.Say(p, npc, string.IsNullOrEmpty(said) ? pick : said + "\n\n" + pick, "reward", null, s, ending);
         }
 
         // ---------------------------------------------------------------- rewards
@@ -474,6 +477,7 @@ namespace DOL.GS.StoryQuests
                 {
                     if (p.ObjectState != GameObject.eObjectState.Active || p.CurrentRegion == null)
                         continue;
+                    Barks(p, now);
                     foreach (StoryQuest s in Active(p).ToList())
                     {
                         string here = s.QuestId + "/" + s.StepId;
@@ -786,6 +790,51 @@ namespace DOL.GS.StoryQuests
                 chain.OnEnded = null;
                 chain.End("fail", Now);
             }
+        }
+
+        static void OnEntered(DOLEvent e, object sender, EventArgs args)
+        {
+            if (sender is GamePlayer p)
+                foreach (StoryQuest s in Active(p).ToList())
+                    StoryDialog.Log(p, s);
+        }
+
+        // ---------------------------------------------------------------- barks (owner 2026-11-06: "More use of the
+        // chat bubbles"): a story NPC you walk past speaks up, over its head - whoever has words for you (a step of
+        // yours here: its first line; a quest for you: its hook) - once in a while each
+
+        static readonly ConcurrentDictionary<string, long> _barked = new();
+        const long BARK_EVERY_MS = 300_000;
+        const int BARK_RANGE = 700;                     // 17.5 m
+
+        static void Barks(GamePlayer p, long now)
+        {
+            if (!NewClient.Is(p))
+                return;
+            foreach (StoryNpc n in _npcs.Values)
+            {
+                if (n.ObjectState != GameObject.eObjectState.Active || n.CurrentRegion != p.CurrentRegion || n.InCombat ||
+                    !n.IsWithinRadius(p, BARK_RANGE))
+                    continue;
+                string key = p.ObjectId + "|" + n.Def.Id;
+                if (_barked.TryGetValue(key, out long t) && now - t < BARK_EVERY_MS)
+                    continue;
+                string line = BarkFor(p, n);
+                if (string.IsNullOrEmpty(line))
+                    continue;
+                _barked[key] = now;
+                NpcSpeech.SayTo(n, p, StoryDialog.Bubble(line));
+            }
+        }
+
+        static string BarkFor(GamePlayer p, StoryNpc n)
+        {
+            foreach (StoryQuest s in Active(p))
+                if (s.Step_ is StepDef st && st.Type is "talk" or "choice" && Same(st.Npc, n.Def.Id) && string.IsNullOrEmpty(s.Choosing))
+                    return Words(st.Say, p);
+            if (_quests.Values.Any(q => Same(q.Giver, n.Def.Id) && CanTake(p, q)))
+                return !string.IsNullOrEmpty(n.Def.Idle) ? Words(n.Def.Idle, p) : null;
+            return null;
         }
 
         static void OnQuit(DOLEvent e, object sender, EventArgs args)
