@@ -20,6 +20,7 @@ var _texture_dir := ""
 static var _shaders := {}
 static var _scenes := {}                    # race prefix -> PackedScene of its figure
 static var _tex_cache := {}                 # textures shared by every figure
+static var _flow_cache := {}                # hair flow maps (hair_flow), by texture
 
 
 ## Which clips loop: movement, idles, the cast / aim holds and sitting; everything else (attacks, styles, parries,
@@ -312,10 +313,16 @@ func apply(changes: Dictionary) -> void:
 			var colours: Array = styles[i].colours
 			if colours.size() > 0:
 				var col: Dictionary = colours[clampi(int(look.get("hair_color", 0)), 0, colours.size() - 1)]
-				var m := _material(true)
+				var flow := hair_flow(String(col.tex))
+				var m := _material(true, false, false, flow != null)
 				m.set_shader_parameter("albedo_tex", _tex(String(col.tex)))
 				m.set_shader_parameter("sheen", 1.0)
-				m.set_shader_parameter("relief", 0.16)          # (its strands, raised)
+				if flow:                                         # redrawn as strands: lit as hair, no relief (it carved
+					m.set_shader_parameter("hair_flow", flow)    # the strands into wood grain)
+					m.set_shader_parameter("strand_spec", 2.0)
+					m.set_shader_parameter("fuzz", 1.0)
+				else:
+					m.set_shader_parameter("relief", 0.16)      # (its strands, raised)
 				_hair_mat = m
 				m.set_shader_parameter("tint", Color(col.tint[0], col.tint[1], col.tint[2]))
 				m.set_shader_parameter("tint_mode", 1)
@@ -705,6 +712,23 @@ func _blend(mi: MeshInstance3D, target: String, w: float) -> void:
 		mi.set_blend_shape_value(i, w)
 
 
+## A hair texture's flow map (pipeline/hair_strands.py), or null when the hair wasn't redrawn. Linear (not sRGB, not
+## compressed): its channels are directions.
+static func hair_flow(tex: String) -> Texture2D:
+	var key := tex.to_lower()
+	if _flow_cache.has(key):
+		return _flow_cache[key]
+	var path := ProjectSettings.globalize_path("%s/fig3_textures/hairflow/%s.png" % [ROOT, key])
+	var t: Texture2D = null
+	if FileAccess.file_exists(path):
+		var img := Image.load_from_file(path)
+		if img:
+			img.generate_mipmaps()
+			t = ImageTexture.create_from_image(img)
+	_flow_cache[key] = t
+	return t
+
+
 func _tex(base: String) -> Texture2D:
 	var key := base.to_lower()
 	if _tex_cache.has(_texture_dir + key):
@@ -746,8 +770,53 @@ static func _finish(m: ShaderMaterial, tex: String) -> void:
 const SKIN_SHADING := "if (remaster_fx > 0.5) {\n\t\tSSS_STRENGTH = 0.05;\n\t\tROUGHNESS = 0.55;\n\t\tSPECULAR = 0.4;\n\t}\n\t//CUTOUT"
 
 
-static func _material(cutout: bool, single_sided := false, skin := false) -> ShaderMaterial:
-	var key := ("cutout" if cutout else "solid") + ("_cull" if single_sided else "") + ("_skin" if skin else "")
+## Remastered hair (owner 2026-11-05: "Let's do all of the vanilla hair styles"): its texture redrawn as strands
+## (pipeline/hair_strands.py), lit as hair - two highlights across the strands, white toward the roots and coloured
+## toward the tips (Kajiya-Kay), the strands' direction from the flow map beside each texture (hairflow/: R, G the
+## doubled angle in UV space, B the strand mask) - and its outline broken into strands where it's seen edge on.
+const HAIR_UNIFORMS := "uniform sampler2D hair_flow : filter_linear_mipmap;\nuniform float strand_spec = 0.0;\nuniform float fuzz = 0.0;\nvarying vec3 hair_t;"
+const HAIR_FRAGMENT := """vec4 hf = texture(hair_flow, UV);
+	{
+		float th = 0.5 * atan(hf.g * 2.0 - 1.0, hf.r * 2.0 - 1.0);
+		vec2 fl = vec2(cos(th), sin(th));
+		vec3 dp1 = dFdx(VERTEX);
+		vec3 dp2 = dFdy(VERTEX);
+		vec2 du1 = dFdx(UV);
+		vec2 du2 = dFdy(UV);
+		vec3 dp2p = cross(dp2, NORMAL);
+		vec3 dp1p = cross(NORMAL, dp1);
+		hair_t = normalize((dp2p * du1.x + dp1p * du2.x) * fl.x + (dp2p * du1.y + dp1p * du2.y) * fl.y + NORMAL * 1e-5);
+	}
+	//CUTOUT"""
+const HAIR_CUTOUT := """ALPHA = c.a;
+	if (remaster_fx > 0.5 && fuzz > 0.0) {
+		float edge = 1.0 - smoothstep(0.08, 0.45, abs(dot(NORMAL, VIEW)));
+		ALPHA = c.a * mix(1.0, smoothstep(0.25, 0.55, hf.b), edge * fuzz);
+	}
+	ALPHA_SCISSOR_THRESHOLD = 0.5;
+	ALPHA_ANTIALIASING_EDGE = 0.3;"""
+const HAIR_LIGHT := """
+void light() {
+	float ndl = dot(NORMAL, LIGHT);
+	if (remaster_fx < 0.5) {
+		DIFFUSE_LIGHT += clamp(ndl, 0.0, 1.0) * ATTENUATION * LIGHT_COLOR / PI;
+	} else {
+		DIFFUSE_LIGHT += clamp(ndl * 0.7 + 0.3, 0.0, 1.0) * ATTENUATION * LIGHT_COLOR / PI;
+		vec3 h = normalize(LIGHT + VIEW);
+		float d1 = dot(normalize(hair_t + NORMAL * 0.12), h);
+		float d2 = dot(normalize(hair_t - NORMAL * 0.12), h);
+		float s1 = pow(sqrt(max(0.0, 1.0 - d1 * d1)), 140.0);
+		float s2 = pow(sqrt(max(0.0, 1.0 - d2 * d2)), 36.0);
+		float vis = smoothstep(-0.1, 0.25, ndl) * ATTENUATION;
+		SPECULAR_LIGHT += (vec3(s1) * 0.55 + ALBEDO * s2 * 0.6) * strand_spec * vis * LIGHT_COLOR / PI;
+	}
+}
+"""
+
+
+static func _material(cutout: bool, single_sided := false, skin := false, hair := false) -> ShaderMaterial:
+	var key := ("cutout" if cutout else "solid") + ("_cull" if single_sided else "") + ("_skin" if skin else "") \
+		+ ("_hair" if hair else "")
 	if not _shaders.has(key):
 		var s := Shader.new()
 		var code := SHADER
@@ -755,7 +824,11 @@ static func _material(cutout: bool, single_sided := false, skin := false) -> Sha
 			code = code.replace("cull_disabled", "cull_back")
 		if skin:
 			code = code.replace("//CUTOUT", SKIN_SHADING)
-		if cutout:
+		if hair:
+			code = code.replace("varying vec2 logo_uv;", "varying vec2 logo_uv;\n" + HAIR_UNIFORMS)
+			code = code.replace("//CUTOUT", HAIR_FRAGMENT)
+			code = code.replace("//CUTOUT", HAIR_CUTOUT if cutout else "") + HAIR_LIGHT
+		elif cutout:
 			code = code.replace("//CUTOUT", "ALPHA = c.a;\n\tALPHA_SCISSOR_THRESHOLD = 0.5;")
 		s.code = code
 		_shaders[key] = s
