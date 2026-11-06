@@ -418,33 +418,74 @@ func _feature_rows(y: float) -> void:
 		_show("customize"))
 
 
-## The face's shape (pipeline/face_morphs.py's fx_ targets, figure.json 'face_shapes'): one slider each, -1 .. 1,
-## the middle the race's own face; right-click puts one back to the middle.
+## The face's shape, feature by feature (Fig3Figure.FACE_FEATURES over the fx_ sliders): each feature a named shape
+## to step through; its name toggles its sliders open for fine tuning (right-click one: back to the middle).
+var _tune := ""
+
 func _shape_rows(shapes: Array, y: float) -> void:
+	var have := {}
 	for fs in shapes:
-		var key := String(fs[0])
-		_label(String(fs[1]).to_upper(), 770, y, 112, 22, 13, CREAM, HORIZONTAL_ALIGNMENT_LEFT, "R")
-		var s := HSlider.new()
-		s.min_value = -1.0
-		s.max_value = 1.0
-		s.step = 0.05
-		s.value = float((draft.look.get("shape", {}) as Dictionary).get(key, 0.0))
-		s.value_changed.connect(func(v: float):
-			var sh: Dictionary = (_figure.look.get("shape", {}) as Dictionary).duplicate()
-			if absf(v) < 0.001:
-				sh.erase(key)
-			else:
-				sh[key] = snappedf(v, 0.05)
-			draft.look["shape"] = sh
-			_figure.set_shape(sh))
-		s.gui_input.connect(func(e: InputEvent):
-			if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_RIGHT:
-				s.value = 0.0
-				s.accept_event())
-		_at(s, 886, y + 2, 102, 18, "R")
-		y += 23
+		have[String(fs[0])] = String(fs[1])
+	var misc := _small("misc_pieces_new")
+	for feat in Fig3Figure.FACE_FEATURES:
+		var keys: Array = (feat[2] as Array).filter(func(k): return have.has(k))
+		if keys.is_empty():
+			continue
+		var fkey := String(feat[0])
+		var shape: Dictionary = _figure.look.get("shape", {})
+		var cur := Fig3Figure.feature_preset(feat, shape)
+		var tb := Button.new()                         # the feature's name: opens / closes its sliders
+		tb.text = ("- " if _tune == fkey else "+ ") + String(feat[1]).to_upper()
+		tb.flat = true
+		tb.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		tb.add_theme_font_size_override("font_size", 15)
+		tb.add_theme_color_override("font_color", CREAM)
+		tb.add_theme_color_override("font_hover_color", GOLD_HI)
+		_at(tb, 766, y, 100, 24, "R")
+		tb.pressed.connect(func():
+			_tune = "" if _tune == fkey else fkey
+			_show("customize"))
+		var n: int = (feat[3] as Array).size()
+		for side in 2:
+			var ab := TextureButton.new()
+			ab.texture_normal = _atlas(misc, Rect2(3 + side * 23, 200, 16, 13), 4)
+			ab.texture_hover = _atlas(misc, Rect2(3 + side * 23, 216, 16, 13), 4)
+			ab.ignore_texture_size = true
+			ab.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+			_at(ab, 866 + side * 104, y + 4, 16, 16, "R")
+			ab.pressed.connect(func():
+				var i: int = (cur + (1 if side == 1 else -1) + n) % n if cur >= 0 else (0 if side == 1 else n - 1)
+				_figure.set_shape(Fig3Figure.with_feature(feat, _figure.look.get("shape", {}), i))
+				draft.look = _figure.look.duplicate(true)
+				_show("customize"))
+		_label(String(feat[3][cur][0]).to_upper() if cur >= 0 else "CUSTOM", 882, y, 88, 24, 15, GOLD_HI,
+				HORIZONTAL_ALIGNMENT_CENTER, "R")
+		_lock("shape_" + fkey, y)
+		y += 27
+		if _tune == fkey:
+			for key in keys:
+				_label(String(have[key]).to_upper(), 786, y, 100, 22, 13, CREAM, HORIZONTAL_ALIGNMENT_LEFT, "R")
+				var s := HSlider.new()
+				s.min_value = -1.0
+				s.max_value = 1.0
+				s.step = 0.05
+				s.value = float(shape.get(key, 0.0))
+				s.value_changed.connect(func(v: float):
+					var sh: Dictionary = (_figure.look.get("shape", {}) as Dictionary).duplicate()
+					if absf(v) < 0.001:
+						sh.erase(key)
+					else:
+						sh[key] = snappedf(v, 0.05)
+					draft.look["shape"] = sh
+					_figure.set_shape(sh))
+				s.gui_input.connect(func(e: InputEvent):
+					if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_RIGHT:
+						s.value = 0.0
+						s.accept_event())
+				_at(s, 886, y + 2, 102, 18, "R")
+				y += 23
 	_bar_button("RANDOM", 776, 606, 108, 28, "R", func():
-		_figure.set_shape(_random_shape())
+		_figure.set_shape(_random_shape(true))
 		draft.look = _figure.look.duplicate(true)
 		_show("customize"))
 	_bar_button("DEFAULT", 892, 606, 108, 28, "R", func():
@@ -548,12 +589,15 @@ func _random_skin(all := false) -> Dictionary:
 	return out
 
 
-## A face of the race's own kind: a few features moved a little, never to the extremes.
-func _random_shape() -> Dictionary:
-	var sh := {}
-	for fs in _figure.meta.get("face_shapes", []):
-		if randf() < 0.6:
-			sh[String(fs[0])] = snappedf(clampf(randfn(0.0, 0.3), -0.7, 0.7), 0.05)
+## A face of the race's own kind: each feature its natural shape or now and then another named one (all: the SHAPE
+## page's own RANDOM, else the locked features stay).
+func _random_shape(all := false) -> Dictionary:
+	var sh: Dictionary = (_figure.look.get("shape", {}) as Dictionary).duplicate()
+	for feat in Fig3Figure.FACE_FEATURES:
+		if not all and locks.get("shape_" + String(feat[0]), false):
+			continue
+		var i := 0 if randf() < 0.5 else randi_range(1, (feat[3] as Array).size() - 1)
+		sh = Fig3Figure.with_feature(feat, sh, i)
 	return sh
 
 
@@ -804,8 +848,7 @@ func _randomize() -> void:
 		for i in f.meta.get("sliders", []).size():
 			arr.append(randi() % 9)
 		f.apply({"sliders": arr})
-	if not locks.get("shape", false):
-		f.set_shape(_random_shape())
+	f.set_shape(_random_shape())
 	if not (f.meta.get("skin_layers", {}) as Dictionary).is_empty():
 		f.apply(_random_skin())
 	draft.look = f.look.duplicate(true)
@@ -1398,8 +1441,9 @@ func _shots(folder: String) -> void:
 	_create_continue()
 	await save.call("4_customize")
 	if not _figure.meta.get("face_shapes", []).is_empty():
-		_figure.set_shape({"nose_tip": 0.6, "cheekbones": 0.5, "jaw_width": -0.4, "eye_size": 0.3, "chin_point": 0.4})
+		_figure.set_shape({"nose_tip": 0.8, "cheekbones": 0.8, "chin_point": 0.8, "chin_length": 0.2, "eye_size": 0.7})
 		draft.look = _figure.look.duplicate(true)
+		_tune = "nose"
 		_page = 1
 		_show("customize")
 		await save.call("5_shape")

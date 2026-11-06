@@ -460,6 +460,62 @@ func _layers(m: ShaderMaterial) -> void:
 	m.set_shader_parameter("layer_mode", modes)
 
 
+## The face, feature by feature (owner 2026-11-06: "choose from eye shapes, nose shapes, lip shapes ..."): each a set
+## of named shapes over its own sliders (look.shape, -1 .. 1; Natural = the race's own). The creator offers these and
+## keeps the sliders under each for fine tuning.
+const FACE_FEATURES := [
+	["eyes", "Eyes", ["eye_spacing", "eye_height", "eye_size", "eye_depth"], [
+		["Natural", {}], ["Large", {"eye_size": 0.7}], ["Small", {"eye_size": -0.6}], ["Deep-set", {"eye_depth": 0.8, "eye_size": -0.2}],
+		["Prominent", {"eye_depth": -0.7, "eye_size": 0.3}], ["Wide-set", {"eye_spacing": 0.7}], ["Close-set", {"eye_spacing": -0.7}],
+		["High", {"eye_height": 0.7}], ["Low", {"eye_height": -0.6}]]],
+	["brow", "Brow", ["brow_height", "brow_depth"], [
+		["Natural", {}], ["Heavy", {"brow_depth": 0.8, "brow_height": -0.3}], ["Smooth", {"brow_depth": -0.7}],
+		["High", {"brow_height": 0.7}], ["Low", {"brow_height": -0.6}]]],
+	["nose", "Nose", ["nose_width", "nose_length", "nose_height", "nose_bridge", "nose_tip"], [
+		["Natural", {}], ["Button", {"nose_length": -0.7, "nose_width": -0.2, "nose_tip": 0.5}], ["Upturned", {"nose_tip": 0.8}],
+		["Hawk", {"nose_bridge": 0.8, "nose_length": 0.5, "nose_tip": -0.6, "nose_width": -0.3}], ["Roman", {"nose_bridge": 0.7, "nose_length": 0.3}],
+		["Broad", {"nose_width": 0.8, "nose_height": -0.2}], ["Narrow", {"nose_width": -0.7}], ["Long", {"nose_length": 0.8, "nose_height": -0.4}],
+		["Flat", {"nose_length": -0.6, "nose_bridge": -0.6, "nose_width": 0.4}]]],
+	["cheeks", "Cheeks", ["cheekbones"], [
+		["Natural", {}], ["High", {"cheekbones": 0.8}], ["Soft", {"cheekbones": -0.5}], ["Hollow", {"cheekbones": -0.9}]]],
+	["mouth", "Mouth", ["mouth_width", "mouth_height", "lips"], [
+		["Natural", {}], ["Full", {"lips": 0.8}], ["Thin", {"lips": -0.7}], ["Wide", {"mouth_width": 0.7}],
+		["Small", {"mouth_width": -0.6, "lips": 0.2}], ["High", {"mouth_height": 0.6}], ["Low", {"mouth_height": -0.6}]]],
+	["jaw", "Jaw", ["jaw_width"], [
+		["Natural", {}], ["Square", {"jaw_width": 0.6}], ["Strong", {"jaw_width": 1.0}], ["Narrow", {"jaw_width": -0.6}],
+		["Delicate", {"jaw_width": -1.0}]]],
+	["chin", "Chin", ["chin_length", "chin_point"], [
+		["Natural", {}], ["Pointed", {"chin_point": 0.8, "chin_length": 0.2}], ["Short", {"chin_length": -0.7}],
+		["Long", {"chin_length": 0.8}], ["Jutting", {"chin_point": 1.0}], ["Receding", {"chin_point": -0.8}]]],
+	["ears", "Ears", ["ear_size", "ear_out", "ear_tilt"], [
+		["Natural", {}], ["Small", {"ear_size": -0.7}], ["Large", {"ear_size": 0.8}], ["Out", {"ear_out": 0.9}],
+		["Swept", {"ear_tilt": 0.9}], ["Large, Swept", {"ear_size": 0.6, "ear_tilt": 0.8}]]],
+]
+
+
+## Which named shape of a feature the look wears (its sliders all at that shape's values), -1: tuned by hand.
+static func feature_preset(feature: Array, shape: Dictionary) -> int:
+	var presets: Array = feature[3]
+	for i in presets.size():
+		var vals: Dictionary = presets[i][1]
+		var ok := true
+		for k in feature[2]:
+			if absf(float(shape.get(k, 0.0)) - float(vals.get(k, 0.0))) > 0.03:
+				ok = false
+				break
+		if ok:
+			return i
+	return -1
+
+
+## The shape with one feature set to its named shape i.
+static func with_feature(feature: Array, shape: Dictionary, i: int) -> Dictionary:
+	var out := shape.duplicate()
+	for k in feature[2]:
+		out.erase(k)
+	out.merge((feature[3][i][1] as Dictionary), true)
+	return out
+
 ## The face shapes alone (the creator's sliders call this as they move: no materials rebuilt).
 func set_shape(shape: Dictionary) -> void:
 	look["shape"] = shape
