@@ -328,6 +328,7 @@ func apply(changes: Dictionary) -> void:
 				m.set_shader_parameter("tint_mode", 1)
 				for mi in _parts(node):
 					mi.material_override = m
+				_scalp(si, String(col.tex), Color(col.tint[0], col.tint[1], col.tint[2]))
 	# face sliders: 0..8, 4 neutral; below 4 blends the low target, above 4 the high one
 	if head:
 		var values: Array = look.get("sliders", [])
@@ -712,6 +713,55 @@ func _blend(mi: MeshInstance3D, target: String, w: float) -> void:
 		mi.set_blend_shape_value(i, w)
 
 
+## The head's scalp under hair style si tinted to its colour (the mask and the hair textures' colours from
+## pipeline/scalp_masks.py; none: off).
+func _scalp(si: int, tex: String, tint: Color) -> void:
+	var head := _part("head")
+	if head == null:
+		return
+	var mask := scalp_mask(String(meta.get("prefix", "")), si)
+	var cols: Dictionary = scalp_colors()
+	var on := mask != null and not _hair_covered()
+	for mi in _parts("head"):
+		var m := mi.material_override as ShaderMaterial
+		if m == null:
+			continue
+		m.set_shader_parameter("scalp_on", 1.0 if on else 0.0)
+		if on:
+			var c: Array = cols.get(tex.to_lower(), [0.25, 0.2, 0.15])
+			m.set_shader_parameter("scalp_tex", mask)
+			m.set_shader_parameter("scalp_color", Color(c[0], c[1], c[2]) * tint * 0.75)   # (in the hair's shade)
+
+
+static var _scalp_cache := {}
+static var _scalp_colors = null
+
+
+static func scalp_mask(prefix: String, si: int) -> Texture2D:
+	var key := "%s_%d" % [prefix, si]
+	if _scalp_cache.has(key):
+		return _scalp_cache[key]
+	var path := ProjectSettings.globalize_path("%s/fig3_textures/scalp/%s.png" % [ROOT, key])
+	var t: Texture2D = null
+	if FileAccess.file_exists(path):
+		var img := Image.load_from_file(path)
+		if img:
+			t = ImageTexture.create_from_image(img)
+	_scalp_cache[key] = t
+	return t
+
+
+static func scalp_colors() -> Dictionary:
+	if _scalp_colors == null:
+		_scalp_colors = {}
+		var path := ProjectSettings.globalize_path("%s/fig3_textures/scalp/colors.json" % ROOT)
+		if FileAccess.file_exists(path):
+			var d = JSON.parse_string(FileAccess.get_file_as_string(path))
+			if d is Dictionary:
+				_scalp_colors = d
+	return _scalp_colors
+
+
 ## A hair texture's flow map (pipeline/hair_strands.py), or null when the hair wasn't redrawn. Linear (not sRGB, not
 ## compressed): its channels are directions.
 static func hair_flow(tex: String) -> Texture2D:
@@ -884,6 +934,11 @@ uniform vec3 sway_back = vec3(0.0, 0.0, -1.0);
 // stealth (Player hidden look): a dither instead of blending - the head, the hair and the body fade alike, with no
 // sorting between the parts (owner 2026-10-31: the head and hair stayed solid or vanished as the camera moved)
 uniform float fade = 1.0;
+// the scalp under the hair (pipeline/scalp_masks.py): the hair's colour, matte - a gap in the hair shows dark scalp,
+// not lit skin (owner 2026-11-05: a Sorceress's braid crown with a slit of shiny skin under it)
+uniform sampler2D scalp_tex : filter_linear, repeat_disable;
+uniform vec3 scalp_color : source_color = vec3(0.1);
+uniform float scalp_on = 0.0;
 varying vec2 logo_uv;
 
 void vertex() {
@@ -962,6 +1017,12 @@ void fragment() {
 		}
 	}
 	//CUTOUT
+	if (scalp_on > 0.0) {
+		float sm = texture(scalp_tex, UV).r * scalp_on;
+		ALBEDO = mix(ALBEDO, scalp_color, sm);
+		ROUGHNESS = mix(ROUGHNESS, 1.0, sm);
+		SPECULAR = mix(SPECULAR, 0.0, sm);
+	}
 }
 """
 
