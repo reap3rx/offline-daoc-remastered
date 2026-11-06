@@ -111,6 +111,20 @@ func _ready() -> void:
 			["Freckle band", {"freckles": 3}], ["Band dark", {"freckles": 3, "freckle_color": 2, "freckle_amt": 1.2}],
 			["Brows black", {"brow_color": 1}], ["Lips custom", {"lip_color_rgb": [0.7, 0.2, 0.35], "lip_amt": 0.6}],
 			["Sparse", {"freckles": 4}]]
+	if pset == "newhair":                           # the styles made from models (pipeline/import_hair.py)
+		presets = []
+		var styles: Array = fig.meta.get("hair_styles", [])
+		var cols := [1, 4, 8]
+		var k := 0
+		for si in styles.size():
+			if bool(styles[si].get("imported", false)):
+				for c in cols.slice(0, 2):
+					presets.append(["%s %d" % [styles[si].label, c], {"hair": si, "hair_color": c, "beard": 0}])
+				k += 1
+		var bs: Array = fig.meta.get("beards", [])
+		for b in bs.size():
+			if bool(bs[b].get("imported", false)) and presets.size() < 12:
+				presets.append(["Beard", {"hair": 0, "hair_color": 4, "beard": b + 1}])
 	if pset == "turban":                            # the Saracen men's turban over each hair style, dyed
 		presets = []
 		var k := 0
@@ -138,7 +152,7 @@ func _ready() -> void:
 		names.append(String(p[0]))
 	for i in presets.size():
 		var vals: Dictionary = presets[i][1]
-		if pset == "beard" or pset == "turban":
+		if pset == "beard" or pset == "turban" or pset == "newhair":
 			fig.look = {"face": 0, "hair_color": 1, "eyes": 2, "skin": 1}
 			fig.apply(vals)
 			vals = {}
@@ -147,6 +161,12 @@ func _ready() -> void:
 			fig.apply(fig.layered_changes())
 			fig.apply(vals)
 			vals = {}
+		if args.has("nohair"):                      # (debug: the style itself hidden - what is under it)
+			var sts: Array = fig.meta.get("hair_styles", [])
+			for st in sts:
+				if st.node != null:
+					for mh in fig._parts(String(st.node)):
+						mh.visible = false
 		for mi in heads:
 			var m := mi as MeshInstance3D
 			for b in m.get_blend_shape_count():

@@ -318,7 +318,7 @@ func apply(changes: Dictionary) -> void:
 		if node == null or not _meshes.has(node):
 			continue
 		for mi in _parts(node):
-			mi.visible = i == si and not _hair_covered()
+			mi.visible = i == si and not _hair_covered() and not _under_helm(styles[i])
 		if i == si:
 			var colours: Array = styles[i].colours
 			if colours.size() > 0:
@@ -328,6 +328,8 @@ func apply(changes: Dictionary) -> void:
 				for mi in _parts(node):
 					mi.material_override = m
 				_scalp(si, String(col.tex), Color(col.tint[0], col.tint[1], col.tint[2]))
+	# the cap under a new style (figure.json hair_under, pipeline/import_hair.py): in the style's colour
+	_hair_under(styles, si)
 	# the turban over the hair: its cloth from the original texture (the remastered one drew strands into it), dyed
 	var tb: Array = meta.get("turbans", [])
 	var ti := turban_index()
@@ -360,7 +362,7 @@ func apply(changes: Dictionary) -> void:
 			mi.visible = k + 1 == bi and not _hair_covered()
 		if k + 1 == bi:
 			var bst: Dictionary = styles[clampi(int(beards[k].style), 0, styles.size() - 1)]
-			var bcols: Array = bst.colours
+			var bcols: Array = beards[k].colours if (beards[k] as Dictionary).has("colours") else bst.colours
 			if bcols.size() > 0:
 				var bm := _hair_material(hair_colour(bcols) if custom_colour("hair_color") != null else bcols[_beard_colour(styles, bcols)])
 				for mi in _parts(bnode):
@@ -451,6 +453,29 @@ static var _layer_tex := {}                     # path -> the mask texture (shar
 ## 2026-11-06) rather than one of the original face textures (old characters, NPCs).
 func is_layered() -> bool:
 	return bool(look.get("v2", false)) and String((meta.get("skin_layers", {}) as Dictionary).get("base", "")) != ""
+
+
+## The scalp cap the models' styles wear under them (owner 2026-11-06: "used as a scalp shading solution ... same
+## color as the chosen hair style, and helped with any gaps"): shown under the worn style if it names it.
+func _hair_under(styles: Array, si: int) -> void:
+	var hu: Dictionary = meta.get("hair_under", {})
+	if hu.is_empty() or not _meshes.has(String(hu.node)):
+		return
+	var st: Dictionary = styles[si] if si >= 0 and si < styles.size() else {}
+	var on := String(st.get("under", "")) == String(hu.node) and not _hair_covered() and not _under_helm(st)
+	for mi in _parts(String(hu.node)):
+		mi.visible = on
+	if on and (st.colours as Array).size() > 0:
+		var col := hair_colour(st.colours)
+		var m := _hair_material({"tex": String(hu.tex), "tint": col.tint})
+		for mi in _parts(String(hu.node)):
+			mi.material_override = m
+
+
+## A hair style made from a model of our own (pipeline/import_hair.py) has no helm morphs to flatten it under a
+## helm: under one that would flatten hair it is not drawn.
+func _under_helm(style: Dictionary) -> bool:
+	return bool(style.get("imported", false)) and _helm != null and _helm_hair >= 2
 
 
 ## The worn beard: 1-based into figure.json "beards", 0 none. A look that never chose one wears its hair style's own
@@ -856,7 +881,7 @@ func _refresh_hair() -> void:
 		if node == null or not _meshes.has(node):
 			continue
 		for mi in _parts(node):
-			mi.visible = i == si and not _hair_covered()
+			mi.visible = i == si and not _hair_covered() and not _under_helm(styles[i])
 			# under a helm the hair takes that helm type's morph (flattened so it doesn't poke through), else none.
 			# Type 1 is the circlets' (the crafted hat06 circlets, the Crown of Zahur - nothing else uses it): a band
 			# that shows the hair, which stays as it is (owner 2026-10-14: circlets hid the hair - its morph tore the
@@ -866,6 +891,11 @@ func _refresh_hair() -> void:
 				(TURBAN_HAIR if turban_index() > 0 and int(styles[i].get("turban", 0)) == 0 else 0)
 			for k in morphs:
 				_blend(mi, String(morphs[k]), 1.0 if int(k) == under and under != 1 else 0.0)
+	if not (meta.get("hair_under", {}) as Dictionary).is_empty():
+		var hu: Dictionary = meta.hair_under
+		var sti: Dictionary = styles[si] if si < styles.size() else {}
+		for mi in _parts(String(hu.node)):
+			mi.visible = String(sti.get("under", "")) == String(hu.node) and not _hair_covered() and not _under_helm(sti)
 	var tb: Array = meta.get("turbans", [])
 	var ti := turban_index()
 	for k in tb.size():
