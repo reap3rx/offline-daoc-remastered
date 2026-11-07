@@ -4,6 +4,7 @@ extends Node
 ##   Godot --path new-client/godot -- --zone=0 --time=16 --probe=face_grid --mute --no-npcs --spot=450,600
 ##       --figure=zz_proto_bri_m [--out=<prefix>] [--angle=25]
 var v: Node
+var _fig: Fig3Figure
 
 const PRESETS := [
 	["Neutral", {}],
@@ -73,6 +74,7 @@ func _ready() -> void:
 	v.add_child(cam)
 	cam.make_current()
 	var fig := Fig3Figure.new()
+	_fig = fig
 	v.add_child(fig)
 	if not fig.load_figure(prefix):
 		print("[fg] no figure ", prefix)
@@ -150,6 +152,11 @@ func _ready() -> void:
 		var ms: Array = fig.meta.get("moustaches", [])
 		for m in ms.size():
 			presets.append(["%s - %s" % [ms[m].label, String(ms[m].get("mesh", "")).get_basename()], {"hair": bald, "beard": 0, "moustache": m + 1, "hair_color": 1, "scalp_cap": 1}])
+		var sb: Array = fig.meta.get("sideburns", [])
+		for m in sb.size():
+			presets.append(["%s - %s" % [sb[m].label, String(sb[m].get("mesh", "")).get_basename()], {"hair": bald, "beard": 0, "sideburns": m + 1, "hair_color": 1, "scalp_cap": 1}])
+		if args.get("rings", "") != "":             # (only the parts with rings, and the sideburns)
+			presets = presets.filter(func(pr): return String(pr[0]).begins_with("Sideburns") or _has_rings(pr[1]))
 		var f0 := int(args.get("from", "0"))
 		presets = presets.slice(f0, f0 + int(args.get("count", "999")))
 		var lf := FileAccess.open(out + "_names.txt", FileAccess.WRITE)
@@ -287,3 +294,16 @@ func _ready() -> void:
 		get_viewport().get_texture().get_image().save_png("%s_%02d.png" % [out, i])
 		print("[fg] ", i, " ", names[i])
 	get_tree().quit()
+
+
+func _has_rings(l: Dictionary) -> bool:
+	for kv in [["hair", "hair_styles", 0], ["beard", "beards", 1], ["moustache", "moustaches", 1]]:
+		if not l.has(String(kv[0])):
+			continue
+		var i := int(l[String(kv[0])]) - int(kv[2])
+		var list: Array = _fig.meta.get(String(kv[1]), [])
+		if (kv[0] == "hair" and l.has("moustache")) or (kv[0] == "hair" and int(l.get("beard", 0)) > 0):
+			continue                                   # (the bald style under a beard)
+		if i >= 0 and i < list.size() and (list[i] as Dictionary).has("jewels"):
+			return true
+	return false

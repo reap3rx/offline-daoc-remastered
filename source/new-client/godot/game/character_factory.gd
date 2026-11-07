@@ -64,6 +64,10 @@ static func random_look(prefix: String, rng: RandomNumberGenerator) -> Dictionar
 		var n := Fig3Figure.option_count_of(m, look, k)
 		if n > 0:
 			look[k] = rng.randi() % n
+	# (the hair styles a player may take: no hoods, none disabled for the race - Fig3Figure hair tuning)
+	var hair_ok := Fig3Figure.offered_of(m, prefix, "hair")
+	if not hair_ok.is_empty():
+		look["hair"] = hair_ok[rng.randi() % hair_ok.size()]
 	var hc := Fig3Figure.option_count_of(m, look, "hair_color")
 	if hc > 0:
 		look["hair_color"] = rng.randi() % hc

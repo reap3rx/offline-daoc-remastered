@@ -626,6 +626,8 @@ func _c_hair_style(p: Control, y: float) -> float:
 	var cur_i := int(draft.look.get("hair", 0))
 	var at := offer.find(cur_i)
 	var label := String(styles[cur_i].label) if cur_i >= 0 and cur_i < styles.size() else "-"
+	if cur_i >= 0 and cur_i < styles.size():
+		label += _tune_mark("hair", styles[cur_i])
 	return _c_cycle(p, "Hair Style", label, func(d: int):
 		var n: int = offer[(at + d + offer.size()) % offer.size()] if at >= 0 else offer[0]
 		_figure.apply({"hair": n, "hair_color": int(draft.look.get("hair_color", 0))})
@@ -818,18 +820,18 @@ func _skin_field(w: int, h: int) -> Image:
 
 ## A slider row (indented under its choice when sub).
 func _c_slider(p: Control, label: String, value: float, lo: float, hi: float, changed: Callable, y: float,
-		sub := true, reset := 0.0) -> float:
+		sub := true, reset := 0.0, step := 0.05) -> float:
 	_ctext(label.to_upper(), p, 0, y, 140 if sub else 112, 22, 12 if sub else 14, CREAM if not sub else Color(CREAM, 0.85),
 			HORIZONTAL_ALIGNMENT_RIGHT)
 	var s := HSlider.new()
 	s.min_value = lo
 	s.max_value = hi
-	s.step = 0.05
+	s.step = step
 	s.value = value
 	s.position = Vector2(150, y + 2)
 	s.size = Vector2(142, 18)
 	p.add_child(s)
-	s.value_changed.connect(func(v: float): changed.call(snappedf(v, 0.05)))
+	s.value_changed.connect(func(v: float): changed.call(snappedf(v, step)))
 	s.gui_input.connect(func(e: InputEvent):
 		if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_RIGHT:
 			s.value = reset
@@ -843,8 +845,9 @@ func _c_amount(p: Control, label: String, key: String, def: float, lo: float, hi
 		draft.look[key] = v, y, true, def)
 
 
-## The worn style's fit (Fig3Figure.HAIR_FIT, owner 2026-11-06): up / down, forward / back, size, width, length - each
-## style keeps its own (look.hair_fit by style node). Right-click a slider: back to as made.
+## The worn style's fit (Fig3Figure.HAIR_FIT, owner 2026-11-06): left / right, up / down, forward / back, size,
+## height, width, depth, wrap, length - each style keeps its own (look.hair_fit by style node). Right-click a slider:
+## back to as made (or as tuned).
 func _c_hair_fit(p: Control, y: float) -> float:
 	var styles: Array = _figure.meta.get("hair_styles", [])
 	var si := int(draft.look.get("hair", 0))
@@ -855,27 +858,99 @@ func _c_hair_fit(p: Control, y: float) -> float:
 	var bi := _figure.beard_index()
 	if bi > 0 and bi <= beards.size() and bool(beards[bi - 1].get("fit", false)):
 		y = _c_fit_rows(p, "BEARD FIT", String(beards[bi - 1].node), y)
-	var musts: Array = _figure.meta.get("moustaches", [])
-	var mu := int(draft.look.get("moustache", 0))
-	if mu > 0 and mu <= musts.size() and bool(musts[mu - 1].get("fit", false)):
-		y = _c_fit_rows(p, "MOUSTACHE FIT", String(musts[mu - 1].node), y)
+	for kind in Fig3Figure.FACE_HAIR:
+		var list: Array = _figure.meta.get(String(kind[1]), [])
+		var k := int(draft.look.get(String(kind[0]), 0))
+		if k > 0 and k <= list.size() and bool(list[k - 1].get("fit", false)):
+			y = _c_fit_rows(p, String(kind[2]).to_upper() + " FIT", String(list[k - 1].node), y)
 	return y
 
 
-## One part's fit sliders (Fig3Figure.HAIR_FIT), kept by its node in look.hair_fit. Right-click: back to as made.
+## One part's fit sliders (Fig3Figure.HAIR_FIT), kept by its node in look.hair_fit. Right-click: back to none. While
+## tuning (Fig3Figure.tuning_on), the race's save / disable / completed controls under them.
 func _c_fit_rows(p: Control, title: String, node: String, y: float) -> float:
 	y = _c_header(p, title, y + 4)
 	for f in Fig3Figure.HAIR_FIT:
 		var k := String(f[0])
 		y = _c_slider(p, String(f[1]), float(_figure.hair_fit_of(node).get(k, 0.0)), -1.0, 1.0, func(v: float):
 			var all: Dictionary = (draft.look.get("hair_fit", {}) as Dictionary).duplicate(true)
-			var one: Dictionary = all.get(node, {})
+			var one: Dictionary = all.get(node, _figure.hair_fit_of(node)).duplicate()
 			one[k] = v
 			all[node] = one
 			draft.look["hair_fit"] = all
 			_figure.look["hair_fit"] = all
-			_figure._apply_hair_fit(), y, true, 0.0)
+			_figure._apply_hair_fit(), y, true, 0.0, 0.01)
+	if Fig3Figure.tuning_on():
+		y = _c_tuning(p, node, y)
 	return y
+
+
+# --- hair tuning (owner 2026-11-06: "a tick box ... that says Disable for <race> ... put a (completed on <date>)
+# somewhere in that UI"): on the owner's machine only (Fig3Figure.tuning_on). Saved to hair_tuning/<race>.json.
+func _tune_race() -> String:
+	return "%s %s" % [String(RACES[realm][int(draft.race)][0]), "Male" if int(draft.gender) == 0 else "Female"]
+
+
+## " (done)" / " (disabled)" after a choice's name while tuning.
+func _tune_mark(kind: String, entry: Dictionary) -> String:
+	if not Fig3Figure.tuning_on() or entry.is_empty():
+		return ""
+	var part := Fig3Figure.tuning_part(_figure.race, Fig3Figure.part_key(kind, entry))
+	if bool(part.get("disabled", false)):
+		return " (disabled)"
+	return " (done)" if part.has("done") else ""
+
+
+func _c_tuning(p: Control, node: String, y: float) -> float:
+	var entry := _figure.part_entry(node)
+	if entry.is_empty():
+		return y
+	var rc := _figure.race
+	var key := Fig3Figure.part_key(String(entry._kind), entry)
+	var part := Fig3Figure.tuning_part(rc, key).duplicate(true)
+	var today := Time.get_date_string_from_system()
+	var off := bool(part.get("disabled", false))
+	y += 4
+	_cbutton("Save fit for " + _tune_race(), p, 8, y, CW - 16, 26, func():
+		part["fit"] = _figure.hair_fit_of(node).duplicate()
+		part["disabled"] = false
+		part["done"] = today
+		part["node"] = node
+		Fig3Figure.save_tuning_part(rc, key, part)
+		_redraw(), 13)
+	y += 30
+	_cbutton(("[X] " if off else "[  ] ") + "Disable for " + _tune_race(), p, 8, y, CW - 16, 26, func():
+		part["disabled"] = not off
+		part["done"] = today
+		part["node"] = node
+		Fig3Figure.save_tuning_part(rc, key, part)
+		_redraw(), 13, off)
+	y += 30
+	var when := "(completed on %s)" % String(part.done) if part.has("done") else "(not done yet)"
+	_ctext(when, p, 0, y, CW, 20, 12, Color(CREAM, 0.85), HORIZONTAL_ALIGNMENT_CENTER)
+	y += 20
+	var n := 0
+	var done := 0
+	for e in _figure.fit_parts():
+		n += 1
+		if Fig3Figure.tuning_part(rc, Fig3Figure.part_key(String(e._kind), e)).has("done"):
+			done += 1
+	_ctext("%s: %d of %d done" % [_tune_race(), done, n], p, 0, y, CW, 20, 12, GOLD, HORIZONTAL_ALIGNMENT_CENTER)
+	return y + 24
+
+
+## A beard / moustache / sideburns row: the choices offered for the race (Fig3Figure.offered - while tuning, all of
+## them, marked).
+func _c_face_hair(p: Control, label: String, key: String, kind: String, list: Array, y: float, cur: int) -> float:
+	var offer: Array = _figure.offered(kind)
+	if offer.size() <= 1:
+		return y
+	var at := offer.find(cur)
+	var shown := "None" if cur <= 0 or cur > list.size() else String(list[cur - 1].label) + _tune_mark(kind, list[cur - 1])
+	return _c_cycle(p, label, shown, func(d: int):
+		var n: int = offer[(at + d + offer.size()) % offer.size()] if at >= 0 else offer[0]
+		_figure.apply({key: n})
+		_redraw(), y, key)
 
 
 # --- FACE: skin and eye colour, hair, then the face feature by feature
@@ -899,11 +974,13 @@ func _c_face(p: Control, y: float) -> float:
 		if tcur > 0:
 			y = _c_colour(p, "Turban Color", "turban_color", Fig3Figure.TURBAN_COLORS, y)
 	if f.option_count("beard") > 1:                 # (men: the beards split off the hair styles)
-		y = _c_key(p, "Beard", "beard", ["None"] + f.meta.beards.map(func(x): return String(x.label)), y, f.beard_index())
-	if f.option_count("moustache") > 1:
-		y = _c_key(p, "Moustache", "moustache", ["None"] + f.meta.moustaches.map(func(x): return String(x.label)), y)
+		y = _c_face_hair(p, "Beard", "beard", "beard", f.meta.beards, y, f.beard_index())
+	for kind in Fig3Figure.FACE_HAIR:              # (moustaches; sideburns, owner 2026-11-06: "its own category")
+		if f.option_count(String(kind[0])) > 1:
+			y = _c_face_hair(p, String(kind[2]), String(kind[0]), String(kind[0]), f.meta[String(kind[1])], y,
+					int(f.look.get(String(kind[0]), 0)))
 	if f.option_count("hair_color") > 0 and (_hair_has_mesh() or f.beard_index() > 0 or f.scalp_cap_on() \
-			or int(f.look.get("moustache", 0)) > 0):
+			or int(f.look.get("moustache", 0)) > 0 or int(f.look.get("sideburns", 0)) > 0):
 		y = _c_colour(p, "Hair Color", "hair_color", _hair_colours(), y)
 	y = _c_hair_fit(p, y)
 	if not f.is_layered():
@@ -1341,10 +1418,11 @@ func _randomize() -> void:
 	if not locks.get("turban", false) and f.option_count("turban") > 0:
 		l["turban_color"] = randi() % Fig3Figure.TURBAN_COLORS.size()
 		l["turban_color_rgb"] = null
-	if not locks.get("beard", false) and f.option_count("beard") > 1:
-		l["beard"] = 0 if randf() < 0.35 else randi_range(1, f.option_count("beard") - 1)
-	if not locks.get("moustache", false) and f.option_count("moustache") > 1:
-		l["moustache"] = 0 if randf() < 0.6 else randi_range(1, f.option_count("moustache") - 1)
+	# (beards, moustaches, sideburns: of those not disabled for the race - hair tuning)
+	for fk in [["beard", 0.35], ["moustache", 0.6], ["sideburns", 0.7]]:
+		var offer: Array = f.offered(String(fk[0])).filter(func(x): return int(x) > 0)
+		if not locks.get(String(fk[0]), false) and not offer.is_empty():
+			l[String(fk[0])] = 0 if randf() < float(fk[1]) else int(offer[randi() % offer.size()])
 	f.apply(l)
 	if not locks.get("hair_color", false) and f.option_count("hair_color") > 0:
 		f.apply({"hair_color": randi() % f.option_count("hair_color")})

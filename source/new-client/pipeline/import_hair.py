@@ -9,7 +9,8 @@ taken out) so the race's hair colours tint it like the others.
 
 The models' own art stays on the owner's machine (content/ is not in the repository).
 
-    python import_hair.py <race folder> <spec.json>      spec: {"hair": [{"obj": path, "label": ...}], "beards": [...]}
+    python import_hair.py <race folder> <spec.json>      spec: {"hair": [{"obj": path, "label": ...}], "beards": [...],
+                                                                "moustaches": [...], "sideburns": [...]}
 """
 import json, sys, re
 from pathlib import Path
@@ -22,31 +23,95 @@ from face_morphs import G, build, weld  # noqa: E402
 GAP = 0.025          # the cap's distance off the skin, in head heights
 
 
-def load_obj(path):
+def _mtl_textures(path):
+    """Each material's texture (map_Kd) in the model's .mtl."""
+    out, cur = {}, None
+    mtl = Path(path).with_suffix('.mtl')
+    if mtl.exists():
+        for l in open(mtl, errors='ignore'):
+            if l.startswith('newmtl'):
+                cur = l.split(None, 1)[1].strip()
+            elif l.startswith('map_Kd') and cur:
+                out[cur] = l.split(None, 1)[1].strip()
+    return out
+
+
+def load_obj(path, jewels=False):
     """Positions in the head's frame (z up, the face toward -y), uvs, triangles - the hair geosets only (an export
-    with a body geoset beside the hair: that one dropped)."""
-    V, VT, F, FT = [], [], [], []
+    with a body geoset beside the hair: that one dropped). jewels: also the geoset drawn from the body's texture -
+    a dwarf beard's braid rings (owner 2026-11-06: "missing the models for the rings in them") - and a fourth
+    value, which triangles are those."""
+    tex = _mtl_textures(path)
+    V, VT, F, FT, J = [], [], [], [], []
     keep = True
+    jew = False
     for l in open(path, errors='ignore'):
         if l.startswith('v '):
             V.append([float(x) for x in l.split()[1:4]])
         elif l.startswith('vt '):
             VT.append([float(x) for x in l.split()[1:3]])
         elif l.startswith('usemtl'):
-            keep = l.strip().endswith('_Dbl') or not re.search(r'_\d+$', l.strip())
+            m = l.split(None, 1)[1].strip()
+            hair = m.endswith('_Dbl') or not re.search(r'_\d+$', m)
+            jew = not hair and 'Body' in tex.get(m, '')
+            keep = hair or (jewels and jew)
         elif l.startswith('f ') and keep:
             parts = [p.split('/') for p in l.split()[1:]]
             for k in range(1, len(parts) - 1):
                 tri = [parts[0], parts[k], parts[k + 1]]
                 F.append([int(p[0]) - 1 for p in tri])
                 FT.append([int(p[1]) - 1 if len(p) > 1 and p[1] else int(p[0]) - 1 for p in tri])
+                J.append(jew)
     V, VT, F, FT = np.array(V), np.array(VT), np.array(F), np.array(FT)
     # one vertex per corner (position + uv), then welded where both agree
     P = V[F.reshape(-1)][:, [2, 0, 1]] * [-1, -1, 1]
     UV = VT[FT.reshape(-1)] if len(VT) else np.zeros((len(P), 2))
     key = np.round(np.c_[P, UV] * 1e5).astype(np.int64)
     _, first, inv = np.unique(key, axis=0, return_index=True, return_inverse=True)
+    if jewels:
+        return P[first], UV[first], inv.reshape(-1, 3), np.array(J, bool)
     return P[first], UV[first], inv.reshape(-1, 3)
+
+
+def has_jewels(path):
+    tex = _mtl_textures(path)
+    return any(not (m.endswith('_Dbl') or not re.search(r'_\d+$', m)) and 'Body' in t for m, t in tex.items())
+
+
+def sub_mesh(Q, UV, T):
+    """The points these triangles use, renumbered."""
+    used = np.unique(T)
+    remap = np.full(len(Q), -1, np.int64)
+    remap[used] = np.arange(len(used))
+    return Q[used], UV[used], remap[T]
+
+
+def jewel_texture(obj, UV, tex_dirs):
+    """The rings' part of the body texture they're drawn from (its own small texture, upscaled; the uvs remapped
+    onto it). Untinted: metal stays metal whatever the hair colour."""
+    import hashlib
+    src = Path(obj).with_name(next(t for m, t in _mtl_textures(obj).items() if 'Body' in t))
+    img = cv2.imread(str(src), cv2.IMREAD_UNCHANGED)
+    h, w = img.shape[:2]
+    u0, v0 = np.floor(UV.min(0) * 64) / 64
+    u1, v1 = np.ceil(UV.max(0) * 64) / 64
+    u0, v0, u1, v1 = max(u0, 0), max(v0, 0), min(u1, 1), min(v1, 1)
+    crop = img[int(round((1 - v1) * h)):int(round((1 - v0) * h)), int(round(u0 * w)):int(round(u1 * w))]
+    tag = 'hj' + hashlib.md5(crop.tobytes()).hexdigest()[:10]
+    for d in tex_dirs:
+        dst = d / (tag + '.png')
+        if not dst.exists():
+            d.mkdir(parents=True, exist_ok=True)
+            if d.name == 'original' or crop.shape[1] > 320:     # (a big piece of the atlas: sharp enough as it is)
+                cv2.imwrite(str(dst), crop[..., :3])
+            else:
+                tmp = d.parent / 'hair_src' / (tag + '_c.png')
+                tmp.parent.mkdir(parents=True, exist_ok=True)
+                cv2.imwrite(str(tmp), crop[..., :3])
+                big = upscale(tmp, d.parent / 'hair_src' / (tag + '.png'))
+                cv2.imwrite(str(dst), cv2.imread(str(big), cv2.IMREAD_UNCHANGED)[..., :3])
+    UVn = np.c_[(UV[:, 0] - u0) / (u1 - u0), (UV[:, 1] - v0) / (v1 - v0)]
+    return tag, UVn
 
 
 def skin_frame(P, T):
@@ -355,13 +420,17 @@ def follow_face(g, node_name, Q, HP, hp, names, H):
     mesh['weights'] = [0.0] * len(fx)
 
 
-FIT = [('up', 'Up / Down'), ('fwd', 'Forward / Back'), ('size', 'Size'), ('width', 'Width'), ('len', 'Length')]
+FIT = [('lr', 'Left / Right'), ('up', 'Up / Down'), ('fwd', 'Forward / Back'), ('size', 'Size'), ('height', 'Height'),
+       ('width', 'Width'), ('depth', 'Depth'), ('wrap', 'Wrap'), ('len', 'Length')]
 
 
 def add_fit_targets(g, node_name, HP, marks, face=False):
     """Morph targets the creator's hair sliders drive (owner 2026-11-06: "could we have hair sliders ... placement,
-    size, and length"): hf_up / hf_fwd move the style, hf_size scales it about the skull, hf_width across, hf_len
-    stretches what hangs below the temples. At 1 each is a little (6% of the head up, 12% bigger, a third longer)."""
+    size, and length"; then: "A left/right slider ... one that kind of bends the sides backward (like curves the
+    sides more towards the jawline) ... breaking the size sliders into size height, and size width ... a slider that
+    affects the width from back to front", and freer ranges to fit every style by hand). Each a function of the point
+    alone, so a beard's rings (a mesh of their own) move with it. At 1: 10% of the head across, 15% up / forward,
+    35% bigger (all ways, or one), the sides drawn back, a long style 60% longer."""
     H = marks['H']
     eye = (marks['eyeL'] + marks['eyeR']) / 2
     sk = HP[HP[:, 2] > eye[2]]
@@ -382,9 +451,16 @@ def add_fit_targets(g, node_name, HP, marks, face=False):
         if len(prim.get('targets', [])) != len(names):
             prim['targets'] = prim.get('targets', [])[:len(names)]
         z = np.zeros_like(P)
-        ds = {'up': z + [0, 0, 0.06 * H], 'fwd': z + [0, -0.06 * H, 0], 'size': (P - cen) * 0.12,
-              'width': np.c_[(P[:, 0] - cen[0]) * 0.15, np.zeros(len(P)), np.zeros(len(P))],
-              'len': np.c_[np.zeros(len(P)), np.zeros(len(P)), np.minimum(P[:, 2] - zl, 0) * 0.35]}
+        o = np.zeros(len(P))
+        dx = P[:, 0] - cen[0]
+        ds = {'lr': z + [0.1 * H, 0, 0], 'up': z + [0, 0, 0.15 * H], 'fwd': z + [0, -0.15 * H, 0],
+              'size': (P - cen) * 0.35,
+              'height': np.c_[o, o, (P[:, 2] - cen[2]) * 0.35],
+              'width': np.c_[dx * 0.35, o, o],
+              'depth': np.c_[o, (P[:, 1] - cen[1]) * 0.35, o],
+              # the sides back (and a little in) by the square of the distance from the middle
+              'wrap': np.c_[-0.25 * dx * np.abs(dx) / H, 0.9 * dx ** 2 / H, o],
+              'len': np.c_[o, o, np.minimum(P[:, 2] - zl, 0) * 0.6]}
         for k, _ in FIT:
             prim.setdefault('targets', []).append({'POSITION': g.add_vec3(ds[k]), 'NORMAL': g.add_vec3(z)})
     mesh.setdefault('extras', {})['targetNames'] = names + ['hf_' + k for k, _ in FIT]
@@ -481,6 +557,12 @@ def face_frames(spec, native, HP, HN, marks):
             src = model_source(it['obj'])
             if src not in native:
                 into[src].append(load_obj(it['obj'])[0])
+    for it in spec.get('sideburns', []):           # (a model with sideburns only: sized as its beards would be)
+        src = model_source(it['obj'])
+        if src not in native and src not in beards and src not in musts:
+            beards.setdefault('side:' + src, []).append(load_obj(it['obj'])[0])
+    for k in [k for k in beards if k.startswith('side:')]:
+        beards[k[5:]] = beards.pop(k)
     out = {}
     for src in set(beards) | set(musts):
         bs, ms = beards.get(src, []), musts.get(src, [])
@@ -517,7 +599,7 @@ def group_places(items, HP, HN, marks, kind, frames=None):
             places[it['obj']] = fit(load_obj(it['obj'])[0], HP, HN, marks) + ('',)
         else:
             Q = load_obj(it['obj'])[0]
-            places[it['obj']] = fit_beard(Q, HP, HN, marks, width=1.08 if it.get('kind') == 'beards' else 0.62) + ('',)
+            places[it['obj']] = fit_beard(Q, HP, HN, marks, width=1.08 if it.get('kind') in ('beards', 'sideburns') else 0.62) + ('',)
     return places
 
 
@@ -593,7 +675,7 @@ def run(folder, spec_path, preview=None):
     faces = face_frames(spec, native, HP, HN, marks)
     for src, f_ in frames.items():
         print('frame %-50s by %s  scale %.3f' % (src[-50:], f_[3], f_[1][0]))
-    for kind in ('hair', 'beards', 'moustaches'):
+    for kind in ('hair', 'beards', 'moustaches', 'sideburns'):
         items = [dict(it, kind=kind) for it in spec.get(kind, [])]
         if not items:
             continue
@@ -601,12 +683,21 @@ def run(folder, spec_path, preview=None):
                               frames if kind == 'hair' else dict(frames, **faces))
         made = []
         for k, item in enumerate(items):
-            Q, UV, T = load_obj(item['obj'])
+            Q, UV, T, J = load_obj(item['obj'], jewels=True)
             place, par, c, by = places[item['obj']]
             Q = place(Q)
-            Q = push_out(Q, T, HP, HN, H)
+            Q = push_out(Q, T, HP, HN, H)            # (the rings with the hair: they stay in their braids)
+            node = {'hair': 'new_hair_%d', 'beards': 'new_beard_%d', 'moustaches': 'new_must_%d',
+                    'sideburns': 'new_side_%d'}[kind] % (k + 1)
+            jewel = None
+            if J.any():
+                Qj, UVj, Tj = sub_mesh(Q, UV, T[J])
+                jtag, UVj = jewel_texture(item['obj'], UVj, tex_dirs)
+                add_mesh(g, like, node + '_j', Qj, skin_frame(Qj, Tj), UVj, Tj, jhead)
+                jewel = {'node': node + '_j', 'tex': jtag}
+                out.append((node + '_j', Qj, Tj))
+                Q, UV, T = sub_mesh(Q, UV, T[~J])
             N = skin_frame(Q, T)
-            node = {'hair': 'new_hair_%d', 'beards': 'new_beard_%d', 'moustaches': 'new_must_%d'}[kind] % (k + 1)
             add_mesh(g, like, node, Q, N, UV, T, jhead)
             src = tex_of(item['obj'])
             tag = shared_tag(src, 'hx')
@@ -615,12 +706,14 @@ def run(folder, spec_path, preview=None):
             if kind == 'hair':
                 lab = item.get('label') or length_label(Q, marks)
             else:
-                lab = item.get('label') or {'beards': 'Beard', 'moustaches': 'Moustache'}[kind]
+                lab = item.get('label') or {'beards': 'Beard', 'moustaches': 'Moustache', 'sideburns': 'Sideburns'}[kind]
             counts[lab] = counts.get(lab, 0) + 1
             if not item.get('label'):
                 lab = '%s %d' % (lab, counts[lab])
             entry = {'label': lab, 'node': node, 'mesh': Path(item['obj']).name, 'colours': cols, 'imported': True,
                      'model': str(Path(item['obj']).parent.name) + '/' + Path(item['obj']).name}
+            if jewel:
+                entry['jewels'] = jewel
             if kind == 'hair':
                 entry['beard'] = 0
                 made.append((lab, entry))
@@ -628,7 +721,7 @@ def run(folder, spec_path, preview=None):
                 entry['style'] = 0
                 meta.setdefault('beards', []).append(entry)
             else:
-                meta.setdefault('moustaches', []).append(entry)
+                meta.setdefault(kind, []).append(entry)
             out.append((node, Q, T))
             print('%-12s %-30s %-12s scale %.3f  fit %.5f  %d tris%s' % (node, entry['model'][-30:], lab, par[0], c, len(T),
                                                                        ('  (frame %s)' % by) if by else ''))
@@ -643,10 +736,14 @@ def run(folder, spec_path, preview=None):
         if st.get('node') and st['node'] in have:
             add_fit_targets(g, st['node'], HP, marks)
             st['fit'] = True
-    for st in meta.get('beards', []) + meta.get('moustaches', []):   # (owner 2026-11-06: "some of the beards ...
-        if st.get('node') and st['node'] in have:                    # are too small" - their own sliders)
+            if st.get('jewels'):
+                add_fit_targets(g, st['jewels']['node'], HP, marks)
+    for st in meta.get('beards', []) + meta.get('moustaches', []) + meta.get('sideburns', []):   # (owner 2026-11-06:
+        if st.get('node') and st['node'] in have:                    # "some of the beards ... are too small")
             add_fit_targets(g, st['node'], HP, marks, face=True)
             st['fit'] = True
+            if st.get('jewels'):                                     # (the rings: the same moves, by the same sliders)
+                add_fit_targets(g, st['jewels']['node'], HP, marks, face=True)
     g.save(folder / 'figure.gltf')
     meta_path.write_text(json.dumps(meta, indent=1), encoding='utf-8')
     return HP, HT, out

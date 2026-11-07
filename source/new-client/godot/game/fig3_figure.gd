@@ -117,6 +117,12 @@ static func npc_look(id: String, meta: Dictionary) -> Dictionary:
 		return 0 if n <= 0 else absi(h / salt) % n
 	var look := {"face": count.call("face", {}, 1), "skin": 0, "hair": count.call("hair", {}, 13),
 			"eyes": count.call("eyes", {}, 31), "hair_color": 0}
+	var styles: Array = meta.get("hair_styles", [])               # (a style disabled for the race - hair tuning -
+	var pre := String(meta.get("prefix", ""))                      # gives way to one that isn't)
+	if styles.size() > 0 and part_disabled(pre, "hair", styles[clampi(int(look.hair), 0, styles.size() - 1)]):
+		var hair_ok := offered_of(meta, pre, "hair")
+		if not hair_ok.is_empty():
+			look["hair"] = hair_ok[absi(h / 13) % hair_ok.size()]
 	look["hair_color"] = count.call("hair_color", look.duplicate(), 97)
 	return look
 
@@ -319,6 +325,7 @@ func apply(changes: Dictionary) -> void:
 			continue
 		for mi in _parts(node):
 			mi.visible = i == si and not _hair_covered() and not _under_helm(styles[i])
+		_jewels(styles[i], i == si and not _hair_covered() and not _under_helm(styles[i]))
 		if i == si:
 			var colours: Array = styles[i].colours
 			if colours.size() > 0:
@@ -360,6 +367,7 @@ func apply(changes: Dictionary) -> void:
 			continue
 		for mi in _parts(bnode):
 			mi.visible = k + 1 == bi and not _hair_covered()
+		_jewels(beards[k], k + 1 == bi and not _hair_covered())
 		if k + 1 == bi:
 			var bst: Dictionary = styles[clampi(int(beards[k].style), 0, styles.size() - 1)]
 			var bcols: Array = beards[k].colours if (beards[k] as Dictionary).has("colours") else bst.colours
@@ -367,21 +375,24 @@ func apply(changes: Dictionary) -> void:
 				var bm := _hair_material(hair_colour(bcols) if custom_colour("hair_color") != null else bcols[_beard_colour(styles, bcols)])
 				for mi in _parts(bnode):
 					mi.material_override = bm
-	# the moustache (owner 2026-11-06: "a beard and moustache subfolder" - pipeline/import_hair.py): look.moustache,
-	# 1-based into figure.json "moustaches", 0 none; coloured as the beard is
-	var musts: Array = meta.get("moustaches", [])
-	var mu := clampi(int(look.get("moustache", 0)), 0, musts.size())
-	for k in musts.size():
-		var mn := String(musts[k].node)
-		if not _meshes.has(mn):
-			continue
-		for mi in _parts(mn):
-			mi.visible = k + 1 == mu and not _hair_covered()
-		if k + 1 == mu and (musts[k].colours as Array).size() > 0:
-			var mcols: Array = musts[k].colours
-			var mm := _hair_material(hair_colour(mcols) if custom_colour("hair_color") != null else mcols[_beard_colour(styles, mcols)])
+	# the moustache (owner 2026-11-06: "a beard and moustache subfolder" - pipeline/import_hair.py) and the sideburns
+	# ("meant to be used in conjunction with other beards"): look.moustache / look.sideburns, 1-based into figure.json
+	# "moustaches" / "sideburns", 0 none; coloured as the beard is
+	for kind in FACE_HAIR:
+		var list: Array = meta.get(String(kind[1]), [])
+		var worn := clampi(int(look.get(String(kind[0]), 0)), 0, list.size())
+		for k in list.size():
+			var mn := String(list[k].node)
+			if not _meshes.has(mn):
+				continue
 			for mi in _parts(mn):
-				mi.material_override = mm
+				mi.visible = k + 1 == worn and not _hair_covered()
+			_jewels(list[k], k + 1 == worn and not _hair_covered())
+			if k + 1 == worn and (list[k].colours as Array).size() > 0:
+				var mcols: Array = list[k].colours
+				var mm := _hair_material(hair_colour(mcols) if custom_colour("hair_color") != null else mcols[_beard_colour(styles, mcols)])
+				for mi in _parts(mn):
+					mi.material_override = mm
 	if not (meta.get("turbans", []) as Array).is_empty():
 		_refresh_hair()                                # (the hair under the turban takes its cap morph)
 	# face sliders: 0..8, 4 neutral; below 4 blends the low target, above 4 the high one
@@ -421,7 +432,12 @@ const TURBAN_HAIR := 2
 ## The creator's hair sliders (owner 2026-11-06: "hair sliders so that way players ... can also try to get the hair
 ## placement, size, and length correct"): the hf_ morph targets pipeline/import_hair.py puts on every style, kept per
 ## style in look.hair_fit {style node: {key: -1..1}}.
-const HAIR_FIT := [["up", "Up / Down"], ["fwd", "Forward / Back"], ["size", "Size"], ["width", "Width"], ["len", "Length"]]
+## (Then: "A left/right slider ... one that kind of bends the sides backward ... size height, and size width ... the
+## width from back to front" - and wider, to fit each style by hand.)
+const HAIR_FIT := [["lr", "Left / Right"], ["up", "Up / Down"], ["fwd", "Forward / Back"], ["size", "Size"],
+	["height", "Height"], ["width", "Width"], ["depth", "Depth"], ["wrap", "Wrap"], ["len", "Length"]]
+## The face hair worn beside a beard: [look key, figure.json list, the creator's label].
+const FACE_HAIR := [["moustache", "moustaches", "Moustache"], ["sideburns", "sideburns", "Sideburns"]]
 const TURBAN_COLORS := [Color(0.92, 0.9, 0.84), Color(0.2, 0.18, 0.16), Color(0.55, 0.12, 0.1), Color(0.16, 0.24, 0.5),
 	Color(0.18, 0.36, 0.2), Color(0.72, 0.56, 0.24), Color(0.42, 0.3, 0.2), Color(0.4, 0.16, 0.42)]
 
@@ -448,6 +464,8 @@ func creator_styles() -> Array:
 		if bool(styles[i].get("hood", false)):
 			continue
 		if int(styles[i].get("turban", 0)) > 0 and not on:
+			continue
+		if not tuning_on() and part_disabled(race, "hair", styles[i]):
 			continue
 		out.append(i)
 	return out
@@ -492,20 +510,133 @@ func _hair_under() -> void:
 			mi.material_override = m
 
 
-## The worn style's own hair-slider values (look.hair_fit, by style node).
+## A style's hair-slider values: the look's own (look.hair_fit, by style node), else the fit tuned for this race
+## (hair tuning, below), else none.
 func hair_fit_of(node: String) -> Dictionary:
-	return (look.get("hair_fit", {}) as Dictionary).get(node, {})
+	var own: Dictionary = look.get("hair_fit", {})
+	if own.has(node):
+		return own[node]
+	var entry := part_entry(node)
+	if entry.is_empty():
+		return {}
+	return (tuning_part(race, part_key(String(entry.get("_kind", "hair")), entry)).get("fit", {}) as Dictionary)
+
+
+## Every part with fit sliders: hair styles, beards, moustaches, sideburns (each entry tagged with its kind).
+func fit_parts() -> Array:
+	var out := []
+	for kind in [["hair", "hair_styles"], ["beard", "beards"], ["moustache", "moustaches"], ["sideburns", "sideburns"]]:
+		for st in meta.get(String(kind[1]), []):
+			if st.node != null and bool(st.get("fit", false)):
+				var e: Dictionary = st.duplicate()
+				e["_kind"] = kind[0]
+				out.append(e)
+	return out
+
+
+func part_entry(node: String) -> Dictionary:
+	for e in fit_parts():
+		if String(e.node) == node:
+			return e
+	return {}
 
 
 func _apply_hair_fit() -> void:
-	var styles: Array = meta.get("hair_styles", []) + meta.get("beards", []) + meta.get("moustaches", [])
-	for st in styles:
-		if st.node == null or not _meshes.has(String(st.node)) or not bool(st.get("fit", false)):
+	for st in fit_parts():
+		if not _meshes.has(String(st.node)):
 			continue
 		var fit := hair_fit_of(String(st.node))
-		for mi in _parts(String(st.node)):
-			for f in HAIR_FIT:
-				_blend(mi, "hf_" + String(f[0]), clampf(float(fit.get(String(f[0]), 0.0)), -1.0, 1.0))
+		var nodes := [String(st.node)]
+		if st.has("jewels"):
+			nodes.append(String(st.jewels.node))
+		for nd in nodes:
+			for mi in _parts(nd):
+				for f in HAIR_FIT:
+					_blend(mi, "hf_" + String(f[0]), clampf(float(fit.get(String(f[0]), 0.0)), -1.0, 1.0))
+
+
+## A part's rings (a dwarf beard's braids, owner 2026-11-06: "missing the models for the rings"): drawn from their own
+## texture, untinted, shown with the part.
+func _jewels(entry: Dictionary, on: bool) -> void:
+	if not entry.has("jewels") or not _meshes.has(String(entry.jewels.node)):
+		return
+	for mi in _parts(String(entry.jewels.node)):
+		mi.visible = on
+	if on:
+		var m := _material(false)
+		m.set_shader_parameter("albedo_tex", _tex(String(entry.jewels.tex)))
+		m.set_shader_parameter("tint", Color.WHITE)
+		m.set_shader_parameter("tint_mode", 0)
+		for mi in _parts(String(entry.jewels.node)):
+			mi.material_override = m
+
+
+# --- hair tuning (owner 2026-11-06: "enable all hairstyles ... have a tick box ... Disable for <race> ... put a
+# (completed on <date>) somewhere in that UI"): on the owner's machine only - the folder beside the pipeline exists
+# - the creator saves each part's fit per race, or disables it for that race, in hair_tuning/<race>.json:
+#   {"race": "lur_m", "parts": {"<kind>:<model or node>": {"fit": {..}, "disabled": bool, "done": "2026-11-07"}}}
+# The saved fit is every figure's default for that part (players' own sliders over it); a disabled part is left
+# out of the creator and of bots' and NPCs' looks. pipeline/import_hair.py later bakes the fits in.
+static var _tuning := {}                    # race -> its tuning file, read once
+
+
+static func tuning_dir() -> String:
+	return ProjectSettings.globalize_path("res://").path_join("../../source/new-client/pipeline/hair_tuning").simplify_path()
+
+
+static func tuning_on() -> bool:
+	return DirAccess.dir_exists_absolute(tuning_dir())
+
+
+static func tuning(race_: String) -> Dictionary:
+	if not _tuning.has(race_):
+		var path := tuning_dir().path_join(race_ + ".json")
+		var d = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
+		_tuning[race_] = d if d is Dictionary else {"race": race_, "parts": {}}
+	return _tuning[race_]
+
+
+static func part_key(kind: String, entry: Dictionary) -> String:
+	var m := String(entry.get("model", ""))
+	return "%s:%s" % [kind, m if m != "" else String(entry.get("node", ""))]
+
+
+static func tuning_part(race_: String, key: String) -> Dictionary:
+	return (tuning(race_).get("parts", {}) as Dictionary).get(key, {})
+
+
+static func save_tuning_part(race_: String, key: String, part: Dictionary) -> void:
+	var t := tuning(race_)
+	var parts: Dictionary = t.get("parts", {})
+	parts[key] = part
+	t["parts"] = parts
+	DirAccess.make_dir_recursive_absolute(tuning_dir())
+	var f := FileAccess.open(tuning_dir().path_join(race_ + ".json"), FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify(t, " ", true))
+		f.close()
+
+
+static func part_disabled(race_: String, kind: String, entry: Dictionary) -> bool:
+	return bool(tuning_part(race_, part_key(kind, entry)).get("disabled", false))
+
+
+## The choices of one kind a look may take (1-based for beards / moustaches / sideburns, 0 = none always offered;
+## 0-based hair style indices): all but those disabled for the race - all of them while tuning (shown, marked).
+static func offered_of(meta_: Dictionary, race_: String, kind: String, tuning_view := false) -> Array:
+	var lists := {"beard": "beards", "moustache": "moustaches", "sideburns": "sideburns", "hair": "hair_styles"}
+	var list: Array = meta_.get(String(lists[kind]), [])
+	var out := [] if kind == "hair" else [0]
+	for i in list.size():
+		if kind == "hair" and (bool(list[i].get("hood", false)) or int(list[i].get("turban", 0)) > 0):
+			continue
+		if tuning_view or not part_disabled(race_, kind, list[i]):
+			out.append(i if kind == "hair" else i + 1)
+	return out
+
+
+func offered(kind: String) -> Array:
+	return offered_of(meta, race, kind, tuning_on())
 
 
 func scalp_cap_on() -> bool:
@@ -809,9 +940,13 @@ func _apply_shape() -> void:
 		for st in styles:
 			if st.node != null and _meshes.has(st.node):
 				meshes.append_array(_parts(st.node))
-		for b in meta.get("beards", []) + meta.get("moustaches", []) + meta.get("turbans", []) + [meta.get("hair_under", {"node": ""})]:
+		for b in meta.get("beards", []) + meta.get("moustaches", []) + meta.get("sideburns", []) + meta.get("turbans", []) \
+				+ [meta.get("hair_under", {"node": ""})]:
 			if _meshes.has(String(b.node)):
 				meshes.append_array(_parts(String(b.node)))
+		for b in styles + meta.get("beards", []) + meta.get("moustaches", []) + meta.get("sideburns", []):
+			if b.has("jewels") and _meshes.has(String(b.jewels.node)):    # (a beard's rings, with it)
+				meshes.append_array(_parts(String(b.jewels.node)))
 		for fs in shapes:
 			var w := clampf(float(shape.get(String(fs[0]), 0.0)), -1.0, 1.0)
 			for mi in meshes:
@@ -941,10 +1076,12 @@ func _refresh_hair() -> void:
 		if _meshes.has(String(tb[k].node)):
 			for mi in _parts(String(tb[k].node)):
 				mi.visible = k + 1 == ti and not _hair_covered() and _helm == null
-	var musts: Array = meta.get("moustaches", [])
-	for k in musts.size():
-		for mi in _parts(String(musts[k].node)):
-			mi.visible = k + 1 == int(look.get("moustache", 0)) and not _hair_covered()
+	for kind in FACE_HAIR:
+		var list: Array = meta.get(String(kind[1]), [])
+		for k in list.size():
+			for mi in _parts(String(list[k].node)):
+				mi.visible = k + 1 == int(look.get(String(kind[0]), 0)) and not _hair_covered()
+			_jewels(list[k], k + 1 == int(look.get(String(kind[0]), 0)) and not _hair_covered())
 	var beards: Array = meta.get("beards", [])
 	var bi := beard_index()
 	for k in beards.size():
@@ -952,6 +1089,7 @@ func _refresh_hair() -> void:
 		if not _meshes.has(bnode):
 			continue
 		var morphs: Dictionary = meta.get("helm_hair", {}).get(bnode, {})
+		_jewels(beards[k], k + 1 == bi and not _hair_covered())
 		for mi in _parts(bnode):
 			mi.visible = k + 1 == bi and not _hair_covered()
 			for h in morphs:
@@ -1253,6 +1391,7 @@ static func option_count_of(meta: Dictionary, look: Dictionary, key: String) -> 
 		"hair": return meta.get("hair_styles", []).size()
 		"beard": return meta.get("beards", []).size() + 1
 		"moustache": return meta.get("moustaches", []).size() + 1 if not (meta.get("moustaches", []) as Array).is_empty() else 0
+		"sideburns": return meta.get("sideburns", []).size() + 1 if not (meta.get("sideburns", []) as Array).is_empty() else 0
 		"turban": return meta.get("turbans", []).size() + 1 if not (meta.get("turbans", []) as Array).is_empty() else 0
 		"hair_color":
 			var styles: Array = meta.get("hair_styles", [])
