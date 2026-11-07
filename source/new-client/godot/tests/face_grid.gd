@@ -88,8 +88,10 @@ func _ready() -> void:
 	var sk: Skeleton3D = fig.model.find_children("*", "Skeleton3D", true, false)[0]
 	var target: Vector3 = sk.global_transform * sk.get_bone_global_pose(sk.find_bone("Bip01 Head")).origin
 	var fwd: Vector3 = (fig.global_transform.basis * Vector3(0, 0, 1)).normalized()
-	cam.global_position = target + fwd.rotated(Vector3.UP, deg_to_rad(angle)) * 0.85 * fig.scale.x + Vector3(0, 0.03, 0)
-	cam.look_at(target + Vector3(0, 0.02, 0))
+	var dist := float(args.get("dist", "0.85"))          # (--dist: further for the big heads - a dwarf's filled the frame)
+	var lift := float(args.get("lift", "0.0"))
+	cam.global_position = target + fwd.rotated(Vector3.UP, deg_to_rad(angle)) * dist * fig.scale.x + Vector3(0, 0.03 + lift, 0)
+	cam.look_at(target + Vector3(0, 0.02 + lift, 0))
 	var heads: Array = fig.model.find_children("*", "MeshInstance3D", true, false)
 	var pset := String(args.get("presets", ""))
 	var presets: Array = MOUTH if pset == "mouth" else (SKIN if pset == "skin" else PRESETS)

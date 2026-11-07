@@ -465,29 +465,42 @@ def model_frames(frames, HP, HN, marks):
 
 def face_frames(spec, native, HP, HN, marks):
     """Beards and moustaches of a WoW model whose hair isn't this race's own (a dwarf's beard on a Briton): placed by
-    the face, not the skull - its skull's frame put a dwarf's beard over the eyes (their faces aren't ours). The
-    model's middling moustache sets it: under the nose, as wide as a moustache on this mouth; its beards follow."""
+    the face, not the skull - its skull's frame put a dwarf's beard over the eyes (their faces aren't ours). Sized by
+    the model's beards: the top of a beard (its cheeks) as wide as this jaw, the median over the model's beards (by
+    its moustaches alone they came out "much too small", owner 2026-11-06); placed by its moustaches: their tops (the
+    nose) under this nose. A model with moustaches only: as wide as a moustache on this mouth."""
     from collections import defaultdict
     H = marks['H']
     mouth, chin = marks['mouth'], marks['chin']
     jaw = HP[(HP[:, 2] < mouth[2]) & (HP[:, 2] > chin[2] - 0.05 * H) & (HP[:, 1] < mouth[1] + 0.25 * H)]
     jw = np.ptp(jaw[:, 0])
-    by = defaultdict(list)
-    for it in spec.get('moustaches', []):
-        src = model_source(it['obj'])
-        if src not in native:
-            by[src].append(it['obj'])
+    c_h = np.array([mouth[0], mouth[1] - 0.03 * H, marks['nose_tip'][2] - 0.035 * H])
+    beards, musts = defaultdict(list), defaultdict(list)
+    for kind, into in (('beards', beards), ('moustaches', musts)):
+        for it in spec.get(kind, []):
+            src = model_source(it['obj'])
+            if src not in native:
+                into[src].append(load_obj(it['obj'])[0])
     out = {}
-    for src, objs in by.items():
-        Qs = [(np.ptp(load_obj(o)[0][:, 0]), o) for o in objs]
-        Qs.sort()
-        w, o = Qs[len(Qs) // 2]
-        Q = load_obj(o)[0]
-        s_ = jw * 0.62 / max(w, 1e-9)
-        c_q = np.array([(Q[:, 0].max() + Q[:, 0].min()) / 2, Q[:, 1].min(), Q[:, 2].max()])
-        c_h = np.array([mouth[0], mouth[1] - 0.03 * H, marks['nose_tip'][2] - 0.035 * H])
-        out[src] = ((lambda pts, c_q=c_q, s_=s_, c_h=c_h: (pts - c_q) * s_ + c_h), np.array([s_, 0, 0]), 0.0,
-                    'face ' + Path(o).name)
+    for src in set(beards) | set(musts):
+        bs, ms = beards.get(src, []), musts.get(src, [])
+        if bs:
+            rows = []
+            for Q in bs:
+                band = Q[Q[:, 2] > Q[:, 2].max() - 0.3 * np.ptp(Q[:, 2])]
+                rows.append((jw * 1.15 / max(np.ptp(band[:, 0]), 1e-9), Q))
+            s_ = float(np.median([r[0] for r in rows]))
+            Qr = min(rows, key=lambda r: abs(r[0] - s_))[1]
+            band = Qr[Qr[:, 2] > Qr[:, 2].max() - 0.3 * np.ptp(Qr[:, 2])]
+            c_q = np.array([(band[:, 0].max() + band[:, 0].min()) / 2, band[:, 1].min(), Qr[:, 2].max()])
+            how = 'beards'
+        else:
+            ws = sorted((np.ptp(Q[:, 0]), i) for i, Q in enumerate(ms))
+            s_ = jw * 0.62 / max(ws[len(ws) // 2][0], 1e-9)
+            how = 'moustaches'
+        if ms:
+            c_q = np.median(np.array([[(m[:, 0].max() + m[:, 0].min()) / 2, m[:, 1].min(), m[:, 2].max()] for m in ms]), 0)
+        out[src] = ((lambda pts, c_q=c_q, s_=s_: (pts - c_q) * s_ + c_h), np.array([s_, 0, 0]), 0.0, 'face by ' + how)
     return out
 
 
@@ -532,6 +545,9 @@ def run(folder, spec_path, preview=None):
         print('already imported:', folder.name)
         return
     like = nodes[next(s['node'] for s in styles if s.get('node') and s['node'] in nodes)]
+    if not any(s_.get('node') and s_['colours'] and 'rgb' in s_['colours'][0] for s_ in styles):
+        from split_beards import colour_rgb          # (a race whose hair had no beard to split: not measured yet)
+        colour_rgb(folder, meta)
     base_cols = next(s['colours'] for s in styles if s.get('node') and s['colours'] and 'rgb' in s['colours'][0])
     prefix = meta['prefix']
     tex_dirs = [folder.parent.parent / 'fig3_textures' / d for d in ('x4plus', 'original')]
@@ -566,7 +582,14 @@ def run(folder, spec_path, preview=None):
     # the styles, beards and moustaches (owner 2026-11-06: sorted by head group - pipeline: claude-work/make_specs.py)
     counts = {}
     native = {model_source(it['obj']) for it in spec.get('hair', [])}
-    frames = model_frames({k: v for k, v in spec.get('frames', {}).items() if k in native}, HP, HN, marks)
+    # (candidates: the model's styles in this race's own list too - the widest from other folders alone missed the
+    # good ones: an elf's short styles sank into her head)
+    cands = {k: list(v) for k, v in spec.get('frames', {}).items() if k in native}
+    for it in spec.get('hair', []):
+        cands.setdefault(model_source(it['obj']), [])
+        if it['obj'] not in cands[model_source(it['obj'])]:
+            cands[model_source(it['obj'])].append(it['obj'])
+    frames = model_frames(cands, HP, HN, marks)
     faces = face_frames(spec, native, HP, HN, marks)
     for src, f_ in frames.items():
         print('frame %-50s by %s  scale %.3f' % (src[-50:], f_[3], f_[1][0]))
