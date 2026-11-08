@@ -508,6 +508,60 @@
    },
    "node": "new_hair_10"
   },
+  "hair:hair_1": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_1"
+  },
+  "hair:hair_2": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_2"
+  },
+  "hair:hair_3": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "width": -0.05
+   },
+   "node": "hair_3"
+  },
+  "hair:hair_4": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "size": -0.01
+   },
+   "node": "hair_4"
+  },
+  "hair:hair_5": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "len": -0.01
+   },
+   "node": "hair_5"
+  },
+  "hair:hair_6": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_6"
+  },
+  "hair:hair_7": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_7"
+  },
+  "hair:hair_8": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_8"
+  },
   "moustache:Moustaches/Var 10.obj": {
    "disabled": true,
    "done": "2026-11-08",
@@ -707,6 +761,41 @@
     "up": -0.72
    },
    "node": "new_must_23"
+  },
+  "sideburns:Beards/Var 2aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.64,
+    "fwd": 1.0,
+    "height": -0.63,
+    "size": -0.88,
+    "up": 0.42,
+    "width": -0.12,
+    "wrap": -0.01
+   },
+   "node": "new_side_1"
+  },
+  "sideburns:Beards/Var 2aaa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "size": -0.11,
+    "up": -0.29
+   },
+   "node": "new_side_2"
+  },
+  "sideburns:Beards/Var 3aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.57,
+    "fwd": 1.0,
+    "height": -0.72,
+    "size": -1.0,
+    "up": 0.66
+   },
+   "node": "new_side_3"
   }
  },
  "race": "lur_m"

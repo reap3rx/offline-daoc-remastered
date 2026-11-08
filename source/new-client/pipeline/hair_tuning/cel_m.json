@@ -1,5 +1,314 @@
 {
  "parts": {
+  "beard:Beards/Var 10.obj": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "node": "new_beard_23"
+  },
+  "beard:Beards/Var 11.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 1.0,
+    "fwd": -0.02,
+    "height": 0.55,
+    "len": 0.0,
+    "up": -0.19,
+    "wrap": 0.7
+   },
+   "node": "new_beard_24"
+  },
+  "beard:Beards/Var 12.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 1.0,
+    "fwd": -0.22,
+    "height": 1.0,
+    "size": 1.0,
+    "up": -0.14,
+    "width": -0.49,
+    "wrap": 0.63
+   },
+   "node": "new_beard_25"
+  },
+  "beard:Beards/Var 1a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.23,
+    "width": 0.02,
+    "wrap": 0.88
+   },
+   "node": "new_beard_1"
+  },
+  "beard:Beards/Var 2.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.08,
+    "len": -0.23,
+    "up": -0.26,
+    "wrap": 1.0
+   },
+   "node": "new_beard_2"
+  },
+  "beard:Beards/Var 2a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 0.15,
+    "fwd": -0.23,
+    "lr": -0.14,
+    "up": -0.19,
+    "width": -0.33
+   },
+   "node": "new_beard_3"
+  },
+  "beard:Beards/Var 3.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.29,
+    "up": -0.27,
+    "wrap": 1.0
+   },
+   "node": "new_beard_4"
+  },
+  "beard:Beards/Var 3a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.19,
+    "lr": -0.09,
+    "size": -0.24,
+    "up": -0.15,
+    "width": -0.12
+   },
+   "node": "new_beard_5"
+  },
+  "beard:Beards/Var 3aaa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.11,
+    "len": -0.35,
+    "up": 0.16,
+    "width": 0.08,
+    "wrap": 0.35
+   },
+   "node": "new_beard_6"
+  },
+  "beard:Beards/Var 4.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 0.15,
+    "fwd": 0.14,
+    "lr": -0.01,
+    "up": -0.41,
+    "width": -0.48,
+    "wrap": 1.0
+   },
+   "node": "new_beard_7"
+  },
+  "beard:Beards/Var 4a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 0.22,
+    "fwd": -0.07,
+    "size": -0.28,
+    "up": -0.48,
+    "width": 0.14,
+    "wrap": 0.9
+   },
+   "node": "new_beard_8"
+  },
+  "beard:Beards/Var 4aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 0.04,
+    "fwd": -0.11,
+    "up": -0.02,
+    "width": 0.07,
+    "wrap": 1.0
+   },
+   "node": "new_beard_9"
+  },
+  "beard:Beards/Var 5.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.02,
+    "len": 0.01,
+    "up": -0.46,
+    "wrap": 1.0
+   },
+   "node": "new_beard_10"
+  },
+  "beard:Beards/Var 5a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.11,
+    "lr": -0.06,
+    "up": -0.32,
+    "wrap": 1.0
+   },
+   "node": "new_beard_11"
+  },
+  "beard:Beards/Var 5aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.13,
+    "up": 0.09
+   },
+   "node": "new_beard_12"
+  },
+  "beard:Beards/Var 6.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.12,
+    "up": -0.23,
+    "wrap": 1.0
+   },
+   "node": "new_beard_13"
+  },
+  "beard:Beards/Var 6a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "lr": -0.16,
+    "up": -0.28,
+    "wrap": 1.0
+   },
+   "node": "new_beard_14"
+  },
+  "beard:Beards/Var 6aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "up": 0.34,
+    "wrap": 0.06
+   },
+   "node": "new_beard_15"
+  },
+  "beard:Beards/Var 7.obj": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "node": "new_beard_16"
+  },
+  "beard:Beards/Var 7a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 1.0,
+    "fwd": -0.28,
+    "len": -0.24,
+    "lr": -0.2,
+    "size": 1.0,
+    "up": -0.33,
+    "width": 0.08,
+    "wrap": 0.03
+   },
+   "node": "new_beard_17"
+  },
+  "beard:Beards/Var 7aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.11,
+    "wrap": 1.0
+   },
+   "node": "new_beard_18"
+  },
+  "beard:Beards/Var 8.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.12,
+    "size": -0.33,
+    "up": -0.33,
+    "wrap": 1.0
+   },
+   "node": "new_beard_19"
+  },
+  "beard:Beards/Var 8a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.08,
+    "lr": -0.11,
+    "size": -0.75,
+    "up": -0.21,
+    "width": -0.36
+   },
+   "node": "new_beard_20"
+  },
+  "beard:Beards/Var 8aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 0.81,
+    "fwd": -0.51,
+    "size": -0.93,
+    "up": 0.33,
+    "width": 0.82
+   },
+   "node": "new_beard_21"
+  },
+  "beard:Beards/Var 9.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 1.0,
+    "fwd": -0.22,
+    "height": -0.04,
+    "len": -0.11,
+    "size": -0.84,
+    "up": -0.24,
+    "width": 0.53,
+    "wrap": -0.04
+   },
+   "node": "new_beard_22"
+  },
+  "beard:beard_1": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.01
+   },
+   "node": "beard_1"
+  },
+  "beard:beard_2": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "up": -0.01
+   },
+   "node": "beard_2"
+  },
+  "beard:beard_3": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "len": 0.25,
+    "width": -0.02
+   },
+   "node": "beard_3"
+  },
+  "beard:beard_4": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "len": 0.14
+   },
+   "node": "beard_4"
+  },
   "hair:Human/Var 10.obj": {
    "copied_from": "bri_m",
    "disabled": false,
@@ -244,6 +553,332 @@
     "up": -0.23,
     "width": -0.06
    }
+  },
+  "hair:hair_1": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_1"
+  },
+  "hair:hair_2": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_2"
+  },
+  "hair:hair_3": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "width": -0.05
+   },
+   "node": "hair_3"
+  },
+  "hair:hair_5": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_5"
+  },
+  "moustache:Moustaches/Var 10.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "size": -0.75,
+    "up": 0.18
+   },
+   "node": "new_must_24"
+  },
+  "moustache:Moustaches/Var 10a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.01,
+    "size": -0.84,
+    "up": 0.46,
+    "width": -0.66,
+    "wrap": 0.32
+   },
+   "node": "new_must_25"
+  },
+  "moustache:Moustaches/Var 1a.obj": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "node": "new_must_1"
+  },
+  "moustache:Moustaches/Var 2.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "up": 0.14
+   },
+   "node": "new_must_2"
+  },
+  "moustache:Moustaches/Var 2a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.04,
+    "lr": -0.06,
+    "up": -0.33
+   },
+   "node": "new_must_3"
+  },
+  "moustache:Moustaches/Var 2aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.08,
+    "height": -0.1,
+    "len": 0.18,
+    "up": 0.33,
+    "width": -1.0
+   },
+   "node": "new_must_4"
+  },
+  "moustache:Moustaches/Var 3.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "size": -1.0,
+    "up": 0.28
+   },
+   "node": "new_must_5"
+  },
+  "moustache:Moustaches/Var 3a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.01,
+    "lr": -0.06,
+    "size": -0.7,
+    "up": -0.15,
+    "wrap": 0.61
+   },
+   "node": "new_must_6"
+  },
+  "moustache:Moustaches/Var 3aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.19,
+    "size": -0.57,
+    "up": 0.38,
+    "width": -1.0
+   },
+   "node": "new_must_7"
+  },
+  "moustache:Moustaches/Var 4.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "height": 0.03,
+    "size": -1.0,
+    "up": 0.19,
+    "width": -0.06
+   },
+   "node": "new_must_8"
+  },
+  "moustache:Moustaches/Var 4a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.0,
+    "lr": -0.07,
+    "size": -0.93,
+    "up": -0.08
+   },
+   "node": "new_must_9"
+  },
+  "moustache:Moustaches/Var 4aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.09,
+    "height": 0.43,
+    "size": -1.0,
+    "up": 0.3,
+    "width": -0.66
+   },
+   "node": "new_must_10"
+  },
+  "moustache:Moustaches/Var 5.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "size": -0.63,
+    "up": 0.22
+   },
+   "node": "new_must_11"
+  },
+  "moustache:Moustaches/Var 5a.obj": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "node": "new_must_12"
+  },
+  "moustache:Moustaches/Var 5aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.1,
+    "height": -0.37,
+    "size": -0.82,
+    "up": 0.33,
+    "width": -0.57,
+    "wrap": 0.05
+   },
+   "node": "new_must_13"
+  },
+  "moustache:Moustaches/Var 6.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 0.35,
+    "size": -0.95,
+    "up": 0.26,
+    "width": 0.16,
+    "wrap": 1.0
+   },
+   "node": "new_must_14"
+  },
+  "moustache:Moustaches/Var 6a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.04,
+    "size": -0.45,
+    "up": -0.24,
+    "wrap": 1.0
+   },
+   "node": "new_must_15"
+  },
+  "moustache:Moustaches/Var 6aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.09,
+    "size": -0.26,
+    "up": 0.25,
+    "width": 0.22,
+    "wrap": 0.77
+   },
+   "node": "new_must_16"
+  },
+  "moustache:Moustaches/Var 7.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.28,
+    "fwd": 0.11,
+    "height": -0.85,
+    "size": -0.83,
+    "up": 0.27,
+    "width": -0.38,
+    "wrap": 0.8
+   },
+   "node": "new_must_17"
+  },
+  "moustache:Moustaches/Var 7a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.0,
+    "height": -0.38,
+    "lr": -0.04,
+    "size": -0.84,
+    "up": 0.0,
+    "width": 0.24,
+    "wrap": 0.53
+   },
+   "node": "new_must_18"
+  },
+  "moustache:Moustaches/Var 7aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "height": -0.4,
+    "len": -0.19,
+    "size": -1.0,
+    "up": 0.47,
+    "width": -0.64,
+    "wrap": 0.17
+   },
+   "node": "new_must_19"
+  },
+  "moustache:Moustaches/Var 8.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "size": -1.0,
+    "up": 0.2,
+    "width": 0.02
+   },
+   "node": "new_must_20"
+  },
+  "moustache:Moustaches/Var 8a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.48,
+    "height": -1.0,
+    "size": -1.0,
+    "up": 0.35,
+    "width": -0.39,
+    "wrap": 0.57
+   },
+   "node": "new_must_21"
+  },
+  "moustache:Moustaches/Var 9.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "size": -0.53,
+    "up": 0.18,
+    "wrap": 0.42
+   },
+   "node": "new_must_22"
+  },
+  "moustache:Moustaches/Var 9a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.46,
+    "height": -0.49,
+    "size": -1.0,
+    "up": 0.42,
+    "width": -0.56
+   },
+   "node": "new_must_23"
+  },
+  "sideburns:Beards/Var 2aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.02,
+    "size": -0.05,
+    "up": -0.23,
+    "wrap": 0.9
+   },
+   "node": "new_side_1"
+  },
+  "sideburns:Beards/Var 2aaa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.05,
+    "size": 0.06,
+    "wrap": 1.0
+   },
+   "node": "new_side_2"
+  },
+  "sideburns:Beards/Var 3aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "width": 0.02,
+    "wrap": 1.0
+   },
+   "node": "new_side_3"
   }
  },
  "race": "cel_m"

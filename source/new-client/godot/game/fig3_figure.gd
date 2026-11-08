@@ -564,7 +564,7 @@ func _jewels(entry: Dictionary, on: bool) -> void:
 	for mi in _parts(String(entry.jewels.node)):
 		mi.visible = on
 	if on:
-		var m := _material(false)
+		var m := _material(true)                      # (cut at half: a band's shape in its alpha)
 		m.set_shader_parameter("albedo_tex", _tex(String(entry.jewels.tex)))
 		m.set_shader_parameter("tint", Color.WHITE)
 		m.set_shader_parameter("tint_mode", 0)

@@ -437,6 +437,223 @@
    "done": "2026-11-08",
    "fit": {},
    "node": "hair_4"
+  },
+  "moustache:Moustaches/Var 10.obj": {
+   "copied_from": "lur_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "moustache:Moustaches/Var 10a.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "height": -0.01,
+    "up": -0.72,
+    "wrap": -0.01
+   }
+  },
+  "moustache:Moustaches/Var 1a.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "depth": 0.19,
+    "len": -0.15,
+    "up": -0.59,
+    "width": 0.52,
+    "wrap": -0.16
+   }
+  },
+  "moustache:Moustaches/Var 2.obj": {
+   "copied_from": "lur_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "moustache:Moustaches/Var 2a.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 1.0,
+    "len": -0.01,
+    "up": 0.72,
+    "width": -0.01
+   }
+  },
+  "moustache:Moustaches/Var 2aa.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "up": -0.49,
+    "width": -0.39
+   }
+  },
+  "moustache:Moustaches/Var 3.obj": {
+   "copied_from": "lur_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "moustache:Moustaches/Var 3a.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 1.0,
+    "len": 0.01,
+    "lr": -0.01,
+    "up": 0.39,
+    "width": -0.27
+   }
+  },
+  "moustache:Moustaches/Var 3aa.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.15,
+    "size": 0.02,
+    "up": -0.7
+   }
+  },
+  "moustache:Moustaches/Var 4.obj": {
+   "copied_from": "lur_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "moustache:Moustaches/Var 4a.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "depth": 0.99,
+    "fwd": 1.0,
+    "up": 0.47,
+    "wrap": 0.65
+   }
+  },
+  "moustache:Moustaches/Var 4aa.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "up": -0.69
+   }
+  },
+  "moustache:Moustaches/Var 5.obj": {
+   "copied_from": "lur_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "moustache:Moustaches/Var 5a.obj": {
+   "copied_from": "lur_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "moustache:Moustaches/Var 5aa.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.01,
+    "len": -0.01,
+    "up": -0.63,
+    "width": -0.01
+   }
+  },
+  "moustache:Moustaches/Var 6.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 1.0,
+    "up": 0.79
+   }
+  },
+  "moustache:Moustaches/Var 6a.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 1.0,
+    "up": 0.7
+   }
+  },
+  "moustache:Moustaches/Var 6aa.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 0.25,
+    "lr": -0.01,
+    "up": -0.7
+   }
+  },
+  "moustache:Moustaches/Var 7.obj": {
+   "copied_from": "lur_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "moustache:Moustaches/Var 7a.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 1.0,
+    "height": -0.01,
+    "up": 0.7
+   }
+  },
+  "moustache:Moustaches/Var 7aa.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.06,
+    "up": -0.51
+   }
+  },
+  "moustache:Moustaches/Var 8.obj": {
+   "copied_from": "lur_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "moustache:Moustaches/Var 8a.obj": {
+   "copied_from": "lur_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "moustache:Moustaches/Var 9.obj": {
+   "copied_from": "lur_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "moustache:Moustaches/Var 9a.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "lr": -0.01,
+    "up": -0.72
+   }
+  },
+  "sideburns:Beards/Var 2aa.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "depth": -0.64,
+    "fwd": 1.0,
+    "height": -0.63,
+    "size": -0.88,
+    "up": 0.42,
+    "width": -0.12,
+    "wrap": -0.01
+   }
+  },
+  "sideburns:Beards/Var 2aaa.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "size": -0.11,
+    "up": -0.29
+   }
+  },
+  "sideburns:Beards/Var 3aa.obj": {
+   "copied_from": "lur_m",
+   "disabled": false,
+   "fit": {
+    "depth": -0.57,
+    "fwd": 1.0,
+    "height": -0.72,
+    "size": -1.0,
+    "up": 0.66
+   }
   }
  },
  "race": "val_m"

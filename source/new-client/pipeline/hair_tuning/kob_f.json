@@ -1,0 +1,224 @@
+{
+ "parts": {
+  "hair:Big Ears/Var 11.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.08,
+    "fwd": 0.12,
+    "height": 0.66,
+    "size": 0.3,
+    "up": -0.5,
+    "width": -0.09
+   },
+   "node": "new_hair_13"
+  },
+  "hair:Big Ears/Var 11a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "new_hair_14"
+  },
+  "hair:Big Ears/Var 13.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "height": 0.13,
+    "size": 0.22,
+    "up": -0.36,
+    "width": -0.18
+   },
+   "node": "new_hair_15"
+  },
+  "hair:Big Ears/Var 14.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "new_hair_16"
+  },
+  "hair:Big Ears/Var 17.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "up": -0.16
+   },
+   "node": "new_hair_17"
+  },
+  "hair:Big Ears/Var 18.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "new_hair_18"
+  },
+  "hair:Big Ears/Var 18a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.12,
+    "height": 1.0,
+    "lr": 0.17,
+    "size": 0.26,
+    "up": -0.67,
+    "width": 0.11
+   },
+   "node": "new_hair_19"
+  },
+  "hair:Big Ears/Var 19.obj": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "node": "new_hair_20"
+  },
+  "hair:Big Ears/Var 20.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "height": 0.47,
+    "size": 0.27,
+    "up": -0.49
+   },
+   "node": "new_hair_21"
+  },
+  "hair:Big Ears/Var 22.obj": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "node": "new_hair_22"
+  },
+  "hair:Big Ears/Var 23.obj": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "node": "new_hair_23"
+  },
+  "hair:Big Ears/Var 3.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.67,
+    "fwd": -0.19,
+    "size": 1.0,
+    "up": -0.47,
+    "width": -1.0
+   },
+   "node": "new_hair_1"
+  },
+  "hair:Big Ears/Var 4.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "size": 0.3,
+    "up": -0.35,
+    "width": -0.35
+   },
+   "node": "new_hair_2"
+  },
+  "hair:Big Ears/Var 4a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.22
+   },
+   "node": "new_hair_3"
+  },
+  "hair:Big Ears/Var 4aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.28,
+    "fwd": 0.27,
+    "size": -0.09,
+    "up": 0.29,
+    "width": -0.3
+   },
+   "node": "new_hair_4"
+  },
+  "hair:Big Ears/Var 5.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "new_hair_5"
+  },
+  "hair:Big Ears/Var 5a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "new_hair_6"
+  },
+  "hair:Big Ears/Var 6.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "height": 0.33,
+    "size": 0.18,
+    "up": -0.33
+   },
+   "node": "new_hair_7"
+  },
+  "hair:Big Ears/Var 6a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "new_hair_8"
+  },
+  "hair:Big Ears/Var 8.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "height": 0.35,
+    "size": 0.36,
+    "up": -0.54,
+    "width": -0.26
+   },
+   "node": "new_hair_9"
+  },
+  "hair:Big Ears/Var 8a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "lr": 0.22,
+    "size": 0.08,
+    "up": 0.44,
+    "width": -0.24
+   },
+   "node": "new_hair_10"
+  },
+  "hair:Big Ears/Var 8aa.obj": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "node": "new_hair_11"
+  },
+  "hair:Big Ears/Var 9.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "size": 0.43,
+    "up": -0.42,
+    "width": -0.31
+   },
+   "node": "new_hair_12"
+  },
+  "hair:hair_1": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_1"
+  },
+  "hair:hair_2": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_2"
+  },
+  "hair:hair_3": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_3"
+  },
+  "hair:hair_4": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_4"
+  }
+ },
+ "race": "kob_f"
+}

@@ -135,6 +135,14 @@ func _ready() -> void:
 		for si in styles.size():
 			if bool(styles[si].get("imported", false)) and presets.size() < 12:
 				presets.append(["%s cap 8" % styles[si].label, {"hair": si, "hair_color": 8, "beard": 0, "scalp_cap": 1}])
+	if pset == "looks":                             # (--looks=<json file>: [[label, look], ...] - any looks to compare)
+		var d = JSON.parse_string(FileAccess.get_file_as_string(String(args.get("looks", ""))))
+		if d is Array:
+			presets = d
+		var lf2 := FileAccess.open(out + "_names.txt", FileAccess.WRITE)
+		for pr in presets:
+			lf2.store_line(String(pr[0]))
+		lf2.close()
 	if pset == "allnew":                            # every new style, then beards and moustaches (--from, --count)
 		presets = []
 		var styles: Array = fig.meta.get("hair_styles", [])
@@ -242,7 +250,7 @@ func _ready() -> void:
 		names.append(String(p[0]))
 	for i in presets.size():
 		var vals: Dictionary = presets[i][1]
-		if pset in ["beard", "turban", "newhair", "cap", "fit", "allnew"]:
+		if pset in ["beard", "turban", "newhair", "cap", "fit", "allnew", "looks"]:
 			fig.look = {"face": 0, "hair_color": 1, "eyes": 2, "skin": 1}
 			var shp: Dictionary = vals.get("_shape", {})
 			var hide_hair := bool(vals.get("_nohair", false))

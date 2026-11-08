@@ -321,6 +321,42 @@
     "width": -1.0,
     "wrap": -0.54
    }
+  },
+  "hair:hair_1": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_1"
+  },
+  "hair:hair_2": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_2"
+  },
+  "hair:hair_3": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "width": -0.05
+   },
+   "node": "hair_3"
+  },
+  "hair:hair_4": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "size": -0.05
+   },
+   "node": "hair_4"
+  },
+  "hair:hair_5": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "len": -0.01
+   },
+   "node": "hair_5"
   }
  },
  "race": "cel_f"

@@ -1,5 +1,258 @@
 {
  "parts": {
+  "beard:Beards/Var 10.obj": {
+   "copied_from": "cel_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "beard:Beards/Var 11.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "depth": 1.0,
+    "fwd": -0.02,
+    "height": 0.55,
+    "len": 0.0,
+    "up": -0.19,
+    "wrap": 0.7
+   }
+  },
+  "beard:Beards/Var 12.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "depth": 1.0,
+    "fwd": -0.22,
+    "height": 1.0,
+    "size": 1.0,
+    "up": -0.14,
+    "width": -0.49,
+    "wrap": 0.63
+   }
+  },
+  "beard:Beards/Var 1a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.23,
+    "width": 0.02,
+    "wrap": 0.88
+   }
+  },
+  "beard:Beards/Var 2.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.08,
+    "len": -0.23,
+    "up": -0.26,
+    "wrap": 1.0
+   }
+  },
+  "beard:Beards/Var 2a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "depth": 0.15,
+    "fwd": -0.23,
+    "lr": -0.14,
+    "up": -0.19,
+    "width": -0.33
+   }
+  },
+  "beard:Beards/Var 3.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.29,
+    "up": -0.27,
+    "wrap": 1.0
+   }
+  },
+  "beard:Beards/Var 3a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.19,
+    "lr": -0.09,
+    "size": -0.24,
+    "up": -0.15,
+    "width": -0.12
+   }
+  },
+  "beard:Beards/Var 3aaa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.11,
+    "len": -0.35,
+    "up": 0.16,
+    "width": 0.08,
+    "wrap": 0.35
+   }
+  },
+  "beard:Beards/Var 4.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "depth": 0.15,
+    "fwd": 0.14,
+    "lr": -0.01,
+    "up": -0.41,
+    "width": -0.48,
+    "wrap": 1.0
+   }
+  },
+  "beard:Beards/Var 4a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "depth": 0.22,
+    "fwd": -0.07,
+    "size": -0.28,
+    "up": -0.48,
+    "width": 0.14,
+    "wrap": 0.9
+   }
+  },
+  "beard:Beards/Var 4aa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "depth": 0.04,
+    "fwd": -0.11,
+    "up": -0.02,
+    "width": 0.07,
+    "wrap": 1.0
+   }
+  },
+  "beard:Beards/Var 5.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.02,
+    "len": 0.01,
+    "up": -0.46,
+    "wrap": 1.0
+   }
+  },
+  "beard:Beards/Var 5a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.11,
+    "lr": -0.06,
+    "up": -0.32,
+    "wrap": 1.0
+   }
+  },
+  "beard:Beards/Var 5aa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.13,
+    "up": 0.09
+   }
+  },
+  "beard:Beards/Var 6.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.12,
+    "up": -0.23,
+    "wrap": 1.0
+   }
+  },
+  "beard:Beards/Var 6a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "lr": -0.16,
+    "up": -0.28,
+    "wrap": 1.0
+   }
+  },
+  "beard:Beards/Var 6aa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "up": 0.34,
+    "wrap": 0.06
+   }
+  },
+  "beard:Beards/Var 7.obj": {
+   "copied_from": "cel_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "beard:Beards/Var 7a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "depth": 1.0,
+    "fwd": -0.28,
+    "len": -0.24,
+    "lr": -0.2,
+    "size": 1.0,
+    "up": -0.33,
+    "width": 0.08,
+    "wrap": 0.03
+   }
+  },
+  "beard:Beards/Var 7aa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.11,
+    "wrap": 1.0
+   }
+  },
+  "beard:Beards/Var 8.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.12,
+    "size": -0.33,
+    "up": -0.33,
+    "wrap": 1.0
+   }
+  },
+  "beard:Beards/Var 8a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.08,
+    "lr": -0.11,
+    "size": -0.75,
+    "up": -0.21,
+    "width": -0.36
+   }
+  },
+  "beard:Beards/Var 8aa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "depth": 0.81,
+    "fwd": -0.51,
+    "size": -0.93,
+    "up": 0.33,
+    "width": 0.82
+   }
+  },
+  "beard:Beards/Var 9.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "depth": 1.0,
+    "fwd": -0.22,
+    "height": -0.04,
+    "len": -0.11,
+    "size": -0.84,
+    "up": -0.24,
+    "width": 0.53,
+    "wrap": -0.04
+   }
+  },
   "hair:Human/Var 10.obj": {
    "copied_from": "bri_m",
    "disabled": false,
@@ -249,6 +502,280 @@
     "size": 0.16,
     "up": -0.23,
     "width": -0.06
+   }
+  },
+  "moustache:Moustaches/Var 10.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "size": -0.75,
+    "up": 0.18
+   }
+  },
+  "moustache:Moustaches/Var 10a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.01,
+    "size": -0.84,
+    "up": 0.46,
+    "width": -0.66,
+    "wrap": 0.32
+   }
+  },
+  "moustache:Moustaches/Var 1a.obj": {
+   "copied_from": "cel_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "moustache:Moustaches/Var 2.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "up": 0.14
+   }
+  },
+  "moustache:Moustaches/Var 2a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.04,
+    "lr": -0.06,
+    "up": -0.33
+   }
+  },
+  "moustache:Moustaches/Var 2aa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 0.08,
+    "height": -0.1,
+    "len": 0.18,
+    "up": 0.33,
+    "width": -1.0
+   }
+  },
+  "moustache:Moustaches/Var 3.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "size": -1.0,
+    "up": 0.28
+   }
+  },
+  "moustache:Moustaches/Var 3a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 0.01,
+    "lr": -0.06,
+    "size": -0.7,
+    "up": -0.15,
+    "wrap": 0.61
+   }
+  },
+  "moustache:Moustaches/Var 3aa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 0.19,
+    "size": -0.57,
+    "up": 0.38,
+    "width": -1.0
+   }
+  },
+  "moustache:Moustaches/Var 4.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "height": 0.03,
+    "size": -1.0,
+    "up": 0.19,
+    "width": -0.06
+   }
+  },
+  "moustache:Moustaches/Var 4a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 0.0,
+    "lr": -0.07,
+    "size": -0.93,
+    "up": -0.08
+   }
+  },
+  "moustache:Moustaches/Var 4aa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 0.09,
+    "height": 0.43,
+    "size": -1.0,
+    "up": 0.3,
+    "width": -0.66
+   }
+  },
+  "moustache:Moustaches/Var 5.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "size": -0.63,
+    "up": 0.22
+   }
+  },
+  "moustache:Moustaches/Var 5a.obj": {
+   "copied_from": "cel_m",
+   "disabled": true,
+   "fit": {}
+  },
+  "moustache:Moustaches/Var 5aa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 0.1,
+    "height": -0.37,
+    "size": -0.82,
+    "up": 0.33,
+    "width": -0.57,
+    "wrap": 0.05
+   }
+  },
+  "moustache:Moustaches/Var 6.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "depth": 0.35,
+    "size": -0.95,
+    "up": 0.26,
+    "width": 0.16,
+    "wrap": 1.0
+   }
+  },
+  "moustache:Moustaches/Var 6a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 0.04,
+    "size": -0.45,
+    "up": -0.24,
+    "wrap": 1.0
+   }
+  },
+  "moustache:Moustaches/Var 6aa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.09,
+    "size": -0.26,
+    "up": 0.25,
+    "width": 0.22,
+    "wrap": 0.77
+   }
+  },
+  "moustache:Moustaches/Var 7.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "depth": -0.28,
+    "fwd": 0.11,
+    "height": -0.85,
+    "size": -0.83,
+    "up": 0.27,
+    "width": -0.38,
+    "wrap": 0.8
+   }
+  },
+  "moustache:Moustaches/Var 7a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 0.0,
+    "height": -0.38,
+    "lr": -0.04,
+    "size": -0.84,
+    "up": 0.0,
+    "width": 0.24,
+    "wrap": 0.53
+   }
+  },
+  "moustache:Moustaches/Var 7aa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "height": -0.4,
+    "len": -0.19,
+    "size": -1.0,
+    "up": 0.47,
+    "width": -0.64,
+    "wrap": 0.17
+   }
+  },
+  "moustache:Moustaches/Var 8.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "size": -1.0,
+    "up": 0.2,
+    "width": 0.02
+   }
+  },
+  "moustache:Moustaches/Var 8a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "depth": -0.48,
+    "height": -1.0,
+    "size": -1.0,
+    "up": 0.35,
+    "width": -0.39,
+    "wrap": 0.57
+   }
+  },
+  "moustache:Moustaches/Var 9.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "size": -0.53,
+    "up": 0.18,
+    "wrap": 0.42
+   }
+  },
+  "moustache:Moustaches/Var 9a.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "depth": -0.46,
+    "height": -0.49,
+    "size": -1.0,
+    "up": 0.42,
+    "width": -0.56
+   }
+  },
+  "sideburns:Beards/Var 2aa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": 0.02,
+    "size": -0.05,
+    "up": -0.23,
+    "wrap": 0.9
+   }
+  },
+  "sideburns:Beards/Var 2aaa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "fwd": -0.05,
+    "size": 0.06,
+    "wrap": 1.0
+   }
+  },
+  "sideburns:Beards/Var 3aa.obj": {
+   "copied_from": "cel_m",
+   "disabled": false,
+   "fit": {
+    "width": 0.02,
+    "wrap": 1.0
    }
   }
  },

@@ -53,7 +53,7 @@ def load_obj(path, jewels=False):
         elif l.startswith('usemtl'):
             m = l.split(None, 1)[1].strip()
             hair = m.endswith('_Dbl') or not re.search(r'_\d+$', m)
-            jew = not hair and 'Body' in tex.get(m, '')
+            jew = not hair and _jewel_tex(tex.get(m, ''))
             keep = hair or (jewels and jew)
         elif l.startswith('f ') and keep:
             parts = [p.split('/') for p in l.split()[1:]]
@@ -75,7 +75,13 @@ def load_obj(path, jewels=False):
 
 def has_jewels(path):
     tex = _mtl_textures(path)
-    return any(not (m.endswith('_Dbl') or not re.search(r'_\d+$', m)) and 'Body' in t for m, t in tex.items())
+    return any(not (m.endswith('_Dbl') or not re.search(r'_\d+$', m)) and _jewel_tex(t) for m, t in tex.items())
+
+
+def _jewel_tex(t):
+    """A geoset drawn from the body's texture (a dwarf's braid rings) or a jewelry one (owner 2026-11-08: the Firbolg
+    women's ponytail band missing - the Dracthyr exports' rings and bands)."""
+    return 'Body' in t or 'jewelry' in t.lower()
 
 
 def sub_mesh(Q, UV, T):
@@ -90,7 +96,7 @@ def jewel_texture(obj, UV, tex_dirs):
     """The rings' part of the body texture they're drawn from (its own small texture, upscaled; the uvs remapped
     onto it). Untinted: metal stays metal whatever the hair colour."""
     import hashlib
-    src = Path(obj).with_name(next(t for m, t in _mtl_textures(obj).items() if 'Body' in t))
+    src = Path(obj).with_name(next(t for m, t in _mtl_textures(obj).items() if _jewel_tex(t)))
     img = cv2.imread(str(src), cv2.IMREAD_UNCHANGED)
     h, w = img.shape[:2]
     u0, v0 = np.floor(UV.min(0) * 64) / 64
@@ -98,18 +104,25 @@ def jewel_texture(obj, UV, tex_dirs):
     u0, v0, u1, v1 = max(u0, 0), max(v0, 0), min(u1, 1), min(v1, 1)
     crop = img[int(round((1 - v1) * h)):int(round((1 - v0) * h)), int(round(u0 * w)):int(round(u1 * w))]
     tag = 'hj' + hashlib.md5(crop.tobytes()).hexdigest()[:10]
+    cut = crop.ndim == 3 and crop.shape[2] == 4 and (crop[..., 3] < 128).mean() > 0.02   # (a band's cut-out shape)
+
+    def keep_alpha(rgb):
+        if not cut:
+            return rgb[..., :3]
+        a = cv2.resize(crop[..., 3], (rgb.shape[1], rgb.shape[0]), interpolation=cv2.INTER_LINEAR)
+        return np.dstack([rgb[..., :3], a])
     for d in tex_dirs:
         dst = d / (tag + '.png')
         if not dst.exists():
             d.mkdir(parents=True, exist_ok=True)
             if d.name == 'original' or crop.shape[1] > 320:     # (a big piece of the atlas: sharp enough as it is)
-                cv2.imwrite(str(dst), crop[..., :3])
+                cv2.imwrite(str(dst), keep_alpha(crop))
             else:
                 tmp = d.parent / 'hair_src' / (tag + '_c.png')
                 tmp.parent.mkdir(parents=True, exist_ok=True)
                 cv2.imwrite(str(tmp), crop[..., :3])
                 big = upscale(tmp, d.parent / 'hair_src' / (tag + '.png'))
-                cv2.imwrite(str(dst), cv2.imread(str(big), cv2.IMREAD_UNCHANGED)[..., :3])
+                cv2.imwrite(str(dst), keep_alpha(cv2.imread(str(big), cv2.IMREAD_UNCHANGED)))
     UVn = np.c_[(UV[:, 0] - u0) / (u1 - u0), (UV[:, 1] - v0) / (v1 - v0)]
     return tag, UVn
 
@@ -213,17 +226,27 @@ def push_out(Q, T, HP, HN, H, clear=0.02):
     return Q + G_[grp]
 
 
-def grey_texture(src, dst, cap=False):
+def grey_texture(src, dst, cap=False, alpha_src=None):
     """The model's texture without its own colour: its brightness, about mid-grey, so a tint gives any colour. The
     scalp cap's a shade darker and even (it sits under the hair: a light streak in it read as bare skin)."""
     img = cv2.imread(str(src), cv2.IMREAD_UNCHANGED)
     rgb = img[..., :3].astype(np.float32) / 255
     lum = rgb @ np.array([0.11, 0.59, 0.3], np.float32)
+    a0 = cv2.imread(str(alpha_src), cv2.IMREAD_UNCHANGED) if alpha_src else None
+    if a0 is not None and a0.ndim == 3 and a0.shape[2] == 4 and (a0[..., 3] < 128).mean() > 0.02:
+        # (owner 2026-11-08: grey patches through the Lurikeen's hair, and others') - these models' texture is a
+        # highlights layer (WoW lays it over a plain base colour): its alpha says where. Where it is clear its
+        # colour means nothing (dark roots, black): those parts made the plain middle brightness, so the strands
+        # run on unbroken. (Not a cut-out: kept as the alpha, the styles all but vanished.)
+        a = cv2.resize(a0[..., 3], (lum.shape[1], lum.shape[0]), interpolation=cv2.INTER_LINEAR).astype(np.float32) / 255
+        mid = float(np.median(lum[a > 0.5])) if (a > 0.5).any() else float(np.median(lum))
+        lum = a * lum + (1 - a) * mid
     lum = lum / max(float(np.median(lum)), 1e-3) * 0.55
     if cap:
         lum = np.minimum(lum * 0.8, 0.5)
     out = np.clip(lum * 255, 0, 255).astype(np.uint8)
-    out = np.stack([out, out, out, np.full_like(out, 255)], -1)
+    alpha = np.full_like(out, 255)
+    out = np.stack([out, out, out, alpha], -1)
     cv2.imwrite(str(dst), out)
     return 0.55
 
@@ -334,6 +357,8 @@ def even_out(path, cap=False):
     rgb = im[..., :3].astype(np.float32) / 255
     lum = rgb @ np.array([0.11, 0.59, 0.3], np.float32)
     isl = lum > 0.02
+    if im.shape[2] == 4 and (im[..., 3] < 128).mean() > 0.02:
+        isl &= im[..., 3] >= 128                     # (a cut-out's clear parts not counted)
     if cap:
         base = cv2.GaussianBlur(lum, (0, 0), 24)
         rgb = rgb * (0.55 + 0.6 * (lum - base))[..., None] / np.maximum(lum, 1e-3)[..., None]
@@ -351,7 +376,7 @@ def hair_textures(src, tag, tex_dirs, flow_dir, cap=False):
     big = upscale(src, tex_dirs[0].parent / 'hair_src' / (tag.lower() + '.png'))
     for d in tex_dirs:
         dst = d / (tag.lower() + '.png')
-        grey_texture(big, dst)
+        grey_texture(big, dst, alpha_src=src)
         im = cv2.imread(str(dst), cv2.IMREAD_UNCHANGED)
         if im.shape[1] < 1024:
             k = 1024 / im.shape[1]
@@ -363,8 +388,21 @@ def hair_textures(src, tag, tex_dirs, flow_dir, cap=False):
         even_out(dst, cap)
 
 
-def _lin_mean(path):
-    """A texture's mean colour in linear light over its covered pixels (alpha over half, not the atlas's black)."""
+def uv_mask(UV, T, rows_down=False, size=256):
+    """Where on its texture a mesh draws (its triangles in uv space): an atlas's unused parts left out of its colour
+    (owner 2026-11-08: the Kobold's new beards and styles far lighter than its own hair - the Kobold's hair texture
+    is mostly unused light atlas)."""
+    m = np.zeros((size, size), np.uint8)
+    uv = np.mod(np.asarray(UV, np.float64), 1.0)
+    px = np.c_[uv[:, 0] * size, (uv[:, 1] if rows_down else 1 - uv[:, 1]) * size]
+    tri = np.round(px[np.asarray(T)] * 4).astype(np.int32)          # (2 bits of sub-pixel)
+    cv2.fillPoly(m, list(tri), 1, lineType=cv2.LINE_8, shift=2)
+    return m.astype(bool)
+
+
+def _lin_mean(path, mask=None):
+    """A texture's mean colour in linear light over its covered pixels (alpha over half, not the atlas's black) -
+    and where the mesh draws on it, if given."""
     img = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
     if img is None:
         return None
@@ -372,18 +410,20 @@ def _lin_mean(path):
     rgb = img[..., :3][..., ::-1].astype(np.float64) / 255
     a = img[..., 3] > 128 if img.shape[2] == 4 else np.ones(img.shape[:2], bool)
     a &= rgb.max(-1) > 0.02
+    if mask is not None and (a & mask).sum() > 50:
+        a &= mask
     return (rgb[a] ** 2.2).mean(0) if a.any() else None
 
 
-def colours_for(tag, base_cols, tex_dir):
+def colours_for(tag, base_cols, tex_dir, ours_mask=None, theirs_mask=None):
     """The race's hair colours on a grey texture. The tint is matched in linear light (the shader's tint is a
     source_color: made linear, then times the texture): the race's own texture x its tint averaged as the GPU sees it,
     over this texture's own average - the plain ratio of the sRGB averages ('rgb') came out darker and more saturated
     than the hair beside it (owner 2026-11-06: "the scalp style does not match the hair color")."""
-    ours = _lin_mean(tex_dir / (tag.lower() + '.png'))
+    ours = _lin_mean(tex_dir / (tag.lower() + '.png'), ours_mask)
     out = []
     for c_ in base_cols:
-        theirs = _lin_mean(tex_dir / (str(c_['tex']).lower() + '.png'))
+        theirs = _lin_mean(tex_dir / (str(c_['tex']).lower() + '.png'), theirs_mask)
         if ours is None or theirs is None:
             tint = [round(float(x) / 0.55, 4) for x in c_['rgb']]
         else:
@@ -481,11 +521,21 @@ def shared_tag(src, kind):
     return '%s%s' % (kind, hashlib.md5(Path(src).read_bytes()).hexdigest()[:10])
 
 
+def _cut_out(path):
+    im = cv2.imread(str(path), cv2.IMREAD_UNCHANGED)
+    return im is not None and im.ndim == 3 and im.shape[2] == 4 and (im[..., 3] < 128).mean() > 0.02
+
+
+TEXTURES_REV = 1794160000      # (2026-11-08: the highlights layers' clear parts evened - made again before this)
+
+
 def ensure_textures(src, tag, tex_dirs, flow_dir, cap=False):
-    """The shared texture made once (hair_textures), kept while newer than its source."""
+    """The shared texture made once (hair_textures), kept while newer than its source - and made again where the
+    source is a highlights layer and its copy older than the fix for those (TEXTURES_REV)."""
     dst = tex_dirs[0] / (tag.lower() + '.png')
     if all((d / (tag.lower() + '.png')).exists() for d in tex_dirs) and (flow_dir / (tag.lower() + '.png')).exists() \
-            and dst.stat().st_mtime >= Path(src).stat().st_mtime:
+            and dst.stat().st_mtime >= Path(src).stat().st_mtime and (cap or not _cut_out(src)
+                                                                      or dst.stat().st_mtime >= TEXTURES_REV):
         return
     hair_textures(src, tag, tex_dirs, flow_dir, cap=cap)
 
@@ -630,7 +680,15 @@ def run(folder, spec_path, preview=None):
     if not any(s_.get('node') and s_['colours'] and 'rgb' in s_['colours'][0] for s_ in styles):
         from split_beards import colour_rgb          # (a race whose hair had no beard to split: not measured yet)
         colour_rgb(folder, meta)
-    base_cols = next(s['colours'] for s in styles if s.get('node') and s['colours'] and 'rgb' in s['colours'][0])
+    base_st = next(s for s in styles if s.get('node') and s['colours'] and 'rgb' in s['colours'][0])
+    base_cols = base_st['colours']
+    base_mask = None                               # (where the race's own style draws on its texture)
+    bn = next((n for n in g.g['nodes'] if n.get('name') == base_st['node'] and 'mesh' in n), None)
+    if bn is not None:
+        bp = g.g['meshes'][bn['mesh']]['primitives'][0]
+        if 'TEXCOORD_0' in bp['attributes']:
+            base_mask = uv_mask(g.acc(bp['attributes']['TEXCOORD_0']).astype(float),
+                                g.acc(bp['indices']).astype(int).reshape(-1, 3), rows_down=True)
     prefix = meta['prefix']
     tex_dirs = [folder.parent.parent / 'fig3_textures' / d for d in ('x4plus', 'original')]
     flow_dir = folder.parent.parent / 'fig3_textures' / 'hairflow'
@@ -658,7 +716,7 @@ def run(folder, spec_path, preview=None):
         stex = shared_tag(src, 'hc')
         ensure_textures(src, stex, tex_dirs, flow_dir, cap=True)
         meta['hair_under'] = {'node': node, 'tex': stex, 'label': item.get('label', 'Scalp Cap'),
-                              'colours': colours_for(stex, base_cols, tex_dirs[0])}
+                              'colours': colours_for(stex, base_cols, tex_dirs[0], uv_mask(UV, T), base_mask)}
         out.append((node, Q, T))
         print('%-12s %-28s %d tris' % (node, Path(item['obj']).name, len(T)))
     # the styles, beards and moustaches (owner 2026-11-06: sorted by head group - pipeline: claude-work/make_specs.py)
@@ -702,7 +760,7 @@ def run(folder, spec_path, preview=None):
             src = tex_of(item['obj'])
             tag = shared_tag(src, 'hx')
             ensure_textures(src, tag, tex_dirs, flow_dir)
-            cols = colours_for(tag, base_cols, tex_dirs[0])
+            cols = colours_for(tag, base_cols, tex_dirs[0], uv_mask(UV, T), base_mask)
             if kind == 'hair':
                 lab = item.get('label') or length_label(Q, marks)
             else:

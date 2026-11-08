@@ -302,7 +302,7 @@ func _build_create() -> void:
 	for i in races.size():
 		var cell := i + 1
 		var b := _bar_button(String(races[i][0]).to_upper(), 794 + (cell % 2) * 106, ry + (cell / 2) * 30, 102, 27, "R",
-				func(): draft.race = i; _check_base(); _check_server_class(); _show("create"))
+				func(): draft.race = i; _forget_fits(); _check_base(); _check_server_class(); _show("create"))
 		_selected(b, int(draft.race) == i)
 		# the chosen class greys the races that can't be it, as the client's create screen (owner 2026-10-15: a
 		# Sluaghbinder - Celt and Firbolg only - left every Hibernian race open)
@@ -311,7 +311,7 @@ func _build_create() -> void:
 	_label("GENDER", 790, 275, 216, 24, 20, GOLD, HORIZONTAL_ALIGNMENT_CENTER, "R")
 	for g in 2:
 		var b := _bar_button(["MALE", "FEMALE"][g], 794 + g * 106, 304, 102, 27, "R",
-				func(): draft.gender = g; _check_server_class(); _show("create"))
+				func(): draft.gender = g; _forget_fits(); _check_server_class(); _show("create"))
 		_selected(b, int(draft.gender) == g)
 	if Server.active:
 		# the Claude version server's classes for this race (no ways - the old client picked the class itself; the
@@ -889,6 +889,22 @@ func _c_fit_rows(p: Control, title: String, node: String, y: float) -> float:
 	return y
 
 
+## The fit slider values in the look (look.hair_fit, by mesh node) dropped - one node's, or all: a node name is
+## the race's own (new_beard_5 is a different beard on a Valkyn than on a Kobold), so values set on one race must
+## not carry to the next one picked (owner 2026-11-08: tuned fits "off again ... when I close down the client and
+## reopen it, it's back"), and once saved the tuned fit is the style's own.
+func _forget_fits(node := "") -> void:
+	for l in [draft.get("look", {}), _figure.look if _figure else {}]:
+		if not (l as Dictionary).has("hair_fit"):
+			continue
+		if node == "":
+			l.erase("hair_fit")
+		else:
+			var all: Dictionary = (l.hair_fit as Dictionary).duplicate(true)
+			all.erase(node)
+			l["hair_fit"] = all
+
+
 # --- hair tuning (owner 2026-11-06: "a tick box ... that says Disable for <race> ... put a (completed on <date>)
 # somewhere in that UI"): on the owner's machine only (Fig3Figure.tuning_on). Saved to hair_tuning/<race>.json.
 func _tune_race() -> String:
@@ -921,6 +937,7 @@ func _c_tuning(p: Control, node: String, y: float) -> float:
 		part["done"] = today
 		part["node"] = node
 		Fig3Figure.save_tuning_part(rc, key, part)
+		_forget_fits(node)
 		_redraw(), 13)
 	y += 30
 	_cbutton(("[X] " if off else "[  ] ") + "Disable for " + _tune_race(), p, 8, y, CW - 16, 26, func():
@@ -928,6 +945,7 @@ func _c_tuning(p: Control, node: String, y: float) -> float:
 		part["done"] = today
 		part["node"] = node
 		Fig3Figure.save_tuning_part(rc, key, part)
+		_forget_fits(node)
 		_redraw(), 13, off)
 	y += 30
 	var when := "(completed on %s)" % String(part.done) if part.has("done") else "(not done yet)"
