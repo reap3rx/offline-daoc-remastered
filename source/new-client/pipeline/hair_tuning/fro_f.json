@@ -3,7 +3,6 @@
   "hair:Pointed Ears/Var 10.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": 0.23,
     "fwd": -0.27,
@@ -16,7 +15,6 @@
   "hair:Pointed Ears/Var 10a.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.27,
     "fwd": -0.08,
@@ -31,7 +29,6 @@
   "hair:Pointed Ears/Var 11.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "fwd": -0.18,
     "height": 0.31,
@@ -43,7 +40,6 @@
   "hair:Pointed Ears/Var 11a.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.42,
     "fwd": 0.02,
@@ -56,7 +52,6 @@
   "hair:Pointed Ears/Var 13.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.06,
     "fwd": 0.1,
@@ -68,7 +63,6 @@
   "hair:Pointed Ears/Var 15.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.76,
     "fwd": -0.16,
@@ -80,7 +74,6 @@
   "hair:Pointed Ears/Var 17.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": 0.14,
     "fwd": -0.23,
@@ -93,7 +86,6 @@
   "hair:Pointed Ears/Var 17a.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.26
    }
@@ -101,7 +93,6 @@
   "hair:Pointed Ears/Var 18.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "height": -0.05,
     "size": 0.07,
@@ -112,7 +103,6 @@
   "hair:Pointed Ears/Var 2.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.7,
     "fwd": -0.05,
@@ -127,7 +117,6 @@
   "hair:Pointed Ears/Var 20.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": 0.15,
     "height": 0.74,
@@ -138,13 +127,11 @@
   "hair:Pointed Ears/Var 20a.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {}
   },
   "hair:Pointed Ears/Var 20aa.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "height": 0.65,
     "size": 0.47,
@@ -155,7 +142,6 @@
   "hair:Pointed Ears/Var 21.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "height": 0.18,
     "size": 0.14,
@@ -165,7 +151,6 @@
   "hair:Pointed Ears/Var 22.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.12,
     "fwd": -0.09,
@@ -178,7 +163,6 @@
   "hair:Pointed Ears/Var 24.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.19,
     "height": 0.07,
@@ -190,7 +174,6 @@
   "hair:Pointed Ears/Var 25.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "width": -0.24
    }
@@ -198,7 +181,6 @@
   "hair:Pointed Ears/Var 26.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": 0.06,
     "height": 0.67,
@@ -209,7 +191,6 @@
   "hair:Pointed Ears/Var 27.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "height": -0.06,
     "len": 0.12,
@@ -219,7 +200,6 @@
   "hair:Pointed Ears/Var 28.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "height": 0.27,
     "size": 0.27,
@@ -230,7 +210,6 @@
   "hair:Pointed Ears/Var 2a.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.88,
     "fwd": 0.0,
@@ -246,7 +225,6 @@
   "hair:Pointed Ears/Var 3.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.63,
     "fwd": -0.1,
@@ -259,7 +237,6 @@
   "hair:Pointed Ears/Var 3a.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.53,
     "fwd": 0.04,
@@ -274,7 +251,6 @@
   "hair:Pointed Ears/Var 4.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.8,
     "fwd": -0.25,
@@ -289,7 +265,6 @@
   "hair:Pointed Ears/Var 4a.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.1,
     "height": 0.16,
@@ -301,7 +276,6 @@
   "hair:Pointed Ears/Var 5.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.22,
     "fwd": 0.06,
@@ -315,7 +289,6 @@
   "hair:Pointed Ears/Var 7.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.54,
     "fwd": -0.07,
@@ -329,7 +302,6 @@
   "hair:Pointed Ears/Var 8.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "depth": -0.02,
     "len": 0.77,
@@ -340,7 +312,6 @@
   "hair:Pointed Ears/Var 9.obj": {
    "copied_from": "elf_f",
    "disabled": false,
-   "done": "2026-11-07",
    "fit": {
     "height": 0.21,
     "up": -0.2

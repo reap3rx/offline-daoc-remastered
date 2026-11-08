@@ -208,7 +208,7 @@
   },
   "hair:Human/Var 29.obj": {
    "copied_from": "bri_f",
-   "disabled": false,
+   "disabled": true,
    "done": "2026-11-07",
    "fit": {
     "depth": -0.37,
@@ -216,7 +216,8 @@
     "size": 0.88,
     "up": -0.66,
     "width": -0.63
-   }
+   },
+   "node": "new_hair_25"
   },
   "hair:Human/Var 2a.obj": {
    "copied_from": "bri_f",

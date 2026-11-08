@@ -870,8 +870,12 @@ func _c_hair_fit(p: Control, y: float) -> float:
 ## tuning (Fig3Figure.tuning_on), the race's save / disable / completed controls under them.
 func _c_fit_rows(p: Control, title: String, node: String, y: float) -> float:
 	y = _c_header(p, title, y + 4)
+	var entry := _figure.part_entry(node)
+	var locked := not entry.is_empty() and Fig3Figure.part_locked(_figure.race, String(entry._kind), entry)
 	for f in Fig3Figure.HAIR_FIT:
 		var k := String(f[0])
+		if locked and k != "len":                  # (a finished style: its fit fixed, Length only)
+			continue
 		y = _c_slider(p, String(f[1]), float(_figure.hair_fit_of(node).get(k, 0.0)), -1.0, 1.0, func(v: float):
 			var all: Dictionary = (draft.look.get("hair_fit", {}) as Dictionary).duplicate(true)
 			var one: Dictionary = all.get(node, _figure.hair_fit_of(node)).duplicate()
@@ -880,7 +884,7 @@ func _c_fit_rows(p: Control, title: String, node: String, y: float) -> float:
 			draft.look["hair_fit"] = all
 			_figure.look["hair_fit"] = all
 			_figure._apply_hair_fit(), y, true, 0.0, 0.01)
-	if Fig3Figure.tuning_on():
+	if Fig3Figure.tuning_on() and not locked:
 		y = _c_tuning(p, node, y)
 	return y
 

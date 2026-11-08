@@ -105,10 +105,11 @@
     "depth": -0.46,
     "fwd": 0.03,
     "lr": -0.01,
-    "size": 0.51,
+    "size": 0.62,
     "up": -0.3,
-    "width": -0.45
-   }
+    "width": -0.77
+   },
+   "node": "new_hair_18"
   },
   "hair:Human/Var 21.obj": {
    "copied_from": "bri_m",

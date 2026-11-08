@@ -26,10 +26,11 @@
    "done": "2026-11-07",
    "fit": {
     "depth": 0.12,
-    "fwd": -0.19,
+    "fwd": 0.28,
     "size": 0.07,
     "up": -0.16
-   }
+   },
+   "node": "new_hair_11"
   },
   "hair:Human/Var 12.obj": {
    "copied_from": "bri_m",
@@ -72,15 +73,18 @@
    "fit": {
     "depth": -0.64,
     "size": 0.38,
+    "up": -0.14,
     "width": -0.39,
     "wrap": 0.37
-   }
+   },
+   "node": "new_hair_16"
   },
   "hair:Human/Var 18.obj": {
    "copied_from": "bri_m",
-   "disabled": true,
+   "disabled": false,
    "done": "2026-11-07",
-   "fit": {}
+   "fit": {},
+   "node": "new_hair_17"
   },
   "hair:Human/Var 2.obj": {
    "copied_from": "bri_m",
@@ -90,12 +94,13 @@
     "depth": -0.38,
     "fwd": -0.17,
     "height": 0.42,
-    "len": 1.0,
+    "len": 0.5,
     "size": 0.53,
-    "up": -0.35,
-    "width": -0.46,
+    "up": -0.39,
+    "width": -0.79,
     "wrap": -1.0
-   }
+   },
+   "node": "new_hair_1"
   },
   "hair:Human/Var 20.obj": {
    "copied_from": "bri_m",
@@ -130,10 +135,11 @@
     "fwd": -0.14,
     "len": 0.38,
     "lr": 0.03,
-    "size": 0.28,
-    "up": -0.15,
-    "width": -0.37
-   }
+    "size": 0.54,
+    "up": -0.4,
+    "width": -0.62
+   },
+   "node": "new_hair_20"
   },
   "hair:Human/Var 24.obj": {
    "copied_from": "bri_m",
@@ -142,8 +148,9 @@
    "fit": {
     "fwd": -0.09,
     "height": 0.65,
-    "up": -0.18
-   }
+    "up": -0.37
+   },
+   "node": "new_hair_21"
   },
   "hair:Human/Var 25.obj": {
    "copied_from": "bri_m",
@@ -163,17 +170,20 @@
    "done": "2026-11-07",
    "fit": {
     "fwd": -0.1,
-    "height": 0.62
-   }
+    "height": 0.62,
+    "up": -0.34
+   },
+   "node": "new_hair_23"
   },
   "hair:Human/Var 3.obj": {
    "copied_from": "bri_m",
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
-    "fwd": -0.25,
+    "fwd": 0.1,
     "height": 0.29
-   }
+   },
+   "node": "new_hair_2"
   },
   "hair:Human/Var 4.obj": {
    "copied_from": "bri_m",
@@ -189,12 +199,13 @@
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
-    "depth": 0.46,
-    "fwd": -0.41,
+    "depth": -0.29,
+    "fwd": 0.19,
     "height": 0.35,
     "lr": -0.01,
     "up": -0.18
-   }
+   },
+   "node": "new_hair_4"
   },
   "hair:Human/Var 6.obj": {
    "copied_from": "bri_m",

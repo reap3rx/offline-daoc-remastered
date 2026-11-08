@@ -1,0 +1,545 @@
+{
+ "parts": {
+  "beard:Beards/Var 10.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.5,
+    "up": -0.08
+   },
+   "node": "new_beard_23"
+  },
+  "beard:Beards/Var 11.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.37,
+    "lr": -0.01,
+    "up": -0.11
+   },
+   "node": "new_beard_24"
+  },
+  "beard:Beards/Var 12.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.54,
+    "height": 0.01,
+    "lr": -0.01,
+    "up": -0.08,
+    "width": -0.01
+   },
+   "node": "new_beard_25"
+  },
+  "beard:Beards/Var 1a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.18,
+    "height": -0.01,
+    "up": 0.54,
+    "width": -0.19,
+    "wrap": -0.01
+   },
+   "node": "new_beard_1"
+  },
+  "beard:Beards/Var 2.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.22,
+    "lr": -0.01,
+    "size": -0.01,
+    "up": 0.04,
+    "wrap": 0.53
+   },
+   "node": "new_beard_2"
+  },
+  "beard:Beards/Var 2a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.76,
+    "up": 1.0,
+    "width": -0.33,
+    "wrap": 1.0
+   },
+   "node": "new_beard_3"
+  },
+  "beard:Beards/Var 3.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.35,
+    "lr": -0.01,
+    "size": 0.05,
+    "up": -0.09,
+    "wrap": 1.0
+   },
+   "node": "new_beard_4"
+  },
+  "beard:Beards/Var 3a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.18,
+    "height": -0.01,
+    "size": -0.88,
+    "up": 0.51,
+    "width": -0.6,
+    "wrap": -0.35
+   },
+   "node": "new_beard_5"
+  },
+  "beard:Beards/Var 3aaa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.16,
+    "lr": 0.01,
+    "size": 0.09,
+    "up": 0.73,
+    "wrap": 0.14
+   },
+   "node": "new_beard_6"
+  },
+  "beard:Beards/Var 4.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.71,
+    "height": 0.1,
+    "up": 0.2,
+    "width": -0.19,
+    "wrap": -0.13
+   },
+   "node": "new_beard_7"
+  },
+  "beard:Beards/Var 4a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.45,
+    "height": -0.26,
+    "size": -0.91,
+    "up": 0.17,
+    "width": -0.52,
+    "wrap": -0.19
+   },
+   "node": "new_beard_8"
+  },
+  "beard:Beards/Var 4aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 0.19,
+    "fwd": 0.03,
+    "height": 0.01,
+    "size": 0.02,
+    "up": 0.29,
+    "width": -0.11
+   },
+   "node": "new_beard_9"
+  },
+  "beard:Beards/Var 5.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.16,
+    "up": -0.2,
+    "width": -0.18
+   },
+   "node": "new_beard_10"
+  },
+  "beard:Beards/Var 5a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 1.0,
+    "fwd": 0.93,
+    "height": 1.0,
+    "len": -0.01,
+    "size": -0.98,
+    "up": 1.0,
+    "width": 0.17,
+    "wrap": 0.78
+   },
+   "node": "new_beard_11"
+  },
+  "beard:Beards/Var 6.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.62,
+    "lr": -0.01,
+    "size": -0.01,
+    "up": 0.28
+   },
+   "node": "new_beard_13"
+  },
+  "beard:Beards/Var 6a.obj": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "node": "new_beard_14"
+  },
+  "beard:Beards/Var 6aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.01,
+    "fwd": 0.28,
+    "lr": 0.01,
+    "size": 0.0,
+    "up": 0.56,
+    "width": -0.39,
+    "wrap": -0.6
+   },
+   "node": "new_beard_15"
+  },
+  "beard:Beards/Var 7.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.33,
+    "lr": -0.01,
+    "up": -0.01
+   },
+   "node": "new_beard_16"
+  },
+  "beard:Beards/Var 7a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.65,
+    "height": -0.17,
+    "len": -0.01,
+    "up": 1.0,
+    "width": -0.01
+   },
+   "node": "new_beard_17"
+  },
+  "beard:Beards/Var 7aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.01,
+    "fwd": 0.01,
+    "height": -0.02,
+    "len": 0.01,
+    "up": 0.24,
+    "width": 0.01,
+    "wrap": -0.01
+   },
+   "node": "new_beard_18"
+  },
+  "beard:Beards/Var 8.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.35,
+    "up": 0.15
+   },
+   "node": "new_beard_19"
+  },
+  "beard:Beards/Var 8aa.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.01,
+    "size": -0.13,
+    "up": 0.32
+   },
+   "node": "new_beard_21"
+  },
+  "beard:Beards/Var 9.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": -0.51,
+    "lr": -0.02,
+    "size": 0.01,
+    "up": -0.16
+   },
+   "node": "new_beard_22"
+  },
+  "beard:beard_1": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.01,
+    "height": -0.01,
+    "len": 0.01,
+    "lr": -0.01,
+    "up": 0.19,
+    "width": 0.01,
+    "wrap": -0.01
+   },
+   "node": "beard_1"
+  },
+  "beard:beard_2": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "height": -0.01,
+    "up": -0.01
+   },
+   "node": "beard_2"
+  },
+  "beard:beard_3": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "height": 0.01,
+    "len": -0.01,
+    "up": -0.01,
+    "wrap": 0.01
+   },
+   "node": "beard_3"
+  },
+  "beard:beard_4": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.01,
+    "height": -0.01,
+    "up": -0.01
+   },
+   "node": "beard_4"
+  },
+  "beard:beard_5": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "height": -0.01,
+    "up": -0.01,
+    "wrap": -0.01
+   },
+   "node": "beard_5"
+  },
+  "hair:Broad heads/Var 11.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "len": -0.05,
+    "size": -0.02
+   },
+   "node": "new_hair_10"
+  },
+  "hair:Broad heads/Var 14.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.03,
+    "fwd": -0.23,
+    "height": 0.15,
+    "lr": 0.02,
+    "size": 0.02,
+    "up": 0.07,
+    "width": -0.2,
+    "wrap": -0.05
+   },
+   "node": "new_hair_11"
+  },
+  "hair:Broad heads/Var 16.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.77,
+    "fwd": -0.17,
+    "height": 0.73,
+    "size": 0.68,
+    "up": -0.63,
+    "width": -0.19
+   },
+   "node": "new_hair_12"
+  },
+  "hair:Broad heads/Var 18.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.3,
+    "fwd": -0.26,
+    "size": 0.59,
+    "up": -0.18,
+    "width": -0.61
+   },
+   "node": "new_hair_13"
+  },
+  "hair:Broad heads/Var 19.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.62,
+    "fwd": -0.15,
+    "height": -0.47,
+    "size": 0.28,
+    "up": -0.11,
+    "width": -0.11
+   },
+   "node": "new_hair_14"
+  },
+  "hair:Broad heads/Var 2.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.3,
+    "len": -0.05,
+    "size": 0.56,
+    "up": -0.15,
+    "width": -0.72
+   },
+   "node": "new_hair_1"
+  },
+  "hair:Broad heads/Var 20.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 0.54,
+    "height": 0.57,
+    "size": -0.81,
+    "up": -0.11
+   },
+   "node": "new_hair_15"
+  },
+  "hair:Broad heads/Var 21.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.29,
+    "height": 0.0,
+    "size": 0.12,
+    "up": -0.11,
+    "width": -0.2
+   },
+   "node": "new_hair_16"
+  },
+  "hair:Broad heads/Var 22.obj": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": 0.02,
+    "fwd": -0.21,
+    "height": -0.04,
+    "len": 0.03,
+    "lr": 0.01,
+    "size": 0.44,
+    "up": -0.36,
+    "width": -0.43,
+    "wrap": -0.03
+   },
+   "node": "new_hair_17"
+  },
+  "hair:Broad heads/Var 3.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "fwd": 0.11,
+    "height": 0.52,
+    "size": 0.01,
+    "up": -0.43
+   },
+   "node": "new_hair_2"
+  },
+  "hair:Broad heads/Var 4.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "up": 0.01
+   },
+   "node": "new_hair_3"
+  },
+  "hair:Broad heads/Var 5.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "size": -0.18
+   },
+   "node": "new_hair_4"
+  },
+  "hair:Broad heads/Var 6.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "height": 0.31,
+    "size": 0.11,
+    "up": -0.25
+   },
+   "node": "new_hair_5"
+  },
+  "hair:Broad heads/Var 7.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "up": -0.13
+   },
+   "node": "new_hair_6"
+  },
+  "hair:Broad heads/Var 7a.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.02,
+    "fwd": -0.47,
+    "height": 0.66,
+    "size": 0.23,
+    "up": -0.35
+   },
+   "node": "new_hair_7"
+  },
+  "hair:Broad heads/Var 8.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "size": -0.31,
+    "up": 0.02
+   },
+   "node": "new_hair_8"
+  },
+  "hair:Broad heads/Var 9.obj": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {
+    "depth": -0.43,
+    "fwd": -0.04,
+    "height": 0.21,
+    "size": 0.38,
+    "up": -0.23,
+    "width": -0.38
+   },
+   "node": "new_hair_9"
+  },
+  "hair:hair_1": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "node": "hair_1"
+  },
+  "hair:hair_2": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "node": "hair_2"
+  },
+  "hair:hair_3": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_3"
+  },
+  "hair:hair_4": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_4"
+  },
+  "hair:hair_5": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "node": "hair_5"
+  },
+  "hair:hair_6": {
+   "disabled": true,
+   "done": "2026-11-08",
+   "node": "hair_6"
+  }
+ },
+ "race": "dwa_m"
+}

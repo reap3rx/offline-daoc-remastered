@@ -465,7 +465,7 @@ func creator_styles() -> Array:
 			continue
 		if int(styles[i].get("turban", 0)) > 0 and not on:
 			continue
-		if not tuning_on() and part_disabled(race, "hair", styles[i]):
+		if part_hidden(race, "hair", styles[i], tuning_on()):
 			continue
 		out.append(i)
 	return out
@@ -514,12 +514,13 @@ func _hair_under() -> void:
 ## (hair tuning, below), else none.
 func hair_fit_of(node: String) -> Dictionary:
 	var own: Dictionary = look.get("hair_fit", {})
-	if own.has(node):
-		return own[node]
 	var entry := part_entry(node)
-	if entry.is_empty():
-		return {}
-	return (tuning_part(race, part_key(String(entry.get("_kind", "hair")), entry)).get("fit", {}) as Dictionary)
+	var out: Dictionary = {}
+	if not entry.is_empty():
+		out = (tuning_part(race, part_key(String(entry.get("_kind", "hair")), entry)).get("fit", {}) as Dictionary).duplicate()
+	if own.has(node):                              # (the look's own over the tuned: a locked style's Length on its fit)
+		out.merge(own[node], true)
+	return out
 
 
 ## Every part with fit sliders: hair styles, beards, moustaches, sideburns (each entry tagged with its kind).
@@ -621,6 +622,17 @@ static func part_disabled(race_: String, kind: String, entry: Dictionary) -> boo
 	return bool(tuning_part(race_, part_key(kind, entry)).get("disabled", false))
 
 
+## A part the owner has finished for the race (owner 2026-11-08: "disable the sliders/tool for every one that I've
+## completed ... Except for the length slider"): its fit fixed, only Length offered; a finished disabled part gone
+## from the creator even while tuning.
+static func part_locked(race_: String, kind: String, entry: Dictionary) -> bool:
+	return tuning_part(race_, part_key(kind, entry)).has("done")
+
+
+static func part_hidden(race_: String, kind: String, entry: Dictionary, tuning_view: bool) -> bool:
+	return part_disabled(race_, kind, entry) and (not tuning_view or part_locked(race_, kind, entry))
+
+
 ## The choices of one kind a look may take (1-based for beards / moustaches / sideburns, 0 = none always offered;
 ## 0-based hair style indices): all but those disabled for the race - all of them while tuning (shown, marked).
 static func offered_of(meta_: Dictionary, race_: String, kind: String, tuning_view := false) -> Array:
@@ -630,7 +642,7 @@ static func offered_of(meta_: Dictionary, race_: String, kind: String, tuning_vi
 	for i in list.size():
 		if kind == "hair" and (bool(list[i].get("hood", false)) or int(list[i].get("turban", 0)) > 0):
 			continue
-		if tuning_view or not part_disabled(race_, kind, list[i]):
+		if not part_hidden(race_, kind, list[i], tuning_view):
 			out.append(i if kind == "hair" else i + 1)
 	return out
 

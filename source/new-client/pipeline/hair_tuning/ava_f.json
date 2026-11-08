@@ -9,10 +9,11 @@
     "fwd": -0.05,
     "height": 0.29,
     "size": 0.3,
-    "up": -0.37,
+    "up": -0.13,
     "width": -0.25,
     "wrap": 0.24
-   }
+   },
+   "node": "new_hair_10"
   },
   "hair:Human/Var 10aa.obj": {
    "copied_from": "bri_f",
@@ -31,11 +32,13 @@
    "done": "2026-11-07",
    "fit": {
     "depth": -0.45,
+    "fwd": 0.12,
     "height": 0.17,
-    "len": 0.43,
+    "len": -0.45,
     "size": 0.23,
-    "up": -0.24
-   }
+    "up": -0.07
+   },
+   "node": "new_hair_12"
   },
   "hair:Human/Var 13.obj": {
    "copied_from": "bri_f",
@@ -43,26 +46,28 @@
    "done": "2026-11-07",
    "fit": {
     "depth": -0.15,
-    "fwd": -0.08,
-    "height": 0.23,
+    "fwd": -0.55,
+    "height": -0.39,
     "len": 0.46,
     "size": 0.61,
-    "up": -0.36,
-    "width": -0.61,
+    "up": 0.24,
+    "width": -0.62,
     "wrap": -1.0
-   }
+   },
+   "node": "new_hair_13"
   },
   "hair:Human/Var 13a.obj": {
    "copied_from": "bri_f",
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
-    "depth": -0.37,
-    "fwd": 0.01,
+    "depth": -0.08,
+    "fwd": -0.19,
     "len": 0.1,
     "size": 0.23,
     "width": -0.27
-   }
+   },
+   "node": "new_hair_14"
   },
   "hair:Human/Var 13aa.obj": {
    "copied_from": "bri_f",
@@ -75,41 +80,38 @@
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
-    "depth": -0.32,
-    "fwd": 0.13,
-    "len": -0.16,
-    "size": 0.44,
-    "up": -0.29,
-    "width": -0.39,
-    "wrap": 0.71
-   }
+    "depth": -0.64,
+    "len": -0.24,
+    "size": 0.63,
+    "up": -0.14,
+    "width": -0.79,
+    "wrap": -1.0
+   },
+   "node": "new_hair_16"
   },
   "hair:Human/Var 15a.obj": {
    "copied_from": "bri_f",
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
-    "depth": -0.51,
-    "fwd": -0.21,
-    "height": 0.23,
-    "size": 0.58,
-    "up": -0.07,
-    "width": -0.5,
-    "wrap": -0.18
-   }
+    "fwd": -0.15,
+    "len": 0.25
+   },
+   "node": "new_hair_17"
   },
   "hair:Human/Var 16.obj": {
    "copied_from": "bri_f",
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
-    "depth": -0.72,
-    "fwd": -0.01,
+    "depth": -0.52,
+    "fwd": -0.18,
     "lr": -0.01,
     "size": 0.69,
-    "up": -0.3,
+    "up": -0.15,
     "width": -0.67
-   }
+   },
+   "node": "new_hair_18"
   },
   "hair:Human/Var 17.obj": {
    "copied_from": "bri_f",
@@ -161,22 +163,24 @@
    "fit": {
     "fwd": -0.09,
     "height": 0.65,
-    "size": 0.19,
-    "up": -0.52,
-    "width": 0.26
-   }
+    "len": -0.45,
+    "up": -0.15,
+    "width": 0.15
+   },
+   "node": "new_hair_21"
   },
   "hair:Human/Var 20a.obj": {
    "copied_from": "bri_f",
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
-    "depth": -0.57,
-    "fwd": -0.22,
-    "size": 0.8,
+    "depth": -1.0,
+    "fwd": 0.01,
+    "size": 0.94,
     "up": -0.25,
-    "width": -0.86
-   }
+    "width": -0.94
+   },
+   "node": "new_hair_22"
   },
   "hair:Human/Var 24.obj": {
    "copied_from": "bri_f",
@@ -211,38 +215,50 @@
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
-    "depth": -0.37,
+    "depth": -0.81,
     "fwd": -0.14,
     "size": 0.88,
-    "up": -0.66,
-    "width": -0.63
-   }
+    "up": -0.16,
+    "width": -1.0
+   },
+   "node": "new_hair_25"
   },
   "hair:Human/Var 2a.obj": {
    "copied_from": "bri_f",
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
-    "fwd": -0.25,
-    "height": 0.29
-   }
+    "fwd": -0.2,
+    "height": 0.29,
+    "up": 0.04
+   },
+   "node": "new_hair_2"
   },
   "hair:Human/Var 3.obj": {
    "copied_from": "bri_f",
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
+    "depth": -0.34,
     "height": 0.58,
+    "len": -0.55,
     "size": 0.28,
-    "up": -0.57,
+    "up": -0.27,
     "width": -0.13
-   }
+   },
+   "node": "new_hair_3"
   },
   "hair:Human/Var 33.obj": {
    "copied_from": "bri_f",
-   "disabled": true,
+   "disabled": false,
    "done": "2026-11-07",
-   "fit": {}
+   "fit": {
+    "depth": -0.13,
+    "fwd": -0.07,
+    "size": 0.14,
+    "up": 0.01
+   },
+   "node": "new_hair_26"
   },
   "hair:Human/Var 3a.obj": {
    "disabled": false,
@@ -265,25 +281,28 @@
    "done": "2026-11-07",
    "fit": {
     "fwd": 0.01,
-    "height": 0.14,
-    "len": 1.0,
+    "height": 0.09,
+    "len": 0.15,
     "size": 0.07,
-    "up": -0.28,
-    "width": 0.11,
+    "up": 0.18,
+    "width": -0.36,
     "wrap": -0.74
-   }
+   },
+   "node": "new_hair_5"
   },
   "hair:Human/Var 6.obj": {
    "copied_from": "bri_f",
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
-    "fwd": -0.14,
-    "height": 0.37,
-    "size": 0.51,
-    "up": -0.55,
-    "width": -0.26
-   }
+    "depth": -0.34,
+    "fwd": -0.05,
+    "len": -0.17,
+    "size": 0.08,
+    "up": 0.11,
+    "width": 0.14
+   },
+   "node": "new_hair_6"
   },
   "hair:Human/Var 7.obj": {
    "copied_from": "bri_f",
@@ -303,24 +322,30 @@
   },
   "hair:Human/Var 8.obj": {
    "copied_from": "bri_f",
-   "disabled": true,
+   "disabled": false,
    "done": "2026-11-07",
-   "fit": {}
+   "fit": {
+    "size": 0.13,
+    "up": -0.05,
+    "width": -0.17
+   },
+   "node": "new_hair_8"
   },
   "hair:Human/Var 9.obj": {
    "copied_from": "bri_f",
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
-    "depth": -0.28,
-    "fwd": -0.19,
+    "depth": -0.61,
+    "fwd": -0.14,
     "height": 0.42,
-    "len": -0.71,
+    "len": -0.6,
     "size": 0.86,
-    "up": -0.58,
-    "width": -1.0,
+    "up": -0.45,
+    "width": -0.92,
     "wrap": -0.54
-   }
+   },
+   "node": "new_hair_9"
   },
   "hair:hair_1": {
    "disabled": false,

@@ -25,11 +25,13 @@
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
-    "depth": 0.12,
-    "fwd": -0.19,
+    "depth": -0.03,
+    "fwd": 0.25,
+    "height": 0.04,
     "size": 0.07,
     "up": -0.16
-   }
+   },
+   "node": "new_hair_11"
   },
   "hair:Human/Var 12.obj": {
    "copied_from": "bri_m",
@@ -37,8 +39,9 @@
    "done": "2026-11-07",
    "fit": {
     "depth": -0.45,
-    "size": 0.11
-   }
+    "size": 0.24
+   },
+   "node": "new_hair_12"
   },
   "hair:Human/Var 13.obj": {
    "copied_from": "bri_m",
@@ -46,9 +49,11 @@
    "done": "2026-11-07",
    "fit": {
     "depth": -0.25,
-    "len": 0.31,
+    "len": 0.54,
+    "size": 0.08,
     "width": 0.13
-   }
+   },
+   "node": "new_hair_13"
   },
   "hair:Human/Var 15.obj": {
    "copied_from": "bri_m",
@@ -61,9 +66,11 @@
    "disabled": false,
    "done": "2026-11-07",
    "fit": {
-    "height": 0.55,
-    "up": -0.34
-   }
+    "height": 0.7,
+    "size": 0.04,
+    "up": -0.55
+   },
+   "node": "new_hair_15"
   },
   "hair:Human/Var 17.obj": {
    "copied_from": "bri_m",

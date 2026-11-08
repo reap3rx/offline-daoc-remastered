@@ -1,0 +1,272 @@
+{
+ "parts": {
+  "beard:beard_1": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "fwd": 0.03
+   },
+   "node": "beard_1"
+  },
+  "hair:Broad heads/Var 11.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": -0.13,
+    "fwd": -0.69,
+    "height": 0.29,
+    "size": 0.3,
+    "up": -0.13,
+    "width": -0.21,
+    "wrap": 0.24
+   },
+   "node": "new_hair_10"
+  },
+  "hair:Broad heads/Var 14.obj": {
+   "disabled": true,
+   "done": "2026-11-07",
+   "node": "new_hair_11"
+  },
+  "hair:Broad heads/Var 16.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": -0.61,
+    "fwd": -1.0,
+    "height": 0.17,
+    "len": 0.32,
+    "size": 0.23,
+    "up": 0.07,
+    "width": 0.05,
+    "wrap": -0.01
+   },
+   "node": "new_hair_12"
+  },
+  "hair:Broad heads/Var 18.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": -0.64,
+    "fwd": -0.47,
+    "height": -0.39,
+    "len": 0.46,
+    "size": 0.58,
+    "up": -0.05,
+    "width": -0.62,
+    "wrap": -1.0
+   },
+   "node": "new_hair_13"
+  },
+  "hair:Broad heads/Var 19.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": -0.58,
+    "fwd": -0.39,
+    "height": 0.36,
+    "len": 0.1,
+    "size": 0.2,
+    "up": -0.16,
+    "width": -0.38
+   },
+   "node": "new_hair_14"
+  },
+  "hair:Broad heads/Var 2.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": -1.0,
+    "fwd": -0.64,
+    "height": 0.42,
+    "len": -0.01,
+    "size": 0.85,
+    "up": -0.11,
+    "width": -1.0,
+    "wrap": -1.0
+   },
+   "node": "new_hair_1"
+  },
+  "hair:Broad heads/Var 20.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": -0.62,
+    "fwd": -0.48,
+    "height": 0.38,
+    "len": 0.02,
+    "size": 0.2,
+    "up": -0.9,
+    "width": 0.05
+   },
+   "node": "new_hair_15"
+  },
+  "hair:Broad heads/Var 21.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": -0.98,
+    "fwd": -0.67,
+    "height": -0.37,
+    "len": -0.49,
+    "size": 0.49,
+    "up": -0.27,
+    "width": -0.75,
+    "wrap": -1.0
+   },
+   "node": "new_hair_16"
+  },
+  "hair:Broad heads/Var 22.obj": {
+   "disabled": true,
+   "done": "2026-11-07",
+   "node": "new_hair_17"
+  },
+  "hair:Broad heads/Var 3.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": 0.01,
+    "fwd": -0.25,
+    "height": 0.6,
+    "len": 0.03,
+    "size": -0.13,
+    "up": -0.28
+   },
+   "node": "new_hair_2"
+  },
+  "hair:Broad heads/Var 4.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": -0.76,
+    "fwd": -0.37,
+    "height": -0.36,
+    "len": 1.0,
+    "size": 0.28,
+    "up": 0.24,
+    "width": -0.17,
+    "wrap": 0.66
+   },
+   "node": "new_hair_3"
+  },
+  "hair:Broad heads/Var 5.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": -0.67,
+    "fwd": -0.83,
+    "height": 0.35,
+    "lr": -0.01,
+    "size": -0.31,
+    "up": -0.34
+   },
+   "node": "new_hair_4"
+  },
+  "hair:Broad heads/Var 6.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": -0.31,
+    "fwd": -0.6,
+    "height": 0.09,
+    "len": 0.15,
+    "size": 0.07,
+    "up": 0.06,
+    "width": -0.49,
+    "wrap": -0.74
+   },
+   "node": "new_hair_5"
+  },
+  "hair:Broad heads/Var 7.obj": {
+   "disabled": true,
+   "done": "2026-11-07",
+   "node": "new_hair_6"
+  },
+  "hair:Broad heads/Var 7a.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": -0.48,
+    "fwd": -0.38,
+    "height": 0.02,
+    "len": -0.87,
+    "lr": -0.02,
+    "size": 0.25,
+    "up": -0.32,
+    "width": -0.24,
+    "wrap": -0.48
+   },
+   "node": "new_hair_7"
+  },
+  "hair:Broad heads/Var 8.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": -0.59,
+    "fwd": -0.63,
+    "size": 0.13,
+    "up": -0.29,
+    "width": -1.0,
+    "wrap": -0.51
+   },
+   "node": "new_hair_8"
+  },
+  "hair:Broad heads/Var 9.obj": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {
+    "depth": -1.0,
+    "fwd": -0.58,
+    "height": 0.42,
+    "len": -0.61,
+    "size": 0.86,
+    "up": -0.45,
+    "width": -1.0,
+    "wrap": -0.54
+   },
+   "node": "new_hair_9"
+  },
+  "hair:hair_1": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {},
+   "node": "hair_1"
+  },
+  "hair:hair_2": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {},
+   "node": "hair_2"
+  },
+  "hair:hair_3": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {},
+   "node": "hair_3"
+  },
+  "hair:hair_5": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {},
+   "node": "hair_5"
+  },
+  "hair:hair_6": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {},
+   "node": "hair_6"
+  },
+  "hair:hair_7": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {},
+   "node": "hair_7"
+  },
+  "hair:hair_8": {
+   "disabled": false,
+   "done": "2026-11-07",
+   "fit": {},
+   "node": "hair_8"
+  }
+ },
+ "race": "inc_m"
+}
