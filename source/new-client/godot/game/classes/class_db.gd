@@ -69,6 +69,33 @@ static func effect_pulses(client_effect: int) -> bool:
 	return _pulsing_effects.has(client_effect)
 
 
+static var _impacts := {}
+const IMPACT_TYPES := ["DirectDamage", "Bolt", "Lifedrain", "Nuke", "DamageSpeedDecrease", "Bomber", "PBAoE"]
+
+
+## How big a hit a client effect lands as (remastered impact light - FxLight.hit; owner 2026-11-09: "For big hits like
+## DD, the light should explode out ... Bigger for bigger spells"): 0 for an effect no damage spell lands with (a DoT's
+## drip, a debuff, a buff, a heal); else 0.6 - 2.5 by the most damage a spell drawn with it does.
+static func effect_impact(client_effect: int) -> float:
+	_load()
+	if _impacts.is_empty():
+		_impacts[-1] = 0.0
+		for k in _spells:
+			var s: Dictionary = _spells[k]
+			var ty := String(s.get("type", ""))
+			var hit := false
+			for t: String in IMPACT_TYPES:
+				if ty.contains(t):
+					hit = true
+					break
+			if not hit:
+				continue
+			var ce := int(s.get("clienteffect", 0))
+			var kk := clampf(0.6 + float(s.get("damage", 0.0)) / 80.0, 0.6, 2.5)
+			_impacts[ce] = maxf(float(_impacts.get(ce, 0.0)), kk)
+	return float(_impacts.get(client_effect, 0.0))
+
+
 ## The first spell of that name (the server's spell ids aren't always the client data's).
 static func spell_by_name(nm: String) -> Dictionary:
 	_load()

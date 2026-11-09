@@ -289,14 +289,17 @@ static var _fx_burst := {}                  # effect id -> [when its burst began
 static var prof_sound_us := 0
 
 
-static func play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: Node3D = null, skip := 0.0) -> Node3D:
+## hit: a damage spell landing, how big (ClassDb.effect_impact): its light goes off like an explosion (FxLight.hit).
+static func play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: Node3D = null, skip := 0.0,
+		hit := 0.0) -> Node3D:
 	var t0 := Time.get_ticks_usec()
-	var r := _play(fx_id, on, height, keep, target, skip)
+	var r := _play(fx_id, on, height, keep, target, skip, hit)
 	prof_play_us += Time.get_ticks_usec() - t0
 	return r
 
 
-static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: Node3D = null, skip := 0.0) -> Node3D:
+static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: Node3D = null, skip := 0.0,
+		hit := 0.0) -> Node3D:
 	var f: Dictionary = (data().get("fx", {}) as Dictionary).get(str(fx_id), {})
 	if f.is_empty() or on == null or not on.is_inside_tree():
 		return null
@@ -331,7 +334,7 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 				on.add_child(stand)
 				_fill_when_loaded(stand, fx_id, on, height, target, String(f.nif))
 				return stand
-			_play_when_loaded(fx_id, on, height, target, String(f.nif))   # a moment late, not a frozen frame
+			_play_when_loaded(fx_id, on, height, target, String(f.nif), hit)   # a moment late, not a frozen frame
 		return null
 	_live[node.get_instance_id()] = node
 	var bone := String(f.get("node", ""))
@@ -385,7 +388,7 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 	if not keep:
 		var secs := float(f.get("duration_s", 3.0))
 		on.get_tree().create_timer(secs if secs > 0.0 else 3.0).timeout.connect(func(): release(node))
-		FxLight.attach(fx, 2.0, 6.0 * clampf(lk, 0.5, 2.0), secs if secs > 0.0 else 3.0)
+		FxLight.hit(fx, secs if secs > 0.0 else 3.0, hit)   # an impact's flash and / or a glow for the effect's life
 	else:
 		FxLight.attach(fx, 1.4, 4.5 * clampf(lk, 0.5, 2.0))   # a held glow (the caster's hands while gathering)
 	return node
@@ -410,13 +413,13 @@ static func _fill_when_loaded(stand: Node3D, fx_id: int, on: Node3D, height: flo
 
 
 ## An effect whose files were still loading: played once they are in (up to 3 s), if its character is still there.
-static func _play_when_loaded(fx_id: int, on: Node3D, height: float, target: Node3D, path: String) -> void:
+static func _play_when_loaded(fx_id: int, on: Node3D, height: float, target: Node3D, path: String, hit := 0.0) -> void:
 	var tree := on.get_tree()
 	var until := Time.get_ticks_msec() + 3000
 	while NifScene.loading(path) and Time.get_ticks_msec() < until:
 		await tree.process_frame
 	if NifScene.is_loaded(path) and is_instance_valid(on) and on.is_inside_tree():
-		_play(fx_id, on, height, false, target if is_instance_valid(target) else null)
+		_play(fx_id, on, height, false, target if is_instance_valid(target) else null, 0.0, hit)
 
 
 static func sound(snd: CharacterSounds, set_id: int, event: String) -> void:
@@ -594,7 +597,7 @@ static func land(client_effect: int, target: Node3D, height: float, snd: Charact
 	var id := int(e.get("resist" if resisted else "target", 0))
 	var shown: Node3D = null
 	if id > 0:
-		shown = play(id, target, height)
+		shown = play(id, target, height, false, null, 0.0, 0.0 if resisted else ClassDb.effect_impact(client_effect))
 	if not resisted and FxLight.enabled:
 		var col := FxLight.color_of(shown) if shown else Color(1, 1, 1)
 		if hostile:

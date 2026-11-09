@@ -27,8 +27,9 @@ static func set_enabled(on: bool) -> void:
 
 
 ## A light on an effect (a NifScene or its holder); null when off, the colour is too dark, or there are too many.
-## fade_s > 0: it dies away over that time (a spell's duration); 0: it stays (weapon / monster effects).
-static func attach(fx: Node3D, energy: float, range_m: float, fade_s := 0.0) -> OmniLight3D:
+## fade_s > 0: it dies away over that time (a spell's duration; `fades` false: the caller fades it - hit); 0: it stays
+## (weapon / monster effects).
+static func attach(fx: Node3D, energy: float, range_m: float, fade_s := 0.0, fades := true) -> OmniLight3D:
 	if not enabled or fx == null or not is_instance_valid(fx) or not fx.is_inside_tree():
 		return null
 	_live = _live.filter(func(l): return is_instance_valid(l))
@@ -52,11 +53,67 @@ static func attach(fx: Node3D, energy: float, range_m: float, fade_s := 0.0) -> 
 	o.position = Vector3(0, 0.3, 0)
 	fx.add_child(o)
 	(_live if fade_s > 0.0 else _steady).append(o)
-	if fade_s > 0.0:
+	if fade_s > 0.0 and fades:
 		var tw := o.create_tween()
 		tw.tween_interval(fade_s * 0.4)                   # full while the effect is at its brightest ...
 		tw.tween_property(o, "light_energy", 0.0, fade_s * 0.6)   # ... then dying with it
 	return o
+
+
+## A landed spell's light (SpellFx._play, everything but a held glow; owner 2026-11-09: "For big hits like DD, the
+## light should explode out then fade pretty quickly, like an explosion. Bigger for bigger spells. The light can linger
+## as long as the spell effect lives ... poison clouds, but those should be smaller"):
+##   - impact > 0 (a damage spell's hit, 0.6 - 2.5 by its damage: ClassDb.effect_impact): a flash out to its peak in a
+##     few hundredths of a second, falling away in about a third of one to a small glow
+##   - that glow - or, for anything else (a poison's drip, a debuff, a buff, a heal), a smaller soft light that comes up
+##     gently, its size by the effect's - stays while the effect is there and goes out with it.
+const FLASH_IN := 0.04
+const FLASH_OUT := 0.35
+static func hit(fx: Node3D, life_s: float, impact := 0.0) -> OmniLight3D:
+	var o := attach(fx, 0.0, 1.0, life_s, false)
+	if o == null:
+		return null
+	var ext := extent(fx)
+	var kl := clampf(ext / 12.0, 0.4, 1.2)                # the effect's own size, for its glow (a drip ~0.7)
+	var glow_e := 0.3 + 0.2 * kl
+	var glow_r := 1.5 + 1.2 * kl
+	var hold := maxf(life_s * 0.75, 0.1)
+	var tw := o.create_tween()
+	o.light_energy = 0.0
+	if impact > 0.0:
+		glow_e = 0.25 + 0.15 * impact
+		glow_r = 2.0 + 0.8 * impact
+		o.omni_range = 4.0 + 4.0 * impact
+		o.omni_attenuation = 1.0                          # (a hard, wide flash)
+		tw.tween_property(o, "light_energy", 4.0 + 3.0 * impact, FLASH_IN)
+		tw.tween_property(o, "light_energy", glow_e, FLASH_OUT).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+		tw.parallel().tween_property(o, "omni_range", glow_r, FLASH_OUT).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+		tw.parallel().tween_property(o, "omni_attenuation", 1.4, FLASH_OUT)
+		hold = maxf(hold - FLASH_IN - FLASH_OUT, 0.05)
+	else:
+		o.omni_range = glow_r
+		var up := minf(0.3, life_s * 0.2)
+		tw.tween_property(o, "light_energy", glow_e, up).set_trans(Tween.TRANS_SINE)
+		hold = maxf(hold - up, 0.05)
+	tw.tween_interval(hold)
+	tw.tween_property(o, "light_energy", 0.0, maxf(life_s * 0.25, 0.1))   # out with the effect
+	o.set_meta("k", impact)
+	o.set_meta("ext", ext)
+	return o
+
+
+## How big an effect is in the world (metres across): its particles' reach and its meshes' bounds, at its scale.
+static func extent(fx: Node3D) -> float:
+	var best := 0.0
+	for gp in fx.find_children("*", "GPUParticles3D", true, false):
+		var p := gp as GPUParticles3D
+		best = maxf(best, p.visibility_aabb.size.x * p.global_basis.get_scale().x)
+	for mi in fx.find_children("*", "MeshInstance3D", true, false):
+		var m := mi as MeshInstance3D
+		if m.mesh:
+			var a := m.get_aabb()
+			best = maxf(best, maxf(a.size.x, a.size.z) * m.global_basis.get_scale().x)
+	return best
 
 
 ## A spell effect done (SpellFx.release, back to its pool): its light goes with it.
