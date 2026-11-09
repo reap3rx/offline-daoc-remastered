@@ -25,6 +25,17 @@ var _scroll: ScrollContainer
 var _list: VBoxContainer
 var _capture := []                       # [action id, slot, button] while waiting for a key
 var _status: Label
+## The character-select screen's copy (owner 2026-11-08: "graphics options and everything else also need to be
+## available in the options menu you can access in the character select screen"): no EDIT UI / CHARACTER SELECT.
+var pregame := false
+# a display change on trial (owner 2026-11-08: "I didn't see any option in game to confirm my setting changes"):
+# picked, then APPLY; kept only once KEEP is pressed, put back after CONFIRM_S seconds otherwise
+const CONFIRM_S := 15.0
+var _pend_res = null                     # [w, h] picked, not yet applied
+var _pend_mode := ""
+var _trial := {}                         # {"mode", "res"} to go back to while a change is on trial
+var _trial_left := 0.0
+var _trial_label: Label
 
 
 func build() -> void:
@@ -59,9 +70,11 @@ func build() -> void:
 	add_child(_status)
 	var buttons := [["EDIT UI", _edit_ui], ["CHARACTER SELECT", _to_character_select], ["QUIT", _quit_game],
 			["CLOSE", hide_window]]
+	if pregame:
+		buttons = [["QUIT", _quit_game], ["CLOSE", hide_window]]
 	for i in buttons.size():
 		var b := UiArt.button(buttons[i][0], Vector2(86, 20), 9)
-		b.position = Vector2(11 + i * 91, 394)
+		b.position = Vector2(11 + (i + (2 if pregame else 0)) * 91, 394)
 		b.pressed.connect(buttons[i][1])
 		add_child(b)
 	apply_saved()
@@ -110,6 +123,8 @@ func show_window() -> void:
 
 func hide_window() -> void:
 	_capture = []
+	if not _trial.is_empty():                              # (closed with a change on trial: put back)
+		_end_trial(false)
 	super.hide_window()
 
 
@@ -253,11 +268,16 @@ func _save(section: String, key: String, value) -> void:
 
 func _video() -> void:
 	_heading("DISPLAY")
-	var cur := DisplayServer.window_get_size()
+	var saved_mode := String(settings.get_value("display", "window_mode", _current_mode()))
+	var saved_res = settings.get_value("display", "resolution", [])
+	var screen := DisplayServer.screen_get_size(DisplayServer.window_get_current_screen())
+	var cur := Vector2i(int(saved_res[0]), int(saved_res[1])) if saved_res is Array and saved_res.size() == 2 \
+			else (screen if saved_mode != "windowed" else DisplayServer.window_get_size())
+	if _pend_res is Array:
+		cur = Vector2i(int(_pend_res[0]), int(_pend_res[1]))
 	var names := []
 	var sel := 0
 	var list := RESOLUTIONS.duplicate()
-	var screen := DisplayServer.screen_get_size(DisplayServer.window_get_current_screen())
 	list = list.filter(func(r: Vector2i): return r.x <= screen.x and r.y <= screen.y)
 	if not list.has(screen):
 		list.append(screen)
@@ -265,14 +285,36 @@ func _video() -> void:
 		names.append("%d X %d" % [list[i].x, list[i].y])
 		if list[i] == cur:
 			sel = i
+	if not _trial.is_empty():                              # a change on trial: keep it or go back
+		_trial_label = UiArt.label("", 10, UiArt.GOLD_HI)
+		_trial_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		_trial_label.custom_minimum_size = Vector2(344, 0)
+		_list.add_child(_trial_label)
+		_trial_tick(0.0)
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 6)
+		var keep := UiArt.button("KEEP", Vector2(110, 20), 9)
+		keep.pressed.connect(func(): _end_trial(true))
+		row.add_child(keep)
+		var back := UiArt.button("REVERT", Vector2(110, 20), 9)
+		back.pressed.connect(func(): _end_trial(false))
+		row.add_child(back)
+		_list.add_child(row)
 	_row("RESOLUTION", _choice(names, sel, func(i: int):
-		_save("display", "resolution", [list[i].x, list[i].y])
-		_apply_window(String(settings.get_value("display", "window_mode", _current_mode())), [list[i].x, list[i].y])))
+		_pend_res = [list[i].x, list[i].y]
+		_status.text = "PRESS APPLY TO TRY IT"))
 	var modes := ["windowed", "fullscreen", "borderless"]
-	_row("WINDOW MODE", _choice(["WINDOWED", "FULLSCREEN", "BORDERLESS WINDOWED"],
-			modes.find(String(settings.get_value("display", "window_mode", _current_mode()))), func(i: int):
-		_save("display", "window_mode", modes[i])
-		_apply_window(modes[i], settings.get_value("display", "resolution", []))))
+	var mode_now := _pend_mode if _pend_mode != "" else saved_mode
+	_row("WINDOW MODE", _choice(["WINDOWED", "FULLSCREEN", "BORDERLESS WINDOWED"], modes.find(mode_now), func(i: int):
+		_pend_mode = modes[i]
+		_status.text = "PRESS APPLY TO TRY IT"))
+	var apply := UiArt.button("APPLY", Vector2(176, 20), 9)
+	apply.pressed.connect(_try_display)
+	_row("", apply)
+	_hint("BORDERLESS AND FULL SCREEN ALWAYS FILL THE SCREEN: A LOWER RESOLUTION THERE DRAWS THE WORLD AT THAT SIZE AND STRETCHES IT (FASTER), THE INTERFACE STAYING SHARP. A CHANGE IS KEPT ONLY WHEN YOU PRESS KEEP - OTHERWISE IT GOES BACK AFTER %d SECONDS." % int(CONFIRM_S))
+	_row("SHOW FPS COUNTER", _toggle(bool(settings.get_value("display", "show_fps", false)), func(v: bool):
+		_save("display", "show_fps", v)
+		BootSettings.show_fps(v)))
 	var caps := []
 	for c in FPS_CAPS:
 		caps.append("MONITOR REFRESH (VSYNC)" if c == 0 else ("UNLIMITED (NO VSYNC)" if c < 0 else "%d FPS" % c))
@@ -350,12 +392,17 @@ func _quality() -> void:
 	_gfx_toggle("REAL-TIME BOUNCE LIGHT (SDFGI)", "gi")
 	_hint("VOLUMETRIC FOG WITH SUN SHAFTS AND GLOWING TORCHES, MORNING AND NIGHT MIST, A NEWER TONE CURVE, BLOOM, INDIRECT LIGHT, EYES THAT ADJUST TO THE DARK AND A COLOUR MOOD FOR EACH REALM AND HOUR. OFF IS THE CLASSIC LOOK. WHILE ON, IT TURNS BLOOM AND INDIRECT LIGHT ON TOO, FIRES FLICKER AND CAST SHADOWS, YOUR TORCH BECOMES A BELT LANTERN AND SPELLS AND GLOWING WEAPONS LIGHT THEIR SURROUNDINGS. BOUNCE LIGHT LETS SUNLIT GROUND AND WALLS LIGHT THE SHADE BESIDE THEM (REMASTERED ONLY): IT REPLACES EACH ZONE'S OWN AMBIENT TINT, SO NIGHTS GO MUCH DARKER - OFF BY DEFAULT, TRY IT.")
 
+	# (owner 2026-11-08: "an old 'lighting' section ... with SSAO and SSIL in it. Do these conflict with our remastered
+	# lighting?" - remastered turns its own indirect light and bloom on, so those two only show for the classic look)
 	_heading("LIGHTING")
 	_gfx_choice("AMBIENT OCCLUSION (SSAO)", "ssao", [-1, 0, 1, 2, 3, 4],
 			["OFF", "VERY LOW", "LOW", "MEDIUM", "HIGH", "ULTRA"])
-	_gfx_toggle("INDIRECT LIGHT (SSIL)", "ssil")
-	_gfx_toggle("BLOOM", "glow")
-	_hint("AMBIENT OCCLUSION DARKENS CREVICES AND CONTACT SHADOWS; INDIRECT LIGHT BOUNCES COLOUR OFF NEARBY SURFACES; BLOOM MAKES SPELLS AND LIGHTS GLOW. THE LAST TWO ARE NEW TO THE LOOK - OFF BY DEFAULT.")
+	if bool(Graphics.value("remastered")):
+		_hint("AMBIENT OCCLUSION DARKENS CREVICES AND CONTACT SHADOWS. REMASTERED LIGHTING BRINGS ITS OWN INDIRECT LIGHT AND BLOOM.")
+	else:
+		_gfx_toggle("INDIRECT LIGHT (SSIL)", "ssil")
+		_gfx_toggle("BLOOM", "glow")
+		_hint("AMBIENT OCCLUSION DARKENS CREVICES AND CONTACT SHADOWS; INDIRECT LIGHT BOUNCES COLOUR OFF NEARBY SURFACES; BLOOM MAKES SPELLS AND LIGHTS GLOW. THE LAST TWO ARE NEW TO THE LOOK - OFF BY DEFAULT.")
 
 	_heading("ANTI-ALIASING")
 	_gfx_choice("MSAA", "msaa", [0, 2, 4, 8], ["OFF", "2X", "4X", "8X"])
@@ -364,6 +411,11 @@ func _quality() -> void:
 	_gfx_choice("RENDER SCALE", "render_scale", [1.0, 1.25, 1.5, 1.75, 2.0],
 			["100% (NATIVE)", "125%", "150%", "175%", "200%"])
 	_hint("RENDER SCALE ABOVE 100% IS SUPERSAMPLING: SHARPER EDGES FOR A LOT OF GRAPHICS CARD TIME.")
+
+	_heading("UPSCALING")
+	var ups: Array = Graphics.UPSCALERS.keys()
+	_gfx_choice("UPSCALER", "upscaler", ups, ups.map(func(k): return String(Graphics.UPSCALERS[k][2])))
+	_hint("DRAWS THE WORLD SMALLER AND SCALES IT UP TO THE SCREEN (AMD FSR - ANY GRAPHICS CARD): A LOT MORE FRAMES FOR A LITTLE SOFTNESS. FSR 2 IS THE SHARPER AND DOES ITS OWN ANTI-ALIASING (MSAA AND TAA ARE OFF WITH IT); FSR 1 IS CHEAPER AND SOFTER. RENDER SCALE IS IGNORED WHILE AN UPSCALER IS ON.")
 
 	_heading("TEXTURES")
 	_gfx_choice("ANISOTROPIC FILTERING", "aniso", [1, 2, 4, 8, 16], ["OFF", "2X", "4X", "8X", "16X"])
@@ -388,6 +440,11 @@ func _mark_preset() -> void:
 func _gfx_set(key: String, v: Variant) -> void:
 	Graphics.set_value(key, v)
 	_mark_preset()
+	if key == "remastered":                                # (the lighting rows it governs: shown again, in place)
+		var at := _scroll.scroll_vertical
+		show_page("video")
+		await get_tree().process_frame
+		_scroll.scroll_vertical = at
 	_status.text = "CUSTOM QUALITY" if Graphics.current_preset() == "" else "%s QUALITY" % Graphics.current_preset().to_upper()
 
 
@@ -681,6 +738,59 @@ func capturing() -> bool:
 
 
 # --- apply ----------------------------------------------------------------------------------------------------
+
+## APPLY: the picked resolution / window mode tried, the old one kept to go back to.
+func _try_display() -> void:
+	if _pend_res == null and _pend_mode == "":
+		_status.text = "NOTHING CHANGED"
+		return
+	var old_mode := String(settings.get_value("display", "window_mode", _current_mode()))
+	var old_res = settings.get_value("display", "resolution", [])
+	if not (old_res is Array and old_res.size() == 2):
+		var ws := DisplayServer.window_get_size()
+		old_res = [ws.x, ws.y]
+	if _trial.is_empty():
+		_trial = {"mode": old_mode, "res": old_res}
+	var mode := _pend_mode if _pend_mode != "" else old_mode
+	var res = _pend_res if _pend_res is Array else old_res
+	_trial["new_mode"] = mode
+	_trial["new_res"] = res
+	_pend_res = null
+	_pend_mode = ""
+	_apply_window(mode, res)
+	_trial_left = CONFIRM_S
+	show_page("video")
+
+
+func _trial_tick(delta: float) -> void:
+	_trial_left -= delta
+	if is_instance_valid(_trial_label):
+		_trial_label.text = "KEEP THESE DISPLAY SETTINGS? GOING BACK IN %d SECONDS." % ceili(maxf(_trial_left, 0.0))
+	if _trial_left <= 0.0:
+		_end_trial(false)
+
+
+func _process(delta: float) -> void:
+	if not _trial.is_empty():
+		_trial_tick(delta)
+
+
+## KEEP: saved (the game starts with it). REVERT / time up / closed: the old one put back.
+func _end_trial(keep: bool) -> void:
+	if _trial.is_empty():
+		return
+	var t := _trial
+	_trial = {}
+	if keep:
+		_save("display", "window_mode", t.new_mode)
+		_save("display", "resolution", t.new_res)
+		_status.text = "DISPLAY SETTINGS KEPT"
+	else:
+		_apply_window(String(t.mode), t.res)
+		_status.text = "DISPLAY SETTINGS PUT BACK"
+	if visible and page == "video":
+		show_page.call_deferred("video")
+
 
 func _apply_fps(cap: int) -> void:
 	BootSettings.apply_fps(cap)

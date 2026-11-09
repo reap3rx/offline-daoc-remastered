@@ -78,7 +78,9 @@ var _swatch_cache := {}
 var _status: Label
 var _name_edit: LineEdit
 var _desc: RichTextLabel
-var _menu: GameMenu
+var _menu: OptionsWindow                     # (the game's own Options window - owner 2026-11-08: the old one was "a real
+var _menu_layer: CanvasLayer                 # stunted one and feels disjointed")
+var _menu_root: Control
 var _drag := 0
 
 
@@ -122,8 +124,21 @@ func _ready() -> void:
 	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.theme = _make_theme()
 	_layer.add_child(_root)
-	_menu = GameMenu.new()
-	add_child(_menu)
+	_menu_layer = CanvasLayer.new()
+	_menu_layer.layer = 20
+	add_child(_menu_layer)
+	_menu_root = Control.new()
+	_menu_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_menu_root.theme = UiArt.tooltip_theme()
+	_menu_layer.add_child(_menu_root)
+	_menu = OptionsWindow.new()
+	_menu.pregame = true
+	_menu.setup("options", "options", Rect2(), Vector2.ZERO)
+	_menu_root.add_child(_menu)
+	_menu.visible = false
+	_menu.build()
+	_scale_menu()
+	get_viewport().size_changed.connect(_scale_menu)
 	get_viewport().size_changed.connect(func(): _show(screen))
 	var shot := ""
 	for a in OS.get_cmdline_user_args():
@@ -234,7 +249,7 @@ func _build_select() -> void:
 	_medallion("play", "PLAY" if sel < chars.size() else "CREATE", 884, 600, "R", _play_or_create, 66, 24)
 	_title("SELECT YOUR CHARACTER")
 	var row := [["quit", "QUIT", func(): get_tree().quit()], ["realm", "REALM", func(): _show("realm")],
-				["options", "OPTIONS", func(): _menu.toggle()], ["customize", "CUSTOMIZE", _customize_existing],
+				["options", "OPTIONS", _toggle_menu], ["customize", "CUSTOMIZE", _customize_existing],
 				["delete", "DELETE", _ask_delete]]
 	for k in row.size():                                    # spread across the bottom like the client
 		_medallion(row[k][0], row[k][1], _wext * (0.095 + k * 0.2025), 726, "L", row[k][2])
@@ -1652,7 +1667,30 @@ func _head_position() -> Vector3:
 	return SPOT + Vector3(0, 1.65, 0)
 
 
+## The Options window at the game's interface scale (GameUI's: the client's 800x600 layout, readable at 1080p), centred.
+func _scale_menu() -> void:
+	var vp := get_viewport().get_visible_rect().size
+	var cfg := ConfigFile.new()
+	cfg.load(UiArt.settings_path)
+	var s := vp.y / 600.0 * 0.78 * float(cfg.get_value("interface", "ui_scale", 1.0))
+	_menu_root.scale = Vector2(s, s)
+	_menu_root.size = vp / s
+	_menu.position = ((vp / s) - _menu.size) / 2.0
+
+
+func _toggle_menu() -> void:
+	if _menu.visible:
+		_menu.hide_window()
+	else:
+		_scale_menu()
+		_menu.show_window()
+
+
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE and _menu.visible and not _menu.capturing():
+		_menu.hide_window()
+		get_viewport().set_input_as_handled()
+		return
 	if screen not in ["select", "create", "customize"]:
 		return
 	if event is InputEventMouseButton:
@@ -1994,6 +2032,11 @@ func _shots(folder: String) -> void:
 			shot_realm = a.split("=", true, 1)[1]
 	_pick_realm(shot_realm)
 	await save.call("2_select")
+	_toggle_menu()                                       # the Options window here (as in the game)
+	await save.call("2b_options")
+	_menu._scroll.scroll_vertical = 100000
+	await save.call("2c_options_end")
+	_toggle_menu()
 	_start_create()
 	draft.name = "Brennan"
 	_show("create")

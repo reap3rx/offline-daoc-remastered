@@ -25,7 +25,8 @@ const DEFAULTS := {
 	"screen_aa": 1,                # 0 off, 1 FXAA, 2 SMAA
 	"taa": false,
 	"aniso": 4,                    # 1 (off) / 2 / 4 / 8 / 16
-	"render_scale": 1.0,           # 1 = native; above 1 = supersampling (no upscaling, owner)
+	"render_scale": 1.0,           # 1 = native; above 1 = supersampling
+	"upscaler": "off",             # UPSCALERS: the world drawn smaller and upscaled (owner 2026-11-08: "throw the FSR options in")
 	"grass_distance": 72.0,        # metres
 	"grass_density": 1.0,
 	"remastered": true,            # REMASTERED LIGHTING (owner 2026-10-28): SkySystem.set_remastered
@@ -33,25 +34,36 @@ const DEFAULTS := {
 	"compressed_textures": true,   # the world's textures block-compressed (NifMaterials.load_image): less video memory, faster loads
 }
 const PRESET_NAMES := ["low", "medium", "high", "ultra", "extreme"]
+## AMD FidelityFX Super Resolution, built into the engine (DLSS is not - owner 2026-11-08, after the benchmark: at
+## 3440 x 1440 an RTX 4070 spent 12 ms a frame; drawn at 67% and upscaled, 4-5 ms less): [mode, render scale, label].
+## FSR 2 is temporal (sharp, its own anti-aliasing - MSAA off with it); FSR 1 is spatial (cheaper, softer).
+const UPSCALERS := {
+	"off": [Viewport.SCALING_3D_MODE_BILINEAR, 1.0, "OFF (NATIVE)"],
+	"fsr2_quality": [Viewport.SCALING_3D_MODE_FSR2, 0.67, "FSR 2 QUALITY (67%)"],
+	"fsr2_balanced": [Viewport.SCALING_3D_MODE_FSR2, 0.59, "FSR 2 BALANCED (59%)"],
+	"fsr2_performance": [Viewport.SCALING_3D_MODE_FSR2, 0.5, "FSR 2 PERFORMANCE (50%)"],
+	"fsr1_quality": [Viewport.SCALING_3D_MODE_FSR, 0.77, "FSR 1 QUALITY (77%)"],
+	"fsr1_performance": [Viewport.SCALING_3D_MODE_FSR, 0.59, "FSR 1 PERFORMANCE (59%)"],
+}
 # HIGH is the defaults (the owner's own game until now)
 const PRESETS := {
 	"low": {"view_distance": 0.8, "shadows": true, "shadow_size": 1024, "shadow_distance": 80.0, "shadow_filter": 1,
 			"ssao": -1, "ssil": false, "glow": false, "msaa": 0, "screen_aa": 1, "taa": false, "aniso": 2,
 			"render_scale": 1.0, "grass_distance": 45.0, "grass_density": 0.5, "remastered": false, "gi": false,
-			"compressed_textures": true},
+			"compressed_textures": true, "upscaler": "off"},
 	"medium": {"view_distance": 1.0, "shadows": true, "shadow_size": 2048, "shadow_distance": 110.0, "shadow_filter": 3,
 			"ssao": 1, "ssil": false, "glow": false, "msaa": 0, "screen_aa": 1, "taa": false, "aniso": 4,
 			"render_scale": 1.0, "grass_distance": 60.0, "grass_density": 0.75, "remastered": false, "gi": false,
-			"compressed_textures": true},
+			"compressed_textures": true, "upscaler": "off"},
 	"high": DEFAULTS,
 	"ultra": {"view_distance": 1.6, "shadows": true, "shadow_size": 4096, "shadow_distance": 220.0, "shadow_filter": 5,
 			"ssao": 4, "ssil": false, "glow": false, "msaa": 4, "screen_aa": 1, "taa": false, "aniso": 16,
 			"render_scale": 1.0, "grass_distance": 110.0, "grass_density": 1.0, "remastered": true, "gi": false,
-			"compressed_textures": true},
+			"compressed_textures": true, "upscaler": "off"},
 	"extreme": {"view_distance": 2.5, "shadows": true, "shadow_size": 8192, "shadow_distance": 400.0, "shadow_filter": 5,
 			"ssao": 4, "ssil": true, "glow": false, "msaa": 4, "screen_aa": 2, "taa": false, "aniso": 16,
 			"render_scale": 1.0, "grass_distance": 160.0, "grass_density": 1.0, "remastered": true, "gi": false,
-			"compressed_textures": true},
+			"compressed_textures": true, "upscaler": "off"},
 }
 const VIEW_MAX := 4.0                    # the slider's top: 4x the client's fog and draw ranges
 
@@ -190,14 +202,21 @@ func apply_viewport() -> void:
 	var vp := get_viewport()
 	if vp == null:
 		return
-	vp.msaa_3d = {0: Viewport.MSAA_DISABLED, 2: Viewport.MSAA_2X, 4: Viewport.MSAA_4X, 8: Viewport.MSAA_8X}.get(
-			int(value("msaa")), Viewport.MSAA_2X)
+	var up: Array = UPSCALERS.get(String(value("upscaler")), UPSCALERS["off"])
+	var fsr2: bool = up[0] == Viewport.SCALING_3D_MODE_FSR2
+	vp.msaa_3d = Viewport.MSAA_DISABLED if fsr2 else {0: Viewport.MSAA_DISABLED, 2: Viewport.MSAA_2X, 4: Viewport.MSAA_4X,
+			8: Viewport.MSAA_8X}.get(int(value("msaa")), Viewport.MSAA_2X)
 	vp.screen_space_aa = clampi(int(value("screen_aa")), 0, 2) as Viewport.ScreenSpaceAA
-	vp.use_taa = bool(value("taa"))
+	vp.use_taa = bool(value("taa")) and not fsr2           # (FSR 2 is its own temporal anti-aliasing)
 	if "anisotropic_filtering_level" in vp:
 		vp.set("anisotropic_filtering_level", {1: 0, 2: 1, 4: 2, 8: 3, 16: 4}.get(int(value("aniso")), 2))
-	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
-	vp.scaling_3d_scale = clampf(float(value("render_scale")), 1.0, 2.0)
+	if String(value("upscaler")) != "off":
+		vp.scaling_3d_mode = up[0]
+		vp.scaling_3d_scale = float(up[1]) * BootSettings.res_scale
+		vp.fsr_sharpness = 0.2
+	else:
+		vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+		vp.scaling_3d_scale = clampf(float(value("render_scale")), 1.0, 2.0) * BootSettings.res_scale   # (a lower resolution, full screen)
 	RenderingServer.directional_shadow_atlas_set_size(int(value("shadow_size")), true)
 	var f := clampi(int(value("shadow_filter")), 0, 5)
 	RenderingServer.directional_soft_shadow_filter_set_quality(f as RenderingServer.ShadowQuality)

@@ -3,8 +3,8 @@ extends Node
 ## moment the game starts, before the login screen - they used to apply only once the world loaded, so the game
 ## opened windowed and switched on entering (owner 2026-10-09). Test runs (--ui-test, --shots ...) are left alone so
 ## they stay in their own window. Options > VIDEO applies changes through apply_display() too.
-## Modes: "windowed" (a normal window at the resolution), "borderless" (a borderless window at the resolution,
-## centred - the owner's 1920 x 1080 borderless windowed), "fullscreen" (exclusive full screen).
+## Modes: "windowed" (a normal window at the resolution), "borderless" (a borderless window over the whole screen),
+## "fullscreen" (exclusive full screen) - the last two render the world at the chosen resolution (res_scale).
 
 const TEST_FLAGS := ["ui-test", "ui-shots", "shots", "probe", "tour", "bench", "pregame-shot", "login-shot"]
 
@@ -25,6 +25,7 @@ static func _dev_mode() -> bool:
 
 
 func _ready() -> void:
+	_build_fps_counter()
 	for a in OS.get_cmdline_user_args():
 		if a.trim_prefix("--").split("=")[0] in TEST_FLAGS:
 			return
@@ -35,6 +36,7 @@ func _ready() -> void:
 		apply_fps(int(cfg.get_value("display", "fps_cap", 0)))
 	if cfg.has_section_key("display", "window_mode") or cfg.has_section_key("display", "resolution"):
 		apply_display(String(cfg.get_value("display", "window_mode", "windowed")), cfg.get_value("display", "resolution", []))
+	show_fps(bool(cfg.get_value("display", "show_fps", false)))
 
 
 static func apply_fps(cap: int) -> void:
@@ -42,18 +44,73 @@ static func apply_fps(cap: int) -> void:
 	Engine.max_fps = maxi(cap, 0)
 
 
+## The world's render size against the window (owner 2026-11-08: a lower resolution in borderless left a small window
+## in the middle of the screen, "not stretched to take up my whole screen as it should"): borderless and full screen
+## always cover the screen; a resolution below the screen's renders the 3D world at that size and stretches it, the
+## interface staying sharp at the screen's own. Graphics.apply_viewport multiplies its render scale by this.
+static var res_scale := 1.0
+
+
 static func apply_display(mode: String, res) -> void:
+	var screen := DisplayServer.window_get_current_screen()
+	var full := DisplayServer.screen_get_size(screen)
+	var want := Vector2i(int(res[0]), int(res[1])) if res is Array and res.size() == 2 else full
 	if mode == "fullscreen":
 		DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
+	else:
+		if DisplayServer.window_get_mode() != DisplayServer.WINDOW_MODE_WINDOWED:
+			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+		DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, mode == "borderless")
+		if mode == "borderless":                           # (the whole screen, whatever the resolution)
+			DisplayServer.window_set_size(full)
+			DisplayServer.window_set_position(DisplayServer.screen_get_position(screen))
+		else:
+			var area := DisplayServer.screen_get_usable_rect(screen)
+			var size := want.min(full)
+			DisplayServer.window_set_size(size)
+			DisplayServer.window_set_position(area.position + (area.size - size) / 2)
+	res_scale = 1.0
+	if mode != "windowed" and want.y > 0 and want.y < full.y:
+		res_scale = clampf(float(want.y) / float(full.y), 0.25, 1.0)
+	var g := (Engine.get_main_loop() as SceneTree).root.get_node_or_null("Graphics") if Engine.get_main_loop() else null
+	if g:
+		g.apply_viewport()
+
+
+# ---------------------------------------------------------------- the FPS counter (owner 2026-11-08: "an FPS counter that I
+# can tick on ... small in one of the corners of the screen (probably top left)"): Options > VIDEO, [display] show_fps
+var _fps_layer: CanvasLayer
+var _fps_label: Label
+var _fps_t := 0.0
+
+
+func _build_fps_counter() -> void:
+	_fps_layer = CanvasLayer.new()
+	_fps_layer.layer = 120
+	_fps_layer.visible = false
+	add_child(_fps_layer)
+	_fps_label = Label.new()
+	_fps_label.position = Vector2(6, 4)
+	_fps_label.add_theme_font_size_override("font_size", 13)
+	_fps_label.add_theme_color_override("font_color", Color(0.95, 0.9, 0.6))
+	_fps_label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+	_fps_label.add_theme_constant_override("outline_size", 4)
+	_fps_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fps_layer.add_child(_fps_label)
+	set_process(false)
+
+
+func show_fps(on: bool) -> void:
+	if _fps_layer == null:
 		return
-	if DisplayServer.window_get_mode() != DisplayServer.WINDOW_MODE_WINDOWED:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, mode == "borderless")
-	var screen := DisplayServer.window_get_current_screen()
-	var area := DisplayServer.screen_get_usable_rect(screen) if mode == "windowed" else \
-			Rect2i(DisplayServer.screen_get_position(screen), DisplayServer.screen_get_size(screen))
-	var size := Vector2i(int(res[0]), int(res[1])) if res is Array and res.size() == 2 else DisplayServer.window_get_size()
-	size = size.min(DisplayServer.screen_get_size(screen))
-	DisplayServer.window_set_size(size)
-	DisplayServer.window_set_position(area.position + (area.size - size) / 2)
+	_fps_layer.visible = on
+	set_process(on)
+	_fps_t = 1.0
+
+
+func _process(delta: float) -> void:
+	_fps_t += delta
+	if _fps_t >= 0.25:                                     # (four times a second: readable, not flickering)
+		_fps_t = 0.0
+		_fps_label.text = "%d FPS" % roundi(Engine.get_frames_per_second())

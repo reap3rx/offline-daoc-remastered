@@ -598,8 +598,9 @@ static func tuning(race_: String) -> Dictionary:
 
 
 static func part_key(kind: String, entry: Dictionary) -> String:
-	var m := String(entry.get("model", ""))
-	return "%s:%s" % [kind, m if m != "" else String(entry.get("node", ""))]
+	var m: Variant = entry.get("model", "")                # (either may be null: a bald style has no node)
+	var n: Variant = entry.get("node", "")
+	return "%s:%s" % [kind, str(m) if m != null and str(m) != "" else (str(n) if n != null else "")]
 
 
 static func tuning_part(race_: String, key: String) -> Dictionary:
