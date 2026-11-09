@@ -402,6 +402,13 @@ func weapon_stance() -> String:
 func set_combat(on: bool, stance: String) -> void:
 	in_combat = on
 	combat_stance = stance
+	# put away mid-swing (the killing blow): the weapon goes once the swing has played out (owner 2026-11-09: "I like
+	# to see the killing animation finish")
+	if not on and _action_left > 0.0 and is_inside_tree():
+		get_tree().create_timer(_action_left).timeout.connect(func():
+			if not in_combat:
+				refresh_gear())
+		return
 	refresh_gear()
 
 

@@ -510,6 +510,11 @@ func _controls() -> void:
 			1 if bool(settings.get_value("player", "ac_cursor_toggle", false)) else 0, func(i: int):
 		_save("player", "ac_cursor_toggle", modes[i] == "toggle")
 		preload("res://game/combat/action_combat.gd").cursor_toggle = modes[i] == "toggle"))
+	# owner 2026-11-09: the weapon stays out after a kill unless this is on
+	_row("ACTION COMBAT: SHEATHE WEAPON AFTER A KILL", _toggle(bool(settings.get_value("player", "ac_sheathe_after_kill", false)),
+			func(v: bool):
+		_save("player", "ac_sheathe_after_kill", v)
+		preload("res://game/combat/action_combat.gd").sheathe_after_kill = v))
 	_heading("KEY CONFIGURATION")
 	# shared by every character unless this one has its own (the WoW-style override, off by default)
 	_row("CHARACTER-SPECIFIC KEY BINDINGS", _toggle(Keybinds.character_specific, func(v: bool):

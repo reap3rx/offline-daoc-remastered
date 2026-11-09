@@ -696,6 +696,8 @@ func keep_drawn() -> bool:
 	var p := _player()
 	if not on or p == null or viewer == null or viewer.npcs == null:
 		return false
+	if not sheathe_after_kill:
+		return true                                        # (Options: the weapon stays out after a kill)
 	var by_oid = viewer.npcs.get("by_oid")
 	if not (by_oid is Dictionary):
 		return false
@@ -945,6 +947,11 @@ var _sprint_quiet_until := 0
 ## the journal, options ...) brings it out as it opens and lets it go again when the last one closes - unless the key
 ## was pressed meanwhile (then the key's state rules: hide it over an open window, or keep it after closing).
 static var cursor_toggle := false
+## Owner 2026-11-09: "a togglable option to not automatically sheath your sword (default off in action mode) when
+## combat ends. I like to see the killing animation finish and it feels weird that the sword automatically [goes away]
+## when the mob dies." Off (the default): in action combat the weapon stays out after a kill - the blow plays out - until
+## you put it away (the attack-mode key). On: the old way, sheathed as the target dies (unless others still fight you).
+static var sheathe_after_kill := false
 var _toggle_free := false
 var _win_free := false                 # a window opened and brought the cursor out (not yet answered by the key)
 var _win_was := false
@@ -1336,6 +1343,7 @@ func _load_layout() -> void:
 	var g := ConfigFile.new()
 	g.load(SETTINGS)
 	cursor_toggle = bool(g.get_value("player", "ac_cursor_toggle", false))
+	sheathe_after_kill = bool(g.get_value("player", "ac_sheathe_after_kill", false))
 	var cfg := ConfigFile.new()
 	_layout_for = _char_name()
 	if cfg.load(_layout_path()) != OK or not cfg.has_section(SECTION):
