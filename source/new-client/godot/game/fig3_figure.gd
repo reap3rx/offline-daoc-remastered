@@ -1461,6 +1461,12 @@ var _near := false                           # Sway ran this frame (remastered, 
 ## a legs clip, the legs (the root, the pelvis, the thighs and down) play it in step, carrying on from where the run was,
 ## and the upper body plays the action as it was made - turned by `twist` about the hips, spread up the back. Fades in
 ## and out over LOWER_FADE. Player sets it each frame; an action standing still plays whole, as before.
+## The ground for the feet (animation step 3, Sway._feet): the zone viewer sets what answers height_at(x, z, near_y)
+## (the region, or the zone) and whether it's a city (a city's grid is its roofs: the floor pick only, as Player).
+static var ground_src: Object = null
+static var ground_city := false
+
+
 ## Where the head looks (world; INF: ahead) - Player and Npc set it every frame (Sway turns the head; step 2).
 var look_point := Vector3.INF
 const LOCO_CLIPS := ["run", "walk", "walk_back", "strafe_left", "strafe_right"]
@@ -2255,6 +2261,14 @@ class Sway extends SkeletonModifier3D:
 	var _lp := 0.0
 	var _lp_v := 0.0
 	var _breath := 0.0                           # the breath's phase (rad)
+	# the feet on uneven ground (step 3): standing, each foot is set on the ground under it - the body lowered to the
+	# lower foot, the other leg bent to reach its ground (two-bone IK) - fading in as it comes to rest
+	var _thigh: Array[int] = [-1, -1]
+	var _calf: Array[int] = [-1, -1]
+	var _foot: Array[int] = [-1, -1]
+	var _root_b := -1
+	var _ik_w := 0.0
+	var _ik_d: Array[float] = [0.0, 0.0]
 	var _winded := 0.0                           # 0..1: how hard it has been running lately
 
 	func _bones(sk: Skeleton3D) -> void:
@@ -2269,6 +2283,12 @@ class Sway extends SkeletonModifier3D:
 		_neck = sk.find_bone("Bip01 Head")
 		_pelvis = sk.find_bone("Bip01 Pelvis")
 		_neck_b = sk.find_bone("Bip01 Neck")
+		_root_b = sk.find_bone("Bip01")
+		for k in 2:
+			var side: String = ["L", "R"][k]
+			_thigh[k] = sk.find_bone("Bip01 %s Thigh" % side)
+			_calf[k] = sk.find_bone("Bip01 %s Calf" % side)
+			_foot[k] = sk.find_bone("Bip01 %s Foot" % side)
 		_head_b = _neck
 		for sw in [["Bip01 Spine1", 0.55], ["Bip01 Spine2", 0.45]]:
 			var sb := sk.find_bone(String(sw[0]))
@@ -2362,6 +2382,7 @@ class Sway extends SkeletonModifier3D:
 		var side_ang := clampf(_side, -0.2, 0.2)
 		var axis_back := up.cross(fwd).normalized()           # + swings the lower end back (away from the body)
 		_turning(sk, dt, fresh, fwd_s)
+		_feet(sk, dt)
 		for i in _spine.size():                               # (first: the cloak and hair hang off the leaning back;
 			_turn(sk, _spine[i], axis_back, _lean * _spine_w[i], fwd, 0.0)    # + tips the upper body forward)
 		# a shield, a two-hander, a slung bow or a quiver on the back: the cloak hangs as the animation has it (owner
@@ -2495,6 +2516,101 @@ class Sway extends SkeletonModifier3D:
 			var t_s := Time.get_ticks_msec() / 1000.0
 			var drift := (sin(t_s * 0.95 + _phase) * 0.6 + sin(t_s * 0.41 + _phase * 1.7) * 0.4) * 0.014 * still
 			_world_turn(sk, _spine[_spine.size() - 1], Basis(chest_side, -lift) * Basis(chest_fwd, drift), false)
+
+	const FEET_MAX := 0.4                        # metres: no more than this up or down to the ground under a foot
+	const FEET_FADE := 0.25                      # seconds to come in / go out
+
+	## The ground's height under a point (world): the terrain and the floors (as Player._floor_below); -INF: none.
+	func _ground(p: Vector3) -> float:
+		var start := p.y + FEET_MAX + 0.3
+		var best := -INF
+		var src: Object = Fig3Figure.ground_src
+		if src != null and is_instance_valid(src) and not Fig3Figure.ground_city and src.has_method("height_at"):
+			var t: float = src.call("height_at", p.x, p.z, p.y)
+			if t <= start:
+				best = t
+		if is_inside_tree():
+			var q := PhysicsRayQueryParameters3D.create(Vector3(p.x, start, p.z), Vector3(p.x, p.y - FEET_MAX - 0.3, p.z),
+					ZoneLoader.LAYER_FLOOR)
+			q.hit_back_faces = false
+			var hit := get_world_3d().direct_space_state.intersect_ray(q)
+			if hit and float(hit.position.y) > best:
+				best = hit.position.y
+		return best
+
+	func _feet(sk: Skeleton3D, dt: float) -> void:
+		if _foot[0] < 0 or _foot[1] < 0 or _thigh[0] < 0 or _thigh[1] < 0 or _calf[0] < 0 or _calf[1] < 0 or _root_b < 0:
+			return
+		var cur := String(fig.anim.current_animation) if fig and fig.anim else ""
+		var ok := _vel_s.length() < 0.5 and Fig3Figure.ground_src != null and not (cur.begins_with("ride") \
+				or cur.begins_with("sit") or cur == "swim" or cur.begins_with("death") or cur == "jump" or cur == "land" \
+				or cur.begins_with("lie") or cur == "ladder")
+		_ik_w = move_toward(_ik_w, 1.0 if ok else 0.0, dt / FEET_FADE)
+		if _ik_w <= 0.0:
+			_ik_d[0] = 0.0
+			_ik_d[1] = 0.0
+			return
+		var xf := sk.global_transform
+		var su := 1.0 / maxf(xf.basis.get_scale().y, 0.001)          # (metres to the skeleton's units)
+		var up_s := (xf.basis.inverse() * Vector3.UP).normalized()
+		var base_y := model.global_position.y
+		var d: Array[float] = [0.0, 0.0]
+		for k in 2:
+			var fw := xf * sk.get_bone_global_pose(_foot[k]).origin
+			var g := _ground(Vector3(fw.x, base_y, fw.z))
+			var want := 0.0 if g == -INF else clampf(g - base_y, -FEET_MAX, FEET_MAX)
+			_ik_d[k] = lerpf(_ik_d[k], want, clampf(dt * 12.0, 0.0, 1.0))
+			d[k] = _ik_d[k] * _ik_w
+		if absf(d[0]) < 0.005 and absf(d[1]) < 0.005:
+			return
+		var body := clampf(minf(d[0], d[1]), -FEET_MAX * 0.9, 0.2)    # the body down to the lower foot (or up)
+		var feet_was: Array[Basis] = [sk.get_bone_global_pose(_foot[0]).basis, sk.get_bone_global_pose(_foot[1]).basis]
+		sk.set_bone_pose_position(_root_b, sk.get_bone_pose_position(_root_b) + up_s * body * su)
+		for k in 2:
+			var raise := (d[k] - body) * su
+			if absf(raise) > 0.0005:
+				_two_bone(sk, k, up_s * raise)
+			# the foot keeps its own turn (as the clip has it), not the leg's
+			var g := sk.get_bone_global_pose(_foot[k])
+			_skel_set(sk, _foot[k], Transform3D(feet_was[k], g.origin))
+
+	## The leg (thigh, calf) bent so the foot moves by `delta` (skeleton space), the knee in its own plane.
+	func _two_bone(sk: Skeleton3D, k: int, delta: Vector3) -> void:
+		var h := sk.get_bone_global_pose(_thigh[k]).origin
+		var kn := sk.get_bone_global_pose(_calf[k]).origin
+		var an := sk.get_bone_global_pose(_foot[k]).origin
+		var tg := an + delta
+		var a := h.distance_to(kn)
+		var b := kn.distance_to(an)
+		if a < 1e-4 or b < 1e-4:
+			return
+		var c := clampf(h.distance_to(tg), absf(a - b) + 1e-3, a + b - 1e-3)
+		var n := (kn - h).cross(an - h)
+		if n.length() < 1e-6:
+			return                                               # (a straight leg: no plane to bend in - leave it)
+		n = n.normalized()
+		var want_k := acos(clampf((a * a + b * b - c * c) / (2.0 * a * b), -1.0, 1.0))
+		var cur_k := (h - kn).angle_to(an - kn)
+		var r1 := Basis(n, want_k - cur_k)
+		var r2 := Basis(n, cur_k - want_k)
+		var e1 := absf((h - kn).angle_to(r1 * (an - kn)) - want_k)
+		var e2 := absf((h - kn).angle_to(r2 * (an - kn)) - want_k)
+		_skel_turn(sk, _calf[k], r1 if e1 <= e2 else r2)
+		var an2 := sk.get_bone_global_pose(_foot[k]).origin
+		var from := (an2 - h).normalized()
+		var to := (tg - h).normalized()
+		if from.dot(to) < 0.99999:
+			_skel_turn(sk, _thigh[k], Basis(Quaternion(from, to)))
+
+	func _skel_turn(sk: Skeleton3D, b: int, r: Basis) -> void:
+		var g := sk.get_bone_global_pose(b)
+		_skel_set(sk, b, Transform3D(r * g.basis, g.origin))
+
+	func _skel_set(sk: Skeleton3D, b: int, ng: Transform3D) -> void:
+		var p := sk.get_bone_parent(b)
+		var pg := sk.get_bone_global_pose(p) if p >= 0 else Transform3D.IDENTITY
+		var local := pg.affine_inverse() * ng
+		sk.set_bone_pose_rotation(b, local.basis.get_rotation_quaternion())
 
 	## A bone turned by `r` (a turn in the world), about its own joint or (ground) about the ground under it.
 	func _world_turn(sk: Skeleton3D, b: int, r: Basis, ground: bool) -> void:

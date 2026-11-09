@@ -1365,6 +1365,9 @@ func _process_inner(delta: float) -> void:
 		if absf(h - float(PlayerData.target.get("health", 1.0))) > 0.001:
 			PlayerData.target["health"] = h
 			PlayerData.target_changed.emit()
+	if zone:                                               # (the feet's ground: Fig3Figure.Sway._feet)
+		Fig3Figure.ground_src = region if region else zone
+		Fig3Figure.ground_city = zone.city
 	if player and npcs:                                    # (the head looks at your target: Player._look_point)
 		player.look_target = npcs.target if is_instance_valid(npcs.target) and npcs.target.state.alive else null
 	if player and zone:
