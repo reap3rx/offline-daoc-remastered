@@ -832,15 +832,14 @@ func _pace(delta: float) -> void:
 		_pace_mps = lerpf(_pace_mps, minf(v, 20.0), clampf(delta * 6.0, 0.0, 1.0))
 	_pace_from = here
 	var fig := model as Fig3Figure
-	if fig.stopping():                                 # (its last step: Fig3Figure.motion_tick paces it)
-		fig.motion_tick()
+	if fig.stopping():                                 # (its last step: Fig3Figure paces it)
 		return
 	var clip := String(anim.current_animation)
 	var want := 1.0
 	if (clip == "run" or clip == "walk") and _pace_mps > 0.3:
 		var nat := (model as Fig3Figure).natural_speed(clip)
 		if nat > 0.0:
-			want = clampf(_pace_mps / nat, 0.5, 2.5) * fig.start_boost()
+			want = clampf(_pace_mps / nat, 0.5, 2.5) * fig.pace_factor()
 	if absf(anim.speed_scale - want) > 0.01:
 		anim.speed_scale = want
 

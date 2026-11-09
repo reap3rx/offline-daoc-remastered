@@ -1424,81 +1424,128 @@ func play(clip: String) -> void:
 
 # ---------------------------------------------------------------- start and stop (claude 2026-11-08)
 ## Owner 2026-11-08 (Guild Wars 2's runner: "an extra step to stop, or ... a little extra motion to gain momentum when
-## she starts running ... you don't actually feel the momentum - the controls remain tight ... extra stop and start
-## animations, that would get interrupted for any other animation"): Remastered, near the camera (Sway), a figure that
-## stops keeps its stride going a moment, slowing, before it settles into its idle - its last step - and a figure
-## that starts takes its first strides a little quick, the push off. Only the look: the figure moves (and stops) as
-## it did. The rest of it - the lean, the hair and cloak - is Sway's. Player._play and Npc call move_clip.
-const STOP_S := 0.32                         # the stride running on, slowing, after a stop
-const START_S := 0.35                        # the quickened first strides
+## she starts running ... you don't actually feel the momentum - the controls remain tight"; then, of the first try -
+## the stride running on in place after a stop - "the character itself looks like they ice skate"): Remastered, near
+## the camera, the drawn figure trails its real place a little, on a critically damped spring - it gathers speed over
+## its first strides when you start, and carries on a last half step when you stop - and the legs keep pace with
+## where the figure is drawn, not with the real place, so the feet stay on the ground. The real place - where you
+## are, what the camera and the server go by - starts and stops at once, as before. The lean, the hair and the cloak
+## are Sway's. Player._play and Npc call move_clip and pace_factor.
+const FOLLOW_W := 36.0                       # the spring (rad/s): ~0.4 m behind at a run, a last step of as much
+const FOLLOW_SNAP_M := 3.0                   # further than this (a teleport, a zone): no trailing, there at once
 var _near := false                           # Sway ran this frame (remastered, in range)
-var _stop_t0 := -1.0
-var _stop_speed0 := 1.0
+var _follow := Vector3.INF                   # where the figure is drawn (world), trailing its real place
+var _follow_v := Vector3.ZERO
+var _model_base := Vector3.INF               # the model's own place in the figure, without the trail
+var _real_speed := 0.0                        # how fast the real place moves (m/s, smoothed)
+var _last_anchor := Vector3.INF
 var _stop_to := ""
-var _start_t0 := -1.0
+var _stop_speed0 := 1.0
+var _stop_vis0 := 0.0
+var _stopping := false
+var _stop_t := 0.0
 
 
 static func _idle_like(clip: String) -> bool:
 	return clip.contains("idle") and not clip.begins_with("sit")
 
 
-## Before a clip is played for movement: true when the figure has taken it (a stop under way - leave the clip be),
-## false to play it as usual. A stop is cut short by anything but standing still.
+func _process(delta: float) -> void:
+	if model == null or delta <= 0.0:
+		return
+	if _model_base == Vector3.INF:
+		_model_base = model.position
+	var anchor := global_position
+	var cur := String(anim.current_animation) if anim else ""
+	var real_v := Vector3.ZERO if _last_anchor == Vector3.INF else (anchor - _last_anchor) / delta
+	_last_anchor = anchor
+	real_v.y = 0.0
+	_real_speed = lerpf(_real_speed, minf(real_v.length(), 25.0), clampf(delta * 12.0, 0.0, 1.0))
+	if not (sway_on and _near) or cur.begins_with("ride") or cur.begins_with("sit"):
+		if _follow != Vector3.INF:
+			_follow = Vector3.INF
+			model.position = _model_base
+		_follow_v = Vector3.ZERO
+		if _stopping:
+			motion_tick(0.0)
+		return
+	if _follow == Vector3.INF or Vector2(anchor.x - _follow.x, anchor.z - _follow.z).length() > FOLLOW_SNAP_M:
+		_follow = anchor
+		_follow_v = real_v
+	var steps := ceili(minf(delta, 0.25) * 120.0)
+	var h := minf(delta, 0.25) / steps
+	for _i in steps:                                       # (critically damped: no overshoot - it never passes you)
+		var x := _follow - anchor
+		x.y = 0.0
+		_follow_v += (-FOLLOW_W * FOLLOW_W * x - 2.0 * FOLLOW_W * _follow_v) * h
+		_follow_v.y = 0.0
+		_follow += _follow_v * h
+	_follow.y = anchor.y
+	var off := _follow - anchor
+	var par := model.get_parent() as Node3D
+	model.position = _model_base + (par.global_basis.inverse() * off if par else off)
+	if _stopping:
+		motion_tick(delta)
+
+
+func vis_speed() -> float:
+	return Vector2(_follow_v.x, _follow_v.z).length() if _follow != Vector3.INF else _real_speed
+
+
+## The run / walk's pace: how fast the drawn figure moves against the real place - under 1 while it gathers speed
+## (the first strides), 1 at a steady run.
+func pace_factor() -> float:
+	if _follow == Vector3.INF or _real_speed < 0.3:
+		return 1.0
+	return clampf(vis_speed() / _real_speed, 0.25, 1.2)
+
+
+## Before a clip is played for movement: true when the figure has taken it (a stop under way - its last step: leave
+## the clip be), false to play it as usual. Anything but standing still cuts the last step short.
 func move_clip(clip: String) -> bool:
 	if anim == null:
 		return false
 	var cur := String(anim.current_animation)
-	if _stop_t0 >= 0.0:
+	if _stopping:
 		if _idle_like(clip) and _near:
 			_stop_to = clip
-			motion_tick()
-			return _stop_t0 >= 0.0
-		_stop_t0 = -1.0                            # (moving again, casting, swinging, jumping: at once)
+			return _stopping
+		_stopping = false                              # (moving again, casting, swinging, jumping: at once)
 		anim.speed_scale = _stop_speed0
 	if not (sway_on and _near):
 		return false
-	if _idle_like(clip) and (cur == "run" or cur == "walk"):
-		_stop_t0 = Time.get_ticks_msec() / 1000.0
+	if _idle_like(clip) and (cur == "run" or cur == "walk") and vis_speed() > 0.8:
+		_stopping = true
+		_stop_t = 0.0
 		_stop_speed0 = anim.speed_scale
+		_stop_vis0 = vis_speed()
 		_stop_to = clip
 		return true
-	if (clip == "run" or clip == "walk") and (_idle_like(cur) or cur == ""):
-		_start_t0 = Time.get_ticks_msec() / 1000.0
 	return false
 
 
-## The quickened first strides: the run's pace times this.
-func start_boost() -> float:
-	if _start_t0 < 0.0:
-		return 1.0
-	var t := (Time.get_ticks_msec() / 1000.0 - _start_t0) / START_S
-	if t >= 1.0:
-		_start_t0 = -1.0
-		return 1.0
-	return 1.0 + 0.3 * (1.0 - t)
-
-
 func stopping() -> bool:
-	return _stop_t0 >= 0.0
+	return _stopping
 
 
-## A stop under way: the stride slows, then the idle blends in.
-func motion_tick() -> void:
-	if _stop_t0 < 0.0 or anim == null:
+## The last step: the stride slowing with the figure as it comes to rest, then the idle blends in.
+func motion_tick(delta := 0.0) -> void:
+	if not _stopping or anim == null:
 		return
-	var t := (Time.get_ticks_msec() / 1000.0 - _stop_t0) / STOP_S
+	_stop_t += delta
 	var cur := String(anim.current_animation)
 	if not (cur == "run" or cur == "walk"):        # (something else took over - a cast, a swing: it stands)
-		_stop_t0 = -1.0
+		_stopping = false
 		anim.speed_scale = 1.0
 		return
-	if t >= 1.0 or not _near:
-		_stop_t0 = -1.0
+	var v := vis_speed()
+	if v < 0.45 or _stop_t > 0.6 or not _near or _follow == Vector3.INF:
+		_stopping = false
 		if anim.has_animation(_stop_to):
-			anim.play(_stop_to, 0.3)
+			anim.play(_stop_to, 0.25)
 		anim.speed_scale = 1.0
 		return
-	anim.speed_scale = _stop_speed0 * lerpf(1.0, 0.3, t * t)
+	anim.speed_scale = _stop_speed0 * clampf(v / maxf(_stop_vis0, 0.1), 0.2, 1.0)
 
 
 func _part(part_name: String) -> MeshInstance3D:
