@@ -37,6 +37,10 @@ static func _build(spec: Dictionary, at: Transform3D, far: float, materials: Nif
 	p.local_coords = false
 	var life := maxf(float(spec.lifetime), 0.05)
 	p.lifetime = life
+	# moved every frame (Godot's default is 30 a second, interpolated: at 160 fps the sparks stepped - owner
+	# 2026-11-09, spell effects "a little rough")
+	p.fixed_fps = 0
+	p.interpolate = false
 	# how many are alive at once: the client's Emit Flags (pipeline 'rate_mode') - 'rate': the emit rate x the lifetime,
 	# never past the system's size; 'auto': the system's size (owner 2026-11-01: a Thane's hand glow kept 85 additive
 	# glows alive where the client's 30 a second keeps about 5 - a white bubble instead of a flickering spark). Models
@@ -109,12 +113,24 @@ static func _build(spec: Dictionary, at: Transform3D, far: float, materials: Nif
 		quad.size = Vector2(float(spec.quad[0]), float(spec.quad[1]))
 	p.draw_pass_1 = quad
 	p.set_meta("nif_quad", quad.size)
-	if str(spec.get("blend", "")) in ["screen", "multiply", "invdest_add"]:
+	# soft edges: a particle fades as it nears what's behind it (the ground, a wall, a body) instead of cutting off
+	# in a hard line - within about a quarter of its size
+	var soft := clampf(quad.size.x * 0.25, 0.05, 0.8)
+	var blend := str(spec.get("blend", ""))
+	if blend in ["screen", "multiply", "invdest_add", "add", ""]:
 		var sm := ShaderMaterial.new()
-		sm.shader = _screen_shader() if str(spec.blend) == "screen" else (
-				_multiply_shader() if str(spec.blend) == "multiply" else _invdest_add_shader())
+		match blend:
+			"screen": sm.shader = _screen_shader()
+			"multiply": sm.shader = _multiply_shader()
+			"invdest_add": sm.shader = _invdest_add_shader()
+			"add": sm.shader = _add_shader()
+			_: sm.shader = _mix_shader()
+		sm.set_shader_parameter("soft_dist", soft)
 		if spec.get("texture") is String and String(spec.texture) != "":
-			sm.set_shader_parameter("tex", materials.texture(String(spec.texture)))
+			var tx := materials.texture(String(spec.texture))
+			sm.set_shader_parameter("tex", tx)
+			if tx == null and blend in ["add", ""]:
+				p.visible = false                        # its texture isn't in the client: not a white square
 		quad.material = sm
 		return p
 	var mat := StandardMaterial3D.new()
@@ -123,9 +139,10 @@ static func _build(spec: Dictionary, at: Transform3D, far: float, materials: Nif
 	mat.vertex_color_use_as_albedo = true
 	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	if str(spec.get("blend", "")) == "add":
-		mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
-	elif str(spec.get("blend", "")) == "invdest":
+	mat.vertex_color_is_srgb = true                     # (the client's colour ramps are gamma colours)
+	mat.proximity_fade_enabled = true
+	mat.proximity_fade_distance = soft
+	if str(spec.get("blend", "")) == "invdest":
 		# the client's INVDESTCOLOR / INVSRCALPHA (corpse lights' wisps): the colour in full, the alpha dimming what's
 		# behind - a premultiplied blend (as 'mix' they were grey smoke)
 		mat.blend_mode = BaseMaterial3D.BLEND_MODE_PREMULT_ALPHA
@@ -161,6 +178,38 @@ static func fit_to_scale(root: Node) -> void:
 static var _screen: Shader
 static var _multiply: Shader
 static var _invdest_add: Shader
+static var _add: Shader
+static var _mix: Shader
+
+
+## Additive glows (most spell sparks, cores, flares) - and, with remastered lighting, their brightest parts pushed
+## past white so the glow (bloom) picks them up: a fireball's core, a heal's sparkle get a soft halo, the dim edges
+## stay as they were (owner 2026-11-09).
+static func _add_shader() -> Shader:
+	if _add == null:
+		_add = Shader.new()
+		_add.code = SCREEN_SHADER.replace("render_mode blend_mix,", "render_mode blend_add,").replace(
+				"""	vec3 c = t.rgb * COLOR.rgb;
+	float m = max(max(c.r, c.g), max(c.b, 0.001));
+	ALBEDO = c / m;
+	ALPHA = m * t.a * COLOR.a;""", """	ALBEDO = t.rgb * COLOR.rgb;
+	ALPHA = t.a * COLOR.a;
+	float m = max(max(ALBEDO.r, ALBEDO.g), ALBEDO.b) * ALPHA;
+	ALBEDO *= 1.0 + GLOW_BOOST * remaster_fx * smoothstep(0.45, 1.0, m);""").replace("//TAIL", "ALPHA *= soft;")
+	return _add
+
+
+## Plain alpha-blended particles (smoke, dust, leaves).
+static func _mix_shader() -> Shader:
+	if _mix == null:
+		_mix = Shader.new()
+		_mix.code = SCREEN_SHADER.replace(
+				"""	vec3 c = t.rgb * COLOR.rgb;
+	float m = max(max(c.r, c.g), max(c.b, 0.001));
+	ALBEDO = c / m;
+	ALPHA = m * t.a * COLOR.a;""", """	ALBEDO = t.rgb * COLOR.rgb;
+	ALPHA = t.a * COLOR.a;""").replace("//TAIL", "ALPHA *= soft;")
+	return _mix
 
 
 ## The client's INVDESTCOLOR / ONE (a few glows): the particle's colour added in full - its alpha takes no part.
@@ -171,7 +220,7 @@ static func _invdest_add_shader() -> Shader:
 				"""	vec3 c = t.rgb * COLOR.rgb;
 	float m = max(max(c.r, c.g), max(c.b, 0.001));
 	ALBEDO = c / m;
-	ALPHA = m * t.a * COLOR.a;""", """	ALBEDO = t.rgb * COLOR.rgb;""")
+	ALPHA = m * t.a * COLOR.a;""", """	ALBEDO = t.rgb * COLOR.rgb;""").replace("//TAIL", "ALBEDO *= soft;")
 	return _invdest_add
 
 
@@ -185,7 +234,8 @@ static func _multiply_shader() -> Shader:
 	float m = max(max(c.r, c.g), max(c.b, 0.001));
 	ALBEDO = c / m;
 	ALPHA = m * t.a * COLOR.a;""", """	float a = t.a * COLOR.a;
-	ALBEDO = clamp(t.rgb * COLOR.rgb + vec3(1.0 - a), 0.0, 1.0);   // the blend exactly, as the card clamped it""")
+	ALBEDO = clamp(t.rgb * COLOR.rgb + vec3(1.0 - a), 0.0, 1.0);   // the blend exactly, as the card clamped it""").replace(
+				"//TAIL", "ALBEDO = mix(vec3(1.0), ALBEDO, soft);")
 	return _multiply
 
 
@@ -194,16 +244,26 @@ static func _multiply_shader() -> Shader:
 static func _screen_shader() -> Shader:
 	if _screen == null:
 		_screen = Shader.new()
-		_screen.code = SCREEN_SHADER
+		_screen.code = SCREEN_SHADER.replace("//TAIL", "ALPHA *= soft;")
 	return _screen
 
 
+## (all particle shaders, owner 2026-11-09 - spell effects "a little rough": the colour ramps read as the gamma colours
+## they are; soft edges against the depth behind; //TAIL is each blend's own way to apply the fade)
+const GLOW_BOOST := 1.6
 const SCREEN_SHADER := """
 shader_type spatial;
 render_mode blend_mix, depth_draw_never, cull_disabled, unshaded;
 uniform sampler2D tex : source_color, filter_linear_mipmap, repeat_disable;
+uniform sampler2D depth_tex : hint_depth_texture, filter_nearest;
+uniform float soft_dist = 0.3;
+global uniform float remaster_fx;
+const float GLOW_BOOST = 1.6;
 
 void vertex() {
+	vec3 lo = COLOR.rgb / 12.92;
+	vec3 hi = pow((COLOR.rgb + 0.055) / 1.055, vec3(2.4));
+	COLOR.rgb = mix(hi, lo, vec3(lessThan(COLOR.rgb, vec3(0.04045))));
 	mat4 w = mat4(normalize(INV_VIEW_MATRIX[0]), normalize(INV_VIEW_MATRIX[1]), normalize(INV_VIEW_MATRIX[2]), MODEL_MATRIX[3]);
 	float a = INSTANCE_CUSTOM.x;
 	w = w * mat4(vec4(cos(a), -sin(a), 0.0, 0.0), vec4(sin(a), cos(a), 0.0, 0.0), vec4(0.0, 0.0, 1.0, 0.0), vec4(0.0, 0.0, 0.0, 1.0));
@@ -220,6 +280,13 @@ void fragment() {
 	float m = max(max(c.r, c.g), max(c.b, 0.001));
 	ALBEDO = c / m;
 	ALPHA = m * t.a * COLOR.a;
+	float soft = 1.0;
+	if (soft_dist > 0.0) {
+		float d = texture(depth_tex, SCREEN_UV).r;
+		vec4 v = INV_PROJECTION_MATRIX * vec4(SCREEN_UV * 2.0 - 1.0, d, 1.0);
+		soft = clamp((VERTEX.z - v.z / v.w) / soft_dist, 0.0, 1.0);
+	}
+	//TAIL
 }
 """
 

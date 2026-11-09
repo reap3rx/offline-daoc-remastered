@@ -297,6 +297,11 @@ void light() {
 		# flame card had light_scale 0 and drew nothing)
 		code = code.replace("//ALPHA_OUT", "ALBEDO = c.rgb * min(emissive + vec3(light_scale), vec3(1.0)) * %s;" % (
 				"opacity" if invdest else "c.a * opacity"))
+		if not world:
+			# an effect's additive card (a ray, a flare, a ring of light): with remastered lighting its brightest parts
+			# pushed past white for the glow, as the particles (NifParticles; owner 2026-11-09)
+			code = code.replace("ALBEDO = c.rgb * min(emissive + vec3(light_scale), vec3(1.0)) * %s;" % ("opacity" if invdest else "c.a * opacity"),
+					"ALBEDO = c.rgb * min(emissive + vec3(light_scale), vec3(1.0)) * %s;\n\tALBEDO *= 1.0 + 1.6 * remaster_fx * smoothstep(0.45, 1.0, max(max(ALBEDO.r, ALBEDO.g), ALBEDO.b));" % ("opacity" if invdest else "c.a * opacity"))
 	elif alpha == "destcolor":
 		# the client blends in gamma space with its colour capped at 1 (fixed function): a mid grey brightens 1.5x in
 		# gamma = 2.4x in our linear buffer, not 1.2x
