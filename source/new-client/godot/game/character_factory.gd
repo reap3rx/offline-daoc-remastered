@@ -68,6 +68,12 @@ static func random_look(prefix: String, rng: RandomNumberGenerator) -> Dictionar
 	var hair_ok := Fig3Figure.offered_of(m, prefix, "hair")
 	if not hair_ok.is_empty():
 		look["hair"] = hair_ok[rng.randi() % hair_ok.size()]
+	# (owner 2026-11-08: "We will definitely get the bots to use it" - the new beards, moustaches and sideburns too,
+	# of those not disabled for the race; none at times)
+	for fk in [["beard", 0.35], ["moustache", 0.6], ["sideburns", 0.7]]:
+		var offer: Array = Fig3Figure.offered_of(m, prefix, String(fk[0])).filter(func(x): return int(x) > 0)
+		if not offer.is_empty():
+			look[String(fk[0])] = 0 if rng.randf() < float(fk[1]) else int(offer[rng.randi() % offer.size()])
 	var hc := Fig3Figure.option_count_of(m, look, "hair_color")
 	if hc > 0:
 		look["hair_color"] = rng.randi() % hc

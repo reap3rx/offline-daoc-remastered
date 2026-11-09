@@ -344,6 +344,12 @@
    "disabled": true,
    "done": "2026-11-07",
    "node": "hair_4"
+  },
+  "hair:hair_5": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_5"
   }
  },
  "race": "inc_f"

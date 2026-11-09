@@ -232,6 +232,12 @@
    },
    "node": "beard_1"
   },
+  "beard:beard_2": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "beard_2"
+  },
   "beard:beard_3": {
    "disabled": true,
    "done": "2026-11-08",

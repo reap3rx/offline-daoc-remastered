@@ -845,25 +845,23 @@ func _c_amount(p: Control, label: String, key: String, def: float, lo: float, hi
 		draft.look[key] = v, y, true, def)
 
 
-## The worn style's fit (Fig3Figure.HAIR_FIT, owner 2026-11-06): left / right, up / down, forward / back, size,
-## height, width, depth, wrap, length - each style keeps its own (look.hair_fit by style node). Right-click a slider:
-## back to as made (or as tuned).
-func _c_hair_fit(p: Control, y: float) -> float:
-	var styles: Array = _figure.meta.get("hair_styles", [])
-	var si := int(draft.look.get("hair", 0))
-	if si >= 0 and si < styles.size() and styles[si].node != null and bool(styles[si].get("fit", false)):
-		y = _c_fit_rows(p, "HAIR FIT", String(styles[si].node), y)
-	# (owner 2026-11-06: "some of the beards ... are too small. Perhaps some sliders for those")
-	var beards: Array = _figure.meta.get("beards", [])
-	var bi := _figure.beard_index()
-	if bi > 0 and bi <= beards.size() and bool(beards[bi - 1].get("fit", false)):
-		y = _c_fit_rows(p, "BEARD FIT", String(beards[bi - 1].node), y)
-	for kind in Fig3Figure.FACE_HAIR:
-		var list: Array = _figure.meta.get(String(kind[1]), [])
-		var k := int(draft.look.get(String(kind[0]), 0))
-		if k > 0 and k <= list.size() and bool(list[k - 1].get("fit", false)):
-			y = _c_fit_rows(p, String(kind[2]).to_upper() + " FIT", String(list[k - 1].node), y)
-	return y
+## The fit under a style's row (owner 2026-11-08: "The Hair, Beard, Sideburns, and Moustache fit sections of the UI
+## can now all go away, and just have the length slider for each right under the style selector"): Length alone -
+## the rest of the fit is the one tuned for the race. While tuning, a part not yet finished keeps every slider and
+## the save / disable controls (Shar, Frostalf and the copied face hair still to check).
+func _c_part_fit(p: Control, kind: String, y: float) -> float:
+	var lists := {"hair": "hair_styles", "beard": "beards", "moustache": "moustaches", "sideburns": "sideburns"}
+	var list: Array = _figure.meta.get(String(lists[kind]), [])
+	var i := int(draft.look.get("hair", 0)) if kind == "hair" else \
+			(_figure.beard_index() if kind == "beard" else int(draft.look.get(kind, 0))) - 1
+	if i < 0 or i >= list.size() or list[i].node == null or not bool(list[i].get("fit", false)):
+		return y
+	var node := String(list[i].node)
+	var entry := _figure.part_entry(node)
+	var locked := entry.is_empty() or Fig3Figure.part_locked(_figure.race, String(entry._kind), entry)
+	if Fig3Figure.tuning_on() and not locked:
+		return _c_fit_rows(p, {"hair": "HAIR", "beard": "BEARD", "moustache": "MOUSTACHE", "sideburns": "SIDEBURNS"}[kind] + " FIT", node, y)
+	return _c_fit_slider(p, node, "len", "Length", y)
 
 
 ## One part's fit sliders (Fig3Figure.HAIR_FIT), kept by its node in look.hair_fit. Right-click: back to none. While
@@ -873,20 +871,24 @@ func _c_fit_rows(p: Control, title: String, node: String, y: float) -> float:
 	var entry := _figure.part_entry(node)
 	var locked := not entry.is_empty() and Fig3Figure.part_locked(_figure.race, String(entry._kind), entry)
 	for f in Fig3Figure.HAIR_FIT:
-		var k := String(f[0])
-		if locked and k != "len":                  # (a finished style: its fit fixed, Length only)
+		if locked and String(f[0]) != "len":       # (a finished style: its fit fixed, Length only)
 			continue
-		y = _c_slider(p, String(f[1]), float(_figure.hair_fit_of(node).get(k, 0.0)), -1.0, 1.0, func(v: float):
-			var all: Dictionary = (draft.look.get("hair_fit", {}) as Dictionary).duplicate(true)
-			var one: Dictionary = all.get(node, _figure.hair_fit_of(node)).duplicate()
-			one[k] = v
-			all[node] = one
-			draft.look["hair_fit"] = all
-			_figure.look["hair_fit"] = all
-			_figure._apply_hair_fit(), y, true, 0.0, 0.01)
+		y = _c_fit_slider(p, node, String(f[0]), String(f[1]), y)
 	if Fig3Figure.tuning_on() and not locked:
 		y = _c_tuning(p, node, y)
 	return y
+
+
+## One fit slider for a part (look.hair_fit, by node: over the race's tuned fit). Right-click: 0.
+func _c_fit_slider(p: Control, node: String, k: String, label: String, y: float) -> float:
+	return _c_slider(p, label, float(_figure.hair_fit_of(node).get(k, 0.0)), -1.0, 1.0, func(v: float):
+		var all: Dictionary = (draft.look.get("hair_fit", {}) as Dictionary).duplicate(true)
+		var one: Dictionary = all.get(node, _figure.hair_fit_of(node)).duplicate()
+		one[k] = v
+		all[node] = one
+		draft.look["hair_fit"] = all
+		_figure.look["hair_fit"] = all
+		_figure._apply_hair_fit(), y, true, 0.0, 0.01)
 
 
 ## The fit slider values in the look (look.hair_fit, by mesh node) dropped - one node's, or all: a node name is
@@ -982,6 +984,7 @@ func _c_face(p: Control, y: float) -> float:
 	y = _c_colour(p, "Skin Color", "skin", _skin_colours(), y, "skin")
 	y = _c_colour(p, "Eye Color", "eyes", _eye_colours(), y)
 	y = _c_hair_style(p, y)
+	y = _c_part_fit(p, "hair", y)
 	if not (f.meta.get("hair_under", {}) as Dictionary).is_empty():      # (the scalp cap: on or off under any style)
 		y = _c_key(p, String(f.meta.hair_under.get("label", "Scalp Cap")), "scalp_cap", ["Off", "On"], y)
 	if f.option_count("turban") > 0:              # (Saracens: a turban worn over any hair style)
@@ -997,14 +1000,15 @@ func _c_face(p: Control, y: float) -> float:
 			y = _c_colour(p, "Turban Color", "turban_color", Fig3Figure.TURBAN_COLORS, y)
 	if f.option_count("beard") > 1:                 # (men: the beards split off the hair styles)
 		y = _c_face_hair(p, "Beard", "beard", "beard", f.meta.beards, y, f.beard_index())
+		y = _c_part_fit(p, "beard", y)
 	for kind in Fig3Figure.FACE_HAIR:              # (moustaches; sideburns, owner 2026-11-06: "its own category")
 		if f.option_count(String(kind[0])) > 1:
 			y = _c_face_hair(p, String(kind[2]), String(kind[0]), String(kind[0]), f.meta[String(kind[1])], y,
 					int(f.look.get(String(kind[0]), 0)))
+			y = _c_part_fit(p, String(kind[0]), y)
 	if f.option_count("hair_color") > 0 and (_hair_has_mesh() or f.beard_index() > 0 or f.scalp_cap_on() \
 			or int(f.look.get("moustache", 0)) > 0 or int(f.look.get("sideburns", 0)) > 0):
 		y = _c_colour(p, "Hair Color", "hair_color", _hair_colours(), y)
-	y = _c_hair_fit(p, y)
 	if not f.is_layered():
 		y = _c_key(p, "Face", "face", f.meta.get("faces", []).map(func(x): return String(x.label)), y)
 	if f.option_count("tattoo") > 0:

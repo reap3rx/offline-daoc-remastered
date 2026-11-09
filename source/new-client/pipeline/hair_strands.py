@@ -21,7 +21,7 @@ def arg(k, d):
     return float(next((a.split('=')[1] for a in sys.argv if a.startswith(f'--{k}=')), d))
 
 
-def strands(src, dst, flow_dst, L=40, keep=0.1, contrast=0.2, blur_px=24.0, flow_size=512):
+def strands(src, dst, flow_dst, L=40, keep=0.1, contrast=0.2, blur_px=24.0, flow_size=512, painted=False):
     im = cv2.imread(str(src), cv2.IMREAD_UNCHANGED).astype(np.float32) / 255.0
     if im.ndim == 2:
         im = np.dstack([im, im, im])
@@ -38,6 +38,18 @@ def strands(src, dst, flow_dst, L=40, keep=0.1, contrast=0.2, blur_px=24.0, flow
     jxy = cv2.GaussianBlur(gx * gy, (0, 0), sig)
     # the strokes run across the strongest gradient: the tensor's minor eigenvector
     theta = 0.5 * np.arctan2(2 * jxy, jxx - jyy) + np.pi / 2
+    if painted:
+        # (owner 2026-11-08: painted styles' strands "don't follow the shape of the hair" - wood grain): where the
+        # painting has no clear stroke (its flat parts) the tensor's direction is noise, and the strands swirled.
+        # There they run down the texture (the way a hair card's strokes go), turning to the painting's own
+        # strokes as those grow clear.
+        coh = np.sqrt((jxx - jyy) ** 2 + 4 * jxy ** 2) / (jxx + jyy + 1e-6)
+        energy = (jxx + jyy) / (np.percentile(jxx + jyy, 90) + 1e-9)
+        wgt = np.clip((coh - 0.25) / 0.45, 0, 1) * np.clip(energy * 3, 0, 1)
+        wgt = cv2.GaussianBlur(wgt.astype(np.float32), (0, 0), 2 * s)
+        vx = wgt * np.cos(2 * theta) + (1 - wgt) * np.cos(np.pi)       # (doubled angles: down the texture is pi/2)
+        vy = wgt * np.sin(2 * theta) + (1 - wgt) * np.sin(np.pi)
+        theta = 0.5 * np.arctan2(vy, vx)
     fx, fy = np.cos(theta).astype(np.float32), np.sin(theta).astype(np.float32)
     rng = np.random.default_rng(7)
     noise = rng.random((h, w), dtype=np.float32)
@@ -67,6 +79,8 @@ def strands(src, dst, flow_dst, L=40, keep=0.1, contrast=0.2, blur_px=24.0, flow
     base = cv2.GaussianBlur(bgr * isl[..., None], (0, 0), blur) / np.maximum(cv2.GaussianBlur(isl, (0, 0), blur), 1e-3)[..., None]
     detail = bgr / np.maximum(cv2.GaussianBlur(bgr, (0, 0), 4.0 * s), 1e-3)
     paint = base * (1.0 + keep * (np.clip(detail, 0.3, 2.0) - 1.0))
+    if painted:                                    # (the painting's locks and waves kept, softened by a third - its
+        paint = base + 0.65 * (bgr - base)         # bright highlights stood out as white streaks - the strands on them)
     out_rgb = np.clip(paint * (0.45 + 1.1 * st[..., None]), 0, 1)
     mask = np.clip((st - 0.35) / 0.4, 0, 1) * isl
     cv2.imwrite(str(dst), (np.dstack([out_rgb, alpha0]) * 255 + 0.5).astype(np.uint8))

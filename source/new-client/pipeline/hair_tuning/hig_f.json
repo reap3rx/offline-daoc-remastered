@@ -320,6 +320,30 @@
     "width": -1.0,
     "wrap": -0.54
    }
+  },
+  "hair:hair_1": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_1"
+  },
+  "hair:hair_2": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_2"
+  },
+  "hair:hair_3": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_3"
+  },
+  "hair:hair_4": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_4"
   }
  },
  "race": "hig_f"

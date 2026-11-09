@@ -253,6 +253,30 @@
     "wrap": -0.04
    }
   },
+  "beard:beard_1": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "beard_1"
+  },
+  "beard:beard_2": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "beard_2"
+  },
+  "beard:beard_3": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "beard_3"
+  },
+  "beard:beard_4": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "beard_4"
+  },
   "hair:Human/Var 10.obj": {
    "copied_from": "bri_m",
    "disabled": false,
@@ -503,6 +527,30 @@
     "up": -0.23,
     "width": -0.06
    }
+  },
+  "hair:hair_1": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_1"
+  },
+  "hair:hair_2": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_2"
+  },
+  "hair:hair_3": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_3"
+  },
+  "hair:hair_4": {
+   "disabled": false,
+   "done": "2026-11-08",
+   "fit": {},
+   "node": "hair_4"
   },
   "moustache:Moustaches/Var 10.obj": {
    "copied_from": "cel_m",

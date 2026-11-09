@@ -383,6 +383,8 @@ def hair_textures(src, tag, tex_dirs, flow_dir, cap=False):
             cv2.imwrite(str(dst), cv2.resize(im, (1024, int(round(im.shape[0] * k))), interpolation=cv2.INTER_CUBIC))
         if cap:                                  # (fine, short, low contrast: a close crop, not painted locks)
             strands(dst, dst, flow_dir / (tag.lower() + '.png'), L=16, keep=0.0, contrast=0.14)
+        elif _cut_out(src):                      # (the painted locks and waves kept, strands along them - below)
+            strands(dst, dst, flow_dir / (tag.lower() + '.png'), L=30, keep=0.12, contrast=0.12, painted=True)
         else:
             strands(dst, dst, flow_dir / (tag.lower() + '.png'), L=40, keep=0.12)
         even_out(dst, cap)
@@ -526,7 +528,8 @@ def _cut_out(path):
     return im is not None and im.ndim == 3 and im.shape[2] == 4 and (im[..., 3] < 128).mean() > 0.02
 
 
-TEXTURES_REV = 1794160000      # (2026-11-08: the highlights layers' clear parts evened - made again before this)
+TEXTURES_REV = 1794188400      # (2026-11-08: the highlights layers' clear parts evened, their strands along the
+                               # painting - hair_strands painted; made again before this)
 
 
 def ensure_textures(src, tag, tex_dirs, flow_dir, cap=False):
