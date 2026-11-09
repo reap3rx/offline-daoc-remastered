@@ -265,6 +265,13 @@ static func gait(a: Animation, sk: Skeleton3D) -> Dictionary:
 	if corr < 0.0:
 		best = -best
 	var out := {}
+	# the floor: how high a foot's bone is when the foot is down (its lowest in the stride, along up - the skeleton's
+	# origin is the ground) - where a stop's planted foot is held (Sway._brake)
+	var fl := INF
+	for k in 2:
+		for p in pts[k]:
+			fl = minf(fl, (p as Vector3).dot(up))
+	out["floor"] = fl
 	# passing: the feet level with each other (under the body) - the pose nearest standing, where a start begins
 	var pass_d := INF
 	for i in n:

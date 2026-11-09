@@ -273,6 +273,8 @@ static func _skeleton(root: Node) -> Skeleton3D:
 ## One speffects entry on a character: on its bone, at its chest, or at its feet. Returns the node (freed after the
 ## effect's duration, or by the caller).
 static var prof_play_us := 0                 # debug timing (tests/crowd_probe.gd)
+## Your target (the zone viewer keeps it): its effects are never culled.
+static var focus: Node3D = null
 const SAME_FX_MS := 400
 const SAME_FX_MAX := 6
 static var _fx_burst := {}                  # effect id -> [when its burst began (ticks ms), copies started in it]
@@ -301,7 +303,10 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 	burst[1] = int(burst[1]) + 1
 	_fx_burst[fx_id] = burst
 	var cam := on.get_viewport().get_camera_3d()
-	if cam and not Perf.brute:               # culled: off screen, too far, or too many alive (the nearest win)
+	# culled: off screen, too far, or too many alive (the nearest win) - never the ones on you or your target (owner
+	# 2026-11-09: hits on the mob he was casting at showed rarely - with the card busy the governor had cut fx_range
+	# toward 10 m, and a caster's target is 20 - 35 m away)
+	if cam and not Perf.brute and not (on is Player) and on != focus:
 		var d := cam.global_position.distance_to(on.global_position)
 		if d > 6.0 and (d > Perf.fx_range or not cam.is_position_in_frustum(on.global_position + Vector3(0, 1, 0))
 				or _live_count() >= Perf.max_effects):

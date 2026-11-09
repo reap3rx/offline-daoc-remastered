@@ -2388,7 +2388,9 @@ class Sway extends SkeletonModifier3D:
 		var dv := 0.0 if fresh else clampf(fwd_s - _fwd_v, -9.0, 9.0)
 		_fwd_v = fwd_s
 		# (a stop kicks a third as hard as a start: owner 2026-11-09, "an awkward bounce back as Arthur stops")
-		_lean_v += dv * (0.16 if dv > 0.0 else 0.055)
+		# (a start leans into the run; a stop pitches the body forward over its feet - owner 2026-11-09: the stop
+		# leaned the wrong way, back)
+		_lean_v += dv * 0.16 if dv > 0.0 else -dv * 0.05
 		_back_v += dv * (0.06 if dv > 0.0 else 0.035)
 		var want_side := clampf(-v.x * 0.03, -0.15, 0.15) + Fig3Figure.wind * 0.02 * sin(t * 0.9 + _phase)
 		# springs (a little under-damped: one soft overshoot as it settles) - in steps of a 60th of a second at
@@ -2681,8 +2683,8 @@ class Sway extends SkeletonModifier3D:
 	# foot stays where it came down, the knees give and the hips drop, the upper body leans back against the stop, then
 	# rocks a little forward; the planted foot lets go and steps back into the stance as the clip settles
 	const BRAKE_DROP := 0.025                    # metres the hips drop at the hardest of a stop from a run
-	const BRAKE_LEAN := 0.17                     # rad the upper body leans back then (owner 2026-11-09: a bit more)
-	const BRAKE_SETTLE := 0.06                   # rad it rocks forward after
+	const BRAKE_LEAN := 0.15                     # rad the upper body pitches forward over the planted foot
+	const BRAKE_SETTLE := 0.05                   # rad it settles back past upright after
 	var _brake_clip := ""
 	var _brake_p := Vector3.ZERO                 # (the figure's own space)
 	var _brake_set := false
@@ -2724,7 +2726,8 @@ class Sway extends SkeletonModifier3D:
 		sk.set_bone_pose_position(_root_b, sk.get_bone_pose_position(_root_b) - up_s * BRAKE_DROP * b * su)
 		var up_w := (model.global_basis * Vector3.UP).normalized()
 		var side_w := (model.global_basis * Vector3(1, 0, 0)).normalized()
-		var back := -BRAKE_LEAN * b + BRAKE_SETTLE * settle                    # (+ about the side axis tips forward)
+		var back := BRAKE_LEAN * b - BRAKE_SETTLE * settle                     # (+ about the side axis tips forward:
+		                                                                       # the momentum pitches it over, then back)
 		for i in _spine.size():
 			_world_turn(sk, _spine[i], Basis(side_w, back * _spine_w[i]), false)
 		if _neck_b >= 0:
@@ -2733,8 +2736,14 @@ class Sway extends SkeletonModifier3D:
 		for i in 2:
 			var tw := nat_p[i]                         # (the feet where the clip has them - the knees take the drop)
 			if i == k and pin > 0.0:
+				# pinned where it came down - and ON the ground: the run's contact frame has the foot a little above it
+				# (owner 2026-11-09: "the foot also stops in the air")
 				var pw := model.global_transform * _brake_p
-				tw = nat_p[i].lerp(Vector3(pw.x, nat_p[i].y, pw.z), pin)
+				var g: Dictionary = Fig3Figure._gaits.get(fig.race + "/" + cur.get_slice("_", 0), {})
+				var fy := nat_p[i].y
+				if g.has("floor"):
+					fy = (xf * (up_s * float(g["floor"]))).y
+				tw = nat_p[i].lerp(Vector3(pw.x, fy, pw.z), pin)
 			var now_s := sk.get_bone_global_pose(_foot[i]).origin
 			var delta := inv * tw - now_s
 			if delta.length() > 0.0005:

@@ -767,6 +767,9 @@ func refresh_gear() -> void:
 		_apply_hidden_look.call_deferred()
 
 
+const STAFF_TILT := {"lur_m": 20.0}           # degrees out from the body (dress)
+
+
 ## A figure's worn gear, shared with the character select screen (owner 2026-10-10: the staff / armour didn't show
 ## there): armour parts on a Fig3Figure (pipeline/build_armor.py), and the active weapon set on its bones. item_at:
 ## slot -> item Dictionary ({} when empty). Returns the bone attachments made.
@@ -875,6 +878,12 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 				_sling_on_back(w, bone == "Bip01 L Back")
 			elif slot == 12 or stance in ["2h", "pole", "staff", "scy"]:
 				_raise_on_back(w)
+		# a staff carried in one hand out of combat, tipped out from the body for the races whose run swings it through
+		# their head (owner 2026-11-09: Lurikeen males' staff clipped into the face running - same grip on every race,
+		# but their arm swing is wider for their size); the two-handed guard keeps the client's grip
+		if in_hand and stance == "staff" and not combat and model is Fig3Figure \
+				and STAFF_TILT.has((model as Fig3Figure).race):
+			w.rotate_object_local(Vector3(1, 0, 0), deg_to_rad(float(STAFF_TILT[(model as Fig3Figure).race])))
 		var at := BoneAttachment3D.new()
 		at.bone_name = bone
 		at.set_meta("shield", shield)

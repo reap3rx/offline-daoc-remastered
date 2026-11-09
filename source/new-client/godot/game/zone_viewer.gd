@@ -1370,6 +1370,7 @@ func _process_inner(delta: float) -> void:
 		Fig3Figure.ground_city = zone.city
 	if player and npcs:                                    # (the head looks at your target: Player._look_point)
 		player.look_target = npcs.target if is_instance_valid(npcs.target) and npcs.target.state.alive else null
+		SpellFx.focus = npcs.target if is_instance_valid(npcs.target) else null
 	if player and zone:
 		if _jumping:
 			return                                         # a teleport inside the region is arriving (_jump_in_region)

@@ -115,7 +115,7 @@ static func _build(spec: Dictionary, at: Transform3D, far: float, materials: Nif
 	p.set_meta("nif_quad", quad.size)
 	# soft edges: a particle fades as it nears what's behind it (the ground, a wall, a body) instead of cutting off
 	# in a hard line - within about a quarter of its size
-	var soft := clampf(quad.size.x * 0.25, 0.05, 0.8)
+	var soft := clampf(quad.size.x * 0.25, 0.05, 0.8) if soft_on else 0.0
 	var blend := str(spec.get("blend", ""))
 	if blend in ["screen", "multiply", "invdest_add", "add", ""]:
 		var sm := ShaderMaterial.new()
@@ -140,7 +140,7 @@ static func _build(spec: Dictionary, at: Transform3D, far: float, materials: Nif
 	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	mat.vertex_color_is_srgb = true                     # (the client's colour ramps are gamma colours)
-	mat.proximity_fade_enabled = true
+	mat.proximity_fade_enabled = soft > 0.0
 	mat.proximity_fade_distance = soft
 	if str(spec.get("blend", "")) == "invdest":
 		# the client's INVDESTCOLOR / INVSRCALPHA (corpse lights' wisps): the colour in full, the alpha dimming what's
@@ -175,6 +175,7 @@ static func fit_to_scale(root: Node) -> void:
 		p.set_meta("fit_k", k)
 
 
+static var soft_on := true                  # (tests: the effects without their soft edges)
 static var _screen: Shader
 static var _multiply: Shader
 static var _invdest_add: Shader
