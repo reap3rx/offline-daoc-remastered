@@ -811,8 +811,21 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 				return                                     # play_death() holds the last frame
 		if swim:
 			clip = "swim"                                  # swimming, still or moving (as you: Player)
-		if anim.has_animation(clip):
+		var fig: Fig3Figure = model as Fig3Figure if model is Fig3Figure else null
+		var was := String(anim.current_animation)
+		anim.clear_queue()
+		# stopping / starting as the player does (Fig3Figure.stop_clip_for / start_phase; animation step 6)
+		var stop := fig.stop_clip_for(was, anim.current_animation_position) if fig and Fig3Figure.idle_like(clip) \
+				and (was == "run" or was == "walk") else ""
+		if stop != "":
+			anim.play(stop, 0.1)
+			anim.queue(clip)
+		elif anim.has_animation(clip):
 			anim.play(clip, 0.2)
+			if fig and (clip == "run" or clip == "walk") and (Fig3Figure.idle_like(was) or Fig3Figure.is_stop_clip(was)):
+				var at := fig.start_phase(clip)
+				if at >= 0.0:
+					anim.seek(at, false)
 
 
 var _action_left := 0.0

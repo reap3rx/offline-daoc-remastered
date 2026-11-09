@@ -166,3 +166,155 @@ static func build(a: Animation, clip: String, sk: Skeleton3D, on := enabled) -> 
 	b.set_meta("smooth", true)
 	b.set_meta("raw", a)
 	return b
+
+
+# ---------------------------------------------------------------- transitions (claude 2026-11-09, step 6)
+## Built from the clips themselves, per race (Fig3Figure.load_figure): a stop - from the moment a foot plants in the run
+## (or walk), easing into the idle's first pose, the arms settling a little later than the body - one for each foot
+## (`<clip>_stop_l` / `_r`); and the push-off moments a start begins the run at. gait() finds them: where each foot is
+## furthest ahead (it plants) and furthest back (it pushes off), from the clip's own bones.
+const STOP_SECONDS := {"run": 0.5, "walk": 0.42}
+const STOP_ARM_LAG := 1.6                    # x DELAY: the arms and the head come to rest after the body
+
+
+static func _track_of(a: Animation) -> Dictionary:
+	var m := {}
+	for t in a.get_track_count():
+		var ty := a.track_get_type(t)
+		if ty == Animation.TYPE_ROTATION_3D or ty == Animation.TYPE_POSITION_3D:
+			var key := "%s|%d" % [String(a.track_get_path(t)), ty]
+			m[key] = t
+	return m
+
+
+static func _bone_local(a: Animation, sk: Skeleton3D, m: Dictionary, path_of: Dictionary, b: int, tm: float) -> Transform3D:
+	var rest := sk.get_bone_rest(b)
+	var q := rest.basis.get_rotation_quaternion()
+	var p := rest.origin
+	var path: String = path_of.get(b, "")
+	if path != "":
+		if m.has(path + "|%d" % Animation.TYPE_ROTATION_3D):
+			q = a.rotation_track_interpolate(m[path + "|%d" % Animation.TYPE_ROTATION_3D], tm)
+		if m.has(path + "|%d" % Animation.TYPE_POSITION_3D):
+			p = a.position_track_interpolate(m[path + "|%d" % Animation.TYPE_POSITION_3D], tm)
+	return Transform3D(Basis(q), p)
+
+
+## Where a bone is (skeleton space) at `tm` - through its chain of parents.
+static func _fk(a: Animation, sk: Skeleton3D, m: Dictionary, path_of: Dictionary, b: int, tm: float) -> Vector3:
+	var chain: Array[int] = []
+	var x := b
+	while x >= 0:
+		chain.push_front(x)
+		x = sk.get_bone_parent(x)
+	var tr := Transform3D.IDENTITY
+	for c in chain:
+		tr = tr * _bone_local(a, sk, m, path_of, c, tm)
+	return tr.origin
+
+
+## The clip's gait: {plant_l, plant_r (times a foot is furthest ahead), push_l, push_r (furthest back)} - or {}.
+static func gait(a: Animation, sk: Skeleton3D) -> Dictionary:
+	if a == null or sk == null:
+		return {}
+	var feet := [sk.find_bone("Bip01 L Foot"), sk.find_bone("Bip01 R Foot")]
+	var head := sk.find_bone("Bip01 Head")
+	if feet[0] < 0 or feet[1] < 0 or head < 0:
+		return {}
+	var m := _track_of(a)
+	var path_of := {}
+	for t in a.get_track_count():
+		var bn := sk.find_bone(String(a.track_get_path(t).get_concatenated_subnames()))
+		if bn >= 0:
+			path_of[bn] = String(a.track_get_path(t))
+	var n := 30
+	var pts := [[], []]
+	var up := Vector3.ZERO
+	for i in n:
+		var tm := a.length * i / n
+		var h := _fk(a, sk, m, path_of, head, tm)
+		for k in 2:
+			var f := _fk(a, sk, m, path_of, feet[k], tm)
+			pts[k].append(f)
+			up += h - f
+	up = up.normalized()
+	# forward: the way the feet sweep most (across the up axis); + is the way a foot moves while it is up in the air
+	var mean := Vector3.ZERO
+	for k in 2:
+		for p in pts[k]:
+			mean += p
+	mean /= float(n * 2)
+	var best := Vector3.ZERO
+	var best_v := -1.0
+	for deg in range(0, 180, 5):
+		var ref := up.cross(Vector3(1, 0, 0) if absf(up.x) < 0.9 else Vector3(0, 0, 1)).normalized()
+		var axis := ref.rotated(up, deg_to_rad(float(deg)))
+		var v := 0.0
+		for k in 2:
+			for p in pts[k]:
+				v += pow((p - mean).dot(axis), 2.0)
+		if v > best_v:
+			best_v = v
+			best = axis
+	var corr := 0.0
+	for k in 2:
+		for i in n:
+			var p: Vector3 = pts[k][i]
+			var nx: Vector3 = pts[k][(i + 1) % n]
+			corr += (nx - p).dot(best) * (p - mean).dot(up)
+	if corr < 0.0:
+		best = -best
+	var out := {}
+	# passing: the feet level with each other (under the body) - the pose nearest standing, where a start begins
+	var pass_d := INF
+	for i in n:
+		var dz: float = absf(((pts[0][i] as Vector3) - (pts[1][i] as Vector3)).dot(best))
+		if dz < pass_d:
+			pass_d = dz
+			out["pass"] = a.length * i / n
+	for k in 2:
+		var hi := -INF
+		var lo := INF
+		for i in n:
+			var z: float = ((pts[k][i] as Vector3) - mean).dot(best)
+			if z > hi:
+				hi = z
+				out["plant_" + ["l", "r"][k]] = a.length * i / n
+			if z < lo:
+				lo = z
+				out["push_" + ["l", "r"][k]] = a.length * i / n
+	return out
+
+
+## A stop: the move clip's pose at `from_t` (a foot planting) easing into the idle's first pose over `secs`.
+static func stop_clip(move: Animation, idle: Animation, from_t: float, secs: float) -> Animation:
+	var b := Animation.new()
+	b.length = secs
+	b.loop_mode = Animation.LOOP_NONE
+	var mm := _track_of(move)
+	var n := maxi(2, int(ceil(secs * 30.0)))
+	for t in idle.get_track_count():
+		var ty := idle.track_get_type(t)
+		if ty != Animation.TYPE_ROTATION_3D and ty != Animation.TYPE_POSITION_3D:
+			continue
+		var path := idle.track_get_path(t)
+		var mt: int = mm.get("%s|%d" % [String(path), ty], -1)
+		var nt := b.add_track(ty)
+		b.track_set_path(nt, path)
+		b.track_set_interpolation_type(nt, Animation.INTERPOLATION_CUBIC)
+		var bone := String(path.get_concatenated_subnames())
+		var lag := _delay(bone) * STOP_ARM_LAG
+		for i in n + 1:
+			var tm := secs * i / n
+			var u := clampf((tm - lag) / maxf(secs - lag, 0.05), 0.0, 1.0)
+			u = u * u * u * (u * (u * 6.0 - 15.0) + 10.0)          # (smootherstep: eases out of the stride and in to rest)
+			if ty == Animation.TYPE_ROTATION_3D:
+				var q1 := idle.rotation_track_interpolate(t, 0.0)
+				var q0 := move.rotation_track_interpolate(mt, from_t) if mt >= 0 else q1
+				b.rotation_track_insert_key(nt, tm, q0.slerp(q1, u))
+			else:
+				var p1 := idle.position_track_interpolate(t, 0.0)
+				var p0 := move.position_track_interpolate(mt, from_t) if mt >= 0 else p1
+				b.position_track_insert_key(nt, tm, p0.lerp(p1, u))
+	b.set_meta("smooth", true)
+	return b

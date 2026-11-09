@@ -353,10 +353,25 @@ func _set_loops() -> void:
 func _play(clip: String, speed := 1.0) -> void:
 	if _anim == null or not _anim.has_animation(clip):
 		return
-	if _anim.current_animation != clip:
+	var fig := _model as Fig3Figure
+	var cur := String(_anim.current_animation)
+	if fig and Fig3Figure.is_stop_clip(cur) and Fig3Figure.idle_like(clip):
+		_anim.speed_scale = 1.0                            # (a stop playing out: the idle is queued after it)
+		return
+	if cur != clip:
+		_anim.clear_queue()
+		# stopping: the stride's own stop for the foot that plants next (Fig3Figure.stop_clip_for; step 6)
+		var stop := fig.stop_clip_for(cur, _anim.current_animation_position) if fig and Fig3Figure.idle_like(clip) \
+				and (cur == "run" or cur == "walk") else ""
+		if stop != "":
+			_anim.play(stop, 0.1)
+			_anim.queue(clip)
+			_anim.speed_scale = 1.0
+			return
 		_anim.play(clip, 0.15)
-		var fig := _model as Fig3Figure
 		var at := fig.lower_phase(clip) if fig else -1.0
+		if at < 0.0 and fig and (clip == "run" or clip == "walk") and (Fig3Figure.idle_like(cur) or Fig3Figure.is_stop_clip(cur)):
+			at = fig.start_phase(clip)                     # starting: from the stride's passing pose
 		if at >= 0.0:
 			_anim.seek(at, false)                          # (the legs ran on under a swing: on in step)
 	_anim.speed_scale = speed
@@ -403,6 +418,10 @@ func weapon_stance() -> String:
 ## locked on), someone you've selected close by (a merchant you're talking to), else where the camera looks - the head
 ## turning toward it within what a neck can turn (Sway). The zone viewer keeps look_target to your selected target.
 var look_target: Node3D = null
+const TURN_STEP_RATE := 1.4                  # rad/s: turning faster than this on the spot, the legs step round
+var _last_facing := NAN
+var _turn_rate := 0.0
+var _turn_step_left := 0.0
 
 
 func _look_point() -> Vector3:
@@ -606,6 +625,7 @@ func _one_shot(clip: String) -> void:
 		return
 	_action = clip
 	_action_left = clip_seconds(clip)
+	_anim.clear_queue()
 	_anim.play(clip, 0.1)
 	_anim.seek(0.0, true)
 	_anim.speed_scale = 1.0
@@ -1583,6 +1603,20 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 		else:
 			legs = "run"
 			legs_speed = _sync("run", "run", speed)
+	# turning on the spot (step 6): the legs step round (the walk under whatever the body does - a guard holds) while
+	# the body turns quickly, and a moment after
+	var facing := char_yaw + _body_offset
+	var yaw_rate := wrapf(facing - _last_facing, -PI, PI) / maxf(delta, 0.001) if not is_nan(_last_facing) else 0.0
+	_last_facing = facing
+	_turn_rate = lerpf(_turn_rate, clampf(yaw_rate, -20.0, 20.0), clampf(delta * 10.0, 0.0, 1.0))
+	_turn_step_left -= delta
+	if Fig3Figure.sway_on and legs == "" and not moving and grounded and not swimming and not climbing and not dead \
+			and not sitting and force_clip == "" and not (mount and is_instance_valid(mount)):
+		if absf(_turn_rate) > TURN_STEP_RATE:
+			_turn_step_left = 0.3
+		if _turn_step_left > 0.0:
+			legs = "walk"
+			legs_speed = clampf(absf(_turn_rate) * 0.45, 0.8, 1.6)
 	if _model is Fig3Figure:
 		(_model as Fig3Figure).set_lower(legs, legs_speed, -_body_offset)
 		(_model as Fig3Figure).look_point = _look_point()

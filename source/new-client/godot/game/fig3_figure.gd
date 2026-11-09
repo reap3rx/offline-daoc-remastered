@@ -183,6 +183,8 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 			a.loop_mode = Animation.LOOP_LINEAR if loops(clip) else Animation.LOOP_NONE
 			if (loops(clip) or AnimStyle.group_of(clip) != "") and not a.has_meta("smooth"):
 				_use_smooth(prefix, clip, a, skels[0] if skels.size() > 0 else null)
+		if skels.size() > 0:
+			_add_transitions(prefix, skels[0])
 		add_rest_reset(anim)
 		if anim.has_animation("idle"):
 			anim.play("idle")
@@ -228,6 +230,69 @@ func _use_smooth(prefix: String, clip: String, a: Animation, sk: Skeleton3D) -> 
 	if lib and lib.has_animation(raw):
 		lib.remove_animation(raw)
 		lib.add_animation(raw, b)
+
+
+# ---------------------------------------------------------------- transitions (claude 2026-11-09, animation step 6)
+## A stop from a run or a walk plays a short clip built from the stride itself (AnimStyle.stop_clip): from the moment the
+## next foot plants, easing into the idle - instead of the idle cutting in at whatever point of the stride. A start
+## begins the run at its passing pose (the feet together under the body - the nearest to standing). Remastered only
+## (stop_clip_for / start_phase answer nothing in Classic). Per race, once (static, as the smoothing).
+static var _gaits := {}                      # "prefix/clip" -> AnimStyle.gait
+
+
+func _add_transitions(prefix: String, sk: Skeleton3D) -> void:
+	if not anim.has_animation("idle"):
+		return
+	for mv: String in ["run", "walk"]:
+		if not anim.has_animation(mv):
+			continue
+		var move := anim.get_animation(mv)
+		var lib := anim.get_animation_library(anim.find_animation_library(move))
+		var key := prefix + "/" + mv
+		_smooth_lock.lock()
+		if not _gaits.has(key):
+			_gaits[key] = AnimStyle.gait(move, sk)
+		var g: Dictionary = _gaits[key]
+		for foot in ["l", "r"]:
+			var name := "%s_stop_%s" % [mv, foot]
+			var ck := prefix + "/" + name
+			if not g.has("plant_" + foot):
+				continue
+			if not _smooth_cache.has(ck):
+				_smooth_cache[ck] = AnimStyle.stop_clip(move, anim.get_animation("idle"),
+						float(g["plant_" + foot]), float(AnimStyle.STOP_SECONDS[mv]))
+			if lib and not lib.has_animation(name):
+				lib.add_animation(name, _smooth_cache[ck])
+		_smooth_lock.unlock()
+
+
+static func idle_like(clip: String) -> bool:
+	return clip == "idle" or clip.begins_with("combat_idle")
+
+
+static func is_stop_clip(clip: String) -> bool:
+	return clip.contains("_stop_")
+
+
+## The stop to play when `move` (run / walk), now at `at`, ends - for the foot that plants next; "" for none.
+func stop_clip_for(move: String, at: float) -> String:
+	if not sway_on or anim == null or not anim.has_animation(move):
+		return ""
+	var g: Dictionary = _gaits.get(race + "/" + move, {})
+	if not g.has("plant_l") or not g.has("plant_r"):
+		return ""
+	var length := anim.get_animation(move).length
+	var foot := "l" if fposmod(float(g.plant_l) - at, length) < fposmod(float(g.plant_r) - at, length) else "r"
+	var clip := "%s_stop_%s" % [move, foot]
+	return clip if anim.has_animation(clip) else ""
+
+
+## Where a start begins `move` (its passing pose); -1: from the start as before.
+func start_phase(move: String) -> float:
+	if not sway_on:
+		return -1.0
+	var g: Dictionary = _gaits.get(race + "/" + move, {})
+	return float(g.get("pass", -1.0))
 
 
 ## Merge `changes` into the current look and redraw.
