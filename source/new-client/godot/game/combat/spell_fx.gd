@@ -16,7 +16,14 @@ extends RefCounted
 ## (the explosion's sprites are 2.5 - 6 m), so on a badger cub it is a small pink puff, as in the owner's old-client
 ## clip; "Track Angle" turns the effect to face the target (the hand burst's streak becomes the ray toward the enemy).
 
-const BOLT_SPEED_M := 850.0 * 0.025
+## A bolt's flight (owner 2026-11-09: "one consistent (fast) speed"): faster than the server's 850 units / s (21 m/s),
+## the same at any distance - its hit shows a little before the server's damage at long range
+const BOLT_SPEED_M := 32.0
+## Ray spells (Sun Ray, Gleam Ray ... - a cast effect whose ray shows late in its own timeline, speffects release
+## ~0.9 s): the effect starts RAY_LEAD before its ray, so the ray and the hit come almost at once, as a direct damage
+## spell's should (owner 2026-11-09: "acting like bolts now and not a DD that lands instantly")
+const RAY_LEAD := 0.2
+const RAY_FROM := 0.5                        # (a release this late or later: a ray spell)
 const FxLight := preload("res://game/fx_light.gd")   # remastered lighting: effects light their surroundings
 static var _data := {}
 static var _scenes := {}                    # gltf path -> NifScene template (duplicated per use)
@@ -281,14 +288,14 @@ static var _fx_burst := {}                  # effect id -> [when its burst began
 static var prof_sound_us := 0
 
 
-static func play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: Node3D = null) -> Node3D:
+static func play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: Node3D = null, skip := 0.0) -> Node3D:
 	var t0 := Time.get_ticks_usec()
-	var r := _play(fx_id, on, height, keep, target)
+	var r := _play(fx_id, on, height, keep, target, skip)
 	prof_play_us += Time.get_ticks_usec() - t0
 	return r
 
 
-static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: Node3D = null) -> Node3D:
+static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: Node3D = null, skip := 0.0) -> Node3D:
 	var f: Dictionary = (data().get("fx", {}) as Dictionary).get(str(fx_id), {})
 	if f.is_empty() or on == null or not on.is_inside_tree():
 		return null
@@ -369,6 +376,8 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 		fx.add_child(tr)
 		tr._process(0.0)
 	NifParticles.fit_to_scale(fx)
+	if skip > 0.0:
+		(fx as NifScene).seek(skip)
 	for gp in (fx as NifScene).particles():
 		(gp as GPUParticles3D).amount_ratio = Perf.particle_ratio   # fewer sparks in a busy fight (Perf governor)
 	var lk := size_of(on) if bool(f.get("autoscale", false)) else 1.0
@@ -517,9 +526,11 @@ static func fire(client_effect: int, handles: Array, caster: Node3D, snd: Charac
 	# minstrel's musical notes, alb_min_cst, where the original shows only the small blue effect over the head)
 	var animated := (e.get("anims", []) as Array).any(func(a): return String(a) != "")
 	var figure := caster is Player or (caster is Npc and (caster as Npc).model is Fig3Figure)
+	var rel := float(e.get("release_s", 0.0))
+	var skip := maxf(rel - RAY_LEAD, 0.0) if rel >= RAY_FROM and int(e.get("projectile", 0)) == 0 else 0.0
 	if animated or not figure:
 		for id in e.get("cast_fx", []):
-			play(int(id), caster, 1.8, false, target)
+			play(int(id), caster, 1.8, false, target, skip)
 	sound(snd, int(e.get("sound_set", 0)), "cast")
 	var pid := int(e.get("projectile", 0))
 	if pid > 0 and target and is_instance_valid(target) and caster.is_inside_tree():
@@ -560,6 +571,8 @@ static func fire(client_effect: int, handles: Array, caster: Node3D, snd: Charac
 static func land(client_effect: int, target: Node3D, height: float, snd: CharacterSounds, resisted := false) -> void:
 	var e := effect(client_effect)
 	var wait := float(e.get("release_s", 0.0))
+	if wait >= RAY_FROM and int(e.get("projectile", 0)) == 0:
+		wait = RAY_LEAD                                    # (its cast effect started just before the ray: fire)
 	if wait > 0.0 and target and target.is_inside_tree():
 		await target.get_tree().create_timer(wait).timeout
 		if not is_instance_valid(target) or not target.is_inside_tree():

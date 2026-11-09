@@ -2479,8 +2479,10 @@ class Sway extends SkeletonModifier3D:
 			_yaw_raw = raw
 			_yaw_dt = 0.0
 			_om = lerpf(_om, clampf(om_raw, -12.0, 12.0), 0.5)
-		else:
-			_om = lerpf(_om, 0.0, 1.0 - exp(-dt * 2.0)) if _yaw_dt > 0.05 else _om
+		elif _yaw_dt > 0.035:
+			# no change for two physics ticks: the turn has stopped - at once, not over half a second (owner 2026-11-09:
+			# its fading rate kept pushing the body round past where it faced, then it sprang back - a rubber band)
+			_om = lerpf(_om, 0.0, 1.0 - exp(-dt * 40.0))
 		var ff := clampf(_om, -TURN_FF, TURN_FF)
 		var lat := _om * fwd_speed                         # sideways pull running through a curve (m/s2)
 		var want_bank := clampf(atan(lat / 9.8) * 0.3, -0.17, 0.17)
@@ -2490,9 +2492,14 @@ class Sway extends SkeletonModifier3D:
 		for _i in steps:
 			for i in 3:
 				var w: float = TURN_W[i]
-				_lag_v[i] += (w * w * (_yaw - _lag[i]) + 2.0 * w * (ff - _lag_v[i])) * h
+				var before := _yaw - _lag[i]
+				_lag_v[i] += (w * w * before + 2.0 * w * (ff - _lag_v[i])) * h
 				_lag[i] += _lag_v[i] * h
-			_bank_v += ((want_bank - _bank) * 90.0 - _bank_v * 15.0) * h
+				# never past where it faces: catching up, a part that would go by stops there (no swing back)
+				if absf(ff) < 0.05 and before * (_yaw - _lag[i]) < 0.0:
+					_lag[i] = _yaw
+					_lag_v[i] = 0.0
+			_bank_v += ((want_bank - _bank) * 90.0 - _bank_v * 19.0) * h     # (critically damped: no lean past upright)
 			_bank += _bank_v * h
 		for i in 3:
 			var d := clampf(_lag[i] - _yaw, -TURN_MAX, TURN_MAX)

@@ -234,6 +234,12 @@ func restart() -> void:
 	_step(0.0)
 
 
+## The timeline started partway in (SpellFx: a ray spell's cast effect from just before its ray - owner 2026-11-09).
+func seek(t: float) -> void:
+	_time = maxf(t, 0.0)
+	_step(0.0)
+
+
 func particles() -> Array:
 	return _emitters.map(func(e): return e.p)
 
