@@ -173,7 +173,7 @@ static func build(a: Animation, clip: String, sk: Skeleton3D, on := enabled) -> 
 ## (or walk), easing into the idle's first pose, the arms settling a little later than the body - one for each foot
 ## (`<clip>_stop_l` / `_r`); and the push-off moments a start begins the run at. gait() finds them: where each foot is
 ## furthest ahead (it plants) and furthest back (it pushes off), from the clip's own bones.
-const STOP_SECONDS := {"run": 0.58, "walk": 0.45}             # (the brake and the resettle: Sway._brake)
+const STOP_SECONDS := {"run": 0.55, "walk": 0.45}
 const STOP_ARM_LAG := 1.6                    # x DELAY: the arms and the head come to rest after the body
 
 
@@ -286,8 +286,29 @@ static func gait(a: Animation, sk: Skeleton3D) -> Dictionary:
 	return out
 
 
-## A stop: the move clip's pose at `from_t` (a foot planting) easing into the idle's first pose over `secs`.
-static func stop_clip(move: Animation, idle: Animation, from_t: float, secs: float) -> Animation:
+## A stop: the move clip's pose at `from_t` (the `plant` foot - "L" / "R" - coming down ahead) easing into the idle's
+## first pose over `secs`. As GW2's (owner 2026-11-09): the planted leg holds its pose through the first 40 % - the
+## stop is taken on it - while the trailing leg swings straight through (a little of the passing pose's knee lift,
+## `pass_t`) and sets down beside it by 45 %; the body and the arms ease into the stance, the arms and head a little after.
+const STOP_HOLD := 0.4
+const STOP_SWING_END := 0.45                 # the trailing foot is down by here
+const STOP_LIFT := 0.3                       # how much of the passing pose's knee lift it swings through
+
+
+static func _ss(u: float) -> float:
+	u = clampf(u, 0.0, 1.0)
+	return u * u * u * (u * (u * 6.0 - 15.0) + 10.0)
+
+
+static func _leg_side(bone: String) -> String:
+	for side in ["L", "R"]:
+		for part in [" Thigh", " Calf", " Foot", " Toe0", " ThighTwist"]:
+			if bone == "Bip01 " + side + part:
+				return side
+	return ""
+
+
+static func stop_clip(move: Animation, idle: Animation, from_t: float, secs: float, plant := "", pass_t := -1.0) -> Animation:
 	var b := Animation.new()
 	b.length = secs
 	b.loop_mode = Animation.LOOP_NONE
@@ -304,14 +325,24 @@ static func stop_clip(move: Animation, idle: Animation, from_t: float, secs: flo
 		b.track_set_interpolation_type(nt, Animation.INTERPOLATION_CUBIC)
 		var bone := String(path.get_concatenated_subnames())
 		var lag := _delay(bone) * STOP_ARM_LAG
+		var leg := _leg_side(bone) if plant != "" else ""
 		for i in n + 1:
 			var tm := secs * i / n
-			var u := clampf((tm - lag) / maxf(secs - lag, 0.05), 0.0, 1.0)
-			u = u * u * u * (u * (u * 6.0 - 15.0) + 10.0)          # (smootherstep: eases out of the stride and in to rest)
+			var s := tm / secs
+			var u := _ss((tm - lag) / maxf(secs - lag, 0.05))     # (eases out of the stride and in to rest)
 			if ty == Animation.TYPE_ROTATION_3D:
 				var q1 := idle.rotation_track_interpolate(t, 0.0)
 				var q0 := move.rotation_track_interpolate(mt, from_t) if mt >= 0 else q1
-				b.rotation_track_insert_key(nt, tm, q0.slerp(q1, u))
+				var q := q0.slerp(q1, u)
+				if leg == plant:
+					q = q0.slerp(q1, _ss((s - STOP_HOLD) / (1.0 - STOP_HOLD)))          # the stop taken on it
+				elif leg != "" and pass_t >= 0.0 and mt >= 0:
+					# the trailing leg straight through and down beside it - a little of the passing pose's knee lift on
+					# the way, not its heel kick (2026-11-09: the full passing pose left the foot up behind)
+					var qp := move.rotation_track_interpolate(mt, pass_t)
+					var w := clampf(s / STOP_SWING_END, 0.0, 1.0)
+					q = q0.slerp(q1, _ss(w)).slerp(qp, STOP_LIFT * sin(PI * w))
+				b.rotation_track_insert_key(nt, tm, q)
 			else:
 				var p1 := idle.position_track_interpolate(t, 0.0)
 				var p0 := move.position_track_interpolate(mt, from_t) if mt >= 0 else p1

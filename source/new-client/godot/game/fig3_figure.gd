@@ -272,8 +272,16 @@ func _stop_clip(prefix: String, mv: String, foot: String, into: String) -> Strin
 	var ck := prefix + "/" + name
 	_smooth_lock.lock()
 	if not _smooth_cache.has(ck):
-		_smooth_cache[ck] = AnimStyle.stop_clip(move, anim.get_animation(into), float(g["plant_" + foot]),
-				float(AnimStyle.STOP_SECONDS[mv]))
+		# the trailing leg's passing pose: the first of the stride's two passings after the plant
+		var at := float(g["plant_" + foot])
+		var pass_t := -1.0
+		if g.has("pass"):
+			var half := move.length * 0.5
+			var p1 := fposmod(float(g["pass"]), move.length)
+			var p2 := fposmod(p1 + half, move.length)
+			pass_t = p1 if fposmod(p1 - at, move.length) < fposmod(p2 - at, move.length) else p2
+		_smooth_cache[ck] = AnimStyle.stop_clip(move, anim.get_animation(into), at, float(AnimStyle.STOP_SECONDS[mv]),
+				foot.to_upper(), pass_t)
 	if lib and not lib.has_animation(name):
 		lib.add_animation(name, _smooth_cache[ck])
 	_smooth_lock.unlock()
@@ -2672,9 +2680,9 @@ class Sway extends SkeletonModifier3D:
 	# idle ... you could really feel the character stop based on how her feet planted"): through a stop clip the front
 	# foot stays where it came down, the knees give and the hips drop, the upper body leans back against the stop, then
 	# rocks a little forward; the planted foot lets go and steps back into the stance as the clip settles
-	const BRAKE_DROP := 0.075                    # metres the hips drop at the hardest of a stop from a run
-	const BRAKE_LEAN := 0.22                     # rad the upper body leans back then
-	const BRAKE_SETTLE := 0.07                   # rad it rocks forward after
+	const BRAKE_DROP := 0.025                    # metres the hips drop at the hardest of a stop from a run
+	const BRAKE_LEAN := 0.09                     # rad the upper body leans back then
+	const BRAKE_SETTLE := 0.04                   # rad it rocks forward after
 	var _brake_clip := ""
 	var _brake_p := Vector3.ZERO
 
@@ -2715,9 +2723,8 @@ class Sway extends SkeletonModifier3D:
 			_world_turn(sk, _neck_b, Basis(side_w, -back * 0.5), false)       # (the head keeps its eyes ahead)
 		var inv := xf.affine_inverse()
 		for i in 2:
-			var tw := nat_p[i]
-			if i == k:
-				tw = nat_p[i].lerp(Vector3(_brake_p.x, nat_p[i].y, _brake_p.z), hold)
+			var tw := nat_p[i]                         # (the feet where the clip has them - the knees take the drop;
+			                                           # 2026-11-09: holding the foot where it was looked stuck behind)
 			var now_s := sk.get_bone_global_pose(_foot[i]).origin
 			var delta := inv * tw - now_s
 			if delta.length() > 0.0005:
