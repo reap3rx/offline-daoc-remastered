@@ -809,8 +809,6 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 				return                                     # play_death() holds the last frame
 		if swim:
 			clip = "swim"                                  # swimming, still or moving (as you: Player)
-		if model is Fig3Figure and (model as Fig3Figure).move_clip(clip):
-			return                                         # (remastered: its last step first - Fig3Figure.move_clip)
 		if anim.has_animation(clip):
 			anim.play(clip, 0.2)
 
@@ -831,15 +829,12 @@ func _pace(delta: float) -> void:
 		var v := Vector2(here.x - _pace_from.x, here.z - _pace_from.z).length() / delta
 		_pace_mps = lerpf(_pace_mps, minf(v, 20.0), clampf(delta * 6.0, 0.0, 1.0))
 	_pace_from = here
-	var fig := model as Fig3Figure
-	if fig.stopping():                                 # (its last step: Fig3Figure paces it)
-		return
 	var clip := String(anim.current_animation)
 	var want := 1.0
 	if (clip == "run" or clip == "walk") and _pace_mps > 0.3:
 		var nat := (model as Fig3Figure).natural_speed(clip)
 		if nat > 0.0:
-			want = clampf(_pace_mps / nat, 0.5, 2.5) * fig.pace_factor()
+			want = clampf(_pace_mps / nat, 0.5, 2.5)
 	if absf(anim.speed_scale - want) > 0.01:
 		anim.speed_scale = want
 

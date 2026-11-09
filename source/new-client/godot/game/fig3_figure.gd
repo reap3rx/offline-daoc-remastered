@@ -1423,129 +1423,10 @@ func play(clip: String) -> void:
 
 
 # ---------------------------------------------------------------- start and stop (claude 2026-11-08)
-## Owner 2026-11-08 (Guild Wars 2's runner: "an extra step to stop, or ... a little extra motion to gain momentum when
-## she starts running ... you don't actually feel the momentum - the controls remain tight"; then, of the first try -
-## the stride running on in place after a stop - "the character itself looks like they ice skate"): Remastered, near
-## the camera, the drawn figure trails its real place a little, on a critically damped spring - it gathers speed over
-## its first strides when you start, and carries on a last half step when you stop - and the legs keep pace with
-## where the figure is drawn, not with the real place, so the feet stay on the ground. The real place - where you
-## are, what the camera and the server go by - starts and stops at once, as before. The lean, the hair and the cloak
-## are Sway's. Player._play and Npc call move_clip and pace_factor.
-const FOLLOW_W := 36.0                       # the spring (rad/s): ~0.4 m behind at a run, a last step of as much
-const FOLLOW_SNAP_M := 3.0                   # further than this (a teleport, a zone): no trailing, there at once
+## Owner 2026-11-08 (Guild Wars 2's runner: "a little of the momentum reflected in the animations and movement of the
+## hair and cloaks"): Sway's lean, hair and cloak. A trailing figure (drawn a little behind its real place, the legs
+## paced to it) was tried and taken out (owner 2026-11-09: "a jittery quality to movement ... still too subtle").
 var _near := false                           # Sway ran this frame (remastered, in range)
-var _follow := Vector3.INF                   # where the figure is drawn (world), trailing its real place
-var _follow_v := Vector3.ZERO
-var _model_base := Vector3.INF               # the model's own place in the figure, without the trail
-var _real_speed := 0.0                        # how fast the real place moves (m/s, smoothed)
-var _last_anchor := Vector3.INF
-var _stop_to := ""
-var _stop_speed0 := 1.0
-var _stop_vis0 := 0.0
-var _stopping := false
-var _stop_t := 0.0
-
-
-static func _idle_like(clip: String) -> bool:
-	return clip.contains("idle") and not clip.begins_with("sit")
-
-
-func _process(delta: float) -> void:
-	if model == null or delta <= 0.0:
-		return
-	if _model_base == Vector3.INF:
-		_model_base = model.position
-	var anchor := global_position
-	var cur := String(anim.current_animation) if anim else ""
-	var real_v := Vector3.ZERO if _last_anchor == Vector3.INF else (anchor - _last_anchor) / delta
-	_last_anchor = anchor
-	real_v.y = 0.0
-	_real_speed = lerpf(_real_speed, minf(real_v.length(), 25.0), clampf(delta * 12.0, 0.0, 1.0))
-	if not (sway_on and _near) or cur.begins_with("ride") or cur.begins_with("sit"):
-		if _follow != Vector3.INF:
-			_follow = Vector3.INF
-			model.position = _model_base
-		_follow_v = Vector3.ZERO
-		if _stopping:
-			motion_tick(0.0)
-		return
-	if _follow == Vector3.INF or Vector2(anchor.x - _follow.x, anchor.z - _follow.z).length() > FOLLOW_SNAP_M:
-		_follow = anchor
-		_follow_v = real_v
-	var steps := ceili(minf(delta, 0.25) * 120.0)
-	var h := minf(delta, 0.25) / steps
-	for _i in steps:                                       # (critically damped: no overshoot - it never passes you)
-		var x := _follow - anchor
-		x.y = 0.0
-		_follow_v += (-FOLLOW_W * FOLLOW_W * x - 2.0 * FOLLOW_W * _follow_v) * h
-		_follow_v.y = 0.0
-		_follow += _follow_v * h
-	_follow.y = anchor.y
-	var off := _follow - anchor
-	var par := model.get_parent() as Node3D
-	model.position = _model_base + (par.global_basis.inverse() * off if par else off)
-	if _stopping:
-		motion_tick(delta)
-
-
-func vis_speed() -> float:
-	return Vector2(_follow_v.x, _follow_v.z).length() if _follow != Vector3.INF else _real_speed
-
-
-## The run / walk's pace: how fast the drawn figure moves against the real place - under 1 while it gathers speed
-## (the first strides), 1 at a steady run.
-func pace_factor() -> float:
-	if _follow == Vector3.INF or _real_speed < 0.3:
-		return 1.0
-	return clampf(vis_speed() / _real_speed, 0.25, 1.2)
-
-
-## Before a clip is played for movement: true when the figure has taken it (a stop under way - its last step: leave
-## the clip be), false to play it as usual. Anything but standing still cuts the last step short.
-func move_clip(clip: String) -> bool:
-	if anim == null:
-		return false
-	var cur := String(anim.current_animation)
-	if _stopping:
-		if _idle_like(clip) and _near:
-			_stop_to = clip
-			return _stopping
-		_stopping = false                              # (moving again, casting, swinging, jumping: at once)
-		anim.speed_scale = _stop_speed0
-	if not (sway_on and _near):
-		return false
-	if _idle_like(clip) and (cur == "run" or cur == "walk") and vis_speed() > 0.8:
-		_stopping = true
-		_stop_t = 0.0
-		_stop_speed0 = anim.speed_scale
-		_stop_vis0 = vis_speed()
-		_stop_to = clip
-		return true
-	return false
-
-
-func stopping() -> bool:
-	return _stopping
-
-
-## The last step: the stride slowing with the figure as it comes to rest, then the idle blends in.
-func motion_tick(delta := 0.0) -> void:
-	if not _stopping or anim == null:
-		return
-	_stop_t += delta
-	var cur := String(anim.current_animation)
-	if not (cur == "run" or cur == "walk"):        # (something else took over - a cast, a swing: it stands)
-		_stopping = false
-		anim.speed_scale = 1.0
-		return
-	var v := vis_speed()
-	if v < 0.45 or _stop_t > 0.6 or not _near or _follow == Vector3.INF:
-		_stopping = false
-		if anim.has_animation(_stop_to):
-			anim.play(_stop_to, 0.25)
-		anim.speed_scale = 1.0
-		return
-	anim.speed_scale = _stop_speed0 * clampf(v / maxf(_stop_vis0, 0.1), 0.2, 1.0)
 
 
 func _part(part_name: String) -> MeshInstance3D:
@@ -2154,6 +2035,22 @@ class Sway extends SkeletonModifier3D:
 	var _fwd_v := 0.0                            # last frame's speed ahead
 	var _lean := 0.0
 	var _lean_v := 0.0
+	var _vel := Vector3.ZERO                     # the figure's speed (world), measured between its moves
+	var _vel_dt := 0.0
+	var _vel_s := Vector3.ZERO
+	# turning (owner 2026-11-09, "modernize the feel": the client's figures turn as one block, at once): the head turns
+	# first and looks into the turn, the shoulders follow, the hips last; running through a curve the body banks in
+	var _pelvis := -1
+	var _neck_b := -1
+	var _head_b := -1
+	var _yaw := INF                              # the figure's facing (world, unwrapped: no jump at +-PI)
+	var _yaw_raw := 0.0
+	var _yaw_dt := 0.0
+	var _om := 0.0                               # how fast it turns (rad/s, smoothed)
+	var _lag := PackedFloat32Array([0.0, 0.0, 0.0])      # where the hips, the chest and the head face (world yaw)
+	var _lag_v := PackedFloat32Array([0.0, 0.0, 0.0])
+	var _bank := 0.0
+	var _bank_v := 0.0
 
 	func _bones(sk: Skeleton3D) -> void:
 		_ready_bones = true
@@ -2165,6 +2062,9 @@ class Sway extends SkeletonModifier3D:
 			if mid >= 0:
 				_cloaks_mid.append(mid)
 		_neck = sk.find_bone("Bip01 Head")
+		_pelvis = sk.find_bone("Bip01 Pelvis")
+		_neck_b = sk.find_bone("Bip01 Neck")
+		_head_b = _neck
 		for sw in [["Bip01 Spine1", 0.55], ["Bip01 Spine2", 0.45]]:
 			var sb := sk.find_bone(String(sw[0]))
 			if sb >= 0:
@@ -2200,10 +2100,24 @@ class Sway extends SkeletonModifier3D:
 		if fig:
 			fig._near = true
 		var fresh := _last == Vector3.INF                      # (first frame in range: no change in speed to read)
-		var vel := Vector3.ZERO if fresh else (pos - _last) / dt
-		_last = pos
-		if vel.length() > 25.0:
-			vel = Vector3.ZERO                                 # (a teleport, a zone change)
+		# the speed between moves, not between frames: you move 60 times a second (the physics), the frames come at
+		# up to 165 - read frame to frame the speed flickers (0, 0, 2.7x ...) and set the lean and hair shaking
+		# (owner 2026-11-09: "a jittery quality to movement now"); an NPC's place comes in steps too
+		if fresh:
+			_vel = Vector3.ZERO
+			_vel_dt = 0.0
+			_last = pos
+		else:
+			_vel_dt += dt
+			if pos.distance_squared_to(_last) > 1e-8 or _vel_dt > 0.12:
+				_vel = (pos - _last) / _vel_dt
+				_vel_dt = 0.0
+				_last = pos
+				if _vel.length() > 25.0:
+					_vel = Vector3.ZERO                        # (a teleport, a zone change)
+		# (and smoothed: a move lands 2 or 3 frames after the last, so even between moves it reads +-25 %)
+		_vel_s = _vel if fresh else _vel_s.lerp(_vel, 1.0 - exp(-dt * 12.0))
+		var vel := _vel_s
 		# the model faces +Z in its own space (as the converted figures do); in the skeleton's space:
 		var to_skel := sk.global_basis.orthonormalized().inverse() * model.global_basis.orthonormalized()
 		var fwd := (to_skel * Vector3(0, 0, 1)).normalized()
@@ -2241,6 +2155,7 @@ class Sway extends SkeletonModifier3D:
 		var back_h := clampf(_back, -0.12, 0.45)               # (hair may swing a little forward past the head)
 		var side_ang := clampf(_side, -0.2, 0.2)
 		var axis_back := up.cross(fwd).normalized()           # + swings the lower end back (away from the body)
+		_turning(sk, dt, fresh, fwd_s)
 		for i in _spine.size():                               # (first: the cloak and hair hang off the leaning back;
 			_turn(sk, _spine[i], axis_back, _lean * _spine_w[i], fwd, 0.0)    # + tips the upper body forward)
 		# a shield, a two-hander, a slung bow or a quiver on the back: the cloak hangs as the animation has it (owner
@@ -2270,6 +2185,91 @@ class Sway extends SkeletonModifier3D:
 			hm.set_shader_parameter("sway_dir", back_w * (sin(back_h) * 0.75 + absf(bob)) + side_w * (sin(side_ang) * 0.6 + swish)
 					+ up_w * bob)
 			_hair_live = true
+
+	const TURN_W := [13.0, 19.0, 30.0]          # how quickly the hips, the chest, the head catch up (rad/s springs)
+	const TURN_MAX := 1.2                        # never further behind than this (rad): a snap past it is partly at once
+	const TURN_FF := 4.0                         # a steady turn up to this (rad/s - the turn keys) is followed with
+	                                             # no lag at all: only a sudden change of facing (the mouse, a strafe,
+	                                             # an NPC turning to you) shows the body coming round
+
+	func _turning(sk: Skeleton3D, dt: float, fresh: bool, fwd_speed: float) -> void:
+		var f := model.global_basis * Vector3(0, 0, 1)
+		var raw := atan2(f.x, f.z)
+		var cur := String(fig.anim.current_animation) if fig and fig.anim else ""
+		var off := cur.begins_with("ride") or cur.begins_with("sit") or cur.begins_with("death") or cur.begins_with("lie")
+		if fresh or _yaw == INF or off:
+			_yaw = raw
+			_yaw_raw = raw
+			_yaw_dt = 0.0
+			_om = 0.0
+			for i in 3:
+				_lag[i] = raw
+				_lag_v[i] = 0.0
+			_bank = 0.0
+			_bank_v = 0.0
+			return
+		# (the facing changes in steps too: its rate read between changes, as the speed)
+		_yaw_dt += dt
+		var dy := wrapf(raw - _yaw_raw, -PI, PI)
+		if absf(dy) > 1e-5 or _yaw_dt > 0.12:
+			var om_raw := dy / _yaw_dt
+			_yaw += dy
+			_yaw_raw = raw
+			_yaw_dt = 0.0
+			_om = lerpf(_om, clampf(om_raw, -12.0, 12.0), 0.5)
+		else:
+			_om = lerpf(_om, 0.0, 1.0 - exp(-dt * 2.0)) if _yaw_dt > 0.05 else _om
+		var ff := clampf(_om, -TURN_FF, TURN_FF)
+		var lat := _om * fwd_speed                         # sideways pull running through a curve (m/s2)
+		var want_bank := clampf(atan(lat / 9.8) * 0.3, -0.17, 0.17)
+		var sdt := minf(dt, 0.25)
+		var steps := ceili(sdt * 120.0)
+		var h := sdt / steps
+		for _i in steps:
+			for i in 3:
+				var w: float = TURN_W[i]
+				_lag_v[i] += (w * w * (_yaw - _lag[i]) + 2.0 * w * (ff - _lag_v[i])) * h
+				_lag[i] += _lag_v[i] * h
+			_bank_v += ((want_bank - _bank) * 90.0 - _bank_v * 15.0) * h
+			_bank += _bank_v * h
+		for i in 3:
+			var d := clampf(_lag[i] - _yaw, -TURN_MAX, TURN_MAX)
+			_lag[i] = _yaw + d
+		var d_hips := _lag[0] - _yaw
+		var d_chest := _lag[1] - _lag[0] + clampf(_om * 0.04, -0.12, 0.12)        # (and a look into the turn)
+		var d_head := _lag[2] - _lag[1] + clampf(_om * 0.08, -0.3, 0.3)
+		var up_w := (model.global_basis * Vector3.UP).normalized()
+		var side_w := up_w.cross(f.normalized()).normalized()          # the way a left turn pulls (the model's +X)
+		# the hips: turned, and banked about the ground under them (not the hips: the feet would lift)
+		if _pelvis >= 0:
+			var r := Basis(up_w.cross(side_w).normalized(), _bank) * Basis(up_w, d_hips)
+			_world_turn(sk, _pelvis, r, true)
+		for i in _spine.size():
+			_world_turn(sk, _spine[i], Basis(up_w, d_chest * _spine_w[i]), false)
+		if _neck_b >= 0 and _head_b >= 0:
+			_world_turn(sk, _neck_b, Basis(up_w, d_head * 0.4), false)
+			_world_turn(sk, _head_b, Basis(up_w, d_head * 0.6), false)
+		elif _head_b >= 0:
+			_world_turn(sk, _head_b, Basis(up_w, d_head), false)
+
+	## A bone turned by `r` (a turn in the world), about its own joint or (ground) about the ground under it.
+	func _world_turn(sk: Skeleton3D, b: int, r: Basis, ground: bool) -> void:
+		var sb := sk.global_basis.orthonormalized()
+		var rs := sb.inverse() * r * sb                  # the same turn in the skeleton's space
+		var g := sk.get_bone_global_pose(b)
+		var origin := g.origin
+		if ground:
+			var up_s := (sb.inverse() * (model.global_basis * Vector3.UP)).normalized()
+			var foot := sk.global_transform.affine_inverse() * model.global_position   # the figure's feet, in skeleton space
+			var pivot := origin - up_s * (origin - foot).dot(up_s)
+			origin = pivot + rs * (origin - pivot)
+		var ng := Transform3D(rs * g.basis, origin)
+		var p := sk.get_bone_parent(b)
+		var pg := sk.get_bone_global_pose(p) if p >= 0 else Transform3D.IDENTITY
+		var local := pg.affine_inverse() * ng
+		sk.set_bone_pose_rotation(b, local.basis.get_rotation_quaternion())
+		if ground:
+			sk.set_bone_pose_position(b, local.origin)
 
 	func _still_hair() -> void:
 		if _hair_live and fig and fig._hair_mat:
