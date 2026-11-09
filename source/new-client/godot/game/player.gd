@@ -368,7 +368,8 @@ func _play(clip: String, speed := 1.0) -> void:
 			_anim.queue(clip)
 			_anim.speed_scale = 1.0
 			return
-		_anim.play(clip, 0.15)
+		# (between the stances - the idle and a guard - a slower blend: the weapon comes up, not snaps)
+		_anim.play(clip, 0.3 if Fig3Figure.idle_like(clip) and Fig3Figure.idle_like(cur) else 0.15)
 		var at := fig.lower_phase(clip) if fig else -1.0
 		if at < 0.0 and fig and (clip == "run" or clip == "walk") and (Fig3Figure.idle_like(cur) or Fig3Figure.is_stop_clip(cur)):
 			at = fig.start_phase(clip)                     # starting: from the stride's passing pose

@@ -757,8 +757,19 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 		if visible != vis:
 			visible = vis
 	_pace(delta)
-	if model is Fig3Figure and Fig3Figure.sway_on:
-		(model as Fig3Figure).look_point = _look_point()
+	if model is Fig3Figure:
+		var f := model as Fig3Figure
+		if Fig3Figure.sway_on:
+			f.look_point = _look_point()
+		# a swing or a cast on the move (chasing you): its legs keep running under it, as yours (Fig3Figure.set_lower;
+		# animation step 5)
+		var legs := ""
+		var legs_speed := 1.0
+		if _action_left > 0.0 and state.alive and _pace_mps > 0.6 and not state.swimming and state.ride_clip == "":
+			legs = "run" if (state.fighting or state.running) and anim and anim.has_animation("run") else "walk"
+			var nat := f.natural_speed(legs)
+			legs_speed = clampf(_pace_mps / nat, 0.5, 2.5) if nat > 0.0 else 1.0
+		f.set_lower(legs, legs_speed, 0.0)
 	_animate_lod(delta, cam)
 	if _swim_fit > 0:
 		_swim_fit -= 1
@@ -821,11 +832,12 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 			anim.play(stop, 0.1)
 			anim.queue(clip)
 		elif anim.has_animation(clip):
-			anim.play(clip, 0.2)
-			if fig and (clip == "run" or clip == "walk") and (Fig3Figure.idle_like(was) or Fig3Figure.is_stop_clip(was)):
-				var at := fig.start_phase(clip)
-				if at >= 0.0:
-					anim.seek(at, false)
+			anim.play(clip, 0.3 if Fig3Figure.idle_like(clip) and Fig3Figure.idle_like(was) else 0.2)
+			var at := fig.lower_phase(clip) if fig else -1.0           # (its legs ran on under a swing: on in step)
+			if at < 0.0 and fig and (clip == "run" or clip == "walk") and (Fig3Figure.idle_like(was) or Fig3Figure.is_stop_clip(was)):
+				at = fig.start_phase(clip)
+			if at >= 0.0:
+				anim.seek(at, false)
 
 
 var _action_left := 0.0
