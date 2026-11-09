@@ -1421,6 +1421,85 @@ func play(clip: String) -> void:
 		anim.play(clip, 0.15)
 
 
+# ---------------------------------------------------------------- start and stop (claude 2026-11-08)
+## Owner 2026-11-08 (Guild Wars 2's runner: "an extra step to stop, or ... a little extra motion to gain momentum when
+## she starts running ... you don't actually feel the momentum - the controls remain tight ... extra stop and start
+## animations, that would get interrupted for any other animation"): Remastered, near the camera (Sway), a figure that
+## stops keeps its stride going a moment, slowing, before it settles into its idle - its last step - and a figure
+## that starts takes its first strides a little quick, the push off. Only the look: the figure moves (and stops) as
+## it did. The rest of it - the lean, the hair and cloak - is Sway's. Player._play and Npc call move_clip.
+const STOP_S := 0.32                         # the stride running on, slowing, after a stop
+const START_S := 0.35                        # the quickened first strides
+var _near := false                           # Sway ran this frame (remastered, in range)
+var _stop_t0 := -1.0
+var _stop_speed0 := 1.0
+var _stop_to := ""
+var _start_t0 := -1.0
+
+
+static func _idle_like(clip: String) -> bool:
+	return clip.contains("idle") and not clip.begins_with("sit")
+
+
+## Before a clip is played for movement: true when the figure has taken it (a stop under way - leave the clip be),
+## false to play it as usual. A stop is cut short by anything but standing still.
+func move_clip(clip: String) -> bool:
+	if anim == null:
+		return false
+	var cur := String(anim.current_animation)
+	if _stop_t0 >= 0.0:
+		if _idle_like(clip) and _near:
+			_stop_to = clip
+			motion_tick()
+			return _stop_t0 >= 0.0
+		_stop_t0 = -1.0                            # (moving again, casting, swinging, jumping: at once)
+		anim.speed_scale = _stop_speed0
+	if not (sway_on and _near):
+		return false
+	if _idle_like(clip) and (cur == "run" or cur == "walk"):
+		_stop_t0 = Time.get_ticks_msec() / 1000.0
+		_stop_speed0 = anim.speed_scale
+		_stop_to = clip
+		return true
+	if (clip == "run" or clip == "walk") and (_idle_like(cur) or cur == ""):
+		_start_t0 = Time.get_ticks_msec() / 1000.0
+	return false
+
+
+## The quickened first strides: the run's pace times this.
+func start_boost() -> float:
+	if _start_t0 < 0.0:
+		return 1.0
+	var t := (Time.get_ticks_msec() / 1000.0 - _start_t0) / START_S
+	if t >= 1.0:
+		_start_t0 = -1.0
+		return 1.0
+	return 1.0 + 0.3 * (1.0 - t)
+
+
+func stopping() -> bool:
+	return _stop_t0 >= 0.0
+
+
+## A stop under way: the stride slows, then the idle blends in.
+func motion_tick() -> void:
+	if _stop_t0 < 0.0 or anim == null:
+		return
+	var t := (Time.get_ticks_msec() / 1000.0 - _stop_t0) / STOP_S
+	var cur := String(anim.current_animation)
+	if not (cur == "run" or cur == "walk"):        # (something else took over - a cast, a swing: it stands)
+		_stop_t0 = -1.0
+		anim.speed_scale = 1.0
+		return
+	if t >= 1.0 or not _near:
+		_stop_t0 = -1.0
+		if anim.has_animation(_stop_to):
+			anim.play(_stop_to, 0.3)
+		anim.speed_scale = 1.0
+		return
+	anim.speed_scale = _stop_speed0 * lerpf(1.0, 0.3, t * t)
+
+
 func _part(part_name: String) -> MeshInstance3D:
 	var list: Array = _meshes.get(part_name, [])
 	return list[0] if list.size() > 0 else null
@@ -2022,6 +2101,11 @@ class Sway extends SkeletonModifier3D:
 	var _side_v := 0.0
 	var _phase := 0.0
 	var _ready_bones := false
+	var _spine: Array[int] = []                  # (the lean into a start, back from a stop: its bones and shares)
+	var _spine_w: Array[float] = []
+	var _fwd_v := 0.0                            # last frame's speed ahead
+	var _lean := 0.0
+	var _lean_v := 0.0
 
 	func _bones(sk: Skeleton3D) -> void:
 		_ready_bones = true
@@ -2033,6 +2117,14 @@ class Sway extends SkeletonModifier3D:
 			if mid >= 0:
 				_cloaks_mid.append(mid)
 		_neck = sk.find_bone("Bip01 Head")
+		for sw in [["Bip01 Spine1", 0.55], ["Bip01 Spine2", 0.45]]:
+			var sb := sk.find_bone(String(sw[0]))
+			if sb >= 0:
+				_spine.append(sb)
+				_spine_w.append(float(sw[1]))
+		if _spine.is_empty() and sk.find_bone("Bip01 Spine") >= 0:
+			_spine.append(sk.find_bone("Bip01 Spine"))
+			_spine_w.append(1.0)
 		var t := sk.find_bone("Bip01 Ponytail1")
 		if t >= 0:
 			_tails.append(t)
@@ -2043,6 +2135,8 @@ class Sway extends SkeletonModifier3D:
 		if sk == null or not Fig3Figure.sway_on or model == null:
 			_last = Vector3.INF
 			_still_hair()
+			if fig:
+				fig._near = false
 			return
 		if not _ready_bones:
 			_bones(sk)
@@ -2051,9 +2145,14 @@ class Sway extends SkeletonModifier3D:
 		if cam and cam.global_position.distance_to(pos) > SWAY_RANGE_M:
 			_last = Vector3.INF
 			_still_hair()
+			if fig:
+				fig._near = false
 			return
 		var dt := maxf(delta, 0.001)
-		var vel := Vector3.ZERO if _last == Vector3.INF else (pos - _last) / dt
+		if fig:
+			fig._near = true
+		var fresh := _last == Vector3.INF                      # (first frame in range: no change in speed to read)
+		var vel := Vector3.ZERO if fresh else (pos - _last) / dt
 		_last = pos
 		if vel.length() > 25.0:
 			vel = Vector3.ZERO                                 # (a teleport, a zone change)
@@ -2066,15 +2165,36 @@ class Sway extends SkeletonModifier3D:
 		var t := Time.get_ticks_msec() / 1000.0
 		var breeze := Fig3Figure.wind * (0.03 + 0.025 * sin(t * 1.3 + _phase) + 0.015 * sin(t * 3.1 + _phase * 2.0))
 		var want_back := clampf(v.z * 0.05, 0.0, 0.35) + maxf(breeze, 0.0)
+		# starting and stopping (owner 2026-11-08: "a little of the momentum reflected in the animations and movement of
+		# the hair and cloaks" - the controls stay tight, the figure only looks it): the change in speed ahead kicks
+		# the body - a lean into the first stride, a rock back as it stops, settling with one soft overshoot - and the
+		# hair and cloak, which catch up late and swing on past
+		# (the speed ahead smoothed a little first: an NPC's position comes in steps)
+		var fwd_s := v.z if fresh else lerpf(_fwd_v, v.z, 1.0 - exp(-dt * 14.0))
+		var dv := 0.0 if fresh else clampf(fwd_s - _fwd_v, -9.0, 9.0)
+		_fwd_v = fwd_s
+		_lean_v += dv * 0.16
+		_back_v += dv * 0.06
 		var want_side := clampf(-v.x * 0.03, -0.15, 0.15) + Fig3Figure.wind * 0.02 * sin(t * 0.9 + _phase)
-		# springs (a little under-damped: one soft overshoot as it settles)
-		_back_v += ((want_back - _back) * 40.0 - _back_v * 9.0) * dt
-		_back += _back_v * dt
-		_side_v += ((want_side - _side) * 30.0 - _side_v * 8.0) * dt
-		_side += _side_v * dt
+		# springs (a little under-damped: one soft overshoot as it settles) - in steps of a 60th of a second at
+		# most, so a slow frame (a crowded town) can't set them shaking
+		var sdt := minf(dt, 0.25)                             # (a hitch: no more than a quarter second at once)
+		var steps := ceili(sdt * 60.0)
+		var h := sdt / steps
+		for _i in steps:
+			_lean_v += (-_lean * 70.0 - _lean_v * 8.5) * h
+			_lean += _lean_v * h
+			_back_v += ((want_back - _back) * 40.0 - _back_v * 6.5) * h      # (a soft swing on past as it settles)
+			_back += _back_v * h
+			_side_v += ((want_side - _side) * 30.0 - _side_v * 8.0) * h
+			_side += _side_v * h
+		_lean = clampf(_lean, -0.14, 0.14)
 		var back := clampf(_back, 0.0, 0.45)                   # never forward, into the legs
+		var back_h := clampf(_back, -0.12, 0.45)               # (hair may swing a little forward past the head)
 		var side_ang := clampf(_side, -0.2, 0.2)
 		var axis_back := up.cross(fwd).normalized()           # + swings the lower end back (away from the body)
+		for i in _spine.size():                               # (first: the cloak and hair hang off the leaning back;
+			_turn(sk, _spine[i], axis_back, _lean * _spine_w[i], fwd, 0.0)    # + tips the upper body forward)
 		# a shield, a two-hander, a slung bow or a quiver on the back: the cloak hangs as the animation has it (owner
 		# 2026-11-03: they clipped through the swinging cloak); it swings again once the back is clear
 		if fig == null or not fig.back_gear:
@@ -2083,7 +2203,7 @@ class Sway extends SkeletonModifier3D:
 			for b in _cloaks_mid:
 				_turn(sk, b, axis_back, back * 0.35, fwd, side_ang * 0.5)
 		for b in _tails:
-			_turn(sk, b, axis_back, back * 0.8, fwd, side_ang * 1.2)
+			_turn(sk, b, axis_back, back_h * 0.8, fwd, side_ang * 1.2)
 		# long hair (the Catacombs hair is rigid on the head: its lower part bent in the shader)
 		var hm: ShaderMaterial = fig._hair_mat if fig else null
 		if hm and _neck >= 0:
@@ -2099,7 +2219,7 @@ class Sway extends SkeletonModifier3D:
 			var swish := sin(t * 5.0 + _phase) * minf(speed, 8.0) * 0.008
 			hm.set_shader_parameter("sway_head", head_w)
 			hm.set_shader_parameter("sway_back", back_w)
-			hm.set_shader_parameter("sway_dir", back_w * (sin(back) * 0.75 + absf(bob)) + side_w * (sin(side_ang) * 0.6 + swish)
+			hm.set_shader_parameter("sway_dir", back_w * (sin(back_h) * 0.75 + absf(bob)) + side_w * (sin(side_ang) * 0.6 + swish)
 					+ up_w * bob)
 			_hair_live = true
 

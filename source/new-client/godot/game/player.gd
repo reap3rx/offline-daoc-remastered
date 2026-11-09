@@ -353,9 +353,12 @@ func _set_loops() -> void:
 func _play(clip: String, speed := 1.0) -> void:
 	if _anim == null or not _anim.has_animation(clip):
 		return
+	var fig := _model as Fig3Figure
+	if fig and fig.move_clip(clip):                 # (remastered: a stop's last step under way - Fig3Figure.move_clip)
+		return
 	if _anim.current_animation != clip:
 		_anim.play(clip, 0.15)
-	_anim.speed_scale = speed
+	_anim.speed_scale = speed * (fig.start_boost() if fig and (clip == "run" or clip == "walk") else 1.0)
 
 
 ## Wounded: the 1.65 client's own rule (game.dll 0x438b5c, after the run speed from the server's MaxSpeed percent): below
