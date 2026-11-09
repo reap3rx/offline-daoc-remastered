@@ -361,7 +361,7 @@ func _play(clip: String, speed := 1.0) -> void:
 	if cur != clip:
 		_anim.clear_queue()
 		# stopping: the stride's own stop for the foot that plants next (Fig3Figure.stop_clip_for; step 6)
-		var stop := fig.stop_clip_for(cur, _anim.current_animation_position) if fig and Fig3Figure.idle_like(clip) \
+		var stop := fig.stop_clip_for(cur, _anim.current_animation_position, clip) if fig and Fig3Figure.idle_like(clip) \
 				and (cur == "run" or cur == "walk") else ""
 		if stop != "":
 			_anim.play(stop, 0.1)
@@ -1604,20 +1604,14 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 		else:
 			legs = "run"
 			legs_speed = _sync("run", "run", speed)
-	# turning on the spot (step 6): the legs step round (the walk under whatever the body does - a guard holds) while
-	# the body turns quickly, and a moment after
+	# (how fast you turn - kept for the figure)
 	var facing := char_yaw + _body_offset
 	var yaw_rate := wrapf(facing - _last_facing, -PI, PI) / maxf(delta, 0.001) if not is_nan(_last_facing) else 0.0
 	_last_facing = facing
 	_turn_rate = lerpf(_turn_rate, clampf(yaw_rate, -20.0, 20.0), clampf(delta * 10.0, 0.0, 1.0))
 	_turn_step_left -= delta
-	if Fig3Figure.sway_on and legs == "" and not moving and grounded and not swimming and not climbing and not dead \
-			and not sitting and force_clip == "" and not (mount and is_instance_valid(mount)):
-		if absf(_turn_rate) > TURN_STEP_RATE:
-			_turn_step_left = 0.3
-		if _turn_step_left > 0.0:
-			legs = "walk"
-			legs_speed = clampf(absf(_turn_rate) * 0.45, 0.8, 1.6)
+	# (2026-11-09: taken out - the walk stepping in place looked floaty; Fig3Figure's Sway keeps the feet planted and
+	# steps them round instead)
 	if _model is Fig3Figure:
 		(_model as Fig3Figure).set_lower(legs, legs_speed, -_body_offset)
 		(_model as Fig3Figure).look_point = _look_point()

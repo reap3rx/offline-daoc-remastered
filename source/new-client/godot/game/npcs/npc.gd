@@ -826,7 +826,7 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 		var was := String(anim.current_animation)
 		anim.clear_queue()
 		# stopping / starting as the player does (Fig3Figure.stop_clip_for / start_phase; animation step 6)
-		var stop := fig.stop_clip_for(was, anim.current_animation_position) if fig and Fig3Figure.idle_like(clip) \
+		var stop := fig.stop_clip_for(was, anim.current_animation_position, clip) if fig and Fig3Figure.idle_like(clip) \
 				and (was == "run" or was == "walk") else ""
 		if stop != "":
 			anim.play(stop, 0.1)

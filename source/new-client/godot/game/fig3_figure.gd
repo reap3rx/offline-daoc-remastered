@@ -253,17 +253,31 @@ func _add_transitions(prefix: String, sk: Skeleton3D) -> void:
 		if not _gaits.has(key):
 			_gaits[key] = AnimStyle.gait(move, sk)
 		var g: Dictionary = _gaits[key]
-		for foot in ["l", "r"]:
-			var name := "%s_stop_%s" % [mv, foot]
-			var ck := prefix + "/" + name
-			if not g.has("plant_" + foot):
-				continue
-			if not _smooth_cache.has(ck):
-				_smooth_cache[ck] = AnimStyle.stop_clip(move, anim.get_animation("idle"),
-						float(g["plant_" + foot]), float(AnimStyle.STOP_SECONDS[mv]))
-			if lib and not lib.has_animation(name):
-				lib.add_animation(name, _smooth_cache[ck])
 		_smooth_lock.unlock()
+		for foot in ["l", "r"]:
+			_stop_clip(prefix, mv, foot, "idle")
+
+
+## The stop from `move` as `foot` plants, into the stance `into` (the idle, or a combat guard - owner 2026-11-09: a
+## stop into the plain idle then snapped to the drawn weapon's guard): built the first time it's wanted, per race.
+func _stop_clip(prefix: String, mv: String, foot: String, into: String) -> String:
+	var name := "%s_stop_%s" % [mv, foot] + ("" if into == "idle" else "__" + into)
+	if anim.has_animation(name):
+		return name
+	var g: Dictionary = _gaits.get(prefix + "/" + mv, {})
+	if not g.has("plant_" + foot) or not anim.has_animation(mv) or not anim.has_animation(into):
+		return ""
+	var move := anim.get_animation(mv)
+	var lib := anim.get_animation_library(anim.find_animation_library(move))
+	var ck := prefix + "/" + name
+	_smooth_lock.lock()
+	if not _smooth_cache.has(ck):
+		_smooth_cache[ck] = AnimStyle.stop_clip(move, anim.get_animation(into), float(g["plant_" + foot]),
+				float(AnimStyle.STOP_SECONDS[mv]))
+	if lib and not lib.has_animation(name):
+		lib.add_animation(name, _smooth_cache[ck])
+	_smooth_lock.unlock()
+	return name if anim.has_animation(name) else ""
 
 
 static func idle_like(clip: String) -> bool:
@@ -274,8 +288,8 @@ static func is_stop_clip(clip: String) -> bool:
 	return clip.contains("_stop_")
 
 
-## The stop to play when `move` (run / walk), now at `at`, ends - for the foot that plants next; "" for none.
-func stop_clip_for(move: String, at: float) -> String:
+## The stop to play when `move` (run / walk), now at `at`, ends into `into` - for the foot that plants next; "" none.
+func stop_clip_for(move: String, at: float, into := "idle") -> String:
 	if not sway_on or anim == null or not anim.has_animation(move):
 		return ""
 	var g: Dictionary = _gaits.get(race + "/" + move, {})
@@ -283,8 +297,7 @@ func stop_clip_for(move: String, at: float) -> String:
 		return ""
 	var length := anim.get_animation(move).length
 	var foot := "l" if fposmod(float(g.plant_l) - at, length) < fposmod(float(g.plant_r) - at, length) else "r"
-	var clip := "%s_stop_%s" % [move, foot]
-	return clip if anim.has_animation(clip) else ""
+	return _stop_clip(race, move, foot, into)
 
 
 ## Where a start begins `move` (its passing pose); -1: from the start as before.
@@ -2269,6 +2282,12 @@ class Sway extends SkeletonModifier3D:
 	var _root_b := -1
 	var _ik_w := 0.0
 	var _ik_d: Array[float] = [0.0, 0.0]
+	var _planted := false                        # standing: each foot stays where it was set down ...
+	var _plant_p: Array[Vector3] = [Vector3.ZERO, Vector3.ZERO]
+	var _plant_b: Array[Basis] = [Basis(), Basis()]
+	var _st: Array[float] = [-1.0, -1.0]          # ... until it steps (0..1 through the step; -1 planted) to where the body has it
+	var _from_p: Array[Vector3] = [Vector3.ZERO, Vector3.ZERO]
+	var _from_b: Array[Basis] = [Basis(), Basis()]
 	var _winded := 0.0                           # 0..1: how hard it has been running lately
 
 	func _bones(sk: Skeleton3D) -> void:
@@ -2519,6 +2538,11 @@ class Sway extends SkeletonModifier3D:
 
 	const FEET_MAX := 0.4                        # metres: no more than this up or down to the ground under a foot
 	const FEET_FADE := 0.25                      # seconds to come in / go out
+	const STEP_DIST := 0.16                      # metres a planted foot may be left from where the body has it ...
+	const STEP_TURN := 0.6                       # ... or turned from it (rad, ~35 deg) before it steps
+	const STEP_SECONDS := 0.2
+	const STEP_LIFT := 0.07
+	const FLICK := 6.0                           # rad/s: turning faster, the feet go round with the body
 
 	## The ground's height under a point (world): the terrain and the floors (as Player._floor_below); -INF: none.
 	func _ground(p: Vector3) -> float:
@@ -2544,35 +2568,104 @@ class Sway extends SkeletonModifier3D:
 		var cur := String(fig.anim.current_animation) if fig and fig.anim else ""
 		var ok := _vel_s.length() < 0.5 and Fig3Figure.ground_src != null and not (cur.begins_with("ride") \
 				or cur.begins_with("sit") or cur == "swim" or cur.begins_with("death") or cur == "jump" or cur == "land" \
-				or cur.begins_with("lie") or cur == "ladder")
+				or cur.begins_with("lie") or cur == "ladder") and fig.lower_clip == "" \
+				and (Fig3Figure.idle_like(cur) or AnimStyle.group_of(cur) == "aim")   # (a swing's own footwork plays)
 		_ik_w = move_toward(_ik_w, 1.0 if ok else 0.0, dt / FEET_FADE)
+		var xf := sk.global_transform
+		# where the clip has the feet now (world) - and their turn
+		var nat_p: Array[Vector3] = []
+		var nat_b: Array[Basis] = []
+		for k in 2:
+			var g := sk.get_bone_global_pose(_foot[k])
+			nat_p.append(xf * g.origin)
+			nat_b.append(xf.basis * g.basis)
+		if _ik_w <= 0.0 or not ok:
+			_planted = false                                  # (moving: the feet go with the clip)
+			_st[0] = -1.0
+			_st[1] = -1.0
+		elif not _planted:
+			_planted = true                                   # (coming to rest: the feet plant where they are)
+			_st[0] = -1.0
+			_st[1] = -1.0
+			for k in 2:
+				_plant_p[k] = nat_p[k]
+				_plant_b[k] = nat_b[k]
 		if _ik_w <= 0.0:
 			_ik_d[0] = 0.0
 			_ik_d[1] = 0.0
 			return
-		var xf := sk.global_transform
+		# planted: a foot left too far from where the body now has it (the body turned or shifted over it) steps there -
+		# a quick lift and set down, one foot at a time, the one further off first (owner 2026-11-09: turning on the spot
+		# with the walk clip stepping in place looked floaty)
+		var want_p: Array[Vector3] = [nat_p[0], nat_p[1]]
+		var want_b: Array[Basis] = [nat_b[0], nat_b[1]]
+		var lift: Array[float] = [0.0, 0.0]
+		if _planted:
+			# quicker steps the faster it turns, the next foot off as the last comes down; a flick - the feet just go round
+			var fast := absf(_om)
+			var secs := lerpf(STEP_SECONDS, 0.12, clampf((fast - 1.0) / 3.0, 0.0, 1.0))
+			var need := lerpf(1.0, 0.6, clampf(fast / 3.0, 0.0, 1.0))
+			for k in 2:
+				if _st[k] >= 0.0:
+					_st[k] += dt / secs
+					if _st[k] >= 1.0:
+						_plant_p[k] = nat_p[k]
+						_plant_b[k] = nat_b[k]
+						_st[k] = -1.0
+			var worst := -1
+			var worst_e := need
+			for k in 2:
+				if _st[k] >= 0.0 or _st[1 - k] >= 0.0 and _st[1 - k] < 0.5:
+					continue
+				var off := Vector2(_plant_p[k].x - nat_p[k].x, _plant_p[k].z - nat_p[k].z).length() / STEP_DIST
+				var fa := (_plant_b[k] * Vector3(0, 0, 1)).normalized()
+				var fb := (nat_b[k] * Vector3(0, 0, 1)).normalized()
+				var e := maxf(off, absf(Vector2(fa.x, fa.z).angle_to(Vector2(fb.x, fb.z))) / STEP_TURN)
+				if e > worst_e:
+					worst_e = e
+					worst = k
+			if worst >= 0:
+				_st[worst] = 0.0
+				_from_p[worst] = _plant_p[worst]
+				_from_b[worst] = _plant_b[worst]
+			for k in 2:
+				if fast > FLICK:
+					_plant_p[k] = nat_p[k]                       # (a flick round: no planting till it slows)
+					_plant_b[k] = nat_b[k]
+					_st[k] = -1.0
+				elif _st[k] >= 0.0:
+					var u := smoothstep(0.0, 1.0, _st[k])
+					want_p[k] = _from_p[k].lerp(nat_p[k], u)
+					want_b[k] = Basis(_from_b[k].get_rotation_quaternion().slerp(nat_b[k].get_rotation_quaternion(), u)).scaled(nat_b[k].get_scale())
+					lift[k] = sin(PI * clampf(_st[k], 0.0, 1.0)) * STEP_LIFT
+				else:
+					want_p[k] = _plant_p[k]
+					want_b[k] = _plant_b[k]
 		var su := 1.0 / maxf(xf.basis.get_scale().y, 0.001)          # (metres to the skeleton's units)
 		var up_s := (xf.basis.inverse() * Vector3.UP).normalized()
 		var base_y := model.global_position.y
 		var d: Array[float] = [0.0, 0.0]
 		for k in 2:
-			var fw := xf * sk.get_bone_global_pose(_foot[k]).origin
-			var g := _ground(Vector3(fw.x, base_y, fw.z))
-			var want := 0.0 if g == -INF else clampf(g - base_y, -FEET_MAX, FEET_MAX)
-			_ik_d[k] = lerpf(_ik_d[k], want, clampf(dt * 12.0, 0.0, 1.0))
+			var g := _ground(Vector3(want_p[k].x, base_y, want_p[k].z))
+			var wnt := 0.0 if g == -INF else clampf(g - base_y, -FEET_MAX, FEET_MAX)
+			_ik_d[k] = lerpf(_ik_d[k], wnt, clampf(dt * 12.0, 0.0, 1.0))
 			d[k] = _ik_d[k] * _ik_w
-		if absf(d[0]) < 0.005 and absf(d[1]) < 0.005:
-			return
 		var body := clampf(minf(d[0], d[1]), -FEET_MAX * 0.9, 0.2)    # the body down to the lower foot (or up)
-		var feet_was: Array[Basis] = [sk.get_bone_global_pose(_foot[0]).basis, sk.get_bone_global_pose(_foot[1]).basis]
-		sk.set_bone_pose_position(_root_b, sk.get_bone_pose_position(_root_b) + up_s * body * su)
+		if absf(body) > 0.0005:
+			sk.set_bone_pose_position(_root_b, sk.get_bone_pose_position(_root_b) + up_s * body * su)
+		var inv := xf.affine_inverse()
 		for k in 2:
-			var raise := (d[k] - body) * su
-			if absf(raise) > 0.0005:
-				_two_bone(sk, k, up_s * raise)
-			# the foot keeps its own turn (as the clip has it), not the leg's
+			# the foot's place: where it is planted (or stepping), on its ground, from where the clip puts it - by the weight
+			var tw := Vector3(want_p[k].x, nat_p[k].y + d[k] + lift[k] * _ik_w, want_p[k].z)
+			tw = nat_p[k].lerp(tw, _ik_w) + Vector3.UP * 0.0
+			var now_s := sk.get_bone_global_pose(_foot[k]).origin
+			var delta := inv * tw - now_s
+			if delta.length() > 0.0005:
+				_two_bone(sk, k, delta)
 			var g := sk.get_bone_global_pose(_foot[k])
-			_skel_set(sk, _foot[k], Transform3D(feet_was[k], g.origin))
+			var fb: Basis = xf.basis.inverse() * want_b[k]
+			var keep := Basis(g.basis.get_rotation_quaternion().slerp(fb.get_rotation_quaternion(), _ik_w)).scaled(g.basis.get_scale())
+			_skel_set(sk, _foot[k], Transform3D(keep, g.origin))
 
 	## The leg (thigh, calf) bent so the foot moves by `delta` (skeleton space), the knee in its own plane.
 	func _two_bone(sk: Skeleton3D, k: int, delta: Vector3) -> void:
