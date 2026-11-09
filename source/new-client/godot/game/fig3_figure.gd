@@ -2681,10 +2681,11 @@ class Sway extends SkeletonModifier3D:
 	# foot stays where it came down, the knees give and the hips drop, the upper body leans back against the stop, then
 	# rocks a little forward; the planted foot lets go and steps back into the stance as the clip settles
 	const BRAKE_DROP := 0.025                    # metres the hips drop at the hardest of a stop from a run
-	const BRAKE_LEAN := 0.09                     # rad the upper body leans back then
-	const BRAKE_SETTLE := 0.04                   # rad it rocks forward after
+	const BRAKE_LEAN := 0.17                     # rad the upper body leans back then (owner 2026-11-09: a bit more)
+	const BRAKE_SETTLE := 0.06                   # rad it rocks forward after
 	var _brake_clip := ""
-	var _brake_p := Vector3.ZERO
+	var _brake_p := Vector3.ZERO                 # (the figure's own space)
+	var _brake_set := false
 
 	func _brake(sk: Skeleton3D) -> void:
 		var cur := String(fig.anim.current_animation) if fig and fig.anim else ""
@@ -2699,7 +2700,14 @@ class Sway extends SkeletonModifier3D:
 		var xf := sk.global_transform
 		if cur != _brake_clip:
 			_brake_clip = cur
-			_brake_p = xf * sk.get_bone_global_pose(_foot[k]).origin
+			_brake_set = false
+		# the front foot pinned where it came down - once the stop has blended in to its own first pose (not at its
+		# first frame, mid-stride) - through the hold, so the body settling over it doesn't drag it (owner: a slide)
+		if not _brake_set and u >= 0.14:
+			_brake_set = true
+			_brake_p = model.global_transform.affine_inverse() * (xf * sk.get_bone_global_pose(_foot[k]).origin)
+		var pin := smoothstep(0.1, 0.16, u) * (1.0 - smoothstep(AnimStyle.STOP_HOLD, AnimStyle.STOP_HOLD + 0.2, u)) \
+				if _brake_set else 0.0
 		var amt := 1.0 if cur.begins_with("run") else 0.45
 		var b := sin(PI * clampf(u / 0.42, 0.0, 1.0)) * amt                     # the brake: in hard, out by 42 %
 		var settle := sin(PI * clampf((u - 0.28) / 0.42, 0.0, 1.0)) * amt       # then the rock forward
@@ -2723,8 +2731,10 @@ class Sway extends SkeletonModifier3D:
 			_world_turn(sk, _neck_b, Basis(side_w, -back * 0.5), false)       # (the head keeps its eyes ahead)
 		var inv := xf.affine_inverse()
 		for i in 2:
-			var tw := nat_p[i]                         # (the feet where the clip has them - the knees take the drop;
-			                                           # 2026-11-09: holding the foot where it was looked stuck behind)
+			var tw := nat_p[i]                         # (the feet where the clip has them - the knees take the drop)
+			if i == k and pin > 0.0:
+				var pw := model.global_transform * _brake_p
+				tw = nat_p[i].lerp(Vector3(pw.x, nat_p[i].y, pw.z), pin)
 			var now_s := sk.get_bone_global_pose(_foot[i]).origin
 			var delta := inv * tw - now_s
 			if delta.length() > 0.0005:

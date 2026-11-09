@@ -173,7 +173,7 @@ static func build(a: Animation, clip: String, sk: Skeleton3D, on := enabled) -> 
 ## (or walk), easing into the idle's first pose, the arms settling a little later than the body - one for each foot
 ## (`<clip>_stop_l` / `_r`); and the push-off moments a start begins the run at. gait() finds them: where each foot is
 ## furthest ahead (it plants) and furthest back (it pushes off), from the clip's own bones.
-const STOP_SECONDS := {"run": 0.55, "walk": 0.45}
+const STOP_SECONDS := {"run": 0.62, "walk": 0.48}
 const STOP_ARM_LAG := 1.6                    # x DELAY: the arms and the head come to rest after the body
 
 
@@ -290,8 +290,8 @@ static func gait(a: Animation, sk: Skeleton3D) -> Dictionary:
 ## first pose over `secs`. As GW2's (owner 2026-11-09): the planted leg holds its pose through the first 40 % - the
 ## stop is taken on it - while the trailing leg swings straight through (a little of the passing pose's knee lift,
 ## `pass_t`) and sets down beside it by 45 %; the body and the arms ease into the stance, the arms and head a little after.
-const STOP_HOLD := 0.4
-const STOP_SWING_END := 0.45                 # the trailing foot is down by here
+const STOP_HOLD := 0.55                     # (owner 2026-11-09: the front foot holding a bit longer)
+const STOP_SWING_END := 0.5                  # the trailing foot is down by here
 const STOP_LIFT := 0.3                       # how much of the passing pose's knee lift it swings through
 
 
