@@ -175,17 +175,17 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 			_meshes[part] = []
 		_meshes[part].append(node)
 	var players := model.find_children("*", "AnimationPlayer", true, false)
+	var skels := model.find_children("*", "Skeleton3D", true, false)
 	if players.size() > 0:
 		anim = players[0]
 		for clip in anim.get_animation_list():
 			var a := anim.get_animation(clip)
 			a.loop_mode = Animation.LOOP_LINEAR if loops(clip) else Animation.LOOP_NONE
-			if loops(clip) and not a.has_meta("smooth"):
-				_use_smooth(prefix, clip, a)
+			if (loops(clip) or AnimStyle.group_of(clip) != "") and not a.has_meta("smooth"):
+				_use_smooth(prefix, clip, a, skels[0] if skels.size() > 0 else null)
 		add_rest_reset(anim)
 		if anim.has_animation("idle"):
 			anim.play("idle")
-	var skels := model.find_children("*", "Skeleton3D", true, false)
 	if skels.size() > 0:
 		var body := BodyShape.new()                 # (first: the sway works on the shaped body)
 		body.name = "BodyShape"
@@ -201,22 +201,21 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 	return true
 
 
-## The converted clips keep the client's keys - 15 a second - and the import packs them (compressed tracks), which
-## always join keys with straight lines: a bone's speed changes in a step at every key, a stutter fifteen times a
-## second. Small motions hide it; the men's idle sways the whole body four times as far as the women's, and it showed
-## as jitter (owner 2026-11-05: "a weird jitteriness ... in male's animations ... Females seem smooth"). The looping
-## clips (idles, walking, running, swimming) are rebuilt unpacked through the same keys, with curves between them:
-## every pose is the same, the motion between them smooth. The one-shot swings keep their snap. Once per race and clip
+## The converted clips keep the client's keys - 15 a second - joined with straight lines: a bone's speed changes in a
+## step at every key (owner 2026-11-05: "a weird jitteriness ... in male's animations"). The looping clips, and the
+## others AnimStyle has a group for, are rebuilt through AnimStyle: curves between the keys, the limbs' overlap, a
+## steadier head (owner 2026-11-09: "modernize the feel"). The swings keep their snap for now. Once per race and clip
 ## (static): every figure of the race shares the result.
+const AnimStyle := preload("res://game/anim_style.gd")
 static var _smooth_cache := {}               # "prefix/clip" -> Animation
 static var _smooth_lock := Mutex.new()       # (figures are loaded on worker threads too)
 
 
-func _use_smooth(prefix: String, clip: String, a: Animation) -> void:
+func _use_smooth(prefix: String, clip: String, a: Animation, sk: Skeleton3D) -> void:
 	var key := prefix + "/" + clip
 	_smooth_lock.lock()
 	if not _smooth_cache.has(key):
-		_smooth_cache[key] = smoothed(a)
+		_smooth_cache[key] = AnimStyle.build(a, clip, sk)
 	var b: Animation = _smooth_cache[key]
 	_smooth_lock.unlock()
 	var lib_name := anim.find_animation_library(a)
@@ -225,50 +224,6 @@ func _use_smooth(prefix: String, clip: String, a: Animation) -> void:
 	if lib and lib.has_animation(raw):
 		lib.remove_animation(raw)
 		lib.add_animation(raw, b)
-
-
-static func smoothed(a: Animation) -> Animation:
-	var b := Animation.new()
-	b.length = a.length
-	b.loop_mode = a.loop_mode
-	b.step = a.step
-	# keys up to, not at, the clip's end: a looping cubic track wraps from its last key back to the first, and a key
-	# at the very end is the first one again with no time between them - the curve through it divides by that zero
-	# and throws the bones about for a moment every loop (owner 2026-11-05: a Breton archer's leg kicking out once
-	# a second while she held her bow drawn, bow_aim's 0.93 s)
-	var n := maxi(1, int(ceil(a.length * 15.0 - 0.01)))
-	var times: Array = []
-	for i in n + 1:
-		var tm := i / 15.0
-		if i == 0 or tm < a.length - 0.02:
-			times.append(tm)
-	for t in a.get_track_count():
-		var ty := a.track_get_type(t)
-		var nt := b.add_track(ty)
-		b.track_set_path(nt, a.track_get_path(t))
-		b.track_set_enabled(nt, a.track_is_enabled(t))
-		b.track_set_interpolation_loop_wrap(nt, a.track_get_interpolation_loop_wrap(t))
-		var single := a.track_get_key_count(t) <= 1
-		match ty:
-			Animation.TYPE_POSITION_3D:
-				for tm in ([0.0] if single else times):
-					b.position_track_insert_key(nt, tm, a.position_track_interpolate(t, tm))
-			Animation.TYPE_ROTATION_3D:
-				for tm in ([0.0] if single else times):
-					b.rotation_track_insert_key(nt, tm, a.rotation_track_interpolate(t, tm))
-			Animation.TYPE_SCALE_3D:
-				for tm in ([0.0] if single else times):
-					b.scale_track_insert_key(nt, tm, a.scale_track_interpolate(t, tm))
-			Animation.TYPE_BLEND_SHAPE:
-				for tm in ([0.0] if single else times):
-					b.blend_shape_track_insert_key(nt, tm, a.blend_shape_track_interpolate(t, tm))
-			_:
-				for k in a.track_get_key_count(t):
-					b.track_insert_key(nt, a.track_get_key_time(t, k), a.track_get_key_value(t, k), a.track_get_key_transition(t, k))
-		b.track_set_interpolation_type(nt, Animation.INTERPOLATION_CUBIC if ty in [Animation.TYPE_POSITION_3D,
-				Animation.TYPE_ROTATION_3D, Animation.TYPE_SCALE_3D, Animation.TYPE_BLEND_SHAPE] else a.track_get_interpolation_type(t))
-	b.set_meta("smooth", true)
-	return b
 
 
 ## Merge `changes` into the current look and redraw.
