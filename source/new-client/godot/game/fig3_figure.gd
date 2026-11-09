@@ -187,6 +187,10 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 		if anim.has_animation("idle"):
 			anim.play("idle")
 	if skels.size() > 0:
+		var layers := Layers.new()                  # (first of all: the legs' clip under an action, then the shape)
+		layers.name = "Layers"
+		layers.fig = self
+		(skels[0] as Skeleton3D).add_child(layers)
 		var body := BodyShape.new()                 # (first: the sway works on the shaped body)
 		body.name = "BodyShape"
 		body.fig = self
@@ -1384,6 +1388,39 @@ func play(clip: String) -> void:
 var _near := false                           # Sway ran this frame (remastered, in range)
 
 
+# ---------------------------------------------------------------- upper / lower body (claude 2026-11-09)
+## Owner 2026-11-09: a swing on the move played its own baked step and slid along, turned to where the body ran (in
+## action combat, sideways to where you look) - "some sort of way that the upper torso turns to swing in the direction
+## of the way the cursor is looking ... while the hips and legs still run in the correct way ... It will have to cover
+## styled attack animations too". The client had no upper / lower body blending; Layers adds it: while set_lower names
+## a legs clip, the legs (the root, the pelvis, the thighs and down) play it in step, carrying on from where the run was,
+## and the upper body plays the action as it was made - turned by `twist` about the hips, spread up the back. Fades in
+## and out over LOWER_FADE. Player sets it each frame; an action standing still plays whole, as before.
+const LOCO_CLIPS := ["run", "walk", "walk_back", "strafe_left", "strafe_right"]
+const LOWER_FADE := 0.15
+var lower_clip := ""
+var lower_speed := 1.0
+var lower_twist := 0.0
+var _loco_clip := ""                         # the last movement clip playing whole, and where in it (Layers)
+var _loco_t := 0.0
+var _lower_clip := ""                        # the legs clip Layers last ran under an action, and where in it
+var _lower_t := 0.0
+var _lower_at := 0
+
+
+func set_lower(clip: String, speed := 1.0, twist := 0.0) -> void:
+	lower_clip = clip
+	lower_speed = speed
+	lower_twist = clampf(wrapf(twist, -PI, PI), -1.4, 1.4)
+
+
+## Where the legs are in `clip`, when they just ran it under an action (to carry on in step); -1 otherwise.
+func lower_phase(clip: String) -> float:
+	if clip == _lower_clip and Time.get_ticks_msec() - _lower_at < 300:
+		return _lower_t
+	return -1.0
+
+
 func _part(part_name: String) -> MeshInstance3D:
 	var list: Array = _meshes.get(part_name, [])
 	return list[0] if list.size() > 0 else null
@@ -1970,6 +2007,144 @@ class BodyShape extends SkeletonModifier3D:
 						(m as ShaderMaterial).set_shader_parameter(k, vals[k])
 
 
+class Layers extends SkeletonModifier3D:
+	var fig: Fig3Figure
+	var _w := 0.0
+	var _t := 0.0
+	var _clip := ""
+	var _twist := 0.0
+	var _ready_bones := false
+	var _root := -1
+	var _pelvis := -1
+	var _spine := -1
+	var _upper: Array[int] = []                  # Spine1, Spine2: the twist spread up the back
+	var _thighs: Array[int] = []                 # (in this rig the thighs hang off the spine, not the pelvis)
+	var _below: Array[int] = []                  # calves, feet, toes, thigh twists, the pelvis' robe and belt bones
+	var _tracks := {}                            # clip -> {bone: [rotation track, position track]}
+
+	func _bones(sk: Skeleton3D) -> void:
+		_ready_bones = true
+		_root = sk.find_bone("Bip01")
+		_pelvis = sk.find_bone("Bip01 Pelvis")
+		_spine = sk.find_bone("Bip01 Spine")
+		for n in ["Bip01 Spine1", "Bip01 Spine2"]:
+			if sk.find_bone(n) >= 0:
+				_upper.append(sk.find_bone(n))
+		for side in ["L", "R"]:
+			var th := sk.find_bone("Bip01 %s Thigh" % side)
+			if th >= 0:
+				_thighs.append(th)
+			for n in ["Calf", "Foot", "Toe0", "ThighTwist", "Belt"]:
+				var b := sk.find_bone("Bip01 %s %s" % [side, n])
+				if b >= 0:
+					_below.append(b)
+		for n in ["Bip01 BackRobe 01", "Bip01 BackRobe 02", "Bip01 FrontRobe 01", "Bip01 FrontRobe 02"]:
+			if sk.find_bone(n) >= 0:
+				_below.append(sk.find_bone(n))
+
+	func _map(sk: Skeleton3D, a: Animation, clip: String) -> Dictionary:
+		if _tracks.has(clip):
+			return _tracks[clip]
+		var m := {}
+		for t in a.get_track_count():
+			var ty := a.track_get_type(t)
+			if ty != Animation.TYPE_ROTATION_3D and ty != Animation.TYPE_POSITION_3D:
+				continue
+			var b := sk.find_bone(String(a.track_get_path(t).get_concatenated_subnames()))
+			if b < 0:
+				continue
+			if not m.has(b):
+				m[b] = [-1, -1]
+			m[b][0 if ty == Animation.TYPE_ROTATION_3D else 1] = t
+		_tracks[clip] = m
+		return m
+
+	## A bone's pose in the legs' clip (its rest where the clip has no track; its scale as it is now).
+	func _local(sk: Skeleton3D, a: Animation, m: Dictionary, b: int) -> Transform3D:
+		var rest := sk.get_bone_rest(b)
+		var q := rest.basis.get_rotation_quaternion()
+		var p := rest.origin
+		if m.has(b):
+			if m[b][0] >= 0:
+				q = a.rotation_track_interpolate(m[b][0], _t)
+			if m[b][1] >= 0:
+				p = a.position_track_interpolate(m[b][1], _t)
+		return Transform3D(Basis(q).scaled(sk.get_bone_pose_scale(b)), p)
+
+	func _set_local(sk: Skeleton3D, b: int, want: Transform3D, w: float, pos: bool) -> void:
+		var q0 := sk.get_bone_pose_rotation(b)
+		sk.set_bone_pose_rotation(b, q0.slerp(want.basis.get_rotation_quaternion(), w))
+		if pos:
+			sk.set_bone_pose_position(b, sk.get_bone_pose_position(b).lerp(want.origin, w))
+
+	## The bone's world (skeleton-space) pose made `want` - by w - through its local pose.
+	func _set_global(sk: Skeleton3D, b: int, want: Transform3D, w: float) -> void:
+		var g := sk.get_bone_global_pose(b)
+		var ng := g.interpolate_with(want, w)
+		var p := sk.get_bone_parent(b)
+		var pg := sk.get_bone_global_pose(p) if p >= 0 else Transform3D.IDENTITY
+		var local := pg.affine_inverse() * ng
+		sk.set_bone_pose_rotation(b, local.basis.get_rotation_quaternion())
+		sk.set_bone_pose_position(b, local.origin)
+
+	func _process_modification_with_delta(delta: float) -> void:
+		var sk := get_skeleton()
+		if sk == null or fig == null or fig.anim == null:
+			return
+		var anim := fig.anim
+		var cur := String(anim.current_animation)
+		if cur in LOCO_CLIPS:
+			fig._loco_clip = cur
+			fig._loco_t = anim.current_animation_position
+		var want := fig.lower_clip != "" and anim.has_animation(fig.lower_clip)
+		if want and fig.lower_clip != _clip:
+			_t = fig._loco_t if fig._loco_clip == fig.lower_clip and _w <= 0.0 else (_t if _w > 0.0 else 0.0)
+			_clip = fig.lower_clip
+		_w = move_toward(_w, 1.0 if want else 0.0, delta / LOWER_FADE)
+		if want:
+			_twist = fig.lower_twist
+		if _w <= 0.0 or _clip == "" or not anim.has_animation(_clip):
+			_clip = "" if _w <= 0.0 else _clip
+			return
+		if not _ready_bones:
+			_bones(sk)
+		if _root < 0 or _pelvis < 0 or _spine < 0:
+			return
+		var a := anim.get_animation(_clip)
+		if want:
+			_t = fposmod(_t + delta * fig.lower_speed, maxf(a.length, 0.01))
+			fig._lower_clip = _clip
+			fig._lower_t = _t
+			fig._lower_at = Time.get_ticks_msec()
+		var w := smoothstep(0.0, 1.0, _w)
+		var m := _map(sk, a, _clip)
+		# the upper body as the action has it (before the hips change under it)
+		var spine_was := sk.get_bone_global_pose(_spine)
+		var l_root := _local(sk, a, m, _root)
+		var l_pelvis := _local(sk, a, m, _pelvis)
+		var l_spine := _local(sk, a, m, _spine)
+		var spine_run := l_root * l_pelvis * l_spine
+		var thigh_run: Array[Transform3D] = []
+		for th in _thighs:
+			thigh_run.append(spine_run * _local(sk, a, m, th))
+		_set_local(sk, _root, l_root, w, true)
+		_set_local(sk, _pelvis, l_pelvis, w, true)
+		# the spine: the action's own turn of the upper body, on the legs' hips, turned back by half the twist
+		var sb := sk.global_basis.orthonormalized()
+		var up_w := (fig.model.global_basis * Vector3.UP).normalized() if fig.model else Vector3.UP
+		var turn := func(ang: float) -> Basis:
+			return sb.inverse() * Basis(up_w, ang) * sb
+		_set_global(sk, _spine, Transform3D((turn.call(_twist * 0.5) as Basis) * spine_was.basis, spine_run.origin), w)
+		for b in _upper:                                      # (and a quarter each further up)
+			var g := sk.get_bone_global_pose(b)
+			_set_global(sk, b, Transform3D((turn.call(_twist * 0.25) as Basis) * g.basis, g.origin), w)
+		# the legs: where the legs' clip has them, whatever the back does above
+		for i in _thighs.size():
+			_set_global(sk, _thighs[i], thigh_run[i], w)
+		for b in _below:
+			_set_local(sk, b, _local(sk, a, m, b), w, false)
+
+
 class Sway extends SkeletonModifier3D:
 	var model: Node3D
 	var fig: Fig3Figure
@@ -2090,8 +2265,9 @@ class Sway extends SkeletonModifier3D:
 		var fwd_s := v.z if fresh else lerpf(_fwd_v, v.z, 1.0 - exp(-dt * 14.0))
 		var dv := 0.0 if fresh else clampf(fwd_s - _fwd_v, -9.0, 9.0)
 		_fwd_v = fwd_s
-		_lean_v += dv * 0.16
-		_back_v += dv * 0.06
+		# (a stop kicks a third as hard as a start: owner 2026-11-09, "an awkward bounce back as Arthur stops")
+		_lean_v += dv * (0.16 if dv > 0.0 else 0.055)
+		_back_v += dv * (0.06 if dv > 0.0 else 0.035)
 		var want_side := clampf(-v.x * 0.03, -0.15, 0.15) + Fig3Figure.wind * 0.02 * sin(t * 0.9 + _phase)
 		# springs (a little under-damped: one soft overshoot as it settles) - in steps of a 60th of a second at
 		# most, so a slow frame (a crowded town) can't set them shaking
@@ -2099,7 +2275,7 @@ class Sway extends SkeletonModifier3D:
 		var steps := ceili(sdt * 60.0)
 		var h := sdt / steps
 		for _i in steps:
-			_lean_v += (-_lean * 70.0 - _lean_v * 8.5) * h
+			_lean_v += (-_lean * 70.0 - _lean_v * 13.5) * h            # (nearly critical: no rock past upright)
 			_lean += _lean_v * h
 			_back_v += ((want_back - _back) * 40.0 - _back_v * 6.5) * h      # (a soft swing on past as it settles)
 			_back += _back_v * h

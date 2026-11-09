@@ -355,6 +355,10 @@ func _play(clip: String, speed := 1.0) -> void:
 		return
 	if _anim.current_animation != clip:
 		_anim.play(clip, 0.15)
+		var fig := _model as Fig3Figure
+		var at := fig.lower_phase(clip) if fig else -1.0
+		if at >= 0.0:
+			_anim.seek(at, false)                          # (the legs ran on under a swing: on in step)
 	_anim.speed_scale = speed
 
 
@@ -1533,6 +1537,27 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 	_apply_model_yaw()
 	_action_left -= delta
 	var moving := ahead != 0.0 or strafe != 0.0
+	# upper / lower body (claude 2026-11-09; owner: a swing on the move took its own baked step and slid along, facing
+	# where the body ran, not where you looked): while a swing, a style, a parry or an emote plays on the move, the
+	# legs keep their run / walk in step and the upper body plays the action, turned back to where you face
+	# (Fig3Figure.set_lower)
+	var legs := ""
+	var legs_speed := 1.0
+	if moving and grounded and not swimming and not climbing and not dead and force_clip == "" and _action_left > 0.0:
+		if ahead < 0.0:
+			legs = "walk_back"
+			legs_speed = _sync("walk_back", "back", speed)
+		elif classic and ahead == 0.0 and strafe != 0.0:
+			legs = "strafe_right" if strafe > 0.0 else "strafe_left"
+			legs_speed = _sync(legs, "strafe", speed)
+		elif speed == WALK_SPEED:
+			legs = "walk"
+			legs_speed = _sync("walk", "walk", speed)
+		else:
+			legs = "run"
+			legs_speed = _sync("run", "run", speed)
+	if _model is Fig3Figure:
+		(_model as Fig3Figure).set_lower(legs, legs_speed, -_body_offset)
 	if casting_spell:
 		_cast_left -= delta
 		# moving ends the casting pose at once (as the old client: moving interrupts a cast - the server says so a
