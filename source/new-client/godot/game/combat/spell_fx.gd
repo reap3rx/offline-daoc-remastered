@@ -25,6 +25,7 @@ const BOLT_SPEED_M := 32.0
 const RAY_LEAD := 0.2
 const RAY_FROM := 0.5                        # (a release this late or later: a ray spell)
 const FxLight := preload("res://game/fx_light.gd")   # remastered lighting: effects light their surroundings
+const Extras := preload("res://game/combat/spell_extras.gd")   # remastered: build-up, burst, trails, scorch, sparks
 static var _data := {}
 static var _scenes := {}                    # gltf path -> NifScene template (duplicated per use)
 
@@ -477,6 +478,7 @@ static func begin(client_effect: int, caster: Node3D, snd: CharacterSounds) -> A
 		var n := play(int(id), caster, 1.8, true)
 		if n:
 			out.append(n)
+	Extras.gather(out)
 	sound(snd, int(e.get("sound_set", 0)), "gather")
 	return out
 
@@ -519,6 +521,11 @@ static func fizzle(client_effect: int, handles: Array, snd: CharacterSounds) -> 
 ## `then` runs when it arrives (immediately with no projectile).
 static func fire(client_effect: int, handles: Array, caster: Node3D, snd: CharacterSounds, target: Node3D = null,
 		then: Callable = Callable()) -> void:
+	# the burst as it goes off, in the gathered glow's colour (remastered)
+	for h in handles:
+		if h is Node and is_instance_valid(h) and caster and caster.is_inside_tree():
+			Extras.release(launch_point(caster), FxLight.color_of(h), caster.get_tree().current_scene)
+			break
 	drop(handles)
 	var e := effect(client_effect)
 	# a character's caster effects (spells.csv Effect2 / 3) go with its casting animation: a spell with none (Anim1-3
@@ -552,6 +559,7 @@ static func fire(client_effect: int, handles: Array, caster: Node3D, snd: Charac
 			bolt.look_at(to, Vector3.UP, true) if from.distance_to(to) > 0.01 else null
 			var secs := from.distance_to(to) / BOLT_SPEED_M
 			FxLight.attach(bolt, 2.5, 7.0)                 # a bolt lights the ground it flies over
+			Extras.trail(bolt, FxLight.color_of(bolt))     # ... and draws a ribbon behind it (remastered)
 			sound(snd, int(e.get("sound_set", 0)), "travel")
 			var tw := bolt.create_tween()
 			tw.tween_property(bolt, "global_position", to, secs)
@@ -568,7 +576,13 @@ static func fire(client_effect: int, handles: Array, caster: Node3D, snd: Charac
 ## A cast effect with a release moment (its streak / flash shows partway in: Gleam Ray's ray at 0.93 s) holds the
 ## target effect and its sound until then, as the old client did (the ray first, then the puff); the damage itself is
 ## already dealt.
-static func land(client_effect: int, target: Node3D, height: float, snd: CharacterSounds, resisted := false) -> void:
+## hostile: a spell on an enemy (the caller knows the sides) - remastered, it scorches the ground and throws sparks.
+const AREA_RING_M := 4.0                     # (the effect data has no radius: an area spell's ring this wide)
+static var _ring_at := {}
+
+
+static func land(client_effect: int, target: Node3D, height: float, snd: CharacterSounds, resisted := false,
+		hostile := false) -> void:
 	var e := effect(client_effect)
 	var wait := float(e.get("release_s", 0.0))
 	if wait >= RAY_FROM and int(e.get("projectile", 0)) == 0:
@@ -578,8 +592,18 @@ static func land(client_effect: int, target: Node3D, height: float, snd: Charact
 		if not is_instance_valid(target) or not target.is_inside_tree():
 			return
 	var id := int(e.get("resist" if resisted else "target", 0))
+	var shown: Node3D = null
 	if id > 0:
-		play(id, target, height)
+		shown = play(id, target, height)
+	if not resisted and FxLight.enabled:
+		var col := FxLight.color_of(shown) if shown else Color(1, 1, 1)
+		if hostile:
+			Extras.impact(target, col, size_of(target), height, Extras.is_fire(String(e.get("name", ""))))
+		if int(e.get("radius", 0)) > 0:                 # an area spell: one ring for its burst, not one per target
+			var now := Time.get_ticks_msec()
+			if now - int(_ring_at.get(client_effect, -10000)) > 600:
+				_ring_at[client_effect] = now
+				Extras.ring(target.global_position, col, AREA_RING_M, target.get_tree().current_scene)
 	if not resisted and int(e.get("buildup", 0)) > 0 and int(e.buildup) != id:
 		play(int(e.buildup), target, height)            # spells.csv Buildup Effect, with the target effect (a summon's
 														# only one: Arawn's eyes on a necromancer's new servant)

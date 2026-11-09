@@ -1433,7 +1433,11 @@ func _spell_effect(d: Dictionary) -> void:
 			# model), from the caster: the sound is the spell's, not the model's
 			var own: CharacterSounds = _sounds_of(t)
 			var hit_snd: CharacterSounds = null if repeat or quiet else (own if own else cast_snd)
-			SpellFx.land(ce, t, float(t.get("height")) if t is Npc else 1.8, hit_snd, resisted)
+			# an enemy hit (you on a monster, a monster on you): remastered, it scorches the ground and throws sparks
+			var cv: bool = caster != null and is_instance_valid(caster)
+			var hostile: bool = cv and ((caster is Player and t is Npc and int((t as Npc).spawn.get("realm", 0)) == 0) \
+					or (caster is Npc and int((caster as Npc).spawn.get("realm", 0)) == 0 and t is Player))
+			SpellFx.land(ce, t, float(t.get("height")) if t is Npc else 1.8, hit_snd, resisted, hostile)
 	if instant and int(SpellFx.effect(ce).get("projectile", 0)) == 0:
 		SpellFx.sound(cast_snd, int(SpellFx.effect(ce).get("sound_set", 0)), "cast")   # (its sound, then the target's)
 		land.call()
