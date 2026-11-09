@@ -399,6 +399,26 @@ func weapon_stance() -> String:
 	return WeaponModels.stance(int(MeleeMath.weapon(PlayerData).get("model", 0)))
 
 
+## Where your head looks (Fig3Figure.look_point; claude 2026-11-09, animation step 2): your target in a fight (or
+## locked on), someone you've selected close by (a merchant you're talking to), else where the camera looks - the head
+## turning toward it within what a neck can turn (Sway). The zone viewer keeps look_target to your selected target.
+var look_target: Node3D = null
+
+
+func _look_point() -> Vector3:
+	if dead or camera == null or sitting or (mount and is_instance_valid(mount)):
+		return Vector3.INF
+	var t: Node3D = lock_target if lock_target != null and is_instance_valid(lock_target) else look_target
+	if t != null and is_instance_valid(t) and t.is_inside_tree():
+		var d := t.global_position.distance_to(global_position)
+		if (d < 30.0 and (in_combat or t == lock_target)) or d < 8.0:
+			var h = t.get("height")
+			return t.global_position + Vector3(0, (float(h) * 0.85) if h != null else 1.4, 0)
+	var dir := -camera.global_basis.z
+	dir.y *= 0.4                                       # (the camera looks down on you: the eyes stay nearer level)
+	return camera.global_position + dir.normalized() * 40.0
+
+
 func set_combat(on: bool, stance: String) -> void:
 	in_combat = on
 	combat_stance = stance
@@ -1565,6 +1585,7 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 			legs_speed = _sync("run", "run", speed)
 	if _model is Fig3Figure:
 		(_model as Fig3Figure).set_lower(legs, legs_speed, -_body_offset)
+		(_model as Fig3Figure).look_point = _look_point()
 	if casting_spell:
 		_cast_left -= delta
 		# moving ends the casting pose at once (as the old client: moving interrupts a cast - the server says so a

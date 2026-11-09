@@ -1396,6 +1396,8 @@ var _near := false                           # Sway ran this frame (remastered, 
 ## a legs clip, the legs (the root, the pelvis, the thighs and down) play it in step, carrying on from where the run was,
 ## and the upper body plays the action as it was made - turned by `twist` about the hips, spread up the back. Fades in
 ## and out over LOWER_FADE. Player sets it each frame; an action standing still plays whole, as before.
+## Where the head looks (world; INF: ahead) - Player and Npc set it every frame (Sway turns the head; step 2).
+var look_point := Vector3.INF
 const LOCO_CLIPS := ["run", "walk", "walk_back", "strafe_left", "strafe_right"]
 const LOWER_FADE := 0.15
 var lower_clip := ""
@@ -2181,6 +2183,14 @@ class Sway extends SkeletonModifier3D:
 	var _lag_v := PackedFloat32Array([0.0, 0.0, 0.0])
 	var _bank := 0.0
 	var _bank_v := 0.0
+	# looking (owner 2026-11-09, step 2): the head turns to fig.look_point - where you look, your target, the player
+	# an NPC is talking to - and back when it's behind; breathing and a slow sway when standing (more after a run)
+	var _ly := 0.0
+	var _ly_v := 0.0
+	var _lp := 0.0
+	var _lp_v := 0.0
+	var _breath := 0.0                           # the breath's phase (rad)
+	var _winded := 0.0                           # 0..1: how hard it has been running lately
 
 	func _bones(sk: Skeleton3D) -> void:
 		_ready_bones = true
@@ -2317,6 +2327,11 @@ class Sway extends SkeletonModifier3D:
 					+ up_w * bob)
 			_hair_live = true
 
+	const LOOK_W := 7.0                          # how quickly the head turns to look (rad/s spring)
+	const LOOK_YAW := 1.15                       # as far as the head turns (rad, ~65 deg) ...
+	const LOOK_UP := 0.4
+	const LOOK_DOWN := 0.35
+	const LOOK_GIVE_UP := 1.95                   # ... and past this (~110 deg: behind) it looks ahead again
 	const TURN_W := [13.0, 19.0, 30.0]          # how quickly the hips, the chest, the head catch up (rad/s springs)
 	const TURN_MAX := 1.2                        # never further behind than this (rad): a snap past it is partly at once
 	const TURN_FF := 4.0                         # a steady turn up to this (rad/s - the turn keys) is followed with
@@ -2370,6 +2385,25 @@ class Sway extends SkeletonModifier3D:
 		var d_chest := _lag[1] - _lag[0] + clampf(_om * 0.04, -0.12, 0.12)        # (and a look into the turn)
 		var d_head := _lag[2] - _lag[1] + clampf(_om * 0.08, -0.3, 0.3)
 		var up_w := (model.global_basis * Vector3.UP).normalized()
+		# the look: toward fig.look_point from the chest's facing, within what a neck can turn; behind - straight ahead
+		var want_ly := 0.0
+		var want_lp := 0.0
+		var chest_yaw := _lag[1] + (fig.lower_twist if fig.lower_clip != "" else 0.0)
+		if fig.look_point != Vector3.INF and _head_b >= 0:
+			var hw := sk.global_transform * sk.get_bone_global_pose(_head_b).origin
+			var dv := fig.look_point - hw
+			var flat := Vector2(dv.x, dv.z).length()
+			if flat > 0.25:
+				var rel := wrapf(atan2(dv.x, dv.z) - chest_yaw, -PI, PI)
+				if absf(rel) < LOOK_GIVE_UP:
+					want_ly = clampf(rel, -LOOK_YAW, LOOK_YAW)
+					want_lp = clampf(atan2(dv.y, flat), -LOOK_DOWN, LOOK_UP) * (1.0 - absf(want_ly) / (LOOK_YAW * 2.0))
+		for _i in steps:
+			_ly_v += (LOOK_W * LOOK_W * (want_ly - _ly) - 2.0 * LOOK_W * _ly_v) * h
+			_ly += _ly_v * h
+			_lp_v += (LOOK_W * LOOK_W * (want_lp - _lp) - 2.0 * LOOK_W * _lp_v) * h
+			_lp += _lp_v * h
+		d_head += _ly
 		var side_w := up_w.cross(f.normalized()).normalized()          # the way a left turn pulls (the model's +X)
 		# the hips: turned, and banked about the ground under them (not the hips: the feet would lift)
 		if _pelvis >= 0:
@@ -2377,11 +2411,25 @@ class Sway extends SkeletonModifier3D:
 			_world_turn(sk, _pelvis, r, true)
 		for i in _spine.size():
 			_world_turn(sk, _spine[i], Basis(up_w, d_chest * _spine_w[i]), false)
+		# (the nod about the head's own side axis once it has turned; + up: a turn about +X tips +Z down)
+		var nod_axis := Basis(up_w, chest_yaw + d_head) * Vector3(1, 0, 0)
 		if _neck_b >= 0 and _head_b >= 0:
-			_world_turn(sk, _neck_b, Basis(up_w, d_head * 0.4), false)
-			_world_turn(sk, _head_b, Basis(up_w, d_head * 0.6), false)
+			_world_turn(sk, _neck_b, Basis(nod_axis, -_lp * 0.4) * Basis(up_w, d_head * 0.4), false)
+			_world_turn(sk, _head_b, Basis(nod_axis, -_lp * 0.6) * Basis(up_w, d_head * 0.6), false)
 		elif _head_b >= 0:
-			_world_turn(sk, _head_b, Basis(up_w, d_head), false)
+			_world_turn(sk, _head_b, Basis(nod_axis, -_lp) * Basis(up_w, d_head), false)
+		# breathing and the standing sway: the chest rises a little (quicker and deeper after a run), the upper body
+		# drifts slowly side to side - fading out as it moves
+		var still := 1.0 - clampf(_vel_s.length() / 2.0, 0.0, 1.0)
+		_winded = clampf(_winded + dt * (0.12 if _vel_s.length() > 3.5 else -0.07), 0.0, 1.0)
+		_breath = fposmod(_breath + dt * TAU * (0.26 + 0.32 * _winded), TAU)
+		if still > 0.0 and _spine.size() > 0:
+			var chest_fwd := Basis(up_w, chest_yaw) * Vector3(0, 0, 1)
+			var chest_side := Basis(up_w, chest_yaw) * Vector3(1, 0, 0)
+			var lift := (0.5 - 0.5 * cos(_breath)) * (0.018 + 0.03 * _winded) * still
+			var t_s := Time.get_ticks_msec() / 1000.0
+			var drift := (sin(t_s * 0.95 + _phase) * 0.6 + sin(t_s * 0.41 + _phase * 1.7) * 0.4) * 0.014 * still
+			_world_turn(sk, _spine[_spine.size() - 1], Basis(chest_side, -lift) * Basis(chest_fwd, drift), false)
 
 	## A bone turned by `r` (a turn in the world), about its own joint or (ground) about the ground under it.
 	func _world_turn(sk: Skeleton3D, b: int, r: Basis, ground: bool) -> void:

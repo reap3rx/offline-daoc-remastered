@@ -757,6 +757,8 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 		if visible != vis:
 			visible = vis
 	_pace(delta)
+	if model is Fig3Figure and Fig3Figure.sway_on:
+		(model as Fig3Figure).look_point = _look_point()
 	_animate_lod(delta, cam)
 	if _swim_fit > 0:
 		_swim_fit -= 1
@@ -814,6 +816,21 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 
 
 var _action_left := 0.0
+
+
+## Where its head looks (Fig3Figure.look_point; claude 2026-11-09): at you, when it fights you, when you've selected it
+## (talking to a merchant), or when you pass close by it standing; else ahead.
+func _look_point() -> Vector3:
+	if not state.alive or manager == null:
+		return Vector3.INF
+	var pl = manager.get("player")
+	if not (pl is Node3D) or not is_instance_valid(pl):
+		return Vector3.INF
+	var d := (pl as Node3D).global_position.distance_to(global_position)
+	var mine: bool = manager.get("target") == self
+	if (state.fighting and d < 25.0) or (mine and d < 12.0) or (state.mode == NpcState.Mode.IDLE and d < 4.5):
+		return (pl as Node3D).global_position + Vector3(0, 1.55, 0)
+	return Vector3.INF
 
 
 ## A race figure's run / walk keeps pace with how fast it really moves (Fig3Figure.natural_speed; owner 2026-10-31).
