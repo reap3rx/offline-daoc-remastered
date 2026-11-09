@@ -173,7 +173,7 @@ static func build(a: Animation, clip: String, sk: Skeleton3D, on := enabled) -> 
 ## (or walk), easing into the idle's first pose, the arms settling a little later than the body - one for each foot
 ## (`<clip>_stop_l` / `_r`); and the push-off moments a start begins the run at. gait() finds them: where each foot is
 ## furthest ahead (it plants) and furthest back (it pushes off), from the clip's own bones.
-const STOP_SECONDS := {"run": 0.5, "walk": 0.42}
+const STOP_SECONDS := {"run": 0.58, "walk": 0.45}             # (the brake and the resettle: Sway._brake)
 const STOP_ARM_LAG := 1.6                    # x DELAY: the arms and the head come to rest after the body
 
 

@@ -2401,6 +2401,7 @@ class Sway extends SkeletonModifier3D:
 		var side_ang := clampf(_side, -0.2, 0.2)
 		var axis_back := up.cross(fwd).normalized()           # + swings the lower end back (away from the body)
 		_turning(sk, dt, fresh, fwd_s)
+		_brake(sk)
 		_feet(sk, dt)
 		for i in _spine.size():                               # (first: the cloak and hair hang off the leaning back;
 			_turn(sk, _spine[i], axis_back, _lean * _spine_w[i], fwd, 0.0)    # + tips the upper body forward)
@@ -2666,6 +2667,63 @@ class Sway extends SkeletonModifier3D:
 			var fb: Basis = xf.basis.inverse() * want_b[k]
 			var keep := Basis(g.basis.get_rotation_quaternion().slerp(fb.get_rotation_quaternion(), _ik_w)).scaled(g.basis.get_scale())
 			_skel_set(sk, _foot[k], Transform3D(keep, g.origin))
+
+	# the brake (owner 2026-11-09, GW2: "plant a foot down, stopping her forward momentum, then resettle into the
+	# idle ... you could really feel the character stop based on how her feet planted"): through a stop clip the front
+	# foot stays where it came down, the knees give and the hips drop, the upper body leans back against the stop, then
+	# rocks a little forward; the planted foot lets go and steps back into the stance as the clip settles
+	const BRAKE_DROP := 0.075                    # metres the hips drop at the hardest of a stop from a run
+	const BRAKE_LEAN := 0.22                     # rad the upper body leans back then
+	const BRAKE_SETTLE := 0.07                   # rad it rocks forward after
+	var _brake_clip := ""
+	var _brake_p := Vector3.ZERO
+
+	func _brake(sk: Skeleton3D) -> void:
+		var cur := String(fig.anim.current_animation) if fig and fig.anim else ""
+		if not Fig3Figure.is_stop_clip(cur) or _foot[0] < 0 or _foot[1] < 0 or _root_b < 0:
+			_brake_clip = ""
+			return
+		var a := fig.anim.get_animation(cur)
+		if a == null or a.length <= 0.0:
+			return
+		var u := clampf(fig.anim.current_animation_position / a.length, 0.0, 1.0)
+		var k := 0 if cur.contains("_stop_l") else 1                  # (the foot that planted: the stop's own)
+		var xf := sk.global_transform
+		if cur != _brake_clip:
+			_brake_clip = cur
+			_brake_p = xf * sk.get_bone_global_pose(_foot[k]).origin
+		var amt := 1.0 if cur.begins_with("run") else 0.45
+		var b := sin(PI * clampf(u / 0.42, 0.0, 1.0)) * amt                     # the brake: in hard, out by 42 %
+		var settle := sin(PI * clampf((u - 0.28) / 0.42, 0.0, 1.0)) * amt       # then the rock forward
+		var hold := 1.0 - smoothstep(0.55, 0.85, u)                               # the planted foot lets go late
+		# where the clip has the feet (world), and their turn, before the body drops
+		var nat_p: Array[Vector3] = []
+		var nat_b: Array[Basis] = []
+		for i in 2:
+			var g := sk.get_bone_global_pose(_foot[i])
+			nat_p.append(xf * g.origin)
+			nat_b.append(g.basis)
+		var su := 1.0 / maxf(xf.basis.get_scale().y, 0.001)
+		var up_s := (xf.basis.inverse() * Vector3.UP).normalized()
+		sk.set_bone_pose_position(_root_b, sk.get_bone_pose_position(_root_b) - up_s * BRAKE_DROP * b * su)
+		var up_w := (model.global_basis * Vector3.UP).normalized()
+		var side_w := (model.global_basis * Vector3(1, 0, 0)).normalized()
+		var back := -BRAKE_LEAN * b + BRAKE_SETTLE * settle                    # (+ about the side axis tips forward)
+		for i in _spine.size():
+			_world_turn(sk, _spine[i], Basis(side_w, back * _spine_w[i]), false)
+		if _neck_b >= 0:
+			_world_turn(sk, _neck_b, Basis(side_w, -back * 0.5), false)       # (the head keeps its eyes ahead)
+		var inv := xf.affine_inverse()
+		for i in 2:
+			var tw := nat_p[i]
+			if i == k:
+				tw = nat_p[i].lerp(Vector3(_brake_p.x, nat_p[i].y, _brake_p.z), hold)
+			var now_s := sk.get_bone_global_pose(_foot[i]).origin
+			var delta := inv * tw - now_s
+			if delta.length() > 0.0005:
+				_two_bone(sk, i, delta)
+			var g := sk.get_bone_global_pose(_foot[i])
+			_skel_set(sk, _foot[i], Transform3D(nat_b[i], g.origin))
 
 	## The leg (thigh, calf) bent so the foot moves by `delta` (skeleton space), the knee in its own plane.
 	func _two_bone(sk: Skeleton3D, k: int, delta: Vector3) -> void:
