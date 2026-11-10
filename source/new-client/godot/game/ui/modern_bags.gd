@@ -319,6 +319,10 @@ class BagCell extends Control:
 	func _make_custom_tooltip(_for_text: String) -> Object:
 		return ItemTooltip.compare(slot)
 
+	## The pad's buttons on this item (Pad).
+	func pad_actions() -> Array:
+		return Pad.item_actions(slot)
+
 	func _gui_input(event: InputEvent) -> void:
 		if InventorySheet.click_hold(self, event, slot):
 			accept_event()

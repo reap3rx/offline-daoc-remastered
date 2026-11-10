@@ -60,6 +60,7 @@ static func play(world: Node, weapons: Array, trail: Variant) -> void:
 ## at the trail's Buildup and goes out at the end of the swing. A colour none fits (black) keeps the ribbon.
 static var glow_on := true
 const GLOW_FADE_S := 0.15
+const GLOW_LEAD := 0.25                       # the share of the wind-up before the glow lights
 const GLOW_SCALE := 0.85
 # weapon family -> trail colour -> weapon effect number (content/weapons/weapon_effects.json)
 ## An entry is the effect itself, or [effect, true]: the two-hander's silver glow recoloured to the trail's colour (a
@@ -120,8 +121,10 @@ static func color_name(c: Color) -> String:
 static func glow(weapons: Array, trail: Dictionary) -> bool:
 	var rgb: Array = trail.get("rgb", [255, 255, 255])
 	var cname := color_name(Color8(int(rgb[0]), int(rgb[1]), int(rgb[2])))
-	var wait := maxf(0.0, float(trail.get("buildup", 400)) / 1000.0)
-	var span := maxf(0.15, (float(trail.get("ms", 1000)) - float(trail.get("buildup", 400))) / 1000.0)
+	# lit a quarter of the way into the client's wind-up (owner 2026-11-10: "they activate a bit slow"), out at the
+	# swing's end as before
+	var wait := maxf(0.0, float(trail.get("buildup", 400)) / 1000.0) * GLOW_LEAD
+	var span := maxf(0.15, float(trail.get("ms", 1000)) / 1000.0 - wait)
 	var shown := false
 	for w in weapons:
 		if not is_instance_valid(w):

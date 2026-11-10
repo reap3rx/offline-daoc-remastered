@@ -223,6 +223,20 @@ class QuickSlot extends Control:
 		else:
 			PlayerData.use_skill.emit(e)                    # spells, styles, abilities
 
+	## The pad's buttons on this slot (Pad): A uses it, X tells what it is, Y picks it up to move (B: the usual close).
+	func pad_actions() -> Array:
+		var e := entry()
+		if e.is_empty():
+			return []
+		return [["a", "USE", use], ["x", "INFO", _info], ["y", "MOVE", func(): Pad.call("_pick_up", self)]]
+
+	func _info() -> void:
+		var e := entry()
+		if String(e.get("kind", "")) == "item":
+			PlayerData.delve.emit(ItemDb.item(String(e.get("id", ""))))
+		elif String(e.get("kind", "")) != "macro":
+			PlayerData.skill_info.emit(e)
+
 	func _get_drag_data(_pos: Vector2) -> Variant:
 		var e := entry()
 		if e.is_empty():

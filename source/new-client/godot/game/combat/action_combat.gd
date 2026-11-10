@@ -654,17 +654,19 @@ func _pad_shot(id: String, down: bool, now: int) -> void:
 		_draw_pending = ""
 
 
-## X: the style that is lit - a reaction first (its opening passes quickly), then a chain, then a positional; with the
-## weapon away a positional (the server draws it if it goes).
-func pad_style() -> void:
+## The style button: the one that is lit - a reaction first (its opening passes quickly), then a chain, then a
+## positional; with the weapon away a positional (the server draws it if it goes). A kind ("reactive", "position",
+## "chain"): that one only (owner 2026-11-10: "the ability to assign the specific reaction/positional/chain styles").
+func pad_style(kind := "") -> void:
 	if not pad_ready():
 		return
 	if not _drawn():
-		_soft_target()
-		Server.command("/ac style position")
+		if kind == "" or kind == "position":
+			_soft_target()
+			Server.command("/ac style position")
 		return
 	var kinds := ["position", "reactive", "chain"]
-	for i in [1, 2, 0]:
+	for i in ([1, 2, 0] if kind == "" else [kinds.find(kind)]):
 		if _ready.length() > i and _ready[i] == "1":
 			_soft_target()
 			Server.command("/ac style " + kinds[i])
@@ -1129,7 +1131,7 @@ func _ui_window_open() -> bool:
 
 func _hold_sprint(p: Player) -> void:
 	var want := on and p != null and Server.playing and p.input_enabled and not p.dead and not _typing() \
-			and ((Input.is_physical_key_pressed(KEY_SHIFT) and (_moving_keys() or p.autorun)) or (Pad.sprint and Pad.moving()))
+			and ((Input.is_physical_key_pressed(KEY_SHIFT) and (_moving_keys() or p.autorun)) or Pad.sprinting())
 	if want == _sprint_held:
 		return
 	_sprint_held = want

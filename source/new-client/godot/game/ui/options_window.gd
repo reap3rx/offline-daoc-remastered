@@ -8,7 +8,7 @@ extends ClassicWindow
 ## INTERFACE (UI scale), WINDOWS (put closed windows back - owner 2026-10-09). Spell-icon options are left out
 ## (owner: the client's default icon set). Saved in user://settings.cfg (keys in user://keybinds.cfg).
 
-const PAGES := ["video", "audio", "controls", "interface", "chat", "windows"]
+const PAGES := ["video", "audio", "controls", "interface", "chat", "windows", "controller"]
 const PAGE_NAMES := ["VIDEO", "AUDIO", "CONTROLS", "INTERFACE", "CHAT", "WINDOWS"]
 const RESOLUTIONS := [Vector2i(1280, 720), Vector2i(1366, 768), Vector2i(1600, 900), Vector2i(1920, 1080),
 		Vector2i(2560, 1080), Vector2i(2560, 1440), Vector2i(3440, 1440), Vector2i(3840, 2160)]
@@ -40,7 +40,7 @@ var _trial_label: Label
 
 func build() -> void:
 	settings.load(UiArt.settings_path)
-	for i in PAGES.size():
+	for i in PAGE_NAMES.size():                            # (CONTROLLER opens from CONTROLS: no tab of its own)
 		var b := UiArt.button(PAGE_NAMES[i], Vector2(58, 18), 9)
 		b.position = Vector2(9 + i * 59.5, 23)
 		b.pressed.connect(show_page.bind(PAGES[i]))
@@ -123,6 +123,7 @@ func show_window() -> void:
 
 func hide_window() -> void:
 	_capture = []
+	Pad.cancel_capture()
 	if not _trial.is_empty():                              # (closed with a change on trial: put back)
 		_end_trial(false)
 	super.hide_window()
@@ -136,8 +137,10 @@ func show_page(p: String) -> void:
 	page = p
 	_capture = []
 	_status.text = ""
+	Pad.cancel_capture()
 	for k in _tabs:
-		_tabs[k].add_theme_color_override("font_color", Color(1, 0.8, 0.2) if k == p else UiArt.CREAM)
+		var lit: bool = k == p or (k == "controls" and p == "controller")
+		_tabs[k].add_theme_color_override("font_color", Color(1, 0.8, 0.2) if lit else UiArt.CREAM)
 	for c in _list.get_children():
 		c.queue_free()
 	match p:
@@ -147,6 +150,7 @@ func show_page(p: String) -> void:
 		"interface": _interface()
 		"chat": _chat()
 		"windows": _windows()
+		"controller": _controller()
 	_scroll.scroll_vertical = 0
 
 
@@ -488,6 +492,9 @@ func _audio() -> void:
 
 
 func _controls() -> void:
+	var pad := UiArt.button("CONTROLLER SETTINGS AND BUTTONS", Vector2(344, 20), 9)
+	pad.pressed.connect(show_page.bind("controller"))
+	_list.add_child(pad)
 	_heading("MOVEMENT")
 	var styles := ["modern", "classic"]
 	_row("MOVEMENT STYLE", _choice(["MODERN (FULL-SPEED STRAFE)", "CLASSIC DAOC"],
@@ -687,6 +694,93 @@ func _windows() -> void:
 	_list.add_child(reset)
 
 
+# --- the controller (owner 2026-11-10: "controller customization ... holding a button be a selectable input") -----
+
+const PAD_GROUPS := [["COMBAT", ["attack", "defend", "dodge", "jump", "sprint_hold", "sprint_toggle", "sheathe",
+		"weapon_cycle", "interact", "lock_on"]], ["STYLES", ["style_auto", "style_reactive", "style_position", "style_chain"]],
+		["TARGETING", ["target_enemy", "target_friend"]], ["MOVING ABOUT", ["run_lock", "sit", "torch"]],
+		["WINDOWS", ["hero", "bags", "map", "journal", "styles_window", "menu_wheel", "escape"]]]
+
+
+func _controller() -> void:
+	var back := UiArt.button("< KEYBOARD AND MOUSE", Vector2(344, 20), 9)
+	back.pressed.connect(show_page.bind("controls"))
+	_list.add_child(back)
+	_heading("CONTROLLER")
+	_row("LOOK SPEED", _slider(Pad.look_speed, 0.3, 2.5, 0.05, func(x: float):
+		Pad.look_speed = x
+		_save("pad", "look_speed", x)))
+	_row("INVERT LOOK (UP / DOWN)", _toggle(Pad.invert_look, func(v: bool):
+		Pad.invert_look = v
+		_save("pad", "invert_look", v)))
+	_row("HOLD TIME (A HELD BUTTON)", _slider(float(Pad.hold_ms), 150.0, 700.0, 10.0, func(x: float):
+		Pad.hold_ms = int(x)
+		_save("pad", "hold_ms", int(x))))
+	_heading("CONTROLLER BUTTONS")
+	var reset := UiArt.button("DEFAULT BUTTONS", Vector2(344, 18), 9)
+	reset.pressed.connect(func():
+		Pad.reset_bindings()
+		show_page("controller")
+		_status.text = "CONTROLLER BUTTONS BACK TO THE DEFAULTS")
+	_list.add_child(reset)
+	_hint("CLICK A BOX, THEN PRESS ON THE CONTROLLER. HOLD LB / RB (OR BOTH) FIRST FOR A COMBO; KEEP THE BUTTON DOWN FOR A HOLD. MENU OR ESC CANCELS, RIGHT-CLICK (X) CLEARS. A BUTTON DOES ONE THING: BINDING IT HERE TAKES IT FROM WHATEVER HAD IT.")
+	var groups: Array = PAD_GROUPS.duplicate()
+	for q in 3:
+		var ids := []
+		for slot in 10:
+			ids.append("qb%d_%d" % [q + 1, slot + 1])
+		groups.append(["QUICKBAR %d" % (q + 1), ids])
+	for g in groups:
+		_heading(String(g[0]))
+		for id in g[1]:
+			_pad_row(String(id))
+
+
+func _pad_row(id: String) -> void:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 4)
+	var l := UiArt.label(String(Pad.action_info(id)[1]).to_upper(), 9, UiArt.CREAM)
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	l.custom_minimum_size.y = 18
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	l.clip_text = true
+	row.add_child(l)
+	var have: Array = Pad.inputs_of(id)
+	for slot in 2:
+		var input := String(have[slot]) if slot < have.size() else ""
+		var b := UiArt.button(Pad.describe(input) if input != "" else "-", Vector2(104, 18), 8)
+		b.clip_text = true
+		b.pressed.connect(func():
+			b.text = "PRESS..."
+			_status.text = "PRESS ON THE CONTROLLER FOR %s" % String(Pad.action_info(id)[1]).to_upper()
+			Pad.capture(func(got: String):
+				if got == "menu":
+					_status.text = "CANCELLED"
+					b.text = Pad.describe(input) if input != "" else "-"
+					return
+				if input != "" and input != got:
+					Pad.bind(input, "")
+				var stolen := Pad.bind(got, id)
+				var msg := "%s = %s%s" % [String(Pad.action_info(id)[1]).to_upper(), Pad.describe(got),
+						("   (TAKEN FROM %s)" % String(Pad.action_info(stolen)[1]).to_upper()) if stolen != "" else ""]
+				_reshow_page.call_deferred("controller", _scroll.scroll_vertical, msg)))
+		b.gui_input.connect(func(e: InputEvent):
+			if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_RIGHT and input != "":
+				Pad.bind(input, "")
+				b.text = "-"
+				b.accept_event())
+		row.add_child(b)
+	_list.add_child(row)
+
+
+func _reshow_page(p: String, at: int, message: String) -> void:
+	show_page(p)
+	_status.text = message
+	await get_tree().process_frame
+	if is_instance_valid(_scroll) and page == p:
+		_scroll.scroll_vertical = at
+
+
 # --- key capture ----------------------------------------------------------------------------------------------
 
 func _start_capture(id: String, slot: int, b: Button) -> void:
@@ -703,6 +797,12 @@ func _key_text(id: String, slot: int) -> String:
 
 
 func _input(event: InputEvent) -> void:
+	if Pad.capturing() and visible and event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+		Pad.cancel_capture()
+		show_page("controller")
+		_status.text = "CANCELLED"
+		get_viewport().set_input_as_handled()
+		return
 	if _capture.is_empty() or not visible:
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
@@ -739,7 +839,7 @@ func _reshow_controls(at: int, message: String) -> void:
 
 
 func capturing() -> bool:
-	return not _capture.is_empty()
+	return not _capture.is_empty() or Pad.capturing()
 
 
 # --- apply ----------------------------------------------------------------------------------------------------

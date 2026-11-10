@@ -254,6 +254,10 @@ class EquipSlot extends Control:
 	func _make_custom_tooltip(_for_text: String) -> Object:      # weapons / armour: the mini delve box
 		return ItemTooltip.make(PlayerData.item_at(slot))
 
+	## The pad's buttons on what you wear here (Pad).
+	func pad_actions() -> Array:
+		return Pad.item_actions(slot)
+
 
 	func _gui_input(event: InputEvent) -> void:
 		if InventorySheet.click_hold(self, event, slot):
@@ -348,6 +352,10 @@ class BackpackRow extends Control:
 
 	func _make_custom_tooltip(_for_text: String) -> Object:      # weapons / armour: the mini delve box
 		return ItemTooltip.make(PlayerData.item_at(slot()))
+
+	## The pad's buttons on this item (Pad).
+	func pad_actions() -> Array:
+		return Pad.item_actions(slot())
 
 
 	func _gui_input(event: InputEvent) -> void:

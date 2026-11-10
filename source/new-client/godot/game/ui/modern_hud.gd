@@ -45,17 +45,47 @@ var mini := MINI                                         # the minimap's side (i
 ## Kept in settings.cfg [modern_layout]; a piece not listed sits where layout() puts it.
 var custom := {}
 const LAYOUT_SECTION := "modern_layout"
+## The controller's layout (owner 2026-11-10: the controller bar "overlapping ... the buffs, the target health ... Maybe
+## they can be moved to different locations in the controller UI"): while the pad's bar is up the HUD has a layout of
+## its own - the bar's two halves where the quickbars were, your effects and the pet window moved up out of their way,
+## every piece movable by EDIT UI and kept apart from the mouse layout ([modern_layout_pad]).
+const PAD_SECTION := "modern_layout_pad"
+var pad_mode := false
+
+
+func _section() -> String:
+	return PAD_SECTION if pad_mode else LAYOUT_SECTION
+
+
+func _load_custom() -> void:
+	custom.clear()
+	var cfg := ConfigFile.new()
+	cfg.load(UiArt.settings_path)
+	if cfg.has_section(_section()):
+		for k in cfg.get_section_keys(_section()):
+			var v = cfg.get_value(_section(), k)
+			if v is Vector2:
+				custom[k] = v
+
+
+## The pad's bar came up / went away (PadBar): the matching layout.
+func set_pad_mode(on: bool) -> void:
+	if on == pad_mode:
+		return
+	pad_mode = on
+	_load_custom()
+	layout()
+
+
+func _pad_bar():
+	return Pad.bar if Pad.bar and is_instance_valid(Pad.bar) else null
 
 
 func _ready() -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(UiArt.settings_path)
 	mini = clampf(float(cfg.get_value("modern_zoom", "minimap", MINI)), 110.0, 380.0)
-	if cfg.has_section(LAYOUT_SECTION):
-		for k in cfg.get_section_keys(LAYOUT_SECTION):
-			var v = cfg.get_value(LAYOUT_SECTION, k)
-			if v is Vector2:
-				custom[k] = v
+	_load_custom()
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	orb = Orb.new()
@@ -114,7 +144,18 @@ func layout() -> void:
 	loot.size = Vector2(LootFeed.W, LootFeed.ROW * LootFeed.MAX_ROWS)
 	loot.position = Vector2(a.x - LootFeed.W - 8, minimap.position.y - 22 - loot.size.y)
 	# the quickbars either side of the orb, the compass top centre, the effects over the right bar
-	if ui.quickbars.size() >= 2:
+	var pb = _pad_bar()
+	if pad_mode and pb:
+		# the controller's layout: the bar's halves either side of the orb, your effects over the right one (clear of
+		# the target plate), the pet window over the left one
+		pb.place_default()
+		var r: Control = pb.right
+		var l: Control = pb.left
+		if ui._effects_bar:
+			ui._effects_bar.position = Vector2(cx + 135.0, r.position.y - 44.0)
+		pet.size = Vector2(PetPanel.W, PetPanel.MAX_H)
+		pet.position = Vector2(maxf(8.0, cx - 135.0 - PetPanel.W), l.position.y - 12.0 - PetPanel.MAX_H)
+	elif ui.quickbars.size() >= 2:
 		var q1: Quickbar = ui.quickbars[0]
 		var q2: Quickbar = ui.quickbars[1]
 		for q in [q1, q2]:
@@ -163,9 +204,14 @@ func movable() -> Array:
 		return out
 	if ui.event_tracker:
 		out.append(["events", "EVENT TRACKER", ui.event_tracker])
-	for i in ui.quickbars.size():
-		if i < 3 and ui.quickbars[i].visible:
-			out.append(["bar%d" % (i + 1), "QUICKBAR %d" % (i + 1), ui.quickbars[i]])
+	var pb = _pad_bar()
+	if pad_mode and pb:
+		out.append(["pad_left", "CONTROLLER: D-PAD", pb.left])
+		out.append(["pad_right", "CONTROLLER: BUTTONS", pb.right])
+	else:
+		for i in ui.quickbars.size():
+			if i < 3 and ui.quickbars[i].visible:
+				out.append(["bar%d" % (i + 1), "QUICKBAR %d" % (i + 1), ui.quickbars[i]])
 	if ui._effects_bar:
 		out.append(["effects", "YOUR EFFECTS", ui._effects_bar])
 	if ui.windows.has("compass"):
@@ -190,10 +236,10 @@ func reset_places() -> void:
 func _save_custom() -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(UiArt.settings_path)
-	if cfg.has_section(LAYOUT_SECTION):
-		cfg.erase_section(LAYOUT_SECTION)
+	if cfg.has_section(_section()):
+		cfg.erase_section(_section())
 	for k in custom:
-		cfg.set_value(LAYOUT_SECTION, k, custom[k])
+		cfg.set_value(_section(), k, custom[k])
 	cfg.save(UiArt.settings_path)
 
 
