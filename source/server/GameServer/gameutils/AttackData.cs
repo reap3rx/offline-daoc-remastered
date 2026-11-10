@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using DOL.Database;
 using DOL.GS.Spells;
 using DOL.GS.Styles;
