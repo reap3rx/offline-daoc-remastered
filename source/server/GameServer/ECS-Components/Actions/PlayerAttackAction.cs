@@ -163,6 +163,12 @@ namespace DOL.GS
                 if (_reactiveStyle != null)
                     ActionCombat.SpendOpening(_playerOwner, _reactiveStyle, _reactiveOpening);
 
+                // A power attack (an anytime style) closes the reaction windows open before it (owner 2026-11-10: "if you
+                // evade and then you power attack, the reactional then becomes not usable until you evade again"); a
+                // new evade / parry / block opens them again. (It ends a chain too: it is the last style now.)
+                if (_combatStyle != null && ActionCombat.KindOf(_combatStyle) == "anytime")
+                    ActionCombat.CloseReactions(_playerOwner);
+
                 ActionCombat.MarkSwing(_playerOwner, full);
 
                 if (action.FumblePending)

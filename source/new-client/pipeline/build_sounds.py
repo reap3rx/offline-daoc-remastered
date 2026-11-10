@@ -38,6 +38,8 @@ OWNER_MAPPED = {
     532: 's_Horse_Vocal(d)_03', 533: 's_Horse_Vocal(d)_04',
 }
 OUT = ROOT / 'godot/content/sounds'
+# the realms' level fanfares (no cc_sounds row: the client plays them itself on a level gained)
+LOOSE_FILES = ('levalb.wav', 'levmid.wav', 'levhib.wav')
 
 
 def _rows(name):
@@ -473,6 +475,12 @@ def export(used_ids, used_mp3s, extra_ids=(), creature_set_ids=(), weapon_set_id
                 if not dst.exists() or dst.stat().st_mtime < src.stat().st_mtime or _is_adpcm(dst):
                     _write_wav(src, dst)
                 index['named'][row['name'].lower()] = dict(row, file=f'files/{dst.name}')
+    for name in LOOSE_FILES:                                # played by name, not through a table (SpellFx.level_fanfare)
+        src = _find(name)
+        if src is None:
+            missing.append(name)
+        elif not (files_dir / name.lower()).exists():
+            _write_wav(src, files_dir / name.lower())
     index_path.write_text(json.dumps(index, indent=1), encoding='utf-8')
     return missing
 

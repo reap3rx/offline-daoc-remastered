@@ -28,6 +28,13 @@ namespace DOL.GS.Styles
 			if (living.TargetObject is not GameLiving target)
 				return false;
 
+			// Action Combat: a chain follows the last STYLE you landed, whatever plain swings came between (owner
+			// 2026-11-10: "light attacks should not interrupt or be tied into the style use timing at all"); any other
+			// style in between breaks it.
+			if (style.OpeningRequirementType is Style.eOpening.Offensive && style.OpeningRequirementValue != 0 &&
+				living is GamePlayer acPlayer && ActionCombat.IsActive(acPlayer))
+				lastAttackData = ActionCombat.Get(acPlayer).LastStyleData;
+
 			// Required attack result.
 			eAttackResult requiredAttackResult = eAttackResult.Any;
 

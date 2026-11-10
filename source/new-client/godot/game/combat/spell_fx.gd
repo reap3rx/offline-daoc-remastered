@@ -437,6 +437,28 @@ static func _play_when_loaded(fx_id: int, on: Node3D, height: float, target: Nod
 		_play(fx_id, on, height, false, target if is_instance_valid(target) else null, 0.0, hit)
 
 
+## Your level gained: your realm's fanfare (the client's sounds/levalb, levmid, levhib.wav) on the music bus, in place
+## of the trifecta effect's spell sound (owner 2026-11-10: "each realm is supposed to have their own sound associated
+## with leveling up (like a fanfare). Right now it plays like a buff sound.")
+const LEVEL_FANFARE := {"alb": "files/levalb.wav", "mid": "files/levmid.wav", "hib": "files/levhib.wav"}
+
+
+static func level_fanfare(parent: Node, realm: String) -> void:
+	var path := ProjectSettings.globalize_path("res://content/sounds".path_join(String(LEVEL_FANFARE.get(realm, LEVEL_FANFARE.hib))))
+	if parent == null or not FileAccess.file_exists(path):
+		return
+	var p := AudioStreamPlayer.new()
+	p.stream = AudioStreamWAV.load_from_file(path)
+	if p.stream == null:
+		p.free()
+		return
+	p.bus = "Music" if AudioServer.get_bus_index("Music") >= 0 else "Master"
+	p.process_mode = Node.PROCESS_MODE_ALWAYS
+	parent.add_child(p)
+	p.finished.connect(p.queue_free)
+	p.play()
+
+
 static func sound(snd: CharacterSounds, set_id: int, event: String) -> void:
 	if snd == null or set_id <= 0:
 		return

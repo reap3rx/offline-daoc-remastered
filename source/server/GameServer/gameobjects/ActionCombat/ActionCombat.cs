@@ -85,6 +85,8 @@ namespace DOL.GS
 		// blow it turned aside. Once a reactive style is used on it, it is spent until a new one comes.
 		public AttackData SpentEnemyOpening;
 		public AttackData SpentOwnOpening;
+		// The last style's blow (WeaponAction): chains follow it, plain swings don't count (owner 2026-11-10).
+		public AttackData LastStyleData;
 		public long FumbledUntil;
 		public long LastSwingAt = -100000;     // when your last blow (or whiff) went
 		public int LastSwingFullMs = 1;         // that weapon's whole swing time then (full damage, styles ready)
@@ -580,6 +582,17 @@ namespace DOL.GS
 			return style.OpeningRequirementType is Style.eOpening.Defensive
 				? ReferenceEquals(opening, state.SpentEnemyOpening)
 				: ReferenceEquals(opening, state.SpentOwnOpening);
+		}
+
+		/// <summary>The reaction windows the enemy's blows opened are spent (your own last blow is the power attack now,
+		/// so what it opens is new).</summary>
+		public static void CloseReactions(GamePlayer player)
+		{
+			ActionCombatState state = Get(player);
+			AttackData enemy = (player.TargetObject as GameLiving)?.attackComponent?.attackAction?.LastAttackData;
+
+			if (enemy != null)
+				state.SpentEnemyOpening = enemy;
 		}
 
 		public static void SpendOpening(GamePlayer player, Style style, AttackData opening)

@@ -309,6 +309,10 @@ namespace DOL.GS
 
             _owner.attackComponent.attackAction.LastAttackData = attackData;
 
+            // Action Combat: the last style's blow, for the chains that follow it (StyleProcessor.CanUseStyle)
+            if (style != null && _owner is GamePlayer stylePlayer && ActionCombat.IsActive(stylePlayer))
+                ActionCombat.Get(stylePlayer).LastStyleData = attackData;
+
             if (attackData.Target == null ||
                 attackData.AttackResult is eAttackResult.OutOfRange or
                 eAttackResult.TargetNotVisible or

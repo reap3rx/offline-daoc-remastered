@@ -1213,6 +1213,11 @@ const WEAPONLESS := 19                          # cc_weapons.csv: a creature's b
 func _combat_sounds(a: Node, v: Node, d: Dictionary, styled: bool) -> void:
 	var ws := int(WeaponModels.info(int(d.weapon)).get("sound_set", 0)) if int(d.weapon) > 0 else 0
 	var a_snd := _sounds_of(a) if (int(d.result) & 0x7F) != SPELL_RESULT else null   # (a spell: its own sounds)
+	# an arrow's hit (a bow as the weapon, not the BowShoot packet): the bow already sounded when it was loosed - the
+	# hit is only the arrow striking (the bow set's hit sounds) (owner 2026-11-10: "sounds like a double shot")
+	if a_snd and ws > 0 and int(d.style) != BOW_SHOOT \
+			and int(WeaponModels.info(int(d.weapon)).get("stance", 0)) in [5, 6, 8]:
+		a_snd = null
 	if a_snd:
 		if ws > 0:
 			a_snd.weapon(ws, "style_use" if styled else "use")
@@ -1494,9 +1499,13 @@ func _emote(d: Dictionary) -> void:
 	# (GamePlayer.Bind sends the realm's bind emote to everyone in view, you too) the bindstone rings and sound
 	# (owner 2026-10-16) - the server only sends the emote id, the client draws the rest
 	var fx := int(EMOTE_FX.get(int(d.emote), 0))
+	var mine_level := int(d.emote) == 42 and int(d.oid) == Server.me_oid
 	if fx and v is Node3D:
 		var snd = v.get("sounds")
-		SpellFx.emote(fx, v, snd as CharacterSounds)
+		SpellFx.emote(fx, v, null if mine_level else snd as CharacterSounds)
+	if mine_level:
+		SpellFx.level_fanfare(self, String(PlayerData.character.get("realm", "hib")))
+
 
 
 ## emotes.csv (gamedata.mpk): emote id -> its client effect (Spell column), every row that has one

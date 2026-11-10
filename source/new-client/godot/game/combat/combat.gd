@@ -89,7 +89,9 @@ func setup(p: Player, n: NpcManager) -> void:
 	PlayerData.release_requested.connect(release)
 	PlayerData.release_to.connect(func(_kind: String): release())   # (offline has only the bind point to go to)
 	PlayerData.pray_requested.connect(pray)
-	PlayerData.leveled_up.connect(func(_lv): SpellFx.emote(8007, player, player.sounds))   # emote LvlUp
+	PlayerData.leveled_up.connect(func(_lv):                  # emote LvlUp, with your realm's fanfare
+		SpellFx.emote(8007, player, null)
+		SpellFx.level_fanfare(self, String(PlayerData.character.get("realm", "hib"))))
 	PlayerData.sit_requested.connect(sit)
 	PlayerData.emote_requested.connect(emote)
 	PlayerData.bind_requested.connect(bind_here)

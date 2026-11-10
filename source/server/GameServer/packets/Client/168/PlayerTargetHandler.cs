@@ -48,7 +48,10 @@ namespace DOL.GS.PacketHandler.Client.v168
                     ClientService.UpdateObjectForPlayer(actionSource, target);
 
                 // Unstealth if anything is targeted while we're in combat mode. Exclude archers as they should be allowed to change target without losing stealth.
-                if (actionSource.ActiveWeaponSlot is not eActiveWeaponSlot.Distance && actionSource.IsAttacking && actionSource.IsStealthed)
+                // Action Combat (owner 2026-11-10): the reticle targets as you aim, weapon drawn - only being seen or an attack
+                // brings you out, not choosing a target.
+                if (actionSource.ActiveWeaponSlot is not eActiveWeaponSlot.Distance && actionSource.IsAttacking && actionSource.IsStealthed &&
+                    !ActionCombat.IsActive(actionSource))
                     actionSource.Stealth(false);
             }
 
