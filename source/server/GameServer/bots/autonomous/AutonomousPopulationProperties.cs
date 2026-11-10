@@ -34,5 +34,37 @@ namespace DOL.GS
 
         [ServerProperty("autonomous_population", "world_actor_only", "Require every progressing bot to remain a real loaded world actor.", true)]
         public static bool WORLD_ACTOR_ONLY;
+
+        // The living population's dials (owner 2026-11-10, "Living Bot Population - Plan"; OfflineDaoc.Population.PopulationKnobs
+        // reads them, and the launcher's Population page writes them).
+        [ServerProperty("autonomous_population", "population_max_online_per_realm", "Most bots online per realm at once.", 250)]
+        public static int POPULATION_MAX_ONLINE_PER_REALM;
+
+        [ServerProperty("autonomous_population", "population_curve_scale", "Multiplies every hour's online share of the roster (0.5 = a quiet server).", 1.0)]
+        public static double POPULATION_CURVE_SCALE;
+
+        [ServerProperty("autonomous_population", "population_prime_start_hour", "The local hour prime time starts (it lasts about four hours).", 19)]
+        public static int POPULATION_PRIME_START_HOUR;
+
+        [ServerProperty("autonomous_population", "population_new_arrivals", "New level-one arrivals online at a time per realm.", 30)]
+        public static int POPULATION_NEW_ARRIVALS;
+
+        [ServerProperty("autonomous_population", "population_session_scale", "Multiplies every bot session's length.", 1.0)]
+        public static double POPULATION_SESSION_SCALE;
+
+        [ServerProperty("autonomous_population", "population_persona_mix", "Casual / regular / tryhard percent for new personas.", "25/55/20")]
+        public static string POPULATION_PERSONA_MIX;
+
+        [ServerProperty("autonomous_population", "population_chat_level", "quiet, normal or lively.", "normal")]
+        public static string POPULATION_CHAT_LEVEL;
+
+        [ServerProperty("autonomous_population", "population_mistake_rate", "off, low, normal or high.", "normal")]
+        public static string POPULATION_MISTAKE_RATE;
+
+        [ServerProperty("autonomous_population", "population_fast_clock", "Testing: the population's day passes in an hour.", false)]
+        public static bool POPULATION_FAST_CLOCK;
+
+        [ServerProperty("autonomous_population", "population_launch_utc", "When the population's first arrivals began (stamped by the server; cleared when the launcher builds a fresh roster). The roster arrives over about 24 days from it.", "")]
+        public static string POPULATION_LAUNCH_UTC;
     }
 }

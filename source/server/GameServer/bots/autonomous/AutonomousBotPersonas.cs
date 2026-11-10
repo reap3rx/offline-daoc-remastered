@@ -20,6 +20,16 @@ public static class AutonomousBotPersonas
 {
     public sealed record Persona(string[] Greet, string[] Ambient, string[] Faction, string[] Reply, string[] Directed, string[] Farewell);
 
+    /// <summary>One of Claude's three (kept through the 2026-11-10 roster purge, reset to level 1).</summary>
+    public static bool IsSpecial(string name) => name != null && ByName.ContainsKey(name);
+
+    /// <summary>Their player habits in the living population: evening players, sociable, talkative, fairly skilled,
+    /// regular in drive and mostly PvE - and the scheduler has them around more often than most.</summary>
+    public static OfflineDaoc.Population.BotPersona SpecialPersona(string name) => new()
+    {
+        Drive = 58, Focus = 30, Social = 78, Skill = 70, Chat = 88, Sched = "evening",
+    };
+
     private static readonly Dictionary<string, Persona> ByName = new(StringComparer.OrdinalIgnoreCase)
     {
         ["Claudin"] = new Persona(

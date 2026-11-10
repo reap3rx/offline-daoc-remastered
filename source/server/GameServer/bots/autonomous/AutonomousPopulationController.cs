@@ -12,6 +12,7 @@ using DOL.GS.Commands;
 using DOL.GS.GameEvents;
 using DOL.GS.PacketHandler;
 using DOL.Logging;
+using OfflineDaoc.Population;
 
 namespace DOL.GS;
 
@@ -20,7 +21,7 @@ namespace DOL.GS;
 /// to the configured startup ramp. It never invents offline progress and never
 /// creates characters on its own.
 /// </summary>
-public static class AutonomousPopulationController
+public static partial class AutonomousPopulationController
 {
     public const string TeleportToBotCommandType = "TeleportToBot";
     public const int MaximumSpawnEnqueuePerPoll = 16;
@@ -48,6 +49,9 @@ public static class AutonomousPopulationController
     {
         Interlocked.Increment(ref _loginGeneration);
         _startedUtc = DateTime.UtcNow;
+        _clockOriginLocal = DateTime.Now;
+        Sessions.Clear();
+        Personas.Clear();
         OfflineWorldBotRecord[] previouslyOnline = DOLDB<OfflineWorldBotRecord>
             .SelectObjects(DB.Column("IsOnline").IsEqualTo(true))
             .ToArray();
@@ -103,65 +107,13 @@ public static class AutonomousPopulationController
             }
 
             OfflineWorldBotRecord[] roster = _cachedRoster;
-            int desired = AutonomousPopulationRamp.DesiredActiveCount(_cachedEnabled, roster.Length, _cachedRampMinutes, nowUtc - _startedUtc);
-            int missing = desired - AutonomousBotRegistry.Count - PendingSpawns.Count;
-            _populationSatisfied = missing <= 0;
-            if (missing <= 0)
+            if (!_cachedEnabled || roster.Length == 0)
+            {
+                _populationSatisfied = true;
                 return;
-
-            var realmLoad = new Dictionary<eRealm, int>(AutonomousBotRegistry.CountByRealm());
-            foreach (OfflineWorldBotRecord pending in roster.Where(record => PendingSpawns.ContainsKey(record.BotId)))
-            {
-                eRealm realm = (eRealm)pending.Realm;
-                realmLoad[realm] = realmLoad.TryGetValue(realm, out int count) ? count + 1 : 1;
             }
-
-            List<OfflineWorldBotRecord> available = roster
-                .Where(record => !record.IsOnline && !AutonomousBotRegistry.Contains(record.BotId) && !PendingSpawns.ContainsKey(record.BotId))
-                .ToList();
-
-            // Ten thousand actors require about eleven scheduled logins per
-            // second to reach 33% at five minutes and 100% at fifteen. Keep
-            // every pulse bounded while retaining modest catch-up headroom.
-            int enqueueCount = Math.Min(Math.Min(missing, available.Count), MaximumSpawnEnqueuePerPoll);
-            for (int i = 0; i < enqueueCount; i++)
-            {
-                long? nextId = AutonomousRealmLoginBalancer.SelectNext(
-                    available.Select(record => new AutonomousRealmLoginBalancer.Candidate(record.BotId, (eRealm)record.Realm)),
-                    realmLoad);
-                OfflineWorldBotRecord next = nextId.HasValue
-                    ? available.FirstOrDefault(record => record.BotId == nextId.Value)
-                    : null;
-                if (next == null)
-                    break;
-                available.Remove(next);
-                if (!PendingSpawns.TryAdd(next.BotId, 0))
-                    continue;
-
-                eRealm realm = (eRealm)next.Realm;
-                realmLoad[realm] = realmLoad.TryGetValue(realm, out int count) ? count + 1 : 1;
-                try
-                {
-                    // Fetch the exact real inventory on this existing background
-                    // poller. Applying slots/bonuses and actor creation still belong
-                    // to the game loop; it must never spin waiting for SQLite here.
-                    int generation = Volatile.Read(ref _loginGeneration);
-                    string ownerId = AutonomousBotEconomy.GetOwnerId(next.BotId);
-                    var inventory = new BotInventory(ownerId);
-                    var items = inventory.StartLoadFromDatabaseTask(ownerId).GetAwaiter().GetResult();
-                    if (generation != Volatile.Read(ref _loginGeneration) || _timer == null)
-                    {
-                        PendingSpawns.TryRemove(next.BotId, out _);
-                        return;
-                    }
-                    NpcService.Instance.Post(SpawnOnGameLoop, new PreparedSpawn(next.BotId, items, generation));
-                }
-                catch
-                {
-                    PendingSpawns.TryRemove(next.BotId, out _);
-                    throw;
-                }
-            }
+            // the living population (owner 2026-11-10): the daily curve and the bots' own habits decide who is on
+            PollSchedule(roster, nowUtc);
         }
         catch (Exception exception)
         {
@@ -170,6 +122,33 @@ public static class AutonomousPopulationController
         finally
         {
             Volatile.Write(ref _polling, 0);
+        }
+    }
+
+    /// <summary>Starts one bot's login: its real inventory read here (this background poller), the actor made on the
+    /// game loop. False when the server is stopping.</summary>
+    private static bool EnqueueLogin(OfflineWorldBotRecord next)
+    {
+        if (!PendingSpawns.TryAdd(next.BotId, 0))
+            return true;
+        try
+        {
+            int generation = Volatile.Read(ref _loginGeneration);
+            string ownerId = AutonomousBotEconomy.GetOwnerId(next.BotId);
+            var inventory = new BotInventory(ownerId);
+            var items = inventory.StartLoadFromDatabaseTask(ownerId).GetAwaiter().GetResult();
+            if (generation != Volatile.Read(ref _loginGeneration) || _timer == null)
+            {
+                PendingSpawns.TryRemove(next.BotId, out _);
+                return false;
+            }
+            NpcService.Instance.Post(SpawnOnGameLoop, new PreparedSpawn(next.BotId, items, generation));
+            return true;
+        }
+        catch
+        {
+            PendingSpawns.TryRemove(next.BotId, out _);
+            throw;
         }
     }
 
@@ -224,6 +203,7 @@ public static class AutonomousPopulationController
             }
 
             record.IsOnline = true;
+            BeginSession(bot, record);
             record.Activity = "Choosing first live goal";
             record.CurrentGoal = "Find a reachable level-appropriate XP camp";
             record.ObjectiveProgress = "Entered world through staggered login queue";
@@ -328,6 +308,7 @@ public static class AutonomousPopulationController
         // Pure reads: SQLite WAL readers never block the writer, so this no
         // longer holds the shared write lock that game-loop transactions wait on.
         _cachedEnabled = ReadBool("population_enabled", false);
+        LoadKnobs();
         _cachedRampMinutes = ReadInt("startup_ramp_minutes", 15);
         _cachedRoster = DOLDB<OfflineWorldBotRecord>
             .SelectObjects(DB.Column("IsRetired").IsEqualTo(false))

@@ -536,6 +536,9 @@ internal sealed partial class MainForm : Form
         var xpSettings = new TabPage("Options") { BackColor = DaocTheme.Panel, ForeColor = DaocTheme.Text };
         xpSettings.Controls.Add(BuildXpSettingsPanel());
         tabs.TabPages.Add(population);
+        var living = new TabPage("Population") { BackColor = DaocTheme.Panel, ForeColor = DaocTheme.Text };
+        living.Controls.Add(new PopulationPanel(() => _database, () => _root));
+        tabs.TabPages.Add(living);
         tabs.TabPages.Add(groups);
         tabs.TabPages.Add(rvr);
         var battlegrounds = new TabPage("Battlegrounds") { BackColor = DaocTheme.Panel, ForeColor = DaocTheme.Text };
@@ -2214,10 +2217,28 @@ internal sealed partial class MainForm : Form
         }
 
         bool allowSluaghbinder = SluaghbinderEnabled(connection, transaction);
+        PopulationRoster.EnsureColumns(connection);
+        // lore names (bot_names.json) when the name parts are installed; the old generator otherwise
+        OfflineDaoc.Population.BotLoreNames? lore = null;
+        if (File.Exists(PopulationRoster.NamesFile(_root)))
+        {
+            lore = OfflineDaoc.Population.BotLoreNames.Load(PopulationRoster.NamesFile(_root));
+            using var mobs = connection.CreateCommand();
+            mobs.Transaction = transaction;
+            mobs.CommandText = "SELECT DISTINCT Name FROM Mob";
+            var npcNames = new List<string>();
+            using (var reader = mobs.ExecuteReader())
+                while (reader.Read()) if (!reader.IsDBNull(0)) npcNames.Add(reader.GetString(0));
+            lore.Reserve(reserved.Concat(npcNames));
+        }
+        OfflineDaoc.Population.PopulationKnobs knobs = PopulationRoster.ReadKnobs(connection, transaction);
         var identities = new List<BotCharacterGenerator.Identity>(count);
         for (int index = 0; index < count; index++)
         {
             BotCharacterGenerator.Identity identity = BotCharacterGenerator.Generate(realm, reserved, allowSluaghbinder);
+            if (lore?.Generate(identity.RaceId, identity.Gender, Random.Shared) is { } loreName)
+                identity = identity with { Name = loreName };
+            var persona = OfflineDaoc.Population.BotPersona.Roll(Random.Shared, identity.ClassId, knobs.CasualPct, knobs.TryhardPct);
             BotStartingLocation start = level == 50
                 ? CapitalBotStartingLocation(identity.Realm)
                 : ChooseBotStartingLocation(connection, transaction, identity.Realm, identity.RaceId, identity.ClassId);
@@ -2230,13 +2251,14 @@ internal sealed partial class MainForm : Form
                     (Name, Realm, ClassId, ClassName, RaceId, RaceName, Gender, Level, Experience, RealmPoints,
                      ZoneName, Activity, IsOnline, IsAlive, LastUpdateUtc, MoneyCopper, InventoryRevision,
                      ZoneId, X, Y, Z, RegionId, Health, Mana, Endurance, BindRegionId, BindX, BindY, BindZ,
-                     CurrentGoal, ObjectiveProgress, LastMeaningfulProgressUtc, IsRetired)
+                     CurrentGoal, ObjectiveProgress, LastMeaningfulProgressUtc, IsRetired, PersonaJson, HasArrived)
                 VALUES
                     (@name, @realm, @classId, @className, @raceId, @raceName, @gender, @level, @xp, 0,
                      @zoneName, 'Queued at randomized starting location', 0, 1, @now, @money, 0,
                      @zoneId, @x, @y, @z, @region, 1, 0, 0, @region, @x, @y, @z,
-                     'Awaiting staggered login queue', @placement, @now, 0)
+                     'Awaiting staggered login queue', @placement, @now, 0, @persona, 1)
                 """;
+            insert.Parameters.AddWithValue("@persona", persona.ToJson());
             insert.Parameters.AddWithValue("@name", identity.Name);
             insert.Parameters.AddWithValue("@level", level);
             insert.Parameters.AddWithValue("@xp", level == 50 ? 169999999950L : 0L);

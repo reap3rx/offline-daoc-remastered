@@ -80,6 +80,17 @@ internal static class BotCharacterGenerator
         [3] = ["", "ae", "el", "in", "or"],
     };
 
+    /// <summary>A class, race and sex from the realm's usual mix, without a name (the living population names its bots
+    /// with BotLoreNames).</summary>
+    public static (int ClassId, string ClassName, int RaceId, string RaceName, int Gender) Roll(int realm, bool allowSluaghbinder = true)
+    {
+        int gender = Random.Shared.Next(1, 3);
+        Choice[] pool = allowSluaghbinder ? Choices[realm] : Choices[realm].Where(entry => entry.ClassId != 63).ToArray();
+        Choice choice = pool[Random.Shared.Next(pool.Length)];
+        var race = choice.Races[Random.Shared.Next(choice.Races.Length)];
+        return (choice.ClassId, choice.ClassName, race.Id, race.Name, gender);
+    }
+
     public static Identity Generate(int realm, ISet<string> reservedNames, bool allowSluaghbinder = true)
     {
         int gender = Random.Shared.Next(1, 3);

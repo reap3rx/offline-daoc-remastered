@@ -974,4 +974,12 @@ public sealed class OfflineWorldBotRecord : DataObject
     [DataElement(AllowDbNull = false)] public string ObjectivePveMode { get; set; } = string.Empty;
     [DataElement(AllowDbNull = false)] public int ObjectivePveKillTarget { get; set; }
     [DataElement(AllowDbNull = false)] public int ObjectivePveKills { get; set; }
+    // The living population (owner 2026-11-10, AutonomousPopulationController.Sessions): the bot's persona (rolled once,
+    // OfflineDaoc.Population.BotPersona as JSON), whether it has ever played (a fresh roster arrives in waves), when it
+    // last logged off, when its current session ends, how many sessions it has played.
+    [DataElement(AllowDbNull = false)] public string PersonaJson { get; set; } = string.Empty;
+    [DataElement(AllowDbNull = false)] public bool HasArrived { get; set; }
+    [DataElement(AllowDbNull = false)] public string LastLogoutUtc { get; set; } = string.Empty;
+    [DataElement(AllowDbNull = false)] public string SessionEndsUtc { get; set; } = string.Empty;
+    [DataElement(AllowDbNull = false)] public int SessionCount { get; set; }
 }
