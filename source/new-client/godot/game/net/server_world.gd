@@ -1437,7 +1437,8 @@ func _spell_effect(d: Dictionary) -> void:
 			var cv: bool = caster != null and is_instance_valid(caster)
 			var hostile: bool = cv and ((caster is Player and t is Npc and int((t as Npc).spawn.get("realm", 0)) == 0) \
 					or (caster is Npc and int((caster as Npc).spawn.get("realm", 0)) == 0 and t is Player))
-			SpellFx.land(ce, t, float(t.get("height")) if t is Npc else 1.8, hit_snd, resisted, hostile)
+			var mine: bool = (cv and caster is Player) or t is Player   # (always shown: a kill's last hit too)
+			SpellFx.land(ce, t, float(t.get("height")) if t is Npc else 1.8, hit_snd, resisted, hostile, mine)
 	if instant and int(SpellFx.effect(ce).get("projectile", 0)) == 0:
 		SpellFx.sound(cast_snd, int(SpellFx.effect(ce).get("sound_set", 0)), "cast")   # (its sound, then the target's)
 		land.call()

@@ -283,6 +283,20 @@ static func _skeleton(root: Node) -> Skeleton3D:
 static var prof_play_us := 0                 # debug timing (tests/crowd_probe.gd)
 ## Your target (the zone viewer keeps it): its effects are never culled.
 static var focus: Node3D = null
+## Characters your own spells just landed on (instance id -> msec): their hits are never culled either - your target
+## is cleared the moment it dies, and the killing blow's hit was culled with it (owner 2026-11-10: "the spell effect
+## doesn't seem to trigger on hit if the enemy dies").
+static var _mine := {}
+const MINE_MS := 4000
+
+## Effects on a character smaller than a standard figure are drawn at the standard size (owner 2026-11-10: "if you're
+## blasting a smaller enemy it'll still be visible"); a bigger one's still grow with it, so they show outside its body.
+const MIN_FX_SIZE := 1.0
+
+
+static func fx_size(on: Node3D) -> float:
+	var k := size_of(on)
+	return k if on is Player else maxf(k, MIN_FX_SIZE)
 const SAME_FX_MS := 400
 const SAME_FX_MAX := 6
 static var _fx_burst := {}                  # effect id -> [when its burst began (ticks ms), copies started in it]
@@ -317,7 +331,8 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 	# culled: off screen, too far, or too many alive (the nearest win) - never the ones on you or your target (owner
 	# 2026-11-09: hits on the mob he was casting at showed rarely - with the card busy the governor had cut fx_range
 	# toward 10 m, and a caster's target is 20 - 35 m away)
-	if cam and not Perf.brute and not (on is Player) and on != focus:
+	if cam and not Perf.brute and not (on is Player) and on != focus \
+			and now - int(_mine.get(on.get_instance_id(), -100000)) > MINE_MS:
 		var d := cam.global_position.distance_to(on.global_position)
 		if d > 6.0 and (d > Perf.fx_range or not cam.is_position_in_frustum(on.global_position + Vector3(0, 1, 0))
 				or _live_count() >= Perf.max_effects):
@@ -348,7 +363,7 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 		at.add_child(node)
 		node = at
 		# the bone's world scale (the model's) cancelled, then the effect's own size: the character's for Auto Scale
-		var want := size_of(on) if bool(f.get("autoscale", false)) else 1.0
+		var want := fx_size(on) if bool(f.get("autoscale", false)) else 1.0
 		fx.scale = Vector3.ONE * want / maxf(at.global_basis.get_scale().x, 0.001)
 		if not (bone.ends_with("Held") or bone.ends_with("Hand")):
 			var up := _Upright.new()
@@ -360,7 +375,7 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 			up._process(0.0)
 	else:
 		on.add_child(node)
-		var k := size_of(on) if bool(f.get("autoscale", false)) else 1.0
+		var k := fx_size(on) if bool(f.get("autoscale", false)) else 1.0
 		fx.scale = Vector3.ONE * k / maxf(on.scale.y, 0.001)
 		if bone.to_lower().contains("chest"):
 			node.position.y = height * 0.6 / maxf(on.scale.y, 0.001)
@@ -384,7 +399,7 @@ static func _play(fx_id: int, on: Node3D, height := 1.8, keep := false, target: 
 		(fx as NifScene).seek(skip)
 	for gp in (fx as NifScene).particles():
 		(gp as GPUParticles3D).amount_ratio = Perf.particle_ratio   # fewer sparks in a busy fight (Perf governor)
-	var lk := size_of(on) if bool(f.get("autoscale", false)) else 1.0
+	var lk := fx_size(on) if bool(f.get("autoscale", false)) else 1.0
 	if not keep:
 		var secs := float(f.get("duration_s", 3.0))
 		on.get_tree().create_timer(secs if secs > 0.0 else 3.0).timeout.connect(func(): release(node))
@@ -600,9 +615,14 @@ const AREA_RING_M := 4.0                     # (the effect data has no radius: a
 static var _ring_at := {}
 
 
+## mine: your own spell (or one on you) - its hit always shows, even on a target that just died.
 static func land(client_effect: int, target: Node3D, height: float, snd: CharacterSounds, resisted := false,
-		hostile := false) -> void:
+		hostile := false, mine := false) -> void:
 	var e := effect(client_effect)
+	if mine and target:
+		if _mine.size() > 256:
+			_mine.clear()
+		_mine[target.get_instance_id()] = Time.get_ticks_msec()
 	var wait := float(e.get("release_s", 0.0))
 	if wait >= RAY_FROM and int(e.get("projectile", 0)) == 0:
 		wait = RAY_LEAD                                    # (its cast effect started just before the ray: fire)
@@ -617,7 +637,7 @@ static func land(client_effect: int, target: Node3D, height: float, snd: Charact
 	if not resisted and FxLight.enabled:
 		var col := FxLight.color_of(shown) if shown else Color(1, 1, 1)
 		if hostile:
-			Extras.impact(target, col, size_of(target), height, Extras.is_fire(String(e.get("name", ""))))
+			Extras.impact(target, col, fx_size(target), height, Extras.is_fire(String(e.get("name", ""))))
 		if int(e.get("radius", 0)) > 0:                 # an area spell: one ring for its burst, not one per target
 			var now := Time.get_ticks_msec()
 			if now - int(_ring_at.get(client_effect, -10000)) > 600:
