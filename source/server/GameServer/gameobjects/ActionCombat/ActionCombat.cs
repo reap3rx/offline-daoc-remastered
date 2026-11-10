@@ -23,6 +23,18 @@
  *     endurance cost.
  *   - Monsters fighting you wind up for WindupMs before their blow lands, and your client is told (a cue to
  *     time the parry on).
+ *   - Swinging early tires you (owner 2026-11-09): in combat, a plain swing before the weapon's whole swing time costs
+ *     endurance - QuickSwingMaxEnduranceShare of your maximum at its soonest, nothing at the whole swing time.
+ *   - Fighting several at once (owner 2026-11-09): a timed dodge / parry / block that catches a blow starts a chain -
+ *     for a short window after it, blows from OTHER monsters are turned aside the same way, one per monster, as many
+ *     monsters as the chain has charges: Evade I-VII 1-7 charges over 0.5-2 s; Riposte 1-7 (Parry 7, 14, 21, 29,
+ *     36, 43, 50) over 0.75-3 s; Shields 1-50 0-7 charges plus 1 / 2 / 3 for a small / medium / large shield over
+ *     1-4 s. A parry chain and a small shield cover your front, a medium shield 270 degrees, a large one all round;
+ *     a dodge chain any side. Every parry (timed or chained) by someone with Riposte 1+ strikes back: half an
+ *     off-hand swing dual wielding, else 15% of a main-hand swing.
+ *   - What a parry / block saves depends on spec and on the armor the blow lands on (owner 2026-11-09): its armor
+ *     rating (AF with your buffs, raised by its absorb) against a buffed plate wearer's of your level. At spec 50,
+ *     a block saves 85% (cloth) to 95% (buffed plate), a parry 70% to 85%; never all of it.
  * The client and server talk through "#AC|..." system lines the Godot client takes out of the chat.
  */
 using System;
@@ -61,6 +73,12 @@ namespace DOL.GS
 		public string LastWindows = "";
 		public bool Guarding;
 		public bool FumblePending;
+		// The multi-foe chain started by a timed defense that caught a blow (ActionCombat.StartChain).
+		public eActionDefense ChainKind;
+		public long ChainUntil;
+		public int ChainLeft;
+		public GameLiving ChainFrom;
+		public HashSet<GameLiving> ChainUsed = new();
 		// A reaction answers one opening: the blow you parried / blocked / dodged (the enemy's attack), or your own
 		// blow it turned aside. Once a reactive style is used on it, it is spent until a new one comes.
 		public AttackData SpentEnemyOpening;
@@ -103,6 +121,172 @@ namespace DOL.GS
 		public const int IdlePollMs = 50;          // how often an idle attack action checks for a click
 		public const double GuardFactor = 0.75;    // damage taken while holding guard
 		public const double GuardShieldFactor = 0.6;
+
+		// ------------------------------------------------------------------ early swings tire you (owner 2026-11-09)
+
+		public const double QuickSwingMaxEnduranceShare = 0.15;
+
+		/// <summary>The share of maximum endurance a plain swing this long after the last blow costs: the most at its
+		/// soonest, falling evenly to nothing at the weapon's whole swing time.</summary>
+		public static double QuickSwingEnduranceShare(long elapsedMs, int fullMs)
+		{
+			if (fullMs <= 0 || elapsedMs >= fullMs)
+				return 0.0;
+
+			int soonest = Math.Min(QuickMinMs(fullMs), fullMs - 1);
+
+			if (elapsedMs <= soonest)
+				return QuickSwingMaxEnduranceShare;
+
+			return QuickSwingMaxEnduranceShare * (fullMs - elapsedMs) / (double) (fullMs - soonest);
+		}
+
+		/// <summary>What a plain swing now costs this player (0 out of combat or at the whole swing time).</summary>
+		public static int QuickSwingCost(GamePlayer player)
+		{
+			if (!player.InCombat)
+				return 0;
+
+			double share = QuickSwingEnduranceShare(SinceLastSwing(player), FullSwingMs(player));
+			return share <= 0 ? 0 : (int) Math.Ceiling(player.MaxEndurance * share);
+		}
+
+		// ------------------------------------------------------------------ fighting several at once (owner 2026-11-09)
+
+		public static readonly int[] RiposteSpecs = { 7, 14, 21, 29, 36, 43, 50 };
+
+		public static int RiposteRank(int parrySpec)
+		{
+			int rank = 0;
+
+			foreach (int at in RiposteSpecs)
+			{
+				if (parrySpec >= at)
+					rank++;
+			}
+
+			return rank;
+		}
+
+		/// <summary>Evade I-VII: 1-7 other monsters within 0.5-2 s of the dodge.</summary>
+		public static (int Charges, int WindowMs) EvadeChainFor(int evade)
+		{
+			int e = Math.Clamp(evade, 0, 7);
+			return e == 0 ? (0, 0) : (e, 500 + (e - 1) * 250);
+		}
+
+		/// <summary>Riposte 1-7: 1-7 other monsters within 0.75-3 s of the parry.</summary>
+		public static (int Charges, int WindowMs) ParryChainFor(int parrySpec)
+		{
+			int r = RiposteRank(parrySpec);
+			return r == 0 ? (0, 0) : (r, 750 + (r - 1) * 375);
+		}
+
+		/// <summary>Shields 1-50: 0-7 other monsters, plus the shield's size (1 small, 2 medium, 3 large), within 1-4 s.</summary>
+		public static (int Charges, int WindowMs) BlockChainFor(int shieldSpec, int shieldSize)
+		{
+			if (shieldSpec <= 0)
+				return (0, 0);
+
+			int s = Math.Clamp(shieldSpec, 1, 50);
+			return ((s - 1) * 7 / 49 + Math.Clamp(shieldSize, 1, 3), 1000 + (s - 1) * 3000 / 49);
+		}
+
+		/// <summary>How far round a chained block reaches: small shield the front, medium 270 degrees, large all round.</summary>
+		public static int BlockChainArc(int shieldSize) => shieldSize >= 3 ? 360 : shieldSize == 2 ? 270 : 180;
+
+		private static int ShieldSize(GamePlayer player)
+		{
+			DbInventoryItem left = player.ActiveLeftWeapon;
+			return left == null ? 1 : Math.Clamp(left.Type_Damage, 1, 3);
+		}
+
+		/// <summary>A timed defense caught a blow from `from`: a new chain for the others (replacing any running).</summary>
+		private static void StartChain(GamePlayer player, ActionCombatState state, eActionDefense kind, GameLiving from, long now)
+		{
+			(int charges, int window) = kind switch
+			{
+				eActionDefense.Dodge => EvadeChainFor(player.GetAbilityLevel(Abilities.Evade)),
+				eActionDefense.Block => BlockChainFor(player.GetModifiedSpecLevel(Specs.Shields), ShieldSize(player)),
+				eActionDefense.Parry => ParryChainFor(player.GetModifiedSpecLevel(Specs.Parry)),
+				_ => (0, 0)
+			};
+
+			state.ChainKind = kind;
+			state.ChainLeft = charges;
+			state.ChainUntil = charges > 0 ? now + window : 0;
+			state.ChainFrom = from;
+			state.ChainUsed.Clear();
+		}
+
+		/// <summary>A blow the running chain turns aside: a different monster from the one that started it, one not yet
+		/// turned aside in this chain, inside the window, on the side the chain covers.</summary>
+		private static eActionDefense ChainFor(GamePlayer player, ActionCombatState state, AttackData ad, long now)
+		{
+			if (state.ChainLeft <= 0 || now > state.ChainUntil || ad.Attacker == state.ChainFrom || state.ChainUsed.Contains(ad.Attacker))
+				return eActionDefense.None;
+
+			switch (state.ChainKind)
+			{
+				case eActionDefense.Dodge:
+					return eActionDefense.Dodge;
+				case eActionDefense.Parry:
+					return ad.IsMeleeAttack && player.IsObjectInFront(ad.Attacker, 180) && player.ActiveWeapon != null
+						? eActionDefense.Parry : eActionDefense.None;
+				case eActionDefense.Block:
+				{
+					if (!HasShield(player))
+						return eActionDefense.None;
+
+					int arc = BlockChainArc(ShieldSize(player));
+					return arc >= 360 || player.IsObjectInFront(ad.Attacker, arc) ? eActionDefense.Block : eActionDefense.None;
+				}
+			}
+
+			return eActionDefense.None;
+		}
+
+		/// <summary>The riposte: every parry by someone with Riposte 1+ strikes the parried monster back a moment later.
+		/// Dual wielding, half an off-hand swing; else 15% of a main-hand swing. No styles, procs or damage adds.</summary>
+		public const double RiposteDualWieldShare = 0.5;
+		public const double RiposteShare = 0.15;
+		public const int RiposteDelayMs = 250;
+
+		private static void Riposte(GamePlayer player, GameLiving attacker)
+		{
+			if (attacker == null || RiposteRank(player.GetModifiedSpecLevel(Specs.Parry)) <= 0)
+				return;
+
+			new ECSGameTimer(player, _ =>
+			{
+				if (!player.IsAlive || !attacker.IsAlive || player.IsIncapacitated || !player.attackComponent.AttackState ||
+					!player.IsWithinRadius(attacker, player.attackComponent.AttackRange + 50))
+					return 0;
+
+				DbInventoryItem main = player.ActiveWeapon;
+				DbInventoryItem left = player.ActiveLeftWeapon;
+				bool dual = left != null && (eObjectType) left.Object_Type is not eObjectType.Shield && main != null &&
+					player.attackComponent.CanUseLefthandedWeapon;
+				DbInventoryItem weapon = dual ? left : main;
+
+				if (weapon == null)
+					return 0;
+
+				double share = dual ? RiposteDualWieldShare : RiposteShare;
+				int speed = player.attackComponent.AttackSpeed(weapon);
+				WeaponAction action = new(player, attacker, weapon, null, share, speed, null);
+				AttackData counter = player.attackComponent.LivingMakeAttack(action, attacker, weapon, null, share, speed, false, true);
+
+				if (counter.AttackResult is eAttackResult.HitUnstyled or eAttackResult.HitStyle)
+				{
+					player.DealDamage(counter);
+					player.Out.SendMessage($"You riposte {attacker.GetName(0, false)} for {counter.Damage + counter.CriticalDamage} damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+					Send(player, $"riposte|{attacker.ObjectID}|{counter.Damage + counter.CriticalDamage}");
+				}
+
+				return 0;
+			}, RiposteDelayMs);
+		}
 		// A plain swing's soonest (owner 2026-11-01): 0.75 s for the quickest weapons (a 2.0 s swing time or less) to
 		// 1.75 s for the slowest (5.5 s and up), in between by the weapon's swing time now (quickness, haste in it).
 		public const int QuickMinFastMs = 750;
@@ -238,6 +422,16 @@ namespace DOL.GS
 			// Too soon after the last blow: nothing (no queue - press again when it can go).
 			if (!SwingReady(player))
 				return;
+
+			// Too tired for a swing this soon (owner 2026-11-09): wait for the weapon to come round (cheaper, then free).
+			int cost = QuickSwingCost(player);
+
+			if (cost > 0 && player.Endurance < cost)
+			{
+				player.Out.SendMessage("You are too tired to swing that fast!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				Send(player, "def|tired|0");
+				return;
+			}
 
 			if (!EnsureAttacking(player))
 				return;
@@ -652,28 +846,53 @@ namespace DOL.GS
 			Get(player).Guarding = on && player.IsAlive;
 		}
 
-		/// <summary>Parry spec 1 takes 60% of the blow, 50 takes 20%; untrained 80% (owner 2026-10-28: a parry saves the
-		/// least, a block more, a dodge all of it).</summary>
-		public static double ParryFactor(GamePlayer player) => ParryFactorForSpec(player.GetModifiedSpecLevel(Specs.Parry));
+		/// <summary>The armor the blow lands on, 0..1: its rating (AF with your buffs, raised by its absorb as the
+		/// classic damage formula does) against a buffed plate wearer's of your level (owner 2026-11-09: "base this on
+		/// the Armor Factor stat versus the armor type ... since you can mix types of armor and there are AF buffs").</summary>
+		public const double FullArmorRatingPerLevel = 3.6;
 
-		public static double ParryFactorForSpec(int spec)
+		public static double ArmorScore(GamePlayer player, eArmorSlot slot)
+		{
+			if (slot is eArmorSlot.NOTSET)
+				return 0;
+
+			return ArmorScoreFor(player.GetArmorAF(slot), player.GetArmorAbsorb(slot), player.Level);
+		}
+
+		public static double ArmorScoreFor(double af, double absorb, int level) =>
+			Math.Clamp(af / Math.Max(0.05, 1 - absorb) / (FullArmorRatingPerLevel * Math.Max(1, level)), 0.0, 1.0);
+
+		/// <summary>What a block saves at Shields 50: 85% on cloth to 95% on buffed plate (owner 2026-11-09).</summary>
+		public static double BlockSavedAt50(double armor) => 0.737 + 0.213 * Math.Sqrt(Math.Clamp(armor, 0, 1));
+
+		/// <summary>What a parry saves at Parry 50: 70% on cloth to 85% on buffed plate (a parry ripostes instead).</summary>
+		public static double ParrySavedAt50(double armor) => 0.531 + 0.319 * Math.Sqrt(Math.Clamp(armor, 0, 1));
+
+		/// <summary>The share of a parried blow still taken: Parry 1 saves half of what Parry 50 would; untrained 80% taken.</summary>
+		public static double ParryFactorFor(int spec, double armor)
 		{
 			if (spec <= 0)
 				return 0.8;
 
-			return Math.Clamp(0.6 - 0.4 * (spec - 1) / 49.0, 0.15, 0.6);
+			double k = 0.5 + 0.5 * (Math.Clamp(spec, 1, 50) - 1) / 49.0;
+			return 1.0 - ParrySavedAt50(armor) * k;
 		}
 
-		/// <summary>Shields 1 takes 40% of the blow, 50 takes 10%; untrained 50%.</summary>
-		public static double BlockFactor(GamePlayer player) => BlockFactorForSpec(player.GetModifiedSpecLevel(Specs.Shields));
-
-		public static double BlockFactorForSpec(int spec)
+		/// <summary>The share of a blocked blow still taken: Shields 1 saves two thirds of what Shields 50 would; untrained 50%.</summary>
+		public static double BlockFactorFor(int spec, double armor)
 		{
 			if (spec <= 0)
 				return 0.5;
 
-			return Math.Clamp(0.4 - 0.3 * (spec - 1) / 49.0, 0.05, 0.4);
+			double k = 2.0 / 3.0 + (1.0 / 3.0) * (Math.Clamp(spec, 1, 50) - 1) / 49.0;
+			return 1.0 - BlockSavedAt50(armor) * k;
 		}
+
+		public static double ParryFactor(GamePlayer player, AttackData ad) =>
+			ParryFactorFor(player.GetModifiedSpecLevel(Specs.Parry), ArmorScore(player, ad.ArmorHitLocation));
+
+		public static double BlockFactor(GamePlayer player, AttackData ad) =>
+			BlockFactorFor(player.GetModifiedSpecLevel(Specs.Shields), ArmorScore(player, ad.ArmorHitLocation));
 
 		private static bool HasShield(GamePlayer player)
 		{
@@ -702,6 +921,7 @@ namespace DOL.GS
 			{
 				state.DodgeAnswered = true;
 				state.DodgeReadyAt = now;        // (a dodge that avoided a blow can be followed at once)
+				StartChain(player, state, eActionDefense.Dodge, ad.Attacker, now);
 				ad.ActionDefense = eActionDefense.Dodge;
 				ad.EvadeChance = 100;
 				return eAttackResult.Evaded;
@@ -721,18 +941,48 @@ namespace DOL.GS
 				// With a shield the press blocks - unless it was a parry press (to open a parry reaction).
 				if (HasShield(player) && (!state.ParryOnly || !ad.IsMeleeAttack))
 				{
+					StartChain(player, state, eActionDefense.Block, ad.Attacker, now);
 					ad.ActionDefense = eActionDefense.Block;
-					ad.ActionDamageFactor = BlockFactor(player);
+					ad.ActionDamageFactor = BlockFactor(player, ad);
 					ad.BlockChance = 100;
 					return eAttackResult.Blocked;
 				}
 
 				if (ad.IsMeleeAttack)
 				{
+					StartChain(player, state, eActionDefense.Parry, ad.Attacker, now);
 					ad.ActionDefense = eActionDefense.Parry;
-					ad.ActionDamageFactor = ParryFactor(player);
+					ad.ActionDamageFactor = ParryFactor(player, ad);
 					ad.ParryChance = 100;
 					return eAttackResult.Parried;
+				}
+			}
+
+			// The chain a timed defense started: other monsters' blows turned aside the same way, one each.
+			eActionDefense chained = ChainFor(player, state, ad, now);
+
+			if (chained is not eActionDefense.None)
+			{
+				state.ChainLeft--;
+				state.ChainUsed.Add(ad.Attacker);
+				ad.ActionAuto = true;
+				ad.ActionDefense = chained;
+
+				switch (chained)
+				{
+					case eActionDefense.Dodge:
+						ad.EvadeChance = 100;
+						return eAttackResult.Evaded;
+					case eActionDefense.Block:
+						ad.ArmorHitLocation = player.CalculateArmorHitLocation(ad);
+						ad.ActionDamageFactor = BlockFactor(player, ad);
+						ad.BlockChance = 100;
+						return eAttackResult.Blocked;
+					default:
+						ad.ArmorHitLocation = player.CalculateArmorHitLocation(ad);
+						ad.ActionDamageFactor = ParryFactor(player, ad);
+						ad.ParryChance = 100;
+						return eAttackResult.Parried;
 				}
 			}
 
@@ -763,15 +1013,23 @@ namespace DOL.GS
 			switch (ad.ActionDefense)
 			{
 				case eActionDefense.Parry:
-					player.Out.SendMessage($"Timed parry! You turn {ad.Attacker.GetName(0, false)}'s blow aside: {ad.ActionMitigated} damage saved, {ad.Damage} taken.", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-					Send(player, $"def|parry|{ad.Damage}|{ad.ActionMitigated}");
+					player.Out.SendMessage(ad.ActionAuto
+						? $"Riposte! You turn {ad.Attacker.GetName(0, false)}'s blow aside too: {ad.ActionMitigated} damage saved, {ad.Damage} taken."
+						: $"Timed parry! You turn {ad.Attacker.GetName(0, false)}'s blow aside: {ad.ActionMitigated} damage saved, {ad.Damage} taken.", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					Send(player, $"def|parry|{ad.Damage}|{ad.ActionMitigated}" + (ad.ActionAuto ? "|auto" : ""));
+					Riposte(player, ad.Attacker);
 					break;
 				case eActionDefense.Block:
-					player.Out.SendMessage($"Timed block! You catch {ad.Attacker.GetName(0, false)}'s blow on your shield: {ad.ActionMitigated} damage saved, {ad.Damage} taken.", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-					Send(player, $"def|block|{ad.Damage}|{ad.ActionMitigated}");
+					player.Out.SendMessage(ad.ActionAuto
+						? $"Your shield catches {ad.Attacker.GetName(0, false)}'s blow too: {ad.ActionMitigated} damage saved, {ad.Damage} taken."
+						: $"Timed block! You catch {ad.Attacker.GetName(0, false)}'s blow on your shield: {ad.ActionMitigated} damage saved, {ad.Damage} taken.", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+					Send(player, $"def|block|{ad.Damage}|{ad.ActionMitigated}" + (ad.ActionAuto ? "|auto" : ""));
 					break;
 				case eActionDefense.Dodge:
-					Send(player, "def|dodge|0");
+					if (ad.ActionAuto)
+						player.Out.SendMessage($"You slip {ad.Attacker.GetName(0, false)}'s blow too!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
+
+					Send(player, ad.ActionAuto ? "def|dodge|0|0|auto" : "def|dodge|0");
 					break;
 				case eActionDefense.Guard:
 					if (ad.AttackResult is eAttackResult.HitUnstyled or eAttackResult.HitStyle)
@@ -1293,12 +1551,18 @@ namespace DOL.GS
 			ActionCombatState state = Get(player);
 			StringBuilder sb = new();
 			sb.AppendLine($"Action combat is {(state.Enabled ? "ON" : "OFF")}.");
-			sb.AppendLine($"Timed parry takes {ParryFactor(player) * 100:0}% of a blow (Parry {player.GetModifiedSpecLevel(Specs.Parry)}); window {Window(player, eActionDefense.Parry)} ms; a miss in combat costs {MissedDefenseCost(player, eActionDefense.Parry)} endurance.");
+			double chest = ArmorScore(player, eArmorSlot.TORSO);
+			(int pc, int pw) = ParryChainFor(player.GetModifiedSpecLevel(Specs.Parry));
+			sb.AppendLine($"Timed parry takes {ParryFactorFor(player.GetModifiedSpecLevel(Specs.Parry), chest) * 100:0}% of a blow on your chest (Parry {player.GetModifiedSpecLevel(Specs.Parry)}, armor {chest * 100:0}%); window {Window(player, eActionDefense.Parry)} ms; a miss in combat costs {MissedDefenseCost(player, eActionDefense.Parry)} endurance. Riposte {RiposteRank(player.GetModifiedSpecLevel(Specs.Parry))}: {pc} more for {pw} ms.");
 
 			if (HasShield(player))
-				sb.AppendLine($"Timed block takes {BlockFactor(player) * 100:0}% (Shields {player.GetModifiedSpecLevel(Specs.Shields)}); window {Window(player, eActionDefense.Block)} ms; a miss costs {MissedDefenseCost(player, eActionDefense.Block)}.");
+			{
+				(int bc, int bw) = BlockChainFor(player.GetModifiedSpecLevel(Specs.Shields), ShieldSize(player));
+				sb.AppendLine($"Timed block takes {BlockFactorFor(player.GetModifiedSpecLevel(Specs.Shields), chest) * 100:0}% (Shields {player.GetModifiedSpecLevel(Specs.Shields)}); window {Window(player, eActionDefense.Block)} ms; a miss costs {MissedDefenseCost(player, eActionDefense.Block)}. Then {bc} more for {bw} ms, {BlockChainArc(ShieldSize(player))} degrees round.");
+			}
 
-			sb.AppendLine($"Dodge avoids the whole blow (Evade {player.GetAbilityLevel(Abilities.Evade)}); window {Window(player, eActionDefense.Dodge)} ms; a miss costs {MissedDefenseCost(player, eActionDefense.Dodge)}.");
+			(int ec, int ew) = EvadeChainFor(player.GetAbilityLevel(Abilities.Evade));
+			sb.AppendLine($"Dodge avoids the whole blow (Evade {player.GetAbilityLevel(Abilities.Evade)}); window {Window(player, eActionDefense.Dodge)} ms; a miss costs {MissedDefenseCost(player, eActionDefense.Dodge)}. Then {ec} more for {ew} ms.");
 			sb.Append($"After a press, {ParryCooldownMs} ms past its window before the next - at once after one that caught a blow.");
 			return sb.ToString();
 		}

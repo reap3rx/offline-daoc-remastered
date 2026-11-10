@@ -93,6 +93,16 @@ namespace DOL.GS
             if (_quickSwing || powerAttack)
                 _effectiveness *= ActionCombat.QuickDamageFor(ActionCombat.SinceLastSwing(_playerOwner), ActionCombat.FullSwingMs(_playerOwner));
 
+            // ... and a plain swing before the whole swing time tires you (owner 2026-11-09: fast swings with procs and
+            // damage adds were too strong) - the most at its soonest, nothing at the whole swing time.
+            if (_quickSwing)
+            {
+                int cost = ActionCombat.QuickSwingCost(_playerOwner);
+
+                if (cost > 0)
+                    _playerOwner.ChangeEndurance(_playerOwner, eEnduranceChangeType.Spell, -System.Math.Min(cost, _playerOwner.Endurance));
+            }
+
             return base.PrepareMeleeAttack();
         }
 

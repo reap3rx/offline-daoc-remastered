@@ -66,23 +66,70 @@ public sealed class UT_ActionCombat
     }
 
     [Test]
-    public void ParrySpecReducesWhatGetsThrough()
+    public void ParryAndBlockSaveMoreWithSpecAndArmor()
     {
-        Assert.That(ActionCombat.ParryFactorForSpec(0), Is.EqualTo(0.8).Within(1e-9));
-        Assert.That(ActionCombat.ParryFactorForSpec(1), Is.EqualTo(0.6).Within(1e-9));
-        Assert.That(ActionCombat.ParryFactorForSpec(50), Is.EqualTo(0.2).Within(1e-9));
-        Assert.That(ActionCombat.ParryFactorForSpec(25), Is.LessThan(ActionCombat.ParryFactorForSpec(10)));
-        Assert.That(ActionCombat.ParryFactorForSpec(80), Is.EqualTo(0.15).Within(1e-9));
+        // owner 2026-11-09: at spec 50, block 85% (cloth) - 95% (buffed plate), parry 70% - 85%; never all of it
+        double cloth = ActionCombat.ArmorScoreFor(51, 0.0, 50);
+        double leather = ActionCombat.ArmorScoreFor(102, 0.10, 50);
+        double plate = ActionCombat.ArmorScoreFor(102, 0.34, 50);
+        double buffedPlate = ActionCombat.ArmorScoreFor(130, 0.34, 50);
+        Assert.That(buffedPlate, Is.EqualTo(1.0).Within(1e-9));
+        Assert.That(cloth, Is.LessThan(leather));
+        Assert.That(leather, Is.LessThan(plate));
+        Assert.That(1 - ActionCombat.BlockFactorFor(50, buffedPlate), Is.EqualTo(0.95).Within(0.002));
+        Assert.That(1 - ActionCombat.BlockFactorFor(50, cloth), Is.EqualTo(0.85).Within(0.01));
+        Assert.That(1 - ActionCombat.BlockFactorFor(50, leather), Is.EqualTo(0.905).Within(0.01));
+        Assert.That(1 - ActionCombat.ParryFactorFor(50, buffedPlate), Is.EqualTo(0.85).Within(0.002));
+        Assert.That(1 - ActionCombat.ParryFactorFor(50, cloth), Is.EqualTo(0.70).Within(0.01));
+        Assert.That(ActionCombat.ParryFactorFor(0, plate), Is.EqualTo(0.8).Within(1e-9));
+        Assert.That(ActionCombat.BlockFactorFor(0, plate), Is.EqualTo(0.5).Within(1e-9));
+        Assert.That(ActionCombat.BlockFactorFor(80, 1.0), Is.GreaterThan(0.0), "never all of it");
+
+        for (int spec = 0; spec <= 60; spec += 5)
+        {
+            foreach (double armor in new[] { 0.0, cloth, leather, plate, 1.0 })
+            {
+                Assert.That(ActionCombat.BlockFactorFor(spec, armor), Is.LessThan(ActionCombat.ParryFactorFor(spec, armor)), "a block saves more than a parry");
+                Assert.That(ActionCombat.ParryFactorFor(spec + 5, armor), Is.LessThanOrEqualTo(ActionCombat.ParryFactorFor(spec, armor)));
+            }
+        }
     }
 
     [Test]
-    public void ShieldSpecReducesWhatGetsThrough()
+    public void ChainsGrowWithSkill()
     {
-        Assert.That(ActionCombat.BlockFactorForSpec(0), Is.EqualTo(0.5).Within(1e-9));
-        Assert.That(ActionCombat.BlockFactorForSpec(1), Is.EqualTo(0.4).Within(1e-9));
-        Assert.That(ActionCombat.BlockFactorForSpec(50), Is.EqualTo(0.1).Within(1e-9));
-        for (int spec = 0; spec <= 60; spec += 5)
-            Assert.That(ActionCombat.BlockFactorForSpec(spec), Is.LessThan(ActionCombat.ParryFactorForSpec(spec)), "a block saves more than a parry");
+        // owner 2026-11-09: Evade I 1 monster in 0.5 s .. Evade VII 7 in 2 s
+        Assert.That(ActionCombat.EvadeChainFor(0), Is.EqualTo((0, 0)));
+        Assert.That(ActionCombat.EvadeChainFor(1), Is.EqualTo((1, 500)));
+        Assert.That(ActionCombat.EvadeChainFor(7), Is.EqualTo((7, 2000)));
+        // Riposte 1 at Parry 7 (0.75 s) .. Riposte 7 at Parry 50 (3 s)
+        Assert.That(ActionCombat.RiposteRank(6), Is.EqualTo(0));
+        Assert.That(ActionCombat.RiposteRank(7), Is.EqualTo(1));
+        Assert.That(ActionCombat.RiposteRank(50), Is.EqualTo(7));
+        Assert.That(ActionCombat.ParryChainFor(6), Is.EqualTo((0, 0)));
+        Assert.That(ActionCombat.ParryChainFor(7), Is.EqualTo((1, 750)));
+        Assert.That(ActionCombat.ParryChainFor(50), Is.EqualTo((7, 3000)));
+        // Shields 1 (1 s) .. 50 (4 s): 8 / 9 / 10 with a small / medium / large shield at 50, the size alone at 1
+        Assert.That(ActionCombat.BlockChainFor(1, 1), Is.EqualTo((1, 1000)));
+        Assert.That(ActionCombat.BlockChainFor(1, 3), Is.EqualTo((3, 1000)));
+        Assert.That(ActionCombat.BlockChainFor(50, 1), Is.EqualTo((8, 4000)));
+        Assert.That(ActionCombat.BlockChainFor(50, 2), Is.EqualTo((9, 4000)));
+        Assert.That(ActionCombat.BlockChainFor(50, 3), Is.EqualTo((10, 4000)));
+        Assert.That(ActionCombat.BlockChainArc(1), Is.EqualTo(180));
+        Assert.That(ActionCombat.BlockChainArc(2), Is.EqualTo(270));
+        Assert.That(ActionCombat.BlockChainArc(3), Is.EqualTo(360));
+    }
+
+    [Test]
+    public void EarlySwingsCostEndurance()
+    {
+        // owner 2026-11-09: 15% of max endurance at the soonest swing, falling to nothing at the whole swing time
+        int full = 3000;
+        int soon = ActionCombat.QuickMinMs(full);
+        Assert.That(ActionCombat.QuickSwingEnduranceShare(soon, full), Is.EqualTo(0.15).Within(1e-9));
+        Assert.That(ActionCombat.QuickSwingEnduranceShare(full, full), Is.EqualTo(0.0));
+        Assert.That(ActionCombat.QuickSwingEnduranceShare(9000, full), Is.EqualTo(0.0));
+        Assert.That(ActionCombat.QuickSwingEnduranceShare((soon + full) / 2, full), Is.EqualTo(0.075).Within(0.001));
     }
 
     [Test]

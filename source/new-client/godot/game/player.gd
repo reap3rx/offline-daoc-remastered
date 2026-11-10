@@ -545,6 +545,14 @@ func action_defend(kind: String) -> void:
 	_defend_slow_left = clip_seconds(clip)
 
 
+## A chain's auto-defense (ActionCombat: another monster's blow turned aside after a timed one - owner 2026-11-09):
+## the parry / block / evade plays again, unless a swing (or anything but a defense) is playing - the attack wins.
+func action_defend_auto(kind: String) -> void:
+	if _action_left > 0.0 and _action != _defend_clip:
+		return
+	action_defend(kind)
+
+
 ## A fully charged heavy attack: the drawn weapon glows gold (the client's own weapon effects - spweapons.csv's
 ## gold glows, by the weapon's stance) until the blow goes.
 const CHARGE_GLOW_SCALE := 0.6

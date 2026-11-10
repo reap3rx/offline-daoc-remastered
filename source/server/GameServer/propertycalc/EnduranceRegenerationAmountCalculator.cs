@@ -40,6 +40,12 @@ namespace DOL.GS.PropertyCalc
             bool playerRules = living is GamePlayer || living is GameBot;
             if (playerRules)
             {
+                // Everyone's half Tireless from level 1 (owner 2026-11-09: "not having access to in-combat endurance
+                // regen is brutal for long fights"): the realm ability's 1 a tick, every other tick (seconds on the
+                // game clock). The realm ability still adds its whole 1 on top.
+                if ((GameLoop.GameLoopTime / 1000) % 2 == 0)
+                    regen += 1;
+
                 regen += ClassicRestRegeneration.BaseEndurancePerTick(living.IsSitting, living.InCombat, living.IsMoving);
                 // out of combat: GW2-style, full in seconds (ClassicRestRegeneration) - walking too, not sprinting
                 regen = Math.Max(regen, ClassicRestRegeneration.OutOfCombatEnduranceFloor(living.InCombat,

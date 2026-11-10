@@ -251,8 +251,11 @@ namespace DOL.GS
             {
                 _struckFromWindup = false;
 
+                // ... and not a metronome (owner 2026-11-09: blocks and dodges were easy to time by rhythm alone): each
+                // blow comes 0.7 - 1.3 x the monster's swing time after the last, the same on average (its damage per
+                // second unchanged). The wind-up before each blow still shows.
                 if (attacked)
-                    _interval = Math.Max(500, _interval - ActionCombat.WindupMs);
+                    _interval = Math.Max(500, (int) (_interval * (0.7 + 0.6 * Util.RandomDouble())) - ActionCombat.WindupMs);
             }
 
             return attacked;

@@ -39,6 +39,7 @@ namespace DOL.GS
         public eActionDefense ActionDefense { get; set; }
         public double ActionDamageFactor { get; set; } = 1.0;
         public int ActionMitigated { get; set; }      // what that answer kept off you
+        public bool ActionAuto { get; set; }          // ... and it was a chain's auto-defense, not a press (ActionCombat chains)
         public bool IsActionPartialDefense => ActionDefense is eActionDefense.Parry or eActionDefense.Block &&
             AttackResult is eAttackResult.Parried or eAttackResult.Blocked;
         // Temporary property set by `AttackComponent.BroadcastAttackMessageToOtherPlayers`.

@@ -181,7 +181,10 @@ func on_line(text: String) -> void:
 				_windup(int(f[1]), int(f[2]))
 		"def":
 			if f.size() > 2:
-				_defended(String(f[1]), int(f[2]), int(f[3]) if f.size() > 3 else 0)
+				_defended(String(f[1]), int(f[2]), int(f[3]) if f.size() > 3 else 0, f.size() > 4 and f[4] == "auto")
+		"riposte":                                       # riposte|oid|damage: a parry struck back (ActionCombat.Riposte)
+			if f.size() > 2:
+				_float_text(int(f[1]), "RIPOSTE", Color(1.0, 0.85, 0.35), 34, 0.6)
 		"fct":                                           # damage: fct|oid (0 = you)|amount|critical|out / pet / in
 			if f.size() > 4:
 				_damage_text(int(f[1]), int(f[2]), f[3] == "1", String(f[4]))
@@ -325,9 +328,25 @@ func _blocks() -> bool:
 	return _has_shield() and _win_block > 0
 
 
-func _defended(kind: String, dmg: int, saved: int) -> void:
+## auto: a blow a chain turned aside (another monster's, in the moments after a timed dodge / parry / block - owner
+## 2026-11-09): the move plays again unless a blow of yours is in the way, and the text says so.
+func _defended(kind: String, dmg: int, saved: int, auto := false) -> void:
 	var gold := Color(1.0, 0.85, 0.35)
 	var blue := Color(0.55, 0.8, 1.0)
+	if auto:
+		var p := _player()
+		if p and kind in ["parry", "block", "dodge"]:
+			p.action_defend_auto("evade" if kind == "dodge" else kind)
+		match kind:
+			"parry":
+				_float_text(0, "RIPOSTE  %d saved" % saved if saved > 0 else "RIPOSTE", gold, 40, 0.5)
+			"block":
+				_float_text(0, "SHIELD  %d saved" % saved if saved > 0 else "SHIELD", blue, 40, 0.5)
+			"dodge":
+				_float_text(0, "SLIPPED", Color(0.55, 1.0, 0.6), 40, 0.5)
+		var t := Time.get_ticks_msec()
+		_windups = _windups.filter(func(w): return int(w.end) > t + 120)   # that blow is answered
+		return
 	if kind in ["parry", "block"]:
 		_parry_ready_at = 0                                # (a caught blow: the next press is free to come at once)
 	elif kind == "dodge":

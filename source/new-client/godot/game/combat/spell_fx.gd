@@ -560,15 +560,31 @@ static func fire(client_effect: int, handles: Array, caster: Node3D, snd: Charac
 			var to := aim_point(target)
 			bolt.global_position = from
 			bolt.look_at(to, Vector3.UP, true) if from.distance_to(to) > 0.01 else null
-			var secs := from.distance_to(to) / BOLT_SPEED_M
 			FxLight.attach(bolt, 2.5, 7.0)                 # a bolt lights the ground it flies over
 			Extras.trail(bolt, FxLight.color_of(bolt))     # ... and draws a ribbon behind it (remastered)
 			sound(snd, int(e.get("sound_set", 0)), "travel")
-			var tw := bolt.create_tween()
-			tw.tween_property(bolt, "global_position", to, secs)
-			tw.tween_callback(func():
+			# it homes in: each frame it flies at BOLT_SPEED_M toward where the target is now, not where it was when
+			# the bolt left (owner 2026-11-09: bolts flew to where the target had been - "supposed to hone in")
+			var tree := caster.get_tree()
+			var until := Time.get_ticks_msec() + 6000      # (a target that outruns it, or a stuck frame: it lands anyway)
+			while is_instance_valid(bolt) and Time.get_ticks_msec() < until:
+				await tree.process_frame
+				if not is_instance_valid(bolt):
+					break
+				if is_instance_valid(target) and target.is_inside_tree():
+					to = aim_point(target)
+				var step := BOLT_SPEED_M * bolt.get_process_delta_time()
+				var gap := to - bolt.global_position
+				if gap.length() <= step:
+					bolt.global_position = to
+					break
+				bolt.global_position += gap.normalized() * step
+				if gap.length() > 0.05:
+					bolt.look_at(to, Vector3.UP, true)
+			if is_instance_valid(bolt):
 				release(bolt)
-				if then.is_valid(): then.call())
+			if then.is_valid():
+				then.call()
 			return
 	if then.is_valid():
 		then.call()
