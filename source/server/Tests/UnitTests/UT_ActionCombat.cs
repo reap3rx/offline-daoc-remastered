@@ -46,6 +46,31 @@ public sealed class UT_ActionCombat
     }
 
     [Test]
+    public void LightSwingsDontHoldBackAPositional()
+    {
+        // a 3.6 s weapon; a positional 10 s ago, a light swing 0.5 s ago: ready now
+        Assert.That(ActionCombat.StyleClockReady("position", 20000, 19500, 10000, 10000, 3600, 3600), Is.True);
+        // the swing only just went: a moment for it to finish
+        Assert.That(ActionCombat.StyleClockReady("position", 20000, 19800, 10000, 10000, 3600, 3600), Is.False);
+        // a positional 2 s ago: its own reuse clock (the whole swing time) is still running
+        Assert.That(ActionCombat.StyleClockReady("position", 20000, 18000, 18000, 18000, 3600, 3600), Is.False);
+        Assert.That(ActionCombat.StyleClockReady("position", 21600, 18000, 18000, 18000, 3600, 3600), Is.True);
+    }
+
+    [Test]
+    public void ChainsFollowTheirStyleByWeaponSpeed()
+    {
+        // a dagger (2.0 s): 0.75 s after the opening style; a light swing between doesn't reset it
+        Assert.That(ActionCombat.StyleClockReady("chain", 10750, 10200, 10000, 0, 2000, 2000), Is.True);
+        Assert.That(ActionCombat.StyleClockReady("chain", 10700, 10000, 10000, 0, 2000, 2000), Is.False);
+        // a great sword (5.5 s): 1.75 s
+        Assert.That(ActionCombat.StyleClockReady("chain", 11700, 10000, 10000, 0, 5500, 5500), Is.False);
+        Assert.That(ActionCombat.StyleClockReady("chain", 11750, 10000, 10000, 0, 5500, 5500), Is.True);
+        // quickness / haste that sped the weapon up since count too
+        Assert.That(ActionCombat.ChainSoonestMs(5500, 3750), Is.EqualTo(1250));
+    }
+
+    [Test]
     public void PowerAttackAboutASecondAfterTheLastBlow()
     {
         Assert.That(ActionCombat.AnytimeSoonestMs(2600), Is.EqualTo(1000));    // a sword: 1 s

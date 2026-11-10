@@ -87,6 +87,9 @@ namespace DOL.GS
 		public AttackData SpentOwnOpening;
 		// The last style's blow (WeaponAction): chains follow it, plain swings don't count (owner 2026-11-10).
 		public AttackData LastStyleData;
+		public long LastStyleAt = -100000;      // when it went
+		public int LastStyleFullMs = 1;         // the weapon's whole swing time then
+		public long LastPositionalAt = -100000; // when your last positional style went (its own reuse clock)
 		public long FumbledUntil;
 		public long LastSwingAt = -100000;     // when your last blow (or whiff) went
 		public int LastSwingFullMs = 1;         // that weapon's whole swing time then (full damage, styles ready)
@@ -505,14 +508,67 @@ namespace DOL.GS
 			player.attackComponent.attackAction?.ExpediteMeleeTick();   // it goes now - nothing waits
 		}
 
-		/// <summary>A style of this kind could go now: the weapon recovered (a reactive answers its opening at once).</summary>
-		public static bool StyleReady(GamePlayer player, string kind) => kind switch
+		/// <summary>
+		/// A style of this kind could go now (owner 2026-11-10: "light attacks should not interrupt or be tied into the
+		/// style use timing at all"):
+		///   reactive - at once when its opening comes;
+		///   position - at once when you are in position; its reuse clock starts only when a positional goes (the
+		///              weapon's whole swing time, quickness and haste in it);
+		///   chain    - the soonest a plain swing could follow the style it chains from (QuickMinMs: 0.75 s for the
+		///              quickest weapons to 1.75 s for the slowest, by the swing time now), counted from that style;
+		///   anytime  - as before, from the last blow.
+		/// Light swings in between don't hold a style back, beyond StyleAfterSwingMs for the swing to finish.
+		/// </summary>
+		public const int StyleAfterSwingMs = 450;
+
+		public static bool StyleReady(GamePlayer player, string kind)
 		{
-			"reactive" => GameLoop.GameLoopTime >= Get(player).FumbledUntil,
-			"anytime" => GameLoop.GameLoopTime >= Get(player).FumbledUntil
-				&& SinceLastSwing(player) >= AnytimeSoonestMs(Math.Min(Get(player).LastSwingFullMs, FullSwingMs(player))),
-			_ => Recovered(player)
+			ActionCombatState state = Get(player);
+			long now = GameLoop.GameLoopTime;
+
+			if (now < state.FumbledUntil)
+				return false;
+
+			if (kind == "anytime")
+				return SinceLastSwing(player) >= AnytimeSoonestMs(Math.Min(state.LastSwingFullMs, FullSwingMs(player)));
+
+			return StyleClockReady(kind, now, state.LastSwingAt, state.LastStyleAt, state.LastPositionalAt,
+				state.LastStyleFullMs, FullSwingMs(player));
+		}
+
+		/// <summary>The style clocks for a reactive, a positional or a chain (see StyleReady); fullMs the weapon's whole
+		/// swing time now, lastStyleFullMs the one when the last style went.</summary>
+		public static bool StyleClockReady(string kind, long now, long lastSwingAt, long lastStyleAt, long lastPositionalAt,
+			int lastStyleFullMs, int fullMs) => kind switch
+		{
+			"reactive" => true,
+			"position" => now - lastSwingAt >= StyleAfterSwingMs && now - lastPositionalAt >= fullMs,
+			"chain" => now - lastSwingAt >= StyleAfterSwingMs && now - lastStyleAt >= ChainSoonestMs(lastStyleFullMs, fullMs),
+			_ => now - lastSwingAt >= fullMs
 		};
+
+		/// <summary>How soon a chain may follow the style before it: by the weapon's swing time (speed, quickness, haste).</summary>
+		public static int ChainSoonestMs(int lastStyleFullMs, int fullMs) => QuickMinMs(Math.Min(lastStyleFullMs, fullMs));
+
+		/// <summary>A style's blow went (WeaponAction): the chains follow it, a positional starts its reuse clock.</summary>
+		public static void MarkStyle(GamePlayer player, AttackData attackData)
+		{
+			ActionCombatState state = Get(player);
+			state.LastStyleData = attackData;
+			state.LastStyleAt = GameLoop.GameLoopTime;
+			state.LastStyleFullMs = FullSwingMs(player);
+
+			if (attackData.Style != null && KindOf(attackData.Style) == "position")
+				state.LastPositionalAt = GameLoop.GameLoopTime;
+		}
+
+		/// <summary>The style a chain on this target follows: none if the last style was on someone else (owner
+		/// 2026-11-10: "sometimes the chain style will be available on the next mob without having done the first style").</summary>
+		public static AttackData ChainOpening(GamePlayer player, GameLiving target)
+		{
+			AttackData last = Get(player).LastStyleData;
+			return last != null && last.Target == target ? last : null;
+		}
 
 		public static Style Resolve(GamePlayer player, string kind)
 		{

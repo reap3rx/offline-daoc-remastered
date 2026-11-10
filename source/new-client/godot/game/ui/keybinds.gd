@@ -26,6 +26,7 @@ var path := PATH                        # the shared file, or this character's o
 var character_specific := false
 var _character := {}
 var _held := {}                         # id -> [parsed binding dict]
+var pad_held := {}                      # id -> true while a gamepad button stands in for it (Pad: jump, shots)
 
 const NAMES := {"Esc": KEY_ESCAPE, "Tab": KEY_TAB, "Space": KEY_SPACE, "Enter": KEY_ENTER, "Backspace": KEY_BACKSPACE,
 	"Up": KEY_UP, "Down": KEY_DOWN, "Left": KEY_LEFT, "Right": KEY_RIGHT, "Home": KEY_HOME, "End": KEY_END,
@@ -320,6 +321,8 @@ func held_unshared(id: String, others: Array) -> bool:
 
 ## Held: is any binding of the action down now? Extra modifiers don't break it (Shift walk while moving forward).
 func held(id: String) -> bool:
+	if pad_held.get(id, false):
+		return true
 	for d in _held.get(id, []):
 		var down := false
 		if d.mouse != 0:

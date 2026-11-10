@@ -49,6 +49,7 @@ PlayerData="*res://game/ui/player_data.gd"
 Perf="*res://game/perf_governor.gd"
 WorldLink="*res://game/world_host/world_link.gd"
 Server="*res://game/net/server.gd"
+Pad="*res://game/input/pad.gd"
 
 [dotnet]
 

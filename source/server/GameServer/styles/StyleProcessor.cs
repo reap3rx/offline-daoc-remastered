@@ -33,7 +33,7 @@ namespace DOL.GS.Styles
 			// style in between breaks it.
 			if (style.OpeningRequirementType is Style.eOpening.Offensive && style.OpeningRequirementValue != 0 &&
 				living is GamePlayer acPlayer && ActionCombat.IsActive(acPlayer))
-				lastAttackData = ActionCombat.Get(acPlayer).LastStyleData;
+				lastAttackData = ActionCombat.ChainOpening(acPlayer, target);
 
 			// Required attack result.
 			eAttackResult requiredAttackResult = eAttackResult.Any;

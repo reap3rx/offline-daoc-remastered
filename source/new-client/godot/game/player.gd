@@ -123,6 +123,7 @@ const STICK_GAP_M := 1.4
 const TRACK_START_M := 1000 * 0.025     # "unless you are relatively close to them"
 const STICK_BREAK_M := 1500 * 0.025
 var walking := false
+var _pad_walk := false                 # a gamepad stick pushed only part way: the legs walk (Pad)
 var force_clip := ""                   # tests: hold one animation regardless of movement
 var movement_mode := "modern"          # "modern" or "classic" (Esc menu)
 var input_enabled := true              # false while a menu is open
@@ -1281,6 +1282,16 @@ func _unhandled_input(event: InputEvent) -> void:
 			autorun = false
 
 
+## A gamepad's right stick (Pad): the action camera looks as the mouse moves it (yaw / pitch in radians this frame).
+func pad_look(dyaw: float, dpitch: float) -> void:
+	if not (action_mode and not action_cursor and not dead and input_enabled):
+		return
+	cam_yaw -= dyaw
+	cam_pitch = clampf(cam_pitch - dpitch * (-1.0 if invert_mouse else 1.0), -CAM_PITCH, CAM_PITCH)
+	if _faces_camera() and not sitting and is_nan(_lock_yaw()):
+		char_yaw = cam_yaw                              # weapon out: you face where you look
+
+
 func _unshifted(event: InputEventKey) -> InputEventKey:
 	var e := event.duplicate() as InputEventKey
 	e.shift_pressed = false
@@ -1437,6 +1448,27 @@ func _physics_step(delta: float) -> void:
 				- (1.0 if Keybinds.held_unshared("strafe_left", AC_BUTTONS) else 0.0)
 	strafe = clampf(strafe, -1.0, 1.0)
 	var ahead := (1.0 if fwd else 0.0) - (1.0 if back else 0.0)
+	# a gamepad's left stick (Pad, owner 2026-11-10: "variable speed based on how much you push the stick forward"):
+	# it steers as the keys do, and how far it is pushed is the pace - a short push walks, a full one runs
+	var analog := 1.0
+	_pad_walk = false
+	if action_mode and input_enabled and not dead and not _ui_typing() and strafe == 0.0 and (ahead == 0.0 or autorun) \
+			and not (rmb and lmb):
+		var mv: Vector2 = Pad.move_vector()
+		if mv != Vector2.ZERO:
+			autorun = false
+			if track_mode != "":
+				stop_track()
+			var n := mv.normalized()
+			if absf(n.x) < 0.2:
+				n.x = 0.0                                    # (nearly straight is straight: no lean for a wobble)
+			if absf(n.y) < 0.2:
+				n.y = 0.0
+			n = n.normalized()
+			strafe = n.x
+			ahead = n.y
+			analog = maxf(0.12, mv.length())
+			_pad_walk = analog * RUN_SPEED <= WALK_SPEED * 1.15
 
 	if flying:
 		_fly(delta, ahead, strafe, turn)
@@ -1484,7 +1516,7 @@ func _physics_step(delta: float) -> void:
 	elif walking or (_key(KEY_SHIFT) and not action_mode):   # (action combat: Shift sprints - ActionCombatMode)
 		speed = WALK_SPEED
 	var wish := local.rotated(Vector3.UP, char_yaw) * speed * speed_mult * buff_speed * snare_mult * encumbrance * stealth_mult \
-			* _wounded_mult() * (0.5 if action_mode and _defend_slow_left > 0.0 else 1.0)
+			* _wounded_mult() * (0.5 if action_mode and _defend_slow_left > 0.0 else 1.0) * analog
 	if free_dir != Vector3.ZERO:
 		wish = free_dir * wish.length()                 # free look: straight where you steer while the body turns to it
 	_defend_slow_left = maxf(0.0, _defend_slow_left - delta)
@@ -1615,7 +1647,7 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 		elif classic and ahead == 0.0 and strafe != 0.0:
 			legs = "strafe_right" if strafe > 0.0 else "strafe_left"
 			legs_speed = _sync(legs, "strafe", speed)
-		elif speed == WALK_SPEED:
+		elif speed == WALK_SPEED or _pad_walk:
 			legs = "walk"
 			legs_speed = _sync("walk", "walk", speed)
 		else:
@@ -1672,7 +1704,7 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 		var clip := "strafe_right" if strafe > 0.0 else "strafe_left"
 		_play(clip, _sync(clip, "strafe", speed))
 	elif ahead >= 0.0 and (ahead > 0.0 or strafe != 0.0):
-		if speed == WALK_SPEED:
+		if speed == WALK_SPEED or _pad_walk:
 			_play("walk", _sync("walk", "walk", speed))
 		else:
 			_play("run", _sync("run", "run", speed))

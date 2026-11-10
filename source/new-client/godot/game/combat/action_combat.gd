@@ -127,6 +127,7 @@ func setup(v: Node) -> void:
 	hud.visible = false
 	_load_layout()
 	Server.client_cfg_changed.connect(_server_cfg)
+	Pad.attach(self, v)                                  # a gamepad plays action combat too (Pad)
 
 
 func _exit_tree() -> void:
@@ -602,6 +603,107 @@ func _input(event: InputEvent) -> void:
 			return
 
 
+# ---------------------------------------------------------------- a gamepad (Pad: the same moves as the keys and mouse)
+
+func pad_ready() -> bool:
+	var p := _player()
+	return on and p != null and Server.playing and p.input_enabled and not p.dead and not _typing() and not _editing \
+			and not p.action_cursor
+
+
+## RT: tap a swing, hold the power attack - a bow out: hold to draw, let go to loose.
+func pad_attack(down: bool) -> void:
+	if down and not pad_ready():
+		return
+	var now := Time.get_ticks_msec()
+	if _ranged():
+		_pad_shot("ac_shot", down, now)
+		return
+	if down:
+		_attack_down(now)
+	elif _atk_down:
+		_attack_up(now)
+
+
+## LT: parry / block (sheathed: the first press draws) - a bow out: the critical shot.
+func pad_defend(down: bool) -> void:
+	if down and not pad_ready():
+		return
+	var now := Time.get_ticks_msec()
+	if _ranged():
+		_pad_shot("ac_crit_shot", down, now)
+		return
+	if not down:
+		return
+	if not _drawn():
+		_draw_weapon()
+	elif _parry_ok(now):
+		Server.command("/ac parry")
+		_player().action_defend("block" if _blocks() else "parry")
+
+
+func _pad_shot(id: String, down: bool, now: int) -> void:
+	if down:
+		if now < _shot_ready_at:
+			_draw_pending = id
+		else:
+			_start_draw(id)
+	elif _drawing and _draw_button == id:
+		_loose()
+	elif _draw_pending == id:
+		_draw_pending = ""
+
+
+## X: the style that is lit - a reaction first (its opening passes quickly), then a chain, then a positional; with the
+## weapon away a positional (the server draws it if it goes).
+func pad_style() -> void:
+	if not pad_ready():
+		return
+	if not _drawn():
+		_soft_target()
+		Server.command("/ac style position")
+		return
+	var kinds := ["position", "reactive", "chain"]
+	for i in [1, 2, 0]:
+		if _ready.length() > i and _ready[i] == "1":
+			_soft_target()
+			Server.command("/ac style " + kinds[i])
+			return
+
+
+func pad_dodge(dir: Vector3) -> void:
+	if not pad_ready():
+		return
+	if not _drawn():
+		_draw_weapon()
+	else:
+		_dodge(dir)
+
+
+func pad_interact() -> void:
+	if pad_ready():
+		_interact()
+
+
+## R3: lock on / off (a tap of the Lock On key).
+func pad_lock_tap() -> void:
+	if not pad_ready():
+		return
+	_lock_press()
+	_lock_release()
+
+
+func pad_lock_cycle(dir: int) -> void:
+	if pad_ready() and _locked():
+		_lock_cycle(dir)
+
+
+## A style kind's light ("position", "reactive", "chain", "anytime") - the controller bar shows them.
+func style_lit(kind: String) -> bool:
+	var i := ["position", "reactive", "chain", "anytime"].find(kind)
+	return i >= 0 and _ready.length() > i and _ready[i] == "1"
+
+
 func _drawn() -> bool:
 	return viewer != null and bool(viewer.get("_server_attack"))
 
@@ -1027,7 +1129,7 @@ func _ui_window_open() -> bool:
 
 func _hold_sprint(p: Player) -> void:
 	var want := on and p != null and Server.playing and p.input_enabled and not p.dead and not _typing() \
-			and Input.is_physical_key_pressed(KEY_SHIFT) and (_moving_keys() or p.autorun)
+			and ((Input.is_physical_key_pressed(KEY_SHIFT) and (_moving_keys() or p.autorun)) or (Pad.sprint and Pad.moving()))
 	if want == _sprint_held:
 		return
 	_sprint_held = want
