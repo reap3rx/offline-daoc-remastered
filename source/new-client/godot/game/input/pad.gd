@@ -202,6 +202,47 @@ func inputs_of(action: String) -> Array:
 	return out
 
 
+## Why a controller input can't hold a skill ("" when it can): a button bound to anything but a quickbar slot is a core
+## button (owner 2026-11-10: "not let the player place skills ... onto core buttons"); holds, triggers, the bumpers on
+## their own, the sticks' clicks and View / Menu are never slots.
+func slot_refusal(input: String) -> String:
+	if input.ends_with(":hold") or input in ["lt", "rt", "lb", "rb", "l3", "r3", "view", "menu"] \
+			or input.ends_with("+l3") or input.ends_with("+r3"):
+		return "%s CAN'T HOLD A SKILL - USE THE D-PAD OR A FACE BUTTON, WITH LB / RB FOR MORE." % describe(input)
+	var act := String(bindings.get(input, ""))
+	if act != "" and not act.begins_with("qb"):
+		return "%s IS FOR %s - PICK ANOTHER (OR REBIND IT IN THE CONTROLLER OPTIONS)." % [describe(input),
+				String(action_info(act)[1]).to_upper()]
+	var hold := String(bindings.get(input + ":hold", ""))
+	if act == "" and hold != "":
+		return "%s IS FOR %s WHEN HELD - PICK ANOTHER." % [describe(input), String(action_info(hold)[1]).to_upper()]
+	return ""
+
+
+## The quickbar (bar, slot) an input's skill goes in: the slot it is bound to, or - allocate - the first quickbar slot
+## no controller button uses yet, its own slot empty (bar 3 first: the keyboard's bars stay as they are), bound to it.
+func slot_for_input(input: String, allocate := false) -> Vector2i:
+	var act := String(bindings.get(input, ""))
+	if act.begins_with("qb"):
+		var f := act.trim_prefix("qb").split("_")
+		return Vector2i(int(f[0]) - 1, int(f[1]) - 1)
+	if not allocate:
+		return Vector2i(-1, -1)
+	var used := {}
+	for k in bindings:
+		used[bindings[k]] = true
+	for b in [2, 1, 0]:
+		for sl in 10:
+			var id := "qb%d_%d" % [b + 1, sl + 1]
+			if used.has(id):
+				continue
+			if not (PlayerData.quickbars[b][PlayerData.quickbar_bank[b]][sl] as Dictionary).is_empty():
+				continue
+			bind(input, id)
+			return Vector2i(b, sl)
+	return Vector2i(-1, -1)
+
+
 ## "rb+x:hold" -> "HOLD RB + X".
 static func describe(input: String) -> String:
 	var hold := input.ends_with(":hold")
@@ -725,7 +766,8 @@ func _usable(c: Control) -> bool:
 			or c is ScrollContainer or c is ScrollBar:
 		return false
 	var s := c.size * c.get_global_transform_with_canvas().get_scale()
-	if s.x < 6.0 or s.y < 6.0 or s.x > 520.0 or s.y > 260.0:
+	var wide := 1400.0 if c is BaseButton else 520.0         # (a button the width of its page still counts)
+	if s.x < 6.0 or s.y < 6.0 or s.x > wide or s.y > 260.0:
 		return false
 	return c is BaseButton or c is LineEdit or c is Slider or c is ItemList or c.has_method("pad_actions") \
 			or _scripted(c, "_get_drag_data") or _scripted(c, "_gui_input") or c.tooltip_text != ""

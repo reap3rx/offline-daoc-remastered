@@ -17,6 +17,7 @@ const HEAD_H := 30.0
 const PAD := 8.0
 const COL1 := Vector2(NAV_W + 12.0, 196.0)       # x, width: the backpack / specializations column
 const COL2 := Vector2(NAV_W + 216.0, 286.0)      # the doll / training column
+const PadAssignScript := preload("res://game/input/pad_assign.gd")
 const COL3 := Vector2(NAV_W + 512.0, 206.0)      # the stats / spellbook column
 const ModernBags := preload("res://game/ui/modern_bags.gd")
 const PAGES := [["equipment", "EQUIPMENT", 0], ["skills", "SKILLS", 0], ["spec", "Specialization", 1], ["realm", "Realm Skills", 1]]
@@ -470,6 +471,7 @@ func _build_skills() -> void:
 	acs.tooltip_text = "Pick which style each action-combat move fires"
 	acs.pressed.connect(func(): PlayerData.window_toggle.emit("ac_styles"))
 	bars.add_child(acs)
+
 	for b in 3:
 		var row := MirrorBar.new()
 		row.bar = b
@@ -498,9 +500,15 @@ func _build_skills() -> void:
 	var bk := _column(COL3.x, COL3.y, top, h, "")
 	_book_head = UiArt.label("", 10, UiArt.GOLD_HI)
 	_book_head.position = Vector2(6, 3)
-	_book_head.size = Vector2(COL3.y - 12, 14)
+	_book_head.size = Vector2(COL3.y - 140, 14)
 	_book_head.clip_text = true
 	bk.add_child(_book_head)
+	# the controller (owner 2026-11-10 - PadAssign): press its buttons for a slot, then pick the skill
+	var pad := UiArt.button("ASSIGN TO CONTROLLER", Vector2(124, 14), 7)
+	pad.position = Vector2(COL3.y - 128, 2)
+	pad.tooltip_text = "Press the controller buttons for a slot, then pick the skill to put there"
+	pad.pressed.connect(func(): PadAssignScript.start(ui))
+	bk.add_child(pad)
 	_book_sub = UiArt.label("", 8, UiArt.DIM)
 	_book_sub.position = Vector2(6, 17)
 	_book_sub.size = Vector2(COL3.y - 12, 12)
@@ -924,6 +932,16 @@ class BookRow extends Control:
 			return ItemTooltip.skill(data)
 		var l := UiArt.label(for_text, 9, UiArt.CREAM)
 		return l
+
+	## The pad's buttons on a spellbook line (Pad): A uses it, X tells what it is, Y puts it on a controller button.
+	func pad_actions() -> Array:
+		if not have or String(data.get("id", "")) == "":
+			return []
+		var hero = get_parent()
+		while hero and not (hero is ClassicWindow):
+			hero = hero.get_parent()
+		return [["a", "USE", func(): PlayerData.use_skill.emit(data)], ["x", "INFO", func(): PlayerData.skill_info.emit(data)],
+				["y", "ASSIGN", func(): PadAssignScript.start(hero.get("ui") if hero else null, data)]]
 
 	func _get_drag_data(_pos: Vector2) -> Variant:
 		if not have or String(data.get("id", "")) == "":

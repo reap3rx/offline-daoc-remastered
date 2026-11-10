@@ -60,14 +60,24 @@ public sealed class UT_ActionCombat
     [Test]
     public void ChainsFollowTheirStyleByWeaponSpeed()
     {
-        // a dagger (2.0 s): 0.75 s after the opening style; a light swing between doesn't reset it
-        Assert.That(ActionCombat.StyleClockReady("chain", 10750, 10200, 10000, 0, 2000, 2000), Is.True);
-        Assert.That(ActionCombat.StyleClockReady("chain", 10700, 10000, 10000, 0, 2000, 2000), Is.False);
-        // a great sword (5.5 s): 1.75 s
-        Assert.That(ActionCombat.StyleClockReady("chain", 11700, 10000, 10000, 0, 5500, 5500), Is.False);
-        Assert.That(ActionCombat.StyleClockReady("chain", 11750, 10000, 10000, 0, 5500, 5500), Is.True);
-        // quickness / haste that sped the weapon up since count too
-        Assert.That(ActionCombat.ChainSoonestMs(5500, 3750), Is.EqualTo(1250));
+        // the quickest (a 1.4 s swing): 1 s after the opening style; a light swing between doesn't reset it
+        Assert.That(ActionCombat.StyleClockReady("chain", 11000, 10500, 10000, 0, 1400, 1400), Is.True);
+        Assert.That(ActionCombat.StyleClockReady("chain", 10900, 10000, 10000, 0, 1400, 1400), Is.False);
+        // the slowest (a 6 s swing): 3 s
+        Assert.That(ActionCombat.StyleClockReady("chain", 12900, 10000, 10000, 0, 6000, 6000), Is.False);
+        Assert.That(ActionCombat.StyleClockReady("chain", 13000, 10000, 10000, 0, 6000, 6000), Is.True);
+        // Arthur: a 3.3 scimitar at 116 quickness, a 2.93 s swing - about 1.7 s
+        Assert.That(ActionCombat.StyleGapMs(2930), Is.InRange(1600, 1750));
+        Assert.That(ActionCombat.StyleGapMs(900), Is.EqualTo(1000));
+        Assert.That(ActionCombat.StyleGapMs(9000), Is.EqualTo(3000));
+    }
+
+    [Test]
+    public void APositionalWaitsOutTheStyleBeforeIt()
+    {
+        // a 2.93 s swing; a chain 1 s ago: the positional waits for the style gap too
+        Assert.That(ActionCombat.StyleClockReady("position", 20000, 19000, 19000, 0, 2930, 2930), Is.False);
+        Assert.That(ActionCombat.StyleClockReady("position", 20700, 19000, 19000, 0, 2930, 2930), Is.True);
     }
 
     [Test]

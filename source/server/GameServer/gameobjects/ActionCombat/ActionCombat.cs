@@ -514,8 +514,7 @@ namespace DOL.GS
 		///   reactive - at once when its opening comes;
 		///   position - at once when you are in position; its reuse clock starts only when a positional goes (the
 		///              weapon's whole swing time, quickness and haste in it);
-		///   chain    - the soonest a plain swing could follow the style it chains from (QuickMinMs: 0.75 s for the
-		///              quickest weapons to 1.75 s for the slowest, by the swing time now), counted from that style;
+		///   chain    - StyleGapMs after the style it chains from (1 s for the quickest to 3 s for the slowest);
 		///   anytime  - as before, from the last blow.
 		/// Light swings in between don't hold a style back, beyond StyleAfterSwingMs for the swing to finish.
 		/// </summary>
@@ -530,7 +529,8 @@ namespace DOL.GS
 				return false;
 
 			if (kind == "anytime")
-				return SinceLastSwing(player) >= AnytimeSoonestMs(Math.Min(state.LastSwingFullMs, FullSwingMs(player)));
+				return SinceLastSwing(player) >= AnytimeSoonestMs(Math.Min(state.LastSwingFullMs, FullSwingMs(player)))
+					&& now - state.LastStyleAt >= StyleGapMs(Math.Min(state.LastStyleFullMs, FullSwingMs(player)));
 
 			return StyleClockReady(kind, now, state.LastSwingAt, state.LastStyleAt, state.LastPositionalAt,
 				state.LastStyleFullMs, FullSwingMs(player));
@@ -542,13 +542,28 @@ namespace DOL.GS
 			int lastStyleFullMs, int fullMs) => kind switch
 		{
 			"reactive" => true,
-			"position" => now - lastSwingAt >= StyleAfterSwingMs && now - lastPositionalAt >= fullMs,
-			"chain" => now - lastSwingAt >= StyleAfterSwingMs && now - lastStyleAt >= ChainSoonestMs(lastStyleFullMs, fullMs),
+			"position" => now - lastSwingAt >= StyleAfterSwingMs && now - lastPositionalAt >= fullMs
+				&& now - lastStyleAt >= StyleGapMs(Math.Min(lastStyleFullMs, fullMs)),
+			"chain" => now - lastSwingAt >= StyleAfterSwingMs && now - lastStyleAt >= StyleGapMs(Math.Min(lastStyleFullMs, fullMs)),
 			_ => now - lastSwingAt >= fullMs
 		};
 
-		/// <summary>How soon a chain may follow the style before it: by the weapon's swing time (speed, quickness, haste).</summary>
-		public static int ChainSoonestMs(int lastStyleFullMs, int fullMs) => QuickMinMs(Math.Min(lastStyleFullMs, fullMs));
+		/// <summary>
+		/// How soon a style may follow the last style (a chain, a positional, the power attack - not a reaction), by the
+		/// weapon's swing time (its speed, quickness, haste): owner 2026-11-10, "the longest it should take for a chain
+		/// skill to become active is about 3 seconds ... with 40 quickness and a slow weapon", and Arthur's 1.0 s (a 3.3
+		/// scimitar at 116 quickness) about as quick as it should get - for top-end quickness and a fast weapon. A straight
+		/// line from StyleGapFastMs at a StyleGapFastSwingMs swing to StyleGapSlowMs at StyleGapSlowSwingMs, held at both
+		/// ends: a 2.9 s swing (Arthur) about 1.7 s.
+		/// </summary>
+		public const int StyleGapFastMs = 1000;
+		public const int StyleGapSlowMs = 3000;
+		public const int StyleGapFastSwingMs = 1400;    // a 2.2 dagger at about 250 quickness
+		public const int StyleGapSlowSwingMs = 6000;    // a 5.8 two-hander at 40 quickness
+
+		public static int StyleGapMs(int fullMs) =>
+			Math.Clamp(StyleGapFastMs + (int) ((long) (fullMs - StyleGapFastSwingMs) * (StyleGapSlowMs - StyleGapFastMs)
+				/ (StyleGapSlowSwingMs - StyleGapFastSwingMs)), StyleGapFastMs, StyleGapSlowMs);
 
 		/// <summary>A style's blow went (WeaponAction): the chains follow it, a positional starts its reuse clock.</summary>
 		public static void MarkStyle(GamePlayer player, AttackData attackData)
