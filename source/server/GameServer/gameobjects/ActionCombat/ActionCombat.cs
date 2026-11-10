@@ -24,7 +24,9 @@
  *   - Monsters fighting you wind up for WindupMs before their blow lands, and your client is told (a cue to
  *     time the parry on).
  *   - Swinging early tires you (owner 2026-11-09): in combat, a plain swing before the weapon's whole swing time costs
- *     endurance - QuickSwingMaxEnduranceShare of your maximum at its soonest, nothing at the whole swing time.
+ *     endurance - QuickSwingMaxEnduranceShare (5%) of your maximum at its soonest, nothing at the whole swing time;
+ *     with none left you still swing. Dual wielders' plain swings come round faster with Dual Wield / Celtic Dual /
+ *     Left Axe spec (PlainSwingMs).
  *   - Fighting several at once (owner 2026-11-09): a timed dodge / parry / block that catches a blow starts a chain -
  *     for a short window after it, blows from OTHER monsters are turned aside the same way, one per monster, as many
  *     monsters as the chain has charges: Evade I-VII 1-7 charges over 0.5-2 s; Riposte 1-7 (Parry 7, 14, 21, 29,
@@ -124,7 +126,7 @@ namespace DOL.GS
 
 		// ------------------------------------------------------------------ early swings tire you (owner 2026-11-09)
 
-		public const double QuickSwingMaxEnduranceShare = 0.15;
+		public const double QuickSwingMaxEnduranceShare = 0.05;   // (owner 2026-11-09: 15% was too much)
 
 		/// <summary>The share of maximum endurance a plain swing this long after the last blow costs: the most at its
 		/// soonest, falling evenly to nothing at the weapon's whole swing time.</summary>
@@ -141,13 +143,15 @@ namespace DOL.GS
 			return QuickSwingMaxEnduranceShare * (fullMs - elapsedMs) / (double) (fullMs - soonest);
 		}
 
-		/// <summary>What a plain swing now costs this player (0 out of combat or at the whole swing time).</summary>
+		/// <summary>What a plain swing now costs this player (0 out of combat or at the whole swing time). Never a reason
+		/// not to swing (owner 2026-11-09: "still able to do a basic swing even if their stamina is gone") - it takes
+		/// what endurance there is.</summary>
 		public static int QuickSwingCost(GamePlayer player)
 		{
 			if (!player.InCombat)
 				return 0;
 
-			double share = QuickSwingEnduranceShare(SinceLastSwing(player), FullSwingMs(player));
+			double share = QuickSwingEnduranceShare(SinceLastSwing(player), PlainSwingMs(player));
 			return share <= 0 ? 0 : (int) Math.Ceiling(player.MaxEndurance * share);
 		}
 
@@ -176,11 +180,20 @@ namespace DOL.GS
 		}
 
 		/// <summary>Riposte 1-7: 1-7 other monsters within 0.75-3 s of the parry.</summary>
-		public static (int Charges, int WindowMs) ParryChainFor(int parrySpec)
+		public static (int Charges, int WindowMs) ParryChainFor(int parrySpec) => ParryChainForRank(RiposteRank(parrySpec));
+
+		public static (int Charges, int WindowMs) ParryChainForRank(int rank)
 		{
-			int r = RiposteRank(parrySpec);
+			int r = Math.Clamp(rank, 0, 7);
 			return r == 0 ? (0, 0) : (r, 750 + (r - 1) * 375);
 		}
+
+		/// <summary>The Riposte ability's level (I-VII): trained with Parry at 7, 14, 21, 29, 36, 43 and 50 - the database's
+		/// SpecXAbility rows (db-changes 2026-11-09-riposte-ability.sql), so it shows in the trainer's preview and the
+		/// abilities list like any other (owner 2026-11-09).</summary>
+		public const string RiposteAbility = "Riposte";
+
+		public static int RiposteLevel(GamePlayer player) => player.GetAbilityLevel(RiposteAbility);
 
 		/// <summary>Shields 1-50: 0-7 other monsters, plus the shield's size (1 small, 2 medium, 3 large), within 1-4 s.</summary>
 		public static (int Charges, int WindowMs) BlockChainFor(int shieldSpec, int shieldSize)
@@ -208,7 +221,7 @@ namespace DOL.GS
 			{
 				eActionDefense.Dodge => EvadeChainFor(player.GetAbilityLevel(Abilities.Evade)),
 				eActionDefense.Block => BlockChainFor(player.GetModifiedSpecLevel(Specs.Shields), ShieldSize(player)),
-				eActionDefense.Parry => ParryChainFor(player.GetModifiedSpecLevel(Specs.Parry)),
+				eActionDefense.Parry => ParryChainForRank(RiposteLevel(player)),
 				_ => (0, 0)
 			};
 
@@ -254,7 +267,7 @@ namespace DOL.GS
 
 		private static void Riposte(GamePlayer player, GameLiving attacker)
 		{
-			if (attacker == null || RiposteRank(player.GetModifiedSpecLevel(Specs.Parry)) <= 0)
+			if (attacker == null || RiposteLevel(player) <= 0)
 				return;
 
 			new ECSGameTimer(player, _ =>
@@ -309,13 +322,39 @@ namespace DOL.GS
 		public static int FullSwingMs(GamePlayer player) =>
 			Math.Max(1, player.attackComponent.AttackSpeed(player.ActiveWeapon, player.ActiveLeftWeapon));
 
+		/// <summary>
+		/// A plain swing's whole time (full damage) with two weapons (owner 2026-11-09: "if you're trained high in any of
+		/// the dual wield skill lines, that basic swing timer should be faster and faster"): Dual Wield, Celtic Dual or
+		/// Left Axe at 50 bring it in by DualWieldQuickestShare. The off-hand still joins a share of swings by the classic
+		/// left-hand chance. Styles keep the whole swing time.
+		/// </summary>
+		public const double DualWieldQuickestShare = 0.25;
+
+		public static double DualWieldSwingFactor(int dualSpec) =>
+			1.0 - DualWieldQuickestShare * Math.Clamp(dualSpec, 0, 50) / 50.0;
+
+		public static int DualWieldSpec(GamePlayer player)
+		{
+			DbInventoryItem left = player.ActiveLeftWeapon;
+
+			if (left == null || (eObjectType) left.Object_Type is eObjectType.Shield || player.ActiveWeapon == null ||
+				!player.attackComponent.CanUseLefthandedWeapon || player.ActiveWeaponSlot is not eActiveWeaponSlot.Standard)
+				return 0;
+
+			return Math.Max(player.GetModifiedSpecLevel(Specs.Dual_Wield),
+				Math.Max(player.GetModifiedSpecLevel(Specs.Celtic_Dual), player.GetModifiedSpecLevel(Specs.Left_Axe)));
+		}
+
+		public static int PlainSwingMs(GamePlayer player) =>
+			Math.Max(1, (int) (FullSwingMs(player) * DualWieldSwingFactor(DualWieldSpec(player))));
+
 		public static long SinceLastSwing(GamePlayer player) => GameLoop.GameLoopTime - Get(player).LastSwingAt;
 
 		/// <summary>A plain swing could go now (its soonest time past, not stumbling).</summary>
 		public static bool SwingReady(GamePlayer player)
 		{
 			ActionCombatState state = Get(player);
-			return GameLoop.GameLoopTime >= state.FumbledUntil && SinceLastSwing(player) >= QuickMinMs(FullSwingMs(player));
+			return GameLoop.GameLoopTime >= state.FumbledUntil && SinceLastSwing(player) >= QuickMinMs(PlainSwingMs(player));
 		}
 
 		/// <summary>The weapon has recovered fully: a style could go now (not stumbling).</summary>
@@ -331,7 +370,8 @@ namespace DOL.GS
 			ActionCombatState state = Get(player);
 			state.LastSwingAt = GameLoop.GameLoopTime;
 			state.LastSwingFullMs = Math.Max(1, fullMs);
-			Send(player, $"timer|{state.LastSwingFullMs}|{QuickMinMs(state.LastSwingFullMs)}|{AnytimeSoonestMs(state.LastSwingFullMs)}");
+			int plain = Math.Max(1, (int) (state.LastSwingFullMs * DualWieldSwingFactor(DualWieldSpec(player))));   // (the plain swing's arc)
+			Send(player, $"timer|{plain}|{QuickMinMs(plain)}|{AnytimeSoonestMs(state.LastSwingFullMs)}");
 		}
 
 		public static bool IsActive(GameLiving living)
@@ -422,16 +462,6 @@ namespace DOL.GS
 			// Too soon after the last blow: nothing (no queue - press again when it can go).
 			if (!SwingReady(player))
 				return;
-
-			// Too tired for a swing this soon (owner 2026-11-09): wait for the weapon to come round (cheaper, then free).
-			int cost = QuickSwingCost(player);
-
-			if (cost > 0 && player.Endurance < cost)
-			{
-				player.Out.SendMessage("You are too tired to swing that fast!", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-				Send(player, "def|tired|0");
-				return;
-			}
 
 			if (!EnsureAttacking(player))
 				return;
@@ -1552,8 +1582,8 @@ namespace DOL.GS
 			StringBuilder sb = new();
 			sb.AppendLine($"Action combat is {(state.Enabled ? "ON" : "OFF")}.");
 			double chest = ArmorScore(player, eArmorSlot.TORSO);
-			(int pc, int pw) = ParryChainFor(player.GetModifiedSpecLevel(Specs.Parry));
-			sb.AppendLine($"Timed parry takes {ParryFactorFor(player.GetModifiedSpecLevel(Specs.Parry), chest) * 100:0}% of a blow on your chest (Parry {player.GetModifiedSpecLevel(Specs.Parry)}, armor {chest * 100:0}%); window {Window(player, eActionDefense.Parry)} ms; a miss in combat costs {MissedDefenseCost(player, eActionDefense.Parry)} endurance. Riposte {RiposteRank(player.GetModifiedSpecLevel(Specs.Parry))}: {pc} more for {pw} ms.");
+			(int pc, int pw) = ParryChainForRank(RiposteLevel(player));
+			sb.AppendLine($"Timed parry takes {ParryFactorFor(player.GetModifiedSpecLevel(Specs.Parry), chest) * 100:0}% of a blow on your chest (Parry {player.GetModifiedSpecLevel(Specs.Parry)}, armor {chest * 100:0}%); window {Window(player, eActionDefense.Parry)} ms; a miss in combat costs {MissedDefenseCost(player, eActionDefense.Parry)} endurance. Riposte {RiposteLevel(player)}: {pc} more for {pw} ms.");
 
 			if (HasShield(player))
 			{

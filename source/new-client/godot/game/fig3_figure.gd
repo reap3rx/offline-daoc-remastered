@@ -183,6 +183,7 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 			a.loop_mode = Animation.LOOP_LINEAR if loops(clip) else Animation.LOOP_NONE
 			if (loops(clip) or AnimStyle.group_of(clip) != "") and not a.has_meta("smooth"):
 				_use_smooth(prefix, clip, a, skels[0] if skels.size() > 0 else null)
+		_apply_held_twirls(skels[0] if skels.size() > 0 else null)
 		if skels.size() > 0:
 			_add_transitions(prefix, skels[0])
 		add_rest_reset(anim)
@@ -215,6 +216,65 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 const AnimStyle := preload("res://game/anim_style.gd")
 static var _smooth_cache := {}               # "prefix/clip" -> Animation
 static var _smooth_lock := Mutex.new()       # (figures are loaded on worker threads too)
+
+
+## The weapon twirls the Catacombs clips lost (owner 2026-11-09: Hibernian piercing styles "supposed to twirl the
+## dagger/rapier in like a 360 degree spin before thrusting ... bugged in the catacombs models even in the official
+## version"): the classic clip's Held-bone spin (pipeline/build_held_twirls.py -> held_twirls.json) laid over the
+## Catacombs grip - each key is the grip turned by the classic spin since its first key. Once per clip resource.
+static var _twirls = null
+
+
+func _apply_held_twirls(sk: Skeleton3D) -> void:
+	if _twirls == null:
+		var path := "res://content/characters/held_twirls.json"
+		var parsed = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
+		_twirls = parsed if parsed is Dictionary else {}
+	for clip: String in (_twirls as Dictionary):
+		if not anim.has_animation(clip):
+			continue
+		var a := anim.get_animation(clip)
+		if a.has_meta("twirl"):
+			continue
+		a.set_meta("twirl", true)
+		var bones: Dictionary = _twirls[clip]
+		# each bone's grip (its track at 0, or its rest when the clip keeps it still - often with no track at all), then a
+		# fresh track: the imported tracks are compressed and can't take new keys or be removed
+		var found := {}
+		var base := ""
+		for t in a.get_track_count():
+			if a.track_get_type(t) != Animation.TYPE_ROTATION_3D:
+				continue
+			var np := a.track_get_path(t)
+			base = String(np.get_concatenated_names())
+			if bones.has(String(np.get_concatenated_subnames())):
+				found[String(np.get_concatenated_subnames())] = t
+		if base == "":
+			continue
+		var grips := {}
+		for bone: String in bones:
+			if found.has(bone):
+				grips[bone] = a.rotation_track_interpolate(int(found[bone]), 0.0)
+			else:
+				var bi := sk.find_bone(bone) if sk else -1
+				if bi >= 0:
+					grips[bone] = sk.get_bone_rest(bi).basis.get_rotation_quaternion()
+		for t in found.values():
+			a.track_set_enabled(int(t), false)                # (compressed tracks can't be removed: switched off)
+		for bone: String in grips:
+			var d: Dictionary = bones[bone]
+			var ts: Array = d.get("t", [])
+			var qs: Array = d.get("q", [])
+			if ts.size() < 2 or qs.size() != ts.size():
+				continue
+			var grip: Quaternion = grips[bone]
+			var t := a.add_track(Animation.TYPE_ROTATION_3D)
+			a.track_set_path(t, NodePath(base + ":" + bone))
+			var q0 := Quaternion(float(qs[0][0]), float(qs[0][1]), float(qs[0][2]), float(qs[0][3])).normalized()
+			for n in ts.size():
+				var qn := Quaternion(float(qs[n][0]), float(qs[n][1]), float(qs[n][2]), float(qs[n][3])).normalized()
+				a.rotation_track_insert_key(t, minf(float(ts[n]), a.length), (grip * (q0.inverse() * qn)).normalized())
+			a.track_set_interpolation_type(t, Animation.INTERPOLATION_LINEAR)
 
 
 func _use_smooth(prefix: String, clip: String, a: Animation, sk: Skeleton3D) -> void:

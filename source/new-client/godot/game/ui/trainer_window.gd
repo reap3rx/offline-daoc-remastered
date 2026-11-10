@@ -222,6 +222,10 @@ func _preview_row(k: Dictionary, col: Color) -> Control:
 	var kind := String(PAGE_KIND.get(int(k.page), "skill"))
 	row.tooltip_text = "%s
 Level %d %s" % [name, int(k.level), kind]
+	if kind == "ability":                                  # what it does (owner 2026-11-09: Riposte's tooltip)
+		var about := ClassDb.ability_description_by_name(name)
+		if about != "":
+			row.tooltip_text += "\n\n" + _wrap(about, 60)
 	# the Magic tab's lookup: a spell / style / ability's icons.csv picture + its border
 	var pick: Array = Server.skill_icon({2: "style", 3: "spell", 4: "spell"}.get(int(k.page), "icon"), int(k.icon))
 	var ic := TextureRect.new()
@@ -287,3 +291,18 @@ func _realm_rows() -> void:
 			_selected = ""
 			refresh()))
 	_ra_points.text = str(Server.ra_points)
+
+
+## Breaks a long line at spaces so a tooltip stays narrow.
+static func _wrap(text: String, width: int) -> String:
+	var out := []
+	var line := ""
+	for w in text.split(" ", false):
+		if line != "" and line.length() + 1 + w.length() > width:
+			out.append(line)
+			line = w
+		else:
+			line = w if line == "" else line + " " + w
+	if line != "":
+		out.append(line)
+	return "\n".join(out)

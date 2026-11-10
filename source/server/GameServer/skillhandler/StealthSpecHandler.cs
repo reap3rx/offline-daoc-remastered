@@ -20,8 +20,13 @@ namespace DOL.GS.SkillHandler
 		{
 			bool isStealthed = player.IsStealthed;
 
-			// Can't stealth while in combat
-			if(player.InCombat && !isStealthed && player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
+			// Can't stealth while in combat - for less long the more Stealth you have (owner 2026-11-09: "the timer to
+			// re-enter stealth to reduce at higher stealth skills, and at 50 stealth, the ability to re-enter stealth even
+			// while in combat (as long as you pass the stealth checks)"): CombatLockoutMs after your last blow given or
+			// taken, the classic 10 s untrained, nothing at 50. The checks below (enemies too close) still apply.
+			int lockout = CombatLockoutMs(player.GetModifiedSpecLevel(Specs.Stealth));
+			bool inCombat = lockout > 0 && (player.InCombatInLast(lockout) || player.IsCrowdControlled);
+			if(inCombat && !isStealthed && player.Client.Account.PrivLevel == (int)ePrivLevel.Player)
 			{
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.Stealth.CannotUseInCombat"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
@@ -34,9 +39,10 @@ namespace DOL.GS.SkillHandler
 			}
 			long stealthChangeTick = player.TempProperties.GetProperty<long>(GamePlayer.STEALTH_CHANGE_TICK);
 			long changeTime = player.CurrentRegion.Time - stealthChangeTick;
-			if(changeTime < 2000)
+			int changeDelay = ChangeDelayMs(player.GetModifiedSpecLevel(Specs.Stealth));
+			if(changeTime < changeDelay)
 			{
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.Stealth.CannotUseStealthChangeTick", ((2000 - changeTime) / 1000).ToString()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.Stealth.CannotUseStealthChangeTick", Math.Max(1, (changeDelay - changeTime + 999) / 1000).ToString()), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return;
 			}
 			player.TempProperties.SetProperty(GamePlayer.STEALTH_CHANGE_TICK, player.CurrentRegion.Time);
@@ -50,12 +56,16 @@ namespace DOL.GS.SkillHandler
                     return;
 				}
 
-				// Can't stealth if in attack mode
-				if(player.attackComponent.AttackState || player.IsCasting)
+				// Can't stealth while casting
+				if(player.IsCasting)
 				{
                     player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.Stealth.CannotUseCombatState"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return;
 				}
+
+				// Weapons drawn no longer stop it (owner 2026-11-09: "I can't stealth if my weapons are drawn, which I
+				// would like changed"). Action Combat keeps them drawn: nothing swings until you click. Classic attack mode
+				// swings on its own, so it ends here (a swing would only bring you out again).
 
 				//TODO: more checks in this order
 
@@ -152,8 +162,20 @@ namespace DOL.GS.SkillHandler
 				}
 			}
 
+			if (!isStealthed && player.attackComponent.AttackState && !ActionCombat.IsActive(player))
+				player.attackComponent.StopAttack();
+
 			player.Stealth(!isStealthed);
 		}
+
+		/// <summary>How long after your last blow given or taken you can't hide: the classic 10 s untrained, less with each
+		/// point of Stealth, nothing at 50.</summary>
+		public static int CombatLockoutMs(int stealthSpec) =>
+			(int) (GameLiving.IN_COMBAT_DURATION * (1.0 - Math.Clamp(stealthSpec, 0, 50) / 50.0));
+
+		/// <summary>The least time between hiding and coming out (or the reverse): 2 s untrained, 0.5 s at Stealth 50.</summary>
+		public static int ChangeDelayMs(int stealthSpec) =>
+			2000 - (int) (1500 * Math.Clamp(stealthSpec, 0, 50) / 50.0);
 
 		/// <summary>
 		/// Checks whether object is too close to player

@@ -251,6 +251,30 @@ static func ability_name(key: String, lvl: int) -> String:
 	return n.replace("%n", ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"][clampi(lvl, 0, 10)]).strip_edges()
 
 
+## An ability's description by the name the server shows for it ("Riposte III", "Evade II Ability"): its name with the
+## level dropped matched against each ability's name (owner 2026-11-09: the trainer's preview tooltips). "" when none.
+static func ability_description_by_name(shown: String) -> String:
+	_load()
+	var want := _bare_name(shown)
+	for k in _abilities:
+		var a: Dictionary = _abilities[k]
+		var n := String(a.get("name", k))
+		if n.contains("|"):
+			continue
+		if _bare_name(n.replace("%n", "")) == want:
+			return String(a.get("description", ""))
+	return ""
+
+
+static func _bare_name(n: String) -> String:
+	var out := []
+	for w in n.split(" ", false):
+		if w in ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"] or w.is_valid_int():
+			continue
+		out.append(w.to_lower())
+	return " ".join(out)
+
+
 ## A class id by its name ("Guardian", "Blademaster"), or 0.
 static func by_name(name: String) -> int:
 	_load()

@@ -2112,14 +2112,8 @@ func handle_input(event: InputEvent) -> bool:
 		if Keybinds.pressed(event, "qbank_%d" % (bank + 1)):
 			quickbars[0].set_bank(bank)
 			return true
-	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE and modern:
-		for w in [hero, bags]:                             # the modern windows close first, the top one
-			if w != null and w.visible:
-				w.hide_window()
-				return true
-		if map_window and map_window.visible and map_window.wide:
-			map_window.hide_window()
-			return true
+	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE and _close_windows():
+		return true
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		# owner (checked in the client): Esc untargets. Open options close first; with nothing targeted, Esc opens them
 		if not options.visible and not PlayerData.target.is_empty() and clear_target.is_valid():
@@ -2129,6 +2123,31 @@ func handle_input(event: InputEvent) -> bool:
 		return true
 	return false
 
+
+
+## Esc closes every open window (owner 2026-11-09: "hitting ESC on my keyboard closed any open windows, like the hero
+## panel, bags, etc") - the ones you open and close: not the HUD (status, target, group, the corner map) nor the release
+## window. True when it closed something (the next Esc then untargets / opens the options as before). In Action
+## Combat the cursor goes back with them (ActionCombat's window watch: no window open, no cursor).
+const CLOSE_ON_ESC := ["hero", "bags", "journal", "info", "npc_dialog", "story_dialog", "trainer", "merchant",
+		"vault", "exchange", "options", "raid", "benefits", "siege", "emblem", "guild", "quiver", "poisons", "potions",
+		"ac_styles", "events", "warmap", "guide"]
+
+
+func _close_windows() -> bool:
+	var closed := false
+	for id in CLOSE_ON_ESC:
+		var w: ClassicWindow = windows.get(id)
+		if w != null and is_instance_valid(w) and w.visible:
+			w.hide_window()
+			closed = true
+	if right_panel and is_instance_valid(right_panel) and right_panel.visible and modern:
+		right_panel.hide_window()
+		closed = true
+	if map_window and map_window.visible and map_window.wide:
+		map_window.hide_window()
+		closed = true
+	return closed
 
 
 ## The modern style's band over the top of the sheet panel (its art paints the six orbs there; the menu bar is the

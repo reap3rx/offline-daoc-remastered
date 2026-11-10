@@ -565,10 +565,16 @@ func _input(event: InputEvent) -> void:
 	var kinds := ["position", "reactive", "chain"]
 	for i in kinds.size():
 		if Keybinds.pressed(event, "ac_" + kinds[i]):
-			# only when its light is on (its condition met) and the weapon is out: otherwise nothing at all
+			# only when its light is on (its condition met) and the weapon is out: otherwise nothing at all - except a
+			# positional with the weapon away (owner 2026-11-09: "use a positional style even if the weapons are not
+			# drawn (so it would auto-draw them if you can successfully execute the positional style)"): the server
+			# checks it (no lights while sheathed) and draws only if it goes
 			if _drawn() and _ready.length() > i and _ready[i] == "1":
 				_soft_target()
 				Server.command("/ac style " + kinds[i])
+			elif not _drawn() and kinds[i] == "position":
+				_soft_target()
+				Server.command("/ac style position")
 			get_viewport().set_input_as_handled()
 			return
 	if Keybinds.pressed(event, "ac_interact"):

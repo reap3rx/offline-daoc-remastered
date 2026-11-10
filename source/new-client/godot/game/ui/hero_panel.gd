@@ -29,6 +29,7 @@ var page := "equipment"
 var _sub := "spec"                                # the skills page's centre: "spec" / "realm"
 var _nav: Control
 var _title: Label
+var _who: Label
 var _body: Control
 var filter_slot := -1                             # the equipment slot picked (the backpack shows what fits it)
 var _cells: Array = []
@@ -56,13 +57,16 @@ func build() -> void:
 	crest.position = Vector2(6, 2)
 	crest.size = Vector2(28, 28)
 	add_child(crest)
-	var hero := UiArt.label("HERO", 14, UiArt.GOLD_HI)
-	hero.position = Vector2(40, 6)
-	hero.size = Vector2(70, 20)
-	add_child(hero)
-	_title = UiArt.label("", 9, UiArt.CREAM)
-	_title.position = Vector2(100, 10)
-	_title.size = Vector2(400, 14)
+	# who you are, where it said HERO (owner 2026-11-09: "<First name> <Last name>, the Level <level> <class>")
+	_who = UiArt.label("", 13, UiArt.GOLD_HI)
+	_who.position = Vector2(40, 7)
+	_who.size = Vector2(440, 20)
+	_who.clip_text = true
+	add_child(_who)
+	_title = UiArt.label("", 9, UiArt.CREAM)                # the page's name, right of it
+	_title.position = Vector2(SIZE.x - 34 - 330, 10)
+	_title.size = Vector2(330, 14)
+	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(_title)
 	var x := UiArt.button("X", Vector2(16, 14), 8)
 	x.position = Vector2(SIZE.x - 24, 7)
@@ -128,6 +132,7 @@ func show_page(p: String) -> void:
 
 func show_window() -> void:
 	super.show_window()
+	_refresh_who()
 	if page == "skills":
 		_ask_server()
 	_refresh_all()
@@ -320,6 +325,21 @@ func _refresh_bag() -> void:
 					else "NOTHING FOR %s" % (nm if nm != "" else "MYTHICAL")
 
 
+## "Garrick Ashford, the Level 50 Armsman" (no last name: "Garrick, the Level 50 Armsman").
+func _refresh_who() -> void:
+	if _who == null:
+		return
+	var srv: Dictionary = Server.info if Server.active else {}
+	var nm := PlayerData.display_name()
+	var last := CharacterSheet._word(srv.get("last_name", "")) if not srv.is_empty() else ""
+	if last != "" and not nm.ends_with(last):
+		nm += " " + last
+	var cls := String(PlayerData.character.get("class_name", ""))
+	if cls == "":
+		cls = String(ClassDb.cls(PlayerData.class_id()).get("name", ""))
+	_who.text = "%s, the Level %d %s" % [nm, PlayerData.level, cls] if cls != "" else "%s, the Level %d" % [nm, PlayerData.level]
+
+
 func _refresh_stats() -> void:
 	if _stats == null:
 		return
@@ -405,6 +425,7 @@ var _stats_at := 0
 func _stats_changed() -> void:
 	if not visible:
 		return
+	_refresh_who()
 	var now := Time.get_ticks_msec()
 	if now - _stats_at < 250:
 		return
@@ -441,7 +462,14 @@ func _build_skills() -> void:
 	var ap := _column(COL1.x, COL1.y, top + 156, h - 156, "ABILITIES")
 	_left_abil = _scroll_list(ap, Rect2(4, 20, COL1.y - 6, h - 180))
 	# centre: your quickbars, then the training list
-	var bars := _column(COL2.x, COL2.y, top, 104, "QUICKBARS", "DRAG SKILLS HERE")
+	var bars := _column(COL2.x, COL2.y, top, 104, "QUICKBARS")
+	# Action Combat's style picks, above the bars (owner 2026-11-09: "I'd like the button to be up above the
+	# quickbars in the Hero window")
+	var acs := UiArt.button("ACTION COMBAT STYLES", Vector2(150, 14), 8)
+	acs.position = Vector2(COL2.y - 154, 2)
+	acs.tooltip_text = "Pick which style each action-combat move fires"
+	acs.pressed.connect(func(): PlayerData.window_toggle.emit("ac_styles"))
+	bars.add_child(acs)
 	for b in 3:
 		var row := MirrorBar.new()
 		row.bar = b

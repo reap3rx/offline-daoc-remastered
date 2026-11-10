@@ -123,13 +123,24 @@ public sealed class UT_ActionCombat
     [Test]
     public void EarlySwingsCostEndurance()
     {
-        // owner 2026-11-09: 15% of max endurance at the soonest swing, falling to nothing at the whole swing time
+        // owner 2026-11-09: 5% of max endurance at the soonest swing (first 15%, too much), falling to nothing at the
+        // whole swing time
         int full = 3000;
         int soon = ActionCombat.QuickMinMs(full);
-        Assert.That(ActionCombat.QuickSwingEnduranceShare(soon, full), Is.EqualTo(0.15).Within(1e-9));
+        Assert.That(ActionCombat.QuickSwingEnduranceShare(soon, full), Is.EqualTo(0.05).Within(1e-9));
         Assert.That(ActionCombat.QuickSwingEnduranceShare(full, full), Is.EqualTo(0.0));
         Assert.That(ActionCombat.QuickSwingEnduranceShare(9000, full), Is.EqualTo(0.0));
-        Assert.That(ActionCombat.QuickSwingEnduranceShare((soon + full) / 2, full), Is.EqualTo(0.075).Within(0.001));
+        Assert.That(ActionCombat.QuickSwingEnduranceShare((soon + full) / 2, full), Is.EqualTo(0.025).Within(0.001));
+    }
+
+    [Test]
+    public void DualWieldQuickensThePlainSwing()
+    {
+        // owner 2026-11-09: higher dual wield spec, a faster plain swing (25% quicker at 50)
+        Assert.That(ActionCombat.DualWieldSwingFactor(0), Is.EqualTo(1.0).Within(1e-9));
+        Assert.That(ActionCombat.DualWieldSwingFactor(25), Is.EqualTo(0.875).Within(1e-9));
+        Assert.That(ActionCombat.DualWieldSwingFactor(50), Is.EqualTo(0.75).Within(1e-9));
+        Assert.That(ActionCombat.DualWieldSwingFactor(60), Is.EqualTo(0.75).Within(1e-9));
     }
 
     [Test]

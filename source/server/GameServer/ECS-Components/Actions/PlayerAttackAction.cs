@@ -1,4 +1,4 @@
-using DOL.Database;
+﻿using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Styles;
 using DOL.Language;
@@ -90,7 +90,9 @@ namespace DOL.GS
             // ... and so does a power attack (an anytime style goes about 1 s after the last blow: its share of the swing time)
             bool powerAttack = action is { Enabled: true } && _combatStyle != null && ActionCombat.KindOf(_combatStyle) == "anytime";
 
-            if (_quickSwing || powerAttack)
+            if (_quickSwing)
+                _effectiveness *= ActionCombat.QuickDamageFor(ActionCombat.SinceLastSwing(_playerOwner), ActionCombat.PlainSwingMs(_playerOwner));
+            else if (powerAttack)
                 _effectiveness *= ActionCombat.QuickDamageFor(ActionCombat.SinceLastSwing(_playerOwner), ActionCombat.FullSwingMs(_playerOwner));
 
             // ... and a plain swing before the whole swing time tires you (owner 2026-11-09: fast swings with procs and
