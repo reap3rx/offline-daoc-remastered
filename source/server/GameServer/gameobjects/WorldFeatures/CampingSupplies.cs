@@ -96,9 +96,21 @@ public static class CampingSupplies
                 _list.AddTradeItem(0, (eMerchantWindowSlot)slot++, Template(FireId(t.Number)));
                 _list.AddTradeItem(0, (eMerchantWindowSlot)slot++, Template(PotId(t.Number)));
             }
-            int suppliers = SpawnSuppliers();
-            Log.Info($"CAMPING ready: {Tiers.Length * 2} kits, {suppliers} camping suppliers");
             _ = new ECSGameTimer(null, Tick, 5000);
+            // the suppliers once the world's merchants are standing (a few seconds after the start)
+            _ = new ECSGameTimer(null, _ =>
+            {
+                try
+                {
+                    int suppliers = SpawnSuppliers();
+                    Log.Info($"CAMPING ready: {Tiers.Length * 2} kits, {suppliers} camping suppliers, {_missedTowns} towns without a merchant ({_supplierTowns})");
+                }
+                catch (Exception exception)
+                {
+                    Log.Error("Camping suppliers failed", exception);
+                }
+                return 0;
+            }, 15_000);
         }
         catch (Exception exception)
         {
@@ -162,8 +174,8 @@ public static class CampingSupplies
         var placed = new List<(ushort Region, int X, int Y)>();
         foreach (Region region in WorldMgr.GetAllRegions())
         {
-            if (region == null || region.IsHousing || region.IsRvR || region.IsInstance)
-                continue;
+            if (region == null || region.IsHousing || region.IsRvR || region.IsInstance || region.ID == 27)
+                continue;                                            // (27: the tutorial)
             var towns = new List<(int X, int Y, int Z, int Radius)>();
             foreach (DbArea area in DOLDB<DbArea>.SelectObjects(DB.Column("Region").IsEqualTo(region.ID)))
                 if (area.ClassType is "DOL.GS.Area+Circle" or "DOL.GS.Area+SafeArea")
@@ -182,20 +194,33 @@ public static class CampingSupplies
                 GameMerchant near = new[] { eRealm.Albion, eRealm.Midgard, eRealm.Hibernia, eRealm.None }
                     .SelectMany(r => zone.GetNPCsOfZone(r))
                     .OfType<GameMerchant>()
-                    .Where(m => m.GetType() == typeof(GameMerchant) && m.IsAlive &&
-                                Sq(m.X - town.X) + Sq(m.Y - town.Y) <= Sq(town.Radius))
+                    .Where(m => IsPlainMerchant(m) && m.IsAlive &&
+                                Sq(m.X - town.X) + Sq(m.Y - town.Y) <= Sq(town.Radius + 500))
                     .OrderBy(m => Sq(m.X - town.X) + Sq(m.Y - town.Y))
                     .FirstOrDefault();
                 if (near == null)
+                {
+                    _missedTowns++;
                     continue;
+                }
                 if (SpawnSupplier(near))
                 {
                     placed.Add((region.ID, near.X, near.Y));
                     count++;
+                    _supplierTowns += (_supplierTowns.Length > 0 ? ", " : "") + $"{region.ID}:{near.Name}";
                 }
             }
         }
         return count;
+    }
+
+    // an ordinary town merchant (the guild scripts give many their own merchant classes) - not a seal, bounty, guard,
+    // buff or consignment merchant, and not one of ours
+    private static bool IsPlainMerchant(GameMerchant m)
+    {
+        string type = m.GetType().Name;
+        return m.TradeItems != null && m.Name != "Camping Supplier" && !m.Name.Contains("Horse") &&
+               !new[] { "Seal", "Bounty", "Guard", "Buff", "Consignment", "OF", "RP", "Exchange", "Housing", "Stable" }.Any(type.Contains);
     }
 
     private static bool SpawnSupplier(GameMerchant beside)
@@ -221,6 +246,8 @@ public static class CampingSupplies
     }
 
     private static long Sq(long v) => v * v;
+    private static string _supplierTowns = string.Empty;
+    private static int _missedTowns;
 
     // ---------------------------------------------------------------- using a kit
 
