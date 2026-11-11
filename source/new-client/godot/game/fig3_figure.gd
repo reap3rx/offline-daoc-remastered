@@ -686,12 +686,18 @@ func _jewels(entry: Dictionary, on: bool) -> void:
 static var _tuning := {}                    # race -> its tuning file, read once
 
 
+## The tuned fits: the pipeline's folder on the owner's machine (where the release takes them from), else the copy the
+## release carries (content/characters/hair_tuning) - every player's figures read them. The tuning sliders and the
+## Save fit button show only with the developer tools on (owner 2026-11-11: Make Me a GM - BootSettings.dev).
 static func tuning_dir() -> String:
-	return ProjectSettings.globalize_path("res://").path_join("../../source/new-client/pipeline/hair_tuning").simplify_path()
+	var dev := ProjectSettings.globalize_path("res://").path_join("../../source/new-client/pipeline/hair_tuning").simplify_path()
+	if DirAccess.dir_exists_absolute(dev):
+		return dev
+	return ProjectSettings.globalize_path("res://content/characters/hair_tuning")
 
 
 static func tuning_on() -> bool:
-	return DirAccess.dir_exists_absolute(tuning_dir())
+	return BootSettings.dev
 
 
 static func tuning(race_: String) -> Dictionary:

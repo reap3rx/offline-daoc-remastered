@@ -384,18 +384,41 @@ class Orb extends Part:
 			text(thin, Vector2(tr.position.x + tr.size.x - 34, tr.position.y + 12), "%d%%" % roundi(hpf * 100), 8, UiArt.CREAM, HORIZONTAL_ALIGNMENT_RIGHT, 28)
 
 
-## The party, top left: a row per member - name, level and class, health bar with the power bar under it.
+## The party, top left: a row per member - name, level and class, health bar with the power bar under it. The member
+## you have selected (your target) is framed; while you lead the group, its row shows KICK and LEAD (owner 2026-11-11:
+## "highlight the group member ... little buttons that appear that let you kick them if you're the group leader").
 class Party extends Part:
 	const ROW := 24.0
+	const BTNS := [["KICK", "/disband %s"], ["LEAD", "/makeleader %s"]]
+	const BTN_W := 34.0
 
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_STOP
+		PlayerData.target_changed.connect(queue_redraw)
+
+	## You lead your group (the server's group list: the leader first).
+	static func leading() -> bool:
+		var gm: Array = Server.group_members
+		return not gm.is_empty() and int(gm[0].get("oid", 0)) == Server.me_oid
+
+	static func selected(m: Dictionary) -> bool:
+		return not bool(m.get("me", false)) and String(m.get("name", "")) != "" \
+				and String(PlayerData.target.get("name", "")) == String(m.get("name", ""))
+
+	func _btn_rect(row: int, k: int) -> Rect2:
+		return Rect2(PARTY_W - 4 - (BTNS.size() - k) * (BTN_W + 2), row * ROW + 2, BTN_W, 10)
 
 	func _gui_input(event: InputEvent) -> void:
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			var rows: Array = PlayerData.group_rows()
 			var i := int(event.position.y / ROW)
 			if i >= 0 and i < rows.size() and not bool(rows[i].get("me", false)):
+				if leading() and selected(rows[i]):
+					for k in BTNS.size():
+						if _btn_rect(i, k).has_point(event.position):
+							Server.command(String(BTNS[k][1]) % String(rows[i].get("name", "")))
+							accept_event()
+							return
 				PlayerData.member_clicked.emit(rows[i])
 				accept_event()
 
@@ -412,10 +435,22 @@ class Party extends Part:
 			var y := i * ROW
 			var r := Rect2(0, y, PARTY_W, ROW - 2)
 			plate(r)
+			var sel := selected(m)
+			if sel:
+				draw_rect(r.grow(-1), Color(RIM_HI, 0.18))
+				draw_rect(r, RIM_HI, false, 2.0)
 			var who := String(m.get("name", "")).to_upper()
 			var tag := "L%d %s" % [int(m.get("level", 0)), String(m.get("class_name", "")).to_upper()]
-			text(f, Vector2(6, y + 10), who, 8, UiArt.GOLD_HI if bool(m.get("me", false)) else UiArt.CREAM)
-			text(thin, Vector2(PARTY_W - 6 - 90, y + 10), tag, 7, UiArt.DIM, HORIZONTAL_ALIGNMENT_RIGHT, 90)
+			text(f, Vector2(6, y + 10), who, 8, UiArt.GOLD_HI if bool(m.get("me", false)) or sel else UiArt.CREAM, \
+					HORIZONTAL_ALIGNMENT_LEFT, PARTY_W - 90 if sel else -1.0)
+			if sel and leading():
+				for k in BTNS.size():
+					var br := _btn_rect(i, k)
+					draw_rect(br, Color(0.35, 0.07, 0.05, 0.95) if k == 0 else Color(0.18, 0.14, 0.07, 0.95))
+					draw_rect(br, RIM_HI, false, 1.0)
+					text(thin, Vector2(br.position.x, br.position.y + 8), String(BTNS[k][0]), 7, UiArt.CREAM, HORIZONTAL_ALIGNMENT_CENTER, BTN_W)
+			else:
+				text(thin, Vector2(PARTY_W - 6 - 90, y + 10), tag, 7, UiArt.DIM, HORIZONTAL_ALIGNMENT_RIGHT, 90)
 			var hb := Rect2(6, y + 13, PARTY_W - 12, 5)
 			draw_rect(hb, RED_DARK)
 			draw_rect(Rect2(hb.position, Vector2(hb.size.x * clampf(float(m.get("hp", 0.0)), 0.0, 1.0), hb.size.y)), RED)

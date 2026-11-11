@@ -933,6 +933,16 @@ func _message(d: Dictionary) -> void:
 		if viewer and viewer.ui and viewer.ui.modern:
 			viewer.ui.modern.loot.receive(String(d.text).substr(6))
 		return
+	if String(d.text).begins_with("#SMENU|"):             # the interact menu (SocialMenuCommandHandler): title|label=action..
+		var mf := String(d.text).substr(7).split("|")
+		var entries := []
+		for i in range(1, mf.size()):
+			var kv := String(mf[i]).split("=", true, 1)
+			if kv.size() == 2:
+				entries.append([kv[0], kv[1]])
+		if viewer and viewer.ui and viewer.ui.get("social_menu") and not entries.is_empty():
+			viewer.ui.social_menu.open(String(mf[0]), entries)
+		return
 	if String(d.text).begins_with("#SIT|"):               # a bot sitting at a campfire (AutonomousCampfireVisits): oid|1/0
 		var sf := String(d.text).substr(5).split("|")
 		if sf.size() >= 2:
@@ -985,8 +995,15 @@ func _message(d: Dictionary) -> void:
 	var kind := String(CHAT_KINDS.get(t, "system"))
 	var text := String(d.text)
 	if bool(d.get("popup", false)) and viewer and viewer.ui and viewer.ui.npc_dialog:
-		# an NPC talking to you (SayTo -> the popup window): its words in the NPC window, [keywords] clickable
+		# an NPC talking to you (SayTo -> the popup window): its words in the NPC window, [keywords] as choices -
+		# unless it offers none (a greeting, a "you're too far"): then they float over it (owner 2026-11-11: "Things that
+		# don't need a dialogue box anymore ... use the floating text prompt"), and go to the chat
 		var who := String(PlayerData.target.get("name", ""))
+		var sv = by_oid.get(_target_oid())
+		if NpcDialog.keywords_in(text).is_empty() and text.length() < 320 and sv != null and sv.view is Node3D \
+				and not viewer.ui.npc_dialog.visible:
+			_speech("%d|%s|%s" % [_target_oid(), who, text.replace("\n", " ")])
+			return
 		viewer.ui.npc_dialog.say("srv%d" % _target_oid(), who, text)
 		PlayerData.message.emit(text, "npc")
 		return

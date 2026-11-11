@@ -9,7 +9,7 @@ using DOL.GS.Spells;
 
 namespace DOL.GS.Commands
 {
-    [CmdAttribute("&buff", ePrivLevel.Player, "Buff the target", "/buff <(buffList) | all | help> [playerName | npcName]")]
+    [CmdAttribute("&buff", ePrivLevel.Player, "Buff your target (or yourself) with all your best buffs in one cast", "/buff  (all your best buffs on your target, or on you)", "/buff <(buffList) | all | help> [playerName | npcName]")]
     public class BuffCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         private const int RANGE = 1500;
@@ -62,17 +62,10 @@ namespace DOL.GS.Commands
             if (IsSpammingCommand(client.Player, "buff"))
                 return;
 
+            // Remastered (owner 2026-11-11): a bare /buff casts all your best buffs, anywhere, on your target - or on you
+            // when you have no friendly target - in one five second cast. The hold-interact menu uses it too.
             if (args.Length < 2)
-            {
-                DisplaySyntax(client);
-                return;
-            }
-
-            if (!IsInAllowedArea())
-            {
-                ChatUtil.SendSystemMessage(client.Player, $"This command cannot be used here. You must be within 2500 units of a friendly keep, or within a main city, border keep, or a housing area.");
-                return;
-            }
+                args = [args.Length > 0 ? args[0] : "/buff", "all"];
 
             string targetName = null;
             GameLiving target;
@@ -94,8 +87,10 @@ namespace DOL.GS.Commands
                 {
                     target = client.Player.TargetObject as GameLiving;
 
-                    if (target != null)
-                        targetName = target.Name;
+                    if (target == null || GameServer.ServerRules.IsAllowedToAttack(client.Player, target, true))
+                        target = client.Player;
+
+                    targetName = target.Name;
                 }
             }
             else
@@ -184,46 +179,14 @@ namespace DOL.GS.Commands
             }
 
             if (buffsToCast.Count == 0)
+            {
+                ChatUtil.SendSystemMessage(client.Player, target == client.Player ? "You have no lasting buffs to cast." : $"You have no lasting buffs to cast on {target.Name}.");
                 return;
+            }
 
             BuffCommandSpell buffCommandSpell = CreateBuffCommandSpell(buffsToCast);
             SpellLine spellLine = SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells);
             client.Player.CastSpell(buffCommandSpell, spellLine);
-
-            bool IsInAllowedArea()
-            {
-                if ((ePrivLevel) client.Account.PrivLevel > ePrivLevel.Player)
-                    return true;
-
-                // Camelot, Tir na Nog, Jordheim.
-                if (client.Player.CurrentRegionID is 10 or 101 or 201)
-                    return true;
-
-                if (client.Player.CurrentRegion.HousingEnabled)
-                    return true;
-
-                foreach (AbstractArea area in client.Player.CurrentAreas.OfType<AbstractArea>().ToList())
-                {
-                    switch (area.Description)
-                    {
-                        case "Castle Sauvage":
-                        case "Snowdonia Fortress":
-                        case "Svasud Faste":
-                        case "Vindsaul Faste":
-                        case "Druim Ligen":
-                        case "Druim Cain":
-                            return true;
-                    }
-                }
-
-                // The radius should be large enough for players to be able to cast from outside.
-                AbstractGameKeep keep = GameServer.KeepManager.GetClosestKeepToSpot(client.Player.CurrentRegionID, client.Player, 2500);
-
-                if (keep != null && keep.IsPortalKeep)
-                    return true;
-
-                return false;
-            }
 
             bool CheckSpell(Spell spell, Spell strongestSpell, eSpellType buffType)
             {
@@ -278,7 +241,7 @@ namespace DOL.GS.Commands
                     DamageType = (int) eDamageType.Natural,
                     Target = eSpellTarget.REALM.ToString(),
                     Type = eSpellType.BuffCommand.ToString(),
-                    CastTime = 3,
+                    CastTime = 5,
                     Range = RANGE
                 };
 

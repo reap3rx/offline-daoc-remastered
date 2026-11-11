@@ -6,17 +6,19 @@ namespace OfflineDaoc.Launcher;
 
 internal static class DaocTheme
 {
-    internal static readonly Color Void = Color.FromArgb(18, 15, 12);
-    internal static readonly Color Stone = Color.FromArgb(47, 43, 36);
-    internal static readonly Color StoneDark = Color.FromArgb(25, 24, 21);
-    internal static readonly Color StoneLight = Color.FromArgb(79, 71, 56);
+    // Remastered (owner 2026-11-11: "similar, but different"): the old launcher's warm brown stone turned to a cool slate;
+    // the gold, the parchment and the realm colours stay
+    internal static readonly Color Void = Color.FromArgb(13, 14, 17);
+    internal static readonly Color Stone = Color.FromArgb(39, 42, 49);
+    internal static readonly Color StoneDark = Color.FromArgb(21, 23, 27);
+    internal static readonly Color StoneLight = Color.FromArgb(66, 71, 82);
     internal static readonly Color Iron = Color.FromArgb(102, 100, 90);
     internal static readonly Color Gold = Color.FromArgb(194, 157, 77);
     internal static readonly Color GoldLight = Color.FromArgb(232, 205, 135);
     internal static readonly Color Parchment = Color.FromArgb(215, 199, 157);
     internal static readonly Color Ink = Color.FromArgb(43, 32, 22);
-    internal static readonly Color Panel = Color.FromArgb(35, 31, 26);
-    internal static readonly Color PanelAlt = Color.FromArgb(42, 37, 30);
+    internal static readonly Color Panel = Color.FromArgb(28, 30, 36);
+    internal static readonly Color PanelAlt = Color.FromArgb(35, 38, 45);
     internal static readonly Color Text = Color.FromArgb(224, 215, 190);
     internal static readonly Color Muted = Color.FromArgb(166, 154, 128);
     internal static readonly Color Success = Color.FromArgb(139, 191, 104);
@@ -179,10 +181,10 @@ internal sealed class FantasyBanner : Panel
         }
 
         using var shade = new LinearGradientBrush(ClientRectangle,
-            Color.FromArgb(190, 10, 9, 8), Color.FromArgb(80, 10, 9, 8), 0f);
+            Color.FromArgb(165, 10, 9, 8), Color.FromArgb(25, 10, 9, 8), 0f);    // (lighter: the remastered art shows)
         e.Graphics.FillRectangle(shade, ClientRectangle);
         using var lowerShade = new LinearGradientBrush(ClientRectangle,
-            Color.FromArgb(5, 0, 0, 0), Color.FromArgb(105, 0, 0, 0), 90f);
+            Color.FromArgb(5, 0, 0, 0), Color.FromArgb(70, 0, 0, 0), 90f);
         e.Graphics.FillRectangle(lowerShade, ClientRectangle);
 
         using var outer = new Pen(Color.FromArgb(8, 7, 5), 2f);

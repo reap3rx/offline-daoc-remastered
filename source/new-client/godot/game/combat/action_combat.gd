@@ -696,6 +696,29 @@ func pad_interact() -> void:
 		_interact()
 
 
+## Hold Interact (owner 2026-11-11): the interact menu for whoever the crosshair is on - a bot or player of your realm,
+## your pet - else your target, else you (SocialMenuCommandHandler decides what it offers).
+func pad_interact_menu() -> void:
+	if not pad_ready():
+		return
+	var p := _player()
+	if p == null or p.camera == null or viewer == null:
+		return
+	var centre := get_viewport().get_visible_rect().size * 0.5
+	var picked: Dictionary = viewer._click_pick(centre) if viewer.has_method("_click_pick") else {}
+	var n: Npc = picked.get("npc")
+	var oid := 0
+	if n and n.global_position.distance_to(p.global_position) <= INTERACT_M * 6.0:
+		WorldLink.clear_bot_target()
+		viewer.npcs.select(n)
+		oid = int(n.spawn.get("oid", 0))
+	elif String(picked.get("kind", "")) == "self":
+		oid = Server.me_oid
+	elif _has_target():
+		oid = int(viewer.npcs.target.spawn.get("oid", 0))
+	Server.command("/socialmenu %d" % oid if oid != 0 else "/socialmenu")
+
+
 ## R3: lock on / off (a tap of the Lock On key).
 func pad_lock_tap() -> void:
 	if not pad_ready():
@@ -807,7 +830,7 @@ func _npc_window_open() -> bool:
 	var ui = viewer.get("ui") if viewer else null
 	if ui == null:
 		return false
-	for w in [ui.get("merchant"), ui.get("vault"), ui.get("trainer"), ui.get("npc_dialog")]:
+	for w in [ui.get("merchant"), ui.get("vault"), ui.get("trainer"), ui.get("npc_dialog"), ui.get("social_menu")]:
 		if w != null and is_instance_valid(w) and (w as CanvasItem).visible:
 			return true
 	return false

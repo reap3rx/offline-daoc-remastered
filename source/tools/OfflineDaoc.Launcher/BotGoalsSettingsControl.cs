@@ -13,6 +13,17 @@ internal sealed class BotGoalsSettingsControl : UserControl
     private readonly Button _undo = new() { Text = "Undo edits", AutoSize = true };
     private readonly Button _defaults = new() { Text = "Restore defaults", AutoSize = true };
     private readonly System.Windows.Forms.Timer _poll = new() { Interval = 2000 };
+    private readonly List<Button> _presetButtons = [];
+
+    // The leanings: [solo, group, RvR, battlegrounds] for levels 1-19 (no RvR), 20-49, 50 (no battlegrounds).
+    internal static readonly (string Name, BotGoalSettings Settings)[] Presets =
+    [
+        ("Balanced", BotGoalSettings.Defaults),
+        ("Favor RvR", new() { Levels1To19 = new(50, 30, 0, 20), Levels20To49 = new(20, 25, 40, 15), Level50 = new(10, 20, 70, 0) }),
+        ("Favor Group PvE", new() { Levels1To19 = new(30, 70, 0, 0), Levels20To49 = new(20, 65, 15, 0), Level50 = new(10, 60, 30, 0) }),
+        ("Favor Solo PvE", new() { Levels1To19 = new(80, 20, 0, 0), Levels20To49 = new(60, 25, 15, 0), Level50 = new(40, 30, 30, 0) }),
+        ("Favor Battlegrounds", new() { Levels1To19 = new(40, 30, 0, 30), Levels20To49 = new(25, 25, 15, 35), Level50 = new(20, 40, 40, 0) }),
+    ];
     private BotGoalSettings _saved = BotGoalSettings.Defaults;
     private bool _loading, _loadFailed, _savedFile;
     private string _notice = "";
@@ -31,10 +42,27 @@ internal sealed class BotGoalsSettingsControl : UserControl
             Dock = DockStyle.Top, AutoSize = true, FlowDirection = FlowDirection.TopDown,
             WrapContents = false, Padding = new Padding(16),
         };
-        body.Controls.Add(new Label { Text = "Bot Goals Setting", AutoSize = true,
+        body.Controls.Add(new Label { Text = "Bot Playstyle", AutoSize = true,
             Font = new Font(Font.FontFamily, 15, FontStyle.Bold), ForeColor = DaocTheme.GoldLight });
-        body.Controls.Add(new Label { AutoSize = true, MaximumSize = new Size(850, 0), Margin = new Padding(3, 10, 3, 15),
-            Text = "Choose the goal mix for each level bracket. Each row must total 100%.\n0% disables a goal; 100% selects only that goal. Applies to autonomous gamebots in all three realms." });
+        // Remastered (owner 2026-11-11): the bots choose for themselves now - each persona's drive, focus and social side
+        // picks solo or group, dungeons, RvR and events. This page only leans the whole population one way.
+        body.Controls.Add(new Label { AutoSize = true, MaximumSize = new Size(850, 0), Margin = new Padding(3, 10, 3, 10),
+            Text = "Every bot decides for itself what to do next, from its own personality: a social bot looks for a group, a driven one heads for RvR,\n" +
+                "a casual one takes it easy. Balanced leaves it to them. Pick a leaning to nudge the whole population toward a playstyle -\n" +
+                "the bots still choose, but more of them choose that. Or set the shares yourself under Custom." });
+        var presets = new FlowLayoutPanel { AutoSize = true, Margin = new Padding(0, 0, 0, 12) };
+        foreach (var (name, preset) in Presets)
+        {
+            var b = new Button { Text = name, AutoSize = true, Margin = new Padding(0, 0, 8, 0) };
+            b.Click += (_, _) => { SetValues(preset); _notice = $"{name} loaded. Click Save settings to apply."; UpdateState(); };
+            _presetButtons.Add(b);
+            presets.Controls.Add(b);
+        }
+        body.Controls.Add(presets);
+        body.Controls.Add(new Label { Text = "Custom shares", AutoSize = true, Margin = new Padding(3, 4, 3, 6),
+            Font = new Font(Font.FontFamily, 11, FontStyle.Bold), ForeColor = DaocTheme.GoldLight });
+        body.Controls.Add(new Label { AutoSize = true, MaximumSize = new Size(850, 0), Margin = new Padding(3, 0, 3, 12),
+            Text = "The share of each level bracket that leans to each kind of play. Each row must total 100%; 0% leaves a kind out." });
         var table = new TableLayoutPanel { AutoSize = true, ColumnCount = 6, RowCount = 4, Margin = new Padding(3, 3, 3, 15) };
         foreach (int width in new[] { 150, 125, 125, 125, 140, 190 }) table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, width));
         string[] headings = ["Level bracket", "Solo PvE %", "Group PvE %", "RvR %", "Battlegrounds %", "Row total"];
@@ -144,6 +172,7 @@ internal sealed class BotGoalsSettingsControl : UserControl
             for (int col = 0; col < 4; col++) _values[row, col].Enabled = stopped && !(row == 0 && col == 2) && !(row == 2 && col == 3);
         }
         _save.Enabled = stopped && valid;
+        foreach (Button b in _presetButtons) b.Enabled = stopped;
         _defaults.Enabled = _undo.Enabled = stopped;
         _status.Text = !stopped ? "Locked: stop the server to change bot goals." :
             _notice.Length > 0 ? _notice : !valid ? "Not saved. Adjust each row to exactly 100%." :

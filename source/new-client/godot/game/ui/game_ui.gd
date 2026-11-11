@@ -68,6 +68,7 @@ var _cast_fill: ColorRect
 var _cast_name: Label
 var _effects_bar: HBoxContainer
 var npc_dialog: NpcDialog
+var social_menu: Control                     # the interact menu (social_menu.gd: hold Interact on a bot, your pet)
 var trainer: TrainerWindow
 const TRANSIENT := ["npc_dialog", "story_dialog", "trainer", "merchant", "vault", "exchange", "guide", "info", "release", "siege", "emblem"]
 const INFO_W := 160.0                                     # the information window's width (interact.bmp is 300)
@@ -339,10 +340,18 @@ func _build() -> void:
 		(info.get_node("Title") as Label).size.x = info.size.x - 27)
 	_build_release()
 	_build_cast_bar()
-	npc_dialog = NpcDialog.new()                          # NPC talk with clickable [keywords] (npctalk.bmp)
-	npc_dialog.setup("npc_dialog", "npctalk", Rect2(), client_pos(208, 140))
+	npc_dialog = NpcDialog.new()                          # NPC talk: its words and its [keywords] as choices
+	npc_dialog.resizable = true                           # (owner 2026-11-11: the modern frame, not npctalk.bmp)
+	npc_dialog.patch = [6, 6, 6, 6]
+	npc_dialog.min_size = NpcDialog.SIZE
+	npc_dialog.max_size = NpcDialog.SIZE
+	npc_dialog.size = NpcDialog.SIZE
+	npc_dialog.setup("npc_dialog", "leftbot", Rect2(), client_pos(208, 140))
 	_add(npc_dialog, client_pos(208, 140), false)
+	npc_dialog.set_window_size(NpcDialog.SIZE)
 	npc_dialog.build()
+	social_menu = preload("res://game/ui/social_menu.gd").new()
+	root.add_child(social_menu)
 	trainer = TrainerWindow.new()                         # training at your trainer (training.bmp)
 	trainer.setup("trainer", "training", Rect2(), client_pos(225, 60))
 	_add(trainer, client_pos(225, 60), false)
@@ -447,8 +456,14 @@ func _build() -> void:
 
 	# --- merchant (default.ini Merchant 450,0): opens on a right-click on a merchant
 	merchant = MerchantWindow.new()
-	merchant.setup("merchant", "merchant", Rect2(), client_pos(450, 0))
+	merchant.resizable = true                             # (owner 2026-11-11: the modern frame, not merchant.bmp)
+	merchant.patch = [6, 6, 6, 6]
+	merchant.min_size = MerchantWindow.SIZE
+	merchant.max_size = MerchantWindow.SIZE
+	merchant.size = MerchantWindow.SIZE
+	merchant.setup("merchant", "leftbot", Rect2(), client_pos(450, 0))
 	root.add_child(merchant)
+	merchant.set_window_size(MerchantWindow.SIZE)
 	merchant.visible = false
 	merchant.build()
 	windows["merchant"] = merchant

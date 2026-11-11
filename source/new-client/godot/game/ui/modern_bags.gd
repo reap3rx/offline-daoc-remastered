@@ -333,6 +333,13 @@ class BagCell extends Control:
 			return
 		if event is InputEventMouseButton and event.pressed and not PlayerData.entry(slot).is_empty():
 			if event.button_index == MOUSE_BUTTON_RIGHT:
+				# a shop open: right-click sells it (owner 2026-11-11: "automatically open your bag so you can sell easier")
+				var scene := get_tree().current_scene
+				var ui = scene.get("ui") if scene else null
+				if ui and ui.get("merchant") and ui.merchant.visible:
+					PlayerData.sell(slot, ui.merchant.npc_name)
+					accept_event()
+					return
 				# right-click wears it (owner 2026-11-04); what can't be worn is picked instead (then Shift+I / U)
 				if PlayerData.slots_for(PlayerData.item_at(slot)).is_empty():
 					PlayerData.select_slot(slot)

@@ -1,0 +1,43 @@
+OFFLINE DAoC REMASTERED - DISCLAIMER
+====================================
+
+A free fan project
+------------------
+Offline DAoC Remastered is a free, non-commercial fan project made out of love for
+Dark Age of Camelot. It is not sold, it carries no ads or donations, and it never
+will. If you paid for it, you were scammed.
+
+Not affiliated
+--------------
+This project is not affiliated with, endorsed by, or supported by Electronic Arts,
+Broadsword Online Games, or Mythic Entertainment. Dark Age of Camelot, its names,
+world, art, music and sounds belong to their owners. The game's zones, models,
+textures, sounds and interface art in this package were converted from the original
+Dark Age of Camelot client files; they are not the work of this project.
+
+If you enjoy this, please support the real thing: Dark Age of Camelot is still
+running at www.darkageofcamelot.com, and its client can be downloaded there for free.
+
+If you are a rights holder and want something changed or removed, contact the
+project on Reddit and it will be.
+
+Use of AI
+---------
+This project was built with heavy use of artificial intelligence:
+  - Most of the new code (the new game client, the bot behaviour, the server changes,
+    the launcher and the conversion tools) was written by Anthropic's Claude, an AI
+    model, working under the direction of the project's developer, who designed,
+    tested and decided every feature.
+  - The original game's textures were upscaled with Real-ESRGAN, an AI image upscaler.
+Expect the rough edges that come with that.
+
+No warranty
+-----------
+The software is provided as is, without warranty of any kind. You play at your own
+risk. Back up your saves.
+
+Licences
+--------
+The server is based on OpenDAoC / Dawn of Light and is free software under the GNU
+General Public License; the game client runs on the Godot Engine (MIT licence). See
+the LICENSES folder for the full texts and the other components' notices.

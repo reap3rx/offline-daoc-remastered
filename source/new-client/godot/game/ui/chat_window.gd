@@ -196,6 +196,11 @@ func _client_command(text: String) -> bool:
 	var parts := text.substr(1).split(" ", false)
 	var cmd := String(parts[0]).to_lower() if parts.size() > 0 else ""
 	var rest := text.substr(cmd.length() + 1).strip_edges()
+	# the developer tools (owner 2026-11-11: "Make me a GM would enable some of the dev tools ... Otherwise those are
+	# off"): the launcher starts the game with --dev when Make Me a GM is on (BootSettings.dev)
+	if cmd in ["look", "light", "lights"] and not BootSettings.dev:
+		PlayerData.message.emit("That is a GM tool: tick Make Me a GM in the launcher's Options to use it.", "system")
+		return true
 	match cmd:
 		"follow", "stick", "face":
 			PlayerData.track_requested.emit(cmd)

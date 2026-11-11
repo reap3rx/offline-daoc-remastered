@@ -57,6 +57,7 @@ const ACTIONS := [
 	["style_position", "Positional Style", "POSITION", "tap"],
 	["style_chain", "Chain Style", "CHAIN", "tap"],
 	["interact", "Interact", "USE", "tap"],
+	["interact_menu", "Interact Menu (players, bots, your pet)", "MENU", "tap"],
 	["sheathe", "Weapon In / Out", "SHEATHE", "tap"],
 	["weapon_cycle", "Cycle Weapons", "WEAPON", "tap"],
 	["run_lock", "Autorun", "RUN", "tap"],
@@ -75,7 +76,7 @@ const ACTIONS := [
 ]
 
 static func _defaults() -> Dictionary:
-	var d := {"a": "jump", "b": "dodge", "b:hold": "sprint_hold", "x": "style_auto", "y": "interact",
+	var d := {"a": "jump", "b": "dodge", "b:hold": "sprint_hold", "x": "style_auto", "y": "interact", "y:hold": "interact_menu",
 			"up": "weapon_cycle", "up:hold": "sheathe", "right": "run_lock", "down": "sit", "left": "torch",
 			"l3": "sprint_toggle", "r3": "lock_on", "rt": "attack", "lt": "defend", "lb": "target_friend",
 			"rb": "target_enemy", "view": "hero", "view:hold": "menu_wheel", "menu": "escape"}
@@ -157,6 +158,10 @@ func load_bindings() -> void:
 			var a := String(cfg.get_value("bindings", k, ""))
 			if a != "":
 				bindings[k] = a
+		# version 2 (owner 2026-11-11): hold Interact opens the interact menu - added to a saved set that lacks it
+		if int(cfg.get_value("meta", "version", 1)) < 2 and String(bindings.get("y", "")) == "interact" \
+				and not bindings.has("y:hold") and inputs_of("interact_menu").is_empty():
+			bindings["y:hold"] = "interact_menu"
 	bindings_changed.emit()
 
 
@@ -164,7 +169,7 @@ func save_bindings() -> void:
 	var cfg := ConfigFile.new()
 	for k in bindings:
 		cfg.set_value("bindings", k, bindings[k])
-	cfg.set_value("meta", "version", 1)
+	cfg.set_value("meta", "version", 2)
 	cfg.save(PATH)
 	bindings_changed.emit()
 
@@ -520,6 +525,9 @@ func _do(act: String, down: bool) -> void:
 		"interact":
 			if a:
 				a.call("pad_interact")
+		"interact_menu":
+			if a:
+				a.call("pad_interact_menu")
 		"sheathe":
 			_fire("attack_mode")
 		"weapon_cycle":

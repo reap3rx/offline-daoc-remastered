@@ -24,23 +24,24 @@ namespace DOL.GS
 			if (!base.Interact(player))
 				return false;
 
-			// just give out speed without asking
+			// just give out speed without asking - and say so over their head, no window (owner 2026-11-11: "Things that
+			// don't need a dialogue box anymore (like Hasteners) can just have it go away")
 			GameNPCHelper.CastSpellOnOwnerAndPets(this, player, SkillBase.GetSpellByID(GameHastener.SPEEDOFTHEREALMID), SkillBase.GetSpellLine(GlobalSpellsLines.Realm_Spells), false);
 			player.Out.SendSpellEffectAnimation(this, player, SkillBase.GetSpellByID(935).ClientEffect, 0, false, 1);
 
 			if (player.CurrentRegion.IsCapitalCity)
-				SayTo(player, string.Format("{0} {1}. {2}",
+				NpcSpeech.SayTo(this, player, string.Format("{0} {1}. {2}",
 					LanguageMgr.GetTranslation(player.Client.Account.Language, "GameHastener.Greeting"),
 					player.CharacterClass.Name,
 					LanguageMgr.GetTranslation(player.Client.Account.Language, "GameHastener.CityMovementOffer")));
 					// LanguageMgr.GetTranslation(player.Client.Account.Language, "GameHastener.StrengthOffer")));
 			else if (IsShroudedIslesStartZone(player.CurrentZone.ID))
-				SayTo(player, string.Format("{0} {1}. {2}",
+				NpcSpeech.SayTo(this, player, string.Format("{0} {1}. {2}",
 					LanguageMgr.GetTranslation(player.Client.Account.Language, "GameHastener.Greeting"),
 					player.CharacterClass.Name,
 					LanguageMgr.GetTranslation(player.Client.Account.Language, "GameHastener.CityMovementOffer")));
 			else if(!player.CurrentRegion.IsRvR)//default message outside of RvR
-				SayTo(player, string.Format("{0} {1}. {2}",
+				NpcSpeech.SayTo(this, player, string.Format("{0} {1}. {2}",
 					LanguageMgr.GetTranslation(player.Client.Account.Language, "GameHastener.Greeting"),
 					player.CharacterClass.Name,
 					LanguageMgr.GetTranslation(player.Client.Account.Language, "GameHastener.DefaultMovementOffer")));

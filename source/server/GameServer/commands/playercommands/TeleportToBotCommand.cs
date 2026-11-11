@@ -31,7 +31,8 @@ namespace DOL.GS.Commands
         }
     }
 
-    [CmdAttribute("&tele", ePrivLevel.Player, "Teleport to a playerbot or monster camp", "/tele <playerbot name>", "/tele mob <monster name>")]
+    [CmdAttribute("&tele", ePrivLevel.GM,    // (owner 2026-11-11: a developer tool - Make Me a GM)
+         "Teleport to a playerbot or monster camp", "/tele <playerbot name>", "/tele mob <monster name>")]
     public sealed class TeleportToBotCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)

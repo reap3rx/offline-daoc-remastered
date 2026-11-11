@@ -206,6 +206,7 @@ internal sealed partial class MainForm : Form
         _startButton.Click += (_, _) => StartServer();
         _stopButton.Click += async (_, _) => await StopServerAsync();
         _playButton.Click += (_, _) => LaunchClient();
+        InitRemastered();
 
         rootLayout.Controls.Add(BuildHeader(), 0, 0);
         rootLayout.Controls.Add(BuildCards(), 0, 1);
@@ -239,6 +240,7 @@ internal sealed partial class MainForm : Form
         _serverReadinessPoll.Tick += async (_, _) => await RefreshWhenServerReadyAsync();
         Shown += async (_, _) =>
         {
+            await RemasteredShownAsync();
             await RefreshDashboardAsync();
             await RefreshRealmExchangeAsync();
             _displayClock.Start();
@@ -274,6 +276,7 @@ internal sealed partial class MainForm : Form
             }
             _serverReadinessPoll.Stop();
             _serverLog?.Dispose();
+            CloudOnClose();
         };
         UiScale.Apply(this);
     }
@@ -378,15 +381,15 @@ internal sealed partial class MainForm : Form
         titlePanel.Controls.Add(new Label
         {
             AutoSize = true,
-            Text = "OFFLINE DAoC",
-            Font = new Font("Georgia", 28f, FontStyle.Bold),
+            Text = "OFFLINE DAoC REMASTERED",
+            Font = new Font("Georgia", 24f, FontStyle.Bold),
             ForeColor = DaocTheme.GoldLight,
             Location = new Point(94, 5),
         });
         titlePanel.Controls.Add(new Label
         {
             AutoSize = true,
-            Text = "CLASSIC + SHROUDED ISLES  •  PLAY ALONE OR ADVENTURE WITH LIVING PLAYER BOTS",
+            Text = "DARK AGE OF CAMELOT, REBUILT  •  CLASSIC + SHROUDED ISLES  •  A WORLD OF LIVING PLAYER BOTS",
             Font = new Font("Georgia", 9f),
             ForeColor = Color.FromArgb(196, 145, 70),
             Location = new Point(97, 57),
@@ -402,15 +405,16 @@ internal sealed partial class MainForm : Form
         header.Controls.Add(titlePanel, 0, 0);
 
         var actions = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.TopDown, WrapContents = false, Padding = new Padding(3, 5, 0, 0), BackColor = Color.Transparent };
-        foreach (var button in new[] { _startButton, _stopButton, _playButton })
+        foreach (var button in new[] { _startButton, _stopButton, _playButton, _updateButton })
         {
             button.Width = 132;
-            button.Height = 26;
-            button.Margin = new Padding(2, 2, 2, 2);
+            button.Height = 24;
+            button.Margin = new Padding(2, 1, 2, 1);
         }
         actions.Controls.Add(_startButton);
         actions.Controls.Add(_stopButton);
         actions.Controls.Add(_playButton);
+        actions.Controls.Add(_updateButton);                 // install / update (MainForm.Remastered.cs)
         header.Controls.Add(actions, 1, 0);
         banner.Controls.Add(header);
         return banner;
@@ -535,6 +539,7 @@ internal sealed partial class MainForm : Form
         rvr.Controls.Add(BuildActiveRvrPanel());
         var xpSettings = new TabPage("Options") { BackColor = DaocTheme.Panel, ForeColor = DaocTheme.Text };
         xpSettings.Controls.Add(BuildXpSettingsPanel());
+        xpSettings.Controls.Add(BuildCloudSavePanel());     // (Dock Top: below the options)
         tabs.TabPages.Add(population);
         var living = new TabPage("Population") { BackColor = DaocTheme.Panel, ForeColor = DaocTheme.Text };
         living.Controls.Add(new PopulationPanel(() => _database, () => _root));
@@ -553,7 +558,7 @@ internal sealed partial class MainForm : Form
         records.Enter += async (_, _) => await eventRecords.RefreshAsync();
         tabs.TabPages.Add(records);
         tabs.TabPages.Add(xpSettings);
-        var botGoals = new TabPage("Bot Goals Setting") { BackColor = DaocTheme.Panel, ForeColor = DaocTheme.Text };
+        var botGoals = new TabPage("Bot Playstyle") { BackColor = DaocTheme.Panel, ForeColor = DaocTheme.Text };
         _botGoalsSettings = new BotGoalsSettingsControl(
             Path.Combine(_serverDirectory, OfflineDaoc.Configuration.BotGoalSettings.FileName), BotGoalsServerStopped);
         botGoals.Controls.Add(_botGoalsSettings);
@@ -612,7 +617,7 @@ internal sealed partial class MainForm : Form
         _xpSettingsStatus.Font = new Font("Georgia", 9f, FontStyle.Bold | FontStyle.Italic);
         layout.Controls.Add(_makeMeGm, 0, 3);
         layout.SetColumnSpan(_makeMeGm, 2);
-        layout.Controls.Add(XpRateDescription("Applies to your account at the next server startup. (Mobs will not attack you with /gmstealth on.)"), 2, 3);
+        layout.Controls.Add(XpRateDescription("GM commands and the developer tools (/spawn, /tele, /look, hair fit tuning) from the next server start and Enter Realm."), 2, 3);
         _makeMeGm.CheckedChanged += async (_, _) => await SaveGmSettingAsync();
         layout.Controls.Add(_rvrAnnouncements, 0, 4);
         layout.SetColumnSpan(_rvrAnnouncements, 2);
@@ -1264,7 +1269,10 @@ internal sealed partial class MainForm : Form
         var teleportItem = new ToolStripMenuItem("Teleport to");
         teleportItem.Click += async (_, _) => await TeleportToSelectedBotAsync();
         menu.Items.Add(teleportItem);
-        menu.Items.Add(new ToolStripSeparator());
+        var teleportGap = new ToolStripSeparator();
+        menu.Items.Add(teleportGap);
+        // /tele is a GM command (owner 2026-11-11: a developer tool - Make Me a GM)
+        menu.Opening += (_, _) => teleportItem.Visible = teleportGap.Visible = _makeMeGm.Checked;
         var deleteItem = new ToolStripMenuItem("Delete character forever…");
         deleteItem.Click += async (_, _) => await DeleteSelectedBotAsync();
         menu.Items.Add(deleteItem);
@@ -2723,6 +2731,7 @@ internal sealed partial class MainForm : Form
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
             };
+            UseBundledDotnet(startInfo);
             _serverProcess = new Process { StartInfo = startInfo, EnableRaisingEvents = true };
             _serverProcess.OutputDataReceived += (_, args) => { if (args.Data is not null) _serverLog?.WriteLine(args.Data); };
             _serverProcess.ErrorDataReceived += (_, args) => { if (args.Data is not null) _serverLog?.WriteLine("ERROR: " + args.Data); };
@@ -2730,6 +2739,7 @@ internal sealed partial class MainForm : Form
             {
                 _serverReadinessPoll.Stop();
                 _stoppingServer = false;
+                CloudPushAfterStop();
                 await RefreshDashboardAsync();
             });
             _serverProcess.Start();
@@ -2932,12 +2942,24 @@ internal sealed partial class MainForm : Form
             UseShellExecute = false,
             ArgumentList = { "--path", _clientDirectory, "--", "--server=127.0.0.1", $"--account={credentials.Account}", $"--password={credentials.Password}" },
         };
+        // Make Me a GM (owner 2026-11-11): the developer tools too - /look, /light, the hair fit tuning in character
+        // creation, the Ctrl+F debug keys (the client's BootSettings.dev); /spawn and /tele are GM commands on the server
+        if (_makeMeGm.Checked)
+            start.ArgumentList.Add("--dev");
         // On a 0.36 game (classes / enable_sluaghbinder = False) the new client offers the classic classes only.
         if (!InstalledEditionHasCustomClass(_database))
             start.ArgumentList.Add("--custom-class=off");
         // The new client's settings, keybinds, quickbars and logs stay in new-client\save.
         start.Environment["APPDATA"] = Path.Combine(top, "save");
-        // The .NET it runs on: the game's bundled runtime (tools\dotnet beside new-client), else new-client\tools\dotnet.
+        UseBundledDotnet(start);
+        Process.Start(start);
+    }
+
+    // The .NET the game and the server run on: the game's bundled runtime (tools\dotnet beside the client folder), else
+    // the client's own tools\dotnet - a player needs no .NET of their own (a machine without one: the release).
+    private void UseBundledDotnet(ProcessStartInfo start)
+    {
+        string top = Path.GetFullPath(Path.Combine(_launcherRoot, ".."));
         foreach (string candidate in new[] { Path.Combine(top, "..", "tools", "dotnet"), Path.Combine(top, "tools", "dotnet") })
         {
             string dotnet = Path.GetFullPath(candidate);
@@ -2947,9 +2969,8 @@ internal sealed partial class MainForm : Form
             start.Environment["DOTNET_ROOT_X64"] = dotnet;
             start.Environment["DOTNET_MULTILEVEL_LOOKUP"] = "0";
             start.Environment["PATH"] = dotnet + ";" + Environment.GetEnvironmentVariable("PATH");
-            break;
+            return;
         }
-        Process.Start(start);
     }
 
     private (string Account, string Password) ReadCredentials()

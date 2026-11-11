@@ -178,7 +178,8 @@ namespace DOL.GS.Commands
         }
     }
 
-    [CmdAttribute("&spawn", ePrivLevel.Player, "Opens the companion class menu or creates a temporary helper", "/spawn [class name]")]
+    [CmdAttribute("&spawn", ePrivLevel.GM,   // (owner 2026-11-11: a developer tool - Make Me a GM)
+         "Opens the companion class menu or creates a temporary helper", "/spawn [class name]")]
     public sealed class SpawnTemporaryGroupBotCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)

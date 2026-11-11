@@ -1,0 +1,34 @@
+OFFLINE DAoC REMASTERED - CREDITS AND SPECIAL THANKS
+===================================================
+
+Dark Age of Camelot
+  Mythic Entertainment - the original developers who made Dark Age of Camelot in 2001,
+  and every artist, designer, writer, programmer, composer and GM who built Albion,
+  Midgard and Hibernia.
+  Broadsword Online Games - for keeping Camelot alive all these years, and for keeping
+  the classic client free to download.
+
+Offline DAoC
+  u/zomboden and everyone on Reddit who made and shared Offline DAoC, the single-player
+  Dark Age of Camelot this project grew out of. None of this exists without it.
+
+OpenDAoC and Dawn of Light
+  The OpenDAoC team and contributors, and the Dawn of Light (DOL) project before them -
+  the open-source server emulator underneath the whole world.
+
+Claude, by Anthropic
+  The AI that wrote most of the remaster's code alongside the developer: the new client,
+  the living bots, the server changes, the tools, this launcher and this installer.
+
+Also built on
+  Godot Engine - the engine the new client runs on (godotengine.org, MIT licence).
+  NifTools - the NetImmerse / Gamebryo file format work that made converting the models
+    possible.
+  Real-ESRGAN (xinntao) - the AI upscaler used on the textures.
+  Allakhazam and its contributors - the period quest guides the in-game Quest Guide
+    draws on, with CapnBry's radar sightings and the Uthgard bestiary for monster
+    placement and levels.
+
+And thank you
+  To everyone who still remembers training mobs to the zone line, holding the Emain
+  bridge, or waiting on a port at the border keep. This is for you.
