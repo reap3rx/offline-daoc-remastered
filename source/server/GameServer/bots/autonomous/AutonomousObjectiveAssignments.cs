@@ -146,7 +146,8 @@ public static class AutonomousObjectiveAssignments
     }
 
     /// <summary>Selects only PvE work, retaining the current bucket's solo/group balance.</summary>
-    public static eAutonomousObjectiveKind ChoosePveObjective(Allocation target, int assignedSolo, int assignedGroup, Random random = null)
+    public static eAutonomousObjectiveKind ChoosePveObjective(Allocation target, int assignedSolo, int assignedGroup, Random random = null,
+        OfflineDaoc.Population.BotPersona persona = null)
     {
         random ??= Random.Shared;
         int soloNeeded = Math.Max(0, target.SoloPve - assignedSolo);
@@ -154,11 +155,29 @@ public static class AutonomousObjectiveAssignments
         if (soloNeeded + groupNeeded == 0)
         {
             if (target.SoloPve + target.GroupPve == 0) return eAutonomousObjectiveKind.RvR;
-            return random.Next(target.SoloPve + target.GroupPve) < target.SoloPve
-                ? eAutonomousObjectiveKind.SoloPve : eAutonomousObjectiveKind.GroupPve;
+            soloNeeded = target.SoloPve;
+            groupNeeded = target.GroupPve;
         }
-        return random.Next(soloNeeded + groupNeeded) < soloNeeded ? eAutonomousObjectiveKind.SoloPve : eAutonomousObjectiveKind.GroupPve;
+        // its persona weighs the draw (plan step 3: "Drive, focus and social steer ... grouping"): a soloer more likely
+        // takes the solo slots and a grouper the group ones; the remaining need still sets the realm's totals
+        double solo = soloNeeded * (persona?.SoloAffinity() ?? 1.0);
+        double group = groupNeeded * (persona?.GroupAffinity() ?? 1.0);
+        return random.NextDouble() * (solo + group) < solo ? eAutonomousObjectiveKind.SoloPve : eAutonomousObjectiveKind.GroupPve;
     }
+
+    /// <summary>A persona-weighted "is it this one?" against the other remaining need (the allocator's draws).</summary>
+    public static bool WeightedTake(int needed, double affinity, int otherNeeded, Random random = null)
+    {
+        if (needed <= 0)
+            return false;
+        random ??= Random.Shared;
+        double w = needed * affinity;
+        return random.NextDouble() * (w + Math.Max(0, otherNeeded)) < w;
+    }
+
+    private static OfflineDaoc.Population.BotPersona PersonaOf(GameBot bot) =>
+        bot?.PersistentRecord != null && !bot.IsTemporaryGroupHelper
+            ? AutonomousPopulationController.PersonaOf(bot.PersistentRecord) : null;
 
     /// <summary>Returns exact integer targets from the startup goal policy.</summary>
     public static Allocation TargetForPopulation(int count, bool levelFifty)
@@ -336,7 +355,8 @@ public static class AutonomousObjectiveAssignments
                 bool TakesBattleground(GameBot bot, int otherNeeded)
                 {
                     int needed = Math.Max(0, target.Battlegrounds - assignedBattleground);
-                    return needed > 0 && CanTakeBattleground(bot) && Random.Shared.Next(needed + Math.Max(0, otherNeeded)) < needed;
+                    return needed > 0 && CanTakeBattleground(bot) &&
+                           WeightedTake(needed, PersonaOf(bot)?.BattlegroundAffinity() ?? 1.0, otherNeeded);
                 }
                 foreach (GameBot bot in members.Where(bot => !groupOwned.Contains(bot) && !HasActiveRvrTenure(bot.PersistentRecord, utcNow) &&
                                                               !HasActivePveAssignment(bot.PersistentRecord, utcNow) &&
@@ -345,7 +365,7 @@ public static class AutonomousObjectiveAssignments
                     eAutonomousObjectiveKind kind = TakesBattleground(bot,
                         Math.Max(0, target.SoloPve - assignedSolo) + Math.Max(0, target.GroupPve - assignedGroup))
                         ? eAutonomousObjectiveKind.Battleground
-                        : ChoosePveObjective(target, assignedSolo, assignedGroup);
+                        : ChoosePveObjective(target, assignedSolo, assignedGroup, null, PersonaOf(bot));
                     if (kind == eAutonomousObjectiveKind.Battleground)
                         assignedBattleground++;
                     else if (kind == eAutonomousObjectiveKind.SoloPve)
@@ -363,14 +383,14 @@ public static class AutonomousObjectiveAssignments
                     int rvrNeeded = Math.Max(0, target.RvR - assignedRvr);
                     int soloNeeded = Math.Max(0, target.SoloPve - assignedSolo);
                     int groupNeeded = Math.Max(0, target.GroupPve - assignedGroup);
-                    if (rvrNeeded > 0 && Random.Shared.Next(rvrNeeded + soloNeeded + groupNeeded) < rvrNeeded)
-                        kind = eAutonomousObjectiveKind.RvR;
+                    if (WeightedTake(rvrNeeded, PersonaOf(bot)?.RvrAffinity() ?? 1.0, soloNeeded + groupNeeded))
+                        kind = eAutonomousObjectiveKind.RvR;    // (a frontier-minded persona more likely - plan step 3)
                     else if (TakesBattleground(bot, soloNeeded + groupNeeded))
                         kind = eAutonomousObjectiveKind.Battleground;
                     else if (AutonomousBotGoalPolicy.IsConfigured && rvrNeeded + soloNeeded + groupNeeded == 0)
                         kind = AutonomousBotGoalPolicy.Choose(bot.Level);
                     else
-                        kind = ChoosePveObjective(target, assignedSolo, assignedGroup);
+                        kind = ChoosePveObjective(target, assignedSolo, assignedGroup, null, PersonaOf(bot));
 
                     switch (kind)
                     {

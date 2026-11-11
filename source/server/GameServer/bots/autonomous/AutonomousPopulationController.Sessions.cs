@@ -53,6 +53,11 @@ public static partial class AutonomousPopulationController
 
     public static int LastTarget(eRealm realm) => LastTargets.GetValueOrDefault(realm);
 
+    /// <summary>Minutes of play left in the bot's session (on the population's clock); large when it has none.</summary>
+    public static double MinutesLeftInSession(GameBot bot) =>
+        bot != null && Sessions.TryGetValue(bot.DatabaseID, out Session s)
+            ? Math.Max(0.0, (s.EndsUtc - DateTime.UtcNow).TotalMinutes * _knobs.ClockRate) : 999.0;
+
     private static void LoadKnobs()
     {
         _knobs = PopulationKnobs.FromProperties(ReadProperty);

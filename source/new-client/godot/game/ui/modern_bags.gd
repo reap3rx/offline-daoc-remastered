@@ -281,7 +281,11 @@ class BagCell extends Control:
 		# armour and weapons framed in the colour they con to you (owner 2026-11-04)
 		var gear := not it.is_empty() and not PlayerData.slots_for(it).is_empty()
 		_bs.border_color = ItemTooltip.con_color(int(it.get("level", 0)), PlayerData.level) if gear else Color(0.45, 0.37, 0.22)
-		_bs.set_border_width_all(2 if gear else 1)
+		# camping supplies framed in their quality's colour, grey .. purple (owner 2026-11-11)
+		var tier = ItemTooltip.tier_color(it) if not it.is_empty() else null
+		if tier != null:
+			_bs.border_color = tier
+		_bs.set_border_width_all(2 if gear or tier != null else 1)
 
 	func _get_drag_data(_p: Vector2) -> Variant:
 		_dragged_slot = slot

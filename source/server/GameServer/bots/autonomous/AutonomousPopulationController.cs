@@ -114,6 +114,16 @@ public static partial class AutonomousPopulationController
             }
             // the living population (owner 2026-11-10): the daily curve and the bots' own habits decide who is on
             PollSchedule(roster, nowUtc);
+            if (nowUtc >= _nextPersonaTickUtc)
+            {
+                // plan step 3: groupers offering groups to players (the game loop: dialogs and whispers)
+                _nextPersonaTickUtc = nowUtc.AddSeconds(30);
+                NpcService.Instance.Post<int>(_ =>
+                {
+                    try { AutonomousPersonaPlay.TickOffers(); }
+                    catch (Exception exception) { Log.Error("Persona group offers failed", exception); }
+                }, 0);
+            }
         }
         catch (Exception exception)
         {
@@ -320,6 +330,7 @@ public static partial class AutonomousPopulationController
     }
 
     private static volatile bool _populationSatisfied;
+    private static DateTime _nextPersonaTickUtc;
 
     private static void QueueOwnerCommands(bool repairOrphans)
     {

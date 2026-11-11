@@ -476,6 +476,10 @@ namespace DOL.GS
                         return true;
                 }
 
+                // a campfire it decided to sit at (owner 2026-11-11: AutonomousCampfireVisits) owns its movement
+                if (_groupDirective?.IsDynamic != true && AutonomousCampfireVisits.Hold(bot))
+                    return true;
+
                 // Keep a camp's recovery session across AI turns. Clearing it on
                 // every tick restarts the pose and loses recovery-to-full. Only
                 // an obsolete camp's sit state is stale; routing below also wakes
@@ -3240,7 +3244,11 @@ namespace DOL.GS
             // A dynamic event nearby (scripts/dynamicevents): go and help - most of the time (owner 2026-11-02: "bots
             // should seek out events, and want to help out with them, and want the rewards"). The event is the camp: its
             // place, and its current monsters to fight; a waiting disturbance wakes when the bot gets there.
-            if (Random.Shared.Next(100) < 70 && DynamicEvents.DynamicEventManager.TryBotTarget(bot, out var ev))
+            // an event nearby: weighed by persona (plan step 3 - a grouper or tryhard likely joins, a soloer sometimes, a
+            // frontier-minded bot seldom); 70 in 100 for a bot without one
+            int eventPercent = bot.IsTemporaryGroupHelper || bot.PersistentRecord == null ? 70
+                : AutonomousPopulationController.PersonaOf(bot.PersistentRecord).EventJoinPercent();
+            if (Random.Shared.Next(100) < eventPercent && DynamicEvents.DynamicEventManager.TryBotTarget(bot, out var ev))
             {
                 _nextPlanTick = GameLoop.GameLoopTime + 30_000 + bot.ObjectID % 8_000;
                 _camp = new CampDestination("event:" + ev.Id, ev.MonsterName, ev.ZoneName, ev.RegionId, ev.X, ev.Y, ev.Z,
@@ -3272,6 +3280,15 @@ namespace DOL.GS
                 ? bot.Group.GetMembersInTheGroup().Max(member => member.EffectiveLevel) : bot.EffectiveLevel;
             ConColor maximumTargetCon = MaximumTargetCon(groupSize);
             ConColor naturalMaximumTargetCon = NaturalMaximumTargetCon(groupSize);
+            OfflineDaoc.Population.BotPersona persona = bot.IsTemporaryGroupHelper || bot.PersistentRecord == null
+                ? null : AutonomousPopulationController.PersonaOf(bot.PersistentRecord);
+            if (!sharedGroup && persona != null && _deathDifficultySteps == 0)
+            {
+                // a soloer's taste (plan step 3): a casual keeps to blue-and-easier camps, a skilled tryhard reaches for
+                // orange; a death still steps the ceiling down as before
+                maximumTargetCon = (ConColor)Math.Clamp((int)maximumTargetCon + persona.SoloConShift(),
+                    (int)ConColor.GREEN, (int)ConColor.ORANGE);
+            }
             // Normal groups start at yellow-or-better, but every death retry is
             // allowed to step down through green. Grey creatures are rejected
             // when candidates are built and can never become a recovery goal.
@@ -3455,7 +3472,7 @@ namespace DOL.GS
                     legal, _recentFailedSoloTargets, GameLoop.GameLoopTime);
                 AutonomousBotDecisionEngine.Camp[] categoryCandidates = legal.ToArray();
                 environment = AutonomousBotDecisionEngine.SelectPveEnvironment(
-                    categoryCandidates, groupSize, planningLevel, Random.Shared);
+                    categoryCandidates, groupSize, planningLevel, Random.Shared, persona?.DungeonPreferenceScale() ?? 1.0);
                 legal = categoryCandidates.Where(camp => environment == AutonomousBotDecisionEngine.PveEnvironment.Dungeon
                     ? camp.IsDungeon : !camp.IsDungeon);
             }

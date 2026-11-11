@@ -11,6 +11,7 @@
         Bind,
         NewFrontiers,
         Battleground,
-        House
+        House,
+        Soulbind        // the nearest soulbind stone of the region (owner 2026-11-11: SoulbindStones)
     }
 }

@@ -1279,13 +1279,13 @@ func message(text: String, kind := "system") -> void:
 
 ## The information window for an item (shift-click on it).
 ## The death window, laid out as the original client's (ui/atlantis/release_window.xml, 285 x 96): the release timer's
-## line and green bar over four buttons - /RELEASE and /RELEASE CITY, /RELEASE HOUSE and /RELEASE BIND - each the
-## server's /release command of that kind (owner 2026-10-16: the new client had one release button, the original four).
+## line and green bar over the ways back - owner 2026-11-11: two of them, the nearest SOULBIND STONE (/release soulbind,
+## the server's SoulbindStones) or your BIND STONE (/release bind); a resurrection offered comes as its own question.
 func _build_release() -> void:
 	var w := ClassicWindow.new()
 	w.resizable = true
 	w.patch = [6, 19, 13, 33]
-	w.size = Vector2(285, 118)
+	w.size = Vector2(285, 96)
 	var at := Vector2(area().x * 0.5 - 142, area().y * 0.32)
 	w.setup("release", "interact", Rect2(), at)
 	w.closable = false
@@ -1318,8 +1318,7 @@ func _build_release() -> void:
 		full[0] = maxf(full[0], left)
 		timer.text = "RELEASE TIMER  %d:%02d" % [int(left) / 60, int(left) % 60]
 		bar.size.x = 218.0 * clampf(left / maxf(full[0], 1.0), 0.0, 1.0))
-	for spec in [["/RELEASE", "", Vector2(15, 58)], ["/RELEASE CITY", "city", Vector2(150, 58)],
-			["/RELEASE HOUSE", "house", Vector2(15, 84)], ["/RELEASE BIND", "bind", Vector2(150, 84)]]:
+	for spec in [["SOULBIND STONE", "soulbind", Vector2(15, 62)], ["BIND STONE", "bind", Vector2(150, 62)]]:
 		var b := UiArt.button(String(spec[0]), Vector2(120, 20), 9)
 		b.position = spec[2]
 		var kind := String(spec[1])

@@ -190,7 +190,7 @@ public static class AutonomousBotDecisionEngine
     }
 
     public static PveEnvironment SelectPveEnvironment(IEnumerable<Camp> camps, int groupSize,
-        int level, Random random = null)
+        int level, Random random = null, double preferenceScale = 1.0)
     {
         Camp[] choices = camps?.Where(camp => camp != null).ToArray() ?? Array.Empty<Camp>();
         bool hasDungeon = choices.Any(camp => camp.IsDungeon);
@@ -207,7 +207,8 @@ public static class AutonomousBotDecisionEngine
             .Select(group => DungeonAvailability(group))
             .DefaultIfEmpty(0)
             .Max();
-        int effectivePreference = preference * availability / 1_000;
+        // preferenceScale: the bot's persona (plan step 3: a tryhard wants dungeons, a casual the easy outdoor camps)
+        int effectivePreference = (int)Math.Min(900, preference * Math.Max(0.0, preferenceScale)) * availability / 1_000;
         return random.Next(1_000) < effectivePreference ? PveEnvironment.Dungeon : PveEnvironment.Outdoor;
     }
 

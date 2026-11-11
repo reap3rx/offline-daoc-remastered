@@ -1147,7 +1147,14 @@ namespace DOL.GS
 
         private Point3D? FindNearestBindPoint()
         {
-            return BotReleaseBindPoints.Nearest(_deathRegionId, X, Y, IsAutonomousWorldBot ? Realm : eRealm.None);
+            Point3D? bind = BotReleaseBindPoints.Nearest(_deathRegionId, X, Y, IsAutonomousWorldBot ? Realm : eRealm.None);
+            // a soulbind stone nearer than the bind stone: rise there and walk back (owner 2026-11-11)
+            SoulbindStone stone = IsAutonomousWorldBot ? SoulbindStones.Nearest(_deathRegionId, X, Y) : null;
+            if (stone != null && (bind == null ||
+                    (long)(stone.X - X) * (stone.X - X) + (long)(stone.Y - Y) * (stone.Y - Y) <
+                    (long)(bind.X - X) * (bind.X - X) + (long)(bind.Y - Y) * (bind.Y - Y)))
+                return new Point3D(stone.X + 80, stone.Y, stone.Z);
+            return bind;
         }
 
         public void OnResurrectedBy(GameLiving caster)

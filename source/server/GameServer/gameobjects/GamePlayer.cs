@@ -1438,6 +1438,12 @@ namespace DOL.GS
                 return;
             }
 
+            if (releaseCommand is eReleaseType.Soulbind && SoulbindStones.Nearest(CurrentRegionID, X, Y) == null)
+            {
+                Out.SendMessage("There is no soulbind stone in this land - you will rise at your bind stone.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                releaseCommand = eReleaseType.Bind;
+            }
+
             if (releaseCommand is eReleaseType.House)
             {
                 if (character.BindHouseRegion < 1)
@@ -1523,6 +1529,13 @@ namespace DOL.GS
 
             switch (m_releaseType)
             {
+                case eReleaseType.Soulbind:
+                {
+                    // the nearest soulbind stone of the region you fell in (SoulbindStones)
+                    if (!SoulbindStones.TryReleasePoint(this, out relRegion, out relX, out relY, out relZ, out relHeading))
+                        ValidateAndGetBind(out relRegion, out relX, out relY, out relZ, out relHeading);
+                    break;
+                }
                 case eReleaseType.Duel:
                 {
                     relRegion = (ushort) character.Region;
@@ -6632,6 +6645,10 @@ namespace DOL.GS
                     if (inventoryItem.Use(this))
                         return;
                 }
+
+                // a camping kit (owner 2026-11-11): builds a campfire, or hangs a cooking pot over one
+                if (CampingSupplies.TryUse(this, useItem))
+                    return;
 
                 if (useItem.Item_Type is >= ((int) eInventorySlot.LeftFrontSaddleBag) and <= ((int) eInventorySlot.RightRearSaddleBag))
                 {

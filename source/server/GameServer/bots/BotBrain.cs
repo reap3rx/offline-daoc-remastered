@@ -1858,6 +1858,14 @@ namespace DOL.AI.Brain
                 return true;
             }
 
+            // camping supplies (owner 2026-11-11): a kit and a pot when it has the coin to spare
+            if (AutonomousCampfireVisits.TryBuyKits(bot))
+            {
+                SetMerchantStatus(bot, "Bought camping supplies", "A campfire kit for the road");
+                _nextMerchantServiceTick = now + 30_000;
+                return true;
+            }
+
             _nextMerchantServiceTick = now + 20_000 + Random.Shared.Next(20_001);
             AutonomousBotEconomy.MarkEconomyChanged(bot.DatabaseID);
             return false;

@@ -13,6 +13,21 @@ const CON := {-3: Color8(170, 170, 170), -2: Color8(80, 220, 80), -1: Color8(90,
 
 static var _con: Array = []
 
+# Camping supplies (owner 2026-11-11, the server's CampingSupplies): their quality is their colour, whatever your level -
+# grey .. purple, as the con colours
+const CAMP_TIERS := {
+	"Smoky Campfire Kit": -3, "Dented Tin Cookpot": -3, "Woodsman's Campfire Kit": -2, "Iron Cookpot": -2,
+	"Traveler's Campfire Kit": -1, "Traveler's Stewpot": -1, "Ranger's Campfire Kit": 0, "Ranger's Cauldron": 0,
+	"Hearthstone Campfire Kit": 1, "Hearthkeeper's Cauldron": 1, "Emberforged Campfire Kit": 2,
+	"Emberforged Cauldron": 2, "Everburning Campfire Kit": 3, "Feastmaster's Cauldron": 3,
+}
+
+
+## A quality-coloured item's colour (camping supplies), or null.
+static func tier_color(it: Dictionary) -> Variant:
+	var t = CAMP_TIERS.get(String(it.get("name", "")))
+	return CON[int(t)] if t != null else null
+
 
 static func is_gear(it: Dictionary) -> bool:
 	var ot := int(it.get("object_type", 0))
@@ -27,7 +42,8 @@ static func make(it: Dictionary) -> Control:
 		if not d.is_empty():
 			var sbox := VBoxContainer.new()
 			sbox.add_theme_constant_override("separation", -1)
-			sbox.add_child(_line(String(d.caption), con_color(int(it.get("level", 0)), PlayerData.level)))
+			var cap_col = tier_color(it)
+			sbox.add_child(_line(String(d.caption), cap_col if cap_col != null else con_color(int(it.get("level", 0)), PlayerData.level)))
 			for l in d.lines:
 				if String(l).strip_edges() != "":
 					sbox.add_child(_line(String(l), UiArt.CREAM))

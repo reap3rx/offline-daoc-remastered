@@ -306,6 +306,7 @@ var _win_block := 150
 var _win_dodge := 100
 var _win_cool := 500
 var _parry_ready_at := 0
+var _last_parry_only := false                     # the last press was Parry Only (a shield's parry, the weapon's move)
 
 
 func _parry_ok(now: int, parry_only := false) -> bool:
@@ -337,7 +338,10 @@ func _defended(kind: String, dmg: int, saved: int, auto := false) -> void:
 	if auto:
 		var p := _player()
 		if p and kind in ["parry", "block", "dodge"]:
-			p.action_defend_auto("evade" if kind == "dodge" else kind)
+			var clip_kind := "evade" if kind == "dodge" else kind
+			if clip_kind == "parry" and _has_shield() and not _last_parry_only:
+				clip_kind = "block"                            # (a shield's parry: the shield comes up, as the press)
+			p.action_defend_auto(clip_kind)
 		match kind:
 			"parry":
 				_float_text(0, "RIPOSTE  %d saved" % saved if saved > 0 else "RIPOSTE", gold, 40, 0.5)
@@ -547,6 +551,7 @@ func _input(event: InputEvent) -> void:
 				_draw_weapon()
 			elif _parry_ok(now, true):
 				Server.command("/ac parry only")
+				_last_parry_only = true
 				p.action_defend("parry")
 			get_viewport().set_input_as_handled()
 			return
@@ -555,7 +560,10 @@ func _input(event: InputEvent) -> void:
 				_draw_weapon()                                 # sheathed: the first press draws, the next parries
 			elif event.is_pressed() and _parry_ok(now):
 				Server.command("/ac parry")
-				p.action_defend("block" if _blocks() else "parry")   # the move plays now, hit or miss
+				_last_parry_only = false
+				# the move plays now, hit or miss - with a shield up the block's (owner 2026-11-11: a small shield
+				# without the Shields line still parries - the server's rule - but the shield is what comes up)
+				p.action_defend("block" if _has_shield() else "parry")
 			get_viewport().set_input_as_handled()
 			return
 	if mouse and not p.action_cursor and event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
@@ -639,7 +647,8 @@ func pad_defend(down: bool) -> void:
 		_draw_weapon()
 	elif _parry_ok(now):
 		Server.command("/ac parry")
-		_player().action_defend("block" if _blocks() else "parry")
+		_last_parry_only = false
+		_player().action_defend("block" if _has_shield() else "parry")
 
 
 func _pad_shot(id: String, down: bool, now: int) -> void:

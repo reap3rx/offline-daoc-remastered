@@ -822,6 +822,8 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 				return                                     # play_death() holds the last frame
 		if swim:
 			clip = "swim"                                  # swimming, still or moving (as you: Player)
+		elif sitting and clip == "idle" and anim.has_animation("sit_idle"):
+			clip = "sit_idle"                              # at a campfire
 		var fig: Fig3Figure = model as Fig3Figure if model is Fig3Figure else null
 		var was := String(anim.current_animation)
 		anim.clear_queue()
@@ -841,6 +843,22 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 
 
 var _action_left := 0.0
+var sitting := false                          # sat at a campfire (the server's #SIT line): sit_idle while it stands still
+
+
+## Sat down at (or got up from) a campfire: the figure's own sit down / stand up, then its seated idle while it rests.
+func set_sitting(on: bool) -> void:
+	if on == sitting:
+		return
+	sitting = on
+	_shown_mode = -1                                       # (the idle choice runs again)
+	if anim == null or _action_left > 0.0 or int(state.mode) != int(NpcState.Mode.IDLE):
+		return
+	var turn := "sit_down" if on else "stand_up"
+	if anim.has_animation(turn):
+		anim.play(turn, 0.15)
+		anim.queue("sit_idle" if on and anim.has_animation("sit_idle") else "idle")
+		_shown_mode = int(NpcState.Mode.IDLE)
 
 
 ## Where its head looks (Fig3Figure.look_point; claude 2026-11-09): at you, when it fights you, when you've selected it

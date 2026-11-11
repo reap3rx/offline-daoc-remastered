@@ -129,6 +129,52 @@ public sealed class BotPersona
         return p;
     }
 
+    // ---------------------------------------------------------------- the persona in play (plan step 3, owner 2026-11-11)
+    // What a bot chooses, never what it may do: these weigh choices the game's own systems then carry out.
+
+    /// <summary>How strongly it leans to a kind of work (1 = neutral): the frontier by Focus, a group or going alone by
+    /// Social. Used as weights on the allocator's own remaining-need draws, so the realm's totals still hold.</summary>
+    public double RvrAffinity() => 0.3 + 1.7 * Focus / 100.0;
+    public double GroupAffinity() => 0.3 + 1.7 * Social / 100.0;
+    public double SoloAffinity() => 0.3 + 1.7 * (100 - Social) / 100.0;
+    public double BattlegroundAffinity() => (1.0 + RvrAffinity()) / 2.0;
+
+    /// <summary>The share of dungeon picks against outdoor camps: a tryhard wants dungeons and named mobs, a casual the
+    /// easy outdoor camps; a grouper a little more (dungeons are group work).</summary>
+    public double DungeonPreferenceScale()
+    {
+        double s = Tier switch { Casual => 0.55, Tryhard => 1.6, _ => 1.0 };
+        return Social > 66 ? s * 1.2 : s;
+    }
+
+    /// <summary>Steps of con a soloing bot moves its hardest camp: casual one easier (blue), tryhard one harder (orange)
+    /// when it has the skill for it.</summary>
+    public int SoloConShift() => Tier == Casual ? -1 : Tier == Tryhard && Skill >= 50 ? 1 : 0;
+
+    /// <summary>Percent chance it answers a nearby event (the old rule: 70 for every bot).</summary>
+    public int EventJoinPercent()
+    {
+        int p = SocialKind switch { "group" => 85, "solo" => 45, _ => 70 };
+        if (Tier == Tryhard) p += 8;
+        if (FocusKind == "rvr") p -= 25;
+        return Math.Clamp(p, 10, 95);
+    }
+
+    /// <summary>Whether it takes a player's invitation: a grouper almost always, an either-way player usually (less near its
+    /// log-off time), a soloer rarely - unless asked again soon after a refusal.</summary>
+    public bool AcceptsInvite(Random rng, double minutesLeft, bool askedAgain)
+    {
+        double p = SocialKind switch { "group" => 0.97, "solo" => 0.15, _ => 0.82 };
+        if (minutesLeft < 10)
+            p *= SocialKind == "group" ? 0.6 : 0.35;
+        if (askedAgain)
+            p = Math.Min(0.95, p + 0.4);
+        return rng.NextDouble() < p;
+    }
+
+    /// <summary>Whether it ever offers a group to a player unasked: groupers only.</summary>
+    public bool InvitesPlayers() => SocialKind == "group";
+
     private static int Bell(Random rng, double mean, double sd)
     {
         double u1 = 1.0 - rng.NextDouble(), u2 = rng.NextDouble();

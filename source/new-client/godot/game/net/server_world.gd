@@ -9,6 +9,7 @@ extends NpcManager
 
 const ActionCombatMode := preload("res://game/combat/action_combat.gd")
 const Housing := preload("res://game/world/housing.gd")      # player housing: houses, lot markers (no class cache needed)
+const CampObjects := preload("res://game/world/camp_objects.gd")   # campfires, cooking pots, soulbind stones (2026-11-11)
 const Mounts := preload("res://game/world/mounts.gd")        # personal horses (ControlledHorse)
 const RUN_UNITS := 150.0                     # a mover faster than this (units / s) runs, slower walks
 const SNAP_M := 6.0                          # an update this far from where it is drawn: jump there
@@ -932,6 +933,13 @@ func _message(d: Dictionary) -> void:
 		if viewer and viewer.ui and viewer.ui.modern:
 			viewer.ui.modern.loot.receive(String(d.text).substr(6))
 		return
+	if String(d.text).begins_with("#SIT|"):               # a bot sitting at a campfire (AutonomousCampfireVisits): oid|1/0
+		var sf := String(d.text).substr(5).split("|")
+		if sf.size() >= 2:
+			var sst: NpcState = by_oid.get(int(sf[0]))
+			if sst and sst.view is Npc:
+				(sst.view as Npc).set_sitting(sf[1] == "1")
+		return
 	if String(d.text).begins_with("#PET|"):               # your commander's retinue (HeroInfo.cs): the modern pet window
 		preload("res://game/ui/modern_hud.gd").receive_pets(String(d.text).substr(5))
 		return
@@ -1576,10 +1584,12 @@ func _add_object(d: Dictionary) -> void:
 		return
 	var model := int(d.model) & 0x7FFF
 	var p := scene_pos(float(d.x), float(d.y), float(d.z))
-	if not (model in RELIC_MODELS) and _baked_prop_near(p):
+	if not (model in RELIC_MODELS) and not (model in USE_MODELS) and _baked_prop_near(p):
 		return                                                     # the zone already has it (baked, with its fixes)
 		# (never a relic: it lies on its pad - a baked world object right under it)
 	var m: Node3D = Housing.make_object(model) if Housing.has_object(model) else null   # lot markers (housing)
+	if m == null and CampObjects.is_custom(model):
+		m = CampObjects.make(model)                               # a campfire, a pot, a soulbind stone
 	if m == null:
 		m = WeaponModels.make_world(model)
 	if m == null:
@@ -2141,7 +2151,7 @@ func use_object_at(cam: Camera3D, screen_pos: Vector2) -> bool:
 	if oid == 0 or not (h is Node3D) or not is_instance_valid(h):
 		return false
 	var model := int((h as Node3D).get_meta("model", 0))
-	if not (Housing.is_lot_marker(model) or model in RELIC_MODELS):
+	if not (Housing.is_lot_marker(model) or model in RELIC_MODELS or model in USE_MODELS):
 		return false
 	_target_ground(oid)
 	get_object()
@@ -2199,7 +2209,8 @@ func get_object() -> void:
 		return
 	var r := Server.to_region(_current_zone(), player.global_position)
 	var holder: Node3D = objects.get(target_object)
-	if holder and (int(holder.get_meta("model", 0)) in RELIC_MODELS or Housing.is_lot_marker(int(holder.get_meta("model", 0)))):
+	if holder and (int(holder.get_meta("model", 0)) in RELIC_MODELS or int(holder.get_meta("model", 0)) in USE_MODELS \
+			or Housing.is_lot_marker(int(holder.get_meta("model", 0)))):
 		# a relic is carried off with a use; a lot marker is used too (GameLotMarker.Interact: buy the lot, or the
 		# deeds to build on it when it is yours)
 		Server.client.call("Interact", target_object, int(r.x), int(r.y))
@@ -2304,6 +2315,10 @@ func _pet_window(d: Dictionary) -> void:
 # ---------------------------------------------------------------- keeps: doors, siege weapons, relics (owner 2026-10-14)
 
 const RELIC_MODELS := [630, 631, 632, 633, 634, 635]     # objects.csv: the six realm relics
+# ground objects that are used, not picked up (owner 2026-11-11): a treasure chest (TreasureChests - opening it), a
+# soulbind stone, a campfire and its pot (they tell you about themselves)
+const USE_MODELS := [1596, 32001, 32002, 32003, 32011, 32012, 32013, 32014, 32015, 32016, 32017, 32021, 32022, 32023,
+		32024, 32025, 32026, 32027]
 var doors := {}                              # the client's door id -> {oid, name, health %, realm}: the server's doors
 var door_oids := {}                          # object id -> door id
 var target_door := 0                         # the targeted door's object id (its health on the target window)

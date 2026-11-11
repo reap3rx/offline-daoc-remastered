@@ -53,7 +53,7 @@ static func stance_clip(anim: AnimationPlayer, st: String, base: String) -> Stri
 
 
 ## A defence's clip for the stance (canims Parry / Evade / Block): two-hand and scythe the 2H parries / evade, polearm
-## and staff the polearm ones, a flex weapon its own parry, everything else the one-hand ones; "" when the figure has
+## and staff the polearm parries and the 2H evade, a flex weapon its own parry, everything else the one-hand ones; "" when the figure has
 ## none. Parries and blocks pick the low or the high one.
 static func defend_clip(anim: AnimationPlayer, st: String, kind: String) -> String:
 	if anim == null:
@@ -68,7 +68,9 @@ static func defend_clip(anim: AnimationPlayer, st: String, kind: String) -> Stri
 			else:
 				want = "parry_%s_%s" % [fam, hl] if fam != "" else "parry_" + hl
 		"evade":
-			want = "evade_" + fam if fam != "" else "evade"
+			# polearm and staff dodge as the two-handers (owner 2026-11-11: the polearm's backflip is too awkward for
+			# action combat - "replaced with the 2H dodge animation")
+			want = "evade_2h" if fam != "" else "evade"
 		"block":
 			want = "block_" + hl
 	if anim.has_animation(want):

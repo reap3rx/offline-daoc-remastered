@@ -23,6 +23,10 @@ public static class BotGroupInvite
             return false;
         }
 
+        // its persona answers (plan step 3): a soloer may turn you down, in character
+        if (bot.PlayerGroupLeader != player && !AutonomousPersonaPlay.AnswerInvite(player, bot))
+            return false;
+
         if (bot.Group != null)
         {
             bool autonomousGroup = bot.PlayerGroupLeader == null;
