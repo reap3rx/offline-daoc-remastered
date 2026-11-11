@@ -59,8 +59,9 @@ def walk(root, skip_dirs=(), skip_files=(), skip_ext=()):
     root = Path(root)
     for dirpath, dirnames, filenames in os.walk(root):
         rel_dir = Path(dirpath).relative_to(root).as_posix()
-        dirnames[:] = sorted(d for d in dirnames
-                             if (f"{rel_dir}/{d}" if rel_dir != "." else d) not in skip_dirs and d not in skip_dirs)
+        # a skipped folder is named by its path from root ("logs", ".godot/mono/temp/obj") - a nested folder that only
+        # shares the name stays (runtimes/win-x64/native held the server's SQLite.Interop.dll)
+        dirnames[:] = sorted(d for d in dirnames if (f"{rel_dir}/{d}" if rel_dir != "." else d) not in skip_dirs)
         for name in sorted(filenames):
             rel = f"{rel_dir}/{name}" if rel_dir != "." else name
             if name in skip_files or rel in skip_files or Path(name).suffix.lower() in skip_ext:

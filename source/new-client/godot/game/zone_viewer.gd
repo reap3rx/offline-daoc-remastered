@@ -53,7 +53,7 @@ var _save_left := 5.0
 
 
 func _ready() -> void:
-	get_window().title = "Offline DAoC Rebuilt v0.37c"            # the root window keeps it (window_set_title alone was reset to the project name)
+	get_window().title = "Offline DAoC Remastered"            # the root window keeps it (window_set_title alone was reset to the project name)
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		args[kv[0]] = kv[1] if kv.size() > 1 else ""
