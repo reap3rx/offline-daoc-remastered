@@ -49,7 +49,7 @@ have. Releases are made with `source/tools/release/make_release.ps1`.
 ## Credits
 
 Mythic Entertainment, who made Dark Age of Camelot; Broadsword, who keep it running; u/zomboden and the Offline DAoC
-community, whose single-player DAoC this grew out of; the OpenDAoC and Dawn of Light projects; Godot Engine; NifTools;
+community, whose single-player DAoC ([OfflineDAoC](https://github.com/shadowofze/OfflineDAoC)) this grew out of; the OpenDAoC and Dawn of Light projects; Godot Engine; NifTools;
 Real-ESRGAN; Allakhazam's quest guides; and Anthropic's Claude. The full list:
 [CREDITS](source/tools/release/text/CREDITS.txt).
 

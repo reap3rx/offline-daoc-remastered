@@ -10,7 +10,8 @@ Dark Age of Camelot
 
 Offline DAoC
   u/zomboden and everyone on Reddit who made and shared Offline DAoC, the single-player
-  Dark Age of Camelot this project grew out of. None of this exists without it.
+  Dark Age of Camelot this project grew out of (github.com/shadowofze/OfflineDAoC).
+  None of this exists without it.
 
 OpenDAoC and Dawn of Light
   The OpenDAoC team and contributors, and the Dawn of Light (DOL) project before them -
