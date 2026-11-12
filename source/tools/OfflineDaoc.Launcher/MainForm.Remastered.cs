@@ -39,6 +39,7 @@ internal sealed partial class MainForm
 
     private void InitRemastered()
     {
+        try { Icon = Icon.ExtractAssociatedIcon(Environment.ProcessPath!); } catch { }   // (the crest in the title bar and taskbar)
         _updater = new Updater(_launcherRoot);
         _updateButton.Click += async (_, _) => await UpdateClickedAsync();
         _updateButton.Visible = _updater.Enabled;

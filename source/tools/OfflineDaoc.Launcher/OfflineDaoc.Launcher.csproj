@@ -8,6 +8,8 @@
     <AssemblyName>OfflineDAoC</AssemblyName>
     <Product>Offline DAoC Remastered</Product>
     <AssemblyTitle>Offline DAoC Remastered Launcher</AssemblyTitle>
+    <!-- the realm crest, as in the launcher's header and the game's window (owner 2026-11-11) -->
+    <ApplicationIcon>Assets\offline-daoc.ico</ApplicationIcon>
     <!-- Windows enlarges fonts for display scaling; UiScale scales the pixel layout to match. -->
     <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
   </PropertyGroup>
