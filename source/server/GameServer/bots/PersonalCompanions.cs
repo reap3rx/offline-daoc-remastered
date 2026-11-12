@@ -314,7 +314,7 @@ namespace DOL.GS
                 PathfindingProvider.Instance.DefaultFilters) ?? current;
         }
 
-        /// <summary>Call Companion: at your side now - alive, rested, from wherever it was (or home, or dead).</summary>
+        /// <summary>Call Companion: at your side now - alive, rested, from wherever it was (or home, or dead); not in combat.</summary>
         public static string Call(GamePlayer p)
         {
             Record r = Load(p);
@@ -322,6 +322,9 @@ namespace DOL.GS
                 return p.Level < QuestLevel ? $"You have no companion yet (at level {QuestLevel} someone in town can help)." : "You have no companion yet - see the companion quest in your journal.";
             if (!p.IsAlive)
                 return "You can't call anyone while you're dead.";
+            // (owner 2026-11-12: calling back a dead companion mid-fight would be a free resurrection - not in combat)
+            if (p.InCombat)
+                return "You can't call your companion while you're in combat.";
             long now = GameLoop.GameLoopTime;
             if (_calledAt.TryGetValue(p, out long at) && now - at < CALL_REUSE_MS)
                 return $"You must wait {(CALL_REUSE_MS - (now - at)) / 1000 + 1} seconds to call again.";
