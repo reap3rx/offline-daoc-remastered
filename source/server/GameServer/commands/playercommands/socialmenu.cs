@@ -58,6 +58,12 @@ namespace DOL.GS.Commands
             {
                 title = "Yourself";
                 list.Add(("Buff Yourself", "/buff"));
+                if (PersonalCompanions.Load(me) is PersonalCompanions.Record mine)
+                {
+                    list.Add(("Call " + mine.Name, "/companion call"));
+                    if (PersonalCompanions.Of(me) != null)
+                        list.Add(("Send " + mine.Name + " Home", "/companion home"));
+                }
                 if (group != null)
                     list.Add(("Leave Group", "/disband"));
                 return list;
@@ -74,6 +80,20 @@ namespace DOL.GS.Commands
                 list.Add(("Passive", "@pet:passive"));
                 list.Add(("Buff", "/buff"));
                 list.Add(("Dismiss", "@pet:release"));
+                return list;
+            }
+
+            // your companion: home, how much they talk, the usual help
+            if (PersonalCompanions.IsCompanionOf(me, target) && PersonalCompanions.Load(me) is PersonalCompanions.Record rec)
+            {
+                title = $"{target.Name} (your companion)";
+                list.Add(("Call to Me", "/companion call"));
+                list.Add(("Send Home", "/companion home"));
+                foreach (string how in new[] { "chatty", "normal", "quiet" })
+                    if (how != rec.Talk)
+                        list.Add(("Be " + char.ToUpperInvariant(how[0]) + how[1..], "/companion talk " + how));
+                list.Add(("Buff", "/buff"));
+                list.Add(("Assist", "/assist"));
                 return list;
             }
 

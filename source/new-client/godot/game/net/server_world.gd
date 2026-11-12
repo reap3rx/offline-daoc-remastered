@@ -943,6 +943,10 @@ func _message(d: Dictionary) -> void:
 		if viewer and viewer.ui and viewer.ui.get("social_menu") and not entries.is_empty():
 			viewer.ui.social_menu.open(String(mf[0]), entries)
 		return
+	if String(d.text).begins_with("#COMPANION|"):         # your companion's name (PersonalCompanions.cs): its abilities show
+		PlayerData.set_meta("companion", String(d.text).substr(11))
+		Server.skills_changed.emit()
+		return
 	if String(d.text).begins_with("#SIT|"):               # a bot sitting at a campfire (AutonomousCampfireVisits): oid|1/0
 		var sf := String(d.text).substr(5).split("|")
 		if sf.size() >= 2:

@@ -53,6 +53,8 @@ func use(key: String) -> void:
 		"stag": stag()
 		"critical shot": combat.critical_shot()
 		"rapid fire": combat.rapid_fire()
+		"call companion": Server.command("/companion call")       # (PersonalCompanions.cs: the server's own reuse)
+		"send companion home": Server.command("/companion home")
 
 
 func toggle_sprint() -> void:

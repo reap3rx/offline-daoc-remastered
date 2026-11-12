@@ -740,6 +740,14 @@ namespace DOL.GS.ServerProperties
 		public static double XP_RATE;
 
 		/// <summary>
+		/// Each group member past the first adds back this share of a kill's experience (owner 2026-11-11: "reduce the
+		/// penalty of splitting XP ... grouping feel good but doesn't make soloing feel horrible"). 0.5: a duo's members
+		/// get 75% of a solo kill each, a trio 67%, four 63%, eight 56%. The classic value was 0.125.
+		/// </summary>
+		[ServerProperty("rates", "group_xp_bonus", "Each group member past the first adds back this share of the kill's experience (0.125 classic, 0.5 Remastered: a duo gets 75% each, eight get 56%)", 0.5)]
+		public static double GROUP_XP_BONUS;
+
+		/// <summary>
 		/// The autonomous player-bot experience rate. This is intentionally
 		/// independent from XP_RATE so the real player's progression can be
 		/// tuned without changing the persistent world population.

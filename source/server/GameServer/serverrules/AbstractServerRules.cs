@@ -1266,7 +1266,9 @@ namespace DOL.GS.ServerRules
 
                     // /spawn helpers never receive XP and never increase the
                     // divisor. Their legitimate combat damage belongs to the
-                    // human owner for reward-percentage purposes.
+                    // human owner for reward-percentage purposes. A personal
+                    // companion is a member in full (owner 2026-11-11: it "splits
+                    // kills, quest credit and XP"): it counts in the group's size.
                     ProcessDamage(owner, pair.Value, owner, mostDamagingPlayer,
                         playerCountAndDamage, false);
 
@@ -1276,7 +1278,7 @@ namespace DOL.GS.ServerRules
                         groupCountAndDamage ??= new();
                         mostDamagingGroup ??= new();
                         ProcessDamage(owner, pair.Value, group, mostDamagingGroup,
-                            groupCountAndDamage, false);
+                            groupCountAndDamage, helper.IsPersonalCompanion);
                     }
                 }
 
@@ -1606,7 +1608,7 @@ namespace DOL.GS.ServerRules
 
                 // Group size is reduced by 1 to prevent the bonus from doing more than simply working against the base experience reduction done in `CalculateNpcExperienceValueModifiedByGroup`.
                 // For example, a bonus of 100% should nullify that reduction. If the group size wasn't reduced by 1, duos would actually gain more experience than solo players (ignoring other bonuses).
-                return (long) (baseXpReward * (value.Count - 1) * 0.125);
+                return (long) (baseXpReward * (value.Count - 1) * Properties.GROUP_XP_BONUS);   // (0.5 Remastered, 0.125 classic)
             }
 
             long CalculateGuildBonus()

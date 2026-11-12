@@ -1,0 +1,1461 @@
+{
+ "name": "companion",
+ "npcs": [
+  {
+   "id": "companion_rowena",
+   "name": "Rowena Ashby",
+   "model": 38,
+   "guild": "Adventurers' Guild",
+   "pos": [
+    294,
+    712,
+    57.0
+   ],
+   "zone": 0,
+   "realm": 1,
+   "level": 40,
+   "idle": "Every road in Albion is easier with a friend on it."
+  },
+  {
+   "id": "companion_ketil",
+   "name": "Ketil Ravnsson",
+   "model": 213,
+   "guild": "Shield-Hall of Mularn",
+   "pos": [
+    1258,
+    1362,
+    119.4
+   ],
+   "zone": 100,
+   "realm": 2,
+   "level": 40,
+   "idle": "No one should go into the cold alone. Not in Midgard."
+  },
+  {
+   "id": "companion_caoimhe",
+   "name": "Caoimhe Ni Dhuinn",
+   "model": 365,
+   "guild": "Fianna of Mag Mell",
+   "pos": [
+    660,
+    190,
+    130.0
+   ],
+   "zone": 200,
+   "realm": 3,
+   "level": 40,
+   "idle": "The forest is kinder to two than to one. Remember that."
+  }
+ ],
+ "quests": [
+  {
+   "id": "companion_alb",
+   "title": "A Friend for the Road",
+   "level": 7,
+   "min_level": 7,
+   "realm": 1,
+   "giver": "companion_rowena",
+   "offer": "You've the look of someone who shouldn't walk the roads alone, {name}. I find companions for people like you - folk who'll stand at your shoulder for the long road. Shall I find you a [companion]?",
+   "accept": "companion",
+   "summary": "Rowena Ashby of Cotswold Village finds travelling companions for adventurers. Rowena has someone in mind for you.",
+   "steps": [
+    {
+     "id": "sex",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Speak with Rowena Ashby in Cotswold Village",
+     "say": "There you are, {name}. Word gets around - you've been making a name for yourself, and nobody should walk the long road alone. I keep a list of good people looking for someone worth following.\n\nTell me who you'd want at your shoulder. A [man] or a [woman]?",
+     "options": [
+      {
+       "keyword": "man",
+       "say": "A man. Good.\n\nAnd their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "woman",
+       "say": "A woman. Good.\n\nAnd their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      }
+     ]
+    },
+    {
+     "id": "class",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's calling",
+     "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "There you are, {name}. Word gets around - you've been making a name for yourself, and nobody should walk the long road alone. I keep a list of good people looking for someone worth following.\n\nTell me who you'd want at your shoulder. A [man] or a [woman]?",
+       "next": "sex"
+      },
+      {
+       "keyword": "Armsman",
+       "say": "An Armsman. Heavy armour and a long polearm - they'll hold any line you draw.\n\nAnd of what people? [Avalonian], [Briton], [Highlander], [Inconnu], [Saracen].\n\nOr go [back].",
+       "next": "race_Armsman"
+      },
+      {
+       "keyword": "Paladin",
+       "say": "A Paladin. A knight of the Church: sword, chant and an oath that doesn't bend.\n\nAnd of what people? [Avalonian], [Briton], [Highlander], [Saracen].\n\nOr go [back].",
+       "next": "race_Paladin"
+      },
+      {
+       "keyword": "Mercenary",
+       "say": "A Mercenary. Two blades and no patience for standing still.\n\nAnd of what people? [Avalonian], [Briton], [Highlander], [Inconnu], [Saracen].\n\nOr go [back].",
+       "next": "race_Mercenary"
+      },
+      {
+       "keyword": "Reaver",
+       "say": "A Reaver. A flail and a darker kind of devotion. Unsettling. Effective.\n\nAnd of what people? [Briton], [Inconnu], [Saracen].\n\nOr go [back].",
+       "next": "race_Reaver"
+      },
+      {
+       "keyword": "Cleric",
+       "say": "A Cleric. Prayer that closes wounds - and calls back the dead.\n\nAnd of what people? [Avalonian], [Briton], [Highlander].\n\nOr go [back].",
+       "next": "race_Cleric"
+      },
+      {
+       "keyword": "Friar",
+       "say": "A Friar. A quarterstaff, a healing hand and a laugh for every road.\n\nAnd of what people? [Briton].\n\nOr go [back].",
+       "next": "race_Friar"
+      },
+      {
+       "keyword": "Wizard",
+       "say": "A Wizard. Fire and ice from a safe distance. Mostly safe.\n\nAnd of what people? [Avalonian], [Briton].\n\nOr go [back].",
+       "next": "race_Wizard"
+      },
+      {
+       "keyword": "Theurgist",
+       "say": "A Theurgist. Summons the very air, earth and ice to fight for you.\n\nAnd of what people? [Avalonian], [Briton].\n\nOr go [back].",
+       "next": "race_Theurgist"
+      },
+      {
+       "keyword": "Sorcerer",
+       "say": "A Sorcerer. Mind and body bent to their will - and a pet to boot.\n\nAnd of what people? [Avalonian], [Briton], [Inconnu], [Saracen].\n\nOr go [back].",
+       "next": "race_Sorcerer"
+      },
+      {
+       "keyword": "Cabalist",
+       "say": "A Cabalist. Builds a servant of clay or stone and sends it ahead.\n\nAnd of what people? [Avalonian], [Briton], [Inconnu], [Saracen].\n\nOr go [back].",
+       "next": "race_Cabalist"
+      },
+      {
+       "keyword": "Necromancer",
+       "say": "A Necromancer. Fights through a shade from beyond. Don't stare at it.\n\nAnd of what people? [Briton], [Inconnu], [Saracen].\n\nOr go [back].",
+       "next": "race_Necromancer"
+      },
+      {
+       "keyword": "Scout",
+       "say": "A Scout. A longbow, sharp eyes and a shield for when the arrows run out.\n\nAnd of what people? [Briton], [Highlander], [Inconnu], [Saracen].\n\nOr go [back].",
+       "next": "race_Scout"
+      },
+      {
+       "keyword": "Infiltrator",
+       "say": "An Infiltrator. You won't see them. Neither will the enemy - until too late.\n\nAnd of what people? [Briton], [Inconnu], [Saracen].\n\nOr go [back].",
+       "next": "race_Infiltrator"
+      },
+      {
+       "keyword": "Minstrel",
+       "say": "A Minstrel. Songs to speed your feet and lull your foes to sleep.\n\nAnd of what people? [Briton], [Highlander], [Saracen].\n\nOr go [back].",
+       "next": "race_Minstrel"
+      }
+     ]
+    },
+    {
+     "id": "race_Armsman",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "An Armsman. Heavy armour and a long polearm - they'll hold any line you draw.\n\nAnd of what people? [Avalonian], [Briton], [Highlander], [Inconnu], [Saracen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Avalonian",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Highlander",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Inconnu",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Saracen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Paladin",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "A Paladin. A knight of the Church: sword, chant and an oath that doesn't bend.\n\nAnd of what people? [Avalonian], [Briton], [Highlander], [Saracen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Avalonian",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Highlander",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Saracen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Mercenary",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "A Mercenary. Two blades and no patience for standing still.\n\nAnd of what people? [Avalonian], [Briton], [Highlander], [Inconnu], [Saracen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Avalonian",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Highlander",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Inconnu",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Saracen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Reaver",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "A Reaver. A flail and a darker kind of devotion. Unsettling. Effective.\n\nAnd of what people? [Briton], [Inconnu], [Saracen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Inconnu",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Saracen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Cleric",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "A Cleric. Prayer that closes wounds - and calls back the dead.\n\nAnd of what people? [Avalonian], [Briton], [Highlander].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Avalonian",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Highlander",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Friar",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "A Friar. A quarterstaff, a healing hand and a laugh for every road.\n\nAnd of what people? [Briton].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Wizard",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "A Wizard. Fire and ice from a safe distance. Mostly safe.\n\nAnd of what people? [Avalonian], [Briton].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Avalonian",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Theurgist",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "A Theurgist. Summons the very air, earth and ice to fight for you.\n\nAnd of what people? [Avalonian], [Briton].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Avalonian",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Sorcerer",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "A Sorcerer. Mind and body bent to their will - and a pet to boot.\n\nAnd of what people? [Avalonian], [Briton], [Inconnu], [Saracen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Avalonian",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Inconnu",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Saracen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Cabalist",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "A Cabalist. Builds a servant of clay or stone and sends it ahead.\n\nAnd of what people? [Avalonian], [Briton], [Inconnu], [Saracen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Avalonian",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Inconnu",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Saracen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Necromancer",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "A Necromancer. Fights through a shade from beyond. Don't stare at it.\n\nAnd of what people? [Briton], [Inconnu], [Saracen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Inconnu",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Saracen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Scout",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "A Scout. A longbow, sharp eyes and a shield for when the arrows run out.\n\nAnd of what people? [Briton], [Highlander], [Inconnu], [Saracen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Highlander",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Inconnu",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Saracen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Infiltrator",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "An Infiltrator. You won't see them. Neither will the enemy - until too late.\n\nAnd of what people? [Briton], [Inconnu], [Saracen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Inconnu",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Saracen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Minstrel",
+     "type": "choice",
+     "npc": "companion_rowena",
+     "goal": "Tell Rowena your companion's people",
+     "say": "A Minstrel. Songs to speed your feet and lull your foes to sleep.\n\nAnd of what people? [Briton], [Highlander], [Saracen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nSteel and shield: [Armsman], [Paladin], [Mercenary], [Reaver]\nFaith and healing: [Cleric], [Friar]\nThe arcane: [Wizard], [Theurgist], [Sorcerer], [Cabalist], [Necromancer]\nRoad and shadow: [Scout], [Infiltrator], [Minstrel]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Briton",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Highlander",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Saracen",
+       "ending": "joined"
+      }
+     ]
+    }
+   ],
+   "endings": {
+    "joined": {
+     "text": "Then I know just the one - they've been waiting for someone like you.\n\nThere. Look after each other out there, {name}. And call for them whenever you need them."
+    }
+   }
+  },
+  {
+   "id": "companion_mid",
+   "title": "A Friend for the Road",
+   "level": 7,
+   "min_level": 7,
+   "realm": 2,
+   "giver": "companion_ketil",
+   "offer": "You've the look of someone who shouldn't walk the roads alone, {name}. I find companions for people like you - folk who'll stand at your shoulder for the long road. Shall I find you a [companion]?",
+   "accept": "companion",
+   "summary": "Ketil Ravnsson of Mularn finds travelling companions for adventurers. Ketil has someone in mind for you.",
+   "steps": [
+    {
+     "id": "sex",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Speak with Ketil Ravnsson in Mularn",
+     "say": "Ah - {name}. The skalds are already muttering your name, did you know? A name like that needs a shield-mate. I know good folk who'd follow you into the cold, if you'll have them.\n\nTell me who you'd want at your shoulder. A [man] or a [woman]?",
+     "options": [
+      {
+       "keyword": "man",
+       "say": "A man. Good.\n\nAnd their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "woman",
+       "say": "A woman. Good.\n\nAnd their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      }
+     ]
+    },
+    {
+     "id": "class",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Tell Ketil your companion's calling",
+     "say": "And their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "Ah - {name}. The skalds are already muttering your name, did you know? A name like that needs a shield-mate. I know good folk who'd follow you into the cold, if you'll have them.\n\nTell me who you'd want at your shoulder. A [man] or a [woman]?",
+       "next": "sex"
+      },
+      {
+       "keyword": "Warrior",
+       "say": "A Warrior. Thick armour, a big shield, and no idea how to back down.\n\nAnd of what people? [Dwarf], [Kobold], [Norseman], [Troll], [Valkyn].\n\nOr go [back].",
+       "next": "race_Warrior"
+      },
+      {
+       "keyword": "Thane",
+       "say": "A Thane. A hammer in one hand and Thor's thunder in the other.\n\nAnd of what people? [Dwarf], [Norseman], [Troll].\n\nOr go [back].",
+       "next": "race_Thane"
+      },
+      {
+       "keyword": "Berserker",
+       "say": "A Berserker. When the rage takes them, every blow lands like a falling tree.\n\nAnd of what people? [Dwarf], [Norseman], [Troll], [Valkyn].\n\nOr go [back].",
+       "next": "race_Berserker"
+      },
+      {
+       "keyword": "Savage",
+       "say": "A Savage. Hand-to-hand claws and a body hardened past pain.\n\nAnd of what people? [Dwarf], [Kobold], [Norseman], [Troll], [Valkyn].\n\nOr go [back].",
+       "next": "race_Savage"
+      },
+      {
+       "keyword": "Skald",
+       "say": "A Skald. Sings of the battle while fighting in it - and the songs help.\n\nAnd of what people? [Dwarf], [Kobold], [Norseman], [Troll].\n\nOr go [back].",
+       "next": "race_Skald"
+      },
+      {
+       "keyword": "Healer",
+       "say": "A Healer. Mends the living, raises the fallen. Every war-band needs one.\n\nAnd of what people? [Dwarf], [Norseman].\n\nOr go [back].",
+       "next": "race_Healer"
+      },
+      {
+       "keyword": "Shaman",
+       "say": "A Shaman. Heals the body, sickens the foe - an old, earthy magic.\n\nAnd of what people? [Kobold], [Troll].\n\nOr go [back].",
+       "next": "race_Shaman"
+      },
+      {
+       "keyword": "Runemaster",
+       "say": "A Runemaster. Carves the runes of Odin into bolts of pure force.\n\nAnd of what people? [Dwarf], [Kobold], [Norseman].\n\nOr go [back].",
+       "next": "race_Runemaster"
+      },
+      {
+       "keyword": "Spiritmaster",
+       "say": "A Spiritmaster. Calls warrior spirits from Hel to fight at your side.\n\nAnd of what people? [Kobold], [Norseman].\n\nOr go [back].",
+       "next": "race_Spiritmaster"
+      },
+      {
+       "keyword": "Bonedancer",
+       "say": "A Bonedancer. Commands an army of bones. Cheerful company, considering.\n\nAnd of what people? [Kobold], [Troll], [Valkyn].\n\nOr go [back].",
+       "next": "race_Bonedancer"
+      },
+      {
+       "keyword": "Hunter",
+       "say": "A Hunter. A spear, a bow, and a hound that never loses the trail.\n\nAnd of what people? [Dwarf], [Kobold], [Norseman], [Valkyn].\n\nOr go [back].",
+       "next": "race_Hunter"
+      },
+      {
+       "keyword": "Shadowblade",
+       "say": "A Shadowblade. Two blades out of the dark. You'll only hear about it afterwards.\n\nAnd of what people? [Kobold], [Norseman], [Valkyn].\n\nOr go [back].",
+       "next": "race_Shadowblade"
+      }
+     ]
+    },
+    {
+     "id": "race_Warrior",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Tell Ketil your companion's people",
+     "say": "A Warrior. Thick armour, a big shield, and no idea how to back down.\n\nAnd of what people? [Dwarf], [Kobold], [Norseman], [Troll], [Valkyn].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Dwarf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Kobold",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Norseman",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Troll",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Valkyn",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Thane",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Tell Ketil your companion's people",
+     "say": "A Thane. A hammer in one hand and Thor's thunder in the other.\n\nAnd of what people? [Dwarf], [Norseman], [Troll].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Dwarf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Norseman",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Troll",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Berserker",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Tell Ketil your companion's people",
+     "say": "A Berserker. When the rage takes them, every blow lands like a falling tree.\n\nAnd of what people? [Dwarf], [Norseman], [Troll], [Valkyn].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Dwarf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Norseman",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Troll",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Valkyn",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Savage",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Tell Ketil your companion's people",
+     "say": "A Savage. Hand-to-hand claws and a body hardened past pain.\n\nAnd of what people? [Dwarf], [Kobold], [Norseman], [Troll], [Valkyn].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Dwarf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Kobold",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Norseman",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Troll",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Valkyn",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Skald",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Tell Ketil your companion's people",
+     "say": "A Skald. Sings of the battle while fighting in it - and the songs help.\n\nAnd of what people? [Dwarf], [Kobold], [Norseman], [Troll].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Dwarf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Kobold",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Norseman",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Troll",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Healer",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Tell Ketil your companion's people",
+     "say": "A Healer. Mends the living, raises the fallen. Every war-band needs one.\n\nAnd of what people? [Dwarf], [Norseman].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Dwarf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Norseman",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Shaman",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Tell Ketil your companion's people",
+     "say": "A Shaman. Heals the body, sickens the foe - an old, earthy magic.\n\nAnd of what people? [Kobold], [Troll].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Kobold",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Troll",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Runemaster",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Tell Ketil your companion's people",
+     "say": "A Runemaster. Carves the runes of Odin into bolts of pure force.\n\nAnd of what people? [Dwarf], [Kobold], [Norseman].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Dwarf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Kobold",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Norseman",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Spiritmaster",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Tell Ketil your companion's people",
+     "say": "A Spiritmaster. Calls warrior spirits from Hel to fight at your side.\n\nAnd of what people? [Kobold], [Norseman].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Kobold",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Norseman",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Bonedancer",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Tell Ketil your companion's people",
+     "say": "A Bonedancer. Commands an army of bones. Cheerful company, considering.\n\nAnd of what people? [Kobold], [Troll], [Valkyn].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Kobold",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Troll",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Valkyn",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Hunter",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Tell Ketil your companion's people",
+     "say": "A Hunter. A spear, a bow, and a hound that never loses the trail.\n\nAnd of what people? [Dwarf], [Kobold], [Norseman], [Valkyn].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Dwarf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Kobold",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Norseman",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Valkyn",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Shadowblade",
+     "type": "choice",
+     "npc": "companion_ketil",
+     "goal": "Tell Ketil your companion's people",
+     "say": "A Shadowblade. Two blades out of the dark. You'll only hear about it afterwards.\n\nAnd of what people? [Kobold], [Norseman], [Valkyn].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nAxe and shield: [Warrior], [Thane], [Berserker], [Savage], [Skald]\nHealing and the spirits: [Healer], [Shaman]\nRunes and the dead: [Runemaster], [Spiritmaster], [Bonedancer]\nBow and shadow: [Hunter], [Shadowblade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Kobold",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Norseman",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Valkyn",
+       "ending": "joined"
+      }
+     ]
+    }
+   ],
+   "endings": {
+    "joined": {
+     "text": "Then I know just the one - they've been waiting for someone like you.\n\nThere. Look after each other out there, {name}. And call for them whenever you need them."
+    }
+   }
+  },
+  {
+   "id": "companion_hib",
+   "title": "A Friend for the Road",
+   "level": 7,
+   "min_level": 7,
+   "realm": 3,
+   "giver": "companion_caoimhe",
+   "offer": "You've the look of someone who shouldn't walk the roads alone, {name}. I find companions for people like you - folk who'll stand at your shoulder for the long road. Shall I find you a [companion]?",
+   "accept": "companion",
+   "summary": "Caoimhe Ni Dhuinn of Mag Mell finds travelling companions for adventurers. Caoimhe has someone in mind for you.",
+   "steps": [
+    {
+     "id": "sex",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Speak with Caoimhe Ni Dhuinn in Mag Mell",
+     "say": "{name}! The birds have been singing about you, and they're rarely wrong. A path like yours shouldn't be walked alone - I know a few good souls who'd gladly walk it with you.\n\nTell me who you'd want at your shoulder. A [man] or a [woman]?",
+     "options": [
+      {
+       "keyword": "man",
+       "say": "A man. Good.\n\nAnd their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "woman",
+       "say": "A woman. Good.\n\nAnd their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      }
+     ]
+    },
+    {
+     "id": "class",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's calling",
+     "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "{name}! The birds have been singing about you, and they're rarely wrong. A path like yours shouldn't be walked alone - I know a few good souls who'd gladly walk it with you.\n\nTell me who you'd want at your shoulder. A [man] or a [woman]?",
+       "next": "sex"
+      },
+      {
+       "keyword": "Hero",
+       "say": "A Hero. A shield, a spear, and a stubborn streak as old as the hills.\n\nAnd of what people? [Celt], [Firbolg], [Lurikeen], [Sylvan].\n\nOr go [back].",
+       "next": "race_Hero"
+      },
+      {
+       "keyword": "Blademaster",
+       "say": "A Blademaster. Two blades, never still - quick as a hawk's stoop.\n\nAnd of what people? [Celt], [Elf], [Firbolg].\n\nOr go [back].",
+       "next": "race_Blademaster"
+      },
+      {
+       "keyword": "Champion",
+       "say": "A Champion. A great sword and spells that sap the strength from foes.\n\nAnd of what people? [Celt], [Elf], [Lurikeen].\n\nOr go [back].",
+       "next": "race_Champion"
+      },
+      {
+       "keyword": "Valewalker",
+       "say": "A Valewalker. A scythe and the forest's own magic. Strange, and strong.\n\nAnd of what people? [Celt], [Firbolg], [Sylvan].\n\nOr go [back].",
+       "next": "race_Valewalker"
+      },
+      {
+       "keyword": "Sluaghbinder",
+       "say": "A Sluaghbinder. Binds the restless dead of the Sluagh to their will.\n\nAnd of what people? [Celt], [Firbolg].\n\nOr go [back].",
+       "next": "race_Sluaghbinder"
+      },
+      {
+       "keyword": "Druid",
+       "say": "A Druid. The grove's healing - and a creature of the wild beside them.\n\nAnd of what people? [Celt], [Firbolg], [Sylvan].\n\nOr go [back].",
+       "next": "race_Druid"
+      },
+      {
+       "keyword": "Warden",
+       "say": "A Warden. Heals, shields and fights. A friend in every way.\n\nAnd of what people? [Celt], [Firbolg], [Sylvan].\n\nOr go [back].",
+       "next": "race_Warden"
+      },
+      {
+       "keyword": "Bard",
+       "say": "A Bard. Songs that heal, speed and calm - and a raised voice for the fallen.\n\nAnd of what people? [Celt], [Firbolg].\n\nOr go [back].",
+       "next": "race_Bard"
+      },
+      {
+       "keyword": "Eldritch",
+       "say": "An Eldritch. The void's cold light, thrown hard and far.\n\nAnd of what people? [Elf], [Lurikeen].\n\nOr go [back].",
+       "next": "race_Eldritch"
+      },
+      {
+       "keyword": "Enchanter",
+       "say": "An Enchanter. Bends light into weapons and a spirit to guard them.\n\nAnd of what people? [Elf], [Lurikeen].\n\nOr go [back].",
+       "next": "race_Enchanter"
+      },
+      {
+       "keyword": "Mentalist",
+       "say": "A Mentalist. Mind against mind, and gentle healing besides.\n\nAnd of what people? [Celt], [Elf], [Lurikeen].\n\nOr go [back].",
+       "next": "race_Mentalist"
+      },
+      {
+       "keyword": "Animist",
+       "say": "An Animist. Grows fungal servants from the earth itself. Oddly loyal things.\n\nAnd of what people? [Celt], [Firbolg], [Sylvan].\n\nOr go [back].",
+       "next": "race_Animist"
+      },
+      {
+       "keyword": "Ranger",
+       "say": "A Ranger. A bow from the high forests - and they never miss twice.\n\nAnd of what people? [Celt], [Elf], [Lurikeen].\n\nOr go [back].",
+       "next": "race_Ranger"
+      },
+      {
+       "keyword": "Nightshade",
+       "say": "A Nightshade. Silent, quick and gone before the body falls.\n\nAnd of what people? [Elf], [Lurikeen].\n\nOr go [back].",
+       "next": "race_Nightshade"
+      }
+     ]
+    },
+    {
+     "id": "race_Hero",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "A Hero. A shield, a spear, and a stubborn streak as old as the hills.\n\nAnd of what people? [Celt], [Firbolg], [Lurikeen], [Sylvan].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Celt",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Firbolg",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Lurikeen",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Sylvan",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Blademaster",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "A Blademaster. Two blades, never still - quick as a hawk's stoop.\n\nAnd of what people? [Celt], [Elf], [Firbolg].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Celt",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Elf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Firbolg",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Champion",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "A Champion. A great sword and spells that sap the strength from foes.\n\nAnd of what people? [Celt], [Elf], [Lurikeen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Celt",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Elf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Lurikeen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Valewalker",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "A Valewalker. A scythe and the forest's own magic. Strange, and strong.\n\nAnd of what people? [Celt], [Firbolg], [Sylvan].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Celt",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Firbolg",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Sylvan",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Sluaghbinder",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "A Sluaghbinder. Binds the restless dead of the Sluagh to their will.\n\nAnd of what people? [Celt], [Firbolg].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Celt",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Firbolg",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Druid",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "A Druid. The grove's healing - and a creature of the wild beside them.\n\nAnd of what people? [Celt], [Firbolg], [Sylvan].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Celt",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Firbolg",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Sylvan",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Warden",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "A Warden. Heals, shields and fights. A friend in every way.\n\nAnd of what people? [Celt], [Firbolg], [Sylvan].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Celt",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Firbolg",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Sylvan",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Bard",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "A Bard. Songs that heal, speed and calm - and a raised voice for the fallen.\n\nAnd of what people? [Celt], [Firbolg].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Celt",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Firbolg",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Eldritch",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "An Eldritch. The void's cold light, thrown hard and far.\n\nAnd of what people? [Elf], [Lurikeen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Elf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Lurikeen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Enchanter",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "An Enchanter. Bends light into weapons and a spirit to guard them.\n\nAnd of what people? [Elf], [Lurikeen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Elf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Lurikeen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Mentalist",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "A Mentalist. Mind against mind, and gentle healing besides.\n\nAnd of what people? [Celt], [Elf], [Lurikeen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Celt",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Elf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Lurikeen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Animist",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "An Animist. Grows fungal servants from the earth itself. Oddly loyal things.\n\nAnd of what people? [Celt], [Firbolg], [Sylvan].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Celt",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Firbolg",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Sylvan",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Ranger",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "A Ranger. A bow from the high forests - and they never miss twice.\n\nAnd of what people? [Celt], [Elf], [Lurikeen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Celt",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Elf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Lurikeen",
+       "ending": "joined"
+      }
+     ]
+    },
+    {
+     "id": "race_Nightshade",
+     "type": "choice",
+     "npc": "companion_caoimhe",
+     "goal": "Tell Caoimhe your companion's people",
+     "say": "A Nightshade. Silent, quick and gone before the body falls.\n\nAnd of what people? [Elf], [Lurikeen].\n\nOr go [back].",
+     "options": [
+      {
+       "keyword": "back",
+       "say": "And their calling?\n\nBlade and shield: [Hero], [Blademaster], [Champion], [Valewalker], [Sluaghbinder]\nNurture and song: [Druid], [Warden], [Bard]\nMagic: [Eldritch], [Enchanter], [Mentalist], [Animist]\nBow and shadow: [Ranger], [Nightshade]\n\nOr go [back].",
+       "next": "class"
+      },
+      {
+       "keyword": "Elf",
+       "ending": "joined"
+      },
+      {
+       "keyword": "Lurikeen",
+       "ending": "joined"
+      }
+     ]
+    }
+   ],
+   "endings": {
+    "joined": {
+     "text": "Then I know just the one - they've been waiting for someone like you.\n\nThere. Look after each other out there, {name}. And call for them whenever you need them."
+    }
+   }
+  }
+ ]
+}

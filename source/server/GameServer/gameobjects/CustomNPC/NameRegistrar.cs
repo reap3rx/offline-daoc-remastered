@@ -36,6 +36,9 @@ namespace DOL.GS
 					SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client.Account.Language, "NameRegistrar.ReturnToMe", LastnameCommandHandler.LASTNAME_MIN_LEVEL));
 				else
                     SayTo(player, eChatLoc.CL_SystemWindow, LanguageMgr.GetTranslation(player.Client.Account.Language, "NameRegistrar.LastName"));
+                // a companion's new name is written here too (owner 2026-11-11)
+                if (PersonalCompanions.Load(player) is PersonalCompanions.Record companion)
+                    SayTo(player, eChatLoc.CL_SystemWindow, $"Your companion, {companion.Name}, may take a new name in my book as well: /companion rename <name>.");
                 return true;
 			}
 			return false;

@@ -46,6 +46,10 @@ namespace DOL.GS
         public long DatabaseID { get; set; }
         public bool IsAutonomousWorldBot { get; private set; }
         public bool IsTemporaryGroupHelper { get; private set; }
+        /// <summary>The player's own companion (PersonalCompanions; owner 2026-11-11): a helper that is a group member in
+        /// full - it takes its share of the experience - and that dies, releases and walks back as a player would.</summary>
+        public bool IsPersonalCompanion { get; set; }
+        private long _companionReleasedAt;
         public bool IsEndgameCompanion => TemporaryCompanionBalance.IsEndgame(IsTemporaryGroupHelper, Level);
         private bool _endgameCompanionEquipped;
         public bool SuppressLootAndProgress => IsTemporaryGroupHelper;
@@ -996,6 +1000,27 @@ namespace DOL.GS
             }
 
             long deadFor = GameLoop.GameLoopTime - _deathTick;
+            if (IsPersonalCompanion)
+            {
+                // owner 2026-11-11: "if they see they can't be rezzed, they can release right away when able. If there is
+                // someone who can res them, but they don't because they die too or are out of mana for too long, they
+                // will release after a minute."
+                if (deadFor < (GroupHasResurrector() ? 60_000 : 6_000))
+                    return 3000;
+                try
+                {
+                    ReleaseToNearestBindAndReturn(true);
+                }
+                catch (Exception exception)
+                {
+                    log.Error($"COMPANION_RELEASE bot={Name}", exception);
+                    return 3000;
+                }
+                if (!IsAlive)
+                    return 3000;
+                _deathRecoveryTimer = null;
+                return 0;
+            }
             AutonomousBotGroupCoordinator.PveCorpseDisposition groupDisposition =
                 AutonomousBotGroupCoordinator.PveCorpseRecovery(this);
             if (groupDisposition == AutonomousBotGroupCoordinator.PveCorpseDisposition.HoldForResurrection)
@@ -1045,6 +1070,27 @@ namespace DOL.GS
 
         public const long SiegeCorpseWaitMilliseconds = 240_000;
 
+        /// <summary>Anyone in the group who can raise the dead at all - alive or not, with power or not (the
+        /// companion's "can I be rezzed?").</summary>
+        private bool GroupHasResurrector()
+        {
+            if (Group == null)
+                return false;
+            foreach (GameLiving member in Group.GetMembersInTheGroup())
+            {
+                if (member == this || member.CurrentRegionID != CurrentRegionID)
+                    continue;
+                if (member is GameBot bot && bot.ResurrectionSpell != null)
+                    return true;
+                if (member is GamePlayer player && player.CharacterClass?.ID is
+                    (int)eCharacterClass.Cleric or (int)eCharacterClass.Friar or
+                    (int)eCharacterClass.Healer or (int)eCharacterClass.Shaman or
+                    (int)eCharacterClass.Druid or (int)eCharacterClass.Warden or (int)eCharacterClass.Bard)
+                    return true;
+            }
+            return false;
+        }
+
         private bool HasViableResurrector()
         {
             if (Group == null)
@@ -1067,7 +1113,7 @@ namespace DOL.GS
 
         private void ReleaseToNearestBindAndReturn(bool returnToParty = true)
         {
-            if (IsTemporaryGroupHelper)
+            if (IsTemporaryGroupHelper && !IsPersonalCompanion)
             {
                 if (!TemporaryCompanionRecovery.CanReleaseToOwner(this))
                     return;
@@ -1128,7 +1174,8 @@ namespace DOL.GS
             Mana = Math.Max(0, MaxMana / 3);
             Endurance = Math.Max(0, MaxEndurance / 3);
             IsReturningAfterRelease = returnToParty;
-            if (returnToParty) AutonomousRealmRaid.RejoinAfterRelease(this);
+            _companionReleasedAt = GameLoop.GameLoopTime;
+            if (returnToParty && !IsPersonalCompanion) AutonomousRealmRaid.RejoinAfterRelease(this);
             _nextReturnRoleplayTick = GameLoop.GameLoopTime + Util.Random(45_000, 90_000);
             Brain?.FSM?.SetCurrentState(eFSMStateType.FOLLOW);
             Brain?.Start();
@@ -1147,9 +1194,9 @@ namespace DOL.GS
 
         private Point3D? FindNearestBindPoint()
         {
-            Point3D? bind = BotReleaseBindPoints.Nearest(_deathRegionId, X, Y, IsAutonomousWorldBot ? Realm : eRealm.None);
+            Point3D? bind = BotReleaseBindPoints.Nearest(_deathRegionId, X, Y, IsAutonomousWorldBot || IsPersonalCompanion ? Realm : eRealm.None);
             // a soulbind stone nearer than the bind stone: rise there and walk back (owner 2026-11-11)
-            SoulbindStone stone = IsAutonomousWorldBot ? SoulbindStones.Nearest(_deathRegionId, X, Y) : null;
+            SoulbindStone stone = IsAutonomousWorldBot || IsPersonalCompanion ? SoulbindStones.Nearest(_deathRegionId, X, Y) : null;
             if (stone != null && (bind == null ||
                     (long)(stone.X - X) * (stone.X - X) + (long)(stone.Y - Y) * (stone.Y - Y) <
                     (long)(bind.X - X) * (bind.X - X) + (long)(bind.Y - Y) * (bind.Y - Y)))
@@ -1184,6 +1231,9 @@ namespace DOL.GS
             // Even persistent bots in a human's party retain their walk-back.
             if (!IsTemporaryGroupHelper || !IsAlive || Owner?.IsAlive != true ||
                 Owner.ObjectState != eObjectState.Active || Owner.CurrentZone == null)
+                return false;
+            // the companion walks back from its bind stone (ContinueReturnJourney) - Call Companion brings it at once
+            if (IsPersonalCompanion && IsReturningAfterRelease && !afterRevival)
                 return false;
             if ((afterRevival || IsReturningAfterRelease) && !TemporaryCompanionRecovery.CanReleaseToOwner(this))
                 return false;
@@ -1240,7 +1290,9 @@ namespace DOL.GS
             if (!IsReturningAfterRelease || !IsAlive)
                 return false;
 
-            if (IsTemporaryGroupHelper)
+            // the companion walks unless its player is in another region, or it has been on the road five minutes
+            if (IsTemporaryGroupHelper && (!IsPersonalCompanion || Owner == null || Owner.CurrentRegionID != CurrentRegionID ||
+                    GameLoop.GameLoopTime - _companionReleasedAt > 300_000))
             {
                 TryReturnTemporaryCompanionToLeader(true);
                 return IsReturningAfterRelease;
@@ -1274,7 +1326,8 @@ namespace DOL.GS
                 Say(ReturnDialogue("dismount"));
             }
 
-            _stableReturnPlan ??= FindFasterStableRoute(destination);
+            if (!IsPersonalCompanion)                      // (no purse for a ticket: it walks)
+                _stableReturnPlan ??= FindFasterStableRoute(destination);
             if (_stableReturnPlan != null)
             {
                 if (!IsWithinRadius(_stableReturnPlan.Master, 225))

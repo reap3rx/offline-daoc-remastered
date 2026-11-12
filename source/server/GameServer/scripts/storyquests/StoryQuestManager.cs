@@ -38,6 +38,10 @@ namespace DOL.GS.StoryQuests
         static readonly object _lock = new();
 
         public static IEnumerable<StoryQuestDef> Quests => _quests.Values;
+        /// <summary>An answer picked on a choice step (before the quest moves on): the companion quest records them.</summary>
+        public static event Action<GamePlayer, StoryQuest, StepDef, OptionDef> ChoiceMade;
+        /// <summary>A quest finished (its ending's id) - after its rewards.</summary>
+        public static event Action<GamePlayer, StoryQuest, string> Finished;
         public static StoryQuestDef Quest(string id) => id != null && _quests.TryGetValue(id, out var q) ? q : null;
         static long Now => Environment.TickCount64;   // (the dynamic events' clock: encounters share it)
 
@@ -282,6 +286,8 @@ namespace DOL.GS.StoryQuests
                     OptionDef o = st.Options.FirstOrDefault(x => Same(x.Keyword, text));
                     if (o == null)
                         continue;
+                    try { ChoiceMade?.Invoke(p, s, st, o); }
+                    catch (Exception ex) { log.Error($"Story quests: {s.QuestId} choice {o.Keyword}", ex); }
                     if (!string.IsNullOrEmpty(o.Say))
                         StoryDialog.Say(p, npc, Words(o.Say, p), "talk", null, s);
                     Advance(p, s, o.Next, o.Ending);
@@ -394,6 +400,26 @@ namespace DOL.GS.StoryQuests
             s.Complete(ending, null);
             RefreshIndicators(p);
             ClearMarker(p);
+            try { Finished?.Invoke(p, s, ending); }
+            catch (Exception ex) { log.Error($"Story quests: {s.QuestId} finished", ex); }
+        }
+
+        /// <summary>Hand a quest to someone without its giver's offer (the companion quest at level 7): its first step
+        /// begins and the map points the way. Null when they can't take it.</summary>
+        public static StoryQuest StartFor(GamePlayer p, string id)
+        {
+            if (Quest(id) is not StoryQuestDef q || !CanTake(p, q))
+                return null;
+            var sq = new StoryQuest(p, q);
+            if (!p.AddQuest(sq))
+                return null;
+            sq.QuestGiver = Npc(q.Giver);
+            sq.RebuildGoals();
+            p.Out.SendQuestUpdate(sq);
+            StoryDialog.Log(p, sq);
+            RefreshIndicators(p);
+            StepEntered(p, sq);
+            return sq;
         }
 
         static List<DbItemTemplate> Choices(StoryQuest s, string ending)

@@ -72,6 +72,10 @@ static func _skills(lists: Array) -> void:
 	lists[1].add_child(SkillRow.make("ability", 0, "Sprint", 409, -1, "").with_id("sprint"))
 	if int(PlayerData.specs.get("Stealth", 0)) >= 1:            # the Stealth spec is used like an ability (hide)
 		lists[1].add_child(SkillRow.make("ability", 0, "Stealth", int(ClassDb.spec("Stealth").get("icon", 0)), -1, "").with_id("stealth"))
+	# your companion (PersonalCompanions.cs sends its name): call it to you, send it home
+	if String(PlayerData.get_meta("companion", "")) != "":
+		lists[1].add_child(SkillRow.make("ability", 0, "Call Companion", 411, -1, "").with_id("call companion"))
+		lists[1].add_child(SkillRow.make("ability", 0, "Send Companion Home", 410, -1, "").with_id("send companion home"))
 	for a in ClassDb.abilities_known(cid, PlayerData.level, PlayerData.specs):
 		if String(a.key).to_lower() in ["quickcast", "engage", "berserk", "stag", "critical shot", "rapid fire"]:   # the usable ones (Abilities.use)
 			lists[1].add_child(SkillRow.make("ability", 0, String(a.name), int(ClassDb.ability(String(a.key)).get("icon", 0)), -1, "").with_id(String(a.key).to_lower()))
