@@ -23,7 +23,7 @@
   {"name": "Domnann", "region": 181, "x": 423943, "y": 446276}
  ],
  "zones": {
-  "0":   {"name": "Camelot Hills", "min": 1, "max": 10},
+  "0":   {"name": "Camelot Hills", "min": 0, "max": 10},
   "1":   {"name": "Salisbury Plains", "min": 8, "max": 16},
   "2":   {"name": "Black Mtns. South", "min": 8, "max": 16},
   "8":   {"name": "Campacorentin Forest", "min": 14, "max": 22},
@@ -42,7 +42,7 @@
   "57":  {"name": "Inishail Island", "min": 42, "max": 52},
   "55":  {"name": "Gwyddneau", "min": 48, "max": 60, "gradient": false},
 
-  "100": {"name": "Vale of Mularn", "min": 1, "max": 10},
+  "100": {"name": "Vale of Mularn", "min": 0, "max": 10},
   "101": {"name": "East Svealand", "min": 6, "max": 16},
   "102": {"name": "West Svealand", "min": 10, "max": 20},
   "103": {"name": "Gotar", "min": 12, "max": 22},
@@ -61,7 +61,7 @@
   "158": {"name": "Modernagrav", "min": 44, "max": 56},
   "156": {"name": "Iarnwood", "min": 48, "max": 60, "gradient": false},
 
-  "200": {"name": "Lough Derg", "min": 1, "max": 10},
+  "200": {"name": "Lough Derg", "min": 0, "max": 10},
   "207": {"name": "Connacht", "min": 6, "max": 16},
   "201": {"name": "Silvermine Mts.", "min": 8, "max": 16},
   "206": {"name": "Valley of Bri Leith", "min": 12, "max": 22},

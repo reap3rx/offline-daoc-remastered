@@ -5619,6 +5619,12 @@ namespace DOL.GS
             if (item == null)
                 return 0;
 
+            // Something worn there that isn't armour (an item whose unique template is gone from the database loads as a
+            // bare placeholder): no armour from it, rather than the exception that removed every monster hitting you
+            // from the world (owner 2026-11-12: "mobs falling through the floor ... They just disappear and then die").
+            if (!GlobalConstants.IsArmor(item.Object_Type))
+                return Math.Max(0, GetModified(eProperty.ArmorFactor) / 5.0);
+
             int armorFactorCap = GetArmorFactorCap((eObjectType) item.Object_Type, out int itemArmorFactorCap);
             double armorFactor = Math.Min(item.DPS_AF, itemArmorFactorCap); // Cap item AF first.
             armorFactor += BaseBuffBonusCategory[eProperty.ArmorFactor] / 5.0; // Base AF buffs need to be applied manually for players.

@@ -830,7 +830,8 @@ func _npc_window_open() -> bool:
 	var ui = viewer.get("ui") if viewer else null
 	if ui == null:
 		return false
-	for w in [ui.get("merchant"), ui.get("vault"), ui.get("trainer"), ui.get("npc_dialog"), ui.get("social_menu")]:
+	for w in [ui.get("merchant"), ui.get("vault"), ui.get("trainer"), ui.get("npc_dialog"), ui.get("social_menu"),
+			ui.get("story_dialog")]:
 		if w != null and is_instance_valid(w) and (w as CanvasItem).visible:
 			return true
 	return false

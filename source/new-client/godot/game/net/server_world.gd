@@ -947,6 +947,15 @@ func _message(d: Dictionary) -> void:
 		PlayerData.set_meta("companion", String(d.text).substr(11))
 		Server.skills_changed.emit()
 		return
+	if String(d.text).begins_with("#CAMP|"):              # sitting at a campfire (CampingSupplies.cs): seconds to its warmth
+		var secs := String(d.text).substr(6)
+		if secs == "" or int(secs) <= 0:
+			Server.effects.erase(-1)
+		else:                                             # the effects bar's own icon, counting down (a fire's spell icon)
+			Server.effects[-1] = {"icon": 3161, "name": "Campfire: warmth coming", "negative": 0,
+					"until": Time.get_ticks_msec() + int(secs) * 1000}
+		PlayerData.effects_changed.emit()
+		return
 	if String(d.text).begins_with("#SIT|"):               # a bot sitting at a campfire (AutonomousCampfireVisits): oid|1/0
 		var sf := String(d.text).substr(5).split("|")
 		if sf.size() >= 2:

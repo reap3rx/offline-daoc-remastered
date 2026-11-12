@@ -597,7 +597,11 @@ namespace DOL.GS.DynamicEvents
         {
             var v = new Vector3((float) (Zone.XOffset + p[0] * 40), (float) (Zone.YOffset + p[1] * 40),
                 p.Length > 2 ? (float) (p[2] * 40) : 0f);
-            return snap ? Snap(v) : v;
+            if (!snap)
+                return v;
+            Vector3 s = Snap(v);
+            // an upper floor the navmesh doesn't have (Mag Mell's town hall): the place's own height, not the ground under it
+            return p.Length > 2 && s.Z < v.Z - 100 ? v : s;
         }
 
         public Vector3 Snap(Vector3 v)

@@ -738,28 +738,31 @@ class Nav extends Control:
 	var _hover := -1
 
 	func _init() -> void:
-		mouse_filter = Control.MOUSE_FILTER_STOP
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	# each page a row of its own (owner 2026-11-12: the controller couldn't reach Specialization / Realm Skills - the
+	# column was one element to it): the rows take the clicks, the column draws them
+	func _ready() -> void:
+		for i in PAGES.size():
+			var r := NavRow.new()
+			r.nav = self
+			r.index = i
+			r.position = Vector2(0, i * ROW)
+			r.size = Vector2(size.x - 2, ROW)
+			add_child(r)
 
 	func _rows() -> Array:
 		return PAGES
 
-	func _gui_input(event: InputEvent) -> void:
-		if event is InputEventMouseMotion:
-			var i := int(event.position.y / ROW)
-			if i != _hover:
-				_hover = i
-				queue_redraw()
-		elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			var i := int(event.position.y / ROW)
-			if i >= 0 and i < PAGES.size():
-				panel.show_page(String(PAGES[i][0]) if String(PAGES[i][0]) != "skills" else panel._sub)
-				if panel.page == "skills":
-					panel._ask_server()
-				accept_event()
+	func pick(i: int) -> void:
+		if i >= 0 and i < PAGES.size():
+			panel.show_page(String(PAGES[i][0]) if String(PAGES[i][0]) != "skills" else panel._sub)
+			if panel.page == "skills":
+				panel._ask_server()
 
-	func _notification(what: int) -> void:
-		if what == NOTIFICATION_MOUSE_EXIT and _hover != -1:
-			_hover = -1
+	func hover(i: int) -> void:
+		if i != _hover:
+			_hover = i
 			queue_redraw()
 
 	func _draw() -> void:
@@ -781,6 +784,25 @@ class Nav extends Control:
 			var fs := 8 if sub else 10
 			draw_string_outline(f, Vector2(22 if sub else 8, y + 15), txt.to_upper() if not sub else txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 2, Color(0, 0, 0, 0.8))
 			draw_string(f, Vector2(22 if sub else 8, y + 15), txt.to_upper() if not sub else txt, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
+
+
+class NavRow extends Control:
+	var nav
+	var index := 0
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_STOP
+
+	func _gui_input(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			nav.pick(index)
+			accept_event()
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_MOUSE_ENTER:
+			nav.hover(index)
+		elif what == NOTIFICATION_MOUSE_EXIT and nav._hover == index:
+			nav.hover(-1)
 
 
 ## A slot on the Hero doll: a click picks it (the backpack shows what fits), a drag or double-click as everywhere.

@@ -895,7 +895,26 @@ var _last_focus: Control = null
 
 func _point_at(c: Control) -> void:
 	_last_focus = c
+	# in a scrolled list (a shop's goods, the spellbook, the journal): scrolled into view first (owner 2026-11-12:
+	# "highlight the items with the plus pad")
+	var sc := _scroll_of(c)
+	if sc and not _screen_rect(sc).grow(1.0).encloses(_screen_rect(c)):
+		sc.ensure_control_visible(c)
+		await get_tree().process_frame
+		if not is_instance_valid(c) or not c.is_visible_in_tree():
+			return
 	_move_cursor(_screen_rect(c).get_center() - _cursor)
+
+
+func _scroll_of(c: Control) -> ScrollContainer:
+	var n := c.get_parent()
+	while n:
+		if n is ScrollContainer:
+			return n
+		if n is ClassicWindow:
+			return null
+		n = n.get_parent()
+	return null
 
 
 func _move_cursor(by: Vector2, force := false) -> void:

@@ -35,7 +35,7 @@ REALMS = {
         ]),
     "mid": dict(
         realm=2, zone=100, town="Mularn",
-        npc=dict(id="companion_ketil", name="Ketil Ravnsson", model=213, guild="Shield-Hall of Mularn", pos=[1258, 1362, 119.4]),
+        npc=dict(id="companion_ketil", name="Ketil Ravnsson", model=213, guild="Shield-Hall of Mularn", pos=[1258, 1362, 117.0]),
         hello="Ah - {name}. The skalds are already muttering your name, did you know? A name like that needs a shield-mate. "
               "I know good folk who'd follow you into the cold, if you'll have them.",
         idle="No one should go into the cold alone. Not in Midgard.",

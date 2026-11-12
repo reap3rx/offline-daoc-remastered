@@ -1023,12 +1023,12 @@ func _build_story_dialog() -> void:
 		return
 	story_dialog = StoryDialogScript.new()
 	story_dialog.resizable = true
-	story_dialog.patch = [6, 19, 13, 33]
+	story_dialog.patch = [6, 6, 6, 6]                     # (owner 2026-11-12: the modern frame, as the NPC dialog)
 	story_dialog.min_size = StoryDialogScript.BODY
 	story_dialog.max_size = StoryDialogScript.BODY
 	story_dialog.size = StoryDialogScript.BODY
 	var at := Vector2(area().x * 0.5 - StoryDialogScript.BODY.x * 0.5, area().y * 0.5 - StoryDialogScript.BODY.y * 0.5)
-	story_dialog.setup("story_dialog", "interact", Rect2(), at)
+	story_dialog.setup("story_dialog", "leftbot", Rect2(), at)
 	_add(story_dialog, at, false)
 	story_dialog.build()
 

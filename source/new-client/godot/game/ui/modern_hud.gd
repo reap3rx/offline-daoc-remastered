@@ -574,6 +574,29 @@ class Minimap extends Part:
 				hud.ui.map_window.toggle_window()
 				accept_event()
 
+	static var _near := {}
+
+	## The outdoor zones touching a zone in its region: [[zone, dx, dy, w, h]] in its map's units (region units from
+	## its corner) - zones_index.json's 8192-unit blocks.
+	static func _neighbours(z: int) -> Array:
+		if _near.has(z):
+			return _near[z]
+		var out := []
+		var me: Dictionary = Server.zone_info(z)
+		if not me.is_empty():
+			var mx := float(me.x)
+			var my := float(me.y)
+			for key in Server._index:
+				var o: Dictionary = Server._index[key]
+				if int(key) == z or int(o.get("region", -1)) != int(me.get("region", -2)) or int(o.get("type", 0)) != 0:
+					continue
+				var gap_x := maxf(float(o.x) - (mx + float(me.w)), mx - (float(o.x) + float(o.w)))
+				var gap_y := maxf(float(o.y) - (my + float(me.h)), my - (float(o.y) + float(o.h)))
+				if gap_x <= 0.5 and gap_y <= 0.5:                # touching, corners too
+					out.append([int(key), (float(o.x) - mx) * 8192.0, (float(o.y) - my) * 8192.0, float(o.w) * 8192.0, float(o.h) * 8192.0])
+		_near[z] = out
+		return out
+
 	func _draw() -> void:
 		var w: MapWindow = hud.ui.map_window if hud.ui else null
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.02, 0.02, 0.03, 0.9))
@@ -601,10 +624,23 @@ class Minimap extends Part:
 		var tex: Texture2D = w._texture(pic)
 		var k := size.x / span                             # the picture's size on screen
 		var origin := size * 0.5 - frac * k
+		var mix := MapWindow.render_mix(0.6 / span) if i < 0 else 0.0
+		# the zones next to this one, around it (owner 2026-11-12: "stitch map together so that minimap doesn't show black
+		# at the edge of the zones"): each where it lies in the region, its painted map (and its render close in)
+		if i < 0 and not w._zone(z).has("map_rect"):
+			for n in _neighbours(z):
+				var nr := Rect2(origin + Vector2(n[1], n[2]) / mr.size.x * k, Vector2(n[3], n[4]) / mr.size.x * k)
+				if not nr.intersects(Rect2(Vector2.ZERO, size)):
+					continue
+				var nt: Texture2D = w._texture(String(w._zone(int(n[0])).get("map", "")))
+				if nt:
+					draw_texture_rect(nt, nr, false)
+				var nrt: Texture2D = w.render_texture(int(n[0])) if mix > 0.0 else null
+				if nrt:
+					draw_texture_rect(nrt, nr, false, Color(1, 1, 1, mix))
 		if tex:
 			draw_texture_rect(tex, Rect2(origin, Vector2(k, k)), false)
 		# the zone drawn from above over it when close in (MapWindow.render_texture), the painted map when far out
-		var mix := MapWindow.render_mix(0.6 / span) if i < 0 else 0.0
 		var rt: Texture2D = w.render_texture(z) if mix > 0.0 else null
 		if rt:
 			draw_texture_rect(rt, Rect2(origin, Vector2(k, k)), false, Color(1, 1, 1, mix))

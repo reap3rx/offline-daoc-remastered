@@ -291,6 +291,52 @@ func buy_selected() -> void:
 		PlayerData.buy(selected, npc_name)
 
 
+## The controller's way to buy (owner 2026-11-12: "highlight the items with the plus pad, click a for a context window,
+## then it be quantity option and then a buy option"): A on a row - BUY ONE, or HOW MANY... for a second menu of
+## amounts; each says what it costs.
+func pad_menu(id: String, row: Control) -> void:
+	select_item(id)
+	var menu = _social_menu()
+	if menu == null:
+		return
+	var price := int(ItemDb.item(id).get("price", 0))
+	var back := func():                                    # the pointer back on the row it came from
+		if is_instance_valid(row) and row.is_visible_in_tree() and Pad.active:
+			Pad.call("_point_at", row)
+	var buy := func(n: int):
+		_qty.value = n
+		buy_selected()
+		_qty.value = 1
+		back.call()
+	var entries := [["BUY ONE  -  " + _cost(price), buy.bind(1)]]
+	if server_window not in [4, 11]:
+		entries.append(["HOW MANY...", func():
+			var amounts := []
+			for n in [5, 10, 20, 50, 100]:
+				amounts.append(["BUY %d  -  %s" % [n, _cost(price * n)], buy.bind(n)])
+			amounts.append(["CANCEL", back])
+			menu.open(String(ItemDb.item(id).get("name", "")), amounts)])
+	entries.append(["CANCEL", back])
+	menu.open(String(ItemDb.item(id).get("name", "")), entries)
+
+
+func _cost(copper: int) -> String:
+	if server_window == 2:
+		return "%d TOKENS" % copper
+	var p := PlayerData.split_money(copper)
+	var out := []
+	for k in ["mithril", "platinum", "gold", "silver", "copper"]:
+		if int(p[k]) > 0:
+			out.append("%d%s" % [int(p[k]), k.substr(0, 1)])
+	return " ".join(out) if not out.is_empty() else "FREE"
+
+
+func _social_menu():
+	var v := get_tree().current_scene
+	var ui = v.get("ui") if v else null
+	return ui.get("social_menu") if ui else null
+
+
 func _can_drop_data(_pos: Vector2, data: Variant) -> bool:
 	return InventorySheet.is_item(data) and PlayerData.is_backpack(int(data.slot))
 
@@ -350,6 +396,15 @@ class ShopRow extends Control:
 			right -= w
 			draw_string(thin, Vector2(right, 19), s, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, parts[i][1])
 			right -= 4
+
+	func pad_actions() -> Array:
+		return [["a", "BUY...", func(): window.pad_menu(item_id, self)], ["x", "INFORMATION", func(): _info()]]
+
+	func _info() -> void:
+		window.select_item(item_id)
+		PlayerData.delve_id = item_id
+		PlayerData.selected_slot = -1
+		PlayerData.summary.emit(ItemDb.item(item_id))
 
 	func _make_custom_tooltip(_for_text: String) -> Object:          # weapons / armour: the mini delve box
 		return ItemTooltip.make(ItemDb.item(item_id)) if item_id != "" else null

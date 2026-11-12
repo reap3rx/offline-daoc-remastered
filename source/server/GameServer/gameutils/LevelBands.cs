@@ -108,7 +108,9 @@ namespace DOL.GS
             Zone zone = WorldMgr.GetRegion(regionId)?.GetZone(x, y);
             if (zone != null && _bands.TryGetValue(zone.ID, out ZoneBand band) && _stats.TryGetValue(zone.ID, out ZoneStats st) &&
                 st.Levels.Length > 0)
-                return (byte) Math.Clamp(Banded(band, st, regionId, x, y, level), 1, 255);
+                // (a starting zone's band begins at 0 - owner 2026-11-12: "some level 0 mobs near the starting areas.
+                // Level 1s are actually quite tough for a brand new player or bot")
+                return (byte) Math.Clamp(Banded(band, st, regionId, x, y, level), band.Min <= 0 ? 0 : 1, 255);
             if (_dungeonShift.TryGetValue(regionId, out int shift))
                 return (byte) Math.Clamp(level + shift, 1, _config.KeepAtOrAbove - 1);
             return level;

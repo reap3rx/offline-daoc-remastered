@@ -115,7 +115,8 @@ namespace DOL.GS.StoryQuests
             if (nav != null && nav.IsAvailable && nav.HasNavmesh(z))
             {
                 Vector3? floor = nav.GetClosestPoint(z, v, 96, 96, 2048, nav.DefaultFilters);
-                if (floor.HasValue)
+                // (an upper floor the navmesh doesn't have - Mag Mell's town hall: the place's height, not the ground under it)
+                if (floor.HasValue && !(p.Length > 2 && floor.Value.Z < v.Z - 100))
                     return floor.Value;
             }
             return v;

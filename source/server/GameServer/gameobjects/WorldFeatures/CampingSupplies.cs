@@ -378,9 +378,20 @@ public static class CampingSupplies
 
     // ---------------------------------------------------------------- the fire's warmth
 
-    // a sitter's minute at a fire: (fire object id, sitter) -> when they sat; and who has had this fire's buffs
-    private static readonly ConcurrentDictionary<(int Fire, GameLiving Who), long> SatSince = new();
-    private static readonly ConcurrentDictionary<(int Fire, GameLiving Who), bool> Warmed = new();
+    // a sitter's time at a fire: (fire object id, sitter) -> when they sat, and what it has given them this sitting.
+    // Standing up, walking off or a fight ends the sitting; the next minute sat gives the buffs again (owner
+    // 2026-11-12: "you can receive the buffs as long as the campfire is still active") - and a pot hung over the fire
+    // while you sit feeds you at once.
+    private sealed class Sitting
+    {
+        public long Since;
+        public bool Warmed;
+        public int PotFed;
+    }
+
+    private static readonly ConcurrentDictionary<(int Fire, GameLiving Who), Sitting> Sitters = new();
+    // players shown the fire's countdown in their effects bar ("#CAMP|seconds"; "#CAMP|" clears it)
+    private static readonly HashSet<GamePlayer> Counting = [];
 
     public static bool IsSitting(GameLiving who) => who switch
     {
@@ -407,6 +418,7 @@ public static class CampingSupplies
                 }
                 all = Live.Where(o => !o.IsPot).ToArray();
             }
+            var counting = new Dictionary<GamePlayer, long>();
             foreach (CampObject fire in all)
             {
                 var here = new HashSet<GameLiving>();
@@ -420,21 +432,38 @@ public static class CampingSupplies
                     var key = (fire.ObjectID, who);
                     if (!who.IsAlive || !IsSitting(who) || who.InCombat)
                     {
-                        SatSince.TryRemove(key, out _);
+                        Sitters.TryRemove(key, out _);
                         continue;
                     }
-                    long since = SatSince.GetOrAdd(key, now);
-                    if (now - since < SitSecondsNeeded * 1000 || Warmed.ContainsKey(key))
+                    Sitting s = Sitters.GetOrAdd(key, _ => new Sitting { Since = now });
+                    long left = SitSecondsNeeded * 1000L - (now - s.Since);
+                    if (left > 0)
+                    {
+                        if (who is GamePlayer sitter)
+                            counting[sitter] = Math.Min(counting.GetValueOrDefault(sitter, long.MaxValue), left);
                         continue;
-                    Warmed[key] = true;
-                    Warm(who, fire);
+                    }
+                    CampObject pot = fire.Pot != null && fire.Pot.ObjectState == GameObject.eObjectState.Active ? fire.Pot : null;
+                    if (!s.Warmed)
+                    {
+                        s.Warmed = true;
+                        s.PotFed = pot?.ObjectID ?? 0;
+                        Warm(who, fire);
+                    }
+                    else if (pot != null && s.PotFed != pot.ObjectID)
+                    {
+                        s.PotFed = pot.ObjectID;
+                        Feed(who, pot);
+                    }
                 }
+                // walked off: the sitting is over
+                foreach (var key in Sitters.Keys.Where(k => k.Fire == fire.ObjectID && !here.Contains(k.Who)).ToArray())
+                    Sitters.TryRemove(key, out _);
                 AutonomousCampfireVisits.Chatter(fire, here);
             }
-            foreach (var key in SatSince.Keys.Where(k => all.All(f => f.ObjectID != k.Fire)).ToArray())
-                SatSince.TryRemove(key, out _);
-            foreach (var key in Warmed.Keys.Where(k => all.All(f => f.ObjectID != k.Fire)).ToArray())
-                Warmed.TryRemove(key, out _);
+            foreach (var key in Sitters.Keys.Where(k => all.All(f => f.ObjectID != k.Fire)).ToArray())
+                Sitters.TryRemove(key, out _);
+            ShowCountdowns(counting);
             AutonomousCampfireVisits.Tick(all);
         }
         catch (Exception exception)
@@ -442,6 +471,34 @@ public static class CampingSupplies
             Log.Error("Camping tick failed", exception);
         }
         return 5000;
+    }
+
+    /// <summary>The effects bar's campfire icon (owner 2026-11-12: "an icon in the buff area letting you know that
+    /// you're sitting near a campfire, with a countdown on it telling you how long before your buffs come").</summary>
+    private static void ShowCountdowns(Dictionary<GamePlayer, long> counting)
+    {
+        lock (Counting)
+        {
+            foreach (GamePlayer p in Counting.Where(p => !counting.ContainsKey(p)).ToArray())
+            {
+                Counting.Remove(p);
+                if (p.ObjectState == GameObject.eObjectState.Active)
+                    NewClient.Send(p, "#CAMP|");
+            }
+            foreach (var (p, left) in counting)
+            {
+                Counting.Add(p);
+                NewClient.Send(p, "#CAMP|" + (int)Math.Ceiling(left / 1000.0));
+            }
+        }
+    }
+
+    private static void Feed(GameLiving who, CampObject pot)
+    {
+        foreach (Spell spell in PotSpells(pot.Tier))
+            Cast(who, spell);
+        if (who is GamePlayer player)
+            player.Out.SendMessage("A hot meal from the pot restores you.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
     }
 
     private static void Warm(GameLiving who, CampObject fire)
