@@ -350,7 +350,11 @@ func _build_panel() -> void:
 
 ## Top right: the version (Offline DAoC Rebuilt - the launcher runs the server).
 func _show_host() -> void:
-	_host_label.text = "OFFLINE DAOC REMASTERED - BETA V0.1"
+	var ver := ""                                          # the launcher says which (owner 2026-11-11: the version installed)
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--version="):
+			ver = a.trim_prefix("--version=")
+	_host_label.text = ("OFFLINE DAOC REMASTERED - " + ver).to_upper() if ver != "" else "OFFLINE DAOC REMASTERED"
 	_host_label.add_theme_color_override("font_color", Color(CREAM, 0.55))
 
 

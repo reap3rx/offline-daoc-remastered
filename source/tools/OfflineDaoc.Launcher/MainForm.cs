@@ -394,7 +394,7 @@ internal sealed partial class MainForm : Form
             ForeColor = Color.FromArgb(196, 145, 70),
             Location = new Point(97, 57),
         });
-        titlePanel.Controls.Add(new Label
+        titlePanel.Controls.Add(_versionLabel = new Label
         {
             AutoSize = true,
             Text = _newClient ? BetaVersion.ToUpperInvariant() : VersionLabel(InstalledEditionHasCustomClass(_database)),
@@ -2899,7 +2899,10 @@ internal sealed partial class MainForm : Form
     internal const string NewClientExecutable = "Godot_v4.7.2-stable_mono_win64.exe";
 
     // A launcher is the new client's when the new client (..\godot\project.godot) sits beside its folder.
-    private static bool IsNewClientLauncher() => IsNewClientFolder(AppContext.BaseDirectory);
+    // A release install is the Remastered launcher even before its game is downloaded (owner 2026-11-11: the first start
+    // showed the old "VERSION 0.37b"): update.json beside it says so.
+    private static bool IsNewClientLauncher() => IsNewClientFolder(AppContext.BaseDirectory)
+        || File.Exists(Path.Combine(AppContext.BaseDirectory, "update.json"));
 
     internal static bool IsNewClientFolder(string launcherFolder) =>
         File.Exists(Path.Combine(launcherFolder.TrimEnd(Path.DirectorySeparatorChar), "..", "godot", "project.godot"));
@@ -2946,6 +2949,7 @@ internal sealed partial class MainForm : Form
         // creation, the Ctrl+F debug keys (the client's BootSettings.dev); /spawn and /tele are GM commands on the server
         if (_makeMeGm.Checked)
             start.ArgumentList.Add("--dev");
+        start.ArgumentList.Add("--version=" + GameVersionText);          // (the login screen shows it)
         // On a 0.36 game (classes / enable_sluaghbinder = False) the new client offers the classic classes only.
         if (!InstalledEditionHasCustomClass(_database))
             start.ArgumentList.Add("--custom-class=off");

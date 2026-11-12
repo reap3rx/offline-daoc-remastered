@@ -698,19 +698,51 @@ func item_actions(slot: int) -> Array:
 	var ui = _ui()
 	var out := []
 	var pack := PlayerData.is_backpack(slot)
-	if not pack:
-		out.append(["a", "REMOVE", func(): PlayerData.unequip(slot)])
-	elif not PlayerData.slots_for(it).is_empty():
-		out.append(["a", "EQUIP", func(): PlayerData.equip(slot)])
-	elif Server.active:
-		out.append(["a", "USE", func(): Server.use("srv:%d" % slot)])
+	# A: everything the item offers, in a menu (owner 2026-11-11: "Items that can be interacted with in your inventory
+	# (such as the Personal Bind Stone) need an option when you select them to use them. Also, an easy way to assign them
+	# to a controller hotbar button"); X moves it, Y puts it on the controller straight away
+	out.append(["a", "OPTIONS", item_menu.bind(slot)])
 	out.append(["x", "MOVE", func(): _pick_up(focused())])
-	if pack and ui:
-		out.append(["y", "DROP", _drop_asked.bind(slot)])
+	if pack and Server.active:
+		out.append(["y", "ON CONTROLLER", _assign_item.bind(slot)])
 	var m = ui.get("merchant") if ui else null
 	if pack and m and is_instance_valid(m) and m.visible:
 		out.append(["b", "SELL", func(): PlayerData.sell(slot, String(m.npc_name))])
 	return out
+
+
+## An item's menu (the interact menu's box): use, wear or take off, put on the controller, sell, drop.
+func item_menu(slot: int) -> void:
+	var ui = _ui()
+	var it := PlayerData.item_at(slot)
+	if ui == null or it.is_empty() or ui.get("social_menu") == null:
+		return
+	var pack := PlayerData.is_backpack(slot)
+	var gear := not PlayerData.slots_for(it).is_empty()
+	var entries := []
+	if Server.active:
+		entries.append(["Use", func(): Server.use("srv:%d" % slot)])     # (a charge, a potion, a bind stone, a poison)
+	if pack and gear:
+		entries.append(["Equip", func(): PlayerData.equip(slot)])
+	elif not pack:
+		entries.append(["Take Off", func(): PlayerData.unequip(slot)])
+	if pack and Server.active:
+		entries.append(["Put on Controller", _assign_item.bind(slot)])
+	var m = ui.get("merchant")
+	if pack and m and is_instance_valid(m) and m.visible:
+		entries.append(["Sell", func(): PlayerData.sell(slot, String(m.npc_name))])
+	if pack:
+		entries.append(["Drop", _drop_asked.bind(slot)])
+	ui.social_menu.open(String(it.get("name", "item")), entries)
+
+
+## The item onto a controller button: press the buttons for the slot (PadAssign, as the spellbook's ASSIGN).
+func _assign_item(slot: int) -> void:
+	var ui = _ui()
+	if ui == null or PlayerData.entry(slot).is_empty():
+		return
+	var d := InventorySheet._data(slot)
+	load("res://game/input/pad_assign.gd").start(ui, d)
 
 
 func _drop_asked(slot: int) -> void:

@@ -35,6 +35,13 @@ var _search: LineEdit
 var _wallet: RichTextLabel
 var _weight: Label
 var _sorted_by: Label
+var _quiver: Button
+var _poisons: Button
+
+# the classes with a quiver (the archers) and a poison bag (the assassins) - their windows' buttons on the bags
+# (owner 2026-11-11: "The bag UI should also have a button for the Quiver UI and Poison UI")
+const ARCHERS := ["scout", "hunter", "ranger"]
+const POISONERS := ["infiltrator", "shadowblade", "nightshade"]
 
 
 func build() -> void:
@@ -47,6 +54,14 @@ func build() -> void:
 	x.position = Vector2(SIZE.x - 24, 6)
 	x.pressed.connect(hide_window)
 	add_child(x)
+	_quiver = UiArt.button("QUIVER", Vector2(54, 14), 8)
+	_quiver.position = Vector2(SIZE.x - 24 - 58, 6)
+	_quiver.pressed.connect(func(): PlayerData.window_toggle.emit("quiver"))
+	add_child(_quiver)
+	_poisons = UiArt.button("POISONS", Vector2(58, 14), 8)
+	_poisons.position = Vector2(SIZE.x - 24 - 58, 6)
+	_poisons.pressed.connect(func(): PlayerData.window_toggle.emit("poisons"))
+	add_child(_poisons)
 	_weight = UiArt.label("", 8, UiArt.CREAM)
 	_weight.position = Vector2(GRID_X + 60, GRID_Y + 5 * CELL + 4)
 	_weight.size = Vector2(COLS * CELL - 60, 12)
@@ -173,6 +188,9 @@ static func sorted_slots() -> Array:
 func refresh() -> void:
 	if not visible or _cells.is_empty():
 		return
+	var cls := String(PlayerData.character.get("class_name", "")).to_lower()
+	_quiver.visible = cls in ARCHERS
+	_poisons.visible = cls in POISONERS
 	var order := sorted_slots()
 	var q := _search.text.strip_edges().to_lower() if _search else ""
 	for i in _cells.size():

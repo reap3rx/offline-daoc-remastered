@@ -50,7 +50,7 @@ func open(title: String, entries: Array) -> void:
 	for e in entries:
 		var b := UiArt.button(String(e[0]).to_upper(), Vector2(w - 24, 16), 9)
 		b.position = Vector2(12, y)
-		b.pressed.connect(_pick.bind(String(e[1])))
+		b.pressed.connect(_pick.bind(e[1]))
 		_box.add_child(b)
 		if _first == null:
 			_first = b
@@ -69,9 +69,12 @@ func close() -> void:
 		c.queue_free()
 
 
-func _pick(action: String) -> void:
+func _pick(action: Variant) -> void:
 	close()
-	run_action(action, get_tree())
+	if action is Callable:                                # the client's own menus (an item in your bags)
+		(action as Callable).call()
+		return
+	run_action(String(action), get_tree())
 
 
 ## An entry's action, as the menu (or anything else) would run it.

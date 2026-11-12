@@ -22,6 +22,19 @@ internal sealed partial class MainForm
     private readonly Label _cloudStatus = new() { AutoSize = true, MaximumSize = new Size(620, 0), ForeColor = DaocTheme.Parchment, Font = new Font("Georgia", 9f) };
     private readonly Button _cloudButton = new() { AutoSize = true, Text = "Connect Google Drive…" };
 
+    private Label? _versionLabel;
+
+    /// <summary>What the header and the game show: the version installed (a release), the one being downloaded on the
+    /// first start, "WORKSHOP" in the developer's own folder (owner 2026-11-11).</summary>
+    private string GameVersionText { get; set; } = "WORKSHOP";
+
+    private void ShowVersion(string text)
+    {
+        GameVersionText = text;
+        if (_versionLabel != null) _versionLabel.Text = text.ToUpperInvariant();
+        Text = $"Offline DAoC Remastered - {text}";
+    }
+
     private string ClientSaveFolder => Path.GetFullPath(Path.Combine(_launcherRoot, "..", "save", "Godot", "app_userdata", "MMOEngine"));
 
     private void InitRemastered()
@@ -29,6 +42,10 @@ internal sealed partial class MainForm
         _updater = new Updater(_launcherRoot);
         _updateButton.Click += async (_, _) => await UpdateClickedAsync();
         _updateButton.Visible = _updater.Enabled;
+        if (_updater.Enabled)
+            ShowVersion(_updater.Installed is { } m && _updater.GameInstalled ? $"Version {m.Version}" : "Not installed yet");
+        else
+            ShowVersion("Workshop");
         _cloud = new CloudSave(_root, _database, Path.Combine(_serverDirectory, "realm-event-records.sqlite3"), ClientSaveFolder);
         _cloudButton.Click += (_, _) => ToggleCloud();
         ShowCloudState();
@@ -37,6 +54,7 @@ internal sealed partial class MainForm
     /// <summary>When the window first shows: the install (first start), the update check, the cloud's save.</summary>
     private async Task RemasteredShownAsync()
     {
+        ShowVersion(GameVersionText);                    // (the header's label is built after InitRemastered)
         if (_updater == null || !_updater.Enabled)
         {
             CloudSyncIn();
@@ -65,6 +83,7 @@ internal sealed partial class MainForm
             Updater.Plan p = _updatePlan;
             if (p.FirstInstall)
             {
+                ShowVersion($"Version {p.Latest.Version}");
                 _updateButton.Text = "INSTALL GAME";
                 _footer.Text = $"Ready to install Offline DAoC Remastered {p.Latest.Version}: {p.DownloadBytes / 1e9:F1} GB to download. Click INSTALL GAME.";
             }
@@ -136,6 +155,7 @@ internal sealed partial class MainForm
                 $"Updated to {plan.Latest.Version}.";
             _updatePlan = null;
             _updateButton.Text = "UP TO DATE";
+            ShowVersion($"Version {plan.Latest.Version}");
         }
         catch (Exception e)
         {

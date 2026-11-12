@@ -385,11 +385,11 @@ class Orb extends Part:
 
 
 ## The party, top left: a row per member - name, level and class, health bar with the power bar under it. The member
-## you have selected (your target) is framed; while you lead the group, its row shows KICK and LEAD (owner 2026-11-11:
+## you have selected (your target) is framed; while you lead the group, its row shows KICK (owner 2026-11-11:
 ## "highlight the group member ... little buttons that appear that let you kick them if you're the group leader").
 class Party extends Part:
 	const ROW := 24.0
-	const BTNS := [["KICK", "/disband %s"], ["LEAD", "/makeleader %s"]]
+	const BTNS := [["KICK", "/disband %s"]]                  # (no LEAD: the bots can't lead a group)
 	const BTN_W := 34.0
 
 	func _init() -> void:

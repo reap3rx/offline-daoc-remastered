@@ -503,7 +503,7 @@ func _build() -> void:
 		if player:
 			player.movement_mode = mode)
 	_refresh()
-	set_style(String(_saved("interface", "style", "classic")), false)
+	set_style(String(_saved("interface", "style", "modern")), false)      # (owner 2026-11-11: the modern UI by default)
 
 
 ## CLASSIC: the 1.65 windows. MODERN: the GW2-style HUD (ModernHud) over the shared windows - it parks the classic
