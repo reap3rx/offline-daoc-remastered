@@ -61,6 +61,7 @@ const ACTIONS := [
 	["sheathe", "Weapon In / Out", "SHEATHE", "tap"],
 	["weapon_cycle", "Cycle Weapons", "WEAPON", "tap"],
 	["run_lock", "Autorun", "RUN", "tap"],
+	["pull", "Pull (your group's puller starts the fight)", "PULL", "tap"],
 	["sit", "Sit / Stand", "SIT", "tap"],
 	["torch", "Torch", "TORCH", "tap"],
 	["lock_on", "Lock On", "LOCK", "tap"],
@@ -76,13 +77,17 @@ const ACTIONS := [
 ]
 
 static func _defaults() -> Dictionary:
+	# (owner 2026-11-12: "/pull ... default Up on the d-pad ... Autorun ... L3 ... Left on the d-pad will be default swap
+	# weapon, hold it to sheath weapon, and right will be torch"; nearest enemy LB + RB + X, you / your group LB + RB + Y)
 	var d := {"a": "jump", "b": "dodge", "b:hold": "sprint_hold", "x": "style_auto", "y": "interact", "y:hold": "interact_menu",
-			"up": "weapon_cycle", "up:hold": "sheathe", "right": "run_lock", "down": "sit", "left": "torch",
-			"l3": "sprint_toggle", "r3": "lock_on", "rt": "attack", "lt": "defend", "lb": "target_friend",
-			"rb": "target_enemy", "view": "hero", "view:hold": "menu_wheel", "menu": "escape"}
+			"up": "pull", "left": "weapon_cycle", "left:hold": "sheathe", "right": "torch", "down": "sit",
+			"l3": "run_lock", "r3": "lock_on", "rt": "attack", "lt": "defend",
+			"view": "hero", "view:hold": "menu_wheel", "menu": "escape"}
 	for i in 8:
 		d["lb+" + SLOTS[i]] = "qb1_%d" % (i + 1)
 		d["lb+rb+" + SLOTS[i]] = "qb3_%d" % (i + 1)
+	d["lb+rb+x"] = "target_enemy"
+	d["lb+rb+y"] = "target_friend"
 	for i in [0, 1, 2, 3, 7]:
 		d["rb+" + SLOTS[i]] = "qb2_%d" % (i + 1)
 	d["rb+x"] = "style_reactive"                       # (owner 2026-11-10: RB + X / Y / B the specific styles)
@@ -159,17 +164,36 @@ func load_bindings() -> void:
 			if a != "":
 				bindings[k] = a
 		# version 2 (owner 2026-11-11): hold Interact opens the interact menu - added to a saved set that lacks it
-		if int(cfg.get_value("meta", "version", 1)) < 2 and String(bindings.get("y", "")) == "interact" \
+		var version := int(cfg.get_value("meta", "version", 1))
+		if version < 2 and String(bindings.get("y", "")) == "interact" \
 				and not bindings.has("y:hold") and inputs_of("interact_menu").is_empty():
 			bindings["y:hold"] = "interact_menu"
+		# version 3 (owner 2026-11-12): the new defaults, over the old defaults only (a binding of your own stays)
+		if version < 3:
+			_migrate(bindings, {"lb": "target_friend", "rb": "target_enemy"}, {"lb+rb+y": "target_friend", "lb+rb+x": "target_enemy"})
+			_migrate(bindings, {"up": "weapon_cycle", "up:hold": "sheathe", "right": "run_lock", "left": "torch"},
+					{"up": "pull", "left": "weapon_cycle", "left:hold": "sheathe", "right": "torch"})
+			if String(bindings.get("l3", "")) == "sprint_toggle" and inputs_of("run_lock").is_empty():
+				bindings["l3"] = "run_lock"
 	bindings_changed.emit()
+
+
+## Old defaults that are still as they were become the new ones (each pair moves only when all of `old` is unchanged).
+static func _migrate(b: Dictionary, old: Dictionary, now: Dictionary) -> void:
+	for k in old:
+		if String(b.get(k, "")) != String(old[k]):
+			return
+	for k in old:
+		b.erase(k)
+	for k in now:
+		b[k] = now[k]
 
 
 func save_bindings() -> void:
 	var cfg := ConfigFile.new()
 	for k in bindings:
 		cfg.set_value("bindings", k, bindings[k])
-	cfg.set_value("meta", "version", 2)
+	cfg.set_value("meta", "version", 3)
 	cfg.save(PATH)
 	bindings_changed.emit()
 
@@ -534,6 +558,8 @@ func _do(act: String, down: bool) -> void:
 			_fire("weapon_cycle")
 		"run_lock":
 			_fire("run_lock")
+		"pull":
+			Server.command("/pull")
 		"sit":
 			_fire("sit")
 		"torch":
@@ -542,7 +568,7 @@ func _do(act: String, down: bool) -> void:
 			if a:
 				a.call("pad_lock_tap")
 		"target_enemy":
-			_fire("target_enemy")
+			_next_enemy()
 		"target_friend":
 			_next_friend()
 		"hero":
@@ -567,13 +593,99 @@ func _open(id: String) -> void:
 		bar.open_window(id)
 
 
-## LB tapped: you, then each of your group in turn (the Target Group #1-8 keys); after a pause it starts with you again.
+## You, then each of your group and the pets near you in turn, nearest first (owner 2026-11-12: "start with you then
+## cycle through every nearby group member/pet before getting back to yourself when nothing else is in range"); after
+## a pause it starts with you again.
+const FRIEND_RANGE_M := 40.0
+const ZOOM_SPEED := 6.0                  # metres a second at a full push (LB + RB + the right stick)
 func _next_friend() -> void:
 	var now := Time.get_ticks_msec()
-	var n := clampi(PlayerData.group.size(), 1, 8)
-	_group_pick = 0 if now - _group_pick_at > 4000 else (_group_pick + 1) % n
+	var near := _friends_near()
+	_group_pick = 0 if now - _group_pick_at > 4000 else (_group_pick + 1) % (near.size() + 1)
 	_group_pick_at = now
-	_fire("target_group_%d" % (_group_pick + 1))
+	if _group_pick == 0:
+		_fire("target_group_1")                          # (you)
+		return
+	var pick = near[_group_pick - 1]
+	if pick is int:
+		_fire("target_group_%d" % pick)                  # a player of your group: by their place in it
+	elif viewer and viewer.get("npcs"):
+		viewer.npcs.select(pick)                         # a bot or a pet: its model
+
+
+## The group's bots and players and the pets in range, nearest first: a group place (int) or an NPC's view (Node3D).
+func _friends_near() -> Array:
+	var p := _player()
+	if p == null or viewer == null or viewer.get("npcs") == null:
+		return []
+	var me: Vector3 = p.global_position
+	var found := []                                       # [distance, pick]
+	var npcs = viewer.npcs
+	for i in PlayerData.group.size():                    # (the others: you are not in PlayerData.group)
+		var m = PlayerData.group[i]
+		if not (m is Dictionary):
+			continue
+		var st = npcs.by_oid.get(int(m.get("oid", 0)))
+		if st and st.view and is_instance_valid(st.view):
+			var d: float = (st.view.global_position as Vector3).distance_to(me)
+			if d <= FRIEND_RANGE_M:
+				found.append([d, st.view])
+		elif m.has("pos"):
+			var d2: float = (m.pos as Vector3).distance_to(me)
+			if d2 <= FRIEND_RANGE_M:
+				found.append([d2, i + 2])                     # (group place: 1 is you)
+	var pet_name := String(PlayerData.pet.get("name", ""))
+	if pet_name != "":                                   # your pet
+		for i in npcs.active:
+			var n = npcs.active[i]
+			if is_instance_valid(n) and String(n.spawn.get("name", "")) == pet_name and n.state.alive:
+				var d3: float = (n.global_position as Vector3).distance_to(me)
+				if d3 <= FRIEND_RANGE_M and found.all(func(f): return f[1] != n):
+					found.append([d3, n])
+	found.sort_custom(func(a, b): return a[0] < b[0])
+	return found.map(func(f): return f[1])
+
+
+## The nearest enemy, then the next nearest, and on (owner 2026-11-12: "It should cycle through nearest enemies");
+## after a pause it starts with the nearest again.
+var _enemy_pick := 0
+var _enemy_pick_at := 0
+var _enemy_list: Array = []
+func _next_enemy() -> void:
+	var now := Time.get_ticks_msec()
+	if now - _enemy_pick_at > 4000 or _enemy_list.is_empty():
+		_enemy_list = _enemies_near()
+		_enemy_pick = 0
+	else:
+		_enemy_pick += 1
+		if _enemy_pick >= _enemy_list.size():
+			_enemy_list = _enemies_near()
+			_enemy_pick = 0
+	_enemy_pick_at = now
+	if _enemy_list.is_empty() or viewer == null:
+		_fire("target_enemy")                            # (the keyboard's own, when we know of nobody)
+		return
+	var v = _enemy_list[_enemy_pick]
+	if is_instance_valid(v):
+		viewer.npcs.select(v)
+
+
+func _enemies_near() -> Array:
+	var p := _player()
+	if p == null or viewer == null or viewer.get("npcs") == null:
+		return []
+	var me: Vector3 = p.global_position
+	var found := []
+	for i in viewer.npcs.active:                         # (NpcManager.nearest_enemy's test: a realm-less, targetable monster)
+		var n = viewer.npcs.active[i]
+		if not is_instance_valid(n) or int(n.spawn.realm) != 0 or (int(n.spawn.flags) & Npc.FLAG_CANTTARGET) \
+				or n.state.stealthed or not n.state.alive:
+			continue
+		var d: float = (n.global_position as Vector3).distance_to(me)
+		if d <= 60.0:
+			found.append([d, n])
+	found.sort_custom(func(a, b): return a[0] < b[0])
+	return found.map(func(f): return f[1])
 
 
 func _use_slot(qbar: int, slot: int) -> void:
@@ -698,13 +810,18 @@ func item_actions(slot: int) -> Array:
 	var ui = _ui()
 	var out := []
 	var pack := PlayerData.is_backpack(slot)
-	# A: everything the item offers, in a menu (owner 2026-11-11: "Items that can be interacted with in your inventory
-	# (such as the Personal Bind Stone) need an option when you select them to use them. Also, an easy way to assign them
-	# to a controller hotbar button"); X moves it, Y puts it on the controller straight away
-	out.append(["a", "OPTIONS", item_menu.bind(slot)])
+	# A does the obvious thing (owner 2026-11-12: "make the A button contextual, so if it's an item, A will be equip. If
+	# it's a usable item, A will be use. Y will be the options menu, which will have drop or assign to controller"):
+	# wear it, take it off, or use it; X moves it; Y is the menu of everything else
+	var gear := not PlayerData.slots_for(it).is_empty()
+	if not pack:
+		out.append(["a", "TAKE OFF", func(): PlayerData.unequip(slot)])
+	elif gear:
+		out.append(["a", "EQUIP", func(): PlayerData.equip(slot)])
+	elif Server.active:
+		out.append(["a", "USE", func(): Server.use("srv:%d" % slot)])
 	out.append(["x", "MOVE", func(): _pick_up(focused())])
-	if pack and Server.active:
-		out.append(["y", "ON CONTROLLER", _assign_item.bind(slot)])
+	out.append(["y", "OPTIONS", item_menu.bind(slot)])
 	var m = ui.get("merchant") if ui else null
 	if pack and m and is_instance_valid(m) and m.visible:
 		out.append(["b", "SELL", func(): PlayerData.sell(slot, String(m.npc_name))])
@@ -1057,6 +1174,11 @@ func _look(delta: float) -> void:
 		return
 	var rs := _stick(JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y)
 	if bar and is_instance_valid(bar) and bar.radial_shown():
+		return
+	# LB + RB held: the right stick up / down zooms the camera in / out (owner 2026-11-12)
+	if layer == 3:
+		if absf(rs.y) > 0.0 and p.has_method("pad_zoom"):
+			p.call("pad_zoom", rs.y * ZOOM_SPEED * delta)
 		return
 	# locked on: a flick sideways is the next target that way (the camera stays on the lock)
 	if ac and is_instance_valid(ac) and bool(ac.call("_locked")):

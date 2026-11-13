@@ -87,6 +87,12 @@ namespace DOL.GS.Commands
             if (PersonalCompanions.IsCompanionOf(me, target) && PersonalCompanions.Load(me) is PersonalCompanions.Record rec)
             {
                 title = $"{target.Name} (your companion)";
+                if (PersonalCompanions.HasWordsFor(me))
+                    list.Add(("Talk", "/companion speak"));
+                list.Add(("Gear", "/companion gear"));
+                if (BotSpec.GetSpecializationChoices(rec.Class).Count > 1)
+                    list.Add(("How to Fight", "/companion role"));
+                list.Add(("What Shall We Do?", "/companion ideas"));
                 list.Add(("Call to Me", "/companion call"));
                 list.Add(("Send Home", "/companion home"));
                 foreach (string how in new[] { "chatty", "normal", "quiet" })

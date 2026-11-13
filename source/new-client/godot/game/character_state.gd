@@ -624,9 +624,7 @@ func encumbrance_mult() -> float:
 	var m := 1.0
 	if now:
 		m = maxf(0.0, 1.0 - (w - cap) / (cap * 0.35))
-	if now and not encumbered:
-		message.emit("You are heavily encumbered and cannot move." if m <= 0.0 else "You are encumbered and move more slowly.", "important")
-	encumbered = now
+	encumbered = now                                        # (the HUD's red bag says so, not the chat: owner 2026-11-12)
 	return m
 
 

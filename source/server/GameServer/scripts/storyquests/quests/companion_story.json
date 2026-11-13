@@ -1,0 +1,1533 @@
+{
+ "name": "companion_story",
+ "npcs": [],
+ "quests": [
+  {
+   "id": "cstory_alb_15",
+   "title": "Letters from Home",
+   "level": 15,
+   "min_level": 15,
+   "realm": 1,
+   "kind": "story",
+   "offer": "{name}, wait - a moment. A courier found me with this: a letter from Master Aldous Wren, the {cclass} who taught me {clesson}. It's strange. He says he found something in Campacorentin Forest, and that if I don't hear from him by the new moon I should come looking. That was a month ago. I know we've our own road... but will you come with me?",
+   "summary": "Your companion's own story, chapter 1 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 8,
+     "at": [
+      477,
+      359,
+      45.4
+     ],
+     "radius": 25,
+     "goal": "Find Master Aldous Wren's camp in Campacorentin Forest",
+     "text": "Master Aldous Wren's camp has been torn apart: the tent slashed, the fire kicked out, and a grey handprint daubed on a stone."
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 8,
+     "at": [
+      477,
+      359,
+      45.4
+     ],
+     "wake_m": 30,
+     "goal": "Defeat Grey Hand Cutthroat-Chief",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "Grey Hand Cutthroat-Chief",
+       "center": [
+        477,
+        359,
+        45.4
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat Grey Hand Cutthroat-Chief",
+       "announce": "They come out of hiding as if they had been waiting. 'More of the old one's friends? Good. Fewer to hunt later.'",
+       "boss": {
+        "template": 12589,
+        "name": "Grey Hand Cutthroat-Chief",
+        "level": 17,
+        "health_mult": 2.2,
+        "model": 9
+       },
+       "success": "Grey Hand Cutthroat-Chief falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 12589,
+          "name": "Grey Hand cutthroat",
+          "level": [
+           14,
+           15
+          ],
+          "model": 9
+         }
+        ]
+       }
+      }
+     ],
+     "text": "Among the leader's things: Master Aldous Wren's journal, half its pages torn out."
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 8,
+     "at": [
+      477,
+      359,
+      45.4
+     ],
+     "goal": "Talk with your companion",
+     "say": "This is Master Aldous Wren's journal. He would never leave it behind - not willingly. There's a name in here, 'the Grey Hand', and a meeting place. {name}, I have to know what happened to him. Will you see this through with me? [I will]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_alb_25",
+   "title": "The Grey Hand",
+   "level": 25,
+   "min_level": 25,
+   "realm": 1,
+   "kind": "story",
+   "requires": "cstory_alb_15",
+   "offer": "I've read the journal every night. The last whole page says the Grey Hand meet in Avalon Marsh, and that they want the Seal of Wren - whatever that is. Master Aldous Wren went to see for himself. Let's go and see for ourselves.",
+   "summary": "Your companion's own story, chapter 2 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 9,
+     "at": [
+      1589,
+      168,
+      49.8
+     ],
+     "radius": 25,
+     "goal": "Find where the Grey Hand meet in Avalon Marsh",
+     "text": "Ashes of a meeting fire, and the marks of a great many boots. Not long gone."
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 9,
+     "at": [
+      1589,
+      168,
+      49.8
+     ],
+     "wake_m": 30,
+     "goal": "Defeat Sister Morwen of the Grey Hand",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "Sister Morwen of the Grey Hand",
+       "center": [
+        1589,
+        168,
+        49.8
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat Sister Morwen of the Grey Hand",
+       "announce": "A voice from the shadows: 'The student comes looking for the master. How sweet. How foolish.'",
+       "boss": {
+        "template": 12043,
+        "name": "Sister Morwen of the Grey Hand",
+        "level": 27,
+        "health_mult": 2.2,
+        "model": 38
+       },
+       "success": "Sister Morwen of the Grey Hand falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 12043,
+          "name": "Grey Hand cutthroat",
+          "level": [
+           24,
+           25
+          ],
+          "model": 9
+         }
+        ]
+       }
+      }
+     ],
+     "text": "The lieutenant's orders name a prison, and a prisoner: Master Aldous Wren."
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 9,
+     "at": [
+      1589,
+      168,
+      49.8
+     ],
+     "goal": "Talk with your companion",
+     "say": "Master Aldous Wren's alive! A prisoner - but alive. {name}, I could kiss you. Don't worry, I won't. We go after him, yes? [Onward]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_alb_35",
+   "title": "The Empty Cage",
+   "level": 35,
+   "min_level": 35,
+   "realm": 1,
+   "kind": "story",
+   "requires": "cstory_alb_25",
+   "offer": "The orders said Master Aldous Wren is held in Cornwall. I've barely slept since. Please - let's go now.",
+   "summary": "Your companion's own story, chapter 3 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 6,
+     "at": [
+      870,
+      774,
+      138.8
+     ],
+     "radius": 25,
+     "goal": "Find the prison of the Grey Hand in Cornwall",
+     "text": "An empty cage. Scratched into its bars, in Master Aldous Wren's hand: 'Not the relic. Me. They want what I know.'"
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 6,
+     "at": [
+      870,
+      774,
+      138.8
+     ],
+     "wake_m": 30,
+     "goal": "Defeat Gaoler Brannoc",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "Gaoler Brannoc",
+       "center": [
+        870,
+        774,
+        138.8
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat Gaoler Brannoc",
+       "announce": "The jailer rattles a ring of keys. 'Come for the old one? You're a week late. But you'll do instead.'",
+       "boss": {
+        "template": 12831,
+        "name": "Gaoler Brannoc",
+        "level": 37,
+        "health_mult": 2.2,
+        "model": 9
+       },
+       "success": "Gaoler Brannoc falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 12831,
+          "name": "Grey Hand cutthroat",
+          "level": [
+           34,
+           35
+          ],
+          "model": 9
+         }
+        ]
+       }
+      }
+     ],
+     "text": "The jailer's ledger says Master Aldous Wren was moved a week ago, further into the wild - and names who sold him out: Garrick Vane."
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 6,
+     "at": [
+      870,
+      774,
+      138.8
+     ],
+     "goal": "Talk with your companion",
+     "say": "Moved. Again. And Garrick Vane... Master Aldous Wren's own student, before me. I'm sorry, {name} - I'm angry, and none of it's at you. Thank you for staying. [Always]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_alb_45",
+   "title": "Old Debts",
+   "level": 45,
+   "min_level": 45,
+   "realm": 1,
+   "kind": "story",
+   "requires": "cstory_alb_35",
+   "offer": "I know where Garrick Vane is now: Lyonesse. Master Aldous Wren trusted Garrick Vane like a son, like a daughter. I want to look Garrick Vane in the eye. Come with me?",
+   "summary": "Your companion's own story, chapter 4 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 10,
+     "at": [
+      1241,
+      842,
+      67.7
+     ],
+     "radius": 25,
+     "goal": "Find Garrick Vane in Lyonesse",
+     "text": "Garrick Vane is waiting for you, as if they knew you would come."
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 10,
+     "at": [
+      1241,
+      842,
+      67.7
+     ],
+     "wake_m": 30,
+     "goal": "Defeat Garrick Vane",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "Garrick Vane",
+       "center": [
+        1241,
+        842,
+        67.7
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat Garrick Vane",
+       "announce": "Garrick Vane draws, unhurried. 'The master always did like you better. Let's see why.'",
+       "boss": {
+        "template": 12974,
+        "name": "Garrick Vane",
+        "level": 47,
+        "health_mult": 2.2,
+        "model": 9
+       },
+       "success": "Garrick Vane falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 12974,
+          "name": "Grey Hand cutthroat",
+          "level": [
+           44,
+           45
+          ],
+          "model": 9
+         }
+        ]
+       }
+      }
+     ],
+     "text": "Garrick Vane falls to one knee. 'The master is in Dartmoor, with the one who leads the Grey Hand. Go, then. You were always the better student.'"
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 10,
+     "at": [
+      1241,
+      842,
+      67.7
+     ],
+     "goal": "Talk with your companion",
+     "say": "I thought beating Garrick Vane would feel like something. It just feels tired. One more road, {name}. The last one. [Let's end it]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_alb_50",
+   "title": "The Last Lesson",
+   "level": 50,
+   "min_level": 50,
+   "realm": 1,
+   "kind": "story",
+   "requires": "cstory_alb_45",
+   "offer": "This is it. Master Aldous Wren is in Dartmoor, with the one who leads the Grey Hand. Whatever happens there... I'm glad it's you beside me, {name}.",
+   "summary": "Your companion's own story, chapter 5 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 4,
+     "at": [
+      954,
+      392,
+      22.8
+     ],
+     "radius": 25,
+     "goal": "Find Master Aldous Wren in Dartmoor",
+     "text": "Master Aldous Wren is there - chained, grey-faced, alive. And between you and him: the one who leads the Grey Hand."
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 4,
+     "at": [
+      954,
+      392,
+      22.8
+     ],
+     "wake_m": 30,
+     "goal": "Defeat the Grey Master",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "the Grey Master",
+       "center": [
+        954,
+        392,
+        22.8
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat the Grey Master",
+       "announce": "'The seal of wren was never the prize. Your master's mind was. And now yours.'",
+       "boss": {
+        "template": 770017,
+        "name": "the Grey Master",
+        "level": 52,
+        "health_mult": 2.2,
+        "model": 9
+       },
+       "success": "the Grey Master falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 770017,
+          "name": "Grey Hand cutthroat",
+          "level": [
+           49,
+           50
+          ],
+          "model": 9
+         }
+        ]
+       }
+      }
+     ],
+     "text": "The leader of the Grey Hand falls, and the chains fall with them. Master Aldous Wren stands, slowly, and looks at {cname} for a long time."
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 4,
+     "at": [
+      954,
+      392,
+      22.8
+     ],
+     "goal": "Talk with your companion",
+     "say": "Master Aldous Wren says I've nothing left to learn from him. That the rest I learned from you. I don't know about that. But I know I'm not going anywhere, {name}. Not without you. [Nor I without you]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_mid_15",
+   "title": "Letters from Home",
+   "level": 15,
+   "min_level": 15,
+   "realm": 2,
+   "kind": "story",
+   "offer": "{name}, wait - a moment. A courier found me with this: a letter from Sigrid Hammerhand, the {cclass} who taught me {clesson}. It's strange. She says she found something in Gotar, and that if I don't hear from her by the new moon I should come looking. That was a month ago. I know we've our own road... but will you come with me?",
+   "summary": "Your companion's own story, chapter 1 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 103,
+     "at": [
+      724,
+      1057,
+      116.8
+     ],
+     "radius": 25,
+     "goal": "Find Sigrid Hammerhand's camp in Gotar",
+     "text": "Sigrid Hammerhand's camp has been torn apart: the tent slashed, the fire kicked out, a broken shield left in the ashes."
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 103,
+     "at": [
+      724,
+      1057,
+      116.8
+     ],
+     "wake_m": 30,
+     "goal": "Defeat Unsworn Raid-Leader",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "Unsworn Raid-Leader",
+       "center": [
+        724,
+        1057,
+        116.8
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat Unsworn Raid-Leader",
+       "announce": "They come out of hiding as if they had been waiting. 'More of the old one's friends? Good. Fewer to hunt later.'",
+       "boss": {
+        "template": 60164905,
+        "name": "Unsworn Raid-Leader",
+        "level": 17,
+        "health_mult": 2.2,
+        "model": 213
+       },
+       "success": "Unsworn Raid-Leader falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 60164905,
+          "name": "Unsworn raider",
+          "level": [
+           14,
+           15
+          ],
+          "model": 213
+         }
+        ]
+       }
+      }
+     ],
+     "text": "Among the leader's things: Sigrid Hammerhand's journal, half its pages torn out."
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 103,
+     "at": [
+      724,
+      1057,
+      116.8
+     ],
+     "goal": "Talk with your companion",
+     "say": "This is Sigrid Hammerhand's journal. She would never leave it behind - not willingly. There's a name in here, 'the Unsworn', and a meeting place. {name}, I have to know what happened to her. Will you see this through with me? [I will]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_mid_25",
+   "title": "The Unsworn",
+   "level": 25,
+   "min_level": 25,
+   "realm": 2,
+   "kind": "story",
+   "requires": "cstory_mid_15",
+   "offer": "I've read the journal every night. The last whole page says the Unsworn meet in Myrkwood Forest, and that they want the oath-ring of Hammerhand - whatever that is. Sigrid Hammerhand went to see for herself. Let's go and see for ourselves.",
+   "summary": "Your companion's own story, chapter 2 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 105,
+     "at": [
+      662,
+      142,
+      124.9
+     ],
+     "radius": 25,
+     "goal": "Find where the Unsworn meet in Myrkwood Forest",
+     "text": "Ashes of a meeting fire, and the marks of a great many boots. Not long gone."
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 105,
+     "at": [
+      662,
+      142,
+      124.9
+     ],
+     "wake_m": 30,
+     "goal": "Defeat Ulfa the Unsworn",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "Ulfa the Unsworn",
+       "center": [
+        662,
+        142,
+        124.9
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat Ulfa the Unsworn",
+       "announce": "A voice from the shadows: 'The student comes looking for the master. How sweet. How foolish.'",
+       "boss": {
+        "template": 60158949,
+        "name": "Ulfa the Unsworn",
+        "level": 27,
+        "health_mult": 2.2,
+        "model": 168
+       },
+       "success": "Ulfa the Unsworn falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 60158949,
+          "name": "Unsworn raider",
+          "level": [
+           24,
+           25
+          ],
+          "model": 213
+         }
+        ]
+       }
+      }
+     ],
+     "text": "The lieutenant's orders name a prison, and a prisoner: Sigrid Hammerhand."
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 105,
+     "at": [
+      662,
+      142,
+      124.9
+     ],
+     "goal": "Talk with your companion",
+     "say": "Sigrid Hammerhand's alive! A prisoner - but alive. {name}, I could kiss you. Don't worry, I won't. We go after her, yes? [Onward]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_mid_35",
+   "title": "The Empty Cage",
+   "level": 35,
+   "min_level": 35,
+   "realm": 2,
+   "kind": "story",
+   "requires": "cstory_mid_25",
+   "offer": "The orders said Sigrid Hammerhand is held in Skona Ravine. I've barely slept since. Please - let's go now.",
+   "summary": "Your companion's own story, chapter 3 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 106,
+     "at": [
+      999,
+      750,
+      88.6
+     ],
+     "radius": 25,
+     "goal": "Find the prison of the Unsworn in Skona Ravine",
+     "text": "An empty cage. Scratched into its bars, in Sigrid Hammerhand's hand: 'Not the relic. Me. They want what I know.'"
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 106,
+     "at": [
+      999,
+      750,
+      88.6
+     ],
+     "wake_m": 30,
+     "goal": "Defeat Jailer Skeggi",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "Jailer Skeggi",
+       "center": [
+        999,
+        750,
+        88.6
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat Jailer Skeggi",
+       "announce": "The jailer rattles a ring of keys. 'Come for the old one? You're a week late. But you'll do instead.'",
+       "boss": {
+        "template": 60167861,
+        "name": "Jailer Skeggi",
+        "level": 37,
+        "health_mult": 2.2,
+        "model": 213
+       },
+       "success": "Jailer Skeggi falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 60167861,
+          "name": "Unsworn raider",
+          "level": [
+           34,
+           35
+          ],
+          "model": 213
+         }
+        ]
+       }
+      }
+     ],
+     "text": "The jailer's ledger says Sigrid Hammerhand was moved a week ago, further into the wild - and names who sold her out: Hrafn Oathless."
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 106,
+     "at": [
+      999,
+      750,
+      88.6
+     ],
+     "goal": "Talk with your companion",
+     "say": "Moved. Again. And Hrafn Oathless... Sigrid Hammerhand's own student, before me. I'm sorry, {name} - I'm angry, and none of it's at you. Thank you for staying. [Always]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_mid_45",
+   "title": "Old Debts",
+   "level": 45,
+   "min_level": 45,
+   "realm": 2,
+   "kind": "story",
+   "requires": "cstory_mid_35",
+   "offer": "I know where Hrafn Oathless is now: Raumarik. Sigrid Hammerhand trusted Hrafn Oathless like a son, like a daughter. I want to look Hrafn Oathless in the eye. Come with me?",
+   "summary": "Your companion's own story, chapter 4 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 108,
+     "at": [
+      1395,
+      185,
+      161.3
+     ],
+     "radius": 25,
+     "goal": "Find Hrafn Oathless in Raumarik",
+     "text": "Hrafn Oathless is waiting for you, as if they knew you would come."
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 108,
+     "at": [
+      1395,
+      185,
+      161.3
+     ],
+     "wake_m": 30,
+     "goal": "Defeat Hrafn Oathless",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "Hrafn Oathless",
+       "center": [
+        1395,
+        185,
+        161.3
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat Hrafn Oathless",
+       "announce": "Hrafn Oathless draws, unhurried. 'The master always did like you better. Let's see why.'",
+       "boss": {
+        "template": 60162353,
+        "name": "Hrafn Oathless",
+        "level": 47,
+        "health_mult": 2.2,
+        "model": 213
+       },
+       "success": "Hrafn Oathless falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 60162353,
+          "name": "Unsworn raider",
+          "level": [
+           44,
+           45
+          ],
+          "model": 213
+         }
+        ]
+       }
+      }
+     ],
+     "text": "Hrafn Oathless falls to one knee. 'The master is in Malmohus, with the one who leads the Unsworn. Go, then. You were always the better student.'"
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 108,
+     "at": [
+      1395,
+      185,
+      161.3
+     ],
+     "goal": "Talk with your companion",
+     "say": "I thought beating Hrafn Oathless would feel like something. It just feels tired. One more road, {name}. The last one. [Let's end it]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_mid_50",
+   "title": "The Last Lesson",
+   "level": 50,
+   "min_level": 50,
+   "realm": 2,
+   "kind": "story",
+   "requires": "cstory_mid_45",
+   "offer": "This is it. Sigrid Hammerhand is in Malmohus, with the one who leads the Unsworn. Whatever happens there... I'm glad it's you beside me, {name}.",
+   "summary": "Your companion's own story, chapter 5 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 116,
+     "at": [
+      841,
+      316,
+      68.7
+     ],
+     "radius": 25,
+     "goal": "Find Sigrid Hammerhand in Malmohus",
+     "text": "Sigrid Hammerhand is there - chained, grey-faced, alive. And between you and her: the one who leads the Unsworn."
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 116,
+     "at": [
+      841,
+      316,
+      68.7
+     ],
+     "wake_m": 30,
+     "goal": "Defeat the Unsworn King",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "the Unsworn King",
+       "center": [
+        841,
+        316,
+        68.7
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat the Unsworn King",
+       "announce": "'The oath-ring of hammerhand was never the prize. Your master's mind was. And now yours.'",
+       "boss": {
+        "template": 60165645,
+        "name": "the Unsworn King",
+        "level": 52,
+        "health_mult": 2.2,
+        "model": 213
+       },
+       "success": "the Unsworn King falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 60165645,
+          "name": "Unsworn raider",
+          "level": [
+           49,
+           50
+          ],
+          "model": 213
+         }
+        ]
+       }
+      }
+     ],
+     "text": "The leader of the Unsworn falls, and the chains fall with them. Sigrid Hammerhand stands, slowly, and looks at {cname} for a long time."
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 116,
+     "at": [
+      841,
+      316,
+      68.7
+     ],
+     "goal": "Talk with your companion",
+     "say": "Sigrid Hammerhand says I've nothing left to learn from her. That the rest I learned from you. I don't know about that. But I know I'm not going anywhere, {name}. Not without you. [Nor I without you]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_hib_15",
+   "title": "Letters from Home",
+   "level": 15,
+   "min_level": 15,
+   "realm": 3,
+   "kind": "story",
+   "offer": "{name}, wait - a moment. A courier found me with this: a letter from Aodhan of the Grey Branch, the {cclass} who taught me {clesson}. It's strange. He says he found something in Valley of Bri Leith, and that if I don't hear from him by the new moon I should come looking. That was a month ago. I know we've our own road... but will you come with me?",
+   "summary": "Your companion's own story, chapter 1 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 206,
+     "at": [
+      61,
+      464,
+      132.4
+     ],
+     "radius": 25,
+     "goal": "Find Aodhan of the Grey Branch's camp in Valley of Bri Leith",
+     "text": "Aodhan of the Grey Branch's camp has been torn apart: the shelter pulled down, the fire scattered, and a ring of dead white flowers around it."
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 206,
+     "at": [
+      61,
+      464,
+      132.4
+     ],
+     "wake_m": 30,
+     "goal": "Defeat Hollow Court Reaver",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "Hollow Court Reaver",
+       "center": [
+        61,
+        464,
+        132.4
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat Hollow Court Reaver",
+       "announce": "They come out of hiding as if they had been waiting. 'More of the old one's friends? Good. Fewer to hunt later.'",
+       "boss": {
+        "template": 30003,
+        "name": "Hollow Court Reaver",
+        "level": 17,
+        "health_mult": 2.2,
+        "model": 337
+       },
+       "success": "Hollow Court Reaver falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 30003,
+          "name": "Hollow Court sidhe",
+          "level": [
+           14,
+           15
+          ],
+          "model": 337
+         }
+        ]
+       }
+      }
+     ],
+     "text": "Among the leader's things: Aodhan of the Grey Branch's journal, half its pages torn out."
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 206,
+     "at": [
+      61,
+      464,
+      132.4
+     ],
+     "goal": "Talk with your companion",
+     "say": "This is Aodhan of the Grey Branch's journal. He would never leave it behind - not willingly. There's a name in here, 'the Hollow Court', and a meeting place. {name}, I have to know what happened to him. Will you see this through with me? [I will]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_hib_25",
+   "title": "The Hollow Court",
+   "level": 25,
+   "min_level": 25,
+   "realm": 3,
+   "kind": "story",
+   "requires": "cstory_hib_15",
+   "offer": "I've read the journal every night. The last whole page says the Hollow Court meet in Cliffs of Moher, and that they want the Silver Branch - whatever that is. Aodhan of the Grey Branch went to see for himself. Let's go and see for ourselves.",
+   "summary": "Your companion's own story, chapter 2 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 203,
+     "at": [
+      616,
+      1084,
+      132.7
+     ],
+     "radius": 25,
+     "goal": "Find where the Hollow Court meet in Cliffs of Moher",
+     "text": "Ashes of a meeting fire, and the marks of a great many boots. Not long gone."
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 203,
+     "at": [
+      616,
+      1084,
+      132.7
+     ],
+     "wake_m": 30,
+     "goal": "Defeat the Hollow Knight",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "the Hollow Knight",
+       "center": [
+        616,
+        1084,
+        132.7
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat the Hollow Knight",
+       "announce": "A voice from the shadows: 'The student comes looking for the master. How sweet. How foolish.'",
+       "boss": {
+        "template": 60158578,
+        "name": "the Hollow Knight",
+        "level": 27,
+        "health_mult": 2.2,
+        "model": 337
+       },
+       "success": "the Hollow Knight falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 60158578,
+          "name": "Hollow Court sidhe",
+          "level": [
+           24,
+           25
+          ],
+          "model": 337
+         }
+        ]
+       }
+      }
+     ],
+     "text": "The lieutenant's orders name a prison, and a prisoner: Aodhan of the Grey Branch."
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 203,
+     "at": [
+      616,
+      1084,
+      132.7
+     ],
+     "goal": "Talk with your companion",
+     "say": "Aodhan of the Grey Branch's alive! A prisoner - but alive. {name}, I could kiss you. Don't worry, I won't. We go after him, yes? [Onward]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_hib_35",
+   "title": "The Empty Cage",
+   "level": 35,
+   "min_level": 35,
+   "realm": 3,
+   "kind": "story",
+   "requires": "cstory_hib_25",
+   "offer": "The orders said Aodhan of the Grey Branch is held in Lough Gur. I've barely slept since. Please - let's go now.",
+   "summary": "Your companion's own story, chapter 3 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 204,
+     "at": [
+      624,
+      1463,
+      155.2
+     ],
+     "radius": 25,
+     "goal": "Find the prison of the Hollow Court in Lough Gur",
+     "text": "An empty cage. Scratched into its bars, in Aodhan of the Grey Branch's hand: 'Not the relic. Me. They want what I know.'"
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 204,
+     "at": [
+      624,
+      1463,
+      155.2
+     ],
+     "wake_m": 30,
+     "goal": "Defeat Warden Dubh",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "Warden Dubh",
+       "center": [
+        624,
+        1463,
+        155.2
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat Warden Dubh",
+       "announce": "The jailer rattles a ring of keys. 'Come for the old one? You're a week late. But you'll do instead.'",
+       "boss": {
+        "template": 60158445,
+        "name": "Warden Dubh",
+        "level": 37,
+        "health_mult": 2.2,
+        "model": 337
+       },
+       "success": "Warden Dubh falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 60158445,
+          "name": "Hollow Court sidhe",
+          "level": [
+           34,
+           35
+          ],
+          "model": 337
+         }
+        ]
+       }
+      }
+     ],
+     "text": "The jailer's ledger says Aodhan of the Grey Branch was moved a week ago, further into the wild - and names who sold him out: Niamh Brightspear."
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 204,
+     "at": [
+      624,
+      1463,
+      155.2
+     ],
+     "goal": "Talk with your companion",
+     "say": "Moved. Again. And Niamh Brightspear... Aodhan of the Grey Branch's own student, before me. I'm sorry, {name} - I'm angry, and none of it's at you. Thank you for staying. [Always]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_hib_45",
+   "title": "Old Debts",
+   "level": 45,
+   "min_level": 45,
+   "realm": 3,
+   "kind": "story",
+   "requires": "cstory_hib_35",
+   "offer": "I know where Niamh Brightspear is now: Sheeroe Hills. Aodhan of the Grey Branch trusted Niamh Brightspear like a son, like a daughter. I want to look Niamh Brightspear in the eye. Come with me?",
+   "summary": "Your companion's own story, chapter 4 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 216,
+     "at": [
+      200,
+      215,
+      83.9
+     ],
+     "radius": 25,
+     "goal": "Find Niamh Brightspear in Sheeroe Hills",
+     "text": "Niamh Brightspear is waiting for you, as if they knew you would come."
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 216,
+     "at": [
+      200,
+      215,
+      83.9
+     ],
+     "wake_m": 30,
+     "goal": "Defeat Niamh Brightspear",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "Niamh Brightspear",
+       "center": [
+        200,
+        215,
+        83.9
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat Niamh Brightspear",
+       "announce": "Niamh Brightspear draws, unhurried. 'The master always did like you better. Let's see why.'",
+       "boss": {
+        "template": 44026,
+        "name": "Niamh Brightspear",
+        "level": 47,
+        "health_mult": 2.2,
+        "model": 365
+       },
+       "success": "Niamh Brightspear falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 44026,
+          "name": "Hollow Court sidhe",
+          "level": [
+           44,
+           45
+          ],
+          "model": 337
+         }
+        ]
+       }
+      }
+     ],
+     "text": "Niamh Brightspear falls to one knee. 'The master is in Cursed Forest, with the one who leads the Hollow Court. Go, then. You were always the better student.'"
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 216,
+     "at": [
+      200,
+      215,
+      83.9
+     ],
+     "goal": "Talk with your companion",
+     "say": "I thought beating Niamh Brightspear would feel like something. It just feels tired. One more road, {name}. The last one. [Let's end it]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  },
+  {
+   "id": "cstory_hib_50",
+   "title": "The Last Lesson",
+   "level": 50,
+   "min_level": 50,
+   "realm": 3,
+   "kind": "story",
+   "requires": "cstory_hib_45",
+   "offer": "This is it. Aodhan of the Grey Branch is in Cursed Forest, with the one who leads the Hollow Court. Whatever happens there... I'm glad it's you beside me, {name}.",
+   "summary": "Your companion's own story, chapter 5 of 5.",
+   "steps": [
+    {
+     "id": "road",
+     "type": "reach",
+     "zone": 208,
+     "at": [
+      295,
+      1195,
+      160.7
+     ],
+     "radius": 25,
+     "goal": "Find Aodhan of the Grey Branch in Cursed Forest",
+     "text": "Aodhan of the Grey Branch is there - chained, grey-faced, alive. And between you and him: the one who leads the Hollow Court."
+    },
+    {
+     "id": "fight",
+     "type": "encounter",
+     "zone": 208,
+     "at": [
+      295,
+      1195,
+      160.7
+     ],
+     "wake_m": 30,
+     "goal": "Defeat the Hollow Queen",
+     "stages": [
+      {
+       "id": "b1",
+       "type": "boss",
+       "name": "the Hollow Queen",
+       "center": [
+        295,
+        1195,
+        160.7
+       ],
+       "radius": 35,
+       "time_s": 900,
+       "objective": "Defeat the Hollow Queen",
+       "announce": "'The silver branch was never the prize. Your master's mind was. And now yours.'",
+       "boss": {
+        "template": 60159966,
+        "name": "the Hollow Queen",
+        "level": 52,
+        "health_mult": 2.2,
+        "model": 365
+       },
+       "success": "the Hollow Queen falls.",
+       "fail": "You fall back.",
+       "adds": {
+        "every_s": 35,
+        "count": 1,
+        "mobs": [
+         {
+          "template": 60159966,
+          "name": "Hollow Court sidhe",
+          "level": [
+           49,
+           50
+          ],
+          "model": 337
+         }
+        ]
+       }
+      }
+     ],
+     "text": "The leader of the Hollow Court falls, and the chains fall with them. Aodhan of the Grey Branch stands, slowly, and looks at {cname} for a long time."
+    },
+    {
+     "id": "words",
+     "type": "companion",
+     "zone": 208,
+     "at": [
+      295,
+      1195,
+      160.7
+     ],
+     "goal": "Talk with your companion",
+     "say": "Aodhan of the Grey Branch says I've nothing left to learn from him. That the rest I learned from you. I don't know about that. But I know I'm not going anywhere, {name}. Not without you. [Nor I without you]",
+     "ending": "done"
+    }
+   ],
+   "endings": {
+    "done": {
+     "text": "",
+     "rewards": {
+      "xp_pct": 50,
+      "copper_per_level": 60,
+      "marks": 10
+     }
+    }
+   }
+  }
+ ]
+}

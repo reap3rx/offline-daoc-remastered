@@ -27,7 +27,7 @@ namespace DOL.GS.StoryQuests
         static readonly Regex Brackets = new(@"\[([^\]]+)\]");
 
         /// <param name="kind">talk / offer / choice / reward / end / idle</param>
-        public static void Say(GamePlayer p, StoryNpc npc, string text, string kind = "talk", StoryQuestDef q = null,
+        public static void Say(GamePlayer p, GameNPC npc, string text, string kind = "talk", StoryQuestDef q = null,
             StoryQuest s = null, string ending = null, bool bubble = true)
         {
             if (p == null || npc == null || string.IsNullOrEmpty(text))

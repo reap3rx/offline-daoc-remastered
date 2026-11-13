@@ -23,9 +23,11 @@ namespace DOL.GS
     ///   Call Companion (/companion call): brings it to you at once, alive - from anywhere, from death, from home.
     ///   Send Companion Home (/companion home): it leaves until you call it; it stays home across log-ins.
     ///   /companion talk chatty|normal|quiet, /companion rename &lt;name&gt; (at a Name Registrar).
-    /// What it is lives in DOLCharactersXCustomParam "companion": "class|race|gender|name|talk|home".
+    /// What it is lives in DOLCharactersXCustomParam "companion": "class|race|gender|name|talk|home|spec|competence".
+    /// The rest of it: PersonalCompanions.Rescue.cs (the quest's last steps), .Gear.cs (what it wears), .Mind.cs (its
+    /// role, its competence, its ideas, its answers and its own story).
     /// </summary>
-    public static class PersonalCompanions
+    public static partial class PersonalCompanions
     {
         static readonly Logging.Logger log = Logging.LoggerManager.Create(typeof(PersonalCompanions));
         public const string ParamKey = "companion";
@@ -40,8 +42,10 @@ namespace DOL.GS
             public string Name = "";
             public string Talk = "normal";
             public bool Home;
+            public string Spec = "";                       // its specialization (role) by eSpecType name; "" = its own choice
+            public int Competence;                         // its own experience: fights won at your side
 
-            public string Format() => $"{(int) Class}|{(int) Race}|{(int) Gender}|{Name}|{Talk}|{(Home ? 1 : 0)}";
+            public string Format() => $"{(int) Class}|{(int) Race}|{(int) Gender}|{Name}|{Talk}|{(Home ? 1 : 0)}|{Spec}|{Competence}";
 
             public static Record Parse(string v)
             {
@@ -54,6 +58,8 @@ namespace DOL.GS
                     Class = (eCharacterClass) c, Race = (eRace) r, Gender = (eGender) g, Name = p[3],
                     Talk = p.Length > 4 && p[4] is "chatty" or "normal" or "quiet" ? p[4] : "normal",
                     Home = p.Length > 5 && p[5] == "1",
+                    Spec = p.Length > 6 ? p[6] : "",
+                    Competence = p.Length > 7 && int.TryParse(p[7], out int k) ? Math.Max(0, k) : 0,
                 };
             }
         }
@@ -78,6 +84,9 @@ namespace DOL.GS
             GameEventMgr.AddHandler(GamePlayerEvent.Quit, new DOLEventHandler(OnQuit));
             StoryQuestManager.ChoiceMade += OnChoice;
             StoryQuestManager.Finished += OnQuestFinished;
+            StoryQuestManager.StepBegan += OnStepBegan;
+            StoryQuestManager.MoreWords = FillWords;
+            GameEventMgr.AddHandler(GameLivingEvent.Dying, new DOLEventHandler(OnSomethingDied));
             _ = new ECSGameTimer(null, Tick, 5000);
         }
 
@@ -97,6 +106,7 @@ namespace DOL.GS
                     OfferQuest(p);
                 else if (!r.Home)
                     Spawn(p, r, false);
+                ResumeRescue(p);
                 return 0;
             }, 4000);
         }
@@ -109,7 +119,7 @@ namespace DOL.GS
                 OfferQuest(p);
             else if (Of(p) is GameBot bot && bot.IsAlive)
                 bot.Say(Pick(LevelLines, p, bot).Replace("{level}", p.Level.ToString()));
-            // (its own level follows in the tick, out of a fight)
+            // (its own level follows in the tick, out of a fight; its story may have a chapter for this level: Mind)
         }
 
         static void OnQuit(DOLEvent e, object sender, EventArgs args)
@@ -117,6 +127,7 @@ namespace DOL.GS
             if (sender is not GamePlayer p)
                 return;
             _active.TryRemove(p, out _);              // (a helper leaves with its owner: GameBot.OnOwnerQuit)
+            EndRescue(p);
             _calledAt.TryRemove(p, out _);
             _spokeAt.TryRemove(p, out _);
             _records.TryRemove(p.ObjectId, out _);
@@ -183,12 +194,21 @@ namespace DOL.GS
             else if (st.Id == "class" && Enum.TryParse(o.Keyword, true, out eCharacterClass c))
                 s.SetCustomProperty("c_class", ((int) c).ToString());
             else if (st.Id.StartsWith("race_") && Enum.TryParse(o.Keyword, true, out eRace r))
+            {
                 s.SetCustomProperty("c_race", ((int) r).ToString());
+                if (int.TryParse(s.GetCustomProperty("c_class"), out int cc))
+                    s.SetCustomProperty("c_name", NewName(p, (eCharacterClass) cc, s.GetCustomProperty("c_sex") == "2" ? eGender.Female : eGender.Male));
+            }
             s.SaveIntoDatabase();
         }
 
         static void OnQuestFinished(GamePlayer p, StoryQuest s, string ending)
         {
+            if (s.QuestId.StartsWith("cstory_", StringComparison.OrdinalIgnoreCase))
+            {
+                StoryChapterDone(p, s);
+                return;
+            }
             if (!s.QuestId.StartsWith("companion_", StringComparison.OrdinalIgnoreCase))
                 return;
             if (!int.TryParse(s.GetCustomProperty("c_class"), out int c) || !int.TryParse(s.GetCustomProperty("c_race"), out int r))
@@ -197,11 +217,27 @@ namespace DOL.GS
                 return;
             }
             eGender g = s.GetCustomProperty("c_sex") == "2" ? eGender.Female : eGender.Male;
-            Make(p, (eCharacterClass) c, (eRace) r, g);
+            string name = s.GetCustomProperty("c_name");
+            _rescued.TryRemove(p, out GameBot saved);
+            Make(p, (eCharacterClass) c, (eRace) r, g, string.IsNullOrEmpty(name) ? null : name, saved);
         }
 
-        /// <summary>A new companion: its name, the record, and at your side.</summary>
-        public static GameBot Make(GamePlayer p, eCharacterClass c, eRace r, eGender g)
+        /// <summary>A name of its realm for a new companion, not anyone else's.</summary>
+        static string NewName(GamePlayer p, eCharacterClass c, eGender g)
+        {
+            var taken = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { p.Name };
+            for (int i = 0; i < 20; i++)
+            {
+                string n = AutonomousBotIdentityGenerator.GenerateForClass(p.Realm, g, c, taken).Name;
+                if (!NameInUse(n))
+                    return n;
+                taken.Add(n);
+            }
+            return AutonomousBotIdentityGenerator.GenerateForClass(p.Realm, g, c, taken).Name;
+        }
+
+        /// <summary>A new companion: its name, the record, and at your side (the one you rescued, when it is there).</summary>
+        public static GameBot Make(GamePlayer p, eCharacterClass c, eRace r, eGender g, string name = null, GameBot adopt = null)
         {
             if (!AutonomousBotIdentityGenerator.IsClassAvailable(c) ||
                 !AutonomousBotIdentityGenerator.GetEligibleRaces(c).Contains(r))
@@ -209,23 +245,26 @@ namespace DOL.GS
                 p.Out.SendMessage($"A {r} {c} can't be your companion.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return null;
             }
-            var taken = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { p.Name };
-            string name = null;
-            for (int i = 0; i < 20 && name == null; i++)
-            {
-                string n = AutonomousBotIdentityGenerator.GenerateForClass(p.Realm, g, c, taken).Name;
-                if (!NameInUse(n))
-                    name = n;
-            }
-            name ??= AutonomousBotIdentityGenerator.GenerateForClass(p.Realm, g, c, taken).Name;
+            name ??= NewName(p, c, g);
             var rec = new Record { Class = c, Race = r, Gender = g, Name = name };
             Save(p, rec);
             SendState(p, rec);
-            GameBot bot = Spawn(p, rec, false);
+            GameBot bot = adopt != null && adopt.ObjectState == GameObject.eObjectState.Active && adopt.Name == name
+                ? Adopt(p, adopt, rec) : null;
+            if (bot == null)
+            {
+                if (adopt != null)
+                {
+                    ForgetRescueHandlers(adopt);
+                    adopt.Delete();
+                }
+                bot = Spawn(p, rec, false);
+            }
             if (bot != null)
             {
                 bot.TurnTo(p);
-                bot.Say(Pick(HelloLines, p, bot));
+                if (adopt == null)
+                    bot.Say(Pick(HelloLines, p, bot));
                 p.Out.SendMessage($"{name} is your companion now. Call Companion brings {(g == eGender.Female ? "her" : "him")} to you; " +
                     "Send Companion Home sends them off until you call. (/companion for the rest.)",
                     eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -246,7 +285,7 @@ namespace DOL.GS
             if (Of(p) is GameBot old)
             {
                 _active.TryRemove(p, out _);
-                old.Delete();
+                Release(old);
             }
             if (p.Group != null && p.Group.MemberCount >= p.Group.MaximumMemberCount)
             {
@@ -259,7 +298,9 @@ namespace DOL.GS
             try
             {
                 bot = new GameBot(p, (byte) r.Class, r.Name, (byte) r.Race, (byte) r.Gender, temporaryGroupHelper: true,
-                    equipmentLevel: p.Level, botLevel: p.Level) { IsPersonalCompanion = true };
+                    equipmentLevel: p.Level, botLevel: p.Level, preferredSpec: SpecOf(r)) { IsPersonalCompanion = true };
+                Dress(p, bot);
+                ApplyCompetence(bot, r);
             }
             catch (Exception ex)
             {
@@ -276,6 +317,27 @@ namespace DOL.GS
             if (!bot.AddToWorld())
             {
                 bot.Delete();
+                return null;
+            }
+            return JoinUp(p, bot, r, loud);
+        }
+
+        /// <summary>The one you rescued becomes your companion where it stands.</summary>
+        static GameBot Adopt(GamePlayer p, GameBot bot, Record r)
+        {
+            ForgetRescueHandlers(bot);
+            bot.Flags &= ~GameNPC.eFlags.PEACE;
+            bot.IsPersonalCompanion = true;
+            bot.Health = bot.MaxHealth;
+            return JoinUp(p, bot, r, false);
+        }
+
+        static GameBot JoinUp(GamePlayer p, GameBot bot, Record r, bool loud)
+        {
+            if (p.Group != null && p.Group.MemberCount >= p.Group.MaximumMemberCount && bot.Group != p.Group)
+            {
+                bot.Delete();
+                p.Out.SendMessage($"Your group is full - {r.Name} can't join it.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 return null;
             }
             if (p.Group == null)
@@ -295,6 +357,7 @@ namespace DOL.GS
             if (bot.Brain is BotBrain brain)
                 brain.FSM.SetCurrentState(eFSMStateType.FOLLOW);
             _active[p] = bot;
+            WatchCompanion(bot);
             if (r.Home)
             {
                 r.Home = false;
@@ -359,7 +422,7 @@ namespace DOL.GS
                 if (bot.IsAlive)
                     bot.Say(Pick(HomeLines, p, bot));
                 _active.TryRemove(p, out _);
-                bot.Delete();
+                Release(bot);
             }
             r.Home = true;
             Save(p, r);
@@ -387,11 +450,15 @@ namespace DOL.GS
                     if (bot.Level != p.Level && bot.IsAlive && !bot.InCombat && !p.InCombat && !bot.IsReturningAfterRelease &&
                         bot.CurrentRegionID == p.CurrentRegionID)
                     {
-                        Spawn(p, r, false);
+                        byte was = bot.Level;
+                        if (Spawn(p, r, false) is GameBot fresh && fresh.Level > was)
+                            GameBot.LevelFlourish(fresh, 1500);   // (once the client has it: its own level-up glow and fanfare)
                         continue;
                     }
                     Chatter(p, bot, r, now);
+                    MaybeStory(p, bot, r, now);
                 }
+                TickRescues();
             }
             catch (Exception ex)
             {
@@ -408,6 +475,18 @@ namespace DOL.GS
             long last = _spokeAt.GetOrAdd(p, now);
             if (now - last < every / 3 || Random.Shared.NextDouble() > 5000.0 / every)
                 return;
+            // now and then an idea instead of a remark (an event near you, a camp about your level)
+            if ((!_suggestedAt.TryGetValue(p, out long sAt) || now - sAt > (r.Talk == "chatty" ? 600_000 : 1_200_000)) &&
+                Random.Shared.Next(3) == 0)
+            {
+                _spokeAt[p] = now;
+                _suggestedAt[p] = now;
+                if (NearbyEvent(p) != null || Camp(p) != null)
+                {
+                    Suggest(p, false);
+                    return;
+                }
+            }
             string line = Remark(p, bot);
             if (string.IsNullOrEmpty(line))
                 return;
@@ -525,8 +604,11 @@ namespace DOL.GS
             if (Of(p) is GameBot bot)
             {
                 _active.TryRemove(p, out _);
-                bot.Delete();
+                Release(bot);
             }
+            EndRescue(p);
+            foreach (DbInventoryItem kept in Kept(p))                  // (GM testing: its kept gear goes too)
+                GameServer.Database.DeleteObject(kept);
             if (Row(p) is DbCoreCharacterXCustomParam row)
                 GameServer.Database.DeleteObject(row);
             _records.TryRemove(p.ObjectId, out _);
@@ -582,8 +664,8 @@ namespace DOL.GS
     }
 
     /// <summary>/companion: your companion - call, home, talk, rename (the client's abilities use the first two).</summary>
-    [CmdAttribute("&companion", ePrivLevel.Player, "Your companion: call, send home, how much they talk, a new name",
-        "/companion [call | home | talk chatty|normal|quiet | rename <name>]")]
+    [CmdAttribute("&companion", ePrivLevel.Player, "Your companion: call, send home, gear, role, how much they talk, ideas, a new name",
+        "/companion [call | home | gear | role | ideas | talk chatty|normal|quiet | rename <name>]")]
     public class CompanionCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
@@ -598,6 +680,12 @@ namespace DOL.GS
                 "home" => PersonalCompanions.Home(p),
                 "talk" => PersonalCompanions.SetTalk(p, args.Length > 2 ? args[2] : ""),
                 "rename" => PersonalCompanions.Rename(p, args.Length > 2 ? args[2] : ""),
+                "gear" => PersonalCompanions.GearMenu(p, args.Length > 2 ? args[2] : ""),
+                "give" => PersonalCompanions.Give(p, args.Length > 2 ? args[2] : "", args.Length > 3 ? args[3] : ""),
+                "take" => PersonalCompanions.Take(p, args.Length > 2 ? args[2] : ""),
+                "role" => PersonalCompanions.Role(p, args.Length > 2 ? args[2] : ""),
+                "ideas" or "idea" or "plan" => PersonalCompanions.Suggest(p, true),
+                "talkto" or "speak" => PersonalCompanions.SpeakUp(p),
                 "forget" when client.Account.PrivLevel > (uint) ePrivLevel.Player => PersonalCompanions.Forget(p),
                 _ => Status(p),
             };
@@ -613,7 +701,9 @@ namespace DOL.GS
                     ? $"At level {PersonalCompanions.QuestLevel} someone in your starting town can find you a companion."
                     : "You have no companion yet - see the companion quest in your journal.";
             string where = PersonalCompanions.Of(p) is GameBot b ? (b.IsAlive ? "with you" : "dead") : r.Home ? "at home" : "away";
-            return $"{r.Name}, {r.Race} {r.Class} ({where}; talks: {r.Talk}). /companion call | home | talk chatty|normal|quiet | rename <name> (at a Name Registrar)";
+            return $"{r.Name}, {r.Race} {r.Class} - {PersonalCompanions.RoleName(r)}, {PersonalCompanions.CompetenceTitle(r.Competence)} " +
+                $"({where}; talks: {r.Talk}). /companion call | home | gear | role | ideas | talk chatty|normal|quiet | " +
+                "rename <name> (at a Name Registrar)";
         }
     }
 }

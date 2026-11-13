@@ -25,12 +25,14 @@ $Dotnet = 'C:\Program Files\dotnet\dotnet.exe'
 $Python = Join-Path (Split-Path $Game -Parent) 'claude-work\pyenv\Scripts\python.exe'
 if (-not (Test-Path $Python)) { $Python = 'python' }
 
+# a version with a letter (owner 2026-11-12: "0.1a") is the program's file version with the letter as a number (0.1.1)
+$FileVersion = [regex]::Replace($Version, '([0-9])([a-z])$', { param($m) $m.Groups[1].Value + '.' + ([int][char]$m.Groups[2].Value - 96) })
 Write-Host "== 1. the launcher"
 $Launcher = Join-Path $Out 'launcher'
 if (Test-Path $Launcher) { Remove-Item $Launcher -Recurse -Force }
 & $Dotnet publish (Join-Path $Game 'source\tools\OfflineDaoc.Launcher\OfflineDaoc.Launcher.csproj') -c Release -r win-x64 `
     --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `
-    -p:EnableCompressionInSingleFile=true -p:DebugType=none -p:Version=$Version -o $Launcher -nologo -v q
+    -p:EnableCompressionInSingleFile=true -p:DebugType=none -p:Version=$FileVersion -p:InformationalVersion=$Version -o $Launcher -nologo -v q
 if ($LASTEXITCODE) { throw "The launcher didn't build." }
 
 Write-Host "== 2. the new world"

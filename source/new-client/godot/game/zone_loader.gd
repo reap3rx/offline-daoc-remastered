@@ -206,6 +206,8 @@ func _build_terrain() -> void:
 	body.name = "TerrainBody"
 	body.collision_layer = LAYER_FLOOR                    # the client's terrain is a floor (picked), never a wall
 	body.collision_mask = 0
+	if not city:
+		body.add_to_group("open_terrain")                 # Player: the camera arm rides over it, not into it
 	add_child(body)
 	var per := (hsize - 1) / CHUNKS
 	var detail_name: String = String(info.get("terrain_detail", "")) if info.get("terrain_detail") != null else ""   # null in some zones

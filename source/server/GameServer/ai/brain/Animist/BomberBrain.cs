@@ -38,7 +38,6 @@ namespace DOL.AI.Brain
                 if (log.IsErrorEnabled && subSpell == null)
                     log.Error("Bomber SubspellID for Bomber SpellID: " + _spell.ID + " is not implemented yet");
 
-                Body.Health = 0;
                 Body.Delete();
                 return;
             }
@@ -51,7 +50,8 @@ namespace DOL.AI.Brain
                 spellHandler.StartSpell(Body.TargetObject as GameLiving);
             }
 
-            Body.Health = 0;
+            // gone, not dead (owner 2026-11-12: the wisp "falls and melts into the ground" - a health of 0 first made
+            // the client keep it as a corpse that sinks; removed alive it simply vanishes as the payload goes off)
             Body.Delete();
         }
 

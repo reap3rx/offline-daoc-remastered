@@ -36,6 +36,7 @@ var minimap: Minimap
 var quests: QuestLog
 var loot: LootFeed
 var pet: PetPanel
+var burden: Burden
 var menu: Control
 var _zone_label: Label
 var _clock: Label
@@ -106,6 +107,9 @@ func _ready() -> void:
 	pet = PetPanel.new()
 	pet.hud = self
 	add_child(pet)
+	burden = Burden.new()
+	burden.hud = self
+	add_child(burden)
 	_zone_label = UiArt.label("", 9, UiArt.GOLD_HI)
 	_zone_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 	_zone_label.clip_text = true
@@ -193,6 +197,10 @@ func layout() -> void:
 	_zone_label.size = Vector2(mini - 44, 12)
 	_clock.position = Vector2(minimap.position.x + mini - 44, minimap.position.y - 13)
 	_clock.size = Vector2(44, 12)
+	var bx := minimap.position.x - Burden.W - 6
+	if bx < 4.0:
+		bx = minimap.position.x + minimap.size.x + 6         # (a minimap moved to the left edge: the bag on its right)
+	burden.position = Vector2(bx, minimap.position.y + minimap.size.y - Burden.H)
 
 
 ## Every piece EDIT UI can move: [id, name, Control].
@@ -250,6 +258,7 @@ func _process(_delta: float) -> void:
 		orb.queue_redraw()
 		minimap.queue_redraw()
 	if Engine.get_process_frames() % 10 == 0:
+		burden.refresh()
 		party.queue_redraw()
 		pet.queue_redraw()
 		menu.queue_redraw()
@@ -277,6 +286,63 @@ class Part extends Control:
 	func plate(r: Rect2) -> void:
 		draw_rect(r, STONE)
 		draw_rect(r, RIM, false, 1.0)
+
+
+## Over your carrying capacity (owner 2026-11-12: "a red bag icon with a weight, near the map or bags, instead of the
+## 'You are encumbered' chat spam"): what you carry / can carry, beside the minimap while it lasts.
+class Burden extends Part:
+	const W := 50.0
+	const H := 44.0
+	var now := -1
+	var most := -1
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_PASS
+		size = Vector2(W, H)
+		visible = false
+
+	## What you carry and can carry: the server's Encumberance packet, or the game's own sums offline.
+	func refresh() -> void:
+		var n := -1
+		var m := -1
+		if Server.weight_max >= 0:
+			n = Server.weight_now
+			m = Server.weight_max
+		elif PlayerData.stats.size() >= 8:
+			n = PlayerData.inventory_weight()
+			m = maxi(int(PlayerData.effective_stats()[0]), int(PlayerData.stats[0]))
+		var over := m > 0 and n > m
+		if over != visible or n != now or m != most:
+			now = n
+			most = m
+			visible = over
+			tooltip_text = ("ENCUMBERED: YOU CARRY %d OF %d LBS AND MOVE MORE SLOWLY" % [n, m]) if over else ""
+			queue_redraw()
+
+	func _draw() -> void:
+		if now < 0 or most <= 0:
+			return
+		var c := Vector2(W * 0.5, 17.0)
+		var red := Color(0.86, 0.16, 0.12)
+		# the sack: a round body, a gathered neck and its tie
+		var body := PackedVector2Array()
+		var rim := PackedVector2Array()
+		for i in 24:
+			var a := TAU * i / 24.0
+			var p := Vector2(cos(a) * 12.0, sin(a) * 10.5)
+			if p.y > 6.0:
+				p.y = 6.0 + (p.y - 6.0) * 0.4                # a flatter bottom: it sits
+			body.append(c + Vector2(0, 5) + p)
+			rim.append(c + Vector2(0, 5) + p * 1.12)
+		draw_colored_polygon(rim, Color(0.05, 0.02, 0.01))
+		draw_colored_polygon(body, red)
+		var neck := PackedVector2Array([c + Vector2(-5, -11), c + Vector2(5, -11), c + Vector2(3.5, -5), c + Vector2(-3.5, -5)])
+		draw_colored_polygon(neck, red.darkened(0.15))
+		draw_line(c + Vector2(-6, -5), c + Vector2(6, -5), Color(0.95, 0.8, 0.45), 2.0)
+		draw_line(c + Vector2(-5, -11), c + Vector2(5, -11), Color(0.05, 0.02, 0.01), 1.5)
+		text(UiArt.font(true), c + Vector2(-4, 9), "!", 12, UiArt.CREAM)
+		text(UiArt.font(false), Vector2(0, H - 2), "%d/%d" % [now, most], 9, Color(1.0, 0.45, 0.4),
+				HORIZONTAL_ALIGNMENT_CENTER, W)
 
 
 ## The health orb with its arcs, the target plate above, the name and level under.
@@ -441,8 +507,13 @@ class Party extends Part:
 				draw_rect(r, RIM_HI, false, 2.0)
 			var who := String(m.get("name", "")).to_upper()
 			var tag := "L%d %s" % [int(m.get("level", 0)), String(m.get("class_name", "")).to_upper()]
-			text(f, Vector2(6, y + 10), who, 8, UiArt.GOLD_HI if bool(m.get("me", false)) or sel else UiArt.CREAM, \
-					HORIZONTAL_ALIGNMENT_LEFT, PARTY_W - 90 if sel else -1.0)
+			# their colour on the map beside the name (owner 2026-11-12): a triangle, your companion's a star
+			if not bool(m.get("me", false)):
+				var comp := String(PlayerData.get_meta("companion", "")) if PlayerData.has_meta("companion") else ""
+				var mk := {"colour": preload("res://game/ui/group_marks.gd").row_colour(rows, i), "star": comp != "" and String(m.get("name", "")) == comp}
+				preload("res://game/ui/group_marks.gd").draw_member(self, Vector2(10, y + 7), mk, 0.85)
+			text(f, Vector2(18, y + 10), who, 8, UiArt.GOLD_HI if bool(m.get("me", false)) or sel else UiArt.CREAM, \
+					HORIZONTAL_ALIGNMENT_LEFT, PARTY_W - 102 if sel else -1.0)
 			if sel and leading():
 				for k in BTNS.size():
 					var br := _btn_rect(i, k)
@@ -670,6 +741,19 @@ class Minimap extends Part:
 			if inside.call(cp):
 				draw_circle(cp, 3.0, Color(0.0, 0.03, 0.1))
 				draw_circle(cp, 2.2, Color8(70, 150, 255))
+		# your group: a triangle each in its colour, your companion a star (GroupMarks)
+		for gm in preload("res://game/ui/group_marks.gd").members(get_tree()):
+			var gp: Vector2 = at.call(Vector2(gm.pos.x, gm.pos.z) / 0.025)
+			if inside.call(gp):
+				preload("res://game/ui/group_marks.gd").draw_member(self, gp, gm)
+		# your companion's idea: its star in a ring (past the edge, a pointer to it)
+		var cm := preload("res://game/ui/group_marks.gd").live_mark(z, w.player.global_position)
+		if not cm.is_empty():
+			var cmp: Vector2 = at.call(Vector2(cm.pos.x, cm.pos.z) / 0.025)
+			if inside.call(cmp):
+				preload("res://game/ui/group_marks.gd").draw_mark(self, cmp)
+			else:
+				edges.append([cmp, preload("res://game/ui/group_marks.gd").MARK_COLOUR, false])
 		for e in preload("res://game/ui/event_tracker.gd").in_zone(z):
 			var ep: Vector2 = at.call(Vector2(float(e.x), float(e.y)) / 0.025)
 			var st := String(e.get("state", "active"))

@@ -459,6 +459,28 @@ static func level_fanfare(parent: Node, realm: String) -> void:
 	p.play()
 
 
+## Someone else's level - a bot, your companion (owner 2026-11-12: "The sound plays at their location, louder the closer
+## you are, but not as loud as your own"): the realm's fanfare from where they stand, fading out by 70 m.
+static func level_fanfare_at(who: Node3D, realm: String) -> void:
+	var path := ProjectSettings.globalize_path("res://content/sounds".path_join(String(LEVEL_FANFARE.get(realm, LEVEL_FANFARE.hib))))
+	if who == null or not who.is_inside_tree() or not FileAccess.file_exists(path):
+		return
+	var p := AudioStreamPlayer3D.new()
+	p.stream = AudioStreamWAV.load_from_file(path)
+	if p.stream == null:
+		p.free()
+		return
+	p.bus = "Music" if AudioServer.get_bus_index("Music") >= 0 else "Master"
+	p.attenuation_model = AudioStreamPlayer3D.ATTENUATION_INVERSE_DISTANCE
+	p.unit_size = 8.0                                       # full (for another's) within 8 m, then fading with distance
+	p.max_distance = 70.0
+	p.volume_db = -6.0                                      # never as loud as your own
+	p.position = Vector3(0, 1.5, 0)
+	who.add_child(p)
+	p.finished.connect(p.queue_free)
+	p.play()
+
+
 static func sound(snd: CharacterSounds, set_id: int, event: String) -> void:
 	if snd == null or set_id <= 0:
 		return

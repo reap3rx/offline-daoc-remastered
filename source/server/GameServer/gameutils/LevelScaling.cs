@@ -16,9 +16,11 @@ namespace DOL.GS
     /// fights as if they were that level: their damage to it shrinks and its damage to them grows, by the ratio of
     /// their level to the cap - steeply enough that a level 50 among level 22s wins easily but not in a blow. Lower
     /// players are not lifted (as in GW2). The cap is per monster, so it follows the monster wherever you go.
-    /// Kills while scaled down pay a tenth of their experience; drops are the monster's own (the area's level) and
-    /// come as if you were the capped level - no grey-con nothing; an event's monsters and its rewards pay in full
-    /// (rewards at your real level).
+    /// Kills while scaled down pay as a green kill would at your own level (owner 2026-11-12: "fighting lower level
+    /// mobs should scale you down so grey mobs con green ... Basically gray mobs should not exist"): the share of a
+    /// level the kill is worth at the level you fight it at, half of it, of your own level. The cap never lets the
+    /// monster con grey, so its drops, quest drops and kill credit come as they would to anyone there; an event's
+    /// monsters and its rewards pay in full (rewards at your real level).
     ///
     /// Event allies (a giver and their guards) support, they don't carry: half damage to the event's monsters, half
     /// damage taken from them, so they last long enough for you to see they're in trouble (owner: "ensure they do not
@@ -32,8 +34,7 @@ namespace DOL.GS
         const double IN_EXP = 1.5;                // damage in: (level / cap) ^ this (the same: 2.8 times)
         const double MIN_OUT = 0.1;               // your damage never drops below a tenth
         const double MAX_IN = 4.0;                // its damage to you never more than four times
-        const double KILL_XP = 0.1;               // a scaled kill's experience: a tenth of what it would have been
-        const double GREY_XP_OF_LEVEL = 0.001;    // ...and a grey one (normally nothing) a thousandth of your level
+        const double KILL_XP = 0.5;               // a scaled kill: half the share of a level it is worth at the capped level
         const double ALLY_OUT = 0.5;              // event allies' damage to the event's monsters
         const double ALLY_IN = 0.5;               // and the monsters' damage to them
 
@@ -52,11 +53,14 @@ namespace DOL.GS
 
         static bool IsEventFoe(GameLiving l) => l is EventNpc { IsEnemy: true, Chain: not null };
 
-        /// <summary>The level you fight this monster at, at most: its own level + MARGIN (an event's monsters: at least
-        /// the event's top level + 1, so its waves and boss feel of a piece).</summary>
+        /// <summary>The level you fight this monster at, at most: its own level + MARGIN, and never so high that it
+        /// cons grey (at low levels a con is a level or two wide); an event's monsters: at least the event's top level
+        /// + 1, so its waves and boss feel of a piece.</summary>
         public static int Cap(GameLiving monster)
         {
             int cap = monster.Level + MARGIN;
+            while (cap > monster.Level && ConLevels.GetConLevel(cap, monster.Level) <= (int) ConColor.GREY)
+                cap--;
             if (monster is EventNpc { Chain: not null } ev && ev.Chain.Def.Levels is { Length: > 0 } lv)
                 cap = Math.Max(cap, lv[^1] + 1);
             return cap;
@@ -99,16 +103,38 @@ namespace DOL.GS
             return 1.0;
         }
 
-        /// <summary>The experience for a kill while scaled down (base already worked out; 0 for a grey one).</summary>
+        /// <summary>The experience for a kill while scaled down (base already worked out, by the monster's level): what
+        /// it is worth against a same-level kill at the capped level, of a same-level kill at yours, halved - a green
+        /// kill's worth, wherever you go.</summary>
         public static long KillExperience(GamePlayer player, GameNPC killed, long baseXp)
         {
-            if (killed is EventNpc || Gap(player, killed) <= 0)
+            int gap = Gap(player, killed);
+            if (killed is EventNpc || gap <= 0 || baseXp <= 0)
                 return baseXp;
-            if (baseXp > 0)
-                return Math.Max(1, (long) (baseXp * KILL_XP));
-            long level = GamePlayer.GetExperienceAmountForLevel(player.Level) - GamePlayer.GetExperienceAmountForLevel(player.Level - 1);
-            return player.Level >= 50 ? 0 : Math.Max(1, (long) (level * GREY_XP_OF_LEVEL));
+            double atCap = GameServer.ServerRules.GetExperienceForLiving(player.Level - gap);
+            double atYours = GameServer.ServerRules.GetExperienceForLiving(player.Level);
+            if (atCap <= 0)
+                return baseXp;
+            return Math.Max(1, (long) (baseXp * atYours / atCap * KILL_XP));
         }
+
+        /// <summary>The con of a monster to someone on the players' side, for its rewards: by the level they are scaled
+        /// to against it - a player, a player's pet, a bot in a player's group (on its own a bot cons as it is).</summary>
+        public static int RewardConLevel(GameLiving who, GameNPC killed)
+        {
+            if (who == null || killed == null)
+                return 0;
+            GameLiving you = Fighter(who, IsEventFoe(killed));
+            if (you == null && who is GameBot bot && bot.Group?.GetPlayersInTheGroup().Count > 0)
+                you = bot;
+            if (you == null)
+                return who.GetConLevel(killed);
+            int level = EffectiveLevelAgainst(you, killed);
+            return ConLevels.GetConLevel(level > 0 ? level : you.EffectiveLevel, killed.EffectiveLevel);
+        }
+
+        /// <summary>Grey for rewards (nothing at all): never, scaled down; see RewardConLevel.</summary>
+        public static bool RewardGrey(GameLiving who, GameNPC killed) => RewardConLevel(who, killed) <= (int) ConColor.GREY;
 
         /// <summary>Whether a drop from this kill stays: always - scaled down you get the area's drops like anyone
         /// there (owner 2026-11-02: the GW2 way; the drops are the monster's level, not yours).</summary>
@@ -120,9 +146,7 @@ namespace DOL.GS
         {
             if (killer == null || killed == null)
                 return 0;
-            GameLiving you = Fighter(killer, IsEventFoe(killed)) ?? killer;
-            int level = EffectiveLevelAgainst(you, killed);
-            return ConLevels.GetConLevel(level > 0 ? level : killer.EffectiveLevel, killed.EffectiveLevel);
+            return RewardConLevel(killer, killed);          // (a bot on its own: its own con - grey stays grey)
         }
 
         // ---------------------------------------------------------------- a zone's top monster level

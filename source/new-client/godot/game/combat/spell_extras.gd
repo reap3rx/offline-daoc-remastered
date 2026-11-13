@@ -63,7 +63,7 @@ static func release(at: Vector3, color: Color, root: Node) -> void:
 		return
 	var o := OmniLight3D.new()
 	o.light_color = color
-	o.light_energy = 7.0
+	o.light_energy = 7.0 * FxLight.day_scale
 	o.omni_range = 7.0
 	o.omni_attenuation = 1.2
 	o.shadow_enabled = false

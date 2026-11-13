@@ -23,7 +23,6 @@ namespace DOL.GS
         private PlayerMovementMonitor _playerMovementMonitor;
         private bool _validateMovementOnNextTick;
 
-        private bool _isEncumberedMessageSent;
 
         public new GamePlayer Owner { get; }
         public int MaxSpeedPercent => MaxSpeed * 100 / GamePlayer.PLAYER_BASE_SPEED;
@@ -121,31 +120,10 @@ namespace DOL.GS
             if (IsMoving)
                 Owner.LastPlayerActivityTime = GameLoop.GameLoopTime;
 
-            if (Owner.IsEncumbered)
-            {
-                if (Owner.IsMoving)
-                {
-                    if (!_isEncumberedMessageSent)
-                    {
-                        SendEncumberedMessage(Owner);
-                        _isEncumberedMessageSent = true;
-                    }
-                }
-                else
-                {
-                    _isEncumberedMessageSent = false;
-
-                    if (MaxSpeedPercent <= 0)
-                        SendEncumberedMessage(Owner); // Allow it to be spammed.
-                }
-            }
+            // (no "You are encumbered" each time you move: the client's HUD shows a red bag with the weight while you are
+            // over - the Encumberance packet - owner 2026-11-12)
 
             AddToServiceObjectStore();
-
-            static void SendEncumberedMessage(GamePlayer player)
-            {
-                player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "PlayerMovementComponent.Encumbered"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            }
         }
 
         public void OnHeadingUpdate()

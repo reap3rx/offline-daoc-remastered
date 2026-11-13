@@ -1203,7 +1203,8 @@ namespace DOL.GS.ServerRules
                              pair.Key is not GameBot { IsTemporaryGroupHelper: true }))
                 {
                     // If the killed NPC is gray to any of the entities, or if a guard is involved, don't give any XP, drop any loot, change faction relations, etc.
-                    if (pair.Key.IsObjectGreyCon(killedNpc) || pair.Key is GameGuard)
+                    // (scaled down - LevelScaling - nothing is grey to the players' side: owner 2026-11-12)
+                    if (LevelScaling.RewardGrey(pair.Key, killedNpc) || pair.Key is GameGuard)
                         return false;
 
                     if (pair.Key.ObjectState is not GameObject.eObjectState.Active ||
@@ -1498,10 +1499,14 @@ namespace DOL.GS.ServerRules
                 * challenge code may not kick in. It could also kick in if the monster is low yellow to the high level player, depending on the group strength of the pair.
                 */
 
-                ConColor conColorForHighestLevelPlayerInGroup = ConLevels.GetConColor(highestLevelPlayer.GetConLevel(killedNpc));
+                ConColor conColorForHighestLevelPlayerInGroup = ConLevels.GetConColor(LevelScaling.RewardConLevel(highestLevelPlayer, killedNpc));
 
                 if (conColorForHighestLevelPlayerInGroup is ConColor.GREY)
                     return 0;
+
+                // scaled down against it (LevelScaling.KillExperience works the kill out from the monster's own value)
+                if (LevelScaling.Gap(playerToAward, killedNpc) > 0 || LevelScaling.Gap(highestLevelPlayer, killedNpc) > 0)
+                    return (long) Math.Ceiling((double) killedNpc.ExperienceValue / memberCount);
 
                 if (playerToAward.XPLogState is eXPLogState.Verbose && memberCount > 1)
                     playerToAward.Out.SendMessage($"Base XP divided among {memberCount} members", eChatType.CT_System, eChatLoc.CL_SystemWindow);

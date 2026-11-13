@@ -94,6 +94,7 @@ public static class AutonomousBotChatCoordinator
     {
         if (player == null || string.IsNullOrWhiteSpace(message) || player.CurrentRegion == null)
             return;
+        PersonalCompanions.OnPlayerChat(player, message);  // ("Hey <name>, what do you want to do?" - its own answer)
         if (AutonomousChatIntentModel.Predict(message) == eAutonomousChatIntent.IgnoreOutOfWorld)
             return;
         lock (Sync)

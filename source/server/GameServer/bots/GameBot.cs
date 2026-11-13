@@ -1730,6 +1730,7 @@ namespace DOL.GS
 
             if (leveled)
             {
+                LevelFlourish(this, 0);
                 // New specialization points remain unspent until the bot chooses
                 // to reach and interact with its real class trainer.
                 RefreshSpecDependantSkills(false);
@@ -1753,6 +1754,29 @@ namespace DOL.GS
                 log.Info($"AUTONOMOUS_XP_PROGRESS bot=\"{Name}\" id={DatabaseID} class=\"{ClassName}\" " +
                          $"amount={experienceGained} xp={previousExperience}->{Experience} level={previousLevel}->{Level}");
             }
+        }
+
+        /// <summary>
+        /// A level gained (owner 2026-11-12: "Add the level up effects and sound for bots and companions when they level
+        /// up. The sound plays at their location, louder the closer you are, but not as loud as your own"): the level-up
+        /// emote everyone near sees - the client draws its glow and plays the fanfare from where the bot stands.
+        /// </summary>
+        public static void LevelFlourish(GameBot bot, int delayMs)
+        {
+            if (bot == null)
+                return;
+            if (delayMs <= 0)
+            {
+                if (bot.ObjectState == eObjectState.Active && bot.IsAlive)
+                    bot.Emote(eEmote.LvlUp);
+                return;
+            }
+            new ECSGameTimer(bot, _ =>
+            {
+                if (bot.ObjectState == eObjectState.Active && bot.IsAlive)
+                    bot.Emote(eEmote.LvlUp);
+                return 0;
+            }, delayMs);
         }
 
         private static long ScaleAutonomousExperience(long experience, bool isRvR)
@@ -2326,7 +2350,8 @@ namespace DOL.GS
             byte genderId = 0,
             bool temporaryGroupHelper = false,
             byte equipmentLevel = 0,
-            byte botLevel = 0)
+            byte botLevel = 0,
+            eSpecType preferredSpec = eSpecType.None)
         {
             Owner = owner ?? throw new ArgumentNullException(nameof(owner));
             IsTemporaryGroupHelper = temporaryGroupHelper;
@@ -2351,11 +2376,14 @@ namespace DOL.GS
             // Stat and spec initialization — order matters
             InitializeBotStats();
             eCharacterClass temporaryClass = (eCharacterClass)ClassId;
+            // a companion's role is the specialization its player chose (PersonalCompanions.Role); others pick at random
+            eSpecType spec = preferredSpec != eSpecType.None && BotSpec.GetSpecializationChoices(temporaryClass).Contains(preferredSpec)
+                ? preferredSpec : BotSpec.ChooseRandomSpecialization(temporaryClass);
             BotSpec = temporaryClass == eCharacterClass.Bonedancer
-                ? new BonedancerBotSpec(BotSpec.ChooseRandomSpecialization(temporaryClass), 0, false)
+                ? new BonedancerBotSpec(spec, 0, false)
                 : temporaryClass == eCharacterClass.Sluaghbinder
-                    ? new SluaghbinderBotSpec(BotSpec.ChooseRandomSpecialization(temporaryClass), 0, false)
-                : BotSpec.GetSpec(temporaryClass, BotSpec.ChooseRandomSpecialization(temporaryClass));
+                    ? new SluaghbinderBotSpec(spec, 0, false)
+                : BotSpec.GetSpec(temporaryClass, spec);
             LoadClassSpecializations(false);
             SpendSpecPoints(Level, 0);
             RefreshSpecDependantSkills(false);
@@ -4579,6 +4607,32 @@ namespace DOL.GS
         private void SetJewelry()
         {
             BotEquipment.SetJewelryROG(this, Realm, (eCharacterClass)CharacterClass.ID, Level, eObjectType.Magical);
+        }
+
+        /// <summary>A companion putting on something it was given or found (PersonalCompanions.Gear): into the slot (what
+        /// was there goes), its bonuses, the weapon it holds, and how it looks.</summary>
+        public bool WearCompanionItem(DbInventoryItem item, eInventorySlot slot, bool broadcast)
+        {
+            if (Inventory == null || item == null)
+                return false;
+            DbInventoryItem old = Inventory.GetItem(slot);
+            if (old != null)
+                Inventory.RemoveItemWithoutDbDeletion(old);
+            if (!Inventory.AddItem(slot, item))
+            {
+                if (old != null)
+                    Inventory.AddItem(slot, old);
+                return false;
+            }
+            RefreshItemBonuses();
+            if (slot == eInventorySlot.TwoHandWeapon)
+                SwitchWeapon(eActiveWeaponSlot.TwoHanded);
+            else if (slot is eInventorySlot.RightHandWeapon or eInventorySlot.LeftHandWeapon && ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded &&
+                     Inventory.GetItem(eInventorySlot.TwoHandWeapon) == null)
+                SwitchWeapon(eActiveWeaponSlot.Standard);
+            if (broadcast && ObjectState == eObjectState.Active)
+                BroadcastLivingEquipmentUpdate();
+            return true;
         }
 
         public virtual void RefreshItemBonuses()

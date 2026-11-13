@@ -7,6 +7,9 @@ extends RefCounted
 ## lights stay while it is there, with a slight shimmer. Only while remastered lighting is on (SkySystem).
 
 static var enabled := false
+## By day the lights are a third as strong (SkySystem sets it from the hour; 1 at night and underground): in sunlight
+## a group's casters gathered and burst light over and over and the picture "blinked" brighter (owner 2026-11-12).
+static var day_scale := 1.0
 const MAX_LIVE := 16                       # at most this many spell lights at once (a raid's casting) ...
 const MAX_STEADY := 24                     # ... and weapon / monster lights
 static var _colors := {}                   # effect path -> Color
@@ -42,7 +45,7 @@ static func attach(fx: Node3D, energy: float, range_m: float, fade_s := 0.0, fad
 	var o := OmniLight3D.new()
 	o.name = "FxLight"
 	o.light_color = c
-	o.light_energy = energy
+	o.light_energy = energy * day_scale
 	o.omni_range = range_m
 	o.omni_attenuation = 1.4
 	o.shadow_enabled = false
@@ -75,17 +78,17 @@ static func hit(fx: Node3D, life_s: float, impact := 0.0) -> OmniLight3D:
 		return null
 	var ext := extent(fx)
 	var kl := clampf(ext / 12.0, 0.4, 1.2)                # the effect's own size, for its glow (a drip ~0.7)
-	var glow_e := 0.3 + 0.2 * kl
+	var glow_e := (0.3 + 0.2 * kl) * day_scale
 	var glow_r := 1.5 + 1.2 * kl
 	var hold := maxf(life_s * 0.75, 0.1)
 	var tw := o.create_tween()
 	o.light_energy = 0.0
 	if impact > 0.0:
-		glow_e = 0.25 + 0.15 * impact
+		glow_e = (0.25 + 0.15 * impact) * day_scale
 		glow_r = 2.0 + 0.8 * impact
 		o.omni_range = 4.0 + 4.0 * impact
 		o.omni_attenuation = 1.0                          # (a hard, wide flash)
-		tw.tween_property(o, "light_energy", 4.0 + 3.0 * impact, FLASH_IN)
+		tw.tween_property(o, "light_energy", (4.0 + 3.0 * impact) * day_scale, FLASH_IN)
 		tw.tween_property(o, "light_energy", glow_e, FLASH_OUT).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 		tw.parallel().tween_property(o, "omni_range", glow_r, FLASH_OUT).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 		tw.parallel().tween_property(o, "omni_attenuation", 1.4, FLASH_OUT)

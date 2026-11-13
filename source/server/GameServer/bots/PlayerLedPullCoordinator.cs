@@ -157,7 +157,7 @@ namespace DOL.GS
         {
             if (player?.IsAlive != true) return null;
             if ((player.IsAttacking || player.IsCasting && player.castingComponent?.SpellHandler?.Spell?.IsHarmful == true) &&
-                player.TargetObject is GameLiving target && ValidEnemy(player, target)) return target;
+                player.TargetObject is GameLiving target && ValidEnemy(player, target) && LeaderFighting(player, target)) return target;
             if (player.ControlledBrain is ControlledMobBrain brain && brain.Owner == player &&
                 brain.Body?.IsAlive == true && brain.Body.CurrentRegionID == player.CurrentRegionID &&
                 player.IsWithinRadius(brain.Body, BotBrain.GROUP_DEFENSE_ASSIST_RADIUS))
@@ -169,6 +169,22 @@ namespace DOL.GS
                 if (ValidEnemy(player, petTarget)) return petTarget;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Owner 2026-11-12: "Bots and companions start attacking any mob the player targets when the player's weapon
+        /// is drawn. Disable this so the player directs pulls with the pull hotkey." A drawn weapon and a target are
+        /// not a fight: the party joins in once the target is really fighting - the leader has struck it, or it is
+        /// after the leader or someone in the group - or when the leader orders it with /pull.
+        /// </summary>
+        public static bool LeaderFighting(GamePlayer player, GameLiving target)
+        {
+            if (player == null || target == null || !target.IsAlive) return false;
+            if (target.Realm != eRealm.None) return true;     // (an enemy of the realms: as before - RvR is always a fight)
+            if (!target.InCombat) return false;
+            if (target.TargetObject == player || target.attackComponent?.AttackerTracker?.ContainsAttacker(player) == true)
+                return true;
+            return target.TargetObject is GameLiving victim && player.Group?.IsInTheGroup(victim) == true;
         }
 
         private static void Engage(GamePlayer player, GameLiving target, bool orderHumanPet)

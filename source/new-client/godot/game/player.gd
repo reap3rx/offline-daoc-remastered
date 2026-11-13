@@ -1269,6 +1269,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		# the client's bindable actions (Keybinds: keyboard.dat presets, rebindable incl. mouse buttons)
 		if Keybinds.pressed(event, "run_lock"):
 			autorun = not autorun
+		elif Keybinds.pressed(event, "pull") and input_enabled and not dead:
+			Server.command("/pull")                       # the party takes on your target (owner 2026-11-12)
 		elif Keybinds.pressed(event, "torch") or (event is InputEventKey and event.shift_pressed
 				and Keybinds.pressed(_unshifted(event), "torch")):   # its key or Shift + its key, as the client
 			set_torch(not torch_on)
@@ -1290,6 +1292,13 @@ func pad_look(dyaw: float, dpitch: float) -> void:
 	cam_pitch = clampf(cam_pitch - dpitch * (-1.0 if invert_mouse else 1.0), -CAM_PITCH, CAM_PITCH)
 	if _faces_camera() and not sitting and is_nan(_lock_yaw()):
 		char_yaw = cam_yaw                              # weapon out: you face where you look
+
+
+## LB + RB + the right stick (Pad._look): the camera in and out as the wheel does (owner 2026-11-12).
+func pad_zoom(d: float) -> void:
+	if not input_enabled or dead:
+		return
+	cam_distance = clampf(cam_distance * exp(d * 0.35), CAM_MIN, CAM_MAX_FREE if free_camera else CAM_MAX)
 
 
 func _unshifted(event: InputEventKey) -> InputEventKey:
@@ -1337,7 +1346,10 @@ func _offset_room(dir: Vector3, dist: float) -> float:
 		var ball := SphereShape3D.new()
 		ball.radius = CAM_BALL
 		_offset_query.shape = ball
-		_offset_query.exclude = [get_rid()]
+		var ex: Array[RID] = [get_rid()]
+		for r in _terrain_rids:
+			ex.append(r)
+		_offset_query.exclude = ex                      # (the open ground: _process holds the eye above it)
 	_offset_query.collision_mask = _arm.collision_mask
 	_offset_query.transform = Transform3D(Basis.IDENTITY, camera.global_position)
 	_offset_query.motion = dir * dist
@@ -1369,14 +1381,91 @@ func _process(_delta: float) -> void:
 	if flying or riding:
 		_cam_y = INF
 		_pivot.position.y = 1.55
-		return
-	_smooth_camera_height(_delta)
-	var g := camera.global_position
-	var lim := _water_h(g.x, g.z)
+		if flying:
+			return
+	else:
+		_smooth_camera_height(_delta)
+	# the eye itself (the shoulder offset moves it off the arm's end) stays above the ground and the water
+	var b := camera.global_basis
+	var eye := camera.global_position + b.x * camera.h_offset + b.y * camera.v_offset
+	var lim := _water_h(eye.x, eye.z)
 	if zone and not zone.city:
-		lim = maxf(lim, _ground_h(g.x, g.z))
-	if lim > -INF and g.y < lim + CAM_CLEAR:
-		camera.global_position.y = lim + CAM_CLEAR
+		lim = maxf(lim, _ground_h(eye.x, eye.z))
+	if lim > -INF and eye.y < lim + CAM_CLEAR:
+		camera.global_position.y += lim + CAM_CLEAR - eye.y
+
+
+## The camera over open ground (owner 2026-11-12: "camera jittering near the ground", with a video): the arm's sphere
+## grazed the terrain at a low angle, and a hair's change in the ground's height swung the arm's length in and out from
+## one frame to the next. The arm leaves the terrain out now - _process keeps the eye above it, smoothly - and a ray
+## checks that no hill stands between you and the camera: past one it comes in at once and eases back out.
+const HILL_EASE := 3.0                          # how quickly the camera eases back out once a hill is out of the way
+var _arm_len := -1.0
+var _hill := INF
+var _terrain_rids := {}
+var _terrain_scan := 0.0
+var _hill_query: PhysicsRayQueryParameters3D
+
+
+func _set_arm_length(delta: float) -> void:
+	if _arm_len < 0.0:
+		_arm_len = _arm.spring_length
+	_arm_len = lerpf(_arm_len, cam_distance, minf(1.0, delta * 10.0))
+	_arm.spring_length = minf(_arm_len, _hill_room(delta))
+
+
+func _hill_room(delta: float) -> float:
+	_keep_terrain_out(delta)
+	if flying or zone == null or zone.city or not is_inside_tree() or _arm.collision_mask == 0:
+		_hill = INF
+		return INF
+	var from := _pivot.global_position
+	var end := from + _arm.global_basis.z.normalized() * _arm_len
+	var lim := maxf(_water_h(end.x, end.z), _ground_h(end.x, end.z))
+	if lim > -INF and end.y < lim + CAM_CLEAR:
+		end.y = lim + CAM_CLEAR                       # where _process will hold the camera
+	if _hill_query == null:
+		_hill_query = PhysicsRayQueryParameters3D.new()
+		_hill_query.collision_mask = ZoneLoader.LAYER_FLOOR
+		_hill_query.exclude = [get_rid()]
+	_hill_query.from = from
+	_hill_query.to = end
+	var hit := get_world_3d().direct_space_state.intersect_ray(_hill_query)
+	var room := INF
+	if not hit.is_empty() and hit.collider is Node and (hit.collider as Node).is_in_group("open_terrain"):
+		var f := from.distance_to(hit.position) / maxf(0.001, from.distance_to(end))
+		room = maxf(CAM_MIN * 0.5, _arm_len * f - 0.3)
+	if room < _hill:
+		_hill = room                                  # a hill in the way: in at once
+	elif _hill < INF:
+		var to := minf(room, _arm_len + 0.5)
+		_hill += maxf(0.5, (to - _hill) * HILL_EASE) * delta
+		if _hill >= to:
+			_hill = room
+	return _hill
+
+
+## The open ground's bodies left out of the arm and the shoulder sweep (the zones round you come and go).
+func _keep_terrain_out(delta: float) -> void:
+	_terrain_scan -= delta
+	if _terrain_scan > 0.0:
+		return
+	_terrain_scan = 1.0
+	var now := {}
+	for body in get_tree().get_nodes_in_group("open_terrain"):
+		if body is CollisionObject3D:
+			now[(body as CollisionObject3D).get_rid()] = true
+	if now.size() == _terrain_rids.size() and now.keys().all(func(r): return _terrain_rids.has(r)):
+		return
+	_terrain_rids = now
+	_arm.clear_excluded_objects()
+	_arm.add_excluded_object(get_rid())
+	var ex: Array[RID] = [get_rid()]
+	for r in now:
+		_arm.add_excluded_object(r)
+		ex.append(r)
+	if _offset_query:
+		_offset_query.exclude = ex
 
 
 func _physics_process(delta: float) -> void:
@@ -1411,7 +1500,7 @@ func _physics_step(delta: float) -> void:
 			_anim.get_animation(clip).loop_mode = Animation.LOOP_LINEAR
 			_anim.play(clip, 0.2)
 		_pivot.rotation = Vector3(cam_pitch, cam_yaw, 0.0)
-		_arm.spring_length = lerpf(_arm.spring_length, cam_distance, minf(1.0, delta * 10.0))
+		_set_arm_length(delta)
 		return
 	if dead:
 		autorun = false
@@ -1548,7 +1637,7 @@ func _physics_step(delta: float) -> void:
 		_air_time = 0.0
 		_animate(ahead, strafe, speed, delta)
 		_pivot.rotation = Vector3(cam_pitch, cam_yaw, 0.0)
-		_arm.spring_length = lerpf(_arm.spring_length, cam_distance, minf(1.0, delta * 10.0))
+		_set_arm_length(delta)
 		return
 	if swimming:
 		velocity.x = wish.x
@@ -1589,7 +1678,7 @@ func _physics_step(delta: float) -> void:
 		camera.h_offset = want.x if absf(want.x) < absf(camera.h_offset) else lerpf(camera.h_offset, want.x, rate)
 		camera.v_offset = want.y if absf(want.y) < absf(camera.v_offset) else lerpf(camera.v_offset, want.y, rate)
 	_pivot.rotation = Vector3(cam_pitch + cam_kick, cam_yaw, 0.0)
-	_arm.spring_length = lerpf(_arm.spring_length, cam_distance, minf(1.0, delta * 10.0))
+	_set_arm_length(delta)
 
 
 ## Action Combat's dodge: a quick hop toward `local_dir` (x right, z back, in the character's frame) - the server's
@@ -1945,5 +2034,5 @@ func _fly(delta: float, ahead: float, strafe: float, turn: float) -> void:
 	velocity = Vector3.ZERO
 	_apply_model_yaw()
 	_pivot.rotation = Vector3(cam_pitch, cam_yaw, 0.0)
-	_arm.spring_length = lerpf(_arm.spring_length, cam_distance, minf(1.0, delta * 10.0))
+	_set_arm_length(delta)
 	_play(force_clip if force_clip != "" else "idle")

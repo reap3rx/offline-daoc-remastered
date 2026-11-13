@@ -318,8 +318,22 @@ namespace DOL.GS.StoryQuests
             }
         }
 
-        static string Words(string s, GamePlayer p) =>
-            (s ?? "").Replace("{name}", p.Name).Replace("{class}", p.CharacterClass.Name).Replace("{race}", p.RaceName);
+        static string Words(string s, GamePlayer p)
+        {
+            string t = (s ?? "").Replace("{name}", p.Name).Replace("{class}", p.CharacterClass.Name).Replace("{race}", p.RaceName);
+            return MoreWords != null && t.Contains('{') ? MoreWords(p, t) : t;
+        }
+
+        /// <summary>More of a quest's words filled in for someone (the companion quest: its name and he / she).</summary>
+        public static Func<GamePlayer, string, string> MoreWords;
+        /// <summary>A step began (after the quest moved on to it, or was taken).</summary>
+        public static event Action<GamePlayer, StoryQuest> StepBegan;
+
+        /// <summary>A quest's words filled in for someone ({name}, {class}, {race} and MoreWords').</summary>
+        public static string Fill(GamePlayer p, string s) => Words(s, p);
+
+        /// <summary>A step done from outside (the rescued companion's "yes"): its text, then on as the step says.</summary>
+        public static void CompleteStep(GamePlayer p, StoryQuest s) => StepDone(p, s);
 
         // ---------------------------------------------------------------- steps
 
@@ -377,6 +391,8 @@ namespace DOL.GS.StoryQuests
         {
             _markers.TryRemove(p, out _);
             Look(p, s);
+            try { StepBegan?.Invoke(p, s); }
+            catch (Exception ex) { log.Error($"Story quests: {s.QuestId} step {s.StepId}", ex); }
         }
 
         static void Finish(GamePlayer p, StoryQuest s, string ending)
@@ -414,7 +430,7 @@ namespace DOL.GS.StoryQuests
             var sq = new StoryQuest(p, q);
             if (!p.AddQuest(sq))
                 return null;
-            sq.QuestGiver = Npc(q.Giver);
+            sq.QuestGiver = q.Giver != null ? Npc(q.Giver) : null;
             sq.RebuildGoals();
             p.Out.SendQuestUpdate(sq);
             StoryDialog.Log(p, sq);

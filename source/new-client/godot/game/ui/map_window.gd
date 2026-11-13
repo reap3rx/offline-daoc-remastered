@@ -760,6 +760,18 @@ class MapView extends Control:
 						continue
 					draw_circle(cpt, 3.0, Color(0.0, 0.03, 0.1))
 					draw_circle(cpt, 2.2, Color8(70, 150, 255))
+				# your group: triangles in their colours, your companion a star (GroupMarks)
+				for gm in preload("res://game/ui/group_marks.gd").members(get_tree()):
+					var gf := _mark_frac(Vector2(gm.pos.x, gm.pos.z) / 0.025)
+					if gf.x >= 0 and Rect2(Vector2.ZERO, size).has_point(gf * size):
+						preload("res://game/ui/group_marks.gd").draw_member(self, gf * size, gm)
+			# your companion's idea
+			if w.player:
+				var cm := preload("res://game/ui/group_marks.gd").live_mark(int(w.shown.get("id", -1)), w.player.global_position)
+				if not cm.is_empty():
+					var mf := _mark_frac(Vector2(cm.pos.x, cm.pos.z) / 0.025)
+					if mf.x >= 0:
+						preload("res://game/ui/group_marks.gd").draw_mark(self, mf * size)
 		if String(w.shown.get("kind", "")) != "region":
 			_draw_events(int(w.shown.get("id", -1)))
 		# the roadside inns are shelved (owner 2026-10-11: 0.36c is the Claude version's world 1:1 - no inns on Avalon

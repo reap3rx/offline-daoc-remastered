@@ -685,7 +685,18 @@ func _local_bounds() -> AABB:
 
 
 func con_to(player_level: int) -> int:
-	return manager.con_level(player_level, state.level)
+	return manager.con_level(_scaled_level(player_level), state.level)
+
+
+## Against a monster you fight at its level + 3 at most, never so high it cons grey (the server's LevelScaling, owner
+## 2026-11-12: "Basically gray mobs should not exist"): its con is by that level.
+func _scaled_level(player_level: int) -> int:
+	if int(spawn.get("realm", 0)) != 0 or state.level <= 0:
+		return player_level
+	var cap := int(state.level) + 3
+	while cap > int(state.level) and manager.con_level(cap, state.level) <= -3:
+		cap -= 1
+	return mini(player_level, cap)
 
 
 ## The NPC's con colour to you - friendly NPCs con too (period: "you target him (con purple at lvl 14), it will say

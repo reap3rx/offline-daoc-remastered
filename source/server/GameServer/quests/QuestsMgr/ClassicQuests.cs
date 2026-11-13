@@ -369,6 +369,17 @@ namespace DOL.GS.Quests
             if (slain.PlayerKillers != null) killers.UnionWith(slain.PlayerKillers);
             if (slain.Killer is GamePlayer direct) killers.Add(direct);
             else if (slain.Killer is GameNPC pet && pet.Brain is IControlledBrain controlled && controlled.GetPlayerOwner() is GamePlayer owner) killers.Add(owner);
+            // the killing blow from your companion, a bot or anyone in your group counts for the group's players near it
+            // (owner 2026-11-12: Zombie Problem's tails never came when a party member landed the blow)
+            GameLiving root = slain.Killer as GameLiving;
+            for (int depth = 0; depth < 8 && root is GameNPC n && n.Brain is IControlledBrain cb && cb.GetLivingOwner() is GameLiving up; depth++)
+                root = up;
+            if (root is GameBot { IsTemporaryGroupHelper: true, Owner: GamePlayer helperOwner })
+                killers.Add(helperOwner);
+            if (root?.Group != null)
+                foreach (GamePlayer member in root.Group.GetPlayersInTheGroup())
+                    if (member.IsWithinRadius(mob, WorldMgr.MAX_EXPFORKILL_DISTANCE))
+                        killers.Add(member);
             foreach (GamePlayer player in killers)
             {
                 if (!player.IsWithinRadius(mob, WorldMgr.VISIBILITY_DISTANCE)) continue;

@@ -2714,6 +2714,7 @@ namespace DOL.AI.Brain
                         && PlayerLedPullCoordinator.Available(_brain.BotBody, leader)
                         && _brain.Body.IsWithinRadius(ownerTarget, GROUP_DEFENSE_ASSIST_RADIUS)
                         && (leader.IsAttacking || (leader.IsCasting && leader.castingComponent?.SpellHandler?.Spell?.IsHarmful == true))
+                        && PlayerLedPullCoordinator.LeaderFighting(leader, ownerTarget)
                         && _brain.CanAggroTarget(ownerTarget))
                     {
                         _brain.AddToAggroList(ownerTarget, 1);
@@ -2776,6 +2777,7 @@ namespace DOL.AI.Brain
                         && PlayerLedPullCoordinator.Available(_brain.BotBody, leader)
                         && _brain.Body.IsWithinRadius(ownerTarget, GROUP_DEFENSE_ASSIST_RADIUS)
                         && ownerTarget.IsAlive
+                        && PlayerLedPullCoordinator.LeaderFighting(leader, ownerTarget)
                         && _brain.CanAggroTarget(ownerTarget))
                     {
                         _brain.AddToAggroList(ownerTarget, 1);

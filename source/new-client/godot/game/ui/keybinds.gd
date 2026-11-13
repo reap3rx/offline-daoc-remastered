@@ -56,6 +56,10 @@ func _ready() -> void:
 	# the unseen-characters report (owner 2026-10-17: invisible gamebots / pets): F12, free in every preset
 	actions.append({"id": "bot_report", "label": "Report Unseen Characters (log)", "category": "Misc",
 			"presets": {"rpg": ["F12"], "fps": ["F12"], "mmo": ["F12"]}})
+	# /pull (owner 2026-11-12: "Middle mouse button can be the /pull command, numlock can be autorun"): the party's
+	# tank leads the pull on your target, the rest wait for contact (PlayerLedPullCoordinator)
+	actions.append({"id": "pull", "label": "Pull (your party takes on your target)", "category": "Combat",
+			"presets": {"rpg": ["Middle Mouse"], "fps": ["Middle Mouse"], "mmo": ["Middle Mouse"]}})
 	# your horse (mounts, owner 2026-11-02): call it / get off - Shift+H, free in every preset
 	actions.append({"id": "mount", "label": "Mount / Dismount", "category": "Movement",
 			"presets": {"rpg": ["Shift+H"], "fps": ["Shift+H"], "mmo": ["Shift+H"]}})
@@ -159,6 +163,8 @@ func load_bindings() -> void:
 	# version 2 (2026-10-09): quickbars 2 / 3 gained their Alt / Ctrl keys and the Shift bank keys; older saves kept
 	# those empty, so they take the new defaults once
 	var old := int(cfg.get_value("keybinds", "version", 1)) < 2 if ok else false
+	# version 3 (2026-11-12): the middle mouse button left autorun for /pull
+	var pre_pull := int(cfg.get_value("keybinds", "version", 1)) < 3 if ok else false
 	for a in actions:
 		# (has_section_key first: a null default still logs "no default was given" for every action new since the save)
 		var saved = cfg.get_value("bindings", a.id) if ok and cfg.has_section_key("bindings", a.id) else null
@@ -167,13 +173,17 @@ func load_bindings() -> void:
 			bindings[a.id] = (saved as Array).duplicate()
 		else:
 			bindings[a.id] = (a.presets.get(preset, []) as Array).duplicate()
+	if pre_pull and (bindings.get("run_lock", []) as Array).has("Middle Mouse"):
+		(bindings["run_lock"] as Array).erase("Middle Mouse")
+		if bindings.has("pull") and not (bindings["pull"] as Array).has("Middle Mouse"):
+			bindings["pull"] = ["Middle Mouse"]
 	_apply()
 
 
 func save_bindings() -> void:
 	var cfg := ConfigFile.new()
 	cfg.set_value("keybinds", "preset", preset)
-	cfg.set_value("keybinds", "version", 2)
+	cfg.set_value("keybinds", "version", 3)
 	for id in bindings:
 		cfg.set_value("bindings", id, bindings[id])
 	cfg.save(path)

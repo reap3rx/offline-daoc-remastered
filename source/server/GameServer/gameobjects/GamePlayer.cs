@@ -8905,17 +8905,7 @@ namespace DOL.GS
             if (forced || MaxSpeedModifierFromEncumbrance != newMaxSpeedModifier)
             {
                 if (inventoryWeight > maxCarryingCapacity)
-                {
-                    IsEncumbered = true;
-                    string message;
-
-                    if (movementComponent.MaxSpeedPercent <= 0)
-                        message = "GamePlayer.UpdateEncumbrance.EncumberedCannotMove";
-                    else
-                        message = "GamePlayer.UpdateEncumbrance.EncumberedMoveSlowly";
-
-                    Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, message), eChatType.CT_Important, eChatLoc.CL_SystemWindow);
-                }
+                    IsEncumbered = true;           // (the client's HUD shows it - a red bag with the weight - not the chat: owner 2026-11-12)
                 else
                     IsEncumbered = false;
 

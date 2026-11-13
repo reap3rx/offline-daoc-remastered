@@ -947,6 +947,9 @@ func _message(d: Dictionary) -> void:
 		PlayerData.set_meta("companion", String(d.text).substr(11))
 		Server.skills_changed.emit()
 		return
+	if String(d.text).begins_with("#CMARK|"):             # your companion's idea, on the maps (PersonalCompanions.Mind)
+		preload("res://game/ui/group_marks.gd").set_mark(String(d.text))
+		return
 	if String(d.text).begins_with("#CAMP|"):              # sitting at a campfire (CampingSupplies.cs): seconds to its warmth
 		var secs := String(d.text).substr(6)
 		if secs == "" or int(secs) <= 0:
@@ -1543,6 +1546,11 @@ func _emote(d: Dictionary) -> void:
 		SpellFx.emote(fx, v, null if mine_level else snd as CharacterSounds)
 	if mine_level:
 		SpellFx.level_fanfare(self, String(PlayerData.character.get("realm", "hib")))
+	elif int(d.emote) == 42 and v is Node3D:
+		# a bot or your companion gaining a level (GameBot.LevelFlourish): its fanfare from where it stands
+		var st: NpcState = by_oid.get(int(d.oid))
+		var r := int(st.spawn.get("realm", 0)) if st and st.spawn is Dictionary else 0
+		SpellFx.level_fanfare_at(v as Node3D, ["hib", "alb", "mid", "hib"][clampi(r, 0, 3)])
 
 
 

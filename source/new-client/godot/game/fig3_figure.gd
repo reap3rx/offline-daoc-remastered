@@ -423,7 +423,7 @@ func apply(changes: Dictionary) -> void:
 			mi.material_override = m
 	# hair: one style node visible, its colour = texture x tint
 	var styles: Array = meta.get("hair_styles", [])
-	var si := clampi(int(look.get("hair", 0)), 0, maxi(styles.size() - 1, 0))
+	var si := _worn_style(styles)
 	for i in styles.size():
 		var node = styles[i].node
 		if node == null or not _meshes.has(node):
@@ -431,7 +431,7 @@ func apply(changes: Dictionary) -> void:
 		for mi in _parts(node):
 			mi.visible = i == si and not _hair_covered() and not _under_helm(styles[i])
 		_jewels(styles[i], i == si and not _hair_covered() and not _under_helm(styles[i]))
-		if i == si:
+		if i == si or i == int(look.get("hair", 0)):          # (and your own style, should the helm come off)
 			var colours: Array = styles[i].colours
 			if colours.size() > 0:
 				var col := hair_colour(colours)
@@ -771,6 +771,27 @@ func scalp_cap_on() -> bool:
 ## helm: under one that would flatten hair it is not drawn.
 func _under_helm(style: Dictionary) -> bool:
 	return bool(style.get("imported", false)) and _helm != null and _helm_hair >= 2
+
+
+## The style drawn: the look's, or under a helm that would flatten one of our own styles the race's first original
+## style in its place - its helm morph fits it under the helm (owner 2026-11-12: "use the vanilla models of hair that go
+## under helmets so the character doesn't look bald").
+func _worn_style(styles: Array) -> int:
+	var si := clampi(int(look.get("hair", 0)), 0, maxi(styles.size() - 1, 0))
+	if styles.is_empty() or not _under_helm(styles[si]):
+		return si
+	var morphs: Dictionary = meta.get("helm_hair", {})
+	var fallback := -1
+	for i in styles.size():
+		var st: Dictionary = styles[i]
+		if st.node == null or not _meshes.has(st.node) or bool(st.get("imported", false)) or bool(st.get("hood", false)) \
+				or int(st.get("turban", 0)) > 0:
+			continue
+		if morphs.has(String(st.node)):
+			return i                                        # (one with helm morphs: it sits under the helm)
+		if fallback < 0:
+			fallback = i
+	return fallback if fallback >= 0 else si
 
 
 ## The worn beard: 1-based into figure.json "beards", 0 none. A look that never chose one wears its hair style's own
@@ -1174,11 +1195,15 @@ func _apply_full_helm() -> void:
 
 func _refresh_hair() -> void:
 	var styles: Array = meta.get("hair_styles", [])
-	var si := clampi(int(look.get("hair", 0)), 0, maxi(styles.size() - 1, 0))
+	var si := _worn_style(styles)
 	for i in styles.size():
 		var node = styles[i].node
 		if node == null or not _meshes.has(node):
 			continue
+		if i == si and si != int(look.get("hair", 0)) and (styles[i].colours as Array).size() > 0:
+			var hm := _hair_material(hair_colour(styles[i].colours))   # (the stand-in under a helm: your colour)
+			for mi in _parts(node):
+				mi.material_override = hm
 		for mi in _parts(node):
 			mi.visible = i == si and not _hair_covered() and not _under_helm(styles[i])
 			# under a helm the hair takes that helm type's morph (flattened so it doesn't poke through), else none.
@@ -2312,6 +2337,8 @@ class Sway extends SkeletonModifier3D:
 	var _hair_live := false
 	var _cloaks: Array[int] = []
 	var _cloaks_mid: Array[int] = []
+	var _held := {}                              # cloak bone -> its idle rotation: held there with gear on the back
+	var _held_ready := false
 	var _tails: Array[int] = []
 	var _last := Vector3.INF
 	var _back := 0.0
@@ -2396,8 +2423,37 @@ class Sway extends SkeletonModifier3D:
 			_tails.append(t)
 		_phase = float(get_instance_id() % 997) * 0.37
 
+	## Something rides on your back - a shield, a slung two-hander or bow, a quiver (owner 2026-11-12: "I'd like their
+	## physics to be disabled so they don't flap when running and clip through those things on your back. If it's
+	## possible to make only the bottom quarter move, that would be best"): every cloak bone but each chain's lowest
+	## holds the idle's pose, whatever the run clip does; the lowest still moves with it.
+	func _hold_cloak(sk: Skeleton3D) -> void:
+		if not _held_ready:
+			_held_ready = true
+			var a: Animation = fig.anim.get_animation("idle") if fig.anim and fig.anim.has_animation("idle") else null
+			var root: Node = fig.anim.get_node_or_null(fig.anim.root_node) if fig.anim else null
+			var base := String(root.get_path_to(sk)) if root else ""
+			for side in ["C", "L", "R"]:
+				var chain: Array[int] = []
+				for n in range(1, 10):
+					var b := sk.find_bone("Bip01 %s Cloak%02d" % [side, n])
+					if b >= 0:
+						chain.append(b)
+				for k in maxi(chain.size() - 1, 0):              # (the lowest left to the animation)
+					var b := chain[k]
+					var q := sk.get_bone_rest(b).basis.get_rotation_quaternion()
+					if a:
+						var ti := a.find_track(NodePath("%s:%s" % [base, sk.get_bone_name(b)]), Animation.TYPE_ROTATION_3D)
+						if ti >= 0:
+							q = a.rotation_track_interpolate(ti, 0.0)
+					_held[b] = q
+		for b in _held:
+			sk.set_bone_pose_rotation(int(b), _held[b])
+
 	func _process_modification_with_delta(delta: float) -> void:
 		var sk := get_skeleton()
+		if sk and fig and fig.back_gear:
+			_hold_cloak(sk)
 		if sk == null or not Fig3Figure.sway_on or model == null:
 			_last = Vector3.INF
 			_still_hair()

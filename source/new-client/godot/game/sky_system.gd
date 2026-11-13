@@ -244,6 +244,7 @@ func _process(delta: float) -> void:
 	if zone and int(zone.info.get("id", -1)) != _look_zone:
 		apply_look()
 	if dungeon:                                              # the clock still runs (camp timers, night NPCs)
+		FxLight.day_scale = 1.0
 		game_seconds = fposmod(game_seconds + delta * day_increment * time_scale, 86400.0)
 		if remastered:
 			_remaster_frame()                                # (the mist follows you)
@@ -309,6 +310,7 @@ func _update(_delta: float) -> void:
 	var h := hour()
 	var w := _phase_weights(h)
 	night_level = clampf(float(w.night) + 0.5 * (float(w.dawn) + float(w.dusk)) + storm * 0.3, 0.0, 1.0)
+	FxLight.day_scale = lerpf(0.3, 1.0, night_level)          # (spell lights: a third as strong in full sun)
 	for zl in _zones():
 		(zl as ZoneLoader).set_light_level(night_level)
 	# sun path: rises in the east at 06:00, highest at noon tilted south by the ecliptic angle, sets west at 18:00
@@ -620,12 +622,15 @@ func set_remastered(on: bool) -> void:
 	if _cam_attr == null:
 		_cam_attr = CameraAttributesPractical.new()
 		_cam_attr.auto_exposure_enabled = _t("ae", 1.0) > 0.0
-		_cam_attr.auto_exposure_speed = 0.6
 		# a narrow window: dark rooms brightened a little, glare toned down a little - not a different picture
 		_cam_attr.auto_exposure_min_sensitivity = _t("aemin", 80.0)
 		_cam_attr.auto_exposure_max_sensitivity = _t("aemax", 160.0)
 	# (0.4, the engine's, made daylight 40% brighter); underground the eyes adjust less - the dark stays dark
 	_cam_attr.auto_exposure_scale = _t("aescale_dungeon", 0.2) if dungeon else _t("aescale", 0.25)
+	# the eyes adjust over a few seconds, not in blinks (owner 2026-11-12: daylight "blinking" brighter and brighter,
+	# over and over - at 0.6 the exposure chased every change in the picture; measured standing still in Lough Derg's
+	# daylight it swung a quarter of the picture's brightness, at 0.1 - 0.15 it holds steady)
+	_cam_attr.auto_exposure_speed = _t("aespeed", 0.15)
 	if _world:
 		_world.camera_attributes = _cam_attr
 	if _mist == null:
