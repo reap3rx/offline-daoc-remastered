@@ -19,16 +19,16 @@ extends SkeletonModifier3D
 const JOINT_R := 0.04                        # m: the cloth's thickness round a joint (clear_gear, the hair)
 const GAP := 0.02                            # m: what the gear clears the cloak by at rest
 const SHARE := [0.34, 0.16, 0.24, 0.16, 0.10]    # each joint's part of the swing, top to hem
-const RUN_BACK := 0.065                      # rad of swing back per m/s ahead ...
-const RUN_BACK_MAX := 0.4                    # ... up to this (on top of what is kept of the run clip's own: enough
+const RUN_BACK := 0.055                      # rad of swing back per m/s ahead ...
+const RUN_BACK_MAX := 0.33                   # ... up to this (on top of what is kept of the run clip's own: enough
                                              # that the heels kicking up behind stay under the hem)
-const BACK_MAX := 0.58                       # the most it ever swings back
+const BACK_MAX := 0.5                        # the most it ever swings back
 const SIDE_MAX := 0.3                        # ... or to a side
 const START_KICK := 0.07                     # a start's kick back (rad/s per m/s gained)
 const STRAFE_SIDE := 0.04                    # rad to the side per m/s sideways
 const TURN_SIDE := 0.04                      # rad out of a turn per rad/s ...
 const TURN_SIDE_RUN := 0.017                 # ... and per rad/s and m/s ahead
-const CLIP_KEEP := 0.65                      # how much of the clip's own flap of the cloak is kept ...
+const CLIP_KEEP := 0.5                       # how much of the clip's own flap of the cloak is kept ...
 const UNDER_GEAR_CLIP := 0.25                # ... and under the gear
 const UNDER_GEAR_SIDE := 0.4                 # ... and of the swing to the side
 const GEAR_BACK := 0.1                       # the gear's own swing: this share of the cloak's
@@ -521,7 +521,9 @@ func refresh_gear() -> void:
 		var reach := absf((fp.u as Vector3).dot(up)) * float(fp.hu) + absf((fp.v as Vector3).dot(up)) * float(fp.hv)
 		# a broad piece (a shield) holds the cloak under it still; a long one (a slung weapon, a bow, a quiver) rides
 		# on the cloak instead - pinned under a spear the whole cloak hung dead and the heels came through it
-		var long_ := float(fp.hu) >= float(fp.hv) * 1.8
+		# (owner 2026-11-14, later: the shield too - "if the cloak is stiff, you see the feet clipping through the cloak
+		# when she runs. So if the shield rotates to move with the cloak when it lifts up, it would not clip")
+		var long_ := true
 		var low := (fp.centre as Vector3).dot(up) - reach
 		if not long_:
 			bottom = minf(bottom, low)
@@ -573,8 +575,14 @@ func sway_gear(back: float, side: float, bob: float) -> void:
 			var idle_dir := ig.origin - itop
 			var cur_dir := _sk.get_bone_global_pose(int(ch[k])).origin - _sk.get_bone_global_pose(int(ch[0])).origin
 			if idle_dir.length() > 1e-5 and cur_dir.length() > 1e-5:
-				var bb := _sk.get_bone_global_pose(int(g.bone)).basis.orthonormalized()
+				# about where the cloak hangs from (not the piece's own top: a spear turned about its tip threw its
+				# lower end far out from the back - owner 2026-11-14), so the piece stays lying on the cloak
+				var bg := _sk.get_bone_global_pose(int(g.bone))
+				var bb := bg.basis.orthonormalized()
 				r = bb.inverse() * Basis(Quaternion(idle_dir.normalized(), cur_dir.normalized())) * bb
+				var cp: Vector3 = bg.affine_inverse() * _sk.get_bone_global_pose(int(ch[0])).origin
+				(w as Node3D).transform = Transform3D(r, cp - r * cp) * (g.base as Transform3D)
+				continue
 		var piv: Vector3 = g.pivot
 		(w as Node3D).transform = Transform3D(r, piv - r * piv) * (g.base as Transform3D)
 
