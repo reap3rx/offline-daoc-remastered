@@ -57,7 +57,7 @@ func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		var kv := a.trim_prefix("--").split("=", true, 1)
 		args[kv[0]] = kv[1] if kv.size() > 1 else ""
-	if args.has("probe") or args.has("shots") or args.has("bench") or args.has("tour"):
+	if args.has("probe") or args.has("live-probe") or args.has("shots") or args.has("bench") or args.has("tour"):
 		UiArt.settings_path = "user://settings_tests.cfg"   # test runs keep their window layout off the player's
 	if args.has("char-file"):                            # tests: a COPY of a character (json), saved only under a
 		var cf = JSON.parse_string(FileAccess.get_file_as_string(String(args["char-file"])))   # test account
@@ -156,8 +156,7 @@ func _ready() -> void:
 			Server.apply_to_player()
 			player.refresh_gear()
 			Server.gear_changed.connect(player.refresh_gear)
-	var cfg := ConfigFile.new()
-	cfg.load("user://settings.cfg")
+	var cfg := UiArt.load_settings()
 	player.movement_mode = String(args.get("movement", cfg.get_value("player", "movement", "modern")))
 	ui = GameUI.new()
 	ui.player = player
@@ -395,8 +394,7 @@ func _ready_rest(loading: LoadingScreen) -> void:
 	# the debug text is off in the player's game (owner 2026-10-10) - Ctrl+F12 shows it for issue screenshots (kept
 	# in the settings file); test runs always show it
 	var test_run := args.has("probe") or args.has("shots") or args.has("tour") or args.has("bench")
-	var hcfg := ConfigFile.new()
-	hcfg.load(UiArt.settings_path)
+	var hcfg := UiArt.load_settings()
 	# 0.36c (the server's client) always starts with it hidden (owner 2026-10-11); Ctrl+F12 still shows it
 	hud.visible = test_run or (BootSettings.dev and not Server.active and bool(hcfg.get_value("debug", "hud", false)))
 
@@ -745,10 +743,9 @@ func _input(event: InputEvent) -> void:
 	# Ctrl+F12: the debug text, for issue screenshots - here, ahead of the interface's keybinds (which took it)
 	if event is InputEventKey and event.pressed and not event.echo and event.ctrl_pressed 			and event.physical_keycode == KEY_F12 and hud and BootSettings.dev:
 		hud.visible = not hud.visible
-		var hcfg := ConfigFile.new()
-		hcfg.load(UiArt.settings_path)
+		var hcfg := UiArt.load_settings()
 		hcfg.set_value("debug", "hud", hud.visible)
-		hcfg.save(UiArt.settings_path)
+		UiArt.save_settings(hcfg)
 		get_viewport().set_input_as_handled()
 		return
 	# Ctrl+F11: inspect the targeted bot (bot plan diagnostics) - what it's doing and its last decisions, in the chat

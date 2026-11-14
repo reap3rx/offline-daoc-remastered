@@ -1740,6 +1740,9 @@ namespace DOL.GS
                 Health = MaxHealth;
                 Mana = MaxMana;
                 Endurance = MaxEndurance;
+                // the group window's level (owner 2026-11-13: "slow or delayed in updating bot levels") - only a whole
+                // window update carries it, and a player's level-up sends one; a bot's never did
+                Group?.UpdateGroupWindow();
                 AutonomousBotStatusPersistence.Queue(this, true);
             }
             else

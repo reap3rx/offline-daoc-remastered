@@ -261,16 +261,14 @@ func _build_tactics(page: Control) -> void:
 	var hide := UiArt.button("Hide lower ranks", Vector2(102, 13), 7)
 	hide.toggle_mode = true
 	hide.position = Vector2(124, -1)
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	_hide_lower = bool(cfg.get_value("companions", "hide_lower_ranks", false))
 	hide.button_pressed = _hide_lower
 	hide.toggled.connect(func(on: bool):
 		_hide_lower = on
-		var c2 := ConfigFile.new()
-		c2.load(UiArt.settings_path)
+		var c2 := UiArt.load_settings()
 		c2.set_value("companions", "hide_lower_ranks", on)
-		c2.save(UiArt.settings_path)
+		UiArt.save_settings(c2)
 		refresh())
 	page.add_child(hide)
 	var box := CompanionUi.inset(page, Vector2(12, 14), Vector2(214, 214))

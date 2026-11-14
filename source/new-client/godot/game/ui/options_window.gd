@@ -8,6 +8,7 @@ extends ClassicWindow
 ## INTERFACE (UI scale), WINDOWS (put closed windows back - owner 2026-10-09). Spell-icon options are left out
 ## (owner: the client's default icon set). Saved in user://settings.cfg (keys in user://keybinds.cfg).
 
+const HEALTH_PLATES := preload("res://game/npcs/health_plates.gd")
 const PAGES := ["video", "audio", "controls", "interface", "chat", "windows", "controller"]
 const PAGE_NAMES := ["VIDEO", "AUDIO", "CONTROLS", "INTERFACE", "CHAT", "WINDOWS"]
 const RESOLUTIONS := [Vector2i(1280, 720), Vector2i(1366, 768), Vector2i(1600, 900), Vector2i(1920, 1080),
@@ -130,8 +131,7 @@ func hide_window() -> void:
 
 
 func show_page(p: String) -> void:
-	settings = ConfigFile.new()
-	settings.load(UiArt.settings_path)
+	settings = UiArt.load_settings()
 	if not p in PAGES:
 		p = "video"
 	page = p
@@ -259,13 +259,17 @@ func _toggle(on: bool, on_change: Callable) -> Button:
 	return b
 
 
+func _plate_opt(key: String, value) -> void:
+	_save("nameplates", key, value)
+	HEALTH_PLATES.reload()
+
+
 ## Re-read the file first: other parts of the UI write it too (window positions, chat boxes, quickbars), and
 ## writing back an old copy erased them - the owner's windows forgot their places after a quit.
 func _save(section: String, key: String, value) -> void:
-	settings = ConfigFile.new()
-	settings.load(UiArt.settings_path)
+	settings = UiArt.load_settings()
 	settings.set_value(section, key, value)
-	settings.save(UiArt.settings_path)
+	UiArt.save_settings(settings)
 
 
 # --- pages ----------------------------------------------------------------------------------------------------
@@ -591,6 +595,17 @@ func _interface() -> void:
 			ui.set_ui_scale(scale_slider.value))
 	_row("UI SCALE", scale_slider)
 	_hint("THE INTERFACE KEEPS ITS SIZE ON SCREEN AT ANY RESOLUTION; UI SCALE MAKES ALL OF IT BIGGER OR SMALLER.")
+	# WoW-style nameplates over monsters (HealthPlates; owner 2026-11-13)
+	_heading("NAMEPLATES")
+	_row("SHOW", _choice(["Off", "Target only", "Target, hurt or fighting", "All enemies near"],
+			int(HEALTH_PLATES.opt("show")), func(i: int): _plate_opt("show", i)))
+	_hint("A SLIM HEALTH BAR OVER THE HEAD WITH THE NAME, THE LEVEL IN ITS CON COLOUR AND A CAST BAR - RED HOSTILE, YELLOW NEUTRAL, GREEN FRIENDLY. YOUR TARGET'S IS BIGGER WITH A WHITE FRAME.")
+	_row("FRIENDLY TOO", _toggle(bool(HEALTH_PLATES.opt("friendly")), func(on: bool): _plate_opt("friendly", on)))
+	_row("HEALTH NUMBER", _choice(["None", "Percent"], int(HEALTH_PLATES.opt("health_text")), func(i: int): _plate_opt("health_text", i)))
+	_row("SIZE", _slider(float(HEALTH_PLATES.opt("scale")), 0.7, 1.6, 0.05, func(x: float): _plate_opt("scale", x)))
+	_row("STACK", _toggle(bool(HEALTH_PLATES.opt("stack")), func(on: bool): _plate_opt("stack", on)))
+	_row("CAST BARS", _toggle(bool(HEALTH_PLATES.opt("cast_bar")), func(on: bool): _plate_opt("cast_bar", on)))
+	_hint("FRIENDLY TOO: YOUR GROUP, YOUR REALM'S BOTS AND GUARDS GET PLATES BY THE SAME RULE (HANDY FOR HEALERS). STACK: PLATES MOVE APART INSTEAD OF COVERING EACH OTHER.")
 	_heading("LOOT")
 	_row("AUTO LOOT", _toggle(Loot.autoloot(), func(on: bool): Loot.set_autoloot(on)))
 	_hint("ON: COINS AND ITEMS FROM YOUR KILLS GO STRAIGHT INTO YOUR BACKPACK (NOT IN 1.65 - A QUALITY OF LIFE OPTION). OFF: THEY DROP AT THE MONSTER'S FEET FOR YOU TO PICK UP, AS IN THE ORIGINAL.")
@@ -698,7 +713,8 @@ func _windows() -> void:
 
 const PAD_GROUPS := [["COMBAT", ["attack", "defend", "dodge", "jump", "sprint_hold", "sprint_toggle", "sheathe",
 		"weapon_cycle", "interact", "lock_on"]], ["STYLES", ["style_auto", "style_reactive", "style_position", "style_chain"]],
-		["TARGETING", ["target_enemy", "target_friend"]], ["MOVING ABOUT", ["run_lock", "sit", "torch"]],
+		["TARGETING", ["target_enemy", "target_friend"]], ["MOVING ABOUT", ["run_lock", "pull", "sit", "torch"]],
+		["CAMERA", ["zoom_in", "zoom_out"]],
 		["WINDOWS", ["hero", "bags", "map", "journal", "styles_window", "menu_wheel", "escape"]]]
 
 
@@ -732,6 +748,8 @@ func _controller() -> void:
 		groups.append(["QUICKBAR %d" % (q + 1), ids])
 	for g in groups:
 		_heading(String(g[0]))
+		if String(g[0]) == "CAMERA":
+			_hint("ALSO, ALWAYS: HOLD LB + RB AND PUSH THE RIGHT STICK UP TO ZOOM IN, DOWN TO ZOOM OUT.")
 		for id in g[1]:
 			_pad_row(String(id))
 
@@ -889,6 +907,7 @@ func _end_trial(keep: bool) -> void:
 	if keep:
 		_save("display", "window_mode", t.new_mode)
 		_save("display", "resolution", t.new_res)
+		_save("display", "screen", DisplayServer.window_get_current_screen())
 		_status.text = "DISPLAY SETTINGS KEPT"
 	else:
 		_apply_window(String(t.mode), t.res)

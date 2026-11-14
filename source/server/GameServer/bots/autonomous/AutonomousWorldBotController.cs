@@ -452,6 +452,10 @@ namespace DOL.GS
                     (!bot.IsCasting || BotSongTwistPolicy.HasMobileSongCast(bot)))
                     return TravelAcrossRegions(bot);
 
+                // Help a nearby player or bot of the realm in a fight, grouped or not (AutonomousNearbyHelp).
+                if (TryHelpNearby(brain, bot, nowTick))
+                    return false;
+
                 if (_groupDirective?.IsDynamic == true &&
                     AutonomousBotGroupCoordinator.ShouldPauseForGroupPullRecovery(_groupDirective.Phase,
                         _groupDirective.GroupCombatActive, _groupDirective.RecoveringBetweenPulls) &&
@@ -608,11 +612,14 @@ namespace DOL.GS
                 if (objectiveKind == eAutonomousObjectiveKind.Battleground && _groupDirective?.IsDynamic != true)
                     return ExecuteBattleground(brain, bot);
 
+                // (an event's camp moves with it - a march, the next stage - so for one the id is enough: re-taking it
+                // whenever the spot moved restarted the goal every pulse)
                 if (_groupDirective?.IsDynamic == true && _groupDirective.Camp != null &&
                     (!string.Equals(_camp?.Id, _groupDirective.Camp.Id, StringComparison.Ordinal) ||
-                     _camp?.TargetLevel != _groupDirective.Camp.TargetLevel ||
-                     _camp?.X != _groupDirective.Camp.X || _camp?.Y != _groupDirective.Camp.Y ||
-                     _camp?.Z != _groupDirective.Camp.Z))
+                     (!_groupDirective.Camp.Id.StartsWith("event:", StringComparison.Ordinal) &&
+                      (_camp?.TargetLevel != _groupDirective.Camp.TargetLevel ||
+                       _camp?.X != _groupDirective.Camp.X || _camp?.Y != _groupDirective.Camp.Y ||
+                       _camp?.Z != _groupDirective.Camp.Z))))
                 {
                     _camp = FromSharedCamp(_groupDirective.Camp);
                     _reportedEmptySharedCampId = string.Empty;
@@ -2077,6 +2084,33 @@ namespace DOL.GS
             return candidates[AutonomousRvrStaging.TargetIndex(actorKey, candidates.Length, warbandSize)];
         }
 
+        private long _nextNearbyHelpScan;
+
+        private bool TryHelpNearby(BotBrain brain, GameBot bot, long nowTick)
+        {
+            if (nowTick < _nextNearbyHelpScan || brain.HasAggro || bot.IsAttacking || bot.IsCasting ||
+                bot.IsOnStableMasterRoute || GameRelic.IsPlayerCarryingRelic(bot))
+                return false;
+            _nextNearbyHelpScan = nowTick + AutonomousNearbyHelp.ScanMilliseconds + bot.ObjectID % 500;
+
+            AutonomousNearbyHelp.Choice help = AutonomousNearbyHelp.Find(bot);
+            if (help == null)
+                return false;
+
+            bot.WakeRecoveryRest();
+            bot.StopMovingOnPath();
+            bot.StopMoving();
+            bot.TargetObject = help.Foe;
+            AutonomousBotGroupCoordinator.MarkCombatObserved(bot.Group);
+            brain.AddToAggroList(help.Foe, Math.Max(25, help.Foe.EffectiveLevel * 10));
+            brain.FSM.SetCurrentState(eFSMStateType.AGGRO);
+            SetStatus(bot, $"Helping {help.Ally.Name}", GoalText(),
+                help.Need == AutonomousNearbyHelp.Need.Trouble
+                    ? $"{help.Ally.Name} is in trouble against {help.Foe.Name}; stepping in"
+                    : $"Joining {help.Ally.Name}'s fight against {help.Foe.Name}", help.Foe.Name);
+            return true;
+        }
+
         private bool TryEngageSharedDungeonOpponent(BotBrain brain, GameBot bot)
         {
             // Shared frontier dungeons use the early bounded threat check;
@@ -2717,6 +2751,7 @@ namespace DOL.GS
             {
                 AutonomousGoalDiagnostics.End(bot, GoalAttemptEnd.Expired, "The event is over");
                 SetStatus(bot, "Event over", GoalText(), "The event this bot was helping with has ended", string.Empty, _camp.ZoneName);
+                AutonomousBotGroupCoordinator.ReleaseCamp(bot, _camp.Id);
                 _camp = null;
                 _campStartedTick = 0;
                 _nextPlanTick = 0;

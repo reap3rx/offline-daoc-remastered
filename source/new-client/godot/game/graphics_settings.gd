@@ -141,11 +141,10 @@ static func _same(a: Variant, b: Variant) -> bool:
 
 
 func _save() -> void:
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)                         # (re-read: other parts of the UI write the file too)
+	var cfg := UiArt.load_settings()                      # (re-read: other parts of the UI write the file too)
 	for k in values:
 		cfg.set_value("graphics", k, values[k])
-	cfg.save(UiArt.settings_path)
+	UiArt.save_settings(cfg)
 
 
 # ---------------------------------------------------------------- the recommendation

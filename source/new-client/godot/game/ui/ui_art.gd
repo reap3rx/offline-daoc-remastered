@@ -18,6 +18,52 @@ const SHADOW := Color(0, 0, 0, 0.95)
 ## Where the interface keeps its settings; test runs (--ui-test) use their own file so they never move the
 ## owner's windows.
 static var settings_path := "user://settings.cfg"
+static var _good: ConfigFile = null              # the settings as last read or written whole ...
+static var _good_path := ""                      # ... and the file they are of
+static var _retry := 0
+
+
+## The settings file, read whole - or, when it can't be read just now, the copy last read or written whole (owner
+## 2026-11-13: "Display settings do not save after client restart (on my work pc)": a virus scanner holding the file
+## for a moment after a write made the next read fail, and that save wrote a file of one setting over all the rest).
+## Every part of the game reads and writes the settings through here.
+static func load_settings() -> ConfigFile:
+	var cfg := ConfigFile.new()
+	var err := cfg.load(settings_path)
+	if err == OK:
+		_good = _copy(cfg)
+		_good_path = settings_path
+		return cfg
+	if not FileAccess.file_exists(settings_path):
+		return cfg                                   # (a first start: nothing yet)
+	if _good != null and _good_path == settings_path:
+		return _copy(_good)
+	if err == ERR_PARSE_ERROR:                       # (a damaged file: kept beside it, the rest read as far as it goes)
+		DirAccess.copy_absolute(ProjectSettings.globalize_path(settings_path),
+				ProjectSettings.globalize_path(settings_path + ".damaged"))
+	return cfg
+
+
+## Saved; a file the system won't let us write just now is tried again a moment later.
+static func save_settings(cfg: ConfigFile) -> void:
+	_good = _copy(cfg)
+	_good_path = settings_path
+	if cfg.save(settings_path) == OK:
+		_retry = 0
+		return
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null or _retry >= 6:
+		return
+	_retry += 1
+	tree.create_timer(0.5 * _retry).timeout.connect(func():
+		if _good != null and _good_path == settings_path:
+			save_settings(_copy(_good)))
+
+
+static func _copy(cfg: ConfigFile) -> ConfigFile:
+	var c := ConfigFile.new()
+	c.parse(cfg.encode_to_text())
+	return c
 static var _tex := {}
 static var _fonts := {}
 
@@ -187,6 +233,21 @@ static func confirm(parent: Control, title: String, text: String, ok_text: Strin
 	no.position = Vector2(w * 0.5 + 10, h - 30)
 	no.pressed.connect(done.bind(false))
 	box.add_child(no)
+	# a controller can answer it (owner 2026-11-13: group invites, resurrection, the constitution healer "should become
+	# selectable with the controller"): the pointer comes out and sits on the first answer (A), B / Esc is the second;
+	# while one shows, the pointer stays out (action combat) and the d-pad walks only its buttons (Pad._usables)
+	shade.add_to_group("ui_modal")
+	var esc := InputEventKey.new()
+	esc.keycode = KEY_ESCAPE
+	var sc := Shortcut.new()
+	sc.events = [esc]
+	no.shortcut = sc
+	no.shortcut_feedback = false
+	no.shortcut_in_tooltip = false
+	var tree := Engine.get_main_loop() as SceneTree
+	var pad: Node = tree.root.get_node_or_null("Pad") if tree else null
+	if pad and bool(pad.get("active")):
+		pad.call_deferred("_point_at", yes)
 	shade.gui_input.connect(func(e):
 		if e is InputEventMouseButton and e.pressed and not Rect2(box.position, box.size).has_point(e.position):
 			done.call(false))

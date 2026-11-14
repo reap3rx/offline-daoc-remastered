@@ -4936,6 +4936,37 @@ namespace DOL.AI.Brain
                 }
             }
 
+            // A world bot's healer also heals its realm's players and bots fighting nearby when they
+            // are badly hurt, grouped with it or not (AutonomousNearbyHelp; owner 2026-11-13).
+            // Its own group comes first unless the stranger is worse off.
+            bool healingStranger = false;
+            if (BotBody.IsAutonomousWorldBot && IsHealer && !BotBody.IsTemporaryGroupHelper && !BotBody.IsPlayerLedGroup &&
+                (spellTarget == null || spellTarget.HealthPercent >= 50))
+            {
+                GameLiving stranger = null;
+                foreach (GameLiving living in Body.GetPlayersInRadius(AutonomousNearbyHelp.Radius).Cast<GameLiving>()
+                             .Concat(Body.GetNPCsInRadius(AutonomousNearbyHelp.Radius).OfType<GameBot>()))
+                {
+                    if (living == null || living == Body || !living.IsAlive || living.Realm != Body.Realm ||
+                        !living.InCombat || living.HealthPercent >= 50 || !InSupportReach(living) ||
+                        Body.Group != null && Body.Group.IsInTheGroup(living) ||
+                        stranger != null && living.HealthPercent >= stranger.HealthPercent)
+                        continue;
+                    if (!PathfindingProvider.Instance.HasLineOfSight(Body.CurrentZone, new(Body.X, Body.Y, Body.Z),
+                            new(living.X, living.Y, living.Z), PathfindingProvider.Instance.DefaultFilters))
+                        continue;
+                    stranger = living;
+                }
+                if (stranger != null && (spellTarget == null || stranger.HealthPercent < spellTarget.HealthPercent))
+                {
+                    spellTarget = stranger;
+                    healingStranger = true;
+                    amountToHeal = Math.Max(amountToHeal, stranger.MaxHealth - stranger.Health);
+                    numNeedHealing = Math.Max(1, numNeedHealing);
+                    if (stranger.HealthPercent < 35) numEmergency = Math.Max(1, numEmergency);
+                }
+            }
+
             if (AutonomousRealmRaid.HasSharedSupport(BotBody))
             {
                 // Lowest-health raid member or pet in range, without sorting the whole roster.
@@ -5061,7 +5092,7 @@ namespace DOL.AI.Brain
             }
 
             // Cast the selected spell
-            if (BotBody.IsAutonomousWorldBot && (AutonomousObjectiveAssignments.Is(BotBody, eAutonomousObjectiveKind.RvR) || AutonomousRealmRaid.GetView(BotBody.Group) != null) &&
+            if (BotBody.IsAutonomousWorldBot && (healingStranger || AutonomousObjectiveAssignments.Is(BotBody, eAutonomousObjectiveKind.RvR) || AutonomousRealmRaid.GetView(BotBody.Group) != null) &&
                 spellTarget != null && spellTarget != Body && Body.Group?.IsInTheGroup(spellTarget) != true &&
                 (spellToCast == BotBody.HealGroup || spellToCast == BotBody.HealInstantGroup))
                 spellToCast = CheckHealSpell(BotBody.HealBig) ? BotBody.HealBig :

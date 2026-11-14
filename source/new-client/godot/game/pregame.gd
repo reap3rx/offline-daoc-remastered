@@ -1670,8 +1670,7 @@ func _head_position() -> Vector3:
 ## The Options window at the game's interface scale (GameUI's: the client's 800x600 layout, readable at 1080p), centred.
 func _scale_menu() -> void:
 	var vp := get_viewport().get_visible_rect().size
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	var s := vp.y / 600.0 * 0.78 * float(cfg.get_value("interface", "ui_scale", 1.0))
 	_menu_root.scale = Vector2(s, s)
 	_menu_root.size = vp / s

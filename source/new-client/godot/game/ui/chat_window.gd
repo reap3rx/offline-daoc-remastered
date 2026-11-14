@@ -70,8 +70,7 @@ func build() -> void:
 	closable = role != "main"
 	min_size = Vector2(160, 50)
 	max_size = Vector2(900, 480)
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	types = cfg.get_value("chat_" + window_id, "types", (DEFAULTS[role] as Array).duplicate())
 	_log = RichTextLabel.new()
 	_log.scroll_following = true
@@ -118,10 +117,9 @@ func _layout() -> void:
 
 func set_types(t: Array) -> void:
 	types = t
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	cfg.set_value("chat_" + window_id, "types", types)
-	cfg.save(UiArt.settings_path)
+	UiArt.save_settings(cfg)
 
 
 func typing() -> bool:

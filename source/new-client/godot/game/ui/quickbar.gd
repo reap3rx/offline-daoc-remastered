@@ -78,10 +78,9 @@ func set_vertical(v: bool) -> void:
 	_layout()
 	var area := get_parent_area_size()                     # keep the whole turned bar on the screen
 	position = position.clamp(Vector2.ZERO, (area - size).max(Vector2.ZERO))
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	cfg.set_value("interface", "quickbar%d_vertical" % (bar + 1), vertical)
-	cfg.save(UiArt.settings_path)
+	UiArt.save_settings(cfg)
 	save_position()
 
 
@@ -134,6 +133,7 @@ class QuickSlot extends Control:
 	var _plate: Panel
 	var _cool: ColorRect                                 # the server's reuse timer (DisableSkills): darkened + seconds
 	var _cool_text: Label
+	var _smart: Label                                    # a smart heal (Server.smart_heal): a small gold cross in the corner
 
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_STOP
@@ -164,6 +164,11 @@ class QuickSlot extends Control:
 		_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		add_child(_text)
+		_smart = UiArt.label("+", 10, UiArt.GOLD_HI)
+		_smart.position = Vector2(23, -3)
+		_smart.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_smart.visible = false
+		add_child(_smart)
 		_cool = ColorRect.new()
 		_cool.color = Color(0, 0, 0, 0.6)
 		_cool.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -201,6 +206,7 @@ class QuickSlot extends Control:
 		_border.texture = ItemDb.border(int(e.get("border", -1))) if not e.is_empty() else null
 		_text.text = String(e.get("name", "")).to_upper() if String(e.get("kind", "")) in ["petcmd", "macro"] 				or (not e.is_empty() and int(e.get("icon", -1)) < 0) else ""      # (an ability without an icon: its name)
 		_plate.visible = _text.text != ""
+		_smart.visible = String(e.get("id", "")).begins_with("srv:smart:")
 		var keys: Array = Keybinds.bindings.get("qb%d_%d" % [bar + 1, slot + 1], [])
 		var k := String(keys[0]) if keys.size() > 0 else ""
 		# the art already shows 1-10 over each slot; only a rebound key is written in the slot

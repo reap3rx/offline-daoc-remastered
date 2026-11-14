@@ -134,6 +134,14 @@ static func con_color(item_level: int, player_level: int) -> Color:
 static func skill(e: Dictionary) -> Control:
 	if e.is_empty() or String(e.get("kind", "")) in ["item", "macro", "petcmd"]:
 		return null
+	if Server.active and String(e.get("id", "")).begins_with("srv:smart:"):   # a smart heal: what it does, then its heal
+		var lines: Array = Server.smart_lines(e)
+		var d := Server.skill_lines(e)
+		if not d.is_empty():
+			lines.append(" ")
+			lines.append(String(d.caption))
+			lines.append_array(d.lines)
+		return text_box(String(e.get("name", "")), lines)
 	if Server.active:
 		var d := Server.skill_lines(e)
 		return null if d.is_empty() else text_box(String(d.caption), d.lines)

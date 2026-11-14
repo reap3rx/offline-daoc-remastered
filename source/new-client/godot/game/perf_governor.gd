@@ -52,8 +52,7 @@ func _ready() -> void:
 
 
 func load_settings() -> void:
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	target_fps = int(cfg.get_value("performance", "target_fps", 60))
 	_apply()
 

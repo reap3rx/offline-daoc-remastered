@@ -604,7 +604,7 @@ func _hair_under() -> void:
 	var hu: Dictionary = meta.get("hair_under", {})
 	if hu.is_empty() or not _meshes.has(String(hu.node)):
 		return
-	var on := scalp_cap_on() and not _hair_covered() and not (_helm != null and _helm_hair >= 2)
+	var on := scalp_cap_on() and not _hair_covered() and not (_helm != null and _helm_hair >= 2) and not scalp_painted()
 	for mi in _parts(String(hu.node)):
 		mi.visible = on
 	var cols: Array = hu.get("colours", [])
@@ -761,6 +761,14 @@ static func offered_of(meta_: Dictionary, race_: String, kind: String, tuning_vi
 
 func offered(kind: String) -> Array:
 	return offered_of(meta, race, kind, tuning_on())
+
+
+## The scalp cap is painted on the head (a 'scalp' skin layer, pipeline/scalp_layer.py) rather than its shell drawn.
+func scalp_painted() -> bool:
+	for d in (meta.get("skin_layers", {}) as Dictionary).get("layers", []):
+		if String((d as Dictionary).get("key", "")) == "scalp":
+			return true
+	return false
 
 
 func scalp_cap_on() -> bool:
@@ -922,6 +930,18 @@ func _layers(m: ShaderMaterial) -> void:
 	var sst := int(look.get("stubble_style", 1 if float(look.get("stubble", 0.0)) > 0.01 else 0))
 	if sst > 0:
 		slots.append([pick.call("stubble", sst), hair.darkened(0.4), clampf(float(look.get("stubble", 0.8)), 0.0, 1.0) * 0.95, 3])
+	# the scalp cap, painted on (owner 2026-11-13: "make it a texture that overlays the scalp, rather than the hair
+	# model"; pipeline/scalp_layer.py): in the cap's own colour for the hair colour chosen
+	if scalp_painted() and scalp_cap_on() and not (_helm != null and _helm_hair >= 2):
+		var sc := hair
+		var hu: Dictionary = meta.get("hair_under", {})
+		var hcols: Array = hu.get("colours", [])
+		if custom_colour("hair_color") == null and hcols.size() > 0:
+			var rgb := String((hcols[clampi(int(look.get("hair_color", 0)), 0, hcols.size() - 1)] as Dictionary).get("rgb", ""))
+			var f := rgb.split(" ")
+			if f.size() == 3:
+				sc = Color(float(f[0]), float(f[1]), float(f[2]))
+		slots.append([pick.call("scalp", 1), sc, 0.92, 3])
 	var li := int(look.get("lip_color", 0))
 	var lc = custom_colour("lip_color")
 	if lc != null or (li > 0 and li < LIP_COLORS.size()):
@@ -1218,7 +1238,8 @@ func _refresh_hair() -> void:
 	if not (meta.get("hair_under", {}) as Dictionary).is_empty():
 		var hu: Dictionary = meta.hair_under
 		for mi in _parts(String(hu.node)):
-			mi.visible = scalp_cap_on() and not _hair_covered() and not (_helm != null and _helm_hair >= 2)
+			mi.visible = scalp_cap_on() and not _hair_covered() and not (_helm != null and _helm_hair >= 2) \
+					and not scalp_painted()
 	var tb: Array = meta.get("turbans", [])
 	var ti := turban_index()
 	for k in tb.size():
@@ -1481,9 +1502,15 @@ static func armor_parts(model: int, female: bool, extension := 0) -> Dictionary:
 		return parts
 	var out := parts.duplicate()
 	var p: Array = (out.body as Array).duplicate()
-	p[0] = maxi(1, extension)                                  # (a mesh the race lacks: _apply_armor keeps its default)
+	# a robe (its Catacombs texture robBody..): the race's Body07, the long robe with its skirt and wide sleeves - the
+	# texture's own number named mesh 1, the plain shirt (owner 2026-11-13: "Robes do not appear as robes, they appear
+	# as shirts"); anything else: the item's extension (a mesh the race lacks: _apply_armor keeps its default)
+	p[0] = ROBE_VARIANT if String(p[1]).to_lower().begins_with("rob") else maxi(1, extension)
 	out.body = p
 	return out
+
+
+const ROBE_VARIANT := 7
 
 
 ## Every animated character (player, NPC, monster, bot) gets this: a "RESET" animation holding every bone at its

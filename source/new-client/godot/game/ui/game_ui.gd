@@ -92,8 +92,7 @@ func _ready() -> void:
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(root)
 	root.theme = UiArt.tooltip_theme()
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	ui_scale = float(cfg.get_value("interface", "ui_scale", 1.0))
 	get_viewport().size_changed.connect(_rescale)
 	_rescale()
@@ -511,10 +510,9 @@ func _build() -> void:
 ## back to CLASSIC they take their saved places again.
 func set_style(style: String, save := true) -> void:
 	if save:
-		var cfg := ConfigFile.new()
-		cfg.load(UiArt.settings_path)
+		var cfg := UiArt.load_settings()
 		cfg.set_value("interface", "style", style)
-		cfg.save(UiArt.settings_path)
+		UiArt.save_settings(cfg)
 	if style == "modern":
 		if modern == null:
 			modern = ModernHudScript.new()
@@ -1280,8 +1278,7 @@ static func _grey_material() -> ShaderMaterial:
 
 
 func _saved(section: String, key: String, def):
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	return cfg.get_value(section, key, def) if cfg.has_section_key(section, key) else def
 
 
@@ -1872,10 +1869,9 @@ func _collapse(on: bool) -> void:
 	for i in TABS.size():
 		_tab_lit[i].visible = (not on) and TABS[i] == sheet_tab
 	right_panel.size.y = STRIP_H if on else PANEL_H         # (folded: the world under it takes the clicks)
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	cfg.set_value("interface", "sheet_collapsed", on)
-	cfg.save(UiArt.settings_path)
+	UiArt.save_settings(cfg)
 
 
 func _set_sheet(tab: String) -> void:
@@ -1895,10 +1891,9 @@ func _set_sheet(tab: String) -> void:
 		"character": CharacterSheet.build(_sheet_body)
 		"inventory": InventorySheet.build(_sheet_body, self)
 		_: PanelSheets.build(_sheet_body, tab)
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	cfg.set_value("interface", "sheet", tab)
-	cfg.save(UiArt.settings_path)
+	UiArt.save_settings(cfg)
 
 
 func _refresh() -> void:
@@ -1971,10 +1966,9 @@ func _tick_pet_buffs() -> void:
 func set_pet_buffs(on: bool) -> void:
 	if _pet_buffs:
 		_pet_buffs.visible = on
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	cfg.set_value("windows", "pet_buffs", on)
-	cfg.save(UiArt.settings_path)
+	UiArt.save_settings(cfg)
 
 
 var _stats_dirty := false
@@ -2126,6 +2120,9 @@ func handle_input(event: InputEvent) -> bool:
 		if Keybinds.pressed(event, "qbank_%d" % (bank + 1)):
 			quickbars[0].set_bank(bank)
 			return true
+	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE \
+			and not get_tree().get_nodes_in_group("ui_modal").is_empty():
+		return false                                       # (a question showing: its second answer takes Esc - UiArt.confirm)
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE and _close_windows():
 		return true
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:

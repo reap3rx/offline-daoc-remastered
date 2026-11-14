@@ -45,8 +45,7 @@ static func option(key: String) -> bool:
 	var now := Time.get_ticks_msec() / 1000.0
 	if now - _opts_at > 1.0:
 		_opts_at = now
-		var cfg := ConfigFile.new()
-		cfg.load(UiArt.settings_path)
+		var cfg := UiArt.load_settings()
 		for k in ["names_gamebots", "names_companions", "map_dots"]:
 			_opts[k] = bool(cfg.get_value("bots", k, true))
 	return bool(_opts.get(key, true))

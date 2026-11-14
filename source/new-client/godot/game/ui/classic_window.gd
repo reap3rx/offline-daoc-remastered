@@ -181,17 +181,15 @@ func _section() -> String:
 func save_position() -> void:
 	if window_id == "" or not is_inside_tree():
 		return
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	cfg.set_value(_section(), window_id, [position.x, position.y, visible, size.x, size.y])
 	cfg.set_value("ui_layout", window_id, [position.x, position.y, visible, size.x, size.y])   # game-wide fallback
-	cfg.save(UiArt.settings_path)
+	UiArt.save_settings(cfg)
 
 
 ## Restore a saved position / size / visibility; otherwise keep the default.
 func restore(default_visible: bool) -> void:
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	var v = cfg.get_value(_section(), window_id) if cfg.has_section_key(_section(), window_id) else null
 	if v == null and cfg.has_section_key("ui_layout", window_id):
 		v = cfg.get_value("ui_layout", window_id)              # another window shape: the last layout, kept on screen
@@ -217,8 +215,7 @@ func set_scalable(on: bool) -> void:
 		_grip.move_to_front()
 	var z := 1.0
 	if on:
-		var cfg := ConfigFile.new()
-		cfg.load(UiArt.settings_path)
+		var cfg := UiArt.load_settings()
 		z = float(cfg.get_value("modern_zoom", window_id, 1.0))
 	set_zoom(z, false)
 
@@ -231,10 +228,9 @@ func set_zoom(z: float, save := true) -> void:
 	if is_inside_tree():
 		_clamp_to_screen()
 	if save and window_id != "":
-		var cfg := ConfigFile.new()
-		cfg.load(UiArt.settings_path)
+		var cfg := UiArt.load_settings()
 		cfg.set_value("modern_zoom", window_id, zoom)
-		cfg.save(UiArt.settings_path)
+		UiArt.save_settings(cfg)
 
 
 ## The grip in the bottom right corner: drag it to scale the window.

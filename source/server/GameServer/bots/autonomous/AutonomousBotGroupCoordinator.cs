@@ -576,6 +576,22 @@ public static partial class AutonomousBotGroupCoordinator
         }
     }
 
+    /// <summary>A dynamic event the group was helping with is over: its shared camp goes (not rejected - it will run
+    /// again), so the members stop taking it up again each pulse (owner 2026-11-13: bots "tend to leave" events; one
+    /// party re-took a finished event 999 times in an hour, each time dropping it at once).</summary>
+    public static void ReleaseCamp(GameBot bot, string campId)
+    {
+        lock (Sync)
+        {
+            if (bot?.Group == null || !TryGetSession(bot.Group, out Session session) || session.Camp?.Id != campId)
+                return;
+            session.Camp = null;
+            if (!session.Recovery.IsRegrouping && !IsAssemblyPhase(session.Phase))
+                session.Phase = "Choosing group target";
+            WriteSessionMetadata(session, BotMembers(session.Group));
+        }
+    }
+
     public static void MarkGrinding(GameBot bot)
     {
         if (bot?.Group == null)

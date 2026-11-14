@@ -174,6 +174,13 @@ static func _server_skills(lists: Array) -> void:
 ## The server's spell lines in its order (GamePlayerUtils.UpdateUsableListSpells: the baseline lines, then the
 ## specialization lines), each a category of its own.
 static func _server_magic(list: VBoxContainer) -> void:
+	var smart: Array = Server.smart_heal_entries()        # the smart heals (Server.smart_heal): a line of their own
+	if not smart.is_empty():
+		list.add_child(_line_row("Automatic Heals", "srvsmart"))
+		if bool(_open_lines.get("srvsmart", false)):
+			for s in smart:
+				var r := SkillRow.make("spell", 0, String(s.name), int(s.icon), int(s.border), String(s.smart).to_upper())
+				list.add_child(r.with_id(String(s.id)))
 	for li in Server.spell_lines.size():
 		var line: Dictionary = Server.spell_lines[li]
 		var key := "srv%d:%s" % [li, line.name]            # (a baseline and a spec line may share a name)

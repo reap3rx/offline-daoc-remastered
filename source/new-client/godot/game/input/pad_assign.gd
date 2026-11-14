@@ -166,7 +166,7 @@ static func known_skills() -> Array:
 		var ka := int(order.get(a.kind, 3))
 		var kb := int(order.get(b.kind, 3))
 		return ka < kb if ka != kb else String(a.name) < String(b.name))
-	return out
+	return Server.smart_heal_entries() + out             # (the smart heals first: a healer's most used buttons)
 
 
 func _assign(d: Dictionary) -> void:

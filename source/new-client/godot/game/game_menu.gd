@@ -18,7 +18,7 @@ var _fps: OptionButton
 
 func _ready() -> void:
 	layer = 10
-	settings.load(SETTINGS_PATH)
+	settings = UiArt.load_settings()
 	_panel = PanelContainer.new()
 	_panel.set_anchors_preset(Control.PRESET_CENTER)
 	_panel.custom_minimum_size = Vector2(380, 0)
@@ -112,8 +112,9 @@ func apply_fps_cap(cap: int) -> void:
 
 func _on_fps(index: int) -> void:
 	var cap: int = FPS_CAPS[index]
+	settings = UiArt.load_settings()                     # (fresh: an old copy saved over newer settings)
 	settings.set_value("display", "fps_cap", cap)
-	settings.save(SETTINGS_PATH)
+	UiArt.save_settings(settings)
 	apply_fps_cap(cap)
 
 
@@ -130,8 +131,9 @@ func apply_volumes() -> void:
 
 
 func _on_volume(bus: String, val: float) -> void:
+	settings = UiArt.load_settings()
 	settings.set_value("audio", bus.to_lower(), val)
-	settings.save(SETTINGS_PATH)
+	UiArt.save_settings(settings)
 	apply_volumes()
 
 
@@ -157,6 +159,7 @@ func close() -> void:
 
 func _on_movement(index: int) -> void:
 	var mode := String(_movement.get_item_metadata(index))
+	settings = UiArt.load_settings()
 	settings.set_value("player", "movement", mode)
-	settings.save(SETTINGS_PATH)
+	UiArt.save_settings(settings)
 	movement_changed.emit(mode)

@@ -42,6 +42,9 @@ func setup(zone_dir: String, zone_loader: ZoneLoader, p: Node3D) -> void:
 	var plates := NamePlates.new()                         # overhead names (Label3Ds on the views, depth-tested)
 	plates.manager = self
 	add_child(plates)
+	var bars = preload("res://game/npcs/health_plates.gd").new()   # WoW-style nameplates (health, cast bar)
+	bars.manager = self
+	add_child(bars)
 
 
 func _add_spawns(spawns: Array, zone_id: int, offset: Vector3) -> Array:

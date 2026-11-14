@@ -51,6 +51,9 @@ func setup_server(v: Node, zone_loader: ZoneLoader, p: Node3D) -> void:
 	var plates := NamePlates.new()
 	plates.manager = self
 	add_child(plates)
+	var bars = preload("res://game/npcs/health_plates.gd").new()   # WoW-style nameplates
+	bars.manager = self
+	add_child(bars)
 	Server.world.connect(_on_world)
 	# a new region's world (a teleport to the Shrouded Isles): your speed as the server last sent it - it isn't sent
 	# again while it stays the same (owner 2026-10-14: a skald companion's speed song stopped working after a zone
@@ -1023,6 +1026,8 @@ func _message(d: Dictionary) -> void:
 		viewer.ui.npc_dialog.say("srv%d" % _target_oid(), who, text)
 		PlayerData.message.emit(text, "npc")
 		return
+	if kind == "say":
+		_say_bubble(text)
 	if t >= 0xC8 and t <= 0xCB:                                 # screen centre (zone names, warnings)
 		if viewer and viewer.ui and viewer.ui.has_method("center_message"):
 			viewer.ui.center_message(text, t == 0xC9 or t == 0xCB)      # (the Smaller pair: area descriptions)
@@ -1030,6 +1035,42 @@ func _message(d: Dictionary) -> void:
 			return
 		kind = "system"
 	PlayerData.message.emit(text, kind)
+
+
+## Anyone's words aloud float over their head too (owner 2026-11-13: "Floating text for everyone, bots included, when
+## they speak"): "Name says, "...""; "You say, "..."" over you. The speaker is found by name among those near.
+var _says_re: RegEx
+func _say_bubble(text: String) -> void:
+	if viewer == null:
+		return
+	if _says_re == null:
+		_says_re = RegEx.create_from_string("^(.+?) (?:says|say|yells|yell|shouts|shout)(?: to [^,]+)?, \"(.*)\"\\.?$")
+	var m := _says_re.search(text.strip_edges())
+	if m == null:
+		return
+	var who := m.get_string(1)
+	var words := m.get_string(2)
+	var v: Node3D = null
+	var height := 1.8
+	if who == "You":
+		v = viewer.get("player") as Node3D
+	else:
+		var me: Vector3 = viewer.player.global_position if viewer.get("player") else Vector3.ZERO
+		var best := INF
+		for oid in by_oid:
+			var st = by_oid[oid]
+			if st == null or not (st.spawn is Dictionary) or String(st.spawn.get("name", "")) != who:
+				continue
+			var sv = st.view
+			if sv != null and is_instance_valid(sv) and sv is Node3D:
+				var d := (sv as Node3D).global_position.distance_squared_to(me)
+				if d < best:
+					best = d
+					v = sv
+		if v != null and v.get("height") != null:
+			height = float(v.get("height"))
+	if v != null:
+		preload("res://game/ui/speech_bubbles.gd").show(v, words, height)
 
 
 ## "<object id>|<name>|<text>": the words float over the NPC (ui/speech_bubbles.gd) and go into the chat.
@@ -1343,12 +1384,18 @@ func _cast(d: Dictionary) -> void:
 	_cast_begin(oid, v, ce, int(d.get("time", 0)) / 10.0)          # cast time in tenths of a second
 
 
+## A casting monster's cast: oid -> [start, end] (ticks ms) for its nameplate's cast bar (HealthPlates).
+var cast_until := {}
+
+
 func _cast_begin(oid: int, v: Node, ce: int, seconds: float) -> void:
 	var anims: Array = SpellFx.effect(ce).get("anims", [])
 	if v is Player:
 		(v as Player).cast_start(anims, seconds)
 	elif v is Npc:
 		(v as Npc).cast_start(anims, seconds)
+		var t := Time.get_ticks_msec()
+		cast_until[oid] = [t, t + int(seconds * 1000.0)]
 	_gathers[oid] = [ce, SpellFx.begin(ce, v as Node3D, _sounds_of(v)),
 			Time.get_ticks_msec() + int(seconds * 1000.0) + GATHER_GRACE_MS]
 
@@ -1510,6 +1557,7 @@ func _view_soon(oid: int, wait_ms := 3000) -> Node3D:
 
 func _interrupt(oid: int, fizzle := true) -> void:
 	_late_cast.erase(oid)
+	cast_until.erase(oid)
 	if fizzle:                                        # (the server's InterruptAnimation: a drawn bow is lowered too)
 		var bv := _view_of(oid)
 		if bv is Npc:

@@ -921,6 +921,8 @@ func on_skills(d: Dictionary) -> void:
 		skills = []
 	skills.append_array(d.list)
 	if not bool(d.more):
+		_smart_cache = {}
+		_refresh_smart_icons()
 		_refresh_bar_icons()
 		_forget_details("sk:")
 		skills_changed.emit()
@@ -1030,6 +1032,8 @@ func on_spell_line(d: Dictionary) -> void:
 		_lines_building = []
 		_forget_details("sk:")
 		_remap_bar_spells()
+		_smart_cache = {}
+		_refresh_smart_icons()
 		# every spell you know: its effect files load now in the background (owner 2026-10-31: a spell's art didn't
 		# show the first time it was cast in a session - its files only started loading at that cast)
 		for line in spell_lines:
@@ -1110,6 +1114,11 @@ func _forget_details(prefix: String) -> void:
 ## specs): 100 + n, by its page - 6 a style, 3 a hybrid's spell or song (owner 2026-10-14: "my buffs don't even have
 ## a tooltip" - they were asked as abilities, 8, and the server had nothing to say), 8 an ability / realm ability.
 func skill_detail(e: Dictionary) -> Array:
+	if String(e.get("id", "")).begins_with("srv:smart:"):
+		var h := smart_heal(String(e.id).substr(10))
+		if h.is_empty():
+			return []
+		e = {"kind": "spell", "id": String(h.id), "name": String(h.name)}
 	var parts := String(e.get("id", "")).split(":")
 	if parts.size() >= 4 and parts[0] == "srv" and parts[1] == "spell":
 		return [2, int(parts[2]) * 100 + int(parts[3])]
@@ -1378,6 +1387,8 @@ func _on_disable(d: Dictionary) -> void:
 
 ## Seconds until a quickbar id can be used again (0 = ready).
 func reuse_left(id: String) -> float:
+	if id.begins_with("srv:smart:"):
+		id = String(smart_heal(id.substr(10)).get("id", ""))
 	if not disabled.has(id):
 		return 0.0
 	var left := (int(disabled[id]) - Time.get_ticks_msec()) / 1000.0
@@ -1392,10 +1403,20 @@ func reuse_left(id: String) -> float:
 func use_entry(id: String, player: Node3D, zone_id: int, target_in_view: bool) -> bool:
 	if client == null or not id.begins_with("srv:"):
 		return false
+	var smart := false
+	if id.begins_with("srv:smart:"):                     # a smart heal: the best heal of its kind you know now
+		var h := smart_heal(id.substr(10))
+		if h.is_empty():
+			PlayerData.message.emit("You don't know a heal of that kind yet.", "spells")
+			return true
+		id = String(h.id)
+		smart = _heal_target_spell(h.spell, player)
 	var parts := id.split(":")
 	var v := viewer()
 	var ac = v.get("action_combat") if v else null
-	if parts.size() >= 4 and parts[1] == "spell" and _heal_target(int(parts[2]), int(parts[3]), player):
+	if smart:
+		pass
+	elif parts.size() >= 4 and parts[1] == "spell" and _heal_target(int(parts[2]), int(parts[3]), player):
 		pass                                             # (a heal: on whoever needs it most - no facing needed)
 	elif ac != null and ac.has_method("before_use"):
 		ac.before_use()                                  # (action combat: the reticle's target, faced)
@@ -1436,6 +1457,10 @@ func _heal_target(line: int, level: int, player: Node3D) -> bool:
 	var s := ClassDb.spell(int(sp.get("id", 0)))
 	if s.is_empty() or String(s.get("name", "")) != String(sp.get("name", "")):
 		s = ClassDb.spell_by_name(String(sp.get("name", "")))
+	return _heal_target_spell(s, player)
+
+
+func _heal_target_spell(s: Dictionary, player: Node3D) -> bool:
 	if not (String(s.get("type", "")) in SMART_HEAL_TYPES and String(s.get("target", "")) == "Realm" \
 			and int(s.get("radius", 0)) == 0):
 		return false
@@ -1475,6 +1500,138 @@ func _heal_target(line: int, level: int, player: Node3D) -> bool:
 	elif client:
 		client.call("Target", best_oid, 0x8000 | 0x6000)
 	return true
+
+
+# ---------------------------------------------------------------- smart heals
+## Three heals a healer can put on a quickbar or a controller button in place of a fixed spell (owner 2026-11-13: "a small
+## heal, big heal, and spec heal ... and then know they're casting the best version of each without replacing it or having
+## to target anyone"): each casts the strongest heal of its kind you know right now on whoever needs it most
+## (_heal_target_spell), so the button keeps up as new heals are learned. The kinds, from the class's own spell lines:
+##   small - the quick baseline heal (the "Minor" one, 2.2 s);   big - the slower baseline heal (2.8 s);
+##   spec  - the specialization line's heal (Major, then Greater once known; not the instant ones with a long reuse).
+## Each appears once its first heal is learned. The ordinary spells stay in the spellbook and work as before.
+## Ids "srv:smart:<kind>"; use_entry, reuse_left and skill_detail stand them in for the heal they cast.
+const SMART_KINDS := ["small", "big", "spec"]
+const SMART_NAMES := {
+	"albion": {"small": "Prayer of Mercy", "big": "Benediction", "spec": "Divine Grace"},
+	"midgard": {"small": "Eir's Touch", "big": "Eir's Mending", "spec": "Hand of Eir"},
+	"hibernia": {"small": "Dewfall", "big": "Brigid's Balm", "spec": "Dian Cecht's Grace"},
+	"mentalist": {"small": "Mind's Ease", "big": "Somatic Focus", "spec": "Mind over Flesh"},
+}
+const SMART_WORDS := {"small": "small", "big": "big", "spec": "specialization"}
+var _smart_class := -1
+var _smart_kinds := {}                        # your class's heal spell name -> {kind, value}
+var _smart_cache := {}                        # kind -> the heal it casts now (cleared when the lists change)
+
+
+## A heal's kind for the smart heals: "small" / "big" / "spec", or "" (not a single-target cast heal).
+static func smart_kind_of(s: Dictionary, baseline: bool) -> String:
+	if String(s.get("type", "")) != "Heal" or String(s.get("target", "")) != "Realm" or int(s.get("radius", 0)) != 0:
+		return ""
+	if float(s.get("casttime", 0.0)) <= 0.0 or float(s.get("value", 0.0)) <= 0.0:
+		return ""
+	if not baseline:
+		return "spec"
+	return "small" if float(s.casttime) <= 2.5 else "big"
+
+
+func _smart_table() -> Dictionary:
+	var cid := PlayerData.class_id()
+	if cid == _smart_class:
+		return _smart_kinds
+	_smart_class = cid
+	_smart_kinds = {}
+	var specs := {}
+	for e in ClassDb.specs_at(cid, 50):
+		specs[String(e.spec)] = 50
+	for l in ClassDb.spell_lines(cid, 50, specs):
+		for sid in l.spells:
+			var s := ClassDb.spell(int(sid))
+			var kind := smart_kind_of(s, bool(l.baseline))
+			if kind == "":
+				continue
+			var nm := String(s.name)
+			if not _smart_kinds.has(nm) or float(s.value) > float(_smart_kinds[nm].value):
+				_smart_kinds[nm] = {"kind": kind, "value": float(s.value), "spell": s}
+	return _smart_kinds
+
+
+## The heal a smart kind casts now: {id, name, icon, border, spell}, or {} when you know none of that kind yet.
+func smart_heal(kind: String) -> Dictionary:
+	if _smart_class != PlayerData.class_id():
+		_smart_cache = {}
+	if _smart_cache.has(kind):
+		return _smart_cache[kind]
+	var table := _smart_table()
+	var best := {}
+	var best_v := -1.0
+	var cands := []                                      # [use id, name, icon]
+	for li in spell_lines.size():
+		for sp in (spell_lines[li].spells as Array):
+			if String(sp.get("kind", "spell")) == "spell":
+				cands.append(["srv:spell:%d:%d" % [li, int(sp.level)], String(sp.name), int(sp.icon)])
+	var first := 0
+	while first < skills.size() and int(skills[first].page) == 0:
+		first += 1
+	for i in range(first, skills.size()):                # a hybrid's spells are in the skill list
+		if int(skills[i].page) == 3:
+			cands.append(["srv:skill:%d" % (i - first), String(skills[i].name), int(skills[i].icon)])
+	for c in cands:
+		var t: Dictionary = table.get(String(c[1]), {})
+		if t.is_empty() or String(t.kind) != kind or float(t.value) < best_v:
+			continue
+		best_v = float(t.value)
+		var ic: Array = skill_icon("spell", int(c[2]))
+		best = {"id": String(c[0]), "name": String(c[1]), "icon": int(ic[0]), "border": int(ic[1]), "spell": t.spell}
+	_smart_cache[kind] = best
+	return best
+
+
+## A smart heal's own name, by your realm (a Mentalist's of the mind).
+func smart_name(kind: String) -> String:
+	var c := ClassDb.cls(PlayerData.class_id())
+	var key := "mentalist" if String(c.get("name", "")) == "Mentalist" else String(c.get("realm", "albion"))
+	return String((SMART_NAMES.get(key, SMART_NAMES.albion) as Dictionary).get(kind, kind))
+
+
+## The smart heals you have now, as the spell lists drag them: [{kind, id, icon, border, name, smart, casts}].
+func smart_heal_entries() -> Array:
+	var out := []
+	if not active:
+		return out
+	for k in SMART_KINDS:
+		var h := smart_heal(k)
+		if not h.is_empty():
+			out.append({"kind": "spell", "id": "srv:smart:" + k, "icon": int(h.icon), "border": int(h.border),
+					"name": smart_name(k), "smart": k, "casts": String(h.name)})
+	return out
+
+
+## A smart heal's hover lines: what it does, and the heal it casts now.
+func smart_lines(e: Dictionary) -> Array:
+	var k := String(e.get("id", "")).substr(10)
+	var h := smart_heal(k)
+	var out := ["Casts your best %s heal on whoever in your group needs it most (you, if no one is hurt more)." % String(SMART_WORDS.get(k, k)),
+			"Now: %s" % String(h.get("name", "none known yet"))]
+	return out
+
+
+## The bars' smart heals take the icon of the heal they cast now (a new heal learned can bring a new picture).
+func _refresh_smart_icons() -> void:
+	var changed := false
+	for bar in PlayerData.quickbars:
+		for bank in bar:
+			for e in bank:
+				if not (e is Dictionary) or not String(e.get("id", "")).begins_with("srv:smart:"):
+					continue
+				var h := smart_heal(String(e.id).substr(10))
+				if not h.is_empty() and int(e.get("icon", -1)) != int(h.icon):
+					e["icon"] = int(h.icon)
+					e["border"] = int(h.border)
+					changed = true
+	if changed:
+		PlayerData.save_character()
+		PlayerData.changed.emit()
 
 
 ## Weapon keys: the server readies a weapon set when its slot is used (GamePlayer.UseSlot: 10 / 11 standard,

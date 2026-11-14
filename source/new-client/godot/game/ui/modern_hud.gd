@@ -60,8 +60,7 @@ func _section() -> String:
 
 func _load_custom() -> void:
 	custom.clear()
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	if cfg.has_section(_section()):
 		for k in cfg.get_section_keys(_section()):
 			var v = cfg.get_value(_section(), k)
@@ -83,8 +82,7 @@ func _pad_bar():
 
 
 func _ready() -> void:
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	mini = clampf(float(cfg.get_value("modern_zoom", "minimap", MINI)), 110.0, 380.0)
 	_load_custom()
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -242,13 +240,12 @@ func reset_places() -> void:
 
 
 func _save_custom() -> void:
-	var cfg := ConfigFile.new()
-	cfg.load(UiArt.settings_path)
+	var cfg := UiArt.load_settings()
 	if cfg.has_section(_section()):
 		cfg.erase_section(_section())
 	for k in custom:
 		cfg.set_value(_section(), k, custom[k])
-	cfg.save(UiArt.settings_path)
+	UiArt.save_settings(cfg)
 
 
 func _process(_delta: float) -> void:
@@ -627,10 +624,9 @@ class Minimap extends Part:
 				return
 			if not event.pressed and _sizing:
 				_sizing = false
-				var cfg := ConfigFile.new()
-				cfg.load(UiArt.settings_path)
+				var cfg := UiArt.load_settings()
 				cfg.set_value("modern_zoom", "minimap", hud.mini)
-				cfg.save(UiArt.settings_path)
+				UiArt.save_settings(cfg)
 				accept_event()
 				return
 		if event is InputEventMouseButton and event.pressed:

@@ -40,8 +40,7 @@ func fade_out(seconds := 2.0) -> void:
 
 
 func _apply_volumes() -> void:
-	var cfg := ConfigFile.new()
-	cfg.load("user://settings.cfg")
+	var cfg := UiArt.load_settings()
 	for bus in ["Master", "Music"]:
 		var i := AudioServer.get_bus_index(bus)
 		if i >= 0:

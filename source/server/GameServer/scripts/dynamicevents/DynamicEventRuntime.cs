@@ -148,6 +148,7 @@ namespace DOL.GS.DynamicEvents
         public bool Dormant;
         public string PendingId;                     // the next stage, after the rest
         public long PendingAt;
+        public const int RestCapS = 15;                  // the breather between stages, at most
         public string LastOutcome = "";              // shown on the map a little while after it ends
         public long LastOutcomeUntil;
         public EventNpc Giver;
@@ -295,7 +296,8 @@ namespace DOL.GS.DynamicEvents
             if (!string.IsNullOrEmpty(next) && next != "end" && Def.Stages.Any(s => s.Id == next))
             {
                 PendingId = next;                           // a breather: sit, heal, gather up
-                PendingAt = now + 1000L * Math.Max(3, Def.RestS);
+                // (owner 2026-11-13: "Catch your breath portion of events shortened to 15 seconds")
+                PendingAt = now + 1000L * Math.Clamp(Def.RestS, 3, RestCapS);
             }
             else
                 End(won ? "success" : "fail", now);

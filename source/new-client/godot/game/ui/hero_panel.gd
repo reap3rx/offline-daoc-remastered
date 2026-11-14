@@ -672,6 +672,20 @@ func _fill_book() -> void:
 	var known := (spec.skills as Array).filter(func(k): return bool(k.have)).size()
 	_book_sub.text = "LEVEL %d NOW  -  %d OF %d KNOWN" % [int(spec.level), known, (spec.skills as Array).size()]
 	var use := _usable()
+	# the smart heals (Server.smart_heal_entries) head the book of the specialization whose heals they cast
+	var smart: Array = Server.smart_heal_entries()
+	var names := {}
+	for k in spec.skills:
+		names[String(k.name)] = true
+	if smart.any(func(s): return names.has(String(s.casts))):
+		var sl := UiArt.label("AUTOMATIC HEALS - YOUR BEST OF EACH, ON WHOEVER NEEDS IT MOST", 8, UiArt.GOLD)
+		sl.custom_minimum_size = Vector2(COL3.y - 20, 14)
+		sl.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+		_book_list.add_child(sl)
+		for s in smart:
+			var srow := BookRow.new()
+			srow.setup(s, 0, true, true, COL3.y - 20, String(s.smart).to_upper())
+			_book_list.add_child(srow)
 	var group := ""
 	for k in spec.skills:
 		var g := String(k.group)
@@ -906,7 +920,7 @@ class BookRow extends Control:
 	var data := {}
 	var have := false
 
-	func setup(d: Dictionary, level: int, known: bool, base: bool, w: float) -> void:
+	func setup(d: Dictionary, level: int, known: bool, base: bool, w: float, right := "") -> void:
 		data = d
 		have = known
 		custom_minimum_size = Vector2(w, 20)
@@ -934,7 +948,7 @@ class BookRow extends Control:
 		l.clip_text = true
 		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(l)
-		var lv := UiArt.label(("L%d" if base else "%d") % level, 8, UiArt.GOLD if known else UiArt.DIM)
+		var lv := UiArt.label(right if right != "" else ("L%d" if base else "%d") % level, 8, UiArt.GOLD if known else UiArt.DIM)
 		lv.position = Vector2(w - 30, 3)
 		lv.size = Vector2(26, 14)
 		lv.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -942,6 +956,9 @@ class BookRow extends Control:
 		add_child(lv)
 		if not known:
 			ic.modulate = Color(0.35, 0.35, 0.35, 0.9)          # greyed until learned (the owner: the reverse of the old window)
+		if right != "":
+			lv.position.x -= 14
+			lv.size.x += 14
 		tooltip_text = String(d.get("name", "")).to_upper() + ("" if known else
 				("\nLEARNED AT LEVEL %d" if base else "\nLEARNED AT %d IN THIS SPECIALIZATION") % level)
 

@@ -90,6 +90,7 @@ namespace DOL.GS.Commands
                 if (PersonalCompanions.HasWordsFor(me))
                     list.Add(("Talk", "/companion speak"));
                 list.Add(("Gear", "/companion gear"));
+                list.Add(("Sell Items", "/companion sell"));
                 if (BotSpec.GetSpecializationChoices(rec.Class).Count > 1)
                     list.Add(("How to Fight", "/companion role"));
                 list.Add(("What Shall We Do?", "/companion ideas"));

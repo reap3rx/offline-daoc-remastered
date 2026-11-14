@@ -1148,6 +1148,8 @@ func _ui_window_open() -> bool:
 	var ui = viewer.get("ui") if viewer else null
 	if ui == null:
 		return false
+	if not get_tree().get_nodes_in_group("ui_modal").is_empty():
+		return true                                        # (a question to answer: UiArt.confirm)
 	for id in ["bags", "hero", "journal", "options", "events_window", "guild_window", "warmap", "potions", "poisons",
 			"quiver", "ac_styles", "exchange", "emblem_window"]:
 		var w = ui.get(id)
@@ -1580,8 +1582,9 @@ func _save_layout(to_server := true) -> void:
 	var path := _layout_path()
 	if path != SETTINGS:
 		DirAccess.make_dir_recursive_absolute("user://char_settings")
-	var cfg := ConfigFile.new()
-	cfg.load(path)
+	var cfg := UiArt.load_settings() if path == SETTINGS else ConfigFile.new()
+	if path != SETTINGS:
+		cfg.load(path)
 	for id in _show:
 		cfg.set_value(SECTION, "show_" + String(id), bool(_show[id]))
 	for id in _offset:
@@ -1589,7 +1592,10 @@ func _save_layout(to_server := true) -> void:
 	cfg.set_value(SECTION, "cam_side", cam_side)
 	cfg.set_value(SECTION, "cam_up", cam_up)
 	cfg.set_value(SECTION, "cam_distance", ac_distance)
-	cfg.save(path)
+	if path == SETTINGS:
+		UiArt.save_settings(cfg)
+	else:
+		cfg.save(path)
 
 
 ## Another character came in: its own layout and camera.

@@ -65,6 +65,8 @@ const ACTIONS := [
 	["sit", "Sit / Stand", "SIT", "tap"],
 	["torch", "Torch", "TORCH", "tap"],
 	["lock_on", "Lock On", "LOCK", "tap"],
+	["zoom_in", "Camera Zoom In (while held)", "ZOOM +", "held"],
+	["zoom_out", "Camera Zoom Out (while held)", "ZOOM -", "held"],
 	["target_enemy", "Target Nearest Enemy", "ENEMY", "tap"],
 	["target_friend", "Target You / Your Group", "FRIEND", "tap"],
 	["hero", "Hero Panel", "HERO", "tap"],
@@ -102,6 +104,7 @@ var device := -1
 var layer := 0                           # 0 none, 1 LB, 2 RB, 3 both
 var sprint := false                      # the sprint toggle
 var sprint_held := false
+var _zoom := 0                           # held zoom: -1 in, 1 out (owner 2026-11-13: zoom in the controller button menu)
 var ac: Node = null                      # the Action Combat node (ActionCombatMode.setup attaches it)
 var viewer: Node = null
 var bar: Control = null                  # the controller bar (pad_bar.gd)
@@ -145,8 +148,7 @@ func _ready() -> void:
 	_overlay.draw.connect(_draw_overlay)
 	_layer.add_child(_overlay)
 	load_bindings()
-	var cfg := ConfigFile.new()
-	cfg.load("user://settings.cfg")
+	var cfg := UiArt.load_settings()
 	hold_ms = int(cfg.get_value("pad", "hold_ms", 300))
 	look_speed = float(cfg.get_value("pad", "look_speed", 1.0))
 	invert_look = bool(cfg.get_value("pad", "invert_look", false))
@@ -525,6 +527,10 @@ func _do(act: String, down: bool) -> void:
 				a.call("pad_defend", down)
 		"sprint_hold":
 			sprint_held = down
+		"zoom_in":
+			_zoom = -1 if down else (0 if _zoom == -1 else _zoom)
+		"zoom_out":
+			_zoom = 1 if down else (0 if _zoom == 1 else _zoom)
 		"menu_wheel":
 			if bar and is_instance_valid(bar):
 				if down:
@@ -848,6 +854,9 @@ func item_menu(slot: int) -> void:
 	var m = ui.get("merchant")
 	if pack and m and is_instance_valid(m) and m.visible:
 		entries.append(["Sell", func(): PlayerData.sell(slot, String(m.npc_name))])
+	elif pack and Server.active and String(PlayerData.get_meta("companion", "")) != "":
+		# your companion takes it to sell in town - a tenth less than a merchant pays (owner 2026-11-13)
+		entries.append(["Sell to %s" % String(PlayerData.get_meta("companion")), func(): Server.command("/companion sell %d" % slot)])
 	if pack:
 		entries.append(["Drop", _drop_asked.bind(slot)])
 	ui.social_menu.open(String(it.get("name", "item")), entries)
@@ -956,6 +965,9 @@ func _usables() -> Array:
 	var vp := get_viewport().get_visible_rect()
 	var ui = _ui()
 	var stack: Array = [ui] if ui else [get_tree().root]       # (in the world: the interface only, not the scene)
+	var modals := get_tree().get_nodes_in_group("ui_modal")
+	if not modals.is_empty() and is_instance_valid(modals[-1]):
+		stack = [modals[-1]]                               # (a question on screen: only its answers)
 	while not stack.is_empty():
 		var n: Node = stack.pop_back()
 		if (n is CanvasItem and not (n as CanvasItem).visible) or (n is CanvasLayer and not (n as CanvasLayer).visible):
@@ -1175,6 +1187,8 @@ func _look(delta: float) -> void:
 	var rs := _stick(JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y)
 	if bar and is_instance_valid(bar) and bar.radial_shown():
 		return
+	if _zoom != 0 and p.has_method("pad_zoom"):
+		p.call("pad_zoom", float(_zoom) * ZOOM_SPEED * 0.7 * delta)
 	# LB + RB held: the right stick up / down zooms the camera in / out (owner 2026-11-12)
 	if layer == 3:
 		if absf(rs.y) > 0.0 and p.has_method("pad_zoom"):
@@ -1210,6 +1224,7 @@ func _release_all() -> void:
 	_pending.clear()
 	sprint = false
 	sprint_held = false
+	_zoom = 0
 	if layer != 0:
 		layer = 0
 		layer_changed.emit(0)

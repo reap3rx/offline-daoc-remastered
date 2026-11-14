@@ -6,7 +6,7 @@ extends Node
 ## Modes: "windowed" (a normal window at the resolution), "borderless" (a borderless window over the whole screen),
 ## "fullscreen" (exclusive full screen) - the last two render the world at the chosen resolution (res_scale).
 
-const TEST_FLAGS := ["ui-test", "ui-shots", "shots", "probe", "tour", "bench", "pregame-shot", "login-shot"]
+const TEST_FLAGS := ["ui-test", "ui-shots", "shots", "probe", "live-probe", "tour", "bench", "pregame-shot", "login-shot"]
 
 ## Developer mode (owner 2026-10-13: "make sure debug mode like ctrl f12 is disabled on the godot release"): the debug
 ## text (Ctrl+F12), the bot inspector (Ctrl+F11) and the Ctrl+F1..F11 test keys work only with a dev_mode.txt file in
@@ -32,11 +32,15 @@ func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.trim_prefix("--").split("=")[0] in TEST_FLAGS:
 			return
-	var cfg := ConfigFile.new()
-	if cfg.load("user://settings.cfg") != OK:
+	var cfg := UiArt.load_settings()
+	if cfg.get_sections().is_empty():
 		return
 	if cfg.has_section_key("display", "fps_cap"):
 		apply_fps(int(cfg.get_value("display", "fps_cap", 0)))
+	# the monitor it was kept on (a work PC's second screen: the game came up on the other one, not at 4K)
+	var screen := int(cfg.get_value("display", "screen", -1))
+	if screen >= 0 and screen < DisplayServer.get_screen_count() and screen != DisplayServer.window_get_current_screen():
+		DisplayServer.window_set_current_screen(screen)
 	if cfg.has_section_key("display", "window_mode") or cfg.has_section_key("display", "resolution"):
 		apply_display(String(cfg.get_value("display", "window_mode", "windowed")), cfg.get_value("display", "resolution", []))
 	show_fps(bool(cfg.get_value("display", "show_fps", false)))

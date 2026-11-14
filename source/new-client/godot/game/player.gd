@@ -196,8 +196,7 @@ func _ready() -> void:
 	torch.shadow_enabled = false                         # the client's fixed-function point lights cast no shadows
 	torch.light_volumetric_fog_energy = 0.25             # (remastered fog: no bright ball of haze round you)
 	add_child(torch)
-	var cfg := ConfigFile.new()
-	cfg.load("user://settings.cfg")
+	var cfg := UiArt.load_settings()
 	set_torch(bool(cfg.get_value("player", "torch", true)))
 	mouse_sensitivity = float(cfg.get_value("player", "mouse_sensitivity", 1.0))
 	invert_mouse = bool(cfg.get_value("player", "invert_mouse", false))
@@ -1274,10 +1273,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif Keybinds.pressed(event, "torch") or (event is InputEventKey and event.shift_pressed
 				and Keybinds.pressed(_unshifted(event), "torch")):   # its key or Shift + its key, as the client
 			set_torch(not torch_on)
-			var cfg := ConfigFile.new()
-			cfg.load("user://settings.cfg")
+			var cfg := UiArt.load_settings()
 			cfg.set_value("player", "torch", torch_on)
-			cfg.save("user://settings.cfg")
+			UiArt.save_settings(cfg)
 		elif Keybinds.pressed(event, "walk"):
 			walking = not walking
 		elif Keybinds.pressed(event, "move_forward") or Keybinds.pressed(event, "move_back"):

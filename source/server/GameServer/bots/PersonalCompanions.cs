@@ -664,8 +664,8 @@ namespace DOL.GS
     }
 
     /// <summary>/companion: your companion - call, home, talk, rename (the client's abilities use the first two).</summary>
-    [CmdAttribute("&companion", ePrivLevel.Player, "Your companion: call, send home, gear, role, how much they talk, ideas, a new name",
-        "/companion [call | home | gear | role | ideas | talk chatty|normal|quiet | rename <name>]")]
+    [CmdAttribute("&companion", ePrivLevel.Player, "Your companion: call, send home, gear, sell, role, how much they talk, ideas, a new name",
+        "/companion [call | home | gear | sell | role | ideas | talk chatty|normal|quiet | rename <name>]")]
     public class CompanionCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
@@ -683,6 +683,7 @@ namespace DOL.GS
                 "gear" => PersonalCompanions.GearMenu(p, args.Length > 2 ? args[2] : ""),
                 "give" => PersonalCompanions.Give(p, args.Length > 2 ? args[2] : "", args.Length > 3 ? args[3] : ""),
                 "take" => PersonalCompanions.Take(p, args.Length > 2 ? args[2] : ""),
+                "sell" => PersonalCompanions.Sell(p, args.Length > 2 ? args[2] : ""),
                 "role" => PersonalCompanions.Role(p, args.Length > 2 ? args[2] : ""),
                 "ideas" or "idea" or "plan" => PersonalCompanions.Suggest(p, true),
                 "talkto" or "speak" => PersonalCompanions.SpeakUp(p),

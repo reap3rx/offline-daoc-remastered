@@ -71,6 +71,8 @@ func _process_inner(_delta: float) -> void:
 		# 2026-10-15 UI audit - the toggle only reached the offline bots)
 		if show and not targeted and not _companion_names and _group_oids.has(int(n.spawn.get("oid", 0))):
 			show = false
+		if show and bool(n.get_meta("hp_plate", false)):     # a nameplate (HealthPlates) shows the name already
+			show = false
 		var labels: Array = n.get_meta("plate", [])
 		var fresh := false
 		if labels.is_empty():
