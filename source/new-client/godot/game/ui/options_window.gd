@@ -293,6 +293,11 @@ func _video() -> void:
 		names.append("%d X %d" % [list[i].x, list[i].y])
 		if list[i] == cur:
 			sel = i
+	# where the settings live and what the start made of them (owner 2026-11-14: the work PC kept coming up windowed)
+	if BootSettings.report != "":
+		_hint("AT START: %s. SETTINGS FILE: %s" % [BootSettings.report.to_upper(), ProjectSettings.globalize_path(UiArt.settings_path)])
+	if UiArt.last_error != "":
+		_hint("SAVING: %s" % UiArt.last_error.to_upper())
 	if not _trial.is_empty():                              # a change on trial: keep it or go back
 		_trial_label = UiArt.label("", 10, UiArt.GOLD_HI)
 		_trial_label.autowrap_mode = TextServer.AUTOWRAP_WORD
@@ -916,11 +921,16 @@ func _end_trial(keep: bool) -> void:
 		_save("display", "window_mode", t.new_mode)
 		_save("display", "resolution", t.new_res)
 		_save("display", "screen", DisplayServer.window_get_current_screen())
-		var back := UiArt.load_settings()                   # (what the file holds now, for the log)
-		print("[display] kept: %s %s on screen %d - in %s: %s %s" % [t.new_mode, str(t.new_res), DisplayServer.window_get_current_screen(),
-				ProjectSettings.globalize_path(UiArt.settings_path), str(back.get_value("display", "window_mode", "-")),
-				str(back.get_value("display", "resolution", "-"))])
-		_status.text = "DISPLAY SETTINGS KEPT"
+		var back := ConfigFile.new()                       # (what the file on disk holds now - not the copy in memory)
+		var err := back.load(UiArt.settings_path)
+		print("[display] kept: %s %s on screen %d - in %s (read back: error %d): %s %s" % [t.new_mode, str(t.new_res),
+				DisplayServer.window_get_current_screen(), ProjectSettings.globalize_path(UiArt.settings_path), err,
+				str(back.get_value("display", "window_mode", "-")), str(back.get_value("display", "resolution", "-"))])
+		if err == OK and String(back.get_value("display", "window_mode", "")) == String(t.new_mode):
+			_status.text = "DISPLAY SETTINGS KEPT"
+		else:
+			_status.text = "DISPLAY SETTINGS KEPT FOR NOW - THE SETTINGS FILE DIDN'T TAKE THEM (%s)" % \
+					(UiArt.last_error.to_upper() if UiArt.last_error != "" else "READ BACK: ERROR %d" % err)
 	else:
 		_apply_window(String(t.mode), t.res)
 		_status.text = "DISPLAY SETTINGS PUT BACK"

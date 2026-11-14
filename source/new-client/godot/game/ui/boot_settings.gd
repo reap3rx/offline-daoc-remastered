@@ -31,10 +31,31 @@ func _ready() -> void:
 	_build_fps_counter()
 	for a in OS.get_cmdline_user_args():
 		if a.trim_prefix("--").split("=")[0] in TEST_FLAGS:
+			report = "a test run: left as it is"
 			return
 	var cfg := UiArt.load_settings()
+	var why := ""
 	if cfg.get_sections().is_empty():
-		return
+		why = "no settings found" if not FileAccess.file_exists(UiArt.settings_path) else "the settings file couldn't be read"
+	elif not (cfg.has_section_key("display", "window_mode") or cfg.has_section_key("display", "resolution")):
+		why = "no display settings saved yet"
+	if why != "":
+		# the spare copy of the display settings (written beside the file with every save that had them)
+		var spare := ConfigFile.new()
+		if UiArt.settings_path == "user://settings.cfg" and spare.load(UiArt.DISPLAY_COPY) == OK \
+				and (spare.has_section_key("display", "window_mode") or spare.has_section_key("display", "resolution")):
+			print("[display] %s - the spare copy (%s) used" % [why, ProjectSettings.globalize_path(UiArt.DISPLAY_COPY)])
+			_spare = why
+			if why == "no display settings saved yet":     # (put back in the file, which read fine otherwise)
+				for k in spare.get_section_keys("display"):
+					cfg.set_value("display", k, spare.get_value("display", k))
+				UiArt.save_settings(cfg)
+			cfg = spare
+		else:
+			report = why
+			print("[display] %s (%s)" % [report, ProjectSettings.globalize_path(UiArt.settings_path)])
+			if cfg.get_sections().is_empty():
+				return
 	if cfg.has_section_key("display", "fps_cap"):
 		apply_fps(int(cfg.get_value("display", "fps_cap", 0)))
 	# the monitor it was kept on (a work PC's second screen: the game came up on the other one, not at 4K)
@@ -44,6 +65,15 @@ func _ready() -> void:
 	show_fps(bool(cfg.get_value("display", "show_fps", false)))
 	if cfg.has_section_key("display", "window_mode") or cfg.has_section_key("display", "resolution"):
 		_keep_display(String(cfg.get_value("display", "window_mode", "windowed")), cfg.get_value("display", "resolution", []), screen)
+	else:
+		report = "no display settings saved yet"
+		print("[display] %s (%s)" % [report, ProjectSettings.globalize_path(UiArt.settings_path)])
+
+
+## What happened to the saved display at start, for Options > VIDEO (owner 2026-11-14: the work PC still came up windowed
+## and smaller, on its one screen - this shows why without digging in the log).
+static var report := ""
+var _spare := ""
 
 
 ## The saved window, applied - and again a moment later if the window has come out otherwise (owner 2026-11-14: on the
@@ -65,6 +95,10 @@ func _keep_display(mode: String, res, screen: int) -> void:
 		print("[display] came out %s: applied again" % _now_text())
 		apply_display(mode, res)
 	print("[display] now %s" % _now_text())
+	var w := DisplayServer.window_get_size()
+	report = "%s %s saved; the window is %d x %d%s%s" % [mode.to_upper(), ("%d X %d" % [int(res[0]), int(res[1])]) if res is Array and res.size() == 2 else "",
+			w.x, w.y, "" if display_matches(mode, res) else " - NOT AS SAVED",
+			"" if _spare == "" else " (from the spare copy: %s)" % _spare]
 
 
 static func _now_text() -> String:

@@ -775,6 +775,17 @@ namespace DOL.GS.StoryQuests
 
         // ---------------------------------------------------------------- encounter: a chain of your own
 
+        /// <summary>The enemies of a step's encounter standing now; null when it hasn't begun (PersonalCompanions: the
+        /// rescued one spars with them until you join in).</summary>
+        public static List<GameNPC> EncounterEnemies(GamePlayer p, StoryQuest s)
+        {
+            if (p == null || s == null || !_encounters.TryGetValue(Key(p, s), out ChainRuntime c) || c.Stage == null)
+                return null;
+            lock (c.Stage.Spawned)
+                return c.Stage.Spawned.Where(n => n != null && n.IsEnemy && n.IsAlive && n.ObjectState == GameObject.eObjectState.Active)
+                    .Cast<GameNPC>().ToList();
+        }
+
         static void StartEncounter(GamePlayer p, StoryQuest s, StepDef st, Zone z)
         {
             string key = Key(p, s);

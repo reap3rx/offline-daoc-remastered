@@ -25,6 +25,7 @@ const CAST := Color(1.0, 0.72, 0.1)
 var manager: NpcManager
 var _canvas: Control
 var _font: Font
+var _lvl_font: Font                         # (the level: the bold face made heavier still)
 var _plates: Array = []                     # this frame's plates: {n, rect, name, level, lcol, fill, frac, cast, tgt}
 
 static var _opts := {}
@@ -53,6 +54,10 @@ static func reload() -> void:
 func _ready() -> void:
 	layer = 1                                   # over the world, under the game's windows (GameUI is layer 5)
 	_font = UiArt.font(true)
+	var heavy := FontVariation.new()
+	heavy.base_font = _font
+	heavy.variation_embolden = 0.9
+	_lvl_font = heavy
 	_canvas = Control.new()
 	_canvas.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_canvas.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -123,6 +128,7 @@ func _gather() -> void:
 		var lvl := int(n.state.level)
 		_plates.append({"n": n, "at": at, "size": size, "s": s, "name": String(n.spawn.get("name", "")),
 				"level": str(lvl) if lvl > 0 else "", "lcol": n.con_color(PlayerData.level), "fill": fill,
+				"boss": is_boss(n),
 				"frac": clampf(n.state.health, 0.0, 1.0), "cast": cast, "tgt": tgt2,
 				"alpha": 1.0 if tgt2 or not have_target else 0.72,
 				"dist": n.global_position.distance_to(cam.global_position)})
@@ -159,8 +165,52 @@ func _rect_of(p: Dictionary) -> Rect2:
 	var size: Vector2 = p.size
 	var name_h := _font.get_height(_name_px(p))
 	var h := name_h + size.y + (5.0 * s if float(p.cast) >= 0.0 else 0.0)
-	var w := size.x + 26.0 * s                         # (the level to the right)
-	return Rect2(Vector2(p.at.x - size.x * 0.5, p.at.y - h), Vector2(w, h))
+	var left := _left_w(p)                             # (the level - and a boss's skull - to the left of the bar)
+	return Rect2(Vector2(p.at.x - size.x * 0.5 - left, p.at.y - h), Vector2(size.x + left, h))
+
+
+## The level, large and bold, left of the bar (owner 2026-11-14: "Put the level in large and bold on the left side of the
+## health, and if the mob is a boss mob, then put a skull icon next to it").
+func _level_px(p: Dictionary) -> int:
+	return maxi(12, roundi(21.0 * float(p.s) * (1.1 if bool(p.tgt) else 1.0)))
+
+
+func _left_w(p: Dictionary) -> float:
+	var w := 0.0
+	if String(p.level) != "":
+		w += _lvl_font.get_string_size(String(p.level), HORIZONTAL_ALIGNMENT_LEFT, -1, _level_px(p)).x + 5.0 * float(p.s)
+	if bool(p.boss):
+		w += _skull_w(p) + 3.0 * float(p.s)
+	return w
+
+
+func _skull_w(p: Dictionary) -> float:
+	return 17.0 * float(p.s)
+
+
+## A boss: a named monster - in DAoC their names are capitalised (a "Grimwold", not a "crypt spider").
+static func is_boss(n: Npc) -> bool:
+	var nm := String(n.spawn.get("name", "")).strip_edges()
+	if nm == "" or int(n.spawn.get("realm", 0)) != 0:
+		return false
+	var c := nm.substr(0, 1)
+	return c != c.to_lower()
+
+
+## A small skull (vector: the round head, its jaw and teeth, two dark eyes) in the box (centre c, size w).
+func _skull(c: Vector2, w: float, a: float) -> void:
+	var bone := Color(0.93, 0.9, 0.82, a)
+	var dark := Color(0.08, 0.04, 0.03, a)
+	_canvas.draw_circle(c + Vector2(0, -w * 0.1), w * 0.5 + 1.0, Color(0, 0, 0, 0.85 * a))
+	_canvas.draw_rect(Rect2(c + Vector2(-w * 0.3 - 1.0, w * 0.05), Vector2(w * 0.6 + 2.0, w * 0.45 + 1.0)), Color(0, 0, 0, 0.85 * a))
+	_canvas.draw_circle(c + Vector2(0, -w * 0.1), w * 0.5, bone)
+	_canvas.draw_rect(Rect2(c + Vector2(-w * 0.3, w * 0.05), Vector2(w * 0.6, w * 0.42)), bone)
+	_canvas.draw_circle(c + Vector2(-w * 0.2, -w * 0.08), w * 0.15, dark)
+	_canvas.draw_circle(c + Vector2(w * 0.2, -w * 0.08), w * 0.15, dark)
+	_canvas.draw_colored_polygon(PackedVector2Array([c + Vector2(0, w * 0.06), c + Vector2(-w * 0.07, w * 0.2),
+			c + Vector2(w * 0.07, w * 0.2)]), dark)
+	for k in [-1, 0, 1]:
+		_canvas.draw_line(c + Vector2(k * w * 0.13, w * 0.3), c + Vector2(k * w * 0.13, w * 0.47), dark, maxf(1.0, w * 0.06))
 
 
 func _name_px(p: Dictionary) -> int:
@@ -177,13 +227,14 @@ func _draw_plates() -> void:
 		var name_h := _font.get_height(npx)
 		# the name, centred over the bar
 		var nw := _font.get_string_size(String(p.name), HORIZONTAL_ALIGNMENT_LEFT, -1, npx).x
-		var base := Vector2(r.position.x + size.x * 0.5 - nw * 0.5, r.position.y + _font.get_ascent(npx))
+		var left := _left_w(p)
+		var base := Vector2(r.position.x + left + size.x * 0.5 - nw * 0.5, r.position.y + _font.get_ascent(npx))
 		var ncol := Color(1, 1, 1, a) if bool(p.tgt) else Color(0.92, 0.9, 0.85, a)
 		_canvas.draw_string_outline(_font, base, String(p.name), HORIZONTAL_ALIGNMENT_LEFT, -1, npx,
 				maxi(2, roundi(npx * 0.22)), Color(0, 0, 0, 0.85 * a))
 		_canvas.draw_string(_font, base, String(p.name), HORIZONTAL_ALIGNMENT_LEFT, -1, npx, ncol)
 		# the bar: frame, dark back, the health fill
-		var bar := Rect2(Vector2(r.position.x, r.position.y + name_h), size)
+		var bar := Rect2(Vector2(r.position.x + left, r.position.y + name_h), size)
 		var frame := Color(1, 1, 1, 0.95) if bool(p.tgt) else Color(0, 0, 0, 0.9 * a)
 		_canvas.draw_rect(bar.grow(1.0 if not bool(p.tgt) else 1.5), frame)
 		_canvas.draw_rect(bar, Color(0.06, 0.05, 0.05, 0.82 * a))
@@ -199,14 +250,24 @@ func _draw_plates() -> void:
 			var tb := Vector2(bar.position.x + size.x * 0.5 - tw * 0.5, bar.position.y + size.y * 0.5 + _font.get_ascent(tpx) * 0.4)
 			_canvas.draw_string_outline(_font, tb, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, tpx, 2, Color(0, 0, 0, 0.9 * a))
 			_canvas.draw_string(_font, tb, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, tpx, Color(1, 1, 1, a))
-		# the level, right of the bar in its con colour
+		# the level, large and bold left of the bar in its con colour; a boss's skull before it
+		var lx := bar.position.x - 5.0 * s
 		if String(p.level) != "":
-			var lpx := maxi(8, roundi(11.0 * s))
-			var lb := Vector2(bar.end.x + 4.0 * s, bar.position.y + size.y * 0.5 + _font.get_ascent(lpx) * 0.4)
+			var lpx := _level_px(p)
+			var lw := _lvl_font.get_string_size(String(p.level), HORIZONTAL_ALIGNMENT_LEFT, -1, lpx).x
+			lx -= lw
+			var lb := Vector2(lx, bar.position.y + size.y * 0.5 + _lvl_font.get_ascent(lpx) * 0.36)
 			var lc: Color = p.lcol
 			lc.a = a
-			_canvas.draw_string_outline(_font, lb, String(p.level), HORIZONTAL_ALIGNMENT_LEFT, -1, lpx, 2, Color(0, 0, 0, 0.9 * a))
-			_canvas.draw_string(_font, lb, String(p.level), HORIZONTAL_ALIGNMENT_LEFT, -1, lpx, lc)
+			_canvas.draw_string(_lvl_font, lb + Vector2(1.5, 1.5) * s, String(p.level), HORIZONTAL_ALIGNMENT_LEFT, -1, lpx,
+					Color(0, 0, 0, 0.9 * a))                     # (a drop shadow, then the dark edge, then the number)
+			_canvas.draw_string_outline(_lvl_font, lb, String(p.level), HORIZONTAL_ALIGNMENT_LEFT, -1, lpx,
+					maxi(3, roundi(lpx * 0.18)), Color(0, 0, 0, 0.95 * a))
+			_canvas.draw_string(_lvl_font, lb, String(p.level), HORIZONTAL_ALIGNMENT_LEFT, -1, lpx, lc)
+			lx -= 3.0 * s
+		if bool(p.boss):
+			var sw := _skull_w(p)
+			_skull(Vector2(lx - sw * 0.5, bar.position.y + size.y * 0.5), sw, a)
 		# the cast bar under it
 		if float(p.cast) >= 0.0:
 			var cb := Rect2(Vector2(bar.position.x, bar.end.y + 2.0 * s), Vector2(size.x, maxf(2.0, 3.0 * s)))

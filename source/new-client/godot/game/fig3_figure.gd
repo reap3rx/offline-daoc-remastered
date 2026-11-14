@@ -106,6 +106,12 @@ static func look_seed(spawn: Dictionary) -> String:
 	if guild.ends_with("'s Retinue"):
 		var n := String(spawn.get("name", "")).strip_edges()
 		return guild + ":" + n.get_slice(" ", n.get_slice_count(" ") - 1)
+	# someone with a name of their own on the server - a bot, your companion, a named NPC - looks the same every time
+	# they are sent (owner 2026-11-14: "The companion's look changes every time they're summoned, which also happens
+	# when they level up"): their object id, the seed before, is new each time; a plain "guard" keeps it
+	var nm := String(spawn.get("name", "")).strip_edges()
+	if String(spawn.get("id", "")).begins_with("srv") and nm != "" and nm.substr(0, 1) != nm.substr(0, 1).to_lower():
+		return "name:" + nm
 	return String(spawn.get("id", ""))
 
 
@@ -2381,8 +2387,7 @@ class Sway extends SkeletonModifier3D:
 	var _cloaks_mid: Array[int] = []
 	var _held := {}                              # cloak bone -> its idle rotation: held there with gear on the back
 	var _held_ready := false
-	var _low_idle := {}                          # each cloak chain's lowest bone -> its idle rotation (it swings)
-	var _back_bones: Array[int] = []             # the back gear's bones (they follow the hem a little)
+	var _chains: Array = []                      # the cloak's bone chains (C, L, R), top to bottom
 	var _tails: Array[int] = []
 	var _last := Vector3.INF
 	var _back := 0.0
@@ -2468,9 +2473,9 @@ class Sway extends SkeletonModifier3D:
 		_phase = float(get_instance_id() % 997) * 0.37
 
 	## Something rides on your back - a shield, a slung two-hander or bow, a quiver (owner 2026-11-12: "I'd like their
-	## physics to be disabled so they don't flap when running and clip through those things on your back. If it's
-	## possible to make only the bottom quarter move, that would be best"): every cloak bone but each chain's lowest
-	## holds the idle's pose, whatever the run clip does; the lowest still moves with it.
+	## physics to be disabled so they don't flap when running and clip through those things on your back"; 2026-11-14:
+	## "both only move a little with movement, and move together so the shield always is on the outside of the
+	## cloak"): the cloak keeps a little of its clip's swing (CLOAK_KEEP) and the gear turns with it.
 	func _hold_cloak(sk: Skeleton3D) -> void:
 		if not _held_ready:
 			_held_ready = true
@@ -2483,54 +2488,65 @@ class Sway extends SkeletonModifier3D:
 					var b := sk.find_bone("Bip01 %s Cloak%02d" % [side, n])
 					if b >= 0:
 						chain.append(b)
-				for k in chain.size():
-					var b := chain[k]
+				# (and the control bone the chain hangs from: the run clip swings it most - 14 to 19 degrees)
+				var top := sk.get_bone_parent(chain[0]) if not chain.is_empty() else -1
+				if top >= 0 and sk.get_bone_name(top).contains("Cloak"):
+					chain.push_front(top)
+				for b in chain:
 					var q := sk.get_bone_rest(b).basis.get_rotation_quaternion()
 					if a:
 						var ti := a.find_track(NodePath("%s:%s" % [base, sk.get_bone_name(b)]), Animation.TYPE_ROTATION_3D)
 						if ti >= 0:
 							q = a.rotation_track_interpolate(ti, 0.0)
-					if k < chain.size() - 1:
-						_held[b] = q
-					else:
-						_low_idle[b] = q                         # (the lowest left to the animation)
-			for n in ["Bip01 L Back", "Bip01 R Back"]:
-				var bb := sk.find_bone(n)
-				if bb >= 0:
-					_back_bones.append(bb)
+					_held[b] = q
+				if not chain.is_empty():
+					_chains.append(chain)
+		# every cloak bone keeps only a little of what the clip does (owner 2026-11-14: "The cloak was moving too much
+		# and the shield not at all. They should both only move a little with movement, and move together")
 		for b in _held:
-			sk.set_bone_pose_rotation(int(b), _held[b])
+			sk.set_bone_pose_rotation(int(b), (_held[b] as Quaternion).slerp(sk.get_bone_pose_rotation(int(b)), CLOAK_KEEP))
 		_gear_with_cloak(sk)
 
-	## The shield and weapons on the back go a little with the cloak's swinging hem (owner 2026-11-13: "Maybe the shield
-	## and weapons on back can move as well so they don't clip? All of them not moving much, but in unison"): the hem's
-	## swing away from its idle hang, in the skeleton's space, given in part to the back bones the gear hangs on.
-	const GEAR_FOLLOW := 0.45
+	## With something on the back the cloak keeps this share of its clip's swing, and the gear on the back - shield,
+	## slung weapon or bow, quiver - turns with the cloak's middle by as much, about where it hangs: the two move as one,
+	## the gear staying on the outside. No cloak worn: the gear stays as it was put on.
+	const CLOAK_KEEP := 0.3
 
 	func _gear_with_cloak(sk: Skeleton3D) -> void:
-		if _back_bones.is_empty() or _low_idle.is_empty() or fig.cloak_hidden or (fig.armor.get("cloak", []) as Array).size() < 2:
-			return                                               # (no cloak worn: the gear stays put)
-		var sum := Vector4.ZERO
-		var n := 0
-		for b in _low_idle:
-			var p := sk.get_bone_parent(int(b))
-			var pb := sk.get_bone_global_pose(p).basis.orthonormalized() if p >= 0 else Basis()
-			var swing := sk.get_bone_pose_rotation(int(b)) * (_low_idle[b] as Quaternion).inverse()
-			var q := (pb * Basis(swing) * pb.inverse()).get_rotation_quaternion()
-			if n > 0 and Vector4(q.x, q.y, q.z, q.w).dot(sum) < 0.0:
-				q = -q                                           # (the same hemisphere, to average)
-			sum += Vector4(q.x, q.y, q.z, q.w)
-			n += 1
-		if n == 0 or sum.length() < 1e-6:
-			return
-		var avg := Quaternion(sum.x, sum.y, sum.z, sum.w).normalized()
-		var part := Basis(Quaternion.IDENTITY.slerp(avg, GEAR_FOLLOW))
-		for b in _back_bones:
-			var g := sk.get_bone_global_pose(b)
-			var p := sk.get_bone_parent(b)
-			var pg := sk.get_bone_global_pose(p) if p >= 0 else Transform3D.IDENTITY
-			var local := pg.affine_inverse() * Transform3D(part * g.basis, g.origin)
-			sk.set_bone_pose_rotation(b, local.basis.get_rotation_quaternion())
+		var turn := Basis()
+		if not fig.cloak_hidden and (fig.armor.get("cloak", []) as Array).size() >= 2:
+			var sum := Vector4.ZERO
+			var n := 0
+			for chain in _chains:
+				var mid: int = (chain as Array).size() / 2
+				var p := sk.get_bone_parent(int(chain[0]))
+				var g := sk.get_bone_global_pose(p) if p >= 0 else Transform3D.IDENTITY
+				for k in mid + 1:                                # (where it would hang, idle, from where the back is now)
+					var b: int = chain[k]
+					g = g * Transform3D(Basis(_held[b] as Quaternion), sk.get_bone_pose_position(b))
+				var cur := sk.get_bone_global_pose(int(chain[mid]))
+				var q := (cur.basis.orthonormalized() * g.basis.orthonormalized().inverse()).get_rotation_quaternion()
+				if n > 0 and Vector4(q.x, q.y, q.z, q.w).dot(sum) < 0.0:
+					q = -q                                       # (the same hemisphere, to average)
+				sum += Vector4(q.x, q.y, q.z, q.w)
+				n += 1
+			if n > 0 and sum.length() > 1e-6:
+				turn = Basis(Quaternion(sum.x, sum.y, sum.z, sum.w).normalized())
+		for at in sk.get_children():
+			if not (at is BoneAttachment3D) or not (String(at.bone_name).ends_with("Back") or at.has_meta("back_gear")):
+				continue
+			var bi := sk.find_bone(String(at.bone_name))
+			if bi < 0:
+				continue
+			var bb := sk.get_bone_global_pose(bi).basis.orthonormalized()
+			var r := bb.inverse() * turn * bb                    # (the cloak's turn in the bone's own frame)
+			for c in at.get_children():
+				if not (c is Node3D):
+					continue
+				if not c.has_meta("base_xf"):
+					c.set_meta("base_xf", (c as Node3D).transform)
+				var b0: Transform3D = c.get_meta("base_xf")
+				(c as Node3D).transform = Transform3D(r * b0.basis, r * b0.origin)
 
 	func _process_modification_with_delta(delta: float) -> void:
 		var sk := get_skeleton()

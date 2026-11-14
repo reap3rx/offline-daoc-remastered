@@ -914,6 +914,7 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 			BodyFrame.place_quiver(skel, qi, q, frame)
 			var qa := BoneAttachment3D.new()
 			qa.bone_name = qbone
+			qa.set_meta("back_gear", true)                     # (it turns with the cloak: Fig3Figure.Sway)
 			skel.add_child(qa)
 			qa.add_child(q)
 			made.append(qa)

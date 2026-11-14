@@ -21,6 +21,11 @@ static var settings_path := "user://settings.cfg"
 static var _good: ConfigFile = null              # the settings as last read or written whole ...
 static var _good_path := ""                      # ... and the file they are of
 static var _retry := 0
+## A spare copy of the [display] section, written with every save that has one (owner 2026-11-14: the work PC still came
+## up windowed and smaller every start). The start falls back on it when the settings file has no display settings.
+const DISPLAY_COPY := "user://display.cfg"
+## Why the last save didn't reach the disk ("" when it did): Options > VIDEO shows it.
+static var last_error := ""
 
 
 ## The settings file, read whole - or, when it can't be read just now, the copy last read or written whole (owner
@@ -51,8 +56,15 @@ static func save_settings(cfg: ConfigFile) -> void:
 	var err := cfg.save(settings_path)
 	if err == OK:
 		_retry = 0
+		last_error = ""
+		if settings_path == "user://settings.cfg" and cfg.has_section("display"):
+			var d := ConfigFile.new()
+			for k in cfg.get_section_keys("display"):
+				d.set_value("display", k, cfg.get_value("display", k))
+			d.save(DISPLAY_COPY)
 		return
-	print("[settings] couldn't write %s (error %d) - trying again" % [ProjectSettings.globalize_path(settings_path), err])
+	last_error = "couldn't write %s (error %d)" % [ProjectSettings.globalize_path(settings_path), err]
+	print("[settings] %s - trying again" % last_error)
 	var tree := Engine.get_main_loop() as SceneTree
 	if tree == null or _retry >= 6:
 		return

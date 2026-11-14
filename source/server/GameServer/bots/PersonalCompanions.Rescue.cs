@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using DOL.AI.Brain;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.GS.StoryQuests;
@@ -151,7 +154,10 @@ namespace DOL.GS
             bot.Health = Math.Max(1, bot.MaxHealth / 3);
             bot.StopFollowing();
             if (st.Type == "encounter")
+            {
                 bot.Flags |= GameNPC.eFlags.PEACE;           // (the rowdies can't finish them off before you get there)
+                new ECSGameTimer(bot, _ => SparTick(p, bot), SparMs);
+            }
             GameEventMgr.AddHandler(bot, GameObjectEvent.Interact, new DOLEventHandler(OnRescuedInteract));
             GameEventMgr.AddHandler(bot, GameLivingEvent.WhisperReceive, new DOLEventHandler(OnRescuedWhisper));
             _rescued[p] = bot;
@@ -252,6 +258,96 @@ namespace DOL.GS
         }
 
         /// <summary>The tick's part: a rescued one whose step has passed goes; one too far behind you waits.</summary>
+        // ---------------------------------------------------------------- the fight you walk in on
+        // Owner 2026-11-14: "They should be fighting the mob that comes out when you approach (they can be doing 0 damage
+        // to each other until the player engages)". Until you join in, the one you came for and the nearest of the gang
+        // trade blows that never land - each swing parried, blocked, dodged or missed, shown to everyone near, no damage
+        // (the rescued one is still PEACE: nothing can really hurt them, nor they anything). Once you are in it - a gang
+        // member hurt, or after you or your group - they fight for real beside you, and never drop below a third of
+        // their health. If the fight is called off (you were driven back), it's back to the sparring.
+        const int SparMs = 1300;
+        static readonly ConcurrentDictionary<GameBot, int> _sparBeat = new();
+
+        static int SparTick(GamePlayer p, GameBot bot)
+        {
+            StoryQuest quest = RescueQuest(p);
+            if (bot.ObjectState != GameObject.eObjectState.Active || !bot.IsAlive || p.ObjectState != GameObject.eObjectState.Active ||
+                !_rescued.TryGetValue(p, out GameBot mine) || mine != bot || quest?.Step_?.Type != "encounter")
+            {
+                _sparBeat.TryRemove(bot, out _);
+                return 0;
+            }
+            try
+            {
+                // the gang that came out (the encounter's own enemies); before it has, none
+                List<GameNPC> foes = (StoryQuestManager.EncounterEnemies(p, quest) ?? new List<GameNPC>())
+                    .Where(n => n.CurrentRegionID == bot.CurrentRegionID && bot.IsWithinRadius(n, 1500)).ToList();
+                if (foes.Count == 0)
+                    return SparMs;
+                bool yours(GameObject o) => o == p || o is GameLiving l && p.Group != null && p.Group.IsInTheGroup(l) && l != bot;
+                bool engaged = foes.Any(n => n.HealthPercent < 100 || yours(n.TargetObject)) ||
+                               p.TargetObject is GameNPC t && foes.Contains(t) && p.attackComponent.AttackState;
+                if (engaged)
+                {
+                    bot.Flags &= ~GameNPC.eFlags.PEACE;
+                    if (bot.HealthPercent < 33)
+                        bot.Health = Math.Max(bot.Health, bot.MaxHealth / 3);
+                    if (!bot.InCombat && bot.Brain is BotBrain brain)
+                    {
+                        GameNPC foe = foes.OrderBy(n => bot.GetDistanceTo(n)).First();
+                        bot.TargetObject = foe;
+                        brain.AddToAggroList(foe, Math.Max(25, foe.EffectiveLevel * 10));
+                        brain.FSM.SetCurrentState(eFSMStateType.AGGRO);
+                    }
+                    return SparMs;
+                }
+                bot.Flags |= GameNPC.eFlags.PEACE;
+                GameNPC partner = foes.Where(n => bot.IsWithinRadius(n, 900)).OrderBy(n => bot.GetDistanceTo(n)).FirstOrDefault();
+                if (partner == null)
+                    return SparMs;
+                if (!partner.IsWithinRadius(bot, 160))
+                {
+                    // the gang member comes up to them (stopping a step short)
+                    double ang = Math.Atan2(partner.Y - bot.Y, partner.X - bot.X);
+                    partner.WalkTo(new Point3D((int) (bot.X + Math.Cos(ang) * 110), (int) (bot.Y + Math.Sin(ang) * 110), bot.Z),
+                        (short) Math.Max(100, partner.MaxSpeed / 2));
+                    return SparMs;
+                }
+                bot.TurnTo(partner);
+                partner.TurnTo(bot);
+                int beat = _sparBeat.AddOrUpdate(bot, 1, (_, b) => b + 1);
+                if (beat % 2 == 0)
+                    SparSwing(bot, partner);
+                else
+                    SparSwing(partner, bot);
+            }
+            catch (Exception ex)
+            {
+                log.Error($"Companion: the rescue's sparring for {p.Name}", ex);
+                return 0;
+            }
+            return SparMs;
+        }
+
+        /// <summary>A blow that never lands: the swing, and the other's parry, block, dodge - or a plain miss.</summary>
+        static void SparSwing(GameLiving a, GameLiving d)
+        {
+            byte result = (byte) Random.Shared.Next(4);          // 0 miss, 1 parry, 2 block, 3 evade
+            ushort defender = 0;
+            if (result == 1)
+                defender = (ushort) (d.ActiveWeapon?.Model ?? 0);
+            if (result == 2)
+            {
+                if (d.ActiveLeftWeapon is DbInventoryItem shield && shield.Object_Type == (int) eObjectType.Shield)
+                    defender = (ushort) shield.Model;
+                else
+                    result = 3;
+            }
+            ushort weapon = (ushort) (a.ActiveWeapon?.Model ?? 0);
+            foreach (GamePlayer viewer in a.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                viewer.Out.SendCombatAnimation(a, d, weapon, defender, 0, 0, result, d.HealthPercent);
+        }
+
         static void TickRescues()
         {
             foreach (var (p, bot) in _rescued.ToArray())
@@ -266,7 +362,8 @@ namespace DOL.GS
                 if (s.Step_.At != null && WorldMgr.GetZone((ushort) s.Step_.Zone) is Zone z && z.ZoneRegion != null)
                 {
                     Vector3 home = StoryQuestManager.ToWorld(s.Step_.Zone, s.Step_.At) + new Vector3(60, 40, 0);
-                    if (bot.CurrentRegionID != z.ZoneRegion.ID || Vector2.Distance(new Vector2(bot.X, bot.Y), new Vector2(home.X, home.Y)) > 250)
+                    if (bot.CurrentRegionID != z.ZoneRegion.ID ||
+                        !bot.InCombat && Vector2.Distance(new Vector2(bot.X, bot.Y), new Vector2(home.X, home.Y)) > 250)
                     {
                         bot.StopFollowing();
                         bot.MoveTo(z.ZoneRegion.ID, (int) home.X, (int) home.Y, (int) home.Z, bot.Heading);
