@@ -926,10 +926,26 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 			var a := at as BoneAttachment3D
 			if a and String(a.bone_name).ends_with("Back") and a.get_child_count() > 0 and a.get_meta("shield", false):
 				BodyFrame.push_back(skel, skel.find_bone(a.bone_name), a.get_child(0) as Node3D, frame, 0.07)
-	# the cloak hangs still while something rides on the back (owner 2026-11-03: the shield / two-hander clipped through
-	# the swinging cloak) - Fig3Figure.Sway
-	if model is Fig3Figure:
-		(model as Fig3Figure).back_gear = not back_taken.is_empty() or quiver_shown
+	# with a cloak on, the gear on the back sits just outside where the cloak hangs (owner 2026-11-14: "the position of
+	# the shield on the back can be moved further away from the body (as well as the weapons/quivers) when a cloak is
+	# being worn"); the cloak's springs then keep under it, and it swings a little about its strap (figure_cloth.gd)
+	# (an NPC dresses its figure's inner model: the figure is above it)
+	var figm: Fig3Figure = null
+	var up_n: Node = model
+	for _i in 4:
+		if up_n == null or up_n is Fig3Figure:
+			figm = up_n as Fig3Figure
+			break
+		up_n = up_n.get_parent()
+	if figm:
+		figm.back_gear = not back_taken.is_empty() or quiver_shown
+		var cloth = figm._cloth
+		if cloth:
+			for at in made:
+				var a := at as BoneAttachment3D
+				if a and a.get_child_count() > 0 and (String(a.bone_name).ends_with(" Back") or a.has_meta("back_gear")):
+					cloth.clear_gear(skel.find_bone(a.bone_name), a.get_child(0) as Node3D)
+			cloth.refresh_gear()
 	return made
 
 

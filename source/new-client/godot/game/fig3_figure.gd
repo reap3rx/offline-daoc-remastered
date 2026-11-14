@@ -209,6 +209,20 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 		sway.model = model
 		sway.fig = self
 		(skels[0] as Skeleton3D).add_child(sway)
+		var cloth = FigureCloth.new()                # (after the sway: the cloak hangs off the leaning back)
+		cloth.name = "Cloth"
+		cloth.fig = self
+		cloth.model = model
+		(skels[0] as Skeleton3D).add_child(cloth)
+		if cloth.setup(skels[0]):
+			_cloth = cloth
+			var hc := HairCollide.new()                 # (last: the hair over the cloak as the springs left it)
+			hc.name = "HairCollide"
+			hc.fig = self
+			(skels[0] as Skeleton3D).add_child(hc)
+		else:
+			(skels[0] as Skeleton3D).remove_child(cloth)
+			cloth.free()
 	apply({})
 	_apply_cloak()
 	return true
@@ -220,6 +234,8 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 ## steadier head (owner 2026-11-09: "modernize the feel"). The swings keep their snap for now. Once per race and clip
 ## (static): every figure of the race shares the result.
 const AnimStyle := preload("res://game/anim_style.gd")
+const FigureCloth := preload("res://game/figure_cloth.gd")
+var _cloth = null                            # the cloak's and ponytail's springs (figure_cloth.gd), null: none
 static var _smooth_cache := {}               # "prefix/clip" -> Animation
 static var _smooth_lock := Mutex.new()       # (figures are loaded on worker threads too)
 
@@ -1179,6 +1195,12 @@ func _apply_cloak() -> void:
 			m.set_shader_parameter("has_logo", logo != null)
 		for mi in _parts("cloak_%d" % want):
 			mi.material_override = m
+	if _cloth:
+		var was: bool = _cloth.cloak_on
+		_cloth.cloak_on = show and want > 0
+		_cloth.refresh_body()
+		if was != _cloth.cloak_on:
+			_cloth.cloak_changed()
 	_apply_full_helm()
 	_refresh_hair()
 
@@ -1840,6 +1862,18 @@ global uniform float remaster_fx;
 uniform vec3 sway_dir = vec3(0.0);
 uniform vec3 sway_head = vec3(0.0);
 uniform vec3 sway_back = vec3(0.0, 0.0, -1.0);
+// and it lies over what is behind it (Fig3Figure.HairCollide, owner 2026-11-14: "If hair can have the same
+// physics/collision as the cloaks"): capsules it stays outside of along sway_back - the back, the cloak's chains as the
+// springs have them now (a, b: world; a.w the radius) - and the gear on the back, which it lies over (a box: its middle,
+// its sides' ways, how far each way)
+uniform int col_n = 0;
+uniform vec4 col_a[16];
+uniform vec4 col_b[16];
+uniform int box_n = 0;
+uniform vec4 box_o[3];
+uniform vec4 box_x[3];
+uniform vec4 box_y[3];
+uniform vec4 box_z[3];
 // stealth (Player hidden look): a dither instead of blending - the head, the hair and the body fade alike, with no
 // sorting between the parts (owner 2026-10-31: the head and hair stayed solid or vanished as the camera moved)
 uniform float fade = 1.0;
@@ -1890,6 +1924,33 @@ vec3 bulge(vec3 wp, vec3 wn, vec4 p, vec3 d, float amt) {
 	return d * amt * p.w * 0.9 * exp(-q * 1.6) * face;
 }
 
+vec3 hair_collide(vec3 p, float w) {
+	for (int i = 0; i < col_n; i++) {
+		vec3 a = col_a[i].xyz;
+		float r = col_a[i].w;
+		vec3 ab = col_b[i].xyz - a;
+		float t = clamp(dot(p - a, ab) / max(dot(ab, ab), 1e-8), 0.0, 1.0);
+		vec3 d = p - (a + ab * t);
+		float k = dot(d, sway_back);                  // how far behind the line
+		vec3 lat = d - sway_back * k;
+		float l2 = dot(lat, lat);
+		if (l2 < r * r && k > -2.5 * r) {               // (beside it, not the front of the body)
+			float need = sqrt(r * r - l2);
+			if (k < need) p += sway_back * ((need - k) * w);
+		}
+	}
+	for (int i = 0; i < box_n; i++) {
+		vec3 o = box_o[i].xyz;
+		vec3 h = vec3(box_x[i].w, box_y[i].w, box_z[i].w);
+		vec3 q = vec3(dot(p - o, box_x[i].xyz), dot(p - o, box_y[i].xyz), dot(p - o, box_z[i].xyz));
+		float edge = (1.0 - smoothstep(h.x - 0.04, h.x + 0.04, abs(q.x))) * (1.0 - smoothstep(h.y - 0.04, h.y + 0.04, abs(q.y)));
+		if (edge > 0.0 && q.z < h.z && q.z > -h.z - 0.2) {
+			p += box_z[i].xyz * ((h.z - q.z) * edge * w);   // (over its outer face)
+		}
+	}
+	return p;
+}
+
 void vertex() {
 	logo_uv = CUSTOM0.xy;
 	if (bulge_a.w > 0.0 || bulge_c.w > 0.0) {
@@ -1899,11 +1960,15 @@ void vertex() {
 				+ bulge(wp, wn, bulge_c, bulge_cd, bulge_amt.y) + bulge(wp, wn, bulge_d, bulge_cd, bulge_amt.y);
 		VERTEX += inverse(mat3(MODEL_MATRIX)) * dv;
 	}
-	if (dot(sway_dir, sway_dir) > 1e-6) {
+	if (dot(sway_dir, sway_dir) > 1e-6 || col_n > 0 || box_n > 0) {
 		vec3 wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 		float away = smoothstep(0.13, 0.42, distance(wp, sway_head));
 		float behind = smoothstep(-0.03, 0.05, dot(wp - sway_head, sway_back));
-		VERTEX += inverse(mat3(MODEL_MATRIX)) * (sway_dir * away * behind);
+		vec3 np = wp + sway_dir * away * behind;
+		if (away * behind > 0.0) {
+			np = hair_collide(np, away * behind);
+		}
+		VERTEX += inverse(mat3(MODEL_MATRIX)) * (np - wp);
 	}
 }
 
@@ -2028,12 +2093,12 @@ void fragment() {
 
 
 # ---------------------------------------------------------------- cloak and hair sway (claude 2026-10-31)
-## Remastered: the cloak and a ponytail trail behind as the figure moves and stir in the wind, on top of what the
-## animation does (owner 2026-10-31: "keep in mind clipping"). They only ever swing back, away from the body, and a
-## little to the side - never forward into the legs; backing up or standing still they hang as animated. Springs, so
-## they settle after a stop. Figures beyond SWAY_RANGE_M are left alone.
+## Remastered: long hair trails behind as the figure moves and stirs in the wind, on top of what the animation does
+## (owner 2026-10-31: "keep in mind clipping"), and lies over the back, the cloak and the gear (HairCollide); the cloak
+## and a ponytail are springs that collide with the body and the gear (figure_cloth.gd, 2026-11-14). Figures beyond
+## SWAY_RANGE_M are left alone.
 static var sway_on := false                  # SkySystem: remastered
-var back_gear := false                        # something rides on the back (Player.dress): the cloak hangs as animated
+var back_gear := false                        # something rides on the back (Player.dress; the cloak keeps under it: figure_cloth.gd)
 var _hair_mat: ShaderMaterial                # the hair's material (its sway uniforms)
 static var wind := 1.0                       # SkySystem: the storm's wind (as the trees')
 const SWAY_RANGE_M := 35.0
@@ -2378,16 +2443,73 @@ class Layers extends SkeletonModifier3D:
 			_set_local(sk, b, _local(sk, a, m, b), w, false)
 
 
+## The hair lies over what is behind it (owner 2026-11-14: "If hair can have the same physics/collision as the
+## cloaks"): after the cloak's springs have moved it, the back, the cloak's chains and the gear on the back go to the
+## hair's shader (hair_collide), which pushes the long hair out over them. Remastered and in range only.
+class HairCollide extends SkeletonModifier3D:
+	var fig: Fig3Figure
+	var _on := false
+
+	func _process_modification_with_delta(_delta: float) -> void:
+		var hm: ShaderMaterial = fig._hair_mat if fig else null
+		if hm == null:
+			return
+		var cloth = fig._cloth
+		if cloth == null or not fig._near or not Fig3Figure.sway_on:
+			if _on:
+				_on = false
+				hm.set_shader_parameter("col_n", 0)
+				hm.set_shader_parameter("box_n", 0)
+			return
+		_on = true
+		var caps: Array = cloth.hair_capsules()
+		var n := mini(caps.size(), 16)
+		var a := PackedVector4Array()
+		var b := PackedVector4Array()
+		a.resize(16)
+		b.resize(16)
+		for i in n:
+			var c: Array = caps[i]
+			var p: Vector3 = c[0]
+			var q: Vector3 = c[1]
+			a[i] = Vector4(p.x, p.y, p.z, float(c[2]))
+			b[i] = Vector4(q.x, q.y, q.z, 0.0)
+		hm.set_shader_parameter("col_a", a)
+		hm.set_shader_parameter("col_b", b)
+		hm.set_shader_parameter("col_n", n)
+		var boxes: Array = cloth.hair_boxes()
+		var k := mini(boxes.size(), 3)
+		var bo := PackedVector4Array()
+		var bx := PackedVector4Array()
+		var by := PackedVector4Array()
+		var bz := PackedVector4Array()
+		bo.resize(3)                                 # (each its own: a packed array in a list is a copy)
+		bx.resize(3)
+		by.resize(3)
+		bz.resize(3)
+		for i in k:
+			var e: Array = boxes[i]
+			var o: Vector3 = e[0]
+			var x: Vector3 = e[1]
+			var y: Vector3 = e[2]
+			var z: Vector3 = e[3]
+			var h: Vector3 = e[4]
+			bo[i] = Vector4(o.x, o.y, o.z, 0.0)
+			bx[i] = Vector4(x.x, x.y, x.z, h.x)
+			by[i] = Vector4(y.x, y.y, y.z, h.y)
+			bz[i] = Vector4(z.x, z.y, z.z, h.z)
+		hm.set_shader_parameter("box_o", bo)
+		hm.set_shader_parameter("box_x", bx)
+		hm.set_shader_parameter("box_y", by)
+		hm.set_shader_parameter("box_z", bz)
+		hm.set_shader_parameter("box_n", k)
+
+
 class Sway extends SkeletonModifier3D:
 	var model: Node3D
 	var fig: Fig3Figure
 	var _neck := -1                              # the head bone (the hair's sway is measured from the skull)
 	var _hair_live := false
-	var _cloaks: Array[int] = []
-	var _cloaks_mid: Array[int] = []
-	var _held := {}                              # cloak bone -> its idle rotation: held there with gear on the back
-	var _held_ready := false
-	var _chains: Array = []                      # the cloak's bone chains (C, L, R), top to bottom
 	var _tails: Array[int] = []
 	var _last := Vector3.INF
 	var _back := 0.0
@@ -2442,13 +2564,6 @@ class Sway extends SkeletonModifier3D:
 
 	func _bones(sk: Skeleton3D) -> void:
 		_ready_bones = true
-		for side in ["C", "L", "R"]:
-			var b := sk.find_bone("Bip01 %s Cloak01" % side)
-			if b >= 0:
-				_cloaks.append(b)
-			var mid := sk.find_bone("Bip01 %s Cloak03" % side)
-			if mid >= 0:
-				_cloaks_mid.append(mid)
 		_neck = sk.find_bone("Bip01 Head")
 		_pelvis = sk.find_bone("Bip01 Pelvis")
 		_neck_b = sk.find_bone("Bip01 Neck")
@@ -2472,91 +2587,15 @@ class Sway extends SkeletonModifier3D:
 			_tails.append(t)
 		_phase = float(get_instance_id() % 997) * 0.37
 
-	## Something rides on your back - a shield, a slung two-hander or bow, a quiver (owner 2026-11-12: "I'd like their
-	## physics to be disabled so they don't flap when running and clip through those things on your back"; 2026-11-14:
-	## "both only move a little with movement, and move together so the shield always is on the outside of the
-	## cloak"): the cloak keeps a little of its clip's swing (CLOAK_KEEP) and the gear turns with it.
-	func _hold_cloak(sk: Skeleton3D) -> void:
-		if not _held_ready:
-			_held_ready = true
-			var a: Animation = fig.anim.get_animation("idle") if fig.anim and fig.anim.has_animation("idle") else null
-			var root: Node = fig.anim.get_node_or_null(fig.anim.root_node) if fig.anim else null
-			var base := String(root.get_path_to(sk)) if root else ""
-			for side in ["C", "L", "R"]:
-				var chain: Array[int] = []
-				for n in range(1, 10):
-					var b := sk.find_bone("Bip01 %s Cloak%02d" % [side, n])
-					if b >= 0:
-						chain.append(b)
-				# (and the control bone the chain hangs from: the run clip swings it most - 14 to 19 degrees)
-				var top := sk.get_bone_parent(chain[0]) if not chain.is_empty() else -1
-				if top >= 0 and sk.get_bone_name(top).contains("Cloak"):
-					chain.push_front(top)
-				for b in chain:
-					var q := sk.get_bone_rest(b).basis.get_rotation_quaternion()
-					if a:
-						var ti := a.find_track(NodePath("%s:%s" % [base, sk.get_bone_name(b)]), Animation.TYPE_ROTATION_3D)
-						if ti >= 0:
-							q = a.rotation_track_interpolate(ti, 0.0)
-					_held[b] = q
-				if not chain.is_empty():
-					_chains.append(chain)
-		# every cloak bone keeps only a little of what the clip does (owner 2026-11-14: "The cloak was moving too much
-		# and the shield not at all. They should both only move a little with movement, and move together")
-		for b in _held:
-			sk.set_bone_pose_rotation(int(b), (_held[b] as Quaternion).slerp(sk.get_bone_pose_rotation(int(b)), CLOAK_KEEP))
-		_gear_with_cloak(sk)
-
-	## With something on the back the cloak keeps this share of its clip's swing, and the gear on the back - shield,
-	## slung weapon or bow, quiver - turns with the cloak's middle by as much, about where it hangs: the two move as one,
-	## the gear staying on the outside. No cloak worn: the gear stays as it was put on.
-	const CLOAK_KEEP := 0.3
-
-	func _gear_with_cloak(sk: Skeleton3D) -> void:
-		var turn := Basis()
-		if not fig.cloak_hidden and (fig.armor.get("cloak", []) as Array).size() >= 2:
-			var sum := Vector4.ZERO
-			var n := 0
-			for chain in _chains:
-				var mid: int = (chain as Array).size() / 2
-				var p := sk.get_bone_parent(int(chain[0]))
-				var g := sk.get_bone_global_pose(p) if p >= 0 else Transform3D.IDENTITY
-				for k in mid + 1:                                # (where it would hang, idle, from where the back is now)
-					var b: int = chain[k]
-					g = g * Transform3D(Basis(_held[b] as Quaternion), sk.get_bone_pose_position(b))
-				var cur := sk.get_bone_global_pose(int(chain[mid]))
-				var q := (cur.basis.orthonormalized() * g.basis.orthonormalized().inverse()).get_rotation_quaternion()
-				if n > 0 and Vector4(q.x, q.y, q.z, q.w).dot(sum) < 0.0:
-					q = -q                                       # (the same hemisphere, to average)
-				sum += Vector4(q.x, q.y, q.z, q.w)
-				n += 1
-			if n > 0 and sum.length() > 1e-6:
-				turn = Basis(Quaternion(sum.x, sum.y, sum.z, sum.w).normalized())
-		for at in sk.get_children():
-			if not (at is BoneAttachment3D) or not (String(at.bone_name).ends_with("Back") or at.has_meta("back_gear")):
-				continue
-			var bi := sk.find_bone(String(at.bone_name))
-			if bi < 0:
-				continue
-			var bb := sk.get_bone_global_pose(bi).basis.orthonormalized()
-			var r := bb.inverse() * turn * bb                    # (the cloak's turn in the bone's own frame)
-			for c in at.get_children():
-				if not (c is Node3D):
-					continue
-				if not c.has_meta("base_xf"):
-					c.set_meta("base_xf", (c as Node3D).transform)
-				var b0: Transform3D = c.get_meta("base_xf")
-				(c as Node3D).transform = Transform3D(r * b0.basis, r * b0.origin)
-
 	func _process_modification_with_delta(delta: float) -> void:
 		var sk := get_skeleton()
-		if sk and fig and fig.back_gear:
-			_hold_cloak(sk)
 		if sk == null or not Fig3Figure.sway_on or model == null:
 			_last = Vector3.INF
 			_still_hair()
 			if fig:
 				fig._near = false
+				if fig._cloth:
+					fig._cloth.rest()
 			return
 		if not _ready_bones:
 			_bones(sk)
@@ -2567,6 +2606,8 @@ class Sway extends SkeletonModifier3D:
 			_still_hair()
 			if fig:
 				fig._near = false
+				if fig._cloth:
+					fig._cloth.rest()
 			return
 		var dt := maxf(delta, 0.001)
 		if fig:
@@ -2587,6 +2628,8 @@ class Sway extends SkeletonModifier3D:
 				_last = pos
 				if _vel.length() > 25.0:
 					_vel = Vector3.ZERO                        # (a teleport, a zone change)
+					if fig._cloth:
+						fig._cloth.jumped()
 		# (and smoothed: a move lands 2 or 3 frames after the last, so even between moves it reads +-25 %)
 		_vel_s = _vel if fresh else _vel_s.lerp(_vel, 1.0 - exp(-dt * 12.0))
 		var vel := _vel_s
@@ -2635,15 +2678,14 @@ class Sway extends SkeletonModifier3D:
 		_feet(sk, dt)
 		for i in _spine.size():                               # (first: the cloak and hair hang off the leaning back;
 			_turn(sk, _spine[i], axis_back, _lean * _spine_w[i], fwd, 0.0)    # + tips the upper body forward)
-		# a shield, a two-hander, a slung bow or a quiver on the back: the cloak hangs as the animation has it (owner
-		# 2026-11-03: they clipped through the swinging cloak); it swings again once the back is clear
-		if fig == null or not fig.back_gear:
-			for b in _cloaks:
-				_turn(sk, b, axis_back, back, fwd, side_ang)
-			for b in _cloaks_mid:
-				_turn(sk, b, axis_back, back * 0.35, fwd, side_ang * 0.5)
-		for b in _tails:
-			_turn(sk, b, axis_back, back_h * 0.8, fwd, side_ang * 1.2)
+		# the cloak and a ponytail: springs that collide with the body and the gear on the back (figure_cloth.gd) - and
+		# that gear swinging a little about its strap: back with the run's start and stop, side to side with the stride
+		if fig._cloth:
+			var stride := sin(t * 10.0 + _phase) * minf(Vector2(v.x, v.z).length(), 7.0) * 0.0025
+			fig._cloth.tick(dt, vel, back * 0.1, side_ang * 0.2, stride)
+		else:
+			for b in _tails:
+				_turn(sk, b, axis_back, back_h * 0.8, fwd, side_ang * 1.2)
 		# long hair (the Catacombs hair is rigid on the head: its lower part bent in the shader)
 		var hm: ShaderMaterial = fig._hair_mat if fig else null
 		if hm and _neck >= 0:
