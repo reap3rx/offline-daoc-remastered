@@ -48,9 +48,11 @@ static func load_settings() -> ConfigFile:
 static func save_settings(cfg: ConfigFile) -> void:
 	_good = _copy(cfg)
 	_good_path = settings_path
-	if cfg.save(settings_path) == OK:
+	var err := cfg.save(settings_path)
+	if err == OK:
 		_retry = 0
 		return
+	print("[settings] couldn't write %s (error %d) - trying again" % [ProjectSettings.globalize_path(settings_path), err])
 	var tree := Engine.get_main_loop() as SceneTree
 	if tree == null or _retry >= 6:
 		return

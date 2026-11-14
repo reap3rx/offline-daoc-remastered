@@ -329,6 +329,8 @@ public static class TreasureChests
             t.Quality = Rng.Next(96, 101);
             t.Condition = t.MaxCondition;
             t.Durability = t.MaxDurability;
+            t.AllowAdd = true;          // kept with the item (a rolled one-off is never written without it: the chests'
+                                        // armour came back "(blank item)" after a restart - owner 2026-11-14)
             return t;
         }
         catch (Exception exception)

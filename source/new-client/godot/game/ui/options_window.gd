@@ -916,6 +916,10 @@ func _end_trial(keep: bool) -> void:
 		_save("display", "window_mode", t.new_mode)
 		_save("display", "resolution", t.new_res)
 		_save("display", "screen", DisplayServer.window_get_current_screen())
+		var back := UiArt.load_settings()                   # (what the file holds now, for the log)
+		print("[display] kept: %s %s on screen %d - in %s: %s %s" % [t.new_mode, str(t.new_res), DisplayServer.window_get_current_screen(),
+				ProjectSettings.globalize_path(UiArt.settings_path), str(back.get_value("display", "window_mode", "-")),
+				str(back.get_value("display", "resolution", "-"))])
 		_status.text = "DISPLAY SETTINGS KEPT"
 	else:
 		_apply_window(String(t.mode), t.res)

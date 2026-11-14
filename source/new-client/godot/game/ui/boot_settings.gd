@@ -41,9 +41,55 @@ func _ready() -> void:
 	var screen := int(cfg.get_value("display", "screen", -1))
 	if screen >= 0 and screen < DisplayServer.get_screen_count() and screen != DisplayServer.window_get_current_screen():
 		DisplayServer.window_set_current_screen(screen)
-	if cfg.has_section_key("display", "window_mode") or cfg.has_section_key("display", "resolution"):
-		apply_display(String(cfg.get_value("display", "window_mode", "windowed")), cfg.get_value("display", "resolution", []))
 	show_fps(bool(cfg.get_value("display", "show_fps", false)))
+	if cfg.has_section_key("display", "window_mode") or cfg.has_section_key("display", "resolution"):
+		_keep_display(String(cfg.get_value("display", "window_mode", "windowed")), cfg.get_value("display", "resolution", []), screen)
+
+
+## The saved window, applied - and again a moment later if the window has come out otherwise (owner 2026-11-14: on the
+## work PC the game "still" came up windowed after KEEP. A window moved onto a screen with another scaling is resized
+## by Windows to keep its size in that screen's scale, and the window isn't shown yet when this first runs; on one
+## screen at 100% neither happens, which is why the main PC never showed it). What was asked and what came out go in
+## the log (user://logs/godot.log) under [display].
+func _keep_display(mode: String, res, screen: int) -> void:
+	apply_display(mode, res)
+	print("[display] saved: %s %s on screen %d - applied" % [mode, str(res), screen])
+	for wait in [0.0, 0.4, 1.5]:
+		if wait > 0.0:
+			await get_tree().create_timer(wait).timeout
+		else:
+			await get_tree().process_frame
+			await get_tree().process_frame
+		if display_matches(mode, res):
+			continue
+		print("[display] came out %s: applied again" % _now_text())
+		apply_display(mode, res)
+	print("[display] now %s" % _now_text())
+
+
+static func _now_text() -> String:
+	var s := DisplayServer.window_get_current_screen()
+	return "screen %d (%s), window %s at %s, mode %d, borderless %s" % [s, str(DisplayServer.screen_get_size(s)),
+			str(DisplayServer.window_get_size()), str(DisplayServer.window_get_position()), DisplayServer.window_get_mode(),
+			str(DisplayServer.window_get_flag(DisplayServer.WINDOW_FLAG_BORDERLESS))]
+
+
+## Is the window as the saved settings have it?
+static func display_matches(mode: String, res) -> bool:
+	var screen := DisplayServer.window_get_current_screen()
+	var full := DisplayServer.screen_get_size(screen)
+	match mode:
+		"fullscreen":
+			return DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN
+		"borderless":
+			return DisplayServer.window_get_flag(DisplayServer.WINDOW_FLAG_BORDERLESS) \
+					and DisplayServer.window_get_size() == full \
+					and DisplayServer.window_get_position() == DisplayServer.screen_get_position(screen)
+		_:
+			var want := Vector2i(int(res[0]), int(res[1])) if res is Array and res.size() == 2 else full
+			return DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED \
+					and not DisplayServer.window_get_flag(DisplayServer.WINDOW_FLAG_BORDERLESS) \
+					and DisplayServer.window_get_size() == want.min(full)
 
 
 static func apply_fps(cap: int) -> void:

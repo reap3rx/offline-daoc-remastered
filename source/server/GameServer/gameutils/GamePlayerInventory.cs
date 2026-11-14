@@ -83,6 +83,9 @@ namespace DOL.GS
                                 continue;
                             }
 
+                            // a one-off whose template was never saved: made again (LostUniqueStandIn)
+                            LostUniqueStandIn.Mend(m_player, item);
+
                             // Depending on whether or not the item is an artifact we will
                             // create different types of inventory items. That way we can speed
                             // up item type checks and implement item delve information in
@@ -189,6 +192,11 @@ namespace DOL.GS
 
                         continue;
                     }
+
+                    // a one-off in your inventory is always written with it (owner 2026-11-14: rolled armour came
+                    // back blank after a restart - its template was never allowed into the database)
+                    if (item.Template is DbItemUnique unique && !unique.IsPersisted && !unique.AllowAdd)
+                        unique.AllowAdd = true;
 
                     if (item.IsStackable && item.Count == 0) // Failsafe in case count wasn't properly tracked.
                         itemsToDelete.Add(item);
