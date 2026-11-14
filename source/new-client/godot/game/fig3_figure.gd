@@ -235,7 +235,7 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 ## (static): every figure of the race shares the result.
 const AnimStyle := preload("res://game/anim_style.gd")
 const FigureCloth := preload("res://game/figure_cloth.gd")
-var _cloth = null                            # the cloak's and ponytail's springs (figure_cloth.gd), null: none
+var _cloth = null                            # the cloak's and ponytail's swing (figure_cloth.gd), null: none
 static var _smooth_cache := {}               # "prefix/clip" -> Animation
 static var _smooth_lock := Mutex.new()       # (figures are loaded on worker threads too)
 
@@ -2095,7 +2095,7 @@ void fragment() {
 # ---------------------------------------------------------------- cloak and hair sway (claude 2026-10-31)
 ## Remastered: long hair trails behind as the figure moves and stirs in the wind, on top of what the animation does
 ## (owner 2026-10-31: "keep in mind clipping"), and lies over the back, the cloak and the gear (HairCollide); the cloak
-## and a ponytail are springs that collide with the body and the gear (figure_cloth.gd, 2026-11-14). Figures beyond
+## and a ponytail swing with the figure's movement, within limits (figure_cloth.gd, 2026-11-14). Figures beyond
 ## SWAY_RANGE_M are left alone.
 static var sway_on := false                  # SkySystem: remastered
 var back_gear := false                        # something rides on the back (Player.dress; the cloak keeps under it: figure_cloth.gd)
@@ -2678,11 +2678,10 @@ class Sway extends SkeletonModifier3D:
 		_feet(sk, dt)
 		for i in _spine.size():                               # (first: the cloak and hair hang off the leaning back;
 			_turn(sk, _spine[i], axis_back, _lean * _spine_w[i], fwd, 0.0)    # + tips the upper body forward)
-		# the cloak and a ponytail: springs that collide with the body and the gear on the back (figure_cloth.gd) - and
-		# that gear swinging a little about its strap: back with the run's start and stop, side to side with the stride
+		# the cloak, a ponytail and the gear on the back swing with the figure's own movement, within limits
+		# (figure_cloth.gd)
 		if fig._cloth:
-			var stride := sin(t * 10.0 + _phase) * minf(Vector2(v.x, v.z).length(), 7.0) * 0.0025
-			fig._cloth.tick(dt, vel, back * 0.1, side_ang * 0.2, stride)
+			fig._cloth.tick(dt, v, fresh)
 		else:
 			for b in _tails:
 				_turn(sk, b, axis_back, back_h * 0.8, fwd, side_ang * 1.2)
