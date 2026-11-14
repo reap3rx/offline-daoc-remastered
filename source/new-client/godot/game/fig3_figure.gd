@@ -904,6 +904,7 @@ func _layers(m: ShaderMaterial) -> void:
 	elif int(look.get("brow_color", 0)) > 0:
 		brow = BROW_COLORS[clampi(int(look.brow_color) - 1, 0, BROW_COLORS.size() - 1)]
 	var slots := []                                    # [channel, colour (sRGB), strength, way]
+	var scalp_shade := []
 	var pick := func(key: String, opt: int) -> int:
 		var d: Dictionary = defs.get(key, {})
 		var ch: Array = d.get("chan", [])
@@ -937,17 +938,20 @@ func _layers(m: ShaderMaterial) -> void:
 		var hu: Dictionary = meta.get("hair_under", {})
 		var hcols: Array = hu.get("colours", [])
 		if custom_colour("hair_color") == null and hcols.size() > 0:
-			var rgb := String((hcols[clampi(int(look.get("hair_color", 0)), 0, hcols.size() - 1)] as Dictionary).get("rgb", ""))
-			var f := rgb.split(" ")
-			if f.size() == 3:
-				sc = Color(float(f[0]), float(f[1]), float(f[2]))
+			var rgb = (hcols[clampi(int(look.get("hair_color", 0)), 0, hcols.size() - 1)] as Dictionary).get("rgb", [])
+			if rgb is Array and (rgb as Array).size() == 3:     # (figure.json: [r, g, b])
+				sc = Color(float(rgb[0]), float(rgb[1]), float(rgb[2]))
 		slots.append([pick.call("scalp", 1), sc, 0.92, 3])
+		scalp_shade = [int((defs.get("scalp", {}) as Dictionary).get("shade_chan", -1)), sc.darkened(0.55), 0.7, 3]
 	var li := int(look.get("lip_color", 0))
 	var lc = custom_colour("lip_color")
 	if lc != null or (li > 0 and li < LIP_COLORS.size()):
 		slots.append([pick.call("lips", 1), lc if lc != null else LIP_COLORS[li], clampf(float(look.get("lip_amt", 0.6)), 0.0, 1.0), 1])
 	_paint(m, sl)
 	slots = slots.filter(func(s): return int(s[0]) >= 0)
+	# the slicked-back scalp's shade between its strands (the second channel of its texture), when a slot is left
+	if not scalp_shade.is_empty() and int(scalp_shade[0]) >= 0 and slots.size() < 7:
+		slots.append(scalp_shade)
 	m.set_shader_parameter("layer_count", slots.size())
 	if slots.is_empty():
 		return
@@ -1340,9 +1344,20 @@ func _apply_armor() -> void:
 	var parts := armor
 	var variants: Dictionary = meta.get("variants", {})
 	var clothes: Dictionary = meta.get("clothes", {})
+	# a robe (Body07: its sleeves to the wrist and its skirt to the ankles) hides the arms and legs under it - they lie
+	# on the sleeves' own surface and showed through them in patches (owner 2026-11-13: "Robe models work now, but
+	# textures are bugged (particularly around the arms)")
+	var body_want: Array = parts.get("body", [])
+	var robe := body_want.size() > 1 and int(body_want[0]) == ROBE_VARIANT \
+			and (variants.get("body", []) as Array).map(func(x): return int(x)).has(ROBE_VARIANT)
 	for slot in ["body", "legs", "boots", "arms", "gloves"]:
 		var default_v := int(clothes.get(slot, {}).get("variant", 1))
 		var want: Array = parts.get(slot, [])
+		if robe and slot in ["arms", "legs"]:
+			for k in (variants.get(slot, []) as Array):
+				for mi in _parts(slot if int(k) == default_v else "%s_v%d" % [slot, int(k)]):
+					mi.visible = false
+			continue
 		var v := int(want[0]) if want.size() > 0 else default_v
 		# (as whole numbers: figure.json's lists parse as floats, and has(5) never matched 5.0 - every armour piece
 		# fell back to the starter clothes' mesh, no pauldrons on any armour; owner 2026-11-01)
@@ -2366,6 +2381,8 @@ class Sway extends SkeletonModifier3D:
 	var _cloaks_mid: Array[int] = []
 	var _held := {}                              # cloak bone -> its idle rotation: held there with gear on the back
 	var _held_ready := false
+	var _low_idle := {}                          # each cloak chain's lowest bone -> its idle rotation (it swings)
+	var _back_bones: Array[int] = []             # the back gear's bones (they follow the hem a little)
 	var _tails: Array[int] = []
 	var _last := Vector3.INF
 	var _back := 0.0
@@ -2466,16 +2483,54 @@ class Sway extends SkeletonModifier3D:
 					var b := sk.find_bone("Bip01 %s Cloak%02d" % [side, n])
 					if b >= 0:
 						chain.append(b)
-				for k in maxi(chain.size() - 1, 0):              # (the lowest left to the animation)
+				for k in chain.size():
 					var b := chain[k]
 					var q := sk.get_bone_rest(b).basis.get_rotation_quaternion()
 					if a:
 						var ti := a.find_track(NodePath("%s:%s" % [base, sk.get_bone_name(b)]), Animation.TYPE_ROTATION_3D)
 						if ti >= 0:
 							q = a.rotation_track_interpolate(ti, 0.0)
-					_held[b] = q
+					if k < chain.size() - 1:
+						_held[b] = q
+					else:
+						_low_idle[b] = q                         # (the lowest left to the animation)
+			for n in ["Bip01 L Back", "Bip01 R Back"]:
+				var bb := sk.find_bone(n)
+				if bb >= 0:
+					_back_bones.append(bb)
 		for b in _held:
 			sk.set_bone_pose_rotation(int(b), _held[b])
+		_gear_with_cloak(sk)
+
+	## The shield and weapons on the back go a little with the cloak's swinging hem (owner 2026-11-13: "Maybe the shield
+	## and weapons on back can move as well so they don't clip? All of them not moving much, but in unison"): the hem's
+	## swing away from its idle hang, in the skeleton's space, given in part to the back bones the gear hangs on.
+	const GEAR_FOLLOW := 0.45
+
+	func _gear_with_cloak(sk: Skeleton3D) -> void:
+		if _back_bones.is_empty() or _low_idle.is_empty() or fig.cloak_hidden or (fig.armor.get("cloak", []) as Array).size() < 2:
+			return                                               # (no cloak worn: the gear stays put)
+		var sum := Vector4.ZERO
+		var n := 0
+		for b in _low_idle:
+			var p := sk.get_bone_parent(int(b))
+			var pb := sk.get_bone_global_pose(p).basis.orthonormalized() if p >= 0 else Basis()
+			var swing := sk.get_bone_pose_rotation(int(b)) * (_low_idle[b] as Quaternion).inverse()
+			var q := (pb * Basis(swing) * pb.inverse()).get_rotation_quaternion()
+			if n > 0 and Vector4(q.x, q.y, q.z, q.w).dot(sum) < 0.0:
+				q = -q                                           # (the same hemisphere, to average)
+			sum += Vector4(q.x, q.y, q.z, q.w)
+			n += 1
+		if n == 0 or sum.length() < 1e-6:
+			return
+		var avg := Quaternion(sum.x, sum.y, sum.z, sum.w).normalized()
+		var part := Basis(Quaternion.IDENTITY.slerp(avg, GEAR_FOLLOW))
+		for b in _back_bones:
+			var g := sk.get_bone_global_pose(b)
+			var p := sk.get_bone_parent(b)
+			var pg := sk.get_bone_global_pose(p) if p >= 0 else Transform3D.IDENTITY
+			var local := pg.affine_inverse() * Transform3D(part * g.basis, g.origin)
+			sk.set_bone_pose_rotation(b, local.basis.get_rotation_quaternion())
 
 	func _process_modification_with_delta(delta: float) -> void:
 		var sk := get_skeleton()

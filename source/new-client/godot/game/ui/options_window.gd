@@ -606,6 +606,14 @@ func _interface() -> void:
 	_row("STACK", _toggle(bool(HEALTH_PLATES.opt("stack")), func(on: bool): _plate_opt("stack", on)))
 	_row("CAST BARS", _toggle(bool(HEALTH_PLATES.opt("cast_bar")), func(on: bool): _plate_opt("cast_bar", on)))
 	_hint("FRIENDLY TOO: YOUR GROUP, YOUR REALM'S BOTS AND GUARDS GET PLATES BY THE SAME RULE (HANDY FOR HEALERS). STACK: PLATES MOVE APART INSTEAD OF COVERING EACH OTHER.")
+	_row("TARGET ON THE ORB", _toggle(bool(settings.get_value("interface", "orb_target", true)), func(on: bool):
+		_save("interface", "orb_target", on)
+		preload("res://game/ui/modern_hud.gd").Orb.reload()
+		if ui:
+			for o in ui.find_children("*", "", true, false):
+				if o is CanvasItem and o.get_script() != null and o.has_method("show_target"):
+					(o as CanvasItem).queue_redraw()))
+	_hint("THE MODERN INTERFACE'S TARGET PLATE ABOVE THE HEALTH ORB. OFF: THE NAMEPLATE OVER YOUR TARGET IS ENOUGH.")
 	_heading("LOOT")
 	_row("AUTO LOOT", _toggle(Loot.autoloot(), func(on: bool): Loot.set_autoloot(on)))
 	_hint("ON: COINS AND ITEMS FROM YOUR KILLS GO STRAIGHT INTO YOUR BACKPACK (NOT IN 1.65 - A QUALITY OF LIFE OPTION). OFF: THEY DROP AT THE MONSTER'S FEET FOR YOU TO PICK UP, AS IN THE ORIGINAL.")

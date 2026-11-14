@@ -2,7 +2,9 @@
 that overlays the scalp, rather than the hair model? I think it would work better."): where the race's cap shell
 (figure.json hair_under, pipeline/import_hair.py) lies over the head, a mask in the head texture's own layout - the head
 shader paints it in the hair colour, speckled like short hair (Fig3Figure._layers, way 3 as the stubble) - and the
-shell itself is no longer drawn.
+shell itself is no longer drawn. Only its upper part, from well up the forehead to the crown and lower toward the back
+(the owner: "more near the crown of the head, hidden by most hair styles"), drawn as slicked back hair: strands from front
+to back in R (the hair colour) and the shade between them in G (Fig3Figure._layers, the layer's shade_chan).
 
     python scalp_layer.py <race folder> [more ...]   writes skin_scalp.png beside figure.gltf, adds it to figure.json's
                                                      skin_layers (its 'tex' list and a layer 'scalp')
@@ -60,7 +62,8 @@ def bake(folder, preview=False):
         return
     P, UV, T = head[0]
     C = np.concatenate([c[0] for c in cap])
-    H = P[:, 2].max() - P[:, 2].min()                       # the head's height (z up)
+    z0, z1 = P[:, 2].min(), P[:, 2].max()
+    H = z1 - z0                                             # the head's height (z up)
     # the cap's own spacing: how far apart its points are (its shell lies a little off the skin)
     samp = C[np.random.default_rng(1).choice(len(C), min(400, len(C)), replace=False)]
     dd = np.sqrt(((samp[:, None, :] - C[None, :, :]) ** 2).sum(2))
@@ -72,6 +75,13 @@ def bake(folder, preview=False):
     t0 = near + 1.5 * spacing
     t1 = t0 + 0.035 * H
     m = np.clip((t1 - d) / max(t1 - t0, 1e-9), 0.0, 1.0)
+    # which way the face looks along y: the cap comes down lowest at the back of the head (the nape), so the face is
+    # the other way
+    low = C[C[:, 2] < np.percentile(C[:, 2], 15)]
+    front = -1.0 if low[:, 1].mean() > C[:, 1].mean() else 1.0
+    fwd = P[:, 1] * front                                   # + toward the face
+    f_mid = (fwd.max() + fwd.min()) / 2
+    f_half = max((fwd.max() - fwd.min()) / 2, 1e-6)
     # only the big pieces of the texture (the face and scalp - not the eyeballs, teeth, ears)
     isl = islands(T, len(P))
     area = {}
@@ -80,18 +90,44 @@ def bake(folder, preview=False):
         area[isl[t[0]]] = area.get(isl[t[0]], 0) + abs((b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1])) / 2
     total = sum(area.values())
     keep = np.array([area.get(isl[i], 0) > 0.08 * total for i in range(len(P))])
-    tex, cov = raster(UV, T, m[:, None], keep, SIZE)
-    mask = np.where(cov, tex[..., 0], 0.0).astype(np.float32)
-    # the hairline soft, and the hair in it: a fine speckle (short hairs), texel by texel as the stubble
-    mask = cv2.GaussianBlur(mask, (0, 0), SIZE / 512)
+    # per texel: the shell's cover and where on the head it is (owner 2026-11-13, the first bake: "too low and far down
+    # on the face. It needs to be more near the crown of the head, hidden by most hair styles, and the texture should be
+    # more hair like ... slicked back hair")
+    attrs = np.c_[m, (P[:, 2] - z0) / H, (fwd - f_mid) / f_half, P[:, 0] / f_half, (P[:, 2] - (z0 + 0.62 * H)) / f_half]
+    tex, cov = raster(UV, T, attrs.astype(np.float32), keep, SIZE)
+    shell = np.where(cov, tex[..., 0], 0.0)
+    u, v = tex[..., 1], tex[..., 2]                         # height on the head 0..1; front (+1) .. back (-1)
+    # the hairline: well up the forehead in front, lower toward the back of the head (the nape stays covered)
+    cut = 0.73 + 0.15 * v
+    edge = np.clip((u - cut) / 0.05, 0.0, 1.0)
+    edge = edge * edge * (3 - 2 * edge)
+    mask = (shell * edge).astype(np.float32)
+    mask = cv2.GaussianBlur(mask, (0, 0), SIZE / 700)
+    mask = np.clip(mask * 1.6, 0.0, 1.0)                    # (solid where it lies on the head, soft only at its edge)
+    # slicked back: strands along the head's meridians, front to back - by the angle around the front-back axis
+    ang = np.arctan2(tex[..., 3], tex[..., 4])
     rng = np.random.default_rng(7)
+    n = 4096
+    line = cv2.GaussianBlur(rng.random((1, n)).astype(np.float32), (0, 0), 1.6).ravel()
+    line = (line - line.min()) / max(line.max() - line.min(), 1e-6)
+    wob = 0.012 * np.sin(v * 7.0 + ang * 3.0)               # (strands bend a little on their way back)
+    idx = ((ang + wob + np.pi) / (2 * np.pi) * (n - 1) * 0.5).astype(np.int64) % n
+    strands = line[idx]
+    broad = cv2.GaussianBlur(rng.random((1, n)).astype(np.float32), (0, 0), 40).ravel()
+    broad = (broad - broad.min()) / max(broad.max() - broad.min(), 1e-6)
+    strands = np.clip(0.75 * strands + 0.25 * broad[idx], 0, 1)
+    # the hairline: a little ragged, short hairs thinning out
     speck = cv2.GaussianBlur(rng.random((SIZE, SIZE)).astype(np.float32), (0, 0), 0.7)
     speck = (speck - speck.min()) / max(speck.max() - speck.min(), 1e-6)
-    mask = np.clip(mask * (0.72 + 0.4 * speck), 0.0, 1.0)
+    thin = np.clip(mask * 1.6, 0, 1)
+    body = np.clip(mask * (0.86 + 0.14 * strands) * np.where(mask < 0.4, 0.7 + 0.5 * speck, 1.0), 0, 1)
+    gaps = np.clip(thin * (1.0 - strands) ** 1.6, 0, 1)    # darker between the strands
     rgba = np.zeros((SIZE, SIZE, 4), np.uint8)
-    rgba[..., 2] = (mask * 255).astype(np.uint8)            # (cv2 is BGRA: index 2 = R, the layer's channel)
+    rgba[..., 2] = (body * 255).astype(np.uint8)            # (cv2 is BGRA: index 2 = R, the layer's channel)
+    rgba[..., 1] = (gaps * 255).astype(np.uint8)            # G: the shade between the strands
     rgba[..., 3] = 255
     cv2.imwrite(str(folder / (TEX_NAME + '.png')), rgba)
+    m = shell                                               # (for the report below)
     texs = sl.setdefault('tex', [])
     if TEX_NAME not in texs:
         if len(texs) >= 7:                                  # (the head shader takes seven layer textures)
@@ -102,7 +138,7 @@ def bake(folder, preview=False):
     layers = [l for l in sl.get('layers', []) if l.get('key') != 'scalp']
     proto = next((l for l in layers if l.get('key') == 'stubble'), {})
     entry = {k: v for k, v in proto.items() if k not in ('key', 'label', 'chan', 'opts', 'options')}
-    entry.update({'key': 'scalp', 'label': 'Scalp', 'kind': 'hair', 'chan': [chan]})
+    entry.update({'key': 'scalp', 'label': 'Scalp', 'kind': 'hair', 'chan': [chan], 'shade_chan': chan + 1})
     if 'opts' in proto:
         entry['opts'] = ['Cap']
     if 'options' in proto:
@@ -110,16 +146,18 @@ def bake(folder, preview=False):
     layers.append(entry)
     sl['layers'] = layers
     meta_path.write_text(json.dumps(meta, indent=1), encoding='utf-8')
-    covered = (m > 0.5)
-    print('%s scalp: %d of %d head points (%.0f%%), lowest at %.2f of the head height; shell %.3f off, spacing %.3f; chan %d'
-          % (folder.name, covered.sum(), len(P), 100 * covered.mean(),
-             (P[covered, 2].min() - P[:, 2].min()) / H if covered.any() else -1, near, spacing, chan))
+    on = mask > 0.5
+    print('%s scalp: %.1f%% of the texture, lowest at %.2f of the head height (front %.2f); face toward %s y; chan %d'
+          % (folder.name, 100 * on.mean(), float(u[on].min()) if on.any() else -1,
+             float(u[on & (v > 0.5)].min()) if (on & (v > 0.5)).any() else -1, '-' if front < 0 else '+', chan))
     if preview:
         tex_dir = folder.parent.parent / 'fig3_textures' / 'x4plus'
         f = tex_dir / (meta['faces'][0]['tex'].lower() + '.png')
         im = cv2.imread(str(f)) if f.exists() else np.full((SIZE, SIZE, 3), 180, np.uint8)
         im = cv2.resize(im, (SIZE, SIZE)).astype(np.float32)
-        out = im * (1 - mask[..., None]) + np.array([30, 40, 60], np.float32) * mask[..., None]
+        hair = np.array([40, 60, 95], np.float32)
+        out = im * (1 - body[..., None]) + hair * body[..., None]
+        out = out * (1 - 0.6 * gaps[..., None]) + hair * 0.45 * 0.6 * gaps[..., None]
         cv2.imwrite(str(folder / 'scalp_preview.png'), out.astype(np.uint8))
 
 

@@ -109,7 +109,14 @@ func _fill() -> void:
 		c.queue_free()
 	var all := known_skills()
 	var first: Button = null
+	var group := ""
 	for d in all:
+		if String(d.get("group", "")) != group:                 # each group under its heading
+			group = String(d.get("group", ""))
+			var hl := UiArt.label(group, 9, UiArt.GOLD_HI)
+			hl.custom_minimum_size = Vector2(280, 18)
+			hl.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+			_list.add_child(hl)
 		var b := Button.new()
 		b.text = String(d.name).to_upper()
 		b.icon = ItemDb.icon(int(d.get("icon", 0)))
@@ -140,33 +147,98 @@ func _point_first(b: Control) -> void:
 		Pad.call("_point_at", b)
 
 
-## Every skill you can use: your abilities, styles and spells (as the spellbook's lines drag them).
+## Every skill you can use, in groups (owner 2026-11-13: "the list of abilities should be organized by category. So thrust
+## styles together, Earth magic spells together, etc."; "Stealth was not appearing on my infiltrator"; "things like
+## 'abilities: dual wield' which is just text" left out): [{kind, id, icon, border, name, group}], group by group -
+## the smart heals, each spell line (a hybrid's by its specialization), each weapon's styles, then the abilities.
 static func known_skills() -> Array:
 	var out := []
 	if not Server.active:
 		return out
+	for e in Server.smart_heal_entries():
+		var d: Dictionary = e.duplicate()
+		d["group"] = "AUTOMATIC HEALS"
+		out.append(d)
+	var spells := []                                         # [group, entry] in the server's order
+	var styles := []
+	var abilities := []
+	# a list caster's lines (the baseline and the specialization line of a name together)
+	for li in Server.spell_lines.size():
+		var line: Dictionary = Server.spell_lines[li]
+		for sp in (line.spells as Array):
+			var kind := "style" if String(sp.get("kind", "spell")) == "style" else "spell"
+			var ic2: Array = Server.skill_icon(kind, int(sp.icon))
+			var g := String(line.name).to_upper()
+			if kind == "style":
+				g += " STYLES"
+			(styles if kind == "style" else spells).append([g, {"kind": kind, "id": "srv:spell:%d:%d" % [li, int(sp.level)],
+					"icon": int(ic2[0]), "border": int(ic2[1]), "name": String(sp.name), "lv": int(sp.level)}])
+	# the skill list: hybrid spells and songs under their specialization, styles under their weapon, abilities
 	var first := PanelSheets._first_skill()
+	var style_spec := _style_specs()
 	for i in Server.skills.size():
 		var sk: Dictionary = Server.skills[i]
 		var pg := int(sk.page)
 		if pg == 0:
+			if String(sk.name) in PanelSheets.SPEC_ACTIONS and int(sk.level) > 0:   # Stealth: the spec itself is used
+				var ics: Array = Server.skill_icon("icon", int(sk.icon))
+				abilities.append(["ABILITIES", {"kind": "ability", "id": "srv:spec:%d" % i, "icon": int(ics[0]),
+						"border": int(ics[1]), "name": String(sk.name), "lv": 0}])
 			continue
 		var kind: String = "ability" if pg in [1, 5, 6] else ("style" if pg == 2 else "spell")
 		var ic: Array = Server.skill_icon("icon" if kind == "ability" else kind, int(sk.icon))
-		out.append({"kind": kind, "id": "srv:skill:%d" % (i - first), "icon": int(ic[0]), "border": int(ic[1]),
-				"name": String(sk.name)})
-	for li in Server.spell_lines.size():
-		for sp in (Server.spell_lines[li].spells as Array):
-			var kind := "style" if String(sp.get("kind", "spell")) == "style" else "spell"
-			var ic2: Array = Server.skill_icon(kind, int(sp.icon))
-			out.append({"kind": kind, "id": "srv:spell:%d:%d" % [li, int(sp.level)], "icon": int(ic2[0]),
-					"border": int(ic2[1]), "name": String(sp.name)})
-	var order := {"style": 0, "spell": 1, "ability": 2}
-	out.sort_custom(func(a, b):
-		var ka := int(order.get(a.kind, 3))
-		var kb := int(order.get(b.kind, 3))
-		return ka < kb if ka != kb else String(a.name) < String(b.name))
-	return Server.smart_heal_entries() + out             # (the smart heals first: a healer's most used buttons)
+		var d := {"kind": kind, "id": "srv:skill:%d" % (i - first), "icon": int(ic[0]), "border": int(ic[1]),
+				"name": String(sk.name), "lv": int(sk.level)}
+		if kind == "ability":
+			if int(ic[0]) < 0:
+				continue                                         # (a passive line of text: Weaponry, Dual Wield ...)
+			abilities.append(["REALM ABILITIES" if pg == 6 else "ABILITIES", d])
+		elif kind == "style":
+			styles.append([String(style_spec.get(String(sk.name), "OTHER")).to_upper() + " STYLES", d])
+		else:
+			var sp_i := int(sk.get("special", 0xFE))
+			var head := "SONGS" if pg == 4 or sp_i == 0xFF else "SPELLS"
+			if sp_i >= 0 and sp_i < Server.skills.size() and int(Server.skills[sp_i].page) == 0:
+				head = String(Server.skills[sp_i].name).to_upper()
+			spells.append([head, d])
+	# spells by line in the server's order (lowest level first in each); styles by weapon; abilities by name
+	for gi in 2:
+		var grp: Array = spells if gi == 0 else styles
+		var by_name := gi == 1
+		var order := {}
+		for e in grp:
+			if not order.has(e[0]):
+				order[e[0]] = order.size()
+		grp.sort_custom(func(a, b):
+			if a[0] != b[0]:
+				return String(a[0]) < String(b[0]) if by_name else int(order[a[0]]) < int(order[b[0]])
+			return int(a[1].lv) < int(b[1].lv) or (int(a[1].lv) == int(b[1].lv) and String(a[1].name) < String(b[1].name)))
+	abilities.sort_custom(func(a, b):
+		if a[0] != b[0]:
+			return String(a[0]) == "ABILITIES"
+		return String(a[1].name) < String(b[1].name))
+	for e in spells + styles + abilities:
+		var d: Dictionary = e[1]
+		d["group"] = e[0]
+		out.append(d)
+	return out
+
+
+## A style's name -> its specialization's name, for your class (ClassDb's styles).
+static func _style_specs() -> Dictionary:
+	var out := {}
+	ClassDb.style(0)                                         # (loads the class data)
+	var cid := PlayerData.class_id()
+	for k in ClassDb._styles:
+		var s: Dictionary = ClassDb._styles[k]
+		var c := int(s.get("classid", 0))
+		if c != 0 and c != cid:
+			continue
+		var key := String(s.get("speckeyname", ""))
+		var nm := String(s.get("name", ""))
+		if not out.has(nm) or c == cid:
+			out[nm] = String(ClassDb.spec(key).get("name", key))
+	return out
 
 
 func _assign(d: Dictionary) -> void:

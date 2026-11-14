@@ -195,17 +195,19 @@ func layout() -> void:
 	_zone_label.size = Vector2(mini - 44, 12)
 	_clock.position = Vector2(minimap.position.x + mini - 44, minimap.position.y - 13)
 	_clock.size = Vector2(44, 12)
-	var bx := minimap.position.x - Burden.W - 6
-	if bx < 4.0:
-		bx = minimap.position.x + minimap.size.x + 6         # (a minimap moved to the left edge: the bag on its right)
-	burden.position = Vector2(bx, minimap.position.y + minimap.size.y - Burden.H)
+	# the encumbered bag beside the minimap, wherever that is - unless EDIT UI put the bag somewhere (owner 2026-11-13)
+	if not custom.has("burden"):
+		var bx := minimap.position.x - Burden.W - 6
+		if bx < 4.0:
+			bx = minimap.position.x + minimap.size.x + 6     # (a minimap moved to the left edge: the bag on its right)
+		burden.position = Vector2(bx, minimap.position.y + minimap.size.y - Burden.H)
 
 
 ## Every piece EDIT UI can move: [id, name, Control].
 func movable() -> Array:
 	var out: Array = [["orb", "HEALTH ORB AND TARGET", orb], ["menu", "MENU BAR", menu], ["party", "PARTY", party],
 			["minimap", "MINIMAP", minimap], ["quests", "QUEST LOG", quests], ["loot", "LOOT FEED", loot],
-			["pet", "PET WINDOW", pet]]
+			["pet", "PET WINDOW", pet], ["burden", "ENCUMBERED BAG", burden]]
 	if ui == null:
 		return out
 	if ui.event_tracker:
@@ -292,6 +294,7 @@ class Burden extends Part:
 	const H := 44.0
 	var now := -1
 	var most := -1
+	var preview := false                     # EDIT UI: shown (as an example) to be moved
 
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_PASS
@@ -309,15 +312,15 @@ class Burden extends Part:
 			n = PlayerData.inventory_weight()
 			m = maxi(int(PlayerData.effective_stats()[0]), int(PlayerData.stats[0]))
 		var over := m > 0 and n > m
-		if over != visible or n != now or m != most:
+		if (over or preview) != visible or n != now or m != most:
 			now = n
 			most = m
-			visible = over
+			visible = over or preview
 			tooltip_text = ("ENCUMBERED: YOU CARRY %d OF %d LBS AND MOVE MORE SLOWLY" % [n, m]) if over else ""
 			queue_redraw()
 
 	func _draw() -> void:
-		if now < 0 or most <= 0:
+		if (now < 0 or most <= 0) and not preview:
 			return
 		var c := Vector2(W * 0.5, 17.0)
 		var red := Color(0.86, 0.16, 0.12)
@@ -338,12 +341,26 @@ class Burden extends Part:
 		draw_line(c + Vector2(-6, -5), c + Vector2(6, -5), Color(0.95, 0.8, 0.45), 2.0)
 		draw_line(c + Vector2(-5, -11), c + Vector2(5, -11), Color(0.05, 0.02, 0.01), 1.5)
 		text(UiArt.font(true), c + Vector2(-4, 9), "!", 12, UiArt.CREAM)
-		text(UiArt.font(false), Vector2(0, H - 2), "%d/%d" % [now, most], 9, Color(1.0, 0.45, 0.4),
+		text(UiArt.font(false), Vector2(0, H - 2), ("%d/%d" % [now, most]) if most > 0 else "LBS", 9, Color(1.0, 0.45, 0.4),
 				HORIZONTAL_ALIGNMENT_CENTER, W)
 
 
 ## The health orb with its arcs, the target plate above, the name and level under.
 class Orb extends Part:
+	# the target plate over the orb can be turned off (owner 2026-11-13: "with name plates, it would be nice to be able
+	# to toggle it"): Options > Interface > TARGET ON THE ORB (settings.cfg interface/orb_target)
+	static var _show_target := true
+	static var _show_at := -10.0
+
+	static func show_target() -> bool:
+		var now := Time.get_ticks_msec() / 1000.0
+		if now - _show_at > 1.0:
+			_show_at = now
+			_show_target = bool(UiArt.load_settings().get_value("interface", "orb_target", true))
+		return _show_target
+
+	static func reload() -> void:
+		_show_at = -10.0
 
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_STOP
@@ -351,7 +368,7 @@ class Orb extends Part:
 
 	func _gui_input(event: InputEvent) -> void:
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			if _target_rect().has_point(event.position) and not PlayerData.target.is_empty():
+			if show_target() and _target_rect().has_point(event.position) and not PlayerData.target.is_empty():
 				PlayerData.attack_toggle_requested.emit()       # the target plate: attack mode on / off
 				accept_event()
 
@@ -435,7 +452,7 @@ class Orb extends Part:
 			text(f, Vector2(np.position.x + 8 + tw, np.position.y + 10.5), scaled, 9, Color(1.0, 0.6, 0.25))
 		# the target plate above: name in its con colour, its health
 		var t := PlayerData.target
-		if not t.is_empty():
+		if not t.is_empty() and show_target():
 			var tr := _target_rect()
 			plate(tr)
 			var hpf := clampf(float(t.get("health", 1.0)), 0.0, 1.0)

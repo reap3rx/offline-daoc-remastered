@@ -678,10 +678,14 @@ func _fill_book() -> void:
 	for k in spec.skills:
 		names[String(k.name)] = true
 	if smart.any(func(s): return names.has(String(s.casts))):
-		var sl := UiArt.label("AUTOMATIC HEALS - YOUR BEST OF EACH, ON WHOEVER NEEDS IT MOST", 8, UiArt.GOLD)
-		sl.custom_minimum_size = Vector2(COL3.y - 20, 14)
-		sl.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
-		_book_list.add_child(sl)
+		# two short lines, clipped to the column (owner 2026-11-13: one long line pushed the scroll bar out of the window)
+		for t in [["AUTOMATIC HEALS", UiArt.GOLD], ["YOUR BEST OF EACH, ON WHOEVER NEEDS IT MOST", UiArt.DIM]]:
+			var sl := UiArt.label(String(t[0]), 8, t[1])
+			sl.custom_minimum_size = Vector2(COL3.y - 20, 12)
+			sl.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+			sl.clip_text = true
+			sl.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+			_book_list.add_child(sl)
 		for s in smart:
 			var srow := BookRow.new()
 			srow.setup(s, 0, true, true, COL3.y - 20, String(s.smart).to_upper())

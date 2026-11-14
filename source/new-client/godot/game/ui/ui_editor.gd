@@ -38,6 +38,9 @@ func open(game_ui: GameUI) -> void:
 	if ac:
 		ac._editing = true                                  # (draws its movable parts, frees the cursor, no fighting)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if ui.modern and ui.modern.burden:                      # (the encumbered bag shows while you place it)
+		ui.modern.burden.preview = true
+		ui.modern.burden.refresh()
 	_collect()
 	_build_panel()
 
@@ -222,6 +225,9 @@ func close() -> void:
 	if _closed:
 		return
 	_closed = true
+	if ui and ui.modern and is_instance_valid(ui.modern) and ui.modern.burden:
+		ui.modern.burden.preview = false
+		ui.modern.burden.refresh()
 	var ac = _ac()
 	if ac:
 		ac._editing = false
