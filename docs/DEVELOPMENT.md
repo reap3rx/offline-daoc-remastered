@@ -1,8 +1,7 @@
 # Developing Offline DAoC Remastered
 
 For people (and AI assistants) who change the code. Read [AGENTS.md](../AGENTS.md) first for the layout
-and the rules. The old OfflineDAoC release line's version of this guide is in
-[history/DEVELOPMENT-0.37.md](history/DEVELOPMENT-0.37.md).
+and the rules. Players need only [PLAY.md](PLAY.md).
 
 ## Build and test the server
 

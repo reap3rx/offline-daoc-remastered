@@ -3,8 +3,8 @@
 The client of Offline DAoC Remastered, built in Godot 4.7 (.NET). It speaks the DAoC network protocol of
 the original client (game client version 1.127) to the local server: what it shows is decoded from
 the server's packets. Players get it through the launcher and installer of
-[Offline DAoC Remastered](https://github.com/reap3rx/offline-daoc-remastered/releases). The 0.36c
-version of this file is in `docs/history/NEW-CLIENT-README-0.36c.md`.
+[Offline DAoC Remastered](https://github.com/reap3rx/offline-daoc-remastered/releases); see
+[docs/PLAY.md](../../docs/PLAY.md).
 
 ## Layout
 

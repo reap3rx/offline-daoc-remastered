@@ -7,12 +7,9 @@ Claude Code as `CLAUDE.md`.
 
 Offline DAoC Remastered is a single-player Dark Age of Camelot (Classic + Shrouded Isles, 1.65): an
 OpenDAoC-based server (.NET 10, SQLite) with living player bots and companions, played through a new
-client written in Godot 4.7 (.NET), started by a Windows launcher. It grew out of the original
-OfflineDAoC v0.36c and has its own version line (0.1, 0.2, 0.2a ... 0.2j at the time of writing). The
+client written in Godot 4.7 (.NET), started by a Windows launcher. It grew out of the community's
+OfflineDAoC project and has its own version line (0.1, 0.2, 0.2a ... 0.2j at the time of writing). The
 goal is a remaster: keep the spirit of DAoC, make it feel like a modern game.
-
-The guides of the old OfflineDAoC release line (0.37, its three editions, the patcher) are in
-`docs/history/` for reference only. Nothing in them describes how Remastered is built or released.
 
 ## Layout
 
@@ -30,7 +27,7 @@ The guides of the old OfflineDAoC release line (0.37, its three editions, the pa
 | `db-changes/` | SQL changes to the world database, applied with `apply.py` |
 | `tools/claude-version` | Database helpers and generators. Many are one-off changes already applied; read a script's header before running it. |
 | `tools/pet-art`, `tools/asset-tool` | Art pipeline for the original client's models, skins and effects |
-| `docs/` | Player and developer guides; `docs/history/` holds the old release line's notes |
+| `docs/` | Player guides ([PLAY.md](docs/PLAY.md), [GAMEPLAY.md](docs/GAMEPLAY.md)) and developer guides |
 
 In the playable folder (not in Git):
 - `new-client/godot`: the client as it runs (a copy of `source/new-client/godot` plus `content/`, about 44 GB of converted game content)
