@@ -45,6 +45,13 @@ namespace DOL.GS
             {
                 int level = Math.Clamp(t.Level > 0 ? t.Level : taker.Level, 1, 51);
                 DbItemUnique u = Fit(t, taker, level);
+                // made for the taker: a class restriction that shuts them out goes (owner 2026-11-15: a Ranger's
+                // event reward, a necklace, came "Mentalist only" - jewellery is not refitted the way armour and
+                // weapons are, and kept its template's classes)
+                if (!string.IsNullOrEmpty(u.AllowedClasses) && u.AllowedClasses != "0" &&
+                    Array.IndexOf(u.AllowedClasses.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries),
+                        taker.CharacterClass.ID.ToString()) < 0)
+                    u.AllowedClasses = string.Empty;
                 bool weapon = u.Object_Type >= (int) eObjectType._FirstWeapon && u.Object_Type <= (int) eObjectType._LastWeapon;
                 bool armor = u.Object_Type >= (int) eObjectType._FirstArmor && u.Object_Type <= (int) eObjectType._LastArmor;
                 AddToaBonuses(u, taker, level);

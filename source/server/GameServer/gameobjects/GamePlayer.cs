@@ -9499,6 +9499,10 @@ namespace DOL.GS
             if (!Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item))
                 return false;
             InventoryLogging.LogInventoryAction(source, this, eInventoryActionType.Trade, item.Template, item.Count);
+            // what a monster or an NPC hands you is loot to the loot feed (owner 2026-11-15: named monsters' drops did
+            // not show); what a bot or a player hands you is a trade and is not
+            if (source is GameNPC and not GameBot)
+                LootFeed.Item(this, item.Template, item.IsStackable ? item.Count : 1);
 
             if (source == null)
             {

@@ -705,8 +705,10 @@ func pad_interact_menu() -> void:
 	if p == null or p.camera == null or viewer == null:
 		return
 	var centre := get_viewport().get_visible_rect().size * 0.5
-	var picked: Dictionary = viewer._click_pick(centre) if viewer.has_method("_click_pick") else {}
+	var picked: Dictionary = viewer._click_pick(centre, true) if viewer.has_method("_click_pick") else {}
 	var n: Npc = picked.get("npc")
+	if n == null:
+		n = _near_crosshair(p, INTERACT_M * 6.0)
 	var oid := 0
 	if n and n.global_position.distance_to(p.global_position) <= INTERACT_M * 6.0:
 		WorldLink.clear_bot_target()
@@ -742,6 +744,40 @@ func _drawn() -> bool:
 	return viewer != null and bool(viewer.get("_server_attack"))
 
 
+## Whoever the crosshair is nearly on (owner 2026-11-15: "favor the target in front of you"): the living person or
+## creature closest to the crosshair's line, within a few degrees of it (more for one close by), within `reach` of
+## you and not behind a wall. Null when there is none.
+func _near_crosshair(p: Player, reach: float) -> Npc:
+	var npcs: NpcManager = viewer.npcs if viewer else null
+	if npcs == null or p.camera == null:
+		return null
+	var centre := get_viewport().get_visible_rect().size * 0.5
+	var from := p.camera.project_ray_origin(centre)
+	var fwd := p.camera.project_ray_normal(centre)
+	var best: Npc = null
+	var best_ang := INF
+	for i in npcs.active:
+		var n: Npc = npcs.active[i]
+		if not is_instance_valid(n) or not n.state.alive or n.global_position.distance_to(p.global_position) > reach:
+			continue
+		var mid := n.global_position + Vector3(0, n.height * 0.5, 0)
+		var to := mid - from
+		var dist := to.length()
+		if dist < 0.5 or fwd.dot(to) <= 0.0:
+			continue
+		var ang := rad_to_deg(fwd.angle_to(to))
+		var allow := maxf(4.0, rad_to_deg(atan2(maxf(0.8, n.height * 0.6), dist)))
+		if ang <= allow and ang < best_ang:
+			best_ang = ang
+			best = n
+	if best:
+		var q := PhysicsRayQueryParameters3D.create(from, best.global_position + Vector3(0, best.height * 0.5, 0),
+				ZoneLoader.LAYER_WALL | ZoneLoader.LAYER_FLOOR)
+		if not p.get_world_3d().direct_space_state.intersect_ray(q).is_empty():
+			return null
+	return best
+
+
 ## Interact (owner 2026-10-26): what the crosshair is on - talk to an NPC (a monster: target it), open a door, pick
 ## up what lies on the ground, manage a companion - else the nearest of those in front of you within INTERACT_M.
 func _interact() -> void:
@@ -750,7 +786,7 @@ func _interact() -> void:
 		return
 	var centre := get_viewport().get_visible_rect().size * 0.5
 	var npcs: NpcManager = viewer.npcs
-	var picked: Dictionary = viewer._click_pick(centre) if viewer.has_method("_click_pick") else {}
+	var picked: Dictionary = viewer._click_pick(centre, true) if viewer.has_method("_click_pick") else {}
 	var n: Npc = picked.get("npc")
 	if n and n.global_position.distance_to(p.global_position) <= INTERACT_M * 4.0:
 		_use_npc(n)
@@ -767,6 +803,10 @@ func _interact() -> void:
 	if bot and bool(bot.get("companion")) and viewer.companions:
 		WorldLink.target_bot(bot)
 		viewer.companions.manage(int(bot.get("bot_id")))
+		return
+	n = _near_crosshair(p, INTERACT_M * 4.0)           # not exactly under it: whoever the crosshair is nearly on
+	if n:
+		_use_npc(n)
 		return
 	# nothing under the crosshair: the nearest thing to use in front of you
 	var acc := {"best": null, "score": INF}            # (a dictionary: the lambda below can't assign outer locals)
@@ -1157,7 +1197,7 @@ func _ui_window_open() -> bool:
 	if not get_tree().get_nodes_in_group("ui_modal").is_empty():
 		return true                                        # (a question to answer: UiArt.confirm)
 	for id in ["bags", "hero", "journal", "options", "events_window", "guild_window", "warmap", "potions", "poisons",
-			"quiver", "ac_styles", "exchange", "emblem_window"]:
+			"ac_styles", "exchange", "emblem_window"]:           # (not the quiver: it stays up while you play)
 		var w = ui.get(id)
 		if w != null and is_instance_valid(w) and (w as CanvasItem).visible:
 			return true

@@ -2327,6 +2327,12 @@ func target_nearest_loot() -> void:
 func get_object() -> void:
 	if Server.client == null:
 		return
+	# a gravestone: Get / Interact prays at it (owner 2026-11-15: /pray needed the keyboard - nothing for a controller).
+	# The server's own rule stands (GamePlayer.Pray: it must be your grave, and close) and answers in chat.
+	var grave = objects.get(target_object)
+	if grave is Node3D and is_instance_valid(grave) and String((grave as Node3D).get_meta("name", "")).contains("'s Grave"):
+		Server.command("/pray")
+		return
 	var r := Server.to_region(_current_zone(), player.global_position)
 	var holder: Node3D = objects.get(target_object)
 	if holder and (int(holder.get_meta("model", 0)) in RELIC_MODELS or int(holder.get_meta("model", 0)) in USE_MODELS \

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text.Json;
+using DOL.Database;
 using DOL.Events;
 using DOL.GS.PacketHandler;
 using DOL.Logging;
@@ -26,6 +27,9 @@ public static class SoulbindStones
     public const float TownMargin = 3500;                     // beyond a town's own radius
     public const float BindDistance = 6000;                   // from any bind stone
     public const float Separation = 14000;                    // from each other
+    public const int CurrentVersion = 2;                      // 2 (2026-11-15): chosen again, in the lived-in parts of the zones
+    public const float EdgeMargin = 0.12f;                    // of the zone's width, kept clear at each edge
+    public const float CampReach = 6000;                      // a stone stands within this of some monster camp
     public const ushort ModelAlbion = 32001, ModelMidgard = 32002, ModelHibernia = 32003;
 
     public sealed class Entry
@@ -41,7 +45,7 @@ public static class SoulbindStones
 
     public sealed class FileData
     {
-        public int Version { get; set; } = 1;
+        public int Version { get; set; } = CurrentVersion;
         public List<ushort> Zones { get; set; } = [];         // zones already given their stones (even when none fit)
         public List<Entry> Stones { get; set; } = [];
     }
@@ -87,7 +91,12 @@ public static class SoulbindStones
         try
         {
             if (File.Exists(FilePath))
-                return JsonSerializer.Deserialize<FileData>(File.ReadAllText(FilePath)) ?? new FileData();
+            {
+                FileData read = JsonSerializer.Deserialize<FileData>(File.ReadAllText(FilePath)) ?? new FileData();
+                if (read.Version >= CurrentVersion)
+                    return read;
+                Log.Info($"SOULBIND stones: {FilePath} is version {read.Version} - choosing the stones again");
+            }
         }
         catch (Exception exception)
         {
@@ -104,16 +113,27 @@ public static class SoulbindStones
     {
         var chosen = new List<Entry>();
         Region region = zone.ZoneRegion;
-        List<WorldFeatureSpots.Spot> spots = WorldFeatureSpots.Sample(zone, 220, TownMargin, rng)
+        // Where people actually go (owner 2026-11-15: "quite a few ... near the edges of the map up on top of hills
+        // that are problematic"): clear of the zone's edges, within reach of a monster camp, and the high ground last -
+        // ridges came first before, and a zone's highest fifth is mostly its rim.
+        Vector3[] camps = WorldFeatureSpots.CampsOf(zone);
+        if (camps.Length == 0)
+            camps = CampsFromDatabase(zone);              // (at the server's start the zone holds no monsters yet)
+        float mx = zone.Width * EdgeMargin, my = zone.Height * EdgeMargin;
+        List<WorldFeatureSpots.Spot> spots = WorldFeatureSpots.Sample(zone, 220, TownMargin, rng, camps)
             .Where(s => !WorldFeatureSpots.NearBind(region, s.Pos.X, s.Pos.Y, BindDistance))
+            .Where(s => s.Pos.X >= zone.XOffset + mx && s.Pos.X <= zone.XOffset + zone.Width - mx &&
+                        s.Pos.Y >= zone.YOffset + my && s.Pos.Y <= zone.YOffset + zone.Height - my)
+            .Where(s => camps.Length == 0 || camps.Any(c =>
+                Vector2.DistanceSquared(new(c.X, c.Y), new(s.Pos.X, s.Pos.Y)) < CampReach * CampReach))
             .ToList();
-        // interesting first: a ridge or a coast, then a camp's edge, then anywhere; a little chance mixes them
+        // a camp's edge first, then a coast, then open country, a ridge last; a little chance mixes them
         var scored = spots.Select(s => (Spot: s, Score: s.Kind switch
         {
-            WorldFeatureSpots.Kind.Ridge => 3.0,
-            WorldFeatureSpots.Kind.Coast => 2.6,
-            WorldFeatureSpots.Kind.Camp => 1.6,
-            _ => 1.0,
+            WorldFeatureSpots.Kind.Camp => 3.0,
+            WorldFeatureSpots.Kind.Coast => 2.2,
+            WorldFeatureSpots.Kind.Ridge => 0.4,
+            _ => 1.8,
         } + rng.NextDouble() * 1.5)).OrderByDescending(x => x.Score).ToList();
         int want = rng.Next(100) < 70 ? MaxPerZone : MaxPerZone - 1;
         foreach (var (spot, _) in scored)
@@ -129,6 +149,23 @@ public static class SoulbindStones
             });
         }
         return chosen;
+    }
+
+    private static readonly Dictionary<ushort, Vector3[]> RegionCamps = [];
+
+    /// <summary>The zone's monster spawn points as the database has them.</summary>
+    private static Vector3[] CampsFromDatabase(Zone zone)
+    {
+        ushort rid = zone.ZoneRegion.ID;
+        if (!RegionCamps.TryGetValue(rid, out Vector3[] all))
+        {
+            all = DOLDB<DbMob>.SelectObjects(DB.Column("Region").IsEqualTo(rid))
+                .Where(m => m.Realm == 0 && m.Level > 0)
+                .Select(m => new Vector3(m.X, m.Y, m.Z)).ToArray();
+            RegionCamps[rid] = all;
+        }
+        return all.Where(c => c.X >= zone.XOffset && c.X < zone.XOffset + zone.Width &&
+                              c.Y >= zone.YOffset && c.Y < zone.YOffset + zone.Height).ToArray();
     }
 
     private static bool Spawn(Entry e)

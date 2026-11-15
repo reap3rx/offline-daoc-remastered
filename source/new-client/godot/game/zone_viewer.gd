@@ -787,7 +787,9 @@ func target_self() -> void:
 ## being clicked, or standing behind your own character): the nearest of an NPC (its body or its shown name), your
 ## own character and a door; an NPC behind a wall, floor or door is never picked. {} when none of them -
 ## {"npc": Npc} / {"kind": "self"} / {"kind": "door"}.
-func _click_pick(at: Vector2) -> Dictionary:
+## others_first (the action-combat crosshair, owner 2026-11-15): your own character counts only when nothing else is
+## on the line - the crosshair sits near your character, and it kept taking the pick from whoever stood beyond it.
+func _click_pick(at: Vector2, others_first := false) -> Dictionary:
 	if player == null or player.camera == null:
 		return {}
 	var cam := player.camera
@@ -804,13 +806,15 @@ func _click_pick(at: Vector2) -> Dictionary:
 			best = {"npc": n}
 			best_d = npcs.last_pick_dist
 	var self_d := _clicked_self_at(at)
-	if self_d < best_d:
+	if self_d < best_d and not others_first:
 		best = {"kind": "self"}
 		best_d = self_d
 	var dq := PhysicsRayQueryParameters3D.create(from, from + dir * 60.0, ZoneDoor.PICK_LAYER)
 	var door := get_world_3d().direct_space_state.intersect_ray(dq)
 	if not door.is_empty() and door.collider.has_meta("door") and from.distance_to(door.position) < best_d:
 		best = {"kind": "door"}
+	if best.is_empty() and others_first and self_d < INF:
+		best = {"kind": "self"}
 	return best
 
 

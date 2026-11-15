@@ -57,7 +57,8 @@ namespace DOL.GS
                 
                 DbInventoryItem invitem = GameInventoryItem.Create<DbItemUnique>(item);
                 invitem.IsROG = true;
-                player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem);
+                if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem))
+                    LootFeed.Item(player, invitem.Template, 1);
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.PickupObject.YouGet", invitem.Name), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
             }
         }
@@ -77,7 +78,8 @@ namespace DOL.GS
 
                 DbInventoryItem invitem = GameInventoryItem.Create<DbItemUnique>(item);
                 invitem.IsROG = true;
-                player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem);
+                if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem))
+                    LootFeed.Item(player, invitem.Template, 1);
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.PickupObject.YouGet", invitem.Name), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
             }
         }
@@ -103,7 +105,8 @@ namespace DOL.GS
 
                 DbInventoryItem invitem = GameInventoryItem.Create<DbItemUnique>(item);
                 invitem.IsROG = true;
-                player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem);
+                if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, invitem))
+                    LootFeed.Item(player, invitem.Template, 1);
                 player.Out.SendMessage(
                     LanguageMgr.GetTranslation(player.Client.Account.Language, "GamePlayer.PickupObject.YouGet",
                         invitem.Name), eChatType.CT_Loot, eChatLoc.CL_SystemWindow);

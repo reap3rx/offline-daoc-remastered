@@ -2141,8 +2141,10 @@ func handle_input(event: InputEvent) -> bool:
 ## window. True when it closed something (the next Esc then untargets / opens the options as before). In Action
 ## Combat the cursor goes back with them (ActionCombat's window watch: no window open, no cursor).
 const CLOSE_ON_ESC := ["hero", "bags", "journal", "info", "npc_dialog", "story_dialog", "trainer", "merchant",
-		"vault", "exchange", "options", "raid", "benefits", "siege", "emblem", "guild", "quiver", "poisons", "potions",
+		"vault", "exchange", "options", "raid", "benefits", "siege", "emblem", "guild", "poisons", "potions",
 		"ac_styles", "events", "warmap", "guide"]
+# (not the quiver, owner 2026-11-15: "quiver hides when bag closes" - it stays up like a part of the HUD until its own
+#  button, Ctrl+Q or /quiver puts it away, so closing the bags or pressing Esc leaves your arrows in sight)
 
 
 func _close_windows() -> bool:

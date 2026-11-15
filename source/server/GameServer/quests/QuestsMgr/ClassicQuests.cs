@@ -265,7 +265,7 @@ namespace DOL.GS.Quests
                     player.Out.SendMessage("Your backpack is full.", PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
                     return true;
                 }
-                if (player.Inventory.AddTemplate(GameInventoryItem.Create(template), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                if (GiveFed(player, template))
                     player.Out.SendMessage($"{npc.GetName(0, true)} gives you {template.GetName(1, false)}.", PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
                 quest.AdvanceByScript(npc);
                 return true;
@@ -284,7 +284,7 @@ namespace DOL.GS.Quests
                 if (GiveCooldown.TryGetValue(key, out long until) && now < until) continue;
                 GiveCooldown[key] = now + 60_000;
                 DbItemTemplate template = GameServer.Database.FindObjectByKey<DbItemTemplate>(id);
-                if (template == null || !player.Inventory.AddTemplate(GameInventoryItem.Create(template), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack)) continue;
+                if (template == null || !GiveFed(player, template)) continue;
                 string from = string.IsNullOrEmpty(step.GrantFrom) ? "You receive" : step.GrantFrom + " gives you";
                 player.Out.SendMessage($"{from} {template.GetName(1, false)}.", PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
             }
@@ -302,7 +302,7 @@ namespace DOL.GS.Quests
                 {
                     GiveCooldown[key] = now + 60_000;
                     DbItemTemplate template = GameServer.Database.FindObjectByKey<DbItemTemplate>(custom.Item);
-                    if (template != null && player.Inventory.AddTemplate(GameInventoryItem.Create(template), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                    if (template != null && GiveFed(player, template))
                         player.Out.SendMessage($"You have the {template.Name} for {quest.Name}.", PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
                 }
             }
@@ -392,7 +392,7 @@ namespace DOL.GS.Quests
                     {
                         if (!string.Equals(drop.Mob, mob.Name, StringComparison.OrdinalIgnoreCase) || !Util.Chance(drop.Chance)) continue;
                         DbItemTemplate template = GameServer.Database.FindObjectByKey<DbItemTemplate>(drop.Item);
-                        if (template != null && player.Inventory.AddTemplate(GameInventoryItem.Create(template), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                        if (template != null && GiveFed(player, template))
                             player.Out.SendMessage($"You take the {template.Name} from {mob.GetName(0, false)}.", PacketHandler.eChatType.CT_Loot, PacketHandler.eChatLoc.CL_SystemWindow);
                     }
                 }
@@ -421,7 +421,7 @@ namespace DOL.GS.Quests
                         return;
                     }
                     player.Inventory.RemoveCountFromStack(give.Item, 1);
-                    if (reward != null && player.Inventory.AddTemplate(GameInventoryItem.Create(reward), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                    if (reward != null && GiveFed(player, reward))
                         player.Out.SendMessage($"{npc.GetName(0, true)} gives you {reward.GetName(1, false)}.", PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
                     quest.AdvanceByScript(npc);
                     return;
@@ -552,7 +552,7 @@ namespace DOL.GS.Quests
                     if (player.Inventory.GetFirstItemByID(step.NeedsItem, eInventorySlot.Min_Inv, eInventorySlot.Max_Inv) != null) continue;
                     DbItemTemplate template = GameServer.Database.FindObjectByKey<DbItemTemplate>(step.NeedsItem);
                     if (template == null) continue;
-                    if (player.Inventory.AddTemplate(GameInventoryItem.Create(template), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                    if (GiveFed(player, template))
                         player.Out.SendMessage($"{npc.GetName(0, true)} gives you another {template.Name}.", PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
                 }
             }
@@ -616,6 +616,16 @@ namespace DOL.GS.Quests
         /// never gave it (67 classic quests stopped at step 1, quest audit 2026-10-13), and a lost one was gone for
         /// good. A player on a delivery step without its item receives it (at most once a minute).
         /// </summary>
+        /// <summary>One of a template into the bags, and onto the loot feed (owner 2026-11-15: quest drops such as
+        /// bandit ears did not show there).</summary>
+        private static bool GiveFed(GamePlayer player, DbItemTemplate template)
+        {
+            if (template == null || !player.Inventory.AddTemplate(GameInventoryItem.Create(template), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                return false;
+            LootFeed.Item(player, template, 1);
+            return true;
+        }
+
         private static void GiveDeliveryItem(GamePlayer player, DataQuest quest)
         {
             if (quest.StepType is not (DataQuest.eStepType.Deliver or DataQuest.eStepType.DeliverFinish)) return;
@@ -626,7 +636,7 @@ namespace DOL.GS.Quests
             if (GiveCooldown.TryGetValue(key, out long until) && now < until) return;
             GiveCooldown[key] = now + 60_000;
             DbItemTemplate template = GameServer.Database.FindObjectByKey<DbItemTemplate>(id);
-            if (template != null && player.Inventory.AddTemplate(GameInventoryItem.Create(template), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+            if (template != null && GiveFed(player, template))
                 player.Out.SendMessage($"You have the {template.Name} to deliver for {quest.Name}.", PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
         }
 
@@ -653,7 +663,7 @@ namespace DOL.GS.Quests
             if (GiveCooldown.TryGetValue(key, out long until) && now < until) return;
             GiveCooldown[key] = now + 60_000;
             DbItemTemplate template = GameServer.Database.FindObjectByKey<DbItemTemplate>(step.NeedsItem);
-            if (template != null && player.Inventory.AddTemplate(GameInventoryItem.Create(template), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+            if (template != null && GiveFed(player, template))
                 player.Out.SendMessage($"You recover the {template.Name} for {quest.Name}.", PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
         }
 
