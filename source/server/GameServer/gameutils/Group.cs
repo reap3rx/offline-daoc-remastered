@@ -317,6 +317,20 @@ namespace DOL.GS
 
                 player.Out.SendMessage("You leave your group.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 player.Notify(GamePlayerEvent.LeaveGroup, player);
+
+                // The bots that followed this player go with them. With two or more of them the group lived on
+                // among the bots, each still bound to the player who had left: they kept following, would not
+                // fight, and refused a new invitation as "already following another player-led group" (owner,
+                // 2026-11-15). Another player still in the group takes them over; otherwise each leaves - back to
+                // its own life, or deleted if it was a temporary helper, as when a group disbands.
+                GamePlayer heir = GetPlayersInTheGroup().FirstOrDefault(p => p != player);
+                foreach (GameBot follower in GetMembersInTheGroup().OfType<GameBot>().Where(b => b.PlayerGroupLeader == player).ToList())
+                {
+                    if (heir != null)
+                        follower.EnterPlayerLedGroup(heir);
+                    else
+                        _ = RemoveMember(follower);
+                }
             }
 
             GameLiving soleMemberToRemove = null;

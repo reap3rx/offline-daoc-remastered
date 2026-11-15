@@ -272,6 +272,16 @@ namespace DOL.GS.DynamicEvents
             target = null;
             if (bot?.CurrentRegion == null || Chains.Count == 0)
                 return false;
+            // Bots think on several threads at once and all of them count themselves in here: unlocked, two writing
+            // together broke the dictionary, and every bot that looked for a camp near that event failed its goal
+            // until the event was over (2026-11-15: 64 "Autonomous goal execution failed" in 13 minutes).
+            lock (_botsAt)
+                return TryBotTargetLocked(bot, out target);
+        }
+
+        static bool TryBotTargetLocked(GameBot bot, out BotEventTarget target)
+        {
+            target = null;
             long now = Now;
             ChainRuntime best = null;
             double bestD = double.MaxValue;
@@ -328,9 +338,16 @@ namespace DOL.GS.DynamicEvents
             {
                 at = c.Def.Giver != null && c.Leader != null && c.Stage.Def.Type is "escort" or "defend"
                     ? new Vector3(c.Leader.X, c.Leader.Y, c.Leader.Z) : c.Stage.Center;
-                foe = c.Stage.Spawned.Where(n => n.IsEnemy && n.IsAlive && n.ObjectState == GameObject.eObjectState.Active &&
-                        bot.IsWithinRadius(n, 3000))
-                    .OrderBy(n => n.GetDistanceTo(bot)).FirstOrDefault();
+                try
+                {
+                    foe = c.Stage.Spawned.ToArray().Where(n => n != null && n.IsEnemy && n.IsAlive &&
+                            n.ObjectState == GameObject.eObjectState.Active && bot.IsWithinRadius(n, 3000))
+                        .OrderBy(n => n.GetDistanceTo(bot)).FirstOrDefault();
+                }
+                catch (Exception e) when (e is IndexOutOfRangeException or ArgumentException or InvalidOperationException)
+                {
+                    foe = null;   // the stage's monsters changed under this bot's thread: it looks again next think
+                }
                 doing = $"{c.Def.Title}: {c.Stage.Def.Objective}";
             }
             else if (c.PendingId != null)
