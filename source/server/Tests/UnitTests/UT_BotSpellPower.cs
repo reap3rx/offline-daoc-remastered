@@ -61,6 +61,8 @@ namespace DOL.UnitTests
             public ICharacterClass Class;
             public int Stat = 100;
             public int Focus;
+            public bool Fighting;
+            public override bool InCombat => Fighting;
             public override byte Level { get; set; }
             public override ICharacterClass CharacterClass => Class;
             public override int Endurance { get; set; }
@@ -107,6 +109,8 @@ namespace DOL.UnitTests
             public bool Moving;
             public bool Attacking;
             public bool Casting;
+            public bool Fighting;                       // in combat: the classic amounts (out of it, the Remastered floor)
+            public override bool InCombat => Fighting;
             public int TestX;
             public override int X => TestX;
             public override int Y => 0;
@@ -150,11 +154,21 @@ namespace DOL.UnitTests
                 foreach (bool temporary in new[] { false, true })
                 {
                     var bot = NewRestBot(type, temporary);
+                    // in combat the classic amount stands, and a low bar does not halve it
+                    bot.Fighting = true;
                     bot.Mana = 20;
                     int low = new PowerRegenerationAmountCalculator().CalcValue(bot, eProperty.PowerRegenerationAmount);
                     bot.Mana = 75;
                     Assert.That(new PowerRegenerationAmountCalculator().CalcValue(bot, eProperty.PowerRegenerationAmount), Is.EqualTo(low));
                     Assert.That(low, Is.EqualTo(3));
+                    // out of combat (Remastered, ClassicRestRegeneration): full in about 12 s - half the bar on the
+                    // standing 6 s tick, whatever the bar holds
+                    bot.Fighting = false;
+                    foreach (int mana in new[] { 20, 75 })
+                    {
+                        bot.Mana = mana;
+                        Assert.That(new PowerRegenerationAmountCalculator().CalcValue(bot, eProperty.PowerRegenerationAmount), Is.EqualTo(50));
+                    }
                     foreach (int start in new[] { 20, 75 })
                     {
                         bot.Mana = start; SetRecovery(bot, true);
@@ -167,6 +181,7 @@ namespace DOL.UnitTests
                     Assert.That(bot.Endurance, Is.EqualTo(30));
                 }
                 Player human = Actor<Player>(); human.Class = (ICharacterClass)Activator.CreateInstance(type); human.Level = 7; human.Stat = 100;
+                human.Fighting = true;                  // (the classic penalty is the in-combat amount's)
                 Field(typeof(GameLiving), human, "m_mana", 10);
                 int humanLow = new PowerRegenerationAmountCalculator().CalcValue(human, eProperty.PowerRegenerationAmount);
                 Field(typeof(GameLiving), human, "m_mana", human.MaxMana);
@@ -191,7 +206,8 @@ namespace DOL.UnitTests
         [TestCase("moving")] [TestCase("attack")] [TestCase("cast")] [TestCase("aggro")] [TestCase("pet")]
         public void CombatMovementAndPetCombatCannotReceiveFastRestTicks(string blocker)
         {
-            var bot = NewRestBot(typeof(ClassSpiritmaster)); SetRecovery(bot, true);
+            // (in combat: out of it every player and bot has the Remastered out-of-combat floor, moving or not)
+            var bot = NewRestBot(typeof(ClassSpiritmaster)); SetRecovery(bot, true); bot.Fighting = true;
             if (blocker == "moving") bot.Moving = true;
             if (blocker == "attack") bot.Attacking = true;
             if (blocker == "cast") bot.Casting = true;

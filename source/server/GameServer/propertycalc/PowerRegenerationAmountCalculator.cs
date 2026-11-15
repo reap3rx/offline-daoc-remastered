@@ -53,8 +53,7 @@ namespace DOL.GS.PropertyCalc
 
             if (living is GamePlayer || living is GameBot)       // out of combat: GW2-style, full in seconds (ClassicRestRegeneration)
                 regen = Math.Max(regen, ClassicRestRegeneration.OutOfCombatFloor(living.InCombat, living.MaxMana,
-
-                    ClassicRestRegeneration.HealthAndPowerInterval(living.IsSitting, false)));
+                    ClassicRestRegeneration.OutOfCombatInterval(living)));
             return Math.Max(1, (int) regen);
         }
     }

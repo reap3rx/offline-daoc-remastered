@@ -677,10 +677,19 @@ public static class AutonomousObjectiveAssignments
         (!DateTime.TryParse(bot.PersistentRecord.ObjectiveExpiresUtc, null,
              System.Globalization.DateTimeStyles.RoundtripKind, out DateTime due) || due.ToUniversalTime() <= DateTime.UtcNow);
 
+    private static readonly DateTime ProcessStartUtc = System.Diagnostics.Process.GetCurrentProcess().StartTime.ToUniversalTime();
+
+    private static bool AssignedInThisRun(GameBot bot) =>
+        DateTime.TryParse(bot.PersistentRecord.ObjectiveAssignedUtc, null,
+            System.Globalization.DateTimeStyles.RoundtripKind, out DateTime assigned) && assigned.ToUniversalTime() >= ProcessStartUtc;
+
     public static void CompleteBetweenTaskServices(GameBot bot)
     {
         if (!IsBetweenPveTasks(bot)) return;
-        if (BetweenTaskServiceExpired(bot))
+        // Only a trip that ran out its time in this run of the server is worth a warning. One begun before the server
+        // was last started ran out by the clock while the server was off (2026-11-15: 61 of the day's 65 warnings came
+        // within minutes of a start - the same few bots at every restart - and read as "bots cannot find a camp").
+        if (BetweenTaskServiceExpired(bot) && AssignedInThisRun(bot))
             DOL.Logging.LoggerManager.Create(typeof(AutonomousObjectiveAssignments)).Warn(
                 $"AUTONOMOUS_BETWEEN_TASK_TIMEOUT bot=\"{bot.Name}\" id={bot.DatabaseID} level={bot.Level} " +
                 $"region={bot.CurrentRegionID} x={bot.X} y={bot.Y} z={bot.Z} " +

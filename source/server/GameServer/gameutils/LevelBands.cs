@@ -162,6 +162,12 @@ namespace DOL.GS
             {
                 if (_ready)
                     return;
+                if (GameServer.Instance?.Configuration == null)
+                {
+                    // no server yet (unit tests): no bands, and asked again once there is one
+                    _config = new Config { Enabled = false };
+                    return;
+                }
                 try
                 {
                     Load();

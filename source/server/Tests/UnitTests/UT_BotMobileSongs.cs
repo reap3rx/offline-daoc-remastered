@@ -325,7 +325,7 @@ namespace DOL.UnitTests
 
         [TestCase(40, 1)] [TestCase(40, 39)]
         [TestCase(80, 1)] [TestCase(80, 79)]
-        public void SpeedSongTargetsTheWholeNativeRaidAndAttachedPets(int capacity, int singerSlot)
+        public void GroupSongTargetsTheWholeNativeRaidAndAttachedPets(int capacity, int singerSlot)
         {
             Player owner = Actor<Player>();
             var members = new List<GameLiving> { owner };
@@ -349,8 +349,11 @@ namespace DOL.UnitTests
             Field(typeof(Group), group, "_groupMembers", members);
             foreach (GameLiving member in members) member.Group = group;
             Assert.That(group.EnableCompanionRaid(owner, capacity), Is.True);
+            // Not pulsing: a helping pulse (the speed song itself) is open since 2026-11-02 - everyone of the realm near
+            // the singer, grouped or not (SpellHandler.OpenPulseTargets, from the world around it) - so the raid's own
+            // reach is tested on the group spell beneath it.
             var song = new Spell(new DbSpell { SpellID = 1105, Type = "SpeedEnhancement", Target = "Group",
-                Range = 2000, Value = 204, Pulse = 1, Frequency = 60, Duration = 6,
+                Range = 2000, Value = 204, Pulse = 0, Frequency = 0, Duration = 6,
                 CastTime = 3, InstrumentRequirement = 1 }, 1);
             var handler = new SpeedEnhancementSpellHandler(members[singerSlot], song, Line);
             var expected = members.Concat(pets).ToArray();

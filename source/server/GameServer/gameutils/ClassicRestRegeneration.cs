@@ -23,6 +23,14 @@ namespace DOL.GS
         public static int OutOfCombatEnduranceFloor(bool inCombat, bool sprinting, int max) =>
             inCombat || sprinting || max <= 0 ? 0 : (int) System.Math.Ceiling(max / OUT_OF_COMBAT_ENDURANCE_FULL_S);
 
+        /// <summary>The interval the out-of-combat floor is worked out for: the one this living's health and power
+        /// really tick at. A resting bot ticks every second (BotRestRecovery), not every six: given the six-second
+        /// floor on a one-second tick it was full in two seconds, not twelve (2026-11-15, the failing
+        /// UT_BotSpellPower tests).</summary>
+        public static int OutOfCombatInterval(GameLiving living) =>
+            living is GameBot { IsEnhancedResting: true } ? BotRestRecovery.TickMilliseconds
+                : HealthAndPowerInterval(living.IsSitting, false);
+
         public static int HealthAndPowerInterval(bool sitting, bool inCombat)
         {
             return (6 - (sitting ? 3 : 0) + (inCombat ? 8 : 0) - (sitting && inCombat ? 1 : 0)) * 1000;

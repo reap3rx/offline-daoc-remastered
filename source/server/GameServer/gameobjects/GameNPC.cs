@@ -1060,6 +1060,12 @@ namespace DOL.GS
 			m_x = dbMob.X;
 			m_y = dbMob.Y;
 			m_z = dbMob.Z;
+			// X / Y / Z read the movement component, which knew nothing of this place until AddToWorld's base call.
+			// Scripts that place helpers round themselves before that call (Colialt's zombies, the Giant Sporite
+			// Cluster's copies, the Blight controller's Fire Blights, Breanwort ...) read 0,0,0 and their helpers went
+			// to the region's corner, outside every zone: 2,052 "Couldn't find a zone" warnings a day, and those
+			// fights without their adds (2026-11-15).
+			movementComponent.ForceUpdatePosition();
 			Heading = dbMob.Heading;
 			MaxSpeedBase = (short) dbMob.Speed;
 			CurrentRegionID = dbMob.Region;
