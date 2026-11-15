@@ -768,9 +768,12 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 		if visible != vis:
 			visible = vis
 	_pace(delta)
+	if _lod:
+		_lod.rank = rank
 	if model is Fig3Figure:
 		var f := model as Fig3Figure
-		if Fig3Figure.sway_on:
+		f.fx_on = rank < Perf.sway_n                    # (under load the farther figures lose the polish)
+		if Fig3Figure.sway_on and f.fx_on:
 			f.look_point = _look_point()
 		# a swing or a cast on the move (chasing you): its legs keep running under it, as yours (Fig3Figure.set_lower;
 		# animation step 5)
@@ -953,6 +956,7 @@ func _set_swim_drop(d: float) -> void:
 
 ## Animation and shadow level of detail: AnimLod (shared with the gamebots' and companions' figures).
 var _lod: AnimLod
+var rank := 0                                 # its place among the views on screen, nearest first (NpcManager._rank)
 
 
 func _animate_lod(delta: float, cam: Camera3D) -> void:

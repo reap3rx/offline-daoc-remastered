@@ -87,6 +87,7 @@ var view: Node3D                             # whose distance / visibility count
 var model: Node3D                            # whose meshes cast the shadow
 var anim: AnimationPlayer
 var last_dist := 0.0                         # metres from the camera at the last step
+var rank := 0                                # its place among the views on screen, nearest first (NpcManager._rank)
 var _dt := 0.0
 var _shadow_check := 0.0
 var _casting_shadow := true
@@ -95,6 +96,29 @@ static var _budget_frame := -1
 static var _budget := 0
 static var prof_anim_us := 0                 # debug timing (tests/crowd_probe.gd)
 static var prof_anim_n := 0
+
+
+## A skeleton with modifiers (a race figure's body shape, layers, sway) runs them - and sends its skin to the graphics
+## card again - every frame, posed or not (measured 2026-11-14: with 98 figures posed 20 times a second the frame
+## still spent 9 ms preparing them). A view posed less often, or off screen, steps its skeleton itself, when it is
+## posed; back to every frame when it is near again.
+var _sk: Skeleton3D
+var _sk_looked := false
+var _manual := false
+
+func _own_skeleton(on: bool) -> void:
+	if on == _manual:
+		return
+	if not _sk_looked:
+		_sk_looked = true
+		if model:
+			for s in model.find_children("*", "Skeleton3D", true, false):
+				_sk = s
+				break
+	_manual = on
+	if _sk and is_instance_valid(_sk):
+		_sk.modifier_callback_mode_process = Skeleton3D.MODIFIER_CALLBACK_MODE_PROCESS_MANUAL if on \
+				else Skeleton3D.MODIFIER_CALLBACK_MODE_PROCESS_IDLE
 
 
 func _init(v: Node3D, m: Node3D, a: AnimationPlayer) -> void:
@@ -132,11 +156,20 @@ func step(delta: float, cam: Camera3D) -> void:
 		if not in_view(view.global_position + Vector3(0, 1, 0)):
 			_dt = minf(_dt, 2.0)
 			_shadow_tick(delta, 1e9)
+			_own_skeleton(true)                           # (off screen: its skeleton rests too)
 			return
 		if FULL or last_dist < NEAR_FULL_M:
 			_shadow_tick(delta, last_dist)
+			# under load the farther views are posed less often (Perf.pose_from / pose_step; the clip keeps its
+			# speed - the time is carried)
+			var slow := rank >= Perf.pose_from
+			_own_skeleton(slow)
+			if slow and _dt < Perf.pose_step:
+				return
 			var tn := Time.get_ticks_usec()
 			anim.advance(_dt)
+			if _manual and _sk:
+				_sk.advance(_dt)
 			prof_anim_us += Time.get_ticks_usec() - tn
 			prof_anim_n += 1
 			_dt = 0.0

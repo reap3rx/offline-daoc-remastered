@@ -34,6 +34,15 @@ var fx_range := 80.0                       # spell effects beyond this (metres f
 var max_effects := 300                     # spell effects alive at once (the nearest are kept)
 var gather_range := 80.0                   # other casters' hand glows (the long-lived effects) only this close
 var voices := 48                           # sounds at once (CharacterSounds)
+# the characters themselves (owner 2026-11-14: "some sort of solution to disable some of these expensive effects on
+# characters when many are in the screen, up to the point where the player is the only one"; measured: 0.37 ms a
+# figure a frame - 98 in view ran at 24 fps with every other saving already at its most). The views on screen are
+# ranked by distance (NpcManager: your target and group first); as the CPU level rises, from the farthest in:
+const FULL_N := 12                         # the nearest this many keep everything, whatever the load
+const NO_LIMIT := 1 << 20
+var sway_n := NO_LIMIT                     # ranks from this on lose the sway, cloak / gear swing, hair, feet, look
+var pose_from := NO_LIMIT                  # ranks from this on are posed less often ...
+var pose_step := 1.0 / 30.0                # ... this far apart (seconds: 30 down to 20 poses a second)
 
 var gpu_vendor := ""
 var gpu_name := ""
@@ -252,6 +261,11 @@ func _apply() -> void:
 	fx_range = lerpf(80.0, 10.0, sqrt(both))
 	gather_range = lerpf(80.0, 6.0, sqrt(both))
 	npc_shadow_m = lerpf(60.0, 8.0, both)                   # shadows cost both: each caster drawn again per split
+	# the polish goes first (level 0.1 - 0.5: from the 64th nearest in to the 12th), then the pose rate (0.35 - 0.7,
+	# the same way, at 30 a second), then that rate falls to 20 (0.7 - 1)
+	sway_n = NO_LIMIT if c < 0.1 else maxi(FULL_N, int(lerpf(64.0, FULL_N, clampf((c - 0.1) / 0.4, 0.0, 1.0))))
+	pose_from = NO_LIMIT if c < 0.35 else maxi(FULL_N, int(lerpf(64.0, FULL_N, clampf((c - 0.35) / 0.35, 0.0, 1.0))))
+	pose_step = 1.0 / lerpf(30.0, 20.0, clampf((c - 0.7) / 0.3, 0.0, 1.0))
 	# the graphics card's savings only
 	particle_ratio = lerpf(1.0, 0.25, g)
 	var vp := get_viewport()

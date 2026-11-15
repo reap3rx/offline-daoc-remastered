@@ -2107,6 +2107,7 @@ void fragment() {
 ## and a ponytail swing with the figure's movement, within limits (figure_cloth.gd, 2026-11-14). Figures beyond
 ## SWAY_RANGE_M are left alone.
 static var sway_on := false                  # SkySystem: remastered
+var fx_on := true                             # false: no sway, cloak swing, feet or look for it now (under load: Npc)
 var back_gear := false                        # something rides on the back (Player.dress; the cloak keeps under it: figure_cloth.gd)
 var _hair_mat: ShaderMaterial                # the hair's material (its sway uniforms)
 static var wind := 1.0                       # SkySystem: the storm's wind (as the trees')
@@ -2658,7 +2659,7 @@ class Sway extends SkeletonModifier3D:
 			_bones(sk)
 		var pos := sk.global_position
 		var cam := get_viewport().get_camera_3d() if is_inside_tree() else null
-		if cam and cam.global_position.distance_to(pos) > SWAY_RANGE_M:
+		if (fig and not fig.fx_on) or (cam and cam.global_position.distance_to(pos) > SWAY_RANGE_M):
 			_last = Vector3.INF
 			_still_hair()
 			if fig:

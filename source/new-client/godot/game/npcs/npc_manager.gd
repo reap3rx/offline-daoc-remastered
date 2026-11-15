@@ -471,6 +471,10 @@ func _process_body(delta: float) -> void:
 		_tick = 0.25
 		update_views(12)
 		return
+	_rank_left -= delta
+	if _rank_left <= 0.0:
+		_rank_left = 0.2
+		_rank()
 	for i in active:
 		var n: Npc = active[i]
 		n.pending += delta
@@ -484,6 +488,36 @@ func _process_body(delta: float) -> void:
 		return
 	_tick = 0.25
 	update_views(12)
+
+
+## The views on screen in order of distance, for the load savings (Perf.sway_n / pose_from): your target and your
+## group count as nearest; off screen last. Only while there is something to save.
+var _rank_left := 0.0
+var _ranked := false
+
+func _rank() -> void:
+	if Perf.sway_n >= Perf.NO_LIMIT and Perf.pose_from >= Perf.NO_LIMIT:
+		if _ranked:
+			_ranked = false
+			for i in active:
+				(active[i] as Npc).rank = 0
+		return
+	_ranked = true
+	var mine := {}
+	for g in PlayerData.group:
+		mine[String((g as Dictionary).get("name", ""))] = true
+	var list: Array = []
+	for i in active:
+		var n: Npc = active[i]
+		if n == target or mine.has(String(n.state.spawn.get("name", ""))):
+			n.rank = 0
+		elif not n.visible or not AnimLod.in_view(n.global_position + Vector3(0, 1, 0)):
+			n.rank = Perf.NO_LIMIT
+		else:
+			list.append(n)
+	list.sort_custom(func(a, b): return (a as Npc).last_dist < (b as Npc).last_dist)
+	for k in list.size():
+		(list[k] as Npc).rank = k
 
 
 ## Everything in view range gets its model now - called behind the loading screen (owner 2026-10-10: load it during
