@@ -20,16 +20,16 @@ var clutters := {}                          # zone id -> GroundClutter
 var sky: SkySystem
 var ui: GameUI
 var npcs: NpcManager
-var combat: Combat
+var combat = null                          # (these six were the old standalone game's own systems, removed 2026-11-15:
 const ActionCombatMode := preload("res://game/combat/action_combat.gd")   # (preloaded: no class cache needed)
 const Housing := preload("res://game/world/housing.gd")
 var action_combat: ActionCombatMode = null      # Action Combat (the server's game only): F9
-var quests: QuestEngine
-var emissaries: Emissaries                 # the three faction emissaries (the only custom NPCs)
-var tasks: TaskSystem                      # the 1.65 /task system
-var loot: Loot                             # monster drops, auto loot, items on the ground
-var companions: Companions                 # your hired companions (bot plan phase 6)
-var _inn_window: InnkeeperWindow
+var quests = null                          #  the server runs the game. Always null; what still asks for them finds none)
+var emissaries = null
+var tasks = null
+var loot = null
+var companions = null
+var _inn_window = null
 var _click_from := Vector2.ZERO
 var _click_moved := 0.0
 var _click_down := false
@@ -136,21 +136,8 @@ func _ready() -> void:
 	else:
 		player.set_model("res://content/characters/%s/celt_animated.gltf" % args.get("model", "celt_male_cata"))   # Catacombs Celt (owner 2026-10-09); --model=celt_male = classic
 	# the 1.65 interface (game/ui): the character from the select screen, its inventory, quickbars, options (Esc)
-	if args.has("ui-test"):
-		UiArt.settings_path = "user://settings_uitest.cfg"     # test runs never move the owner's windows
 	Graphics.load_from(UiArt.settings_path)                 # Options > VIDEO quality, before the world is built
-	if args.has("ui-test") and CharacterStore.selected.is_empty():
-		# tests: a sample Celt Guardian that is never saved (no account), --ui-shots=<folder> saves the windows
-		# --realm=alb / mid: a sample Briton Fighter / Norseman Warrior instead (Albion / Midgard zone tests)
-		var sample := {"alb": {"name": "Uitest", "realm": "alb", "prefix": "bri_m", "race": "Briton", "base": "BRIT-FIGH",
-				"class_name": "Fighter", "level": 1},
-				"mid": {"name": "Uitest", "realm": "mid", "prefix": "nor_m", "race": "Norseman", "base": "NORS-WARR",
-				"class_name": "Viking", "level": 1}}
-		var sc: Dictionary = sample.get(String(args.get("realm", "")), {"name": "Uitest", "realm": "hib", "prefix": "cel_m",
-				"race": "Celt", "base": "CELT-ARMS", "class_name": "Guardian", "level": 1})
-		PlayerData.load_character(sc)
-		CharacterStore.selected = sc                     # the next zone keeps this sample (its companions, level...)
-	elif not CharacterStore.selected.is_empty():
+	if not CharacterStore.selected.is_empty():
 		PlayerData.load_character(CharacterStore.selected)
 		if Server.active:                                # the server's items, money, level ... (they came before the zone)
 			Server.apply_to_player()
@@ -166,8 +153,6 @@ func _ready() -> void:
 		ui.warmap.zone_id = zone_id                          # your marker on the realm war map
 	if ui.map_window:                                        # M: the zone map (tests/zone_map_render.gd made it)
 		ui.map_window.set_zone(zone.dir.path_join("map.png"), float(zone.info.size_m), String(zone.info.get("name", "")))
-	if args.has("ui-shots"):
-		_ui_shots.call_deferred(String(args["ui-shots"]))
 	_build_sky()
 	ui.sky = sky
 	# the zone's people and monsters (pipeline/build_npcs.py + build_monsters.py; LOUGH DERG LEDGER.md)
@@ -220,87 +205,8 @@ func _ready() -> void:
 		npcs.setup(zone.dir, zone, player)
 		npcs.interacted.connect(_on_interact)
 		ui.clear_target = npcs.clear_target
-		combat = Combat.new()                            # melee: attack mode, swings, monsters fighting back, XP
-		combat.name = "Combat"
-		add_child(combat)
-		combat.setup(player, npcs)
-		var cast := Casting.new()                        # spells: cast bar, power, effects
-		cast.name = "Casting"
-		add_child(cast)
-		cast.setup(player, npcs, combat)
-		combat.casting = cast
-		combat.npc_casting = NpcCasting.new()            # monsters' spells (their templates')
-		combat.npc_casting.combat = combat
-		combat.npc_casting.casting = cast
-		combat.pets = Pets.new()                         # summoned pets (pets.json)
-		combat.pets.name = "Pets"
-		add_child(combat.pets)
-		combat.pets.setup(combat)
-		var abil := Abilities.new()                      # Sprint, Quickcast
-		abil.name = "Abilities"
-		add_child(abil)
-		abil.setup(player, combat, cast)
-		combat.abilities = abil
-		cast.cast_progress.connect(ui.show_cast)
-		ui.casting = cast
-		ui.item_dropped_on_world.connect(_on_item_dropped)
-		ui.npc_dialog.keyword.connect(_on_keyword)
-		combat.player_died.connect(ui.show_release.bind(true))
-		var routes := HorseRoutes.new()                   # stable master horse routes (tickets)
-		routes.name = "HorseRoutes"
-		routes.viewer = self
-		routes.player = player
-		routes.npcs = npcs
-		add_child(routes)
-		quests = QuestEngine.new()                        # the classic quests (QuestDb)
-		quests.name = "Quests"
-		add_child(quests)
-		quests.setup(self)
-		ui.quest_abandon = quests.abandon
-		var markers := QuestMarkers.new()                  # "!" over givers with a quest for you, "?" over step targets
-		markers.name = "QuestMarkers"
-		ui.add_child(markers)
-		ui.move_child(markers, 0)
-		markers.setup(self)
-		combat.monster_killed.connect(quests.on_kill)
-		emissaries = Emissaries.new()
-		emissaries.name = "Emissaries"
-		add_child(emissaries)
-		emissaries.setup(self)
-		combat.monster_killed.connect(emissaries.on_kill)
-		combat.killed_by.connect(quests.on_player_died)
-		tasks = TaskSystem.new()                            # the 1.65 /task system (kill / delivery tasks, levels 1-19)
-		tasks.name = "Tasks"
-		add_child(tasks)
-		tasks.setup(self)
-		combat.monster_killed.connect(tasks.on_kill)
-		combat.killed_by.connect(tasks.on_player_died)
-		PlayerData.task_command.connect(tasks.command)
-		loot = Loot.new()                                   # drops (auto loot or on the ground) and dropped items
-		loot.name = "Loot"
-		add_child(loot)
-		loot.setup(self)
-		combat.monster_killed.connect(loot.on_kill)
-		companions = Companions.new()                      # your companions: hiring, the inns, the courier quest
-		companions.name = "Companions"
-		add_child(companions)
-		companions.setup(self)
-		combat.group_xp = companions.group_xp
-		_inn_window = InnkeeperWindow.new()
-		ui.root.add_child(_inn_window)
-		_inn_window.build()
-		_inn_window.visible = false
-		ui.windows["innkeeper"] = _inn_window
-		var cw := CompanionWindow.new()
-		ui.root.add_child(cw)
-		cw.build()
-		cw.visible = false
-		ui.windows["companion"] = cw
-		companions.window = cw
-		combat.attack_mode_changed.connect(func(on: bool):
-				if audio:
-					audio.set_battle(on))
-		combat.player_released.connect(ui.show_release.bind(false))
+		# (no server - test runs: the zone's people stand where the data puts them, and nothing more; the old
+		# standalone game's combat, spells, pets, quests, tasks, loot and companions went 2026-11-15)
 	clutter = _add_clutter(zone)
 	if sky and region:
 		sky.region = region
@@ -1031,21 +937,6 @@ func _side_by_side(first: ClassicWindow, second: ClassicWindow) -> void:
 func _healer_interact(n: Npc) -> void:
 	var who := String(n.spawn.name)
 	PlayerData.message.emit("%s says, \"Greetings, %s. What can I do for you today?\"" % [who, String(ClassDb.cls(PlayerData.class_id()).get("name", ""))], "npc")
-	# any healer of your realm - the roadside inns' own and every town's (owner 2026-10-11) - brings a fallen companion
-	# back - free below level 20, then a player's one-death constitution price (Companions.revive_cost)
-	if (bool(n.spawn.get("revives_companions", false)) or int(n.spawn.get("realm", 0)) == PlayerData.realm_id()) 			and companions and not companions.dead().is_empty():
-		var rec: Dictionary = companions.dead()[0]
-		var cid := int(Companions.info(rec).id)
-		var fee := Companions.revive_cost(rec)
-		var ask := ("It will cost %s to bring %s back from the dead. Do you accept?" % [PlayerData.money_string(fee), rec.name]) if fee > 0 				else ("%s will bring %s back from the dead for free (until level %d). Do you accept?" % [who, rec.name, Companions.FREE_REVIVE_BELOW])
-		UiArt.confirm(ui.root, "", ask,
-				"ACCEPT", "DECLINE", func():
-			if player.global_position.distance_to(n.global_position) > 6.0:
-				PlayerData.message.emit("You are too far away to interact with %s." % who, "system")
-				return
-			companions.revive(cid, who),
-				func(): PlayerData.message.emit("You decide not to have %s brought back yet." % rec.name, "system"))
-		return
 	if PlayerData.con_lost <= 0:
 		PlayerData.message.emit("Your constitution is already fully restored!", "system")
 		return
@@ -1851,134 +1742,6 @@ func _on_server_world(kind: String, d: Dictionary) -> void:
 			if sky:
 				sky.day_increment = Server.day_increment
 				sky.set_hour(fposmod(float(d.time) / 3600000.0, 24.0))
-
-
-## Tests: screenshots of the interface windows (character, inventory, options pages), then quit.
-func _ui_shots(folder: String) -> void:
-	DirAccess.make_dir_recursive_absolute(folder)
-	await get_tree().create_timer(6.0).timeout
-	var shots := [["hud", func(): pass], ["npc_target", func():
-				if npcs:
-					var best: Npc = null
-					for i in npcs.active:
-						var n: Npc = npcs.active[i]
-						if n.spawn.role == "merchant" and (best == null or n.global_position.distance_to(player.global_position) < best.global_position.distance_to(player.global_position)):
-							best = n
-					if best:
-						npcs.select(best)
-						player.face(atan2(-(best.global_position.x - player.global_position.x), -(best.global_position.z - player.global_position.z)))],
-			["merchant", func():
-				if npcs and npcs.target:
-					PlayerData.set_copper(25000)
-					ui.merchant.open_for(String(npcs.target.spawn.name), String(npcs.target.spawn.items))
-					var first: Array = ItemDb.merchant_list(String(npcs.target.spawn.items))
-					if first.size() > 0:
-						ui.merchant.select_item(String(first[0][2]))
-						ui.merchant.buy_selected()
-						ui.merchant.select_item(String(first[0][2]))],
-			["door_open", func():
-				ui.merchant.hide_window()
-				if zone.doors.size() > 0:
-					var best: ZoneDoor = zone.doors[0]
-					for d in zone.doors:
-						if d.global_position.distance_to(player.global_position) < best.global_position.distance_to(player.global_position):
-							best = d
-					best.open_door()
-					player.global_position = best._world(best.closed.origin) + best.closed.basis.x.normalized() * 4.0 + Vector3(0, 0.3, 0)
-					player.face(atan2(-(best.global_position.x - player.global_position.x), -(best.global_position.z - player.global_position.z)))],
-			["plates_friendly", func():
-				if npcs and npcs.target:
-					var t: Npc = npcs.target
-					npcs.clear_target()
-					_stand_near(t.global_position, 6.0)],
-			["plates_monster", func():
-				if npcs:
-					var best: NpcState = null
-					for st in npcs.states:
-						var s: NpcState = st
-						if int(s.spawn.realm) == 0 and s.level > 0 and s.pos.distance_to(player.global_position) > 60.0 								and (best == null or s.pos.distance_to(player.global_position) < best.pos.distance_to(player.global_position)):
-							best = s
-					if best:
-						_stand_near(best.pos, 7.0)],
-			["combat_start", func():                     # stand by a monster, target it, attack mode
-				PlayerData.message.connect(func(t, _k): print("[chat] ", t))
-				if npcs and combat:
-					var best: NpcState = null
-					for st in npcs.states:
-						var s: NpcState = st
-						if int(s.spawn.realm) == 0 and s.level <= 1 and s.alive 								and (best == null or s.pos.distance_to(player.global_position) < best.pos.distance_to(player.global_position)):
-							best = s
-					if best:
-						_stand_near(best.pos, 2.2)
-						await get_tree().create_timer(0.6).timeout
-						if best.view:
-							npcs.select(best.view)
-							PlayerData.level = 5                     # test: a Blademaster with Blades 5
-							PlayerData.promote(43)
-							PlayerData.specs["Blades"] = 5
-							combat.set_attack_mode(true)
-							PlayerData.use_skill.emit({"kind": "style", "id": "784"})   # Shining Blade
-						print("[test] fighting ", best.spawn.name, " lvl ", best.level, " hp ", best.hp)],
-			["combat_1", func(): PlayerData.use_skill.emit({"kind": "style", "id": "784"})], ["combat_2", func(): PlayerData.use_skill.emit({"kind": "style", "id": "784"})], ["combat_3", func(): PlayerData.use_skill.emit({"kind": "style", "id": "784"})],
-			["combat_4", func(): PlayerData.use_skill.emit({"kind": "style", "id": "784"})], ["combat_5", func(): PlayerData.use_skill.emit({"kind": "style", "id": "784"})], ["combat_6", func(): pass],
-			["combat_7", func():
-				print("[test] player hp ", PlayerData.hp, "/", PlayerData.max_hp, " xp ", PlayerData.xp, " level ", PlayerData.level)],
-			["map", func():
-				ui.map_window.toggle_window()],
-			["map_close", func():
-				ui.map_window.toggle_window()],
-			["sheet_skills", func():
-				PlayerData.level = 5
-				PlayerData.promote(43)                       # Blademaster (test character, never saved)
-				PlayerData.specs["Blades"] = 5
-				PlayerData.specs["Parry"] = 2
-				PlayerData._load_specs()
-				ui.show_sheet("skills")],
-			["sheet_combat", func(): ui.show_sheet("combat")],
-			["trainer", func():
-				for i in npcs.active:
-					var n: Npc = npcs.active[i]
-					if str(n.spawn.get("trains", "") if n.spawn.get("trains") != null else "") == "Guardian":
-						_trainer_interact(n)
-						break],
-			["trainer_close", func():
-				ui.trainer.hide_window()
-				ui.npc_dialog.hide_window()],
-			["esc_untarget", func():                     # target the monster, then Esc: no target, no options
-				if npcs and not npcs.active.is_empty():
-					npcs.select(npcs.active.values()[0])
-					var k := InputEventKey.new()
-					k.keycode = KEY_ESCAPE
-					k.pressed = true
-					ui.handle_input(k)
-					print("esc_untarget: target=", PlayerData.target, " options=", ui.options.visible)],
-			["inventory", func():
-				ui.sheet_tab = ""
-				ui.show_sheet("inventory")
-				for slot in PlayerData.inventory:                # right-click an item: the mini delve
-					PlayerData.select_slot(int(slot))
-					break],
-			["character", func(): ui.show_sheet("character")],
-			["vertical_bar", func():
-				ui.quickbars[1].set_vertical(true)
-				PlayerData.set_pet({"name": "Test Pet"})
-				PlayerData.set_target({"name": "Wood Imp", "con_color": Color(0.4, 0.6, 1.0), "health": 0.6})],
-			["chat_typing", func():
-				ui.chat.start_typing("hello")
-				for i in 3:
-					ui.message("You hit the wood imp for %d damage!" % (12 + i), "combat")
-				PlayerData.delve.emit(ItemDb.item("training_sword_hib"))],
-			["options_video", func():
-				ui.chat.stop_typing()
-				ui.options.show_window()], ["options_controls", func(): ui.options.show_page("controls")],
-			["options_chat", func(): ui.options.show_page("chat")],
-			["options_windows", func(): ui.options.show_page("windows")]]
-	for s in shots:
-		s[1].call()
-		await get_tree().create_timer(1.5).timeout
-		await RenderingServer.frame_post_draw
-		get_viewport().get_texture().get_image().save_png("%s/%s.png" % [folder, s[0]])
-	get_tree().quit()
 
 
 ## Tests: put the player a few metres from a point, facing it.

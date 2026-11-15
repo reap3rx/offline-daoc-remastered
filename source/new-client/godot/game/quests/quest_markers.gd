@@ -87,54 +87,7 @@ func _rebuild() -> void:
 	if Server.active:
 		_server_rebuild()
 		return
-	if viewer == null or viewer.npcs == null or viewer.quests == null:
-		_sync_decals()
-		return
-	var targets := {}                    # NPCs your current steps end at
-	var givers := {}                     # NPCs who gave you a quest still running
-	for id in PlayerData.quests:
-		var st: Dictionary = viewer.quests.step_of(id)
-		var t := String(st.get("target", ""))
-		if t != "":
-			targets[t.to_lower()] = true
-		var custom: Dictionary = st.get("custom", {})
-		if String(custom.get("target", "")) != "":
-			targets[String(custom.target).to_lower()] = true
-		var g := String(QuestDb.quest(id).get("giver", ""))
-		if g != "":
-			givers[g.to_lower()] = true
-	var marks := []
-	for id in PlayerData.quests:                          # the classic step markers (classic-quests.json)
-		var mk: Dictionary = viewer.quests.step_of(id).get("marker", {})
-		if not mk.is_empty() and int(mk.get("zone", -1)) == int(viewer.zone.info.id):
-			marks.append({"at": Vector2(float(mk.pos[0]), float(mk.pos[2])), "kind": "step"})
-	var hunt := Emissaries.hunt()                         # the emissary's hunt: a red dot on the hunting ground
-	if not hunt.is_empty() and int(hunt.get("zone", -1)) == int(viewer.zone.info.id):
-		marks.append({"at": Vector2(float(hunt.pos[0]), float(hunt.pos[2])), "kind": "step"})
-	for s in viewer.npcs.states:
-		var st: NpcState = s
-		if not st.alive or int(st.spawn.realm) == 0:
-			continue
-		var who := String(st.spawn.name).to_lower()
-		if targets.has(who):
-			_marked[st] = "turnin"
-			continue
-		for q in QuestDb.by_giver(String(st.spawn.name)):
-			if viewer.quests.qualifies(q):
-				_marked[st] = "available"
-				break
-		if not _marked.has(st) and givers.has(who):
-			_marked[st] = "progress"
-	_task_marks(marks)
-	var here := int(viewer.zone.info.id)
-	for st in _marked:                                     # (the map shows this zone: a neighbour's NPCs are its own map's)
-		var zid := (st as NpcState).zone_id
-		if zid >= 0 and zid != here:
-			continue
-		marks.append({"at": Vector2((st as NpcState).pos.x, (st as NpcState).pos.z), "kind": MAP_KIND[_marked[st]]})
-	if viewer.ui and viewer.ui.map_window:
-		viewer.ui.map_window.marks = marks
-	_sync_decals()
+	_sync_decals()                       # (no server: no quests - the old standalone game's markers went 2026-11-15)
 
 
 ## 0.36c: the server's quest indicators (ServerWorld: NPCCreate flags / the quest effect) - available yellow, finish
@@ -156,32 +109,6 @@ func _server_rebuild() -> void:
 	if viewer and viewer.ui and viewer.ui.map_window:
 		viewer.ui.map_window.marks = marks + Server.quest_map_marks()
 	_sync_decals()
-
-
-## The task's target in its colour (TaskSystem): kill task - every live monster of that name within 150 m of the spot
-## the guard picked (and the spot on the map); once killed, the guard; delivery - the receiver.
-func _task_marks(marks: Array) -> void:
-	var t := TaskSystem.current()
-	if t.is_empty():
-		return
-	var here := int(viewer.zone.info.id)
-	var want := ""
-	if String(t.type) == "kill" and not bool(t.get("killed", false)):
-		if int(t.get("target_zone", -1)) != here:
-			return
-		var p: Array = t.target_pos
-		var spot := Vector3(float(p[0]), float(p[1]), float(p[2]))
-		marks.append({"at": Vector2(spot.x, spot.z), "kind": "task"})
-		for s in viewer.npcs.states:
-			var st: NpcState = s
-			if st.alive and String(st.spawn.name) == String(t.mob) and st.pos.distance_to(spot) < 150.0:
-				_marked[st] = "task"
-		return
-	want = String(t.giver) if String(t.type) == "kill" else String(t.get("receiver", ""))
-	for s in viewer.npcs.states:
-		var st: NpcState = s
-		if st.alive and String(st.spawn.name) == want:
-			_marked[st] = "task"
 
 
 func _sync_decals() -> void:

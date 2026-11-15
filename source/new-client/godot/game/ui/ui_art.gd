@@ -151,6 +151,21 @@ static func fit(f: Font, s: String, fs: int, w: float) -> String:
 ## every later text with enough new letters in it).
 static var _fonts_warm := false
 
+static var _bot_opts_at := -1.0
+static var _bot_opts := {}
+
+
+## Options > INTERFACE > BOTS: "names_gamebots", "names_companions", "map_dots" (all on by default). Read once a second.
+static func bot_option(key: String) -> bool:
+	var now := Time.get_ticks_msec() / 1000.0
+	if now - _bot_opts_at > 1.0:
+		_bot_opts_at = now
+		var cfg := load_settings()
+		for k in ["names_gamebots", "names_companions", "map_dots"]:
+			_bot_opts[k] = bool(cfg.get_value("bots", k, true))
+	return bool(_bot_opts.get(key, true))
+
+
 static func warm_fonts() -> void:
 	if _fonts_warm:
 		return

@@ -62,7 +62,7 @@ signal item_dropped_on_world(slot: int, screen_pos: Vector2)   # zone viewer: an
 var map_window: MapWindow
 const EventTrackerScript := preload("res://game/ui/event_tracker.gd")
 var event_tracker: Control
-var casting: Casting
+var casting = null                         # (the old standalone game's spells: always null with the server)
 var _cast_bar: Control
 var _cast_fill: ColorRect
 var _cast_name: Label

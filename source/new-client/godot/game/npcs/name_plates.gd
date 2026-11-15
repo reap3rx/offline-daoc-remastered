@@ -44,7 +44,7 @@ var _group_oids := {}
 
 
 func _process_inner(_delta: float) -> void:
-	_companion_names = BotView.option("names_companions")
+	_companion_names = UiArt.bot_option("names_companions")
 	_group_oids.clear()
 	if Server.active:
 		for m in Server.group_members:

@@ -45,7 +45,7 @@ var diseased := false                       # disease: no regeneration, 15% slow
 var npc_buffs: Array = []                  # its other self buffs (damage add / shield, haste, bladeturn, procs)
 var aggro := {}                             # threat: "player" / a pet's NpcState / a BotFoe -> amount (StandardMobBrain)
 var target_pet: NpcState                    # the pet it fights instead of the player (most threat)
-var target_bot: BotFoe                      # ...or the gamebot (bot plan phase 4)
+var target_bot = null                        # ...or the gamebot (bot plan phase 4)
 var weapon_pick := ""                       # its melee weapon this spawn ("one_hand" / "two_hand"; both: 50/50)
 var melee_forced := false                   # an archer hit while shooting fights in melee for the rest of the fight
 var swing_result := ""                      # its last swing at the player: "hit" / "miss" / "parry" / "block" / "evade" / "style"

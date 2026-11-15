@@ -55,13 +55,7 @@ func build() -> void:
 			if selected.begins_with("srv"):
 				Server.client.call("RemoveQuest", int(selected.substr(3)) - 1)
 			return
-		if selected == "task":                           # /task abort (TaskSystem): a given-up task fails
-			PlayerData.task_command.emit("abort")
-		elif selected == "emissary":                     # FactionReputationQuest.AbortQuest: the hunt is dropped
-			PlayerData.character.erase(Emissaries.SAVE_KEY)
-			PlayerData.save_character()
-			PlayerData.quests_changed.emit()
-		elif selected != "":
+		if selected != "":
 			remove_requested.emit(selected))
 	add_child(_remove)
 	PlayerData.quests_changed.connect(refresh)
@@ -81,16 +75,10 @@ func refresh() -> void:
 		_server_list()
 		return
 	var ids: Array = PlayerData.quests.keys()
-	if not TaskSystem.current().is_empty():               # the /task task, at the top
-		ids.push_front("task")
-	if not Emissaries.hunt().is_empty():                  # the emissary's repeatable hunt
-		ids.append("emissary")
 	if not ids.has(selected):
 		selected = String(ids[0]) if not ids.is_empty() else ""
 	for id in ids:
-		var q := QuestDb.quest(id) if id != "emissary" else {"name": "%s Favor: %s" % [Emissaries.mine().get("faction_name", "Faction"), Emissaries.hunt().get("target", "")]}
-		if id == "task":
-			q = {"name": String(TaskSystem.current().get("name", "Task"))}
+		var q := QuestDb.quest(id)
 		_list.add_child(_row(String(q.get("name", id)), String(id)))
 	_show_selected()
 
@@ -163,22 +151,9 @@ func _server_list() -> void:
 
 func _show_selected() -> void:
 	_remove.disabled = selected == ""
-	_guide.disabled = selected == "task"                  # a /task has no quest guide (the two stay separate)
+	_guide.disabled = false
 	if selected == "":
 		_body.text = "[color=#9a9184]You have no quests.[/color]"
-		return
-	if selected == "task":
-		var t := TaskSystem.current()
-		_body.text = "
-".join(["[b]%s[/b]" % String(t.get("name", "")).to_upper(),
-				"[color=#9a9184]From %s[/color]" % String(t.get("giver", "")), "", TaskSystem.describe(t)])
-		return
-	if selected == "emissary":
-		var e := Emissaries.mine()
-		_body.text = "
-".join(["[b]%s FAVOR: %s[/b]" % [String(e.get("faction_name", "")).to_upper(), String(Emissaries.hunt().get("target", "")).to_upper()],
-				"[color=#9a9184]Repeatable, from %s[/color]" % e.get("name", ""), "", String(e.get("text", {}).get("story", "")), "",
-				Emissaries.journal_text()])
 		return
 	var q := QuestDb.quest(selected)
 	var steps: Array = q.get("steps", [])

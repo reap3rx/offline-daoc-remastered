@@ -22,9 +22,9 @@ from the original game client's files and comes with the install.
 ## Two things to know before changing code
 
 - **The server owns the game.** The launcher always starts the client with `--server=127.0.0.1`. The
-  client still contains an older standalone game (its own combat, spells, quests, bots and
-  companions; the branches behind `not Server.active`). It never runs and is being removed. Do not
-  extend it.
+  client's own older standalone game (combat, spells, pets, quests, tasks, bots, companions) was
+  removed on 2026-11-15. Without a server the client is only a zone viewer for test probes; a few
+  branches behind `not Server.active` remain and should not be extended.
 - **The game runs from a copy.** Edit here, then copy the changed files to `new-client/godot/game` in
   the playable folder.
 

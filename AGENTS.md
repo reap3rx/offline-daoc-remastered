@@ -73,10 +73,10 @@ In the playable folder (not in Git):
 ## Useful facts
 
 - **One way to play.** The launcher always starts the client against the local server
-  (`--server=127.0.0.1`). The client also contains an older standalone game (its own combat, quests,
-  bots and companions, everything behind `not Server.active`). It never runs and is being removed;
-  do not extend it, and check which side a system lives on before changing it (the server owns
-  companions, quests, loot and combat).
+  (`--server=127.0.0.1`). The server owns companions, quests, loot and combat. The client's own older
+  standalone game (its combat, spells, pets, quests, tasks, bots and companions) was removed on
+  2026-11-15. Without a server the client is only a zone viewer for test probes; some code behind
+  `not Server.active` remains (offline merchants, trainers, character files) and should not be extended.
 - **Two copies of the client code.** Edit `source/new-client/godot/game`, then copy the changed files to
   `new-client/godot/game` to run them. Only the source copy is in Git.
 - **Custom classes.** The Sluaghbinder (Hibernia; `ServerProperties.Properties.ENABLE_SLUAGHBINDER`,

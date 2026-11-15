@@ -624,10 +624,10 @@ func _interface() -> void:
 	_hint("ON: COINS AND ITEMS FROM YOUR KILLS GO STRAIGHT INTO YOUR BACKPACK (NOT IN 1.65 - A QUALITY OF LIFE OPTION). OFF: THEY DROP AT THE MONSTER'S FEET FOR YOU TO PICK UP, AS IN THE ORIGINAL.")
 	# the bots' names and map dots (bot plan phase 3, owner 2026-10-10: all on by default, mix and match)
 	_heading("BOTS")
-	_row("COMPANION NAMES", _toggle(BotView.option("names_companions"), func(on: bool): _save("bots", "names_companions", on)))
-	_row("GAMEBOT NAMES", _toggle(BotView.option("names_gamebots"), func(on: bool): _save("bots", "names_gamebots", on)))
+	_row("COMPANION NAMES", _toggle(UiArt.bot_option("names_companions"), func(on: bool): _save("bots", "names_companions", on)))
+	_row("GAMEBOT NAMES", _toggle(UiArt.bot_option("names_gamebots"), func(on: bool): _save("bots", "names_gamebots", on)))
 	_hint("SHOW OR HIDE THE NAMES OVER YOUR COMPANIONS AND OVER THE GAMEBOTS, EACH ON ITS OWN. A BOT YOU CLICK ALWAYS SHOWS ITS NAME.")
-	_row("REALM BOTS ON MAP", _toggle(BotView.option("map_dots"), func(on: bool): _save("bots", "map_dots", on)))
+	_row("REALM BOTS ON MAP", _toggle(UiArt.bot_option("map_dots"), func(on: bool): _save("bots", "map_dots", on)))
 	_hint("YOUR REALM'S GAMEBOTS AND COMPANIONS AS GREEN DOTS ON YOUR MAP (ALSO IN DUNGEONS). ENEMY BOTS NEVER SHOW.")
 	_hint("THE BOT ROSTER AND THE SERVER SETTINGS (XP RATES, BOT GOALS AND THE REST) ARE IN THE OFFLINE DAOC REBUILT LAUNCHER.")
 

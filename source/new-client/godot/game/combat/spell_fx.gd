@@ -157,12 +157,24 @@ static func preload_effects(client_effects: Array) -> int:
 	return paths.size()
 
 
+static var _npc_spells := {}
+
+
+## A monster's spell (content/spells/npc_spells.json), by id.
+static func _npc_spell(id: int) -> Dictionary:
+	if _npc_spells.is_empty():
+		var path := "res://content/spells/npc_spells.json"
+		var parsed = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
+		_npc_spells = parsed if parsed is Dictionary else {"": {}}
+	return _npc_spells.get(str(id), {})
+
+
 ## The client effects a zone may need: its monsters' spells and the player's.
 static func zone_effects(npc_states: Array) -> Array:
 	var ces := {}
 	for st in npc_states:
 		for sid in (st as NpcState).spawn.get("spells", []):
-			var ce := int(NpcCasting.spell(int(sid)).get("clienteffect", 0))
+			var ce := int(_npc_spell(int(sid)).get("clienteffect", 0))
 			if ce > 0:
 				ces[ce] = true
 	for line in ClassDb.spell_lines(PlayerData.class_id(), PlayerData.level, PlayerData.specs):
