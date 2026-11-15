@@ -235,6 +235,15 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 ## (static): every figure of the race shares the result.
 const AnimStyle := preload("res://game/anim_style.gd")
 const FigureCloth := preload("res://game/figure_cloth.gd")
+## Timing of the per-figure passes by part (tests/perf probes): off, a flag check each.
+static var prof_on := false
+static var prof := {}
+
+static func mark(part: String, since: int) -> int:
+	var now := Time.get_ticks_usec()
+	prof[part] = int(prof.get(part, 0)) + now - since
+	return now
+
 var _cloth = null                            # the cloak's and ponytail's swing (figure_cloth.gd), null: none
 static var _smooth_cache := {}               # "prefix/clip" -> Animation
 static var _smooth_lock := Mutex.new()       # (figures are loaded on worker threads too)
@@ -2449,25 +2458,72 @@ class Layers extends SkeletonModifier3D:
 class HairCollide extends SkeletonModifier3D:
 	var fig: Fig3Figure
 	var _on := false
+	var _hm_id := 0                              # the hair material the length was measured for
+	var _long := false                           # the hair reaches down to the shoulders (anything to lie over)
+	const LONG_M := 0.22                         # ... this far below the head bone
+	var _a := PackedVector4Array()
+	var _b := PackedVector4Array()
+	var _bo := PackedVector4Array()
+	var _bx := PackedVector4Array()
+	var _by := PackedVector4Array()
+	var _bz := PackedVector4Array()
+
+	## Short hair, or hair under a hood, has nothing to lie over: measured once per hair (2026-11-14: this pass ran for
+	## every figure every frame - 0.8 ms of a 32-figure crowd's frame).
+	func _measure(hm: ShaderMaterial) -> void:
+		_hm_id = hm.get_instance_id()
+		_long = false
+		var sk := get_skeleton()
+		var cloth = fig._cloth
+		var head := sk.find_bone("Bip01 Head") if sk else -1
+		if head < 0 or cloth == null:
+			return
+		var frame: Dictionary = cloth._frame()
+		if frame.is_empty():
+			return
+		var up: Vector3 = frame.up
+		var top: float = sk.get_bone_global_rest(head).origin.dot(up)
+		var m: float = cloth._m()
+		for k in fig._meshes:
+			if not String(k).begins_with("hair"):
+				continue
+			for mi in fig._meshes[k]:
+				var g := mi as MeshInstance3D
+				if g == null or not g.visible or g.mesh == null or g.material_override != hm:
+					continue
+				var box := g.get_aabb()
+				for i in 8:
+					if (top - box.get_endpoint(i).dot(up)) / m > LONG_M:
+						_long = true
+						return
 
 	func _process_modification_with_delta(_delta: float) -> void:
 		var hm: ShaderMaterial = fig._hair_mat if fig else null
 		if hm == null:
 			return
 		var cloth = fig._cloth
-		if cloth == null or not fig._near or not Fig3Figure.sway_on:
+		if hm.get_instance_id() != _hm_id:
+			_measure(hm)
+			_on = true                               # (a new material: its counts set below or cleared)
+		if cloth == null or not fig._near or not Fig3Figure.sway_on or not _long:
 			if _on:
 				_on = false
 				hm.set_shader_parameter("col_n", 0)
 				hm.set_shader_parameter("box_n", 0)
 			return
+		var tp := Time.get_ticks_usec() if Fig3Figure.prof_on else 0
 		_on = true
 		var caps: Array = cloth.hair_capsules()
 		var n := mini(caps.size(), 16)
-		var a := PackedVector4Array()
-		var b := PackedVector4Array()
-		a.resize(16)
-		b.resize(16)
+		if _a.size() != 16:
+			_a.resize(16)
+			_b.resize(16)
+			_bo.resize(3)
+			_bx.resize(3)
+			_by.resize(3)
+			_bz.resize(3)
+		var a := _a
+		var b := _b
 		for i in n:
 			var c: Array = caps[i]
 			var p: Vector3 = c[0]
@@ -2479,14 +2535,10 @@ class HairCollide extends SkeletonModifier3D:
 		hm.set_shader_parameter("col_n", n)
 		var boxes: Array = cloth.hair_boxes()
 		var k := mini(boxes.size(), 3)
-		var bo := PackedVector4Array()
-		var bx := PackedVector4Array()
-		var by := PackedVector4Array()
-		var bz := PackedVector4Array()
-		bo.resize(3)                                 # (each its own: a packed array in a list is a copy)
-		bx.resize(3)
-		by.resize(3)
-		bz.resize(3)
+		var bo := _bo
+		var bx := _bx
+		var by := _by
+		var bz := _bz
 		for i in k:
 			var e: Array = boxes[i]
 			var o: Vector3 = e[0]
@@ -2503,6 +2555,8 @@ class HairCollide extends SkeletonModifier3D:
 		hm.set_shader_parameter("box_y", by)
 		hm.set_shader_parameter("box_z", bz)
 		hm.set_shader_parameter("box_n", k)
+		if Fig3Figure.prof_on:
+			Fig3Figure.mark("hair over cloak", tp)
 
 
 class Sway extends SkeletonModifier3D:
@@ -2561,6 +2615,9 @@ class Sway extends SkeletonModifier3D:
 	var _from_p: Array[Vector3] = [Vector3.ZERO, Vector3.ZERO]
 	var _from_b: Array[Basis] = [Basis(), Basis()]
 	var _winded := 0.0                           # 0..1: how hard it has been running lately
+	var _g_at: Array[Vector3] = [Vector3.INF, Vector3.INF]      # the ground under each foot: where it was asked for,
+	var _g_val: Array[float] = [-INF, -INF]                      # what it was, and how long ago
+	var _g_age: Array[float] = [1.0, 1.0]
 
 	func _bones(sk: Skeleton3D) -> void:
 		_ready_bones = true
@@ -2612,6 +2669,7 @@ class Sway extends SkeletonModifier3D:
 		var dt := maxf(delta, 0.001)
 		if fig:
 			fig._near = true
+		var tp := Time.get_ticks_usec() if Fig3Figure.prof_on else 0
 		var fresh := _last == Vector3.INF                      # (first frame in range: no change in speed to read)
 		# the speed between moves, not between frames: you move 60 times a second (the physics), the frames come at
 		# up to 165 - read frame to frame the speed flickers (0, 0, 2.7x ...) and set the lean and hair shaking
@@ -2673,15 +2731,27 @@ class Sway extends SkeletonModifier3D:
 		var back_h := clampf(_back, -0.12, 0.45)               # (hair may swing a little forward past the head)
 		var side_ang := clampf(_side, -0.2, 0.2)
 		var axis_back := up.cross(fwd).normalized()           # + swings the lower end back (away from the body)
+		if Fig3Figure.prof_on:
+			tp = Fig3Figure.mark("sway: speed and springs", tp)
 		_turning(sk, dt, fresh, fwd_s)
+		if Fig3Figure.prof_on:
+			tp = Fig3Figure.mark("sway: turning and look", tp)
 		_brake(sk)
+		if Fig3Figure.prof_on:
+			tp = Fig3Figure.mark("sway: brake", tp)
 		_feet(sk, dt)
+		if Fig3Figure.prof_on:
+			tp = Fig3Figure.mark("sway: feet", tp)
 		for i in _spine.size():                               # (first: the cloak and hair hang off the leaning back;
 			_turn(sk, _spine[i], axis_back, _lean * _spine_w[i], fwd, 0.0)    # + tips the upper body forward)
 		# the cloak, a ponytail and the gear on the back swing with the figure's own movement, within limits
 		# (figure_cloth.gd)
+		if Fig3Figure.prof_on:
+			tp = Fig3Figure.mark("sway: lean", tp)
 		if fig._cloth:
 			fig._cloth.tick(dt, v, fresh)
+			if Fig3Figure.prof_on:
+				tp = Fig3Figure.mark("cloak and gear", tp)
 		else:
 			for b in _tails:
 				_turn(sk, b, axis_back, back_h * 0.8, fwd, side_ang * 1.2)
@@ -2703,6 +2773,8 @@ class Sway extends SkeletonModifier3D:
 			hm.set_shader_parameter("sway_dir", back_w * (sin(back_h) * 0.75 + absf(bob)) + side_w * (sin(side_ang) * 0.6 + swish)
 					+ up_w * bob)
 			_hair_live = true
+		if Fig3Figure.prof_on:
+			Fig3Figure.mark("sway: hair", tp)
 
 	const LOOK_W := 7.0                          # how quickly the head turns to look (rad/s spring)
 	const LOOK_YAW := 1.15                       # as far as the head turns (rad, ~65 deg) ...
@@ -2925,7 +2997,16 @@ class Sway extends SkeletonModifier3D:
 		var base_y := model.global_position.y
 		var d: Array[float] = [0.0, 0.0]
 		for k in 2:
-			var g := _ground(Vector3(want_p[k].x, base_y, want_p[k].z))
+			# the ground under a planted foot is asked for once, not every frame (2026-11-14: two terrain lookups and
+			# two ray casts a figure a frame - 1.4 ms of a 32-figure crowd's frame, most of them standing): again
+			# when the foot has moved a centimetre, the figure's height changed, or after half a second
+			var gp := Vector3(want_p[k].x, base_y, want_p[k].z)
+			_g_age[k] += dt
+			if _g_age[k] > 0.5 or absf(gp.x - _g_at[k].x) > 0.01 or absf(gp.z - _g_at[k].z) > 0.01 or absf(gp.y - _g_at[k].y) > 0.01:
+				_g_val[k] = _ground(gp)
+				_g_at[k] = gp
+				_g_age[k] = randf() * 0.1                     # (not every figure's on the same frame)
+			var g := _g_val[k]
 			var wnt := 0.0 if g == -INF else clampf(g - base_y, -FEET_MAX, FEET_MAX)
 			_ik_d[k] = lerpf(_ik_d[k], wnt, clampf(dt * 12.0, 0.0, 1.0))
 			d[k] = _ik_d[k] * _ik_w

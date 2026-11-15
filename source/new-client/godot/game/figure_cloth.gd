@@ -62,7 +62,9 @@ var _yaw := INF
 var _om := 0.0                               # how fast it turns (rad/s, smoothed; + to its left)
 var _vz := 0.0                               # its speed ahead last frame (smoothed)
 var _move_w := 0.0                           # 0..1: a moving clip plays (the clip's own flap is held back)
-const MOVE_CLIPS := ["run", "walk", "walk_back", "strafe_left", "strafe_right", "idle"]
+const MOVE_CLIPS := ["run", "walk", "walk_back", "strafe_left", "strafe_right"]
+var _quiet := false                          # standing with nothing swinging: nothing done (see tick)
+var _quiet_n := 0
 
 
 func setup(sk: Skeleton3D) -> bool:
@@ -97,6 +99,7 @@ func setup(sk: Skeleton3D) -> bool:
 	_cloak_n = _chains.size()
 	_tail = sk.find_bone("Bip01 Ponytail1")
 	_phase = float(get_instance_id() % 997) * 0.37
+	_quiet_n = int(get_instance_id() % 4)          # (not every figure on the same frame)
 	return _cloak_n > 0 or _tail >= 0
 
 
@@ -159,6 +162,23 @@ func tick(dt: float, v: Vector3, fresh: bool) -> void:
 	_b2 = minf(_b2, BACK_MAX)
 	_s1 = clampf(_s1, -SIDE_MAX, SIDE_MAX)
 	_s2 = clampf(_s2, -SIDE_MAX, SIDE_MAX)
+	# standing, nothing swinging and no moving clip: the cloak, the ponytail and the gear are where the clip and
+	# dress have them - nothing to do (2026-11-14: this ran in full for every figure every frame, most of a town's
+	# crowd standing; 1.5 ms of a 32-figure crowd's frame)
+	var cur := String(fig.anim.current_animation) if fig and fig.anim else ""
+	_move_w = move_toward(_move_w, 1.0 if cur in MOVE_CLIPS or Fig3Figure.is_stop_clip(cur) else 0.0, dt * 4.0)
+	if _move_w <= 0.0 and want_b == 0.0 and absf(want_s) < 1e-3 \
+			and absf(_b1) + absf(_b2) + absf(_s1) + absf(_s2) < 2e-3 \
+			and absf(_b1v) + absf(_b2v) + absf(_s1v) + absf(_s2v) < 2e-2:
+		# (the gear still lies on the cloak as the standing clip has it - a weapon stance's idle hangs it further
+		# back than the plain one, and left where dress put it the cloak came through a slung spear: every fourth
+		# frame is plenty for a standing clip)
+		_quiet_n += 1
+		if not _gear.is_empty() and (not _quiet or _quiet_n % 4 == 0):
+			sway_gear(0.0, 0.0, 0.0)
+		_quiet = true
+		return
+	_quiet = false
 	# the figure's ahead and up in the skeleton's space; + about axis_back swings the lower end back, + about fwd
 	# to its left
 	var to_skel := _sk.global_basis.orthonormalized().inverse() * model.global_basis.orthonormalized()
@@ -173,8 +193,6 @@ func tick(dt: float, v: Vector3, fresh: bool) -> void:
 		# the clip's own flap of the cloak (the run's throws it out level behind, like a flag): only a part kept - the
 		# heavy cloth's swing is this one's; under the gear less still
 		# (the moving clips only: sitting, lying, a swing or a cast lay the cloak out their own way)
-		var cur := String(fig.anim.current_animation) if fig and fig.anim else ""
-		_move_w = move_toward(_move_w, 1.0 if cur in MOVE_CLIPS or Fig3Figure.is_stop_clip(cur) else 0.0, dt * 4.0)
 		var keep_free := lerpf(1.0, CLIP_KEEP, _move_w)
 		var keep_under := lerpf(1.0, UNDER_GEAR_CLIP, _move_w)
 		for b in _controls:
