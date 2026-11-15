@@ -241,6 +241,12 @@ func clock_text() -> String:
 
 
 func _process(delta: float) -> void:
+	var t_live := Time.get_ticks_usec()
+	_process_timed(delta)
+	Perf.proc_add("sky", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)
+
+
+func _process_timed(delta: float) -> void:
 	if zone and int(zone.info.get("id", -1)) != _look_zone:
 		apply_look()
 	if dungeon:                                              # the clock still runs (camp timers, night NPCs)

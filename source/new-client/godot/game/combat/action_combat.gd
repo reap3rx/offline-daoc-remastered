@@ -1053,6 +1053,12 @@ func _aim_score(n: Npc, p: Player, max_angle: float, max_range: float) -> float:
 # ---------------------------------------------------------------- every frame
 
 func _process(_delta: float) -> void:
+	var t_live := Time.get_ticks_usec()
+	_process_timed(_delta)
+	Perf.proc_add("action combat", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)
+
+
+func _process_timed(_delta: float) -> void:
 	if not _queried and Server.playing:
 		_queried = true
 		Server.command("/ac query")

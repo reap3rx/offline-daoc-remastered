@@ -45,4 +45,6 @@ obj/
 # Server world state (rewritten every run)
 runtime/server/bot-*.json
 runtime/server/rvr-world.json
+runtime/server/dynamic-events-state.json
+runtime/server/soulbind-stones.json
 __pycache__/

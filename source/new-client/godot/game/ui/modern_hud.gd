@@ -251,6 +251,12 @@ func _save_custom() -> void:
 
 
 func _process(_delta: float) -> void:
+	var t_live := Time.get_ticks_usec()
+	_process_timed(_delta)
+	Perf.proc_add("modern hud", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)
+
+
+func _process_timed(_delta: float) -> void:
 	if not visible:
 		return
 	if Engine.get_process_frames() % 4 == 0:

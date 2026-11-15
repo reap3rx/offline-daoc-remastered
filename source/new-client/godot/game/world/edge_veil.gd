@@ -44,6 +44,12 @@ func setup(r: RegionWorld) -> void:
 
 
 func _process(_dt: float) -> void:
+	var t_live := Time.get_ticks_usec()
+	_process_timed(_dt)
+	Perf.proc_add("world edge", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)
+
+
+func _process_timed(_dt: float) -> void:
 	if region == null or region.current == null or _sea == null or _fog == null:
 		return
 	var z := region.current
@@ -383,12 +389,21 @@ func allows(p: Vector3) -> bool:
 
 ## The skirts of one zone: every block-long stretch of its sides with no built zone beyond, and the outer corners.
 func _veil(z: ZoneLoader) -> void:
+	var tv := Time.get_ticks_usec()
+	_veil_inner(z)
+	Perf.note("zone: world edge", tv)
+
+
+func _veil_inner(z: ZoneLoader) -> void:
 	if z == null or z.city or bool(z.info.get("dungeon", false)):
 		return
 	_refresh_blocks()
 	var e := region.entry(int(z.info.id))
 	if e.is_empty() or int(e.get("region", -1)) != _region_id:
 		return
+	# in the world, a stretch a frame (2026-11-15: a neighbour zone placed held a frame 125 ms building all of its
+	# edge at once); behind the loading screen, all at once as before
+	var spread: bool = Server.playing
 	var size := float(z.info.size_m)
 	var w := int(e.w)
 	var h := int(e.h)
@@ -446,6 +461,10 @@ func _veil(z: ZoneLoader) -> void:
 			var r_next: float = reaches[k + 1] if k < n - 1 and open[k + 1] else reach
 			_strip(z, root, mat, sea, (sd[0] as Vector2) + (sd[1] as Vector2) * (k * BLOCK_M), sd[1], sd[2],
 					size, world0, Vector3(r_prev, reach, r_next), prev_inner, next_inner)
+			if spread:
+				await get_tree().process_frame
+				if not is_instance_valid(z) or not is_instance_valid(root) or not is_inside_tree():
+					return
 	for k in corners:
 		if fan[k]:
 			var c: Array = corners[k]
@@ -453,6 +472,10 @@ func _veil(z: ZoneLoader) -> void:
 			var d: Vector2 = c[1]
 			var reach := minf(_reach(dg, Vector2i(int(d.x), 0)), _reach(dg, Vector2i(0, int(d.y))))
 			_corner(z, root, mat, sea, c[0], d, size, world0, reach)
+			if spread:
+				await get_tree().process_frame
+				if not is_instance_valid(z) or not is_instance_valid(root) or not is_inside_tree():
+					return
 
 
 ## How far the land beyond may reach from a block outside the edge: half the open ground to the next built block

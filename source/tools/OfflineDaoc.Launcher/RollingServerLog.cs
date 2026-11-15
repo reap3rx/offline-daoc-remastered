@@ -9,8 +9,8 @@ namespace OfflineDaoc.Launcher;
 /// </summary>
 internal sealed class RollingServerLog : IDisposable
 {
-    internal const long DefaultSegmentBytes = 512L * 1024 * 1024;
-    internal const long DefaultTotalBytes = 2L * 1024 * 1024 * 1024;
+    internal const long DefaultSegmentBytes = 64L * 1024 * 1024;     // (was 512 MB: two console logs alone held 864 MB)
+    internal const long DefaultTotalBytes = 256L * 1024 * 1024;
     private const int MaximumArchiveFiles = 8;
 
     private readonly object _sync = new();

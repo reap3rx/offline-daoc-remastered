@@ -469,6 +469,25 @@ func _stack() -> void:
 			w.transform = w.get_meta("placed_xf", w.transform)
 			list.append(e)
 	list.sort_custom(func(x, y): return ORDER.find(String(x[2])) < ORDER.find(String(y[2])))
+	if list.is_empty():
+		return
+	# the same race in the same cloak with the same pieces hung the same way: the same answer (2026-11-15: every
+	# figure dressed worked it out again from thousands of points - 90 ms at the first, some at every one after)
+	var key := "%s|%s" % [String(fig.get("race")), _cloak_key() if cloak_on else "-"]
+	for e in list:
+		var kw := e[1] as Node3D
+		var ids := 0
+		for n in kw.find_children("*", "MeshInstance3D", true, false):
+			if (n as MeshInstance3D).mesh:
+				ids = hash([ids, (n as MeshInstance3D).mesh.get_rid().get_id()])
+		key += "|%d:%s:%d:%d" % [int(e[0]), String(e[2]), ids, hash(kw.transform)]
+	if _slide_cache.has(key):
+		var slides: Array = _slide_cache[key]
+		for i in list.size():
+			if absf(float(slides[i])) > 1e-4:
+				(list[i][1] as Node3D).position += _sk.get_bone_global_rest(int(list[i][0])).basis.inverse() * (back * float(slides[i]))
+		return
+	var made := []
 	var reach := {}                                     # cell -> how far back the surface so far reaches
 	var have_cloak := false
 	if cloak_on:
@@ -508,11 +527,29 @@ func _stack() -> void:
 			slide = need if have_cloak else maxf(need, 0.0)
 		if absf(slide) > 1e-4:
 			w.position += _sk.get_bone_global_rest(bone).basis.inverse() * (back * slide)
+		made.append(slide)
 		for c in outer:
 			var d: float = float(outer[c]) + slide
 			if d > float(reach.get(c, -INF)):
 				reach[c] = d
 		first = false
+	_slide_cache[key] = made
+
+
+static var _slide_cache := {}                # race | cloak | the pieces as hung -> how far each slid
+
+
+## The cloak that shows, as a key ("" none).
+func _cloak_key() -> String:
+	var parts: Dictionary = fig.get("_meshes")
+	var key := ""
+	for k in parts:
+		if String(k).begins_with("cloak"):
+			for x in parts[k]:
+				var mi := x as MeshInstance3D
+				if mi.visible and mi.mesh and mi.skin:
+					key = "%d|%d" % [mi.mesh.get_rid().get_id(), mi.skin.get_rid().get_id()]
+	return key
 
 
 static var _samples_cache := {}              # mesh rid -> PackedVector3Array (points over its triangles, its own space)

@@ -648,6 +648,7 @@ func _ground(st: NpcState) -> void:
 ## kind: the server's RemoveObject type - 0 a dead NPC (its body stays a while: Npc.make_corpse), 1 a living NPC,
 ## 2 a player.
 func _remove(oid: int, park := true, kind := 1, why := "") -> void:
+	_obj_wait.erase(oid)
 	if door_oids.has(oid):
 		doors.erase(door_oids[oid])
 		door_oids.erase(oid)
@@ -919,6 +920,7 @@ func interact(n: Npc) -> void:
 
 func update_views(max_build: int) -> void:
 	super.update_views(max_build)
+	_objects_ready()
 	var now := Time.get_ticks_msec()
 	for oid in _parked.keys():                                   # parked too long: let go
 		if now - int(_parked[oid][6]) > PARK_S * 1000.0:
@@ -1657,7 +1659,39 @@ func _view_pos(oid: int) -> Vector3:
 
 ## A world object the server shows: monster drops, items people dropped, the server's own placed objects. Doors are
 ## the zone's own (drawn with the land); everything else gets its item model where the server says.
+## A ground object's model loads on the worker first, like a view's files (the health check 2026-11-14: "object
+## model 1596 78 ms" - the first of each model parsed its file in the frame its packet came): the object appears a
+## quarter of a second later, the first time only.
+var _obj_wait := {}                          # oid -> [its create packet, the model's file, since (ms)]
+
+
 func _add_object(d: Dictionary) -> void:
+	var t_obj := Time.get_ticks_usec()
+	var model := int(d.model) & 0x7FFF
+	if int(d.door) < 0 and not Housing.has_object(model) and not CampObjects.is_custom(model):
+		var wp := WeaponModels.path_of(model)
+		if wp != "" and not WeaponModels._scenes.has(wp):
+			_remove(int(d.oid))
+			_obj_wait[int(d.oid)] = [d, wp, Time.get_ticks_msec()]
+			if not _prep_jobs.has("weapon:" + wp):
+				_prep_next["weapon:" + wp] = ["weapon", wp]
+			return
+	_add_object_inner(d)
+	Perf.note("object model %d" % model, t_obj)
+
+
+func _objects_ready() -> void:
+	if _obj_wait.is_empty():
+		return
+	var now := Time.get_ticks_msec()
+	for oid in _obj_wait.keys():
+		var w: Array = _obj_wait[oid]
+		if WeaponModels._scenes.has(String(w[1])) or now - int(w[2]) > PREP_GIVE_UP_MS:
+			_obj_wait.erase(oid)
+			_add_object_inner(w[0])
+
+
+func _add_object_inner(d: Dictionary) -> void:
 	var oid := int(d.oid)
 	_remove(oid)
 	if int(d.door) >= 0:

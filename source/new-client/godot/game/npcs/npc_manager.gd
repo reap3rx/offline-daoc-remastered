@@ -527,6 +527,68 @@ func prebuild() -> void:
 		update_views(1 << 30)
 
 
+## Your realm's player races made ready behind the loading screen, once a session (2026-11-15: the first Firbolg, the
+## first Lurikeen ... of a session each held a frame a quarter to half a second when they came into view - the card
+## taking the race's whole figure, its meshes and shaders - however far off the main thread the files were read).
+## The other realms' races still load at their first sight (an enemy in the frontiers).
+const REALM_RACES := {"alb": ["bri", "ava", "hig", "sar", "inc"], "mid": ["nor", "tro", "dwa", "kob", "val"],
+		"hib": ["cel", "fir", "elf", "lur", "syl"]}
+
+## Started, then asked each frame until it says done (never waited for with the main thread stopped: a figure's
+## loading needs it now and then, and the game stood still for good).
+static var _warm_tasks: Array = []
+static var _warm_out := {}
+static var _warm_lock := Mutex.new()
+static var _warm_t0 := 0
+static var _warm_realm := ""
+
+static func warm_realm_start(realm: String) -> void:
+	if not _warm_tasks.is_empty():
+		return
+	_warm_t0 = Time.get_ticks_msec()
+	_warm_realm = realm
+	var lock := _warm_lock
+	var out := _warm_out
+	var tasks := _warm_tasks
+	var todo: Array = []
+	for r: String in REALM_RACES.get(realm, []):
+		for g: String in ["_m", "_f"]:
+			var p: String = r + g
+			if not Fig3Figure._scenes.has(p) and not _prep_failed.has("figure:" + p):
+				todo.append(p)
+	if todo.is_empty():
+		return
+	# one after another on one worker, as the views' own preparation does (several at once is untried)
+	tasks.append(WorkerThreadPool.add_task(func():
+		for p: String in todo:
+			var ps := Fig3Figure.pack_figure(p)
+			Fig3Figure.warm_clips(p, ps)
+			lock.lock()
+			out[p] = ps
+			lock.unlock(), false, "realm figures"))
+
+
+## True once they are all in (and into the cache).
+static func warm_realm_done() -> bool:
+	if _warm_tasks.is_empty():
+		return true
+	for t in _warm_tasks:
+		if not WorkerThreadPool.is_task_completed(int(t)):
+			return false
+	for t in _warm_tasks:
+		WorkerThreadPool.wait_for_task_completion(int(t))
+	for p in _warm_out:
+		if _warm_out[p] != null:
+			if not Fig3Figure._scenes.has(p):
+				Fig3Figure._scenes[p] = _warm_out[p]
+		else:
+			_prep_failed["figure:" + String(p)] = true
+	print("[views] %d race figures of %s made ready in %d ms" % [_warm_out.size(), _warm_realm, Time.get_ticks_msec() - _warm_t0])
+	_warm_tasks.clear()
+	_warm_out.clear()
+	return true
+
+
 var prof_build_us := 0                      # debug timing (tests/seamless_probe.gd): view builds, model parses, ticks
 var prof_built := 0
 var prof_parse_us := 0
@@ -560,6 +622,7 @@ func update_views(max_build: int) -> void:
 				# for good. After PREP_GIVE_UP_MS the view is built on the spot (its files load here, a hitch at worst).
 				if now - s.prep_since < PREP_GIVE_UP_MS:
 					continue
+				Perf.note_us("view built without its files (waited %d ms)" % (now - s.prep_since), Perf.NOTE_US)
 			s.prep_since = 0
 			var tb := Time.get_ticks_usec()
 			var n := Npc.new()
@@ -715,16 +778,32 @@ func _prep_start() -> void:
 
 ## The worker: each file loaded by its cache's own loader (no cache touched here).
 static func _prep_run(jobs: Dictionary, out: Dictionary) -> void:
+	var t0 := Time.get_ticks_msec()
+	var texes := 0
 	for k in jobs:
 		var job: Array = jobs[k]
+		if String(job[0]) == "tex":
+			# one texture a frame or so, not a figure's dozen at once (2026-11-15: a frame waited 395 ms while the
+			# card took 200 MB of a new figure's skins - the worker made them all in the same instant)
+			texes += 1
+			if texes > 1:
+				OS.delay_msec(TEX_GAP_MS)
 		match String(job[0]):
 			"model": out[k] = _pack_model(String(job[1]))
-			"figure": out[k] = Fig3Figure.pack_figure(String(job[1]))
+			"figure":
+				out[k] = Fig3Figure.pack_figure(String(job[1]))
+				Fig3Figure.warm_clips(String(job[1]), out[k])      # (its clips made ready here, not at its first view)
 			"meta": out[k] = JSON.parse_string(FileAccess.get_file_as_string("%s/races/%s/figure.json" % [Fig3Figure.ROOT, job[1]]))
 			"tex": out[k] = Fig3Figure.load_texture(String(job[1][0]), String(job[1][1]))
 			"helm": out[k] = Fig3Figure.pack_helm(String(job[1]))
 			"weapon": out[k] = WeaponModels.pack(String(job[1]))
 			"fx": out[k] = NifScene.pack_copy(String(job[1]))
+	if prep_log:
+		print("[prep] %d files (%d textures) in %d ms" % [jobs.size(), texes, Time.get_ticks_msec() - t0])
+
+
+const TEX_GAP_MS := 12
+static var prep_log := false                 # tests: a line per worker task
 
 
 func _exit_tree() -> void:

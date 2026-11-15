@@ -1397,6 +1397,12 @@ func _smooth_camera_height(delta: float) -> void:
 
 
 func _process(_delta: float) -> void:
+	var t_live := Time.get_ticks_usec()
+	_process_timed(_delta)
+	Perf.proc_add("player frame", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)
+
+
+func _process_timed(_delta: float) -> void:
 	if camera == null or (zone == null and region == null):
 		return
 	if flying or riding:

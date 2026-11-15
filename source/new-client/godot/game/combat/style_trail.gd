@@ -329,6 +329,12 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	var t_live := Time.get_ticks_usec()
+	_process_timed(delta)
+	Perf.proc_add("style trails", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)
+
+
+func _process_timed(delta: float) -> void:
 	if not is_instance_valid(_frame):
 		queue_free()
 		return

@@ -1,0 +1,3 @@
+# Git never converts line endings here: files keep the endings they have. (Twelve server files once showed as
+# fully rewritten after a tool changed theirs; an editor or script must still write a file back as it found it.)
+* -text

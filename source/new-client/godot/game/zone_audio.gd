@@ -199,6 +199,12 @@ func play_mp3(id: int) -> void:
 
 
 func _process(delta: float) -> void:
+	var t_live := Time.get_ticks_usec()
+	_process_timed(delta)
+	Perf.proc_add("zone audio", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)
+
+
+func _process_timed(delta: float) -> void:
 	if data.is_empty() or sky == null or listener == null:
 		return
 	_time += delta

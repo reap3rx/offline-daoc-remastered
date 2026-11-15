@@ -564,6 +564,7 @@ func _on_world(kind: String, d: Dictionary) -> void:
 	_on_world_inner(kind, d)
 	var dt := Time.get_ticks_usec() - t0
 	Perf.proc_add("server packets", dt)                  # (the live log: process by part)
+	Perf.note_us("packet " + kind, dt)
 	if dt > 20000:
 		Perf.proc_add("slow packet " + kind, dt)         # which kind, when one packet held a frame up
 

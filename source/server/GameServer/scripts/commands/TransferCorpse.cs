@@ -5,7 +5,7 @@ namespace DOL.GS.Commands
 {
     [CmdAttribute(
         "&transfercorpse",
-        new string[] {"&tc"},
+        new string[] { }, // (no "/tc": that is the Realm Exchange teleport - two commands on one name logged an error every start)
         ePrivLevel.Player, // Set to player.
         "/transfercorpse <Keep name> ie: /transfercorpse dun crauchon")]
     public class transfercorpseCommandHandler : AbstractCommandHandler, ICommandHandler

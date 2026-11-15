@@ -11,7 +11,7 @@
  *
  * Created directly as King/Queen at level 1 (no base-class promotion).
  * Spec lines, abilities and spells live in the database (KingCareer,
- * Slash, Parry, Fealty, Majesty) - see tools/king/seed_king.py.
+ * Slash, Parry, Fealty, Majesty) - see db-changes/2026-10-25-king-step*.sql.
  */
 using System;
 using System.Collections.Generic;

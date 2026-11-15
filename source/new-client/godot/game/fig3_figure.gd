@@ -53,6 +53,39 @@ static func pack_figure(prefix: String) -> PackedScene:
 	return packed
 
 
+## A race's clips made ready (smoothed, the twirls, the stops, the rest pose): the work of the first figure of a race,
+## a quarter of a second of it (the health check 2026-11-14: "view figure 277 ms" at the first Lurikeen in view).
+## The clips are the packed scene's own, shared by every figure made from it, so it is done once.
+func _prep_clips(prefix: String, sk: Skeleton3D) -> void:
+	for clip in anim.get_animation_list():
+		var a := anim.get_animation(clip)
+		a.loop_mode = Animation.LOOP_LINEAR if loops(clip) else Animation.LOOP_NONE
+		if (loops(clip) or AnimStyle.group_of(clip) != "") and not a.has_meta("smooth"):
+			_use_smooth(prefix, clip, a, sk)
+	_apply_held_twirls(sk)
+	if sk:
+		_add_transitions(prefix, sk)
+	add_rest_reset(anim)
+
+
+## The same on a worker thread, before any figure of the race exists (NpcManager's view preparation): a figure made
+## from the scene just for this, never in the tree, freed after.
+static func warm_clips(prefix: String, ps: PackedScene) -> void:
+	if ps == null:
+		return
+	var f := Fig3Figure.new()
+	f.race = prefix
+	var m := ps.instantiate() as Node3D
+	if m:
+		var players := m.find_children("*", "AnimationPlayer", true, false)
+		var skels := m.find_children("*", "Skeleton3D", true, false)
+		if players.size() > 0:
+			f.anim = players[0]
+			f._prep_clips(prefix, skels[0] if skels.size() > 0 else null)
+		m.free()
+	f.free()
+
+
 static func texture_dir(texture_set := "x4plus") -> String:
 	var d := "%s/fig3_textures/%s" % [ROOT, texture_set]
 	return d if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(d)) else ROOT + "/fig3_textures/original"
@@ -172,9 +205,13 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 		if _scenes[prefix] == null:
 			push_warning("figure missing: " + prefix)
 			return false
+	var tl := Time.get_ticks_usec()
 	model = (_scenes[prefix] as PackedScene).instantiate() as Node3D
+	tl = Perf.note("figure: instantiate", tl)
 	add_body_bones(model)                           # (before it enters the tree: its skins bind to them)
+	tl = Perf.note("figure: body bones", tl)
 	add_child(model)
+	tl = Perf.note("figure: into the tree", tl)
 	for node in model.find_children("*", "MeshInstance3D", true, false):
 		var part := String(node.name).get_slice("__", 0)    # a part's extra shapes are named <part>__1, __2 ...
 		if not _meshes.has(part):
@@ -184,17 +221,12 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 	var skels := model.find_children("*", "Skeleton3D", true, false)
 	if players.size() > 0:
 		anim = players[0]
-		for clip in anim.get_animation_list():
-			var a := anim.get_animation(clip)
-			a.loop_mode = Animation.LOOP_LINEAR if loops(clip) else Animation.LOOP_NONE
-			if (loops(clip) or AnimStyle.group_of(clip) != "") and not a.has_meta("smooth"):
-				_use_smooth(prefix, clip, a, skels[0] if skels.size() > 0 else null)
-		_apply_held_twirls(skels[0] if skels.size() > 0 else null)
-		if skels.size() > 0:
-			_add_transitions(prefix, skels[0])
-		add_rest_reset(anim)
+		tl = Time.get_ticks_usec()
+		_prep_clips(prefix, skels[0] if skels.size() > 0 else null)
+		tl = Perf.note("figure: clips", tl)
 		if anim.has_animation("idle"):
 			anim.play("idle")
+	tl = Time.get_ticks_usec()
 	if skels.size() > 0:
 		var layers := Layers.new()                  # (first of all: the legs' clip under an action, then the shape)
 		layers.name = "Layers"
@@ -223,8 +255,13 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 		else:
 			(skels[0] as Skeleton3D).remove_child(cloth)
 			cloth.free()
-	apply({})
+	tl = Perf.note("figure: modifiers", tl)
+	# its look at once when the maker knows it (a view: NPCs, bots) - not the default look first and then its own,
+	# each 20-40 ms of materials (2026-11-15: two looks a figure, in the frame it came into view)
+	apply(first_look.call() if first_look.is_valid() else {})
+	tl = Perf.note("figure: look", tl)
 	_apply_cloak()
+	Perf.note("figure: cloak", tl)
 	return true
 
 
@@ -244,6 +281,7 @@ static func mark(part: String, since: int) -> int:
 	prof[part] = int(prof.get(part, 0)) + now - since
 	return now
 
+var first_look := Callable()                 # set before load_figure: the look to start in (a Dictionary back)
 var _cloth = null                            # the cloak's and ponytail's swing (figure_cloth.gd), null: none
 static var _smooth_cache := {}               # "prefix/clip" -> Animation
 static var _smooth_lock := Mutex.new()       # (figures are loaded on worker threads too)

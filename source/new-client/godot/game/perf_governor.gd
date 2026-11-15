@@ -74,6 +74,15 @@ func set_option(key: String, value) -> void:
 
 func _process(delta: float) -> void:
 	_proc_frames += 1
+	# the frame that just ended (its parts and steps were gathered since this ran last), by the clock: the engine's
+	# delta stops growing at eight physics ticks (a 308 ms frame came as 139)
+	var now_us := Time.get_ticks_usec()
+	var real := (now_us - _hitch_at) / 1000000.0 if _hitch_at > 0 else delta
+	_hitch_at = now_us
+	if real * 1000.0 >= HITCH_MS and Server.playing:
+		_hitch(real)
+	_hparts.clear()
+	_notes.clear()
 	_frame_ms = lerpf(_frame_ms, delta * 1000.0, 0.1)
 	var vp := get_viewport()
 	if vp and not _gpu_on:
@@ -155,6 +164,7 @@ var _phys_ticks := 0
 
 func phys_add(part: String, usec: int) -> void:
 	_phys[part] = int(_phys.get(part, 0)) + usec
+	_hparts["physics " + part] = int(_hparts.get("physics " + part, 0)) + usec
 	frame_parts["phys " + part] = int(frame_parts.get("phys " + part, 0)) + usec
 
 
@@ -174,8 +184,81 @@ var frame_parts := {}                            # the same, since a probe last 
 func proc_add(part: String, usec: int) -> void:
 	_proc[part] = int(_proc.get(part, 0)) + usec
 	frame_parts[part] = int(frame_parts.get(part, 0)) + usec
+	_hparts[part] = int(_hparts.get(part, 0)) + usec
 	if usec > int(_proc_peak.get(part, 0)):
 		_proc_peak[part] = usec
+
+
+## Hitches by name (the health check, 2026-11-14: a frame of 100 ms or longer about 70 times an hour in play, a fifth
+## of them with no cause in the log). Every long single step on the main thread is noted with what it was
+## (note_us: a view's figure, a packet, a zone placed ...); a frame that took HITCH_MS or longer writes one "[hitch]"
+## line to the live log: its length, the parts and steps that ran in it, what is left unexplained, and the shader
+## pipelines and scene nodes that came since the last line.
+const HITCH_MS := 60.0
+const NOTE_US := 2500
+var _hparts := {}                                # this frame's parts (proc_add)
+var _notes: Array = []                           # this frame's long steps: [label, usec]
+var _hitch_at := 0                               # when the last frame began (ticks usec)
+var _hitch_lines := 0                            # written since the last live line (never a flood)
+var _hitch_nodes := 0.0
+var _hitch_pipes := -1
+var hitches: Array = []                          # the last ones, for probes (tests): [ms, text]
+
+
+func note_us(label: String, usec: int) -> void:
+	if usec >= NOTE_US and _notes.size() < 24:
+		_notes.append([label, usec])
+
+
+## The same, timed from `since` (Time.get_ticks_usec()); returns now, for the next step.
+func note(label: String, since: int) -> int:
+	var now := Time.get_ticks_usec()
+	note_us(label, now - since)
+	return now
+
+
+func _hitch(delta: float) -> void:
+	var ms := delta * 1000.0
+	var known := 0
+	var parts := ""
+	var keys := _hparts.keys()
+	keys.sort_custom(func(a, b): return int(_hparts[a]) > int(_hparts[b]))
+	for k in keys:
+		if String(k).begins_with("slow packet"):
+			continue                                   # (inside "server packets")
+		known += int(_hparts[k])
+		if int(_hparts[k]) >= 1000:
+			parts += "%s %.0f, " % [k, int(_hparts[k]) / 1000.0]
+	var steps := ""
+	_notes.sort_custom(func(a, b): return int(a[1]) > int(b[1]))
+	for e in _notes:
+		steps += "%s %.0f, " % [e[0], int(e[1]) / 1000.0]
+	var pipes := 0
+	for k in [RenderingServer.RENDERING_INFO_PIPELINE_COMPILATIONS_DRAW, RenderingServer.RENDERING_INFO_PIPELINE_COMPILATIONS_SPECIALIZATION,
+			RenderingServer.RENDERING_INFO_PIPELINE_COMPILATIONS_SURFACE, RenderingServer.RENDERING_INFO_PIPELINE_COMPILATIONS_MESH]:
+		pipes += int(RenderingServer.get_rendering_info(k))
+	var nodes := Performance.get_monitor(Performance.OBJECT_NODE_COUNT)
+	# (the engine's own count of the frame: scripts and nodes in process, the physics ticks; what is in neither was
+	# spent drawing or waiting for the render thread - a shader being compiled)
+	var text := "%.0f ms | parts: %s| steps: %s| unexplained %.0f ms | engine: process %.0f physics %.0f | pipelines +%d | nodes %+d" % [ms,
+			parts if parts != "" else "none ", steps if steps != "" else "none ",
+			maxf(0.0, ms - known / 1000.0 - 1000.0 / maxf(fps, 1.0)),
+			Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0, Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0,
+			(pipes - _hitch_pipes) if _hitch_pipes >= 0 else 0, int(nodes - _hitch_nodes)]
+	_hitch_pipes = pipes
+	_hitch_nodes = nodes
+	hitches.append([ms, text])
+	if hitches.size() > 200:
+		hitches.pop_front()
+	_hitch_lines += 1
+	if _hitch_lines > 6:
+		return
+	var path := "user://perf_live.log"
+	var f := FileAccess.open(path, FileAccess.READ_WRITE) if FileAccess.file_exists(path) else FileAccess.open(path, FileAccess.WRITE)
+	if f:
+		f.seek_end()
+		f.store_line("[hitch] %s %s" % [Time.get_time_string_from_system(), text])
+		f.close()
 
 
 func _physics_process(_delta: float) -> void:
@@ -216,6 +299,8 @@ func _live_log() -> void:
 	_proc.clear()
 	_proc_peak.clear()
 	_proc_frames = 0
+	_hitch_lines = 0
+	_hitch_nodes = Performance.get_monitor(Performance.OBJECT_NODE_COUNT)
 	f.store_line(("[host] " if DisplayServer.get_name() == "headless" else "[game] ") + "%s fps %.0f | process %.1f max %.1f ms | physics %.1f max %.1f ms | slow frames %d | gpu %.1f ms | draws %d objs %d nodes %d | vram %d MB | cpu lvl %.2f gpu lvl %.2f | npcs drawn %d | bots %d" % [
 		Time.get_time_string_from_system(), Engine.get_frames_per_second(),
 		Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0, _proc_max,

@@ -44,6 +44,7 @@ func setup(st: NpcState, mgr: Node) -> void:
 	var t0 := Time.get_ticks_usec()
 	_build_model()
 	var t1 := Time.get_ticks_usec()
+	Perf.note_us("view of %s" % String(info.get("race", String(info.get("gltf", "")).get_file())), t1 - t0)
 	if not (int(spawn.flags) & FLAG_CANTTARGET):
 		_build_pick()
 	prof_build["model"] = int(prof_build.get("model", 0)) + t1 - t0
@@ -108,6 +109,7 @@ static func _pb(key: String, since: int) -> int:
 	prof_build[key] = int(prof_build.get(key, 0)) + now - since
 	if now - since > int(prof_peak.get(key, 0)):
 		prof_peak[key] = now - since
+	Perf.note_us("view " + key, now - since)             # (a long step, by name, in the live log's hitch lines)
 	return now
 
 
@@ -117,10 +119,9 @@ func _build_model() -> void:
 	if info.has("race") and info.race:
 		var f := Fig3Figure.new()
 		add_child(f)
+		f.first_look = func() -> Dictionary: return _look(f)
 		if f.load_figure(String(info.race)):
 			tb = _pb("figure", tb)
-			f.apply(_look(f))
-			tb = _pb("look", tb)
 			_dress(f)
 			tb = _pb("dress", tb)
 			model = f
@@ -390,15 +391,19 @@ func _dress(f: Fig3Figure) -> void:
 	f.hood_up = bool(gear.get("hood", false))
 	f.cloak_hidden = bool(gear.get("cloak_hidden", false))
 	f.helm_hidden = bool(gear.get("helm_hidden", false))
+	var td := Time.get_ticks_usec()
 	f.set_armor(parts, tints)
+	td = Perf.note("dress armor", td)
 	var helm_color := 0
 	for e in rows:
 		if int(e.slot) == 21:
 			helm_color = int(e.get("color", 0))
 	f.set_helm(int(by_slot.get(21, 0)), f.helm_hidden, helm_color)
+	td = Perf.note("dress helm", td)
 	_weapon_root = f
 	_weapon_slots = by_slot
 	_hang_weapons(state != null and state.fighting)
+	Perf.note("dress weapons", td)
 
 
 ## The GHOST flag's look (a spiritmaster's spirit pets, ghostly NPCs): see-through, with a subtle white glow over it

@@ -1100,6 +1100,12 @@ func _fire(id: String) -> void:
 # ---------------------------------------------------------------- every frame
 
 func _process(delta: float) -> void:
+	var t_live := Time.get_ticks_usec()
+	_process_timed(delta)
+	Perf.proc_add("gamepad", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)
+
+
+func _process_timed(delta: float) -> void:
 	if device >= 0 and not assume_connected and not Input.get_connected_joypads().has(device):
 		device = -1
 		_set_active(false)

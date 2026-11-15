@@ -143,12 +143,20 @@ func cross(id: int) -> Vector3:
 
 
 func _process(delta: float) -> void:
+	var t_live := Time.get_ticks_usec()
+	_process_timed(delta)
+	Perf.proc_add("zone streaming", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)
+
+
+func _process_timed(delta: float) -> void:
 	if current == null:
 		return
 	if _task >= 0 and WorkerThreadPool.is_task_completed(_task):
 		WorkerThreadPool.wait_for_task_completion(_task)
 		_task = -1
+		var tp := Time.get_ticks_usec()
 		_place_built()
+		Perf.proc_add("zone placed", Time.get_ticks_usec() - tp)
 	_check_left -= delta
 	if _check_left > 0.0 or _loading_now:
 		return
@@ -237,9 +245,12 @@ func _place_built() -> void:
 		nm.adopt_models(_packed)
 	_packed = {}
 	z.position = offset_of(id)
+	var tz := Time.get_ticks_usec()
 	viewer.add_child(z)
+	tz = Perf.note("zone: into the tree", tz)
 	zones[id] = z
 	zone_added.emit(z)
+	Perf.note("zone: its listeners", tz)
 
 
 func _release(id: int) -> void:

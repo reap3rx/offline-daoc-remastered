@@ -1,62 +1,51 @@
-# Offline DAoC — instructions for AI assistants and developers
+# Offline DAoC Remastered — instructions for AI assistants and developers
 
 Read this first, then [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md). This file is also loaded by
 Claude Code as `CLAUDE.md`.
 
 ## What this is
 
-Offline DAoC is a single-player DAoC server (OpenDAoC fork, .NET 10, SQLite) with autonomous
-gamebots, companion bots and a Windows launcher. The current release is **0.37**, the first one
-shipped as an **update** to the 0.36 base (0.36 / 0.36b / 0.36c stay the full downloads). It comes in
-three editions:
-- **0.37b:** the custom Hibernian Sluaghbinder class is on.
-- **0.37:** the class is off. The server setting `classes / enable_sluaghbinder` is `False`, and
-  the client is the 0.37b `game.dll` without its two Sluaghbinder patches.
-- **0.37c:** the 0.37b or 0.37 game plus the **new client** (Godot 4, C#) in `new-client\`. Its launcher
-  runs that game's own server, so both clients share one account, bot roster and world. On a 0.37
-  game the launcher starts it with `--custom-class=off` and it offers the classic classes only.
+Offline DAoC Remastered is a single-player Dark Age of Camelot (Classic + Shrouded Isles, 1.65): an
+OpenDAoC-based server (.NET 10, SQLite) with living player bots and companions, played through a new
+client written in Godot 4.7 (.NET), started by a Windows launcher. It grew out of the original
+OfflineDAoC v0.36c and has its own version line (0.1, 0.2, 0.2a ... 0.2j at the time of writing). The
+goal is a remaster: keep the spirit of DAoC, make it feel like a modern game.
 
-From 0.37 on a version is a game patch (both editions) plus a new-client patch, built by
-`source/tools/make_patch.py` against `source/tools/release-baselines/0.36/` and applied by
-`source/tools/OfflineDaoc.Patcher` (see [release-baselines/README.md](source/tools/release-baselines/README.md)).
+The guides of the old OfflineDAoC release line (0.37, its three editions, the patcher) are in
+`docs/history/` for reference only. Nothing in them describes how Remastered is built or released.
 
 ## Layout
 
 | Path | What it is |
 |---|---|
 | `source/server` | Game server, all bot AI, tests (`Tests/`). The solution is `Dawn of Light.sln`. |
-| `source/server/GameServer/bots` | Companion bots, class AI, bot brains |
+| `source/server/GameServer/bots` | Companion bots (`PersonalCompanions*.cs`), class AI, bot brains |
 | `source/server/GameServer/bots/autonomous` | Autonomous gamebots: goals, camps, groups, travel, watchdog |
-| `source/tools/OfflineDaoc.Launcher` | Launcher (the in-game version label is `MainForm.DisplayVersion`) |
-| `source/tools/OfflineDaoc.ProgressImport` | Progress transfer tool (`progress-policy.json` lists the saved-progress tables) |
-| `source/tools/build_release_037.py` | Builds the clean 0.37 reference package from a local install (then `assemble_release_037.py`); `*_036.py` built the 0.36 full downloads |
-| `source/tools/make_patch.py` | Builds the update patches (game + new client, world updates per edition) and their download manifests |
-| `source/tools/OfflineDaoc.Patcher` | The patcher shipped in every patch: checks, backs up, applies files and world updates, rolls back |
-| `source/tools/find_changes_since_release.py` | Lists what changed since a released base (input for the next patch) |
-| `source/tools/build_newclient_037.py` | Builds the 0.37c new-client reference package (`build_newclient_036.py` + `seal_newclient_036.py` made the 0.36c full download) |
-| `source/tools/make_downloaders_037.py` | Makes the downloader zips (`Download-OfflineDAoC-v0.37*.zip`) |
-| `source/tools/smoke_release_037.py` | Starts a package's server and logs in, as a player would |
-| `source/tools/release-world-defaults.json` | The default keep owners, levels and doors every release world starts with |
-| `source/new-client` | The new client: Godot 4 project (`godot/`), its C# network client and the content pipeline. Converted game content is not in Git. |
-| `source/tools/*_035.py`, `*_02.py` | Earlier releases' pipelines, kept for reference |
-| `tools/pet-art` | Art pipeline for the private pet models and skins, pet weapons and spell effects. Each install step has a rollback. |
-| `docs/` | Player and developer guides; `docs/history/` holds earlier versions' notes |
+| `source/server/GameServer/scripts` | Story quests, dynamic events, named monsters, custom NPCs and commands |
+| `source/new-client/godot/game` | The client's code (GDScript, plus the network client in C#: `net/DaocClient.cs`) |
+| `source/new-client/godot/tests` | Probes and checks run inside the game (`--live-probe=<name>`) |
+| `source/new-client/pipeline` | Python content pipeline: converts the original client's files into `godot/content` |
+| `source/tools/OfflineDaoc.Launcher` | The launcher (server control, updates, cloud saves), tests in `OfflineDaoc.Launcher.Tests` |
+| `source/tools/release` | `make_release.ps1`, `publish_release.ps1`, `build_release.py`, `make_world_db.py`, the installer script |
+| `db-changes/` | SQL changes to the world database, applied with `apply.py` |
+| `tools/claude-version` | Database helpers and generators. Many are one-off changes already applied; read a script's header before running it. |
+| `tools/pet-art`, `tools/asset-tool` | Art pipeline for the original client's models, skins and effects |
+| `docs/` | Player and developer guides; `docs/history/` holds the old release line's notes |
 
-In a playable folder:
+In the playable folder (not in Git):
+- `new-client/godot`: the client as it runs (a copy of `source/new-client/godot` plus `content/`, about 44 GB of converted game content)
+- `new-client/runtime`: the launcher players start (`OfflineDAoC.exe`); `new-client/save`: settings, keybinds and logs
 - `runtime/server`: the server binaries and navigation meshes
 - `runtime/data/opendaoc.sqlite3.db`: world data plus the player's saves
-- `runtime/client-opendaoc/app`: the original game client
-- `new-client/` (0.37c only): `godot/` (the new client), `tools/godot_net/` (the engine),
-  `runtime/` (its launcher; `server_root.txt` points it at `..\..\runtime`) and `save/` (its settings)
+- `runtime/client-opendaoc/app`: the original game client, kept as the content pipeline's source
 
 ## Rules
 
 - **Protect player data.**
   - Never commit or publish a played database, `account.txt`, logs, bot rosters, backups or
     credentials.
-  - Public packages are built only by `build_release_0xx.py`, which empties every saved-progress
-    table, restores the default world (keeps, doors, relics) and verifies it. No account ships;
-    automatic account creation is on.
+  - Public releases are built only by `source/tools/release/make_release.ps1`. Its world database comes
+    from `make_world_db.py`, which takes every trace of the owner out and checks the result. No account ships.
   - Never ship DXVK (`d3d9.dll`, `dxvk.conf`), diagnostics switches or the new client's
     `dev_mode.txt`.
 - **Keep the owner's gameplay rules.** Preserve these unless the owner asks otherwise:
@@ -81,32 +70,33 @@ In a playable folder:
 - **Navigation:** don't rebuild or replace navmeshes globally to fix one route without evidence.
 - **Be honest in reports.** Report automated tests separately from real in-game checks. Don't
   describe Darkness Falls raid AI, Legion or the hardest level 70+ encounters as implemented.
-- **Keep the old releases.** v0.3–v0.36c stay available as legacy releases, and their branches
-  and tags are not rewritten.
+- **Keep the old releases.** Published releases and their tags are not rewritten.
+- **Commit and publish only when the owner asks.** A release reaches players' launchers the moment it is published.
 
 ## Useful facts
 
-- **Edition switch:**
-  - The switch is `ServerProperties.Properties.ENABLE_SLUAGHBINDER`. It defaults to on, is read
-    from the database and is honored by the bot generator, character creation and launcher bot
-    batches.
-  - The Sluaghbinder uses the client's Hibernian Mauler slot (class 62), and the novice is stored
-    as Acolyte (16) until promotion to class 63.
+- **One way to play.** The launcher always starts the client against the local server
+  (`--server=127.0.0.1`). The client also contains an older standalone game (its own combat, quests,
+  bots and companions, everything behind `not Server.active`). It never runs and is being removed;
+  do not extend it, and check which side a system lives on before changing it (the server owns
+  companions, quests, loot and combat).
+- **Two copies of the client code.** Edit `source/new-client/godot/game`, then copy the changed files to
+  `new-client/godot/game` to run them. Only the source copy is in Git.
+- **Custom classes.** The Sluaghbinder (Hibernia; `ServerProperties.Properties.ENABLE_SLUAGHBINDER`,
+  on) stays until the owner designs its replacement. The King / Queen (Albion, player-only,
+  `playerclasses/albion/ClassKing.cs`, database steps in `db-changes/`) is part of Remastered and not
+  finished: its epic quest and a play-through to 50 are open.
+- **Performance.** The client's `Perf` autoload (`game/perf_governor.gd`) writes `perf_live.log` in the
+  save folder every two seconds, and a `[hitch]` line naming what ran in any frame of 60 ms or more.
+  Start there before guessing at a performance problem.
 - **Item model chain:** `objects.csv` model ID → `items.csv` row → `items/<nif>`.
   - Shields that carry an emblem take their base texture from a `pskins.csv` override.
   - `tools/pet-art/nif4_geom.py` reads the old 4.x item NIFs that pyffi can't.
-- **Client art, spells and sounds:** read [docs/CLIENT-MODDING-GUIDE.txt](docs/CLIENT-MODDING-GUIDE.txt)
-  before changing models, meshes, skins, spell effects, icons or NPC sounds. It lists the client's
-  catalog rules (no blank lines, terminators, Expansion Only, ID order), confirmed and unconfirmed
-  limits, every tool, and past mistakes.
-- **Helmets with no face:** see [docs/HELMET-FACE-FIX.md](docs/HELMET-FACE-FIX.md) and
-  `tools/claude-version/helmet_face_check.py`.
-- **Two clients, one server (0.36c and later):** the launcher switches to its new-client mode when
-  `..\godot\project.godot` exists beside it (`MainForm.IsNewClientFolder`). Both launchers read
-  the same `runtime/account.txt` (`PortableCredentials`), so either client logs in to the same
-  account.
+- **Original client art, spells and sounds:** read [docs/CLIENT-MODDING-GUIDE.txt](docs/CLIENT-MODDING-GUIDE.txt)
+  before changing models, meshes, skins, spell effects, icons or NPC sounds.
 - **Server settings:** Offline-specific settings are in the database tables
   `offline_population_settings` and `offline_local_options`, and in `runtime/server/bot-goals.json`.
+- **Known test state:** 2,851 server tests, 26 failing (6 distinct tests, all bot behaviour) as of 0.2j.
 
 The owner may customize their fork's rules. These are safety defaults, not a ban on changes the
 owner asks for.

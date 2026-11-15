@@ -64,6 +64,12 @@ func _ring_material(kind: String) -> ShaderMaterial:
 
 
 func _process(delta: float) -> void:
+	var t_live := Time.get_ticks_usec()
+	_process_timed(delta)
+	Perf.proc_add("quest markers", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)
+
+
+func _process_timed(delta: float) -> void:
 	_tick -= delta
 	if _tick <= 0.0:
 		_tick = 2.0
