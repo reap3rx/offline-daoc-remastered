@@ -2180,6 +2180,12 @@ class SheetHeader extends Control:
 			accept_event()
 
 	func _draw() -> void:
+		var t_draw := Time.get_ticks_usec()
+		_draw_timed()
+		Perf.note("drawing: SheetHeader game_ui", t_draw)
+
+
+	func _draw_timed() -> void:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.07, 0.065, 0.06))
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.45, 0.37, 0.22), false, 1.0)
 		var f := UiArt.font(true)

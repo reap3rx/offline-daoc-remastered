@@ -119,6 +119,56 @@ static func font(bold := true) -> FontFile:
 	return _fonts[file]
 
 
+## A line cut to a width, with "..." (the event tracker's and the quest log's). 2026-11-15: both cut a letter at a time
+## and measured the whole line again after each - a long hint was a hundred measurements, a quarter of a second in the
+## frame it first showed (found as the last of the "nothing ran" freezes). Halving finds the cut in about seven, and
+## a line already cut is remembered.
+static var _fit_cache := {}
+
+static func fit(f: Font, s: String, fs: int, w: float) -> String:
+	if s.length() <= 3 or f.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x <= w:
+		return s
+	var key := "%d|%d|%d|%s" % [f.get_instance_id(), fs, int(w), s]
+	if _fit_cache.has(key):
+		return _fit_cache[key]
+	var lo := 3                                           # the longest start known to fit (at least three letters stay)
+	var hi := s.length()                                  # the shortest known not to
+	while hi - lo > 1:
+		var mid := (lo + hi) / 2
+		if f.get_string_size(s.substr(0, mid) + "...", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > w:
+			hi = mid
+		else:
+			lo = mid
+	if _fit_cache.size() > 400:
+		_fit_cache.clear()
+	_fit_cache[key] = s.substr(0, lo) + "..."
+	return _fit_cache[key]
+
+
+## Every letter the interface is likely to draw, made ready at start on a worker (2026-11-15: the fonts are drawn from
+## distance fields, sharp at any size, and each letter's field takes a few milliseconds to work out the first time it
+## is drawn - the first paragraph in the regular face, an event's hint, held a frame a quarter of a second; so did
+## every later text with enough new letters in it).
+static var _fonts_warm := false
+
+static func warm_fonts() -> void:
+	if _fonts_warm:
+		return
+	_fonts_warm = true
+	var chars := ""
+	for c in range(0x20, 0x7F):
+		chars += char(c)
+	for c in range(0xA1, 0x100):
+		chars += char(c)
+	chars += "\u2013\u2014\u2018\u2019\u201C\u201D\u2026\u2022"
+	var faces := [font(true), font(false)]
+	WorkerThreadPool.add_task(func():
+		var t0 := Time.get_ticks_msec()
+		for f in faces:
+			(f as FontFile).get_string_size(chars, HORIZONTAL_ALIGNMENT_LEFT, -1, 16)
+		print("[fonts] %d letters of %d faces made ready in %d ms" % [chars.length(), faces.size(), Time.get_ticks_msec() - t0]), false, "interface fonts")
+
+
 ## A caps label in the new-old style.
 static func label(text: String, size := 11, color := CREAM, bold := true) -> Label:
 	var l := Label.new()

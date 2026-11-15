@@ -87,6 +87,7 @@ var view: Node3D                             # whose distance / visibility count
 var model: Node3D                            # whose meshes cast the shadow
 var anim: AnimationPlayer
 var last_dist := 0.0                         # metres from the camera at the last step
+var hidden := false                          # behind walls from the camera (NpcManager's line of sight): it rests
 var rank := 0                                # its place among the views on screen, nearest first (NpcManager._rank)
 var _dt := 0.0
 var _shadow_check := 0.0
@@ -153,10 +154,10 @@ func step(delta: float, cam: Camera3D) -> void:
 	if cam:
 		last_dist = view.global_position.distance_to(cam.global_position)
 		snapshot(cam)                                     # (once a frame: the camera's planes)
-		if not in_view(view.global_position + Vector3(0, 1, 0)):
+		if hidden or not in_view(view.global_position + Vector3(0, 1, 0)):
 			_dt = minf(_dt, 2.0)
 			_shadow_tick(delta, 1e9)
-			_own_skeleton(true)                           # (off screen: its skeleton rests too)
+			_own_skeleton(true)                           # (off screen or behind walls: its skeleton rests too)
 			return
 		if FULL or last_dist < NEAR_FULL_M:
 			_shadow_tick(delta, last_dist)

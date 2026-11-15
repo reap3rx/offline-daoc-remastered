@@ -525,7 +525,10 @@ func apply(changes: Dictionary) -> void:
 			if want == null:
 				want = TURBAN_COLORS[clampi(int(look.get("turban_color", 0)), 0, TURBAN_COLORS.size() - 1)]
 			var tm := _material(false)
-			tm.set_shader_parameter("albedo_tex", load_texture(texture_dir("original"), String(tb[k].tex).to_lower()))
+			var tkey := texture_dir("original") + String(tb[k].tex).to_lower()   # (read once, not at every look)
+			if not _tex_cache.has(tkey):
+				_tex_cache[tkey] = load_texture(texture_dir("original"), String(tb[k].tex).to_lower())
+			tm.set_shader_parameter("albedo_tex", _tex_cache[tkey])
 			tm.set_shader_parameter("tint", Color(want.r * 1.2, want.g * 1.2, want.b * 1.2))
 			tm.set_shader_parameter("tint_mode", 1)
 			tm.set_shader_parameter("relief", 0.1)
@@ -874,21 +877,58 @@ func _worn_style(styles: Array) -> int:
 ## The worn beard: 1-based into figure.json "beards", 0 none. A look that never chose one wears its hair style's own
 ## (the beard the original mesh had).
 func beard_index() -> int:
-	var beards: Array = meta.get("beards", [])
+	return beard_index_of(meta, look)
+
+
+## (By the race's figure.json and a look alone: NpcManager asks before the figure exists - hair_texes.)
+static func beard_index_of(meta_: Dictionary, look_: Dictionary) -> int:
+	var beards: Array = meta_.get("beards", [])
 	if beards.is_empty():
 		return 0
-	if look.has("beard"):
-		return clampi(int(look.beard), 0, beards.size())
-	var styles: Array = meta.get("hair_styles", [])
+	if look_.has("beard"):
+		return clampi(int(look_.beard), 0, beards.size())
+	var styles: Array = meta_.get("hair_styles", [])
 	if styles.is_empty():
 		return 0
-	return int(styles[clampi(int(look.get("hair", 0)), 0, styles.size() - 1)].get("beard", 0))
+	return int(styles[clampi(int(look_.get("hair", 0)), 0, styles.size() - 1)].get("beard", 0))
+
+
+## The hair textures a look wears - its hair style's, its beard's, its moustache's and sideburns' - as apply() picks
+## them (no custom colour: an NPC's or a bot's look). Each is drawn with its flow map too (hair_flow). 2026-11-15:
+## the beard's texture and every flow map were read from disk in the frame a figure came into view - 23 ms of its
+## look, and why nearly every freeze left was a man.
+static func hair_texes(meta_: Dictionary, look_: Dictionary) -> Array:
+	var out := []
+	var styles: Array = meta_.get("hair_styles", [])
+	if styles.size() > 0:
+		var colours: Array = styles[clampi(int(look_.get("hair", 0)), 0, styles.size() - 1)].colours
+		if colours.size() > 0:
+			out.append(String(colours[clampi(int(look_.get("hair_color", 0)), 0, colours.size() - 1)].tex))
+	var beards: Array = meta_.get("beards", [])
+	var bi := beard_index_of(meta_, look_)
+	if bi > 0 and bi <= beards.size() and styles.size() > 0:
+		var b: Dictionary = beards[bi - 1]
+		var bst: Dictionary = styles[clampi(int(b.get("style", 0)), 0, styles.size() - 1)]
+		var bcols: Array = b.colours if b.has("colours") else bst.colours
+		if bcols.size() > 0:
+			out.append(String(bcols[beard_colour_of(look_, styles, bcols)].tex))
+	for kind in FACE_HAIR:
+		var list: Array = meta_.get(String(kind[1]), [])
+		var worn := clampi(int(look_.get(String(kind[0]), 0)), 0, list.size())
+		if worn > 0 and (list[worn - 1].colours as Array).size() > 0:
+			var mcols: Array = list[worn - 1].colours
+			out.append(String(mcols[beard_colour_of(look_, styles, mcols)].tex))
+	return out.filter(func(x): return x != "").map(func(x): return String(x).to_lower())
 
 
 ## The beard style's colour nearest the hair's (figure.json colours' "rgb"), else the same index.
 func _beard_colour(styles: Array, bcols: Array) -> int:
-	var hc := int(look.get("hair_color", 0))
-	var hcols: Array = styles[clampi(int(look.get("hair", 0)), 0, styles.size() - 1)].colours if styles.size() > 0 else []
+	return beard_colour_of(look, styles, bcols)
+
+
+static func beard_colour_of(look_: Dictionary, styles: Array, bcols: Array) -> int:
+	var hc := int(look_.get("hair_color", 0))
+	var hcols: Array = styles[clampi(int(look_.get("hair", 0)), 0, styles.size() - 1)].colours if styles.size() > 0 else []
 	if hcols.is_empty() or not (hcols[clampi(hc, 0, hcols.size() - 1)] as Dictionary).has("rgb"):
 		return clampi(hc, 0, bcols.size() - 1)
 	var want: Array = hcols[clampi(hc, 0, hcols.size() - 1)].rgb
@@ -1746,6 +1786,12 @@ static func hair_flow(tex: String) -> Texture2D:
 	var key := tex.to_lower()
 	if _flow_cache.has(key):
 		return _flow_cache[key]
+	_flow_cache[key] = load_flow(key)
+	return _flow_cache[key]
+
+
+## The flow map read from disk (no cache touched: NpcManager's worker reads them ahead).
+static func load_flow(key: String) -> Texture2D:
 	var path := ProjectSettings.globalize_path("%s/fig3_textures/hairflow/%s.png" % [ROOT, key])
 	var t: Texture2D = null
 	if FileAccess.file_exists(path):
@@ -1753,7 +1799,6 @@ static func hair_flow(tex: String) -> Texture2D:
 		if img:
 			img.generate_mipmaps()
 			t = ImageTexture.create_from_image(img)
-	_flow_cache[key] = t
 	return t
 
 
@@ -1846,6 +1891,65 @@ void light() {
 	}
 }
 """
+
+
+## Every kind of figure shader made and drawn once, behind the loading screen, once a session (2026-11-15: each kind
+## was compiled the first time a figure wore it - the first strand hair, the first cut-out beard - and the frame waited
+## a quarter of a second on the graphics card each time). A speck in front of the camera for a few frames.
+static var _shaders_warm := false
+
+static func warm_shaders(cam: Node3D) -> void:
+	if _shaders_warm or cam == null:
+		return
+	_shaders_warm = true
+	var root := Node3D.new()
+	root.name = "FigureShaderWarmup"
+	cam.add_child(root)
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.002, 0.002)
+	var i := 0
+	for cutout in [false, true]:
+		for single in [false, true]:
+			for skin in [false, true]:
+				for hair in [false, true]:
+					if skin and hair:
+						continue
+					var mi := MeshInstance3D.new()
+					mi.mesh = quad
+					mi.material_override = _material(cutout, single, skin, hair)
+					mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+					mi.position = Vector3(-0.02 + 0.004 * i, -0.02, -0.6)
+					root.add_child(mi)
+					i += 1
+	# and a lamp and a spot that cast shadows (the first one in view makes the renderer set its shadow map up)
+	if not OS.get_cmdline_user_args().has("--no-warm-lights"):
+		var lamp := OmniLight3D.new()
+		lamp.shadow_enabled = true
+		lamp.omni_range = 0.5
+		lamp.light_energy = 0.01
+		lamp.position = Vector3(0, 0.05, -0.6)
+		root.add_child(lamp)
+		var spot := SpotLight3D.new()
+		spot.shadow_enabled = true
+		spot.spot_range = 0.5
+		spot.light_energy = 0.01
+		spot.position = Vector3(0, 0.2, -0.6)
+		spot.rotation_degrees = Vector3(-90, 0, 0)
+		root.add_child(spot)
+	# and the frame's own copies of its depth and colour, which soft particles (a fire's smoke) and a few spell effects
+	# read: the first thing in view that reads one makes the renderer set the copy up
+	for kind in ["hint_depth_texture, filter_nearest", "hint_screen_texture, filter_linear_mipmap"]:
+		var sh := Shader.new()
+		sh.code = "shader_type spatial;\nrender_mode unshaded, blend_mix, depth_draw_never;\nuniform sampler2D buf : %s;\nvoid fragment() {\n\tALBEDO = texture(buf, SCREEN_UV).rgb;\n\tALPHA = 0.004;\n}\n" % kind
+		var sm := ShaderMaterial.new()
+		sm.shader = sh
+		var wi := MeshInstance3D.new()
+		wi.mesh = quad
+		wi.material_override = sm
+		wi.position = Vector3(-0.02 + 0.004 * i, -0.02, -0.6)
+		root.add_child(wi)
+		i += 1
+	root.get_tree().create_timer(1.5).timeout.connect(root.queue_free)
 
 
 static func _material(cutout: bool, single_sided := false, skin := false, hair := false) -> ShaderMaterial:

@@ -196,6 +196,7 @@ func _start_build(id: int) -> void:
 	var skip := _known_models(nm)
 	var info: Dictionary = nm.models if nm else {}
 	_job = {"id": id, "zone": null, "packed": {}, "cancelled": false, "lock": Mutex.new()}
+	Perf.background("zone %d being built" % id)
 	_task = WorkerThreadPool.add_task(Callable(RegionWorld, "_build").bind(id, skip, info, terrain_set, texture_set, _job), false, "zone %d" % id)
 
 

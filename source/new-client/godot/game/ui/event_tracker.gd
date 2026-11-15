@@ -84,6 +84,12 @@ func content_height() -> float:
 
 
 func _draw() -> void:
+	var t_draw := Time.get_ticks_usec()
+	_draw_timed()
+	Perf.note("drawing: event_tracker", t_draw)
+
+
+func _draw_timed() -> void:
 	if Time.get_ticks_msec() - received_ms > 8000 or events.is_empty():
 		return
 	var font := UiArt.font(true)
@@ -160,8 +166,4 @@ func _text(f: Font, at: Vector2, s: String, fs: int, col: Color) -> void:
 
 
 static func _fit(f: Font, s: String, fs: int, w: float) -> String:
-	if f.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x <= w:
-		return s
-	while s.length() > 3 and f.get_string_size(s + "...", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > w:
-		s = s.substr(0, s.length() - 1)
-	return s + "..."
+	return UiArt.fit(f, s, fs, w)

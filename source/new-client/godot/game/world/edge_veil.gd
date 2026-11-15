@@ -311,7 +311,7 @@ func _near(centre: Vector2, radius: float) -> Array:
 ## swell; the zones blend by nearness (each its own at its edge, so the land beyond meets it exactly; between two
 ## neighbours' skirts agree, and a gap between two zones fills as a saddle). Where
 ## the edge runs under a lake higher than the sea the ground stays under it for LAKE_OUT_M first.
-func _land(p: Vector2, near: Array) -> float:
+func _land(p: Vector2, near: Array, sea_y: float) -> float:
 	var full: float = OUT_M[OUT_M.size() - 1]
 	var sum := 0.0
 	var wsum := 0.0
@@ -332,18 +332,18 @@ func _land(p: Vector2, near: Array) -> float:
 		var lake := _zw(c, lq.x, lq.y)
 		if lake > _zh(c, lq.x, lq.y):
 			g = minf(g, lake - 1.5)
-			if lake > _sea_y + 0.5:
+			if lake > sea_y + 0.5:
 				start = maxf(start, LAKE_OUT_M)
 		var h := g
 		if dist > start:
 			var t := clampf((dist - start) / (full - start), 0.0, 1.0)
 			var swell := (6.0 * sin(p.x * 0.011 + p.y * 0.007 + 1.7) + 3.0 * sin(p.x * 0.029 - p.y * 0.033 + 0.4)) \
 					* sin(PI * t) * (1.0 - t)
-			h = lerpf(g, minf(g, _sea_y - SEA_DEPTH), smoothstep(0.0, 0.9, t)) + swell
+			h = lerpf(g, minf(g, sea_y - SEA_DEPTH), smoothstep(0.0, 0.9, t)) + swell
 		var wt := (1.0 - smoothstep(full * 0.6, full, dist)) / ((dist + 1.0) * (dist + 1.0))
 		sum += h * wt
 		wsum += wt
-	return sum / wsum if wsum > 0.0 else _sea_y - SEA_DEPTH
+	return sum / wsum if wsum > 0.0 else sea_y - SEA_DEPTH
 
 
 func _refresh_blocks() -> void:
@@ -401,9 +401,12 @@ func _veil_inner(z: ZoneLoader) -> void:
 	var e := region.entry(int(z.info.id))
 	if e.is_empty() or int(e.get("region", -1)) != _region_id:
 		return
-	# in the world, a stretch a frame (2026-11-15: a neighbour zone placed held a frame 125 ms building all of its
-	# edge at once); behind the loading screen, all at once as before
-	var spread: bool = Server.playing
+	# in the world the stretches are worked out on a worker and only added here (2026-11-15: a stretch is 561 points
+	# of land beyond, each blended from every zone within reach - 60 to 130 ms apiece, so a zone with one open side
+	# held a frame that long and one with ten, ten times it; a stretch a frame was ten slow frames in a row); behind
+	# the loading screen, all at once as before
+	var threaded: bool = Server.playing
+	var jobs := []
 	var size := float(z.info.size_m)
 	var w := int(e.w)
 	var h := int(e.h)
@@ -459,23 +462,40 @@ func _veil_inner(z: ZoneLoader) -> void:
 			# the reach eases into the neighbouring stretches' over their shared ends (no step between them)
 			var r_prev: float = reaches[k - 1] if k > 0 and open[k - 1] else reach
 			var r_next: float = reaches[k + 1] if k < n - 1 and open[k + 1] else reach
-			_strip(z, root, mat, sea, (sd[0] as Vector2) + (sd[1] as Vector2) * (k * BLOCK_M), sd[1], sd[2],
-					size, world0, Vector3(r_prev, reach, r_next), prev_inner, next_inner)
-			if spread:
-				await get_tree().process_frame
-				if not is_instance_valid(z) or not is_instance_valid(root) or not is_inside_tree():
-					return
+			jobs.append(_strip_job(z, root, sea, (sd[0] as Vector2) + (sd[1] as Vector2) * (k * BLOCK_M), sd[1], sd[2],
+					size, world0, Vector3(r_prev, reach, r_next), prev_inner, next_inner))
 	for k in corners:
 		if fan[k]:
 			var c: Array = corners[k]
 			var dg: Vector2i = c[2]
 			var d: Vector2 = c[1]
 			var reach := minf(_reach(dg, Vector2i(int(d.x), 0)), _reach(dg, Vector2i(0, int(d.y))))
-			_corner(z, root, mat, sea, c[0], d, size, world0, reach)
-			if spread:
-				await get_tree().process_frame
-				if not is_instance_valid(z) or not is_instance_valid(root) or not is_inside_tree():
-					return
+			var full: float = OUT_M[OUT_M.size() - 1]
+			jobs.append({"corner": true, "at": c[0], "dir": d, "size": size, "world0": world0, "reach": reach,
+					"near": _near(world0 + (c[0] as Vector2) + d * (reach * 0.5), reach + full + 10.0)})
+	if jobs.is_empty():
+		return
+	var sea_y := _sea_y
+	if not threaded:
+		for j in jobs:
+			_add_arrays(root, mat, _job_arrays(j, sea_y))
+		return
+	Perf.background("zone %d world edge (%d stretches)" % [int(z.info.id), jobs.size()])
+	WorkerThreadPool.add_task(func():
+		var out := []
+		for j in jobs:
+			out.append(_job_arrays(j, sea_y))
+		_veil_in.call_deferred(root, mat, out), false, "world edge")
+
+
+## The worked-out stretches into the world, a few a frame (a mesh made and added is well under a millisecond).
+func _veil_in(root: Variant, mat: Material, meshes: Array) -> void:
+	if not is_instance_valid(root) or not (root as Node).is_inside_tree():
+		return
+	var t0 := Time.get_ticks_usec()
+	for a in meshes:
+		_add_arrays(root, mat, a)
+	Perf.note("zone: world edge in", t0)
 
 
 ## How far the land beyond may reach from a block outside the edge: half the open ground to the next built block
@@ -489,8 +509,9 @@ func _reach(b: Vector2i, outward: Vector2i) -> float:
 	return full
 
 
-func _strip(z: ZoneLoader, root: Node3D, mat: Material, sea: float, origin: Vector2, along: Vector2,
-		out: Vector2, size: float, world0: Vector2, reaches: Vector3, prev_inner: bool, next_inner: bool) -> void:
+## One stretch's job for _job_arrays, and (here, it needs the zone) the lake that carries on beyond it.
+func _strip_job(z: ZoneLoader, root: Node3D, sea: float, origin: Vector2, along: Vector2,
+		out: Vector2, size: float, world0: Vector2, reaches: Vector3, prev_inner: bool, next_inner: bool) -> Dictionary:
 	var reach := reaches.y
 	var count := int(round(BLOCK_M / ALONG_M))
 	var lake := -INF                                        # a lake above the sea at this stretch of edge, if any
@@ -499,11 +520,51 @@ func _strip(z: ZoneLoader, root: Node3D, mat: Material, sea: float, origin: Vect
 		var l := z.water_level_at(clampf(p.x, 0.0, size), clampf(p.y, 0.0, size))
 		if l > -INF and l > z.height_at(clampf(p.x, 0.0, size), clampf(p.y, 0.0, size)):
 			lake = maxf(lake, l)
+	if lake > sea + 0.5:                                    # a higher lake carries on a little before the land falls
+		var wm := z.water_material_at(clampf(origin.x + along.x * BLOCK_M * 0.5 - out.x * 2.0, 0.0, size),
+				clampf(origin.y + along.y * BLOCK_M * 0.5 - out.y * 2.0, 0.0, size))
+		if wm:
+			var lb := origin + along * BLOCK_M + out * minf(LAKE_OUT_M, reach * 0.3)
+			_water_quad(root, wm, Vector2(minf(origin.x, lb.x), minf(origin.y, lb.y)),
+					Vector2(absf(lb.x - origin.x), absf(lb.y - origin.y)), lake)
+	var full: float = OUT_M[OUT_M.size() - 1]
+	return {"corner": false, "origin": origin, "along": along, "out": out, "size": size, "world0": world0,
+			"reaches": reaches, "prev_inner": prev_inner, "next_inner": next_inner,
+			"near": _near(world0 + origin + along * (BLOCK_M * 0.5) + out * (reach * 0.5), BLOCK_M * 0.5 + reach * 0.5 + full + 10.0)}
+
+
+## A job's mesh arrays. Runs on a worker in the world: it reads only the job, the zones' ground it carries (never
+## changed once read) and constants.
+func _job_arrays(j: Dictionary, sea_y: float) -> Array:
 	var verts := PackedVector3Array()
 	var uvs := PackedVector2Array()
 	var rows := OUT_M.size()
 	var full: float = OUT_M[rows - 1]
-	var near := _near(world0 + origin + along * (BLOCK_M * 0.5) + out * (reach * 0.5), BLOCK_M * 0.5 + reach * 0.5 + full + 10.0)
+	var size: float = j.size
+	var world0: Vector2 = j.world0
+	var near: Array = j.near
+	if bool(j.corner):
+		var steps := 10
+		var at: Vector2 = j.at
+		var dir: Vector2 = j.dir
+		var c_reach: float = j.reach
+		for i in steps + 1:
+			# a quarter turn between the two outward directions of this corner
+			var a := float(i) / steps * PI * 0.5
+			var n := Vector2(dir.x * cos(a), dir.y * sin(a)).normalized()
+			for r in rows:
+				var d: float = float(OUT_M[r]) / full * c_reach
+				var p := at + n * d
+				verts.append(Vector3(p.x, _land(world0 + p, near, sea_y), p.y))
+				var m := at - n * minf(d, size * 0.45)
+				uvs.append(Vector2(clampf(m.x / size, 0.0, 1.0), clampf(m.y / size, 0.0, 1.0)))
+		return _mesh_arrays(verts, uvs, steps + 1, rows)
+	var origin: Vector2 = j.origin
+	var along: Vector2 = j.along
+	var out: Vector2 = j.out
+	var reaches: Vector3 = j.reaches
+	var reach := reaches.y
+	var count := int(round(BLOCK_M / ALONG_M))
 	for i in count + 1:
 		var e := origin + along * (i * ALONG_M)
 		var sa := i * ALONG_M
@@ -516,49 +577,21 @@ func _strip(z: ZoneLoader, root: Node3D, mat: Material, sea: float, origin: Vect
 		# at an inner corner the skirt stops at the diagonal, where the skirt of the land round the corner takes over
 		# (the same land, so they meet exactly)
 		var r_here := r_base
-		if prev_inner:
+		if bool(j.prev_inner):
 			r_here = minf(r_here, maxf(sa, 0.5))
-		if next_inner:
+		if bool(j.next_inner):
 			r_here = minf(r_here, maxf(BLOCK_M - sa, 0.5))
 		for r in rows:
 			var d: float = float(OUT_M[r]) / full * r_here
 			var p := e + out * d
-			verts.append(Vector3(p.x, _land(world0 + p, near), p.y))
+			verts.append(Vector3(p.x, _land(world0 + p, near, sea_y), p.y))
 			var m := e - out * minf(d, size * 0.45)       # the painted ground mirrored like the heights
 			uvs.append(Vector2(clampf(m.x / size, 0.0, 1.0), clampf(m.y / size, 0.0, 1.0)))
-	_add_mesh(root, mat, verts, uvs, count + 1, rows)
-	if lake > sea + 0.5:                                    # a higher lake carries on a little before the land falls
-		var wm := z.water_material_at(clampf(origin.x + along.x * BLOCK_M * 0.5 - out.x * 2.0, 0.0, size),
-				clampf(origin.y + along.y * BLOCK_M * 0.5 - out.y * 2.0, 0.0, size))
-		if wm:
-			var lb := origin + along * BLOCK_M + out * minf(LAKE_OUT_M, reach * 0.3)
-			_water_quad(root, wm, Vector2(minf(origin.x, lb.x), minf(origin.y, lb.y)),
-					Vector2(absf(lb.x - origin.x), absf(lb.y - origin.y)), lake)
-
-
-func _corner(z: ZoneLoader, root: Node3D, mat: Material, sea: float, at: Vector2, dir: Vector2,
-		size: float, world0: Vector2, reach: float) -> void:
-	var steps := 10
-	var verts := PackedVector3Array()
-	var uvs := PackedVector2Array()
-	var rows := OUT_M.size()
-	var full: float = OUT_M[rows - 1]
-	var near := _near(world0 + at + dir * (reach * 0.5), reach + full + 10.0)
-	for i in steps + 1:
-		# a quarter turn between the two outward directions of this corner
-		var a := float(i) / steps * PI * 0.5
-		var n := Vector2(dir.x * cos(a), dir.y * sin(a)).normalized()
-		for r in rows:
-			var d: float = float(OUT_M[r]) / full * reach
-			var p := at + n * d
-			verts.append(Vector3(p.x, _land(world0 + p, near), p.y))
-			var m := at - n * minf(d, size * 0.45)
-			uvs.append(Vector2(clampf(m.x / size, 0.0, 1.0), clampf(m.y / size, 0.0, 1.0)))
-	_add_mesh(root, mat, verts, uvs, steps + 1, rows)
+	return _mesh_arrays(verts, uvs, count + 1, rows)
 
 
 ## A grid of (cols x rows) vertices (rows of one column together) as triangles facing up, with smooth normals.
-func _add_mesh(root: Node3D, mat: Material, verts: PackedVector3Array, uvs: PackedVector2Array, cols: int, rows: int) -> void:
+static func _mesh_arrays(verts: PackedVector3Array, uvs: PackedVector2Array, cols: int, rows: int) -> Array:
 	var idx := PackedInt32Array()
 	for c in cols - 1:
 		for r in rows - 1:
@@ -589,6 +622,10 @@ func _add_mesh(root: Node3D, mat: Material, verts: PackedVector3Array, uvs: Pack
 	arrays[Mesh.ARRAY_NORMAL] = normals
 	arrays[Mesh.ARRAY_TEX_UV] = uvs
 	arrays[Mesh.ARRAY_INDEX] = idx
+	return arrays
+
+
+static func _add_arrays(root: Node3D, mat: Material, arrays: Array) -> void:
 	var mesh := ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 	mesh.surface_set_material(0, mat)

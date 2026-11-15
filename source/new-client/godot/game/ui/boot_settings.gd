@@ -28,6 +28,7 @@ func _ready() -> void:
 	# the window's name (owner 2026-11-11: Offline DAoC Remastered) - set here, not as the project's name, which names
 	# the folder every player's settings live in
 	DisplayServer.window_set_title("Offline DAoC Remastered")
+	UiArt.warm_fonts()
 	_build_fps_counter()
 	for a in OS.get_cmdline_user_args():
 		if a.trim_prefix("--").split("=")[0] in TEST_FLAGS:

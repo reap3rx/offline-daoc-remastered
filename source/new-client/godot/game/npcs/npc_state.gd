@@ -56,6 +56,7 @@ var path_dir := 1
 var path_wait := 0.0
 var running := false                        # moving at run speed out of a fight (patrols) - the view plays "run"
 var seen_at := 0                            # when the server last sent it (ticks ms; ServerWorld drops it when stale)
+var los_at := -1                            # when the camera last had a clear line to it (ticks ms; -1 not looked yet)
 var prep_since := 0                         # when its view began waiting for its files (ticks ms; 0 = not waiting)
 var swimming := false                       # in deep water (the server's ObjectUpdate 0x10, IsUnderwater): it swims
 var stealthed := false                     # the STEALTH flag (ambushers): unseen, untargetable until it fights

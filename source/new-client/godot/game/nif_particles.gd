@@ -14,7 +14,9 @@ static func build(spec: Dictionary, at: Transform3D, far: float, materials: NifM
 	var out := []
 	var done := Semaphore.new()
 	(func():
+		var tp := Time.get_ticks_usec()
 		out.append(NifParticles._build(spec, at, far, materials))
+		Perf.note("particles for a worker: %s" % String(spec.get("texture", spec.get("name", "?"))).get_file(), tp)
 		done.post()).call_deferred()
 	var waited := 0
 	while not done.try_wait():

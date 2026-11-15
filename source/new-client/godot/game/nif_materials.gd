@@ -153,6 +153,51 @@ static var compress := true
 const BC_VERSION := 1
 
 
+## A glTF model's pictures, block-compressed (2026-11-15: a monster's glTF was read with its pictures as raw colour -
+## one 4096 x 4096 skin is 89 MB of video memory, and the frame it reached the graphics card waited a quarter of a
+## second; every kind of monster, the first time it came into view). The model is read WITHOUT its pictures
+## (GLTFState.HANDLE_BINARY_DISCARD_TEXTURES, set by the caller before append_from_file) and each material is given
+## its base colour and glow from load_image - the .bc beside the PNG, made the first time. False: the model uses a
+## kind of picture this doesn't place (a normal map ...) or compression is off - read it again the plain way.
+static func gltf_textures(state: GLTFState) -> bool:
+	if not compress:
+		return false
+	var js: Dictionary = state.json
+	var jmats: Array = js.get("materials", [])
+	var jtex: Array = js.get("textures", [])
+	var jimg: Array = js.get("images", [])
+	for jm in jmats:
+		var d: Dictionary = jm
+		if d.has("normalTexture") or d.has("occlusionTexture") or (d.get("pbrMetallicRoughness", {}) as Dictionary).has("metallicRoughnessTexture"):
+			return false
+	var mats: Array = state.get_materials()
+	var made := {}
+	for i in mini(mats.size(), jmats.size()):
+		var bm := mats[i] as BaseMaterial3D
+		if bm == null:
+			continue
+		var d: Dictionary = jmats[i]
+		var want := {"albedo_texture": (d.get("pbrMetallicRoughness", {}) as Dictionary).get("baseColorTexture", {}),
+				"emission_texture": d.get("emissiveTexture", {})}
+		for prop in want:
+			var ref: Dictionary = want[prop]
+			if not ref.has("index") or int(ref.index) >= jtex.size():
+				continue
+			var src := int((jtex[int(ref.index)] as Dictionary).get("source", -1))
+			if src < 0 or src >= jimg.size():
+				continue
+			var uri := String((jimg[src] as Dictionary).get("uri", ""))
+			if uri == "" or uri.begins_with("data:"):
+				return false                                   # (a picture inside the file: the plain way)
+			var p := state.base_path.path_join(uri.uri_decode())
+			if not made.has(p):
+				var img := load_image(p)
+				made[p] = ImageTexture.create_from_image(img) if img else null
+			if made[p] != null:
+				bm.set(prop, made[p])
+	return true
+
+
 static func load_image(path: String, allow_compress := true) -> Image:
 	var bc := path.get_basename() + ".bc"
 	if compress and allow_compress and FileAccess.file_exists(bc) and FileAccess.file_exists(path) \

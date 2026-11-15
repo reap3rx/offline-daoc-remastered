@@ -257,8 +257,17 @@ static func _pack_model(path: String) -> PackedScene:
 	var doc := GLTFDocument.new()
 	var state := GLTFState.new()
 	state.base_path = ProjectSettings.globalize_path(path.get_base_dir())
+	# its pictures block-compressed, not raw (NifMaterials.gltf_textures): read without them, then given them
+	if NifMaterials.compress:
+		state.handle_binary_image = GLTFState.HANDLE_BINARY_DISCARD_TEXTURES
 	if doc.append_from_file(path, state) != OK:
 		return null
+	if NifMaterials.compress and not NifMaterials.gltf_textures(state):
+		doc = GLTFDocument.new()                               # (not a model it can dress: the plain way)
+		state = GLTFState.new()
+		state.base_path = ProjectSettings.globalize_path(path.get_base_dir())
+		if doc.append_from_file(path, state) != OK:
+			return null
 	# the generated tree is only the template: free it once packed - a loose node is never freed for us, and
 	# every zone left all its monster models and their textures behind (owner 2026-10-10: 7-8 fps after a zone
 	# change, video memory full; ~970 MB more after Camelot Hills -> Shannon Estuary than a fresh start)
@@ -454,11 +463,108 @@ func _process(delta: float) -> void:
 	Perf.proc_add("npc manager", Time.get_ticks_usec() - tq)
 
 
+## LINE OF SIGHT (2026-11-15, owner: 14 to 29 fps by Master Eadig in Camelot - 183 characters within VIEW_RANGE, every
+## one posed every frame, nearly all of them behind walls). A character the camera has no clear line to rests: still
+## built, still drawn where it is, not posed (AnimLod.hidden) - so nothing pops in, it only starts moving again. The
+## buffer the owner asked for: the lines go to a box bigger than the character and also from a little ahead of the
+## camera's movement, and a character keeps moving SIGHT_KEEP_MS after its last clear line. Anything within SIGHT_NEAR_M,
+## and your target, always counts as seen. Views are also built seen-first, nearest first (update_views).
+## --no-los turns it off.
+const SIGHT_NEAR_M := 10.0
+const SIGHT_KEEP_MS := 1500
+const SIGHT_EVERY_S := 0.2                     # each character is looked at this often
+const SIGHT_LEAD_S := 0.4                      # the camera's movement, this far ahead
+const SIGHT_MASK := ZoneLoader.LAYER_WALL | ZoneLoader.LAYER_FLOOR
+static var los_on := not OS.get_cmdline_user_args().has("--no-los")
+var _los_i := 0
+var _los_cam := Vector3.INF
+var _los_vel := Vector3.ZERO
+var _los_q: PhysicsRayQueryParameters3D
+var los_rays := 0                            # (tests: rays cast, and their time)
+var los_us := 0
+
+
+func hidden(s: NpcState) -> bool:
+	return los_on and s.los_at >= 0 and Time.get_ticks_msec() - s.los_at > SIGHT_KEEP_MS
+
+
+## How many of the views are resting behind walls now (tests, the live log).
+func hidden_count() -> int:
+	var n := 0
+	for i in active:
+		if hidden((active[i] as Npc).state):
+			n += 1
+	return n
+
+
+func _los_pass(cam: Camera3D, delta: float) -> void:
+	if not los_on or cam == null or states.is_empty() or player == null:
+		return
+	var t0 := Time.get_ticks_usec()
+	var space := get_world_3d().direct_space_state
+	if space == null:
+		return
+	if _los_q == null:
+		_los_q = PhysicsRayQueryParameters3D.new()
+		_los_q.collision_mask = SIGHT_MASK
+	var cp := cam.global_position
+	if _los_cam != Vector3.INF and delta > 0.0 and cp.distance_to(_los_cam) < 20.0:
+		_los_vel = _los_vel.lerp((cp - _los_cam) / delta, 0.2)
+	else:
+		_los_vel = Vector3.ZERO
+	_los_cam = cp
+	# a second eye a little ahead of where the camera is going (what is about to come into view), if the way there is open
+	var lead := cp + (_los_vel * SIGHT_LEAD_S).limit_length(4.0)
+	if lead.distance_to(cp) < 0.3 or _los_hit(space, cp, lead):
+		lead = cp
+	var now := Time.get_ticks_msec()
+	var pp := player.global_position
+	var n := states.size()
+	var count := clampi(ceili(n * delta / SIGHT_EVERY_S), 1, 80)
+	var tstate: NpcState = target.state if target and is_instance_valid(target) else null
+	for k in count:
+		_los_i = (_los_i + 1) % n
+		var s: NpcState = states[_los_i]
+		var d2 := Vector2(s.pos.x - pp.x, s.pos.z - pp.z).length_squared()
+		if d2 > FREE_RANGE * FREE_RANGE:
+			continue
+		if d2 < SIGHT_NEAR_M * SIGHT_NEAR_M or s == tstate or s.pos.distance_squared_to(cp) < SIGHT_NEAR_M * SIGHT_NEAR_M:
+			s.los_at = now
+			continue
+		if _los_clear(space, cp, lead, s.pos):
+			s.los_at = now
+		elif s.los_at < 0:
+			s.los_at = 0                                   # looked at, never seen
+	los_us += Time.get_ticks_usec() - t0
+	Perf.proc_add("line of sight", Time.get_ticks_usec() - t0)
+
+
+func _los_hit(space: PhysicsDirectSpaceState3D, a: Vector3, b: Vector3) -> bool:
+	_los_q.from = a
+	_los_q.to = b
+	los_rays += 1
+	return not space.intersect_ray(_los_q).is_empty()
+
+
+## A clear line from the camera (or its lead) to any of: the head, above it, the chest and a metre to each side of it.
+func _los_clear(space: PhysicsDirectSpaceState3D, cp: Vector3, lead: Vector3, at: Vector3) -> bool:
+	if not _los_hit(space, cp, at + Vector3(0, 1.6, 0)):
+		return true
+	var flat := Vector3(at.x - cp.x, 0.0, at.z - cp.z)
+	var side := Vector3(-flat.z, 0.0, flat.x).normalized() if flat.length_squared() > 0.01 else Vector3.RIGHT
+	if not _los_hit(space, cp, at + Vector3(0, 1.0, 0) + side) or not _los_hit(space, cp, at + Vector3(0, 1.0, 0) - side):
+		return true
+	if not _los_hit(space, cp, at + Vector3(0, 2.6, 0)):
+		return true
+	return lead != cp and not _los_hit(space, lead, at + Vector3(0, 1.3, 0))
+
+
 func _process_body(delta: float) -> void:
 	if player == null:
 		return
 	_frame += 1
 	var cam := get_viewport().get_camera_3d()
+	_los_pass(cam, delta)
 	var tt := Time.get_ticks_usec()
 	if AnimLod.threaded:
 		AnimLod.snapshot(cam)                          # the views step themselves after this, on worker threads
@@ -527,68 +633,6 @@ func prebuild() -> void:
 		update_views(1 << 30)
 
 
-## Your realm's player races made ready behind the loading screen, once a session (2026-11-15: the first Firbolg, the
-## first Lurikeen ... of a session each held a frame a quarter to half a second when they came into view - the card
-## taking the race's whole figure, its meshes and shaders - however far off the main thread the files were read).
-## The other realms' races still load at their first sight (an enemy in the frontiers).
-const REALM_RACES := {"alb": ["bri", "ava", "hig", "sar", "inc"], "mid": ["nor", "tro", "dwa", "kob", "val"],
-		"hib": ["cel", "fir", "elf", "lur", "syl"]}
-
-## Started, then asked each frame until it says done (never waited for with the main thread stopped: a figure's
-## loading needs it now and then, and the game stood still for good).
-static var _warm_tasks: Array = []
-static var _warm_out := {}
-static var _warm_lock := Mutex.new()
-static var _warm_t0 := 0
-static var _warm_realm := ""
-
-static func warm_realm_start(realm: String) -> void:
-	if not _warm_tasks.is_empty():
-		return
-	_warm_t0 = Time.get_ticks_msec()
-	_warm_realm = realm
-	var lock := _warm_lock
-	var out := _warm_out
-	var tasks := _warm_tasks
-	var todo: Array = []
-	for r: String in REALM_RACES.get(realm, []):
-		for g: String in ["_m", "_f"]:
-			var p: String = r + g
-			if not Fig3Figure._scenes.has(p) and not _prep_failed.has("figure:" + p):
-				todo.append(p)
-	if todo.is_empty():
-		return
-	# one after another on one worker, as the views' own preparation does (several at once is untried)
-	tasks.append(WorkerThreadPool.add_task(func():
-		for p: String in todo:
-			var ps := Fig3Figure.pack_figure(p)
-			Fig3Figure.warm_clips(p, ps)
-			lock.lock()
-			out[p] = ps
-			lock.unlock(), false, "realm figures"))
-
-
-## True once they are all in (and into the cache).
-static func warm_realm_done() -> bool:
-	if _warm_tasks.is_empty():
-		return true
-	for t in _warm_tasks:
-		if not WorkerThreadPool.is_task_completed(int(t)):
-			return false
-	for t in _warm_tasks:
-		WorkerThreadPool.wait_for_task_completion(int(t))
-	for p in _warm_out:
-		if _warm_out[p] != null:
-			if not Fig3Figure._scenes.has(p):
-				Fig3Figure._scenes[p] = _warm_out[p]
-		else:
-			_prep_failed["figure:" + String(p)] = true
-	print("[views] %d race figures of %s made ready in %d ms" % [_warm_out.size(), _warm_realm, Time.get_ticks_msec() - _warm_t0])
-	_warm_tasks.clear()
-	_warm_out.clear()
-	return true
-
-
 var prof_build_us := 0                      # debug timing (tests/seamless_probe.gd): view builds, model parses, ticks
 var prof_built := 0
 var prof_parse_us := 0
@@ -596,7 +640,10 @@ var prof_parsed := 0
 var prof_tick_us := 0
 
 
-const PREP_GIVE_UP_MS := 3000                # a view waits at most this long for its files from the worker
+# (3 s until 2026-11-15: in a crowd the worker's queue ran longer than that, and 27 of 87 freezes in a morning's play
+# were views "built without their files" - 100 ms each instead of 45. A figure a few seconds late beats a freeze.)
+const PREP_GIVE_UP_MS := 20000                # a view waits at most this long for its files from the worker
+var _view_pass := 0
 const VIEW_BUILD_US := 4000                   # view building per pass: at most this long (one at least) - seamless
 											# zones bring new monsters into view fast; a burst stalled whole frames
 
@@ -605,12 +652,28 @@ func update_views(max_build: int) -> void:
 	var pp := player.global_position
 	var built := 0
 	var t0 := Time.get_ticks_usec()
+	_view_pass += 1
+	# those to build: the ones the camera can see first, nearest first; the ones behind walls after them, and (in play)
+	# at half the pace - one every other pass, when nothing seen was built (their building is a slow frame nobody
+	# needs yet)
+	var todo := []
 	for st in states:
 		var s: NpcState = st
 		var d := Vector2(s.pos.x - pp.x, s.pos.z - pp.z).length()
 		if d > VIEW_RANGE:
 			s.prep_since = 0                               # (out of range: its wait starts over when it comes back)
-		if d <= VIEW_RANGE and not active.has(s.index) and built < max_build 				and (built == 0 or max_build > 1000 or Time.get_ticks_usec() - t0 < VIEW_BUILD_US):
+		if d <= VIEW_RANGE and not active.has(s.index):
+			todo.append([d + (1000.0 if hidden(s) else 0.0), s])
+		elif d > FREE_RANGE and active.has(s.index):
+			if active[s.index] == target:
+				clear_target()
+			active[s.index].queue_free()
+			active.erase(s.index)
+			s.view = null
+	todo.sort_custom(func(a, b): return a[0] < b[0])
+	for td in todo:
+		var s: NpcState = td[1]
+		if built < max_build and (built == 0 or max_build > 1000 or Time.get_ticks_usec() - t0 < VIEW_BUILD_US):
 			if (s.info.has("missing") or (not s.info.has("gltf") and not s.info.has("race") and not s.info.has("object_model"))) 					and not s.info.has("effects"):
 				continue                                   # nothing to show (effect-only models do get a view)
 			if max_build <= 1000 and not _prepared(s):     # its files load on a worker first (_prepared) ...
@@ -623,22 +686,19 @@ func update_views(max_build: int) -> void:
 				if now - s.prep_since < PREP_GIVE_UP_MS:
 					continue
 				Perf.note_us("view built without its files (waited %d ms)" % (now - s.prep_since), Perf.NOTE_US)
+			if max_build <= 1000 and float(td[0]) >= 1000.0 and (built > 0 or _view_pass % 2 == 1):
+				continue                                   # behind walls: not this pass
 			s.prep_since = 0
 			var tb := Time.get_ticks_usec()
 			var n := Npc.new()
 			add_child(n)
 			n.setup(s, self)
+			last_built = [String(s.spawn.get("name", "")), String(s.info.get("gltf", s.info.get("race", ""))), Time.get_ticks_msec()]
 			prof_build_us += Time.get_ticks_usec() - tb
 			prof_built += 1
 			s.view = n
 			active[s.index] = n
 			built += 1
-		elif d > FREE_RANGE and active.has(s.index):
-			if active[s.index] == target:
-				clear_target()
-			active[s.index].queue_free()
-			active.erase(s.index)
-			s.view = null
 	_prep_start()
 	if target and is_instance_valid(target) and not target.state.alive:
 		clear_target()                                     # it died: no target on a corpse (owner's old client)
@@ -697,9 +757,14 @@ func _prep_needs(s: NpcState) -> Dictionary:
 				elif slot == 21:
 					helm = int(e.model)
 			var dir := Fig3Figure.texture_dir()
-			for key in Fig3Figure.texture_keys(meta, Fig3Figure.npc_look(Fig3Figure.look_seed(spawn), meta), parts):
+			var its_look := Fig3Figure.npc_look(Fig3Figure.look_seed(spawn), meta)
+			var hair: Array = Fig3Figure.hair_texes(meta, its_look)     # (the beard's too, and each one's flow map)
+			for key in Fig3Figure.texture_keys(meta, its_look, parts) + hair:
 				if not Fig3Figure._tex_cache.has(dir + String(key)):
 					need["tex:" + dir + String(key)] = ["tex", [dir, key]]
+			for key in hair:
+				if not Fig3Figure._flow_cache.has(String(key)):
+					need["flow:" + String(key)] = ["flow", String(key)]
 			if helm > 0:
 				var hp := Fig3Figure.helm_path(helm, String(meta.get("prefix", prefix)))
 				if hp != "" and not Fig3Figure._helm_scenes.has(hp):
@@ -766,6 +831,9 @@ func _prep_start() -> void:
 				"fx":
 					if not NifScene._packed.has(job[1]):
 						NifScene._packed[job[1]] = v
+				"flow":
+					if not Fig3Figure._flow_cache.has(job[1]):
+						Fig3Figure._flow_cache[job[1]] = v
 		_prep_jobs = {}
 		_prep_out = {}
 	if _prep_next.is_empty():
@@ -773,6 +841,7 @@ func _prep_start() -> void:
 	_prep_jobs = _prep_next
 	_prep_next = {}
 	_prep_out = {}
+	Perf.background("view files: " + ", ".join(PackedStringArray(_prep_jobs.keys().slice(0, 14).map(func(k): return String(k).get_file()))))
 	_prep_task = WorkerThreadPool.add_task(_prep_run.bind(_prep_jobs, _prep_out), false, "npc views")
 
 
@@ -798,11 +867,13 @@ static func _prep_run(jobs: Dictionary, out: Dictionary) -> void:
 			"helm": out[k] = Fig3Figure.pack_helm(String(job[1]))
 			"weapon": out[k] = WeaponModels.pack(String(job[1]))
 			"fx": out[k] = NifScene.pack_copy(String(job[1]))
+			"flow": out[k] = Fig3Figure.load_flow(String(job[1]))
 	if prep_log:
 		print("[prep] %d files (%d textures) in %d ms" % [jobs.size(), texes, Time.get_ticks_msec() - t0])
 
 
-const TEX_GAP_MS := 12
+var last_built: Array = ["", "", 0]          # the newest view: [name, its model or race, when (ms)] - probes
+const TEX_GAP_MS := 6
 static var prep_log := false                 # tests: a line per worker task
 
 

@@ -36,6 +36,9 @@ func setup(st: NpcState, mgr: Node) -> void:
 	state = st
 	spawn = st.spawn
 	info = st.info
+	if Server.playing and show_delay_ms > 0:               # (built in play: shown a moment later - show_delay_ms)
+		_show_at = Time.get_ticks_msec() + show_delay_ms
+		visible = false
 	set_process(false)                             # ticked by the manager
 	manager = mgr
 	name = "npc_%s" % String(spawn.id).left(8)
@@ -77,6 +80,18 @@ func rebind(st: NpcState) -> void:
 
 ## Threaded posing: near ones every frame, farther ones every 2nd / 4th with the time gathered (the manager's loop did
 ## this on the main thread) - the click box is the manager's (sync_pick, main thread).
+## A view built in play can be drawn a moment after it is made: --show-delay=<ms>. Off by default (2026-11-15: tried
+## at 500 against a quarter-second stall that turned out to be the minimap reading a map picture; it changed nothing).
+static var show_delay_ms := _show_delay()
+var _show_at := 0
+
+static func _show_delay() -> int:
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--show-delay="):
+			return int(a.get_slice("=", 1))
+	return 0
+
+
 func _process(delta: float) -> void:
 	pending += delta
 	var stride := 1 if AnimLod.FULL or Perf.brute or last_dist < AnimLod.NEAR_FULL_M else (2 if last_dist < 45.0 else 4)
@@ -89,7 +104,7 @@ func _process(delta: float) -> void:
 ## The click box on / off with its life (main thread: a body's processing changes the scene's lists).
 func sync_pick() -> void:
 	if state and AnimLod.threaded:                    # shown / hidden with its life (main thread only)
-		var vis := (state.alive or state.corpse_left > 0.0) and not state.stealthed
+		var vis := (state.alive or state.corpse_left > 0.0) and not state.stealthed and Time.get_ticks_msec() >= _show_at
 		if visible != vis:
 			visible = vis
 	if _pick and state:
@@ -244,7 +259,10 @@ func _attach_effects() -> void:
 					_fx_bounds = b if _fx_bounds.size.y <= 0.0 else _fx_bounds.merge(b)
 					height = maxf(height, b.end.y)
 		NifParticles.fit_to_scale.call_deferred(fx)          # particle sprites follow the scale too (once placed)
-		(func(): FxLight.attach(fx, 1.0, 4.5)).call_deferred()   # remastered: a wisp's / flame's light round it
+		(func():
+			var tf := Time.get_ticks_usec()
+			FxLight.attach(fx, 1.0, 4.5)
+			Perf.note("a view's effect light", tf)).call_deferred()   # remastered: a wisp's / flame's light round it
 
 
 ## Weapons in a monster model's hands (skeletons, the Bonedancer's commander and minions - biped monster NIFs carry the
@@ -769,12 +787,13 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 	if rotation.y != state.yaw:
 		rotation.y = state.yaw
 	if not AnimLod.threaded:                          # (threaded: sync_pick shows / hides it - main thread only)
-		var vis := (state.alive or state.corpse_left > 0.0) and not state.stealthed
+		var vis := (state.alive or state.corpse_left > 0.0) and not state.stealthed and Time.get_ticks_msec() >= _show_at
 		if visible != vis:
 			visible = vis
 	_pace(delta)
 	if _lod:
 		_lod.rank = rank
+		_lod.hidden = manager != null and (manager as NpcManager).hidden(state)
 	if model is Fig3Figure:
 		var f := model as Fig3Figure
 		f.fx_on = rank < Perf.sway_n                    # (under load the farther figures lose the polish)

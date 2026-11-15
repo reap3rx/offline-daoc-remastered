@@ -79,10 +79,15 @@ func _process(delta: float) -> void:
 	var now_us := Time.get_ticks_usec()
 	var real := (now_us - _hitch_at) / 1000000.0 if _hitch_at > 0 else delta
 	_hitch_at = now_us
+	_h_process = _phase_process                    # (the frame that just ended: its phases)
+	_h_physics = _phase_physics
+	_phase_process = 0
+	_phase_physics = 0
 	if real * 1000.0 >= HITCH_MS and Server.playing:
 		_hitch(real)
 	_hparts.clear()
 	_notes.clear()
+	_dms.clear()
 	_frame_ms = lerpf(_frame_ms, delta * 1000.0, 0.1)
 	var vp := get_viewport()
 	if vp and not _gpu_on:
@@ -185,6 +190,8 @@ func proc_add(part: String, usec: int) -> void:
 	_proc[part] = int(_proc.get(part, 0)) + usec
 	frame_parts[part] = int(frame_parts.get(part, 0)) + usec
 	_hparts[part] = int(_hparts.get(part, 0)) + usec
+	if dmark_on:
+		_dm.call_deferred(part)
 	if usec > int(_proc_peak.get(part, 0)):
 		_proc_peak[part] = usec
 
@@ -199,10 +206,23 @@ const NOTE_US := 2500
 var _hparts := {}                                # this frame's parts (proc_add)
 var _notes: Array = []                           # this frame's long steps: [label, usec]
 var _hitch_at := 0                               # when the last frame began (ticks usec)
+var _h_process := 0
+var _hitch_vram := 0.0
+var _h_physics := 0
 var _hitch_lines := 0                            # written since the last live line (never a flood)
 var _hitch_nodes := 0.0
 var _hitch_pipes := -1
 var hitches: Array = []                          # the last ones, for probes (tests): [ms, text]
+
+
+## What the worker threads were given lately (a view's files, a zone to build): a frame can wait on the graphics card
+## taking what they loaded, with nothing of the frame's own to show for it.
+var _bg: Array = []                              # [msec, label]
+
+func background(label: String) -> void:
+	_bg.append([Time.get_ticks_msec(), label])
+	if _bg.size() > 12:
+		_bg.pop_front()
 
 
 func note_us(label: String, usec: int) -> void:
@@ -215,6 +235,75 @@ func note(label: String, since: int) -> int:
 	var now := Time.get_ticks_usec()
 	note_us(label, now - since)
 	return now
+
+
+## Where a frame's time went, by the engine's own phases: a node that runs last in each (PerfTail) marks their ends.
+## process = every node's _process; physics = the physics ticks; the rest = drawing, timers, signals, waiting.
+class PerfTail extends Node:
+	var perf: Node
+	func _process(_d: float) -> void:
+		perf.set("_phase_process", Time.get_ticks_usec() - int(perf.get("_hitch_at")))
+		perf.set("_t_tail_proc", Time.get_ticks_usec())
+		perf.set("_t_first_physf", 0)
+		perf.call_deferred("_on_deferred")
+	func _physics_process(_d: float) -> void:
+		perf.set("_phase_physics", int(perf.get("_phase_physics")) + Time.get_ticks_usec() - int(perf.get("_phys_at")))
+		perf.set("_t_tail_phys", Time.get_ticks_usec())
+
+# the gaps between the phases (what "rest" is made of): after the nodes' process until the next frame's first physics
+# tick (timers, deferred calls, the draw); from the last physics tick's nodes to the process signal (the physics step
+# and its signals); from the process signal to the first node (coroutines that waited for the frame)
+var _t_tail_proc := 0
+var _t_first_physf := 0
+var _t_tail_phys := 0
+var _t_procf := 0
+
+## --dmark (a test): a deferred marker after every timed part, so a long deferred call shows between two of them.
+var dmark_on := OS.get_cmdline_user_args().has("--dmark")
+var _dms: Array = []
+
+func _dm(part: String) -> void:
+	_dms.append([part, Time.get_ticks_usec()])
+
+var _t_deferred := 0
+var _t_predraw := 0
+var _t_postdraw := 0
+
+func _on_deferred() -> void:
+	_t_deferred = Time.get_ticks_usec()
+
+func _on_pre_draw() -> void:
+	_t_predraw = Time.get_ticks_usec()
+
+func _on_post_draw() -> void:
+	_t_postdraw = Time.get_ticks_usec()
+
+
+func _on_physics_frame() -> void:
+	if _t_first_physf == 0:
+		_t_first_physf = Time.get_ticks_usec()
+
+func _on_process_frame() -> void:
+	_t_procf = Time.get_ticks_usec()
+
+var _phase_process := 0
+var _phase_physics := 0
+var _phys_at := 0
+var _tail: Node = null
+
+
+func _phase_tick() -> void:
+	_phys_at = Time.get_ticks_usec()
+	if _tail == null:
+		_tail = PerfTail.new()
+		_tail.set("perf", self)
+		_tail.process_priority = 1 << 20
+		_tail.process_physics_priority = 1 << 20
+		get_tree().root.add_child.call_deferred(_tail)
+		get_tree().physics_frame.connect(_on_physics_frame)
+		get_tree().process_frame.connect(_on_process_frame)
+		RenderingServer.frame_pre_draw.connect(_on_pre_draw)
+		RenderingServer.frame_post_draw.connect(_on_post_draw)
 
 
 func _hitch(delta: float) -> void:
@@ -240,11 +329,41 @@ func _hitch(delta: float) -> void:
 	var nodes := Performance.get_monitor(Performance.OBJECT_NODE_COUNT)
 	# (the engine's own count of the frame: scripts and nodes in process, the physics ticks; what is in neither was
 	# spent drawing or waiting for the render thread - a shader being compiled)
-	var text := "%.0f ms | parts: %s| steps: %s| unexplained %.0f ms | engine: process %.0f physics %.0f | pipelines +%d | nodes %+d" % [ms,
+	var text := "%.0f ms | parts: %s| steps: %s| unexplained %.0f ms | phases: process %.0f physics %.0f rest %.0f | pipelines +%d | nodes %+d" % [ms,
 			parts if parts != "" else "none ", steps if steps != "" else "none ",
 			maxf(0.0, ms - known / 1000.0 - 1000.0 / maxf(fps, 1.0)),
-			Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0, Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0,
+			_h_process / 1000.0, _h_physics / 1000.0, maxf(0.0, ms - (_h_process + _h_physics) / 1000.0),
 			(pipes - _hitch_pipes) if _hitch_pipes >= 0 else 0, int(nodes - _hitch_nodes)]
+	if _t_tail_proc > 0 and _t_procf > _t_tail_proc:
+		var first_next := _t_first_physf if _t_first_physf > _t_tail_proc else _t_procf
+		text += " | gaps: after process (draw, timers, deferred) %.0f, physics step and signals %.0f, before process (coroutines) %.0f" % [
+				(first_next - _t_tail_proc) / 1000.0,
+				(_t_procf - _t_tail_phys) / 1000.0 if _t_tail_phys > _t_tail_proc else 0.0,
+				(Time.get_ticks_usec() - _t_procf) / 1000.0]
+	if _t_deferred > _t_tail_proc and _t_predraw > _t_tail_proc and _t_postdraw > _t_tail_proc:
+		text += " | after process: deferred calls %.0f, timers / tweens / freed nodes %.0f, the draw %.0f, after the draw %.0f" % [
+				(_t_deferred - _t_tail_proc) / 1000.0, (_t_predraw - _t_deferred) / 1000.0, (_t_postdraw - _t_predraw) / 1000.0,
+				((_t_first_physf if _t_first_physf > _t_postdraw else _t_procf) - _t_postdraw) / 1000.0]
+	if dmark_on and _dms.size() > 0:
+		var prev_t := _t_tail_proc
+		var prev_l := "the end of process"
+		var worst := 0
+		var where := ""
+		for e in _dms:
+			if int(e[1]) - prev_t > worst:
+				worst = int(e[1]) - prev_t
+				where = "after '%s' was queued and before '%s'" % [prev_l, e[0]]
+			prev_t = int(e[1])
+			prev_l = String(e[0])
+		text += " | longest deferred stretch %.0f ms: %s" % [worst / 1000.0, where]
+	text += " | vram %+d MB" % int((Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) - _hitch_vram) / 1048576.0)
+	var lately := ""
+	var now_ms := Time.get_ticks_msec()
+	for e in _bg:
+		if now_ms - int(e[0]) < 20000:
+			lately += "%s (%d ms ago), " % [e[1], now_ms - int(e[0])]
+	if lately != "":
+		text += " | workers: " + lately
 	_hitch_pipes = pipes
 	_hitch_nodes = nodes
 	hitches.append([ms, text])
@@ -262,6 +381,7 @@ func _hitch(delta: float) -> void:
 
 
 func _physics_process(_delta: float) -> void:
+	_phase_tick()
 	_phys_ticks += 1
 var _phys_max := 0.0
 var _proc_max := 0.0
@@ -301,6 +421,7 @@ func _live_log() -> void:
 	_proc_frames = 0
 	_hitch_lines = 0
 	_hitch_nodes = Performance.get_monitor(Performance.OBJECT_NODE_COUNT)
+	_hitch_vram = Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED)
 	f.store_line(("[host] " if DisplayServer.get_name() == "headless" else "[game] ") + "%s fps %.0f | process %.1f max %.1f ms | physics %.1f max %.1f ms | slow frames %d | gpu %.1f ms | draws %d objs %d nodes %d | vram %d MB | cpu lvl %.2f gpu lvl %.2f | npcs drawn %d | bots %d" % [
 		Time.get_time_string_from_system(), Engine.get_frames_per_second(),
 		Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0, _proc_max,

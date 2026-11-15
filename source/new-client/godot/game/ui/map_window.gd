@@ -207,6 +207,7 @@ func _show(what: Dictionary, picked: bool) -> void:
 			title = String(_zone(int(what.id)).get("name", ""))
 			pic = String(_zone(int(what.id)).get("map", ""))
 	_title.text = title.to_upper()
+	_shown_pic = pic
 	if _view.texture != _texture(pic):
 		_view.reset_view()
 	_view.texture = _texture(pic)
@@ -225,11 +226,44 @@ func _texture(name: String) -> Texture2D:
 		var path := "res://content/maps/x4plus/" + name
 		if not FileAccess.file_exists(path):
 			path = "res://content/maps/original/" + name
-		var img := Image.load_from_file(ProjectSettings.globalize_path(path)) if FileAccess.file_exists(path) else null
-		if img:
-			img.generate_mipmaps()
-		_tex[name] = ImageTexture.create_from_image(img) if img else null
+		return _picture(name, path)
 	return _tex[name]
+
+
+## A map picture read on a worker, null until it is in (2026-11-15: each was read from disk and its mipmaps made in the
+## frame it was first drawn - the minimap reaching a neighbour zone's map near a border, a town's map as you walked
+## in: a quarter of a second each, the last of the freezes with "nothing running"). Whoever draws it draws nothing
+## for the moment it takes; the map window shows it when it arrives.
+var _tex_loading := {}
+var _shown_pic := ""
+
+func _picture(key: String, path: String) -> Texture2D:
+	if _tex.has(key):
+		return _tex[key]
+	if not FileAccess.file_exists(path):
+		_tex[key] = null
+		return null
+	if not _tex_loading.has(key):
+		_tex_loading[key] = true
+		var full := ProjectSettings.globalize_path(path)
+		WorkerThreadPool.add_task(func():
+			var img := Image.load_from_file(full)
+			if img:
+				img.generate_mipmaps()
+			var t: Texture2D = ImageTexture.create_from_image(img) if img else null
+			_picture_in.call_deferred(key, t), false, "map picture")
+	return null
+
+
+func _picture_in(key: String, t: Texture2D) -> void:
+	_tex[key] = t
+	_tex_loading.erase(key)
+	if key == _shown_pic and _view:
+		if _view.texture != t:
+			_view.reset_view()
+		_view.texture = t
+	if _view:
+		_view.queue_redraw()
 
 
 ## The zone drawn from straight above (tests/map_render.gd: content/maps/render/z<zone>.jpg) - every tree, path and
@@ -237,28 +271,16 @@ func _texture(name: String) -> Texture2D:
 ## high-rez"). null when the zone has none yet. Only for a whole-zone map (its square is the zone's own).
 func render_texture(z: int) -> Texture2D:
 	var key := "render:%d" % z
-	if not _tex.has(key):
-		var path := "res://content/maps/render/z%03d.jpg" % z
-		var img := Image.load_from_file(ProjectSettings.globalize_path(path)) if FileAccess.file_exists(path) else null
-		if img:
-			img.generate_mipmaps()
-		_tex[key] = ImageTexture.create_from_image(img) if img else null
 	var mr := map_rect(z)
 	if mr.position != Vector2.ZERO:
 		return null                                     # (a capital's or dungeon's map shows part of the zone)
-	return _tex[key]
+	return _picture(key, "res://content/maps/render/z%03d.jpg" % z)
 
 
 ## The painted map's names and markers on their own (pipeline/build_map_labels.py), drawn over the render.
 func render_labels(z: int) -> Texture2D:
 	var key := "labels:%d" % z
-	if not _tex.has(key):
-		var path := "res://content/maps/render/z%03d_labels.png" % z
-		var img := Image.load_from_file(ProjectSettings.globalize_path(path)) if FileAccess.file_exists(path) else null
-		if img:
-			img.generate_mipmaps()
-		_tex[key] = ImageTexture.create_from_image(img) if img else null
-	return _tex[key]
+	return _picture(key, "res://content/maps/render/z%03d_labels.png" % z)
 
 
 ## The names' and markers' boxes in the labels picture (build_map_labels.py): {size, boxes: [[x, y, w, h]]}.
@@ -715,6 +737,12 @@ class MapView extends Control:
 			draw_string(font, base, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col.lightened(0.3))
 
 	func _draw() -> void:
+		var t_draw := Time.get_ticks_usec()
+		_draw_timed()
+		Perf.note("drawing: MapView map_window", t_draw)
+
+
+	func _draw_timed() -> void:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0, 0, 0))
 		draw_set_transform(pan, 0.0, Vector2(zoom, zoom))     # the zoomed, dragged picture: everything in its frame
 		if texture:
@@ -872,6 +900,12 @@ class LogPanel extends Control:
 		return lines
 
 	func _draw() -> void:
+		var t_draw := Time.get_ticks_usec()
+		_draw_timed()
+		Perf.note("drawing: LogPanel map_window", t_draw)
+
+
+	func _draw_timed() -> void:
 		_rows.clear()
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.02, 0.02, 0.03, 0.8))
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.45, 0.42, 0.35), false, 1.0)

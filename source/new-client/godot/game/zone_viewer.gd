@@ -415,14 +415,8 @@ func _ready_rest(loading: LoadingScreen) -> void:
 		# textures upload and their shaders compile before you see the world (owner 2026-10-10)
 		loading.set_progress(0.95)
 		await get_tree().process_frame
-		if npcs and Server.active and args.has("warm-realm"):
-			# OFF unless --warm-realm (2026-11-15: the game closed without a word a few seconds into the world on the
-			# one run that had it - not yet understood). Your realm's player races, once a session
-			# (NpcManager.warm_realm_start): at most 20 s of the loading screen
-			NpcManager.warm_realm_start(String(Server.selected.get("realm", "")))
-			var warm_until := Time.get_ticks_msec() + 20000
-			while not NpcManager.warm_realm_done() and Time.get_ticks_msec() < warm_until:
-				await get_tree().process_frame
+		if Server.active and player and player.camera:
+			Fig3Figure.warm_shaders(player.camera)             # (every figure shader compiled here, not at its first wearer)
 		if npcs:
 			npcs.prebuild()
 			SpellFx.preload_effects(SpellFx.zone_effects(npcs.states))

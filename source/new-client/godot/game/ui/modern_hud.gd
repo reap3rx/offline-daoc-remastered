@@ -326,6 +326,12 @@ class Burden extends Part:
 			queue_redraw()
 
 	func _draw() -> void:
+		var t_draw := Time.get_ticks_usec()
+		_draw_timed()
+		Perf.note("drawing: Burden modern_hud", t_draw)
+
+
+	func _draw_timed() -> void:
 		if (now < 0 or most <= 0) and not preview:
 			return
 		var c := Vector2(W * 0.5, 17.0)
@@ -385,6 +391,12 @@ class Orb extends Part:
 		return Rect2(-70, -34, 2 * ARC_R + 8 + 140, 30)
 
 	func _draw() -> void:
+		var t_draw := Time.get_ticks_usec()
+		_draw_timed()
+		Perf.note("drawing: Orb modern_hud", t_draw)
+
+
+	func _draw_timed() -> void:
 		var f := UiArt.font(true)
 		var thin := UiArt.font(false)
 		var c := _centre()
@@ -509,6 +521,12 @@ class Party extends Part:
 				accept_event()
 
 	func _draw() -> void:
+		var t_draw := Time.get_ticks_usec()
+		_draw_timed()
+		Perf.note("drawing: Party modern_hud", t_draw)
+
+
+	func _draw_timed() -> void:
 		var rows: Array = PlayerData.group_rows()
 		if rows.is_empty():
 			mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -582,6 +600,12 @@ class QuestLog extends Part:
 		return out.slice(0, 6)
 
 	func _draw() -> void:
+		var t_draw := Time.get_ticks_usec()
+		_draw_timed()
+		Perf.note("drawing: QuestLog modern_hud", t_draw)
+
+
+	func _draw_timed() -> void:
 		var list := entries()
 		if list.is_empty():
 			return
@@ -604,11 +628,7 @@ class QuestLog extends Part:
 			y += 3.0
 
 	static func _fit(f: Font, s: String, fs: int, w: float) -> String:
-		if f.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x <= w:
-			return s
-		while s.length() > 3 and f.get_string_size(s + "...", HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > w:
-			s = s.substr(0, s.length() - 1)
-		return s + "..."
+		return UiArt.fit(f, s, fs, w)
 
 
 ## The minimap: the zone's painted map around you, north up. The wheel zooms (a fifth to the whole zone across), a
@@ -688,6 +708,12 @@ class Minimap extends Part:
 		return out
 
 	func _draw() -> void:
+		var t_draw := Time.get_ticks_usec()
+		_draw_timed()
+		Perf.note("drawing: Minimap modern_hud", t_draw)
+
+
+	func _draw_timed() -> void:
 		var w: MapWindow = hud.ui.map_window if hud.ui else null
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.02, 0.02, 0.03, 0.9))
 		if w == null or w.current_zone < 0 or w.player == null:
@@ -915,6 +941,12 @@ class PetPanel extends Part:
 		return "" if i < 0 else "PET: %s (DRAG ONTO A QUICKBAR)" % String(CMDS[i][1]).to_upper()
 
 	func _draw() -> void:
+		var t_draw := Time.get_ticks_usec()
+		_draw_timed()
+		Perf.note("drawing: PetPanel modern_hud", t_draw)
+
+
+	func _draw_timed() -> void:
 		var pd: Dictionary = PlayerData.pet
 		if pd.is_empty():
 			_content_h = 0.0
@@ -1026,6 +1058,12 @@ class LootFeed extends Part:
 		queue_redraw()
 
 	func _draw() -> void:
+		var t_draw := Time.get_ticks_usec()
+		_draw_timed()
+		Perf.note("drawing: LootFeed modern_hud", t_draw)
+
+
+	func _draw_timed() -> void:
 		var now := Time.get_ticks_msec() / 1000.0
 		var f := UiArt.font(true)
 		var thin := UiArt.font(false)
@@ -1171,6 +1209,12 @@ class HudMenu extends Part:
 		return ui.right_panel.visible and ui.sheet_tab == id
 
 	func _draw() -> void:
+		var t_draw := Time.get_ticks_usec()
+		_draw_timed()
+		Perf.note("drawing: HudMenu modern_hud", t_draw)
+
+
+	func _draw_timed() -> void:
 		for i in ITEMS.size():
 			var r := Rect2(i * (ICON + GAP), 0, ICON, ICON)
 			var c := r.get_center()
