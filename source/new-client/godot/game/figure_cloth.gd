@@ -12,12 +12,12 @@ extends SkeletonModifier3D
 ##   behind the top (two springs in a row), heavy and well damped.
 ## - With something on the back (a shield, a slung weapon or bow, a quiver) the joints under it stay put - they keep a
 ##   third of the clip's own flap and add none - and the hem below it swings free. Player.dress moves that gear out
-##   just past the cloak at rest (clear_gear), and it swings a little about its strap (sway_gear).
+##   just past the cloak at rest (place_gear), and it swings a little about its strap (sway_gear).
 ## Fig3Figure adds one to its skeleton; Sway calls tick from its own pass (after the body's lean and turn), so the node
 ## does nothing as a modifier itself. Remastered and within Fig3Figure.SWAY_RANGE_M only.
 
-const JOINT_R := 0.04                        # m: the cloth's thickness round a joint (clear_gear, the hair)
-const GAP := 0.02                            # m: what the gear clears the cloak by at rest
+const JOINT_R := 0.04                        # m: the cloth's thickness round a joint (the hair)
+const GAP := 0.015                           # m: what the gear clears the cloak by at rest
 const SHARE := [0.34, 0.16, 0.24, 0.16, 0.10]    # each joint's part of the swing, top to hem
 const RUN_BACK := 0.055                      # rad of swing back per m/s ahead ...
 const RUN_BACK_MAX := 0.33                   # ... up to this (on top of what is kept of the run clip's own: enough
@@ -406,44 +406,200 @@ func _frame() -> Dictionary:
 
 # ---------------------------------------------------------------- the gear on the back
 
-## Player.dress: a piece on the back moved out just past where the cloak hangs at rest (owner 2026-11-14: "the
-## position of the shield on the back can be moved further away from the body ... when a cloak is being worn").
-func clear_gear(bone: int, w: Node3D) -> void:
-	if w and not w.has_meta("placed_xf"):
-		w.set_meta("placed_xf", w.transform)              # (where dress put it: back there without a cloak)
-	if not cloak_on or bone < 0 or w == null:
-		return
+## Player.dress: the pieces on the back, each as close in as it goes without touching what is under it (owner
+## 2026-11-14: "make their position dynamic based on how many things and what's equipped ... closest to farthest away
+## from the body ... quiver (always closest ...) followed by bow ..., followed by 2H weapon, followed by shield ...
+## only as far back as it needs to be to not clip"). pieces: [bone, holder, kind ("quiver" / "bow" / "2h" / "shield")].
+## A map of how far back the surface so far reaches, over the back in cells of one skeleton unit (2.4 cm): the cloak
+## as it hangs standing, when one is worn; then each piece in that order is slid along the figure's back-ward way
+## until its inner side clears the map by GAP, and its outer side goes into the map for the next. With a cloak the
+## pieces come in as well as out (the cloak covers the body); with none the first stays where dress put it and the
+## ones after it only move out.
+const ORDER := ["quiver", "bow", "2h", "shield"]
+var _placed: Array = []
+
+func place_gear(pieces: Array) -> void:
+	_placed = pieces.duplicate()
+	for e in _placed:
+		var w0 := e[1] as Node3D
+		if w0 and not w0.has_meta("placed_xf"):
+			w0.set_meta("placed_xf", w0.transform)       # (where dress put it)
+	_stack()
+	refresh_gear()
+
+
+## A cloak put on or taken off (or shown / hidden) after the gear was dressed: the gear placed again for it.
+func cloak_changed() -> void:
+	_stack()
+	refresh_gear()
+
+
+func _stack() -> void:
 	var frame := _frame()
-	if frame.is_empty():
+	if frame.is_empty() or _sk == null:
 		return
 	var back: Vector3 = frame.back
-	var shape := _footprint(bone, w, w.transform, frame)
-	if shape.is_empty():
-		return
-	var cloak := _body_points(true)
-	var outer := -INF
+	var up: Vector3 = frame.up
+	var right: Vector3 = back.cross(up).normalized()
 	var m := _m()
-	var reach: float = 0.03 * m
-	for b in cloak:
-		var g := _sk.get_bone_global_rest(int(b))
-		for p in cloak[b]:
-			var q: Vector3 = g * (p as Vector3)                      # (skeleton space)
-			var rel: Vector3 = q - (shape.centre as Vector3)
-			if absf(rel.dot(shape.u)) <= float(shape.hu) + reach and absf(rel.dot(shape.v)) <= float(shape.hv) + reach:
-				outer = maxf(outer, q.dot(back))
-	# and the cloak's joints, whose thickness the springs keep off it (or they would sit pressed against it)
-	var joint_outer := -INF
+	var list := []
+	for e in _placed:
+		if not is_instance_valid(e[1]):                  # (the last dress's, gone)
+			continue
+		var w := e[1] as Node3D
+		if w and int(e[0]) >= 0 and not w.is_queued_for_deletion():
+			w.transform = w.get_meta("placed_xf", w.transform)
+			list.append(e)
+	list.sort_custom(func(x, y): return ORDER.find(String(x[2])) < ORDER.find(String(y[2])))
+	var reach := {}                                     # cell -> how far back the surface so far reaches
+	var have_cloak := false
+	if cloak_on:
+		for q in _cloak_surface():
+			var c := Vector2i(floori(q.dot(right)), floori(q.dot(up)))
+			var d: float = q.dot(back)
+			if d > float(reach.get(c, -INF)):
+				reach[c] = d
+		have_cloak = not reach.is_empty()
+	var first := true
+	for e in list:
+		var bone := int(e[0])
+		var w := e[1] as Node3D
+		var g := _sk.get_bone_global_rest(bone) * w.transform
+		var inner := {}
+		var outer := {}
+		for q0 in _piece_samples(w):
+			var q: Vector3 = g * (q0 as Vector3)
+			var c := Vector2i(floori(q.dot(right)), floori(q.dot(up)))
+			var d: float = q.dot(back)
+			if d < float(inner.get(c, INF)):
+				inner[c] = d
+			if d > float(outer.get(c, -INF)):
+				outer[c] = d
+		# how far it has to slide back: the most any of its cells is short of clearing the surface under it (the
+		# cells about it too: the samples don't fall alike in both)
+		var need := -INF
+		for c in inner:
+			var under := -INF
+			for dx in [-1, 0, 1]:
+				for dy in [-1, 0, 1]:
+					under = maxf(under, float(reach.get((c as Vector2i) + Vector2i(dx, dy), -INF)))
+			if under > -INF:
+				need = maxf(need, under + GAP * m - float(inner[c]))
+		var slide := 0.0
+		if need > -INF:
+			slide = need if have_cloak else maxf(need, 0.0)
+		if absf(slide) > 1e-4:
+			w.position += _sk.get_bone_global_rest(bone).basis.inverse() * (back * slide)
+		for c in outer:
+			var d: float = float(outer[c]) + slide
+			if d > float(reach.get(c, -INF)):
+				reach[c] = d
+		first = false
+
+
+static var _samples_cache := {}              # mesh rid -> PackedVector3Array (points over its triangles, its own space)
+
+## Points over a holder's meshes, about a unit apart, in the holder's space.
+func _piece_samples(holder: Node3D) -> Array:
+	var out := []
+	for n in holder.find_children("*", "MeshInstance3D", true, false):
+		var mi := n as MeshInstance3D
+		if mi.mesh == null:
+			continue
+		var xf := Transform3D.IDENTITY
+		var up_n: Node = mi
+		while up_n != null and up_n != holder:
+			if up_n is Node3D:
+				xf = (up_n as Node3D).transform * xf
+			up_n = up_n.get_parent()
+		var key := mi.mesh.get_rid().get_id()
+		if not _samples_cache.has(key):
+			var pts := PackedVector3Array()
+			for s in mi.mesh.get_surface_count():
+				var arr := mi.mesh.surface_get_arrays(s)
+				if arr[Mesh.ARRAY_VERTEX] != null:
+					_over_triangles(arr[Mesh.ARRAY_VERTEX], arr[Mesh.ARRAY_INDEX], 1.0 / maxf(xf.basis.get_scale().y, 1e-4), pts)
+			_samples_cache[key] = pts
+		for q in (_samples_cache[key] as PackedVector3Array):
+			out.append(xf * q)
+	return out
+
+
+## Points over a mesh's triangles, about step apart (its corners always).
+static func _over_triangles(verts: PackedVector3Array, index, step: float, into: PackedVector3Array) -> void:
+	var idx: PackedInt32Array = index if index != null else PackedInt32Array()
+	var nt := (idx.size() if not idx.is_empty() else verts.size()) / 3
+	for t in nt:
+		var a := verts[idx[t * 3] if not idx.is_empty() else t * 3]
+		var b := verts[idx[t * 3 + 1] if not idx.is_empty() else t * 3 + 1]
+		var c := verts[idx[t * 3 + 2] if not idx.is_empty() else t * 3 + 2]
+		var n := clampi(ceili(maxf(a.distance_to(b), maxf(b.distance_to(c), c.distance_to(a))) / step), 1, 10)
+		for i in n + 1:
+			for j in n + 1 - i:
+				into.append(a + (b - a) * (float(i) / n) + (c - a) * (float(j) / n))
+
+
+static var _cloak_cache := {}                # "<mesh>|<skin>" -> PackedVector3Array
+
+## Points over the cloak that shows, as it hangs standing (its bones at their idle turn off the back at rest), in the
+## skeleton's space.
+func _cloak_surface() -> PackedVector3Array:
+	var mi: MeshInstance3D = null
+	var parts: Dictionary = fig.get("_meshes")
+	for k in parts:
+		if String(k).begins_with("cloak"):
+			for x in parts[k]:
+				if (x as MeshInstance3D).visible and (x as MeshInstance3D).mesh and (x as MeshInstance3D).skin:
+					mi = x
+	if mi == null:
+		return PackedVector3Array()
+	var key := "%d|%d" % [mi.mesh.get_rid().get_id(), mi.skin.get_rid().get_id()]
+	if _cloak_cache.has(key):
+		return _cloak_cache[key]
+	var idle := {}                                      # cloak bone -> where it is standing
 	for i in _cloak_n:
-		for b in _chains[i]:
-			var q := _sk.get_bone_global_rest(int(b)).origin
-			var rel: Vector3 = q - (shape.centre as Vector3)
-			if absf(rel.dot(shape.u)) <= float(shape.hu) + JOINT_R * m and absf(rel.dot(shape.v)) <= float(shape.hv) + JOINT_R * m:
-				joint_outer = maxf(joint_outer, q.dot(back) + JOINT_R * m)
-	if outer == -INF and joint_outer == -INF:
-		return
-	var push := maxf(outer + GAP * m, joint_outer + 0.005 * m) - float(shape.inner)
-	if push > 0.0:
-		w.position += _sk.get_bone_global_rest(bone).basis.inverse() * (back * push)
+		var ch: Array = _chains[i]
+		var top := _sk.get_bone_parent(int(ch[0]))
+		var g := _sk.get_bone_global_rest(top) if top >= 0 else Transform3D.IDENTITY
+		if top >= 0 and _held.has(top):
+			var pp := _sk.get_bone_parent(top)
+			g = (_sk.get_bone_global_rest(pp) if pp >= 0 else Transform3D.IDENTITY) \
+					* Transform3D(Basis(_held[top] as Quaternion), _sk.get_bone_rest(top).origin)
+			idle[top] = g
+		for b in ch:
+			g = g * Transform3D(Basis(_held[int(b)] as Quaternion), _sk.get_bone_rest(int(b)).origin)
+			idle[int(b)] = g
+	var skin := mi.skin
+	var mats: Array[Transform3D] = []
+	for i in skin.get_bind_count():
+		var nm := String(skin.get_bind_name(i))
+		var b := _sk.find_bone(nm) if nm != "" else skin.get_bind_bone(i)
+		mats.append(((idle[b] as Transform3D) if idle.has(b) else (_sk.get_bone_global_rest(b) if b >= 0 else Transform3D.IDENTITY)) * skin.get_bind_pose(i))
+	var pts := PackedVector3Array()
+	for s in mi.mesh.get_surface_count():
+		var arr := mi.mesh.surface_get_arrays(s)
+		var vs = arr[Mesh.ARRAY_VERTEX]
+		var bs = arr[Mesh.ARRAY_BONES]
+		var ws = arr[Mesh.ARRAY_WEIGHTS]
+		if vs == null or bs == null or ws == null or (vs as PackedVector3Array).is_empty():
+			continue
+		var nv := (vs as PackedVector3Array).size()
+		var per: int = (bs as PackedInt32Array).size() / nv
+		var skinned := PackedVector3Array()
+		skinned.resize(nv)
+		for v in nv:
+			var q := Vector3.ZERO
+			var wsum := 0.0
+			for k in per:
+				var wt: float = ws[v * per + k]
+				var bi: int = bs[v * per + k]
+				if wt > 0.0 and bi < mats.size():
+					q += (mats[bi] * (vs[v] as Vector3)) * wt
+					wsum += wt
+			skinned[v] = q / wsum if wsum > 0.0 else (vs[v] as Vector3)
+		_over_triangles(skinned, arr[Mesh.ARRAY_INDEX], 1.0, pts)
+	_cloak_cache[key] = pts
+	return pts
 
 
 ## A piece's footprint on the back (skeleton space, rest): its middle, the two ways it spreads across the back (u its
@@ -477,16 +633,6 @@ func _footprint(bone: int, w: Node3D, xf: Transform3D, frame: Dictionary) -> Dic
 	var mid := (lo + hi) * 0.5
 	return {"u": u, "v": v, "hu": (hi.x - lo.x) * 0.5, "hv": (hi.y - lo.y) * 0.5, "inner": lo.z, "outer": hi.z,
 		"centre": u * mid.x + v * mid.y + back * mid.z}
-
-
-## A cloak put on or taken off (or shown / hidden) after the gear was dressed: the gear moved out for it, or back.
-func cloak_changed() -> void:
-	for g in _gear:
-		var w = g.node
-		if is_instance_valid(w):
-			(w as Node3D).transform = (w as Node3D).get_meta("placed_xf", g.base)
-			clear_gear(int(g.bone), w)
-	refresh_gear()
 
 
 ## The gear on the back, after Player.dress put it there: the strap each piece swings about, and which of the cloak's
@@ -539,6 +685,12 @@ func refresh_gear() -> void:
 		var top := (fp.centre as Vector3) + up * reach
 		_gear.append({"node": w, "bone": bone, "base": w.transform, "pivot": to_bone * top, "box": Player._holder_box(w),
 			"ax_back": (tb * back.cross(up)).normalized(), "ax_side": (tb * back).normalized(), "ride": ride})
+	# the pieces ride as one (each on its own joint they would turn apart and into each other): all on the lowest
+	var low_ride := -1
+	for g in _gear:
+		low_ride = maxi(low_ride, int(g.ride))
+	for g in _gear:
+		g.ride = low_ride
 	var m := _m()
 	for i in _cloak_n:
 		var cov := []

@@ -895,6 +895,7 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 		var at := BoneAttachment3D.new()
 		at.bone_name = bone
 		at.set_meta("shield", shield)
+		at.set_meta("back_kind", "shield" if shield else ("bow" if slung else "2h"))
 		skel.add_child(at)
 		at.add_child(w)
 		if in_hand:
@@ -914,14 +915,23 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 			BodyFrame.place_quiver(skel, qi, q, frame)
 			var qa := BoneAttachment3D.new()
 			qa.bone_name = qbone
-			qa.set_meta("back_gear", true)                     # (it turns with the cloak: Fig3Figure.Sway)
+			qa.set_meta("back_gear", true)                     # (it rides on the cloak: figure_cloth.gd)
+			qa.set_meta("back_kind", "quiver")
 			skel.add_child(qa)
 			qa.add_child(q)
 			made.append(qa)
 			quiver_shown = true
 	# a shield on the back stands off the slung bow and the quiver (owner 2026-11-03: "a bit further back from the bow
 	# so they don't clip")
-	if has_bow and not frame.is_empty():
+	var figm: Fig3Figure = null
+	var up_n: Node = model
+	for _i in 4:
+		if up_n == null or up_n is Fig3Figure:
+			figm = up_n as Fig3Figure
+			break
+		up_n = up_n.get_parent()
+	# (a remastered figure stacks the pieces itself, below)
+	if has_bow and not frame.is_empty() and (figm == null or figm._cloth == null):
 		for at in made:
 			var a := at as BoneAttachment3D
 			if a and String(a.bone_name).ends_with("Back") and a.get_child_count() > 0 and a.get_meta("shield", false):
@@ -930,22 +940,18 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 	# the shield on the back can be moved further away from the body (as well as the weapons/quivers) when a cloak is
 	# being worn"); the cloak's springs then keep under it, and it swings a little about its strap (figure_cloth.gd)
 	# (an NPC dresses its figure's inner model: the figure is above it)
-	var figm: Fig3Figure = null
-	var up_n: Node = model
-	for _i in 4:
-		if up_n == null or up_n is Fig3Figure:
-			figm = up_n as Fig3Figure
-			break
-		up_n = up_n.get_parent()
+	# and each as close in as it goes without touching the one under it: quiver, bow, two-hander, shield (owner
+	# 2026-11-14)
 	if figm:
 		figm.back_gear = not back_taken.is_empty() or quiver_shown
 		var cloth = figm._cloth
 		if cloth:
+			var pieces := []
 			for at in made:
 				var a := at as BoneAttachment3D
 				if a and a.get_child_count() > 0 and (String(a.bone_name).ends_with(" Back") or a.has_meta("back_gear")):
-					cloth.clear_gear(skel.find_bone(a.bone_name), a.get_child(0) as Node3D)
-			cloth.refresh_gear()
+					pieces.append([skel.find_bone(a.bone_name), a.get_child(0), String(a.get_meta("back_kind", "2h"))])
+			cloth.place_gear(pieces)
 	return made
 
 
