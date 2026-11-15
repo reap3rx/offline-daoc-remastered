@@ -254,6 +254,8 @@ func _loop(st: Dictionary, snd: Dictionary, want: bool, fade_time: float, delta:
 		if row.is_empty():
 			return                                 # dead reference: silent in the client too
 		player = _make_player(row, true, music)
+		if player == null:
+			return                                 # its file is still being read: next frame
 		snd["player"] = player
 		snd["vol"] = _pick(row["vol"])
 		player.play(_rng.randf() * player.stream.get_length())   # don't start every bed at its first sample
@@ -307,6 +309,8 @@ func _one_shot(st: Dictionary, snd: Dictionary, music: bool) -> void:
 		return                                     # still playing
 	if music and st["busy"] != null and is_instance_valid(st["busy"]):
 		return                                     # one music part per region at a time
+	if _stream(row["file"], false) == null:
+		return                                     # not read yet (or missing): this one is skipped, the next plays
 	var group: String = row.get("polygroup", "")
 	var stat: Dictionary = stats.get_or_add(st["def"]["name"], {"played": 0, "full": 0})
 	if group != "" and polygroups.has(group):
@@ -336,8 +340,11 @@ func _one_shot(st: Dictionary, snd: Dictionary, music: bool) -> void:
 
 
 func _make_player(row: Dictionary, loop: bool, music: bool) -> AudioStreamPlayer:
+	var stream := _stream(row["file"], loop)
+	if stream == null:
+		return null
 	var player := AudioStreamPlayer.new()
-	player.stream = _stream(row["file"], loop)
+	player.stream = stream
 	player.set_meta("snd", String(row.get("name", "")))     # which client sound it is (debug_text, probes)
 	player.set_meta("file", String(row.get("file", "")))
 	player.pitch_scale = _pick(row["rate"])
@@ -351,21 +358,38 @@ func _make_player(row: Dictionary, loop: bool, music: bool) -> AudioStreamPlayer
 static var load_us := 0                          # time spent reading sound files (debug: tests/walk_perf.gd)
 
 
+## A sound's stream, or null while its file is read on a worker (2026-11-15: read here at its first play it held the
+## frame - 164 ms once in the owner's session, "sound loads" in the live log). Null too, for good, when there is no
+## such file. Callers skip a sound that is not ready; the beds try again every frame.
 func _stream(file: String, loop: bool) -> AudioStream:
 	var key := file + ("#loop" if loop else "")
 	if _streams.has(key):
 		return _streams[key]
-	var t0 := Time.get_ticks_usec()
-	var st := AudioStreamWAV.load_from_file(ProjectSettings.globalize_path("res://content/sounds".path_join(file)))
-	load_us += Time.get_ticks_usec() - t0
-	Perf.proc_add("sound loads", Time.get_ticks_usec() - t0)   # (a first play reads its file: the live log)
-	if loop and st != null:
-		var frame_bytes := (2 if st.stereo else 1) * 2
-		st.loop_mode = AudioStreamWAV.LOOP_FORWARD
-		st.loop_begin = 0
-		st.loop_end = st.data.size() / frame_bytes
-	_streams[key] = st
-	return st
+	if not _reading.has(key):
+		_reading[key] = true
+		var path := ProjectSettings.globalize_path("res://content/sounds".path_join(file))
+		var me := get_instance_id()
+		WorkerThreadPool.add_task(func():
+			var t0 := Time.get_ticks_usec()
+			var st := AudioStreamWAV.load_from_file(path) if FileAccess.file_exists(path) else null
+			if loop and st != null:
+				var frame_bytes := (2 if st.stereo else 1) * 2
+				st.loop_mode = AudioStreamWAV.LOOP_FORWARD
+				st.loop_begin = 0
+				st.loop_end = st.data.size() / frame_bytes
+			load_us += Time.get_ticks_usec() - t0
+			ZoneAudio._stream_in.call_deferred(me, key, st), false, "zone sound")
+	return null
+
+
+var _reading := {}
+
+
+static func _stream_in(id: int, key: String, st: AudioStream) -> void:
+	var za := instance_from_id(id) as ZoneAudio
+	if za:
+		za._streams[key] = st
+		za._reading.erase(key)
 
 
 func _pick(r) -> float:
@@ -449,6 +473,8 @@ func _storm_sounds(delta: float) -> void:
 func _weather_shot(file: String, volume: float, pitch: float) -> void:
 	var st := _stream(file, false)
 	if st == null:
+		if _reading.has(file):                     # being read: the gust or the thunder a moment late, not lost
+			get_tree().create_timer(0.1).timeout.connect(_weather_shot.bind(file, volume, pitch))
 		return
 	var player := AudioStreamPlayer.new()
 	player.stream = st

@@ -208,8 +208,16 @@ func _play_row(row: Dictionary, delay: float) -> void:
 		await get_tree().create_timer(delay).timeout
 	if play_log.size() > 50:
 		play_log.pop_front()
+	var stream := _stream(row["file"])
+	var waited := 0
+	while stream == null and _reading.has(row["file"]) and waited < 90:   # first play: a few frames late, not lost
+		await get_tree().process_frame
+		if not is_inside_tree():
+			return
+		waited += 1
+		stream = _stream(row["file"])
 	var p := AudioStreamPlayer3D.new()
-	p.stream = _stream(row["file"])
+	p.stream = stream
 	p.bus = "Effects"
 	p.attenuation_model = AudioStreamPlayer3D.ATTENUATION_DISABLED
 	p.pitch_scale = _rng.randf_range(row["rate"][0], row["rate"][1])
@@ -244,12 +252,28 @@ func _play_row(row: Dictionary, delay: float) -> void:
 static var load_us := 0                          # time spent reading sound files (debug: tests/walk_perf.gd)
 
 
+## A sound's stream, or null while its file is first read on a worker (it was read here, in the frame that first
+## played it; 2026-11-15, with ZoneAudio's). _play_row waits the few frames for it.
 func _stream(file: String) -> AudioStream:
-	if not _streams.has(file):
-		var t0 := Time.get_ticks_usec()
-		_streams[file] = AudioStreamWAV.load_from_file(ProjectSettings.globalize_path("res://content/sounds".path_join(file)))
-		load_us += Time.get_ticks_usec() - t0
-	return _streams[file]
+	if _streams.has(file):
+		return _streams[file]
+	if not _reading.has(file):
+		_reading[file] = true
+		var path := ProjectSettings.globalize_path("res://content/sounds".path_join(file))
+		WorkerThreadPool.add_task(func():
+			var t0 := Time.get_ticks_usec()
+			var st := AudioStreamWAV.load_from_file(path) if FileAccess.file_exists(path) else null
+			load_us += Time.get_ticks_usec() - t0
+			CharacterSounds._stream_in.call_deferred(file, st), false, "character sound")
+	return null
+
+
+static var _reading := {}
+
+
+static func _stream_in(file: String, st: AudioStream) -> void:
+	_streams[file] = st
+	_reading.erase(file)
 
 
 func contacts_text() -> String:
