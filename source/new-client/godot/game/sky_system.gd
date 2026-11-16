@@ -673,10 +673,10 @@ func set_remastered(on: bool) -> void:
 	environment.fog_aerial_perspective = 0.0 if dungeon else _t("aerial", 0.3)
 	if _cam_attr == null:
 		_cam_attr = CameraAttributesPractical.new()
-		_cam_attr.auto_exposure_enabled = _t("ae", 1.0) > 0.0
 		# a narrow window: dark rooms brightened a little, glare toned down a little - not a different picture
 		_cam_attr.auto_exposure_min_sensitivity = _t("aemin", 80.0)
 		_cam_attr.auto_exposure_max_sensitivity = _t("aemax", 160.0)
+	_cam_attr.auto_exposure_enabled = _t("ae", 1.0) > 0.5     # (the look panel can turn it off: the light watch's test)
 	# (0.4, the engine's, made daylight 40% brighter); underground the eyes adjust less - the dark stays dark
 	_cam_attr.auto_exposure_scale = _t("aescale_dungeon", 0.2) if dungeon else _t("aescale", 0.25)
 	# the eyes adjust over a few seconds, not in blinks (owner 2026-11-12: daylight "blinking" brighter and brighter,

@@ -366,6 +366,11 @@ func _build_sky() -> void:
 	sky.name = "Sky"
 	add_child(sky)
 	sky.setup(zone, player if player else self, args.get("textures", "x4plus"))
+	if Server.active:                                       # the light watch (world/light_watch.gd): brightness jumps
+		var watch: Node = preload("res://game/world/light_watch.gd").new()
+		watch.name = "LightWatch"
+		watch.set("sky", sky)
+		add_child(watch)
 	sky.set_hour(float(args.get("time", "10")))
 	sky.server_driven = Server.active                      # the server's storms only (Server.weather)
 	if Server.active and Server.game_hour() >= 0.0:

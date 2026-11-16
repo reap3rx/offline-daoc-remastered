@@ -15,6 +15,7 @@ const KNOBS := [
 	["sat", "Saturation", 0.4, 1.6, 1.0],
 	["ambient", "Ambient light", 0.3, 2.0, 1.0],
 	["aescale", "Eyes adjusting (outdoors)", 0.0, 0.8, 0.25],
+	["ae", "Eyes adjusting on / off", 0.0, 1.0, 1.0],
 	["FOG AND MIST"],
 	["fog", "Haze thickness", 0.0, 3.0, 1.0],
 	["mist", "Ground mist", 0.0, 3.0, 1.0],

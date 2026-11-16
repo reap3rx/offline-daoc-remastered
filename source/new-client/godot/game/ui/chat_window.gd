@@ -204,6 +204,8 @@ func _client_command(text: String) -> bool:
 			PlayerData.track_requested.emit(cmd)
 		"realmwar", "rw":
 			PlayerData.window_toggle.emit("warmap")
+		"lightlog":                                        # the light watch's report now (world/light_watch.gd)
+			PlayerData.message.emit(preload("res://game/world/light_watch.gd").report_now(), "system")
 		"quiver":                                          # the quiver window (QuiverWindow)
 			PlayerData.window_toggle.emit("quiver")
 		"poisons", "poisonbag":                            # the poison bag (PoisonWindow)
