@@ -25,6 +25,7 @@ var _last := {}                                  # the previous sample: lum, yaw
 var _reports := 0
 var _off := false
 var _born := 0                                   # (no reports in the first 10 s of a world: the loading screen going)
+var _lums: Array = []                            # per sample: [msec, whole picture, middle, ui] (the last 30 s)
 static var _instance: Node
 
 const COLS := ["zone", "look_mix", "ambient", "sun", "exposure", "glow", "haze", "storm", "flash", "ae_scale",
@@ -75,7 +76,7 @@ func _process(delta: float) -> void:
 		_off = true
 		return
 	_pending = true
-	var at := {"yaw": rad_to_deg(rot.y), "pitch": rad_to_deg(rot.x), "pos": p, "msec": Time.get_ticks_msec()}
+	var at := {"yaw": rad_to_deg(rot.y), "pitch": rad_to_deg(rot.x), "pos": p, "msec": Time.get_ticks_msec(), "ui": _ui_state()}
 	RenderingServer.call_on_render_thread(func():
 		var rd := RenderingServer.get_rendering_device()
 		var f := rd.texture_get_format(rid) if rd else null
@@ -87,6 +88,32 @@ func _process(delta: float) -> void:
 		at.fmt = f.format
 		if rd.texture_get_data_async(rid, 0, func(data: PackedByteArray): _arrived.call_deferred(data, at)) != OK:
 			_failed.call_deferred())
+
+
+## What the interface shows (first session, 2026-11-15: every "jump" the watch caught was a window - the map, the
+## drop dialog's dark shade, the interface hidden): open windows, dialog shades, the interface on or off. A jump
+## counts only when this is the same in both pictures.
+func _ui_state() -> String:
+	var ui = get_parent().get("ui") if get_parent() else null
+	if ui == null or not is_instance_valid(ui):
+		return "-"
+	var root: Control = ui.get("root")
+	var open := 0
+	var wins = ui.get("windows")
+	if wins is Dictionary:
+		for k in wins:
+			var wn = wins[k]
+			if wn is CanvasItem and is_instance_valid(wn) and (wn as CanvasItem).is_visible_in_tree():
+				open += 1
+	var shades := 0
+	var popups := 0
+	if root:
+		for c in root.get_children():
+			if c is ColorRect and (c as ColorRect).visible and (c as ColorRect).color.a > 0.2:
+				shades += 1
+			elif c is Control and (c as Control).visible:
+				popups += 1
+	return "%s w%d s%d c%d" % ["on" if root and root.is_visible_in_tree() else "off", open, shades, popups]
 
 
 func _failed() -> void:
@@ -108,14 +135,22 @@ func _arrived(data: PackedByteArray, at: Dictionary) -> void:
 		push_warning("light watch: picture format %d not read - off for this session" % fmt)
 		return
 	var sum := 0.0
+	var mid := 0.0
 	for gy in 36:
 		var row := (int((gy + 0.5) * h / 36.0)) * w * 4
 		for gx in 64:
 			var i := row + int((gx + 0.5) * w / 64.0) * 4
 			var r := data[i + 2] if bgra else data[i]
 			var b := data[i] if bgra else data[i + 2]
-			sum += 0.2126 * r + 0.7152 * data[i + 1] + 0.0722 * b
+			var y := 0.2126 * r + 0.7152 * data[i + 1] + 0.0722 * b
+			sum += y
+			if gx >= 19 and gx < 45 and gy >= 7 and gy < 22:      # the middle of the picture: the world, rarely a window
+				mid += y
 	at.lum = sum / (64.0 * 36.0 * 255.0)
+	at.mid = mid / (26.0 * 15.0 * 255.0)
+	_lums.append([int(at.msec), float(at.lum), float(at.mid), String(at.ui)])
+	if _lums.size() > 60:
+		_lums.pop_front()
 	if _last.is_empty():
 		print("[light watch] reading the picture back: %d x %d, format %d, brightness %.3f" % [w, h, fmt, float(at.lum)])
 	at.data = data
@@ -126,7 +161,7 @@ func _arrived(data: PackedByteArray, at: Dictionary) -> void:
 				absf(deg_to_rad(float(at.pitch) - float(prev.pitch))))
 		var moved := (at.pos as Vector3).distance_to(prev.pos)
 		var change := (float(at.lum) - float(prev.lum)) / maxf(float(prev.lum), 0.02)
-		if absf(change) >= JUMP and rad_to_deg(turned) < STILL_DEG and moved < STILL_M:
+		if absf(change) >= JUMP and rad_to_deg(turned) < STILL_DEG and moved < STILL_M and at.ui == prev.ui:
 			_write("the picture went %s by %d%% in %d ms with the camera still" % ["brighter" if change > 0 else "darker",
 					roundi(absf(change) * 100.0), int(at.msec) - int(prev.msec)], prev, at)
 	_last = at
@@ -136,7 +171,7 @@ func _arrived(data: PackedByteArray, at: Dictionary) -> void:
 ## the two pictures. Returns where it went.
 func _write(why: String, before: Dictionary, after: Dictionary) -> String:
 	_reports += 1
-	var stamp := Time.get_datetime_string_from_system().replace(":", "-")
+	var stamp := "%s_%02d" % [Time.get_datetime_string_from_system().replace(":", "-"), _reports]
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("user://light_watch"))
 	var path := "user://light_watch.log"
 	var f := FileAccess.open(path, FileAccess.READ_WRITE) if FileAccess.file_exists(path) else FileAccess.open(path, FileAccess.WRITE)
@@ -146,8 +181,11 @@ func _write(why: String, before: Dictionary, after: Dictionary) -> String:
 	f.store_line("==== %s  %s" % [stamp, why])
 	if not before.is_empty():
 		f.store_line("brightness %.3f -> %.3f" % [float(before.lum), float(after.lum)])
-	f.store_line("ms_ago " + " ".join(COLS))
 	var now := Time.get_ticks_msec()
+	f.store_line("brightness twice a second (ms_ago whole middle interface):")
+	for s in _lums:
+		f.store_line("  %6d %.3f %.3f %s" % [now - int(s[0]), float(s[1]), float(s[2]), String(s[3])])
+	f.store_line("ms_ago " + " ".join(COLS))
 	var n := _rows.size()
 	for k in n:
 		var r: Array = _rows[(_head + k) % n]
