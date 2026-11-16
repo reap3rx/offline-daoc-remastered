@@ -55,14 +55,9 @@ namespace DOL.GS.PacketHandler.Client.v168
                     actionSource.Stealth(false);
             }
 
-            if (actionSource.IsPraying)
-            {
-                if (target is not GameGravestone gravestone || !gravestone.InternalID.Equals(actionSource.InternalID))
-                {
-                    actionSource.Out.SendMessage("You are no longer targeting your grave. Your prayers fail.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-                    actionSource.PrayTimerStop();
-                }
-            }
+            // Praying carries on whatever you target next (owner 2026-11-15: with the action camera the reticle picks
+            // targets as you look about, so holding the grave targeted meant staring at it for the whole prayer).
+            // Standing up or moving still ends it (GamePlayer.Sit).
         }
     }
 }
