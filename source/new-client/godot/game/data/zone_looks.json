@@ -1,3 +1,215 @@
 {
-	"default": {}
+	"default": {},
+	"0": {
+		"exposure": 2.14
+	},
+	"2": {
+		"exposure": 2.14
+	},
+	"3": {
+		"exposure": 1.15
+	},
+	"4": {
+		"exposure": 1.81
+	},
+	"7": {
+		"exposure": 2.13
+	},
+	"8": {
+		"exposure": 2.12
+	},
+	"11": {
+		"exposure": 2.13
+	},
+	"13": {
+		"exposure": 1.17
+	},
+	"14": {
+		"exposure": 2.13
+	},
+	"19": {
+		"exposure_dungeon": 1.38
+	},
+	"20": {
+		"exposure_night": 1.59
+	},
+	"21": {
+		"exposure_dungeon": 1.74
+	},
+	"22": {
+		"exposure_dungeon": 1.5
+	},
+	"52": {
+		"exposure_night": 1.9
+	},
+	"56": {
+		"exposure": 2.13
+	},
+	"60": {
+		"exposure_dungeon": 1.1
+	},
+	"61": {
+		"exposure_dungeon": 1.33
+	},
+	"100": {
+		"exposure": 2.14
+	},
+	"101": {
+		"exposure": 1.71
+	},
+	"102": {
+		"exposure": 1.25
+	},
+	"104": {
+		"exposure": 2.13
+	},
+	"105": {
+		"exposure": 1.36
+	},
+	"107": {
+		"exposure": 1.2
+	},
+	"111": {
+		"exposure": 2.07
+	},
+	"114": {
+		"exposure": 1.38
+	},
+	"115": {
+		"exposure_night": 1.14
+	},
+	"116": {
+		"exposure": 1.6
+	},
+	"125": {
+		"exposure_dungeon": 1.75
+	},
+	"126": {
+		"exposure_dungeon": 1.73
+	},
+	"128": {
+		"exposure_dungeon": 1.5
+	},
+	"129": {
+		"exposure_dungeon": 1.55
+	},
+	"150": {
+		"exposure_dungeon": 0.99
+	},
+	"151": {
+		"exposure": 1.58
+	},
+	"152": {
+		"exposure_night": 1.2
+	},
+	"153": {
+		"exposure_night": 1.07
+	},
+	"154": {
+		"exposure": 1.56
+	},
+	"156": {
+		"exposure": 2.14
+	},
+	"160": {
+		"exposure_dungeon": 1.12
+	},
+	"161": {
+		"exposure_dungeon": 1.74
+	},
+	"180": {
+		"exposure_dungeon": 1.76
+	},
+	"181": {
+		"exposure": 1.42
+	},
+	"182": {
+		"exposure": 2.0,
+		"exposure_night": 1.84
+	},
+	"183": {
+		"exposure": 2.13
+	},
+	"184": {
+		"exposure": 1.68
+	},
+	"185": {
+		"exposure": 1.6
+	},
+	"187": {
+		"exposure": 1.62
+	},
+	"190": {
+		"exposure_dungeon": 1.38
+	},
+	"191": {
+		"exposure_dungeon": 1.28
+	},
+	"201": {
+		"exposure": 1.17
+	},
+	"203": {
+		"exposure": 1.53
+	},
+	"204": {
+		"exposure": 1.72
+	},
+	"206": {
+		"exposure": 1.23
+	},
+	"207": {
+		"exposure": 1.59
+	},
+	"208": {
+		"exposure": 1.2
+	},
+	"209": {
+		"exposure": 1.48
+	},
+	"210": {
+		"exposure": 1.98
+	},
+	"212": {
+		"exposure": 1.16
+	},
+	"213": {
+		"exposure": 1.24
+	},
+	"218": {
+		"exposure": 1.43
+	},
+	"220": {
+		"exposure_dungeon": 1.73
+	},
+	"222": {
+		"exposure_dungeon": 1.75
+	},
+	"223": {
+		"exposure_dungeon": 1.31
+	},
+	"225": {
+		"exposure_night": 1.99
+	},
+	"249": {
+		"exposure_dungeon": 1.74
+	},
+	"250": {
+		"exposure": 1.24
+	},
+	"251": {
+		"exposure": 1.24
+	},
+	"252": {
+		"exposure": 1.23
+	},
+	"253": {
+		"exposure_night": 1.85
+	},
+	"272": {
+		"exposure": 1.24,
+		"exposure_night": 1.72
+	},
+	"274": {
+		"exposure": 1.43
+	}
 }

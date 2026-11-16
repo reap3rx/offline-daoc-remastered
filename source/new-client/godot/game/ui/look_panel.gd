@@ -9,13 +9,15 @@ const SkySystemScript := preload("res://game/sky_system.gd")
 ## [key, label, min, max, default] (SkySystem / NifMaterials defaults) - headings are [title]
 const KNOBS := [
 	["LIGHT AND COLOUR"],
-	["exposure", "Exposure", 0.4, 1.6, 0.85],
+	["exposure", "Exposure by day", 0.5, 4.0, 1.07],
+	["exposure_night", "Exposure by night", 0.5, 4.0, 2.12],
+	["exposure_dungeon", "Exposure underground", 0.5, 4.0, 1.65],
 	["agx", "Contrast (tone curve)", 1.0, 2.0, 1.4],
 	["con", "Contrast (grade)", 0.7, 1.3, 1.0],
 	["sat", "Saturation", 0.4, 1.6, 1.0],
 	["ambient", "Ambient light", 0.3, 2.0, 1.0],
-	["aescale", "Eyes adjusting (outdoors)", 0.0, 0.8, 0.25],
-	["ae", "Eyes adjusting on / off", 0.0, 1.0, 1.0],
+	["ae", "Engine eyes-adjusting (old: can flicker)", 0.0, 1.0, 0.0],
+	["aescale", "Eyes adjusting strength (when on)", 0.0, 0.8, 0.25],
 	["FOG AND MIST"],
 	["fog", "Haze thickness", 0.0, 3.0, 1.0],
 	["mist", "Ground mist", 0.0, 3.0, 1.0],

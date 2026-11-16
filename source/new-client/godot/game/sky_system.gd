@@ -634,7 +634,7 @@ func set_remastered(on: bool) -> void:
 			_life.off()
 		return
 	environment.tonemap_mode = Environment.TONE_MAPPER_AGX
-	environment.tonemap_exposure = _t("exposure", 0.85)
+	environment.tonemap_exposure = exposure_now(1.0)
 	environment.tonemap_agx_contrast = _t("agx", 1.4)
 	environment.glow_enabled = true
 	environment.glow_intensity = _t("glow", 0.5)
@@ -676,7 +676,10 @@ func set_remastered(on: bool) -> void:
 		# a narrow window: dark rooms brightened a little, glare toned down a little - not a different picture
 		_cam_attr.auto_exposure_min_sensitivity = _t("aemin", 80.0)
 		_cam_attr.auto_exposure_max_sensitivity = _t("aemax", 160.0)
-	_cam_attr.auto_exposure_enabled = _t("ae", 1.0) > 0.5     # (the look panel can turn it off: the light watch's test)
+	# the engine's eyes-adjusting is off (owner 2026-11-15: it jumped - "an immediate increase in brightness", in the
+	# middle of zones; gone with it off): the exposure is fixed per zone, by day and by night (exposure_now). The look
+	# panel can still turn it on ("ae") to compare.
+	_cam_attr.auto_exposure_enabled = _t("ae", 0.0) > 0.5
 	# (0.4, the engine's, made daylight 40% brighter); underground the eyes adjust less - the dark stays dark
 	_cam_attr.auto_exposure_scale = _t("aescale_dungeon", 0.2) if dungeon else _t("aescale", 0.25)
 	# the eyes adjust over a few seconds, not in blinks (owner 2026-11-12: daylight "blinking" brighter and brighter,
@@ -715,6 +718,21 @@ func _realm() -> String:
 
 
 ## Every frame while on: the fog of the hour and weather, the mist where you stand, the colour grade.
+## The fixed exposure (2026-11-15, instead of the engine's eyes-adjusting): the zone's day value in daylight, its night
+## value from dusk to dawn (day: 1 with the sun up, 0 below the horizon), the dungeon value underground. The values
+## are what the eyes-adjusting settled on in each zone (tests/exposure_bake.gd -> game/data/zone_looks.json), so the
+## world looks as it did, without the jumps.
+func exposure_now(day: float) -> float:
+	if dungeon:
+		return _t("exposure_dungeon", EXPOSURE_DUNGEON)
+	return lerpf(_t("exposure_night", EXPOSURE_NIGHT), _t("exposure", EXPOSURE_DAY), clampf(day, 0.0, 1.0))
+
+
+const EXPOSURE_DAY := 1.07                 # (the median of 98 zones; 70 zones have their own values in zone_looks.json)
+const EXPOSURE_NIGHT := 2.12
+const EXPOSURE_DUNGEON := 1.65
+
+
 func _remaster_frame(w: Dictionary = {}, sun_dir := Vector3.UP) -> void:
 	if environment == null or zone == null:
 		return
@@ -745,6 +763,7 @@ func _remaster_frame(w: Dictionary = {}, sun_dir := Vector3.UP) -> void:
 			sun.light_volumetric_fog_energy = lerpf(_t("moonfog", 0.15), _t("sunfog", 1.6), day)
 		environment.volumetric_fog_anisotropy = lerpf(_t("moon_aniso", 0.3), _t("aniso", 0.7), day)
 		environment.glow_intensity = lerpf(_t("glow_night", 0.3), _t("glow", 0.5), day)
+		environment.tonemap_exposure = exposure_now(day)
 	var glow := 1.0 if dungeon else lerpf(_t("lampday", 0.1), 1.0, night_level)
 	var zs := _zones()
 	if absf(glow - _fog_glow) > 0.02 or zs.size() != _glow_zones:   # (and newly loaded zones of the region)
