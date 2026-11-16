@@ -153,11 +153,35 @@ vec3 aurora_glow(vec3 dir) {
 uniform float moon_phase = 0.5;           // 0 new .. 0.5 full .. 1 new again
 uniform float moon_phase_on = 0.0;        // remastered: the moon waxes and wanes
 
+// The clouds' lattice values, from whole numbers with whole-number arithmetic (2026-11-15, owner: a straight seam
+// across the sky, different clouds on either side of it). The float hash above took fract() of a cell's coordinate
+// times a few hundred: with the clouds' offsets that product runs to hundreds of thousands, where a float keeps a
+// few sixty-fourths - and a cell's corner worked out as "this cell + 1" and as "the next cell" could round apart
+// (Direct3D's compiler may reorder such sums), giving two neighbouring cells different values for the corner they
+// share: a step in the weather map along a cell's edge, a straight line through the sky. Whole numbers cannot.
+float hc2(ivec2 i) {
+	uint n = uint(i.x) * 1597334677u ^ uint(i.y) * 3812015801u;
+	n = (n ^ (n >> 16u)) * 2246822519u;
+	n ^= n >> 13u;
+	n *= 3266489917u;
+	n ^= n >> 16u;
+	return float(n & 16777215u) / 16777216.0;
+}
+
+float hc3(ivec3 i) {
+	uint n = uint(i.x) * 1597334677u ^ uint(i.y) * 3812015801u ^ uint(i.z) * 2654435761u;
+	n = (n ^ (n >> 16u)) * 2246822519u;
+	n ^= n >> 13u;
+	n *= 3266489917u;
+	n ^= n >> 16u;
+	return float(n & 16777215u) / 16777216.0;
+}
+
 float vn2(vec2 p) {
-	vec2 i = floor(p);
+	ivec2 i = ivec2(floor(p));
 	vec2 f = fract(p);
 	f = f * f * (3.0 - 2.0 * f);
-	return mix(mix(h21(i), h21(i + vec2(1.0, 0.0)), f.x), mix(h21(i + vec2(0.0, 1.0)), h21(i + vec2(1.0, 1.0)), f.x), f.y);
+	return mix(mix(hc2(i), hc2(i + ivec2(1, 0)), f.x), mix(hc2(i + ivec2(0, 1)), hc2(i + ivec2(1, 1)), f.x), f.y);
 }
 
 float fbm2(vec2 p) {
@@ -177,11 +201,11 @@ float h31(vec3 p) {
 }
 
 float vn3(vec3 p) {
-	vec3 i = floor(p);
+	ivec3 i = ivec3(floor(p));
 	vec3 f = fract(p);
 	f = f * f * (3.0 - 2.0 * f);
-	float a = mix(mix(h31(i), h31(i + vec3(1.0, 0.0, 0.0)), f.x), mix(h31(i + vec3(0.0, 1.0, 0.0)), h31(i + vec3(1.0, 1.0, 0.0)), f.x), f.y);
-	float b = mix(mix(h31(i + vec3(0.0, 0.0, 1.0)), h31(i + vec3(1.0, 0.0, 1.0)), f.x), mix(h31(i + vec3(0.0, 1.0, 1.0)), h31(i + vec3(1.0, 1.0, 1.0)), f.x), f.y);
+	float a = mix(mix(hc3(i), hc3(i + ivec3(1, 0, 0)), f.x), mix(hc3(i + ivec3(0, 1, 0)), hc3(i + ivec3(1, 1, 0)), f.x), f.y);
+	float b = mix(mix(hc3(i + ivec3(0, 0, 1)), hc3(i + ivec3(1, 0, 1)), f.x), mix(hc3(i + ivec3(0, 1, 1)), hc3(i + ivec3(1, 1, 1)), f.x), f.y);
 	return mix(a, b, f.z);
 }
 
