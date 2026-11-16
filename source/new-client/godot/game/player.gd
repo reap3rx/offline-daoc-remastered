@@ -948,7 +948,9 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 	# away when no bow is equipped"; crossbows none - "bolts ... stored on the hip"): the realm's quiver flat on the
 	# back, its mouth up past the right shoulder (BodyFrame.place_quiver)
 	var bow: Dictionary = item_at.call(13)
-	var has_bow := not bow.is_empty() and WeaponModels.stance(int(bow.get("model", 0))) not in ["xbow", "throw"]
+	# (an instrument in the ranged slot is no bow: no quiver - owner 2026-11-16, a Minstrel with a quiver)
+	var has_bow := not bow.is_empty() and WeaponModels.stance(int(bow.get("model", 0))) not in ["xbow", "throw"] \
+			and not WeaponModels.is_instrument(int(bow.get("model", 0)))
 	var quiver_shown := false
 	if has_bow and QUIVER_MODELS.has(int(gear.get("realm", 0))) and not frame.is_empty():
 		var qbone := "Bip01 Spine2" if skel.find_bone("Bip01 Spine2") >= 0 else "Bip01 Spine1"

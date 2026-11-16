@@ -194,7 +194,31 @@ namespace DOL.GS
             return (int)Math.Clamp(Math.Round(Math.Max(normal, leaderSpeed) * (1 + catchup)), 0, short.MaxValue);
         }
 
-        public static short SpeedLimit(GameBot bot, short normal)
+        public static short SpeedLimit(GameBot bot, short normal) => Paced(bot, Boosted(bot, normal));
+
+        /// <summary>
+        /// The leader's own pace near the companion's place (owner 2026-11-16: following a player who walks, runs slowed
+        /// by the stick or sneaks in stealth, a companion ran at its full speed, reached its place, stopped, fell behind
+        /// and ran again - a jarring stutter). Within 150 units of its place it moves at the leader's speed (5% over, so it
+        /// never loses ground); further back it speeds up toward its own, reached 600 back. Never faster than it is.
+        /// </summary>
+        public static short Paced(GameBot bot, short speed)
+        {
+            if (!Applies(bot) || speed <= 0 || !States.TryGetValue(bot, out State state) ||
+                GameLoop.GameLoopTime >= state.FormationUntil || bot.InCombat || bot.IsAttacking)
+                return speed;
+            GamePlayer leader = bot.PlayerGroupLeader;
+            if (leader == null || !leader.IsMoving || leader.InCombat)
+                return speed;
+            int pace = (int)Math.Round(Math.Abs((int)leader.CurrentSpeed) * 1.05);
+            if (pace <= 0 || pace >= speed)
+                return speed;
+            double back = Vector3.Distance(new(bot.X, bot.Y, bot.Z), state.FormationPoint);
+            double t = Math.Clamp((back - 150) / 450, 0, 1);
+            return (short)Math.Round(pace + (speed - pace) * t);
+        }
+
+        private static short Boosted(GameBot bot, short normal)
         {
             if (!Applies(bot) || !States.TryGetValue(bot, out State state) ||
                 GameLoop.GameLoopTime >= state.FormationUntil || normal <= 0 || !bot.IsAlive ||

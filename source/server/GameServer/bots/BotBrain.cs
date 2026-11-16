@@ -2154,8 +2154,12 @@ namespace DOL.AI.Brain
             if (GameLoop.GameLoopTime >= _nextInstrumentKitCheck)
             {
                 _nextInstrumentKitCheck = GameLoop.GameLoopTime + 60_000;
-                if (BotStarterInstruments.Ensure(bot) && bot.IsAutonomousWorldBot)
-                    AutonomousBotStatusPersistence.Queue(bot, true);
+                if (BotStarterInstruments.Ensure(bot))
+                {
+                    bot.BroadcastLivingEquipmentUpdate();      // (the new instrument seen on its back)
+                    if (bot.IsAutonomousWorldBot)
+                        AutonomousBotStatusPersistence.Queue(bot, true);
+                }
             }
             // Enhanced rest already verifies actual attacks, aggro, harmful
             // casts and pet/group combat. A lingering combat flag after the
@@ -2452,7 +2456,10 @@ namespace DOL.AI.Brain
             foreach (eInventorySlot slot in new[] { eInventorySlot.TwoHandWeapon, eInventorySlot.DistanceWeapon })
                 if (bot.Inventory.GetItem(slot) == null &&
                     bot.Inventory.MoveItem((eInventorySlot)packed.SlotPosition, slot, packed.Count))
+                {
+                    bot.BroadcastLivingEquipmentUpdate();      // (seen on its back)
                     return true;
+                }
             return false;
         }
 
