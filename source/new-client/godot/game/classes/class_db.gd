@@ -53,6 +53,22 @@ static func spell(id: int) -> Dictionary:
 
 static var _spell_names := {}
 static var _pulsing_effects := {}
+static var _song_instruments := {}
+
+
+## The instrument a song drawn with this client effect is played on (1 drum, 2 lute, 3 flute; 0 not a song). Any
+## instrument plays any song (live patch 1.97) - this is only which one the character is shown playing (owner
+## 2026-11-16: the lute for the travel song, whatever instrument is equipped).
+static func song_instrument(client_effect: int) -> int:
+	_load()
+	if _song_instruments.is_empty():
+		_song_instruments[-1] = 0
+		for k in _spells:
+			var s: Dictionary = _spells[k]
+			var t := int(s.get("instrumentrequirement", 0))
+			if t >= 1 and t <= 3:
+				_song_instruments[int(s.get("clienteffect", 0))] = t
+	return int(_song_instruments.get(client_effect, 0))
 
 
 ## Is any spell drawn with this client effect an instrument song? A song's pulses play the cast motion (and its music);

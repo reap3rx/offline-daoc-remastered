@@ -323,3 +323,24 @@ static func make_world(model: int) -> Node3D:
 	for c in holder.get_children():
 		(c as Node3D).transform = Transform3D.IDENTITY
 	return holder
+
+
+## Instruments (owner 2026-11-16: songs show the instrument they are played on): the item models of the drums (1),
+## lutes (2) and flutes (3) in the game (ItemTemplate Object_Type 45 by DPS_AF), and the plain one of each kind shown
+## when the character's own instrument is another kind (a harp, or a flute for a lute song).
+const INSTRUMENT_KIND := {228: 1, 2971: 1, 2977: 1, 2980: 1, 227: 2, 2970: 2, 2976: 2, 2979: 2,
+		325: 3, 2972: 3, 2978: 3, 2981: 3}
+const PLAIN_INSTRUMENT := {1: 228, 2: 227, 3: 325}
+
+
+## The model to show a song of this kind played on: the character's own instrument (among models) if it is that
+## kind, else the plain one.
+static func song_model(kind: int, models: Array) -> int:
+	for m in models:
+		if int(INSTRUMENT_KIND.get(int(m), 0)) == kind:
+			return int(m)
+	return int(PLAIN_INSTRUMENT.get(kind, 0))
+
+
+static func is_instrument(model: int) -> bool:
+	return INSTRUMENT_KIND.has(model) or model in [2116, 3688, 3985, 3239, 3280, 3731, 3908, 2115]

@@ -1392,6 +1392,10 @@ var cast_until := {}
 
 func _cast_begin(oid: int, v: Node, ce: int, seconds: float) -> void:
 	var anims: Array = SpellFx.effect(ce).get("anims", [])
+	# a song: the instrument it is played on in hand for the cast, whatever weapon is drawn (owner 2026-11-16)
+	var kind := ClassDb.song_instrument(ce)
+	if kind > 0 and v and v.has_method("hold_instrument"):
+		v.call("hold_instrument", WeaponModels.song_model(kind, v.call("equipped_models")))
 	if v is Player:
 		(v as Player).cast_start(anims, seconds)
 	elif v is Npc:

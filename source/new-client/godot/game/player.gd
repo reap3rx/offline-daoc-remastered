@@ -672,6 +672,38 @@ func cast_end(landed := false) -> void:
 		_one_shot(_cast_clips[2])
 	else:
 		_action_left = 0.0
+	if song_instrument > 0:
+		hold_instrument(0, clip_seconds(_cast_clips[2]) if landed else 0.0)
+
+
+## A song being played (owner 2026-11-16): the instrument it is played on is in hand while it is cast - the
+## character's own if it is that kind, else a plain one (WeaponModels.song_model) - whatever weapon is drawn, and the
+## weapons go back as they were after (after: seconds, the cast's end motion). 0: put it away.
+var song_instrument := 0
+var _song_serial := 0
+
+
+func hold_instrument(model: int, after := 0.0) -> void:
+	_song_serial += 1
+	var serial := _song_serial
+	if model == 0 and after > 0.0:
+		await get_tree().create_timer(after).timeout
+		if serial != _song_serial:
+			return
+	if song_instrument == model:
+		return
+	song_instrument = model
+	refresh_gear()
+
+
+## The models of the instruments equipped (two-handed and ranged slots), for WeaponModels.song_model.
+func equipped_models() -> Array:
+	var out := []
+	for slot in [12, 13]:
+		var it: Dictionary = PlayerData.item_at.call(slot)
+		if not it.is_empty():
+			out.append(int(it.get("model", 0)))
+	return out
 
 
 var casting_spell := false
@@ -770,7 +802,18 @@ func refresh_gear() -> void:
 	_gear.clear()
 	var gear_opts: Dictionary = (PlayerData.character.get("gear", {}) if PlayerData.character.get("gear") is Dictionary else {}).duplicate()
 	gear_opts["realm"] = {"alb": 1, "mid": 2, "hib": 3}.get(String(PlayerData.character.get("realm", "")), 0)
-	_gear = dress(_model, PlayerData.item_at, PlayerData.active_weapon, in_combat, true, gear_opts)
+	var item_at: Callable = PlayerData.item_at
+	var active: String = PlayerData.active_weapon
+	if song_instrument > 0:
+		# a song being played: its instrument in hand (hold_instrument), the equipped instrument not shown twice
+		var song := song_instrument
+		item_at = func(slot: int) -> Dictionary:
+			if slot == 13:
+				return {"model": song}
+			var it: Dictionary = PlayerData.item_at.call(slot)
+			return {} if slot == 12 and WeaponModels.is_instrument(int(it.get("model", 0))) else it
+		active = "ranged"
+	_gear = dress(_model, item_at, active, in_combat or song_instrument > 0, true, gear_opts)
 	if hidden_look:
 		_apply_hidden_look.call_deferred()
 

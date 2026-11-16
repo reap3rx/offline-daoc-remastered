@@ -336,6 +336,13 @@ func _hang_weapons(drawn: bool) -> void:
 			2: active = "twohand"
 			3: active = "ranged"
 			0, 1: active = "standard"
+	if song_instrument > 0:                       # a song being played (hold_instrument): its instrument in hand
+		slots = _weapon_slots.duplicate()
+		if WeaponModels.is_instrument(int(slots.get(12, 0))):
+			slots.erase(12)                           # (the equipped one isn't shown twice)
+		slots[13] = song_instrument
+		active = "ranged"
+		drawn = true
 	combat_stance = WeaponModels.ranged_kind(int(slots[13])) if active == "ranged" and slots.has(13) 			else WeaponModels.stance(int(slots.get(12 if active == "twohand" else 10, 0)))
 	var item_at := func(slot: int) -> Dictionary:
 		if not slots.has(slot):
@@ -1070,6 +1077,8 @@ func cast_start(clips: Array, seconds: float) -> void:
 
 
 func cast_end(landed := false) -> void:
+	if song_instrument > 0:
+		hold_instrument(0, anim.get_animation(_cast_clips[2]).length if landed and anim and anim.has_animation(_cast_clips[2]) else 0.0)
 	if not casting_spell:
 		return
 	casting_spell = false
@@ -1078,6 +1087,32 @@ func cast_end(landed := false) -> void:
 	else:
 		_action_left = 0.0
 		_shown_mode = -1
+
+
+## A song being played (owner 2026-11-16): the instrument it is played on is in hand while it is cast - its own if it
+## is that kind, else a plain one (WeaponModels.song_model) - and the weapons go back as they were after (after:
+## seconds, the cast's end motion). 0: put it away.
+var song_instrument := 0
+var _song_serial := 0
+
+
+func hold_instrument(model: int, after := 0.0) -> void:
+	_song_serial += 1
+	var serial := _song_serial
+	if model == 0 and after > 0.0:
+		await get_tree().create_timer(after).timeout
+		if serial != _song_serial or not is_instance_valid(self):
+			return
+	if song_instrument == model:
+		return
+	song_instrument = model
+	if _weapon_root:
+		_hang_weapons(_weapons_drawn)
+
+
+## The models of the instruments it has equipped (two-handed and ranged slots), for WeaponModels.song_model.
+func equipped_models() -> Array:
+	return [int(_weapon_slots.get(12, 0)), int(_weapon_slots.get(13, 0))]
 
 
 const CAST_GRACE := 2.0
