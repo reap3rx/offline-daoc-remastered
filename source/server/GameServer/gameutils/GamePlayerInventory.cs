@@ -813,6 +813,12 @@ namespace DOL.GS
                 }
                 case eInventorySlot.TwoHandWeapon:
                 {
+                    // an instrument goes in the ranged slot only (owner 2026-11-16)
+                    if ((eObjectType) item.Object_Type is eObjectType.Instrument)
+                    {
+                        m_player.Out.SendMessage($"{item.GetName(0, true)} goes in your ranged slot.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                        return false;
+                    }
                     if ((eObjectType) item.Object_Type is eObjectType.Shield ||
                         ((eInventorySlot) item.Item_Type is not eInventorySlot.RightHandWeapon and not eInventorySlot.LeftHandWeapon and not eInventorySlot.TwoHandWeapon && (eObjectType) item.Object_Type is not eObjectType.Instrument))
                     {

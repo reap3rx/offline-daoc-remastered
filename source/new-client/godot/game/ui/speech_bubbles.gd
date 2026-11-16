@@ -13,7 +13,8 @@ const MAX_S := 11.0
 const FADE_S := 0.6
 
 
-static func show(view: Node3D, text: String, height := 1.8) -> void:
+## color: the words' colour (a yell is red: owner 2026-11-16).
+static func show(view: Node3D, text: String, height := 1.8, color := Color(1.0, 0.97, 0.86)) -> void:
 	if view == null or not is_instance_valid(view) or text.strip_edges() == "":
 		return
 	if view.has_meta("speech_bubble"):
@@ -36,7 +37,7 @@ static func show(view: Node3D, text: String, height := 1.8) -> void:
 	l.font_size = size
 	l.outline_size = maxi(4, roundi(size * 0.3))
 	l.outline_modulate = Color(0.05, 0.04, 0.03, 0.95)
-	l.modulate = Color(1.0, 0.97, 0.86)
+	l.modulate = color
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.width = size * WRAP_EMS
 	l.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
@@ -62,4 +63,7 @@ static func _clean(text: String) -> String:
 	var i := t.find(" says, \"")
 	if i > 0 and i < 60 and t.ends_with("\""):
 		t = t.substr(i + 8, t.length() - i - 9)
+	var y := t.find(" yells, \"")
+	if y > 0 and y < 60 and t.ends_with("\""):
+		t = t.substr(y + 9, t.length() - y - 10)
 	return t

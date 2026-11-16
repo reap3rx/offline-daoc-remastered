@@ -192,12 +192,14 @@ public class UT_CompanionEquipmentDispatch
     public void StarterKitIsCompleteIdempotentAndRotatesRealInstruments(eRealm realm, eCharacterClass cls)
     {
         // One instrument plays every song and only has to be equipped (owner 2026-11-16, live patch 1.97): the kit is
-        // one lute in the two-handed slot, and a song of any kind never switches the weapon in hand.
+        // one lute in the ranged slot - the only slot an instrument goes in - and a song of any kind never switches the
+        // weapon in hand.
         var bot = Make(realm, cls, 1, false);
         Assert.That(BotStarterInstruments.Ensure(bot), Is.True);
         var original = bot.Inventory.AllItems.ToArray();
         Assert.That(original.Length, Is.EqualTo(1));
-        Assert.That(bot.Inventory.GetItem(eInventorySlot.TwoHandWeapon).DPS_AF, Is.EqualTo((int)eInstrumentType.Lute));
+        Assert.That(bot.Inventory.GetItem(eInventorySlot.DistanceWeapon).DPS_AF, Is.EqualTo((int)eInstrumentType.Lute));
+        Assert.That(bot.Inventory.GetItem(eInventorySlot.TwoHandWeapon), Is.Null);
         Assert.That(BotStarterInstruments.Ensure(bot), Is.False);
         var inHand = bot.ActiveWeapon;
         foreach (var type in new[] { eInstrumentType.Drum, eInstrumentType.Flute, eInstrumentType.Lute })
@@ -222,8 +224,21 @@ public class UT_CompanionEquipmentDispatch
         Assert.That(BotStarterInstruments.Ensure(bot), Is.False, "it has an instrument (in its bag)");
         Assert.That((bool)typeof(BotBrain).GetMethod("TryEquipRealInstrument", BindingFlags.NonPublic | BindingFlags.Static)
             .Invoke(null, new object[] { bot, (int)eInstrumentType.Drum }), Is.True);
-        Assert.That(bot.Inventory.GetItem(eInventorySlot.TwoHandWeapon), Is.SameAs(lute), "equipped from the bag");
+        Assert.That(bot.Inventory.GetItem(eInventorySlot.DistanceWeapon), Is.SameAs(lute), "equipped from the bag");
         foreach (var item in loot) Assert.That(bot.Inventory.AllItems.Contains(item), Is.True);
+    }
+
+    [Test] public void AnInstrumentInTheTwoHandedSlotMovesToTheRangedSlot()
+    {
+        // (owner 2026-11-16: a bot showed two instruments on its back - instruments go in the ranged slot only)
+        var bot = Make(eRealm.Albion, eCharacterClass.Minstrel, 1, false);
+        BotStarterInstruments.Ensure(bot);
+        var lute = bot.Inventory.GetItem(eInventorySlot.DistanceWeapon);
+        bot.Inventory.MoveItem(eInventorySlot.DistanceWeapon, eInventorySlot.TwoHandWeapon, lute.Count);
+        Assert.That(BotStarterInstruments.Tidy(bot), Is.True);
+        Assert.That(bot.Inventory.GetItem(eInventorySlot.TwoHandWeapon), Is.Null);
+        Assert.That(bot.Inventory.GetItem(eInventorySlot.DistanceWeapon), Is.SameAs(lute));
+        Assert.That(BotStarterInstruments.Tidy(bot), Is.False);
     }
 
     [Test] public void SkaldsUseVocalChantsAndAreNotGivenUnusableInstruments()

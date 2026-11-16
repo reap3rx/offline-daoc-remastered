@@ -15,7 +15,7 @@ extends ClassicWindow
 ## holds two stacked 512x64 boxes; Combat uses the upper one, Main the lower, each as a nine-patch.
 
 const TYPES := [
-	["say", "SAY"], ["zone", "ZONE (/Z)"], ["rvr", "REALM DEFENSE (/RVR)"], ["group", "GROUP"], ["guild", "GUILD"],
+	["say", "SAY"], ["yell", "YELLS"], ["zone", "ZONE (/Z)"], ["rvr", "REALM DEFENSE (/RVR)"], ["group", "GROUP"], ["guild", "GUILD"],
 	["officer", "OFFICER"],
 	["alliance", "ALLIANCE"], ["broadcast", "BROADCAST"], ["emote", "EMOTES"], ["advice", "ADVICE"],
 	["chatgroup", "CHAT GROUP"], ["help", "HELP / COMMANDS"], ["system", "SYSTEM MESSAGES"], ["combat", "YOUR COMBAT"],
@@ -23,12 +23,12 @@ const TYPES := [
 	["resists", "RESISTS CHANGED"], ["loot", "LOOT / MONEY"], ["merchant", "MERCHANTS / TRADE"], ["error", "ERRORS"],
 	["npc", "NPC SPEECH"]]
 const DEFAULTS := {
-	"main": ["say", "zone", "rvr", "group", "guild", "officer", "alliance", "broadcast", "emote", "advice", "chatgroup",
+	"main": ["say", "yell", "zone", "rvr", "group", "guild", "officer", "alliance", "broadcast", "emote", "advice", "chatgroup",
 			"help", "npc"],
 	"combat": ["system", "combat", "combat_others", "damage_taken", "spells", "resists", "loot", "merchant", "error"]}
 const COLORS := {"system": Color(0.95, 0.9, 0.6), "say": Color(1, 1, 1), "help": Color(0.6, 0.85, 1.0),
 		"error": Color(1.0, 0.5, 0.4), "loot": Color(0.6, 1.0, 0.6), "zone": Color(1.0, 0.8, 0.45),
-		"rvr": Color(1.0, 0.5, 0.45),
+		"rvr": Color(1.0, 0.5, 0.45), "yell": Color(1.0, 0.42, 0.36),
 		"group": Color(0.55, 0.85, 1.0), "guild": Color(0.5, 1.0, 0.5), "emote": Color(1.0, 0.85, 0.6),
 		"combat": Color(1.0, 0.75, 0.55), "spells": Color(0.75, 0.75, 1.0)}
 
@@ -86,6 +86,13 @@ func build() -> void:
 		types.erase("send")
 		cfg.set_value("chat_" + window_id, "types", types)
 		cfg.set_value("chat_" + window_id, "zone_rvr", true)
+		UiArt.save_settings(cfg)
+	# (yells got their own type the same day: a box with say gets them)
+	if not cfg.get_value("chat_" + window_id, "yell_type", false):
+		if "say" in types and not "yell" in types:
+			types.append("yell")
+		cfg.set_value("chat_" + window_id, "types", types)
+		cfg.set_value("chat_" + window_id, "yell_type", true)
 		UiArt.save_settings(cfg)
 	_log = RichTextLabel.new()
 	_log.scroll_following = true

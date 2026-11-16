@@ -1033,7 +1033,9 @@ func _message(d: Dictionary) -> void:
 			kind = "zone"
 		elif text.begins_with("[RvR] "):
 			kind = "rvr"
-	if kind == "say":
+	if kind == "say" and (text.contains(" yells, \"") or text.begins_with("You yell, \"")):
+		kind = "yell"                                        # a yell: red, in the chat and over the head (2026-11-16)
+	if kind == "say" or kind == "yell":
 		_say_bubble(text)
 	if t >= 0xC8 and t <= 0xCB:                                 # screen centre (zone names, warnings)
 		if viewer and viewer.ui and viewer.ui.has_method("center_message"):
@@ -1051,12 +1053,13 @@ func _say_bubble(text: String) -> void:
 	if viewer == null:
 		return
 	if _says_re == null:
-		_says_re = RegEx.create_from_string("^(.+?) (?:says|say|yells|yell|shouts|shout)(?: to [^,]+)?, \"(.*)\"\\.?$")
+		_says_re = RegEx.create_from_string("^(.+?) (says|say|yells|yell|shouts|shout)(?: to [^,]+)?, \"(.*)\"\\.?$")
 	var m := _says_re.search(text.strip_edges())
 	if m == null:
 		return
 	var who := m.get_string(1)
-	var words := m.get_string(2)
+	var words := m.get_string(3)
+	var loud := m.get_string(2).begins_with("yell") or m.get_string(2).begins_with("shout")
 	var v: Node3D = null
 	var height := 1.8
 	if who == "You":
@@ -1077,7 +1080,10 @@ func _say_bubble(text: String) -> void:
 		if v != null and v.get("height") != null:
 			height = float(v.get("height"))
 	if v != null:
-		preload("res://game/ui/speech_bubbles.gd").show(v, words, height)
+		preload("res://game/ui/speech_bubbles.gd").show(v, words, height, YELL_COLOR if loud else Color(1.0, 0.97, 0.86))
+
+
+const YELL_COLOR := Color(1.0, 0.42, 0.36)
 
 
 ## "<object id>|<name>|<text>": the words float over the NPC (ui/speech_bubbles.gd) and go into the chat.

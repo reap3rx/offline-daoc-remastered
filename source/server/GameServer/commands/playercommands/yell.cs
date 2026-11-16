@@ -83,11 +83,13 @@ namespace DOL.GS.Commands
 						client.Out.SendMessage("You yell for help!", eChatType.CT_Help, eChatLoc.CL_SystemWindow);
 				}
 				client.Player.TempProperties.SetProperty(YELL_TICK, client.Player.CurrentRegion.Time);
+				AutonomousHelpCalls.OnPlayerYell(client.Player, "help");     // bots near enough come running
 				return;
 			}
 
 			string message = string.Join(" ", args, 1, args.Length - 1);
 			client.Player.Yell(message);
+			AutonomousHelpCalls.OnPlayerYell(client.Player, message);           // "help!": bots near enough come running
 			client.Player.TempProperties.SetProperty(YELL_TICK, client.Player.CurrentRegion.Time);
 			return;
 		}

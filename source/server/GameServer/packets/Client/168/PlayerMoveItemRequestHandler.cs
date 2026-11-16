@@ -105,6 +105,10 @@ namespace DOL.GS.PacketHandler.Client.v168
                 {
                     toClientSlot = (eInventorySlot) item.Item_Type;
 
+                    // an instrument goes in the ranged slot only (owner 2026-11-16)
+                    if ((eObjectType) item.Object_Type is eObjectType.Instrument)
+                        toClientSlot = eInventorySlot.DistanceWeapon;
+
                     if (toClientSlot is eInventorySlot.LeftBracer or eInventorySlot.RightBracer)
                     {
                         if (client.Player.Inventory.GetItem(eInventorySlot.LeftBracer) == null)

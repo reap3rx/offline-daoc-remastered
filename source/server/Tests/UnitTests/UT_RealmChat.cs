@@ -97,6 +97,25 @@ public class UT_RealmChat
     }
 
     [Test]
+    public void YellsForHelp_ReachOnlyNearbyBots()
+    {
+        Assert.That(AutonomousHelpCalls.Reach(RealmChatChannels.Channel.Local), Is.LessThan(AutonomousHelpCalls.Reach(RealmChatChannels.Channel.Zone)));
+        Assert.That(AutonomousHelpCalls.Reach(RealmChatChannels.Channel.Local), Is.GreaterThan(WorldMgr.YELL_DISTANCE));
+        Assert.That(AutonomousHelpCalls.HelpersWanted(AutonomousHelpCalls.Kind.Fight, RealmChatChannels.Channel.Local), Is.EqualTo(2));
+    }
+
+    [TestCase(eClassType.ListCaster, eCharacterClass.Wizard, true)]
+    [TestCase(eClassType.Hybrid, eCharacterClass.Cleric, true)]
+    [TestCase(eClassType.Hybrid, eCharacterClass.Healer, true)]
+    [TestCase(eClassType.Hybrid, eCharacterClass.Bard, true)]
+    [TestCase(eClassType.PureTank, eCharacterClass.Armsman, false)]
+    [TestCase(eClassType.Hybrid, eCharacterClass.Paladin, false)]
+    public void CastersAndHealers_RunFromFightsTheyAreLosing(eClassType type, eCharacterClass cls, bool runs)
+    {
+        Assert.That(AutonomousWorldTalk.Runs(type, cls), Is.EqualTo(runs));
+    }
+
+    [Test]
     public void ChannelLines_AreTaggedForTheClient()
     {
         Assert.That(RealmChatChannels.Format(RealmChatChannels.Channel.Zone, "Aldric", "  Help   at the ruins! "),

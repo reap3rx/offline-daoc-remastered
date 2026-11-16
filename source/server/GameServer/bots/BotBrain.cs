@@ -1227,6 +1227,10 @@ namespace DOL.AI.Brain
             if (AutonomousStuckWatchdog.Observe(BotBody))
                 return;
 
+            // running from a fight it is losing (a caster or healer: AutonomousWorldTalk) - nothing else moves it
+            if (AutonomousWorldTalk.KeepFleeing(BotBody, this))
+                return;
+
             AutonomousBotRealmAbilities.UseActives(BotBody);
 
             // Once a stable ticket has boarded, its waypoint chain exclusively
@@ -2442,10 +2446,13 @@ namespace DOL.AI.Brain
 
         /// <summary>
         /// An instrument equipped for songs (owner 2026-11-16: equipped is enough - never drawn, and any instrument plays
-        /// any song, live patch 1.97): one from the bags goes into an empty two-handed or ranged slot. No weapon switch.
+        /// any song, live patch 1.97): one from the bags goes into the empty ranged slot - the only slot an instrument goes in
+        /// (owner 2026-11-16: a bot showed two instruments on its back). No weapon switch.
         /// </summary>
         internal static bool TryEquipRealInstrument(GameLiving bot, int requiredInstrument)
         {
+            if (bot is GameBot gb && BotStarterInstruments.Tidy(gb))
+                bot.BroadcastLivingEquipmentUpdate();
             if (SpellHandler.EquippedInstrument(bot) != null)
                 return true;
             DbInventoryItem packed = bot.Inventory?.AllItems.FirstOrDefault(item =>
@@ -2453,7 +2460,7 @@ namespace DOL.AI.Brain
                 item.SlotPosition <= (int)eInventorySlot.LastBackpack && item.Object_Type == (int)eObjectType.Instrument);
             if (packed == null)
                 return false;
-            foreach (eInventorySlot slot in new[] { eInventorySlot.TwoHandWeapon, eInventorySlot.DistanceWeapon })
+            foreach (eInventorySlot slot in new[] { eInventorySlot.DistanceWeapon })
                 if (bot.Inventory.GetItem(slot) == null &&
                     bot.Inventory.MoveItem((eInventorySlot)packed.SlotPosition, slot, packed.Count))
                 {

@@ -37,6 +37,7 @@ public static class AutonomousWorldTalk
         public long LastSample;
         public bool Called;
         public int WorstCon;
+        public Vector3 FoesAt;
         public readonly HashSet<GameLiving> Allies = new();
         public List<string> FoeNames = new();
         public GamePlayer Rescued;
@@ -60,6 +61,7 @@ public static class AutonomousWorldTalk
     private static readonly ConcurrentDictionary<string, (GameBot Bot, long Until)> Thankable = new(StringComparer.OrdinalIgnoreCase);
     private static readonly ConcurrentDictionary<ushort, (long Tick, bool Any)> PlayersInRegion = new();
     private static readonly Random Rng = new();
+    private static readonly DOL.Logging.Logger Log = DOL.Logging.LoggerManager.Create(typeof(AutonomousWorldTalk));
 
     // ---------------------------------------------------------------- lines
 
@@ -172,12 +174,15 @@ public static class AutonomousWorldTalk
                 return;
             w.LastSample = now;
             Sample(bot, w);
-            // losing a fight it can't win alone: it asks its zone (only when it is alone - a group helps itself)
+            // losing a fight it can't win alone: it yells for help (only when it is alone - a group helps itself), and a
+            // caster or healer often runs for it instead of trading blows (owner 2026-11-16)
             if (!w.Called && bot.Group == null && !bot.IsPlayerLedGroup && bot.HealthPercent < 45 &&
                 (w.MaxFoes >= 2 || w.WorstCon >= (int)ConColor.ORANGE))
             {
                 w.Called = true;
                 AutonomousHelpCalls.TryFightCall(bot, w.FoeNames);
+                if (Runs(bot) && Rng.NextDouble() < FleeChance)
+                    StartFlee(bot, w.FoesAt);
             }
             return;
         }
@@ -204,6 +209,7 @@ public static class AutonomousWorldTalk
         w.MaxFoes = Math.Max(w.MaxFoes, foes.Count);
         if (foes.Count > 0)
         {
+            w.FoesAt = new Vector3((float)foes.Average(f => f.X), (float)foes.Average(f => f.Y), (float)foes.Average(f => f.Z));
             w.FoeNames = foes.Select(f => f.Name).ToList();
             foreach (GameLiving f in foes)
                 w.WorstCon = Math.Max(w.WorstCon, (int)bot.GetConLevel(f));
@@ -289,6 +295,81 @@ public static class AutonomousWorldTalk
     {
         if (player != null && bot != null)
             Thankable[player.Name] = (bot, GameLoop.GameLoopTime + forMs);
+    }
+
+    // ---------------------------------------------------------------- running away
+
+    public const double FleeChance = 0.65;
+    public const int FleeMs = 9_000;
+    public const int FleeDistance = 1_100;
+
+    private sealed class Flight
+    {
+        public Vector3 To;
+        public long Until;
+        public long NextPath;
+    }
+
+    private static readonly ConcurrentDictionary<long, Flight> Flights = new();
+
+    /// <summary>Who runs from a fight it's losing rather than trading blows: casters and healers (and the bard).</summary>
+    public static bool Runs(eClassType type, eCharacterClass cls) =>
+        type == eClassType.ListCaster || cls is eCharacterClass.Cleric or eCharacterClass.Druid or eCharacterClass.Healer or
+            eCharacterClass.Shaman or eCharacterClass.Bard;
+
+    private static bool Runs(GameBot bot) => bot?.CharacterClass != null &&
+        Runs(bot.CharacterClass.ClassType, (eCharacterClass)bot.CharacterClass.ID);
+
+    /// <summary>Away from what's on it, about a hundred feet, for a few seconds.</summary>
+    private static void StartFlee(GameBot bot, Vector3 foes)
+    {
+        if (bot?.CurrentZone == null)
+            return;
+        var me = new Vector3(bot.X, bot.Y, bot.Z);
+        Vector2 away = new(me.X - foes.X, me.Y - foes.Y);
+        if (away.LengthSquared() < 1f)
+        {
+            double a = Rng.NextDouble() * Math.PI * 2;
+            away = new Vector2((float)Math.Cos(a), (float)Math.Sin(a));
+        }
+        away = Vector2.Normalize(away) * FleeDistance;
+        var to = new Vector3(me.X + away.X, me.Y + away.Y, me.Z);
+        try
+        {
+            Vector3? floor = PathfindingProvider.Instance.GetClosestPoint(bot.CurrentZone, to, 128, 128, 256,
+                PathfindingProvider.Instance.DefaultFilters);
+            if (floor.HasValue)
+                to = floor.Value;
+        }
+        catch (Exception) { }
+        Flights[bot.DatabaseID] = new Flight { To = to, Until = GameLoop.GameLoopTime + FleeMs };
+        Log.Info($"BOT_FLEES bot={bot.Name} class={bot.CharacterClass?.Name} health={bot.HealthPercent} to={to.X:0},{to.Y:0}");
+    }
+
+    /// <summary>BotBrain asks this first each think: true while the bot is running from a fight (nothing else moves it,
+    /// it doesn't fight back); afterwards it fights again if they caught it.</summary>
+    public static bool KeepFleeing(GameBot bot, BotBrain brain)
+    {
+        if (bot == null || !Flights.TryGetValue(bot.DatabaseID, out Flight f))
+            return false;
+        long now = GameLoop.GameLoopTime;
+        float dx = bot.X - f.To.X, dy = bot.Y - f.To.Y;
+        if (!bot.IsAlive || now >= f.Until || dx * dx + dy * dy < 120f * 120f || bot.ObjectState != GameObject.eObjectState.Active)
+        {
+            Flights.TryRemove(bot.DatabaseID, out _);
+            return false;
+        }
+        brain?.ClearAggroList();
+        if (bot.IsAttacking)
+            bot.StopAttack();
+        if (bot.IsCasting)
+            bot.StopCurrentSpellcast();
+        if (now >= f.NextPath || !bot.IsMoving)
+        {
+            bot.PathTo(f.To, bot.MaxSpeed);
+            f.NextPath = now + 1_500;
+        }
+        return true;
     }
 
     // ---------------------------------------------------------------- setting off

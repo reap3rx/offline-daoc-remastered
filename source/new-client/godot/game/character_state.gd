@@ -691,6 +691,8 @@ func slots_for(it: Dictionary) -> Array:
 	if it.is_empty():
 		return []
 	var t := int(it.get("item_type", 0))
+	if int(it.get("object_type", 0)) == 45:          # an instrument: the ranged slot only (owner 2026-11-16)
+		return [13]
 	match t:
 		10: return [10]
 		11: return [11] if int(it.get("object_type", 0)) == SHIELD else [10, 11]

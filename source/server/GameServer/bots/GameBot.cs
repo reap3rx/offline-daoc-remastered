@@ -4121,9 +4121,9 @@ namespace DOL.GS
 
                 case eSpecType.Instrument:
                     BotEquipment.SetMeleeWeapon(this, BotSpec.WeaponOneType, eHand.oneHand);
-                    BotEquipment.SetInstrumentROG(this, Realm, (eCharacterClass)CharacterClass.ID, Level, eObjectType.Instrument, eInventorySlot.TwoHandWeapon, eInstrumentType.Flute);
-                    BotEquipment.SetInstrumentROG(this, Realm, (eCharacterClass)CharacterClass.ID, Level, eObjectType.Instrument, eInventorySlot.DistanceWeapon, eInstrumentType.Drum);
-                    BotEquipment.SetInstrumentROG(this, Realm, (eCharacterClass)CharacterClass.ID, Level, eObjectType.Instrument, eInventorySlot.FirstEmptyBackpack, eInstrumentType.Lute);
+                    // one instrument, in the ranged slot - the only place it goes (owner 2026-11-16: two were shown on a
+                    // bot's back; any instrument plays any song since live 1.97)
+                    BotEquipment.SetInstrumentROG(this, Realm, (eCharacterClass)CharacterClass.ID, Level, eObjectType.Instrument, eInventorySlot.DistanceWeapon, eInstrumentType.Lute);
                     break;
 
                 default:

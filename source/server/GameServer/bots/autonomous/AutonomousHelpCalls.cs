@@ -36,8 +36,9 @@ public static class AutonomousHelpCalls
     public const int ArrivalRadius = 500;
     public const int RvrReach = 40_000;                    // realm defense: helpers in the same region within this
     public const int MinRvrLevel = 35;
+    public const int LocalReach = 1_600;                   // a yell for help: bots this near hear it (owner 2026-11-16)
+    public const int LocalCallCooldownMs = 3 * 60_000;     // a bot yells for help at most this often
     public const int ZoneReach = 16_000;                   // zone chat: helpers this near (most of a zone, not all of it)
-    public const int ZoneBotCallGapMs = 90_000;            // bots of one zone ask at most this often between them
 
     public sealed class Call
     {
@@ -69,7 +70,6 @@ public static class AutonomousHelpCalls
     private static readonly List<Call> Calls = new();
     private static readonly Dictionary<long, Call> HelperOf = new();
     private static readonly Dictionary<long, long> NextBotCall = new();
-    private static readonly Dictionary<ushort, long> NextZoneCall = new();
     private static readonly DOL.Logging.Logger Log = DOL.Logging.LoggerManager.Create(typeof(AutonomousHelpCalls));
     private static int _nextId;
     private static readonly Random Rng = new();
@@ -102,6 +102,15 @@ public static class AutonomousHelpCalls
         _ => channel == RealmChatChannels.Channel.Rvr ? 3 : 2,
     };
 
+    /// <summary>How far a call's helpers may be: a yell is heard near (and the bots that hear it are near enough), zone
+    /// chat reaches most of a zone, realm defense a region.</summary>
+    public static int Reach(RealmChatChannels.Channel channel) => channel switch
+    {
+        RealmChatChannels.Channel.Local => LocalReach,
+        RealmChatChannels.Channel.Zone => ZoneReach,
+        _ => RvrReach,
+    };
+
     /// <summary>The lowest level that answers: a few below the one asking (an event: its own lowest, less two).</summary>
     public static int MinimumLevel(Kind kind, int requesterLevel, int eventMinLevel, RealmChatChannels.Channel channel)
     {
@@ -113,10 +122,18 @@ public static class AutonomousHelpCalls
 
     // ---------------------------------------------------------------- lines
 
-    private static readonly string[] FightAsks =
+    /// <summary>A bot overwhelmed by what it's fighting yells for help (owner 2026-11-16: zone chat got "flooded" with
+    /// these - "you see the bot fighting, and they're starting to get overwhelmed, they may yell for help nearby ...
+    /// no /loc information in it. Just like 'Ahh! Help!'").</summary>
+    private static readonly string[] HelpYells =
     [
-        "Help! {foes} on me {place}!", "Could use a hand {place} - I can't handle {foes} alone!",
-        "Anyone near {place}? I've got {foes} on me!", "Need help {place}, {foes}! I won't last long!",
+        "Ahh! Help!", "Help! Somebody help me!", "Aaah! Get it off me!", "Help! Over here!", "I need help!",
+        "Somebody! Help!", "Help me, please!", "They're all over me! Help!",
+    ];
+
+    private static readonly string[] ComingYells =
+    [
+        "Hang on!", "Coming!", "I'm coming!", "Hold on, I've got you!", "On my way!",
     ];
 
     private static readonly string[] EventAsks =
@@ -196,29 +213,24 @@ public static class AutonomousHelpCalls
 
     private static long KeyOf(GameLiving who) => who is GameBot b ? b.DatabaseID : -(long)who.ObjectID - 1;
 
-    /// <summary>A bot losing a fight asks its zone for help (WorldTalk notices the trouble). True when it asked.</summary>
+    /// <summary>A bot losing a fight yells for help (WorldTalk notices the trouble): red words over its head, heard a
+    /// little farther than speech; bots near enough that can help come running. True when it yelled.</summary>
     public static bool TryFightCall(GameBot bot, IReadOnlyList<string> foeNames)
     {
-        if (bot?.CurrentZone == null || bot.Group != null || !bot.IsAutonomousWorldBot || bot.IsTemporaryGroupHelper ||
-            !RealmChatChannels.HasZoneAudience(bot.Realm, bot.CurrentZone))
+        if (bot?.CurrentZone == null || bot.Group != null || !bot.IsAutonomousWorldBot || bot.IsTemporaryGroupHelper)
             return false;
         long now = GameLoop.GameLoopTime;
-        RealmChatChannels.Channel channel = bot.CurrentZone.IsRvR ? RealmChatChannels.Channel.Rvr : RealmChatChannels.Channel.Zone;
         lock (Sync)
         {
             if (NextBotCall.TryGetValue(bot.DatabaseID, out long next) && now < next)
                 return false;
             if (Calls.Any(c => !c.Closed && c.Requester == bot))
                 return false;
-            if (NextZoneCall.TryGetValue(bot.CurrentZone.ID, out long zoneNext) && now < zoneNext)
-                return false;
-            NextBotCall[bot.DatabaseID] = now + BotCallCooldownMs;
-            NextZoneCall[bot.CurrentZone.ID] = now + ZoneBotCallGapMs;
+            NextBotCall[bot.DatabaseID] = now + LocalCallCooldownMs;
         }
         Release(bot);                                           // (a helper in trouble itself stops answering)
-        string text = Fill(Pick(FightAsks), place: RealmChatChannels.PlaceOf(bot), foes: DescribeFoes(foeNames));
-        RealmChatChannels.Send(bot, channel, text);
-        Open(bot, channel, Kind.Fight, string.Empty, string.Empty, 0);
+        bot.Yell(Pick(HelpYells));
+        Open(bot, RealmChatChannels.Channel.Local, Kind.Fight, string.Empty, string.Empty, 0);
         return true;
     }
 
@@ -278,6 +290,13 @@ public static class AutonomousHelpCalls
             Later(speaker, 2_000 + Rng.Next(2_500), () => RealmChatChannels.Send(speaker, channel, answer));
     }
 
+    /// <summary>The player's /yell: a call for help ("help!", or a bare /yell) brings the bots near enough to hear it.</summary>
+    public static void OnPlayerYell(GamePlayer player, string text)
+    {
+        if (player?.CurrentRegion != null && player.IsAlive && HelpWanted(text))
+            Open(player, RealmChatChannels.Channel.Local, Kind.Fight, string.Empty, string.Empty, 0);
+    }
+
     /// <summary>An event under way near the player (a stage running, or resting between two).</summary>
     private static bool NearEvent(GamePlayer player, out string id, out string title, out Vector3 at, out int minLevel)
     {
@@ -309,7 +328,7 @@ public static class AutonomousHelpCalls
             b.IsAlive && b.ObjectState == GameObject.eObjectState.Active && b.Realm == who.Realm &&
             (channel == RealmChatChannels.Channel.Zone
                 ? b.CurrentZone == who.CurrentZone
-                : b.CurrentRegionID == who.CurrentRegionID && b.IsWithinRadius(who, RvrReach)));
+                : b.CurrentRegionID == who.CurrentRegionID && b.IsWithinRadius(who, Reach(channel))));
 
     private static Call Open(GameLiving requester, RealmChatChannels.Channel channel, Kind kind, string eventId, string title, int eventMin)
     {
@@ -329,7 +348,8 @@ public static class AutonomousHelpCalls
             MinLevel = MinimumLevel(kind, requester.Level, eventMin, channel),
             Wanted = HelpersWanted(kind, channel),
             Created = now,
-            AnswerAt = now + AnswerDelayMinMs + Rng.Next(AnswerDelayMaxMs - AnswerDelayMinMs),
+            AnswerAt = channel == RealmChatChannels.Channel.Local ? now + 800 + Rng.Next(1_200)
+                : now + AnswerDelayMinMs + Rng.Next(AnswerDelayMaxMs - AnswerDelayMinMs),
             Expires = now + kind switch { Kind.Event => 120_000, Kind.Group => 240_000, _ => 240_000 },
         };
         lock (Sync)
@@ -431,7 +451,7 @@ public static class AutonomousHelpCalls
                           !GameRelic.IsPlayerCarryingRelic(b),
                     b.HealthPercent, b.Level, call.MinLevel, b.Realm == call.Realm,
                     b.GetDistanceTo(new Point3D((int)call.At.X, (int)call.At.Y, (int)call.At.Z)) <=
-                        (call.Channel == RealmChatChannels.Channel.Zone ? ZoneReach : RvrReach)))
+                        Reach(call.Channel)))
             .OrderBy(b => b.GetDistanceTo(new Point3D((int)call.At.X, (int)call.At.Y, (int)call.At.Z)))
             .Take(call.Wanted)
             .ToArray();
@@ -451,11 +471,19 @@ public static class AutonomousHelpCalls
                 b.InCombat ? "fighting" : b.IsCasting ? "casting" : b.IsOnStableMasterRoute ? "riding" :
                 b.HealthPercent < 60 ? "hurt" : b.Level < call.MinLevel ? "low" :
                 b.GetDistanceTo(new Point3D((int)call.At.X, (int)call.At.Y, (int)call.At.Z)) >
-                    (call.Channel == RealmChatChannels.Channel.Zone ? ZoneReach : RvrReach) ? "far" : "ok")
+                    Reach(call.Channel) ? "far" : "ok")
             .Select(g => $"{g.Key}={g.Count()}"));
         Log.Info($"HELP_CALL id={call.Id} ({why}) kind={call.Kind} channel={call.Channel} from=\"{call.RequesterName}\" level>={call.MinLevel} " +
                  $"zone=\"{call.Zone?.Description}\" heard={heard.Length} helpers=\"{string.Join(",", helpers.Select(h => $"{h.Name}({h.Level},{h.GetDistanceTo(new Point3D((int)call.At.X, (int)call.At.Y, (int)call.At.Z))})"))}\"");
         int i = 0;
+        if (call.Channel == RealmChatChannels.Channel.Local)
+        {
+            // a yell is answered with a yell, by the first to come; the rest just run over
+            GameBot first = helpers.FirstOrDefault();
+            if (first != null && Rng.NextDouble() < 0.75)
+                Later(first, 300 + Rng.Next(700), () => first.Yell(Pick(ComingYells)));
+            return;
+        }
         foreach (GameBot h in helpers)
         {
             string line = call.Kind switch

@@ -18,7 +18,8 @@ namespace DOL.GS;
 /// tag).</summary>
 public static class RealmChatChannels
 {
-    public enum Channel { Zone, Rvr }
+    /// <summary>Zone and Rvr are the channels; Local is a yell (a bot in trouble: AutonomousHelpCalls).</summary>
+    public enum Channel { Zone, Rvr, Local }
 
     public const string ZoneTag = "[Zone]";
     public const string RvrTag = "[RvR]";
@@ -74,8 +75,10 @@ public static class RealmChatChannels
             return;
         if (channel == Channel.Zone)
             SendZone(bot.Name, bot.Realm, bot.CurrentZone, text);
-        else
+        else if (channel == Channel.Rvr)
             SendRvr(bot.Name, bot.Realm, text);
+        else
+            bot.Yell(text);
     }
 
     // ---------------------------------------------------------------- the player's lines
