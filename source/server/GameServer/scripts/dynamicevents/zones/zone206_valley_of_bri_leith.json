@@ -238,7 +238,7 @@
           "name": "Fuamnach's Gale",
           "objective": "Break the gale wisps sweeping the lakeshore",
           "announce": "A cold gale rises over the lake. Fuamnach's wind is hunting something along the southern shore.",
-          "center": [1330, 1430, 120.9],
+          "center": [1333, 1427, 150.9],
           "radius": 120,
           "time_s": 1200,
           "kill": 16,
@@ -267,7 +267,7 @@
           "name": "Shelter the Scarlet Fly",
           "objective": "Keep the scarlet fly safe on the menhir",
           "announce": "Etain, Midir's beloved, rests on the menhir as a scarlet fly. Fuamnach's thralls are coming for her.",
-          "center": [1418, 1446, 137.5],
+          "center": [1421, 1443, 150.9],
           "radius": 80,
           "duration_s": 210,
           "protect": {
@@ -275,16 +275,16 @@
             "level": 30,
             "model": 633,
             "size": 24,
-            "pos": [1418, 1446, 137.5],
+            "pos": [1421, 1443, 150.9],
             "health_mult": 8
           },
           "waves": {
             "every_s": 35,
             "count": 2,
             "from": [
-              [1300, 1500, 157.3],
-              [1500, 1380, 163.3],
-              [1520, 1540, 184.7]
+              [1304, 1500, 157.4],
+              [1488, 1346, 155.3],
+              [1482, 1488, 165.6]
             ],
             "mobs": [
               {
@@ -316,7 +316,7 @@
           "name": "Fuamnach, the Jealous Wife",
           "objective": "Defeat Fuamnach",
           "announce": "Fuamnach, first wife of Midir, stands at the menhir in a storm of her own making. This is a fight for a group.",
-          "center": [1418, 1446, 137.5],
+          "center": [1421, 1443, 150.9],
           "radius": 90,
           "time_s": 1800,
           "boss": {
@@ -324,7 +324,7 @@
             "name": "Fuamnach",
             "level": 38,
             "size": 58,
-            "pos": [1424, 1452, 144.0],
+            "pos": [1427, 1449, 149.4],
             "health_mult": 2.5
           },
           "adds": {
@@ -357,7 +357,7 @@
           "name": "The Gale Wisps Hold the Road to Druim Cain",
           "objective": "Drive the gale wisps off the road to Druim Cain",
           "announce": "With The Scarlet Fly lost, the gale wisps have spread down onto the road to Druim Cain and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [967, 1383, 156.8],
+          "center": [967, 1379, 156.9],
           "radius": 70,
           "count": 10,
           "reinforce_s": 90,
@@ -377,7 +377,7 @@
             "template": 60160478,
             "name": "Gale wisp warleader",
             "level": 39,
-            "pos": [967, 1383, 156.8],
+            "pos": [967, 1379, 156.9],
             "health_mult": 2
           },
           "success": "The gale wisps are gone from the road to Druim Cain. It will need setting right.",
@@ -392,13 +392,13 @@
           "name": "Set It Right",
           "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
           "announce": "Roadwarden Fiona has come out to set the road to Druim Cain right. The gale wisps are coming back for it!",
-          "center": [967, 1383, 156.8],
+          "center": [967, 1379, 156.9],
           "radius": 70,
           "duration_s": 120,
           "protect": {
             "name": "Roadwarden Fiona",
             "level": 38,
-            "pos": [967, 1383, 156.8],
+            "pos": [967, 1379, 156.9],
             "health_mult": 10,
             "model": 633
           },

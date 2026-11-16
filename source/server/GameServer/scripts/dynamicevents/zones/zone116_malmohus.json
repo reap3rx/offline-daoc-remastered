@@ -179,7 +179,7 @@
           "name": "Protect Torvald the Cartographer",
           "objective": "Protect Torvald the Cartographer, who is packing up his maps",
           "announce": "Torvald has mapped the drakulv strongholds, and their patrols have found him. Keep him alive while he packs up the maps.",
-          "center": [154, 110, 119.8],
+          "center": [150, 330, 71.3],
           "radius": 70,
           "duration_s": 180,
           "protect": {
@@ -189,15 +189,15 @@
             "model": 158,
             "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
             "health_mult": 10,
-            "pos": [154, 110, 119.8]
+            "pos": [150, 330, 71.3]
           },
           "waves": {
             "every_s": 30,
             "count": 2,
             "from": [
-              [235, 136, 119.5],
-              [191, 186, 131.1],
-              [131, 190, 148.7]
+              [218, 278, 71.9],
+              [149, 300, 70.3],
+              [133, 372, 72.7]
             ],
             "mobs": [
               {
@@ -344,7 +344,7 @@
             "every_s": 30,
             "count": 2,
             "from": [
-              [474, 315, 131.8],
+              [473, 267, 69.6],
               [426, 269, 67.3],
               [426, 203, 70.6]
             ],

@@ -210,9 +210,9 @@
             "every_s": 30,
             "count": 2,
             "from": [
-              [614, 837, 95.1],
+              [626, 837, 93.1],
               [679, 828, 95.0],
-              [731, 869, 124.3]
+              [746, 865, 128.1]
             ],
             "mobs": [
               {
@@ -318,7 +318,7 @@
           "name": "The Ghost Miners Hold the Road to Swanton Keep",
           "objective": "Drive the ghost miners off the road to Swanton Keep",
           "announce": "With Ghosts of the Old Mine lost, the ghost miners have spread down onto the road to Swanton Keep and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [497, 144, 342.0],
+          "center": [678, 388, 189.8],
           "radius": 70,
           "count": 10,
           "reinforce_s": 90,
@@ -343,7 +343,7 @@
             "template": 12095,
             "name": "Ghost miner warleader",
             "level": 13,
-            "pos": [497, 144, 342.0],
+            "pos": [678, 388, 189.8],
             "health_mult": 2
           },
           "success": "The ghost miners are gone from the road to Swanton Keep. It will need setting right.",
@@ -358,13 +358,13 @@
           "name": "Set It Right",
           "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
           "announce": "Roadwarden Edith has come out to set the road to Swanton Keep right. The ghost miners are coming back for it!",
-          "center": [497, 144, 342.0],
+          "center": [678, 388, 189.8],
           "radius": 70,
           "duration_s": 120,
           "protect": {
             "name": "Roadwarden Edith",
             "level": 12,
-            "pos": [497, 144, 342.0],
+            "pos": [678, 388, 189.8],
             "health_mult": 10,
             "template": 60167624,
             "model": 28,
@@ -374,9 +374,9 @@
             "every_s": 30,
             "count": 2,
             "from": [
-              [577, 173, 340.8],
-              [532, 222, 305.0],
-              [466, 223, 297.8]
+              [701, 446, 166.2],
+              [644, 404, 172.6],
+              [658, 380, 185.8]
             ],
             "mobs": [
               {
@@ -449,16 +449,16 @@
           "radius": 60,
           "time_s": 1500,
           "path": [
-            [756, 324, 197.9],
-            [780, 340, 193.8],
-            [820, 340, 194.2],
+            [748, 324, 199.9],
+            [795, 336, 194.0],
+            [816, 340, 194.1],
             [868, 356, 199.6],
-            [940, 428, 218.7],
-            [996, 484, 232.4],
-            [1060, 484, 255.4],
-            [1124, 548, 289.5],
-            [1156, 588, 304.2],
-            [1180, 596, 304.4]
+            [865, 463, 184.4],
+            [883, 577, 132.0],
+            [932, 682, 147.1],
+            [983, 814, 120.4],
+            [1138, 810, 224.7],
+            [1139, 809, 224.9]
           ],
           "ambushes": [
             {
@@ -491,7 +491,7 @@
           "name": "Clear Smugglers' Cache",
           "objective": "Clear the smugglers' cache",
           "announce": "Clear the smugglers' cache!",
-          "center": [1180, 595, 304.5],
+          "center": [1145, 818, 226.2],
           "radius": 60,
           "time_s": 1200,
           "kill": 12,
@@ -520,7 +520,7 @@
           "name": "Maud the Smuggler Queen",
           "objective": "Defeat Maud the Smuggler Queen",
           "announce": "Maud the Smuggler Queen stands at the smugglers' cache. Bring friends.",
-          "center": [1180, 595, 304.5],
+          "center": [1145, 818, 226.2],
           "radius": 70,
           "time_s": 1200,
           "boss": {
@@ -528,7 +528,7 @@
             "name": "Maud the Smuggler Queen",
             "level": 19,
             "size": 75,
-            "pos": [1180, 595, 304.5],
+            "pos": [1145, 818, 226.2],
             "health_mult": 2.5
           },
           "adds": {
@@ -560,7 +560,7 @@
           "name": "The Forest Smugglers Hold the Road to Swanton Keep",
           "objective": "Drive the forest smugglers off the road to Swanton Keep",
           "announce": "With The Smugglers' Road lost, the forest smugglers have spread down onto the road to Swanton Keep and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1277, 354, 254.1],
+          "center": [1171, 998, 137.6],
           "radius": 70,
           "count": 10,
           "reinforce_s": 90,
@@ -580,7 +580,7 @@
             "template": 12092,
             "name": "Forest smuggler warleader",
             "level": 18,
-            "pos": [1277, 354, 254.1],
+            "pos": [1171, 998, 137.6],
             "health_mult": 2
           },
           "success": "The forest smugglers are gone from the road to Swanton Keep. It will need setting right.",
@@ -595,13 +595,13 @@
           "name": "Set It Right",
           "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
           "announce": "Roadwarden Cuthbert has come out to set the road to Swanton Keep right. The forest smugglers are coming back for it!",
-          "center": [1277, 354, 254.1],
+          "center": [1171, 998, 137.6],
           "radius": 70,
           "duration_s": 120,
           "protect": {
             "name": "Roadwarden Cuthbert",
             "level": 17,
-            "pos": [1277, 354, 254.1],
+            "pos": [1171, 998, 137.6],
             "health_mult": 10,
             "template": 60167624,
             "model": 28,
@@ -611,9 +611,9 @@
             "every_s": 30,
             "count": 2,
             "from": [
-              [1311, 431, 234.0],
-              [1245, 433, 261.6],
-              [1198, 386, 271.9]
+              [1210, 990, 138.5],
+              [1114, 1020, 129.2],
+              [1197, 1046, 134.8]
             ],
             "mobs": [
               {
@@ -653,7 +653,7 @@
           "name": "Protect Shepherd Hywel",
           "objective": "Protect Shepherd Hywel, who is gathering his scattered flock",
           "announce": "Greyfang's wargs have scattered Hywel's flock across the hills. He's going after his sheep - keep the pack off him.",
-          "center": [426, 494, 291.5],
+          "center": [464, 660, 160.7],
           "radius": 70,
           "duration_s": 180,
           "protect": {
@@ -663,15 +663,15 @@
             "model": 28,
             "equipment": "3663a9bf-6ed9-4dff-96c3-f1915ba77331",
             "health_mult": 10,
-            "pos": [426, 494, 291.5]
+            "pos": [464, 660, 160.7]
           },
           "waves": {
             "every_s": 30,
             "count": 2,
             "from": [
-              [338, 476, 250.5],
-              [389, 420, 293.8],
-              [443, 423, 292.1]
+              [369, 644, 131.9],
+              [449, 653, 158.1],
+              [487, 662, 157.2]
             ],
             "mobs": [
               {
