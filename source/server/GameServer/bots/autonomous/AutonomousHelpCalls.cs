@@ -115,8 +115,8 @@ public static class AutonomousHelpCalls
 
     private static readonly string[] FightAsks =
     [
-        "Help! {foes} on me {place}!", "Could use a hand {place} - {foes} are too much for me!",
-        "Anyone near {place}? {foes} have me pinned!", "Need help {place}, {foes}! I won't last long!",
+        "Help! {foes} on me {place}!", "Could use a hand {place} - I can't handle {foes} alone!",
+        "Anyone near {place}? I've got {foes} on me!", "Need help {place}, {foes}! I won't last long!",
     ];
 
     private static readonly string[] EventAsks =
@@ -215,6 +215,7 @@ public static class AutonomousHelpCalls
             NextBotCall[bot.DatabaseID] = now + BotCallCooldownMs;
             NextZoneCall[bot.CurrentZone.ID] = now + ZoneBotCallGapMs;
         }
+        Release(bot);                                           // (a helper in trouble itself stops answering)
         string text = Fill(Pick(FightAsks), place: RealmChatChannels.PlaceOf(bot), foes: DescribeFoes(foeNames));
         RealmChatChannels.Send(bot, channel, text);
         Open(bot, channel, Kind.Fight, string.Empty, string.Empty, 0);
@@ -272,7 +273,7 @@ public static class AutonomousHelpCalls
                 return;
             answer = Pick(["Hello!", "Greetings.", "Hail!", "Well met."]);
         }
-        GameBot speaker = Listeners(player, channel).Where(b => !b.InCombat).OrderBy(_ => Rng.Next()).FirstOrDefault();
+        GameBot speaker = Listeners(player, channel).Where(b => !b.InCombat && !IsAsking(b)).OrderBy(_ => Rng.Next()).FirstOrDefault();
         if (speaker != null)
             Later(speaker, 2_000 + Rng.Next(2_500), () => RealmChatChannels.Send(speaker, channel, answer));
     }
