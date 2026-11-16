@@ -4,7 +4,8 @@ using System.Linq;
 
 namespace DOL.GS
 {
-    /// <summary>Bounded event chat; producers never send packets while holding event locks.</summary>
+    /// <summary>Bounded event chat on the realm defense channel (/rvr: RealmChatChannels - the realm's calls to arms,
+    /// sieges, relics and raids); producers never send packets while holding event locks.</summary>
     public static class RealmEventNotices
     {
         private static readonly object Sync = new();
@@ -89,7 +90,7 @@ namespace DOL.GS
                         (!forces.TryGetValue(force, out string target) || target != notice.EventId)) continue;
                     if (Random.Shared.Next(++candidates) == 0) speaker = bot;
                 }
-                AutonomousBotChatCoordinator.BroadcastFaction(speaker?.Name ?? fallback?.Name ?? "Realm herald", notice.Realm, notice.Text);
+                RealmChatChannels.SendRvr(speaker?.Name ?? fallback?.Name ?? "Realm herald", notice.Realm, notice.Text);
             }
         }
     }

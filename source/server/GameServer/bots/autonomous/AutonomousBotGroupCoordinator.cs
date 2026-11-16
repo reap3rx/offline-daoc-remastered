@@ -166,6 +166,8 @@ public static partial class AutonomousBotGroupCoordinator
         try
         {
             RealmEventNotices.Pulse(now);
+            try { AutonomousHelpCalls.Pulse(now); }
+            catch (Exception exception) { Log.Error("Help calls pulse failed", exception); }
             RealmEventControls.Pulse();
             AutonomousRealmRaid.Pulse(now);
             AutonomousRealmRaid.RecruitForcedParty(now);
@@ -1644,6 +1646,9 @@ public static partial class AutonomousBotGroupCoordinator
                 group.DisbandGroup();
                 continue;
             }
+            // standing together near you: the leader asks aloud and they answer (AutonomousWorldTalk)
+            try { AutonomousWorldTalk.GroupedUp(leader, compatible); }
+            catch (Exception) { }
 
             rendezvousChecks++;
             Session session = NewSession(group, leader, rolledSize, objectiveKind);

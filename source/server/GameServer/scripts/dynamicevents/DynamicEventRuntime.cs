@@ -721,6 +721,9 @@ namespace DOL.GS.DynamicEvents
             }
             LeadPartyHere();
             Announce(Def.Announce, true);
+            // the bots there say something - and call the zone when there are few hands (AutonomousWorldTalk)
+            try { AutonomousWorldTalk.OnEventStage(Chain, this, null); }
+            catch (Exception) { }
         }
 
         public void Tick(long now)
@@ -932,6 +935,8 @@ namespace DOL.GS.DynamicEvents
             string text = won ? Def.Success : Def.Fail;
             if (!string.IsNullOrEmpty(text))
                 Announce(text, false);
+            try { AutonomousWorldTalk.OnEventStage(Chain, this, Outcome == StageOutcome.Success); }
+            catch (Exception) { }
             foreach (EventNpc n in Spawned.ToList())
             {
                 n.Stage = null;

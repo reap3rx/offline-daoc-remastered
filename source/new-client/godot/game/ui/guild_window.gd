@@ -30,7 +30,7 @@ var show_offline := false
 var total := 0
 var members: Array = []                            # this page: [{pos, name, level, class, rank, group, zone, note|guild, online}]
 var selected := ""
-var typing: Callable                               # GameUI: open the chat line with a text (/send name ...)
+var typing: Callable                               # GameUI: open the chat line with a text
 
 var _title: Label
 var _tabs := {}
@@ -138,7 +138,8 @@ func build() -> void:
 			request())
 	add_child(_next)
 	# the selected member's actions (the server says if your rank may: Guild.eRank Promote / Demote / Remove)
-	var acts := [["send", "SEND", "SEND A PRIVATE MESSAGE"], ["invite", "INVITE", "INVITE TO YOUR GROUP"],
+	# (no SEND: there are no private messages since 2026-11-16 - guild chat, /zone, /rvr and talk aloud)
+	var acts := [["invite", "INVITE", "INVITE TO YOUR GROUP"],
 			["promote", "PROMOTE", "RAISE THEIR GUILD RANK BY ONE"], ["demote", "DEMOTE", "LOWER THEIR GUILD RANK BY ONE"],
 			["remove", "REMOVE", "REMOVE FROM THE GUILD"]]
 	var x := 140.0
@@ -267,14 +268,13 @@ func _rebuild() -> void:
 		_empty.text = ""
 	_empty.visible = members.is_empty()
 	var has := selected != "" and members.any(func(m): return m.name == selected)
-	for k in ["send", "invite", "promote", "demote", "remove"]:
+	for k in ["invite", "promote", "demote", "remove"]:
 		(_actions[k] as Button).disabled = not has or (tab == "alliance" and k in ["promote", "demote", "remove"])
 	for k in ["info", "motd", "leave"]:
 		(_actions[k] as Button).disabled = g == ""
 
 
-## One member: online ones bright, offline dim; the group column a dot when grouped; click to select, double-click
-## to send them a message.
+## One member: online ones bright, offline dim; the group column a dot when grouped; click to select.
 func _row(m: Dictionary) -> Control:
 	var row := Button.new()
 	row.focus_mode = Control.FOCUS_NONE
@@ -313,8 +313,6 @@ func _row(m: Dictionary) -> Control:
 	row.gui_input.connect(func(e: InputEvent):
 		if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
 			selected = nm
-			if e.double_click:
-				_act("send")
 			_rebuild())
 	return row
 
@@ -331,9 +329,6 @@ func _act(key: String) -> void:
 		return
 	var m := _member(selected)
 	match key:
-		"send":
-			if not m.is_empty() and typing.is_valid():
-				typing.call("/send %s " % m.name)
 		"invite":
 			if not m.is_empty():
 				Server.command("/invite %s" % m.name)

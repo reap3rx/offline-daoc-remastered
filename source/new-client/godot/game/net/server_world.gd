@@ -14,7 +14,7 @@ const Mounts := preload("res://game/world/mounts.gd")        # personal horses (
 const RUN_UNITS := 150.0                     # a mover faster than this (units / s) runs, slower walks
 const SNAP_M := 6.0                          # an update this far from where it is drawn: jump there
 # eChatType -> the chat window's kinds
-const CHAT_KINDS := {0: "system", 1: "say", 2: "send", 3: "group", 4: "guild", 5: "broadcast", 6: "emote", 7: "help",
+const CHAT_KINDS := {0: "system", 1: "say", 2: "broadcast", 3: "group", 4: "guild", 5: "broadcast", 6: "emote", 7: "help",
 		8: "chatgroup", 9: "advice", 10: "officer", 11: "alliance", 12: "group", 13: "group", 15: "broadcast",
 		16: "spells", 17: "combat", 18: "damage_taken", 19: "combat", 20: "merchant", 21: "system", 22: "combat_others",
 		23: "combat_others", 24: "combat", 25: "spells", 26: "loot", 27: "resists", 28: "system", 29: "damage_taken",
@@ -1028,6 +1028,11 @@ func _message(d: Dictionary) -> void:
 		viewer.ui.npc_dialog.say("srv%d" % _target_oid(), who, text)
 		PlayerData.message.emit(text, "npc")
 		return
+	if kind == "broadcast":                                   # the zone and realm defense channels (RealmChatChannels)
+		if text.begins_with("[Zone] "):
+			kind = "zone"
+		elif text.begins_with("[RvR] "):
+			kind = "rvr"
 	if kind == "say":
 		_say_bubble(text)
 	if t >= 0xC8 and t <= 0xCB:                                 # screen centre (zone names, warnings)

@@ -2,7 +2,9 @@ class_name ChatWindow
 extends ClassicWindow
 ## One chat box. The game has two, as separate windows (owner 2026-10-09: "two separate boxes like the new
 ## version" - default.ini ChatWindow0 "Main" and ChatWindow1 "Combat"):
-##   Main   - chat (say, tells, group, guild ...) with the typing line at its bottom
+##   Main   - chat (say, group, guild, zone, realm defense ...) with the typing line at its bottom. No tells: since
+##            2026-11-16 all talk is aloud (/say - bubbles over heads) but for the zone (/z) and realm defense (/rvr)
+##            channels, where your realm asks for and answers help
 ##   Combat - combat, spells, loot and system messages (the client's "PageUpSys / PageDownSys" box; patch 1.65 added
 ##            a toggleable "Resists Changed" channel to it)
 ## Each box moves by its corner handle, resizes by its top or right edge, and shows the message types chosen for it
@@ -13,18 +15,20 @@ extends ClassicWindow
 ## holds two stacked 512x64 boxes; Combat uses the upper one, Main the lower, each as a nine-patch.
 
 const TYPES := [
-	["say", "SAY"], ["send", "TELLS (/SEND)"], ["group", "GROUP"], ["guild", "GUILD"], ["officer", "OFFICER"],
+	["say", "SAY"], ["zone", "ZONE (/Z)"], ["rvr", "REALM DEFENSE (/RVR)"], ["group", "GROUP"], ["guild", "GUILD"],
+	["officer", "OFFICER"],
 	["alliance", "ALLIANCE"], ["broadcast", "BROADCAST"], ["emote", "EMOTES"], ["advice", "ADVICE"],
 	["chatgroup", "CHAT GROUP"], ["help", "HELP / COMMANDS"], ["system", "SYSTEM MESSAGES"], ["combat", "YOUR COMBAT"],
 	["combat_others", "OTHERS' COMBAT"], ["damage_taken", "DAMAGE TAKEN"], ["spells", "SPELLS"],
 	["resists", "RESISTS CHANGED"], ["loot", "LOOT / MONEY"], ["merchant", "MERCHANTS / TRADE"], ["error", "ERRORS"],
 	["npc", "NPC SPEECH"]]
 const DEFAULTS := {
-	"main": ["say", "send", "group", "guild", "officer", "alliance", "broadcast", "emote", "advice", "chatgroup", "help",
-			"npc"],
+	"main": ["say", "zone", "rvr", "group", "guild", "officer", "alliance", "broadcast", "emote", "advice", "chatgroup",
+			"help", "npc"],
 	"combat": ["system", "combat", "combat_others", "damage_taken", "spells", "resists", "loot", "merchant", "error"]}
 const COLORS := {"system": Color(0.95, 0.9, 0.6), "say": Color(1, 1, 1), "help": Color(0.6, 0.85, 1.0),
-		"error": Color(1.0, 0.5, 0.4), "loot": Color(0.6, 1.0, 0.6), "send": Color(0.95, 0.6, 1.0),
+		"error": Color(1.0, 0.5, 0.4), "loot": Color(0.6, 1.0, 0.6), "zone": Color(1.0, 0.8, 0.45),
+		"rvr": Color(1.0, 0.5, 0.45),
 		"group": Color(0.55, 0.85, 1.0), "guild": Color(0.5, 1.0, 0.5), "emote": Color(1.0, 0.85, 0.6),
 		"combat": Color(1.0, 0.75, 0.55), "spells": Color(0.75, 0.75, 1.0)}
 
@@ -72,6 +76,17 @@ func build() -> void:
 	max_size = Vector2(900, 480)
 	var cfg := UiArt.load_settings()
 	types = cfg.get_value("chat_" + window_id, "types", (DEFAULTS[role] as Array).duplicate())
+	# (2026-11-16: the zone and realm defense channels are new - a chat box saved before them gets them where it had
+	# tells or broadcasts; tells are gone)
+	if not cfg.get_value("chat_" + window_id, "zone_rvr", false):
+		if "send" in types or "broadcast" in types:
+			for k in ["zone", "rvr"]:
+				if not k in types:
+					types.append(k)
+		types.erase("send")
+		cfg.set_value("chat_" + window_id, "types", types)
+		cfg.set_value("chat_" + window_id, "zone_rvr", true)
+		UiArt.save_settings(cfg)
 	_log = RichTextLabel.new()
 	_log.scroll_following = true
 	_log.bbcode_enabled = true

@@ -2,7 +2,7 @@
 
 Every command the server registers, by who may use it. Written by `tools/claude-version/list_server_commands.py` from the code; do not edit by hand. Many are inherited from the server the game is built on and are untested here. The everyday ones are in [QUICK-COMMANDS.md](../QUICK-COMMANDS.md).
 
-## Player commands (218)
+## Player commands (216)
 
 Anyone can use these.
 
@@ -37,7 +37,6 @@ Anyone can use these.
 | `/bountyrent` |  | Pay house rent with bountypoints |  |
 | `/bow` |  | Give an honorable bow | `/bow` |
 | `/brandish` |  | Brandish your weapon | `/brandish` |
-| `/broadcast` | `/b` | Broadcast something to other players in the same zone | `/b <message>` |
 | `/buff` |  | Buff your target (or yourself) with all your best buffs in one cast | `/buff  (all your best buffs on your target, or on you)`<br>`/buff <(buffList) \| all \| help> [playerName \| npcName]` |
 | `/cancelstyle` |  | Toggle cancelstyle flag. | `/cancelstyle` |
 | `/charge` |  | Onward! | `/charge` |
@@ -78,7 +77,6 @@ Anyone can use these.
 | `/events` |  | Dynamic events in your zone | `/events - the events window: this zone's events, to start, wake or stop (testing)`<br>`/events list - what's happening in this zone, in the chat`<br>`/events start <id> [stage] - start an event now, at a stage if given (testing)`<br>`/events stop <id> - end an event now (testing)`<br>`/events wake <id> - make it a disturbance now, waiting for someone to come near (testing)` |
 | `/facegloc` |  | Turns and faces your character into the direction of the x, y coordinates provided (using DOL region global coordinates). | `/facegloc [x] [y]` |
 | `/faceloc` |  | Turns and faces your character into the direction of the x, y coordinates provided (using Mythic zone coordinates). | `/faceloc [x] [y]` |
-| `/faction` |  | Talk to players and active playerbots in your realm | `/faction <message>` |
 | `/filter` |  | Turns off the bad word filter. | `/filter` |
 | `/flex` |  | Makes a flexing gesture | `/flex` |
 | `/formation` |  | Change the formation of your pets! | `/formation <type>` |
@@ -144,7 +142,6 @@ Anyone can use these.
 | `/realmtask` |  | Displays the current realm bonuses status. | `/realmtask` |
 | `/realmtimer` |  | Displays the players current realmtimer Status | `/realmtimer` |
 | `/rearrange` |  | Allows you to rearrange your character overview. | `/rearrange list - Shows a list with all to this account assigned characters and their slots.`<br>`/rearrange setslot [source slot] [target slot] - Sets the given source slot to the given target slot.` |
-| `/region` | `/reg` | Broadcast something to other players in the same region | `/region <message>` |
 | `/release` |  | When you are dead you can '/release'. This will bring you back to your bindpoint! | `/release` |
 | `/relics` | `/relic` | Displays the current relic status. | `/relics` |
 | `/rent` |  | Pay house rent |  |
@@ -160,13 +157,13 @@ Anyone can use these.
 | `/roll` |  | simulates a dice roll. | `/roll [#] to throw with a specified number of dice` |
 | `/rp` |  | toggle receiving realm points | `/rp <on/off>` |
 | `/rude` |  | A rude gesture | `/rude` |
+| `/rvr` | `/rd` | Realm defense: call your realm to arms or for help in the frontier | `/rvr <message> (or /rd <message>)` |
 | `/safety` |  | Turns off PvP safety flag. | `/safety off` |
 | `/salute` |  | Makes a stiff salute | `/salute` |
 | `/salvage` |  | You can salvage one or multiple item(s) when you are a crafter | `/salvage`<br>`/salvage all`<br>`/salvage <bag>`<br>`/salvage <bag-bag>` |
 | `/say` | `/s` | Say something to other players around you | `/say <message>` |
 | `/search` |  | Search the current area. | `/search` |
 | `/sell` |  | Sell items to a targeted merchant.  Specify a single bag, a range or all | `/sell 2-3 to sell all items in bags 2 and 3`<br>`/sell all to sell all items` |
-| `/send` |  | Sends a private message to the target player. |  |
 | `/serverinfo` |  | Shows information about the server | `/serverinfo` |
 | `/servernews` | `/sn` | Shows the current Server News |  |
 | `/settitle` |  | Sets the current player title | `/settitle <index> - to change current title using index in the list` |
@@ -226,6 +223,7 @@ Anyone can use these.
 | `/yawn` |  | yawn | `/yawn` |
 | `/yell` | `/y` | Yell something to other players around you | `/yell <message>` |
 | `/yes` |  | Nod your head | `/yes` |
+| `/zone` | `/z` | Talk to your realm in this zone: ask for help with events, quests and hard fights, or look for a group | `/zone <message> (or /z <message>)` |
 
 ## GM commands (66)
 
@@ -255,6 +253,7 @@ Need GM mode (the launcher's GM option, set while the server is stopped).
 | `/gmrelicpad` |  |  |  |
 | `/gmstealth` |  | Grants the ability to stealth to a gm/admin character | `/gmstealth on : turns the command on`<br>`/gmstealth off : turns the command off` |
 | `/gmvote` |  | Various voting commands! | `/gmvote create ... creates a new empty voting`<br>`/gmvote add choice 1 ... adds 'choice 1' to the newly created voting`<br>`/gmvote desc use this several times ... adds the textline 'use this several times' to the newly created voting`<br>`/gmvote start ... starts the newly created voting`<br>`/gmvote start NAME ... loads and starts the voting saved with NAME`<br>`/gmvote cancel ... cancels the voting currently in progress` |
+| `/gmzone` |  |  | `/gmzone info (or /zone info)`<br>`/gmzone divingflag <0 = use region, 1 = on, 2 = off>`<br>`/gmzone waterlevel <#>`<br>`/gmzone bonus <zoneID\|current> <xpBonus> <rpBonus> <bpBonus> <coinBonus> <Save? (true/false)>` |
 | `/harm` |  |  |  |
 | `/heal` |  |  | `/heal me - heals self` |
 | `/instance` |  | This command assists in the creation of instances. | `/instance key <instancekey> (this sets the id of the instance you want to work with)`<br>`/instance entry <ClassType> [<NpcTemplateID>] (add elements to the instance)`<br>`/instance remove (please target the element to remove)`<br>`/instance create <skin> (skin is the region id to copy)`<br>`/instance test (enter a created instance)`<br>`/instance close (delete the instance on the server)` |
@@ -296,7 +295,6 @@ Need GM mode (the launcher's GM option, set while the server is stopped).
 | `/weather` |  | Sets the weather for the current region | `'/weather info' for information about the current weather in this region`<br>`'/weather start <line> <duration> <speed> <diffusion> <intensity>' to start a storm in this region`<br>`'/weather start' to start a random storm in this region`<br>`'/weather restart' to restart the storm in this region`<br>`'/weather stop' to stop the storm in this region` |
 | `/wf` |  | World feature tests: /wf chest [trap] \| /wf stone \| /wf die | `/wf chest [trap]`<br>`/wf stone`<br>`/wf die` |
 | `/xmob` |  |  | `/xmob get <radius> (max5000)`<br>`/xmob view`<br>`/xmob spawn <radius> (max5000)`<br>`/xmob clear`<br>`/xmob copy <num> (max 20)`<br>`/xmob setlevels <radius> <value> or <min> <max> (max5000)` |
-| `/zone` |  |  | `/zone info`<br>`/zone divingflag <0 = use region, 1 = on, 2 = off>`<br>`/zone waterlevel <#>`<br>`/zone bonus <zoneID\|current> <xpBonus> <rpBonus> <bpBonus> <coinBonus> <Save? (true/false)>` |
 | `/zonebonus` | `/zb` | Picks a new bonus zone | `/zonebonus or /zb` |
 | `/zonepoint` |  |  |  |
 

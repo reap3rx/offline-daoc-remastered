@@ -7,7 +7,7 @@ namespace DOL.GS.Commands
     /// The interact menu (owner 2026-11-11: "hold the interact button ... it will bring up a small menu that has ways you
     /// can interact with that person"): what you can do with your target - a bot or player, your pet, or yourself. The
     /// client asks with the object's id when you hold Interact on it; the answer is one line, #SMENU|title|label=action|...
-    /// where an action is a slash command, "@pet:order" (your pet's window) or "@whisper:Name" (the chat line).
+    /// where an action is a slash command, "@pet:order" (your pet's window) or "@talk:Name" (the chat line, ready to say something to them aloud - there are no whispers).
     ///   /socialmenu [objectId]
     /// </summary>
     [CmdAttribute("&socialmenu", ePrivLevel.Player, "What you can do with your target (the controller's hold-Interact menu)", "/socialmenu [objectId]")]
@@ -120,7 +120,7 @@ namespace DOL.GS.Commands
             list.Add(("Buff", "/buff"));
             list.Add(("Follow", "/follow"));
             list.Add(("Assist", "/assist"));
-            list.Add(("Whisper", "@whisper:" + other.Name));
+            list.Add(("Talk", "@talk:" + other.Name));
             if (other is GamePlayer real && real.Client != null && real.Client != me.Client)
                 list.Add(("Trade", "/tradewith"));
             return list;

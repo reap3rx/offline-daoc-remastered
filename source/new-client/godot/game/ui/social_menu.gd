@@ -3,7 +3,8 @@ extends Control
 ## ways you can interact with that person"): invite / kick, buff, follow, assist, whisper, your pet's orders. The
 ## server decides what is offered (SocialMenuCommandHandler: you, your pet, a bot of your realm, your group's leader)
 ## and sends #SMENU|title|label=action|...; an action is a slash command (run as if typed), "@pet:order" (the pet
-## window's button) or "@whisper:Name" (the chat line, ready to type). The controller works it like any window: the
+## window's button) or "@talk:Name" (the chat line, ready to say something to them aloud: "Name, " - there are no
+## whispers since 2026-11-16, all talk is aloud). The controller works it like any window: the
 ## d-pad moves between the entries, A picks, B closes. A click outside closes it too.
 
 var _box: Control
@@ -83,9 +84,9 @@ static func run_action(action: String, tree: SceneTree) -> void:
 		PlayerData.pet_command(action.trim_prefix("@pet:"))
 		return
 	var ui = _game_ui(tree)
-	if action.begins_with("@whisper:"):
+	if action.begins_with("@talk:") or action.begins_with("@whisper:"):
 		if ui and ui.get("chat"):
-			ui.chat.start_typing("/send %s " % action.trim_prefix("@whisper:"))
+			ui.chat.start_typing("%s, " % action.get_slice(":", 1))
 		return
 	if ui and ui.get("chat"):
 		ui.chat.run_line(action)                          # client commands (/follow) and the server's alike

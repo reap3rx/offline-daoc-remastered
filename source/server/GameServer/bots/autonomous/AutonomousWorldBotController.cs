@@ -363,6 +363,8 @@ namespace DOL.GS
                     _nextPlanTick = 0;
                 }
                 ObserveDeaths(bot);
+                // what it says aloud about its fights, and a fight it can't win alone (AutonomousWorldTalk)
+                AutonomousWorldTalk.Observe(bot);
 
                 // Every autonomous return uses the same navmesh controller,
                 // even before a casualty has propagated into group metadata.
@@ -456,6 +458,16 @@ namespace DOL.GS
                 if (TryHelpNearby(brain, bot, nowTick))
                     return false;
 
+                // Calls for help on the zone and realm defense channels (AutonomousHelpCalls): a bot that asked waits
+                // where it is for its help; one that answered goes to whoever asked and fights what is on them.
+                if (_groupDirective?.IsDynamic != true && !bot.IsPlayerLedGroup)
+                {
+                    if (HoldForHelp(bot))
+                        return true;
+                    if (AnswerHelpCall(brain, bot, out bool helpFighting))
+                        return !helpFighting;
+                }
+
                 if (_groupDirective?.IsDynamic == true &&
                     AutonomousBotGroupCoordinator.ShouldPauseForGroupPullRecovery(_groupDirective.Phase,
                         _groupDirective.GroupCombatActive, _groupDirective.RecoveringBetweenPulls) &&
@@ -482,6 +494,9 @@ namespace DOL.GS
 
                 // a campfire it decided to sit at (owner 2026-11-11: AutonomousCampfireVisits) owns its movement
                 if (_groupDirective?.IsDynamic != true && AutonomousCampfireVisits.Hold(bot))
+                    return true;
+                // walking over to ask you to group, or waiting for your answer (AutonomousPersonaPlay)
+                if (_groupDirective?.IsDynamic != true && AutonomousPersonaPlay.Hold(bot))
                     return true;
 
                 // Keep a camp's recovery session across AI turns. Clearing it on
@@ -2108,6 +2123,100 @@ namespace DOL.GS
                 help.Need == AutonomousNearbyHelp.Need.Trouble
                     ? $"{help.Ally.Name} is in trouble against {help.Foe.Name}; stepping in"
                     : $"Joining {help.Ally.Name}'s fight against {help.Foe.Name}", help.Foe.Name);
+            AutonomousWorldTalk.NoteHelping(bot, help.Ally, help.Need == AutonomousNearbyHelp.Need.Trouble);
+            return true;
+        }
+
+        // ---------------------------------------------------------------- calls for help (AutonomousHelpCalls)
+
+        private Vector3? _helpPathTarget;
+        private long _helpPathTick;
+
+        /// <summary>A bot that asked its zone for help waits where it is (resting) until help comes or it gives up.</summary>
+        private bool HoldForHelp(GameBot bot)
+        {
+            if (!AutonomousHelpCalls.IsWaiting(bot))
+                return false;
+            if (bot.IsMoving)
+            {
+                bot.StopMovingOnPath();
+                bot.StopMoving();
+            }
+            if (!bot.IsRecoveryResting && (bot.HealthPercent < 100 || bot.ManaPercent < 100))
+                bot.BeginRecoveryRest();
+            SetStatus(bot, "Waiting for help", GoalText(), "Asked the zone for help; holding here until it arrives",
+                _camp?.MonsterName ?? string.Empty, _camp?.ZoneName ?? string.Empty);
+            return true;
+        }
+
+        /// <summary>A bot answering a call goes to whoever asked and fights what is on them (an event call: it takes the
+        /// event as its camp). True while it is handling the call; `fighting` when it has just engaged.</summary>
+        private bool AnswerHelpCall(BotBrain brain, GameBot bot, out bool fighting)
+        {
+            fighting = false;
+            AutonomousHelpCalls.Call call = AutonomousHelpCalls.AssignmentOf(bot);
+            if (call == null)
+            {
+                _helpPathTarget = null;
+                return false;
+            }
+            if (bot.CurrentRegionID != call.RegionId || bot.IsOnStableMasterRoute)
+            {
+                AutonomousHelpCalls.Release(bot);
+                return false;
+            }
+            if (call.Kind == AutonomousHelpCalls.Kind.Event)
+            {
+                AutonomousHelpCalls.Release(bot);
+                if (DynamicEvents.DynamicEventManager.TryBotTarget(bot, out var ev))
+                    TakeEventCamp(bot, ev);
+                return false;
+            }
+            Vector3 at = AutonomousHelpCalls.Where(call);
+            float dx = bot.X - at.X, dy = bot.Y - at.Y;
+            if (dx * dx + dy * dy > (float)AutonomousHelpCalls.ArrivalRadius * AutonomousHelpCalls.ArrivalRadius)
+            {
+                long now = GameLoop.GameLoopTime;
+                if (bot.IsRecoveryResting)
+                    bot.WakeRecoveryRest();
+                if (_helpPathTarget == null || Vector3.DistanceSquared(_helpPathTarget.Value, at) > 250f * 250f ||
+                    !bot.IsMoving && now - _helpPathTick > 1_500)
+                {
+                    _helpPathTarget = at;
+                    _helpPathTick = now;
+                    IssuePath(bot, at);
+                }
+                SetStatus(bot, $"Answering {call.RequesterName}'s call", GoalText(),
+                    $"{call.RequesterName} asked for help on the {(call.Channel == RealmChatChannels.Channel.Zone ? "zone" : "realm defense")} channel; on the way",
+                    string.Empty, call.Zone?.Description ?? string.Empty);
+                return true;
+            }
+            _helpPathTarget = null;
+            AutonomousHelpCalls.ReportArrived(bot, call);
+            if (call.Kind == AutonomousHelpCalls.Kind.Group)
+                return false;                                   // (it asks you to group now: AutonomousPersonaPlay.Hold)
+            GameLiving foe = AutonomousHelpCalls.FoeFor(bot, call);
+            if (foe != null)
+            {
+                bot.WakeRecoveryRest();
+                bot.StopMovingOnPath();
+                bot.StopMoving();
+                bot.TargetObject = foe;
+                brain.AddToAggroList(foe, Math.Max(25, foe.Level * 10));
+                brain.FSM.SetCurrentState(eFSMStateType.AGGRO);
+                SetStatus(bot, $"Helping {call.RequesterName}", GoalText(), $"Fighting {foe.Name} for {call.RequesterName}", foe.Name);
+                fighting = true;
+                return true;
+            }
+            if (bot.IsMoving)
+            {
+                bot.StopMovingOnPath();
+                bot.StopMoving();
+            }
+            if (call.Requester != null && GameLoop.GameLoopTime % 5_000 < 700)
+                bot.TurnTo(call.Requester);
+            SetStatus(bot, $"Standing by {call.RequesterName}", GoalText(), "Came to help; staying close while it's needed",
+                string.Empty, call.Zone?.Description ?? string.Empty);
             return true;
         }
 
@@ -3285,6 +3394,25 @@ namespace DOL.GS
                 : AutonomousPopulationController.PersonaOf(bot.PersistentRecord).EventJoinPercent();
             if (Random.Shared.Next(100) < eventPercent && DynamicEvents.DynamicEventManager.TryBotTarget(bot, out var ev))
             {
+                TakeEventCamp(bot, ev);
+                if (_groupDirective?.IsDynamic != true)
+                    AutonomousWorldTalk.SettingOff(bot, ev.ZoneName, ev.MonsterName, ev.Title);
+                return;
+            }
+            if (!_hasCampCatalog)
+            {
+                _nextPlanTick = GameLoop.GameLoopTime + 250;
+                SetStatus(bot, "Preparing live XP camps", "Find a reachable level-appropriate XP camp",
+                    "Waiting for the first complete camp catalog; combat defense remains active");
+                return;
+            }
+            SelectCatalogCamp(bot);
+        }
+
+        /// <summary>A dynamic event becomes the bot's camp: its place, and its current monsters to fight.</summary>
+        private void TakeEventCamp(GameBot bot, DynamicEvents.BotEventTarget ev)
+        {
+            {
                 _nextPlanTick = GameLoop.GameLoopTime + 30_000 + bot.ObjectID % 8_000;
                 _camp = new CampDestination("event:" + ev.Id, ev.MonsterName, ev.ZoneName, ev.RegionId, ev.X, ev.Y, ev.Z,
                     6, false, false);
@@ -3298,15 +3426,12 @@ namespace DOL.GS
                 bot.PersistentRecord.CurrentCampId = _camp.Id;
                 SetStatus(bot, $"Heading to {ev.Title}", GoalText(), $"Helping with the event {ev.Title} in {ev.ZoneName}",
                     ev.MonsterName, ev.ZoneName, true);
-                return;
             }
-            if (!_hasCampCatalog)
-            {
-                _nextPlanTick = GameLoop.GameLoopTime + 250;
-                SetStatus(bot, "Preparing live XP camps", "Find a reachable level-appropriate XP camp",
-                    "Waiting for the first complete camp catalog; combat defense remains active");
-                return;
-            }
+        }
+
+        /// <summary>An XP camp from the catalog (SelectCamp, when no event or raid is taken).</summary>
+        private void SelectCatalogCamp(GameBot bot)
+        {
             _nextPlanTick = GameLoop.GameLoopTime + 30_000 + bot.ObjectID % 8_000;
             int groupSize = Math.Max(1, (int)(bot.Group?.MemberCount ?? 1));
             bool sharedGroup = _groupDirective?.IsDynamic == true;
@@ -3574,6 +3699,8 @@ namespace DOL.GS
             bot.PersistentRecord.CurrentCampId = selected.Id;
             SetStatus(bot, $"Planning route to {selected.MonsterName}", GoalText(), decision.Reason,
                 selected.MonsterName, selected.ZoneName, true);
+            if (!sharedGroup)
+                AutonomousWorldTalk.SettingOff(bot, selected.ZoneName, selected.MonsterName);
         }
 
         private void BeginCampDiagnostics(GameBot bot)

@@ -42,7 +42,7 @@ public class UT_AutonomousBotChat
     [TestCase("you are all shit and dumb")]
     public void ModeratedTopics_GetOneShortNonEscalatingReply(string text)
     {
-        string response = AutonomousBotChatCoordinator.GenerateFactionReply(text, new Random(3));
+        string response = AutonomousBotChatCoordinator.GenerateGuildReply(text, new Random(3));
         Assert.That(response, Is.Not.Empty);
         Assert.That(response.Length, Is.LessThan(80));
     }
@@ -54,7 +54,7 @@ public class UT_AutonomousBotChat
     [TestCase("Anybody else just DC?")]
     public void PlayfulTopics_GetShortConversationReplies(string text)
     {
-        string response = AutonomousBotChatCoordinator.GenerateFactionReply(text, new Random(9));
+        string response = AutonomousBotChatCoordinator.GenerateGuildReply(text, new Random(9));
         Assert.That(response, Is.Not.Empty);
         Assert.That(response.Length, Is.LessThan(100));
     }
@@ -85,12 +85,10 @@ public class UT_AutonomousBotChat
     }
 
     [Test]
-    public void EmittedFactionChat_IsPositiveAndHasNoObsoleteGoReference()
+    public void EmittedChat_IsPositiveAndHasNoObsoleteGoReference()
     {
-        FieldInfo openersField = typeof(AutonomousBotChatCoordinator).GetField("FactionOpeners", BindingFlags.NonPublic | BindingFlags.Static);
-        FieldInfo repliesField = typeof(AutonomousBotChatCoordinator).GetField("FactionReplies", BindingFlags.NonPublic | BindingFlags.Static);
+        FieldInfo repliesField = typeof(AutonomousBotChatCoordinator).GetField("ChatReplies", BindingFlags.NonPublic | BindingFlags.Static);
         var emitted = new List<string>();
-        emitted.AddRange((string[])openersField.GetValue(null));
         emitted.AddRange((string[])repliesField.GetValue(null));
 
         string[] prompts =
@@ -100,11 +98,11 @@ public class UT_AutonomousBotChat
         ];
         foreach (string prompt in prompts)
             for (int seed = 0; seed < 32; seed++)
-                emitted.Add(AutonomousBotChatCoordinator.GenerateFactionReply(prompt, new Random(seed)));
+                emitted.Add(AutonomousBotChatCoordinator.GenerateGuildReply(prompt, new Random(seed)));
 
         string[] forbidden = ["noob", "idiot", "moron", "stfu", "game sucks", "paid a sub", "skill issue", "/go"];
         foreach (string message in emitted)
             foreach (string phrase in forbidden)
-                Assert.That(message, Does.Not.Contain(phrase).IgnoreCase, $"Unsafe faction chat: {message}");
+                Assert.That(message, Does.Not.Contain(phrase).IgnoreCase, $"Unsafe chat: {message}");
     }
 }

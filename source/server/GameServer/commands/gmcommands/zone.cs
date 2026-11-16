@@ -25,12 +25,12 @@ using DOL.GS.PacketHandler;
 namespace DOL.GS.Commands
 {
     [CmdAttribute(
-        "&zone",
+        "&gmzone",
         ePrivLevel.GM,
-		"/zone info",
-		"/zone divingflag <0 = use region, 1 = on, 2 = off>",
-		"/zone waterlevel <#>",
-		"/zone bonus <zoneID|current> <xpBonus> <rpBonus> <bpBonus> <coinBonus> <Save? (true/false)>")]
+		"/gmzone info (or /zone info)",
+		"/gmzone divingflag <0 = use region, 1 = on, 2 = off>",
+		"/gmzone waterlevel <#>",
+		"/gmzone bonus <zoneID|current> <xpBonus> <rpBonus> <bpBonus> <coinBonus> <Save? (true/false)>")]
     public class ZoneCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)

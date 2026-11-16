@@ -340,7 +340,7 @@ namespace DOL.GS
             GameBot named = talkers.FirstOrDefault(bot => AutonomousBotChatCoordinator.ContainsMention(message, bot.Name));
             if (named != null)
             {
-                ScheduleReply(named, guild, AutonomousBotChatCoordinator.GenerateFactionReply(message), 1_400);
+                ScheduleReply(named, guild, AutonomousBotChatCoordinator.GenerateGuildReply(message), 1_400);
                 return;
             }
             ScheduleReplies(guild, null, message, AutonomousBotChatCoordinator.RollResponseCount(Math.Min(2, talkers.Length)));
@@ -353,7 +353,7 @@ namespace DOL.GS
             var used = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             for (int index = 0; index < talkers.Length; index++)
             {
-                string reply = incoming != null ? AutonomousBotChatCoordinator.GenerateFactionReply(incoming) : Pick(GuildReplies);
+                string reply = incoming != null ? AutonomousBotChatCoordinator.GenerateGuildReply(incoming) : Pick(GuildReplies);
                 if (!used.Add(reply)) continue;
                 ScheduleReply(talkers[index], guild, reply, 1_800 + index * 2_000 + Random.Shared.Next(1_200));
             }
