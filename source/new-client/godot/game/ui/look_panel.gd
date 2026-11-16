@@ -190,6 +190,7 @@ func _changed(key: String, v: float) -> void:
 	if not _mine.has(sk):
 		_mine[sk] = {}
 	_mine[sk][key] = snappedf(v, 0.0001)
+	SkySystem.finish_look_blend()
 	SkySystem.tune[key] = v
 	_show(key, v)
 	var s := _sky()

@@ -249,6 +249,17 @@ func _process(delta: float) -> void:
 func _process_timed(delta: float) -> void:
 	if zone and int(zone.info.get("id", -1)) != _look_zone:
 		apply_look()
+	if _look_mix < 1.0:
+		_look_mix = minf(1.0, _look_mix + delta / LOOK_BLEND_S)
+		_look_step -= delta
+		if _look_mix >= 1.0:
+			finish_look_blend()
+			if remastered:
+				set_remastered(true)
+		elif _look_step <= 0.0:
+			_look_step = LOOK_STEP_S
+			if remastered:
+				set_remastered(true)
 	if dungeon:                                              # the clock still runs (camp timers, night NPCs)
 		FxLight.day_scale = 1.0
 		game_seconds = fposmod(game_seconds + delta * day_increment * time_scale, 86400.0)
@@ -486,6 +497,17 @@ var gi := false                        # real-time bounce light (SDFGI) - Graphi
 ## Test-shot tuning (--tune=exposure:0.9,fog:0.5 ...): any number below by its key, for comparing looks.
 static var tune := {}
 static var cli_tune := {}                    # --tune test values: on top of every zone's look
+## A zone's look eased in, not switched (owner 2026-11-15, "exposure glitch": walking out of Camelot's gate into
+## Camelot Hills - a zone with its own tuned look - the light, fill and cloud shade changed in one frame, the whole
+## picture a quarter darker at once; along a zone border it flickered between the two). While _look_mix < 1 every
+## value is read part way between the two zones' looks; the values set once (exposure, bounce light ...) are set
+## again every LOOK_STEP_S.
+const LOOK_BLEND_S := 4.0
+const LOOK_STEP_S := 0.5
+static var _look_from := {}
+static var _look_to := {}
+static var _look_mix := 1.0
+var _look_step := 0.0
 const LOOKS_SHIPPED := "res://game/data/zone_looks.json"
 const LOOKS_MINE := "user://world/zone_looks.json"   # the look panel's saves (the save sync carries the world folder)
 var _look_zone := -2
@@ -510,15 +532,37 @@ func apply_look(force := false) -> void:
 	var id := int(zone.info.get("id", -1)) if zone else -1
 	if id == _look_zone and not force:
 		return
+	var first := _look_zone == -2
 	_look_zone = id
 	var all := looks()
 	var t := {}
 	t.merge(all.get("default", {}), true)
 	t.merge(all.get(str(id), {}), true)
 	t.merge(cli_tune, true)
+	if first or force or not remastered or t == tune:
+		finish_look_blend()
+		tune = t
+		if remastered:
+			set_remastered(true)
+		return
+	# eased from what is on screen now (part way through another blend too) to the new zone's look
+	# (a value missing from the old blend's one side is the code's own default, unknown here: its end value then)
+	var now := {}
+	for k in tune.keys():
+		now[k] = _t(k, float(tune[k])) if _look_from.has(k) == _look_to.has(k) else float(tune[k])
+	finish_look_blend()
+	_look_from = now
+	_look_to = t
 	tune = t
-	if remastered:
-		set_remastered(true)
+	_look_mix = 0.0
+	_look_step = 0.0
+
+
+## The look as it will be: any blend in progress ended (the look panel's edits, a forced look).
+static func finish_look_blend() -> void:
+	_look_mix = 1.0
+	_look_from = {}
+	_look_to = {}
 var _fill_now := Vector3(-1, -1, -1)
 var _cam_attr: CameraAttributesPractical
 var _mist: FogVolume
@@ -541,6 +585,8 @@ const REALM_GRADES := {
 
 ## Graphics.apply_scene: on / off (and again after any graphics change - the classic settings it overrides).
 static func _t(key: String, v: float) -> float:
+	if _look_mix < 1.0 and (_look_from.has(key) or _look_to.has(key)):
+		return lerpf(float(_look_from.get(key, v)), float(_look_to.get(key, v)), smoothstep(0.0, 1.0, _look_mix))
 	return float(tune.get(key, v))
 
 
