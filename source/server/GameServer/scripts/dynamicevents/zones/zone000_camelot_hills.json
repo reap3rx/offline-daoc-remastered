@@ -182,7 +182,7 @@
       "id": "camelot_hills_barrow_wakes",
       "title": "The Barrow Wakes",
       "levels": [5, 7],
-      "hint": "The dead are restless in the eastern barrows...",
+      "hint": "The dead are restless in the old barrows...",
       "rest_s": 45,
       "first_delay_s": [120, 900],
       "interval_s": [1500, 2700],
@@ -194,7 +194,7 @@
           "name": "Protect Brother Aelred",
           "objective": "Protect Brother Aelred, who is sealing the barrow door with holy water",
           "announce": "Brother Aelred has come to seal the old barrow before the dead walk again. They are already walking.",
-          "center": [1368, 1481, 91.0],
+          "center": [1180, 1380, 53.9],
           "radius": 70,
           "duration_s": 180,
           "protect": {
@@ -204,15 +204,15 @@
             "model": 28,
             "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
             "health_mult": 10,
-            "pos": [1368, 1481, 91.0]
+            "pos": [1180, 1380, 53.9]
           },
           "waves": {
             "every_s": 30,
             "count": 2,
             "from": [
-              [1347, 1399, 79.9],
-              [1413, 1409, 87.6],
-              [1451, 1463, 90.8]
+              [1150, 1340, 54.0],
+              [1210, 1420, 57.7],
+              [1140, 1420, 47.5]
             ],
             "mobs": [
               {
@@ -244,7 +244,7 @@
           "name": "Clear Old Barrows",
           "objective": "Clear the old barrows",
           "announce": "They came from the old barrows. Follow them back and clear it out.",
-          "center": [1490, 1283, 90.8],
+          "center": [1165, 1310, 52.6],
           "radius": 60,
           "time_s": 1200,
           "kill": 12,
@@ -278,7 +278,7 @@
           "name": "The Barrow-Wight",
           "objective": "Defeat the Barrow-Wight",
           "announce": "The Barrow-Wight stands at the old barrows. Bring friends.",
-          "center": [1490, 1283, 90.8],
+          "center": [1165, 1310, 52.6],
           "radius": 70,
           "time_s": 1200,
           "boss": {
@@ -286,7 +286,7 @@
             "name": "The Barrow-Wight",
             "level": 9,
             "size": 71,
-            "pos": [1490, 1283, 90.8],
+            "pos": [1165, 1310, 52.6],
             "health_mult": 2.5
           },
           "adds": {
