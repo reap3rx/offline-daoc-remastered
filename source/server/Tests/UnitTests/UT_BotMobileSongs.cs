@@ -1000,21 +1000,19 @@ namespace DOL.UnitTests
         }
 
         [Test]
-        public void WardensDoNotAlternateAnActiveBladeturnAndPaladinsDoNotToggleActiveChant()
+        public void WardenAddsTheDamageChantBesideARunningBladeturnWithoutTogglingIt()
         {
-            // A solo Paladin now holds the damage chant in a fight (see SoloPaladinSwitchesOnceToTheDamageChant).
-            foreach (Type type in new[] { typeof(ClassWarden) })
-            {
-                Bot bot = NewBot(type); bot.CaptureCasts = true; bot.Attacking = true;
-                Spell anchor = Song(type == typeof(ClassWarden) ? "Bladeturn" : "EnduranceRegenBuff");
-                bot.InstantMiscSpells = new List<Spell> { anchor, Song("DamageAdd", id: 99972) };
-                var source = new ECSPulseEffect(new(bot, 0, 1, new SpellHandler(bot, anchor, Line)), anchor.Frequency);
-                source.Start();
-                bot.effectListComponent.BeginTick();
-                typeof(BotBrain).GetMethod("TryMaintainTankChant", Hidden).Invoke(bot.Brain, null);
-                Assert.That(bot.LastRequested, Is.Null, "No secondary without a safe native child window; never toggle anchor");
-                Assert.That(source.IsEnding, Is.False);
-            }
+            // Two chants at once (owner 2026-11-15, live patch 1.97): the fighting Warden keeps bladeturn running and
+            // starts the damage chant beside it - no switching between them.
+            Bot bot = NewBot(typeof(ClassWarden)); bot.CaptureCasts = true; bot.Attacking = true;
+            Spell anchor = Song("Bladeturn");
+            bot.InstantMiscSpells = new List<Spell> { anchor, Song("DamageAdd", id: 99972) };
+            var source = new ECSPulseEffect(new(bot, 0, 1, new SpellHandler(bot, anchor, Line)), anchor.Frequency);
+            source.Start();
+            bot.effectListComponent.BeginTick();
+            typeof(BotBrain).GetMethod("TryMaintainTankChant", Hidden).Invoke(bot.Brain, null);
+            Assert.That(bot.LastRequested?.ID, Is.EqualTo(99972), "the second chant of the pair");
+            Assert.That(source.IsEnding, Is.False, "bladeturn keeps running");
         }
 
         [Test]

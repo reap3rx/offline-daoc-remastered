@@ -363,12 +363,41 @@ namespace DOL.GS
         {
             if (!PulseSpellGroupsIgnoringOtherPulseSpells.Contains(spellHandler.Spell.Group))
             {
-                IEnumerable<ECSPulseEffect> otherPulseEffects = GetPulseEffects().Where(x => !PulseSpellGroupsIgnoringOtherPulseSpells.Contains(x.SpellHandler.Spell.Group));
+                List<ECSPulseEffect> otherPulseEffects = GetPulseEffects()
+                    .Where(x => x.SpellHandler != spellHandler && !PulseSpellGroupsIgnoringOtherPulseSpells.Contains(x.SpellHandler.Spell.Group))
+                    .OrderBy(x => x.StartTick).ToList();
+
+                // Two songs or chants at once (live patch 1.97; owner 2026-11-15, no more twisting): a Bard, Minstrel,
+                // Skald, Paladin or Warden keeps the newer of its running helpful songs beside the new one; the older is
+                // pushed out (its effect lingers out its own time, and it cannot be restarted until then: ECSPulseEffect).
+                int keep = RunsTwoSongs(Owner, spellHandler.Spell) ? 1 : 0;
+                if (keep > 0)
+                {
+                    List<ECSPulseEffect> songs = otherPulseEffects.Where(x => !x.IsEnding && !x.IsEnded &&
+                        RunsTwoSongs(Owner, x.SpellHandler.Spell) && x.SpellHandler.Spell.SpellType != spellHandler.Spell.SpellType).ToList();
+                    if (songs.Count > keep)
+                        songs.RemoveRange(0, songs.Count - keep);
+                    otherPulseEffects.RemoveAll(songs.Contains);
+                }
 
                 foreach (ECSPulseEffect otherPulseEffect in otherPulseEffects)
                     otherPulseEffect.End();
             }
         }
+
+        /// <summary>The classes that run two songs or chants at once (live patch 1.97): their helpful pulsing songs.</summary>
+        public static bool RunsTwoSongs(GameLiving living, Spell spell)
+        {
+            if (spell == null || !spell.IsPulsing || spell.IsHarmful || spell.IsFocus)
+                return false;
+            ICharacterClass characterClass = living is GamePlayer player ? player.CharacterClass :
+                living is IGamePlayer bot ? bot.CharacterClass : null;
+            return characterClass != null && (eCharacterClass)characterClass.ID is eCharacterClass.Bard or
+                eCharacterClass.Minstrel or eCharacterClass.Skald or eCharacterClass.Paladin or eCharacterClass.Warden;
+        }
+
+        /// <summary>How long a stopped or pushed-out song cannot be restarted: as long as its effect lingers (no twisting).</summary>
+        public static int SongRestartLockMs(Spell spell) => spell.Duration > 0 ? Math.Clamp(spell.Duration, 2_000, 10_000) : 5_000;
 
         public virtual void RequestPlayerUpdate(EffectHelper.PlayerUpdate playerUpdate)
         {

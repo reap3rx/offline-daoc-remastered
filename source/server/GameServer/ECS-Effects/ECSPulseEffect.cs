@@ -34,6 +34,12 @@ namespace DOL.GS
         {
             Owner.ActivePulseSpells.TryRemove(SpellHandler.Spell.SpellType, out _);
 
+            // A song or chant of the two-song classes (EffectListComponent.RunsTwoSongs) that stops - pushed out by a
+            // third, cancelled, or the instrument put away - cannot be started again until its lingering effect is
+            // gone: no keeping three going by switching between them (owner 2026-11-15).
+            if (!IsBeingReplaced && Owner.IsAlive && EffectListComponent.RunsTwoSongs(Owner, SpellHandler.Spell))
+                Owner.DisableSkill(SpellHandler.Spell, EffectListComponent.SongRestartLockMs(SpellHandler.Spell));
+
             if (SpellHandler.Spell.IsFocus)
             {
                 foreach (var pair in ChildEffects)
