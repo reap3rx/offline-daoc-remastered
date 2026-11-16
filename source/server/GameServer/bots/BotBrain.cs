@@ -2170,13 +2170,10 @@ namespace DOL.AI.Brain
             // support-only actor merely because a group exists.
             bool minstrelAtRange = !groupedSupport && !UsesMinstrelHybridCombat && (eCharacterClass)bot.CharacterClass.ID == eCharacterClass.Minstrel &&
                                     !IsUnderImmediateMeleePressure();
+            // A fighting performer draws its weapon and its songs play on (owner 2026-11-16: an equipped instrument is
+            // enough); a song started mid-fight can be interrupted by a hit, so it is tried again no sooner than 6 s.
             if (immediateCombat && !minstrelAtRange)
-            {
-                StopTwistedSong();
                 SwitchToUsableMeleeWeapon();
-                _nextSongTwistTick = GameLoop.GameLoopTime + 1_000;
-                return false;
-            }
 
             bool traveling = bot.IsMoving || bot.IsReturningAfterRelease ||
                              bot.Group?.LivingLeader?.IsMoving == true ||
@@ -2184,7 +2181,7 @@ namespace DOL.AI.Brain
                              bot.PersistentRecord?.Activity?.Contains("walking", StringComparison.OrdinalIgnoreCase) == true;
 
             Spell song = MaintainSongPair(bot, immediateCombat, traveling, ownerMoving);
-            _nextSongTwistTick = GameLoop.GameLoopTime + (song != null ? 250 : 1_000);
+            _nextSongTwistTick = GameLoop.GameLoopTime + (song == null ? 1_000 : immediateCombat ? 6_000 : 250);
             // Queuing a legal mobile song must not consume the movement turn.
             // Cast selectors still see the pending/active request and cannot
             // enqueue another spell; follow/route decisions may run alongside it.
@@ -2439,41 +2436,23 @@ namespace DOL.AI.Brain
             return pet == null ? null : spell.Target == eSpellTarget.GROUP ? Body : pet;
         }
 
+        /// <summary>
+        /// An instrument equipped for songs (owner 2026-11-16: equipped is enough - never drawn, and any instrument plays
+        /// any song, live patch 1.97): one from the bags goes into an empty two-handed or ranged slot. No weapon switch.
+        /// </summary>
         internal static bool TryEquipRealInstrument(GameLiving bot, int requiredInstrument)
         {
-            bool CorrectInstrument(DbInventoryItem item) =>
-                item?.Object_Type == (int)eObjectType.Instrument &&
-                (requiredInstrument <= 0 || item.DPS_AF == requiredInstrument);
-
-            if (CorrectInstrument(bot.ActiveWeapon))
+            if (SpellHandler.EquippedInstrument(bot) != null)
                 return true;
-
-            DbInventoryItem distance = bot.Inventory?.GetItem(eInventorySlot.DistanceWeapon);
-            if (CorrectInstrument(distance))
-            {
-                bot.SwitchWeapon(eActiveWeaponSlot.Distance);
-                return true;
-            }
-
-            DbInventoryItem twoHand = bot.Inventory?.GetItem(eInventorySlot.TwoHandWeapon);
-            if (CorrectInstrument(twoHand))
-            {
-                bot.SwitchWeapon(eActiveWeaponSlot.TwoHanded);
-                return true;
-            }
-
             DbInventoryItem packed = bot.Inventory?.AllItems.FirstOrDefault(item =>
                 item != null && item.SlotPosition >= (int)eInventorySlot.FirstBackpack &&
-                item.SlotPosition <= (int)eInventorySlot.LastBackpack && CorrectInstrument(item));
-            if (packed != null && bot.Inventory.MoveItem(
-                    (eInventorySlot)packed.SlotPosition,
-                    eInventorySlot.TwoHandWeapon,
-                    packed.Count))
-            {
-                bot.SwitchWeapon(eActiveWeaponSlot.TwoHanded);
-                return CorrectInstrument(bot.ActiveWeapon);
-            }
-
+                item.SlotPosition <= (int)eInventorySlot.LastBackpack && item.Object_Type == (int)eObjectType.Instrument);
+            if (packed == null)
+                return false;
+            foreach (eInventorySlot slot in new[] { eInventorySlot.TwoHandWeapon, eInventorySlot.DistanceWeapon })
+                if (bot.Inventory.GetItem(slot) == null &&
+                    bot.Inventory.MoveItem((eInventorySlot)packed.SlotPosition, slot, packed.Count))
+                    return true;
             return false;
         }
 

@@ -228,8 +228,9 @@ namespace DOL.GS.Spells
 			{
 				Caster.Mana -= pulsePower;
 
-				if (Spell.InstrumentRequirement != 0 || !HasPositiveEffect)
-					SendEffectAnimation(Caster, 0, true, 1); // Pulsing auras or songs.
+				// Owner 2026-11-16: a helpful song or chant shows (and sounds) only when it is cast, not every pulse.
+				if (!HasPositiveEffect)
+					SendEffectAnimation(Caster, 0, true, 1); // Pulsing auras.
 
 				StartSpell(Target);
 			}
@@ -247,13 +248,23 @@ namespace DOL.GS.Spells
 		/// <returns>true if right instrument</returns>
 		protected bool CheckInstrument()
 		{
-			DbInventoryItem instrument = Caster.ActiveWeapon;
-
 			// From patch 1.97:  Flutes, Lutes, and Drums will now be able to play any song type, and will no longer be limited to specific songs.
-			if (instrument == null || instrument.Object_Type != (int)eObjectType.Instrument ) // || (instrument.DPS_AF != 4 && instrument.DPS_AF != m_spell.InstrumentRequirement))
-				return false;
+			// Owner 2026-11-16: an equipped instrument is enough - it no longer has to be the weapon in hand, so a song is
+			// played (and keeps playing) with a sword drawn.
+			return EquippedInstrument(Caster) != null;
+		}
 
-			return true;
+		/// <summary>The caster's instrument: the one in hand, else one equipped in the two-handed or ranged slot.</summary>
+		public static DbInventoryItem EquippedInstrument(GameLiving living)
+		{
+			static bool IsInstrument(DbInventoryItem item) => item?.Object_Type == (int)eObjectType.Instrument;
+			if (IsInstrument(living?.ActiveWeapon))
+				return living.ActiveWeapon;
+			DbInventoryItem item = living?.Inventory?.GetItem(eInventorySlot.TwoHandWeapon);
+			if (IsInstrument(item))
+				return item;
+			item = living?.Inventory?.GetItem(eInventorySlot.DistanceWeapon);
+			return IsInstrument(item) ? item : null;
 		}
 
 		/// <summary>
@@ -333,7 +344,10 @@ namespace DOL.GS.Spells
 
 		public virtual bool CasterIsAttacked(GameLiving attacker)
 		{
-			if (Spell.Uninterruptible)
+			// Songs are interrupted by an attack at any point of their cast (owner 2026-11-16: the price of two songs at
+			// once and of playing with a weapon drawn); once played, a hit no longer stops them.
+			bool song = Spell.InstrumentRequirement != 0;
+			if (Spell.Uninterruptible && !song)
 				return false;
 
 			NecromancerPet necromancerPet = Caster as NecromancerPet;
@@ -352,8 +366,8 @@ namespace DOL.GS.Spells
 
 			if (CastState is not eCastState.Focusing)
 			{
-				// Only interrupt if we're under 50% of the way through the cast.
-				if (!IsInCastingPhase || GameLoop.GameLoopTime >= _castStartTick + _calculatedCastTime * 0.5)
+				// Only interrupt if we're under 50% of the way through the cast (a song: anywhere in it).
+				if (!IsInCastingPhase || !song && GameLoop.GameLoopTime >= _castStartTick + _calculatedCastTime * 0.5)
 					return false;
 			}
 
@@ -2270,7 +2284,7 @@ namespace DOL.GS.Spells
 
 			if (Spell.InstrumentRequirement != 0)
 			{
-				DbInventoryItem instrument = Caster.ActiveWeapon;
+				DbInventoryItem instrument = EquippedInstrument(Caster);
 
 				if (instrument != null)
 				{

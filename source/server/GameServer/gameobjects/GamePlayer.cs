@@ -5039,19 +5039,8 @@ namespace DOL.GS
                 StopCurrentSpellcast();
             }
 
-            foreach (Spell spell in ActivePulseSpells.Values)
-            {
-                if (spell.InstrumentRequirement != 0)
-                {
-                    ECSPulseEffect effect = EffectListService.GetPulseEffectOnTarget(this, spell);
-
-                    if (effect != null)
-                    {
-                        Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.SwitchWeapon.SpellCancelled"), eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
-                        effect.End();
-                    }
-                }
-            }
+            // Songs keep playing whatever weapon is drawn (owner 2026-11-16): an equipped instrument is enough
+            // (SpellHandler.EquippedInstrument) - it no longer has to be in hand.
 
             DbInventoryItem rightHandItem = Inventory.GetItem(eInventorySlot.RightHandWeapon);
             DbInventoryItem leftHandItem = Inventory.GetItem(eInventorySlot.LeftHandWeapon);

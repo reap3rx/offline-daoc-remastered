@@ -22,14 +22,14 @@ namespace DOL.GS
             if (bot?.Inventory == null || bot.CharacterClass == null ||
                 !Applies((eCharacterClass)bot.CharacterClass.ID)) return false;
             bool added = false;
-            foreach (eInstrumentType type in new[] { eInstrumentType.Drum, eInstrumentType.Flute, eInstrumentType.Lute })
+            // One instrument plays every song (live patch 1.97; owner 2026-11-16): a bot needs one, not one of each kind.
+            foreach (eInstrumentType type in new[] { eInstrumentType.Lute })
             {
-                if (bot.Inventory.AllItems.Any(item => item.Object_Type == (int)eObjectType.Instrument &&
-                    item.DPS_AF == (int)type && item.Model > 0 &&
+                if (bot.Inventory.AllItems.Any(item => item.Object_Type == (int)eObjectType.Instrument && item.Model > 0 &&
                     (item.SlotPosition == Slot.RANGED || item.SlotPosition == Slot.TWOHAND ||
                      item.SlotPosition >= (int)eInventorySlot.FirstBackpack && item.SlotPosition <= (int)eInventorySlot.LastBackpack))) continue;
 
-                eInventorySlot preferred = type == eInstrumentType.Drum ? eInventorySlot.DistanceWeapon : eInventorySlot.TwoHandWeapon;
+                eInventorySlot preferred = eInventorySlot.TwoHandWeapon;
                 eInventorySlot alternate = preferred == eInventorySlot.DistanceWeapon ? eInventorySlot.TwoHandWeapon : eInventorySlot.DistanceWeapon;
                 eInventorySlot slot = bot.Inventory.GetItem(preferred) == null ? preferred :
                     bot.Inventory.GetItem(alternate) == null ? alternate :

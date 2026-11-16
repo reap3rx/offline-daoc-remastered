@@ -191,21 +191,20 @@ public class UT_CompanionEquipmentDispatch
     [TestCase(eRealm.Albion, eCharacterClass.Minstrel)]
     public void StarterKitIsCompleteIdempotentAndRotatesRealInstruments(eRealm realm, eCharacterClass cls)
     {
+        // One instrument plays every song and only has to be equipped (owner 2026-11-16, live patch 1.97): the kit is
+        // one lute in the two-handed slot, and a song of any kind never switches the weapon in hand.
         var bot = Make(realm, cls, 1, false);
         Assert.That(BotStarterInstruments.Ensure(bot), Is.True);
         var original = bot.Inventory.AllItems.ToArray();
-        Assert.That(original.Length, Is.EqualTo(3));
+        Assert.That(original.Length, Is.EqualTo(1));
+        Assert.That(bot.Inventory.GetItem(eInventorySlot.TwoHandWeapon).DPS_AF, Is.EqualTo((int)eInstrumentType.Lute));
         Assert.That(BotStarterInstruments.Ensure(bot), Is.False);
-        foreach (var type in new[] { eInstrumentType.Drum, eInstrumentType.Flute, eInstrumentType.Lute,
-            eInstrumentType.Drum, eInstrumentType.Lute, eInstrumentType.Flute })
+        var inHand = bot.ActiveWeapon;
+        foreach (var type in new[] { eInstrumentType.Drum, eInstrumentType.Flute, eInstrumentType.Lute })
         {
             Assert.That((bool)typeof(BotBrain).GetMethod("TryEquipRealInstrument", BindingFlags.NonPublic | BindingFlags.Static)
                 .Invoke(null, new object[] { bot, (int)type }), Is.True);
-            Assert.That(bot.ActiveWeapon.DPS_AF, Is.EqualTo((int)type));
-            Assert.That(bot.ActiveWeapon.Model, Is.EqualTo(BotStarterInstruments.ModelFor(type)));
-            Assert.That(bot.ActiveWeapon.Level, Is.EqualTo(1));
-            Assert.That(bot.ActiveWeapon.IsTradable, Is.False);
-            Assert.That(bot.ActiveWeapon.IsDropable, Is.False);
+            Assert.That(bot.ActiveWeapon, Is.SameAs(inHand));
         }
         Assert.That(bot.Inventory.AllItems, Is.EquivalentTo(original));
     }
@@ -214,22 +213,17 @@ public class UT_CompanionEquipmentDispatch
     {
         var bot = Make(eRealm.Hibernia, eCharacterClass.Bard, 1, false);
         BotStarterInstruments.Ensure(bot);
-        var drum = bot.Inventory.AllItems.Single(item => item.DPS_AF == (int)eInstrumentType.Drum);
-        var flute = bot.Inventory.AllItems.Single(item => item.DPS_AF == (int)eInstrumentType.Flute);
-        var lute = bot.Inventory.AllItems.Single(item => item.DPS_AF == (int)eInstrumentType.Lute);
-        bot.Inventory.RemoveItem(drum);
-        bot.Inventory.RemoveItem(flute);
-        bot.Inventory.MoveItem((eInventorySlot)lute.SlotPosition, eInventorySlot.TwoHandWeapon, lute.Count);
-        // Drum already exists in a backpack; only the flute is missing.
-        bot.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, drum);
+        var lute = bot.Inventory.AllItems.Single(item => item.Object_Type == (int)eObjectType.Instrument);
+        bot.Inventory.MoveItem((eInventorySlot)lute.SlotPosition, eInventorySlot.FirstEmptyBackpack, lute.Count);
         while (bot.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack) != eInventorySlot.Invalid)
             bot.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, GameInventoryItem.Create(new DbItemTemplate {
                 Id_nb = Guid.NewGuid().ToString(), Name = "earned loot", MaxCount = 1 }));
         var loot = bot.Inventory.AllItems.ToArray();
-        Assert.That(BotStarterInstruments.Ensure(bot), Is.True);
-        Assert.That(bot.Inventory.GetItem(eInventorySlot.DistanceWeapon).DPS_AF, Is.EqualTo((int)eInstrumentType.Flute));
+        Assert.That(BotStarterInstruments.Ensure(bot), Is.False, "it has an instrument (in its bag)");
+        Assert.That((bool)typeof(BotBrain).GetMethod("TryEquipRealInstrument", BindingFlags.NonPublic | BindingFlags.Static)
+            .Invoke(null, new object[] { bot, (int)eInstrumentType.Drum }), Is.True);
+        Assert.That(bot.Inventory.GetItem(eInventorySlot.TwoHandWeapon), Is.SameAs(lute), "equipped from the bag");
         foreach (var item in loot) Assert.That(bot.Inventory.AllItems.Contains(item), Is.True);
-        Assert.That(BotStarterInstruments.Ensure(bot), Is.False);
     }
 
     [Test] public void SkaldsUseVocalChantsAndAreNotGivenUnusableInstruments()
