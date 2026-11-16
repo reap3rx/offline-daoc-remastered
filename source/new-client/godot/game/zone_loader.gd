@@ -87,6 +87,7 @@ func load_zone(content_dir: String, terrain_set_name := "blend", texture_set_nam
 	prof["fixtures"] = Time.get_ticks_usec() - t
 	_build_lights()
 	_build_placed_lights()
+	_build_gates()
 	# where the time went (owner 2026-10-28: loading times - which part?): the textures are part of the models' time
 	prof["textures"] = materials.load_usec
 	var parts := []
@@ -95,6 +96,74 @@ func load_zone(content_dir: String, terrain_set_name := "blend", texture_set_nam
 			parts.append("%s %d" % [k, int(prof[k]) / 1000])
 	print("zone %s built in %d ms (%s; %d textures, %d lamps)" % [info.name, Time.get_ticks_msec() - t0, ", ".join(parts),
 			materials.load_count, _lamps])
+
+
+# ---------------------------------------------------------------- shut gates
+
+## Ways out of a zone that lead nowhere, shut with a gate (owner 2026-11-15: an opening in Camelot's west wall, by
+## Guard Eraedus and the bindstone clerk - "you will fall out of the map if you go through"). The 1.65 city has the
+## passage but no zone jump behind it (zonejump.csv: only Camelot Hills and the Black Mountains), its floor ends eleven
+## metres in, and the only thing across it is on the floor layer, which does not stop a walker. Each: the gate's
+## middle at the floor [x, y, z] (the zone's metres), its width, height, and the way its width runs ("x" or "z").
+## The gate itself is mine (a gap-fill: planks and iron bands drawn here, no art of the game's).
+const SHUT_GATES := {26: [{"at": [612.9, 211.2, 403.3], "wide": 7.4, "high": 9.0, "along": "z"}]}   # (the passage is over 6.8 m high)
+
+
+func _build_gates() -> void:
+	for g in SHUT_GATES.get(int(info.get("id", -1)), []):
+		var wide := float(g.wide)
+		var high := float(g.high)
+		var size := Vector3(0.3, high, wide) if String(g.along) == "z" else Vector3(wide, high, 0.3)
+		var body := StaticBody3D.new()
+		body.name = "ShutGate"
+		body.collision_layer = LAYER_WALL
+		body.collision_mask = 0
+		body.position = Vector3(float(g.at[0]), float(g.at[1]) + high * 0.5, float(g.at[2]))
+		var shape := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = size
+		shape.shape = box
+		body.add_child(shape)
+		var mi := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = size
+		mi.mesh = bm
+		var mat := StandardMaterial3D.new()
+		mat.albedo_texture = _gate_texture()
+		mat.uv1_scale = Vector3(maxf(1.0, round(wide / 2.4)) * 3.0, 2.0, 1.0)   # (a box mesh's faces share a 3 x 2 sheet)
+		mat.roughness = 0.9
+		mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+		mi.material_override = mat
+		body.add_child(mi)
+		add_child(body)
+
+
+## Dark oak planks under three iron bands with studs.
+static func _gate_texture() -> Texture2D:
+	var w := 128
+	var h := 256
+	var img := Image.create(w, h, true, Image.FORMAT_RGB8)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 2611
+	for x in w:
+		var plank := x / 16
+		var tone := 0.85 + 0.15 * sin(float(plank) * 12.9898) * 0.5 + 0.075
+		var seam := x % 16 == 0
+		for y in h:
+			var grain := 0.92 + 0.08 * sin(float(y) * 0.11 + float(plank) * 3.1) + rng.randf_range(-0.03, 0.03)
+			var c := Color(0.20, 0.13, 0.08) * tone * grain
+			if seam:
+				c = Color(0.05, 0.035, 0.025)
+			var band := y % 86
+			if band >= 30 and band < 42:                       # an iron band
+				c = Color(0.11, 0.11, 0.12) * (0.9 + rng.randf_range(-0.05, 0.05))
+				if band == 30 or band == 41:
+					c = Color(0.04, 0.04, 0.045)
+				if (x % 16) >= 6 and (x % 16) < 10 and band >= 34 and band < 38:
+					c = Color(0.20, 0.20, 0.21)                # a stud
+			img.set_pixel(x, y, c)
+	img.generate_mipmaps()
+	return ImageTexture.create_from_image(img)
 
 
 # ---------------------------------------------------------------- heights
