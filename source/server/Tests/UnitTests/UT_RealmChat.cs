@@ -109,6 +109,7 @@ public class UT_RealmChat
     [TestCase(eClassType.Hybrid, eCharacterClass.Healer, true)]
     [TestCase(eClassType.Hybrid, eCharacterClass.Bard, true)]
     [TestCase(eClassType.PureTank, eCharacterClass.Armsman, false)]
+    [TestCase(eClassType.ListCaster, eCharacterClass.Valewalker, false)]
     [TestCase(eClassType.Hybrid, eCharacterClass.Paladin, false)]
     public void CastersAndHealers_RunFromFightsTheyAreLosing(eClassType type, eCharacterClass cls, bool runs)
     {

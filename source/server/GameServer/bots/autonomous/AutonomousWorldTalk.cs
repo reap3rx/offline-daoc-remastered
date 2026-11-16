@@ -314,8 +314,9 @@ public static class AutonomousWorldTalk
 
     /// <summary>Who runs from a fight it's losing rather than trading blows: casters and healers (and the bard).</summary>
     public static bool Runs(eClassType type, eCharacterClass cls) =>
-        type == eClassType.ListCaster || cls is eCharacterClass.Cleric or eCharacterClass.Druid or eCharacterClass.Healer or
-            eCharacterClass.Shaman or eCharacterClass.Bard;
+        type == eClassType.ListCaster && cls != eCharacterClass.Valewalker ||     // (a Valewalker fights in melee)
+        cls is eCharacterClass.Cleric or eCharacterClass.Druid or eCharacterClass.Healer or eCharacterClass.Shaman or
+            eCharacterClass.Bard;
 
     private static bool Runs(GameBot bot) => bot?.CharacterClass != null &&
         Runs(bot.CharacterClass.ClassType, (eCharacterClass)bot.CharacterClass.ID);
