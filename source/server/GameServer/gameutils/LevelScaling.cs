@@ -12,7 +12,7 @@ namespace DOL.GS
     /// matter where they go? Kind of how GW2 does it, where you feel stronger and maybe the content is easy, but not
     /// trivial").
     ///
-    /// Against any ordinary monster, a player (or their pet; at an event, a bot too) above the monster's level + MARGIN
+    /// Against any ordinary monster, a player or a bot (or their pet) above the monster's level + MARGIN
     /// fights as if they were that level: their damage to it shrinks and its damage to them grows, by the ratio of
     /// their level to the cap - steeply enough that a level 50 among level 22s wins easily but not in a blow. Lower
     /// players are not lifted (as in GW2). The cap is per monster, so it follows the monster wherever you go.
@@ -48,6 +48,18 @@ namespace DOL.GS
             GameBot b when atEvent || WithPlayers(b) => b,
             GameNPC { Brain: IControlledBrain cb } => cb.GetLivingOwner() is GameLiving o &&
                 (o is GamePlayer || o is GameBot ob && (atEvent || WithPlayers(ob))) ? o : null,
+            _ => null
+        };
+
+        /// <summary>The one whose level counts for the damage of a fight: a player, any bot, or the pet of either.
+        /// Owner 2026-11-17: "That way everyone is the same" - a level 35 bot answering a yell in a starter zone fights
+        /// the monster at its level + 3 like anyone. Only the fighting: a bot on its own still picks its pulls and earns
+        /// its experience and drops at its own level (Fighter, RewardConLevel).</summary>
+        static GameLiving Combatant(GameLiving l) => l switch
+        {
+            GamePlayer p => p,
+            GameBot b => b,
+            GameNPC { Brain: IControlledBrain cb } => cb.GetLivingOwner() is GameLiving o && (o is GamePlayer || o is GameBot) ? o : null,
             _ => null
         };
 
@@ -104,13 +116,13 @@ namespace DOL.GS
                 return ALLY_OUT;
             if (target is EventNpc { IsEnemy: false, Role: EventRole.Ally or EventRole.Giver } && IsEventFoe(attacker))
                 return ALLY_IN;
-            GameLiving you = Fighter(attacker, IsEventFoe(target));
+            GameLiving you = Combatant(attacker);
             if (you != null)
             {
                 int gap = Gap(you, target);
                 return gap <= 0 ? 1.0 : Math.Max(MIN_OUT, Math.Pow((you.Level - gap) / (double) you.Level, OUT_EXP));
             }
-            GameLiving victim = Fighter(target, IsEventFoe(attacker));
+            GameLiving victim = Combatant(target);
             if (victim != null)
             {
                 int gap = Gap(victim, attacker);
