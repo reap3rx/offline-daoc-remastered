@@ -674,9 +674,21 @@ namespace DOL.AI.Brain
             // be processed twice by player-led companions.
         }
 
+        /// <summary>The monster the player ordered at (/pull, or the player attacking it). Owner 2026-11-17: "the pull command
+        /// wasn't working ... she was waiting until I got hit to attack" - the monsters had turned grey to the companion
+        /// (level 9 on level 2s), and the no-grey rule is for picking its own pulls; the player's order is the player's
+        /// call, so a grey monster they name is fought.</summary>
+        private GameLiving _playerOrderedTarget;
+
+        /// <summary>The player named this monster (PlayerLedPullCoordinator's tank pull): a grey one is fought too.</summary>
+        public void MarkPlayerOrder(GameLiving target) => _playerOrderedTarget = target;
+
+        private bool CanAttackOnOrder(GameLiving target) =>
+            target != null && (target == _playerOrderedTarget ? CanDefendAgainst(target) : CanAggroTarget(target));
+
         public virtual bool OrderPull(GameLiving target)
         {
-            if (target == null || !target.IsAlive || !CanAggroTarget(target))
+            if (target == null || !target.IsAlive || !CanAttackOnOrder(target))
                 return false;
             PlayerPartyOrders.StandForFight(BotBody);       // (sat at your camp or resting on your order: up for the pull)
 
@@ -708,6 +720,7 @@ namespace DOL.AI.Brain
         {
             CompanionEngagementMode.RememberPull(AssistedPlayer, target);
             if (!CompanionEngagementMode.Allows(Body, target)) return;
+            _playerOrderedTarget = target;
             PlayerPartyOrders.StandForFight(BotBody);       // (sat at your camp or resting on your order: up and fighting)
             if (CompanionPvpEngagement.Enemy(CompanionPvpEngagement.Leader(Body), target))
                 BotBody.WakeTemporaryCompanionRest();
@@ -721,8 +734,13 @@ namespace DOL.AI.Brain
             if (ActiveOrderedPullTarget != target || !HasAggro)
             {
                 if (BotBody.IsRecoveryResting) BotBody.WakeRecoveryRest();
-                OrderPull(target);
+                bool pulled = OrderPull(target);
                 NextThinkTick = GameLoop.GameLoopTime;
+                if (BotBody?.IsPlayerLedGroup == true)
+                    log.Info($"PULL_ASSIST bot={Body.Name} target=\"{target.Name}\" pulled={pulled} state={FSM.GetCurrentState()?.GetType().Name} " +
+                        $"aggro={HasAggro} attacking={Body.IsAttacking} casting={Body.IsCasting} weapon={Body.ActiveWeaponSlot} " +
+                        $"targetObj=\"{Body.TargetObject?.Name}\" dist={(int)Body.GetDistanceTo(target)} resting={BotBody.IsRecoveryResting} " +
+                        $"restLock={BotBody.IsTemporaryCompanionRestLocked} grey={Body.IsObjectGreyCon(target)}");
             }
         }
 
@@ -761,7 +779,7 @@ namespace DOL.AI.Brain
             {
                 if (_orderedPullTarget?.IsAlive == true &&
                     _orderedPullTarget.ObjectState is GameObject.eObjectState.Active &&
-                    CanAggroTarget(_orderedPullTarget))
+                    CanAttackOnOrder(_orderedPullTarget))
                     return _orderedPullTarget;
 
                 _orderedPullTarget = null;
@@ -3556,7 +3574,7 @@ namespace DOL.AI.Brain
         private void TryCommandCompanionDruidPet(GameLiving target)
         {
             if (!CompanionFollowPolicy.SendsDruidPet(BotBody) || target?.IsAlive != true ||
-                !CanAggroTarget(target) || !CompanionEngagementMode.Allows(Body, target) ||
+                !CanAttackOnOrder(target) || !CompanionEngagementMode.Allows(Body, target) ||
                 !Body.IsWithinRadius(target, GROUP_DEFENSE_ASSIST_RADIUS) ||
                 Body.ControlledBrain is not { Body: { IsAlive: true } } pet) return;
             // The Druid remains a support actor. Only its pet gets an attack

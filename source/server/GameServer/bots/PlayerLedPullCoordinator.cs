@@ -25,6 +25,22 @@ namespace DOL.GS
             public int Finished;
         }
         private static readonly ConditionalWeakTable<Group, GroupState> States = new();
+        private static readonly DOL.Logging.Logger Log = DOL.Logging.LoggerManager.Create(typeof(PlayerLedPullCoordinator));
+
+        /// <summary>One line per /pull: each bot of the group and the checks that let it join or keep it out (owner
+        /// 2026-11-17: a companion stopped answering /pull).</summary>
+        private static void LogOrder(GamePlayer player, GameLiving target, Group group, GameBot[] helpers)
+        {
+            try
+            {
+                string bots = string.Join("; ", group.GetMembersInTheGroup().OfType<GameBot>().Select(b =>
+                    $"{b.Name} avail={Available(b, player)} lead={(b.PlayerGroupLeader == player)} near={b.IsWithinRadius(target, BotBrain.GROUP_DEFENSE_ASSIST_RADIUS)} " +
+                    $"helper={helpers.Contains(b)} support={BotPartyRoles.IsSupport(b)} tank={BotPartyRoles.IsTank(b)} rest={b.IsTemporaryCompanionRestLocked} " +
+                    $"allows={CompanionEngagementMode.Allows(b, target)} brain={b.Brain?.GetType().Name}"));
+                Log.Info($"PULL_ORDER leader={player.Name} target=\"{target.Name}\" dist={(int)player.GetDistanceTo(target)} bots=[{bots}]");
+            }
+            catch (Exception e) { Log.Warn($"PULL_ORDER log failed: {e.Message}"); }
+        }
 
         public static string Begin(GamePlayer player, GameLiving target)
         {
@@ -42,6 +58,7 @@ namespace DOL.GS
                 .Where(bot => Available(bot, player) && bot.IsWithinRadius(target, BotBrain.GROUP_DEFENSE_ASSIST_RADIUS) &&
                     bot.Brain is BotBrain).ToArray();
             foreach (GameBot bot in helpers) bot.EnterPlayerLedGroup(player);
+            LogOrder(player, target, group, helpers);
             if (CompanionPvpEngagement.Enemy(player, target) && helpers.Any(bot => CompanionPvpEngagement.Leader(bot) == player))
             {
                 // RvR is not a PvE tank-contact pull. A resting companion or an
@@ -75,6 +92,7 @@ namespace DOL.GS
             Volatile.Write(ref state.Pending, order);
             foreach (GameBot bot in helpers)
                 if (bot != tank) ((BotBrain)bot.Brain).PrepareForTankPull();
+            ((BotBrain)tank.Brain).MarkPlayerOrder(target);
             if (!((BotBrain)tank.Brain).OrderPull(target))
             {
                 Cancel(order, false);
