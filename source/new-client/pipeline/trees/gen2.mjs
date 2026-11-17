@@ -41,7 +41,37 @@ for (const spec of specs) {
         m.makeRotationAxis(new T.Vector3(Math.sin(a), 0, -Math.cos(a)), 0.09 + 0.04 * i).setPosition(Math.cos(a) * off, 0, Math.sin(a) * off);
       }
       const strip = g => { const c = new T.BufferGeometry(); c.setAttribute('position', g.attributes.position.clone()); c.setAttribute('normal', g.attributes.normal.clone()); c.setAttribute('uv', g.attributes.uv.clone()); c.setIndex(g.index.clone()); return c.applyMatrix4(m); };
-      barks.push(strip(tree.branchesMesh.geometry)); leaves.push(strip(tree.leavesMesh.geometry));
+      const bg = tree.branchesMesh.geometry, lg = tree.leavesMesh.geometry;
+      barks.push(strip(bg)); leaves.push(strip(lg));
+      // the trunk carried down to the tree's lowest point (owner 2026-11-17: pines and spruces whose boughs hang
+      // below the trunk's foot stood on a floating trunk once the boughs were put at the ground): EZ-Tree starts
+      // the trunk with one ring, its first vertices; a plain cylinder of that ring goes from there down
+      {
+        const P = bg.attributes.position, y0 = P.getY(0);
+        let cx = 0, cz = 0, k = 0, rad = 0;
+        for (let j = 0; j < P.count && Math.abs(P.getY(j) - y0) < 1e-4; j++) { cx += P.getX(j); cz += P.getZ(j); k++; }
+        cx /= k; cz /= k;
+        for (let j = 0; j < k; j++) rad = Math.max(rad, Math.hypot(P.getX(j) - cx, P.getZ(j) - cz));
+        let lo = Infinity;
+        for (const g of [bg, lg]) { const q = g.attributes.position; for (let j = 0; j < q.count; j++) lo = Math.min(lo, q.getY(j)); }
+        const drop = y0 - lo;
+        if (k >= 3 && drop > 0.05) {
+          // the ring itself, copied down: same sides, normals and bark u; v runs on at the trunk's own rate
+          const U = bg.attributes.uv, N = bg.attributes.normal, yb = lo - drop * 0.05;
+          const rate = (U.getY(k) - U.getY(0)) / Math.max(P.getY(k) - y0, 1e-4);
+          const pos = [], nor = [], uv = [], idx = [];
+          for (let r = 0; r < 2; r++) for (let j = 0; j < k; j++) {
+            const y = r === 0 ? y0 : yb;
+            pos.push(P.getX(j), y, P.getZ(j)); nor.push(N.getX(j), 0, N.getZ(j));
+            uv.push(U.getX(j), U.getY(j) + rate * (y - y0));
+          }
+          for (let j = 0; j < k - 1; j++) { const a0 = j, a1 = j + 1, b0 = k + j, b1 = k + j + 1; idx.push(a0, a1, b0, a1, b1, b0); }
+          const ext = new T.BufferGeometry();
+          ext.setAttribute('position', new T.Float32BufferAttribute(pos, 3)); ext.setAttribute('normal', new T.Float32BufferAttribute(nor, 3));
+          ext.setAttribute('uv', new T.Float32BufferAttribute(uv, 2)); ext.setIndex(idx);
+          barks.push(ext.applyMatrix4(m));
+        }
+      }
     }
     const bark = mergeGeometries(barks), leaf = mergeGeometries(leaves);
     // to metres: the tallest point at the spec's height, the trunk's foot sunk into the ground like the original
