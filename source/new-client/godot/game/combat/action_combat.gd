@@ -442,8 +442,9 @@ func _float_text(oid: int, text: String, color: Color, size: int, lift: float) -
 	l.no_depth_test = true
 	l.fixed_size = true
 	l.pixel_size = 0.0012
-	l.font_size = size
-	l.outline_size = 10
+	l.font = UiArt.font(true, "damage")                   # (Options > Interface > TEXT AND FONTS: damage numbers)
+	l.font_size = UiArt.tsize(size, "damage")
+	l.outline_size = roundi(10 * UiArt.text_scale("damage"))
 	l.modulate = color
 	l.render_priority = 10
 	viewer.add_child(l)

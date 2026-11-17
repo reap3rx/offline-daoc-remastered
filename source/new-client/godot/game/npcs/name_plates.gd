@@ -30,7 +30,7 @@ var _pixel := 0.0
 
 
 func _ready() -> void:
-	_font = UiArt.font(true)
+	_font = UiArt.font(true, "names")
 
 
 func _process(_delta: float) -> void:
@@ -53,7 +53,7 @@ func _process_inner(_delta: float) -> void:
 	if manager == null or cam == null or manager.player == null:
 		return
 	var vp_h := get_viewport().get_visible_rect().size.y
-	var size := maxi(8, roundi(EM * vp_h))
+	var size := maxi(8, roundi(EM * vp_h * UiArt.text_scale("names")))   # (Options: its text size)
 	var pixel := 2.0 * tan(deg_to_rad(cam.fov * 0.5)) / vp_h
 	var resized := size != _size or not is_equal_approx(pixel, _pixel)
 	_size = size

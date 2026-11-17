@@ -1959,8 +1959,6 @@ const BELT_SCALE := 0.55
 const BELT_SIDE := 0.19
 const BELT_DROP := 0.1
 const BELT_LAYER := 1 << 11
-var _hip_skel: Skeleton3D
-var _hip_bone := -1
 var _light_at := Vector3.INF
 const BELT_GLASS := Vector3(0.0, 0.2, 0.28)            # the glass's middle in the model
 var _belt: Node3D
@@ -1975,38 +1973,55 @@ func _belt_tick() -> void:
 			if (g as GeometryInstance3D).layers != SELF_LAYER:
 				(g as GeometryInstance3D).layers = SELF_LAYER
 	var want := lantern and torch_on and torch != null and not flying
+	if _belt != null and not is_instance_valid(_belt):
+		_belt = null                                       # (the figure was rebuilt - a new outfit - and took it along)
 	if want and _belt == null and not _belt_failed:
 		_belt = _build_belt()
 		_belt_failed = _belt == null
 	if _belt == null:
 		return
+	if want and not _belt_on_hip():
+		want = false                                       # (no skeleton to hang it on: the light alone)
 	if _belt.visible != want:
 		_belt.visible = want
 	if want:
-		var hip := _hip_point()
-		if hip == Vector3.INF:
-			hip = global_transform * torch.position
-		_belt.global_position = hip
-		_belt.rotation.y = char_yaw + PI
-		_light_at = hip if _light_at == Vector3.INF or _light_at.distance_to(hip) > 2.0 else _light_at.lerp(hip, 0.2)
+		var at := _belt.global_position
+		_light_at = at if _light_at == Vector3.INF or _light_at.distance_to(at) > 2.0 else _light_at.lerp(at, 0.2)
 		torch.global_position = _light_at
 	else:
 		_light_at = Vector3.INF
 
 
-## Beside your pelvis, at your belt (world space); INF without a figure's skeleton.
-func _hip_point() -> Vector3:
+## The lantern hangs from the figure's pelvis bone itself (owner 2026-11-16: placed beside where the body was, it
+## "seems to be stuck to a point in space rather than to the character's model itself ... moving in circles, it either
+## went far away from the body or into it"): a BoneAttachment3D on "Bip01 Pelvis", the lantern set once at the belt -
+## beside the hip, a little below - in the bone's own space, so it turns, walks and sways with the body. False when the
+## figure has no such bone.
+var _hip_attach: BoneAttachment3D
+
+
+func _belt_on_hip() -> bool:
 	if _model == null:
-		return Vector3.INF
-	if _hip_skel == null or not is_instance_valid(_hip_skel) or not _model.is_ancestor_of(_hip_skel):
-		var sk := _model.find_children("*", "Skeleton3D", true, false)
-		_hip_skel = sk[0] if not sk.is_empty() else null
-		_hip_bone = _hip_skel.find_bone("Bip01 Pelvis") if _hip_skel else -1
-	if _hip_skel == null or _hip_bone < 0:
-		return Vector3.INF
-	var pelvis := _hip_skel.global_transform * _hip_skel.get_bone_global_pose(_hip_bone).origin
-	var side := Vector3(1, 0, 0).rotated(Vector3.UP, char_yaw + PI)
-	return pelvis + side * BELT_SIDE + Vector3(0, -BELT_DROP, 0)
+		return false
+	if _hip_attach != null and is_instance_valid(_hip_attach) and _model.is_ancestor_of(_hip_attach) \
+			and _belt.get_parent() == _hip_attach:
+		return true
+	var sk := _model.find_children("*", "Skeleton3D", true, false)
+	var skel: Skeleton3D = sk[0] if not sk.is_empty() else null
+	var bone := skel.find_bone("Bip01 Pelvis") if skel else -1
+	if bone < 0:
+		return false
+	if _hip_attach == null or not is_instance_valid(_hip_attach) or not _model.is_ancestor_of(_hip_attach):
+		_hip_attach = BoneAttachment3D.new()
+		_hip_attach.name = "LanternHip"
+		_hip_attach.bone_name = "Bip01 Pelvis"
+		skel.add_child(_hip_attach)
+	var pelvis := skel.global_transform * skel.get_bone_global_pose(bone)
+	var facing := Basis(Vector3.UP, char_yaw + PI)       # (the way you face now: the bone carries it from here)
+	var want := Transform3D(facing, pelvis.origin + facing.x * BELT_SIDE + Vector3(0, -BELT_DROP, 0))
+	_belt.reparent(_hip_attach, false)
+	_belt.transform = pelvis.affine_inverse() * want
+	return true
 
 
 func _build_belt() -> Node3D:

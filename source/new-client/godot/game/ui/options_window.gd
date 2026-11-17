@@ -9,7 +9,7 @@ extends ClassicWindow
 ## (owner: the client's default icon set). Saved in user://settings.cfg (keys in user://keybinds.cfg).
 
 const HEALTH_PLATES := preload("res://game/npcs/health_plates.gd")
-const PAGES := ["video", "audio", "controls", "interface", "chat", "windows", "controller"]
+const PAGES := ["video", "audio", "controls", "interface", "chat", "windows", "controller", "text"]
 const PAGE_NAMES := ["VIDEO", "AUDIO", "CONTROLS", "INTERFACE", "CHAT", "WINDOWS"]
 const RESOLUTIONS := [Vector2i(1280, 720), Vector2i(1366, 768), Vector2i(1600, 900), Vector2i(1920, 1080),
 		Vector2i(2560, 1080), Vector2i(2560, 1440), Vector2i(3440, 1440), Vector2i(3840, 2160)]
@@ -140,7 +140,7 @@ func show_page(p: String) -> void:
 	_status.text = ""
 	Pad.cancel_capture()
 	for k in _tabs:
-		var lit: bool = k == p or (k == "controls" and p == "controller")
+		var lit: bool = k == p or (k == "controls" and p == "controller") or (k == "interface" and p == "text")
 		_tabs[k].add_theme_color_override("font_color", Color(1, 0.8, 0.2) if lit else UiArt.CREAM)
 	for c in _list.get_children():
 		c.queue_free()
@@ -152,6 +152,7 @@ func show_page(p: String) -> void:
 		"chat": _chat()
 		"windows": _windows()
 		"controller": _controller()
+		"text": _text_page()
 	_scroll.scroll_vertical = 0
 
 
@@ -613,6 +614,9 @@ func _controls() -> void:
 
 
 func _interface() -> void:
+	var txt := UiArt.button("TEXT AND FONTS", Vector2(344, 20), 9)
+	txt.pressed.connect(show_page.bind("text"))
+	_list.add_child(txt)
 	_heading("INTERFACE")
 	# the modern HUD (owner 2026-11-02: a GW2-style layout with a DAoC feel) or the 1.65 windows
 	var style := String(settings.get_value("interface", "style", "classic"))
@@ -673,6 +677,71 @@ func _interface() -> void:
 	_row("REALM BOTS ON MAP", _toggle(UiArt.bot_option("map_dots"), func(on: bool): _save("bots", "map_dots", on)))
 	_hint("YOUR REALM'S GAMEBOTS AND COMPANIONS AS GREEN DOTS ON YOUR MAP (ALSO IN DUNGEONS). ENEMY BOTS NEVER SHOW.")
 	_hint("THE BOT ROSTER AND THE SERVER SETTINGS (XP RATES, BOT GOALS AND THE REST) ARE IN THE OFFLINE DAOC REBUILT LAUNCHER.")
+
+
+## TEXT AND FONTS (owner 2026-11-16: "text scale/style/weight options in the UI ... The more customization, the
+## better ... UI elements, name plates, damage numbers from the name plates, etc are all included and separate, so they
+## can be customized individually"; fonts "DAoC, modern, and some other ones that would look good and have some sort
+## of fantasy/visual appeal"): each part of the interface its own family, weight and size, with a line of its text
+## as it will look. Families and weights change at once; sizes as each part lays its text out again.
+func _text_page() -> void:
+	var back := UiArt.button("BACK TO INTERFACE", Vector2(344, 20), 9)
+	back.pressed.connect(show_page.bind("interface"))
+	_list.add_child(back)
+	_hint("EVERY PART OF THE INTERFACE HAS ITS OWN FONT, WEIGHT AND SIZE. \"SAME AS WINDOWS\" FOLLOWS THE WINDOWS AND MENUS' FONT.")
+	var fams: Array = UiArt.TEXT_FONT_ORDER
+	for part in UiArt.TEXT_PARTS:
+		var id := String(part[0])
+		_heading(String(part[1]).to_upper())
+		var sample := Label.new()
+		sample.text = "Moon Gleam  +12 Strength  Barrow Wakes  1,250"
+		sample.add_theme_font_override("font", UiArt.font(true, id))
+		sample.add_theme_color_override("font_color", UiArt.GOLD_HI)
+		sample.add_theme_color_override("font_shadow_color", UiArt.SHADOW)
+		sample.add_theme_constant_override("shadow_offset_x", 1)
+		sample.add_theme_constant_override("shadow_offset_y", 1)
+		sample.clip_text = true
+		sample.custom_minimum_size = Vector2(344, 0)
+		var resize := func(): sample.add_theme_font_size_override("font_size", UiArt.tsize(12, id))
+		resize.call()
+		_list.add_child(sample)
+		var names: Array = [] if id == "ui" else ["Same as windows"]
+		for f in fams:
+			names.append(String(UiArt.TEXT_FONTS[f][0]))
+		var cur := String(settings.get_value("text", "font_" + id, "classic" if id == "ui" else ""))
+		var at := fams.find(cur) + (0 if id == "ui" else 1)
+		_row("FONT", _choice(names, maxi(0, at), func(i: int):
+			var pick := ""
+			if id == "ui":
+				pick = String(fams[i])
+			elif i > 0:
+				pick = String(fams[i - 1])
+			_text_set("font_" + id, pick)))
+		_row("WEIGHT", _choice(UiArt.TEXT_WEIGHTS, int(settings.get_value("text", "weight_" + id, 1)), func(i: int):
+			_text_set("weight_" + id, i)))
+		_row("SIZE", _slider(float(settings.get_value("text", "size_" + id, 1.0)), float(part[2]), float(part[3]), 0.05,
+				func(x: float):
+			_text_set("size_" + id, x)
+			resize.call()))
+	_heading("RESET")
+	var reset := UiArt.button("ALL TEXT BACK TO CLASSIC", Vector2(200, 18), 9)
+	reset.pressed.connect(func():
+		settings = UiArt.load_settings()
+		if settings.has_section("text"):
+			settings.erase_section("text")
+		UiArt.save_settings(settings)
+		UiArt.reload_text()
+		if ui:
+			ui.text_changed()
+		show_page.call_deferred("text"))
+	_list.add_child(reset)
+
+
+func _text_set(key: String, value) -> void:
+	_save("text", key, value)
+	UiArt.reload_text()
+	if ui:
+		ui.text_changed()
 
 
 ## CHAT: which message types the chat block's two boxes show (top = chat, bottom = system), one ON / OFF per box.

@@ -105,9 +105,48 @@ static func region(name: String, r: Rect2) -> AtlasTexture:
 	return a
 
 
-static func font(bold := true) -> FontFile:
-	var file := "minionpro-bold.ttf" if bold else "minionpro-regular.ttf"
-	if not _fonts.has(file):
+## The interface's face for a part of it (TEXT_PARTS: "ui" the windows and menus, "chat", "names" ...), bold or not -
+## its font family, weight and size are the player's (owner 2026-11-16: "text scale/style/weight options in the UI would
+## be useful, because text like in the events window and quest window is small and thin hard to read ... Make sure UI
+## elements, name plates, damage numbers from the name plates, etc are all included and separate, so they can be
+## customized individually"; "DAoC, modern, and some other ones that would look good and have some sort of
+## fantasy/visual appeal"). Options > Interface > TEXT AND FONTS. Each part's face is one FontVariation that
+## reload_text() changes in place, so text already drawn takes a new family or weight at once; sizes apply as the part
+## is next laid out (text_scale).
+static func font(bold := true, part := "ui") -> Font:
+	var key := "%s|%s" % [part, bold]
+	if not _fonts.has(key):
+		_fonts[key] = FontVariation.new()
+		_set_face(_fonts[key], bold, part)
+	return _fonts[key]
+
+
+## The families: [shown name, bold file, regular file, variable weight axis (wght) or not]. Classic is the 1.65
+## client's Minion Pro, Modern its Myriad Pro; the rest are SIL Open Font License faces (content/ui/fonts/OFL-*.txt).
+const TEXT_FONTS := {
+	"classic": ["DAoC Classic (Minion)", "minionpro-bold.ttf", "minionpro-regular.ttf", false],
+	"modern": ["Modern (Myriad)", "myriadpro-semibold.ttf", "myriadpro-regular.ttf", false],
+	"storybook": ["Storybook (Alegreya)", "alegreya.ttf", "alegreya.ttf", true],
+	"engraved": ["Engraved (Cinzel)", "cinzel.ttf", "cinzel.ttf", true],
+	"old_print": ["Old Print (IM Fell)", "imfell.ttf", "imfell.ttf", false],
+	"readable": ["Easy Reading (Atkinson)", "atkinson-bold.ttf", "atkinson-regular.ttf", false],
+}
+const TEXT_FONT_ORDER := ["classic", "modern", "storybook", "engraved", "old_print", "readable"]
+## [id, shown name, its own size range]: every part's family ("" = the windows' own), weight and size, separately.
+const TEXT_PARTS := [["ui", "Windows and menus", 0.85, 1.25], ["events", "Events tracker", 0.8, 1.8],
+		["quests", "Quest journal", 0.8, 1.6], ["chat", "Chat", 0.8, 1.8], ["tooltips", "Tooltips", 0.8, 1.6],
+		["names", "Names over heads", 0.7, 1.8], ["plates", "Nameplate bars", 0.7, 1.8],
+		["damage", "Damage numbers", 0.6, 2.0], ["bubbles", "Speech bubbles", 0.7, 1.8]]
+const TEXT_WEIGHTS := ["Light", "Regular", "Bold", "Heavy"]
+const _EMBOLDEN := [-0.22, 0.0, 0.45, 0.9]
+const _WGHT := [-100, 0, 150, 250]
+static var text_rev := 0                          # goes up with every change (parts that lay text out once watch it)
+static var _text := {}                            # [text] settings, read once (reload_text)
+static var _files := {}                           # file -> FontFile
+
+
+static func _file(file: String) -> FontFile:
+	if not _files.has(file):
 		var f := FontFile.new()
 		f.load_dynamic_font(ProjectSettings.globalize_path("%s/%s" % [FONT_DIR, file]))
 		# the whole UI is drawn scaled (800x600 layout units -> the window); distance-field glyphs stay sharp at any
@@ -115,8 +154,62 @@ static func font(bold := true) -> FontFile:
 		f.multichannel_signed_distance_field = true
 		f.msdf_pixel_range = 8
 		f.msdf_size = 48
-		_fonts[file] = f
-	return _fonts[file]
+		_files[file] = f
+	return _files[file]
+
+
+static func _text_cfg() -> Dictionary:
+	if _text.is_empty():
+		var cfg := load_settings()
+		_text["_"] = true
+		if cfg.has_section("text"):
+			for k in cfg.get_section_keys("text"):
+				_text[k] = cfg.get_value("text", k)
+	return _text
+
+
+## A part's family ("classic" ...): its own, else the windows', else Classic.
+static func text_family(part: String) -> String:
+	var t := _text_cfg()
+	var f := String(t.get("font_" + part, ""))
+	if f == "" or not TEXT_FONTS.has(f):
+		f = String(t.get("font_ui", "classic"))
+	return f if TEXT_FONTS.has(f) else "classic"
+
+
+static func text_weight(part: String) -> int:
+	return clampi(int(_text_cfg().get("weight_" + part, 1)), 0, TEXT_WEIGHTS.size() - 1)
+
+
+## A part's text size, as a multiplier (1.0 = as built).
+static func text_scale(part: String) -> float:
+	return clampf(float(_text_cfg().get("size_" + part, 1.0)), 0.5, 2.5)
+
+
+## A size in font pixels for a part: `px` as built, times the player's size.
+static func tsize(px: float, part := "ui") -> int:
+	return maxi(5, roundi(px * text_scale(part)))
+
+
+static func _set_face(v: FontVariation, bold: bool, part: String) -> void:
+	var fam: Array = TEXT_FONTS[text_family(part)]
+	v.base_font = _file(String(fam[1] if bold else fam[2]))
+	var w := text_weight(part)
+	if bool(fam[3]):
+		v.variation_embolden = 0.0
+		v.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): clampi((700 if bold else 400) + int(_WGHT[w]), 400, 900)}
+	else:
+		v.variation_opentype = {}
+		v.variation_embolden = float(_EMBOLDEN[w]) + (0.35 if bold and fam[1] == fam[2] else 0.0)
+
+
+## The [text] settings changed (Options): every face takes them now; sizes as each part lays its text out again.
+static func reload_text() -> void:
+	_text.clear()
+	for key in _fonts:
+		var f := String(key).split("|")
+		_set_face(_fonts[key], f[1] == "true", f[0])
+	text_rev += 1
 
 
 ## A line cut to a width, with "..." (the event tracker's and the quest log's). 2026-11-15: both cut a letter at a time
@@ -180,7 +273,7 @@ static func warm_fonts() -> void:
 	WorkerThreadPool.add_task(func():
 		var t0 := Time.get_ticks_msec()
 		for f in faces:
-			(f as FontFile).get_string_size(chars, HORIZONTAL_ALIGNMENT_LEFT, -1, 16)
+			(f as Font).get_string_size(chars, HORIZONTAL_ALIGNMENT_LEFT, -1, 16)
 		print("[fonts] %d letters of %d faces made ready in %d ms" % [chars.length(), faces.size(), Time.get_ticks_msec() - t0]), false, "interface fonts")
 
 
@@ -189,7 +282,7 @@ static func label(text: String, size := 11, color := CREAM, bold := true) -> Lab
 	var l := Label.new()
 	l.text = text.to_upper()
 	l.add_theme_font_override("font", font(bold))
-	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_font_size_override("font_size", tsize(size))
 	l.add_theme_color_override("font_color", color)
 	l.add_theme_color_override("font_shadow_color", SHADOW)
 	l.add_theme_constant_override("shadow_offset_x", 1)
@@ -224,7 +317,7 @@ static func button(text: String, size := Vector2(56, 14), font_size := 9) -> But
 	var b := Button.new()
 	b.focus_mode = Control.FOCUS_NONE
 	var caption := text.to_upper()
-	var fs := font_size
+	var fs := tsize(font_size)
 	# shrink until the caption fits inside the bar art's rounded ends, outline included (owner: no cut-off text)
 	while fs > 6 and font(true).get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x + 4 > size.x - minf(18.0, size.x * 0.12):
 		fs -= 1
@@ -358,16 +451,17 @@ static func bar_style(state: int) -> StyleBox:
 static func tooltip_theme() -> Theme:
 	var t := Theme.new()
 	var panel := StyleBoxFlat.new()
-	panel.bg_color = Color(0.02, 0.02, 0.02, 0.85)         # the client's caption box: dark, thin grey rim
-	panel.border_color = Color(0.55, 0.55, 0.5, 0.9)
+	panel.bg_color = Color(0.03, 0.028, 0.025, 0.94)       # dark, a thin gold rim; room to breathe (owner 2026-11-16:
+	panel.border_color = Color(0.62, 0.5, 0.28, 0.9)       # "too cramped")
 	panel.set_border_width_all(1)
-	panel.content_margin_left = 7
-	panel.content_margin_right = 7
-	panel.content_margin_top = 3
-	panel.content_margin_bottom = 4
+	panel.set_corner_radius_all(3)
+	panel.content_margin_left = 10
+	panel.content_margin_right = 10
+	panel.content_margin_top = 6
+	panel.content_margin_bottom = 8
 	t.set_stylebox("panel", "TooltipPanel", panel)
-	t.set_font("font", "TooltipLabel", font(true))
-	t.set_font_size("font_size", "TooltipLabel", 13)
+	t.set_font("font", "TooltipLabel", font(true, "tooltips"))
+	t.set_font_size("font_size", "TooltipLabel", tsize(13, "tooltips"))
 	t.set_color("font_color", "TooltipLabel", CREAM)
 	t.set_color("font_shadow_color", "TooltipLabel", SHADOW)
 	t.set_constant("shadow_offset_x", "TooltipLabel", 1)

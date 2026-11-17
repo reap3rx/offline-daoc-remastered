@@ -27,10 +27,10 @@ static func show(view: Node3D, text: String, height := 1.8, color := Color(1.0, 
 	var vp_h := vp.get_visible_rect().size.y if vp else 1080.0
 	var cam := vp.get_camera_3d() if vp else null
 	var fov := cam.fov if cam else 70.0
-	var size := maxi(10, roundi(EM * vp_h))
+	var size := maxi(10, roundi(EM * vp_h * UiArt.text_scale("bubbles")))   # (Options: its text size)
 	var l := Label3D.new()
 	l.text = _clean(text)
-	l.font = UiArt.font(true)
+	l.font = UiArt.font(true, "bubbles")
 	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	l.fixed_size = true
 	l.pixel_size = 2.0 * tan(deg_to_rad(fov * 0.5)) / vp_h
@@ -46,7 +46,7 @@ static func show(view: Node3D, text: String, height := 1.8, color := Color(1.0, 
 	l.no_depth_test = true                 # a shout carries: readable through the trees
 	l.render_priority = 2
 	l.position = Vector3(0, height + 0.2, 0)
-	l.offset = Vector2(0, size * 2.6)       # above the name and guild lines
+	l.offset = Vector2(0, EM * vp_h * UiArt.text_scale("names") * 2.6)   # above the name and guild lines
 	view.add_child(l)
 	view.set_meta("speech_bubble", l)
 	var words := l.text.split(" ", false).size()

@@ -53,7 +53,7 @@ static func reload() -> void:
 
 func _ready() -> void:
 	layer = 1                                   # over the world, under the game's windows (GameUI is layer 5)
-	_font = UiArt.font(true)
+	_font = UiArt.font(true, "plates")
 	var heavy := FontVariation.new()
 	heavy.base_font = _font
 	heavy.variation_embolden = 0.9
@@ -173,7 +173,7 @@ func _rect_of(p: Dictionary) -> Rect2:
 ## The level, large and bold, left of the bar (owner 2026-11-14: "Put the level in large and bold on the left side of the
 ## health, and if the mob is a boss mob, then put a skull icon next to it").
 func _level_px(p: Dictionary) -> int:
-	return maxi(12, roundi(21.0 * float(p.s) * (1.1 if bool(p.tgt) else 1.0)))
+	return maxi(12, roundi(21.0 * float(p.s) * (1.1 if bool(p.tgt) else 1.0) * UiArt.text_scale("plates")))
 
 
 func _left_w(p: Dictionary) -> float:
@@ -215,7 +215,7 @@ func _skull(c: Vector2, w: float, a: float) -> void:
 
 
 func _name_px(p: Dictionary) -> int:
-	return maxi(9, roundi(13.0 * float(p.s) * (1.1 if bool(p.tgt) else 1.0)))
+	return maxi(9, roundi(13.0 * float(p.s) * (1.1 if bool(p.tgt) else 1.0) * UiArt.text_scale("plates")))
 
 
 func _draw_plates() -> void:

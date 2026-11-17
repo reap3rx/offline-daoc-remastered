@@ -609,8 +609,12 @@ class QuestLog extends Part:
 		var list := entries()
 		if list.is_empty():
 			return
-		var f := UiArt.font(true)
-		var thin := UiArt.font(false)
+		var f := UiArt.font(true, "quests")
+		var thin := UiArt.font(false, "quests")
+		var k := UiArt.text_scale("quests")               # (its text size: the log drawn bigger from its top right)
+		if not is_equal_approx(scale.x, k):
+			pivot_offset = Vector2(QUEST_W, 0.0)
+			scale = Vector2(k, k)
 		var y := 4.0
 		var h := 16.0
 		for e in list:

@@ -85,6 +85,17 @@ var player: Node3D
 var sky: Node                            # SkySystem: the game clock on the time display
 var hidden_all := false
 var learned: Control                         # the new spell / style / ability banners (learned.gd)
+
+
+## Options > Interface > TEXT AND FONTS changed: the parts that lay their text out once do it again (the families and
+## weights are already new - UiArt.reload_text; the rest pick their sizes up as they draw).
+func text_changed() -> void:
+	root.theme = UiArt.tooltip_theme()
+	for c in [chat, chat_combat]:
+		if c and is_instance_valid(c):
+			c.apply_text()
+	if journal and is_instance_valid(journal):
+		journal.refresh()
 ## The same, for the interface drawn outside this layer - action combat's lights and marks, the nameplates (owner
 ## 2026-11-16: "make sure all elements of the UI, including the new ones we've made, are hidable when hide ui (alt+z)").
 static var interface_hidden := false

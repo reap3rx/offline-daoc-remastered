@@ -97,18 +97,15 @@ func build() -> void:
 	_log = RichTextLabel.new()
 	_log.scroll_following = true
 	_log.bbcode_enabled = true
-	_log.add_theme_font_override("normal_font", UiArt.font(false))
-	_log.add_theme_font_override("bold_font", UiArt.font(true))
-	_log.add_theme_font_size_override("normal_font_size", 10)
-	_log.add_theme_font_size_override("bold_font_size", 10)
+	_log.add_theme_font_override("normal_font", UiArt.font(false, "chat"))
+	_log.add_theme_font_override("bold_font", UiArt.font(true, "chat"))
 	_log.add_theme_color_override("default_color", UiArt.CREAM)
 	_log.mouse_filter = Control.MOUSE_FILTER_PASS
 	UiArt.themed(_log)
 	add_child(_log)
 	if role == "main":
 		_input = LineEdit.new()
-		_input.add_theme_font_override("font", UiArt.font(true))
-		_input.add_theme_font_size_override("font_size", 9)
+		_input.add_theme_font_override("font", UiArt.font(true, "chat"))
 		_input.add_theme_color_override("font_color", UiArt.CREAM)
 		var box := StyleBoxFlat.new()
 		box.bg_color = Color(0, 0, 0, 0.6)
@@ -124,6 +121,17 @@ func build() -> void:
 		UiArt.themed(_input)
 		add_child(_input)
 	resized_by_user.connect(_layout)
+	apply_text()
+
+
+## Its text size (Options > Interface > TEXT AND FONTS: "chat").
+func apply_text() -> void:
+	if _log == null:
+		return
+	_log.add_theme_font_size_override("normal_font_size", UiArt.tsize(10, "chat"))
+	_log.add_theme_font_size_override("bold_font_size", UiArt.tsize(10, "chat"))
+	if _input:
+		_input.add_theme_font_size_override("font_size", UiArt.tsize(9, "chat"))
 	_layout()
 
 
@@ -131,10 +139,11 @@ func _layout() -> void:
 	if _log == null:
 		return
 	_log.position = Vector2(8, 12)
-	_log.size = Vector2(size.x - 22, size.y - (34 if _input else 16))
+	_log.size = Vector2(size.x - 22, size.y - ((19.0 + maxf(15.0, UiArt.tsize(9, "chat") + 6.0)) if _input else 16.0))
 	if _input:
-		_input.position = Vector2(6, size.y - 19)
-		_input.size = Vector2(size.x - 20, 15)
+		var ih := maxf(15.0, UiArt.tsize(9, "chat") + 6.0)
+		_input.position = Vector2(6, size.y - 4 - ih)
+		_input.size = Vector2(size.x - 20, ih)
 
 
 func set_types(t: Array) -> void:

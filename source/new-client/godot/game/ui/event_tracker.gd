@@ -51,6 +51,12 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	# its text size (Options > Interface > TEXT AND FONTS: "events"): the tracker drawn bigger as a whole, from its
+	# top right corner, so its lines keep their places
+	var k := UiArt.text_scale("events")
+	if not is_equal_approx(scale.x, k):
+		scale = Vector2(k, k)
+	pivot_offset = Vector2(W, 0.0)
 	if Engine.get_process_frames() % 6 == 0:
 		queue_redraw()
 
@@ -80,7 +86,7 @@ func content_height() -> float:
 			far += 1
 	if far > 0:
 		h += 16.0 + far * 13.0
-	return h + 6.0
+	return (h + 6.0) * scale.y
 
 
 func _draw() -> void:
@@ -92,8 +98,8 @@ func _draw() -> void:
 func _draw_timed() -> void:
 	if Time.get_ticks_msec() - received_ms > 8000 or events.is_empty():
 		return
-	var font := UiArt.font(true)
-	var thin := UiArt.font(false)
+	var font := UiArt.font(true, "events")
+	var thin := UiArt.font(false, "events")
 	var y := 0.0
 	var me := _player_m()
 	var near: Array = []

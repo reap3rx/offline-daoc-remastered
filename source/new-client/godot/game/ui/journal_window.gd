@@ -33,10 +33,9 @@ func build() -> void:
 	_body.position = Vector2(190, 24)
 	_body.size = Vector2(306, 196)
 	_body.bbcode_enabled = true
-	_body.add_theme_font_override("normal_font", UiArt.font(false))
-	_body.add_theme_font_override("bold_font", UiArt.font(true))
-	_body.add_theme_font_size_override("normal_font_size", 10)
-	_body.add_theme_font_size_override("bold_font_size", 11)
+	_body.add_theme_font_override("normal_font", UiArt.font(false, "quests"))
+	_body.add_theme_font_override("bold_font", UiArt.font(true, "quests"))
+	_text_sizes()
 	_body.add_theme_color_override("default_color", UiArt.CREAM)
 	UiArt.themed(_body)
 	add_child(_body)
@@ -66,7 +65,16 @@ func show_window() -> void:
 	refresh()
 
 
+## The quest text's size (Options > Interface > TEXT AND FONTS: "quests"; owner 2026-11-16: "text like in the events
+## window and quest window is small and thin hard to read").
+func _text_sizes() -> void:
+	_body.add_theme_font_size_override("normal_font_size", UiArt.tsize(10, "quests"))
+	_body.add_theme_font_size_override("bold_font_size", UiArt.tsize(11, "quests"))
+
+
 func refresh() -> void:
+	if _body:
+		_text_sizes()
 	if not visible:
 		return
 	for c in _list.get_children():
@@ -92,8 +100,8 @@ func _row(name: String, key: String) -> Control:
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	b.custom_minimum_size = Vector2(LIST.size.x - 14, ROW_H)
-	b.add_theme_font_override("font", UiArt.font(true))
-	b.add_theme_font_size_override("font_size", 9)
+	b.add_theme_font_override("font", UiArt.font(true, "quests"))
+	b.add_theme_font_size_override("font_size", UiArt.tsize(9, "quests"))
 	b.add_theme_constant_override("line_spacing", -2)
 	b.add_theme_color_override("font_color", UiArt.GOLD_HI if key == selected else UiArt.CREAM)
 	b.add_theme_color_override("font_hover_color", UiArt.GOLD_HI)
