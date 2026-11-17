@@ -11,6 +11,8 @@ uniform float rows = 6.0;
 uniform float brightness = 1.0;
 uniform float alpha_cut = 0.32;
 uniform float translucency = 0.15;
+uniform float tone = 1.0;
+uniform float sat = 1.0;
 varying vec2 uv0;
 varying vec2 uv1;
 varying float blend;
@@ -48,7 +50,8 @@ void fragment() {
 	float pick = fract(tree_dither(FRAGCOORD.xy) + 0.37);
 	vec2 uv = pick < blend ? uv1 : uv0;
 	vec4 c = textureGrad(atlas, uv, dFdx(uv0), dFdy(uv0));     // (the two views' places differ by a constant: one mip)
-	ALBEDO = c.rgb * brightness;
+	ALBEDO = c.rgb * brightness * tone;
+	ALBEDO = mix(vec3(dot(ALBEDO, vec3(0.299, 0.587, 0.114))), ALBEDO, sat);
 	ALPHA = cutout(c.a, textureQueryLod(atlas, uv0).x, alpha_cut);
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
 	ROUGHNESS = 1.0;

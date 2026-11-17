@@ -6,6 +6,8 @@ uniform sampler2D albedo_tex : source_color, filter_linear_mipmap_anisotropic, r
 uniform float height = 25.0;
 uniform float brightness = 1.15;
 uniform vec2 uv_scale = vec2(1.0, 1.0);
+uniform float tone = 1.0;
+uniform float sat = 1.0;
 varying float fade_t;
 void vertex() {
 	vec3 at = (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
@@ -19,6 +21,7 @@ void fragment() {
 	if (tree_dither(FRAGCOORD.xy) < fade_t) {
 		discard;
 	}
-	ALBEDO = texture(albedo_tex, UV * uv_scale).rgb * brightness;
+	ALBEDO = texture(albedo_tex, UV * uv_scale).rgb * brightness * tone;
+	ALBEDO = mix(vec3(dot(ALBEDO, vec3(0.299, 0.587, 0.114))), ALBEDO, sat);
 	ROUGHNESS = 1.0;
 }

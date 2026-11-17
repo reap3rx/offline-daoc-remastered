@@ -9,6 +9,7 @@ uniform float height = 25.0;
 uniform float brightness = 1.75;
 uniform float alpha_cut = 0.45;
 uniform float translucency = 0.3;
+uniform float sat = 1.0;
 varying float fade_t;
 void vertex() {
 	vec3 at = (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
@@ -25,6 +26,7 @@ void fragment() {
 	}
 	vec4 c = texture(albedo_tex, UV);
 	ALBEDO = c.rgb * tint * brightness * COLOR.rgb;    // (COLOR: the crown's own shade, deep leaves darker)
+	ALBEDO = mix(vec3(dot(ALBEDO, vec3(0.299, 0.587, 0.114))), ALBEDO, sat);
 	ALPHA = cutout(c.a, textureQueryLod(albedo_tex, UV).x, alpha_cut);
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
 	ROUGHNESS = 1.0;

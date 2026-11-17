@@ -28,8 +28,11 @@ const DIR := "res://content/trees"
 const NEAR_M := 75.0
 ## (tests: --tree-near=<metres> moves the switch, to compare the near and far trees from one spot)
 static var near_m := -1.0
-const HYST := 5.0                   # metres either side of NEAR_M before a tree changes
-const FADE_S := 0.6                 # seconds a tree takes to change
+const HYST := 5.0                   # metres nearer than the hand-over before a tree in view becomes the real one
+const LATE := 30.0                  # metres past it before a tree in view becomes the far card
+const EARLY := 20.0                 # out of view: the real tree within this far past the hand-over
+const HEIGHT_K := 2.6               # a tall tree hands over further out: its height x this, if more than NEAR_M
+const FADE_S := 0.7                 # seconds a tree takes to change
 const GROW := 1.06                  # a little taller than made, and stood deeper (owner 2026-11-17: some feet showed)
 const DEEP := 1.85                  # metres (at scale 1) the trunk's foot goes under the lowest ground round it
 const CELL_M := 32.0                # trees batched per 32 m square: a batch is culled by its middle, so keep it small
@@ -106,7 +109,10 @@ static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform
 			cells[c] = []
 		cells[c].append(i)
 	var drv := _driver(parent)
-	var base := drv.add_trees(xforms)                   # (each tree's slot in the driver)
+	# (a tall tree hands over further out, where it is smaller on the screen: the 46 m grove pines' far cards, seen
+	# from under them, matched them worst - owner 2026-11-17)
+	var at_m := maxf(near_m, float(s.height) * HEIGHT_K) if near_m == NEAR_M else near_m
+	var base := drv.add_trees(xforms, at_m, float(s.height))    # (each tree's slot in the driver)
 	# near: the real trees, one batch per variant per cell
 	var reach := CELL_M * 0.75                          # (a batch's middle to its far corner, and some)
 	for k in groups:
@@ -122,7 +128,7 @@ static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform
 		var mmi := MultiMeshInstance3D.new()
 		mmi.name = "Tree_%s_%d_%d_%d" % [sp, k.x, k.y, k.z]
 		mmi.multimesh = mm
-		mmi.visibility_range_end = near_m + HYST + reach
+		mmi.visibility_range_end = at_m + LATE + reach
 		parent.add_child(mmi)
 	# far: the crossed cards, one batch per cell (the variant rides in the instance's custom data)
 	var cards: Array = s.far_cards
@@ -147,7 +153,7 @@ static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform
 		mmi.multimesh = mm
 		# (it casts a shadow too: in the shadow pass the card turns to the sun, so its shadow is the tree's; without one
 		# the sunlit mist showed through the far trees as a milky veil)
-		mmi.visibility_range_begin = maxf(near_m - HYST - reach, 0.0)
+		mmi.visibility_range_begin = maxf(at_m - HYST - reach, 0.0)
 		mmi.set_meta("base_far", far)
 		mmi.visibility_range_end = far * view_mult
 		mmi.visibility_range_end_margin = far * view_mult * 0.1
@@ -194,15 +200,21 @@ static func _load_species(sp: String) -> Dictionary:
 		return {}
 	var tint := Color(d.get("tint", "#ffffff"))
 	var height := float(d.get("height", 25.0))
+	# (tone, sat: a species held back from the rest - owner 2026-11-17: the far birches "pop too much")
+	var tone := float(d.get("tone", 1.0))
+	var sat := float(d.get("sat", 1.0))
 	var leaves := ShaderMaterial.new()
 	leaves.shader = LEAVES_SHADER
 	leaves.set_shader_parameter("albedo_tex", _texture(String(d.leaf)))
-	leaves.set_shader_parameter("tint", Vector3(tint.r, tint.g, tint.b))
+	leaves.set_shader_parameter("tint", Vector3(tint.r, tint.g, tint.b) * tone)
+	leaves.set_shader_parameter("sat", sat)
 	leaves.set_shader_parameter("height", height)
 	var bark := ShaderMaterial.new()
 	bark.shader = BARK_SHADER
 	bark.set_shader_parameter("albedo_tex", _texture(String(d.bark)))
 	bark.set_shader_parameter("height", height)
+	bark.set_shader_parameter("tone", tone * float(d.get("bark_tone", 1.0)))
+	bark.set_shader_parameter("sat", sat)
 	bark.set_shader_parameter("uv_scale", Vector2(d.get("bark_uv", [1.0, 1.0])[0], d.get("bark_uv", [1.0, 1.0])[1]))
 	var near: Array[ArrayMesh] = []
 	var trunks: Array[PackedVector3Array] = []
@@ -218,9 +230,12 @@ static func _load_species(sp: String) -> Dictionary:
 	far.set_shader_parameter("atlas", _texture(String(d.far.atlas), true, true))
 	far.set_shader_parameter("views", float(d.far.get("views", 8)))
 	far.set_shader_parameter("rows", float(d.far.get("rows", near.size())))
+	far.set_shader_parameter("tone", tone)
+	far.set_shader_parameter("sat", sat)
 	var quad := _far_quad_mesh().duplicate() as ArrayMesh
 	quad.surface_set_material(0, far)
-	return {"near": near, "far_mesh": quad, "far_cards": d.far.cards, "sink": float(d.get("sink", 0.0)), "trunks": trunks}
+	return {"near": near, "far_mesh": quad, "far_cards": d.far.cards, "sink": float(d.get("sink", 0.0)), "trunks": trunks,
+			"height": height}
 
 
 ## One variant's glTF: its "bark" and "leaves" meshes as the two surfaces of one mesh.
@@ -387,8 +402,9 @@ static func _driver(parent: Node3D) -> Driver:
 		return parent.get_meta("tree_driver")
 	var d := Driver.new()
 	d.name = "TreeSwapDriver"
-	d.near = near_m
 	d.hyst = HYST
+	d.late = LATE
+	d.early = EARLY
 	d.fade_s = FADE_S
 	parent.set_meta("tree_driver", d)
 	parent.add_child(d)
@@ -399,7 +415,9 @@ static func _driver(parent: Node3D) -> Driver:
 ## change (0 the real tree, 1 the far card). Distances are looked at 7 times a second; a changing tree moves on each
 ## frame.
 class Driver extends Node:
-	var pos := PackedVector2Array()
+	var pos := PackedVector3Array()                 # each tree's crown middle (the zone's frame)
+	var rad := PackedFloat32Array()                 # and a ball round it, for "is it on screen"
+	var near_at := PackedFloat32Array()             # its species' hand-over distance
 	var t := PackedFloat32Array()
 	var want := PackedByteArray()
 	var near_mm: Array[MultiMesh] = []
@@ -408,16 +426,22 @@ class Driver extends Node:
 	var far_i := PackedInt32Array()
 	var far_v := PackedInt32Array()
 	var moving := {}                                 # tree -> true while it changes
-	var near := 75.0
 	var hyst := 5.0
-	var fade_s := 0.6
+	var late := 30.0
+	var early := 20.0
+	var fade_s := 0.7
 	var _look := 0.0
 	var _first := true
+	var changed_in_view := 0                        # (counts for the tests: tests/trees_probe.gd --trees-stroll)
+	var changed_out_of_view := 0
 
-	func add_trees(xforms: Array[Transform3D]) -> int:
+	func add_trees(xforms: Array[Transform3D], at_m: float, height: float) -> int:
 		var base := pos.size()
 		for x in xforms:
-			pos.append(Vector2(x.origin.x, x.origin.z))
+			var h := height * x.basis.get_scale().y
+			pos.append(x.origin + Vector3(0, h * 0.55, 0))
+			rad.append(h * 0.6)
+			near_at.append(at_m)
 			t.append(1.0)
 			want.append(1)
 			near_mm.append(null)
@@ -437,6 +461,10 @@ class Driver extends Node:
 		far_i[k] = i
 		far_v[k] = v
 
+	## Which trees should be which. On screen a tree only changes when it must: to the real tree once it is nearer
+	## than its hand-over less HYST, to the far card only when it is LATE metres past it. Off screen it changes freely
+	## (the real tree within EARLY metres past the line), so turning round finds it already right - most changes happen
+	## where you can't see them (owner 2026-11-17: trees phasing as you walk, whichever way).
 	func _process(delta: float) -> void:
 		var cam := get_viewport().get_camera_3d()
 		var zone := get_parent() as Node3D
@@ -444,27 +472,42 @@ class Driver extends Node:
 			return
 		_look -= delta
 		if _look <= 0.0:
-			_look = 0.14
-			var c3: Vector3 = zone.global_transform.affine_inverse() * cam.global_position
+			_look = 0.12
+			var to_zone := zone.global_transform.affine_inverse()
+			var c3: Vector3 = to_zone * cam.global_position
 			var c := Vector2(c3.x, c3.z)
-			var lo := (near - hyst) * (near - hyst)
-			var hi := (near + hyst) * (near + hyst)
+			var planes: Array[Plane] = []
+			for pl in cam.get_frustum():
+				planes.append(to_zone * pl)
 			for k in pos.size():
-				var d2 := pos[k].distance_squared_to(c)
+				var p := pos[k]
+				var d := Vector2(p.x, p.z).distance_to(c)
+				var n := near_at[k]
 				var w: int = want[k]
-				if d2 > hi:
-					w = 1
-				elif d2 < lo:
-					w = 0
 				if _first:
-					w = 1 if d2 > near * near else 0
+					w = 1 if d > n else 0
 					want[k] = w
 					t[k] = float(w)
 					_apply(k)
 					continue
+				var seen := true
+				for pl in planes:
+					if pl.distance_to(p) > rad[k]:
+						seen = false
+						break
+				if not seen:
+					w = 0 if d < n + early else 1
+				elif d < n - hyst:
+					w = 0
+				elif d > n + late:
+					w = 1
 				if w != want[k]:
 					want[k] = w
 					moving[k] = true
+					if seen:
+						changed_in_view += 1
+					else:
+						changed_out_of_view += 1
 			_first = false
 		if moving.is_empty():
 			return

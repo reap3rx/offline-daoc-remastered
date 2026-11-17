@@ -36,6 +36,7 @@ for name, s in sp.items():
     man["species"][name] = {"variants": [v + ".glb" for v in vs], "bark": s["bark"] + ".png", "leaf": s["leaf"] + ".png",
         "tint": s["leafTint"], "height": s["height"], "bark_uv": BARK_UV.get(s["bark"], [1, 1]),
         "sink": s["sink"],
+        **{k: s[k] for k in ("tone", "sat", "bark_tone") if k in s},
         "far": {"atlas": f"far_{name}.png", "views": views, "rows": len(vs), "cards": [gen[v]["far"] for v in vs]}}
     used_tex |= {s["bark"], s["leaf"]}
 for t in used_tex: shutil.copy(f"web/tex/{t}.png", os.path.join(dst, t + ".png"))
