@@ -67,6 +67,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	var t0 := Time.get_ticks_usec()
+	_canvas.visible = not GameUI.interface_hidden          # (Alt+Z: the interface hidden)
 	_gather()
 	_canvas.queue_redraw()
 	Perf.proc_add("health plates", Time.get_ticks_usec() - t0)

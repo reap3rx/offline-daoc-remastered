@@ -791,6 +791,8 @@ class Minimap extends Part:
 			var gp: Vector2 = at.call(Vector2(gm.pos.x, gm.pos.z) / 0.025)
 			if inside.call(gp):
 				preload("res://game/ui/group_marks.gd").draw_member(self, gp, gm)
+			else:
+				_member_on_rim(gp, gm)
 		# your companion's idea: its star in a ring (past the edge, a pointer to it)
 		var cm := preload("res://game/ui/group_marks.gd").live_mark(z, w.player.global_position)
 		if not cm.is_empty():
@@ -831,6 +833,23 @@ class Minimap extends Part:
 			var gk := 3.0 + j * 3.5
 			draw_line(Vector2(1, gk), Vector2(gk, 1), Color(RIM_HI, 0.85), 1.2, true)
 		text(UiArt.font(true), Vector2(size.x * 0.5 - 10, 10), "N", 8, UiArt.GOLD_HI, HORIZONTAL_ALIGNMENT_CENTER, 20)
+
+
+	## A group member past the minimap's edge rides its rim in their direction, a small arrow pointing on (owner
+	## 2026-11-16: "have them hug the edge of the map when they're out of range of the map, so you can see what direction
+	## to go if you want to go find them").
+	func _member_on_rim(p: Vector2, gm) -> void:
+		var c := size * 0.5
+		var d := p - c
+		if d.length() < 0.001:
+			return
+		var half := c - Vector2(7, 7)
+		var at := c + d * minf(half.x / maxf(absf(d.x), 0.001), half.y / maxf(absf(d.y), 0.001))
+		var dir := d.normalized()
+		var side := Vector2(-dir.y, dir.x)
+		draw_colored_polygon(PackedVector2Array([at + dir * 7.0, at + dir * 3.0 + side * 3.5, at + dir * 3.0 - side * 3.5]),
+				Color(0.08, 0.05, 0.0, 0.9))
+		preload("res://game/ui/group_marks.gd").draw_member(self, at - dir * 1.5, gm, 0.85)
 
 
 	## What lies beyond the minimap at this zoom (owner 2026-11-04: "an icon or indicator ... that alerts you to where

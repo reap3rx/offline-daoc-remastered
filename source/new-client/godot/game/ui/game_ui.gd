@@ -84,6 +84,9 @@ var modern: Control                          # the modern HUD (Options > INTERFA
 var player: Node3D
 var sky: Node                            # SkySystem: the game clock on the time display
 var hidden_all := false
+## The same, for the interface drawn outside this layer - action combat's lights and marks, the nameplates (owner
+## 2026-11-16: "make sure all elements of the UI, including the new ones we've made, are hidable when hide ui (alt+z)").
+static var interface_hidden := false
 
 
 func _ready() -> void:
@@ -2099,6 +2102,7 @@ func handle_input(event: InputEvent) -> bool:
 	if Keybinds.pressed(event, "toggle_interface") or (event is InputEventKey and event.pressed and not event.echo
 			and event.alt_pressed and not event.ctrl_pressed and event.physical_keycode == KEY_Z):
 		hidden_all = not hidden_all
+		interface_hidden = hidden_all
 		root.visible = not hidden_all
 		return true
 	if Keybinds.pressed(event, "chat") or (event is InputEventKey and event.pressed and event.keycode == KEY_ENTER):

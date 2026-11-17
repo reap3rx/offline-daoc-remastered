@@ -500,6 +500,24 @@ func _audio() -> void:
 			_apply_volumes()))
 
 
+## The action combat camera over your shoulder (owner 2026-11-16: "make it in the option menu (under controls), near
+## the top (right under movement). Then there should be no need for the control + F9 menu any longer"). Its HUD's parts
+## are placed and shown in EDIT UI.
+func _ac_camera() -> void:
+	var scene := get_tree().current_scene if is_inside_tree() else null
+	var ac = scene.get("action_combat") if scene else null
+	_heading("ACTION COMBAT CAMERA")
+	if ac == null:
+		_hint("In the world, the camera's place over your shoulder is set here.")
+		return
+	for s in [["CAMERA: TO THE SIDE", "cam_side", -1.5, 1.5], ["CAMERA: HIGHER", "cam_up", -0.5, 1.2]]:
+		var key := String(s[1])
+		_row(String(s[0]), _slider(float(ac.get(key)), float(s[2]), float(s[3]), 0.05, func(x: float):
+			ac.set(key, x)
+			ac._save_layout()))
+	_hint("The style lights and defense text are placed, and shown or hidden, in EDIT UI.")
+
+
 func _controls() -> void:
 	var pad := UiArt.button("CONTROLLER SETTINGS AND BUTTONS", Vector2(344, 20), 9)
 	pad.pressed.connect(show_page.bind("controller"))
@@ -531,6 +549,7 @@ func _controls() -> void:
 			func(v: bool):
 		_save("player", "ac_sheathe_after_kill", v)
 		preload("res://game/combat/action_combat.gd").sheathe_after_kill = v))
+	_ac_camera()
 	_heading("KEY CONFIGURATION")
 	# shared by every character unless this one has its own (the WoW-style override, off by default)
 	_row("CHARACTER-SPECIFIC KEY BINDINGS", _toggle(Keybinds.character_specific, func(v: bool):

@@ -143,7 +143,7 @@ var _defend_slow_left := 0.0            # ... and while it plays you move at hal
 var cam_kick := 0.0                      # a landed blow's small camera jolt (decays)
 var shoulder := Vector2.ZERO             # action combat's over-the-shoulder view: metres right / up (Camera3D offsets)
 var _dash := Vector3.ZERO               # a dodge's burst (world velocity, decays)
-const AC_BUTTONS := ["ac_attack", "ac_parry", "ac_position", "ac_reactive", "ac_chain", "ac_dodge", "ac_cursor", "ac_hud",
+const AC_BUTTONS := ["ac_attack", "ac_parry", "ac_position", "ac_reactive", "ac_chain", "ac_dodge", "ac_cursor",
 		"ac_interact", "ac_shot", "ac_crit_shot", "ac_parry_only", "ac_lock"]
 var _charge_fx: Node3D = null            # the heavy attack's charge: a glow on the weapon (the game's weapon effects)
 var _dash_left := 0.0
@@ -1545,6 +1545,7 @@ func _physics_process(delta: float) -> void:
 	_physics_step(delta)
 	if lantern and torch:                                 # the belt lantern rides on your hip as you turn
 		torch.position = LANTERN_AT.rotated(Vector3.UP, char_yaw + PI)
+	_belt_tick()
 	Perf.phys_add("player", Time.get_ticks_usec() - t0)        # (Perf's live log: the physics tick by part)
 
 
@@ -1814,6 +1815,8 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 		else:
 			legs = "run"
 			legs_speed = _sync("run", "run", speed)
+		if _model is Fig3Figure and (_model as Fig3Figure).action_twists(_action):
+			legs = ""                                      # a spin or a roll plays whole (Fig3Figure.action_twists)
 	# (how fast you turn - kept for the figure)
 	var facing := char_yaw + _body_offset
 	var yaw_rate := wrapf(facing - _last_facing, -PI, PI) / maxf(delta, 0.001) if not is_nan(_last_facing) else 0.0
@@ -1904,9 +1907,15 @@ func set_lantern(on: bool) -> void:
 		torch.light_color = Color(1.0, 0.74, 0.42)
 		torch.omni_range = SkySystem._t("lantern_range", LANTERN_RANGE)
 		torch.omni_attenuation = SkySystem._t("lantern_falloff", LANTERN_FALLOFF)   # brightest near you, a long fade
-		torch.shadow_blur = 2.0
+		# softer (owner 2026-11-16: "the shadows can be a bit too distracting with the way they bounce around and catch
+		# body parts like the arms and legs as they move ... still give good shadow but maybe not as sharp"): a wider
+		# flame and more blur for gentle edges, a little lighter, and your own body casts none from it (SELF_LAYER) - your
+		# arms and legs swinging threw the big moving shadows; the world's shadows stay
+		torch.shadow_blur = 3.0
+		torch.shadow_opacity = 0.85
+		torch.shadow_caster_mask = 0xFFFFF & ~SELF_LAYER
 		torch.light_volumetric_fog_energy = 0.04         # (no ball of glowing haze round you)
-		torch.light_size = 0.12                          # a lamp's flame, not a point: soft shadow edges
+		torch.light_size = 0.3                           # a lamp's flame, not a point: soft shadow edges
 		torch.set_meta("base_energy", SkySystem._t("lantern", LANTERN_ENERGY))
 		torch.set_meta("flicker", 0.06)
 		torch.set_meta("flicker_seed", 3.0)
@@ -1930,6 +1939,58 @@ func set_torch(on: bool) -> void:
 	torch_on = on
 	if torch:
 		torch.visible = on
+
+
+## Your figure's own render layer (SELF_LAYER only): the lantern on your belt casts no shadow of you (set_lantern).
+const SELF_LAYER := 1 << 10
+## The lantern itself on your belt while it is lit (owner 2026-11-16: "a small model of a belt lantern that appears on
+## the character where the light originates from ... when the lantern is toggled on"): the hanging lantern of the
+## housing wall torch (its frame, glass and cap - not the wall bracket or the flame cards), scaled down, its glass where
+## the light is.
+const BELT_MODEL := "res://content/housing/models/obj_int_wall_torch_04.gltf"
+const BELT_PARTS := ["torch_04_5", "torch_04_6", "torch_04_7", "torch_04_8", "torch_04_9"]   # (":" becomes "_" in a node name)
+const BELT_SCALE := 0.75
+const BELT_GLASS := Vector3(0.0, 0.2, 0.28)            # the glass's middle in the model
+var _belt: Node3D
+var _belt_failed := false
+var _layer_tick := 0
+
+
+func _belt_tick() -> void:
+	_layer_tick += 1
+	if _layer_tick % 20 == 0 and _model:
+		for g in _model.find_children("*", "GeometryInstance3D", true, false):
+			if (g as GeometryInstance3D).layers != SELF_LAYER:
+				(g as GeometryInstance3D).layers = SELF_LAYER
+	var want := lantern and torch_on and torch != null and not flying
+	if want and _belt == null and not _belt_failed:
+		_belt = _build_belt()
+		_belt_failed = _belt == null
+	if _belt == null:
+		return
+	if _belt.visible != want:
+		_belt.visible = want
+	if want:
+		_belt.position = torch.position
+		_belt.rotation.y = char_yaw + PI
+
+
+func _build_belt() -> Node3D:
+	if not ResourceLoader.exists(BELT_MODEL) and not FileAccess.file_exists(BELT_MODEL):
+		return null
+	var scene := NifScene.new()
+	if not scene.load_scene(BELT_MODEL):
+		scene.free()
+		return null
+	for mi in scene.find_children("*", "MeshInstance3D", true, false):
+		(mi as MeshInstance3D).visible = String(mi.name).replace(":", "_") in BELT_PARTS
+	scene.scale = Vector3.ONE * BELT_SCALE
+	scene.position = -BELT_GLASS * BELT_SCALE
+	var pivot := Node3D.new()
+	pivot.name = "BeltLantern"
+	pivot.add_child(scene)
+	add_child(pivot)
+	return pivot
 
 
 ## The client's order (see PICK_LIFT): vertical integrate, floor pick at the new spot (lift onto anything within the

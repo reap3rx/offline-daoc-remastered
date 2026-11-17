@@ -1109,7 +1109,7 @@ namespace DOL.AI.Brain
             }
 
             bool tightInterior = Body.CurrentRegion?.IsDungeon == true;
-            bool companionTravel = CompanionFollowPolicy.Applies(BotBody);
+            bool companionTravel = CompanionFollowPolicy.Follows(BotBody);
             // Do not run native owner-follow and formation orders concurrently.
             if (companionTravel) Body.StopFollowing();
             if (CompanionRaid.IsMember(BotBody))

@@ -1756,6 +1756,59 @@ func set_lower(clip: String, speed := 1.0, twist := 0.0) -> void:
 	lower_twist = clampf(wrapf(twist, -PI, PI), -1.4, 1.4)
 
 
+## Whether `clip` turns the whole body - a spin, a flip, a roll, a lunge that throws the hips over (owner 2026-11-16:
+## "some, like Hamstring in the Critical Strike line, or Backstab II, etc, cause the body to twist in unnatural ways when
+## you're moving while using them"). Such an action plays whole, its own legs with it: running legs under a body that
+## spins tear it apart at the waist. Measured once per clip (tests/twist_probe.gd lists every clip): a swing turns the
+## root up to ~100 degrees about one axis and stays upright; a spin turns it past 150 (most styles' last moves), and a
+## tumble, a lunge or a dodge tilts the hips off every axis by 28 or more (plain swings: 23 at most).
+const SPIN_LIMIT := 2.44                     # radians (140 degrees) of root turn
+const TILT_LIMIT := 0.436                    # radians (25 degrees): every axis of the hips turned at least this far
+static var _twists := {}                     # Animation -> bool
+
+
+func action_twists(clip: String) -> bool:
+	if anim == null or clip == "" or not anim.has_animation(clip):
+		return false
+	var a := anim.get_animation(clip)
+	if _twists.has(a):
+		return _twists[a]
+	var m := twist_of(a)
+	_twists[a] = m.x > SPIN_LIMIT or m.y > TILT_LIMIT
+	return _twists[a]
+
+
+## (the root's largest turn from its first pose, the hips' tilt: the least any of their axes turned at their farthest)
+static func twist_of(a: Animation) -> Vector2:
+	var out := Vector2.ZERO
+	if a == null or a.length <= 0.0:
+		return out
+	var root := -1
+	var pelvis := -1
+	for t in a.get_track_count():
+		if a.track_get_type(t) != Animation.TYPE_ROTATION_3D:
+			continue
+		var bone := String(a.track_get_path(t).get_concatenated_subnames())
+		if bone == "Bip01":
+			root = t
+		elif bone == "Bip01 Pelvis":
+			pelvis = t
+	if root < 0:
+		return out
+	var hips := func(time: float) -> Basis:
+		var b := Basis(a.rotation_track_interpolate(root, time))
+		return b * Basis(a.rotation_track_interpolate(pelvis, time)) if pelvis >= 0 else b
+	var q0 := a.rotation_track_interpolate(root, 0.0)
+	var b0: Basis = hips.call(0.0)
+	for i in range(1, 25):
+		var time := a.length * i / 24.0
+		var ang := (q0.inverse() * a.rotation_track_interpolate(root, time)).normalized().get_angle()
+		out.x = maxf(out.x, minf(ang, TAU - ang))
+		var b: Basis = hips.call(time)
+		out.y = maxf(out.y, minf(b0.x.angle_to(b.x), minf(b0.y.angle_to(b.y), b0.z.angle_to(b.z))))
+	return out
+
+
 ## Where the legs are in `clip`, when they just ran it under an action (to carry on in step); -1 otherwise.
 func lower_phase(clip: String) -> float:
 	if clip == _lower_clip and Time.get_ticks_msec() - _lower_at < 300:

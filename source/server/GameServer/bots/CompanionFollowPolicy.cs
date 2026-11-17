@@ -5,7 +5,7 @@ using DOL.AI.Brain;
 
 namespace DOL.GS
 {
-    /// <summary>Player-led companions only. Never alters autonomous world bots.</summary>
+    /// <summary>Player-led companions (Applies); a world bot in the player's group shares only the following (Follows).</summary>
     public static class CompanionFollowPolicy
     {
         public const int SettleMilliseconds = 600;
@@ -32,7 +32,13 @@ namespace DOL.GS
             }
         }
 
-        public static bool Applies(GameBot bot) => bot is { IsAutonomousWorldBot: false, IsPlayerLedGroup: true } &&
+        public static bool Applies(GameBot bot) => bot is { IsAutonomousWorldBot: false } && Follows(bot);
+
+        /// <summary>Any bot following the player in the player's group - a companion or a world bot that joined - for the
+        /// way it moves: its place in the formation and the leader's pace (owner 2026-11-16: "the player's companion walks
+        /// smoothly when the player walks at slower speeds, but other bots/group members have the stutter"). Buffing,
+        /// travel speed casts and pets stay companion-only (Applies).</summary>
+        public static bool Follows(GameBot bot) => bot is { IsPlayerLedGroup: true } &&
             bot.PlayerGroupLeader is { IsAlive: true, ObjectState: GameObject.eObjectState.Active } leader &&
             bot.Group != null && bot.Group == leader.Group && bot.CurrentRegion == leader.CurrentRegion;
 
@@ -155,13 +161,13 @@ namespace DOL.GS
 
         public static void BeginFormation(GameBot bot, Vector3 point)
         {
-            if (!Applies(bot)) return;
+            if (!Follows(bot)) return;
             State state = For(bot);
             state.FormationPoint = point;
             state.FormationUntil = GameLoop.GameLoopTime + 750;
         }
 
-        public static bool HasFormationOrder(GameBot bot) => Applies(bot) &&
+        public static bool HasFormationOrder(GameBot bot) => Follows(bot) &&
             States.TryGetValue(bot, out State state) && GameLoop.GameLoopTime < state.FormationUntil;
 
         public static Vector3 Predict(Vector3 point, Vector3 velocity, int leaderSpeed)
@@ -175,7 +181,7 @@ namespace DOL.GS
 
         public static Vector3 FormationDestination(GameBot bot, Vector3 point)
         {
-            if (!Applies(bot)) return point;
+            if (!Follows(bot)) return point;
             var leader = bot.PlayerGroupLeader;
             if (leader.IsMoving) point = Predict(point, For(bot).LeaderVelocity, leader.MaxSpeed);
             Vector3 origin = new(leader.X, leader.Y, leader.Z);
@@ -204,7 +210,7 @@ namespace DOL.GS
         /// </summary>
         public static short Paced(GameBot bot, short speed)
         {
-            if (!Applies(bot) || speed <= 0 || !States.TryGetValue(bot, out State state) ||
+            if (!Follows(bot) || speed <= 0 || !States.TryGetValue(bot, out State state) ||
                 GameLoop.GameLoopTime >= state.FormationUntil || bot.InCombat || bot.IsAttacking)
                 return speed;
             GamePlayer leader = bot.PlayerGroupLeader;
@@ -220,7 +226,7 @@ namespace DOL.GS
 
         private static short Boosted(GameBot bot, short normal)
         {
-            if (!Applies(bot) || !States.TryGetValue(bot, out State state) ||
+            if (!Follows(bot) || !States.TryGetValue(bot, out State state) ||
                 GameLoop.GameLoopTime >= state.FormationUntil || normal <= 0 || !bot.IsAlive ||
                 bot.IsOnStableMasterRoute || bot.IsRecoveryResting || bot.InCombat || bot.IsAttacking ||
                 bot.IsCrowdControlled || bot.IsDiseased || bot.HealthPercent < 33 ||

@@ -818,6 +818,7 @@ func _physics_body(delta: float) -> void:
 			s.mode = NpcState.Mode.FIGHT if int(mv.target) != 0 or now_ms < s.combat_until else NpcState.Mode.IDLE
 			s.running = false
 			s.fighting = int(mv.target) != 0 or now_ms < s.combat_until
+			_face_foe(s, mv, delta)
 			continue
 		var step := speed * 0.025 * delta
 		var dest = mv.dest
@@ -839,8 +840,43 @@ func _physics_body(delta: float) -> void:
 		s.mode = NpcState.Mode.WALK
 		s.running = speed >= RUN_UNITS
 		s.fighting = int(mv.target) != 0 or now_ms < s.combat_until   # chasing its target: weapons stay drawn
+		_track_foe(s, mv)
 	_seat_riders()
 	_dress_mounts()
+
+
+## Whom it fights and where they are (owner 2026-11-16: "make sure the bot's head tracking faces their target when
+## they're fighting someone, not the player. Also, sometimes they face the wrong direction when fighting (their back is
+## to the monster)"). The foe is its target from the position updates, else the last one it swung, shot or cast at
+## (_combat; a gamebot's updates carry no target). Its head looks at the foe (Npc._look_point).
+func _track_foe(s: NpcState, mv: Dictionary) -> void:
+	if int(mv.target) > 0:
+		s.foe_oid = int(mv.target)
+	if not s.fighting or s.foe_oid == 0:
+		s.foe_oid = 0
+		s.foe_pos = Vector3.INF
+		return
+	var fst: NpcState = by_oid.get(s.foe_oid)
+	if fst != null and not fst.alive:
+		s.foe_pos = Vector3.INF
+		return
+	s.foe_pos = _view_pos(s.foe_oid)
+
+
+const FACE_FOE_M := 40.0                     # a foe this near is faced (melee, and casters and archers at range)
+
+
+## ...and, standing still while it fights, it turns to face them - the server only turns a monster as it moves or as
+## it swings, and a standing bot often never (its back to what it was fighting). Eased, so it turns as a body would.
+func _face_foe(s: NpcState, mv: Dictionary, delta: float) -> void:
+	_track_foe(s, mv)
+	if s.foe_pos == Vector3.INF or s.ride_clip != "":
+		return
+	var to := s.foe_pos - s.pos
+	to.y = 0.0
+	if to.length() < 0.3 or to.length() > FACE_FOE_M:
+		return
+	s.yaw = lerp_angle(s.yaw, atan2(to.x, to.z), clampf(delta * 8.0, 0.0, 1.0))
 
 
 ## A ridden steed between the server's updates (owner 2026-10-17: stable horses jittered beside their riders, flights
@@ -1241,6 +1277,8 @@ func _combat(d: Dictionary) -> void:
 	# its weapons out while it fights (owner 2026-10-15: a gamebot bard used its styles with the drum still in its hand
 	# - its position packets carry no target, so it never counted as fighting)
 	var ast: NpcState = by_oid.get(int(d.attacker))
+	if ast and int(d.defender) > 0 and int(d.defender) != int(d.attacker):
+		ast.foe_oid = int(d.defender)                 # whom it fights: faced, and looked at (_track_foe)
 	if ast and not spell:
 		ast.combat_until = Time.get_ticks_msec() + 6000
 		ast.fighting = true

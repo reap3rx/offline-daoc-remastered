@@ -575,12 +575,18 @@ namespace DOL.UnitTests
             Assert.That(BotPartyRoles.IsSupport(bot), Is.True, "Pet offense must not turn the Druid into a melee actor.");
             CompanionFollowPolicy.BeginFormation(bot, new(200, 0, 0));
             Assert.That(CompanionFollowPolicy.HasFormationOrder(bot), Is.True);
+            // A world bot that joined the player's group follows as a companion does (its place, the leader's pace:
+            // owner 2026-11-16, the stutter), but its buffs and pets stay its own.
             Field(typeof(GameBot), bot, "<IsAutonomousWorldBot>k__BackingField", true);
             Assert.That(CompanionFollowPolicy.Applies(bot), Is.False);
-            Assert.That(CompanionFollowPolicy.HasFormationOrder(bot), Is.False);
+            Assert.That(CompanionFollowPolicy.Follows(bot), Is.True);
+            Assert.That(CompanionFollowPolicy.HasFormationOrder(bot), Is.True);
             Assert.That(CompanionFollowPolicy.SendsDruidPet(bot), Is.False);
             var buff = new Spell(new DbSpell { Type = "StrengthBuff", Target = "Realm", CastTime = 3 }, 1);
             Assert.That(CompanionFollowPolicy.DeferBuff(bot, buff), Is.False);
+            Field(typeof(GameBot), bot, "<PlayerGroupLeader>k__BackingField", null);
+            Assert.That(CompanionFollowPolicy.Follows(bot), Is.False, "Not led by the player: nothing of the companion's following.");
+            Assert.That(CompanionFollowPolicy.HasFormationOrder(bot), Is.False);
             Assert.That(CompanionFollowPolicy.SpeedLimit(bot, 191), Is.EqualTo(191));
         }
 

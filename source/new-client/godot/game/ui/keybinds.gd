@@ -80,7 +80,6 @@ func _ready() -> void:
 			["ac_interact", "Action: Interact (doors, NPCs, loot)", ["F"]],
 			["ac_lock", "Action: Lock On (tap; hold + mouse to switch)", ["Mouse4"]],
 			["ac_ally", "Action: Target Allies (hold: the reticle picks your realm and pets)", ["LCtrl"]],
-			["ac_hud", "Action: Arrange Combat HUD", ["Ctrl+F9"]],
 			["weapon_cycle", "Cycle Weapons (one hand / two hand / ranged)", ["Z"]],
 			["show_quiver", "Quiver Window", ["Ctrl+Q"]],
 			["arrows_next", "Next Arrows (bow out)", ["Shift+Wheel Up"]],

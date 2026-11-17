@@ -20,7 +20,8 @@ extends Node
 ##   Every one of these is rebindable: Options > Controls > Combat ("Action: ...").
 ## The HUD: a crosshair; a ring closing in on it when a monster winds up a blow at you (gold = parry now); the
 ## charge of a held attack; the swing timer; the Position / Reactive / Chain lights; what your defense did.
-## Ctrl+F9 (Arrange Combat HUD): drag its parts where you like, switch any of them off; kept in settings.cfg.
+## EDIT UI places its parts and switches any of them off; the camera over your shoulder is in Options > Controls (owner
+## 2026-11-16: Ctrl+F9's own arranging panel retired). Kept in settings.cfg.
 ## The server talks to it in "#AC|..." system lines (ServerWorld takes them out of the chat).
 
 const HOLD_S := 1.0                    # an attack held this long is an anytime style (owner 2026-10-28: 0.3 too quick, 0.6 too long; 2026-11-01: about 1 s)
@@ -279,7 +280,7 @@ func _windup(oid: int, ms: int) -> void:
 	get_tree().create_timer(maxf(0.0, (ms - 450) / 1000.0)).timeout.connect(func():
 		if is_instance_valid(n) and n.is_alive():
 			n.play_attack())
-	if not bool(_show.get("marker", true)):
+	if not bool(_show.get("marker", true)) or GameUI.interface_hidden:
 		return
 	var mark = _marks.get(oid)
 	if not is_instance_valid(mark):
@@ -422,7 +423,7 @@ func _damage_text(oid: int, amount: int, crit: bool, way: String) -> void:
 
 
 func _float_text(oid: int, text: String, color: Color, size: int, lift: float) -> void:
-	if not bool(_show.get("fct", true)) or viewer == null:
+	if not bool(_show.get("fct", true)) or viewer == null or GameUI.interface_hidden:
 		return
 	var p := _player()
 	var at := Vector3.INF
@@ -494,10 +495,6 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()            # (not the camera's zoom)
 		return
 	if not on or _typing() or not p.input_enabled or p.dead:
-		return
-	if event is InputEventKey and event.pressed and not event.echo and Keybinds.pressed(event, "ac_hud"):
-		_set_editing(not _editing)
-		get_viewport().set_input_as_handled()
 		return
 	if not _editing and not p.action_cursor:
 		if Keybinds.matches(event, "ac_lock") and not event.is_echo():
@@ -1140,6 +1137,8 @@ func _process_timed(_delta: float) -> void:
 		_end_draw(false)
 	p.charge_glow(_atk_down and now - _atk_at >= int(HOLD_S * 1000.0) and (_anytime_ready() or _counter_ready()))   # (no glow: nothing to fire)
 	p.shoulder = Vector2(cam_side, cam_up)
+	if _layer.visible == GameUI.interface_hidden:
+		_layer.visible = not GameUI.interface_hidden       # Alt+Z hides its lights and defense text too
 	hud.queue_redraw()
 
 

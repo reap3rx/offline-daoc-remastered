@@ -814,6 +814,8 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 			legs = "run" if (state.fighting or state.running) and anim and anim.has_animation("run") else "walk"
 			var nat := f.natural_speed(legs)
 			legs_speed = clampf(_pace_mps / nat, 0.5, 2.5) if nat > 0.0 else 1.0
+			if anim and f.action_twists(String(anim.current_animation)):
+				legs = ""                                  # a spin or a roll plays whole (Fig3Figure.action_twists)
 		f.set_lower(legs, legs_speed, 0.0)
 	_animate_lod(delta, cam)
 	if _swim_fit > 0:
@@ -906,10 +908,15 @@ func set_sitting(on: bool) -> void:
 		_shown_mode = int(NpcState.Mode.IDLE)
 
 
-## Where its head looks (Fig3Figure.look_point; claude 2026-11-09): at you, when it fights you, when you've selected it
-## (talking to a merchant), or when you pass close by it standing; else ahead.
+## Where its head looks (Fig3Figure.look_point; claude 2026-11-09): at whom it fights (ServerWorld._track_foe; owner
+## 2026-11-16: a bot fighting a monster looked at you), when you've selected it (talking to a merchant), or when you
+## pass close by it standing; else ahead.
 func _look_point() -> Vector3:
 	if not state.alive or manager == null:
+		return Vector3.INF
+	if state.fighting and state.foe_oid != 0:
+		if state.foe_pos != Vector3.INF and state.foe_pos.distance_to(state.pos) < 25.0:
+			return state.foe_pos + Vector3(0, 1.4, 0)
 		return Vector3.INF
 	var pl = manager.get("player")
 	if not (pl is Node3D) or not is_instance_valid(pl):
