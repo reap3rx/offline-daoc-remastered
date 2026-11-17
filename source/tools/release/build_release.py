@@ -122,6 +122,30 @@ def gather(game, launcher, world_db, generated):
 
 INSTALL_ONLY = {"world-db"}
 
+# Files the game writes for itself as it loads (compressed textures, model caches). Played in the working folder, new
+# ones appear all over content/ and every bucket they fall in would change: a 27 GB update for a few changed files (owner
+# 2026-11-17, v0.3a). A release keeps the ones the last release carried and leaves new ones out - a player's game makes
+# its own the same way.
+CACHE_EXT = {".bc", ".mcache"}
+
+
+def previous_manifest(out, tag):
+    """The manifest of the release before this one (the newest other v*/manifest.json under --out), or None."""
+    found = [p for p in out.glob("v*/manifest.json") if p.parent.name != tag]
+    return json.loads(max(found, key=lambda p: p.stat().st_mtime).read_text()) if found else None
+
+
+def drop_new_caches(comps, prev):
+    if prev is None:
+        return 0
+    shipped = {f[0] for p in prev["packs"] for f in p["files"]}
+    dropped = 0
+    for files in comps.values():
+        for p in [p for p in files if Path(p).suffix.lower() in CACHE_EXT and p not in shipped]:
+            del files[p]
+            dropped += 1
+    return dropped
+
 
 def plan_packs(comps, sizes, plan_path):
     """component -> buckets of install paths; the bucket counts kept in pack_plan.json once chosen."""
@@ -180,6 +204,10 @@ def main():
     (generated / "update.json").write_text(json.dumps(
         {"feed": f"https://github.com/{a.repo}/releases/latest/download/manifest.json"}, indent=1))
     comps = gather(a.game, a.launcher, a.world, generated)
+    prev = previous_manifest(out, f"v{a.version}")
+    dropped = drop_new_caches(comps, prev)
+    if dropped:
+        print(f"  {dropped} new cache files left out (the game makes its own; a release keeps only those it already carried)")
     srcs = {p: s for files in comps.values() for p, s in files.items()}
     t0 = time.time()
     sizes, hashes = {}, {}
