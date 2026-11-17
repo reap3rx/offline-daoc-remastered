@@ -678,6 +678,7 @@ namespace DOL.AI.Brain
         {
             if (target == null || !target.IsAlive || !CanAggroTarget(target))
                 return false;
+            PlayerPartyOrders.StandForFight(BotBody);       // (sat at your camp or resting on your order: up for the pull)
 
             if (BotBody?.IsTemporaryCompanionRestLocked == true)
                 return false;
@@ -707,6 +708,7 @@ namespace DOL.AI.Brain
         {
             CompanionEngagementMode.RememberPull(AssistedPlayer, target);
             if (!CompanionEngagementMode.Allows(Body, target)) return;
+            PlayerPartyOrders.StandForFight(BotBody);       // (sat at your camp or resting on your order: up and fighting)
             if (CompanionPvpEngagement.Enemy(CompanionPvpEngagement.Leader(Body), target))
                 BotBody.WakeTemporaryCompanionRest();
             if (BotPartyRoles.IsSupport(BotBody))

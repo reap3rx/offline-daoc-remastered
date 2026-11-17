@@ -163,6 +163,11 @@ public static class PlayerPartyOrders
             Release(bot);                                    // (rested: up and after you)
             return false;
         }
+        if (h.Sit && (bot.InCombat || leader.InCombat))
+        {
+            Release(bot);                                    // (a fight breaks up a camp or a rest: up and at it)
+            return false;
+        }
         if (bot.InCombat)
             return false;                                    // (a fight comes first; the spot waits)
         float dx = bot.X - h.Spot.X, dy = bot.Y - h.Spot.Y;
@@ -199,6 +204,19 @@ public static class PlayerPartyOrders
         if (h.Fire != null)
             CampTalk(leader, bot);
         return true;
+    }
+
+    /// <summary>A fight ordered or joined (BotBrain.OrderPull / AssistPlayerAttack; owner 2026-11-17: after a camp the
+    /// companion ignored /pull and only fought once the player was hit): a bot sitting at a camp or resting under your
+    /// order gets up - its rest woken, its seat given up - so the order goes through. A wait keeps its spot to come back
+    /// to.</summary>
+    public static void StandForFight(GameBot bot)
+    {
+        if (bot != null && Holds.TryGetValue(bot, out Hold h) && h.Sit)
+        {
+            Release(bot);
+            bot.WakeRecoveryRest();
+        }
     }
 
     private static void Release(GameBot bot)
