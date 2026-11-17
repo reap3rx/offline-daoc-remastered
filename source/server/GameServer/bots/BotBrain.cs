@@ -383,7 +383,10 @@ namespace DOL.AI.Brain
             // reverse. The native NPC check rejected purple pulls because the
             // character was grey to the monster. Camp selection owns difficulty;
             // this shared execution gate only excludes non-XP grey monsters.
-            if (Body.IsObjectGreyCon(realTarget))
+            // (grouped with a player it is scaled down as the player is - LevelScaling - and nothing is grey to it)
+            if (BotBody != null && LevelScaling.WithPlayers(BotBody) && realTarget is GameNPC scaledFoe
+                    ? LevelScaling.RewardGrey(BotBody, scaledFoe)
+                    : Body.IsObjectGreyCon(realTarget))
                 return false;
 
             return AggroLevel > 0;

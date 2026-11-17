@@ -38,14 +38,30 @@ namespace DOL.GS
         const double ALLY_OUT = 0.5;              // event allies' damage to the event's monsters
         const double ALLY_IN = 0.5;               // and the monsters' damage to them
 
-        /// <summary>The one whose level counts for an attack: a player, a player's pet - and at an event, a bot.</summary>
+        /// <summary>The one whose level counts for an attack: a player, a player's pet, a bot in a group with a player (a
+        /// companion, or a world bot that joined you) and its pet - and at an event, any bot. Owner 2026-11-17: "otherwise
+        /// the player would still be in the situation of making everything trivial if they have their companion or higher
+        /// level bot in a group be able to attack it at full power." A bot out on its own fights as it is.</summary>
         static GameLiving Fighter(GameLiving l, bool atEvent) => l switch
         {
             GamePlayer p => p,
-            GameBot b when atEvent => b,
-            GameNPC { Brain: IControlledBrain cb } => cb.GetLivingOwner() is GameLiving o && (o is GamePlayer || (atEvent && o is GameBot)) ? o : null,
+            GameBot b when atEvent || WithPlayers(b) => b,
+            GameNPC { Brain: IControlledBrain cb } => cb.GetLivingOwner() is GameLiving o &&
+                (o is GamePlayer || o is GameBot ob && (atEvent || WithPlayers(ob))) ? o : null,
             _ => null
         };
+
+        /// <summary>A bot grouped with a player: it is scaled down as the player is.</summary>
+        public static bool WithPlayers(GameBot bot)
+        {
+            Group g = bot?.Group;
+            if (g == null)
+                return false;
+            foreach (GameLiving m in g.GetMembersInTheGroup())
+                if (m is GamePlayer)
+                    return true;
+            return false;
+        }
 
         /// <summary>A monster that can be scaled against: an ordinary realm-less NPC, not a bot, a pet or a guard.</summary>
         static bool Scalable(GameLiving l) =>
@@ -125,8 +141,6 @@ namespace DOL.GS
             if (who == null || killed == null)
                 return 0;
             GameLiving you = Fighter(who, IsEventFoe(killed));
-            if (you == null && who is GameBot bot && bot.Group?.GetPlayersInTheGroup().Count > 0)
-                you = bot;
             if (you == null)
                 return who.GetConLevel(killed);
             int level = EffectiveLevelAgainst(you, killed);
