@@ -19,8 +19,10 @@ await page.route('http://trees.local/**', async route => {
   try { await route.fulfill({ body: fs.readFileSync(f), contentType: ct }); } catch { await route.fulfill({ status: 404 }); }
 });
 await page.goto('http://trees.local/index.html'); await page.waitForFunction(() => window.ready === true);
-const log = [];
+const log = fs.existsSync(path.join(outDir, 'generated.json')) ? JSON.parse(fs.readFileSync(path.join(outDir, 'generated.json'))) : [];
+const have = new Set(log.map(e => e.name));   // (a run picks up where a stopped one left off)
 for (const spec of specs) {
+  if (have.has(spec.name)) continue;
   const res = await page.evaluate(async (spec) => {
     const T = window.THREE;
     const { mergeGeometries } = await import('three/addons/utils/BufferGeometryUtils.js');
@@ -91,7 +93,9 @@ for (const spec of specs) {
       const cv = document.createElement('canvas'); cv.width = 512; cv.height = 1024;
       const r = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, preserveDrawingBuffer: true }); r.setClearColor(0x000000, 0);
       const sc = new T.Scene();
-      sc.add(new T.Mesh(bark, new T.MeshBasicMaterial({ map: bt })));
+      // (the game draws the far card at the near leaves' brightness, 1.75; the bark here at the near bark's 1.15 of it,
+      // so near and far match by construction - owner 2026-11-17: the hand-over showed a darker tree)
+      sc.add(new T.Mesh(bark, new T.MeshBasicMaterial({ map: bt, color: new T.Color(1.15 / 1.75, 1.15 / 1.75, 1.15 / 1.75) })));
       sc.add(new T.Mesh(leaf, new T.MeshBasicMaterial({ map: lt, color: new T.Color(spec.leafTint), alphaTest: 0.45, side: T.DoubleSide, vertexColors: true })));
       let reach = 0;
       for (const g of [bark, leaf]) { const q = g.attributes.position; for (let i = 0; i < q.count; i++) reach = Math.max(reach, Math.hypot(q.getX(i), q.getZ(i))); }
@@ -118,6 +122,7 @@ for (const spec of specs) {
   if (res.shot) fs.writeFileSync(path.join(outDir, spec.name + '.png'), Buffer.from(res.shot.split(',')[1], 'base64'));
   const line = `${spec.name}\t${res.size.map(v => v.toFixed(1)).join('x')}\tbark ${res.barkTris}\tleaves ${res.leafTris}`;
   console.log(line); log.push({ name: spec.name, species: spec.species, far: { half: res.imp.half, bottom: res.imp.bottom, top: res.imp.top, views: res.imp.views }, sink: spec.sink, size: res.size, barkTris: res.barkTris, leafTris: res.leafTris });
+  fs.writeFileSync(path.join(outDir, 'generated.json'), JSON.stringify(log, null, 1));
 }
 fs.writeFileSync(path.join(outDir, 'generated.json'), JSON.stringify(log, null, 1));
 await browser.close();

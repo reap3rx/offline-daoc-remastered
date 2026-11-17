@@ -28,6 +28,11 @@ const DIR := "res://content/trees"
 const NEAR_M := 75.0
 ## (tests: --tree-near=<metres> moves the switch, to compare the near and far trees from one spot)
 static var near_m := -1.0
+## Options > VIDEO > TREE DETAIL DISTANCE (Graphics): the hand-over for an ordinary tree, metres; set_detail applies a
+## change to the trees already built (owner 2026-11-17: "sliders ... what level of fade out vs performance")
+static var detail_m := NEAR_M
+static var _drivers: Array = []                  # weakrefs to the zones' Drivers
+static var _fixed := false                       # (--tree-near: one hand-over for every tree, the slider ignored)
 const HYST := 5.0                   # metres nearer than the hand-over before a tree in view becomes the real one
 const LATE := 30.0                  # metres past it before a tree in view becomes the far card
 const EARLY := 20.0                 # out of view: the real tree within this far past the hand-over
@@ -35,7 +40,9 @@ const HEIGHT_K := 2.6               # a tall tree hands over further out: its he
 const FADE_S := 0.7                 # seconds a tree takes to change
 const GROW := 1.06                  # a little taller than made, and stood deeper (owner 2026-11-17: some feet showed)
 const DEEP := 1.85                  # metres (at scale 1) the trunk's foot goes under the lowest ground round it
-const CELL_M := 32.0                # trees batched per 32 m square: a batch is culled by its middle, so keep it small
+const CELL_M := 48.0                # real trees batched per 48 m square (a batch is culled by its middle)
+const FAR_CELL_M := 128.0           # far cards per 128 m square: a card is one quad, cheap even where it is hidden
+const FAR_REACH := FAR_CELL_M * 0.75
 const LEAVES_SHADER := preload("res://game/tree_leaves.gdshader")
 const BARK_SHADER := preload("res://game/tree_bark.gdshader")
 const FAR_SHADER := preload("res://game/tree_far.gdshader")
@@ -64,6 +71,32 @@ static func species_of(model_file: String) -> String:
 	return String(m.get("models", {}).get(model_file.get_file().get_basename().to_lower(), ""))
 
 
+static func _near_init() -> void:
+	if near_m >= 0.0:
+		return
+	near_m = detail_m
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--tree-near="):
+			near_m = float(a.split("=", true, 1)[1])
+			_fixed = true
+
+
+## The slider moved: the hand-over for the trees to come and the ones already standing.
+static func set_detail(m: float) -> void:
+	detail_m = clampf(m, 40.0, 250.0)
+	_near_init()
+	if _fixed:
+		return
+	near_m = detail_m
+	var keep := []
+	for w in _drivers:
+		var d = w.get_ref()
+		if d != null and is_instance_valid(d):
+			d.retune(near_m)
+			keep.append(w)
+	_drivers = keep
+
+
 ## Draw these placed trees as the new ones, under `parent` (the zone). False: no replacement for this model - the
 ## caller draws the original.
 static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform3D], _cell_m: float, far: float, view_mult: float,
@@ -78,11 +111,7 @@ static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform
 	var sp := species_of(model_file)
 	if sp == "":
 		return false
-	if near_m < 0.0:
-		near_m = NEAR_M
-		for a in OS.get_cmdline_user_args():
-			if a.begins_with("--tree-near="):
-				near_m = float(a.split("=", true, 1)[1])
+	_near_init()
 	_mutex.lock()
 	var s = _species.get(sp)
 	if s == null:
@@ -105,14 +134,17 @@ static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform
 		if not groups.has(k):
 			groups[k] = []
 		groups[k].append(i)
+		c = Vector2i(clampi(int(o.x / FAR_CELL_M), 0, 255), clampi(int(o.z / FAR_CELL_M), 0, 255))
 		if not cells.has(c):
 			cells[c] = []
 		cells[c].append(i)
 	var drv := _driver(parent)
 	# (a tall tree hands over further out, where it is smaller on the screen: the 46 m grove pines' far cards, seen
 	# from under them, matched them worst - owner 2026-11-17)
-	var at_m := maxf(near_m, float(s.height) * HEIGHT_K) if near_m == NEAR_M else near_m
-	var base := drv.add_trees(xforms, at_m, float(s.height))    # (each tree's slot in the driver)
+	# (by the height above the ground; at most 3x: Iarnwood's 150 m trees stand in hundreds)
+	var ratio := 1.0 if _fixed else clampf((float(s.height) - float(s.sink)) * HEIGHT_K / NEAR_M, 1.0, float(s.max_ratio))
+	var at_m := near_m * ratio
+	var base := drv.add_trees(xforms, ratio, float(s.height))    # (each tree's slot in the driver)
 	# near: the real trees, one batch per variant per cell
 	var reach := CELL_M * 0.75                          # (a batch's middle to its far corner, and some)
 	for k in groups:
@@ -129,6 +161,7 @@ static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform
 		mmi.name = "Tree_%s_%d_%d_%d" % [sp, k.x, k.y, k.z]
 		mmi.multimesh = mm
 		mmi.visibility_range_end = at_m + LATE + reach
+		drv.near_nodes.append([mmi, ratio])
 		parent.add_child(mmi)
 	# far: the crossed cards, one batch per cell (the variant rides in the instance's custom data)
 	var cards: Array = s.far_cards
@@ -153,7 +186,8 @@ static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform
 		mmi.multimesh = mm
 		# (it casts a shadow too: in the shadow pass the card turns to the sun, so its shadow is the tree's; without one
 		# the sunlit mist showed through the far trees as a milky veil)
-		mmi.visibility_range_begin = maxf(at_m - HYST - reach, 0.0)
+		mmi.visibility_range_begin = maxf(at_m - HYST - FAR_REACH, 0.0)
+		drv.far_nodes.append([mmi, ratio])
 		mmi.set_meta("base_far", far)
 		mmi.visibility_range_end = far * view_mult
 		mmi.visibility_range_end_margin = far * view_mult * 0.1
@@ -235,7 +269,7 @@ static func _load_species(sp: String) -> Dictionary:
 	var quad := _far_quad_mesh().duplicate() as ArrayMesh
 	quad.surface_set_material(0, far)
 	return {"near": near, "far_mesh": quad, "far_cards": d.far.cards, "sink": float(d.get("sink", 0.0)), "trunks": trunks,
-			"height": height}
+			"height": height, "max_ratio": float(d.get("max_ratio", 3.0))}
 
 
 ## One variant's glTF: its "bark" and "leaves" meshes as the two surfaces of one mesh.
@@ -406,7 +440,10 @@ static func _driver(parent: Node3D) -> Driver:
 	d.late = LATE
 	d.early = EARLY
 	d.fade_s = FADE_S
+	d.near = near_m
+	d.reach = CELL_M * 0.75
 	parent.set_meta("tree_driver", d)
+	_drivers.append(weakref(d))
 	parent.add_child(d)
 	return d
 
@@ -417,7 +454,11 @@ static func _driver(parent: Node3D) -> Driver:
 class Driver extends Node:
 	var pos := PackedVector3Array()                 # each tree's crown middle (the zone's frame)
 	var rad := PackedFloat32Array()                 # and a ball round it, for "is it on screen"
-	var near_at := PackedFloat32Array()             # its species' hand-over distance
+	var ratio := PackedFloat32Array()              # its species' hand-over, x the ordinary one (a tall tree's is further)
+	var near := 75.0                                # the ordinary hand-over (TreeSwap.near_m)
+	var reach := 24.0
+	var near_nodes := []                            # [MultiMeshInstance3D, ratio]: their visibility ranges follow near
+	var far_nodes := []
 	var t := PackedFloat32Array()
 	var want := PackedByteArray()
 	var near_mm: Array[MultiMesh] = []
@@ -435,13 +476,13 @@ class Driver extends Node:
 	var changed_in_view := 0                        # (counts for the tests: tests/trees_probe.gd --trees-stroll)
 	var changed_out_of_view := 0
 
-	func add_trees(xforms: Array[Transform3D], at_m: float, height: float) -> int:
+	func add_trees(xforms: Array[Transform3D], r: float, height: float) -> int:
 		var base := pos.size()
 		for x in xforms:
 			var h := height * x.basis.get_scale().y
 			pos.append(x.origin + Vector3(0, h * 0.55, 0))
 			rad.append(h * 0.6)
-			near_at.append(at_m)
+			ratio.append(r)
 			t.append(1.0)
 			want.append(1)
 			near_mm.append(null)
@@ -482,7 +523,7 @@ class Driver extends Node:
 			for k in pos.size():
 				var p := pos[k]
 				var d := Vector2(p.x, p.z).distance_to(c)
-				var n := near_at[k]
+				var n := ratio[k] * near
 				var w: int = want[k]
 				if _first:
 					w = 1 if d > n else 0
@@ -518,6 +559,16 @@ class Driver extends Node:
 			_apply(k)
 			if t[k] == goal:
 				moving.erase(k)
+
+	func retune(m: float) -> void:
+		near = m
+		for e in near_nodes:
+			if is_instance_valid(e[0]):
+				(e[0] as GeometryInstance3D).visibility_range_end = m * float(e[1]) + LATE + reach
+		for e in far_nodes:
+			if is_instance_valid(e[0]):
+				(e[0] as GeometryInstance3D).visibility_range_begin = maxf(m * float(e[1]) - HYST - FAR_REACH, 0.0)
+		_look = 0.0
 
 	func _apply(k: int) -> void:
 		if near_mm[k]:

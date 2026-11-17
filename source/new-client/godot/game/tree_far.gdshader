@@ -8,9 +8,9 @@ render_mode cull_disabled, specular_disabled, depth_draw_opaque;
 uniform sampler2D atlas : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform float views = 8.0;
 uniform float rows = 6.0;
-uniform float brightness = 1.0;
+uniform float brightness = 1.45;       // (the near leaves' 1.75, less the near crown's own shadow: measured near vs far in game; the pictures are baked unlit, bark at 1.15 / 1.75)
 uniform float alpha_cut = 0.32;
-uniform float translucency = 0.15;
+uniform float translucency = 0.3;
 uniform float tone = 1.0;
 uniform float sat = 1.0;
 varying vec2 uv0;

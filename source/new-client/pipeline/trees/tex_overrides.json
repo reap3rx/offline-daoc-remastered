@@ -1,0 +1,370 @@
+{
+"alder": {
+"bark_box": null
+},
+"stonepine": {
+"bark_box": null
+},
+"tree1": {
+"bark_box": null,
+"leaf_box": [
+0.06,
+0,
+1,
+1
+]
+},
+"tree2": {
+"bark_box": null,
+"leaf_box": [
+0.06,
+0,
+1,
+1
+]
+},
+"oak1": {
+"bark_box": null,
+"leaf_box": [
+0.04,
+0,
+1,
+1
+]
+},
+"talloak1": {
+"bark_box": null,
+"leaf_box": [
+0.04,
+0,
+1,
+1
+]
+},
+"hollytree": {
+"bark_box": null,
+"leaf_box": [
+0.04,
+0,
+1,
+1
+]
+},
+"ash": {
+"leaf_box": [
+0,
+0,
+1,
+0.6
+]
+},
+"maple": {
+"leaf_box": [
+0,
+0,
+1,
+0.6
+]
+},
+"chestnut": {
+"leaf_box": [
+0,
+0,
+1,
+0.6
+]
+},
+"appletree": {
+"leaf_box": [
+0,
+0,
+1,
+0.6
+]
+},
+"beech": {
+"leaf_box": [
+0,
+0,
+1,
+0.6
+]
+},
+"yew": {
+"leaf_box": [
+0,
+0,
+1,
+0.6
+]
+},
+"beech_gnarl": {
+"bark_box": null,
+"leaf_box": [
+0.5,
+0,
+1,
+0.5
+]
+},
+"beech_gnarl_dead": {
+"bark_box": null,
+"leaf_box": [
+0.5,
+0,
+1,
+0.5
+]
+},
+"bpinean": {
+"leaf_box": [
+0,
+0,
+0.74,
+1
+],
+"dense": true,
+"bark_box": [
+0.8,
+0.02,
+0.98,
+0.75
+],
+"rot": -90
+},
+"bpinetreen": {
+"leaf_box": [
+0,
+0,
+0.74,
+1
+],
+"dense": true,
+"bark_box": [
+0.8,
+0.02,
+0.98,
+0.75
+],
+"rot": -90
+},
+"npinean": {
+"leaf_box": [
+0,
+0,
+0.74,
+1
+],
+"dense": true,
+"bark_box": [
+0.8,
+0.02,
+0.98,
+0.75
+],
+"rot": -90
+},
+"npinendk": {
+"leaf_box": [
+0,
+0,
+0.74,
+1
+],
+"dense": true,
+"bark_box": [
+0.8,
+0.02,
+0.98,
+0.75
+],
+"rot": -90
+},
+"npinetreen": {
+"leaf_box": [
+0,
+0,
+0.74,
+1
+],
+"dense": true,
+"bark_box": [
+0.8,
+0.02,
+0.98,
+0.75
+],
+"rot": -90
+},
+"npintren": {
+"leaf_box": [
+0,
+0,
+0.74,
+1
+],
+"dense": true,
+"bark_box": [
+0.8,
+0.02,
+0.98,
+0.75
+],
+"rot": -90
+},
+"pintren": {
+"leaf_box": [
+0,
+0,
+0.74,
+1
+],
+"dense": true,
+"bark_box": [
+0.8,
+0.02,
+0.98,
+0.75
+],
+"rot": -90
+},
+"n_s_pintren": {
+"leaf_box": [
+0,
+0,
+0.74,
+1
+],
+"dense": true,
+"bark_box": [
+0.8,
+0.02,
+0.98,
+0.75
+],
+"rot": -90
+},
+"npinean1-s": {
+"leaf_box": [
+0,
+0,
+0.74,
+1
+],
+"dense": true,
+"bark_box": [
+0.8,
+0.02,
+0.98,
+0.75
+],
+"rot": -90
+},
+"npinetreen_s": {
+"leaf_box": [
+0,
+0,
+0.74,
+1
+],
+"dense": true,
+"bark_box": [
+0.8,
+0.02,
+0.98,
+0.75
+],
+"rot": -90
+},
+"bscrypinen": {
+"leaf_box": [
+0,
+0,
+0.45,
+1
+],
+"dense": true,
+"bark_box": [
+0.52,
+0.02,
+0.95,
+0.98
+],
+"rot": -90
+},
+"bvrgrn1": {
+"bark_box": null,
+"leaf_box": [
+0.15,
+0.3,
+0.85,
+0.85
+],
+"dense": true
+},
+"vrgrn1": {
+"bark_box": null,
+"leaf_box": [
+0.15,
+0.3,
+0.85,
+0.85
+],
+"dense": true
+},
+"nvrgrn1-s": {
+"bark_box": null,
+"leaf_box": [
+0.15,
+0.3,
+0.85,
+0.85
+],
+"dense": true
+},
+"spruce": {
+"bark_box": null,
+"dense": true
+},
+"bighibtree": {
+"leaf_box": [
+0.1,
+0,
+1,
+0.45
+],
+"bark_box": [
+0.05,
+0.47,
+0.62,
+1.0
+]
+},
+"bspanmossn": {
+"bark_box": null,
+"leaf_box": [
+0,
+0.28,
+0.85,
+1
+]
+},
+"bwillown2": {
+"bark_box": null,
+"leaf_box": [
+0,
+0.18,
+1,
+1
+]
+},
+"hweepwilln": {
+"bark_box": null,
+"leaf_box": [
+0,
+0.22,
+1,
+1
+]
+}
+}
