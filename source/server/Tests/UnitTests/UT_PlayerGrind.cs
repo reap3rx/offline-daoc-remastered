@@ -273,12 +273,16 @@ namespace DOL.UnitTests
             Assert.That(Detail(player), Does.Contain("revive/return"));
         }
 
+        // owner 2026-11-16: you can move about while grinding; only going farther than LeashRadius stops it
         [Test] public void ManualMovementStopsWithoutTeleportingPlayerBack()
         {
             var (player, _, _) = Party(); Assert.That(PlayerCompanionGrind.TryStart(player, out _), Is.True);
             player.PositionX = 70; Tick(player);
+            Assert.That(PlayerCompanionGrind.IsActive(player), Is.True, "A few steps keep grind mode on.");
+            int far = PlayerCompanionGrind.LeashRadius + 70;
+            player.PositionX = far; Tick(player);
             Assert.That(PlayerCompanionGrind.IsActive(player), Is.False);
-            Assert.That(player.PositionX, Is.EqualTo(70));
+            Assert.That(player.PositionX, Is.EqualTo(far));
         }
 
         [Test] public void StopRestoresOnlyModeRequestedSeatsAndLeavesGroupIntact()

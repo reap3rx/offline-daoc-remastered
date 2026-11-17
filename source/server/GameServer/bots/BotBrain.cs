@@ -1107,6 +1107,15 @@ namespace DOL.AI.Brain
                 _ambientWanderMovement = false;
                 return;
             }
+            // your orders (PlayerPartyOrders): wait / rest / camp keep it at its spot; a formation sets its place
+            if (PlayerPartyOrders.Holding(BotBody))
+            {
+                _ambientWanderMovement = false;
+                return;
+            }
+            bool ordered = PlayerPartyOrders.Slot(BotBody, leader, out Vector3 orderedSlot);
+            if (ordered)
+                ambientWander = false;
 
             bool tightInterior = Body.CurrentRegion?.IsDungeon == true;
             bool companionTravel = CompanionFollowPolicy.Follows(BotBody);
@@ -1137,6 +1146,8 @@ namespace DOL.AI.Brain
                 leader.X + (int)Math.Round(Math.Cos(radians) * formation.Distance),
                 leader.Y + (int)Math.Round(Math.Sin(radians) * formation.Distance),
                 leader.Z);
+            if (ordered)
+                destination = new Point3D((int)orderedSlot.X, (int)orderedSlot.Y, (int)orderedSlot.Z);
             if (companionTravel && !ambientWander && leader.CurrentZone != null)
             {
                 Vector3 floor = CompanionFollowPolicy.FormationDestination(BotBody, new(destination.X, destination.Y, destination.Z));
@@ -1899,6 +1910,9 @@ namespace DOL.AI.Brain
             bot.MarkAutonomousStateDirty();
             AutonomousStuckWatchdog.MarkProgress(bot, eAutonomousProgressKind.Objective);
         }
+
+        /// <summary>Your order (PlayerPartyOrders "buff"): its buffs seen to now, not at the next maintenance pass.</summary>
+        public void BuffNow() => _nextMaintenanceBuffTick = 0;
 
         private bool TryMaintainTravelAndClassBuffs()
         {

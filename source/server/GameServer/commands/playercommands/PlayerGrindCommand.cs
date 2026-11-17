@@ -18,6 +18,9 @@ namespace DOL.GS.Commands
     {
         public const int PullRadius = 1000;
         public const int RegroupRadius = 350;
+        // owner 2026-11-16: "I want it so that the player can move without it disabling as well, just have a relatively
+        // large radius that if you go out of it disables" - about 37 m from where you started it
+        public const int LeashRadius = 1500;
         public const int ContactTimeout = 35_000;
         // The legacy native client can close an otherwise healthy localhost
         // session after a long period with no player-originated movement. A
@@ -137,7 +140,7 @@ namespace DOL.GS.Commands
             player.Out.SendPlayerJump(false);
             ShowStatus(session, true);
             message = "Grind mode active: stay here; tank pulls first, or attackers pull if no tank. " +
-                "The next pull waits for everyone to return and fully recover HP/power/endurance. /grind stop cancels; moving also stops it.";
+                "The next pull waits for everyone to return and fully recover HP/power/endurance. /grind stop cancels; you can move about, but going more than about 35 metres from here stops it.";
             return true;
         }
 
@@ -174,11 +177,11 @@ namespace DOL.GS.Commands
                 if (player.Client?.ClientState != GameClient.eClientState.Playing || player.ObjectState != GameObject.eObjectState.Active)
                 { Stop(player, "left the world", false); return; }
                 if (!player.IsAlive) { Stop(player, "you died"); return; }
-                if (player.CurrentRegionID != session.Region || player.IsMoving ||
-                    Vector3.DistanceSquared(session.Anchor, new(player.X, player.Y, player.Z)) > 64 * 64 ||
+                if (player.CurrentRegionID != session.Region ||
+                    Vector3.DistanceSquared(session.Anchor, new(player.X, player.Y, player.Z)) > (float)LeashRadius * LeashRadius ||
                     player.Steed != null || player.IsOnHorse ||
                     AutonomousPlayerPilot.IsActive(player) || PlayerMobNavigator.IsActive(player))
-                { Stop(player, "you moved, traveled or enabled another controller"); return; }
+                { Stop(player, "you went too far from your camp, traveled or enabled another controller"); return; }
                 GameLiving[] members = player.Group?.GetMembersInTheGroup().ToArray() ?? Array.Empty<GameLiving>();
                 if (player.Group != session.Group || !IsExclusiveParty(player, session.Group, members))
                 { Stop(player, "party changed; only your temporary companions are allowed"); return; }
@@ -227,7 +230,7 @@ namespace DOL.GS.Commands
                         (member is GameBot || !member.IsSitting))
                     {
                         session.SeatedByMode.Add(member);
-                        if (member == player) player.Sit(true);
+                        if (member == player) { if (!player.IsMoving) player.Sit(true); }
                         else ((GameBot)member).BeginTemporaryCompanionRest();
                     }
                 }

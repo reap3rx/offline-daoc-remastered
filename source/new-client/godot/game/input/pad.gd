@@ -72,6 +72,8 @@ const ACTIONS := [
 	["weapon_cycle", "Cycle Weapons", "WEAPON", "tap"],
 	["run_lock", "Autorun", "RUN", "tap"],
 	["pull", "Pull (your group's puller starts the fight)", "PULL", "tap"],
+	["orders_wheel", "Bot Orders Wheel (formations, wait, follow, rest, camp, buff, grind)", "ORDERS", "held"],
+	["mount", "Mount / Dismount", "MOUNT", "tap"],
 	["sit", "Sit / Stand", "SIT", "tap"],
 	["torch", "Torch", "TORCH", "tap"],
 	["lock_on", "Lock On", "LOCK", "tap"],
@@ -100,6 +102,8 @@ static func _defaults(for_caster := false) -> Dictionary:
 		d["lb+rb+" + SLOTS[i]] = "qb3_%d" % (i + 1)
 	d["lb+rb+x"] = "target_enemy"
 	d["lb+rb+y"] = "target_friend"
+	d["lb+rb+b"] = "mount"                             # (owner 2026-11-16: "default being LB+RB+B to mount and dismount")
+	d["up:hold"] = "orders_wheel"                      # (owner 2026-11-16: "holding up will bring up a radial window of commands")
 	for i in [0, 1, 2, 3, 7]:
 		d["rb+" + SLOTS[i]] = "qb2_%d" % (i + 1)
 	d["rb+x"] = "style_reactive"                       # (owner 2026-11-10: RB + X / Y / B the specific styles)
@@ -201,6 +205,12 @@ func load_bindings() -> void:
 					{"up": "pull", "left": "weapon_cycle", "left:hold": "sheathe", "right": "torch"})
 			if String(bindings.get("l3", "")) == "sprint_toggle" and inputs_of("run_lock").is_empty():
 				bindings["l3"] = "run_lock"
+		# version 4 (owner 2026-11-16): hold d-pad up for the bot orders wheel, LB + RB + B mounts - where still free
+		if version < 4:
+			if String(bindings.get("up", "")) == "pull" and not bindings.has("up:hold") and inputs_of("orders_wheel").is_empty():
+				bindings["up:hold"] = "orders_wheel"
+			if String(bindings.get("lb+rb+b", "qb3_7")) == "qb3_7" and inputs_of("mount").is_empty():
+				bindings["lb+rb+b"] = "mount"
 		if from_shared:
 			for k in STYLE_KEYS:
 				if String(bindings.get(k, "")) == String(STYLE_KEYS[k]):
@@ -234,7 +244,7 @@ func save_bindings() -> void:
 	var cfg := ConfigFile.new()
 	for k in bindings:
 		cfg.set_value("bindings", k, bindings[k])
-	cfg.set_value("meta", "version", 3)
+	cfg.set_value("meta", "version", 4)
 	cfg.save(CASTER_PATH if caster else PATH)
 	bindings_changed.emit()
 
@@ -441,6 +451,11 @@ func _name_of(b: JoyButton) -> String:
 	return ""
 
 
+## The bow (or crossbow) drawn now in Action Combat - the trigger held on a shot.
+func _drawing_bow() -> bool:
+	return ac != null and is_instance_valid(ac) and bool(ac.get("on")) and bool(ac.get("_drawing"))
+
+
 func _mods() -> String:
 	var lb := _down.has("lb")
 	var rb := _down.has("rb")
@@ -465,6 +480,10 @@ func _button(name: String, pressed: bool) -> void:
 	if name in ["lb", "rb"]:
 		if pressed:
 			_used_mod[name] = false
+		elif not bool(_used_mod.get(name, false)) and since < hold_ms and world_mode() and _drawing_bow():
+			# a bumper tapped with the bow drawn: the next (RB) or previous (LB) arrows (owner 2026-11-16: "need a way to
+			# select arrow in controller mode. Maybe cycle through with RB/LB when drawing an arrow?")
+			Server.command("/ac quiver next" if name == "rb" else "/ac quiver prev")
 		elif not bool(_used_mod.get(name, false)) and since < hold_ms and world_mode():
 			_run(name, "tap")                              # a bumper tapped on its own
 		_set_layer()
@@ -576,6 +595,12 @@ func _do(act: String, down: bool) -> void:
 					bar.radial_open()
 				else:
 					bar.radial_close()
+		"orders_wheel":
+			if bar and is_instance_valid(bar):
+				if down:
+					bar.radial_open(bar.ORDERS, "ORDERS")
+				else:
+					bar.radial_close()
 	if not down:
 		return
 	match act:
@@ -605,6 +630,15 @@ func _do(act: String, down: bool) -> void:
 			_fire("run_lock")
 		"pull":
 			Server.command("/pull")
+		"mount":
+			# your horse: called (the server's /summon - the whistle, standing still, out of combat) or got off
+			var pl = _player()
+			if pl and pl.get("mount"):
+				pl.leave_mount()
+			elif viewer and int(viewer.get("_server_steed")) != 0:
+				viewer._server_dismount()
+			else:
+				Server.command("/summon")
 		"sit":
 			_fire("sit")
 		"torch":

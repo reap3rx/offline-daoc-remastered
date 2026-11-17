@@ -118,7 +118,7 @@ namespace DOL.GS.DynamicEvents
                 else if (!Steered && Follow != null && Follow.IsAlive && !Body.IsWithinRadius(Follow, 260))
                 {
                     if (!Body.IsMoving)
-                        Body.PathTo(new Vector3(Follow.X, Follow.Y, Follow.Z), Body.MaxSpeed);
+                        Body.PathTo(EventFollowSlots.Of(Body, Follow), Body.MaxSpeed);
                 }
                 else if (!Steered && Follow == null && Home != null)
                 {
@@ -132,6 +132,26 @@ namespace DOL.GS.DynamicEvents
                 }
             }
             base.Think();
+        }
+    }
+
+    /// <summary>Where a follower stands round the one it follows (owner 2026-11-16: event NPCs "tend to crowd on the same
+    /// exact spot that the lead NPC is ... so everyone is stacked on each other. If they could have some sort of formation
+    /// it would look better and more natural"): its own place on a loose ring behind the leader - the angle from its
+    /// object id, 120 to 200 units out - so a giver's guards walk as an escort, not in a heap.</summary>
+    public static class EventFollowSlots
+    {
+        public static Vector3 Of(GameObject follower, GameObject leader)
+        {
+            double heading = leader.Heading * Math.PI * 2 / 4096.0;
+            double spread = ((follower.ObjectID * 2.399963) % (Math.PI * 1.4)) - Math.PI * 0.7;   // within 126 degrees of behind
+            double a = heading + Math.PI + spread;
+            double r = 120 + follower.ObjectID % 5 * 20;
+            var want = new Vector3(leader.X - (float)(Math.Sin(a) * r), leader.Y + (float)(Math.Cos(a) * r), leader.Z);
+            if (leader.CurrentZone == null)
+                return want;
+            return PathfindingProvider.Instance.GetMoveAlongSurface(leader.CurrentZone, new(leader.X, leader.Y, leader.Z), want,
+                PathfindingProvider.Instance.DefaultFilters) ?? new Vector3(leader.X, leader.Y, leader.Z);
         }
     }
 

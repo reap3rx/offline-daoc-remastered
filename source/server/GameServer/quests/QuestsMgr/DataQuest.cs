@@ -1208,6 +1208,9 @@ namespace DOL.GS.Quests
 			}
 		}
 
+		/// <summary>The item a collect step wants handed over now (null when none) - for HandItemsOver.</summary>
+		public string CurrentCollectItem => Step >= 1 && m_collectItems.Count >= Step ? m_collectItems[Step - 1] : null;
+
 		/// <summary>
 		/// Current step type
 		/// </summary>

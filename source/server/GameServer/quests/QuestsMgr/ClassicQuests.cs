@@ -399,6 +399,22 @@ namespace DOL.GS.Quests
             }
         }
 
+        /// <summary>The items an NPC takes from this player now on a trade step (its Trades' item ids) - HandItemsOver's
+        /// "Give" button.</summary>
+        public static IEnumerable<string> TradeWants(GamePlayer player, GameNPC npc)
+        {
+            if (player == null || npc == null)
+                yield break;
+            foreach (DataQuest quest in player.QuestList.Keys.OfType<DataQuest>().ToArray())
+            {
+                if (!_config.Quests.TryGetValue(quest.ID, out QuestInfo info) || quest.Step <= 0 || quest.Step >= info.Steps.Count) continue;
+                CustomStep custom = info.Steps[quest.Step]?.Custom;
+                if (custom?.Kind != "trade" || custom.Trades == null || !string.Equals(custom.Target, npc.Name, StringComparison.OrdinalIgnoreCase)) continue;
+                foreach (string id in custom.Trades.Keys)
+                    yield return id;
+            }
+        }
+
         /// <summary>A trade step: handing its NPC one of the wanted items takes it, gives what it is traded for, and
         /// completes the step (a kill task's turn-in).</summary>
         private static void OnGiveItem(DOLEvent e, object sender, EventArgs args)

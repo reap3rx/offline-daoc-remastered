@@ -812,8 +812,11 @@ func _physics_body(delta: float) -> void:
 		var speed := float(mv.speed)
 		if not s.alive:
 			continue
-		if s.ride_clip != "":
-			continue                                            # riding: the steed carries it (_seat_riders)
+		# riding someone else's steed (a taxi horse): the steed carries it (_seat_riders); on its own horse it moves as
+		# anyone does (owner 2026-11-16: bots riding behind you - "their mount does not animate and they seem to have a
+		# weird jitter": skipped here, they only jumped from one server update to the next and their horse stood still)
+		if s.ride_clip != "" and not _mounts.has(int(s.spawn.get("oid", 0))):
+			continue
 		if speed <= 0.0:
 			s.mode = NpcState.Mode.FIGHT if int(mv.target) != 0 or now_ms < s.combat_until else NpcState.Mode.IDLE
 			s.running = false
@@ -1642,6 +1645,8 @@ func _emote(d: Dictionary) -> void:
 	# (GamePlayer.OnLevelUp, eEmote.LvlUp 0x2A) the trifecta (owner 2026-10-15: none at 1 -> 2 on the server), /bind
 	# (GamePlayer.Bind sends the realm's bind emote to everyone in view, you too) the bindstone rings and sound
 	# (owner 2026-10-16) - the server only sends the emote id, the client draws the rest
+	if int(d.emote) == HORSE_WHISTLE and v is Node3D:
+		_whistle(v as Node3D)
 	var fx := int(EMOTE_FX.get(int(d.emote), 0))
 	var mine_level := int(d.emote) == 42 and int(d.oid) == Server.me_oid
 	if fx and v is Node3D:
@@ -1655,6 +1660,34 @@ func _emote(d: Dictionary) -> void:
 		var r := int(st.spawn.get("realm", 0)) if st and st.spawn is Dictionary else 0
 		SpellFx.level_fanfare_at(v as Node3D, ["hib", "alb", "mid", "hib"][clampi(r, 0, 3)])
 
+
+
+## Summoning a horse (eEmote.Horse_whistle, 0x43 - GamePlayer.UseSlot's five-second whistle, a bot's AutonomousBotMounts):
+## a hand raised to the lips and a two-note whistle (owner 2026-11-16: "There should be a whistle sound and animation that
+## can be tied with the summon mount ability"). The 1.65 data has neither for it: the beckon gesture, and a whistle made
+## for it (content/sounds/files/horse_whistle.wav, pipeline/make_whistle.py).
+const HORSE_WHISTLE := 0x43
+const WHISTLE_CLIP_EMOTE := 1                   # (Beckon: "come here")
+const WHISTLE_SOUND := "res://content/sounds/files/horse_whistle.wav"
+static var _whistle_stream: AudioStream = null
+
+
+func _whistle(v: Node3D) -> void:
+	if v.has_method("play_emote"):
+		v.call("play_emote", WHISTLE_CLIP_EMOTE)
+	if _whistle_stream == null and FileAccess.file_exists(WHISTLE_SOUND):
+		_whistle_stream = AudioStreamWAV.load_from_file(ProjectSettings.globalize_path(WHISTLE_SOUND))
+	if _whistle_stream == null:
+		return
+	var a := AudioStreamPlayer3D.new()
+	a.stream = _whistle_stream
+	a.bus = "Effects" if AudioServer.get_bus_index("Effects") >= 0 else "Master"
+	a.unit_size = 12.0
+	a.max_distance = 60.0
+	a.position = Vector3(0, 1.6, 0)
+	v.add_child(a)
+	a.play()
+	a.finished.connect(a.queue_free)
 
 
 ## emotes.csv (gamedata.mpk): emote id -> its client effect (Spell column), every row that has one

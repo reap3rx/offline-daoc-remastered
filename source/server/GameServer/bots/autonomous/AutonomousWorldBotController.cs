@@ -2868,9 +2868,26 @@ namespace DOL.GS
                     bot.PersistentRecord.CurrentCampId = string.Empty;
                 return false;
             }
-            _camp = _camp with { X = (int) at.X, Y = (int) at.Y, Z = (int) at.Z, MonsterName = foe?.Name ?? _camp.MonsterName };
+            Vector3 spot = EventStandSpot(bot, at);
+            _camp = _camp with { X = (int) spot.X, Y = (int) spot.Y, Z = (int) spot.Z, MonsterName = foe?.Name ?? _camp.MonsterName };
             _eventDoing = doing;
             return true;
+        }
+
+        /// <summary>Where this bot waits at an event (owner 2026-11-16: bots at events "tend to crowd on the same exact spot
+        /// that the lead NPC is or where the next thing will spawn, so everyone is stacked on each other ... Bots themselves
+        /// can kind of stand around in a more random/awkward way when waiting"): its own place on a ring round the event's
+        /// spot - the angle from its id (the golden angle, so a crowd fills the ring evenly), 160 to 340 units out - kept on
+        /// the walkable surface.</summary>
+        internal static Vector3 EventStandSpot(GameBot bot, Vector3 at)
+        {
+            double a = (bot.ObjectID * 2.399963) % (Math.PI * 2);
+            double r = 160 + bot.ObjectID % 7 * 30;
+            var want = new Vector3(at.X + (float)(Math.Sin(a) * r), at.Y + (float)(Math.Cos(a) * r), at.Z);
+            Zone zone = bot.CurrentRegion?.GetZone((int)at.X, (int)at.Y);
+            if (zone == null)
+                return at;
+            return PathfindingProvider.Instance.GetMoveAlongSurface(zone, at, want, PathfindingProvider.Instance.DefaultFilters) ?? at;
         }
 
         private string _eventDoing = string.Empty;
@@ -2901,6 +2918,9 @@ namespace DOL.GS
             }
             if (HandleCampRecovery(bot, false))
                 return true;
+            // standing at its place: now and then it turns to look toward what's going on, as people waiting do
+            if (!bot.IsMoving && Random.Shared.Next(10) == 0)
+                bot.TurnTo((int)at.X, (int)at.Y);
             SetStatus(bot, "With the event", GoalText(), doing, _camp.MonsterName, _camp.ZoneName);
             return true;
         }

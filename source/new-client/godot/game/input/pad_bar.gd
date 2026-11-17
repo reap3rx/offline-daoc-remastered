@@ -25,6 +25,13 @@ var _shown := false
 var _radial := false
 var _radial_pick := -1
 
+## The bot orders wheel (hold d-pad up; owner 2026-11-16: "formation types (like columns, horizontal or vertical line)
+## Wait, follow, rest, camp, spread out, buff ... /grind to be one of the radial options"): PlayerPartyOrders on the server.
+const ORDERS := [["FOLLOW", "/order follow"], ["COLUMN", "/order formation column"], ["LINE", "/order formation line"],
+		["SPREAD OUT", "/order formation spread"], ["WAIT", "/order wait"], ["REST", "/order rest"],
+		["CAMP", "/order camp"], ["BUFF", "/order buff"], ["GRIND", "/order grind"]]
+var _wheel: Array = []
+var _wheel_title := "MENU"
 const WHEEL := [["HERO", "hero"], ["BAGS", "bags"], ["ABILITIES", "skills"], ["STYLES", "ac_styles"], ["MAP", "map"],
 		["JOURNAL", "journal"], ["GUILD", "guild"], ["OPTIONS", "options"]]
 
@@ -281,7 +288,9 @@ func radial_shown() -> bool:
 	return _radial
 
 
-func radial_open() -> void:
+func radial_open(items: Array = WHEEL, title := "MENU") -> void:
+	_wheel = items
+	_wheel_title = title
 	_radial = true
 	_radial_pick = -1
 
@@ -292,9 +301,13 @@ func radial_close() -> bool:
 		return false
 	_radial = false
 	queue_redraw()
-	if _radial_pick < 0:
+	if _radial_pick < 0 or _radial_pick >= _wheel.size():
 		return false
-	open_window(String(WHEEL[_radial_pick][1]))
+	var what := String(_wheel[_radial_pick][1])
+	if what.begins_with("/"):
+		Server.command(what)                               # an order (the bot orders wheel)
+	else:
+		open_window(what)
 	return true
 
 
@@ -309,7 +322,7 @@ func _radial_tick() -> void:
 	if v.length() < 0.5:
 		return                                             # (the last pick stays until another is pointed at)
 	var ang := fposmod(atan2(v.x, -v.y), TAU)              # 0 = up, clockwise
-	_radial_pick = int(round(ang / TAU * WHEEL.size())) % WHEEL.size()
+	_radial_pick = int(round(ang / TAU * _wheel.size())) % maxi(1, _wheel.size())
 
 
 func _draw() -> void:
@@ -322,14 +335,14 @@ func _draw() -> void:
 	draw_arc(c, 170.0, 0.0, TAU, 64, UiArt.GOLD, 2.0)
 	draw_circle(c, 46.0, Color(0.12, 0.1, 0.08, 0.95))
 	draw_arc(c, 46.0, 0.0, TAU, 48, Color(0.5, 0.42, 0.25), 1.5)
-	var hint := "MENU" if _radial_pick < 0 else String(WHEEL[_radial_pick][0])
+	var hint := _wheel_title if _radial_pick < 0 or _radial_pick >= _wheel.size() else String(_wheel[_radial_pick][0])
 	var hw := font.get_string_size(hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 11).x
 	draw_string(font, c + Vector2(-hw * 0.5, 4), hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UiArt.GOLD_HI)
-	for i in WHEEL.size():
-		var ang := TAU * i / WHEEL.size()
+	for i in _wheel.size():
+		var ang := TAU * i / _wheel.size()
 		var at := c + Vector2(sin(ang), -cos(ang)) * 116.0
 		var picked := i == _radial_pick
-		var text := String(WHEEL[i][0])
+		var text := String(_wheel[i][0])
 		var w := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 10).x + 16.0
 		var rect := Rect2(at - Vector2(w * 0.5, 12), Vector2(w, 24))
 		draw_rect(rect, Color(0.45, 0.36, 0.15, 0.95) if picked else Color(0.17, 0.15, 0.12, 0.92))
