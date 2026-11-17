@@ -9,8 +9,11 @@ uniform vec2 uv_scale = vec2(1.0, 1.0);
 varying float fade_t;
 void vertex() {
 	vec3 at = (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
-	fade_t = tree_fade(at);
+	fade_t = INSTANCE_CUSTOM.y;
 	VERTEX += tree_sway(VERTEX, at, height, TIME);
+	if (fade_t > 0.999) {
+		VERTEX = vec3(0.0);       // (wholly the far card: nothing to draw)
+	}
 }
 void fragment() {
 	if (tree_dither(FRAGCOORD.xy) < fade_t) {

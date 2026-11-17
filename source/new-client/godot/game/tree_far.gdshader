@@ -18,7 +18,7 @@ varying vec3 right_w;
 varying vec3 toward_w;
 varying float fade_t;
 void vertex() {
-	fade_t = tree_fade(MODEL_MATRIX[3].xyz);
+	fade_t = INSTANCE_CUSTOM.y;
 	vec3 cam = (inverse(MODEL_MATRIX) * vec4(CAMERA_POSITION_WORLD, 1.0)).xyz;
 	vec2 d = cam.xz;
 	d = length(d) > 0.0001 ? normalize(d) : vec2(0.0, 1.0);
@@ -35,6 +35,9 @@ void vertex() {
 	uv1 = vec2((k1 + UV.x) / views, (row + UV.y) / rows);
 	right_w = normalize((MODEL_MATRIX * vec4(right, 0.0)).xyz);
 	toward_w = normalize((MODEL_MATRIX * vec4(d.x, 0.0, d.y, 0.0)).xyz);
+	if (fade_t < 0.001) {
+		VERTEX = vec3(0.0);       // (wholly the near tree: nothing to draw)
+	}
 }
 void fragment() {
 	if (tree_dither(FRAGCOORD.xy) >= fade_t) {

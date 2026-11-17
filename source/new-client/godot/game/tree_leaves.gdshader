@@ -12,8 +12,11 @@ uniform float translucency = 0.3;
 varying float fade_t;
 void vertex() {
 	vec3 at = (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
-	fade_t = tree_fade(at);
+	fade_t = INSTANCE_CUSTOM.y;
 	VERTEX += tree_sway(VERTEX, at, height, TIME);
+	if (fade_t > 0.999) {
+		VERTEX = vec3(0.0);       // (wholly the far card: nothing to draw)
+	}
 	VERTEX += NORMAL * 0.04 * sin(TIME * 3.7 + VERTEX.x * 1.3 + VERTEX.z * 1.7) * (0.3 + wind_strength);   // (flutter)
 }
 void fragment() {

@@ -28,7 +28,17 @@ b = im("hbirchtreen.png").crop((0, 0, 410, 512))
 bleed(fit(b.crop((0, 0, 410, 300)))).save(O + "leaf_birch.png")
 # pine: half the grove tree's needle spray, base (the right edge) turned down
 p = im("holdgrove.png").crop((0, 0, 400, 400)).rotate(-90, expand=True, resample=Image.BICUBIC)
-bleed(fit(p.crop(p.getbbox()))).save(O + "leaf_pine.png")
+p = fit(p.crop(p.getbbox()))
+# (owner 2026-11-17: the pine cards showed as squares up close - the spray's base is a solid mass to the card's edge)
+# a ragged spray shape from the stem, and gaps through the mass, so no card edge shows
+import numpy as np
+pa = np.asarray(p).astype(np.float32); H, W = pa.shape[:2]
+yy, xx = np.mgrid[0:H, 0:W] / np.array([H, W])[:, None, None]
+rng = np.random.default_rng(3)
+def nz(n): return np.asarray(Image.fromarray((rng.random((n, n)) * 255).astype(np.uint8)).resize((W, H), Image.BICUBIC)).astype(np.float32) / 255
+d = np.sqrt(((xx - 0.5) / 0.48) ** 2 + ((yy - 0.55) / 0.5) ** 2) + (nz(24) - 0.5) * 0.4
+pa[..., 3] *= np.clip((1.0 - d) / 0.15, 0, 1) * np.clip((nz(48) - 0.22) / 0.1, 0, 1)
+bleed(Image.fromarray(pa.clip(0, 255).astype(np.uint8), "RGBA")).save(O + "leaf_pine.png")
 # dead twigs: the dead tree's bare spray
 d = im("hdeadtree.png"); d = d.crop(d.getbbox())
 bleed(fit(d.crop((0, 0, d.size[0] // 2, d.size[1])))).save(O + "leaf_dead.png")

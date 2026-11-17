@@ -7,11 +7,18 @@ extends RefCounted
 ## a headless browser, the original trees' own bark and leaf colours). ZoneLoader asks build() for each placed model:
 ## each tree becomes one of its species' variants, picked by where it stands (the same one every visit), at the
 ## original's place, turn and size. Collision, the bots' paths and the falling leaves keep the original's footprint.
-##   Near (NEAR_M): the real tree, bark and leaves, swaying, casting shadows.
+##   Near (within NEAR_M): the real tree, bark and leaves, swaying, casting shadows.
 ##   Beyond: a far card that turns to the camera and shows that variant photographed from the nearest of eight
 ##   directions, lit like the near tree, out to the original's own draw range (times Options > VIDEO view
-##   distance). The two cross-fade over FADE_M either side (owner 2026-11-17: "a stark difference in quality that
-##   pops in and out").
+##   distance).
+##   The hand-over is per tree and in time, not in distance (owner 2026-11-17: the distance cross-fade left trees
+##   half see-through when you stood still, and whole batches judged by their middle went missing): a tree that
+##   crosses NEAR_M (HYST either side, so standing on the line doesn't flicker) dithers from one to the other over
+##   FADE_S seconds, then is wholly one. TreeSwap.Driver, one per zone, watches the distances and sets each tree's
+##   instance data; the shaders read it.
+##   Its collision is its own trunk (owner 2026-11-17: "the new tree trunks have the same collision as the old ones
+##   ... running into an invisible wall"): the original's stand-in square (2 x Radius, up to 14 m across) becomes a
+##   post the width of the new trunk, and the camera no longer bumps the old canopy's faces.
 ## Each tree stands on the ground at its spot (the lowest of five points round its trunk), not at the original's
 ## base: the originals carried metres of trunk underground (owner 2026-11-17: "some trees are too low into the
 ## ground").
@@ -21,7 +28,11 @@ const DIR := "res://content/trees"
 const NEAR_M := 75.0
 ## (tests: --tree-near=<metres> moves the switch, to compare the near and far trees from one spot)
 static var near_m := -1.0
-const FADE_M := 25.0
+const HYST := 5.0                   # metres either side of NEAR_M before a tree changes
+const FADE_S := 0.6                 # seconds a tree takes to change
+const GROW := 1.06                  # a little taller than made, and stood deeper (owner 2026-11-17: some feet showed)
+const DEEP := 1.85                  # metres (at scale 1) the trunk's foot goes under the lowest ground round it
+const CELL_M := 32.0                # trees batched per 32 m square: a batch is culled by its middle, so keep it small
 const LEAVES_SHADER := preload("res://game/tree_leaves.gdshader")
 const BARK_SHADER := preload("res://game/tree_bark.gdshader")
 const FAR_SHADER := preload("res://game/tree_far.gdshader")
@@ -52,8 +63,9 @@ static func species_of(model_file: String) -> String:
 
 ## Draw these placed trees as the new ones, under `parent` (the zone). False: no replacement for this model - the
 ## caller draws the original.
-static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform3D], cell_m: float, far: float, view_mult: float,
+static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform3D], _cell_m: float, far: float, view_mult: float,
 		zone_id := -1, ground := Callable()) -> bool:
+	var cell_m := CELL_M
 	var xforms := xforms_in
 	if not enabled or xforms.is_empty() or "--classic-trees" in OS.get_cmdline_user_args():
 		return false
@@ -68,7 +80,6 @@ static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform
 		for a in OS.get_cmdline_user_args():
 			if a.begins_with("--tree-near="):
 				near_m = float(a.split("=", true, 1)[1])
-		(Engine.get_main_loop() as SceneTree).process_frame.connect.call_deferred(_update_eye)
 	_mutex.lock()
 	var s = _species.get(sp)
 	if s == null:
@@ -94,18 +105,24 @@ static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform
 		if not cells.has(c):
 			cells[c] = []
 		cells[c].append(i)
+	var drv := _driver(parent)
+	var base := drv.add_trees(xforms)                   # (each tree's slot in the driver)
 	# near: the real trees, one batch per variant per cell
+	var reach := CELL_M * 0.75                          # (a batch's middle to its far corner, and some)
 	for k in groups:
 		var mm := MultiMesh.new()
 		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.use_custom_data = true                       # (y: how far the tree is into its change to the far card)
 		mm.mesh = s.near[k.z]
 		mm.instance_count = groups[k].size()
 		for j in groups[k].size():
 			mm.set_instance_transform(j, xforms[groups[k][j]])
+			mm.set_instance_custom_data(j, Color(0, 1, 0, 0))
+			drv.set_near(base + groups[k][j], mm, j)
 		var mmi := MultiMeshInstance3D.new()
 		mmi.name = "Tree_%s_%d_%d_%d" % [sp, k.x, k.y, k.z]
 		mmi.multimesh = mm
-		mmi.visibility_range_end = near_m + FADE_M           # (the hand-over itself is in the shaders: tree_fade)
+		mmi.visibility_range_end = near_m + HYST + reach
 		parent.add_child(mmi)
 	# far: the crossed cards, one batch per cell (the variant rides in the instance's custom data)
 	var cards: Array = s.far_cards
@@ -123,13 +140,14 @@ static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform
 			var w := float(card.half) * 2.0
 			var h := float(card.top) - float(card.bottom)
 			mm.set_instance_transform(j, xforms[i] * Transform3D(Basis.from_scale(Vector3(w, h, w)), Vector3(0, float(card.bottom), 0)))
-			mm.set_instance_custom_data(j, Color(float(v), 0, 0, 0))
+			mm.set_instance_custom_data(j, Color(float(v), 1, 0, 0))
+			drv.set_far(base + i, mm, j, v)
 		var mmi := MultiMeshInstance3D.new()
 		mmi.name = "TreeFar_%s_%d_%d" % [sp, c.x, c.y]
 		mmi.multimesh = mm
 		# (it casts a shadow too: in the shadow pass the card turns to the sun, so its shadow is the tree's; without one
 		# the sunlit mist showed through the far trees as a milky veil)
-		mmi.visibility_range_begin = maxf(near_m - FADE_M, 0.0)
+		mmi.visibility_range_begin = maxf(near_m - HYST - reach, 0.0)
 		mmi.set_meta("base_far", far)
 		mmi.visibility_range_end = far * view_mult
 		mmi.visibility_range_end_margin = far * view_mult * 0.1
@@ -145,14 +163,15 @@ static func _on_ground(xforms: Array[Transform3D], ground: Callable, sink: float
 	out.resize(xforms.size())
 	for i in xforms.size():
 		var x := xforms[i]
-		var sc := x.basis.get_scale().y
+		var b := x.basis.scaled(Vector3.ONE * GROW)
+		var sc := b.get_scale().y
 		var o := x.origin
 		var r := 1.5 * sc
 		var g := float(ground.call(o.x, o.z))
 		for off in [Vector2(r, 0), Vector2(-r, 0), Vector2(0, r), Vector2(0, -r)]:
 			g = minf(g, float(ground.call(o.x + off.x, o.z + off.y)))
-		o.y = g - 0.35 * sc + sink * sc
-		out[i] = Transform3D(x.basis, o)
+		o.y = g - DEEP * sc + sink * sc
+		out[i] = Transform3D(b, o)
 	return out
 
 
@@ -186,10 +205,12 @@ static func _load_species(sp: String) -> Dictionary:
 	bark.set_shader_parameter("height", height)
 	bark.set_shader_parameter("uv_scale", Vector2(d.get("bark_uv", [1.0, 1.0])[0], d.get("bark_uv", [1.0, 1.0])[1]))
 	var near: Array[ArrayMesh] = []
+	var trunks: Array[PackedVector3Array] = []
 	for file in d.get("variants", []):
 		var mesh := _load_glb(DIR + "/" + String(file), bark, leaves)
 		if mesh:
 			near.append(mesh)
+			trunks.append(_trunks(mesh))
 	if near.is_empty():
 		return {}
 	var far := ShaderMaterial.new()
@@ -197,12 +218,9 @@ static func _load_species(sp: String) -> Dictionary:
 	far.set_shader_parameter("atlas", _texture(String(d.far.atlas), true, true))
 	far.set_shader_parameter("views", float(d.far.get("views", 8)))
 	far.set_shader_parameter("rows", float(d.far.get("rows", near.size())))
-	for mat: ShaderMaterial in [leaves, bark, far]:
-		mat.set_shader_parameter("near_m", near_m)
-		mat.set_shader_parameter("fade_m", FADE_M)
 	var quad := _far_quad_mesh().duplicate() as ArrayMesh
 	quad.surface_set_material(0, far)
-	return {"near": near, "far_mesh": quad, "far_cards": d.far.cards, "sink": float(d.get("sink", 0.0))}
+	return {"near": near, "far_mesh": quad, "far_cards": d.far.cards, "sink": float(d.get("sink", 0.0)), "trunks": trunks}
 
 
 ## One variant's glTF: its "bark" and "leaves" meshes as the two surfaces of one mesh.
@@ -234,14 +252,6 @@ static func _find_mesh(n: Node, nm: String) -> MeshInstance3D:
 	return null
 
 
-## The camera's place for the shaders' hand-over (tree_eye), each frame.
-static func _update_eye() -> void:
-	var tree := Engine.get_main_loop() as SceneTree
-	var cam := tree.root.get_viewport().get_camera_3d() if tree else null
-	if cam:
-		RenderingServer.global_shader_parameter_set("tree_eye", cam.global_position)
-
-
 ## One unit card standing on the ground (x from -0.5 to 0.5, y from 0 to 1); the far shader turns it to the camera.
 static func _far_quad_mesh() -> ArrayMesh:
 	if _far_quad:
@@ -261,3 +271,213 @@ static func _far_quad_mesh() -> ArrayMesh:
 	# (the card turns, so its box must hold it in any direction: as wide as it is deep)
 	_far_quad.custom_aabb = AABB(Vector3(-0.5, 0, -0.5), Vector3(1, 1, 1))
 	return _far_quad
+
+
+# ---------------------------------------------------------------- collision: the new trunk
+
+## The posts round the trunks of the new tree drawn for this placement (the zone's frame, before grounding): each
+## Vector3(x offset, z offset, radius) in metres from the placement's origin, turned and scaled with it - one per trunk
+## (a clump has two or three). Empty when this model isn't drawn as a new tree here (ZoneLoader then keeps the
+## original's stand-in).
+static func trunk_posts(model_file: String, x: Transform3D, zone_id := -1) -> PackedVector3Array:
+	if not enabled or "--classic-trees" in OS.get_cmdline_user_args():
+		return PackedVector3Array()
+	var zones: Array = _load_manifest().get("zones", [])
+	if not zones.is_empty() and not (float(zone_id) in zones or zone_id in zones):
+		return PackedVector3Array()
+	var sp := species_of(model_file)
+	_mutex.lock()
+	var s = _species.get(sp)
+	_mutex.unlock()
+	if s == null or s.is_empty():
+		return PackedVector3Array()
+	var trunks: Array = s.trunks
+	var o := x.origin
+	var mine: PackedVector3Array = trunks[posmod(hash(Vector2i(roundi(o.x * 4.0), roundi(o.z * 4.0))), trunks.size())]
+	var b := x.basis.scaled(Vector3.ONE * GROW)
+	var sc := b.get_scale().x
+	var out := PackedVector3Array()
+	for t in mine:
+		var off := b * Vector3(t.x, 0.0, t.y)
+		out.append(Vector3(off.x, off.z, t.z * sc * 0.9))     # (0.9: the ring is measured at the buried foot; the bark
+	return out                                                 # tapers a little by the ground)
+
+
+## Posts for the player's capsule round those trunks: eight sides each, from a little under the ground to 25 m up (as
+## the original's stand-in, which has no top), the capsule's own radius taken off so its centre stops at the bark.
+static func trunk_faces(posts: PackedVector3Array, base_y: float, at: Vector3, capsule_r: float) -> PackedVector3Array:
+	var y0 := base_y - 2.4 - at.y
+	var y1 := base_y + 25.6 - at.y
+	var out := PackedVector3Array()
+	for p in posts:
+		var rr := maxf(p.z + 0.05 - capsule_r, 0.05)
+		var c := Vector3(p.x, 0, p.y)
+		for k in 8:
+			var a0 := TAU * k / 8.0
+			var a1 := TAU * (k + 1) / 8.0
+			var p0 := c + Vector3(cos(a0) * rr, 0, sin(a0) * rr)
+			var p1 := c + Vector3(cos(a1) * rr, 0, sin(a1) * rr)
+			var q := [p0 + Vector3(0, y0, 0), p1 + Vector3(0, y0, 0), p1 + Vector3(0, y1, 0), p0 + Vector3(0, y1, 0)]
+			for idx in [0, 1, 2, 0, 2, 3]:            # (wound as ZoneLoader.proxy_faces: front outside)
+				out.append(q[idx])
+	return out
+
+
+## Where the trunks stand in a variant (at scale 1): the bark's lowest ring of vertices (EZ-Tree starts each trunk with
+## one), split into trunks - Vector3(x, z, radius) each. (Not "every bark vertex near the ground": low boughs and a
+## clump's spread made that a wall metres out.)
+static func _trunks(mesh: ArrayMesh) -> PackedVector3Array:
+	var verts: PackedVector3Array = mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var lo := INF
+	for v in verts:
+		lo = minf(lo, v.y)
+	var ring := PackedVector2Array()
+	for v in verts:
+		if v.y < lo + 0.3:
+			ring.append(Vector2(v.x, v.z))
+	var gap := 0.6
+	while true:                                  # (a wide trunk's ring points are further apart: widen till each is one)
+		var groups := _cluster(ring, gap)
+		var out := PackedVector3Array()
+		var split := false
+		for g: PackedVector2Array in groups:
+			var c := Vector2.ZERO
+			for p in g:
+				c += p
+			c /= g.size()
+			var r := 0.0
+			for p in g:
+				r = maxf(r, p.distance_to(c))
+			if g.size() < 4:
+				split = true
+			elif r > 0.05:                           # (a bough's tip resting on the ground: no post)
+				out.append(Vector3(c.x, c.y, r))
+		if (not split and not out.is_empty()) or gap > 2.0:
+			if out.is_empty():
+				out.append(Vector3(0, 0, 0.3))
+			return out
+		gap += 0.2
+	return PackedVector3Array()
+
+
+static func _cluster(pts: PackedVector2Array, gap: float) -> Array:
+	var seen := PackedByteArray()
+	seen.resize(pts.size())
+	var out := []
+	for i in pts.size():
+		if seen[i]:
+			continue
+		seen[i] = 1
+		var g := PackedVector2Array([pts[i]])
+		var k := 0
+		while k < g.size():
+			for j in pts.size():
+				if not seen[j] and pts[j].distance_to(g[k]) < gap:
+					seen[j] = 1
+					g.append(pts[j])
+			k += 1
+		out.append(g)
+	return out
+
+
+# ---------------------------------------------------------------- the hand-over, per tree, in time
+
+static func _driver(parent: Node3D) -> Driver:
+	if parent.has_meta("tree_driver"):
+		return parent.get_meta("tree_driver")
+	var d := Driver.new()
+	d.name = "TreeSwapDriver"
+	d.near = near_m
+	d.hyst = HYST
+	d.fade_s = FADE_S
+	parent.set_meta("tree_driver", d)
+	parent.add_child(d)
+	return d
+
+
+## One per zone: every tree's place (the zone's own frame), its near and far instances, and how far it is into its
+## change (0 the real tree, 1 the far card). Distances are looked at 7 times a second; a changing tree moves on each
+## frame.
+class Driver extends Node:
+	var pos := PackedVector2Array()
+	var t := PackedFloat32Array()
+	var want := PackedByteArray()
+	var near_mm: Array[MultiMesh] = []
+	var near_i := PackedInt32Array()
+	var far_mm: Array[MultiMesh] = []
+	var far_i := PackedInt32Array()
+	var far_v := PackedInt32Array()
+	var moving := {}                                 # tree -> true while it changes
+	var near := 75.0
+	var hyst := 5.0
+	var fade_s := 0.6
+	var _look := 0.0
+	var _first := true
+
+	func add_trees(xforms: Array[Transform3D]) -> int:
+		var base := pos.size()
+		for x in xforms:
+			pos.append(Vector2(x.origin.x, x.origin.z))
+			t.append(1.0)
+			want.append(1)
+			near_mm.append(null)
+			near_i.append(-1)
+			far_mm.append(null)
+			far_i.append(-1)
+			far_v.append(0)
+		_first = true                                # (new trees take their place at once, not by fading)
+		return base
+
+	func set_near(k: int, mm: MultiMesh, i: int) -> void:
+		near_mm[k] = mm
+		near_i[k] = i
+
+	func set_far(k: int, mm: MultiMesh, i: int, v: int) -> void:
+		far_mm[k] = mm
+		far_i[k] = i
+		far_v[k] = v
+
+	func _process(delta: float) -> void:
+		var cam := get_viewport().get_camera_3d()
+		var zone := get_parent() as Node3D
+		if cam == null or zone == null:
+			return
+		_look -= delta
+		if _look <= 0.0:
+			_look = 0.14
+			var c3: Vector3 = zone.global_transform.affine_inverse() * cam.global_position
+			var c := Vector2(c3.x, c3.z)
+			var lo := (near - hyst) * (near - hyst)
+			var hi := (near + hyst) * (near + hyst)
+			for k in pos.size():
+				var d2 := pos[k].distance_squared_to(c)
+				var w: int = want[k]
+				if d2 > hi:
+					w = 1
+				elif d2 < lo:
+					w = 0
+				if _first:
+					w = 1 if d2 > near * near else 0
+					want[k] = w
+					t[k] = float(w)
+					_apply(k)
+					continue
+				if w != want[k]:
+					want[k] = w
+					moving[k] = true
+			_first = false
+		if moving.is_empty():
+			return
+		var step := delta / fade_s
+		for k in moving.keys():
+			var goal: float = float(want[k])
+			t[k] = move_toward(t[k], goal, step)
+			_apply(k)
+			if t[k] == goal:
+				moving.erase(k)
+
+	func _apply(k: int) -> void:
+		if near_mm[k]:
+			near_mm[k].set_instance_custom_data(near_i[k], Color(0, t[k], 0, 0))
+		if far_mm[k]:
+			far_mm[k].set_instance_custom_data(far_i[k], Color(float(far_v[k]), t[k], 0, 0))

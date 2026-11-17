@@ -965,7 +965,7 @@ func _build_fixtures() -> void:
 			for i in xforms.size():
 				var fid := int((per_model[m][i] as Dictionary).get("id", -1))
 				_make_doors(parts, xforms[i], int(info.get("id", 0)) * 1000000 + fid * 100 if fid > 0 else -1)
-		# the new trees (TreeSwap): drawn instead of the original's meshes; its collision and leaves stay as they were
+		# the new trees (TreeSwap): drawn instead of the original's meshes, and walled by their own trunks (below)
 		var swapped: bool = TreeSwap.build(self, String(model.file), xforms, FIXTURE_CELL_M, far, view_mult,
 				int(info.get("id", -1)), _grid_height)
 		for part in ([] if swapped else parts.meshes):
@@ -986,7 +986,7 @@ func _build_fixtures() -> void:
 				add_child(mmi)
 		for i in xforms.size():
 			var vf: PackedVector3Array = parts.visible_faces
-			if vf.is_empty():
+			if vf.is_empty() or swapped:                # (a new tree: the old one's shape is no floor to climb)
 				continue
 			var fk := "%d/%.2f" % [m, float(per_model[m][i].scale)]
 			if not floor_cache.has(fk):
@@ -1002,18 +1002,26 @@ func _build_fixtures() -> void:
 			fcs.shape = floor_cache[fk]
 			fcs.transform = xforms[i] if per_model[m][i].has("basis") else Transform3D(Basis(Vector3.UP, deg_to_rad(float(per_model[m][i].yaw))), xforms[i].origin)
 			(floor_body if picked(per_model[m][i]) else scenery_body).add_child(fcs)
-		# trees: the client's stand-in box around the trunk (proxy_faces), for fixtures it doesn't collide with
+		# trees: the client's stand-in box around the trunk (proxy_faces), for fixtures it doesn't collide with - or,
+		# for a new tree, a post the width of its own trunk (owner 2026-11-17: the old box was an invisible wall)
 		for i in xforms.size():
 			var pf: Dictionary = per_model[m][i]
-			if picked(pf) or pf.get("no_collision", false) or int(pf.get("radius", 0)) <= 0 or pf.has("basis"):
+			var walled: bool = int(pf.get("radius", 0)) > 0 or (swapped and bool(pf.get("collide", false)))
+			if (picked(pf) and not swapped) or pf.get("no_collision", false) or not walled or pf.has("basis"):
 				continue
 			var at := xforms[i].origin
 			var base_y := at.y if city else maxf(at.y - 512.0 * 0.025, _grid_height(at.x, at.z))
 			base_y = at.y + snappedf(base_y - at.y, 0.1)        # (shapes shared between trees of a size)
-			var pk := "%d/%.2f/%.1f" % [int(pf.radius), float(pf.scale), base_y - at.y]
+			var posts := TreeSwap.trunk_posts(String(model.file), xforms[i], int(info.get("id", -1))) if swapped \
+					else PackedVector3Array()
+			var pk := "%d/%.2f/%.1f" % [int(pf.radius), float(pf.scale), base_y - at.y] if posts.is_empty() \
+					else "t%s/%.1f" % [str(posts), base_y - at.y]
 			if not proxy_cache.has(pk):
 				var ps := ConcavePolygonShape3D.new()
-				ps.set_faces(proxy_faces(int(pf.radius), float(pf.scale), base_y, at, Player.STEP_LEAD))
+				if not posts.is_empty():
+					ps.set_faces(TreeSwap.trunk_faces(posts, base_y, at, Player.STEP_LEAD))
+				else:
+					ps.set_faces(proxy_faces(int(pf.radius), float(pf.scale), base_y, at, Player.STEP_LEAD))
 				proxy_cache[pk] = ps
 			var pcs := CollisionShape3D.new()
 			pcs.shape = proxy_cache[pk]
@@ -1026,7 +1034,7 @@ func _build_fixtures() -> void:
 		for i in xforms.size():
 			var f: Dictionary = per_model[m][i]
 			var use: PackedVector3Array = faces
-			if f.get("no_collision", false) or not f.collide:
+			if f.get("no_collision", false) or not f.collide or swapped:     # (a new tree: its trunk post, above)
 				use = PackedVector3Array()
 			if use.is_empty():
 				continue
