@@ -788,6 +788,12 @@ func _interact() -> void:
 	if n and n.global_position.distance_to(p.global_position) <= INTERACT_M * 4.0:
 		_use_npc(n)
 		return
+	# your group's fallen near you: helped up (owner 2026-11-16: your companion, once the fight is over - the server says
+	# if it can't be yet: GameBot.Interact)
+	var fallen := _fallen_near(p)
+	if fallen:
+		npcs.interact(fallen)
+		return
 	if String(picked.get("kind", "")) == "door" and viewer._click_door(centre):
 		return
 	var sw = npcs if npcs and npcs.has_method("click_object") else null
@@ -872,6 +878,26 @@ func _npc_window_open() -> bool:
 		if w != null and is_instance_valid(w) and (w as CanvasItem).visible:
 			return true
 	return false
+
+
+## A group member lying dead within reach (a corpse isn't picked by the crosshair: NpcManager.pick).
+func _fallen_near(p: Node3D) -> Npc:
+	var npcs: NpcManager = viewer.npcs
+	if npcs == null or PlayerData.group.is_empty():
+		return null
+	var names := {}
+	for m in PlayerData.group:
+		names[String((m as Dictionary).get("name", "")).to_lower()] = true
+	var best: Npc = null
+	var bd := INTERACT_M
+	for i in npcs.active:
+		var v: Npc = npcs.active[i]
+		if is_instance_valid(v) and v.state != null and not v.state.alive and names.has(String(v.spawn.get("name", "")).to_lower()):
+			var d := v.global_position.distance_to(p.global_position)
+			if d < bd:
+				bd = d
+				best = v
+	return best
 
 
 func _use_npc(n: Npc) -> void:

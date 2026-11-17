@@ -1913,7 +1913,8 @@ func set_lantern(on: bool) -> void:
 		# arms and legs swinging threw the big moving shadows; the world's shadows stay
 		torch.shadow_blur = 3.0
 		torch.shadow_opacity = 0.85
-		torch.shadow_caster_mask = 0xFFFFF & ~SELF_LAYER
+		torch.shadow_caster_mask = 0xFFFFF & ~SELF_LAYER & ~BELT_LAYER
+		torch.light_cull_mask = 0xFFFFF & ~BELT_LAYER         # (not the lantern itself: the light is inside it)
 		torch.light_volumetric_fog_energy = 0.04         # (no ball of glowing haze round you)
 		torch.light_size = 0.3                           # a lamp's flame, not a point: soft shadow edges
 		torch.set_meta("base_energy", SkySystem._t("lantern", LANTERN_ENERGY))
@@ -1948,8 +1949,19 @@ const SELF_LAYER := 1 << 10
 ## housing wall torch (its frame, glass and cap - not the wall bracket or the flame cards), scaled down, its glass where
 ## the light is.
 const BELT_MODEL := "res://content/housing/models/obj_int_wall_torch_04.gltf"
-const BELT_PARTS := ["torch_04_5", "torch_04_6", "torch_04_7", "torch_04_8", "torch_04_9"]   # (":" becomes "_" in a node name)
-const BELT_SCALE := 0.75
+const BELT_PARTS := ["torch_04_3", "torch_04_5", "torch_04_6", "torch_04_7", "torch_04_8", "torch_04_9"]   # (":" -> "_")
+const BELT_GLOW := "torch_04_8"                          # the glass: lit from inside
+const BELT_SCALE := 0.55
+## On the hip (owner 2026-11-16: "lantern position floats in front of the player rather than sitting on their hip"): beside
+## the pelvis bone, a little below it, riding with the body; the light sits in its glass (eased, so it doesn't bob the
+## shadows). The lantern's own parts are on BELT_LAYER, which the light doesn't reach (the light inside its glass burned
+## it white).
+const BELT_SIDE := 0.19
+const BELT_DROP := 0.1
+const BELT_LAYER := 1 << 11
+var _hip_skel: Skeleton3D
+var _hip_bone := -1
+var _light_at := Vector3.INF
 const BELT_GLASS := Vector3(0.0, 0.2, 0.28)            # the glass's middle in the model
 var _belt: Node3D
 var _belt_failed := false
@@ -1971,8 +1983,30 @@ func _belt_tick() -> void:
 	if _belt.visible != want:
 		_belt.visible = want
 	if want:
-		_belt.position = torch.position
+		var hip := _hip_point()
+		if hip == Vector3.INF:
+			hip = global_transform * torch.position
+		_belt.global_position = hip
 		_belt.rotation.y = char_yaw + PI
+		_light_at = hip if _light_at == Vector3.INF or _light_at.distance_to(hip) > 2.0 else _light_at.lerp(hip, 0.2)
+		torch.global_position = _light_at
+	else:
+		_light_at = Vector3.INF
+
+
+## Beside your pelvis, at your belt (world space); INF without a figure's skeleton.
+func _hip_point() -> Vector3:
+	if _model == null:
+		return Vector3.INF
+	if _hip_skel == null or not is_instance_valid(_hip_skel) or not _model.is_ancestor_of(_hip_skel):
+		var sk := _model.find_children("*", "Skeleton3D", true, false)
+		_hip_skel = sk[0] if not sk.is_empty() else null
+		_hip_bone = _hip_skel.find_bone("Bip01 Pelvis") if _hip_skel else -1
+	if _hip_skel == null or _hip_bone < 0:
+		return Vector3.INF
+	var pelvis := _hip_skel.global_transform * _hip_skel.get_bone_global_pose(_hip_bone).origin
+	var side := Vector3(1, 0, 0).rotated(Vector3.UP, char_yaw + PI)
+	return pelvis + side * BELT_SIDE + Vector3(0, -BELT_DROP, 0)
 
 
 func _build_belt() -> Node3D:
@@ -1983,7 +2017,22 @@ func _build_belt() -> Node3D:
 		scene.free()
 		return null
 	for mi in scene.find_children("*", "MeshInstance3D", true, false):
-		(mi as MeshInstance3D).visible = String(mi.name).replace(":", "_") in BELT_PARTS
+		var part := String(mi.name).replace(":", "_")
+		(mi as MeshInstance3D).visible = part in BELT_PARTS
+		(mi as MeshInstance3D).layers = BELT_LAYER
+		if part == BELT_GLOW:
+			var glow := StandardMaterial3D.new()
+			glow.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+			glow.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			glow.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+			glow.albedo_color = Color(1.0, 0.62, 0.25, 0.55)
+			(mi as MeshInstance3D).material_overlay = glow
+		elif part in BELT_PARTS:
+			var brass := StandardMaterial3D.new()               # (the wall torch's pale metal, darkened to brass)
+			brass.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+			brass.blend_mode = BaseMaterial3D.BLEND_MODE_MUL
+			brass.albedo_color = Color(0.55, 0.43, 0.28)
+			(mi as MeshInstance3D).material_overlay = brass
 	scene.scale = Vector3.ONE * BELT_SCALE
 	scene.position = -BELT_GLASS * BELT_SCALE
 	var pivot := Node3D.new()

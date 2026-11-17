@@ -14,6 +14,7 @@ signal deleted
 signal name_checked(name: String, result: int)      # 0 free, 1 not allowed, 2 taken
 signal world(kind: String, d: Dictionary)           # every world packet (DaocClient.ReadWorld), for ServerWorld / the UI
 signal jumped(entry: Dictionary)                    # the server moved you inside the region (a teleport)
+signal world_entered                                # a character entering the world (its lists come again: LearnedPanel)
 
 var active := false                      # started by the launcher: the server is the game
 var host := "127.0.0.1"
@@ -525,6 +526,8 @@ func enter_world(c: Dictionary) -> void:
 	quests = {}
 	_entering = true
 	playing = false
+	Pad.use_class(String(c.get("class_name", "")))       # a caster's own controller buttons (Pad.CASTER_CLASSES)
+	world_entered.emit()
 	client.call("RequestCharacters", int(REALM_IDS[String(c.realm)]))   # (the server enters from the realm last asked)
 	client.call("EnterWorld", int(REALM_IDS[String(c.realm)]), int(c.slot), String(c.name))
 

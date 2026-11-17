@@ -974,6 +974,10 @@ namespace DOL.GS
             base.ProcessDeath(killer);
             if (IsAutonomousWorldBot)
                 AutonomousBotStatusPersistence.Queue(this);
+            if (IsPersonalCompanion && Owner is { ObjectState: eObjectState.Active } companionOwner)
+                companionOwner.Out.SendMessage($"{Name} has fallen! Once the fight is over, interact with {Name} to help them up " +
+                    "(or /companion raise). Left alone, they'll make their own way back in five minutes.",
+                    eChatType.CT_Important, eChatLoc.CL_SystemWindow);
             StartDeathRecoveryTimer();
         }
 
@@ -1002,10 +1006,15 @@ namespace DOL.GS
             long deadFor = GameLoop.GameLoopTime - _deathTick;
             if (IsPersonalCompanion)
             {
-                // owner 2026-11-11: "if they see they can't be rezzed, they can release right away when able. If there is
-                // someone who can res them, but they don't because they die too or are out of mana for too long, they
-                // will release after a minute."
-                if (deadFor < (GroupHasResurrector() ? 60_000 : 6_000))
+                // owner 2026-11-16 (it released and walked back while the player was still fighting: "that could be a bit
+                // unfair/not punishing"): it stays down while you fight; once the fight is over you can help it up
+                // (interact with it: PersonalCompanions.HelpUp, any class) or a healer can raise it; if nobody does, it
+                // releases on its own after five minutes, as a player's corpse did - at once when you're not in its region.
+                GamePlayer owner = Owner;
+                bool ownerNear = owner is { ObjectState: eObjectState.Active } && owner.CurrentRegionID == _deathRegionId;
+                if (ownerNear && (owner.InCombat || TemporaryCompanionRecovery.HasPartyCombat(this)))
+                    return 3000;
+                if (ownerNear && deadFor < PersonalCompanions.CorpseWaitMilliseconds)
                     return 3000;
                 try
                 {
@@ -1202,6 +1211,19 @@ namespace DOL.GS
                     (long)(bind.X - X) * (bind.X - X) + (long)(bind.Y - Y) * (bind.Y - Y)))
                 return new Point3D(stone.X + 80, stone.Y, stone.Z);
             return bind;
+        }
+
+        /// <summary>Your fallen companion, interacted with: helped back up (PersonalCompanions.HelpUp).</summary>
+        public override bool Interact(GamePlayer player)
+        {
+            if (!IsAlive && IsPersonalCompanion && player != null && Owner == player)
+            {
+                string why = PersonalCompanions.HelpUp(player);
+                if (!string.IsNullOrEmpty(why))
+                    player.Out.SendMessage(why, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return true;
+            }
+            return base.Interact(player);
         }
 
         public void OnResurrectedBy(GameLiving caster)

@@ -26,6 +26,7 @@ var _scroll: ScrollContainer
 var _list: VBoxContainer
 var _capture := []                       # [action id, slot, button] while waiting for a key
 var _status: Label
+var _sliding := 0                        # sliders being dragged now (the window goes see-through: _process)
 ## The character-select screen's copy (owner 2026-11-08: "graphics options and everything else also need to be
 ## available in the options menu you can access in the character select screen"): no EDIT UI / CHARACTER SELECT.
 var pregame := false
@@ -246,7 +247,21 @@ func _slider(value: float, lo: float, hi: float, step: float, on_change: Callabl
 	s.add_theme_stylebox_override("grabber_area", fill)
 	s.add_theme_stylebox_override("grabber_area_highlight", fill)
 	s.value_changed.connect(on_change)
+	s.drag_started.connect(func(): _sliding += 1)
+	s.drag_ended.connect(func(_c: bool): _sliding = maxi(0, _sliding - 1))
 	return s
+
+
+## See-through while a slider moves (owner 2026-11-16: "the option menu is in the way when you are trying to see what
+## you're adjusting. Perhaps the window can go like 80% transparent"): dragged with the mouse, or taken with the pad's A.
+func _process(delta: float) -> void:
+	if not _trial.is_empty():
+		_trial_tick(delta)
+	var pad_slider = Pad.adjusting
+	var sliding := _sliding > 0 or (pad_slider != null and is_instance_valid(pad_slider) and is_ancestor_of(pad_slider))
+	var want := 0.22 if sliding else 1.0
+	if not is_equal_approx(modulate.a, want):
+		modulate.a = move_toward(modulate.a, want, delta * 5.0)
 
 
 func _toggle(on: bool, on_change: Callable) -> Button:
@@ -638,6 +653,15 @@ func _interface() -> void:
 				if o is CanvasItem and o.get_script() != null and o.has_method("show_target"):
 					(o as CanvasItem).queue_redraw()))
 	_hint("THE MODERN INTERFACE'S TARGET PLATE ABOVE THE HEALTH ORB. OFF: THE NAMEPLATE OVER YOUR TARGET IS ENOUGH.")
+	# owner 2026-11-16: new spells go on the hotbar ("the player can always clear them out ... an option in the
+	# Interface to disable the feature")
+	_heading("HOTBAR")
+	_row("DISABLE AUTO SPELL POPULATION ON HOTBAR", _toggle(bool(settings.get_value("interface", "auto_spell_bar_off", false)),
+			func(on: bool): _save("interface", "auto_spell_bar_off", on)))
+	_hint("OFF (THE DEFAULT): A NEW SPELL YOU LEARN TAKES THE FIRST FREE SLOT ON YOUR BARS - A CONTROLLER BUTTON'S FIRST. A NEW CHARACTER'S FIRST SPELLS START ON LB + X (OFFENSIVE), LB + Y (HEALS) AND LB + THE D-PAD (BUFFS).")
+	_row("REPLACE WEAKER SPELLS WITH UPGRADES", _toggle(bool(settings.get_value("interface", "auto_spell_upgrade", true)),
+			func(on: bool): _save("interface", "auto_spell_upgrade", on)))
+	_hint("ON (THE DEFAULT): A STRONGER VERSION OF A SPELL ON YOUR BARS (MOON RAY TO MOON STREAK) TAKES ITS PLACE WHEREVER IT SITS. WORKS WHETHER OR NOT NEW SPELLS ARE PLACED.")
 	_heading("LOOT")
 	_row("AUTO LOOT", _toggle(Loot.autoloot(), func(on: bool): Loot.set_autoloot(on)))
 	_hint("ON: COINS AND ITEMS FROM YOUR KILLS GO STRAIGHT INTO YOUR BACKPACK (NOT IN 1.65 - A QUALITY OF LIFE OPTION). OFF: THEY DROP AT THE MONSTER'S FEET FOR YOU TO PICK UP, AS IN THE ORIGINAL.")
@@ -925,9 +949,6 @@ func _trial_tick(delta: float) -> void:
 		_end_trial(false)
 
 
-func _process(delta: float) -> void:
-	if not _trial.is_empty():
-		_trial_tick(delta)
 
 
 ## KEEP: saved (the game starts with it). REVERT / time up / closed: the old one put back.

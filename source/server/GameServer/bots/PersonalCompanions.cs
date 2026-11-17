@@ -408,6 +408,37 @@ namespace DOL.GS
             return Spawn(p, r, true) != null ? null : $"{r.Name} couldn't come.";
         }
 
+        /// <summary>How long a fallen companion waits to be helped up or raised before it releases (a player's corpse: five
+        /// minutes) - never while its player is fighting (GameBot.HandleDeathRecovery).</summary>
+        public const long CorpseWaitMilliseconds = 300_000;
+        public const int HelpUpRange = 400;
+
+        /// <summary>Help your fallen companion up (owner 2026-11-16: "the player can rez their own bot once combat is over
+        /// by interacting with their corpse (even if they aren't a class with a resurrection spell) ... That way the player
+        /// feels some more connection with them by getting to help them back up"): beside it, alive and out of combat, it
+        /// stands with half its health and power. Null when done, else why not.</summary>
+        public static string HelpUp(GamePlayer p)
+        {
+            GameBot bot = Of(p);
+            if (bot == null)
+                return "Your companion isn't with you.";
+            if (bot.IsAlive)
+                return $"{bot.Name} is already on their feet.";
+            if (!p.IsAlive)
+                return "You can't help anyone up while you're dead.";
+            if (bot.CurrentRegionID != p.CurrentRegionID || !p.IsWithinRadius(bot, HelpUpRange))
+                return $"You must be beside {bot.Name} to help them up.";
+            if (p.InCombat)
+                return $"You can't help {bot.Name} up while you're fighting.";
+            bot.Health = Math.Max(1, bot.MaxHealth / 2);
+            bot.Mana = Math.Max(0, bot.MaxMana / 2);
+            bot.Endurance = Math.Max(0, bot.MaxEndurance / 2);
+            bot.MoveTo(bot.CurrentRegionID, bot.X, bot.Y, bot.Z, bot.Heading);
+            p.Out.SendMessage($"You help {bot.Name} back to their feet.", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+            bot.OnResurrectedBy(p);
+            return null;
+        }
+
         /// <summary>Send Companion Home: gone until called (and stays gone across log-ins).</summary>
         public static string Home(GamePlayer p)
         {
@@ -665,7 +696,7 @@ namespace DOL.GS
 
     /// <summary>/companion: your companion - call, home, talk, rename (the client's abilities use the first two).</summary>
     [CmdAttribute("&companion", ePrivLevel.Player, "Your companion: call, send home, gear, sell, role, how much they talk, ideas, a new name",
-        "/companion [call | home | gear | sell | role | ideas | talk chatty|normal|quiet | rename <name>]")]
+        "/companion [call | home | raise | gear | sell | role | ideas | talk chatty|normal|quiet | rename <name>]")]
     public class CompanionCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
@@ -677,6 +708,7 @@ namespace DOL.GS
             string said = what switch
             {
                 "call" => PersonalCompanions.Call(p),
+                "raise" or "helpup" or "up" => PersonalCompanions.HelpUp(p),
                 "home" => PersonalCompanions.Home(p),
                 "talk" => PersonalCompanions.SetTalk(p, args.Length > 2 ? args[2] : ""),
                 "rename" => PersonalCompanions.Rename(p, args.Length > 2 ? args[2] : ""),

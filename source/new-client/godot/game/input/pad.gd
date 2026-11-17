@@ -21,6 +21,16 @@ signal layer_changed(layer: int)
 signal bindings_changed
 
 const PATH := "user://pad_bindings.cfg"
+## A caster's or a healer's own set (owner 2026-11-16: "have the default controller binds for react, position, and chain
+## be clear (not on the RB + X, Y, B) for controller when the character selects any of the mage classes (including the
+## basic starting classes like Elementalist) or healer classes and their basic classes"): RB + X / Y / B are quickbar
+## slots there, for spells. Kept apart, so a melee character's styles stay where they were.
+const CASTER_PATH := "user://pad_bindings_caster.cfg"
+const CASTER_CLASSES := ["Wizard", "Sorcerer", "Theurgist", "Cabalist", "Necromancer", "Mage", "Elementalist", "Disciple",
+		"Runemaster", "Spiritmaster", "Bonedancer", "Warlock", "Mystic", "Eldritch", "Enchanter", "Mentalist", "Animist",
+		"Magician", "Forester", "Cleric", "Acolyte", "Healer", "Shaman", "Seer", "Druid", "Naturalist"]
+const STYLE_KEYS := {"rb+x": "style_reactive", "rb+y": "style_position", "rb+b": "style_chain"}
+const CASTER_KEYS := {"rb+x": "qb2_5", "rb+y": "qb2_6", "rb+b": "qb2_7"}
 const DEADZONE := 0.18
 const TRIGGER_ON := 0.45
 const TRIGGER_OFF := 0.3
@@ -78,7 +88,7 @@ const ACTIONS := [
 	["escape", "Esc / Close Windows", "ESC", "tap"],
 ]
 
-static func _defaults() -> Dictionary:
+static func _defaults(for_caster := false) -> Dictionary:
 	# (owner 2026-11-12: "/pull ... default Up on the d-pad ... Autorun ... L3 ... Left on the d-pad will be default swap
 	# weapon, hold it to sheath weapon, and right will be torch"; nearest enemy LB + RB + X, you / your group LB + RB + Y)
 	var d := {"a": "jump", "b": "dodge", "b:hold": "sprint_hold", "x": "style_auto", "y": "interact", "y:hold": "interact_menu",
@@ -95,6 +105,9 @@ static func _defaults() -> Dictionary:
 	d["rb+x"] = "style_reactive"                       # (owner 2026-11-10: RB + X / Y / B the specific styles)
 	d["rb+y"] = "style_position"
 	d["rb+b"] = "style_chain"
+	if for_caster:
+		for k in CASTER_KEYS:
+			d[k] = CASTER_KEYS[k]
 	return d
 
 
@@ -109,6 +122,7 @@ var ac: Node = null                      # the Action Combat node (ActionCombatM
 var viewer: Node = null
 var bar: Control = null                  # the controller bar (pad_bar.gd)
 var bindings := {}                       # input -> action id
+var caster := false                      # the character in the world is a caster or a healer: CASTER_PATH's set
 var hold_ms := 300                       # a button held this long is its ":hold" input
 var look_speed := 1.0
 var invert_look := false
@@ -135,6 +149,11 @@ var _capture: Callable                   # the bindings page waiting for a press
 var _cap_mods := ""
 var _cap_button := ""
 var _cap_at := 0
+## A slider taken with A (owner 2026-11-16: "when trying to adjust sliders when on the controller, it can be difficult
+## because the cursor moves off of it. Maybe if you tap A to select a slider, it locks on it, and then use the joystick
+## to adjust the bar"): the left stick (or the d-pad, a step at a time) moves it; A or B lets go.
+var adjusting: Slider = null
+const SLIDE_FULL_S := 2.5               # seconds to cross a slider's whole range at full throw
 
 
 func _ready() -> void:
@@ -157,9 +176,14 @@ func _ready() -> void:
 # ---------------------------------------------------------------- bindings
 
 func load_bindings() -> void:
-	bindings = _defaults()
+	bindings = _defaults(caster)
 	var cfg := ConfigFile.new()
-	if cfg.load(PATH) == OK and cfg.has_section("bindings"):
+	var from_shared := false
+	var path := CASTER_PATH if caster else PATH
+	if caster and not FileAccess.file_exists(CASTER_PATH) and FileAccess.file_exists(PATH):
+		path = PATH                                        # (a caster's first time: your own set, the styles' buttons freed)
+		from_shared = true
+	if cfg.load(path) == OK and cfg.has_section("bindings"):
 		bindings = {}
 		for k in cfg.get_section_keys("bindings"):
 			var a := String(cfg.get_value("bindings", k, ""))
@@ -177,7 +201,22 @@ func load_bindings() -> void:
 					{"up": "pull", "left": "weapon_cycle", "left:hold": "sheathe", "right": "torch"})
 			if String(bindings.get("l3", "")) == "sprint_toggle" and inputs_of("run_lock").is_empty():
 				bindings["l3"] = "run_lock"
+		if from_shared:
+			for k in STYLE_KEYS:
+				if String(bindings.get(k, "")) == String(STYLE_KEYS[k]):
+					bindings[k] = CASTER_KEYS[k]
+			save_bindings()
+			return
 	bindings_changed.emit()
+
+
+## The character entering the world (Server.enter_world): a caster's or a healer's set, or everyone else's.
+func use_class(class_title: String) -> void:
+	var c := class_title in CASTER_CLASSES
+	if c == caster:
+		return
+	caster = c
+	load_bindings()
 
 
 ## Old defaults that are still as they were become the new ones (each pair moves only when all of `old` is unchanged).
@@ -196,12 +235,12 @@ func save_bindings() -> void:
 	for k in bindings:
 		cfg.set_value("bindings", k, bindings[k])
 	cfg.set_value("meta", "version", 3)
-	cfg.save(PATH)
+	cfg.save(CASTER_PATH if caster else PATH)
 	bindings_changed.emit()
 
 
 func reset_bindings() -> void:
-	bindings = _defaults()
+	bindings = _defaults(caster)
 	save_bindings()
 
 
@@ -745,11 +784,27 @@ func _ui_button(name: String, pressed: bool) -> void:
 			_point_at(cell)
 			_release_left()
 		return
+	if adjusting != null:
+		if not is_instance_valid(adjusting) or not adjusting.is_visible_in_tree():
+			adjusting = null
+		elif pressed:
+			if name in ["a", "b"]:
+				adjusting = null
+			elif name in ["left", "right", "up", "down"]:
+				var st := adjusting.step if adjusting.step > 0.0 else (adjusting.max_value - adjusting.min_value) / 20.0
+				adjusting.value += st * (1.0 if name in ["right", "up"] else -1.0)
+			return
+		else:
+			return
 	if dirs.has(name):
 		if pressed:
 			_nav(dirs[name])
 		return
 	var f := focused()
+	if name == "a" and f is Slider and not _carrying:
+		if pressed:
+			adjusting = f as Slider                        # (taken: the stick moves it until A or B)
+		return
 	var acts := actions_for(f)
 	for e in acts:
 		if String(e[0]) == name and e.size() > 2 and (e[2] as Callable).is_valid():
@@ -786,13 +841,15 @@ func actions_for(f: Control) -> Array:
 		if bar and is_instance_valid(bar) and bar.visible:
 			out.append(["lb", "LB / RB + BUTTON: ONTO THE BAR"])
 		return out
+	if adjusting != null and is_instance_valid(adjusting):
+		return [["a", "DONE"], ["b", "DONE"], ["lb", "LEFT STICK / D-PAD: ADJUST"]]
 	if f == null:
 		return [["b", "CLOSE"]]
 	if f.has_method("pad_actions"):
 		out = f.call("pad_actions")
 	else:
 		if f is Slider:
-			out.append(["a", "HOLD A AND MOVE"])
+			out.append(["a", "ADJUST"])
 		elif f is BaseButton or _scripted(f, "_gui_input") or f is LineEdit or f is ItemList:
 			out.append(["a", "SELECT"])
 		if _scripted(f, "_get_drag_data"):
@@ -1129,6 +1186,16 @@ func _process_timed(delta: float) -> void:
 		var mv := _stick(JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y)
 		if bar and is_instance_valid(bar) and bar.radial_shown():
 			mv = Vector2.ZERO                              # (the wheel takes the sticks)
+		if adjusting != null:
+			if not is_instance_valid(adjusting) or not adjusting.is_visible_in_tree():
+				adjusting = null
+			else:
+				if absf(mv.x) > 0.0:
+					var span := adjusting.max_value - adjusting.min_value
+					adjusting.value += span * mv.x * absf(mv.x) * delta / SLIDE_FULL_S
+				_point_at(adjusting)                       # (the pointer stays on it)
+				_overlay.queue_redraw()
+				return
 		if mv != Vector2.ZERO:
 			_move_cursor(mv * pow(mv.length(), 0.6) / maxf(mv.length(), 0.001) * CURSOR_SPEED * delta)
 		elif _stick_was and focused() == null:
