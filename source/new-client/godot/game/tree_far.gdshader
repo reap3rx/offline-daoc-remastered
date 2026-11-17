@@ -5,7 +5,7 @@ render_mode cull_disabled, specular_disabled, depth_draw_opaque;
 #include "res://game/tree_wind.gdshaderinc"
 uniform sampler2D atlas : source_color, filter_linear_mipmap, repeat_disable;
 uniform float count = 6.0;
-uniform float brightness = 1.6;    // (the far pictures were taken in soft light)
+uniform float brightness = 2.1;    // (the far pictures were taken in soft light)
 uniform float alpha_cut = 0.4;
 varying vec2 auv;
 void vertex() {

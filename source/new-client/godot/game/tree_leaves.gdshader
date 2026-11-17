@@ -6,7 +6,7 @@ render_mode cull_disabled, specular_disabled, depth_draw_opaque;
 uniform sampler2D albedo_tex : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform vec3 tint = vec3(1.0);
 uniform float height = 25.0;
-uniform float brightness = 1.0;
+uniform float brightness = 1.5;
 uniform float alpha_cut = 0.45;
 uniform float translucency = 0.3;
 void vertex() {
@@ -26,6 +26,6 @@ void fragment() {
 	}
 }
 void light() {
-	float sh = LIGHT_IS_DIRECTIONAL ? mix(0.6, 1.0, ATTENUATION) : ATTENUATION;
+	float sh = LIGHT_IS_DIRECTIONAL ? mix(0.75, 1.0, ATTENUATION) : ATTENUATION;
 	DIFFUSE_LIGHT += sh * LIGHT_COLOR / PI * canopy_shade(NORMAL, LIGHT);
 }
