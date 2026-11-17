@@ -1,0 +1,9 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="importmap">{"imports":{"three":"/three/build/three.module.js","three/addons/":"/three/examples/jsm/","ez-tree":"/ez-tree/build/ez-tree.es.js"}}</script>
+</head><body style="margin:0;background:#8aa"><canvas id="c" width="900" height="900"></canvas>
+<script type="module">
+import * as THREE from 'three';
+import { Tree } from 'ez-tree';
+import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+window.THREE = THREE; window.Tree = Tree; window.GLTFExporter = GLTFExporter; window.ready = true;
+</script></body></html>

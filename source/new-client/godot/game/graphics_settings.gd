@@ -12,6 +12,8 @@ extends Node
 
 signal changed
 
+const TreeSwap := preload("res://game/tree_swap.gd")
+
 const DEFAULTS := {
 	"view_distance": 1.0,          # x the client's fog distance, object draw ranges and zone streaming
 	"shadows": true,
@@ -32,6 +34,7 @@ const DEFAULTS := {
 	"remastered": true,            # REMASTERED LIGHTING (owner 2026-10-28): SkySystem.set_remastered
 	"gi": false,                   # real-time bounce light (SDFGI), with remastered lighting only - off: see SkySystem
 	"compressed_textures": true,   # the world's textures block-compressed (NifMaterials.load_image): less video memory, faster loads
+	"remastered_trees": true,      # the new trees (TreeSwap, owner 2026-11-17) where a zone has them; off: the original ones
 }
 const PRESET_NAMES := ["low", "medium", "high", "ultra", "extreme"]
 ## AMD FidelityFX Super Resolution, built into the engine (DLSS is not - owner 2026-11-08, after the benchmark: at
@@ -96,6 +99,7 @@ func _statics() -> void:
 	GroundClutter.radius_m = clampf(float(value("grass_distance")), 20.0, 250.0)
 	GroundClutter.density_mult = clampf(float(value("grass_density")), 0.0, 1.0)
 	NifMaterials.compress = bool(value("compressed_textures"))
+	TreeSwap.enabled = bool(value("remastered_trees"))
 
 
 func value(key: String) -> Variant:

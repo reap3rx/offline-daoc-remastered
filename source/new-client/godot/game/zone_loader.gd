@@ -13,6 +13,7 @@ const VIEW_RANGE_MAX_M := 900.0        # ...and at most this far (trees, buildin
 static var view_mult := 1.0
 const TERRAIN_SHADER := preload("res://game/terrain.gdshader")
 const WATER_SHADER := preload("res://game/water.gdshader")
+const TreeSwap := preload("res://game/tree_swap.gd")
 
 var info: Dictionary
 var dir: String
@@ -964,7 +965,10 @@ func _build_fixtures() -> void:
 			for i in xforms.size():
 				var fid := int((per_model[m][i] as Dictionary).get("id", -1))
 				_make_doors(parts, xforms[i], int(info.get("id", 0)) * 1000000 + fid * 100 if fid > 0 else -1)
-		for part in parts.meshes:
+		# the new trees (TreeSwap): drawn instead of the original's meshes; its collision and leaves stay as they were
+		var swapped: bool = TreeSwap.build(self, String(model.file), xforms, FIXTURE_CELL_M, far, view_mult,
+				int(info.get("id", -1)))
+		for part in ([] if swapped else parts.meshes):
 			for c in cells:
 				var mm := MultiMesh.new()
 				mm.transform_format = MultiMesh.TRANSFORM_3D

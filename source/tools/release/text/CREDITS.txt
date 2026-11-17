@@ -26,6 +26,8 @@ Also built on
   NifTools - the NetImmerse / Gamebryo file format work that made converting the models
     possible.
   Real-ESRGAN (xinntao) - the AI upscaler used on the textures.
+  EZ-Tree (Daniel Greenheck, MIT licence) - the tree generator the new trees are grown with
+    (github.com/dgreenheck/ez-tree).
   Allakhazam and its contributors - the period quest guides the in-game Quest Guide
     draws on, with CapnBry's radar sightings and the Uthgard bestiary for monster
     placement and levels.
