@@ -53,6 +53,15 @@ for (const spec of specs) {
       v.set((p.getX(i) - c.x) / ext.x, (p.getY(i) - c.y) / ext.y * 1.4 + 0.25, (p.getZ(i) - c.z) / ext.z).normalize();
       o.set(nr.getX(i), nr.getY(i), nr.getZ(i)); v.lerp(o, 0.15).normalize(); nr.setXYZ(i, v.x, v.y, v.z);
     }
+    // the crown's own shade: leaves deep inside it darker, the outer ones in full light (vertex colour; the far
+    // pictures are taken with it too, so near and far trees have the same depth)
+    const col = new Float32Array(p.count * 3);
+    for (let i = 0; i < p.count; i++) {
+      const rr = Math.hypot((p.getX(i) - c.x) / (ext.x / 2), (p.getY(i) - c.y) / (ext.y / 2), (p.getZ(i) - c.z) / (ext.z / 2));
+      const t = Math.min(Math.max((rr - 0.25) / 0.75, 0), 1), ao = 0.42 + 0.58 * t * t * (3 - 2 * t);
+      col[i * 3] = col[i * 3 + 1] = col[i * 3 + 2] = ao;
+    }
+    leaf.setAttribute('color', new T.BufferAttribute(col, 3));
     const fb = new T.Box3().setFromBufferAttribute(bark.attributes.position).union(lb);
     const tris = g => g.index.count / 3;
     let shot = null;
@@ -64,13 +73,16 @@ for (const spec of specs) {
       const sc = new T.Scene(); sc.background = new T.Color(0x9fb4c0);
       sc.add(new T.HemisphereLight(0xdfe8ff, 0x3c4a30, 1.6)); const sun = new T.DirectionalLight(0xfff2dd, 2.2); sun.position.set(40, 60, 30); sc.add(sun);
       sc.add(new T.Mesh(bark, new T.MeshLambertMaterial({ map: bt })));
-      sc.add(new T.Mesh(leaf, new T.MeshLambertMaterial({ map: lt, color: new T.Color(spec.leafTint), alphaTest: 0.45, side: T.DoubleSide })));
+      sc.add(new T.Mesh(leaf, new T.MeshLambertMaterial({ map: lt, color: new T.Color(spec.leafTint), alphaTest: 0.45, side: T.DoubleSide, vertexColors: true })));
       const h = fb.max.y - fb.min.y, w = Math.max(fb.max.x - fb.min.x, fb.max.z - fb.min.z);
       const cam = new T.PerspectiveCamera(35, 1, 0.1, 2000); const d = Math.max(h, w) * 1.75; cam.position.set(d * 0.7, h * 0.45, d * 0.7); cam.lookAt(0, h * 0.42, 0);
       r.render(sc, cam); shot = r.domElement.toDataURL('image/png'); r.dispose();
     }
-    // far view (impostor): the tree from two sides, square on, soft light only, into one 512 x 512 picture with a
-    // clear background: left half from the front, right half from the side
+    // far views (impostors): the tree photographed unlit (texture x tint only - the game lights it like the near one)
+    // from VIEWS directions around it, every 360/VIEWS degrees, square on, into one row of VIEWS pictures (each
+    // 512 x 1024, stored at half that); every view the same frame: the tree's widest reach round its trunk and its
+    // full height, so the far card can turn to the camera and swap pictures without changing size
+    const VIEWS = 8;
     let imp = null;
     {
       const load = u => new Promise(r => new T.TextureLoader().load(u, t => { t.colorSpace = T.SRGBColorSpace; r(t); }));
@@ -79,19 +91,19 @@ for (const spec of specs) {
       const cv = document.createElement('canvas'); cv.width = 512; cv.height = 1024;
       const r = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, preserveDrawingBuffer: true }); r.setClearColor(0x000000, 0);
       const sc = new T.Scene();
-      sc.add(new T.HemisphereLight(0xeef2ff, 0x55604a, 2.4));
-      sc.add(new T.Mesh(bark, new T.MeshLambertMaterial({ map: bt })));
-      sc.add(new T.Mesh(leaf, new T.MeshLambertMaterial({ map: lt, color: new T.Color(spec.leafTint), alphaTest: 0.45, side: T.DoubleSide })));
-      // the frame fits the tree both ways (the picture is stretched; the far card's own width and height undo it)
-      const half = Math.max(fb.max.x - fb.min.x, fb.max.z - fb.min.z) / 2 * 1.02;
+      sc.add(new T.Mesh(bark, new T.MeshBasicMaterial({ map: bt })));
+      sc.add(new T.Mesh(leaf, new T.MeshBasicMaterial({ map: lt, color: new T.Color(spec.leafTint), alphaTest: 0.45, side: T.DoubleSide, vertexColors: true })));
+      let reach = 0;
+      for (const g of [bark, leaf]) { const q = g.attributes.position; for (let i = 0; i < q.count; i++) reach = Math.max(reach, Math.hypot(q.getX(i), q.getZ(i))); }
+      const half = reach * 1.01;
       const hh = (fb.max.y - fb.min.y) / 2 * 1.01, cy = fb.min.y + (fb.max.y - fb.min.y) / 2;
-      const cam = new T.OrthographicCamera(-half, half, hh, -hh, 0.1, 500);
-      const out = document.createElement('canvas'); out.width = 512; out.height = 512; const ctx = out.getContext('2d');
-      for (let k = 0; k < 2; k++) {
-        const a = k * Math.PI / 2; cam.position.set(Math.sin(a) * 200, cy, Math.cos(a) * 200); cam.lookAt(0, cy, 0);
+      const cam = new T.OrthographicCamera(-half, half, hh, -hh, 0.1, 1000);
+      const out = document.createElement('canvas'); out.width = 256 * VIEWS; out.height = 512; const ctx = out.getContext('2d');
+      for (let k = 0; k < VIEWS; k++) {
+        const a = k * Math.PI * 2 / VIEWS; cam.position.set(Math.sin(a) * 400, cy, Math.cos(a) * 400); cam.lookAt(0, cy, 0);
         r.render(sc, cam); ctx.drawImage(cv, k * 256, 0, 256, 512);
       }
-      imp = { png: out.toDataURL('image/png'), half, bottom: cy - hh, top: cy + hh };
+      imp = { png: out.toDataURL('image/png'), half, bottom: cy - hh, top: cy + hh, views: VIEWS };
       r.dispose();
     }
     const grp = new T.Group();
@@ -105,7 +117,7 @@ for (const spec of specs) {
   fs.writeFileSync(path.join(outDir, spec.name + '_far.png'), Buffer.from(res.imp.png.split(',')[1], 'base64'));
   if (res.shot) fs.writeFileSync(path.join(outDir, spec.name + '.png'), Buffer.from(res.shot.split(',')[1], 'base64'));
   const line = `${spec.name}\t${res.size.map(v => v.toFixed(1)).join('x')}\tbark ${res.barkTris}\tleaves ${res.leafTris}`;
-  console.log(line); log.push({ name: spec.name, species: spec.species, far: { half: res.imp.half, bottom: res.imp.bottom, top: res.imp.top }, size: res.size, barkTris: res.barkTris, leafTris: res.leafTris });
+  console.log(line); log.push({ name: spec.name, species: spec.species, far: { half: res.imp.half, bottom: res.imp.bottom, top: res.imp.top, views: res.imp.views }, sink: spec.sink, size: res.size, barkTris: res.barkTris, leafTris: res.leafTris });
 }
 fs.writeFileSync(path.join(outDir, 'generated.json'), JSON.stringify(log, null, 1));
 await browser.close();

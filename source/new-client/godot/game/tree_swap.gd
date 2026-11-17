@@ -8,13 +8,20 @@ extends RefCounted
 ## each tree becomes one of its species' variants, picked by where it stands (the same one every visit), at the
 ## original's place, turn and size. Collision, the bots' paths and the falling leaves keep the original's footprint.
 ##   Near (NEAR_M): the real tree, bark and leaves, swaying, casting shadows.
-##   Beyond: a far card - two crossed pictures of that variant from the front and the side - out to the original's
-##   own draw range (times Options > VIDEO view distance). The two cross-fade over FADE_M.
+##   Beyond: a far card that turns to the camera and shows that variant photographed from the nearest of eight
+##   directions, lit like the near tree, out to the original's own draw range (times Options > VIDEO view
+##   distance). The two cross-fade over FADE_M either side (owner 2026-11-17: "a stark difference in quality that
+##   pops in and out").
+## Each tree stands on the ground at its spot (the lowest of five points round its trunk), not at the original's
+## base: the originals carried metres of trunk underground (owner 2026-11-17: "some trees are too low into the
+## ground").
 ## Options > VIDEO > REMASTERED TREES (Graphics "remastered_trees") switches it; it takes effect as zones load.
 
 const DIR := "res://content/trees"
 const NEAR_M := 75.0
-const FADE_M := 12.0
+## (tests: --tree-near=<metres> moves the switch, to compare the near and far trees from one spot)
+static var near_m := -1.0
+const FADE_M := 25.0
 const LEAVES_SHADER := preload("res://game/tree_leaves.gdshader")
 const BARK_SHADER := preload("res://game/tree_bark.gdshader")
 const FAR_SHADER := preload("res://game/tree_far.gdshader")
@@ -45,8 +52,9 @@ static func species_of(model_file: String) -> String:
 
 ## Draw these placed trees as the new ones, under `parent` (the zone). False: no replacement for this model - the
 ## caller draws the original.
-static func build(parent: Node3D, model_file: String, xforms: Array[Transform3D], cell_m: float, far: float, view_mult: float,
-		zone_id := -1) -> bool:
+static func build(parent: Node3D, model_file: String, xforms_in: Array[Transform3D], cell_m: float, far: float, view_mult: float,
+		zone_id := -1, ground := Callable()) -> bool:
+	var xforms := xforms_in
 	if not enabled or xforms.is_empty() or "--classic-trees" in OS.get_cmdline_user_args():
 		return false
 	var zones: Array = _load_manifest().get("zones", [])          # (the pilot: Lough Derg only, until it is signed off)
@@ -55,6 +63,12 @@ static func build(parent: Node3D, model_file: String, xforms: Array[Transform3D]
 	var sp := species_of(model_file)
 	if sp == "":
 		return false
+	if near_m < 0.0:
+		near_m = NEAR_M
+		for a in OS.get_cmdline_user_args():
+			if a.begins_with("--tree-near="):
+				near_m = float(a.split("=", true, 1)[1])
+		(Engine.get_main_loop() as SceneTree).process_frame.connect.call_deferred(_update_eye)
 	_mutex.lock()
 	var s = _species.get(sp)
 	if s == null:
@@ -63,6 +77,8 @@ static func build(parent: Node3D, model_file: String, xforms: Array[Transform3D]
 	_mutex.unlock()
 	if s.is_empty():
 		return false
+	if ground.is_valid():
+		xforms = _on_ground(xforms_in, ground, float(s.sink))
 	var nvar: int = s.near.size()
 	# each tree: its variant (by where it stands) and its map cell
 	var groups := {}                            # Vector3i(cell x, cell z, variant) -> Array[int]
@@ -89,9 +105,7 @@ static func build(parent: Node3D, model_file: String, xforms: Array[Transform3D]
 		var mmi := MultiMeshInstance3D.new()
 		mmi.name = "Tree_%s_%d_%d_%d" % [sp, k.x, k.y, k.z]
 		mmi.multimesh = mm
-		mmi.visibility_range_end = NEAR_M
-		mmi.visibility_range_end_margin = FADE_M
-		mmi.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+		mmi.visibility_range_end = near_m + FADE_M           # (the hand-over itself is in the shaders: tree_fade)
 		parent.add_child(mmi)
 	# far: the crossed cards, one batch per cell (the variant rides in the instance's custom data)
 	var cards: Array = s.far_cards
@@ -113,24 +127,44 @@ static func build(parent: Node3D, model_file: String, xforms: Array[Transform3D]
 		var mmi := MultiMeshInstance3D.new()
 		mmi.name = "TreeFar_%s_%d_%d" % [sp, c.x, c.y]
 		mmi.multimesh = mm
-		mmi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		mmi.visibility_range_begin = NEAR_M
-		mmi.visibility_range_begin_margin = FADE_M
+		# (it casts a shadow too: in the shadow pass the card turns to the sun, so its shadow is the tree's; without one
+		# the sunlit mist showed through the far trees as a milky veil)
+		mmi.visibility_range_begin = maxf(near_m - FADE_M, 0.0)
 		mmi.set_meta("base_far", far)
 		mmi.visibility_range_end = far * view_mult
 		mmi.visibility_range_end_margin = far * view_mult * 0.1
-		mmi.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+		# (no fade mode: a fading instance is drawn in the transparent pass - no ambient occlusion, a milky look)
 		parent.add_child(mmi)
 	return true
 
 
-static func _texture(file: String, mipmaps := true) -> Texture2D:
+## The trees stood on the ground: the trunk's foot (sink metres below the model's origin, times its scale) a little
+## under the lowest ground round the trunk.
+static func _on_ground(xforms: Array[Transform3D], ground: Callable, sink: float) -> Array[Transform3D]:
+	var out: Array[Transform3D] = []
+	out.resize(xforms.size())
+	for i in xforms.size():
+		var x := xforms[i]
+		var sc := x.basis.get_scale().y
+		var o := x.origin
+		var r := 1.5 * sc
+		var g := float(ground.call(o.x, o.z))
+		for off in [Vector2(r, 0), Vector2(-r, 0), Vector2(0, r), Vector2(0, -r)]:
+			g = minf(g, float(ground.call(o.x + off.x, o.z + off.y)))
+		o.y = g - 0.35 * sc + sink * sc
+		out[i] = Transform3D(x.basis, o)
+	return out
+
+
+static func _texture(file: String, mipmaps := true, compress := false) -> Texture2D:
 	var img := Image.load_from_file(DIR + "/" + file)
 	if img == null or img.is_empty():
 		push_warning("trees: no texture %s" % file)
 		return null
 	if mipmaps:
 		img.generate_mipmaps()
+	if compress:
+		img.compress(Image.COMPRESS_S3TC, Image.COMPRESS_SOURCE_SRGB)     # (the far atlases: a quarter of the memory)
 	return ImageTexture.create_from_image(img)
 
 
@@ -160,11 +194,15 @@ static func _load_species(sp: String) -> Dictionary:
 		return {}
 	var far := ShaderMaterial.new()
 	far.shader = FAR_SHADER
-	far.set_shader_parameter("atlas", _texture(String(d.far.atlas)))
-	far.set_shader_parameter("count", float(near.size()))
+	far.set_shader_parameter("atlas", _texture(String(d.far.atlas), true, true))
+	far.set_shader_parameter("views", float(d.far.get("views", 8)))
+	far.set_shader_parameter("rows", float(d.far.get("rows", near.size())))
+	for mat: ShaderMaterial in [leaves, bark, far]:
+		mat.set_shader_parameter("near_m", near_m)
+		mat.set_shader_parameter("fade_m", FADE_M)
 	var quad := _far_quad_mesh().duplicate() as ArrayMesh
 	quad.surface_set_material(0, far)
-	return {"near": near, "far_mesh": quad, "far_cards": d.far.cards}
+	return {"near": near, "far_mesh": quad, "far_cards": d.far.cards, "sink": float(d.get("sink", 0.0))}
 
 
 ## One variant's glTF: its "bark" and "leaves" meshes as the two surfaces of one mesh.
@@ -196,25 +234,30 @@ static func _find_mesh(n: Node, nm: String) -> MeshInstance3D:
 	return null
 
 
-## Two crossed unit cards standing on the ground (x and z from -0.5 to 0.5, y from 0 to 1): the first faces z (the
-## front picture), the second faces x (the side picture; UV2.x = 1 picks it).
+## The camera's place for the shaders' hand-over (tree_eye), each frame.
+static func _update_eye() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	var cam := tree.root.get_viewport().get_camera_3d() if tree else null
+	if cam:
+		RenderingServer.global_shader_parameter_set("tree_eye", cam.global_position)
+
+
+## One unit card standing on the ground (x from -0.5 to 0.5, y from 0 to 1); the far shader turns it to the camera.
 static func _far_quad_mesh() -> ArrayMesh:
 	if _far_quad:
 		return _far_quad
 	var st := SurfaceTool.new()
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for k in 2:
-		var corners: Array[Vector3] = []
-		var uvs: Array[Vector2] = []
-		for c in [Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)]:
-			var p := Vector3(c.x - 0.5, c.y, 0.0) if k == 0 else Vector3(0.0, c.y, 0.5 - c.x)
-			corners.append(p)
-			uvs.append(Vector2(c.x, 1.0 - c.y))
-		var nrm := Vector3(0, 0, 1) if k == 0 else Vector3(1, 0, 0)
-		for idx in [0, 1, 2, 0, 2, 3]:
-			st.set_normal(nrm)
-			st.set_uv(uvs[idx])
-			st.set_uv2(Vector2(float(k), 0))
-			st.add_vertex(corners[idx])
+	var corners: Array[Vector3] = []
+	var uvs: Array[Vector2] = []
+	for c in [Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)]:
+		corners.append(Vector3(c.x - 0.5, c.y, 0.0))
+		uvs.append(Vector2(c.x, 1.0 - c.y))
+	for idx in [0, 1, 2, 0, 2, 3]:
+		st.set_normal(Vector3(0, 0, 1))
+		st.set_uv(uvs[idx])
+		st.add_vertex(corners[idx])
 	_far_quad = st.commit()
+	# (the card turns, so its box must hold it in any direction: as wide as it is deep)
+	_far_quad.custom_aabb = AABB(Vector3(-0.5, 0, -0.5), Vector3(1, 1, 1))
 	return _far_quad

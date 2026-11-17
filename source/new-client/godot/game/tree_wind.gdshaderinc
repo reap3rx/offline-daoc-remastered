@@ -19,3 +19,16 @@ float cutout(float a, float lod, float cut) {
 	a *= 1.0 + max(lod, 0.0) * 0.22;
 	return clamp((a - cut) / max(fwidth(a), 0.0001) + 0.5, 0.0, 1.0);
 }
+// the hand-over between the near tree and its far card (TreeSwap): over 2 x fade_m round near_m from the camera
+// (tree_eye: TreeSwap sets it each frame - the same in the shadow pass, so a tree's shadow hands over with it) the
+// near tree gives up its pixels exactly where the far card takes them (one dither, complementary), so there is no
+// moment where both or neither show
+global uniform vec3 tree_eye;
+uniform float near_m = 75.0;
+uniform float fade_m = 25.0;
+float tree_fade(vec3 at) {
+	return clamp((distance(at.xz, tree_eye.xz) - (near_m - fade_m)) / (2.0 * fade_m), 0.0, 1.0);
+}
+float tree_dither(vec2 p) {
+	return fract(52.9829189 * fract(dot(p, vec2(0.06711056, 0.00583715))));
+}

@@ -63,6 +63,10 @@ project/assembly_name="MMOEngine"
 
 [shader_globals]
 
+tree_eye={
+"type": "vec3",
+"value": Vector3(0, 0, 0)
+}
 wetness={
 "type": "float",
 "value": 0.0

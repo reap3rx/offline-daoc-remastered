@@ -967,7 +967,7 @@ func _build_fixtures() -> void:
 				_make_doors(parts, xforms[i], int(info.get("id", 0)) * 1000000 + fid * 100 if fid > 0 else -1)
 		# the new trees (TreeSwap): drawn instead of the original's meshes; its collision and leaves stay as they were
 		var swapped: bool = TreeSwap.build(self, String(model.file), xforms, FIXTURE_CELL_M, far, view_mult,
-				int(info.get("id", -1)))
+				int(info.get("id", -1)), _grid_height)
 		for part in ([] if swapped else parts.meshes):
 			for c in cells:
 				var mm := MultiMesh.new()
