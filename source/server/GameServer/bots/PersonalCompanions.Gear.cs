@@ -14,10 +14,21 @@ namespace DOL.GS
     /// Interact menu's GEAR, or /companion gear - and take it back the same way. What it was given or found is kept as
     /// inventory rows owned by "companion-&lt;your character id&gt;" (the item itself, moved out of your bags - the same move
     /// a trade makes), so it is still there after a restart; it wears a copy of each.
+    /// Its own kit is kept the same way (owner 2026-11-18 bugs doc: "I would like them to have consistent gear and only get
+    /// new gear through drops or rewards, or what the player gives them"): what it came dressed in the first time is
+    /// written down ("kit") and it wears exactly that every time it comes back, at every level. A slot shows, best first:
+    /// what you gave it, what it found, its kit. Taking back what you gave puts its own piece on again.
     /// </summary>
     public static partial class PersonalCompanions
     {
         const string FoundBy = "companion-find";
+        const string KitBy = "companion-kit";
+
+        /// <summary>What you gave it (not a find, not its own kit).</summary>
+        static bool Given(DbInventoryItem x) => x.Creator != FoundBy && x.Creator != KitBy;
+
+        /// <summary>Which kept piece a slot shows: what you gave, then what it found, then its own kit.</summary>
+        static int Rank(DbInventoryItem x) => Given(x) ? 0 : x.Creator == FoundBy ? 1 : 2;
         static readonly Dictionary<GamePlayer, long> _lastFind = new();
 
         static readonly (eInventorySlot Slot, string Label)[] GearSlots =
@@ -83,17 +94,51 @@ namespace DOL.GS
 
         /// <summary>The companion dressed in what it was given and found (a copy of each, so its own coming and going
         /// never touches the kept items).</summary>
-        static void Dress(GamePlayer p, GameBot bot)
+        static void Dress(GamePlayer p, GameBot bot, bool broadcast = false)
         {
             try
             {
-                foreach (DbInventoryItem kept in Kept(p))
-                    if (kept.Template != null)
-                        bot.WearCompanionItem(Copy(kept), (eInventorySlot) kept.SlotPosition, false);
+                var kept = Kept(p).Where(k => k.Template != null).ToList();
+                bool hasKit = kept.Any(k => k.Creator == KitBy);
+                foreach (var (slot, _) in GearSlots)
+                {
+                    DbInventoryItem best = kept.Where(k => k.SlotPosition == (int) slot).OrderBy(Rank).FirstOrDefault();
+                    if (best != null)
+                        bot.WearCompanionItem(Copy(best), slot, broadcast);
+                    else if (hasKit && bot.Inventory?.GetItem(slot) is DbInventoryItem made)
+                        bot.TakeOffCompanionItem(made, broadcast);   // (its kit had nothing there: nothing new appears)
+                }
+                if (!hasKit)
+                    KeepKit(p, bot, kept);
             }
             catch (Exception ex)
             {
                 log.Error($"Companion: dressing {bot.Name}", ex);
+            }
+        }
+
+        /// <summary>The first time: what it came dressed in becomes its own kit, kept like what you give it.</summary>
+        static void KeepKit(GamePlayer p, GameBot bot, List<DbInventoryItem> kept)
+        {
+            foreach (var (slot, _) in GearSlots)
+            {
+                if (kept.Any(k => k.SlotPosition == (int) slot))
+                    continue;
+                DbInventoryItem worn = bot.Inventory?.GetItem(slot);
+                if (worn?.Template == null)
+                    continue;
+                if (worn.Template is DbItemUnique unique && GameServer.Database.FindObjectByKey<DbItemUnique>(unique.Id_nb) == null)
+                {
+                    unique.AllowAdd = true;                         // (a generated piece: its template saved with it)
+                    GameServer.Database.AddObject(unique);
+                }
+                GameInventoryItem row = GameInventoryItem.Create(worn.Template);
+                row.OwnerID = GearOwner(p);
+                row.SlotPosition = (int) slot;
+                row.Creator = KitBy;
+                row.Color = worn.Color;
+                row.Emblem = worn.Emblem;
+                GameServer.Database.AddObject(row);
             }
         }
 
@@ -134,7 +179,9 @@ namespace DOL.GS
                     DbInventoryItem worn = bot?.Inventory?.GetItem(slot);
                     DbInventoryItem k = kept.FirstOrDefault(x => x.SlotPosition == (int) slot);
                     string what = k?.Template?.Name ?? worn?.Name ?? "-";
-                    string whose = k == null ? "" : k.Creator == FoundBy ? " (found)" : " (yours)";
+                    k = kept.Where(x => x.SlotPosition == (int) slot).OrderBy(Rank).FirstOrDefault();
+                    what = k?.Template?.Name ?? worn?.Name ?? "-";
+                    string whose = k == null || k.Creator == KitBy ? "" : k.Creator == FoundBy ? " (found)" : " (yours)";
                     entries.Add(($"{label}: {what}{whose}", "/companion gear " + (int) slot));
                 }
                 Menu(p, $"{r.Name}'s gear", entries);
@@ -144,7 +191,7 @@ namespace DOL.GS
             if (GearSlots.All(g => g.Slot != at))
                 return "That isn't a slot your companion uses.";
             var list = new List<(string, string)>();
-            DbInventoryItem given = kept.FirstOrDefault(x => x.SlotPosition == slotNo && x.Creator != FoundBy);
+            DbInventoryItem given = kept.FirstOrDefault(x => x.SlotPosition == slotNo && Given(x));
             if (given != null)
                 list.Add(($"Take back {given.Template?.Name}", "/companion take " + slotNo));
             int offered = 0;
@@ -184,7 +231,7 @@ namespace DOL.GS
             if (bot != null && bot.InCombat)
                 return $"{r.Name} is a bit busy right now.";
             // what was given there before comes back first
-            DbInventoryItem before = Kept(p).FirstOrDefault(x => x.SlotPosition == slotNo && x.Creator != FoundBy);
+            DbInventoryItem before = Kept(p).FirstOrDefault(x => x.SlotPosition == slotNo && Given(x));
             if (before != null && Take(p, slotArg) is string why)
                 return why;
             // the vault's move: out of your inventory without deleting it, then the row is the companion's
@@ -218,7 +265,7 @@ namespace DOL.GS
                 return "You have no companion.";
             if (!int.TryParse(slotArg, out int slotNo))
                 return "/companion gear picks what to take back.";
-            DbInventoryItem kept = Kept(p).FirstOrDefault(x => x.SlotPosition == slotNo && x.Creator != FoundBy);
+            DbInventoryItem kept = Kept(p).FirstOrDefault(x => x.SlotPosition == slotNo && Given(x));
             if (kept == null)
                 return "You didn't give your companion anything there.";
             eInventorySlot free = p.Inventory.FindFirstEmptySlot(eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack);
@@ -234,9 +281,9 @@ namespace DOL.GS
             back.SlotPosition = (int) free;
             GameInventoryObjectExtensions.SaveItem(back);
             p.Out.SendMessage($"{r.Name} hands back {back.Name}.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
-            // dressed again for its level in that slot
-            if (Of(p) is GameBot bot && bot.IsAlive && !bot.InCombat)
-                Spawn(p, r, false);
+            // its own piece (or a find) on again in that slot, where it stands
+            if (Of(p) is GameBot bot && bot.IsAlive)
+                Dress(p, bot, true);
             return null;
         }
 
@@ -248,15 +295,20 @@ namespace DOL.GS
             {
                 if (_lastFind.TryGetValue(p, out long last) && now - last < 600_000)
                     return;
-                if (Random.Shared.NextDouble() > 0.03)
+                // (its kit no longer changes with its level: a find is likelier once its armour is 5+ levels behind)
+                int behind = bot.Inventory == null ? 0 : bot.Level - new[] { eInventorySlot.HeadArmor, eInventorySlot.TorsoArmor,
+                    eInventorySlot.ArmsArmor, eInventorySlot.HandsArmor, eInventorySlot.LegsArmor, eInventorySlot.FeetArmor }
+                    .Select(a => bot.Inventory.GetItem(a)?.Level ?? bot.Level).DefaultIfEmpty(bot.Level).Min();
+                if (Random.Shared.NextDouble() > (behind >= 5 ? 0.12 : 0.03))
                     return;
                 _lastFind[p] = now;
             }
             var armor = new[] { eInventorySlot.HeadArmor, eInventorySlot.TorsoArmor, eInventorySlot.ArmsArmor,
                 eInventorySlot.HandsArmor, eInventorySlot.LegsArmor, eInventorySlot.FeetArmor };
-            eInventorySlot slot = armor[Random.Shared.Next(armor.Length)];
+            // the piece furthest behind (any of them while all are level)
+            eInventorySlot slot = armor.OrderBy(a => (bot.Inventory?.GetItem(a)?.Level ?? 0) + Random.Shared.NextDouble()).First();
             var kept = Kept(p);
-            if (kept.Any(x => x.SlotPosition == (int) slot && x.Creator != FoundBy))
+            if (kept.Any(x => x.SlotPosition == (int) slot && Given(x)))
                 return;                                            // what you gave it stays on
             DbInventoryItem current = bot.Inventory?.GetItem(slot);
             if (current == null || !GlobalConstants.IsArmor(current.Object_Type))

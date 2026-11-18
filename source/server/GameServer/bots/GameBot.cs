@@ -4047,6 +4047,50 @@ namespace DOL.GS
             }
         }
 
+        /// <summary>
+        /// A companion grows to its player's level where it stands (owner 2026-11-18 bugs doc: "level up without having to
+        /// respawn"): its stats, its specialization points spent by its plan, its new spells and styles - and the gear it
+        /// wears stays on. False while it is busy (a fight, a cast, a horse): the next tick tries again.
+        /// </summary>
+        internal bool TryLevelCompanionInPlace(byte level)
+        {
+            if (!IsTemporaryGroupHelper || level <= Level || level > MaxLevel || !IsAlive || IsCasting || InCombat ||
+                IsAttacking || IsOnStableMasterRoute || Brain is BotBrain { HasAggro: true })
+                return false;
+            byte previousLevel = Level;
+            Level = level;
+            for (int l = Math.Max(6, previousLevel + 1); l <= Level; l++)
+                ApplyLevelStatGrowth(l);
+            SpendSpecPoints(Level, previousLevel);
+            RefreshSpecDependantSkills(false);
+            GetAllUsableSkills(true);
+            GetAllUsableListSpells(true);
+            SetBotSpells();
+            SortStyles();
+            SortSpells();
+            EquipmentLevelFloor = IsEndgameCompanion ? 50 : Math.Max(1, Level - 10);
+            EquipmentLevelCap = Level;
+            RefreshItemBonuses();
+            Health = MaxHealth;
+            Mana = MaxMana;
+            Endurance = MaxEndurance;
+            Group?.UpdateGroupWindow();                 // (as a world bot's level-up: the level shows there)
+            return true;
+        }
+
+        /// <summary>A piece off a companion (its kit had nothing in that slot).</summary>
+        public bool TakeOffCompanionItem(DbInventoryItem item, bool broadcast)
+        {
+            if (Inventory == null || item == null || !Inventory.RemoveItemWithoutDbDeletion(item))
+                return false;
+            RefreshItemBonuses();
+            if (ActiveWeaponSlot == eActiveWeaponSlot.TwoHanded && Inventory.GetItem(eInventorySlot.TwoHandWeapon) == null)
+                SwitchWeapon(eActiveWeaponSlot.Standard);
+            if (broadcast && ObjectState == eObjectState.Active)
+                BroadcastLivingEquipmentUpdate();
+            return true;
+        }
+
         // One-time promotion for helpers already present when their owner
         // reaches 50. Run on the bot's normal turn, never in a player event or
         // during combat/casting/horse travel. Preserve the existing build/group.

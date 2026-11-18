@@ -1983,6 +1983,11 @@ namespace DOL.AI.Brain
                 .ThenByDescending(spell => spell.Value)
                 .ThenByDescending(spell => spell.Level);
 
+            // Quick buffing first (owner 2026-11-18 bugs doc): two or more of the same target's lasting buffs go on in
+            // one five-second /buff cast, as the player's own /buff does.
+            if (!IsStationaryTemporaryCompanionPerformer() && TryQuickBuff(bot, known))
+                return true;
+
             GameLiving outOfRangeBuffTarget = null;
             foreach (Spell spell in candidates)
             {
@@ -2061,6 +2066,132 @@ namespace DOL.AI.Brain
             CompleteCompanionPerformerBuffBatch(bot);
             return false;
         }
+
+        /// <summary>
+        /// Quick buffing for bots (owner 2026-11-18 bugs doc: "They will try to use the /buff style buffing that we have for
+        /// the player if at all possible, for themselves and others. They will not use it if they're a buffer that uses
+        /// concentration and needs to pick out specific buffs because they're getting low"). The lasting buffs a target
+        /// is missing - by the player's /buff rule: no pulses, no recast timers, concentration or over five minutes, the
+        /// strongest of each kind - go on in one five-second cast when there are two or more for the same target: you, a
+        /// groupmate or your pet, whoever is missing the most. A concentration buffer whose missing concentration buffs
+        /// don't all fit in what it has left buffs one at a time as before, choosing.
+        /// </summary>
+        private const int QuickBuffMin = 2;
+        private const int QuickBuffRange = 1500;
+        private bool TryQuickBuff(GameBot bot, List<Spell> known)
+        {
+            List<Spell> lasting = known
+                .Where(spell => !spell.IsPulsing && spell.RecastDelay <= 0 && !spell.NeedInstrument &&
+                                (spell.IsConcentration || spell.Duration > 300_000) &&
+                                spell.SpellType != eSpellType.SpeedEnhancement &&
+                                spell.Target is eSpellTarget.SELF or eSpellTarget.GROUP or eSpellTarget.PET or eSpellTarget.REALM)
+                .GroupBy(spell => (spell.SpellType, spell.Target))
+                .Select(kind => kind.OrderByDescending(spell => spell.Value)
+                    .ThenByDescending(spell => spell.Damage).ThenByDescending(spell => spell.Level).First())
+                .ToList();
+            if (lasting.Count < QuickBuffMin)
+                return false;
+
+            GameLiving pet = bot.ControlledBrain?.Body;
+            List<GameLiving> targets = [bot];
+            if (bot.Group != null)
+                targets.AddRange(bot.Group.GetMembersInTheGroup().Where(member => member != bot));
+            if (pet != null)
+                targets.Add(pet);
+
+            GameLiving best = null;
+            List<Spell> bestSpells = null;
+            foreach (GameLiving target in targets.Distinct())
+            {
+                if (target == null || !target.IsAlive || target.ObjectState != GameObject.eObjectState.Active ||
+                    !bot.IsWithinRadius(target, QuickBuffRange))
+                    continue;
+                List<Spell> missing = lasting.Where(spell =>
+                {
+                    int reach = Math.Max(350, spell.Range);
+                    switch (spell.Target)
+                    {
+                        case eSpellTarget.SELF:
+                            return target == bot && !LivingHasEffect(bot, spell);
+                        case eSpellTarget.GROUP:
+                            return target == bot && FindMissingMaintenanceTarget(spell) == bot;
+                        case eSpellTarget.PET:
+                            return target == pet && bot.IsWithinRadius(pet, reach) && !LivingHasEffect(pet, spell);
+                        default:
+                            return bot.IsWithinRadius(target, reach) && !LivingHasEffect(target, spell);
+                    }
+                }).ToList();
+                if (missing.Count >= QuickBuffMin && (bestSpells == null || missing.Count > bestSpells.Count))
+                {
+                    best = target;
+                    bestSpells = missing;
+                }
+            }
+            if (best == null)
+                return false;
+
+            // a concentration buffer running low picks its buffs one at a time (the ordinary pass below)
+            int concentration = bestSpells.Where(spell => spell.IsConcentration).Sum(spell => spell.Concentration);
+            if (concentration > 0 && concentration > bot.Concentration)
+                return false;
+            if (bot.Mana < bestSpells.Sum(spell => bot.PowerCost(spell)))
+                return false;
+
+            // realm buffs on a groupmate: claimed like a single buff, so two bots don't both cover the same one
+            List<(BotBuffReservations<GameLiving> claims, int family)> claimed = [];
+            if (bot.Group != null)
+            {
+                BotBuffReservations<GameLiving> claims = BuffClaims.GetValue(AutonomousRealmRaid.SupportScope(BotBody), _ => new());
+                foreach (Spell spell in bestSpells.Where(spell => spell.Target == eSpellTarget.REALM).ToList())
+                {
+                    int family = (int)EffectHelper.GetEffectFromSpell(spell);
+                    if (claims.TryReserve(Body, best, family, GameLoop.GameLoopTime, 5_000))
+                        claimed.Add((claims, family));
+                    else
+                        bestSpells.Remove(spell);
+                }
+                if (bestSpells.Count < QuickBuffMin)
+                {
+                    foreach ((BotBuffReservations<GameLiving> c, int f) in claimed)
+                        c.Release(Body, best, f);
+                    return false;
+                }
+            }
+
+            DbSpell dbSpell = new()
+            {
+                Name = "Buff Command",
+                ClientEffect = 11325,                       // (the player's /buff cast)
+                DamageType = (int)eDamageType.Natural,
+                Target = eSpellTarget.REALM.ToString(),
+                Type = eSpellType.BuffCommand.ToString(),
+                CastTime = 5,
+                Range = QuickBuffRange
+            };
+            var quick = new DOL.GS.Commands.BuffCommandSpell(dbSpell, 0,
+                bestSpells.Select(spell => (spell, (SpellLine)m_mobSpellLine)).ToList());
+            bot.StopMovingOnPath();
+            bot.StopMoving();
+            GameObject previousTarget = bot.TargetObject;
+            bot.TargetObject = best;
+            bool cast = bot.CastSpell(quick, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
+            bot.TargetObject = previousTarget;
+            if (!cast)
+            {
+                foreach ((BotBuffReservations<GameLiving> c, int f) in claimed)
+                    c.Release(Body, best, f);
+                return false;
+            }
+            QuickBuffCasts++;
+            if (log.IsInfoEnabled)
+                log.Info($"BOT_QUICK_BUFF bot=\"{bot.Name}\" target=\"{best.Name}\" buffs={bestSpells.Count} " +
+                    $"[{string.Join(", ", bestSpells.Select(spell => spell.Name))}]");
+            _nextMaintenanceBuffTick = GameLoop.GameLoopTime + 5_750;
+            return true;
+        }
+
+        /// <summary>Quick /buff casts the bots have made (tests).</summary>
+        public static int QuickBuffCasts;
 
         private int _pendingMaintenancePetBuffId;
         private long _pendingMaintenancePetBuffUntil;

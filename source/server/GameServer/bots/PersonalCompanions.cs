@@ -477,13 +477,19 @@ namespace DOL.GS
                     Record r = Load(p);
                     if (r == null)
                         continue;
-                    // your level, out of a fight: a fresh one where it stands
+                    // your level, out of a fight: it grows where it stands (owner 2026-11-18 bugs doc: "level up without
+                    // having to respawn"), keeping its gear; only a level down (a GM's doing) brings a fresh one
                     if (bot.Level != p.Level && bot.IsAlive && !bot.InCombat && !p.InCombat && !bot.IsReturningAfterRelease &&
                         bot.CurrentRegionID == p.CurrentRegionID)
                     {
                         byte was = bot.Level;
-                        if (Spawn(p, r, false) is GameBot fresh && fresh.Level > was)
-                            GameBot.LevelFlourish(fresh, 1500);   // (once the client has it: its own level-up glow and fanfare)
+                        if (p.Level > was && bot.TryLevelCompanionInPlace(p.Level))
+                        {
+                            GameBot.LevelFlourish(bot, 0);
+                            log.Info($"COMPANION_LEVEL_IN_PLACE bot=\"{bot.Name}\" level={was}->{bot.Level}");
+                        }
+                        else if (p.Level < was)
+                            Spawn(p, r, false);
                         continue;
                     }
                     Chatter(p, bot, r, now);
