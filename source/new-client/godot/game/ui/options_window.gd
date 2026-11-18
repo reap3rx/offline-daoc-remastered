@@ -9,6 +9,7 @@ extends ClassicWindow
 ## (owner: the client's default icon set). Saved in user://settings.cfg (keys in user://keybinds.cfg).
 
 const HEALTH_PLATES := preload("res://game/npcs/health_plates.gd")
+const FLOAT_TEXT := preload("res://game/ui/float_text.gd")
 const PAGES := ["video", "audio", "controls", "interface", "chat", "windows", "controller", "text"]
 const PAGE_NAMES := ["VIDEO", "AUDIO", "CONTROLS", "INTERFACE", "CHAT", "WINDOWS"]
 const RESOLUTIONS := [Vector2i(1280, 720), Vector2i(1366, 768), Vector2i(1600, 900), Vector2i(1920, 1080),
@@ -665,6 +666,12 @@ func _interface() -> void:
 				if o is CanvasItem and o.get_script() != null and o.has_method("show_target"):
 					(o as CanvasItem).queue_redraw()))
 	_hint("THE MODERN INTERFACE'S TARGET PLATE ABOVE THE HEALTH ORB. OFF: THE NAMEPLATE OVER YOUR TARGET IS ENOUGH.")
+	# owner 2026-11-18 bugs doc: damage numbers that can't overlap, with a choice of how they move (ui/float_text.gd)
+	_heading("DAMAGE NUMBERS")
+	_row("STYLE", _choice(FLOAT_TEXT.STYLES, FLOAT_TEXT.style(), func(i: int):
+		_save("interface", "fct_style", i)
+		FLOAT_TEXT.reload()))
+	_hint("RISE: UP AND FADE. RAINFALL: DROP FROM ABOVE THE HEAD. BLAST: KNOCKED OFF THE HEAD IN AN ARC. SCROLL: A COLUMN BESIDE THE HEAD (DAMAGE YOU TAKE ON THE OTHER SIDE). FOUNTAIN: THROWN UP AND OUT TO EITHER SIDE. NUMBERS NEVER COVER EACH OTHER.")
 	# owner 2026-11-16: new spells go on the hotbar ("the player can always clear them out ... an option in the
 	# Interface to disable the feature")
 	_heading("HOTBAR")

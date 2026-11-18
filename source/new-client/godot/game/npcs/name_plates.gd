@@ -8,10 +8,13 @@ extends Node
 ## - a SET size at every distance (owner: names never grow or shrink as you walk up to them)
 ## - the target's name (left click) is highlighted: bright white
 ## - friendly NPCs light aqua (sampled 175, 223, 208), monsters in their con colour to you
-## - drawn IN the world and depth-tested: a wall or corner in front clips the name pixel by pixel, while a name above
-##   a wall top stays visible (owner's video: "watch how this npcs name disappears as I leave around the corner")
-## Each name is a Label3D on the NPC's view (fixed_size: one font pixel = one screen pixel), the guild line a second
-## Label3D under it, offset in screen pixels.
+## - hidden by walls: a wall or corner in front takes the name away, while a name above a wall top stays visible
+##   (owner's video: "watch how this npcs name disappears as I leave around the corner")
+## The names are drawn flat on the screen over the world, at whole pixels (owner 2026-11-18 bugs doc: "It's blurry on
+## lower resolutions ... They get blurred when they're moving"). They were Label3Ds in the 3D scene, so they went
+## through the 3D render scale, FSR and TAA like the world and smeared when the camera moved. Walls still hide them: a
+## ray from the camera to the name, checked a few times a second, takes the whole name away while a wall, the ground
+## or a building is in front (the old ones were clipped pixel by pixel; now a name is either shown or not).
 
 # The name range, same for friend and foe: the owner's recordings showed names appearing at about 3.3x the camera's
 # distance - and the owner's camera sits at its farthest, 500 units (the old client's saved [Camera] distance=500.00;
@@ -22,20 +25,37 @@ const EM := 0.018                           # font size, a set fraction of the v
 const GUILD_SCALE := 0.8
 const FRIENDLY := Color8(175, 223, 208)
 const OUTLINE := Color(0.02, 0.04, 0.02, 0.9)
+const OCCLUDERS := ZoneLoader.LAYER_WALL | ZoneLoader.LAYER_FLOOR | ZoneLoader.LAYER_SCENERY
+const RAYS_PER_FRAME := 24                  # wall checks a frame, shared by the names shown
+const RECHECK_MS := 120                     # a shown name's wall check is at most this old
 
 var manager: NpcManager
 var _font: Font
-var _size := -1                             # font px the labels were built for
-var _pixel := 0.0
+var _layer: CanvasLayer
+var _canvas: Control
+var _names: Array = []                      # this frame's names: [dist, Vector2 anchor, name, guild, colour]
+var _size := 8
+var _ray := PhysicsRayQueryParameters3D.new()
+var _rr := 0                                # round robin over the shown names for the wall checks
 
 
 func _ready() -> void:
 	_font = UiArt.font(true, "names")
+	_ray.collision_mask = OCCLUDERS
+	_layer = CanvasLayer.new()
+	_layer.layer = 1                        # over the world, under the WoW-style plates (added after) and the windows
+	add_child(_layer)
+	_canvas = Control.new()
+	_canvas.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_canvas.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_canvas.draw.connect(_draw_names)
+	_layer.add_child(_canvas)
 
 
 func _process(_delta: float) -> void:
 	var t0 := Time.get_ticks_usec()
 	_process_inner(_delta)
+	_canvas.queue_redraw()
 	Perf.proc_add("name plates", Time.get_ticks_usec() - t0)   # (the live log: process by part)
 
 
@@ -44,6 +64,7 @@ var _group_oids := {}
 
 
 func _process_inner(_delta: float) -> void:
+	_names.clear()
 	_companion_names = UiArt.bot_option("names_companions")
 	_group_oids.clear()
 	if Server.active:
@@ -52,13 +73,13 @@ func _process_inner(_delta: float) -> void:
 	var cam := get_viewport().get_camera_3d()
 	if manager == null or cam == null or manager.player == null:
 		return
-	var vp_h := get_viewport().get_visible_rect().size.y
-	var size := maxi(8, roundi(EM * vp_h * UiArt.text_scale("names")))   # (Options: its text size)
-	var pixel := 2.0 * tan(deg_to_rad(cam.fov * 0.5)) / vp_h
-	var resized := size != _size or not is_equal_approx(pixel, _pixel)
-	_size = size
-	_pixel = pixel
+	var vp := get_viewport().get_visible_rect().size
+	_size = maxi(8, roundi(EM * vp.y * UiArt.text_scale("names")))   # (Options: its text size)
 	var pp := manager.player.global_position
+	var eye := cam.global_position
+	var space := cam.get_world_3d().direct_space_state
+	var now := Time.get_ticks_msec()
+	var shown: Array = []
 	for i in manager.active:
 		var n: Npc = manager.active[i]
 		if not is_instance_valid(n):
@@ -73,58 +94,76 @@ func _process_inner(_delta: float) -> void:
 			show = false
 		if show and bool(n.get_meta("hp_plate", false)):     # a nameplate (HealthPlates) shows the name already
 			show = false
-		var labels: Array = n.get_meta("plate", [])
-		var fresh := false
-		if labels.is_empty():
-			if not show:
-				continue
-			labels = _build(n)
-			n.set_meta("plate", labels)
-			fresh = true
-		# only on change: a Label3D rebuilds its text mesh when its colour is set, and 265 names re-coloured every
-		# frame cost a raid crowd a large share of its frame time (tests/crowd_probe.gd)
-		if bool(n.get_meta("plate_shown", false)) != show:
-			n.set_meta("plate_shown", show)
-			for l in labels:
-				(l as Label3D).visible = show
 		if not show:
+			if n.has_meta("name_seen_at"):
+				n.remove_meta("name_seen_at")             # (shown again later: checked again before it's drawn)
 			continue
-		if resized or fresh:
-			_fit(labels)
-		var col: Color = Color.WHITE if targeted else (FRIENDLY if n.is_friendly() else n.con_color(PlayerData.level))
-		if fresh or n.get_meta("plate_col", Color(0, 0, 0, 0)) != col:
-			n.set_meta("plate_col", col)
-			for l in labels:
-				(l as Label3D).modulate = col
+		var head := n.global_position + Vector3(0, n.height + 0.2, 0)
+		if cam.is_position_behind(head):
+			continue
+		var at := cam.unproject_position(head)
+		if at.x < -300 or at.y < -60 or at.x > vp.x + 300 or at.y > vp.y + 200:
+			continue
+		shown.append([n, head])
+	# the wall checks: a name just come into view first (so it never shows through a wall for a frame), then the
+	# oldest of the rest, round robin, up to the frame's budget
+	var rays := 0
+	for e in shown:
+		var n: Npc = e[0]
+		if not n.has_meta("name_seen_at"):
+			_check(n, eye, e[1], space, now)
+			rays += 1
+	if shown.size() > 0:
+		var k := 0
+		while rays < RAYS_PER_FRAME and k < shown.size():
+			var e: Array = shown[(_rr + k) % shown.size()]
+			k += 1
+			if now - int(e[0].get_meta("name_seen_at", 0)) >= RECHECK_MS:
+				_check(e[0], eye, e[1], space, now)
+				rays += 1
+		_rr = (_rr + k) % shown.size()
+	for e in shown:
+		var n: Npc = e[0]
+		if bool(n.get_meta("name_hidden", false)):
+			continue
+		var col: Color = Color.WHITE if n == manager.target else (FRIENDLY if n.is_friendly() else n.con_color(PlayerData.level))
+		var guild := String(n.spawn.get("guild", ""))
+		_names.append([eye.distance_squared_to(e[1]), cam.unproject_position(e[1]), String(n.spawn.name),
+				"<%s>" % guild if guild != "" else "", col])
+	_names.sort_custom(func(a, b): return float(a[0]) > float(b[0]))   # farther first: the near ones on top
 
 
-func _build(n: Npc) -> Array:
-	var out := []
-	var guild := String(n.spawn.get("guild", ""))
-	for text in ([String(n.spawn.name)] + (["<%s>" % guild] if guild != "" else [])):
-		var l := Label3D.new()
-		l.text = text
-		l.font = _font
-		l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-		l.fixed_size = true
-		l.no_depth_test = false                          # walls in front clip it, like the client
-		l.shaded = false
-		l.double_sided = true
-		l.outline_modulate = OUTLINE
-		l.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
-		l.position = Vector3(0, n.height + 0.2, 0)
-		l.visible = false
-		n.add_child(l)
-		out.append(l)
-	return out
+## Is a wall, the ground or a building between the camera and this name?
+func _check(n: Npc, eye: Vector3, head: Vector3, space: PhysicsDirectSpaceState3D, now: int) -> void:
+	var to := head
+	var gap := head - eye
+	if gap.length() > 0.5:
+		to = head - gap.normalized() * 0.35                 # (not the ledge or the floor the name hangs over)
+	_ray.from = eye
+	_ray.to = to
+	n.set_meta("name_hidden", not space.intersect_ray(_ray).is_empty())
+	n.set_meta("name_seen_at", now)
 
 
-## Font size and screen-pixel offsets for the current window: the name sits above the guild line.
-func _fit(labels: Array) -> void:
-	var guild_px := roundi(_size * GUILD_SCALE) if labels.size() > 1 else 0
-	for k in labels.size():
-		var l: Label3D = labels[k]
-		l.pixel_size = _pixel
-		l.font_size = _size if k == 0 else guild_px
-		l.outline_size = maxi(3, roundi(l.font_size * 0.18))
-		l.offset = Vector2(0, _font.get_height(guild_px) if k == 0 and guild_px > 0 else 0.0)
+## The name over the guild line, centred on the head and set on whole pixels (no smear as they move).
+func _draw_names() -> void:
+	var guild_px := roundi(_size * GUILD_SCALE)
+	for e in _names:
+		var at: Vector2 = e[1]
+		var bottom := roundf(at.y)
+		var col: Color = e[4]
+		if String(e[3]) != "":
+			bottom = _line(String(e[3]), roundf(at.x), bottom, guild_px, col)
+		_line(String(e[2]), roundf(at.x), bottom, _size, col)
+
+
+## One line of text whose box sits on `bottom`; returns the top of its box (where the line over it sits).
+func _line(text: String, cx: float, bottom: float, px: int, col: Color) -> float:
+	var w := _font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, px).x
+	var base := Vector2(roundf(cx - w * 0.5), bottom - roundf(_font.get_descent(px)))
+	var outline := maxi(3, roundi(px * 0.18))
+	var oc := OUTLINE
+	oc.a *= col.a
+	_canvas.draw_string_outline(_font, base, text, HORIZONTAL_ALIGNMENT_LEFT, -1, px, outline, oc)
+	_canvas.draw_string(_font, base, text, HORIZONTAL_ALIGNMENT_LEFT, -1, px, col)
+	return bottom - roundf(_font.get_height(px))

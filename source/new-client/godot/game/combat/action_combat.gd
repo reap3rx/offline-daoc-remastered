@@ -46,6 +46,8 @@ const DEFAULT_OFFSET := {"lights": Vector2(0, 64), "flash": Vector2(0, -48)}
 static var _swung_early := {}
 
 var viewer: Node
+const FLOAT_TEXT := preload("res://game/ui/float_text.gd")
+var _fct = null                       # the floating combat text's layer (ui/float_text.gd)
 var on := false
 var _queried := false
 var _announced := false
@@ -409,50 +411,40 @@ func _view(oid: int) -> Npc:
 	return v as Npc if is_instance_valid(v) and v is Npc else null
 
 
-## A number rising over whoever took the blow: white yours (yellow and bigger when critical), green your pet's, red
+## A number over whoever took the blow (its motion: Options > DAMAGE NUMBERS > STYLE, ui/float_text.gd): white yours (yellow and bigger when critical), green your pet's, red
 ## what you take. (The server reports every point of damage you deal or take: ActionCombat.ReportDamage.)
 func _damage_text(oid: int, amount: int, crit: bool, way: String) -> void:
 	match way:
 		"in":
-			_float_text(0, "-%d" % amount, Color(1.0, 0.3, 0.25), 52 if crit else 42, 0.0)
+			_float_text(0, "-%d" % amount, Color(1.0, 0.3, 0.25), 52 if crit else 42, 0.0, crit)
 		"pet":
 			_float_text(oid, "%d" % amount, Color(0.55, 0.95, 0.55), 40, 0.0)
 		_:
 			_float_text(oid, ("%d!" % amount) if crit else "%d" % amount,
-					Color(1.0, 0.9, 0.3) if crit else Color(1, 1, 1), 64 if crit else 48, 0.0)
+					Color(1.0, 0.9, 0.3) if crit else Color(1, 1, 1), 64 if crit else 48, 0.0, crit)
 
 
-func _float_text(oid: int, text: String, color: Color, size: int, lift: float) -> void:
+func _float_text(oid: int, text: String, color: Color, size: int, lift: float, crit := false) -> void:
 	if not bool(_show.get("fct", true)) or viewer == null or GameUI.interface_hidden:
 		return
 	var p := _player()
-	var at := Vector3.INF
+	var node: Node3D = null
+	var off := Vector3.ZERO
 	if oid == 0:
 		if p:
-			at = p.global_position + Vector3(0, 2.3 + lift, 0)
+			node = p
+			off = Vector3(0, 2.3 + lift, 0)
 	else:
 		var n := _view(oid)
 		if n:
-			at = n.global_position + Vector3(0, n.height + 0.3 + lift, 0)
-	if at == Vector3.INF:
+			node = n
+			off = Vector3(0, n.height + 0.3 + lift, 0)
+	if node == null:
 		return
-	var l := Label3D.new()
-	l.text = text
-	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	l.no_depth_test = true
-	l.fixed_size = true
-	l.pixel_size = 0.0012
-	l.font = UiArt.font(true, "damage")                   # (Options > Interface > TEXT AND FONTS: damage numbers)
-	l.font_size = UiArt.tsize(size, "damage")
-	l.outline_size = roundi(10 * UiArt.text_scale("damage"))
-	l.modulate = color
-	l.render_priority = 10
-	viewer.add_child(l)
-	l.global_position = at + Vector3(randf_range(-0.35, 0.35), 0, randf_range(-0.2, 0.2))
-	var t := l.create_tween().set_parallel(true)
-	t.tween_property(l, "global_position:y", l.global_position.y + 1.3, 1.1).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-	t.tween_property(l, "modulate:a", 0.0, 0.5).set_delay(0.6)
-	t.chain().tween_callback(l.queue_free)
+	if _fct == null or not is_instance_valid(_fct):
+		_fct = FLOAT_TEXT.new()                            # (flat on the screen: ui/float_text.gd)
+		viewer.add_child(_fct)
+	_fct.add(node, off, node.global_position + off, text, color, size, crit, oid == 0)
 
 
 ## A shield in use: worn in the left hand with the one-handed set out - a two-hander or a bow in hand leaves it on
