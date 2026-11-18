@@ -13,6 +13,7 @@ extends Node
 signal changed
 
 const TreeSwap := preload("res://game/tree_swap.gd")
+const Foliage := preload("res://game/foliage.gd")
 
 const DEFAULTS := {
 	"view_distance": 1.0,          # x the client's fog distance, object draw ranges and zone streaming
@@ -36,6 +37,7 @@ const DEFAULTS := {
 	"compressed_textures": true,   # the world's textures block-compressed (NifMaterials.load_image): less video memory, faster loads
 	"remastered_trees": true,      # the new trees (TreeSwap, owner 2026-11-17) where a zone has them; off: the original ones
 	"tree_detail": 75.0,           # metres out to which trees are the full trees, beyond: their far pictures (TreeSwap)
+	"extra_foliage": true,         # bushes over the open ground and thickets along the world's edge (Foliage, owner 2026-11-17)
 }
 const PRESET_NAMES := ["low", "medium", "high", "ultra", "extreme"]
 ## AMD FidelityFX Super Resolution, built into the engine (DLSS is not - owner 2026-11-08, after the benchmark: at
@@ -54,20 +56,20 @@ const PRESETS := {
 	"low": {"view_distance": 0.8, "shadows": true, "shadow_size": 1024, "shadow_distance": 80.0, "shadow_filter": 1,
 			"ssao": -1, "ssil": false, "glow": false, "msaa": 0, "screen_aa": 1, "taa": false, "aniso": 2,
 			"render_scale": 1.0, "grass_distance": 45.0, "grass_density": 0.5, "remastered": false, "gi": false,
-			"compressed_textures": true, "upscaler": "off", "remastered_trees": true, "tree_detail": 50.0},
+			"compressed_textures": true, "upscaler": "off", "remastered_trees": true, "tree_detail": 50.0, "extra_foliage": true},
 	"medium": {"view_distance": 1.0, "shadows": true, "shadow_size": 2048, "shadow_distance": 110.0, "shadow_filter": 3,
 			"ssao": 1, "ssil": false, "glow": false, "msaa": 0, "screen_aa": 1, "taa": false, "aniso": 4,
 			"render_scale": 1.0, "grass_distance": 60.0, "grass_density": 0.75, "remastered": false, "gi": false,
-			"compressed_textures": true, "upscaler": "off", "remastered_trees": true, "tree_detail": 60.0},
+			"compressed_textures": true, "upscaler": "off", "remastered_trees": true, "tree_detail": 60.0, "extra_foliage": true},
 	"high": DEFAULTS,
 	"ultra": {"view_distance": 1.6, "shadows": true, "shadow_size": 4096, "shadow_distance": 220.0, "shadow_filter": 5,
 			"ssao": 4, "ssil": false, "glow": false, "msaa": 4, "screen_aa": 1, "taa": false, "aniso": 16,
 			"render_scale": 1.0, "grass_distance": 110.0, "grass_density": 1.0, "remastered": true, "gi": false,
-			"compressed_textures": true, "upscaler": "off", "remastered_trees": true, "tree_detail": 110.0},
+			"compressed_textures": true, "upscaler": "off", "remastered_trees": true, "tree_detail": 110.0, "extra_foliage": true},
 	"extreme": {"view_distance": 2.5, "shadows": true, "shadow_size": 8192, "shadow_distance": 400.0, "shadow_filter": 5,
 			"ssao": 4, "ssil": true, "glow": false, "msaa": 4, "screen_aa": 2, "taa": false, "aniso": 16,
 			"render_scale": 1.0, "grass_distance": 160.0, "grass_density": 1.0, "remastered": true, "gi": false,
-			"compressed_textures": true, "upscaler": "off", "remastered_trees": true, "tree_detail": 160.0},
+			"compressed_textures": true, "upscaler": "off", "remastered_trees": true, "tree_detail": 160.0, "extra_foliage": true},
 }
 const VIEW_MAX := 4.0                    # the slider's top: 4x the client's fog and draw ranges
 
@@ -102,6 +104,7 @@ func _statics() -> void:
 	NifMaterials.compress = bool(value("compressed_textures"))
 	TreeSwap.enabled = bool(value("remastered_trees"))
 	TreeSwap.set_detail(float(value("tree_detail")))
+	Foliage.enabled = bool(value("extra_foliage"))
 
 
 func value(key: String) -> Variant:

@@ -15,6 +15,7 @@ extends Node3D
 var zone: ZoneLoader
 var region: RegionWorld                     # seamless zones: the region's loaded zones around you (game/world/region_world.gd)
 var player: Player
+const Foliage := preload("res://game/foliage.gd")
 var clutter: GroundClutter                  # the current zone's (each loaded zone has its own: clutters)
 var clutters := {}                          # zone id -> GroundClutter
 var sky: SkySystem
@@ -540,6 +541,11 @@ func _switch_audio() -> void:
 
 
 func _add_clutter(z: ZoneLoader) -> GroundClutter:
+	var fol := Foliage.new()                               # the extra bushes and the edge thickets (Foliage)
+	fol.name = "Foliage"
+	z.add_child(fol)
+	if not fol.setup(z, player, player.edges if player else null):
+		fol.queue_free()
 	var c := GroundClutter.new()
 	c.name = "GroundClutter"
 	z.add_child(c)

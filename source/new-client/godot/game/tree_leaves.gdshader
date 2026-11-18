@@ -10,10 +10,14 @@ uniform float brightness = 1.75;
 uniform float alpha_cut = 0.45;
 uniform float translucency = 0.3;
 uniform float sat = 1.0;
+global uniform vec3 tree_eye;          // (the camera, set by Foliage each frame: the same in the shadow pass)
+uniform float fade_start = 0.0;
+uniform float fade_end = 0.0;
 varying float fade_t;
 void vertex() {
 	vec3 at = (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
-	fade_t = INSTANCE_CUSTOM.y;
+	// trees: their hand-over (TreeSwap.Driver, per instance); bushes (Foliage): by distance, dissolving out at its reach
+	fade_t = fade_end > 0.0 ? smoothstep(fade_start, fade_end, distance(at, tree_eye)) : INSTANCE_CUSTOM.y;
 	VERTEX += tree_sway(VERTEX, at, height, TIME);
 	if (fade_t > 0.999) {
 		VERTEX = vec3(0.0);       // (wholly the far card: nothing to draw)

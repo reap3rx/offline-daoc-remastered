@@ -1,0 +1,1339 @@
+{
+ "h_rhodo": {
+  "preset": "Oak Small",
+  "options": {
+   "branch": {
+    "levels": 3,
+    "angle": {
+     "1": 72,
+     "2": 55,
+     "3": 40
+    },
+    "children": {
+     "0": 5,
+     "1": 3,
+     "2": 3
+    },
+    "length": {
+     "0": 4,
+     "1": 9,
+     "2": 5,
+     "3": 2.5
+    },
+    "start": {
+     "1": 0.05,
+     "2": 0.2,
+     "3": 0.2
+    },
+    "radius": {
+     "0": 0.5,
+     "1": 0.5
+    },
+    "gnarliness": {
+     "0": 0.2,
+     "1": 0.2,
+     "2": 0.2
+    },
+    "force": {
+     "strength": 0.0
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 4.32,
+    "sizeVariance": 0.4,
+    "angle": 40,
+    "start": 0.0
+   }
+  },
+  "height": 3.4,
+  "sink": 0.3,
+  "leaf": "leaf_beech_gnarl",
+  "bark": "bark_moss",
+  "leafTint": "#b4c4a8",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "h_laurel": {
+  "preset": "Oak Small",
+  "options": {
+   "branch": {
+    "levels": 3,
+    "angle": {
+     "1": 72,
+     "2": 55,
+     "3": 40
+    },
+    "children": {
+     "0": 5,
+     "1": 3,
+     "2": 3
+    },
+    "length": {
+     "0": 4,
+     "1": 9,
+     "2": 5,
+     "3": 2.5
+    },
+    "start": {
+     "1": 0.05,
+     "2": 0.2,
+     "3": 0.2
+    },
+    "radius": {
+     "0": 0.5,
+     "1": 0.5
+    },
+    "gnarliness": {
+     "0": 0.2,
+     "1": 0.2,
+     "2": 0.2
+    },
+    "force": {
+     "strength": 0.0
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 4.32,
+    "sizeVariance": 0.4,
+    "angle": 40,
+    "start": 0.0
+   }
+  },
+  "height": 2.6,
+  "sink": 0.3,
+  "leaf": "leaf_b_htoak1",
+  "bark": "bark_moss",
+  "leafTint": "#c8d4bc",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "h_holly": {
+  "preset": "Oak Small",
+  "options": {
+   "branch": {
+    "levels": 3,
+    "angle": {
+     "1": 72,
+     "2": 55,
+     "3": 40
+    },
+    "children": {
+     "0": 5,
+     "1": 3,
+     "2": 3
+    },
+    "length": {
+     "0": 4,
+     "1": 9,
+     "2": 5,
+     "3": 2.5
+    },
+    "start": {
+     "1": 0.05,
+     "2": 0.2,
+     "3": 0.2
+    },
+    "radius": {
+     "0": 0.5,
+     "1": 0.5
+    },
+    "gnarliness": {
+     "0": 0.2,
+     "1": 0.2,
+     "2": 0.2
+    },
+    "force": {
+     "strength": 0.0
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 4.32,
+    "sizeVariance": 0.4,
+    "angle": 40,
+    "start": 0.0
+   }
+  },
+  "height": 2.8,
+  "sink": 0.3,
+  "leaf": "leaf_hollytree",
+  "bark": "bark_moss",
+  "leafTint": "#e0e8d8",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "h_gorse": {
+  "preset": "Aspen Small",
+  "options": {
+   "branch": {
+    "levels": 2,
+    "angle": {
+     "1": 55,
+     "2": 50
+    },
+    "children": {
+     "0": 10,
+     "1": 5
+    },
+    "length": {
+     "0": 3,
+     "1": 6,
+     "2": 3
+    },
+    "start": {
+     "1": 0.05,
+     "2": 0.2
+    },
+    "radius": {
+     "0": 0.35
+    },
+    "gnarliness": {
+     "0": 0.25,
+     "1": 0.3
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 2.88,
+    "sizeVariance": 0.4,
+    "angle": 35,
+    "start": 0.1
+   }
+  },
+  "height": 1.4,
+  "sink": 0.3,
+  "leaf": "leaf_yew",
+  "bark": "bark_moss",
+  "leafTint": "#d8e0b8",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "h_thicket": {
+  "preset": "Oak Small",
+  "options": {
+   "branch": {
+    "levels": 3,
+    "angle": {
+     "1": 80,
+     "2": 60,
+     "3": 45
+    },
+    "children": {
+     "0": 5,
+     "1": 3,
+     "2": 3
+    },
+    "length": {
+     "0": 3,
+     "1": 13,
+     "2": 6,
+     "3": 3
+    },
+    "start": {
+     "1": 0.02,
+     "2": 0.1,
+     "3": 0.1
+    },
+    "radius": {
+     "0": 0.6,
+     "1": 0.55
+    },
+    "gnarliness": {
+     "0": 0.3,
+     "1": 0.35,
+     "2": 0.3
+    },
+    "force": {
+     "strength": 0.0
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 4.86,
+    "sizeVariance": 0.4,
+    "angle": 45,
+    "start": 0.0
+   }
+  },
+  "height": 4.6,
+  "sink": 0.3,
+  "leaf": "leaf_beech_gnarl",
+  "bark": "bark_moss",
+  "leafTint": "#a8b89c",
+  "variants": 4,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "h_bramble": {
+  "preset": "Oak Small",
+  "options": {
+   "branch": {
+    "levels": 3,
+    "angle": {
+     "1": 80,
+     "2": 60,
+     "3": 45
+    },
+    "children": {
+     "0": 5,
+     "1": 3,
+     "2": 3
+    },
+    "length": {
+     "0": 3,
+     "1": 13,
+     "2": 6,
+     "3": 3
+    },
+    "start": {
+     "1": 0.02,
+     "2": 0.1,
+     "3": 0.1
+    },
+    "radius": {
+     "0": 0.6,
+     "1": 0.55
+    },
+    "gnarliness": {
+     "0": 0.3,
+     "1": 0.35,
+     "2": 0.3
+    },
+    "force": {
+     "strength": 0.0
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 4.86,
+    "sizeVariance": 0.4,
+    "angle": 45,
+    "start": 0.0
+   }
+  },
+  "height": 3.0,
+  "sink": 0.3,
+  "leaf": "leaf_bscrypinen",
+  "bark": "bark_moss",
+  "leafTint": "#c0c8b0",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "h_sapling": {
+  "preset": "Aspen Small",
+  "options": {
+   "branch": {
+    "children": {
+     "0": 8,
+     "1": 4
+    },
+    "start": {
+     "1": 0.35
+    },
+    "radius": {
+     "0": 0.3
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 2.88,
+    "sizeVariance": 0.4,
+    "angle": 30
+   }
+  },
+  "height": 5.0,
+  "sink": 0.3,
+  "leaf": "leaf_elm",
+  "bark": "bark_moss",
+  "leafTint": "#d8e8c8",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "a_hawthorn": {
+  "preset": "Oak Small",
+  "options": {
+   "branch": {
+    "levels": 3,
+    "angle": {
+     "1": 72,
+     "2": 55,
+     "3": 40
+    },
+    "children": {
+     "0": 5,
+     "1": 3,
+     "2": 3
+    },
+    "length": {
+     "0": 4,
+     "1": 9,
+     "2": 5,
+     "3": 2.5
+    },
+    "start": {
+     "1": 0.05,
+     "2": 0.2,
+     "3": 0.2
+    },
+    "radius": {
+     "0": 0.5,
+     "1": 0.5
+    },
+    "gnarliness": {
+     "0": 0.2,
+     "1": 0.2,
+     "2": 0.2
+    },
+    "force": {
+     "strength": 0.0
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 4.32,
+    "sizeVariance": 0.4,
+    "angle": 40,
+    "start": 0.0
+   }
+  },
+  "height": 3.2,
+  "sink": 0.3,
+  "leaf": "leaf_appletree",
+  "bark": "bark_moss",
+  "leafTint": "#d8e0c8",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "a_hazel": {
+  "preset": "Aspen Small",
+  "options": {
+   "branch": {
+    "levels": 2,
+    "angle": {
+     "1": 55,
+     "2": 50
+    },
+    "children": {
+     "0": 10,
+     "1": 5
+    },
+    "length": {
+     "0": 3,
+     "1": 6,
+     "2": 3
+    },
+    "start": {
+     "1": 0.05,
+     "2": 0.2
+    },
+    "radius": {
+     "0": 0.35
+    },
+    "gnarliness": {
+     "0": 0.25,
+     "1": 0.3
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 2.88,
+    "sizeVariance": 0.4,
+    "angle": 35,
+    "start": 0.1
+   }
+  },
+  "height": 2.6,
+  "sink": 0.3,
+  "leaf": "leaf_maple",
+  "bark": "bark_moss",
+  "leafTint": "#d0dcb8",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "a_holly": {
+  "preset": "Oak Small",
+  "options": {
+   "branch": {
+    "levels": 3,
+    "angle": {
+     "1": 72,
+     "2": 55,
+     "3": 40
+    },
+    "children": {
+     "0": 5,
+     "1": 3,
+     "2": 3
+    },
+    "length": {
+     "0": 4,
+     "1": 9,
+     "2": 5,
+     "3": 2.5
+    },
+    "start": {
+     "1": 0.05,
+     "2": 0.2,
+     "3": 0.2
+    },
+    "radius": {
+     "0": 0.5,
+     "1": 0.5
+    },
+    "gnarliness": {
+     "0": 0.2,
+     "1": 0.2,
+     "2": 0.2
+    },
+    "force": {
+     "strength": 0.0
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 4.32,
+    "sizeVariance": 0.4,
+    "angle": 40,
+    "start": 0.0
+   }
+  },
+  "height": 2.8,
+  "sink": 0.3,
+  "leaf": "leaf_hollytree",
+  "bark": "bark_moss",
+  "leafTint": "#e0e8d8",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "a_bramble": {
+  "preset": "Oak Small",
+  "options": {
+   "branch": {
+    "levels": 3,
+    "angle": {
+     "1": 80,
+     "2": 60,
+     "3": 45
+    },
+    "children": {
+     "0": 5,
+     "1": 3,
+     "2": 3
+    },
+    "length": {
+     "0": 3,
+     "1": 13,
+     "2": 6,
+     "3": 3
+    },
+    "start": {
+     "1": 0.02,
+     "2": 0.1,
+     "3": 0.1
+    },
+    "radius": {
+     "0": 0.6,
+     "1": 0.55
+    },
+    "gnarliness": {
+     "0": 0.3,
+     "1": 0.35,
+     "2": 0.3
+    },
+    "force": {
+     "strength": 0.0
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 4.86,
+    "sizeVariance": 0.4,
+    "angle": 45,
+    "start": 0.0
+   }
+  },
+  "height": 2.6,
+  "sink": 0.3,
+  "leaf": "leaf_bscrypinen",
+  "bark": "bark_moss",
+  "leafTint": "#c8c8b0",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "a_thicket": {
+  "preset": "Oak Small",
+  "options": {
+   "branch": {
+    "levels": 3,
+    "angle": {
+     "1": 80,
+     "2": 60,
+     "3": 45
+    },
+    "children": {
+     "0": 5,
+     "1": 3,
+     "2": 3
+    },
+    "length": {
+     "0": 3,
+     "1": 13,
+     "2": 6,
+     "3": 3
+    },
+    "start": {
+     "1": 0.02,
+     "2": 0.1,
+     "3": 0.1
+    },
+    "radius": {
+     "0": 0.6,
+     "1": 0.55
+    },
+    "gnarliness": {
+     "0": 0.3,
+     "1": 0.35,
+     "2": 0.3
+    },
+    "force": {
+     "strength": 0.0
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 4.86,
+    "sizeVariance": 0.4,
+    "angle": 45,
+    "start": 0.0
+   }
+  },
+  "height": 4.4,
+  "sink": 0.3,
+  "leaf": "leaf_appletree",
+  "bark": "bark_moss",
+  "leafTint": "#b8c4a8",
+  "variants": 4,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "a_sapling": {
+  "preset": "Aspen Small",
+  "options": {
+   "branch": {
+    "children": {
+     "0": 8,
+     "1": 4
+    },
+    "start": {
+     "1": 0.35
+    },
+    "radius": {
+     "0": 0.3
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 2.88,
+    "sizeVariance": 0.4,
+    "angle": 30
+   }
+  },
+  "height": 5.0,
+  "sink": 0.3,
+  "leaf": "leaf_tree1",
+  "bark": "bark_moss",
+  "leafTint": "#e0e8d0",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "m_juniper": {
+  "preset": "Pine Small",
+  "options": {
+   "branch": {
+    "children": {
+     "0": 34,
+     "1": 3
+    },
+    "start": {
+     "1": 0.0
+    },
+    "angle": {
+     "1": 70
+    },
+    "length": {
+     "1": 10
+    }
+   },
+   "leaves": {
+    "count": 10,
+    "size": 3.25,
+    "sizeVariance": 0.4,
+    "start": 0
+   }
+  },
+  "height": 2.4,
+  "sink": 0.3,
+  "leaf": "leaf_spruce",
+  "bark": "bark_pine",
+  "leafTint": "#d0dcc8",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "m_heather": {
+  "preset": "Aspen Small",
+  "options": {
+   "branch": {
+    "levels": 2,
+    "angle": {
+     "1": 55,
+     "2": 50
+    },
+    "children": {
+     "0": 10,
+     "1": 5
+    },
+    "length": {
+     "0": 3,
+     "1": 6,
+     "2": 3
+    },
+    "start": {
+     "1": 0.05,
+     "2": 0.2
+    },
+    "radius": {
+     "0": 0.35
+    },
+    "gnarliness": {
+     "0": 0.25,
+     "1": 0.3
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 2.88,
+    "sizeVariance": 0.4,
+    "angle": 35,
+    "start": 0.1
+   }
+  },
+  "height": 1.1,
+  "sink": 0.3,
+  "leaf": "leaf_bscrypinen",
+  "bark": "bark_pine",
+  "leafTint": "#c0a8b0",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "m_birchscrub": {
+  "preset": "Aspen Small",
+  "options": {
+   "branch": {
+    "levels": 2,
+    "angle": {
+     "1": 55,
+     "2": 50
+    },
+    "children": {
+     "0": 10,
+     "1": 5
+    },
+    "length": {
+     "0": 3,
+     "1": 6,
+     "2": 3
+    },
+    "start": {
+     "1": 0.05,
+     "2": 0.2
+    },
+    "radius": {
+     "0": 0.35
+    },
+    "gnarliness": {
+     "0": 0.25,
+     "1": 0.3
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 2.88,
+    "sizeVariance": 0.4,
+    "angle": 35,
+    "start": 0.1
+   }
+  },
+  "height": 2.6,
+  "sink": 0.3,
+  "leaf": "leaf_birch",
+  "bark": "bark_birch",
+  "leafTint": "#c8d4b0",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "m_thicket": {
+  "preset": "Pine Small",
+  "options": {
+   "branch": {
+    "children": {
+     "0": 50,
+     "1": 3
+    },
+    "start": {
+     "1": 0.0
+    },
+    "angle": {
+     "1": 70
+    },
+    "length": {
+     "1": 10
+    }
+   },
+   "leaves": {
+    "count": 12,
+    "size": 3.25,
+    "sizeVariance": 0.4,
+    "start": 0
+   }
+  },
+  "height": 4.4,
+  "sink": 0.3,
+  "leaf": "leaf_npinean",
+  "bark": "bark_pine",
+  "leafTint": "#c8d8c0",
+  "variants": 4,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "m_bramble": {
+  "preset": "Oak Small",
+  "options": {
+   "branch": {
+    "levels": 3,
+    "angle": {
+     "1": 80,
+     "2": 60,
+     "3": 45
+    },
+    "children": {
+     "0": 5,
+     "1": 3,
+     "2": 3
+    },
+    "length": {
+     "0": 3,
+     "1": 13,
+     "2": 6,
+     "3": 3
+    },
+    "start": {
+     "1": 0.02,
+     "2": 0.1,
+     "3": 0.1
+    },
+    "radius": {
+     "0": 0.6,
+     "1": 0.55
+    },
+    "gnarliness": {
+     "0": 0.3,
+     "1": 0.35,
+     "2": 0.3
+    },
+    "force": {
+     "strength": 0.0
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 4.86,
+    "sizeVariance": 0.4,
+    "angle": 45,
+    "start": 0.0
+   }
+  },
+  "height": 2.8,
+  "sink": 0.3,
+  "leaf": "leaf_bscrypinen",
+  "bark": "bark_pine",
+  "leafTint": "#b8b4a0",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "m_sapling": {
+  "preset": "Pine Small",
+  "options": {
+   "branch": {
+    "children": {
+     "0": 34,
+     "1": 3
+    },
+    "start": {
+     "1": 0.0
+    },
+    "angle": {
+     "1": 70
+    },
+    "length": {
+     "1": 10
+    }
+   },
+   "leaves": {
+    "count": 10,
+    "size": 3.25,
+    "sizeVariance": 0.4,
+    "start": 0
+   }
+  },
+  "height": 5.5,
+  "sink": 0.3,
+  "leaf": "leaf_npinean",
+  "bark": "bark_pine",
+  "leafTint": "#d8e4d0",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "s_juniper": {
+  "preset": "Pine Small",
+  "options": {
+   "branch": {
+    "children": {
+     "0": 34,
+     "1": 3
+    },
+    "start": {
+     "1": 0.0
+    },
+    "angle": {
+     "1": 70
+    },
+    "length": {
+     "1": 10
+    }
+   },
+   "leaves": {
+    "count": 10,
+    "size": 3.25,
+    "sizeVariance": 0.4,
+    "start": 0
+   }
+  },
+  "height": 2.4,
+  "sink": 0.3,
+  "leaf": "leaf_nvrgrn1-s",
+  "bark": "bark_pine",
+  "leafTint": "#ffffff",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "s_thicket": {
+  "preset": "Pine Small",
+  "options": {
+   "branch": {
+    "children": {
+     "0": 50,
+     "1": 3
+    },
+    "start": {
+     "1": 0.0
+    },
+    "angle": {
+     "1": 70
+    },
+    "length": {
+     "1": 10
+    }
+   },
+   "leaves": {
+    "count": 12,
+    "size": 3.25,
+    "sizeVariance": 0.4,
+    "start": 0
+   }
+  },
+  "height": 4.4,
+  "sink": 0.3,
+  "leaf": "leaf_npinean1-s",
+  "bark": "bark_pine",
+  "leafTint": "#ffffff",
+  "variants": 4,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "s_scrub": {
+  "preset": "Aspen Small",
+  "options": {
+   "branch": {
+    "levels": 2,
+    "angle": {
+     "1": 55,
+     "2": 50
+    },
+    "children": {
+     "0": 10,
+     "1": 5
+    },
+    "length": {
+     "0": 3,
+     "1": 6,
+     "2": 3
+    },
+    "start": {
+     "1": 0.05,
+     "2": 0.2
+    },
+    "radius": {
+     "0": 0.35
+    },
+    "gnarliness": {
+     "0": 0.25,
+     "1": 0.3
+    }
+   },
+   "leaves": {
+    "count": 6,
+    "size": 2.88,
+    "sizeVariance": 0.4,
+    "angle": 35,
+    "start": 0.1
+   }
+  },
+  "height": 1.4,
+  "sink": 0.3,
+  "leaf": "leaf_bscrypinen",
+  "bark": "bark_pine",
+  "leafTint": "#d8d4d0",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ },
+ "s_sapling": {
+  "preset": "Pine Small",
+  "options": {
+   "branch": {
+    "children": {
+     "0": 34,
+     "1": 3
+    },
+    "start": {
+     "1": 0.0
+    },
+    "angle": {
+     "1": 70
+    },
+    "length": {
+     "1": 10
+    }
+   },
+   "leaves": {
+    "count": 10,
+    "size": 3.25,
+    "sizeVariance": 0.4,
+    "start": 0
+   }
+  },
+  "height": 5.5,
+  "sink": 0.3,
+  "leaf": "leaf_npinetreen_s",
+  "bark": "bark_pine",
+  "leafTint": "#ffffff",
+  "variants": 3,
+  "lean": 0.004,
+  "models": [],
+  "segments": {
+   "0": 5,
+   "1": 3,
+   "2": 3,
+   "3": 3
+  },
+  "sections": {
+   "0": 3,
+   "1": 3,
+   "2": 2,
+   "3": 2
+  }
+ }
+}

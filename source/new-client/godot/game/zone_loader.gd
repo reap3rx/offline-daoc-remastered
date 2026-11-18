@@ -31,6 +31,7 @@ var _terrain_mats: Array[ShaderMaterial] = []
 var _water_mats: Array[ShaderMaterial] = []
 ## The broadleaf trees' crowns (x, y, z in the zone's frame, w = reach): where AmbientLife's falling leaves start.
 var tree_crowns: Array[Vector4] = []
+var model_radius := {}                  # fixture model index -> its radius, metres at scale 1 (Foliage)
 ## Trees that keep their needles (no falling leaves): by model name.
 const EVERGREEN := ["pine", "evergreen", "fir", "yew", "spruce", "cedar", "holly", "dead", "conifer"]
 
@@ -950,6 +951,7 @@ func _build_fixtures() -> void:
 				cells[c] = []
 			cells[c].append(i)
 		var size := _parts_radius(parts) * 2.0 if not parts.meshes.is_empty() else 2.0
+		model_radius[m] = size * 0.5                     # (Foliage keeps its bushes off every placed object)
 		var far := clampf(VIEW_RANGE_PER_M * size, VIEW_RANGE_MIN_M, VIEW_RANGE_MAX_M)
 		if model.has("effect_range_m"):
 			far = float(model.effect_range_m)            # moneffects.csv max visible range
