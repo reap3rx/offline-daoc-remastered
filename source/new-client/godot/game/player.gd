@@ -1441,7 +1441,55 @@ func _smooth_camera_height(delta: float) -> void:
 	_pivot.position.y = 1.55 + (_cam_y - y) + (_model.position.y if mount and _model else 0.0)
 
 
+## Novelty potions' looks on you (the server's "#FX|kind|value|seconds|name", NoveltyPotions.cs, owner 2026-11-18): a
+## size (Draught of the Wee Folk, Giant's Brew - held under a ceiling's height underground), a higher jump (Feather
+## Draught) and a soft glow (Glowcap Juice). A beast's shape is the server's model change (morph).
+var fx_size := 1.0
+var fx_jump := 1.0
+var _fx_glow: OmniLight3D
+
+
+func fx(kind: String, value: String) -> void:
+	match kind:
+		"size":
+			fx_size = clampf(float(value), 0.25, 1.5) if value != "" else 1.0
+		"jump":
+			fx_jump = clampf(float(value), 1.0, 2.0) if value != "" else 1.0
+		"glow":
+			if value == "":
+				if _fx_glow and is_instance_valid(_fx_glow):
+					_fx_glow.queue_free()
+				_fx_glow = null
+			else:
+				if _fx_glow == null or not is_instance_valid(_fx_glow):
+					_fx_glow = OmniLight3D.new()
+					_fx_glow.name = "FxGlow"
+					_fx_glow.position.y = 1.2
+					_fx_glow.omni_range = 6.0
+					_fx_glow.light_energy = 1.1
+					_fx_glow.shadow_enabled = false
+					add_child(_fx_glow)
+				_fx_glow.light_color = Color.from_string(value, Color(1, 0.85, 0.5))
+
+
+func _fx_step() -> void:
+	if _model == null or not is_instance_valid(_model):
+		return
+	var size := fx_size
+	var sky = get_parent().get("sky") if get_parent() else null
+	if size > 1.15 and sky and bool(sky.get("dungeon")):
+		size = 1.15                                          # (no giants under a dungeon's ceiling)
+	# the factor each model carries now (a morph's model and your figure each their own): only a change rescales it,
+	# so its own size (the look's, a race's) is never touched
+	var applied := float(_model.get_meta("fx_applied", 1.0))
+	if is_equal_approx(size, applied):
+		return
+	_model.scale = _model.scale / applied * size
+	_model.set_meta("fx_applied", size)
+
+
 func _process(_delta: float) -> void:
+	_fx_step()
 	var t_live := Time.get_ticks_usec()
 	_process_timed(_delta)
 	Perf.proc_add("player frame", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)
@@ -1720,7 +1768,7 @@ func _physics_step(delta: float) -> void:
 	elif grounded:
 		velocity.x = wish.x
 		velocity.z = wish.z
-		velocity.y = JUMP_VELOCITY if _act("jump") else 0.0
+		velocity.y = JUMP_VELOCITY * fx_jump if _act("jump") else 0.0
 	else:
 		# airborne: keep the take-off momentum, a little steering
 		velocity.x = lerpf(velocity.x, wish.x, AIR_CONTROL * delta * 10.0)

@@ -659,6 +659,7 @@ func _remove(oid: int, park := true, kind := 1, why := "") -> void:
 	if objects.has(oid):
 		var o: Node3D = objects[oid]
 		objects.erase(oid)
+		_beams.erase(oid)
 		if target_object == oid:                              # (a gravestone prayed at, loot picked up)
 			target_object = 0
 			PlayerData.set_target({})
@@ -1002,6 +1003,27 @@ func _message(d: Dictionary) -> void:
 			Server.effects[-1] = {"icon": 3161, "name": "Campfire: warmth coming", "negative": 0,
 					"until": Time.get_ticks_msec() + int(secs) * 1000}
 		PlayerData.effects_changed.emit()
+		return
+	if String(d.text).begins_with("#FX|"):                # a novelty potion's look on you (NoveltyPotions.cs): kind|value|secs|name
+		var ff := String(d.text).substr(4).split("|")
+		if ff.size() >= 3:
+			if viewer and viewer.player and viewer.player.has_method("fx"):
+				viewer.player.fx(String(ff[0]), String(ff[1]))
+			var key: int = FX_ICONS.get(String(ff[0]), [0, 0])[0]
+			if key != 0:
+				if int(ff[2]) <= 0:
+					Server.effects.erase(key)
+				else:
+					Server.effects[key] = {"icon": FX_ICONS[String(ff[0])][1], "name": String(ff[3]) if ff.size() > 3 else "",
+							"negative": 0, "until": Time.get_ticks_msec() + int(ff[2]) * 1000}
+				PlayerData.effects_changed.emit()
+		return
+	if String(d.text).begins_with("#BEAM|"):              # a Superior / Legendary drop's light column (LootOverhaul.Beam): oid|tier
+		var bf := String(d.text).substr(6).split("|")
+		if bf.size() >= 2:
+			_beams[int(bf[0])] = int(bf[1])
+			if objects.has(int(bf[0])):
+				_add_beam(objects[int(bf[0])], int(bf[1]))
 		return
 	if String(d.text).begins_with("#SIT|"):               # a bot sitting at a campfire (AutonomousCampfireVisits): oid|1/0
 		var sf := String(d.text).substr(5).split("|")
@@ -1824,6 +1846,49 @@ func _add_object_inner(d: Dictionary) -> void:
 	holder.set_meta("name", String(d.name))
 	holder.set_meta("model", model)
 	objects[oid] = holder
+	if _beams.has(oid):
+		_add_beam(holder, int(_beams[oid]))
+
+
+## The loot beams (owner 2026-11-18, the loot proposal): a good drop on the ground shows a light column in its tier's
+## colour - Superior blue, Legendary gold - so it is noticed with auto loot off.
+const FX_ICONS := {"size": [-10, 8090], "shape": [-11, 8093], "stealth": [-12, 8095], "jump": [-13, 8071], "glow": [-14, 8075]}
+const BEAM_COLOURS := {3: Color(0.35, 0.6, 1.0, 0.55), 4: Color(1.0, 0.75, 0.25, 0.65)}
+var _beams := {}                              # object id -> its tier (the line may come before or after the object)
+static var _beam_shader: Shader
+
+
+func _add_beam(holder: Node3D, tier: int) -> void:
+	if holder == null or not is_instance_valid(holder) or holder.get_node_or_null("LootBeam"):
+		return
+	if _beam_shader == null:
+		_beam_shader = Shader.new()
+		_beam_shader.code = """shader_type spatial;
+render_mode unshaded, blend_add, cull_disabled, depth_draw_never, shadows_disabled;
+uniform vec4 tint : source_color = vec4(1.0);
+varying float h;
+void vertex() { h = clamp(VERTEX.y / 6.0 + 0.5, 0.0, 1.0); }
+void fragment() {
+	float pulse = 0.8 + 0.2 * sin(TIME * 2.5);
+	ALBEDO = tint.rgb;
+	ALPHA = tint.a * pow(1.0 - h, 1.6) * pulse;
+}"""
+	var mi := MeshInstance3D.new()
+	mi.name = "LootBeam"
+	var cyl := CylinderMesh.new()
+	cyl.top_radius = 0.05
+	cyl.bottom_radius = 0.16
+	cyl.height = 6.0
+	cyl.radial_segments = 10
+	cyl.rings = 1
+	mi.mesh = cyl
+	var mat := ShaderMaterial.new()
+	mat.shader = _beam_shader
+	mat.set_shader_parameter("tint", BEAM_COLOURS.get(tier, BEAM_COLOURS[3]))
+	mi.material_override = mat
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi.position.y = 3.0
+	holder.add_child(mi)
 
 
 var houses := {}                             # house number -> its node (housing regions: HouseCreate)

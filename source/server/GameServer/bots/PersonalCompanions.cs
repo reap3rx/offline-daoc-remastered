@@ -543,6 +543,8 @@ namespace DOL.GS
                 kinds.Add(() => Pick(QuestLines, p, bot).Replace("{quest}", q.Def.Title));
             if (RvrNews(p.Realm) is string news)
                 kinds.Add(() => news);
+            if (Wish(p, bot) is string wish)
+                kinds.Add(() => wish);                       // (its kit has fallen behind: a hint)
             return kinds[Random.Shared.Next(kinds.Count)]();
         }
 

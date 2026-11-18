@@ -2582,8 +2582,8 @@ namespace DOL.GS
         /// <returns></returns>
         public virtual double CalcFallDamage(int fallDamagePercent)
         {
-            if (fallDamagePercent <= 0)
-                return 0;
+            if (fallDamagePercent <= 0 || NoveltyPotions.NoFallDamage(this))
+                return 0;                                       // (a Feather Draught: no falling damage)
 
             int safeFallLevel = GetAbilityLevel(Abilities.SafeFall);
             int mythSafeFall = GetModified(eProperty.MythicalSafeFall);
@@ -6643,6 +6643,10 @@ namespace DOL.GS
 
                 // a camping kit (owner 2026-11-11): builds a campfire, or hangs a cooking pot over one
                 if (CampingSupplies.TryUse(this, useItem))
+                    return;
+
+                // the loot overhaul's things you use (LootUses.cs): a dye, a treasure map, a novelty potion, a kit token
+                if (LootUses.TryUse(this, useItem))
                     return;
 
                 if (useItem.Item_Type is >= ((int) eInventorySlot.LeftFrontSaddleBag) and <= ((int) eInventorySlot.RightRearSaddleBag))
@@ -11043,7 +11047,7 @@ namespace DOL.GS
                         continue;
 
                     double npcLevel = Math.Max(npc.Level, 1.0);
-                    double stealthLevel = player.GetModifiedSpecLevel(Specs.Stealth);
+                    double stealthLevel = Math.Max(player.GetModifiedSpecLevel(Specs.Stealth), NoveltyPotions.StealthLevel(player));
                     double detectRadius = 125.0 + ((npcLevel - stealthLevel) * 20.0);
 
                     // we have detect hidden and enemy don't = higher range
@@ -11123,7 +11127,7 @@ namespace DOL.GS
                 return true;
             if (effectListComponent.ContainsEffectForEffectType(eEffect.TrueSight))
                 return true;
-            int stealthLevel = Math.Min(50, bot.GetModifiedSpecLevel(Specs.Stealth));
+            int stealthLevel = Math.Min(50, Math.Max(bot.GetModifiedSpecLevel(Specs.Stealth), NoveltyPotions.StealthLevel(bot)));
             int levelDiff = Math.Max(0, Level - stealthLevel);
             bool camouflage = bot.effectListComponent.ContainsEffectForEffectType(eEffect.Camouflage);
             bool vanish = bot.effectListComponent.ContainsEffectForEffectType(eEffect.Vanish);
@@ -11173,7 +11177,7 @@ namespace DOL.GS
                      * -See Hidden range = 2700 - (38 * your stealth spec)
                      */
 
-                    int enemyStealthLevel = Math.Min(50, enemyPlayer.GetModifiedSpecLevel(Specs.Stealth));
+                    int enemyStealthLevel = Math.Min(50, Math.Max(enemyPlayer.GetModifiedSpecLevel(Specs.Stealth), NoveltyPotions.StealthLevel(enemyPlayer)));
                     int levelDiff = Math.Max(0, Level - enemyStealthLevel);
                     int range = 0;
 

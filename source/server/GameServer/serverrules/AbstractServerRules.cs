@@ -1698,17 +1698,38 @@ namespace DOL.GS.ServerRules
                 else
                 {
                     DbItemTemplate drop = itemTemplate;
-                    // a named monster's drop or a rare random one, made worth having by its taker (SpecialLoot.cs)
-                    if (SpecialLoot.IsSpecial(itemTemplate))
+                    GamePlayer taker = killer as GamePlayer;
+                    foreach (ItemOwnerTotalDamagePair o in itemOwners)
+                        if (o.Owner is GamePlayer p) { taker = p; break; }
+                    // a random drop's quality tier, its word, a proc and its glow, its look (LootOverhaul.cs)
+                    LootOverhaul.Tier tier = LootOverhaul.Tier.Plain;
+                    bool rog = drop is GeneratedUniqueItem;
+                    if (drop is GeneratedUniqueItem g)
                     {
-                        GamePlayer taker = killer as GamePlayer;
-                        foreach (ItemOwnerTotalDamagePair o in itemOwners)
-                            if (o.Owner is GamePlayer p) { taker = p; break; }
-                        drop = SpecialLoot.Enrich(itemTemplate, taker, $"Taken from {killedNpc.Name}");
+                        tier = LootOverhaul.Apply(g, taker);
+                        if (tier == LootOverhaul.Tier.Legendary)
+                            LootUses.MaybeHeirloom(g);
                     }
-                    CreateItem(killedNpc, drop, itemOwners, playersInRadius);
+                    // a named monster's drop or a Legendary random one, made worth having by its taker (SpecialLoot.cs)
+                    if (SpecialLoot.IsSpecial(drop))
+                    {
+                        drop = SpecialLoot.Enrich(drop, taker, $"Taken from {killedNpc.Name}", addProc: !rog);
+                        if (!rog)
+                            LootOverhaul.MarkQuality(drop);
+                    }
+                    WorldInventoryItem onGround = CreateItem(killedNpc, drop, itemOwners, playersInRadius);
+                    if (onGround != null)
+                        LootOverhaul.Beam(onGround, tier, playersInRadius);
+                    if (tier == LootOverhaul.Tier.Legendary)
+                        foreach (GamePlayer near in playersInRadius)
+                            near.Out.SendMessage($"Legendary! {killedNpc.GetName(0, true)} drops {drop.Name}!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
                 }
             }
+
+            // what a kill drops besides its loot: a dye, a novelty potion, a trophy, rarely a treasure map (LootOverhaul.cs)
+            if (LevelScaling.KeepDrop(killer, killedNpc))
+                foreach (DbItemTemplate extra in LootOverhaul.ForKill(killedNpc, killer))
+                    CreateItem(killedNpc, extra, itemOwners, playersInRadius);
 
             static void CreateMoney(GameNPC killedNpc, DbItemTemplate itemTemplate, SortedSet<ItemOwnerTotalDamagePair> itemOwners, List<GamePlayer> playersInRadius)
             {
@@ -1737,7 +1758,7 @@ namespace DOL.GS.ServerRules
                 money.AddToWorld();
             }
 
-            static void CreateItem(GameNPC killedNpc, DbItemTemplate itemTemplate, SortedSet<ItemOwnerTotalDamagePair> itemOwners, List<GamePlayer> nearbyPlayers)
+            static WorldInventoryItem CreateItem(GameNPC killedNpc, DbItemTemplate itemTemplate, SortedSet<ItemOwnerTotalDamagePair> itemOwners, List<GamePlayer> nearbyPlayers)
             {
                 GameInventoryItem inventoryItem;
 
@@ -1779,7 +1800,7 @@ namespace DOL.GS.ServerRules
                     TryPickUpResult result = item.TryAutoPickUp(itemOwner.Owner);
 
                     if (result is TryPickUpResult.Success)
-                        return;
+                        return null;
                     else if (result is TryPickUpResult.DoesNotWant)
                         continue;
                     else if (result is TryPickUpResult.Blocked)
@@ -1787,6 +1808,7 @@ namespace DOL.GS.ServerRules
                 }
 
                 item.AddToWorld();
+                return item;
             }
 
             static void NotifyNearbyPlayers(GameNPC killedNpc, GameStaticItemTimed item, List<GamePlayer> nearbyPlayers)

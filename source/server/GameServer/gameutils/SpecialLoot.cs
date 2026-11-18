@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DOL.Database;
 using System.Reflection;
 using System.Threading;
@@ -37,7 +38,7 @@ namespace DOL.GS
 
         /// <summary>The drop, enriched for its taker - a new one-off template (DbItemUnique) the inventory saves with the
         /// item - or the template itself when nothing applies (no player taker, money, stackables).</summary>
-        public static DbItemTemplate Enrich(DbItemTemplate t, GamePlayer taker, string why)
+        public static DbItemTemplate Enrich(DbItemTemplate t, GamePlayer taker, string why, bool addProc = true)
         {
             if (t == null || taker == null || t.IsStackable || t.MaxCount > 1 || GameMoney.IsItemMoney(t.Name))
                 return t;
@@ -55,7 +56,7 @@ namespace DOL.GS
                 bool weapon = u.Object_Type >= (int) eObjectType._FirstWeapon && u.Object_Type <= (int) eObjectType._LastWeapon;
                 bool armor = u.Object_Type >= (int) eObjectType._FirstArmor && u.Object_Type <= (int) eObjectType._LastArmor;
                 AddToaBonuses(u, taker, level);
-                if (u.ProcSpellID == 0 && (weapon || armor && u.Item_Type == Slot.TORSO))
+                if (addProc && u.ProcSpellID == 0 && (weapon || armor && u.Item_Type == Slot.TORSO))
                     AddProc(u, level, weapon);
                 if (weapon)
                     Finish(u, level);
@@ -210,6 +211,20 @@ namespace DOL.GS
             }
         }
 
+        /// <summary>One more bonus line from the taker's class pool (a Superior or Legendary drop's extra).</summary>
+        public static void AddOneBonus(DbItemTemplate u, GamePlayer taker, int level)
+        {
+            (eProperty, int)[] pool = PoolFor(taker);
+            for (int tries = 0; tries < 8; tries++)
+            {
+                (eProperty prop, int top) = pool[Util.Random(0, pool.Length - 1)];
+                if (Has(u, prop))
+                    continue;
+                Write(u, prop, Math.Max(1, (int) Math.Round(top * Factor(level) * (0.5 + Util.Random(0, 50) / 100.0))));
+                return;
+            }
+        }
+
         private static bool Has(DbItemTemplate u, eProperty prop)
         {
             int p = (int) prop;
@@ -260,12 +275,12 @@ namespace DOL.GS
             if (u.Color == 0 && Util.Chance(Math.Min(100, 20 + level * 2)))
                 u.Color = level < 25 || Util.Chance(50) ? Lusters[Util.Random(0, Math.Min(Lusters.Length - 1, level / 6))]
                                                         : Enamels[Util.Random(0, Enamels.Length - 1)];
-            if (u.Effect == 0 && level >= 15 && Util.Chance(Math.Min(100, level * 2)))
-            {
-                (int lo, int hi) = EffectRange((eObjectType) u.Object_Type, u.Item_Type == Slot.TWOHAND || u.Hand == 1);
-                if (hi > 0)
-                    u.Effect = Util.Random(lo, hi);
-            }
+            // the glow is its proc's (the loot overhaul, owner 2026-11-18: "make weapon effects tied to procs, that way they
+            // look actually spell forged"): a proc weapon always glows in its proc's colours, one without a proc never does
+            if (u.ProcSpellID > 0)
+                u.Effect = LootOverhaul.GlowFor(u, LootOverhaul.KindOfProc(u.ProcSpellID));
+            else
+                u.Effect = 0;
         }
 
         public static (int, int) EffectRange(eObjectType type, bool twoHanded)
@@ -301,9 +316,17 @@ namespace DOL.GS
 
         /// <summary>The model of a higher-level plain item of the same kind, slot and realm (10 to 25 levels up, within
         /// 50), so a level-30 named sword looks like a level-45 one rather than the smith's basic blade.</summary>
-        public static void BetterLook(DbItemTemplate u, int level)
+        public static void BetterLook(DbItemTemplate u, int level) => BetterLook(u, level, 10, 25);
+
+        // the end-game looks a drop never takes (owner 2026-11-18: "exclude the really fancy models for end-game gear")
+        private static readonly string[] EndgameWords = ["Epic", "Dragon", "Atlantean", "Ancient", "Mythic", "Champion", "Legendary", "Aurulite", "Cloudsong", "Scepter"];
+
+        private static bool Endgame(DbItemTemplate t) => t.Level >= 48 || EndgameWords.Any(w => t.Name?.Contains(w, StringComparison.OrdinalIgnoreCase) == true);
+
+        /// <summary>The model of a plain item of its kind from `from` to `to` levels above (within 47), never an end-game look.</summary>
+        public static void BetterLook(DbItemTemplate u, int level, int from, int to)
         {
-            if (level >= 48)
+            if (level >= 47)
                 return;
             List<DbItemTemplate> pool;
             (int, int, int) key = (u.Object_Type, u.Item_Type, u.Realm);
@@ -328,8 +351,8 @@ namespace DOL.GS
                     _looks[key] = pool;
                 }
             }
-            int lo = level + 10, hi = Math.Min(50, level + 25);
-            List<DbItemTemplate> fit = pool.FindAll(t => t.Level >= lo && t.Level <= hi && t.Model != u.Model);
+            int lo = level + from, hi = Math.Min(47, level + to);
+            List<DbItemTemplate> fit = pool.FindAll(t => t.Level >= lo && t.Level <= hi && t.Model != u.Model && !Endgame(t));
             if (fit.Count == 0)
                 return;
             DbItemTemplate pick = fit[Util.Random(0, fit.Count - 1)];

@@ -175,6 +175,33 @@ public static class TreasureChests
         z.Pending.Add(GameLoop.GameLoopTime + 10 * 60_000);         // (no room just now: try again in a while)
     }
 
+    /// <summary>A treasure map read (LootUses): a chest placed at one of the zone's spots 1,500 to 9,000 units from you
+    /// (never trapped); null when the zone has no spots (a town, a dungeon, a zone not stocked yet).</summary>
+    public static TreasureChest PlaceForMap(GamePlayer p)
+    {
+        ZoneState z;
+        lock (Sync)
+            z = Zones.FirstOrDefault(s => s.Zone == p.CurrentZone);
+        if (z == null || z.Pool.Count == 0)
+            return null;
+        for (int attempt = 0; attempt < 40; attempt++)
+        {
+            WorldFeatureSpots.Spot s = z.Pool[Rng.Next(z.Pool.Count)];
+            long d2 = (long)(s.Pos.X - p.X) * (long)(s.Pos.X - p.X) + (long)(s.Pos.Y - p.Y) * (long)(s.Pos.Y - p.Y);
+            if (d2 < 1500L * 1500 || d2 > 9000L * 9000)
+                continue;
+            var chest = new TreasureChest(z.Level, false)
+            {
+                X = (int)s.Pos.X, Y = (int)s.Pos.Y, Z = (int)s.Pos.Z, Heading = (ushort)Rng.Next(4096),
+                CurrentRegionID = z.Zone.ZoneRegion.ID,
+            };
+            if (!chest.AddToWorld())
+                continue;
+            return chest;                                            // (yours: not the zone's thirty, and no refill once opened)
+        }
+        return null;
+    }
+
     // ---------------------------------------------------------------- opening one
 
     /// <summary>`who` opens the chest: the trap, or the loot. True when it opened.</summary>

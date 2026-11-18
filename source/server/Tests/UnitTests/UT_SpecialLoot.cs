@@ -166,7 +166,11 @@ public sealed class UT_SpecialLoot
         Assert.That(SpecialLoot.EffectRange(eObjectType.Sword, false), Is.EqualTo((1, 20)));
         Assert.That(SpecialLoot.EffectRange(eObjectType.Staff, true), Is.EqualTo((90, 94)));
         Assert.That(SpecialLoot.EffectRange(eObjectType.RecurvedBow, true), Is.EqualTo((0, 0)), "no glow rows for bows");
-        DbItemTemplate sword = new() { Object_Type = (int) eObjectType.Blades, Item_Type = Slot.RIGHTHAND, Level = 50 };
+        // the glow is its proc's (the loot overhaul, 2026-11-18): a weapon with a proc glows in its family's rows, one without doesn't
+        DbItemTemplate plain = new() { Object_Type = (int) eObjectType.Blades, Item_Type = Slot.RIGHTHAND, Level = 50 };
+        SpecialLoot.Finish(plain, 50);
+        Assert.That(plain.Effect, Is.Zero, "no proc: no glow");
+        DbItemTemplate sword = new() { Object_Type = (int) eObjectType.Blades, Item_Type = Slot.RIGHTHAND, Level = 50, ProcSpellID = 8027 };
         for (int i = 0; i < 20 && sword.Effect == 0; i++)
             SpecialLoot.Finish(sword, 50);
         Assert.That(sword.Effect, Is.InRange(1, 20));
