@@ -4,7 +4,7 @@ extends Node3D
 ## vines"): bushes, scrub and saplings scattered over the open ground, and dense thickets along the world's edge
 ## where the barrier stops you (EdgeVeil), so the end of the land reads as a wall of growth. Made like the new
 ## trees (EZ-Tree, the originals' leaf and bark pictures; content/trees/bushes.json), drawn as real 3D bushes round
-## you out to REACH_M, dissolving out there. Client-side decoration with no collision: you, bots and monsters walk
+## you out to reach_m (Options > VIDEO > FOLIAGE DISTANCE), dissolving out there. Client-side decoration with no collision: you, bots and monsters walk
 ## through them like tall grass, so the server's paths are untouched.
 ## (preloaded as Foliage by ZoneViewer: a new class_name needs the editor to register it)
 ## One per loaded zone, a child of its ZoneLoader, in that zone's metres - like GroundClutter. Every bush is where
@@ -15,8 +15,8 @@ const TreeSwap := preload("res://game/tree_swap.gd")
 const DIR := "res://content/trees"
 const CHUNK_M := 48.0
 const CELL_M := 6.4
-const REACH_M := 105.0
-const FADE_M := 25.0
+const REACH_M := 150.0              # the default reach (owner 2026-11-18: 105 m faded in too close)
+const FADE_M := 30.0
 const OPEN_PER_CELL := 0.24          # bushes per 6.4 m cell on full grass, in a clump (the noise below)
 const SCATTER_PER_CELL := 0.02       # ... and anywhere grassy, between the clumps
 const EDGE_BAND_M := 90.0            # thickets from the world's edge this far in (you stop 28 m short of it)
@@ -36,6 +36,9 @@ const PALETTES := {
 }
 
 static var enabled := true
+static var reach_m := REACH_M        # Options > VIDEO > FOLIAGE DISTANCE (Graphics: set_reach)
+static var _mats: Array[ShaderMaterial] = []
+static var _gen := 0                 # bumped when the reach changes: every zone's bushes are planted again
 static var _kinds := {}              # kind -> {"meshes": [ArrayMesh], "sink": fraction of its height under ground}
 static var _loaded := false
 
@@ -47,6 +50,7 @@ var _dense: Image
 var _avoid := {}                     # Vector2i (2 m cells) -> true: a building, a fixture, a trunk stands there
 var _chunks := {}                    # Vector2i -> Node3D (its batches)
 var _seed := 0
+var _built_gen := 0
 
 
 func setup(z: ZoneLoader, follow: Node3D, edge_veil: Node) -> bool:
@@ -64,6 +68,18 @@ func setup(z: ZoneLoader, follow: Node3D, edge_veil: Node) -> bool:
 		_dense = Image.load_from_file(z.dir.path_join(c.densemap))
 	_build_avoid()
 	return true
+
+
+## The slider moved: the fade follows at once, and the bushes are planted again out to the new reach.
+static func set_reach(m: float) -> void:
+	m = clampf(m, 60.0, 300.0)
+	if is_equal_approx(m, reach_m):
+		return
+	reach_m = m
+	for mat in _mats:
+		mat.set_shader_parameter("fade_start", reach_m - FADE_M)
+		mat.set_shader_parameter("fade_end", reach_m)
+	_gen += 1
 
 
 static func _realm_of(z: ZoneLoader) -> String:
@@ -105,8 +121,9 @@ static func _load_kinds() -> bool:
 		bark.set_shader_parameter("albedo_tex", TreeSwap._texture(String(k.bark)))
 		bark.set_shader_parameter("height", h * 3.0)
 		for m in [leaves, bark]:
-			m.set_shader_parameter("fade_start", REACH_M - FADE_M)
-			m.set_shader_parameter("fade_end", REACH_M)
+			m.set_shader_parameter("fade_start", reach_m - FADE_M)
+			m.set_shader_parameter("fade_end", reach_m)
+			_mats.append(m)
 		var meshes: Array[ArrayMesh] = []
 		for file in k.get("variants", []):
 			var mesh := TreeSwap._load_glb(DIR + "/" + String(file), bark, leaves)
@@ -147,13 +164,18 @@ func _process(_dt: float) -> void:
 		RenderingServer.global_shader_parameter_set("tree_eye", cam.global_position)
 	var p := to_local(viewer.global_position)
 	var centre := Vector2i(floori(p.x / CHUNK_M), floori(p.z / CHUNK_M))
-	var reach := ceili(REACH_M / CHUNK_M)
+	if _built_gen != _gen:
+		_built_gen = _gen
+		for c in _chunks.keys():
+			_chunks[c].queue_free()
+		_chunks.clear()
+	var reach := ceili(reach_m / CHUNK_M)
 	var wanted := {}
 	for dz in range(-reach, reach + 1):
 		for dx in range(-reach, reach + 1):
 			var c := centre + Vector2i(dx, dz)
 			var mid := Vector2((c.x + 0.5) * CHUNK_M, (c.y + 0.5) * CHUNK_M)
-			if mid.distance_to(Vector2(p.x, p.z)) < REACH_M + CHUNK_M * 0.71:
+			if mid.distance_to(Vector2(p.x, p.z)) < reach_m + CHUNK_M * 0.71:
 				wanted[c] = true
 	for c in _chunks.keys():
 		if not wanted.has(c):
@@ -284,7 +306,7 @@ func _build_chunk(c: Vector2i) -> Node3D:
 			mm.set_instance_transform(i, list[i])
 		var mmi := MultiMeshInstance3D.new()
 		mmi.multimesh = mm
-		mmi.visibility_range_end = REACH_M + CHUNK_M * 0.75
+		mmi.visibility_range_end = reach_m + CHUNK_M * 0.75
 		root.add_child(mmi)
 	return root
 
