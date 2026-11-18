@@ -41,6 +41,10 @@ signal use_skill(entry: Dictionary)      # a spell / style / ability used (quick
 signal effects_changed                   # buffs / debuffs on the player changed (the effects bar)
 var quickbars := []                      # [bar][bank][slot] = {kind, id, icon, name} or {}
 var quickbar_bank := [0, 0, 0]
+## The controller's own slots (owner 2026-11-18: "if you move a spell on your keyboard hotbar, it then messes with the
+## controller hotbar ... set them up independently"): [bar][slot], one page each, behind the "qbB_S" controller
+## bindings (Pad). The keyboard's quickbars and these never share a slot.
+var pad_bars := []
 signal quests_changed
 signal item_used(id: String)                        # an item used (U / quickbar): quest use_item steps
 signal search_requested                             # /search
@@ -53,6 +57,42 @@ var pet := {}                            # {name, health, mode} - set when a pet
 
 func _ready() -> void:
 	quickbars = _empty_quickbars()
+	pad_bars = _empty_pad_bars()
+
+
+func _empty_pad_bars() -> Array:
+	var bars := []
+	for b in 3:
+		var slots := []
+		for s in SLOTS:
+			slots.append({})
+		bars.append(slots)
+	return bars
+
+
+## The controller's slots, made the first time from what the keyboard's shown pages hold (a character set up before
+## the split keeps every button as it was; from then on the two go their own ways).
+func _pad_bars_from(saved) -> Array:
+	if saved is Array and saved.size() == 3:
+		return saved
+	var out := _empty_pad_bars()
+	for b in 3:
+		var bank: Array = quickbars[b][quickbar_bank[b]]
+		for s in SLOTS:
+			out[b][s] = (bank[s] as Dictionary).duplicate(true)
+	return out
+
+
+## Every page of slots there is - the keyboard's (each bar's ten pages) and the controller's - for the passes that
+## look a skill up again by its name, swap in a stronger spell and so on.
+func all_slot_pages() -> Array:
+	var out := []
+	for bar in quickbars:
+		for bank in bar:
+			out.append(bank)
+	for bar in pad_bars:
+		out.append(bar)
+	return out
 
 
 ## /macro <name> <command> (a client command, as the old client's): the macro goes in the first empty quickbar slot
@@ -92,14 +132,17 @@ func load_character(c: Dictionary) -> void:
 		forget_pet()                                       # another character: the last one's pet isn't theirs
 	_vault_loaded = false                                  # never write the shared vault before it's read (starter gear saves)
 	var saved = c.get("quickbars")
+	var pad = c.get("pad_bars")
 	if Server.active:                                      # this PC's quickbars for a server character
 		var path: String = Server.quickbars_path(String(c.get("name", "")))
 		var q = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else null
 		saved = q.get("quickbars") if q is Dictionary else null
+		pad = q.get("pad") if q is Dictionary else null
 		c["quickbar_bank"] = q.get("bank") if q is Dictionary else null
 	quickbars = saved if saved is Array and saved.size() == 3 else _empty_quickbars()
 	var banks = c.get("quickbar_bank")                     # patch 1.54: the quickbar page persists across quitting
 	quickbar_bank = (banks as Array).map(func(x): return int(x)) if banks is Array and banks.size() == 3 else [0, 0, 0]
+	pad_bars = _pad_bars_from(pad)
 	load_sheet(c)
 	_load_vault()
 	if Server.active:                                      # (the skill list may have come before the bars: each slot is
@@ -121,6 +164,7 @@ func save_character() -> void:
 		return
 	character["quickbars"] = quickbars
 	character["quickbar_bank"] = quickbar_bank
+	character["pad_bars"] = pad_bars
 	store_sheet()
 	CharacterStore.update(Accounts.account, character)
 	_save_vault()
@@ -285,7 +329,7 @@ func _save_server_quickbars() -> void:
 	DirAccess.make_dir_recursive_absolute("user://server_quickbars")
 	var f := FileAccess.open(Server.quickbars_path(String(character.get("name", ""))), FileAccess.WRITE)
 	if f:
-		f.store_string(JSON.stringify({"quickbars": quickbars, "bank": quickbar_bank}))
+		f.store_string(JSON.stringify({"quickbars": quickbars, "bank": quickbar_bank, "pad": pad_bars}))
 
 
 # --- the server's game: item actions go to the server (its inventory packets bring the result back) -----------------

@@ -299,8 +299,8 @@ func slot_refusal(input: String) -> String:
 	return ""
 
 
-## The quickbar (bar, slot) an input's skill goes in: the slot it is bound to, or - allocate - the first quickbar slot
-## no controller button uses yet, its own slot empty (bar 3 first: the keyboard's bars stay as they are), bound to it.
+## The controller slot (bar, slot - PlayerData.pad_bars) an input's skill goes in: the slot it is bound to, or -
+## allocate - the first controller slot no button uses yet and nothing fills, bound to it.
 func slot_for_input(input: String, allocate := false) -> Vector2i:
 	var act := String(bindings.get(input, ""))
 	if act.begins_with("qb"):
@@ -311,12 +311,12 @@ func slot_for_input(input: String, allocate := false) -> Vector2i:
 	var used := {}
 	for k in bindings:
 		used[bindings[k]] = true
-	for b in [2, 1, 0]:
+	for b in [0, 1, 2]:
 		for sl in 10:
 			var id := "qb%d_%d" % [b + 1, sl + 1]
 			if used.has(id):
 				continue
-			if not (PlayerData.quickbars[b][PlayerData.quickbar_bank[b]][sl] as Dictionary).is_empty():
+			if not (PlayerData.pad_bars[b][sl] as Dictionary).is_empty():
 				continue
 			bind(input, id)
 			return Vector2i(b, sl)
@@ -767,15 +767,13 @@ func _enemies_near() -> Array:
 	return found.map(func(f): return f[1])
 
 
+## A controller slot used: its own entry (PlayerData.pad_bars - never the keyboard bar's slot of the same number).
 func _use_slot(qbar: int, slot: int) -> void:
-	var ui = _ui()
-	if ui == null:
+	if qbar < 0 or qbar >= PlayerData.pad_bars.size() or slot < 0 or slot >= PlayerData.SLOTS:
 		return
-	var bars: Array = ui.get("quickbars")
-	if qbar < bars.size() and slot < 10:
-		bars[qbar].use_slot(slot)
-		if bar and is_instance_valid(bar):
-			bar.flash("qb%d_%d" % [qbar + 1, slot + 1])
+	Quickbar.use_entry(PlayerData.pad_bars[qbar][slot])
+	if bar and is_instance_valid(bar):
+		bar.flash("qb%d_%d" % [qbar + 1, slot + 1])
 
 
 func _capture_button(name: String, pressed: bool, since: int) -> void:

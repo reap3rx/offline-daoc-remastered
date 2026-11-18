@@ -242,8 +242,7 @@ static func _style_specs() -> Dictionary:
 
 
 func _assign(d: Dictionary) -> void:
-	var bank: int = PlayerData.quickbar_bank[_slot.x]
-	PlayerData.quickbars[_slot.x][bank][_slot.y] = {"kind": String(d.kind), "id": String(d.id), "icon": int(d.icon),
+	PlayerData.pad_bars[_slot.x][_slot.y] = {"kind": String(d.kind), "id": String(d.id), "icon": int(d.icon),
 			"name": String(d.name), "border": int(d.get("border", -1))}
 	PlayerData.save_character()
 	PlayerData.changed.emit()

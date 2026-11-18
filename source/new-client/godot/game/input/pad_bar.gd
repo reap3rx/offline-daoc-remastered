@@ -185,6 +185,7 @@ class Cluster extends Control:
 			if act.begins_with("qb") and not hold:
 				var f := act.trim_prefix("qb").split("_")
 				var s := Quickbar.QuickSlot.new()
+				s.pad = true                               # (the controller's own slot, not the keyboard bar's)
 				s.bar = int(f[0]) - 1
 				s.slot = int(f[1]) - 1
 				s.size = Vector2(31, 31)

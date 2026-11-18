@@ -944,8 +944,8 @@ func _refresh_bar_icons() -> void:
 	while first < skills.size() and int(skills[first].page) == 0:
 		first += 1
 	var moved := 0
-	for bar in PlayerData.quickbars:
-		for bank in bar:
+	for pages in [PlayerData.all_slot_pages()]:          # (the keyboard's pages and the controller's)
+		for bank in pages:
 			for e in bank:
 				if not (e is Dictionary) or not String(e.get("id", "")).begins_with("srv:skill:"):
 					continue
@@ -975,8 +975,8 @@ func _refresh_bar_icons() -> void:
 ## The same for list spells ("srv:spell:<line>:<level>"): a line's place can move as lines are learned.
 func _remap_bar_spells() -> void:
 	var moved := 0
-	for bar in PlayerData.quickbars:
-		for bank in bar:
+	for pages in [PlayerData.all_slot_pages()]:          # (the keyboard's pages and the controller's)
+		for bank in pages:
 			for e in bank:
 				if not (e is Dictionary) or not String(e.get("id", "")).begins_with("srv:spell:"):
 					continue
@@ -1623,8 +1623,8 @@ func smart_lines(e: Dictionary) -> Array:
 ## The bars' smart heals take the icon of the heal they cast now (a new heal learned can bring a new picture).
 func _refresh_smart_icons() -> void:
 	var changed := false
-	for bar in PlayerData.quickbars:
-		for bank in bar:
+	for pages in [PlayerData.all_slot_pages()]:          # (the keyboard's pages and the controller's)
+		for bank in pages:
 			for e in bank:
 				if not (e is Dictionary) or not String(e.get("id", "")).begins_with("srv:smart:"):
 					continue

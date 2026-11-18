@@ -99,6 +99,21 @@ func use_slot(i: int) -> void:
 	_slots[i].use()
 
 
+## What using a slot's entry does (a quickbar slot, a controller slot): an item is used, a pet command given, a macro
+## typed, a skill used.
+static func use_entry(e: Dictionary) -> void:
+	if e.is_empty():
+		return
+	if String(e.get("kind", "")) == "item":
+		PlayerData.use_item(String(e.get("id", "")))
+	elif String(e.get("kind", "")) == "petcmd":          # a pet window command dragged onto the bar
+		PlayerData.pet_command(String(e.get("id", "")))
+	elif String(e.get("kind", "")) == "macro":           # /macro: its command, as if typed
+		PlayerData.macro_run.emit(String(e.get("id", "")))
+	else:
+		PlayerData.use_skill.emit(e)                        # spells, styles, abilities
+
+
 ## The client's hover text for a bar (game.dll 0x4d7e4f: "Quickbar %d" over "Modifier - None / Alt / Ctrl"),
 ## taken from the bar's actual keys so a rebinding shows up.
 func bar_tooltip() -> String:
@@ -126,6 +141,7 @@ func _refresh() -> void:
 class QuickSlot extends Control:
 	var bar := 0
 	var slot := 0
+	var pad := false                                     # a controller slot (PlayerData.pad_bars), not the keyboard's
 	var _icon: TextureRect
 	var _key: Label
 	var _border: TextureRect
@@ -191,6 +207,8 @@ class QuickSlot extends Control:
 			_cool_text.text = "%d" % ceili(left) if left < 60.0 else "%dM" % ceili(left / 60.0)
 
 	func entry() -> Dictionary:
+		if pad:
+			return PlayerData.pad_bars[bar][slot]
 		return PlayerData.quickbars[bar][PlayerData.quickbar_bank[bar]][slot]
 
 	func _notification(what: int) -> void:
@@ -220,14 +238,7 @@ class QuickSlot extends Control:
 			return
 		modulate = Color(1.6, 1.4, 0.8)
 		create_tween().tween_property(self, "modulate", Color.WHITE, 0.25)
-		if String(e.get("kind", "")) == "item":
-			PlayerData.use_item(String(e.get("id", "")))
-		elif String(e.get("kind", "")) == "petcmd":      # a pet window command dragged onto the bar
-			PlayerData.pet_command(String(e.get("id", "")))
-		elif String(e.get("kind", "")) == "macro":       # /macro: its command, as if typed
-			PlayerData.macro_run.emit(String(e.get("id", "")))
-		else:
-			PlayerData.use_skill.emit(e)                    # spells, styles, abilities
+		Quickbar.use_entry(e)
 
 	## The pad's buttons on this slot (Pad): A uses it, X tells what it is, Y picks it up to move (B: the usual close).
 	func pad_actions() -> Array:
@@ -314,7 +325,10 @@ class QuickSlot extends Control:
 				accept_event()
 
 	func _assign(e: Dictionary) -> void:
-		PlayerData.quickbars[bar][PlayerData.quickbar_bank[bar]][slot] = e
+		if pad:
+			PlayerData.pad_bars[bar][slot] = e
+		else:
+			PlayerData.quickbars[bar][PlayerData.quickbar_bank[bar]][slot] = e
 		PlayerData.save_character()
 		refresh()
 		PlayerData.changed.emit()                          # (the Hero panel's copy of the bars redraws too, and back)

@@ -179,8 +179,8 @@ func _place_on_bars(fresh: Array, upgrade: bool, add: bool) -> Dictionary:
 		var fam := family(e)
 		var replaced: Array = []
 		if fam != "" and upgrade:
-			for bar in PlayerData.quickbars:
-				for bank in bar:
+			for pages in [PlayerData.all_slot_pages()]:      # (the keyboard's pages and the controller's)
+				for bank in pages:
 					for i in (bank as Array).size():
 						var q = bank[i]
 						if not (q is Dictionary) or String(q.get("kind", "")) != "spell":
@@ -196,11 +196,19 @@ func _place_on_bars(fresh: Array, upgrade: bool, add: bool) -> Dictionary:
 			continue
 		if not add:
 			continue
+		# the keyboard's bars and the controller's each get it in their first free slot (they are set up apart)
 		var at := _free_slot()
 		if at.x >= 0:
 			PlayerData.quickbars[at.x][PlayerData.quickbar_bank[at.x]][at.y] = _entry(e)
 			changed = true
-			notes[_key(e)] = "Placed on your hotbar%s." % _where(at)
+		var pv := _free_pad_slot()
+		if pv.x >= 0:
+			PlayerData.pad_bars[pv.x][pv.y] = _entry(e)
+			changed = true
+		if Pad.active and pv.x >= 0:
+			notes[_key(e)] = "Placed on your controller%s." % _where_pad(pv)
+		elif at.x >= 0:
+			notes[_key(e)] = "Placed on your hotbar (quickbar %d, slot %d)." % [at.x + 1, at.y + 1]
 	if changed:
 		PlayerData.save_character()
 		PlayerData.changed.emit()
@@ -211,8 +219,8 @@ static func _entry(e: Dictionary) -> Dictionary:
 	return {"kind": String(e.kind), "id": String(e.id), "icon": int(e.icon), "border": int(e.border), "name": String(e.name)}
 
 
-## The controller slots first ("qbB_S" bindings, LB's layer before RB's), then every slot of the three shown pages.
-static func _slot_order() -> Array:
+## The controller's slots, in the order a hand reaches them ("qbB_S" bindings, LB's layer before RB's).
+static func _pad_order() -> Array:
 	var out: Array = []
 	var seen := {}
 	for layer in ["lb+", "rb+", "lb+rb+", ""]:
@@ -221,44 +229,45 @@ static func _slot_order() -> Array:
 			if act.begins_with("qb"):
 				var f := act.trim_prefix("qb").split("_")
 				var v := Vector2i(int(f[0]) - 1, int(f[1]) - 1)
-				if not seen.has(v):
+				if not seen.has(v) and v.x >= 0 and v.x < 3 and v.y >= 0 and v.y < PlayerData.SLOTS:
 					seen[v] = true
 					out.append(v)
-	for b in 3:
-		for s in PlayerData.SLOTS:
-			var v := Vector2i(b, s)
-			if not seen.has(v):
-				seen[v] = true
-				out.append(v)
 	return out
 
 
+## The keyboard's first free slot: the three bars' shown pages, bar by bar.
 static func _free_slot() -> Vector2i:
-	for v in _slot_order():
-		if v.x < 3 and v.y < PlayerData.SLOTS and (PlayerData.quickbars[v.x][PlayerData.quickbar_bank[v.x]][v.y] as Dictionary).is_empty():
+	for b in 3:
+		for s in PlayerData.SLOTS:
+			if (PlayerData.quickbars[b][PlayerData.quickbar_bank[b]][s] as Dictionary).is_empty():
+				return Vector2i(b, s)
+	return Vector2i(-1, -1)
+
+
+static func _free_pad_slot() -> Vector2i:
+	for v in _pad_order():
+		if (PlayerData.pad_bars[v.x][v.y] as Dictionary).is_empty():
 			return v
 	return Vector2i(-1, -1)
 
 
-## " (LB + X)" when a controller button holds that slot, else " (quickbar 1, slot 5)".
-static func _where(at: Vector2i) -> String:
-	if Pad.active:
-		var id := "qb%d_%d" % [at.x + 1, at.y + 1]
-		for k in Pad.bindings:
-			if String(Pad.bindings[k]) == id:
-				return " (%s)" % Pad.describe(String(k))
-	return " (quickbar %d, slot %d)" % [at.x + 1, at.y + 1]
+## " (LB + X)": the button that holds that controller slot.
+static func _where_pad(at: Vector2i) -> String:
+	var id := "qb%d_%d" % [at.x + 1, at.y + 1]
+	for k in Pad.bindings:
+		if String(Pad.bindings[k]) == id:
+			return " (%s)" % Pad.describe(String(k))
+	return ""
 
 
 ## A brand-new character (every bar empty, level 1 to 5): its first spells where a controller reaches them.
 func _first_spells() -> void:
 	if not auto_bar_on() or int(Server.selected.get("level", 1)) > 5:
 		return
-	for bar in PlayerData.quickbars:
-		for bank in bar:
-			for q in bank:
-				if q is Dictionary and not (q as Dictionary).is_empty():
-					return
+	for bank in PlayerData.all_slot_pages():
+		for q in bank:
+			if q is Dictionary and not (q as Dictionary).is_empty():
+				return
 	var spots := {"offense": ["lb+x", "lb+b", "lb+a"], "heal": ["lb+y"], "buff": ["lb+up", "lb+right", "lb+down", "lb+left"]}
 	var placed := 0
 	var list := _current().filter(func(e): return String(e.kind) == "spell")
@@ -271,17 +280,21 @@ func _first_spells() -> void:
 			role = "heal"
 		elif String(s.get("target", "")).to_lower() == "enemy" or t in OFFENSIVE_TYPES:
 			role = "offense"
-		var at := Vector2i(-1, -1)
+		var pv := Vector2i(-1, -1)                         # the controller: by role, where a thumb reaches it
 		for input in spots[role]:
 			var v: Vector2i = Pad.slot_for_input(input)
-			if v.x >= 0 and (PlayerData.quickbars[v.x][PlayerData.quickbar_bank[v.x]][v.y] as Dictionary).is_empty():
-				at = v
+			if v.x >= 0 and (PlayerData.pad_bars[v.x][v.y] as Dictionary).is_empty():
+				pv = v
 				break
-		if at.x < 0:
-			at = _free_slot()
-		if at.x < 0:
+		if pv.x < 0:
+			pv = _free_pad_slot()
+		var at := _free_slot()                             # the keyboard: its first free slot
+		if pv.x < 0 and at.x < 0:
 			break
-		PlayerData.quickbars[at.x][PlayerData.quickbar_bank[at.x]][at.y] = _entry(e)
+		if pv.x >= 0:
+			PlayerData.pad_bars[pv.x][pv.y] = _entry(e)
+		if at.x >= 0:
+			PlayerData.quickbars[at.x][PlayerData.quickbar_bank[at.x]][at.y] = _entry(e)
 		placed += 1
 	if placed > 0:
 		print("[learned] %d first spell(s) placed on the bars" % placed)
