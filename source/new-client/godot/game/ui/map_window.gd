@@ -664,6 +664,33 @@ class MapView extends Control:
 				w._show({"kind": "zone", "id": z}, true)
 				accept_event()
 
+	## The pad on the map (owner 2026-11-18: "when you open the map with the controller and try to do things like check
+	## different zones, you can't do it"): the left stick moves the pointer over it; on the realm map A opens the zone
+	## under the pointer; on a zone A / X zoom in and out there; Y goes up to the realm map. The zone list above it steps
+	## with A / X (Pad: dropdowns).
+	func pad_actions() -> Array:
+		var w := window
+		var p := get_local_mouse_position()
+		if Pad.active:                                     # (the pad's own pointer: the OS one may lag a warp)
+			p = get_global_transform_with_canvas().affine_inverse() * Pad._cursor
+		if String(w.shown.get("kind", "")) == "region":
+			var z := _zone_under(p)
+			if z >= 0 and String(w._zone(z).get("map", "")) != "":
+				return [["a", "OPEN %s" % String(w._zone(z).get("name", "")).to_upper(), func(): w._show({"kind": "zone", "id": z}, true)]]
+			return [["a", "POINT AT A ZONE"]]
+		var out := [["a", "ZOOM IN", func(): _zoom_at(p, 1.25)], ["x", "ZOOM OUT", func(): _zoom_at(p, 0.8)]]
+		var r := int(w._zone(int(w.shown.get("id", -1))).get("region", -1))
+		if r >= 0 and String(w._region(r).get("map", "")) != "":
+			out.append(["y", "REALM MAP", func(): w._show({"kind": "region", "id": r}, true)])
+		return out
+
+	func _zoom_at(p: Vector2, k: float) -> void:
+		var nz := clampf(zoom * k, 1.0, 6.0)
+		pan = p - (p - pan) * (nz / zoom)
+		zoom = nz
+		_clamp_pan()
+		queue_redraw()
+
 	func _zone_under(p: Vector2) -> int:
 		var at := _view_frac(p) * 256.0
 		for q in window._region(int(window.shown.id)).get("zones", []):

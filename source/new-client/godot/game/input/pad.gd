@@ -864,6 +864,115 @@ func _ui_button(name: String, pressed: bool) -> void:
 					_key(KEY_ESCAPE)
 
 
+## A dropdown stepped by the pad: the next (or previous) item that can be picked, as if picked from its list.
+func _option_step(o: OptionButton, by: int) -> void:
+	var n := o.item_count
+	if n == 0:
+		return
+	var i := o.selected
+	for k in n:
+		i = posmod(i + by, n)
+		if not o.is_item_separator(i) and not o.is_item_disabled(i):
+			break
+	o.select(i)
+	o.item_selected.emit(i)
+
+
+# ---------------------------------------------------------------- one window at a time (the pad's)
+# (owner 2026-11-18: "there should only be able to be one menu or window open at a time, and when it's open, that is
+# the focus of the cursor ... whatever other UI windows were open will close and the new one will be the focus")
+# With the pad in use, a menu window that opens closes the others (but those that work with it: the bags beside a
+# merchant, the vault, the exchange, the hero panel); the d-pad and the pointer's snapping keep to it, and the pointer
+# starts on its first element. The HUD (chat, group, the bars) is never closed. Mouse and keyboard play is untouched.
+
+const COMPANIONS := {"merchant": ["bags", "panel"], "vault": ["bags", "panel"], "exchange": ["bags", "panel"],
+		"bags": ["merchant", "vault", "exchange", "hero", "panel", "poisons", "potions"],
+		"panel": ["merchant", "vault", "exchange", "bags"], "hero": ["bags"], "poisons": ["bags"], "potions": ["bags"]}
+var _focus_win: Control = null
+var _open_menus := {}                    # menu window -> true: open last frame
+
+
+func _menu_windows() -> Array:
+	var ui = _ui()
+	if ui == null:
+		return []
+	var out := []
+	var ws: Dictionary = ui.get("windows") if ui.get("windows") is Dictionary else {}
+	for id in GameUI.CLOSE_ON_ESC:
+		var w = ws.get(id)
+		if w != null and is_instance_valid(w):
+			out.append(w)
+	var rp = ui.get("right_panel")
+	if rp and is_instance_valid(rp) and ui.get("modern"):
+		out.append(rp)                                     # (the modern sheet panel; the classic one is the HUD)
+	var mw = ui.get("map_window")
+	if mw and is_instance_valid(mw):
+		out.append(mw)
+	return out
+
+
+static func _win_id(w: Control) -> String:
+	return String(w.get("window_id")) if w.get("window_id") != null else String(w.name)
+
+
+func _goes_with(a: Control, b: Control) -> bool:
+	return _win_id(b) in (COMPANIONS.get(_win_id(a), []) as Array)
+
+
+## The focus window and the open windows that go with it (the d-pad's world while it is open).
+func _focus_group(w: Control) -> Array:
+	var out: Array = [w]
+	for o in _open_menus:
+		if is_instance_valid(o) and o != w and o.visible and _goes_with(w, o):
+			out.append(o)
+	return out
+
+
+func _track_windows() -> void:
+	var now := {}
+	var opened: Control = null
+	for w in _menu_windows():
+		if w.visible:
+			now[w] = true
+			if not _open_menus.has(w):
+				opened = w
+	if opened:
+		for o in now.keys():
+			if o != opened and not _goes_with(opened, o):
+				if o.has_method("hide_window"):
+					o.hide_window()
+				else:
+					o.visible = false
+				now.erase(o)
+		_focus_win = opened
+		_start_in.call_deferred(opened)
+	elif _focus_win == null or not is_instance_valid(_focus_win) or not now.has(_focus_win):
+		_focus_win = null
+		var best := -1
+		for o in now:                                      # (it closed: the topmost one still open, if any)
+			if o.get_index() > best:
+				best = o.get_index()
+				_focus_win = o
+	_open_menus = now
+
+
+## A window just opened with the pad: the pointer on its first element (top left).
+func _start_in(w: Control) -> void:
+	await get_tree().process_frame                         # (its contents laid out)
+	if not is_instance_valid(w) or not w.visible or w != _focus_win:
+		return
+	var best: Control = null
+	var bk := INF
+	for c in _usables():
+		var r := _screen_rect(c)
+		var k := r.position.y * 4.0 + r.position.x
+		if k < bk:
+			bk = k
+			best = c
+	if best:
+		_point_at(best)
+
+
 ## What the element under the pointer offers: [[button, label, Callable or null]] - its own pad_actions(), else the
 ## usual click / right-click / pick up / close.
 func actions_for(f: Control) -> Array:
@@ -879,6 +988,10 @@ func actions_for(f: Control) -> Array:
 		return [["b", "CLOSE"]]
 	if f.has_method("pad_actions"):
 		out = f.call("pad_actions")
+	elif f is OptionButton:
+		# a dropdown: its list is a popup the pad's pointer can't reach - step through it instead (owner 2026-11-18:
+		# the map's zone list)
+		out = [["a", "NEXT", _option_step.bind(f, 1)], ["x", "PREVIOUS", _option_step.bind(f, -1)]]
 	else:
 		if f is Slider:
 			out.append(["a", "ADJUST"])
@@ -1022,8 +1135,8 @@ func _usable(c: Control) -> bool:
 		return false
 	var s := c.size * c.get_global_transform_with_canvas().get_scale()
 	var wide := 1400.0 if c is BaseButton else 520.0         # (a button the width of its page still counts)
-	if s.x < 6.0 or s.y < 6.0 or s.x > wide or s.y > 260.0:
-		return false
+	if s.x < 6.0 or s.y < 6.0 or ((s.x > wide or s.y > 260.0) and not c.has_method("pad_actions")):
+		return false                                       # (a big control that says what the pad does on it - the map - counts)
 	return c is BaseButton or c is LineEdit or c is Slider or c is ItemList or c.has_method("pad_actions") \
 			or _scripted(c, "_get_drag_data") or _scripted(c, "_gui_input") or c.tooltip_text != ""
 
@@ -1054,6 +1167,10 @@ func _usables() -> Array:
 	var vp := get_viewport().get_visible_rect()
 	var ui = _ui()
 	var stack: Array = [ui] if ui else [get_tree().root]       # (in the world: the interface only, not the scene)
+	if _focus_win and is_instance_valid(_focus_win) and _focus_win.visible:
+		stack = _focus_group(_focus_win)                   # (a window open: it and the ones that go with it only)
+		if _carrying and bar and is_instance_valid(bar):
+			stack.append(bar)                              # (carrying something: the controller bar to drop it on)
 	var modals := get_tree().get_nodes_in_group("ui_modal")
 	if not modals.is_empty() and is_instance_valid(modals[-1]):
 		stack = [modals[-1]]                               # (a question on screen: only its answers)
@@ -1198,6 +1315,8 @@ func _process_timed(delta: float) -> void:
 	if device >= 0 and not assume_connected and not Input.get_connected_joypads().has(device):
 		device = -1
 		_set_active(false)
+	if active:
+		_track_windows()
 	var cursor_mode := active and not world_mode()
 	if cursor_mode != _cursor_shown:
 		_cursor_shown = cursor_mode
