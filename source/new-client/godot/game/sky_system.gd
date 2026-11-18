@@ -92,25 +92,62 @@ var _texture_set := "x4plus"
 
 
 ## Seamless zones: you crossed into another zone of the region - its fog, and its sky if the client gives it another.
+## Both are eased in over ZONE_BLEND_S, not switched (owner 2026-11-18 bugs doc: "gradual blend into the next zone's
+## lighting and color scheme rather than instant jarring jump. Big example is the border between Vale of Mularn and
+## Muspelheim"): the light, sky and fog colours are read part way between the two zones' skies, and the fog's reach and
+## thickness part way between the two zones' fog. Stepping back over the border mid-way turns the blend round.
+const ZONE_BLEND_S := 6.0
+var _sky_prev: Dictionary = {}          # the sky being left (data is the one coming in)
+var _sky_prev_name := ""
+var _sky_mix := 1.0                     # 0 all the old sky .. 1 all the new
+var _fog_from := Vector2(-1, -1)        # the fog's reach (clip m) and amount as they were on screen at the change
+var _fog_mix := 1.0
+
+
 func set_zone(z: ZoneLoader) -> void:
+	var fog_was := _fog_now()
 	zone = z
 	if dungeon:
 		return
+	if fog_was.x >= 0.0:
+		_fog_from = fog_was
+		_fog_mix = 0.0
 	apply_view()
 	var skies: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://content/sky/zone_skies.json"))
 	var nm := String(skies.get(str(int(z.info.id)), "sky_default"))
 	if nm != sky_name:
+		if _sky_mix < 1.0 and nm == _sky_prev_name:
+			var back := _sky_prev                         # (back over the border mid-way: the same blend, turned round)
+			_sky_prev = data
+			_sky_prev_name = sky_name
+			data = back
+			_sky_mix = 1.0 - _sky_mix
+		else:
+			_sky_prev = data
+			_sky_prev_name = sky_name
+			data = JSON.parse_string(FileAccess.get_file_as_string("res://content/sky/%s.json" % nm))
+			_sky_mix = 0.0
 		sky_name = nm
-		data = JSON.parse_string(FileAccess.get_file_as_string("res://content/sky/%s.json" % sky_name))
 		_apply_sky_data()
 	_update(0.0)
+
+
+## The fog's reach and amount on screen now: the zone's, or part way from the last zone's while blending.
+func _fog_now() -> Vector2:
+	if zone == null:
+		return Vector2(-1, -1)
+	var to := Vector2(float(zone.info.fog.get("clip_m", 400.0)), float(zone.info.fog.get("amount", 15)))
+	if _fog_mix >= 1.0 or _fog_from.x < 0.0:
+		return to
+	var t := _fog_mix * _fog_mix * (3.0 - 2.0 * _fog_mix)
+	return _fog_from.lerp(to, t)
 
 
 ## The zone's fog (the client's clip distance per zone) times Options > VIDEO view distance; dungeons keep theirs.
 func apply_view() -> void:
 	if dungeon or zone == null or environment == null:
 		return
-	var clip := float(zone.info.fog.clip_m) * ZoneLoader.view_mult
+	var clip := _fog_now().x * ZoneLoader.view_mult
 	environment.fog_depth_begin = clip * 0.3
 	environment.fog_depth_end = clip * 1.6
 
@@ -260,6 +297,14 @@ func _process_timed(delta: float) -> void:
 			_look_step = LOOK_STEP_S
 			if remastered:
 				set_remastered(true)
+	if _sky_mix < 1.0:
+		_sky_mix = minf(1.0, _sky_mix + delta / ZONE_BLEND_S)
+		if _sky_mix >= 1.0:
+			_sky_prev = {}
+			_sky_prev_name = ""
+	if _fog_mix < 1.0:
+		_fog_mix = minf(1.0, _fog_mix + delta / ZONE_BLEND_S)
+		apply_view()
 	if dungeon:                                              # the clock still runs (camp timers, night NPCs)
 		FxLight.day_scale = 1.0
 		game_seconds = fposmod(game_seconds + delta * day_increment * time_scale, 86400.0)
@@ -304,10 +349,21 @@ func _phase_weights(h: float) -> Dictionary:
 
 
 func _blend(section: String, key: String, w: Dictionary) -> Variant:
+	var now = _blend_in(data, section, key, w)
+	if _sky_mix >= 1.0 or _sky_prev.is_empty():
+		return now
+	var was = _blend_in(_sky_prev, section, key, w)       # (crossing into another zone's sky: part way between)
+	if was == null or now == null or typeof(was) != typeof(now):
+		return now
+	var t := _sky_mix * _sky_mix * (3.0 - 2.0 * _sky_mix)
+	return was.lerp(now, t) if now is Color else lerpf(float(was), float(now), t)
+
+
+func _blend_in(d: Dictionary, section: String, key: String, w: Dictionary) -> Variant:
 	# clear and stormy versions, each weighted over dawn/day/dusk/night
 	var out = null
 	for weather in [["clear", 1.0 - storm], ["stormy", storm]]:
-		var sec: Dictionary = data.get("%s_%s" % [section, weather[0]], data.get("%s_clear" % section, {}))
+		var sec: Dictionary = d.get("%s_%s" % [section, weather[0]], d.get("%s_clear" % section, {}))
 		for phase in w:
 			var weight: float = w[phase] * weather[1]
 			if weight <= 0.0:
@@ -357,12 +413,11 @@ func _update(_delta: float) -> void:
 		_sky_mat.set_shader_parameter("cloud_" + side, cloud)
 
 	# sun sprites: dawn/dusk colours, noon colours in the day, storm variants by storm level
-	var main: Dictionary = data.get("main", {})
 	var noon: float = w.day
 	for pair in [["sun_disk_color", "sundisk_color"], ["sun_glow_color", "sunglow_color"], ["sun_flare_color", "sunflare_color"]]:
-		var low := _rgba(main.get(pair[1], [255, 255, 255, 0])).lerp(_rgba(main.get(pair[1] + "_storm", [0, 0, 0, 0])), storm)
-		var high := _rgba(main.get(pair[1] + "_noon", [255, 255, 255, 0])).lerp(_rgba(main.get(pair[1] + "_noon_storm", [0, 0, 0, 0])), storm)
-		var c := low.lerp(high, noon)
+		var c := _sun_sprite(data.get("main", {}), pair[1], noon)
+		if _sky_mix < 1.0 and not _sky_prev.is_empty():
+			c = _sun_sprite(_sky_prev.get("main", {}), pair[1], noon).lerp(c, _sky_mix * _sky_mix * (3.0 - 2.0 * _sky_mix))
 		c.a *= clampf(sun_dir.y * 6.0 + 0.3, 0.0, 1.0)      # fade as it sinks below the horizon
 		_sky_mat.set_shader_parameter(pair[0], c)
 	_sky_mat.set_shader_parameter("star_visibility", float(w.night) * (1.0 - storm))
@@ -401,6 +456,13 @@ func _update(_delta: float) -> void:
 	if remastered:
 		_remaster_frame(w, sun_dir)
 		_weather_fx(_delta, sun_dir)
+
+
+## A sun sprite's colour from a sky's [main]: the dawn / dusk one toward the noon one, each toward its storm version.
+func _sun_sprite(main: Dictionary, key: String, noon: float) -> Color:
+	var low := _rgba(main.get(key, [255, 255, 255, 0])).lerp(_rgba(main.get(key + "_storm", [0, 0, 0, 0])), storm)
+	var high := _rgba(main.get(key + "_noon", [255, 255, 255, 0])).lerp(_rgba(main.get(key + "_noon_storm", [0, 0, 0, 0])), storm)
+	return low.lerp(high, noon)
 
 
 func _build_rain() -> void:
@@ -736,7 +798,7 @@ const EXPOSURE_DUNGEON := 1.65
 func _remaster_frame(w: Dictionary = {}, sun_dir := Vector3.UP) -> void:
 	if environment == null or zone == null:
 		return
-	var amount := clampf(float(zone.info.fog.get("amount", 15)) / 100.0, 0.0, 1.0)
+	var amount := clampf((float(zone.info.fog.get("amount", 15)) if dungeon else _fog_now().y) / 100.0, 0.0, 1.0)
 	var dawn := float(w.get("dawn", 0.0))
 	var dusk := float(w.get("dusk", 0.0))
 	var night := float(w.get("night", 0.0))
