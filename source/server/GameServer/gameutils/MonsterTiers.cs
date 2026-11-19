@@ -684,13 +684,12 @@ namespace DOL.GS.Commands
                 MonsterTiers.Forget(p);                        // resend the tiers around you
             }
             sbyte tier = MonsterTiers.Tier(npc);
-            MonsterMoves.State s = MonsterMoves.Of(npc);
             DisplayMessage(client, tier == MonsterTiers.None
                 ? $"{npc.Name}: not tiered (level {npc.Level})."
                 : $"{npc.Name}: {Names[tier + 3]} - placed at level {npc.TierBaseLevel}, now level {npc.Level}" +
                   (npc.TierFightBase > 0 ? $" (a fight set for level {npc.TierFightBase})" : "") +
-                  $"; poise {(s.Poise < 0 ? "full" : ((int) s.Poise).ToString())}" +
-                  (MonsterMoves.Staggered(npc) ? ", staggered" : ""));
+                  $"; stamina {(int) MonsterMoves.Stamina(npc)}, " + (MonsterMoves.Humanoid(npc) ? "humanoid" : "beast") +
+                  (MonsterMoves.Shield(npc) ? " with a shield" : "") + (MonsterMoves.Guarding(npc) ? ", guarding" : ""));
         }
     }
 }

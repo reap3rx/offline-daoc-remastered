@@ -92,6 +92,7 @@ namespace DOL.GS
         {
             PetTick(p);
             MonsterTiers.PushTiers(p);
+            MonsterMoves.PushVitals(p);      // endurance / power lines under the plates
             int lv = FightingLevel(p);
             if (_sentLevel.TryGetValue(p.ObjectId, out int was) && was == lv)
                 return;
@@ -208,6 +209,7 @@ namespace DOL.GS
             _sentLevel.TryRemove(p.ObjectId, out _);
             _sentPets.TryRemove(p.ObjectId, out _);
             MonsterTiers.Forget(p);
+            MonsterMoves.Forget(p);
             new ECSGameTimer(p, _ =>
             {
                 if (p.ObjectState == GameObject.eObjectState.Deleted || p.Client == null || p.Client.Player != p)
@@ -224,6 +226,7 @@ namespace DOL.GS
                 _sentLevel.TryRemove(p.ObjectId, out _);
                 _sentPets.TryRemove(p.ObjectId, out _);
                 MonsterTiers.Forget(p);
+                MonsterMoves.Forget(p);
             }
         }
     }

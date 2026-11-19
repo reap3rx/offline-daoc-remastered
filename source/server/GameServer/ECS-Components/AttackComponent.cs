@@ -1263,8 +1263,7 @@ namespace DOL.GS
                         damage = 0;
 
                     damage *= LevelScaling.DamageFactor(ad.Attacker, ad.Target);   // GW2-style scaling down (LevelScaling.cs)
-                    damage *= MonsterMoves.HitFactor(ad);   // a monster's heavy / unblockable blow; a staggered one takes more
-                    MonsterMoves.OnHit(ad);                 // player-side blows wear a monster's poise (MonsterMoves.cs)
+                    damage *= MonsterMoves.HitFactor(ad);   // a monster's style / heavy blow (MonsterMoves.cs)
                     ad.Damage = (int) damage;
                     ad.Modifier = (int) Math.Floor(resistModifier);
                     ad.CriticalChance = CalculateCriticalChance(action);
@@ -1319,6 +1318,8 @@ namespace DOL.GS
             if (playerOwner != null && ad.Style != null && ad.AttackResult is eAttackResult.Evaded or eAttackResult.Parried or eAttackResult.Blocked &&
                 ActionCombat.IsActive(playerOwner))
                 ActionCombat.OnStyleAvoided(playerOwner, ad);
+
+            MonsterMoves.AfterBlow(ad);   // endurance back for a turned-aside blow; monsters' counters, chains, procs
 
             // Attacked living may modify the attack data. Primarily used for keep doors and components.
             ad.Target.ModifyAttack(ad);
@@ -1499,7 +1500,7 @@ namespace DOL.GS
 
         public virtual bool CheckBlock(AttackData ad)
         {
-            double blockChance = owner.TryBlock(ad, out int shieldSize);
+            double blockChance = MonsterMoves.Defense(owner, ad, MonsterMoves.Def.Block, owner.TryBlock(ad, out int shieldSize));
             ad.BlockChance = blockChance * 100;
 
             if (blockChance > 0)
@@ -1758,7 +1759,7 @@ namespace DOL.GS
                 if (lastAttackData != null && lastAttackData.AttackResult is not eAttackResult.HitStyle)
                     lastAttackData = null;
 
-                double evadeChance = owner.TryEvade(ad, lastAttackData);
+                double evadeChance = MonsterMoves.Defense(owner, ad, MonsterMoves.Def.Evade, owner.TryEvade(ad, lastAttackData));   // tired / a monster's competence
                 ad.EvadeChance = evadeChance * 100;
                 double evadeRoll = owner.GetPseudoDouble(RandomDeckEvent.Evade);
 
@@ -1776,7 +1777,7 @@ namespace DOL.GS
 
                 if (ad.IsMeleeAttack)
                 {
-                    double parryChance = owner.TryParry(ad, lastAttackData, AttackerTracker.MeleeCount);
+                    double parryChance = MonsterMoves.Defense(owner, ad, MonsterMoves.Def.Parry, owner.TryParry(ad, lastAttackData, AttackerTracker.MeleeCount));
                     ad.ParryChance = parryChance * 100;
                     double parryRoll = owner.GetPseudoDouble(RandomDeckEvent.Parry);
 

@@ -21,7 +21,8 @@ const HOSTILE := Color(0.82, 0.13, 0.1)
 const NEUTRAL := Color(0.92, 0.78, 0.12)
 const FRIEND := Color(0.2, 0.72, 0.22)
 const CAST := Color(0.72, 0.35, 1.0)                  # purple: a spell you can interrupt (owner 2026-11-19)
-const POISE := Color(1.0, 0.8, 0.25)                 # a monster's poise (MonsterMoves): break it and it staggers
+const ENDURANCE := Color(0.35, 0.85, 0.3)             # its endurance - its poise (owner 2026-11-19, MonsterMoves)
+const POWER := Color(0.3, 0.55, 1.0)                  # its power, when it has any
 
 var manager: NpcManager
 var _canvas: Control
@@ -133,7 +134,7 @@ func _gather() -> void:
 				"level": "", "lcol": n.con_color(PlayerData.level), "fill": fill, "edge": n.strength_color(),
 				"boss": is_boss(n),
 				"frac": clampf(n.state.health, 0.0, 1.0), "cast": cast, "tgt": tgt2,
-				"poise": int(manager.poise.get(int(n.spawn.get("oid", -1)), -1)) if "poise" in manager else -1,
+				"vit": manager.vit.get(int(n.spawn.get("oid", -1)), [100, -1]) if "vit" in manager else [100, -1],
 				"alpha": 1.0 if tgt2 or not have_target else 0.72,
 				"dist": n.global_position.distance_to(cam.global_position)})
 	# farther first, the target last (on top); then stacking: a plate that would cover one below it moves up over it
@@ -168,13 +169,23 @@ func _rect_of(p: Dictionary) -> Rect2:
 	var s: float = p.s
 	var size: Vector2 = p.size
 	var name_h := _font.get_height(_name_px(p))
-	var h := name_h + size.y + (5.0 * s if float(p.cast) >= 0.0 else 0.0)
+	var h := name_h + size.y + (5.0 * s if float(p.cast) >= 0.0 else 0.0) + _lines_h(p)
 	var left := _left_w(p)                             # (the level - and a boss's skull - to the left of the bar)
 	return Rect2(Vector2(p.at.x - size.x * 0.5 - left, p.at.y - h), Vector2(size.x + left, h))
 
 
 ## The level, large and bold, left of the bar (owner 2026-11-14: "Put the level in large and bold on the left side of the
 ## health, and if the mob is a boss mob, then put a skull icon next to it").
+## The endurance line (every plate) and the power line under it (only what has power), under the health bar.
+func _line_px(p: Dictionary) -> float:
+	return maxf(1.5, 2.0 * float(p.s))
+
+
+func _lines_h(p: Dictionary) -> float:
+	var v: Array = p.get("vit", [100, -1])
+	return (_line_px(p) + 1.5) * (2.0 if int(v[1]) >= 0 else 1.0) + 1.0
+
+
 func _level_px(p: Dictionary) -> int:
 	return maxi(12, roundi(21.0 * float(p.s) * (1.1 if bool(p.tgt) else 1.0) * UiArt.text_scale("plates")))
 
@@ -277,17 +288,22 @@ func _draw_plates() -> void:
 		if bool(p.boss):
 			var sw := _skull_w(p)
 			_skull(Vector2(lx - sw * 0.5, bar.position.y + size.y * 0.5), sw, a)
-		# its poise (MonsterMoves): a thin gold line over the bar while it isn't whole
-		var poise := int(p.get("poise", -1))
-		if poise >= 0 and poise < 100:
-			var pb := Rect2(Vector2(bar.position.x, bar.position.y - 3.0 * s), Vector2(size.x, maxf(1.5, 2.0 * s)))
-			_canvas.draw_rect(pb.grow(0.5), Color(0, 0, 0, 0.8 * a))
-			var pc := POISE
-			pc.a = a
-			_canvas.draw_rect(Rect2(pb.position, Vector2(pb.size.x * poise / 100.0, pb.size.y)), pc)
-		# the cast bar under it
+		# its endurance (green) and, if it has any, its power (blue): thin lines under the bar
+		var v: Array = p.get("vit", [100, -1])
+		var ly := bar.end.y + 2.0
+		var lh := _line_px(p)
+		for pair in [[int(v[0]), ENDURANCE], [int(v[1]), POWER]]:
+			if int(pair[0]) < 0:
+				continue
+			var lb := Rect2(Vector2(bar.position.x, ly), Vector2(size.x, lh))
+			_canvas.draw_rect(lb.grow(0.5), Color(0, 0, 0, 0.85 * a))
+			var lc: Color = pair[1]
+			lc.a = a
+			_canvas.draw_rect(Rect2(lb.position, Vector2(lb.size.x * clampf(int(pair[0]) / 100.0, 0.0, 1.0), lh)), lc)
+			ly += lh + 1.5
+		# the cast bar under them
 		if float(p.cast) >= 0.0:
-			var cb := Rect2(Vector2(bar.position.x, bar.end.y + 2.0 * s), Vector2(size.x, maxf(2.0, 3.0 * s)))
+			var cb := Rect2(Vector2(bar.position.x, ly + 2.0 * s), Vector2(size.x, maxf(2.0, 3.0 * s)))
 			_canvas.draw_rect(cb.grow(1.0), Color(0, 0, 0, 0.9 * a))
 			var cc := CAST
 			cc.a = a

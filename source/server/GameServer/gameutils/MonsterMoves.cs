@@ -2,58 +2,187 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Text;
 using DOL.AI.Brain;
 using DOL.GS.PacketHandler;
+using DOL.GS.Spells;
 
 namespace DOL.GS
 {
     /// <summary>
-    /// Monsters that do more than auto-attack (owner 2026-11-18/19, "Purposeful PvE", first pass). A tiered monster's
-    /// con says how much it knows (gameutils/MonsterTiers.cs): green plain blows with the variable wind-up Action Combat
-    /// already has; blue a heavy blow now and then; yellow adds an unblockable one; orange and up slam the ground; the
-    /// higher the con, the more often. Telegraphs (the client draws them, "#AC|..."):
-    ///   - yellow wind-up (a heavy blow): parry, block or dodge it - a timed parry / block of it breaks the monster's poise;
-    ///   - red wind-up (unblockable): only a dodge or stepping out of reach saves you;
-    ///   - a ground circle filling up (a slam): get out of it before it lands.
-    /// Poise: blue and up have a stagger bar. Your blows wear it down (styles more), a timed answer to a heavy blow takes a
-    /// big bite, a kick (/ac kick, everyone's interrupt on a cooldown) takes one too and cancels a wind-up or a spell.
-    /// Broken, the monster staggers for a few seconds - no blows, no spells - and takes more damage. It recovers after a
-    /// few quiet seconds.
+    /// How monsters fight (owner 2026-11-19, "Purposeful PvE", steps 2 and 3): endurance as poise for everyone, and
+    /// monsters using DAoC's own kinds of moves, more of them the higher their con (gameutils/MonsterTiers.cs).
+    ///
+    /// Endurance is the poise. Styles cost it, a missed defence press costs it (ActionCombat), a monster's guard that
+    /// fails costs it; a successful block, parry or evade gives some back. Run low and the defences weaken (Defense),
+    /// styles and specials stop (a monster's Pick), sprint stops (the engine). Monsters keep their own stamina here (0 -
+    /// 100, it comes back by itself); players and bots use their real endurance. No stun from it.
+    ///
+    /// The ladder (owner's example), for humanoids with weapons:
+    ///   green   an anytime style, a bit faster and harder than a plain blow; a positional when it is at your side or back
+    ///   blue    + one reactive defence by its gear: a shield blocks, otherwise it parries; a guard stance (it holds its
+    ///           weapon or shield up - attacking into it is mostly turned aside, and it answers with a counter)
+    ///   yellow  + evades; a small frontal cone (strafe out of it)
+    ///   orange  + chains: a style that lands is followed by another
+    ///   red     the same, more often; purple + a ground slam (the only big circles)
+    /// Beasts (no weapon): a heavy, slower blow (its own weightier ring), bites that carry DAoC's procs - poison,
+    /// disease, bleeding, a snare - and from yellow the same small cone.
+    /// Telegraphs go to action-mode players as "#AC|..." lines; bots and pets read them as well as they can (ReadChance).
     /// </summary>
     public static class MonsterMoves
     {
-        public enum Blow : byte { Normal, Heavy, Unblockable, Slam }
+        public enum Blow : byte { Normal, Style, Chain, Counter, Heavy, Cone, Slam }
+        public enum Def : byte { Evade, Parry, Block }
 
-        public const int NormalMs = 600, HeavyMs = 1100, UnblockableMs = 1300, SlamMs = 1700;
-        public const int SlamRadius = 350;
-        public const double HeavyFactor = 1.8, UnblockableFactor = 2.2, SlamFactor = 1.6;
-        public const double StaggeredTakes = 1.25;
-        public const int StaggerMs = 3000;
-        public const int KickCooldownMs = 10000;
-        public const int KickRange = 300;
+        public const int NormalMs = 600, StyleMs = 450, ChainMs = 400, CounterMs = 380, HeavyMs = 1100, ConeMs = 900, SlamMs = 1700;
+        public const int SlamRadius = 350, ConeRadius = 320, ConeArc = 100;
+        public const double StyleFactor = 1.4, PositionalFactor = 1.7, ChainFactor = 1.5, CounterFactor = 1.45,
+            HeavyFactor = 1.8, ConeFactor = 1.2, SlamFactor = 1.6;
+        public const double StyleCost = 14, ChainCost = 10, CounterCost = 8, HeavyCost = 16, ConeCost = 20,
+            GuardFailCost = 8, DefendGain = 6, RegenPerSecond = 7, LowStamina = 25;
 
         public sealed class State
         {
             public Blow Pending;
             public Blow Last;
+            public bool Positional;
+            public bool ChainNext;
+            public bool CounterNext;
             public long NextSlamAt;
-            public double Poise = -1;          // -1: full (set on first hit)
-            public long PoiseHitAt;
-            public long StaggerUntil;
-            public bool CancelWindup;
+            public long NextConeAt;
+            public ushort ConeHeading;
+            public double Stamina = 100;
+            public long StaminaAt;
+            public long HitAt;                 // when a foe last swung at it
+            public long GuardUntil;
+            public long NextGuardAt;
+            public Def GuardKind;
             public bool TargetReacts;          // a bot / pet target saw this blow coming (rolled as it winds up)
-            public int LastSentPoise = -2;
         }
 
         static readonly ConditionalWeakTable<GameNPC, State> _states = new();
-        static readonly ConcurrentDictionary<string, long> _kickReady = new();
 
-        public static State Of(GameNPC n) => _states.GetValue(n, _ => new State());
+        public static State Of(GameNPC n) => _states.GetValue(n, _ => new State { StaminaAt = GameLoop.GameLoopTime });
 
-        static bool Knows(GameNPC n, out sbyte tier)
+        /// <summary>A monster's competence: 0 green .. 5 purple; -1 untiered, grey, a bot or a pet.</summary>
+        public static int Comp(GameLiving l)
         {
-            tier = MonsterTiers.Tier(n);
-            return tier != MonsterTiers.None && tier > MonsterTiers.Green;
+            if (l is not GameNPC n || n is GameBot)
+                return -1;
+            sbyte t = MonsterTiers.Tier(n);
+            return t == MonsterTiers.None || t < MonsterTiers.Green ? -1 : t - MonsterTiers.Green;
+        }
+
+        /// <summary>Fights with a weapon: a humanoid body, or anything holding a weapon.</summary>
+        public static bool Humanoid(GameNPC n) =>
+            n.BodyType == (ushort) NpcTemplateMgr.eBodyType.Humanoid || n.BodyType == (ushort) NpcTemplateMgr.eBodyType.Giant ||
+            n.Inventory?.GetItem(eInventorySlot.RightHandWeapon) != null || n.Inventory?.GetItem(eInventorySlot.TwoHandWeapon) != null;
+
+        public static bool Shield(GameNPC n) =>
+            n.LeftHandSwingChance == 0 && n.ActiveWeaponSlot == eActiveWeaponSlot.Standard &&
+            n.Inventory?.GetItem(eInventorySlot.LeftHandWeapon) != null;
+
+        // ------------------------------------------------------------------ stamina
+
+        public static double Stamina(GameNPC n) => Stamina(Of(n), GameLoop.GameLoopTime);
+
+        static double Stamina(State s, long now)
+        {
+            if (now > s.StaminaAt)
+            {
+                s.Stamina = Math.Min(100, s.Stamina + (now - s.StaminaAt) / 1000.0 * RegenPerSecond);
+                s.StaminaAt = now;
+            }
+            return s.Stamina;
+        }
+
+        static void Spend(State s, double amount) => s.Stamina = Math.Max(0, Stamina(s, GameLoop.GameLoopTime) - amount);
+        static void Gain(State s, double amount) => s.Stamina = Math.Min(100, Stamina(s, GameLoop.GameLoopTime) + amount);
+
+        /// <summary>Endurance (or a monster's stamina) left, in percent; 100 for those it doesn't apply to.</summary>
+        public static double EndurancePct(GameLiving l)
+        {
+            if (l is GamePlayer or GameBot)
+                return l.MaxEndurance > 0 ? l.Endurance * 100.0 / l.MaxEndurance : 100;
+            return Comp(l) >= 0 ? Stamina((GameNPC) l) : 100;
+        }
+
+        /// <summary>Tired defences: whole above half endurance, down to 35% of themselves at none.</summary>
+        public static double DefenseFactor(GameLiving l)
+        {
+            double pct = EndurancePct(l);
+            return pct >= 50 ? 1.0 : 0.35 + 0.65 * pct / 50.0;
+        }
+
+        // ------------------------------------------------------------------ defences
+
+        /// <summary>A passive evade / parry / block chance (0..1) as the defender's endurance and, for a tiered
+        /// monster, its competence and guard make it.</summary>
+        public static double Defense(GameLiving owner, AttackData ad, Def kind, double chance)
+        {
+            if (owner == null)
+                return chance;
+            int c = Comp(owner);
+            if (c >= 0 && ad?.Attacker != null && owner.IsObjectInFront(ad.Attacker, 120) && !owner.IsCrowdControlled && !owner.IsCasting)
+            {
+                GameNPC n = (GameNPC) owner;
+                bool hum = Humanoid(n), shield = Shield(n);
+                double tc = kind switch
+                {
+                    Def.Block when shield && c >= 1 => 0.08 + 0.03 * c,
+                    Def.Parry when hum && !shield && c >= 1 && ad.IsMeleeAttack => 0.08 + 0.03 * c,
+                    Def.Evade when hum && c >= 2 => 0.04 + 0.025 * c,
+                    _ => 0
+                };
+                State s = Of(n);
+                if (s.GuardUntil > GameLoop.GameLoopTime && s.GuardKind == kind && (kind != Def.Parry || ad.IsMeleeAttack))
+                    tc = Math.Max(tc, 0.55 + 0.05 * c);
+                if (ad.AttackType == AttackData.eAttackType.Ranged && kind != Def.Block)
+                    tc /= 3;
+                chance = Math.Max(chance, tc);
+            }
+            return chance * DefenseFactor(owner);
+        }
+
+        // ------------------------------------------------------------------ guard stance
+
+        public static bool Guarding(GameNPC n) =>
+            _states.TryGetValue(n, out State s) && s.GuardUntil > GameLoop.GameLoopTime;
+
+        public static long GuardLeft(GameNPC n) =>
+            _states.TryGetValue(n, out State s) ? Math.Max(0, s.GuardUntil - GameLoop.GameLoopTime) : 0;
+
+        /// <summary>Between blows, a blue-and-up humanoid under attack may raise its guard instead (baiting): ms, or 0.</summary>
+        public static int TryGuard(GameNPC n)
+        {
+            int c = Comp(n);
+            if (c < 1 || !Humanoid(n))
+                return 0;
+            State s = Of(n);
+            long now = GameLoop.GameLoopTime;
+            if (now < s.NextGuardAt || now - s.HitAt > 3000 || Stamina(s, now) < LowStamina)
+                return 0;
+            if (Util.RandomDouble() > 0.16 + 0.03 * c)
+            {
+                s.NextGuardAt = now + 2500;
+                return 0;
+            }
+            int ms = 1400 + Util.Random(0, 800);
+            s.GuardKind = Shield(n) ? Def.Block : c >= 2 && Util.RandomDouble() < 0.35 ? Def.Evade : Def.Parry;
+            s.GuardUntil = now + ms;
+            s.NextGuardAt = now + ms + Math.Max(3500, 7000 - c * 500);
+            Tell(n, $"guard|{n.ObjectID}|{GuardCode(s.GuardKind)}|{ms}");
+            return ms;
+        }
+
+        static string GuardCode(Def d) => d switch { Def.Block => "block", Def.Evade => "evade", _ => "parry" };
+
+        static void EndGuard(GameNPC n, State s)
+        {
+            if (s.GuardUntil <= GameLoop.GameLoopTime)
+                return;
+            s.GuardUntil = 0;
+            Tell(n, $"guardend|{n.ObjectID}");
         }
 
         // ------------------------------------------------------------------ choosing a blow
@@ -61,42 +190,73 @@ namespace DOL.GS
         /// <summary>The next blow's kind and its wind-up (ms), as a wind-up starts.</summary>
         public static (Blow kind, int ms) Pick(GameNPC npc)
         {
-            if (!Knows(npc, out sbyte t))
+            int c = Comp(npc);
+            if (c < 0)
                 return (Blow.Normal, NormalMs);
             State s = Of(npc);
             long now = GameLoop.GameLoopTime;
-            if (s.Last != Blow.Normal)                       // never two specials in a row: room to breathe
+            double st = Stamina(s, now);
+            bool hum = Humanoid(npc);
+
+            // follow-ups first: a counter after turning a blow aside, a chain after a style landed
+            bool counter = s.CounterNext, chain = s.ChainNext;
+            s.CounterNext = s.ChainNext = false;
+            if (counter && hum && c >= 1 && st >= CounterCost)
+                return (Blow.Counter, CounterMs);
+            if (chain && c >= 3 && st >= ChainCost)
+                return (Blow.Chain, ChainMs);
+            if (s.Last != Blow.Normal)                       // otherwise never two specials in a row: room to breathe
                 return (Blow.Normal, NormalMs);
-            double heavy, unblock;
-            int slamCd;
-            switch (t)
+
+            if (c >= 5 && now >= s.NextSlamAt && Util.RandomDouble() < 0.4)
             {
-                case MonsterTiers.Blue: heavy = 0.22; unblock = 0; slamCd = 0; break;
-                case MonsterTiers.Yellow: heavy = 0.22; unblock = 0.10; slamCd = 0; break;
-                case MonsterTiers.Orange: heavy = 0.22; unblock = 0.14; slamCd = 14000; break;
-                case MonsterTiers.Red: heavy = 0.22; unblock = 0.18; slamCd = 10000; break;
-                default: heavy = 0.20; unblock = 0.20; slamCd = 8000; break;
-            }
-            if (slamCd > 0 && now >= s.NextSlamAt && Util.RandomDouble() < 0.5)
-            {
-                s.NextSlamAt = now + slamCd;
+                s.NextSlamAt = now + 12000;
                 return (Blow.Slam, SlamMs);
             }
-            double r = Util.RandomDouble();
-            if (r < unblock)
-                return (Blow.Unblockable, UnblockableMs);
-            if (r < unblock + heavy)
-                return (Blow.Heavy, HeavyMs);
+            if (c >= 2 && now >= s.NextConeAt && st >= ConeCost && Util.RandomDouble() < 0.35)
+            {
+                s.NextConeAt = now + Math.Max(8000, 16000 - c * 1500);
+                return (Blow.Cone, ConeMs);
+            }
+            if (Util.RandomDouble() < 0.22 + 0.04 * c && st >= (hum ? StyleCost : HeavyCost))
+                return hum ? (Blow.Style, StyleMs) : (Blow.Heavy, HeavyMs);
             return (Blow.Normal, NormalMs);
         }
 
-        public static void Begin(GameNPC npc, Blow kind)
+        public static void Begin(GameNPC npc, Blow kind, GameLiving target)
         {
             State s = Of(npc);
             s.Pending = kind;
-            s.CancelWindup = false;
             s.TargetReacts = false;
+            s.Positional = kind is Blow.Style or Blow.Chain or Blow.Counter && target != null && !target.IsObjectInFront(npc, 120);
+            if (kind == Blow.Cone)
+                s.ConeHeading = target != null ? npc.GetHeading(target) : npc.Heading;
+            Spend(s, kind switch
+            {
+                Blow.Style => StyleCost, Blow.Chain => ChainCost, Blow.Counter => CounterCost,
+                Blow.Heavy => HeavyCost, Blow.Cone => ConeCost, _ => 0
+            });
         }
+
+        /// <summary>The kind as the client draws it: n plain, s a style (ornate ring), p a positional style, h a heavy
+        /// blow (weightier ring), c a cone, g a slam.</summary>
+        public static string Code(GameNPC npc, Blow b) => b switch
+        {
+            Blow.Style or Blow.Chain or Blow.Counter => _states.TryGetValue(npc, out State s) && s.Positional ? "p" : "s",
+            Blow.Heavy => "h", Blow.Cone => "c", Blow.Slam => "g", _ => "n"
+        };
+
+        public static void End(GameNPC npc)
+        {
+            if (!_states.TryGetValue(npc, out State s))
+                return;
+            s.Last = s.Pending;
+            s.Pending = Blow.Normal;
+            s.Positional = false;
+        }
+
+        public static Blow PendingOf(GameLiving attacker) =>
+            attacker is GameNPC n && _states.TryGetValue(n, out State s) ? s.Pending : Blow.Normal;
 
         // ------------------------------------------------------------------ bots and companions
 
@@ -114,128 +274,200 @@ namespace DOL.GS
         /// <summary>A wind-up at a bot or a pet (not an action-mode player): roll whether it reads it.</summary>
         public static void TelegraphAtBot(GameNPC npc, GameLiving target, Blow kind)
         {
-            if (kind is Blow.Heavy or Blow.Unblockable)
+            if (kind != Blow.Normal)
                 Of(npc).TargetReacts = Util.RandomDouble() < ReadChance(target);
         }
 
         /// <summary>A wind-up at a player: their companion may call it out.</summary>
         public static void TelegraphAtPlayer(GamePlayer player, Blow kind)
         {
-            if (kind != Blow.Normal)
+            if (kind is Blow.Heavy or Blow.Cone or Blow.Slam)
                 PersonalCompanions.Warn(player, kind);
         }
 
-        public static void End(GameNPC npc)
-        {
-            if (!_states.TryGetValue(npc, out State s))
-                return;
-            s.Last = s.Pending;
-            s.Pending = Blow.Normal;
-        }
+        // ------------------------------------------------------------------ damage and after the blow
 
-        public static Blow PendingOf(GameLiving attacker) =>
-            attacker is GameNPC n && _states.TryGetValue(n, out State s) ? s.Pending : Blow.Normal;
-
-        public static bool Staggered(GameNPC npc) =>
-            _states.TryGetValue(npc, out State s) && s.StaggerUntil > GameLoop.GameLoopTime;
-
-        public static bool TakeCancel(GameNPC npc)
-        {
-            if (!_states.TryGetValue(npc, out State s) || !s.CancelWindup)
-                return false;
-            s.CancelWindup = false;
-            s.Pending = Blow.Normal;
-            return true;
-        }
-
-        public static string Code(Blow b) => b switch { Blow.Heavy => "h", Blow.Unblockable => "u", Blow.Slam => "s", _ => "n" };
-
-        // ------------------------------------------------------------------ damage
-
-        /// <summary>A blow's damage factor: a monster's heavy / unblockable blow hits harder; a staggered monster takes more.</summary>
+        /// <summary>A blow's damage factor: a monster's style, heavy blow and the like hit harder.</summary>
         public static double HitFactor(AttackData ad)
         {
-            if (ad == null)
+            if (ad?.Attacker is not GameNPC an || !_states.TryGetValue(an, out State s) || s.Pending == Blow.Normal)
                 return 1.0;
-            double f = 1.0;
-            Blow b = PendingOf(ad.Attacker);
-            bool botRead = b != Blow.Normal && ad.Target is not GamePlayer && ad.Attacker is GameNPC an &&
-                _states.TryGetValue(an, out State st) && st.TargetReacts;
-            switch (b)
+            bool botRead = ad.Target is not GamePlayer && s.TargetReacts;   // a bot that read it braced for it
+            double f = s.Pending switch
             {
-                case Blow.Heavy: f *= botRead ? 0.3 : HeavyFactor; break;            // a bot that read it caught it
-                case Blow.Unblockable: f *= botRead ? 0.1 : UnblockableFactor; break; // ... or stepped aside
-            }
-            if (ad.Target is GameNPC tn && Staggered(tn) && MonsterTiers.Combatant(ad.Attacker) != null)
-                f *= StaggeredTakes;
-            return f;
+                Blow.Style => s.Positional ? PositionalFactor : StyleFactor,
+                Blow.Chain => ChainFactor,
+                Blow.Counter => CounterFactor,
+                Blow.Heavy => HeavyFactor,
+                _ => 1.0
+            };
+            return botRead ? 1.0 + (f - 1.0) * 0.25 : f;
         }
 
-        /// <summary>An unblockable blow can't be parried or blocked (a dodge still works).</summary>
-        public static bool Unblockable(GameLiving attacker) => PendingOf(attacker) == Blow.Unblockable;
-
-        // ------------------------------------------------------------------ poise
-
-        static double MaxPoise(sbyte tier) => tier switch
+        /// <summary>After any blow is worked out (AttackComponent): endurance back for a turned-aside blow, a monster's
+        /// guard and counter, a landed style's chain, a beast's bite proc.</summary>
+        public static void AfterBlow(AttackData ad)
         {
-            MonsterTiers.Blue => 60,
-            MonsterTiers.Yellow => 100,
-            MonsterTiers.Orange => 160,
-            MonsterTiers.Red => 250,
-            MonsterTiers.Purple => 400,
-            _ => 0
-        };
-
-        /// <summary>A player-side blow landed on a monster: wear its poise.</summary>
-        public static void OnHit(AttackData ad)
-        {
-            if (ad?.Target is not GameNPC n || MonsterTiers.Combatant(ad.Attacker) == null)
+            if (ad?.Target == null || ad.Attacker == null || !ad.IsMeleeAttack && ad.AttackType != AttackData.eAttackType.Ranged)
                 return;
-            if (ad.AttackResult is not (eAttackResult.HitUnstyled or eAttackResult.HitStyle))
-                return;
-            Wear(n, ad.Style != null ? 12 : 6, ad.Attacker);
-        }
-
-        /// <summary>Wear a monster's poise by this much; broken, it staggers.</summary>
-        public static void Wear(GameNPC n, double amount, GameLiving by)
-        {
-            if (!Knows(n, out sbyte t) || !n.IsAlive)
-                return;
-            State s = Of(n);
             long now = GameLoop.GameLoopTime;
-            double max = MaxPoise(t);
-            if (s.StaggerUntil > now || max <= 0)
-                return;
-            Recover(s, max, now);
-            s.Poise = Math.Max(0, s.Poise - amount);
-            s.PoiseHitAt = now;
-            if (s.Poise <= 0)
+            bool defended = ad.AttackResult is eAttackResult.Evaded or eAttackResult.Parried or eAttackResult.Blocked;
+            bool landed = ad.AttackResult is eAttackResult.HitUnstyled or eAttackResult.HitStyle;
+
+            if (Comp(ad.Target) >= 0)
             {
-                s.StaggerUntil = now + StaggerMs;
-                s.Poise = max;
-                s.CancelWindup = true;
-                if (n.IsCasting)
-                    n.StopCurrentSpellcast();
-                Tell(n, $"stagger|{n.ObjectID}|{StaggerMs}");
+                GameNPC tn = (GameNPC) ad.Target;
+                State s = Of(tn);
+                s.HitAt = now;
+                if (defended)
+                {
+                    Gain(s, DefendGain);
+                    if (Humanoid(tn) && Comp(tn) >= 1)
+                        s.CounterNext = true;                   // it answers a turned-aside blow
+                    EndGuard(tn, s);
+                }
+                else if (landed && s.GuardUntil > now)
+                {
+                    Spend(s, GuardFailCost);                    // its guard was beaten
+                    EndGuard(tn, s);
+                }
             }
-            SendPoise(n, s, max);
+            else if (defended && ad.Target is GamePlayer or GameBot && ad.Target.MaxEndurance > 0)
+            {
+                // a successful block / parry / evade gives some endurance back; a timed one more
+                int pct = ad.ActionDefense != eActionDefense.None && !ad.ActionAuto ? 5 : 2;
+                int gain = Math.Max(1, ad.Target.MaxEndurance * pct / 100);
+                ad.Target.ChangeEndurance(ad.Target, eEnduranceChangeType.Regenerate, gain);
+            }
+
+            int c = Comp(ad.Attacker);
+            if (c >= 0 && landed)
+            {
+                GameNPC an = (GameNPC) ad.Attacker;
+                State s = Of(an);
+                if (s.Pending is Blow.Style or Blow.Counter && c >= 3)
+                    s.ChainNext = true;
+                if (!Humanoid(an))
+                    TryProc(an, ad.Target, s.Pending, c);
+            }
         }
 
-        static void Recover(State s, double max, long now)
+        // ------------------------------------------------------------------ beasts' procs
+
+        static readonly string[] PoisonWords = { "spider", "snake", "serpent", "scorpion", "wasp", "hornet", "beetle", "adder",
+            "viper", "toad", "salamander", "centipede", "asp", "ant", "insect", "lizard", "newt" };
+        static readonly string[] DiseaseWords = { "rat", "zombie", "ghoul", "corpse", "plague", "carrion", "bat", "rotting",
+            "skeleton", "boggart", "fungus", "mold" };
+
+        static readonly int[] Poisons = { 30000, 30004, 30009, 30014, 30019, 30019 };
+        public const int DiseaseProc = 11243, SnareProc = 11201, BleedProcBase = 20200;
+
+        /// <summary>Which DAoC proc this beast's bite carries.</summary>
+        public static int ProcFor(GameNPC n, int c)
         {
-            if (s.Poise < 0)
-                s.Poise = max;
-            else if (now - s.PoiseHitAt > 5000)                 // after 5 quiet seconds: a quarter back per second
-                s.Poise = Math.Min(max, s.Poise + (now - s.PoiseHitAt - 5000) / 1000.0 * 0.25 * max);
+            string name = (n.Name ?? "").ToLowerInvariant();
+            foreach (string w in PoisonWords)
+                if (name.Contains(w))
+                    return Poisons[Math.Clamp(c, 0, 5)];
+            foreach (string w in DiseaseWords)
+                if (name.Contains(w))
+                    return DiseaseProc;
+            return (NpcTemplateMgr.eBodyType) n.BodyType switch
+            {
+                NpcTemplateMgr.eBodyType.Insect or NpcTemplateMgr.eBodyType.Reptile => Poisons[Math.Clamp(c, 0, 5)],
+                NpcTemplateMgr.eBodyType.Undead => DiseaseProc,
+                _ => BleedProcBase + Math.Clamp(c, 0, 5)
+            };
         }
 
-        static void SendPoise(GameNPC n, State s, double max)
+        static void TryProc(GameNPC n, GameLiving target, Blow b, int c)
         {
-            int pct = (int) Math.Round(s.Poise * 100 / max);
-            if (pct == s.LastSentPoise)
+            if (!target.IsAlive || c == 0 && b != Blow.Heavy)
                 return;
-            s.LastSentPoise = pct;
-            Tell(n, $"poise|{n.ObjectID}|{pct}");
+            double chance = b == Blow.Heavy ? 0.3 + 0.05 * c : 0.03 + 0.015 * c;
+            if (Util.RandomDouble() >= chance)
+                return;
+            int id = b == Blow.Heavy && c >= 3 && Util.RandomDouble() < 0.4 ? SnareProc : ProcFor(n, c);
+            try
+            {
+                Spell spell = SkillBase.GetSpellByID(id);
+                SpellLine line = SkillBase.GetSpellLine(GlobalSpellsLines.Mob_Spells);
+                if (spell == null || line == null)
+                    return;
+                ScriptMgr.CreateSpellHandler(n, spell, line)?.StartSpell(target);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"[MonsterMoves] proc {id} from {n.Name}: {e.Message}");
+            }
+        }
+
+        // ------------------------------------------------------------------ area blows: the cone, the slam
+
+        /// <summary>The cone lands: everyone on the players' side in front of it (as it faced when it wound up) and in
+        /// reach is hit. Strafe out of it, or a timed dodge.</summary>
+        public static void Cone(GameNPC npc)
+        {
+            ushort heading = Of(npc).ConeHeading;
+            Area(npc, ConeRadius, ConeFactor, "sweeps", v =>
+            {
+                int diff = Math.Abs(((npc.GetHeading(v) - heading) % 4096 + 4096 + 2048) % 4096 - 2048);
+                return diff * 360.0 / 4096.0 <= ConeArc / 2.0;
+            });
+        }
+
+        /// <summary>The slam lands (purple only): everyone on the players' side still inside the circle is hit.</summary>
+        public static void Slam(GameNPC npc) => Area(npc, SlamRadius, SlamFactor, "slams the ground and hits", _ => true);
+
+        static void Area(GameNPC npc, int radius, double factor, string verb, Func<GameLiving, bool> inside)
+        {
+            if (!npc.IsAlive)
+                return;
+            double baseDamage = npc.attackComponent.WeaponDamage(npc.ActiveWeapon, null, 1.0, out _);
+            var hit = new List<GameLiving>();
+            foreach (GamePlayer p in npc.GetPlayersInRadius((ushort) (radius + 40)))
+                hit.Add(p);
+            foreach (GameNPC o in npc.GetNPCsInRadius((ushort) (radius + 40)))
+                if (o is GameBot || o.Brain is IControlledBrain)
+                    hit.Add(o);
+            foreach (GameLiving v in hit)
+            {
+                if (!v.IsAlive || MonsterTiers.Combatant(v) == null || !GameServer.ServerRules.IsAllowedToAttack(npc, v, true) || !inside(v))
+                    continue;
+                if (v is GamePlayer vp0 && ActionCombat.IsActive(vp0) && ActionCombat.Dodging(vp0))
+                {
+                    ActionCombat.Send(vp0, "def|dodge|0|0");
+                    continue;                                   // a timed dodge rolls out of it
+                }
+                if (v is not GamePlayer && Util.RandomDouble() < ReadChance(v) + 0.15)
+                {
+                    StepOut(npc, v, radius);                    // a bot that saw it coming got out of it
+                    continue;
+                }
+                double dmg = baseDamage * factor * 0.65;       // (about what armour would take off)
+                if (MonsterTiers.TryDamageFactor(npc, v, out double f))
+                    dmg *= f;
+                int amount = Math.Max(1, (int) dmg);
+                v.TakeDamage(npc, eDamageType.Crush, amount, 0);
+                if (npc.Brain is StandardMobBrain b)
+                    b.AddToAggroList(v, 1);
+                if (v is GamePlayer vp)
+                {
+                    vp.Out.SendMessage($"{npc.GetName(0, true)} {verb} you for {amount} damage!",
+                        eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
+                    if (ActionCombat.IsActive(vp))
+                        ActionCombat.Send(vp, $"fct|0|{amount}|0|in");
+                }
+            }
+        }
+
+        static void StepOut(GameNPC npc, GameLiving v, int radius)
+        {
+            if (v is not GameNPC mover)
+                return;
+            double dx = v.X - npc.X, dy = v.Y - npc.Y, len = Math.Max(1, Math.Sqrt(dx * dx + dy * dy));
+            int x = (int) (npc.X + dx / len * (radius + 120)), y = (int) (npc.Y + dy / len * (radius + 120));
+            mover.WalkTo(new Point3D(x, y, v.Z), (short) Math.Max((int) mover.MaxSpeed, 250));
         }
 
         /// <summary>Send an "#AC|..." line to the action-mode players near a monster.</summary>
@@ -246,123 +478,65 @@ namespace DOL.GS
                     ActionCombat.Send(p, line);
         }
 
-        /// <summary>A timed parry / block caught a heavy blow, or a dodge an unblockable one: a big bite of poise.</summary>
-        public static void OnDefended(GamePlayer player, AttackData ad)
-        {
-            if (ad?.Attacker is not GameNPC n)
-                return;
-            Blow b = PendingOf(n);
-            if (b == Blow.Heavy && ad.ActionDefense is eActionDefense.Parry or eActionDefense.Block && !ad.ActionAuto)
-                Wear(n, 40, player);
-            else if (b == Blow.Unblockable && ad.ActionDefense is eActionDefense.Dodge && !ad.ActionAuto)
-                Wear(n, 15, player);
-        }
+        // ------------------------------------------------------------------ the plates' endurance and power lines
 
-        // ------------------------------------------------------------------ the slam
+        static readonly ConcurrentDictionary<string, Dictionary<int, int>> _vitSent = new();
+        static readonly ConcurrentDictionary<string, ushort> _vitRegion = new();
 
-        /// <summary>The slam lands: everyone on the players' side still inside the circle is hit.</summary>
-        public static void Slam(GameNPC npc)
+        /// <summary>Once a second (HeroInfo.Tick): "#VIT|oid:end:pow;..." for the monsters and bots near a player whose
+        /// endurance or power changed (power -1: it has none). The plates draw them under the health bar.</summary>
+        public static void PushVitals(GamePlayer p)
         {
-            if (!npc.IsAlive)
+            if (p?.Client == null)
                 return;
-            double baseDamage = npc.attackComponent.WeaponDamage(npc.ActiveWeapon, null, 1.0, out _);
-            var hit = new List<GameLiving>();
-            foreach (GamePlayer p in npc.GetPlayersInRadius(SlamRadius))
-                hit.Add(p);
-            foreach (GameNPC o in npc.GetNPCsInRadius(SlamRadius))
-                if (o is GameBot || o.Brain is IControlledBrain)
-                    hit.Add(o);
-            foreach (GameLiving v in hit)
+            var sent = _vitSent.GetOrAdd(p.ObjectId, _ => new());
+            var sb = new StringBuilder();
+            lock (sent)
             {
-                if (!v.IsAlive || MonsterTiers.Combatant(v) == null || !GameServer.ServerRules.IsAllowedToAttack(npc, v, true))
-                    continue;
-                if (v is not GamePlayer && Util.RandomDouble() < ReadChance(v) + 0.15)
+                if (!_vitRegion.TryGetValue(p.ObjectId, out ushort reg) || reg != p.CurrentRegionID)
                 {
-                    StepOut(npc, v);                            // a bot that saw the circle got out of it
-                    continue;
+                    sent.Clear();
+                    _vitRegion[p.ObjectId] = p.CurrentRegionID;
                 }
-                double dmg = baseDamage * SlamFactor * 0.65;   // (about what armour would take off)
-                if (MonsterTiers.TryDamageFactor(npc, v, out double f))
-                    dmg *= f;
-                int amount = Math.Max(1, (int) dmg);
-                v.TakeDamage(npc, eDamageType.Crush, amount, 0);
-                if (npc.Brain is StandardMobBrain b)
-                    b.AddToAggroList(v, 1);
-                if (v is GamePlayer vp)
+                foreach (GameNPC npc in p.GetNPCsInRadius(4000))
                 {
-                    vp.Out.SendMessage($"{npc.GetName(0, true)} slams the ground and hits you for {amount} damage!",
-                        eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
-                    if (ActionCombat.IsActive(vp))
-                        ActionCombat.Send(vp, $"fct|0|{amount}|0|in");
+                    if (!npc.IsAlive)
+                        continue;
+                    int end, pow;
+                    if (npc is GameBot bot)
+                    {
+                        end = bot.EndurancePercent;
+                        pow = bot.MaxMana > 0 ? bot.ManaPercent : -1;
+                    }
+                    else if (Comp(npc) >= 0)
+                    {
+                        end = (int) Math.Round(Stamina(npc));
+                        pow = npc.Spells != null && npc.Spells.Count > 0 ? npc.ManaPercent : -1;
+                    }
+                    else
+                        continue;
+                    int code = end * 1000 + pow + 1;
+                    if (sent.TryGetValue(npc.ObjectID, out int was) && was == code)
+                        continue;
+                    sent[npc.ObjectID] = code;
+                    sb.Append(npc.ObjectID).Append(':').Append(end).Append(':').Append(pow).Append(';');
+                    if (sb.Length > 900)
+                    {
+                        NewClient.Send(p, "#VIT|" + sb);
+                        sb.Clear();
+                    }
                 }
             }
-        }
-
-        static void StepOut(GameNPC npc, GameLiving v)
-        {
-            if (v is not GameNPC mover)
-                return;
-            double dx = v.X - npc.X, dy = v.Y - npc.Y, len = Math.Max(1, Math.Sqrt(dx * dx + dy * dy));
-            int x = (int) (npc.X + dx / len * (SlamRadius + 120)), y = (int) (npc.Y + dy / len * (SlamRadius + 120));
-            mover.WalkTo(new Point3D(x, y, v.Z), (short) Math.Max((int) mover.MaxSpeed, 250));
-        }
-
-        // ------------------------------------------------------------------ the kick
-
-        /// <summary>/ac kick: everyone's interrupt on a cooldown - stops a spell or a wind-up, and bites into poise.</summary>
-        public static void Kick(GamePlayer player)
-        {
-            long now = GameLoop.GameLoopTime;
-            if (_kickReady.TryGetValue(player.ObjectId, out long ready) && now < ready)
-            {
-                ActionCombat.Send(player, $"kick|cd|{ready - now}");
-                return;
-            }
-            if (player.TargetObject is not GameNPC n || !n.IsAlive || !player.IsWithinRadius(n, KickRange) ||
-                !player.IsObjectInFront(n, 120) || !GameServer.ServerRules.IsAllowedToAttack(player, n, true))
-            {
-                ActionCombat.Send(player, "kick|far|0");
-                return;
-            }
-            int cost = Math.Max(3, player.MaxEndurance * 5 / 100);
-            if (player.Endurance < cost)
-            {
-                ActionCombat.Send(player, "kick|tired|0");
-                return;
-            }
-            player.ChangeEndurance(player, eEnduranceChangeType.Spell, -cost);
-            _kickReady[player.ObjectId] = now + KickCooldownMs;
-            MonsterTiers.Touch(player, n);
-            State s = Of(n);
-            string what;
-            if (n.IsCasting)
-            {
-                n.StopCurrentSpellcast();
-                what = "interrupt";
-                Wear(n, 30, player);
-            }
-            else if (s.Pending != Blow.Normal)
-            {
-                s.CancelWindup = true;
-                what = "cancel";
-                Wear(n, 40, player);
-            }
-            else
-            {
-                what = "hit";
-                Wear(n, 15, player);
-            }
-            if (n.Brain is StandardMobBrain b)
-                b.AddToAggroList(player, 1);
-            ActionCombat.Send(player, $"kick|{what}|{KickCooldownMs}|{n.ObjectID}");
-            if (what != "hit")
-                Tell(n, $"cancel|{n.ObjectID}");
+            if (sb.Length > 0)
+                NewClient.Send(p, "#VIT|" + sb);
         }
 
         public static void Forget(GamePlayer p)
         {
-            if (p != null)
-                _kickReady.TryRemove(p.ObjectId, out _);
+            if (p == null)
+                return;
+            _vitSent.TryRemove(p.ObjectId, out _);
+            _vitRegion.TryRemove(p.ObjectId, out _);
         }
     }
 }

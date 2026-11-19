@@ -213,27 +213,23 @@ namespace DOL.GS
         {
             long now = GameLoop.GameLoopTime;
 
-            // Staggered (its poise broken, MonsterMoves): no blows for a moment, and the wind-up it had is lost.
-            if (MonsterMoves.Staggered(_npcOwner))
+            // Its guard is up (MonsterMoves.TryGuard): no blows while it lasts - attacking into it is mostly turned aside,
+            // and what it turns aside it answers with a counter.
+            if (MonsterMoves.Guarding(_npcOwner))
             {
-                if (_windupEnd != 0)
-                    MonsterMoves.End(_npcOwner);
-                MonsterMoves.TakeCancel(_npcOwner);
-                _windupEnd = 0;
-                _windupTarget = null;
-                _interval = 300;
+                _interval = (int) Math.Max(100, Math.Min(400, MonsterMoves.GuardLeft(_npcOwner)));
                 return true;
             }
 
-            bool slamming = _windupEnd != 0 && MonsterMoves.PendingOf(_npcOwner) == MonsterMoves.Blow.Slam;
+            bool area = _windupEnd != 0 && MonsterMoves.PendingOf(_npcOwner) is MonsterMoves.Blow.Slam or MonsterMoves.Blow.Cone;
 
-            // Who sees it coming: an action-mode player is told; a bot or a pet against a monster that knows moves (blue
-            // and up) gets the same blows and reads them as well as it can (MonsterMoves.ReadChance).
+            // Who sees it coming: an action-mode player is told; a bot or a pet against a tiered monster gets the same
+            // blows and reads them as well as it can (MonsterMoves.ReadChance).
             bool actionPlayer = _target is GamePlayer ap && ActionCombat.IsActive(ap);
             bool botTarget = !actionPlayer && _target is GameLiving tl and not GamePlayer && MonsterTiers.Combatant(tl) != null &&
-                MonsterTiers.Tier(_npcOwner) is var tier && tier != MonsterTiers.None && tier >= MonsterTiers.Blue;
+                MonsterMoves.Comp(_npcOwner) >= 0;
 
-            if (!slamming && (!(actionPlayer || botTarget) ||
+            if (!area && (!(actionPlayer || botTarget) ||
                 !_npcOwner.IsWithinRadius(_target, AttackComponent.AttackRange + 50)))
             {
                 if (_windupEnd != 0)
@@ -243,29 +239,32 @@ namespace DOL.GS
                 return false;
             }
 
-            // Kicked (MonsterMoves.Kick): the wind-up is lost, it gathers itself.
-            if (_windupEnd != 0 && MonsterMoves.TakeCancel(_npcOwner))
-            {
-                MonsterMoves.End(_npcOwner);
-                _windupEnd = 0;
-                _windupTarget = null;
-                _interval = 900;
-                return true;
-            }
-
             // No wind-up running for this target (or a stale one, held by a stun): start one - a plain blow, or by the
-            // monster's con a heavy, unblockable or slam (MonsterMoves.Pick).
-            if (!slamming && (_windupEnd == 0 || _windupTarget != _target || now > _windupEnd + 400))
+            // monster's con a style, a heavy blow, a cone or a slam (MonsterMoves.Pick). Between blows a blue-and-up
+            // humanoid under attack may raise its guard instead (it baits).
+            if (!area && (_windupEnd == 0 || _windupTarget != _target || now > _windupEnd + 400))
             {
+                if (_windupEnd == 0)
+                {
+                    int guard = MonsterMoves.TryGuard(_npcOwner);
+                    if (guard > 0)
+                    {
+                        _interval = Math.Min(400, guard);
+                        return true;
+                    }
+                }
+
                 var (kind, ms) = MonsterMoves.Pick(_npcOwner);
-                MonsterMoves.Begin(_npcOwner, kind);
+                MonsterMoves.Begin(_npcOwner, kind, _target as GameLiving);
                 _windupTarget = _target;
                 _windupEnd = now + ms;
                 _windupMs = ms;
                 if (kind == MonsterMoves.Blow.Slam)
                     MonsterMoves.Tell(_npcOwner, $"ground|{_npcOwner.ObjectID}|{MonsterMoves.SlamRadius}|{ms}");
-                else if (actionPlayer)
-                    ActionCombat.SendWindup((GamePlayer) _target, _npcOwner, ms, MonsterMoves.Code(kind));
+                else if (kind == MonsterMoves.Blow.Cone)
+                    MonsterMoves.Tell(_npcOwner, $"cone|{_npcOwner.ObjectID}|{MonsterMoves.ConeRadius}|{MonsterMoves.ConeArc}|{ms}|{MonsterMoves.Of(_npcOwner).ConeHeading}");
+                if (actionPlayer && kind != MonsterMoves.Blow.Slam)
+                    ActionCombat.SendWindup((GamePlayer) _target, _npcOwner, ms, MonsterMoves.Code(_npcOwner, kind));
                 if (actionPlayer)
                     MonsterMoves.TelegraphAtPlayer((GamePlayer) _target, kind);
                 else
@@ -283,11 +282,14 @@ namespace DOL.GS
             _windupEnd = 0;
             _windupTarget = null;
 
-            if (slamming)
+            if (area)
             {
-                MonsterMoves.Slam(_npcOwner);
+                if (MonsterMoves.PendingOf(_npcOwner) == MonsterMoves.Blow.Slam)
+                    MonsterMoves.Slam(_npcOwner);
+                else
+                    MonsterMoves.Cone(_npcOwner);
                 MonsterMoves.End(_npcOwner);
-                _interval = 1500;
+                _interval = 1200;
                 return true;
             }
 

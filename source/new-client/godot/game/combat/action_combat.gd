@@ -180,26 +180,24 @@ func on_line(text: String) -> void:
 				_win_dodge = int(f[3])
 				_win_cool = int(f[4])
 				_counter_cost = int(f[5]) if f.size() > 5 else 0
-		"windup":                                        # windup|oid|ms|kind: n plain, h heavy (yellow), u unblockable (red)
+		"windup":                                        # windup|oid|ms|kind (MonsterMoves.Code): n plain, s style, p positional, h heavy, c cone
 			if f.size() > 2:
 				_windup(int(f[1]), int(f[2]), String(f[3]) if f.size() > 3 else "n")
 		"ground":                                        # ground|oid|radius|ms: a slam's circle filling up (MonsterMoves)
 			if f.size() > 3:
 				_ground(int(f[1]), int(f[2]), int(f[3]))
-		"cancel":                                        # cancel|oid: its wind-up / slam was kicked away
+		"cone":                                          # cone|oid|radius|arc|ms|heading: a sweep in front of it (MonsterMoves.Cone)
+			if f.size() > 5:
+				_cone(int(f[1]), int(f[2]), int(f[3]), int(f[4]), int(f[5]))
+		"cancel":                                        # cancel|oid: its wind-up / slam is off
 			if f.size() > 1:
 				_cancel_windups(int(f[1]))
-				_float_text(int(f[1]), "INTERRUPTED", Color(0.75, 0.9, 1.0), 30, 0.7)
-		"stagger":                                       # stagger|oid|ms: its poise broke
+		"guard":                                         # guard|oid|parry/block/evade|ms: it raised its guard (MonsterMoves.TryGuard)
+			if f.size() > 3:
+				_guard(int(f[1]), String(f[2]), int(f[3]))
+		"guardend":                                      # guardend|oid: its guard is down (beaten, or it answered)
 			if f.size() > 1:
-				_cancel_windups(int(f[1]))
-				_float_text(int(f[1]), "STAGGERED", Color(1.0, 0.8, 0.25), 36, 0.8)
-		"poise":                                         # poise|oid|pct
-			if f.size() > 2 and viewer and "poise" in viewer.npcs:
-				viewer.npcs.poise[int(f[1])] = int(f[2])
-		"kick":                                          # kick|what|ms|oid (MonsterMoves.Kick)
-			if f.size() > 1:
-				_kicked(String(f[1]), int(f[2]) if f.size() > 2 else 0, int(f[3]) if f.size() > 3 else 0)
+				_guards.erase(int(f[1]))
 		"def":
 			if f.size() > 2:
 				_defended(String(f[1]), int(f[2]), int(f[3]) if f.size() > 3 else 0, f.size() > 4 and f[4] == "auto")
@@ -313,7 +311,7 @@ func _windup(oid: int, ms: int, kind := "n") -> void:
 		mark.modulate = Color(1.0, 0.25, 0.15)
 		n.add_child(mark)
 		_marks[oid] = mark
-	mark.text = "!!" if kind == "u" else "!"
+	mark.text = "!"
 	mark.modulate = KIND_COLOR.get(kind, Color(1.0, 0.25, 0.15))
 	mark.position = Vector3(0, n.height + 0.5, 0)
 	mark.set_meta("until", now + ms + 150)
@@ -397,8 +395,13 @@ func _defended(kind: String, dmg: int, saved: int, auto := false) -> void:
 	_windups = _windups.filter(func(w): return int(w.end) > now + 120)   # that blow is answered
 
 
-const KIND_COLOR := {"n": Color(1.0, 0.25, 0.15), "h": Color(1.0, 0.85, 0.1), "u": Color(0.9, 0.05, 0.15)}
-var _grounds: Array = []                 # [{oid, node, start, end}] slams' circles
+## The wind-ups' colours (owner 2026-11-19, monster combat v2): plain red; a style gold (an ornate ring); a positional
+## style magenta; a beast's heavy blow a deep ember (a thick, weighted ring); a cone orange (and its wedge on the ground).
+const KIND_COLOR := {"n": Color(1.0, 0.25, 0.15), "s": Color(1.0, 0.7, 0.2), "p": Color(1.0, 0.35, 0.85),
+		"h": Color(0.9, 0.4, 0.1), "c": Color(1.0, 0.55, 0.15)}
+const GUARD_COLOR := Color(0.55, 0.82, 1.0)
+var _grounds: Array = []                 # [{oid, node, start, end}] slams' circles and cones' wedges
+var _guards := {}                        # oid -> {kind, until, next}: monsters holding their guard up
 
 
 ## A slam's circle on the ground around the monster, filling up until it lands (MonsterMoves.Slam): get out of it.
@@ -444,6 +447,99 @@ func _ground(oid: int, radius: int, ms: int) -> void:
 		viewer.note_combat()
 
 
+## A cone's wedge on the ground in front of the monster, as it faced when it wound up, filling until it lands: strafe
+## out of it (or a timed dodge). Small on purpose (owner 2026-11-19: "small frontal cones make melee players strafe").
+func _cone(oid: int, radius: int, arc: int, ms: int, heading: int) -> void:
+	var n := _view(oid)
+	if n == null:
+		return
+	var now := Time.get_ticks_msec()
+	var r := radius * 0.025
+	var yaw := Server.yaw_of(heading)
+	var half := deg_to_rad(arc) * 0.5
+	var root := Node3D.new()
+	for part in [["Edge", Color(1.0, 0.45, 0.1, 0.16), 0.05], ["Fill", Color(1.0, 0.5, 0.1, 0.3), 0.06]]:
+		var st := SurfaceTool.new()
+		st.begin(Mesh.PRIMITIVE_TRIANGLES)
+		var steps := 20
+		for i in steps:
+			var a0 := yaw - half + 2.0 * half * i / steps
+			var a1 := yaw - half + 2.0 * half * (i + 1) / steps
+			st.add_vertex(Vector3(0, float(part[2]), 0))
+			st.add_vertex(Vector3(sin(a0), 0, cos(a0)) * r + Vector3(0, float(part[2]), 0))
+			st.add_vertex(Vector3(sin(a1), 0, cos(a1)) * r + Vector3(0, float(part[2]), 0))
+		var mi := MeshInstance3D.new()
+		mi.mesh = st.commit()
+		var mat := StandardMaterial3D.new()
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+		mat.albedo_color = part[1]
+		mi.material_override = mat
+		mi.name = String(part[0])
+		if part[0] == "Fill":
+			mi.scale = Vector3(0.01, 1, 0.01)
+		root.add_child(mi)
+	get_tree().current_scene.add_child(root)
+	root.global_position = n.global_position + Vector3(0, 0.05, 0)
+	_grounds.append({"oid": oid, "node": root, "start": now, "end": now + ms})
+	if viewer and viewer.has_method("note_combat"):
+		viewer.note_combat()
+
+
+## A monster raised its guard (MonsterMoves.TryGuard): it shows it - its parry / block / evade stance, again and again
+## while it lasts - and attacking into it is mostly turned aside and answered. Wait it out, or go round it.
+func _guard(oid: int, kind: String, ms: int) -> void:
+	var now := Time.get_ticks_msec()
+	_guards[oid] = {"kind": kind, "until": now + ms, "next": 0}
+	if viewer and viewer.has_method("note_combat"):
+		viewer.note_combat()
+
+
+func _step_guards() -> void:
+	if _guards.is_empty():
+		return
+	var now := Time.get_ticks_msec()
+	for oid in _guards.keys():
+		var g: Dictionary = _guards[oid]
+		if now > int(g.until):
+			_guards.erase(oid)
+			continue
+		if now >= int(g.next):
+			g.next = now + 650
+			var n := _view(int(oid))
+			if n and n.is_alive():
+				n.play_defend(String(g.kind))
+
+
+func _draw_guard(oid: int, g: Dictionary, now: int) -> void:
+	var p := _player()
+	var n := _view(oid)
+	if p == null or p.camera == null or n == null:
+		return
+	var head := n.global_position + Vector3(0, n.height * 0.65, 0)
+	if p.camera.is_position_behind(head):
+		return
+	var at := p.camera.unproject_position(head)
+	var dist := maxf(1.0, p.camera.global_position.distance_to(head))
+	var scale := clampf(8.0 / dist, 0.45, 1.3)
+	var pulse := 0.75 + 0.25 * sin(now * 0.012)
+	var col := GUARD_COLOR
+	col.a = 0.9 * pulse
+	var rad := 30.0 * scale
+	# two brackets either side of it - its guard - and a small mark of the kind in between
+	hud.draw_arc(at, rad, PI * 0.65, PI * 1.35, 16, col, 3.0)
+	hud.draw_arc(at, rad, -PI * 0.35, PI * 0.35, 16, col, 3.0)
+	match String(g.kind):
+		"block":
+			hud.draw_rect(Rect2(at + Vector2(-5, -6) * scale, Vector2(10, 12) * scale), col, false, 2.0)
+		"evade":
+			hud.draw_line(at + Vector2(-6, 4) * scale, at + Vector2(6, -4) * scale, col, 2.0)
+			hud.draw_line(at + Vector2(-6, -4) * scale, at + Vector2(6, 4) * scale, col, 2.0)
+		_:
+			hud.draw_line(at + Vector2(-7, 7) * scale, at + Vector2(7, -7) * scale, col, 2.5)
+
+
 func _step_grounds() -> void:
 	if _grounds.is_empty():
 		return
@@ -466,6 +562,7 @@ func _step_grounds() -> void:
 
 func _cancel_windups(oid: int) -> void:
 	_windups = _windups.filter(func(w): return int(w.oid) != oid)
+	_guards.erase(oid)
 	var keep: Array = []
 	for g in _grounds:
 		if int(g.oid) == oid and is_instance_valid(g.node):
@@ -476,23 +573,6 @@ func _cancel_windups(oid: int) -> void:
 	var mark = _marks.get(oid)
 	if is_instance_valid(mark):
 		mark.set_meta("until", 0)
-
-
-## Your kick (/ac kick, MonsterMoves.Kick): what it did.
-func _kicked(what: String, ms: int, oid: int) -> void:
-	match what:
-		"cd":
-			_flash("KICK IN %.0f s" % ceilf(ms / 1000.0), Color(0.8, 0.8, 0.8))
-		"far":
-			_flash("TOO FAR TO KICK", Color(0.8, 0.8, 0.8))
-		"tired":
-			_flash("TOO TIRED", Color(1.0, 0.5, 0.4))
-		"interrupt":
-			_float_text(oid, "INTERRUPT", Color(0.75, 0.55, 1.0), 34, 0.7)
-		"cancel":
-			_flash("KICK!", Color(1.0, 0.85, 0.35))
-		_:
-			_flash("KICK", Color(0.9, 0.9, 0.9))
 
 
 func _flash(text: String, color: Color) -> void:
@@ -695,10 +775,6 @@ func _input(event: InputEvent) -> void:
 			return
 	if Keybinds.pressed(event, "ac_interact"):
 		_interact()
-		get_viewport().set_input_as_handled()
-		return
-	if Keybinds.pressed(event, "ac_kick"):               # everyone's interrupt (MonsterMoves.Kick, owner 2026-11-19)
-		Server.command("/ac kick")
 		get_viewport().set_input_as_handled()
 		return
 	if Keybinds.pressed(event, "ac_dodge"):
@@ -1232,6 +1308,7 @@ func _aim_score(n: Npc, p: Player, max_angle: float, max_range: float) -> float:
 func _process(_delta: float) -> void:
 	var t_live := Time.get_ticks_usec()
 	_step_grounds()
+	_step_guards()
 	_process_timed(_delta)
 	Perf.proc_add("action combat", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)
 
@@ -1899,11 +1976,9 @@ func _draw_attacker_ring(w: Dictionary, now: int, font: Font) -> void:
 	var hot := left <= _press_window() and left > -60
 	var kind := String(w.get("kind", "n"))
 	var col := Color(1.0, 0.82, 0.3) if hot else Color(1.0, 0.3, 0.2, 0.9)
-	if kind == "h":                                     # a heavy blow: yellow, parry / block / dodge it
-		col = Color(1.0, 1.0, 0.75) if hot else KIND_COLOR["h"]
-	elif kind == "u":                                   # unblockable: red, only a dodge saves you
-		col = Color(1.0, 0.55, 0.55) if hot else KIND_COLOR["u"]
-	var wide := 2.0 if kind == "n" else 4.0
+	if kind != "n" and KIND_COLOR.has(kind):
+		col = Color(1.0, 1.0, 0.8) if hot else KIND_COLOR[kind]
+	var wide := 2.0 if kind in ["n", "c"] else (6.0 if kind == "h" else 3.0)
 	var head := n.global_position + Vector3(0, n.height * 0.65, 0)
 	var size := hud.size
 	var at := p.camera.unproject_position(head)
@@ -1911,12 +1986,25 @@ func _draw_attacker_ring(w: Dictionary, now: int, font: Font) -> void:
 	if not behind and Rect2(Vector2(24, 24), size - Vector2(48, 48)).has_point(at):
 		var dist := maxf(1.0, p.camera.global_position.distance_to(head))
 		var scale := clampf(8.0 / dist, 0.45, 1.3)
-		hud.draw_arc(at, lerpf(64.0, 14.0, t) * scale, 0.0, TAU, 48, col, (3.0 if hot else 2.0) + wide - 2.0)
+		var rad := lerpf(64.0, 14.0, t) * scale
+		hud.draw_arc(at, rad, 0.0, TAU, 48, col, (3.0 if hot else 2.0) + wide - 2.0)
 		hud.draw_arc(at, 14.0 * scale, 0.0, TAU, 32, Color(1, 1, 1, 0.3), 1.0)
-		if kind == "u":
-			hud.draw_string(font, at + Vector2(-40, -70.0 * scale), "DODGE", HORIZONTAL_ALIGNMENT_CENTER, 80.0, 14, col)
+		if kind in ["s", "p"]:
+			# a style: an ornate ring - diamonds turning on it as it closes (eight on a positional)
+			var count := 8 if kind == "p" else 4
+			var spin := t * PI
+			for i in count:
+				var a := spin + TAU * i / count
+				var d := Vector2(cos(a), sin(a))
+				var q := Vector2(-d.y, d.x)
+				var c0 := at + d * rad
+				var k := 6.0 * scale
+				hud.draw_colored_polygon(PackedVector2Array([c0 + d * k, c0 + q * k * 0.55, c0 - d * k, c0 - q * k * 0.55]), col)
+			hud.draw_arc(at, rad + 5.0 * scale, 0.0, TAU, 48, Color(col.r, col.g, col.b, 0.35), 1.0)
 		elif kind == "h":
-			hud.draw_string(font, at + Vector2(-40, -70.0 * scale), "HEAVY", HORIZONTAL_ALIGNMENT_CENTER, 80.0, 12, col)
+			# a heavy blow: a thick ember ring with a dark weight inside it and a still outer rim - it lands hard
+			hud.draw_arc(at, rad - 4.0 * scale, 0.0, TAU, 48, Color(0.15, 0.05, 0.0, 0.55), 3.0)
+			hud.draw_arc(at, 68.0 * scale, 0.0, TAU, 48, Color(col.r, col.g, col.b, 0.3), 2.0)
 		return
 	# off screen: an arrow on the edge, pointing at it
 	var centre := size * 0.5
@@ -1997,6 +2085,8 @@ func _draw_hud() -> void:
 	if _show.get("windup", true):
 		for w in _windups:
 			_draw_attacker_ring(w, now, font)
+		for oid in _guards:
+			_draw_guard(int(oid), _guards[oid], now)
 	if _show.get("windup_cross", false):
 		for w in _windups:
 			var total := maxf(1.0, float(int(w.end) - int(w.start)))

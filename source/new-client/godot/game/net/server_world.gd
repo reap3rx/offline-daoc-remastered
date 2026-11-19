@@ -41,6 +41,7 @@ func setup_server(v: Node, zone_loader: ZoneLoader, p: Node3D) -> void:
 	player = p
 	tiers.clear()
 	bot_tiers.clear()
+	vit.clear()
 	var m = JSON.parse_string(FileAccess.get_file_as_string("res://content/monsters/monsters.json"))
 	models = m if m is Dictionary else {}
 	data = {"equipment": {}, "spawns": []}
@@ -1058,6 +1059,12 @@ func _message(d: Dictionary) -> void:
 			var kv := part.split(":")
 			if kv.size() == 2:
 				bot_tiers[int(kv[0])] = int(kv[1])
+		return
+	if String(d.text).begins_with("#VIT|"):               # endurance / power under the plates (MonsterMoves.PushVitals)
+		for part in String(d.text).substr(5).split(";", false):
+			var kv := part.split(":")
+			if kv.size() == 3:
+				vit[int(kv[0])] = [int(kv[1]), int(kv[2])]
 		return
 	if String(d.text).begins_with("#TIER|"):              # monsters' fixed con tiers (MonsterTiers.cs): oid:tier;...
 		for part in String(d.text).substr(6).split(";", false):

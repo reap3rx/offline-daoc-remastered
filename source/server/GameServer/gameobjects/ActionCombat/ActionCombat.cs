@@ -1041,9 +1041,7 @@ namespace DOL.GS
 				return eAttackResult.Evaded;
 			}
 
-			bool unblockable = MonsterMoves.Unblockable(ad.Attacker);   // a red wind-up: only a dodge saves you
-
-			if (inFront && !unblockable && now - state.ParryPressedAt <= state.ParryWindowMs)
+			if (inFront && now - state.ParryPressedAt <= state.ParryWindowMs)
 			{
 				ad.ArmorHitLocation = player.CalculateArmorHitLocation(ad);
 				bool caught = HasShield(player) && (!state.ParryOnly || !ad.IsMeleeAttack) || ad.IsMeleeAttack;
@@ -1059,7 +1057,7 @@ namespace DOL.GS
 				{
 					StartChain(player, state, eActionDefense.Block, ad.Attacker, now);
 					ad.ActionDefense = eActionDefense.Block;
-					ad.ActionDamageFactor = BlockFactor(player, ad);
+					ad.ActionDamageFactor = Tired(player, BlockFactor(player, ad));
 					ad.BlockChance = 100;
 					return eAttackResult.Blocked;
 				}
@@ -1068,7 +1066,7 @@ namespace DOL.GS
 				{
 					StartChain(player, state, eActionDefense.Parry, ad.Attacker, now);
 					ad.ActionDefense = eActionDefense.Parry;
-					ad.ActionDamageFactor = ParryFactor(player, ad);
+					ad.ActionDamageFactor = Tired(player, ParryFactor(player, ad));
 					ad.ParryChance = 100;
 					return eAttackResult.Parried;
 				}
@@ -1076,9 +1074,6 @@ namespace DOL.GS
 
 			// The chain a timed defense started: other monsters' blows turned aside the same way, one each.
 			eActionDefense chained = ChainFor(player, state, ad, now);
-
-			if (unblockable && chained is eActionDefense.Parry or eActionDefense.Block)
-				chained = eActionDefense.None;
 
 			if (chained is not eActionDefense.None)
 			{
@@ -1094,18 +1089,18 @@ namespace DOL.GS
 						return eAttackResult.Evaded;
 					case eActionDefense.Block:
 						ad.ArmorHitLocation = player.CalculateArmorHitLocation(ad);
-						ad.ActionDamageFactor = BlockFactor(player, ad);
+						ad.ActionDamageFactor = Tired(player, BlockFactor(player, ad));
 						ad.BlockChance = 100;
 						return eAttackResult.Blocked;
 					default:
 						ad.ArmorHitLocation = player.CalculateArmorHitLocation(ad);
-						ad.ActionDamageFactor = ParryFactor(player, ad);
+						ad.ActionDamageFactor = Tired(player, ParryFactor(player, ad));
 						ad.ParryChance = 100;
 						return eAttackResult.Parried;
 				}
 			}
 
-			if (state.Guarding && inFront && !unblockable)
+			if (state.Guarding && inFront)
 			{
 				int cost = 3 + player.MaxEndurance * 2 / 100;
 
@@ -1129,7 +1124,6 @@ namespace DOL.GS
 		/// <summary>After the blow is worked out: tell the defender how it went.</summary>
 		public static void OnDefended(GamePlayer player, AttackData ad)
 		{
-			MonsterMoves.OnDefended(player, ad);   // a timed answer to a heavy / unblockable blow breaks poise
 			switch (ad.ActionDefense)
 			{
 				case eActionDefense.Parry:
@@ -1533,7 +1527,25 @@ namespace DOL.GS
 
 		public static void SendWindup(GamePlayer player, GameNPC attacker, int ms, string kind = "n")
 		{
-			Send(player, $"windup|{attacker.ObjectID}|{ms}|{kind}");   // kind: n plain, h heavy (yellow), u unblockable (red)
+			Send(player, $"windup|{attacker.ObjectID}|{ms}|{kind}");   // kind: MonsterMoves.Code (n plain, s style, p positional, h heavy, c cone)
+		}
+
+		/// <summary>A dodge press is open right now (a cone or a slam rolls past it).</summary>
+		public static bool Dodging(GamePlayer player)
+		{
+			ActionCombatState state = Get(player);
+			if (GameLoop.GameLoopTime - state.DodgeAt > state.DodgeWindowMs)
+				return false;
+			state.DodgeAnswered = true;
+			return true;
+		}
+
+		/// <summary>Out of breath (owner 2026-11-19, endurance as poise): below half your endurance a timed parry or
+		/// block lets more through.</summary>
+		public static double Tired(GamePlayer player, double factor)
+		{
+			double f = MonsterMoves.DefenseFactor(player);
+			return f >= 1 ? factor : 1.0 - (1.0 - factor) * f;
 		}
 
 		// ------------------------------------------------------------------ style picks (owner 2026-10-30)

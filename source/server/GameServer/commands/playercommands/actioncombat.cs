@@ -81,9 +81,6 @@ namespace DOL.GS.Commands
 				case "dodge":
 					ActionCombat.PressDodge(player);
 					break;
-				case "kick":                         // everyone's interrupt (MonsterMoves.Kick)
-					MonsterMoves.Kick(player);
-					break;
 				case "counter":
 					CasterCounter.Release(player);
 					break;

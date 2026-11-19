@@ -5,16 +5,16 @@ namespace DOL.GS
 {
     /// <summary>
     /// Your companion in the new monster fights (owner 2026-11-19, "Purposeful PvE"): it calls out the telegraphs it sees
-    /// coming at you - a red wind-up, a slam - which also teaches them; and how well it reads the ones aimed at itself
+    /// coming at you - a heavy blow, a sweep, a slam - which also teaches them; and how well it reads the ones aimed at itself
     /// grows with its competence (MonsterMoves).
     /// </summary>
     public static partial class PersonalCompanions
     {
         static readonly ConcurrentDictionary<GamePlayer, long> _warnedAt = new();
 
-        static readonly string[] UnblockableLines =
+        static readonly string[] ConeLines =
         {
-            "That one can't be blocked - dodge!", "Get out of the way!", "Don't try to catch that one - move!",
+            "It's going to sweep - get to its side!", "Step out of its swing!", "Off its front!",
         };
         static readonly string[] SlamLines =
         {
@@ -58,7 +58,7 @@ namespace DOL.GS
                     return;
                 string[] lines = kind switch
                 {
-                    MonsterMoves.Blow.Unblockable => UnblockableLines,
+                    MonsterMoves.Blow.Cone => ConeLines,
                     MonsterMoves.Blow.Slam => SlamLines,
                     MonsterMoves.Blow.Heavy => HeavyLines,
                     _ => null
