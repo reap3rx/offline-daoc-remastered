@@ -101,6 +101,9 @@ namespace DOL.GS.Spells
     {
         public VoidStepSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
+        // (its Duration is how long its patch / images last, not a lasting effect on the target: always the direct effect)
+        public override void ApplyEffectOnTarget(GameLiving target) => OnDirectEffect(target);
+
         public override string ShortDescription =>
             $"You step through the void {Spell.Value / 64:0} metres ahead. The darkness you leave snares enemies in it for {Spell.Duration / 1000} seconds.";
 
@@ -117,6 +120,7 @@ namespace DOL.GS.Spells
                 return;
             var from = new Point3D(c.X, c.Y, c.Z);
             Point3D to = BlinkSpot(c, (int) Spell.Value);
+            Console.WriteLine($"[ClassKits] {c.Name} Void Step from {from.X} {from.Y} {from.Z} to {(to == null ? "nowhere" : $"{to.X} {to.Y} {to.Z}")}");
             if (to == null)
             {
                 MessageToCaster("There's no room to step there.", eChatType.CT_SpellResisted);
@@ -150,7 +154,7 @@ namespace DOL.GS.Spells
                     continue;
                 if (PathfindingProvider.Instance.IsAvailable && PathfindingProvider.Instance.HasNavmesh(zone))
                 {
-                    Vector3? g = PathfindingProvider.Instance.GetClosestPoint(zone, v, 64, 64, 200, PathfindingProvider.Instance.DefaultFilters);
+                    Vector3? g = PathfindingProvider.Instance.GetClosestPoint(zone, v, 128, 128, 600, PathfindingProvider.Instance.DefaultFilters);
                     if (!g.HasValue)
                         continue;
                     return new Point3D((int) g.Value.X, (int) g.Value.Y, (int) g.Value.Z);
@@ -167,6 +171,9 @@ namespace DOL.GS.Spells
     public class MirrorImageSpellHandler : SpellHandler
     {
         public MirrorImageSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        // (its Duration is how long its patch / images last, not a lasting effect on the target: always the direct effect)
+        public override void ApplyEffectOnTarget(GameLiving target) => OnDirectEffect(target);
 
         public override string ShortDescription =>
             $"Two images of you step out and draw your enemies' attacks for {Spell.Duration / 1000} seconds, until they shatter.";
@@ -214,6 +221,9 @@ namespace DOL.GS.Spells
     public class ThornWallSpellHandler : SpellHandler
     {
         public ThornWallSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        // (its Duration is how long its patch / images last, not a lasting effect on the target: always the direct effect)
+        public override void ApplyEffectOnTarget(GameLiving target) => OnDirectEffect(target);
 
         public override string ShortDescription =>
             $"A line of brambles grows across the ground for {Spell.Duration / 1000} seconds, snaring enemies that cross it.";
@@ -270,6 +280,9 @@ namespace DOL.GS.Spells
     public class VerdantPulseSpellHandler : SpellHandler
     {
         public VerdantPulseSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
+
+        // (its Duration is how long its patch / images last, not a lasting effect on the target: always the direct effect)
+        public override void ApplyEffectOnTarget(GameLiving target) => OnDirectEffect(target);
 
         public override string ShortDescription =>
             $"Green shoots spring up around you for {Spell.Duration / 1000} seconds, healing your side within them every 2 seconds.";
