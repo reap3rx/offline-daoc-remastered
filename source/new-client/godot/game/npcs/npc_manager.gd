@@ -21,6 +21,7 @@ var states: Array = []                      # NpcState for EVERY spawn - the sim
 var active := {}                            # spawn index -> Npc (views near the player)
 var target: Npc
 var tiers := {}                             # oid -> fixed con tier, -3 grey .. 3 purple (the server's MonsterTiers)
+var bot_tiers := {}                         # oid -> a bot's strength next to you as a con, -3 .. 3 (#BTIER)
 var poise := {}                             # oid -> poise left, 0..100 (the server's MonsterMoves)
 var _scenes := {}
 var _tick := 0.0

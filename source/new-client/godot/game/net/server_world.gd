@@ -40,6 +40,7 @@ func setup_server(v: Node, zone_loader: ZoneLoader, p: Node3D) -> void:
 	zone = zone_loader
 	player = p
 	tiers.clear()
+	bot_tiers.clear()
 	var m = JSON.parse_string(FileAccess.get_file_as_string("res://content/monsters/monsters.json"))
 	models = m if m is Dictionary else {}
 	data = {"equipment": {}, "spawns": []}
@@ -1051,6 +1052,12 @@ func _message(d: Dictionary) -> void:
 		return
 	if String(d.text).begins_with("#BOOK|"):              # the spellbook roadmap (HeroInfo.cs): the modern Hero panel
 		Server.book_line(String(d.text).substr(6))
+		return
+	if String(d.text).begins_with("#BTIER|"):             # bots' strength next to you (MonsterTiers.BotStrengthTo)
+		for part in String(d.text).substr(7).split(";", false):
+			var kv := part.split(":")
+			if kv.size() == 2:
+				bot_tiers[int(kv[0])] = int(kv[1])
 		return
 	if String(d.text).begins_with("#TIER|"):              # monsters' fixed con tiers (MonsterTiers.cs): oid:tier;...
 		for part in String(d.text).substr(6).split(";", false):

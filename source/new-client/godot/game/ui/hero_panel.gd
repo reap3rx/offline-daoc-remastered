@@ -355,8 +355,6 @@ func _refresh_stats() -> void:
 		cls = String(w.call(srv.get("base_class", ""))) if not srv.is_empty() else ""
 	var race := String(w.call(srv.get("race_name", ""))) if not srv.is_empty() else String(c.get("race", ""))
 	var lvl := "LEVEL %d" % PlayerData.level
-	if Server.active and Server.fight_level > 0 and Server.fight_level < PlayerData.level:
-		lvl += "  [color=#ff9a40](FIGHTING AT %d)[/color]" % Server.fight_level
 	lines.append("[font_size=11][color=%s]%s[/color][/font_size]" % [hi, PlayerData.display_name().to_upper()])
 	lines.append("%s  %s %s" % [lvl, race.to_upper(), cls.to_upper()])
 	var title := String(w.call(srv.get("title", ""))) if not srv.is_empty() else ""

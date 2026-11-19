@@ -459,8 +459,7 @@ class Orb extends Part:
 		# your level, and in brackets the level you fight your target at while scaled down to it (LevelScaling:
 		# owner 2026-11-03 "the effective level ... next to the actual level of the character in parenthesis")
 		var who := "%s  L%d" % [PlayerData.display_name().to_upper(), PlayerData.level]
-		var eff := Server.fight_level if Server.active else 0
-		var scaled := "  (%d)" % eff if eff > 0 and eff < PlayerData.level else ""
+		var scaled := ""                                # (no "fighting at" level: the scaling stays out of sight, 2026-11-19)
 		var tw := f.get_string_size(who, HORIZONTAL_ALIGNMENT_LEFT, -1, 9).x
 		var sw := f.get_string_size(scaled, HORIZONTAL_ALIGNMENT_LEFT, -1, 9).x if scaled != "" else 0.0
 		var np := Rect2(c.x - (tw + sw) * 0.5 - 8, c.y + ARC_R + 6, tw + sw + 16, 14)

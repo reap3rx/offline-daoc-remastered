@@ -127,9 +127,10 @@ func _gather() -> void:
 			fill = FRIEND
 		elif (int(n.spawn.flags) & Npc.FLAG_PEACE) != 0 or not Server.active and n.stance() in ["neutral", "friendly"]:
 			fill = NEUTRAL
-		var lvl := int(n.state.level)
+		# no level beside the bar any more (everyone fights on one footing, owner 2026-11-19): the border's colour
+		# says how strong it is next to you instead
 		_plates.append({"n": n, "at": at, "size": size, "s": s, "name": String(n.spawn.get("name", "")),
-				"level": str(lvl) if lvl > 0 else "", "lcol": n.con_color(PlayerData.level), "fill": fill,
+				"level": "", "lcol": n.con_color(PlayerData.level), "fill": fill, "edge": n.strength_color(),
 				"boss": is_boss(n),
 				"frac": clampf(n.state.health, 0.0, 1.0), "cast": cast, "tgt": tgt2,
 				"poise": int(manager.poise.get(int(n.spawn.get("oid", -1)), -1)) if "poise" in manager else -1,
@@ -239,6 +240,11 @@ func _draw_plates() -> void:
 		# the bar: frame, dark back, the health fill
 		var bar := Rect2(Vector2(r.position.x + left, r.position.y + name_h), size)
 		var frame := Color(1, 1, 1, 0.95) if bool(p.tgt) else Color(0, 0, 0, 0.9 * a)
+		if p.get("edge") != null:
+			var ec: Color = p.edge
+			ec.a = 0.95 if bool(p.tgt) else 0.85 * a
+			_canvas.draw_rect(bar.grow(2.5 if bool(p.tgt) else 1.5), Color(0, 0, 0, 0.9 * a))
+			frame = ec
 		_canvas.draw_rect(bar.grow(1.0 if not bool(p.tgt) else 1.5), frame)
 		_canvas.draw_rect(bar, Color(0.06, 0.05, 0.05, 0.82 * a))
 		var fill: Color = p.fill

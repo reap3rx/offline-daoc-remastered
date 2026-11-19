@@ -729,6 +729,18 @@ func tier() -> int:
 	return int(manager.tiers.get(int(spawn.get("oid", -1)), NO_TIER)) if manager != null else NO_TIER
 
 
+## How strong this one looks next to you, as a con colour, for its plate's border: a monster's tier, a bot's strength
+## (owner 2026-11-19: no levels shown anywhere - "the player would not know what level the bot is, just know that
+## they're much stronger than them"); null when the server hasn't said.
+func strength_color():
+	var oid := int(spawn.get("oid", -1))
+	if manager != null and manager.bot_tiers.has(oid):
+		return CON_COLORS.get(int(manager.bot_tiers[oid]), Color.WHITE)
+	if tier() != NO_TIER:
+		return CON_COLORS.get(tier(), Color.WHITE)
+	return null
+
+
 ## Grey critters keep their names to themselves until targeted (owner: "their floating names default off").
 func is_critter() -> bool:
 	return tier() == -3

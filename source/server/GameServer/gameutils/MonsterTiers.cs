@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using DOL.AI.Brain;
 using DOL.Events;
@@ -232,6 +233,90 @@ namespace DOL.GS
             return Math.Clamp(lvl, 0, 127);
         }
 
+        /// <summary>The level a monster fights at against a side of level <paramref name="b"/>: the same level, whatever its
+        /// tier (owner 2026-11-19: everyone on one footing, "their level is what gives them access to their tools") -
+        /// how strong it is comes from its tier (TierStrength), not from DAoC's level gaps. Critters stay low; a purple
+        /// never drops below where it was placed.</summary>
+        public static int FightLevelFor(int b, sbyte tier, int baseLevel)
+        {
+            b = Math.Clamp(b, 1, 100);
+            if (tier == Grey)
+                return LevelFor(b, Grey, baseLevel);
+            if (tier == Purple)
+                return Math.Max(baseLevel, b);
+            return b;
+        }
+
+        // ------------------------------------------------------------------ the power curve
+
+        /// <summary>A tier's strength, a yellow being 1 (an even fight for a player whose own power is 1).</summary>
+        public static readonly double[] TierStrength = { 0.25, 0.55, 0.75, 1.0, 1.35, 1.8, 3.0 };   // grey .. purple
+
+        /// <summary>Everyone's footing against monsters (tunable live with /tier tune): how much harder than DAoC's own
+        /// numbers a monster is to bring down, and how much harder it hits.</summary>
+        public static double Toughness = 1.6, Bite = 1.6;
+
+        static string TuningFile => System.IO.Path.Combine(GameServer.Instance.Configuration.RootDirectory, "tier-tuning.txt");
+
+        /// <summary>Keep /tier tune's numbers across restarts (runtime\server\tier-tuning.txt: toughness, bite, the seven
+        /// strengths).</summary>
+        public static void SaveTuning()
+        {
+            try
+            {
+                var ci = System.Globalization.CultureInfo.InvariantCulture;
+                System.IO.File.WriteAllText(TuningFile, string.Join(" ", new[] { Toughness, Bite }.Concat(TierStrength).Select(v => v.ToString(ci))));
+            }
+            catch (Exception) { }
+        }
+
+        static void LoadTuning()
+        {
+            try
+            {
+                if (!System.IO.File.Exists(TuningFile))
+                    return;
+                var ci = System.Globalization.CultureInfo.InvariantCulture;
+                double[] v = System.IO.File.ReadAllText(TuningFile).Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(x => double.Parse(x, ci)).ToArray();
+                if (v.Length >= 9)
+                {
+                    Toughness = v[0];
+                    Bite = v[1];
+                    Array.Copy(v, 2, TierStrength, 0, 7);
+                }
+            }
+            catch (Exception) { }
+        }
+
+        /// <summary>The tier a player (or bot) of this level fights like in plain gear (owner 2026-11-19): 1-12 a green,
+        /// 13-24 a blue, 25-36 a yellow, 37-49 an orange, 50 a red - smoothly in between.</summary>
+        public static double PowerTier(int level)
+        {
+            level = Math.Clamp(level, 1, 50);
+            if (level >= 50)
+                return Red;
+            // band centres: 6.5 -> green, 18.5 -> blue, 30.5 -> yellow, 43 -> orange, 50 -> red
+            double[] at = { 1, 6.5, 18.5, 30.5, 43, 50 };
+            double[] tier = { -2.4, -2, -1, 0, 1, 2 };
+            for (int i = 1; i < at.Length; i++)
+                if (level <= at[i])
+                    return tier[i - 1] + (tier[i] - tier[i - 1]) * (level - at[i - 1]) / (at[i] - at[i - 1]);
+            return Red;
+        }
+
+        /// <summary>The strength of a tier, or of a power between tiers.</summary>
+        public static double Strength(double tier)
+        {
+            tier = Math.Clamp(tier, -3, 3);
+            int lo = (int) Math.Floor(tier);
+            if (lo >= 3)
+                return TierStrength[6];
+            double f = tier - lo;
+            return TierStrength[lo + 3] + (TierStrength[lo + 4] - TierStrength[lo + 3]) * f;
+        }
+
+        public static double Power(int level) => Strength(PowerTier(level));
+
         /// <summary>The one whose level counts on the players' side: a player, a bot, or the owner of a pet of either.</summary>
         public static GameLiving Combatant(GameLiving l) => l switch
         {
@@ -318,7 +403,7 @@ namespace DOL.GS
             if (!hadAggro && body.TierFightBase > 0 && body.HealthPercent < 100)
                 return;                                         // still hurt from the last fight: keep its level
             int b = EngageLevel(side);
-            byte lvl = (byte) LevelFor(b, t, body.TierBaseLevel);
+            byte lvl = (byte) FightLevelFor(b, t, body.TierBaseLevel);
             if (body.TierFightBase == b && body.Level == lvl)
                 return;
             body.TierFightBase = b;
@@ -369,14 +454,14 @@ namespace DOL.GS
             {
                 GameLiving c = Combatant(attacker);
                 if (c != null && tn.TierFightBase > 0)
-                    f = Out(c.Level, tn.TierFightBase);
+                    f = Out(c.Level, tn.TierFightBase) * Power(c.Level) / (Strength(Tier(tn)) * Toughness);
                 return true;
             }
             if (attacker is GameNPC an && Tier(an) != None)
             {
                 GameLiving c = Combatant(target);
                 if (c != null && an.TierFightBase > 0)
-                    f = In(c.Level, an.TierFightBase);
+                    f = In(c.Level, an.TierFightBase) * Strength(Tier(an)) * Bite / Power(c.Level);
                 return true;
             }
             return false;
@@ -437,6 +522,7 @@ namespace DOL.GS
                 return;
             var sent = _sent.GetOrAdd(p.ObjectId, _ => new());
             var sb = new StringBuilder();
+            var bots = new StringBuilder();
             int n = 0;
             lock (sent)
             {
@@ -447,6 +533,17 @@ namespace DOL.GS
                 }
                 foreach (GameNPC npc in p.GetNPCsInRadius(WorldMgr.VISIBILITY_DISTANCE))
                 {
+                    if (npc is GameBot bot)
+                    {
+                        // a bot's plate border: how strong it is next to you (owner 2026-11-19: "a level 50 bot ... a
+                        // purple colored border to like a level 10 player"), its level never shown
+                        sbyte bt = (sbyte) (BotStrengthTo(bot, p) + 10);   // (+10 keeps it apart from monster tiers)
+                        if (sent.TryGetValue(npc.ObjectID, out var bw) && bw.npc == npc && bw.tier == bt)
+                            continue;
+                        sent[npc.ObjectID] = (npc, bt);
+                        bots.Append(npc.ObjectID).Append(':').Append(bt - 10).Append(';');
+                        continue;
+                    }
                     sbyte t = Tier(npc);
                     if (t == None)
                         continue;
@@ -464,11 +561,24 @@ namespace DOL.GS
             }
             if (sb.Length > 0)
                 NewClient.Send(p, "#TIER|" + sb);
+            if (bots.Length > 0)
+                NewClient.Send(p, "#BTIER|" + bots);
             if (_logged.TryAdd(p.ObjectId + ":" + p.CurrentRegionID, 0))
                 Console.WriteLine($"[MonsterTiers] {p.Name}: {sent.Count} tiers sent in region {p.CurrentRegionID} (new client {NewClient.Is(p)})");
         }
 
         static readonly ConcurrentDictionary<string, byte> _logged = new();
+
+        /// <summary>How strong a bot is next to a player, as a con (-3 .. 3): its level's power, plus a companion's
+        /// competence, against the player's.</summary>
+        public static int BotStrengthTo(GameBot bot, GamePlayer p)
+        {
+            double mine = PowerTier(bot.Level);
+            int rank = PersonalCompanions.RankOf(bot);
+            if (rank >= 0)
+                mine += (rank - 5) * 0.08;                      // a raw companion a little below its level, a legend above
+            return (int) Math.Clamp(Math.Round(mine - PowerTier(p.Level)), -3, 3);
+        }
 
         public static void Forget(GamePlayer p)
         {
@@ -484,6 +594,7 @@ namespace DOL.GS
         public static void OnServerStarted(DOLEvent e, object sender, EventArgs args)
         {
             _zones.Clear();
+            LoadTuning();
             _ready = true;
             int count = 0;
             var tally = new int[7];
@@ -514,7 +625,8 @@ namespace DOL.GS
 namespace DOL.GS.Commands
 {
     [CmdAttribute("&tier", ePrivLevel.GM, "A monster's fixed con tier (MonsterTiers): show it, or set it",
-        "/tier  (your target)", "/tier set <grey|green|blue|yellow|orange|red|purple>", "/tier zone  (the tally around you)")]
+        "/tier  (your target)", "/tier set <grey|green|blue|yellow|orange|red|purple>", "/tier zone  (the tally around you)",
+        "/tier tune [toughness|bite|<tier> <value>]  (the power curve, live)")]
     public class TierCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         static readonly string[] Names = { "grey", "green", "blue", "yellow", "orange", "red", "purple" };
@@ -523,6 +635,24 @@ namespace DOL.GS.Commands
         {
             GamePlayer p = client.Player;
             string sub = args.Length > 1 ? args[1].ToLowerInvariant() : "";
+            if (sub == "tune")
+            {
+                if (args.Length > 3 && double.TryParse(args[3], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double v) && v > 0)
+                {
+                    if (args[2].ToLowerInvariant() == "toughness") MonsterTiers.Toughness = v;
+                    else if (args[2].ToLowerInvariant() == "bite") MonsterTiers.Bite = v;
+                    else
+                    {
+                        int ti = Array.IndexOf(Names, args[2].ToLowerInvariant());
+                        if (ti >= 0) MonsterTiers.TierStrength[ti] = v;
+                    }
+                    MonsterTiers.SaveTuning();
+                }
+                DisplayMessage(client, $"Toughness {MonsterTiers.Toughness:0.##}, bite {MonsterTiers.Bite:0.##}; strength " +
+                    string.Join(", ", Names.Select((n, i) => $"{n} {MonsterTiers.TierStrength[i]:0.##}")) +
+                    $"; your power {MonsterTiers.Power(p.Level):0.##} (fights like {MonsterTiers.PowerTier(p.Level):0.0})");
+                return;
+            }
             if (sub == "zone")
             {
                 var tally = new int[7];
