@@ -314,10 +314,12 @@ namespace DOL.GS
 			
 			foreach (SpellLine sl in GetSpellLinesForLiving(living, level))
 			{
-				dict.Add(sl, SkillBase.GetSpellList(sl.KeyName)
+				List<Skill> spells = SkillBase.GetSpellList(sl.KeyName)
 				         .Where(item => item.Level <= sl.Level)
 				         .OrderBy(item => item.Level)
-				         .ThenBy(item => item.ID).Cast<Skill>().ToList());
+				         .ThenBy(item => item.ID).Cast<Skill>().ToList();
+				// a player keeps only the best rank of each spell (SpellFamilies: the upgrade replaces the old one)
+				dict.Add(sl, living is GamePlayer ? SpellFamilies.BestOnly(spells) : spells);
 			}
 			
 			return dict;

@@ -126,6 +126,13 @@ namespace DOL.GS
             if (!CanCastSpell())
                 return false;
 
+            // behind a caster's mana shield only the quick interrupts go (ManaShield.cs, owner 2026-11-19)
+            if (Owner is GamePlayer warder && ManaShield.IsWarding(warder) && !ManaShield.AllowedWhileWarding(spell))
+            {
+                warder.Out.SendMessage("You can't cast while your mana shield is up.", PacketHandler.eChatType.CT_System, PacketHandler.eChatLoc.CL_SystemWindow);
+                return false;
+            }
+
             lock (_startSkillRequestsLock)
             {
                 if (Owner is GameBot bot && (_startSkillRequests.Count != 0 ||

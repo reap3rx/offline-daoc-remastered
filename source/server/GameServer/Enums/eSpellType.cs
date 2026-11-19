@@ -441,6 +441,12 @@ namespace DOL.GS
         // King / Queen class (Fealty): the royal commander and its retainers.
         SummonRoyalCommander,
         SummonRetainer,
-        DismissRetainers
+        DismissRetainers,
+
+        // Class kits (owner 2026-11-19, ClassKits.cs / spells/ClassKitSpells.cs): new spells for the casters.
+        VoidStep,
+        MirrorImage,
+        ThornWall,
+        VerdantPulse
     }
 }

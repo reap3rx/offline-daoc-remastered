@@ -81,6 +81,9 @@ namespace DOL.GS.Commands
 				case "dodge":
 					ActionCombat.PressDodge(player);
 					break;
+				case "ward":                         // a caster's Mana Shield, held on right click (ManaShield.cs)
+					ManaShield.Set(player, args.Length > 2 && args[2].ToLowerInvariant() == "on");
+					break;
 				case "counter":
 					CasterCounter.Release(player);
 					break;

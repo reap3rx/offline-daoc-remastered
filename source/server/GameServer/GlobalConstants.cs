@@ -938,7 +938,7 @@ namespace DOL.GS
 		public static readonly Dictionary<eRealm, List<eCharacterClass>> STARTING_CLASSES_DICT = new Dictionary<eRealm, List<eCharacterClass>>()
 		{
 			// pre 1.93
-			{eRealm.Albion, new List<eCharacterClass>() {eCharacterClass.Fighter, eCharacterClass.Acolyte, eCharacterClass.Mage, eCharacterClass.Elementalist, eCharacterClass.AlbionRogue, eCharacterClass.Disciple,
+			{eRealm.Albion, new List<eCharacterClass>() {   // (no base classes: owner 2026-11-19 - you start as your class; ClassChoice.cs)
 				// post 1.93
 				eCharacterClass.Paladin, 		// Paladin = 1,
 				eCharacterClass.Armsman, 		// Armsman = 2,
@@ -953,18 +953,18 @@ namespace DOL.GS
 				eCharacterClass.Mercenary, 	// Mercenary = 11,
 				eCharacterClass.Necromancer, 	// Necromancer = 12,
 				eCharacterClass.Cabalist, 		// Cabalist = 13,
-				eCharacterClass.Fighter, 		// Fighter = 14,
-				eCharacterClass.Elementalist, 	// Elementalist = 15,
-				eCharacterClass.Acolyte, 		// Acolyte = 16,
-				eCharacterClass.AlbionRogue, 	// AlbionRogue = 17,
-				eCharacterClass.Mage, 			// Mage = 18,
+				// eCharacterClass.Fighter, 		// Fighter = 14,   (base class: gone)
+				// eCharacterClass.Elementalist, 	// Elementalist = 15,   (base class: gone)
+				// eCharacterClass.Acolyte, 		// Acolyte = 16,   (base class: gone)
+				// eCharacterClass.AlbionRogue, 	// AlbionRogue = 17,   (base class: gone)
+				// eCharacterClass.Mage, 			// Mage = 18,   (base class: gone)
 				eCharacterClass.Reaver, 		// Reaver = 19,
-				eCharacterClass.Disciple,		// Disciple = 20,
+				// eCharacterClass.Disciple,		// Disciple = 20,   (base class: gone)
 				eCharacterClass.King,			// King / Queen = 64 (custom, player-only)
 				// eCharacterClass.Heretic, 		// Heretic = 33,
 				// eCharacterClass.MaulerAlb		// Mauler_Alb = 60,
 			}},
-			{eRealm.Midgard, new List<eCharacterClass>() {eCharacterClass.Viking, eCharacterClass.Mystic, eCharacterClass.Seer, eCharacterClass.MidgardRogue,
+			{eRealm.Midgard, new List<eCharacterClass>() {
 				// post 1.93
 				eCharacterClass.Thane, 		// Thane = 21,
 				eCharacterClass.Warrior, 		// Warrior = 22,
@@ -979,14 +979,14 @@ namespace DOL.GS
 				eCharacterClass.Berserker, 	// Berserker = 31,
 				eCharacterClass.Savage, 		// Savage = 32,
 				eCharacterClass.Valkyrie, 		// Valkyrie = 34,
-				eCharacterClass.Viking, 		// Viking = 35,
-				eCharacterClass.Mystic, 		// Mystic = 36,
-				eCharacterClass.Seer, 			// Seer = 37,
-				eCharacterClass.MidgardRogue,	// MidgardRogue = 38,
+				// eCharacterClass.Viking, 		// Viking = 35,   (base class: gone)
+				// eCharacterClass.Mystic, 		// Mystic = 36,   (base class: gone)
+				// eCharacterClass.Seer, 			// Seer = 37,   (base class: gone)
+				// eCharacterClass.MidgardRogue,	// MidgardRogue = 38,   (base class: gone)
 				// eCharacterClass.Warlock, 		// Warlock = 59,
 				// eCharacterClass.MaulerMid		// Mauler_Mid = 61,
 			}},
-			{eRealm.Hibernia, new List<eCharacterClass>() {eCharacterClass.Guardian, eCharacterClass.Stalker, eCharacterClass.Naturalist, eCharacterClass.Magician, eCharacterClass.Forester,
+			{eRealm.Hibernia, new List<eCharacterClass>() {
 				// post 1.93
 				eCharacterClass.Bainshee, 		// Bainshee = 39,
 				eCharacterClass.Eldritch, 		// Eldritch = 40,
@@ -1000,14 +1000,14 @@ namespace DOL.GS
 				eCharacterClass.Bard, 	        // Bard = 48,
 				eCharacterClass.Nightshade, 	// Nightshade = 49,
 				eCharacterClass.Ranger, 		// Ranger = 50,
-				eCharacterClass.Magician, 		// Magician = 51,
-				eCharacterClass.Guardian, 		// Guardian = 52,
-				eCharacterClass.Naturalist, 	// Naturalist = 53,
-				eCharacterClass.Stalker, 		// Stalker = 54,
+				// eCharacterClass.Magician, 		// Magician = 51,   (base class: gone)
+				// eCharacterClass.Guardian, 		// Guardian = 52,   (base class: gone)
+				// eCharacterClass.Naturalist, 	// Naturalist = 53,   (base class: gone)
+				// eCharacterClass.Stalker, 		// Stalker = 54,   (base class: gone)
 				eCharacterClass.Animist, 		// Animist = 55,
 				eCharacterClass.Valewalker, 	// Valewalker = 56,
-				eCharacterClass.Forester, 		// Forester = 57,
-				eCharacterClass.Acolyte,       // Experimental Sluaghbinder novice (levels 1-4)
+				// eCharacterClass.Forester, 		// Forester = 57,   (base class: gone)
+				// eCharacterClass.Acolyte,       // Experimental Sluaghbinder novice (levels 1-4)   (base class: gone)
 				eCharacterClass.Sluaghbinder, 	// Sluaghbinder = 63 (experimental player-only class)
 				// eCharacterClass.Vampiir, 		// Vampiir = 58,
 				// eCharacterClass.MaulerHib	 	// Mauler_Hib = 62,

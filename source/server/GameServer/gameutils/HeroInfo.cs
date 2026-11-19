@@ -53,11 +53,12 @@ namespace DOL.GS
                     // every spell in each, learned up to the line's level
                     foreach (SpellLine line in spec.GetSpellLinesForLiving(p))
                     {
-                        int have = line.Level;
-                        foreach (Spell sp in SkillBase.GetSpellList(line.KeyName).OrderBy(s => s.Level).ThenBy(s => s.ID))
+                        // one row a spell (SpellFamilies): the rank you have - or the first, not yet - and when it upgrades
+                        foreach (var (sp, had, next) in SpellFamilies.Roadmap(SkillBase.GetSpellList(line.KeyName), line.Level))
                         {
                             string kind = sp is Song || sp.NeedInstrument ? "g" : "p";
-                            rows.Add((sp.Level, kind, sp.Icon, sp.Level <= have, line.Name + (line.IsBaseLine ? " (BASE)" : ""), sp.Name));
+                            string name = sp.Name + (next != null ? $" (becomes {next.Name} at {next.Level})" : "");
+                            rows.Add((sp.Level, kind, sp.Icon, had, line.Name + (line.IsBaseLine ? " (BASE)" : ""), name));
                         }
                     }
                 }

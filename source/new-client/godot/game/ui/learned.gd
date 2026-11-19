@@ -22,6 +22,8 @@ const HEAL_TYPES := ["Heal", "HealOverTime", "SpreadHeal", "CureMezz", "CurePois
 
 var ui: Node
 var _known := {}                          # "kind|name" (lower case) -> true: everything seen this session
+var _seen_spells := {}                    # name (lower case) -> its entry: spells known before - an upgrade now takes the
+										  # old rank's place in the server's list (SpellFamilies), so the old one is only here
 var _who := ""
 var _warm_until := 0
 var _settle_at := 0
@@ -51,6 +53,7 @@ static func auto_upgrade_on() -> bool:
 
 func _rewarm() -> void:
 	_known.clear()
+	_seen_spells.clear()
 	_who = String(Server.selected.get("name", "")) if Server.selected is Dictionary else ""
 	_warm_until = Time.get_ticks_msec() + WARM_MS
 	_settle_at = _warm_until
@@ -61,6 +64,7 @@ func _process(_delta: float) -> void:
 		_settle_at = 0
 		_take_in(_current())
 		_first_spells()
+		_upgrade_stale()
 	if not _showing and not _queue.is_empty():
 		_show(_queue.pop_front())
 
@@ -93,6 +97,8 @@ static func _key(e: Dictionary) -> String:
 func _take_in(list: Array) -> void:
 	for e in list:
 		_known[_key(e)] = true
+		if String(e.kind) == "spell":
+			_seen_spells[String(e.name).to_lower()] = e
 
 
 ## Everything you can use now, with where it belongs: [{kind, id, icon, border, name, lv, line, sort}] - sort is
@@ -156,7 +162,8 @@ static func family(e: Dictionary) -> String:
 	if int(s.get("spellgroup", 0)) > 0:
 		return "g%d" % int(s.spellgroup)
 	if s.is_empty():
-		return ""
+		# (a spell the client's tables don't know - a class kit's: its ranks share their line and icon)
+		return "%s|icon%d" % [String(e.get("line", "")), int(e.get("icon", 0))] if String(e.get("line", "")) != "" else ""
 	return "%s|%s|%s|%d|%s" % [String(e.get("line", "")), String(s.get("type", "")), String(s.get("target", "")),
 			int(s.get("damagetype", 0)), "aoe" if int(s.get("radius", 0)) > 0 else "one"]
 
@@ -168,7 +175,7 @@ func _place_on_bars(fresh: Array, upgrade: bool, add: bool) -> Dictionary:
 	var notes := {}
 	if not upgrade and not add:
 		return notes
-	var known_by_name := {}
+	var known_by_name := _seen_spells.duplicate()
 	for e in _current():
 		if String(e.kind) == "spell":
 			known_by_name[String(e.name).to_lower()] = e
@@ -261,6 +268,38 @@ static func _where_pad(at: Vector2i) -> String:
 
 
 ## A brand-new character (every bar empty, level 1 to 5): its first spells where a controller reaches them.
+## A spell on your bars that you no longer have as such - its upgrade replaced it in your list (SpellFamilies, owner
+## 2026-11-19: upgrades replace the older spell) - becomes the rank of its family you have now, wherever it sits.
+func _upgrade_stale() -> void:
+	if not auto_upgrade_on():
+		return
+	var now := _current()
+	var have := {}
+	var by_family := {}
+	for e in now:
+		if String(e.kind) != "spell":
+			continue
+		have[String(e.name).to_lower()] = true
+		var fam := family(e)
+		if fam != "" and (not by_family.has(fam) or int(e.lv) > int(by_family[fam].lv)):
+			by_family[fam] = e
+	var changed := false
+	for pages in [PlayerData.all_slot_pages()]:
+		for bank in pages:
+			for i in (bank as Array).size():
+				var q = bank[i]
+				if not (q is Dictionary) or String(q.get("kind", "")) != "spell" or have.has(String(q.get("name", "")).to_lower()):
+					continue
+				var fam := family({"name": String(q.get("name", "")), "sid": 0, "line": "", "icon": int(q.get("icon", 0))})
+				if fam == "" or not by_family.has(fam):
+					continue
+				bank[i] = _entry(by_family[fam])
+				changed = true
+	if changed:
+		PlayerData.save_character()
+		PlayerData.changed.emit()
+
+
 func _first_spells() -> void:
 	if not auto_bar_on() or int(Server.selected.get("level", 1)) > 5:
 		return

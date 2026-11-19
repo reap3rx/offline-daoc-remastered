@@ -180,6 +180,7 @@ func on_line(text: String) -> void:
 				_win_dodge = int(f[3])
 				_win_cool = int(f[4])
 				_counter_cost = int(f[5]) if f.size() > 5 else 0
+				_can_ward = f.size() > 6 and f[6] == "1"
 		"windup":                                        # windup|oid|ms|kind (MonsterMoves.Code): n plain, s style, p positional, h heavy, c cone
 			if f.size() > 2:
 				_windup(int(f[1]), int(f[2]), String(f[3]) if f.size() > 3 else "n")
@@ -198,8 +199,13 @@ func on_line(text: String) -> void:
 		"guardend":                                      # guardend|oid: its guard is down (beaten, or it answered)
 			if f.size() > 1:
 				_guards.erase(int(f[1]))
+		"ward":                                          # ward|on|share or ward|off|why (ManaShield.cs)
+			if f.size() > 1:
+				_ward_state(String(f[1]) == "on", String(f[2]) if f.size() > 2 else "")
 		"def":
-			if f.size() > 2:
+			if f.size() > 2 and String(f[1]) == "ward":
+				_warded(int(f[2]), int(f[3]) if f.size() > 3 else 0, f.size() > 4 and f[4] == "1")
+			elif f.size() > 2:
 				_defended(String(f[1]), int(f[2]), int(f[3]) if f.size() > 3 else 0, f.size() > 4 and f[4] == "auto")
 		"riposte":                                       # riposte|oid|damage: a parry struck back (ActionCombat.Riposte)
 			if f.size() > 2:
@@ -325,6 +331,9 @@ var _win_parry := 200
 var _win_block := 150
 var _win_dodge := 100
 var _win_cool := 500
+var _can_ward := false                   # no parry / block / evade at all: right click is the Mana Shield (ManaShield.cs)
+var _warding := false
+var _bubble: MeshInstance3D
 var _parry_ready_at := 0
 var _last_parry_only := false                     # the last press was Parry Only (a shield's parry, the weapon's move)
 
@@ -342,6 +351,8 @@ func _parry_ok(now: int, parry_only := false) -> bool:
 
 ## The window a parry / block press opens now (ms).
 func _press_window(parry_only := false) -> int:
+	if _can_ward:
+		return 250                                     # (the Perfect Ward's window: ManaShield.PerfectMs)
 	return _win_block if _blocks() and not parry_only else _win_parry
 
 
@@ -352,6 +363,71 @@ func _blocks() -> bool:
 
 ## auto: a blow a chain turned aside (another monster's, in the moments after a timed dodge / parry / block - owner
 ## 2026-11-09): the move plays again unless a blow of yours is in the way, and the text says so.
+## Raise / lower the Mana Shield (held): the server answers ward|on / ward|off.
+func _ward(down: bool) -> void:
+	if down == _warding:
+		return
+	_warding = down
+	var p := _player()
+	if p:
+		p.warding = down
+	_show_bubble(down)
+	Server.command("/ac ward on" if down else "/ac ward off")
+
+
+func _ward_state(on: bool, why: String) -> void:
+	_warding = on
+	var p := _player()
+	if p:
+		p.warding = on
+	_show_bubble(on)
+	if not on and why == "empty":
+		_flash("OUT OF POWER", Color(0.55, 0.7, 1.0))
+
+
+## The shield itself: a pale blue bubble around you, breathing, while it is up.
+func _show_bubble(on: bool) -> void:
+	var p := _player()
+	if p == null:
+		return
+	if on and not is_instance_valid(_bubble):
+		_bubble = MeshInstance3D.new()
+		var m := SphereMesh.new()
+		m.radius = 0.9
+		m.height = 2.2
+		m.radial_segments = 32
+		m.rings = 16
+		_bubble.mesh = m
+		var mat := StandardMaterial3D.new()
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		mat.albedo_color = Color(0.45, 0.65, 1.0, 0.16)
+		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+		mat.rim_enabled = false
+		_bubble.material_override = mat
+		_bubble.position = Vector3(0, 1.0, 0)
+		_bubble.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		p.add_child(_bubble)
+	if is_instance_valid(_bubble):
+		_bubble.visible = on
+
+
+## A blow the shield took: what reached your health, what your power paid - a Perfect Ward flashes.
+func _warded(taken: int, power: int, perfect: bool) -> void:
+	var blue := Color(0.55, 0.75, 1.0)
+	if perfect:
+		_flash("PERFECT WARD  -%d POWER" % power, Color(0.75, 0.9, 1.0))
+		_float_text(0, "PERFECT WARD", Color(0.75, 0.9, 1.0), 46, 0.5)
+	else:
+		_float_text(0, "WARD  -%d POWER" % power, blue, 34, 0.5)
+	if is_instance_valid(_bubble):
+		var t := create_tween()
+		_bubble.scale = Vector3.ONE * 1.12
+		t.tween_property(_bubble, "scale", Vector3.ONE, 0.25)
+	var now := Time.get_ticks_msec()
+	_windups = _windups.filter(func(w): return int(w.end) > now + 120)
+
+
 func _defended(kind: String, dmg: int, saved: int, auto := false) -> void:
 	var gold := Color(1.0, 0.85, 0.35)
 	var blue := Color(0.55, 0.8, 1.0)
@@ -742,6 +818,10 @@ func _input(event: InputEvent) -> void:
 				p.action_defend("parry")
 			get_viewport().set_input_as_handled()
 			return
+		if Keybinds.matches(event, "ac_parry") and (mouse or event is InputEventKey) and _can_ward:
+			_ward(event.is_pressed())                          # a caster holds right click: the Mana Shield
+			get_viewport().set_input_as_handled()
+			return
 		if Keybinds.matches(event, "ac_parry") and (mouse or event is InputEventKey):
 			if event.is_pressed() and not _drawn():
 				_draw_weapon()                                 # sheathed: the first press draws, the next parries
@@ -822,6 +902,9 @@ func pad_attack(down: bool) -> void:
 
 ## LT: parry / block (sheathed: the first press draws) - a bow out: the critical shot.
 func pad_defend(down: bool) -> void:
+	if _can_ward and not _ranged():
+		_ward(down)                                        # a caster holds LT: the Mana Shield
+		return
 	if down and not pad_ready():
 		return
 	var now := Time.get_ticks_msec()

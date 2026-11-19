@@ -430,9 +430,9 @@ namespace DOL.GS.PacketHandler.Client.v168
                  ch.Class == (int)eCharacterClass.Sluaghbinder))
             {
                 if (log.IsDebugEnabled)
-                    log.Debug($"Mapping Hibernian client class slot {eCharacterClass.MaulerHib} to experimental Acolyte (Sluaghbinder novice path)");
+                    log.Debug($"Mapping Hibernian client class slot {eCharacterClass.MaulerHib} to the Sluaghbinder (no novice path: owner 2026-11-19, no base classes)");
 
-                ch.Class = (int)eCharacterClass.Acolyte;
+                ch.Class = (int)eCharacterClass.Sluaghbinder;
             }
 
             // Set Account Slot, Gender

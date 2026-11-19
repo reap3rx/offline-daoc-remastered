@@ -90,6 +90,7 @@ var combat_stance := ""                 # "" one-hand, "2h", "staff", "pole" (We
 var dead := false
 var sitting := false                   # /sit (Combat.sit): sit_down once, then sit_idle until standing up
 var speed_mult := 1.0                  # sprint (x1.3, Abilities)
+var warding := false                   # the Mana Shield is up (ActionCombat / ManaShield.cs): you walk
 var cc := ""                           # "stun" / "mez" / "root" from monster spells (Casting): no moving
 var snare_mult := 1.0                  # snares: the run speed's share left
 var shade := false                       # a Necromancer with a servant up (Pets)
@@ -1726,7 +1727,7 @@ func _physics_step(delta: float) -> void:
 	elif walking or (_key(KEY_SHIFT) and not action_mode):   # (action combat: Shift sprints - ActionCombatMode)
 		speed = WALK_SPEED
 	var wish := local.rotated(Vector3.UP, char_yaw) * speed * speed_mult * buff_speed * snare_mult * encumbrance * stealth_mult \
-			* _wounded_mult() * (0.5 if action_mode and _defend_slow_left > 0.0 else 1.0) * analog
+			* _wounded_mult() * (0.5 if action_mode and _defend_slow_left > 0.0 else 1.0) * (WALK_SPEED / RUN_SPEED if warding else 1.0) * analog
 	if free_dir != Vector3.ZERO:
 		wish = free_dir * wish.length()                 # free look: straight where you steer while the body turns to it
 	_defend_slow_left = maxf(0.0, _defend_slow_left - delta)

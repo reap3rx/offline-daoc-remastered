@@ -54,7 +54,8 @@ namespace DOL.GS
 		Parry = 1,
 		Block = 2,
 		Dodge = 3,
-		Guard = 4
+		Guard = 4,
+		Ward = 5       // a caster's mana shield (ManaShield.cs)
 	}
 
 	public sealed class ActionCombatState
@@ -74,6 +75,9 @@ namespace DOL.GS
 		public bool CounterAnswered;
 		public string LastWindows = "";
 		public bool Guarding;
+		public bool Warding;                   // the Mana Shield is up (ManaShield.cs)
+		public long WardRaisedAt = -100000;
+		public bool WardPerfectUsed;
 		public bool FumblePending;
 		// The multi-foe chain started by a timed defense that caught a blow (ActionCombat.StartChain).
 		public eActionDefense ChainKind;
@@ -409,6 +413,7 @@ namespace DOL.GS
 			state.Enabled = on;
 			state.SwingQueued = false;
 			state.Guarding = false;
+			state.Warding = false;
 			state.FumblePending = false;
 			state.LastReady = "";
 
@@ -957,7 +962,7 @@ namespace DOL.GS
 			if (state == null)
 				return;
 
-			string line = $"windows|{Window(player, eActionDefense.Parry)}|{Window(player, eActionDefense.Block)}|{Window(player, eActionDefense.Dodge)}|{ParryCooldownMs}|{(CasterCounter.CanCounter(player) ? CasterCounter.Cost(player) : 0)}";
+			string line = $"windows|{Window(player, eActionDefense.Parry)}|{Window(player, eActionDefense.Block)}|{Window(player, eActionDefense.Dodge)}|{ParryCooldownMs}|{(CasterCounter.CanCounter(player) ? CasterCounter.Cost(player) : 0)}|{(ManaShield.CanWard(player) ? 1 : 0)}";
 
 			if (!force && line == state.LastWindows)
 				return;
@@ -1040,6 +1045,9 @@ namespace DOL.GS
 
 			long now = GameLoop.GameLoopTime;
 			CasterCounter.OnBlow(player, state, ad, now);      // (a caster's staff counter: the blow still lands)
+
+			if (ManaShield.Resolve(player, state, ad, now))      // a caster's mana shield takes its share (to power)
+				return eAttackResult.Any;
 			bool inFront = player.IsObjectInFront(ad.Attacker, 180);
 
 			if (now - state.DodgeAt <= state.DodgeWindowMs)
@@ -1137,6 +1145,10 @@ namespace DOL.GS
 		{
 			switch (ad.ActionDefense)
 			{
+				case eActionDefense.Ward:
+					if (ad.AttackResult is eAttackResult.HitUnstyled or eAttackResult.HitStyle)
+						ManaShield.Pay(player, ad);
+					break;
 				case eActionDefense.Parry:
 					player.Out.SendMessage(ad.ActionAuto
 						? $"Riposte! You turn {ad.Attacker.GetName(0, false)}'s blow aside too: {ad.ActionMitigated} damage saved, {ad.Damage} taken."
