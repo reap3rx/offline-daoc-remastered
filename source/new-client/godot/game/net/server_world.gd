@@ -1018,6 +1018,16 @@ func _message(d: Dictionary) -> void:
 							"negative": 0, "until": Time.get_ticks_msec() + int(ff[2]) * 1000}
 				PlayerData.effects_changed.emit()
 		return
+	if String(d.text).begins_with("#ITAG|"):              # what kind of thing your items are (ItemTags.cs): slot:tag;...
+		for part in String(d.text).substr(6).split(";"):
+			var kv := String(part).split(":")
+			if kv.size() == 2:
+				if kv[1] == "":
+					Server.item_tags.erase(int(kv[0]))
+				else:
+					Server.item_tags[int(kv[0])] = kv[1]
+		PlayerData.inventory_changed.emit()
+		return
 	if String(d.text).begins_with("#BEAM|"):              # a Superior / Legendary drop's light column (LootOverhaul.Beam): oid|tier
 		var bf := String(d.text).substr(6).split("|")
 		if bf.size() >= 2:

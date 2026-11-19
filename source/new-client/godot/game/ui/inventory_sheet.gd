@@ -220,9 +220,24 @@ class EquipSlot extends Control:
 		_rim.visible = false
 		add_child(_rim)
 
+	var _heir: Panel
+
 	func refresh() -> void:
 		var it := PlayerData.item_at(slot)
 		_icon.texture = ItemDb.icon(int(it.get("icon", 0))) if not it.is_empty() else null
+		var heir := not it.is_empty() and Server.item_tag(slot) == "heirloom"
+		if heir and _heir == null:
+			_heir = Panel.new()
+			var hs := StyleBoxFlat.new()
+			hs.bg_color = Color(0, 0, 0, 0)
+			hs.border_color = Server.TAG_LOOKS.heirloom[2]
+			hs.set_border_width_all(2)
+			_heir.add_theme_stylebox_override("panel", hs)
+			_heir.set_anchors_preset(Control.PRESET_FULL_RECT)
+			_heir.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			add_child(_heir)
+		if _heir:
+			_heir.visible = heir
 		var active: bool = {"standard": slot == 10, "twohand": slot == 12, "ranged": slot == 13}.get(PlayerData.active_weapon, false)
 		_rim.visible = (active or PlayerData.selected_slot == slot) and not it.is_empty()
 		tooltip_text = String(it.name).to_upper() if not it.is_empty() else String(PlayerData.SLOT_NAMES.get(slot, "")).to_upper()
@@ -311,7 +326,23 @@ class BackpackRow extends Control:
 		var n := String(it.get("name", "")).to_upper()
 		if not e.is_empty() and int(e.get("count", 1)) > 1:
 			n += " (%d)" % int(e.count)
+		var tag := Server.item_tag(slot()) if not e.is_empty() else ""
+		var look: Array = Server.TAG_LOOKS.get(tag, [])
+		if tag == "junk":
+			n += "  (JUNK)"
+		elif tag == "quest":
+			n += "  (QUEST)"
+		elif tag == "craft":
+			n += "  (MATERIAL)"
 		_name.text = n
+		var tint: Color = UiArt.CREAM
+		if tag == "junk":
+			tint = Color(0.6, 0.6, 0.58)
+		elif tag == "heirloom":
+			tint = look[2]
+		elif not look.is_empty():
+			tint = look[1]
+		_name.add_theme_color_override("font_color", tint)
 		_hi.visible = PlayerData.selected_slot == slot() and not e.is_empty()
 		tooltip_text = String(it.get("name", "")).to_upper()
 

@@ -287,6 +287,21 @@ class BagCell extends Control:
 		_hi.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_hi.visible = false
 		add_child(_hi)
+		_badge = UiArt.label("", 7, Color.WHITE)
+		_badge_bg = StyleBoxFlat.new()
+		_badge_bg.bg_color = Color(0, 0, 0, 0.8)
+		_badge.add_theme_stylebox_override("normal", _badge_bg)
+		_badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_badge.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		_badge.clip_text = true
+		_badge.position = Vector2(2, 2)
+		_badge.size = Vector2(26, 9)
+		_badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_badge.visible = false
+		add_child(_badge)
+
+	var _badge_bg: StyleBoxFlat
+	var _badge: Label
 
 	func refresh() -> void:
 		var e := PlayerData.entry(slot)
@@ -304,6 +319,21 @@ class BagCell extends Control:
 		if tier != null:
 			_bs.border_color = tier
 		_bs.set_border_width_all(2 if gear or tier != null else 1)
+		# what kind of thing it is (owner 2026-11-18): junk greyed and marked, quest items and crafting materials marked,
+		# an heirloom in a gold frame on a warm ground
+		var tag := Server.item_tag(slot) if not it.is_empty() else ""
+		var look: Array = Server.TAG_LOOKS.get(tag, [])
+		_icon.modulate = look[3] if not look.is_empty() else Color.WHITE
+		_badge.visible = not look.is_empty() and String(look[0]) != ""
+		if _badge.visible:                                  # a strip across the top of the icon: its kind, in its colours
+			_badge.text = String(look[0])
+			_badge.add_theme_color_override("font_color", look[1])
+			_badge_bg.bg_color = look[4]
+			_badge.size = Vector2(26, 9)
+		if not look.is_empty() and look[2] != null:
+			_bs.border_color = look[2]
+			_bs.set_border_width_all(2 if tag in ["heirloom", "quest"] else 1)
+		_bs.bg_color = Color(0.36, 0.24, 0.05, 0.95) if tag == "heirloom" else Color(0.04, 0.035, 0.03, 0.85)
 
 	func _get_drag_data(_p: Vector2) -> Variant:
 		_dragged_slot = slot

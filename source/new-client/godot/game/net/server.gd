@@ -1655,6 +1655,21 @@ func quickbars_path(char_name: String) -> String:
 # ---------------------------------------------------------------- your character's state from the server
 
 var inv := {}                            # slot -> {id, count} (each item also in ItemDb's runtime table as "srv:<slot>")
+## What kind of thing each of your items is (ItemTags.cs: "#ITAG|slot:tag;..."): "junk", "quest", "craft", "heirloom";
+## gear and things you use have none. The bags mark the icons with it (owner 2026-11-18).
+var item_tags := {}
+
+## The tag of the item in a slot ("" for none).
+func item_tag(slot: int) -> String:
+	return String(item_tags.get(slot, "")) if active else ""
+
+## Badges and frames for a tag: [badge text, badge text colour, frame colour or null, icon tint, badge strip colour].
+const TAG_LOOKS := {
+	"junk": ["JUNK", Color(0.85, 0.83, 0.78), Color(0.38, 0.36, 0.33), Color(0.55, 0.55, 0.55), Color(0.16, 0.15, 0.14, 0.9)],
+	"quest": ["QUEST", Color(1.0, 0.88, 0.35), Color(0.95, 0.78, 0.25), Color.WHITE, Color(0.3, 0.2, 0.02, 0.92)],
+	"craft": ["MAT", Color(0.72, 1.0, 0.65), Color(0.4, 0.62, 0.36), Color.WHITE, Color(0.06, 0.2, 0.06, 0.9)],
+	"heirloom": ["HEIR", Color(0.16, 0.09, 0.0), Color(1.0, 0.74, 0.2), Color.WHITE, Color(1.0, 0.76, 0.25, 0.95)],
+}
 var money := {"mithril": 0, "platinum": 0, "gold": 0, "silver": 0, "copper": 0}
 var points := {}                         # CharacterPointsUpdate
 var info := {}                           # VariousUpdate 3: level, class, titles, guild ...
