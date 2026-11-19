@@ -1,0 +1,1272 @@
+{
+  "zone": 200,
+  "name": "Lough Derg",
+  "rating": "peaceful",
+  "notes": "Owner's zone review 2026-11-19 (Zone Reviews doc): banditry in the north-west and south-west woods, the fae around Mardagh and the western pond, a haunted north-east tied to the Parthanan Farm and the barrow by Mag Mell, the Dergan and their allies in the south-east with an elite island, pests feuding in the hills north of Mag Mell, beetles on every shore, curmudgeons with their mudmen. Coordinates are zone-local units (0..65535, x east, y south).",
+  "keep": [
+    "parthanan",
+    "Parthanan Farm Controller",
+    "nofier",
+    "roane maiden",
+    "roane companion",
+    "summoner",
+    "barca",
+    "primrose",
+    "rounder",
+    "derg monster",
+    "slough serpent"
+  ],
+  "tiers": {
+    "summoner": "orange",
+    "Fallen One": "red",
+    "Bertha": "orange",
+    "Hughar": "red",
+    "Nock": "orange"
+  },
+  "factions": {
+    "bandits": {
+      "id": 9101,
+      "aggro": 85
+    },
+    "lucradans": {
+      "id": 9102,
+      "aggro": 40,
+      "enemies": [
+        "spraggons",
+        "ratboys"
+      ]
+    },
+    "spraggons": {
+      "id": 9103,
+      "aggro": 40,
+      "enemies": [
+        "lucradans",
+        "ratboys"
+      ]
+    },
+    "ratboys": {
+      "id": 9104,
+      "aggro": 60,
+      "enemies": [
+        "lucradans",
+        "spraggons"
+      ]
+    },
+    "beetles": {
+      "id": 9105,
+      "aggro": 40
+    },
+    "curmudgeons": {
+      "id": 9106,
+      "aggro": 80
+    }
+  },
+  "members": {
+    "recruit": {
+      "from": "villainous youth",
+      "name": "villainous youth recruit",
+      "tier": "green",
+      "faction": "bandits",
+      "aggro": [
+        60,
+        400
+      ]
+    },
+    "thug": {
+      "from": "rowdy",
+      "name": "villainous youth thug",
+      "tier": "blue",
+      "faction": "bandits",
+      "aggro": [
+        60,
+        450
+      ]
+    },
+    "lieutenant": {
+      "from": "rowdy",
+      "name": "villainous youth lieutenant",
+      "tier": "orange",
+      "faction": "bandits",
+      "aggro": [
+        60,
+        500
+      ],
+      "size": 1.1
+    },
+    "gang hound": {
+      "from": "lough wolf",
+      "name": "gang hound",
+      "tier": "green",
+      "faction": "bandits",
+      "aggro": [
+        80,
+        500
+      ]
+    },
+    "rowdy": {
+      "from": "rowdy",
+      "tier": "blue",
+      "faction": "bandits",
+      "aggro": [
+        60,
+        450
+      ]
+    },
+    "ringleader": {
+      "from": "rowdy",
+      "name": "rowdy ringleader",
+      "tier": "red",
+      "faction": "bandits",
+      "aggro": [
+        60,
+        500
+      ],
+      "size": 1.2
+    },
+    "annoying lucradan": {
+      "from": "annoying lucradan",
+      "tier": "green",
+      "faction": "lucradans",
+      "aggro": [
+        50,
+        450
+      ]
+    },
+    "feckless lucragan": {
+      "from": "feckless lucragan",
+      "tier": "green",
+      "faction": "lucradans",
+      "aggro": [
+        50,
+        450
+      ]
+    },
+    "wild lucradan": {
+      "from": "wild lucradan",
+      "tier": "blue",
+      "faction": "lucradans",
+      "aggro": [
+        50,
+        450
+      ]
+    },
+    "spraggon": {
+      "from": "spraggon",
+      "tier": "green",
+      "faction": "spraggons",
+      "aggro": [
+        50,
+        450
+      ]
+    },
+    "spraggonite": {
+      "from": "spraggonite",
+      "tier": "green",
+      "faction": "spraggons",
+      "aggro": [
+        50,
+        450
+      ]
+    },
+    "spraggonoll": {
+      "from": "spraggonoll",
+      "tier": "blue",
+      "faction": "spraggons",
+      "aggro": [
+        50,
+        450
+      ]
+    },
+    "rat boy": {
+      "from": "rat boy",
+      "tier": "green",
+      "faction": "ratboys",
+      "aggro": [
+        50,
+        450
+      ]
+    },
+    "rat boy bully": {
+      "from": "rat boy",
+      "name": "rat boy bully",
+      "tier": "blue",
+      "faction": "ratboys",
+      "aggro": [
+        50,
+        450
+      ],
+      "size": 1.1
+    },
+    "badger": {
+      "from": "badger",
+      "tier": "green",
+      "roam": 400
+    },
+    "badger cub": {
+      "from": "badger cub",
+      "tier": "grey",
+      "roam": 300
+    },
+    "young badger": {
+      "from": "young badger",
+      "tier": "green",
+      "roam": 400
+    },
+    "lough wolf": {
+      "from": "lough wolf",
+      "tier": "blue",
+      "roam": 450
+    },
+    "lough wolf cadger": {
+      "from": "lough wolf cadger",
+      "tier": "green",
+      "roam": 400
+    },
+    "orchard nipper": {
+      "from": "orchard nipper",
+      "tier": "green",
+      "roam": 350
+    },
+    "hill toad": {
+      "from": "hill toad",
+      "tier": "green",
+      "roam": 300
+    },
+    "grass spirit": {
+      "from": "grass spirit",
+      "tier": "grey",
+      "roam": 300
+    },
+    "eirebug": {
+      "from": "eirebug",
+      "tier": "green",
+      "roam": 400
+    },
+    "large eirebug": {
+      "from": "large eirebug",
+      "tier": "yellow",
+      "roam": 400
+    },
+    "wild crouch": {
+      "from": "wild crouch",
+      "tier": "green",
+      "roam": 400
+    },
+    "red wolfhound": {
+      "from": "red wolfhound",
+      "tier": "yellow",
+      "roam": 400
+    },
+    "large red wolfhound": {
+      "from": "large red wolfhound",
+      "tier": "orange",
+      "roam": 300
+    },
+    "patriarch": {
+      "from": "large red wolfhound",
+      "name": "red wolfhound patriarch",
+      "tier": "red",
+      "roam": 250,
+      "size": 1.25
+    },
+    "water beetle": {
+      "from": "water beetle",
+      "tier": "blue",
+      "faction": "beetles",
+      "aggro": [
+        0,
+        0
+      ],
+      "roam": 300
+    },
+    "water beetle collector": {
+      "from": "water beetle collector",
+      "tier": "green",
+      "faction": "beetles",
+      "aggro": [
+        0,
+        0
+      ],
+      "roam": 300
+    },
+    "water beetle larva": {
+      "from": "water beetle larva",
+      "tier": "grey",
+      "roam": 200
+    },
+    "small freshwater crab": {
+      "from": "small freshwater crab",
+      "tier": "green",
+      "roam": 250
+    },
+    "haunted driftwood": {
+      "from": "haunted driftwood",
+      "tier": "green",
+      "roam": 0
+    },
+    "blackthorn": {
+      "from": "blackthorn",
+      "tier": "blue"
+    },
+    "lunantishee": {
+      "from": "lunantishee",
+      "tier": "blue",
+      "roam": 300
+    },
+    "cluricaun trip": {
+      "from": "cluricaun trip",
+      "tier": "green",
+      "roam": 400
+    },
+    "moss sheerie": {
+      "from": "moss sheerie",
+      "tier": "yellow",
+      "roam": 350
+    },
+    "druid": {
+      "from": "druid",
+      "tier": "yellow",
+      "aggro": [
+        40,
+        400
+      ]
+    },
+    "druid acolyte": {
+      "from": "druid",
+      "name": "druid acolyte",
+      "tier": "blue",
+      "aggro": [
+        40,
+        400
+      ]
+    },
+    "veil wisp": {
+      "from": "veil wisp",
+      "tier": "blue",
+      "roam": 400
+    },
+    "melancholic fairy": {
+      "from": "melancholic fairy",
+      "tier": "blue",
+      "roam": 350,
+      "aggro": [
+        30,
+        350
+      ]
+    },
+    "rainbow sprite": {
+      "from": "rainbow sprite",
+      "tier": "green",
+      "roam": 400
+    },
+    "faerie beetle": {
+      "from": "faerie beetle",
+      "tier": "blue",
+      "roam": 350
+    },
+    "harvester": {
+      "from": "curmudgeon harvester",
+      "tier": "green",
+      "faction": "curmudgeons",
+      "aggro": [
+        60,
+        450
+      ]
+    },
+    "crab-catcher": {
+      "from": "curmudgeon crab-catcher",
+      "tier": "green",
+      "faction": "curmudgeons",
+      "aggro": [
+        60,
+        450
+      ]
+    },
+    "courier": {
+      "from": "curmudgeon courier",
+      "tier": "blue",
+      "faction": "curmudgeons",
+      "aggro": [
+        60,
+        450
+      ]
+    },
+    "fighter": {
+      "from": "curmudgeon fighter",
+      "tier": "yellow",
+      "faction": "curmudgeons",
+      "aggro": [
+        60,
+        500
+      ]
+    },
+    "campkeeper": {
+      "from": "campkeeper",
+      "tier": "yellow",
+      "faction": "curmudgeons",
+      "aggro": [
+        60,
+        500
+      ]
+    },
+    "poacher": {
+      "from": "curmudgeon poacher",
+      "tier": "blue",
+      "faction": "curmudgeons",
+      "aggro": [
+        60,
+        450
+      ]
+    },
+    "trapper": {
+      "from": "curmudgeon trapper",
+      "tier": "blue",
+      "faction": "curmudgeons",
+      "aggro": [
+        60,
+        450
+      ]
+    },
+    "skinner": {
+      "from": "curmudgeon skinner",
+      "tier": "green",
+      "faction": "curmudgeons",
+      "aggro": [
+        60,
+        450
+      ]
+    },
+    "singer": {
+      "from": "singing curmudgeon",
+      "tier": "green",
+      "faction": "curmudgeons",
+      "aggro": [
+        60,
+        400
+      ]
+    },
+    "mudman": {
+      "from": "mudman",
+      "tier": "blue",
+      "faction": "curmudgeons",
+      "aggro": [
+        60,
+        400
+      ],
+      "roam": 200
+    },
+    "skeletal pawn": {
+      "from": "skeletal pawn",
+      "tier": "green",
+      "roam": 250
+    },
+    "skeletal minion": {
+      "from": "skeletal minion",
+      "tier": "blue",
+      "roam": 250
+    },
+    "ghostly siabra": {
+      "from": "ghostly siabra",
+      "tier": "yellow",
+      "roam": 600
+    },
+    "ghastly siabra": {
+      "from": "ghastly siabra",
+      "tier": "yellow",
+      "roam": 500
+    },
+    "mist wraith": {
+      "from": "mist wraith",
+      "tier": "blue",
+      "roam": 500
+    },
+    "fog wraith": {
+      "from": "fog wraith",
+      "tier": "yellow",
+      "roam": 500
+    },
+    "empyrean orb": {
+      "from": "empyrean orb",
+      "tier": "blue",
+      "roam": 400
+    },
+    "dergan fury": {
+      "from": "dergan fury",
+      "tier": "blue"
+    },
+    "dergan enchanter": {
+      "from": "dergan enchanter",
+      "tier": "yellow"
+    },
+    "dergan tussler": {
+      "from": "dergan tussler",
+      "tier": "orange"
+    },
+    "dergan warlord": {
+      "from": "dergan tussler",
+      "name": "dergan warlord",
+      "tier": "red",
+      "size": 1.2
+    },
+    "siabra": {
+      "from": "siabra",
+      "tier": "blue",
+      "aggro": [
+        60,
+        450
+      ]
+    },
+    "siabra archer": {
+      "from": "siabra archer",
+      "tier": "yellow"
+    },
+    "siabra enchanter": {
+      "from": "siabra enchanter",
+      "tier": "yellow"
+    },
+    "whistler": {
+      "from": "whistler",
+      "tier": "blue"
+    },
+    "changeling": {
+      "from": "minor changeling",
+      "name": "changeling",
+      "tier": "green",
+      "aggro": [
+        60,
+        400
+      ]
+    },
+    "anger sprite": {
+      "from": "anger sprite",
+      "tier": "green",
+      "roam": 300
+    },
+    "dew sheerie": {
+      "from": "dew sheerie",
+      "tier": "yellow",
+      "roam": 400
+    },
+    "rock sheerie": {
+      "from": "rock sheerie",
+      "tier": "yellow",
+      "roam": 300
+    }
+  },
+  "sites": [
+    {
+      "id": "fields_mag_mell",
+      "kind": "wildlife",
+      "area": [
+        11000,
+        2000,
+        24000,
+        9500
+      ],
+      "spawn": {
+        "badger": 17,
+        "badger cub": 14,
+        "lough wolf": 14,
+        "lough wolf cadger": 17,
+        "grass spirit": 10
+      }
+    },
+    {
+      "id": "fields_road",
+      "kind": "wildlife",
+      "area": [
+        24000,
+        9000,
+        30000,
+        15000
+      ],
+      "spawn": {
+        "hill toad": 10,
+        "grass spirit": 10,
+        "badger cub": 7
+      }
+    },
+    {
+      "id": "youth_camp_north",
+      "kind": "camp",
+      "at": [
+        17000,
+        13500
+      ],
+      "r": 600,
+      "respawn": 300,
+      "spawn": {
+        "recruit": 5,
+        "thug": 3,
+        "lieutenant": 1,
+        "gang hound": 2
+      }
+    },
+    {
+      "id": "youth_camp_east",
+      "kind": "camp",
+      "at": [
+        21500,
+        18500
+      ],
+      "r": 500,
+      "respawn": 300,
+      "spawn": {
+        "recruit": 4,
+        "thug": 2,
+        "gang hound": 1
+      }
+    },
+    {
+      "id": "youth_road_patrol",
+      "kind": "patrol",
+      "route": [
+        [
+          17000,
+          13500
+        ],
+        [
+          25000,
+          12000
+        ],
+        [
+          27000,
+          18500
+        ],
+        [
+          21500,
+          18500
+        ]
+      ],
+      "spawn": {
+        "thug": 1,
+        "recruit": 2
+      }
+    },
+    {
+      "id": "woods_north",
+      "kind": "wildlife",
+      "area": [
+        11000,
+        9500,
+        25000,
+        21500
+      ],
+      "spawn": {
+        "lough wolf": 14,
+        "badger": 10,
+        "orchard nipper": 10
+      }
+    },
+    {
+      "id": "rowdy_camp_south",
+      "kind": "camp",
+      "at": [
+        12000,
+        55000
+      ],
+      "r": 600,
+      "respawn": 360,
+      "spawn": {
+        "rowdy": 4,
+        "recruit": 3,
+        "gang hound": 2,
+        "ringleader": 1
+      }
+    },
+    {
+      "id": "youth_camp_south",
+      "kind": "camp",
+      "at": [
+        18500,
+        51000
+      ],
+      "r": 500,
+      "respawn": 300,
+      "spawn": {
+        "recruit": 3,
+        "thug": 2,
+        "gang hound": 2
+      }
+    },
+    {
+      "id": "south_road_patrol",
+      "kind": "patrol",
+      "route": [
+        [
+          18500,
+          51000
+        ],
+        [
+          23500,
+          50000
+        ],
+        [
+          25000,
+          58000
+        ],
+        [
+          18500,
+          51000
+        ]
+      ],
+      "spawn": {
+        "thug": 1,
+        "recruit": 2
+      }
+    },
+    {
+      "id": "woods_south",
+      "kind": "wildlife",
+      "area": [
+        3000,
+        46000,
+        24000,
+        62000
+      ],
+      "spawn": {
+        "lough wolf": 10,
+        "eirebug": 10,
+        "wild crouch": 10,
+        "large eirebug": 3,
+        "orchard nipper": 7
+      }
+    },
+    {
+      "id": "lucradan_warren",
+      "kind": "camp",
+      "at": [
+        19500,
+        3500
+      ],
+      "r": 500,
+      "respawn": 240,
+      "spawn": {
+        "annoying lucradan": 4,
+        "feckless lucragan": 4,
+        "wild lucradan": 3
+      }
+    },
+    {
+      "id": "spraggon_den",
+      "kind": "camp",
+      "at": [
+        33000,
+        4000
+      ],
+      "r": 500,
+      "respawn": 240,
+      "spawn": {
+        "spraggon": 5,
+        "spraggonite": 2,
+        "spraggonoll": 3
+      }
+    },
+    {
+      "id": "rat_boy_hideout",
+      "kind": "camp",
+      "at": [
+        36500,
+        7000
+      ],
+      "r": 400,
+      "respawn": 240,
+      "spawn": {
+        "rat boy": 6,
+        "rat boy bully": 2
+      }
+    },
+    {
+      "id": "lucradan_patrol",
+      "kind": "patrol",
+      "route": [
+        [
+          19500,
+          3500
+        ],
+        [
+          28000,
+          4500
+        ],
+        [
+          32000,
+          6000
+        ],
+        [
+          28000,
+          4500
+        ]
+      ],
+      "spawn": {
+        "wild lucradan": 1,
+        "feckless lucragan": 2
+      }
+    },
+    {
+      "id": "spraggon_patrol",
+      "kind": "patrol",
+      "route": [
+        [
+          33000,
+          4000
+        ],
+        [
+          28000,
+          4500
+        ],
+        [
+          23500,
+          4500
+        ],
+        [
+          28000,
+          4500
+        ]
+      ],
+      "spawn": {
+        "spraggonoll": 1,
+        "spraggon": 2
+      }
+    },
+    {
+      "id": "rat_boy_patrol",
+      "kind": "patrol",
+      "route": [
+        [
+          36500,
+          7000
+        ],
+        [
+          28000,
+          4500
+        ],
+        [
+          30000,
+          9000
+        ],
+        [
+          33500,
+          9500
+        ]
+      ],
+      "spawn": {
+        "rat boy bully": 1,
+        "rat boy": 2
+      }
+    },
+    {
+      "id": "blackthorn_thicket",
+      "kind": "camp",
+      "at": [
+        27500,
+        29500
+      ],
+      "r": 700,
+      "respawn": 300,
+      "spawn": {
+        "blackthorn": 10
+      }
+    },
+    {
+      "id": "lunantishee_ring",
+      "kind": "camp",
+      "at": [
+        31000,
+        37000
+      ],
+      "r": 450,
+      "respawn": 300,
+      "spawn": {
+        "lunantishee": 6,
+        "cluricaun trip": 3
+      }
+    },
+    {
+      "id": "druid_circle",
+      "kind": "camp",
+      "at": [
+        13200,
+        29800
+      ],
+      "r": 450,
+      "respawn": 360,
+      "spawn": {
+        "druid": 3,
+        "druid acolyte": 3,
+        "veil wisp": 3
+      }
+    },
+    {
+      "id": "fairy_glade",
+      "kind": "camp",
+      "at": [
+        14000,
+        38000
+      ],
+      "r": 600,
+      "respawn": 300,
+      "spawn": {
+        "melancholic fairy": 5,
+        "rainbow sprite": 4
+      }
+    },
+    {
+      "id": "fae_woods",
+      "kind": "wildlife",
+      "area": [
+        4000,
+        22000,
+        33000,
+        43000
+      ],
+      "spawn": {
+        "moss sheerie": 14,
+        "cluricaun trip": 14,
+        "grass spirit": 17,
+        "orchard nipper": 10,
+        "faerie beetle": 7,
+        "lough wolf": 7
+      }
+    },
+    {
+      "id": "shore_west",
+      "kind": "line",
+      "points": [
+        [
+          30000,
+          14000
+        ],
+        [
+          31000,
+          20000
+        ],
+        [
+          33000,
+          26000
+        ],
+        [
+          34500,
+          32000
+        ],
+        [
+          34000,
+          40000
+        ],
+        [
+          31000,
+          45000
+        ],
+        [
+          29500,
+          50000
+        ],
+        [
+          31500,
+          56000
+        ],
+        [
+          36000,
+          61000
+        ]
+      ],
+      "each": {
+        "water beetle": 3,
+        "water beetle collector": 1
+      },
+      "spawn": {
+        "water beetle larva": 9,
+        "hill toad": 8
+      }
+    },
+    {
+      "id": "shore_north",
+      "kind": "line",
+      "points": [
+        [
+          33000,
+          13000
+        ],
+        [
+          37000,
+          12500
+        ],
+        [
+          40000,
+          6500
+        ],
+        [
+          44000,
+          4500
+        ],
+        [
+          50000,
+          4000
+        ]
+      ],
+      "each": {
+        "water beetle": 3,
+        "water beetle collector": 1
+      },
+      "spawn": {
+        "small freshwater crab": 9,
+        "water beetle larva": 6
+      }
+    },
+    {
+      "id": "shore_east",
+      "kind": "line",
+      "points": [
+        [
+          56000,
+          8000
+        ],
+        [
+          54000,
+          14000
+        ],
+        [
+          48000,
+          20000
+        ],
+        [
+          46500,
+          28000
+        ],
+        [
+          48000,
+          36000
+        ],
+        [
+          47500,
+          44000
+        ],
+        [
+          50000,
+          50000
+        ],
+        [
+          48000,
+          58000
+        ]
+      ],
+      "each": {
+        "water beetle": 3
+      },
+      "spawn": {
+        "water beetle collector": 6
+      }
+    },
+    {
+      "id": "shore_haunted",
+      "kind": "line",
+      "points": [
+        [
+          50000,
+          5000
+        ],
+        [
+          55000,
+          9000
+        ],
+        [
+          54000,
+          14000
+        ]
+      ],
+      "each": {
+        "haunted driftwood": 2
+      },
+      "spawn": {}
+    },
+    {
+      "id": "curmudgeon_store",
+      "kind": "camp",
+      "at": [
+        43500,
+        6500
+      ],
+      "r": 500,
+      "respawn": 300,
+      "spawn": {
+        "harvester": 4,
+        "crab-catcher": 2,
+        "courier": 2,
+        "fighter": 1,
+        "mudman": 3
+      }
+    },
+    {
+      "id": "curmudgeon_valley_camp",
+      "kind": "camp",
+      "at": [
+        61500,
+        39500
+      ],
+      "r": 500,
+      "respawn": 300,
+      "spawn": {
+        "campkeeper": 2,
+        "poacher": 3,
+        "trapper": 2,
+        "skinner": 2,
+        "singer": 1,
+        "mudman": 2
+      }
+    },
+    {
+      "id": "east_wolf_wood",
+      "kind": "camp",
+      "at": [
+        50500,
+        33000
+      ],
+      "r": 1200,
+      "respawn": 300,
+      "spawn": {
+        "lough wolf": 6,
+        "badger": 4,
+        "young badger": 3,
+        "red wolfhound": 4,
+        "large red wolfhound": 2,
+        "patriarch": 1
+      }
+    },
+    {
+      "id": "old_barrow",
+      "kind": "camp",
+      "at": [
+        37000,
+        11700
+      ],
+      "r": 350,
+      "respawn": 300,
+      "spawn": {
+        "skeletal pawn": 4,
+        "skeletal minion": 2
+      }
+    },
+    {
+      "id": "haunted_forest",
+      "kind": "wildlife",
+      "area": [
+        53000,
+        2000,
+        63500,
+        15000
+      ],
+      "spawn": {
+        "ghostly siabra": 10,
+        "mist wraith": 8,
+        "empyrean orb": 8,
+        "veil wisp": 5
+      }
+    },
+    {
+      "id": "farm_haunts",
+      "kind": "wildlife",
+      "area": [
+        50000,
+        15000,
+        62000,
+        24000
+      ],
+      "spawn": {
+        "fog wraith": 7,
+        "ghastly siabra": 10,
+        "mist wraith": 3
+      }
+    },
+    {
+      "id": "dergan_war_camp",
+      "kind": "camp",
+      "at": [
+        56000,
+        47000
+      ],
+      "r": 600,
+      "respawn": 360,
+      "spawn": {
+        "dergan fury": 4,
+        "dergan enchanter": 2,
+        "siabra archer": 2,
+        "dergan tussler": 1,
+        "changeling": 3,
+        "anger sprite": 2
+      }
+    },
+    {
+      "id": "dergan_outpost",
+      "kind": "camp",
+      "at": [
+        58500,
+        30000
+      ],
+      "r": 500,
+      "respawn": 300,
+      "spawn": {
+        "dergan fury": 3,
+        "siabra": 3,
+        "whistler": 2,
+        "changeling": 2
+      }
+    },
+    {
+      "id": "dergan_patrol",
+      "kind": "patrol",
+      "route": [
+        [
+          58500,
+          30000
+        ],
+        [
+          57000,
+          38000
+        ],
+        [
+          56000,
+          47000
+        ],
+        [
+          57000,
+          38000
+        ]
+      ],
+      "spawn": {
+        "dergan fury": 3
+      }
+    },
+    {
+      "id": "dergan_woods",
+      "kind": "wildlife",
+      "area": [
+        52000,
+        40000,
+        63000,
+        60000
+      ],
+      "spawn": {
+        "dew sheerie": 10,
+        "rock sheerie": 7,
+        "anger sprite": 7,
+        "changeling": 7
+      }
+    },
+    {
+      "id": "dergan_island",
+      "kind": "camp",
+      "at": [
+        41500,
+        55000
+      ],
+      "r": 700,
+      "respawn": 420,
+      "spawn": {
+        "siabra": 4,
+        "siabra archer": 3,
+        "siabra enchanter": 3,
+        "dergan tussler": 2,
+        "dergan warlord": 1
+      }
+    }
+  ]
+}

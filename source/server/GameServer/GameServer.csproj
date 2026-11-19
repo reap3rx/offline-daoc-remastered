@@ -90,6 +90,8 @@
         <!-- story quests: the quest files, read at start-up (scripts/storyquests) -->
         <EmbeddedResource Include="scripts\storyquests\quests\*.json" LogicalName="StoryQuests.%(Filename)%(Extension)" />
         <EmbeddedResource Include="scripts\storyquests\items\*.json" LogicalName="StoryItems.%(Filename)%(Extension)" />
+        <!-- zone rebuilds: who lives in a zone and where (gameutils/ZoneBuilds.cs) -->
+        <EmbeddedResource Include="scripts\zonebuilds\*.json" LogicalName="ZoneBuilds.%(Filename)%(Extension)" />
         <EmbeddedResource Include="gameutils\data\level_bands.json" />
     </ItemGroup>
 </Project>

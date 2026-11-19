@@ -92,6 +92,21 @@ namespace DOL.GS.Movement
 		/// </summary>
 		/// <param name="pathID">path to load</param>
 		/// <returns>first pathpoint of path or null if not found</returns>
+		/// <summary>A path made in memory (a zone rebuild's patrol, ZoneBuilds): never saved, gone at the next start.</summary>
+		public static void RegisterPath(string pathID, EPathType type, IList<(int X, int Y, int Z, int Speed)> points)
+		{
+			lock (_lock)
+			{
+				if (m_pathCache.Count == 0)
+					FillPathCache();
+				m_pathCache[pathID] = new DbPath { PathID = pathID, PathType = (int) type };
+				var list = new SortedList<int, DbPathPoint>();
+				for (int i = 0; i < points.Count; i++)
+					list[i + 1] = new DbPathPoint { PathID = pathID, Step = i + 1, X = points[i].X, Y = points[i].Y, Z = points[i].Z, MaxSpeed = points[i].Speed };
+				m_pathpointCache[pathID] = list;
+			}
+		}
+
 		public static PathPoint LoadPath(string pathID)
 		{
 			lock(_lock)

@@ -76,7 +76,7 @@ namespace DOL.GS
             if (n.Level <= 0 || string.IsNullOrEmpty(n.Name))
                 return false;
             Region r = n.CurrentRegion;
-            if (r == null || r.IsRvR || r.IsFrontier)
+            if (r == null || r.IsRvR)                      // (not IsFrontier: the three home regions carry that flag)
                 return false;
             return true;
         }
@@ -202,7 +202,7 @@ namespace DOL.GS
                 seen += kv.Value.Count;
             }
             double median = levels.Count > 0 ? levels[levels.Count / 2] : 10;
-            zt.Shift = Math.Clamp((median - 15) / 80.0, 0, 0.45);   // older, harder zones lean dangerous
+            zt.Shift = Math.Clamp((median - 15) / 200.0, 0, 0.15);  // older, harder zones lean a little more dangerous
             return zt;
         }
 
@@ -464,7 +464,11 @@ namespace DOL.GS
             }
             if (sb.Length > 0)
                 NewClient.Send(p, "#TIER|" + sb);
+            if (_logged.TryAdd(p.ObjectId + ":" + p.CurrentRegionID, 0))
+                Console.WriteLine($"[MonsterTiers] {p.Name}: {sent.Count} tiers sent in region {p.CurrentRegionID} (new client {NewClient.Is(p)})");
         }
+
+        static readonly ConcurrentDictionary<string, byte> _logged = new();
 
         public static void Forget(GamePlayer p)
         {
@@ -483,6 +487,7 @@ namespace DOL.GS
             _ready = true;
             int count = 0;
             var tally = new int[7];
+            var purple = new List<string>();
             foreach (Region r in WorldMgr.GetAllRegions())
             {
                 GameObject[] all = r.Objects;
@@ -496,10 +501,12 @@ namespace DOL.GS
                         {
                             count++;
                             tally[t + 3]++;
+                            if (t == Purple && purple.Count < 12 && !purple.Contains(n.Name))
+                                purple.Add(n.Name);
                         }
                     }
             }
-            Console.WriteLine($"[MonsterTiers] {count} monsters tiered: grey {tally[0]}, green {tally[1]}, blue {tally[2]}, yellow {tally[3]}, orange {tally[4]}, red {tally[5]}, purple {tally[6]}");
+            Console.WriteLine($"[MonsterTiers] {count} monsters tiered: grey {tally[0]}, green {tally[1]}, blue {tally[2]}, yellow {tally[3]}, orange {tally[4]}, red {tally[5]}, purple {tally[6]} (e.g. {string.Join(", ", purple)})");
         }
     }
 }

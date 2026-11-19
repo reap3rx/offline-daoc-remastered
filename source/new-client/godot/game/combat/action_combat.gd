@@ -412,7 +412,7 @@ func _ground(oid: int, radius: int, ms: int) -> void:
 	var mat := StandardMaterial3D.new()
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.albedo_color = Color(1.0, 0.15, 0.1, 0.22)
+	mat.albedo_color = Color(1.0, 0.15, 0.1, 0.13)
 	mat.no_depth_test = false
 	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 	var outer := MeshInstance3D.new()
@@ -432,7 +432,7 @@ func _ground(oid: int, radius: int, ms: int) -> void:
 	fm.radial_segments = 48
 	fill.mesh = fm
 	var mat2 := mat.duplicate() as StandardMaterial3D
-	mat2.albedo_color = Color(1.0, 0.35, 0.1, 0.4)
+	mat2.albedo_color = Color(1.0, 0.3, 0.1, 0.25)
 	fill.material_override = mat2
 	fill.scale = Vector3(0.01, 1, 0.01)
 	fill.name = "Fill"
