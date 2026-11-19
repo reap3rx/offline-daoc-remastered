@@ -38,8 +38,18 @@ namespace DOL.GS
         public const int SlamRadius = 350, ConeRadius = 320, ConeArc = 100;
         public const double StyleFactor = 1.4, PositionalFactor = 1.7, ChainFactor = 1.5, CounterFactor = 1.45,
             HeavyFactor = 1.8, ConeFactor = 1.2, SlamFactor = 1.6;
-        public const double StyleCost = 14, ChainCost = 10, CounterCost = 8, HeavyCost = 16, ConeCost = 20,
-            GuardFailCost = 8, DefendGain = 6, RegenPerSecond = 7, LowStamina = 25;
+        // (owner 2026-11-19: "Endurance costs for mobs need to be much higher ... If they get parried or evaded or
+        // blocked, whatever they were trying to do should have a much bigger endurance cost, let's start with 3 times.
+        // successfully blocking parrying or evading the player will restore as much ... Missed parry blocks or evades
+        // also cost them.")
+        public const double PlainCost = 4, StyleCost = 14, ChainCost = 10, CounterCost = 8, HeavyCost = 16, ConeCost = 20,
+            DefendedTimes = 3, DefendGain = 12, MissedDefenseCost = 4, GuardFailCost = 24, RegenPerSecond = 4, LowStamina = 25;
+
+        public static double CostOf(Blow b) => b switch
+        {
+            Blow.Style => StyleCost, Blow.Chain => ChainCost, Blow.Counter => CounterCost,
+            Blow.Heavy => HeavyCost, Blow.Cone => ConeCost, Blow.Slam => 0, _ => PlainCost
+        };
 
         public sealed class State
         {
@@ -116,11 +126,9 @@ namespace DOL.GS
         }
 
         /// <summary>Tired defences: whole above half endurance, down to 35% of themselves at none.</summary>
-        public static double DefenseFactor(GameLiving l)
-        {
-            double pct = EndurancePct(l);
-            return pct >= 50 ? 1.0 : 0.35 + 0.65 * pct / 50.0;
-        }
+        public static double DefenseFactor(GameLiving l) => TiredFactor(EndurancePct(l));
+
+        public static double TiredFactor(double pct) => pct >= 50 ? 1.0 : 0.35 + 0.65 * Math.Max(0, pct) / 50.0;
 
         // ------------------------------------------------------------------ defences
 
@@ -228,12 +236,12 @@ namespace DOL.GS
                 s.NextSlamAt = now + 12000;
                 return (Blow.Slam, SlamMs);
             }
-            if (c >= 2 && now >= s.NextConeAt && st >= ConeCost && Util.RandomDouble() < 0.35)
+            if (c >= 2 && now >= s.NextConeAt && st >= Math.Max(LowStamina, ConeCost) && Util.RandomDouble() < 0.35)
             {
                 s.NextConeAt = now + Math.Max(8000, 16000 - c * 1500);
                 return (Blow.Cone, ConeMs);
             }
-            if (Util.RandomDouble() < 0.22 + 0.04 * c && st >= (hum ? StyleCost : HeavyCost))
+            if (Util.RandomDouble() < 0.22 + 0.04 * c && st >= Math.Max(LowStamina, hum ? StyleCost : HeavyCost))
                 return hum ? (Blow.Style, StyleMs) : (Blow.Heavy, HeavyMs);
             return (Blow.Normal, NormalMs);
         }
@@ -246,11 +254,7 @@ namespace DOL.GS
             s.Positional = kind is Blow.Style or Blow.Chain or Blow.Counter && target != null && !target.IsObjectInFront(npc, 120);
             if (kind == Blow.Cone)
                 s.ConeHeading = target != null ? npc.GetHeading(target) : npc.Heading;
-            Spend(s, kind switch
-            {
-                Blow.Style => StyleCost, Blow.Chain => ChainCost, Blow.Counter => CounterCost,
-                Blow.Heavy => HeavyCost, Blow.Cone => ConeCost, _ => 0
-            });
+            Spend(s, kind == Blow.Normal ? 0 : CostOf(kind));   // (a plain blow costs only when it is turned aside)
         }
 
         /// <summary>The kind as the client draws it: n plain, s a style (ornate ring), p a positional style, h a heavy
@@ -323,6 +327,7 @@ namespace DOL.GS
         /// guard and counter, a landed style's chain, a beast's bite proc.</summary>
         public static void AfterBlow(AttackData ad)
         {
+            TierCalibration.Seen(ad);
             if (ad?.Target == null || ad.Attacker == null || !ad.IsMeleeAttack && ad.AttackType != AttackData.eAttackType.Ranged)
                 return;
             long now = GameLoop.GameLoopTime;
@@ -347,6 +352,8 @@ namespace DOL.GS
                     Spend(s, GuardFailCost);                    // its guard was beaten
                     EndGuard(tn, s);
                 }
+                else if (landed && Comp(tn) >= 1 && Humanoid(tn))
+                    Spend(s, MissedDefenseCost);                // a defence it tried and missed
             }
             else if (defended && ad.Target is GamePlayer or GameBot && ad.Target.MaxEndurance > 0)
             {
@@ -357,6 +364,13 @@ namespace DOL.GS
             }
 
             int c = Comp(ad.Attacker);
+            if (c >= 0 && defended)
+            {
+                // its blow turned aside: what it tried costs it three times over (it paid once as it began)
+                State s = Of((GameNPC) ad.Attacker);
+                Blow b = s.Pending;
+                Spend(s, b == Blow.Normal ? PlainCost * DefendedTimes : CostOf(b) * (DefendedTimes - 1));
+            }
             if (c >= 0 && landed)
             {
                 GameNPC an = (GameNPC) ad.Attacker;
@@ -515,10 +529,25 @@ namespace DOL.GS
                     sent.Clear();
                     _vitRegion[p.ObjectId] = p.CurrentRegionID;
                 }
+                var dead = new StringBuilder();
                 foreach (GameNPC npc in p.GetNPCsInRadius(4000))
                 {
                     if (!npc.IsAlive)
+                    {
+                        // a fallen bot (a companion waiting to be helped up): it lies where it fell (owner 2026-11-19:
+                        // "they should be laying down dead where they die") - the client may only have it from a
+                        // create packet, which carries no health
+                        if (npc is GameBot && npc.ObjectState == GameObject.eObjectState.Active)
+                        {
+                            int dcode = -1 - (int) (GameLoop.GameLoopTime / 5000 % 1000000);   // (again every 5 s: a client that rebuilt it)
+                            if (!sent.TryGetValue(npc.ObjectID, out int dwas) || dwas != dcode)
+                            {
+                                sent[npc.ObjectID] = dcode;
+                                dead.Append(npc.ObjectID).Append(':').Append(npc.X).Append(':').Append(npc.Y).Append(':').Append(npc.Z).Append(';');
+                            }
+                        }
                         continue;
+                    }
                     int end, pow;
                     if (npc is GameBot bot)
                     {
@@ -543,6 +572,8 @@ namespace DOL.GS
                         sb.Clear();
                     }
                 }
+                if (dead.Length > 0)
+                    NewClient.Send(p, "#DEAD|" + dead);
             }
             if (sb.Length > 0)
                 NewClient.Send(p, "#VIT|" + sb);

@@ -87,6 +87,12 @@ namespace DOL.GS.Commands
             if (PersonalCompanions.IsCompanionOf(me, target) && PersonalCompanions.Load(me) is PersonalCompanions.Record rec)
             {
                 title = $"{target.Name} (your companion)";
+                if (target is GameLiving down && !down.IsAlive)
+                {
+                    list.Add(("Help Up", "/companion raise"));   // (fallen: that's all)
+                    return list;
+                }
+                list.Add(("Character Sheet", "/companion sheet"));
                 if (PersonalCompanions.HasWordsFor(me))
                     list.Add(("Talk", "/companion speak"));
                 list.Add(("Gear", "/companion gear"));

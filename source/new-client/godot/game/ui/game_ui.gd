@@ -409,6 +409,7 @@ func _build() -> void:
 	_build_potions()
 	_build_ac_styles()
 	_build_events()
+	_build_companion_sheet()
 	_build_story_dialog()
 	_build_guild()
 	PlayerData.window_toggle.connect(func(id: String):
@@ -1070,6 +1071,26 @@ func _build_events() -> void:
 	events_window.setup("events", "interact", Rect2(), at)
 	_add(events_window, at, false)
 	events_window.build()
+
+
+const CompanionSheet := preload("res://game/ui/companion_sheet.gd")
+var companion_sheet: ClassicWindow
+
+
+## Your companion's character sheet (/companion sheet: PersonalCompanions.Sheet).
+func _build_companion_sheet() -> void:
+	if not Server.active:
+		return
+	companion_sheet = CompanionSheet.new()
+	companion_sheet.resizable = true
+	companion_sheet.patch = [6, 19, 13, 33]
+	companion_sheet.min_size = CompanionSheet.BODY
+	companion_sheet.max_size = CompanionSheet.BODY
+	companion_sheet.size = CompanionSheet.BODY
+	var at := Vector2(area().x * 0.5 - 310, area().y * 0.5 - 200)
+	companion_sheet.setup("companion_sheet", "interact", Rect2(), at)
+	_add(companion_sheet, at, false)
+	companion_sheet.build()
 
 
 const PotionWindow := preload("res://game/ui/potion_window.gd")

@@ -45,7 +45,9 @@ static func opt(key: String) -> Variant:
 				"health_text": int(cfg.get_value("nameplates", "health_text", 0)),
 				"scale": float(cfg.get_value("nameplates", "scale", 1.0)),
 				"stack": bool(cfg.get_value("nameplates", "stack", true)),
-				"cast_bar": bool(cfg.get_value("nameplates", "cast_bar", true))}
+				"cast_bar": bool(cfg.get_value("nameplates", "cast_bar", true)),
+				"lines": bool(cfg.get_value("nameplates", "lines", true)),
+				"line_px": float(cfg.get_value("nameplates", "line_px", 4.0))}
 	return _opts.get(key)
 
 
@@ -178,10 +180,12 @@ func _rect_of(p: Dictionary) -> Rect2:
 ## health, and if the mob is a boss mob, then put a skull icon next to it").
 ## The endurance line (every plate) and the power line under it (only what has power), under the health bar.
 func _line_px(p: Dictionary) -> float:
-	return maxf(1.5, 2.0 * float(p.s))
+	return maxf(2.0, float(opt("line_px")) * float(p.s))
 
 
 func _lines_h(p: Dictionary) -> float:
+	if not bool(opt("lines")):
+		return 0.0
 	var v: Array = p.get("vit", [100, -1])
 	return (_line_px(p) + 1.5) * (2.0 if int(v[1]) >= 0 else 1.0) + 1.0
 
@@ -292,7 +296,7 @@ func _draw_plates() -> void:
 		var v: Array = p.get("vit", [100, -1])
 		var ly := bar.end.y + 2.0
 		var lh := _line_px(p)
-		for pair in [[int(v[0]), ENDURANCE], [int(v[1]), POWER]]:
+		for pair in ([[int(v[0]), ENDURANCE], [int(v[1]), POWER]] if bool(opt("lines")) else []):
 			if int(pair[0]) < 0:
 				continue
 			var lb := Rect2(Vector2(bar.position.x, ly), Vector2(size.x, lh))

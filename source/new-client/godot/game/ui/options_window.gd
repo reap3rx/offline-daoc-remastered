@@ -651,12 +651,15 @@ func _interface() -> void:
 	_heading("NAMEPLATES")
 	_row("SHOW", _choice(["Off", "Target only", "Target, hurt or fighting", "All enemies near"],
 			int(HEALTH_PLATES.opt("show")), func(i: int): _plate_opt("show", i)))
-	_hint("A SLIM HEALTH BAR OVER THE HEAD WITH THE NAME, THE LEVEL IN ITS CON COLOUR AND A CAST BAR - RED HOSTILE, YELLOW NEUTRAL, GREEN FRIENDLY. YOUR TARGET'S IS BIGGER WITH A WHITE FRAME.")
+	_hint("A SLIM HEALTH BAR OVER THE HEAD WITH THE NAME, A FRAME IN ITS CON COLOUR (HOW STRONG IT IS AGAINST YOU) AND A CAST BAR - RED HOSTILE, YELLOW NEUTRAL, GREEN FRIENDLY. YOUR TARGET'S IS BIGGER WITH A WHITE FRAME.")
 	_row("FRIENDLY TOO", _toggle(bool(HEALTH_PLATES.opt("friendly")), func(on: bool): _plate_opt("friendly", on)))
 	_row("HEALTH NUMBER", _choice(["None", "Percent"], int(HEALTH_PLATES.opt("health_text")), func(i: int): _plate_opt("health_text", i)))
 	_row("SIZE", _slider(float(HEALTH_PLATES.opt("scale")), 0.7, 1.6, 0.05, func(x: float): _plate_opt("scale", x)))
 	_row("STACK", _toggle(bool(HEALTH_PLATES.opt("stack")), func(on: bool): _plate_opt("stack", on)))
 	_row("CAST BARS", _toggle(bool(HEALTH_PLATES.opt("cast_bar")), func(on: bool): _plate_opt("cast_bar", on)))
+	_row("ENDURANCE / POWER", _toggle(bool(HEALTH_PLATES.opt("lines")), func(on: bool): _plate_opt("lines", on)))
+	_row("THEIR THICKNESS", _slider(float(HEALTH_PLATES.opt("line_px")), 2.0, 8.0, 0.5, func(x: float): _plate_opt("line_px", x)))
+	_hint("A GREEN ENDURANCE LINE UNDER EVERY PLATE AND A BLUE POWER LINE UNDER IT ON WHAT HAS POWER - WATCH A MONSTER TIRE: LOW ON ENDURANCE IT STOPS USING STYLES AND DEFENDS WORSE.")
 	_hint("FRIENDLY TOO: YOUR GROUP, YOUR REALM'S BOTS AND GUARDS GET PLATES BY THE SAME RULE (HANDY FOR HEALERS). STACK: PLATES MOVE APART INSTEAD OF COVERING EACH OTHER.")
 	_row("TARGET ON THE ORB", _toggle(bool(settings.get_value("interface", "orb_target", true)), func(on: bool):
 		_save("interface", "orb_target", on)

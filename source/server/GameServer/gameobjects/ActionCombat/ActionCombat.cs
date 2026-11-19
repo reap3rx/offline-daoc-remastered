@@ -12,7 +12,7 @@
  *     nothing. Holding the attack button and letting go fires the best anytime style (/ac style anytime); the
  *     Position, Reactive and Chain buttons fire the best usable style of that kind.
  *   - Your swings never miss in range (no miss, no level fumble) and always whiff out of range. Monsters still
- *     evade, parry and block at random; if they turn aside one of your STYLES you stumble (double recovery).
+ *     evade, parry and block at random; if they turn aside one of your STYLES it costs you endurance (no stumble).
  *   - Your own defense is timing, not dice (owner 2026-10-28): a parry press (/ac parry) opens a short window -
  *     0.2 s untrained, wider with Parry spec and Mastery of Parrying. A blow landing in it is Parried (unlocking
  *     parry reactives) and you take only part of it - less the more Parry you have. With a shield the press is a
@@ -741,19 +741,30 @@ namespace DOL.GS
 			Send(player, state.LastReady);
 		}
 
-		/// <summary>A monster evaded / parried / blocked one of your styles: you stumble.</summary>
+		/// <summary>A monster evaded / parried / blocked one of your styles: it costs you endurance (owner 2026-11-19: "Remove
+		/// the stumble mechanic, and just make stamina cost for getting your style parried more") - twice the style's
+		/// cost again, at least 4% of your endurance. No lock-out.</summary>
 		public static void OnStyleAvoided(GamePlayer player, AttackData ad)
 		{
-			ActionCombatState state = Get(player);
-			state.FumblePending = true;                   // (PlayerAttackAction: the stumble - twice the swing time)
+			int cost = 0;
+			try
+			{
+				if (ad.Style != null && ad.Weapon != null)
+					cost = 2 * StyleProcessor.EnduranceCostFor(player, ad.Style, ad.Weapon);
+			}
+			catch (Exception)
+			{
+			}
+			cost = Math.Min(player.Endurance, Math.Max(cost, player.MaxEndurance * 4 / 100));
+			if (cost > 0)
+				player.ChangeEndurance(player, eEnduranceChangeType.Spell, -cost);
 			string how = ad.AttackResult switch
 			{
 				eAttackResult.Evaded => "dodges",
 				eAttackResult.Blocked => "blocks",
 				_ => "parries"
 			};
-			player.Out.SendMessage($"{ad.Target.GetName(0, true)} {how} your {ad.Style.Name} - you stumble off balance!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
-			Send(player, "fumble");
+			player.Out.SendMessage($"{ad.Target.GetName(0, true)} {how} your {ad.Style.Name} - it costs you {cost} endurance!", eChatType.CT_Missed, eChatLoc.CL_SystemWindow);
 		}
 
 		// ------------------------------------------------------------------ defending

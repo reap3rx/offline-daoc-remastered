@@ -1060,6 +1060,29 @@ func _message(d: Dictionary) -> void:
 			if kv.size() == 2:
 				bot_tiers[int(kv[0])] = int(kv[1])
 		return
+	if String(d.text).begins_with("#DEAD|"):              # fallen bots: lying where they fell (MonsterMoves.PushVitals)
+		for part in String(d.text).substr(6).split(";", false):
+			var kv := part.split(":")
+			if kv.size() < 4:
+				continue
+			var st: NpcState = by_oid.get(int(kv[0]))
+			if st == null:
+				continue
+			var at := scene_pos(float(kv[1]), float(kv[2]), float(kv[3]))
+			var mv: Dictionary = _mover.get(st, {})
+			if not st.alive and st.pos.distance_to(at) < 1.0:
+				continue
+			mv["speed"] = 0.0
+			mv["dest"] = null
+			mv["target"] = 0
+			mv["sy"] = at.y
+			st.pos = at
+			_ground(st)
+			if st.view:
+				(st.view as Node3D).global_position = st.pos
+			if st.alive:
+				_set_health(st, 0, true)
+		return
 	if String(d.text).begins_with("#VIT|"):               # endurance / power under the plates (MonsterMoves.PushVitals)
 		for part in String(d.text).substr(5).split(";", false):
 			var kv := part.split(":")
@@ -1077,6 +1100,11 @@ func _message(d: Dictionary) -> void:
 		return
 	if String(d.text).begins_with("#EV|"):                # the dynamic events of this zone (DynamicEventManager.cs)
 		preload("res://game/ui/event_tracker.gd").receive(String(d.text).substr(4))
+		return
+	if String(d.text).begins_with("#CSHEET|"):            # your companion's character sheet (PersonalCompanions.Sheet)
+		var cs = viewer.ui.get("companion_sheet") if viewer and viewer.ui else null
+		if cs:
+			cs.receive(String(d.text).substr(8))
 		return
 	if String(d.text).begins_with("#EVL|"):               # the /events window's list (DynamicEventsCommandHandler)
 		var ew = viewer.ui.get("events_window") if viewer and viewer.ui else null

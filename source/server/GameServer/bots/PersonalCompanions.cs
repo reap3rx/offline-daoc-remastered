@@ -704,7 +704,7 @@ namespace DOL.GS
 
     /// <summary>/companion: your companion - call, home, talk, rename (the client's abilities use the first two).</summary>
     [CmdAttribute("&companion", ePrivLevel.Player, "Your companion: call, send home, gear, sell, role, how much they talk, ideas, a new name",
-        "/companion [call | home | raise | gear | sell | role | ideas | talk chatty|normal|quiet | rename <name>]")]
+        "/companion [call | home | raise | gear | sell | role | sheet | ideas | talk chatty|normal|quiet | rename <name>]")]
     public class CompanionCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
@@ -713,6 +713,14 @@ namespace DOL.GS
             if (p == null)
                 return;
             string what = args.Length > 1 ? args[1].ToLowerInvariant() : "";
+            // a fallen companion can only be helped up (owner 2026-11-19: "that's really all you should be able to do
+            // with them when they're dead") - or sent home / called, which the release handles
+            if (PersonalCompanions.Of(p) is GameBot fallen && !fallen.IsAlive &&
+                what is "gear" or "give" or "take" or "sell" or "role" or "ideas" or "idea" or "plan" or "talkto" or "speak" or "sheet")
+            {
+                ChatUtil.SendSystemMessage(p, $"{fallen.Name} is down - help them up first (interact with them, or /companion raise).");
+                return;
+            }
             string said = what switch
             {
                 "call" => PersonalCompanions.Call(p),
@@ -725,6 +733,7 @@ namespace DOL.GS
                 "take" => PersonalCompanions.Take(p, args.Length > 2 ? args[2] : ""),
                 "sell" => PersonalCompanions.Sell(p, args.Length > 2 ? args[2] : ""),
                 "role" => PersonalCompanions.Role(p, args.Length > 2 ? args[2] : ""),
+                "sheet" or "stats" or "info" => PersonalCompanions.Sheet(p),
                 "ideas" or "idea" or "plan" => PersonalCompanions.Suggest(p, true),
                 "talkto" or "speak" => PersonalCompanions.SpeakUp(p),
                 "forget" when client.Account.PrivLevel > (uint) ePrivLevel.Player => PersonalCompanions.Forget(p),

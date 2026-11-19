@@ -258,7 +258,10 @@ namespace DOL.UnitTests
             Assert.That(BotBrain.PrefersSpellRange(new ClassPaladin()), Is.False);
         }
 
-        [Test] public void ActualCloseIncomingAttackAllowsCasterMeleeFallback()
+        // owner 2026-11-19: "Caster bots should never think its a good idea to engage in melee if at all possible" - a
+        // caster being hit first steps out of reach (BotBrain.TryStepAwayFromMelee); the staff is only the fallback when
+        // it can't get away (its step on cooldown).
+        [Test] public void ActualCloseIncomingAttackMakesCasterStepAwayFirst()
         {
             Bot caster = MakeBot(new ClassBonedancer());
             Enemy target = Actor<Enemy>(); target.TestX = 100;
@@ -271,7 +274,7 @@ namespace DOL.UnitTests
             B(caster).SpellResult = false;
             B(caster).AddToAggroList(target, 10);
             B(caster).AttackMostWanted();
-            Assert.That(caster.MeleeStarts, Is.EqualTo(1));
+            Assert.That(caster.MeleeStarts, Is.Zero, "it steps away instead of swinging");
         }
 
         [Test] public void BoltOnlyCasterApproachesSpellRangeNotStaffRange()

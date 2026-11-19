@@ -256,7 +256,7 @@ namespace DOL.GS
             new ECSGameTimer(null, _ =>
             {
                 foreach (GameObject o in region.Objects ?? Array.Empty<GameObject>())
-                    if (o is GameNPC n && n.CurrentZone == zone && !rep.Placed.Contains(n) && sweepNames.Contains(n.Name) && Ordinary(n, d) &&
+                    if (o is GameNPC n && n.CurrentZone == zone && !rep.Placed.Contains(n) && !Exempt.TryGetValue(n, out object _) && sweepNames.Contains(n.Name) && Ordinary(n, d) &&
                         (n.GetType() == typeof(GameNPC) || replacedTypes.Contains(n.GetType().FullName)))
                     {
                         n.Delete();
@@ -467,6 +467,12 @@ namespace DOL.GS
             rep.Placed.Add(npc);
             return npc;
         }
+
+        /// <summary>Monsters the sweeper leaves alone (TierCalibration's own).</summary>
+        public static readonly System.Runtime.CompilerServices.ConditionalWeakTable<GameNPC, object> Exempt = new();
+
+        /// <summary>A copy of a monster's record to spawn from (never saved).</summary>
+        public static DbMob CopyMob(DbMob tpl) => Copy(tpl);
 
         static DbMob Copy(DbMob tpl)
         {

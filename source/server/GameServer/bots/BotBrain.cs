@@ -3268,6 +3268,7 @@ namespace DOL.AI.Brain
                         // in with its staff until it can cast again. Cooldowns,
                         // an already-active debuff or a rejected cast never
                         // order a staff charge.
+                        if (TryStepAwayFromMelee(spellTarget)) return;
                         if (TryEngageUnderMeleePressure(spellTarget)) return;
                         if (TryOutOfPowerMelee(spellTarget)) return;
                         ApproachForOffensiveSpell(spellTarget);
@@ -3454,6 +3455,58 @@ namespace DOL.AI.Brain
             Body.Follow(target,
                 (short)Math.Clamp(desired, 160, short.MaxValue),
                 (short)Math.Clamp((int)MAX_AGGRO_LIST_DISTANCE, 200, (int)short.MaxValue));
+            return true;
+        }
+
+        private long _stepAwayUntil, _nextStepAway;
+
+        /// <summary>A caster with a monster on it steps out of reach - behind its owner (or group's leader) as the
+        /// monster sees them, else straight away from it - instead of standing to swing a staff (owner 2026-11-19:
+        /// "Caster bots should never think its a good idea to engage in melee if at all possible"). Once every few
+        /// seconds; between steps it casts, and only when it can't get away does the old fallback (melee) remain.</summary>
+        private bool TryStepAwayFromMelee(GameLiving target)
+        {
+            long now = GameLoop.GameLoopTime;
+            if (now < _stepAwayUntil)
+                return true;                                      // still walking out
+            if (now < _nextStepAway || BotBody == null || Body.IsCrowdControlled || Body.MaxSpeed <= 0)
+                return false;
+            GameLiving foe = RecentDirectAttacker() ?? target;
+            if (foe?.IsAlive != true || !Body.IsWithinRadius(foe, Body.MeleeAttackRange + 60))
+                return false;
+            bool beingHit = Body.IsBeingInterruptedByOther ||
+                foe == _recentDirectAttacker && now - _recentDirectAttackTick <= 5_000;
+            if (!beingHit && !(foe is GameNPC { TargetObject: var t } && t == Body))
+                return false;
+
+            double x, y;
+            GameLiving anchor = BotBody.Owner ?? (Body.Group?.Leader as GameLiving);
+            if (anchor != null && anchor != Body && anchor.IsAlive && anchor.CurrentRegionID == Body.CurrentRegionID &&
+                anchor.IsWithinRadius(Body, 1500) && !anchor.IsWithinRadius(foe, 120))
+            {
+                double ax = anchor.X - foe.X, ay = anchor.Y - foe.Y, al = Math.Max(1, Math.Sqrt(ax * ax + ay * ay));
+                x = anchor.X + ax / al * 300;                     // behind its friend, as the monster sees them
+                y = anchor.Y + ay / al * 300;
+            }
+            else
+            {
+                double dx = Body.X - foe.X, dy = Body.Y - foe.Y, dl = Math.Sqrt(dx * dx + dy * dy);
+                if (dl < 1)
+                {
+                    dx = Math.Cos(now % 628 / 100.0);
+                    dy = Math.Sin(now % 628 / 100.0);
+                    dl = 1;
+                }
+                x = Body.X + dx / dl * 550;
+                y = Body.Y + dy / dl * 550;
+            }
+            if (Body.IsCasting)
+                Body.StopCurrentSpellcast();
+            Body.StopAttack();
+            Body.StopFollowing();
+            Body.WalkTo(new Point3D((int) x, (int) y, Body.Z), (short) Math.Max(150, (int) Body.MaxSpeed));
+            _stepAwayUntil = now + 1600;
+            _nextStepAway = now + 6000;
             return true;
         }
 

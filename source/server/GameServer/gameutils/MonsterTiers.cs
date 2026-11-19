@@ -252,9 +252,41 @@ namespace DOL.GS
         /// <summary>A tier's strength, a yellow being 1 (an even fight for a player whose own power is 1).</summary>
         public static readonly double[] TierStrength = { 0.25, 0.55, 0.75, 1.0, 1.35, 1.8, 3.0 };   // grey .. purple
 
-        /// <summary>Everyone's footing against monsters (tunable live with /tier tune): how much harder than DAoC's own
-        /// numbers a monster is to bring down, and how much harder it hits.</summary>
-        public static double Toughness = 1.6, Bite = 1.6;
+        /// <summary>Everyone's footing against monsters (tunable live with /tier tune): overall multipliers on how hard a
+        /// monster is to bring down and how hard it hits (1 = the fitted curve as it is).</summary>
+        public static double Toughness = 1.0, Bite = 1.0;
+
+        // The curve (owner 2026-11-19: "much too difficult now due to the damage numbers ... have them fight mobs of
+        // every con. maybe at level 5, 15, 25, 35, 45, and 50 just to see how it feels, and then adjust the curve that
+        // way"), fitted from the stand-in bench (TierCalibration): a monster level with you hits for InCurve(level) times
+        // DAoC's own damage and takes OutCurve(level) times yours, then each con above your band (PowerTier) multiplies
+        // its hits by InStep and divides yours by OutStep (and the other way for each below). The aim, in plain gear and
+        // plain auto-attacks: an even con takes about 25 s to bring down and would take about 50 s to bring you down.
+        public static double InStep = 1.6, OutStep = 1.55;
+        public static readonly int[] CurveLevels = { 1, 5, 15, 25, 35, 45, 50 };
+        public static readonly double[] InCurve = { 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5 };
+        public static readonly double[] OutCurve = { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
+
+        static double CurveAt(double[] curve, int level)
+        {
+            level = Math.Clamp(level, 1, 50);
+            for (int i = 1; i < CurveLevels.Length; i++)
+                if (level <= CurveLevels[i])
+                {
+                    double t = (level - CurveLevels[i - 1]) / (double) (CurveLevels[i] - CurveLevels[i - 1]);
+                    return curve[i - 1] * Math.Pow(curve[i] / curve[i - 1], t);   // (geometric between the points)
+                }
+            return curve[^1];
+        }
+
+        /// <summary>How many cons a tier stands above a fighter of this level (negative: below).</summary>
+        public static double ConGap(sbyte tier, int level) => Math.Clamp(tier, Grey, Purple) - PowerTier(level);
+
+        /// <summary>A tiered monster's hits on a fighter of this level, against DAoC's own damage.</summary>
+        public static double InFactor(sbyte tier, int level) => CurveAt(InCurve, level) * Math.Pow(InStep, ConGap(tier, level)) * Bite;
+
+        /// <summary>A fighter of this level's hits on a tiered monster, against DAoC's own damage.</summary>
+        public static double OutFactor(sbyte tier, int level) => CurveAt(OutCurve, level) / Math.Pow(OutStep, ConGap(tier, level)) / Toughness;
 
         static string TuningFile => System.IO.Path.Combine(GameServer.Instance.Configuration.RootDirectory, "tier-tuning.txt");
 
@@ -265,7 +297,8 @@ namespace DOL.GS
             try
             {
                 var ci = System.Globalization.CultureInfo.InvariantCulture;
-                System.IO.File.WriteAllText(TuningFile, string.Join(" ", new[] { Toughness, Bite }.Concat(TierStrength).Select(v => v.ToString(ci))));
+                System.IO.File.WriteAllText(TuningFile, "v2 " + string.Join(" ", new[] { Toughness, Bite, InStep, OutStep }.Concat(InCurve).Concat(OutCurve)
+                    .Select(v => v.ToString(ci))));
             }
             catch (Exception) { }
         }
@@ -277,12 +310,19 @@ namespace DOL.GS
                 if (!System.IO.File.Exists(TuningFile))
                     return;
                 var ci = System.Globalization.CultureInfo.InvariantCulture;
-                double[] v = System.IO.File.ReadAllText(TuningFile).Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(x => double.Parse(x, ci)).ToArray();
-                if (v.Length >= 9)
+                string[] parts = System.IO.File.ReadAllText(TuningFile).Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length == 0 || parts[0] != "v2")
+                    return;                                      // (the first curve's numbers: they meant something else)
+                double[] v = parts.Skip(1).Select(x => double.Parse(x, ci)).ToArray();
+                int n = CurveLevels.Length;
+                if (v.Length >= 4 + 2 * n)
                 {
                     Toughness = v[0];
                     Bite = v[1];
-                    Array.Copy(v, 2, TierStrength, 0, 7);
+                    InStep = v[2];
+                    OutStep = v[3];
+                    Array.Copy(v, 4, InCurve, 0, n);
+                    Array.Copy(v, 4 + n, OutCurve, 0, n);
                 }
             }
             catch (Exception) { }
@@ -454,14 +494,14 @@ namespace DOL.GS
             {
                 GameLiving c = Combatant(attacker);
                 if (c != null && tn.TierFightBase > 0)
-                    f = Out(c.Level, tn.TierFightBase) * Power(c.Level) / (Strength(Tier(tn)) * Toughness);
+                    f = Out(c.Level, tn.TierFightBase) * OutFactor(Tier(tn), c.Level);
                 return true;
             }
             if (attacker is GameNPC an && Tier(an) != None)
             {
                 GameLiving c = Combatant(target);
                 if (c != null && an.TierFightBase > 0)
-                    f = In(c.Level, an.TierFightBase) * Strength(Tier(an)) * Bite / Power(c.Level);
+                    f = In(c.Level, an.TierFightBase) * InFactor(Tier(an), c.Level);
                 return true;
             }
             return false;
@@ -516,6 +556,35 @@ namespace DOL.GS
         static readonly ConcurrentDictionary<string, ushort> _region = new();
 
         /// <summary>Tell the modern client the tiers of the monsters around: "#TIER|oid:tier;..." (new or changed ones).</summary>
+        /// <summary>How far an aggressive monster notices you, by its con (owner 2026-11-19: "lower con should have the lowest
+        /// ranges, higher con with higher ranges. None at ridiculous levels" - so the weaker ones can be picked off
+        /// first). Wolves and hounds are aggressive whatever their record says ("mobs like wolves should be set to
+        /// aggressive"). Applied as monsters come into a player's view (PushTiers), so a respawn gets it again.</summary>
+        public static int AggroRangeFor(sbyte tier) => tier switch
+        {
+            Green => 250, Blue => 350, Yellow => 450, Orange => 550, Red => 650, Purple => 750, _ => 200
+        };
+
+        static readonly string[] Hunters = { "wolf", "hound", "jackal", "wild dog", "warg" };
+
+        public static void ApplyAggro(GameNPC n, sbyte tier)
+        {
+            if (n?.Brain is not StandardMobBrain b || tier == None || tier <= Grey)
+                return;
+            if (b.AggroLevel <= 0)
+            {
+                string name = (n.Name ?? "").ToLowerInvariant();
+                foreach (string h in Hunters)
+                    if (name.Contains(h))
+                    {
+                        b.AggroLevel = 100;
+                        break;
+                    }
+            }
+            if (b.AggroLevel > 0)
+                b.AggroRange = AggroRangeFor(tier);
+        }
+
         public static void PushTiers(GamePlayer p)
         {
             if (!_ready || p?.Client == null)
@@ -547,6 +616,7 @@ namespace DOL.GS
                     sbyte t = Tier(npc);
                     if (t == None)
                         continue;
+                    ApplyAggro(npc, t);
                     if (sent.TryGetValue(npc.ObjectID, out var was) && was.npc == npc && was.tier == t)
                         continue;
                     sent[npc.ObjectID] = (npc, t);
@@ -626,7 +696,7 @@ namespace DOL.GS.Commands
 {
     [CmdAttribute("&tier", ePrivLevel.GM, "A monster's fixed con tier (MonsterTiers): show it, or set it",
         "/tier  (your target)", "/tier set <grey|green|blue|yellow|orange|red|purple>", "/tier zone  (the tally around you)",
-        "/tier tune [toughness|bite|<tier> <value>]  (the power curve, live)")]
+        "/tier tune [toughness|bite|instep|outstep <value> | in|out <level> <value> | in|out v1,..,v7]  (the power curve, live)")]
     public class TierCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         static readonly string[] Names = { "grey", "green", "blue", "yellow", "orange", "red", "purple" };
@@ -637,20 +707,38 @@ namespace DOL.GS.Commands
             string sub = args.Length > 1 ? args[1].ToLowerInvariant() : "";
             if (sub == "tune")
             {
-                if (args.Length > 3 && double.TryParse(args[3], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double v) && v > 0)
+                var ci = System.Globalization.CultureInfo.InvariantCulture;
+                // /tier tune toughness|bite|instep|outstep <v>  ·  /tier tune in|out <level> <v>  ·  /tier tune in|out v1,v2,..
+                if (args.Length > 3)
                 {
-                    if (args[2].ToLowerInvariant() == "toughness") MonsterTiers.Toughness = v;
-                    else if (args[2].ToLowerInvariant() == "bite") MonsterTiers.Bite = v;
-                    else
+                    string what = args[2].ToLowerInvariant();
+                    double[] curve = what == "in" ? MonsterTiers.InCurve : what == "out" ? MonsterTiers.OutCurve : null;
+                    if (curve != null && args.Length > 4 && int.TryParse(args[3], out int lv) &&
+                        double.TryParse(args[4], System.Globalization.NumberStyles.Float, ci, out double cv) && cv > 0)
                     {
-                        int ti = Array.IndexOf(Names, args[2].ToLowerInvariant());
-                        if (ti >= 0) MonsterTiers.TierStrength[ti] = v;
+                        int at = Array.IndexOf(MonsterTiers.CurveLevels, lv);
+                        if (at >= 0)
+                            curve[at] = cv;
+                    }
+                    else if (curve != null)
+                    {
+                        double[] all = args[3].Split(',').Select(x => double.TryParse(x, System.Globalization.NumberStyles.Float, ci, out double y) ? y : -1).ToArray();
+                        if (all.Length == curve.Length && all.All(x => x > 0))
+                            Array.Copy(all, curve, curve.Length);
+                    }
+                    else if (double.TryParse(args[3], System.Globalization.NumberStyles.Float, ci, out double v) && v > 0)
+                    {
+                        if (what == "toughness") MonsterTiers.Toughness = v;
+                        else if (what == "bite") MonsterTiers.Bite = v;
+                        else if (what == "instep") MonsterTiers.InStep = v;
+                        else if (what == "outstep") MonsterTiers.OutStep = v;
                     }
                     MonsterTiers.SaveTuning();
                 }
-                DisplayMessage(client, $"Toughness {MonsterTiers.Toughness:0.##}, bite {MonsterTiers.Bite:0.##}; strength " +
-                    string.Join(", ", Names.Select((n, i) => $"{n} {MonsterTiers.TierStrength[i]:0.##}")) +
-                    $"; your power {MonsterTiers.Power(p.Level):0.##} (fights like {MonsterTiers.PowerTier(p.Level):0.0})");
+                DisplayMessage(client, $"Toughness {MonsterTiers.Toughness:0.##}, bite {MonsterTiers.Bite:0.##}, steps in {MonsterTiers.InStep:0.##} out {MonsterTiers.OutStep:0.##}; " +
+                    $"curve at levels {string.Join(",", MonsterTiers.CurveLevels)}: in {string.Join(",", MonsterTiers.InCurve.Select(x => x.ToString("0.###", ci)))}, " +
+                    $"out {string.Join(",", MonsterTiers.OutCurve.Select(x => x.ToString("0.###", ci)))}; you fight like {MonsterTiers.PowerTier(p.Level):0.0} - " +
+                    string.Join(", ", Names.Select((n, i) => $"{n} hits x{MonsterTiers.InFactor((sbyte) (i - 3), p.Level):0.##} takes x{MonsterTiers.OutFactor((sbyte) (i - 3), p.Level):0.##}")));
                 return;
             }
             if (sub == "zone")
