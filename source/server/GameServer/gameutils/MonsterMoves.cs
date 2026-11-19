@@ -61,6 +61,14 @@ namespace DOL.GS
         }
 
         static readonly ConditionalWeakTable<GameNPC, State> _states = new();
+        static int _notes;
+
+        /// <summary>A line in the server log for the first few hundred moves of a run (to check them in a probe).</summary>
+        static void Note(GameNPC n, string what)
+        {
+            if (System.Threading.Interlocked.Increment(ref _notes) <= 300)
+                Console.WriteLine($"[MonsterMoves] {n.Name} ({n.ObjectID}): {what}");
+        }
 
         public static State Of(GameNPC n) => _states.GetValue(n, _ => new State { StaminaAt = GameLoop.GameLoopTime });
 
@@ -172,6 +180,7 @@ namespace DOL.GS
             s.GuardUntil = now + ms;
             s.NextGuardAt = now + ms + Math.Max(3500, 7000 - c * 500);
             Tell(n, $"guard|{n.ObjectID}|{GuardCode(s.GuardKind)}|{ms}");
+            Note(n, $"guard {GuardCode(s.GuardKind)} {ms} ms");
             return ms;
         }
 
@@ -202,9 +211,15 @@ namespace DOL.GS
             bool counter = s.CounterNext, chain = s.ChainNext;
             s.CounterNext = s.ChainNext = false;
             if (counter && hum && c >= 1 && st >= CounterCost)
+            {
+                Note(npc, "counter");
                 return (Blow.Counter, CounterMs);
+            }
             if (chain && c >= 3 && st >= ChainCost)
+            {
+                Note(npc, "chain");
                 return (Blow.Chain, ChainMs);
+            }
             if (s.Last != Blow.Normal)                       // otherwise never two specials in a row: room to breathe
                 return (Blow.Normal, NormalMs);
 
@@ -321,6 +336,7 @@ namespace DOL.GS
                 s.HitAt = now;
                 if (defended)
                 {
+                    Note(tn, $"{ad.AttackResult} {ad.Attacker.Name}'s blow{(s.GuardUntil > now ? " (guarding)" : "")}, stamina {(int) Stamina(s, now)}");
                     Gain(s, DefendGain);
                     if (Humanoid(tn) && Comp(tn) >= 1)
                         s.CounterNext = true;                   // it answers a turned-aside blow
@@ -395,6 +411,7 @@ namespace DOL.GS
                 if (spell == null || line == null)
                     return;
                 ScriptMgr.CreateSpellHandler(n, spell, line)?.StartSpell(target);
+                Note(n, $"proc {id} {spell.Name} on {target.Name}");
             }
             catch (Exception e)
             {
