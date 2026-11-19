@@ -1041,7 +1041,9 @@ namespace DOL.GS
 				return eAttackResult.Evaded;
 			}
 
-			if (inFront && now - state.ParryPressedAt <= state.ParryWindowMs)
+			bool unblockable = MonsterMoves.Unblockable(ad.Attacker);   // a red wind-up: only a dodge saves you
+
+			if (inFront && !unblockable && now - state.ParryPressedAt <= state.ParryWindowMs)
 			{
 				ad.ArmorHitLocation = player.CalculateArmorHitLocation(ad);
 				bool caught = HasShield(player) && (!state.ParryOnly || !ad.IsMeleeAttack) || ad.IsMeleeAttack;
@@ -1075,6 +1077,9 @@ namespace DOL.GS
 			// The chain a timed defense started: other monsters' blows turned aside the same way, one each.
 			eActionDefense chained = ChainFor(player, state, ad, now);
 
+			if (unblockable && chained is eActionDefense.Parry or eActionDefense.Block)
+				chained = eActionDefense.None;
+
 			if (chained is not eActionDefense.None)
 			{
 				state.ChainLeft--;
@@ -1100,7 +1105,7 @@ namespace DOL.GS
 				}
 			}
 
-			if (state.Guarding && inFront)
+			if (state.Guarding && inFront && !unblockable)
 			{
 				int cost = 3 + player.MaxEndurance * 2 / 100;
 
@@ -1124,6 +1129,7 @@ namespace DOL.GS
 		/// <summary>After the blow is worked out: tell the defender how it went.</summary>
 		public static void OnDefended(GamePlayer player, AttackData ad)
 		{
+			MonsterMoves.OnDefended(player, ad);   // a timed answer to a heavy / unblockable blow breaks poise
 			switch (ad.ActionDefense)
 			{
 				case eActionDefense.Parry:
@@ -1525,9 +1531,9 @@ namespace DOL.GS
 			}
 		}
 
-		public static void SendWindup(GamePlayer player, GameNPC attacker, int ms)
+		public static void SendWindup(GamePlayer player, GameNPC attacker, int ms, string kind = "n")
 		{
-			Send(player, $"windup|{attacker.ObjectID}|{ms}");
+			Send(player, $"windup|{attacker.ObjectID}|{ms}|{kind}");   // kind: n plain, h heavy (yellow), u unblockable (red)
 		}
 
 		// ------------------------------------------------------------------ style picks (owner 2026-10-30)

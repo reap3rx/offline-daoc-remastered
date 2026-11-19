@@ -22,6 +22,7 @@ namespace DOL.GS
         private long _windupEnd;
         private GameObject _windupTarget;
         private bool _struckFromWindup;
+        private int _windupMs = ActionCombat.WindupMs;
 
         private static int LosCheckInterval => Properties.CHECK_LOS_DURING_RANGED_ATTACK_MINIMUM_INTERVAL;
         private bool IsArcherGuardOrImmobile => _npcOwner is GuardArcher || _npcOwner.MaxSpeedBase == 0;
@@ -210,23 +211,66 @@ namespace DOL.GS
         /// </summary>
         private bool WindingUp()
         {
-            if (_target is not GamePlayer player || !ActionCombat.IsActive(player) ||
-                !_npcOwner.IsWithinRadius(player, AttackComponent.AttackRange + 50))
+            long now = GameLoop.GameLoopTime;
+
+            // Staggered (its poise broken, MonsterMoves): no blows for a moment, and the wind-up it had is lost.
+            if (MonsterMoves.Staggered(_npcOwner))
             {
+                if (_windupEnd != 0)
+                    MonsterMoves.End(_npcOwner);
+                MonsterMoves.TakeCancel(_npcOwner);
+                _windupEnd = 0;
+                _windupTarget = null;
+                _interval = 300;
+                return true;
+            }
+
+            bool slamming = _windupEnd != 0 && MonsterMoves.PendingOf(_npcOwner) == MonsterMoves.Blow.Slam;
+
+            // Who sees it coming: an action-mode player is told; a bot or a pet against a monster that knows moves (blue
+            // and up) gets the same blows and reads them as well as it can (MonsterMoves.ReadChance).
+            bool actionPlayer = _target is GamePlayer ap && ActionCombat.IsActive(ap);
+            bool botTarget = !actionPlayer && _target is GameLiving tl and not GamePlayer && MonsterTiers.Combatant(tl) != null &&
+                MonsterTiers.Tier(_npcOwner) is var tier && tier != MonsterTiers.None && tier >= MonsterTiers.Blue;
+
+            if (!slamming && (!(actionPlayer || botTarget) ||
+                !_npcOwner.IsWithinRadius(_target, AttackComponent.AttackRange + 50)))
+            {
+                if (_windupEnd != 0)
+                    MonsterMoves.End(_npcOwner);
                 _windupEnd = 0;
                 _windupTarget = null;
                 return false;
             }
 
-            long now = GameLoop.GameLoopTime;
-
-            // No wind-up running for this target (or a stale one, held by a stun): start one.
-            if (_windupEnd == 0 || _windupTarget != player || now > _windupEnd + 400)
+            // Kicked (MonsterMoves.Kick): the wind-up is lost, it gathers itself.
+            if (_windupEnd != 0 && MonsterMoves.TakeCancel(_npcOwner))
             {
-                _windupTarget = player;
-                _windupEnd = now + ActionCombat.WindupMs;
-                ActionCombat.SendWindup(player, _npcOwner, ActionCombat.WindupMs);
-                _interval = ActionCombat.WindupMs;
+                MonsterMoves.End(_npcOwner);
+                _windupEnd = 0;
+                _windupTarget = null;
+                _interval = 900;
+                return true;
+            }
+
+            // No wind-up running for this target (or a stale one, held by a stun): start one - a plain blow, or by the
+            // monster's con a heavy, unblockable or slam (MonsterMoves.Pick).
+            if (!slamming && (_windupEnd == 0 || _windupTarget != _target || now > _windupEnd + 400))
+            {
+                var (kind, ms) = MonsterMoves.Pick(_npcOwner);
+                MonsterMoves.Begin(_npcOwner, kind);
+                _windupTarget = _target;
+                _windupEnd = now + ms;
+                _windupMs = ms;
+                if (kind == MonsterMoves.Blow.Slam)
+                    MonsterMoves.Tell(_npcOwner, $"ground|{_npcOwner.ObjectID}|{MonsterMoves.SlamRadius}|{ms}");
+                else if (actionPlayer)
+                    ActionCombat.SendWindup((GamePlayer) _target, _npcOwner, ms, MonsterMoves.Code(kind));
+                if (actionPlayer)
+                    MonsterMoves.TelegraphAtPlayer((GamePlayer) _target, kind);
+                else
+                    MonsterMoves.TelegraphAtBot(_npcOwner, (GameLiving) _target, kind);
+                _interval = ms;
                 return true;
             }
 
@@ -238,6 +282,15 @@ namespace DOL.GS
 
             _windupEnd = 0;
             _windupTarget = null;
+
+            if (slamming)
+            {
+                MonsterMoves.Slam(_npcOwner);
+                MonsterMoves.End(_npcOwner);
+                _interval = 1500;
+                return true;
+            }
+
             _struckFromWindup = true;
             return false;
         }
@@ -250,12 +303,13 @@ namespace DOL.GS
             if (_struckFromWindup)
             {
                 _struckFromWindup = false;
+                MonsterMoves.End(_npcOwner);
 
                 // ... and not a metronome (owner 2026-11-09: blocks and dodges were easy to time by rhythm alone): each
                 // blow comes 0.7 - 1.3 x the monster's swing time after the last, the same on average (its damage per
                 // second unchanged). The wind-up before each blow still shows.
                 if (attacked)
-                    _interval = Math.Max(500, (int) (_interval * (0.7 + 0.6 * Util.RandomDouble())) - ActionCombat.WindupMs);
+                    _interval = Math.Max(500, (int) (_interval * (0.7 + 0.6 * Util.RandomDouble())) - _windupMs);
             }
 
             return attacked;

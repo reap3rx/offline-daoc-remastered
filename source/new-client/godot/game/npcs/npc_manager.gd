@@ -20,6 +20,8 @@ var region: RegionWorld                     # null: one zone (tests, the world h
 var states: Array = []                      # NpcState for EVERY spawn - the simulation
 var active := {}                            # spawn index -> Npc (views near the player)
 var target: Npc
+var tiers := {}                             # oid -> fixed con tier, -3 grey .. 3 purple (the server's MonsterTiers)
+var poise := {}                             # oid -> poise left, 0..100 (the server's MonsterMoves)
 var _scenes := {}
 var _tick := 0.0
 var _frame := 0

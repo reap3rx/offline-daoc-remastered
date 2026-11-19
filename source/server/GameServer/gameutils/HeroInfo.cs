@@ -78,6 +78,9 @@ namespace DOL.GS
         {
             if (p.TargetObject is GameLiving t && t.IsAlive)
             {
+                int tiered = MonsterTiers.FightingLevel(p, t);
+                if (tiered > 0)
+                    return tiered;
                 int gap = LevelScaling.Gap(p, t);
                 if (gap > 0)
                     return p.Level - gap;
@@ -88,6 +91,7 @@ namespace DOL.GS
         private static void Tick(GamePlayer p)
         {
             PetTick(p);
+            MonsterTiers.PushTiers(p);
             int lv = FightingLevel(p);
             if (_sentLevel.TryGetValue(p.ObjectId, out int was) && was == lv)
                 return;
@@ -203,6 +207,7 @@ namespace DOL.GS
             SendConfigs(p);
             _sentLevel.TryRemove(p.ObjectId, out _);
             _sentPets.TryRemove(p.ObjectId, out _);
+            MonsterTiers.Forget(p);
             new ECSGameTimer(p, _ =>
             {
                 if (p.ObjectState == GameObject.eObjectState.Deleted || p.Client == null || p.Client.Player != p)
@@ -218,6 +223,7 @@ namespace DOL.GS
             {
                 _sentLevel.TryRemove(p.ObjectId, out _);
                 _sentPets.TryRemove(p.ObjectId, out _);
+                MonsterTiers.Forget(p);
             }
         }
     }

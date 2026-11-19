@@ -77,7 +77,8 @@ namespace DOL.GS
 
         /// <summary>A monster that can be scaled against: an ordinary realm-less NPC, not a bot, a pet or a guard.</summary>
         static bool Scalable(GameLiving l) =>
-            l is GameNPC npc && npc is not GameBot && npc.Realm == eRealm.None && npc.Brain is not IControlledBrain;
+            l is GameNPC npc && npc is not GameBot && npc.Realm == eRealm.None && npc.Brain is not IControlledBrain &&
+            !MonsterTiers.IsTiered(npc);                    // a tiered monster fights at its fight's level (MonsterTiers.cs)
 
         static bool IsEventFoe(GameLiving l) => l is EventNpc { IsEnemy: true, Chain: not null };
 
@@ -116,6 +117,8 @@ namespace DOL.GS
                 return ALLY_OUT;
             if (target is EventNpc { IsEnemy: false, Role: EventRole.Ally or EventRole.Giver } && IsEventFoe(attacker))
                 return ALLY_IN;
+            if (MonsterTiers.TryDamageFactor(attacker, target, out double tierFactor))
+                return tierFactor;                          // full scaling around the fight's level (MonsterTiers.cs)
             GameLiving you = Combatant(attacker);
             if (you != null)
             {
@@ -152,6 +155,9 @@ namespace DOL.GS
         {
             if (who == null || killed == null)
                 return 0;
+            sbyte tier = MonsterTiers.Tier(killed);
+            if (tier != MonsterTiers.None)
+                return tier;                                // a tiered monster cons its tier to everyone (MonsterTiers.cs)
             GameLiving you = Fighter(who, IsEventFoe(killed));
             if (you == null)
                 return who.GetConLevel(killed);

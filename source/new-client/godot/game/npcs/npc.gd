@@ -715,7 +715,23 @@ func _local_bounds() -> AABB:
 
 
 func con_to(player_level: int) -> int:
+	var t := tier()
+	if t != NO_TIER:
+		return t
 	return manager.con_level(_scaled_level(player_level), state.level)
+
+
+const NO_TIER := 99
+
+## A monster's fixed con tier (the server's MonsterTiers, owner 2026-11-19: a con colour is what it is, the same for
+## everyone): -3 grey critter .. 3 purple epic; NO_TIER when it isn't tiered (or not known yet).
+func tier() -> int:
+	return int(manager.tiers.get(int(spawn.get("oid", -1)), NO_TIER)) if manager != null else NO_TIER
+
+
+## Grey critters keep their names to themselves until targeted (owner: "their floating names default off").
+func is_critter() -> bool:
+	return tier() == -3
 
 
 ## Against a monster you fight at its level + 3 at most, never so high it cons grey (the server's LevelScaling, owner

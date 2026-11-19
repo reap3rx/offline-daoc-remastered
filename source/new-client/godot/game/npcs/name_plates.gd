@@ -86,7 +86,7 @@ func _process_inner(_delta: float) -> void:
 			continue
 		var targeted := n == manager.target
 		var d := Vector2(n.global_position.x - pp.x, n.global_position.z - pp.z).length()
-		var show := n.visible and n.state.alive and (targeted or (d <= NAME_RANGE
+		var show := n.visible and n.state.alive and (targeted or (d <= NAME_RANGE and not n.is_critter()
 				and not int(n.spawn.flags) & (Npc.FLAG_DONTSHOWNAME | Npc.FLAG_CANTTARGET)))
 		# Options > COMPANION NAMES in the server's game: your companions are your group's other members (owner
 		# 2026-10-15 UI audit - the toggle only reached the offline bots)

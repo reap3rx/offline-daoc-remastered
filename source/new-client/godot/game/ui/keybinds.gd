@@ -77,6 +77,7 @@ func _ready() -> void:
 			["ac_position", "Action: Position Style", ["Q"]],
 			["ac_reactive", "Action: Reactive Style", ["E"]], ["ac_chain", "Action: Chain Style", ["R"]],
 			["ac_dodge", "Action: Dodge", ["Middle Mouse"]], ["ac_cursor", "Action: Show Cursor (hold)", ["LAlt"]],
+			["ac_kick", "Action: Kick (interrupt a spell or wind-up)", ["H"]],
 			["ac_interact", "Action: Interact (doors, NPCs, loot)", ["F"]],
 			["ac_lock", "Action: Lock On (tap; hold + mouse to switch)", ["Mouse4"]],
 			["ac_ally", "Action: Target Allies (hold: the reticle picks your realm and pets)", ["LCtrl"]],

@@ -306,6 +306,7 @@ namespace DOL.AI.Brain
         public void ForceAddToAggroList(GameLiving living, long aggroAmount = 0)
         {
             if (!CompanionEngagementMode.Allows(Body, living)) return;
+            if (MonsterTiers.OnAggro(Body, living, HasAggro)) return;   // fixed con tiers: the fight's level; critters run (MonsterTiers.cs)
             if (aggroAmount > 0)
             {
                 foreach (ProtectECSGameEffect protect in living.effectListComponent.GetAbilityEffects(eEffect.Protect))

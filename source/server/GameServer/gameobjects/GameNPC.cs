@@ -181,6 +181,33 @@ namespace DOL.GS
 			}
 		}
 
+		// ---- fixed con tiers and full scaling (gameutils/MonsterTiers.cs)
+		public sbyte MonsterTier = MonsterTiers.Unset;     // -3 grey .. 3 purple; None when not tiered
+		public byte TierBaseLevel;                         // the level it was placed at
+		public short[] TierBaseStats;                      // its stats at that level
+		public int TierFightBase;                          // the level the current fight was set for (0: none yet)
+
+		/// <summary>The level a tiered monster fights at: stats move with it, health starts full.</summary>
+		public void SetTierFightLevel(byte level)
+		{
+			base.Level = level;
+			short[] s = MonsterTiers.StatsAt(this, level);
+			if (s != null)
+			{
+				Strength = s[0]; Constitution = s[1]; Dexterity = s[2]; Quickness = s[3];
+				Intelligence = s[4]; Empathy = s[5]; Piety = s[6]; Charisma = s[7];
+			}
+			else
+				SetStats();
+			Health = MaxHealth;
+		}
+
+		public override byte GetDisplayLevel(GamePlayer player)
+		{
+			int l = MonsterTiers.DisplayLevel(this, player);
+			return l >= 0 ? (byte) Math.Min(127, l) : base.GetDisplayLevel(player);
+		}
+
 		public virtual void SetStats(DbMob dbMob = null)
 		{
 			// GameBots are player characters, even when Level/LoadTemplate enters

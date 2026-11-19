@@ -887,6 +887,8 @@ namespace DOL.GS
 
 		public int GetConLevel(GameObject compare)
 		{
+			if (MonsterTiers.TryCon(this, compare, out int tierCon))
+				return tierCon;   // a tiered monster cons its tier to everyone (MonsterTiers.cs)
 			return ConLevels.GetConLevel(EffectiveLevel, compare.EffectiveLevel);
 		}
 

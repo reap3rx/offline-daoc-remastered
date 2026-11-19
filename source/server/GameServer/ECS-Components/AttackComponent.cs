@@ -1022,6 +1022,7 @@ namespace DOL.GS
         /// <returns>the object where we collect and modifiy all parameters about the attack</returns>
         public AttackData LivingMakeAttack(WeaponAction action, GameObject target, DbInventoryItem weapon, Style style, double effectiveness, int interval, bool dualWield, bool ignoreLOS = false)
         {
+            MonsterTiers.Touch(owner, target as GameLiving);   // fixed con tiers: the fight's level first (MonsterTiers.cs)
             AttackData ad = new()
             {
                 Attacker = owner,
@@ -1262,6 +1263,8 @@ namespace DOL.GS
                         damage = 0;
 
                     damage *= LevelScaling.DamageFactor(ad.Attacker, ad.Target);   // GW2-style scaling down (LevelScaling.cs)
+                    damage *= MonsterMoves.HitFactor(ad);   // a monster's heavy / unblockable blow; a staggered one takes more
+                    MonsterMoves.OnHit(ad);                 // player-side blows wear a monster's poise (MonsterMoves.cs)
                     ad.Damage = (int) damage;
                     ad.Modifier = (int) Math.Floor(resistModifier);
                     ad.CriticalChance = CalculateCriticalChance(action);

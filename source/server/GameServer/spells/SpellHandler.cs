@@ -2122,6 +2122,8 @@ namespace DOL.GS.Spells
 			else if (Target == null)
 				Target = target;
 
+			MonsterTiers.Touch(Caster, Target);   // fixed con tiers: the fight's level first (MonsterTiers.cs)
+
 			if (Target != null)
 			{
 				if (Spell.IsFocus && (!Target.IsAlive || !Caster.IsWithinRadius(Target, Spell.CalculateEffectiveRange(Caster))))
@@ -3260,6 +3262,7 @@ namespace DOL.GS.Spells
 			if (finalDamage < 0)
 				finalDamage = 0;
 
+			finalDamage *= MonsterTiers.SpellFactor(m_caster);              // a tiered monster's spells follow its fight level
 			finalDamage *= LevelScaling.DamageFactor(m_caster, ad.Target);   // GW2-style scaling down (LevelScaling.cs)
 
 			// DoTs can only crit with Wild Arcana. This is handled by the DoTSpellHandler directly.
