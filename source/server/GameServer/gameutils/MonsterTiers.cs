@@ -264,8 +264,11 @@ namespace DOL.GS
         // plain auto-attacks: an even con takes about 25 s to bring down and would take about 50 s to bring you down.
         public static double InStep = 1.6, OutStep = 1.55;
         public static readonly int[] CurveLevels = { 1, 5, 15, 25, 35, 45, 50 };
-        public static readonly double[] InCurve = { 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5 };
-        public static readonly double[] OutCurve = { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 };
+        // (bench run 1, 19 Nov: the stand-in Celt Hero in plain reinforced armour, a rowdy and a lough wolf at every con:
+        // InCurve so an even con would take ~60 s to bring it down; OutCurve's shape from how fast it brought them down,
+        // pinned at level 17 to what Fiona's fights felt right with - styles, gear and a companion make up the rest)
+        public static readonly double[] InCurve = { 0.80, 0.80, 0.87, 0.86, 0.69, 0.55, 0.45 };
+        public static readonly double[] OutCurve = { 0.35, 0.35, 0.72, 0.92, 1.25, 1.52, 1.81 };
 
         static double CurveAt(double[] curve, int level)
         {

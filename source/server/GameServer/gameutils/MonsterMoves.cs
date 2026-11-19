@@ -36,8 +36,9 @@ namespace DOL.GS
 
         public const int NormalMs = 600, StyleMs = 450, ChainMs = 400, CounterMs = 380, HeavyMs = 1100, ConeMs = 900, SlamMs = 1700;
         public const int SlamRadius = 350, ConeRadius = 320, ConeArc = 100;
-        public const double StyleFactor = 1.4, PositionalFactor = 1.7, ChainFactor = 1.5, CounterFactor = 1.45,
-            HeavyFactor = 1.8, ConeFactor = 1.2, SlamFactor = 1.6;
+        // (owner 2026-11-19 playtest: too much damage - a level 9's 141 health took 63 from a green's blow)
+        public const double StyleFactor = 1.3, PositionalFactor = 1.5, ChainFactor = 1.35, CounterFactor = 1.3,
+            HeavyFactor = 1.6, ConeFactor = 1.15, SlamFactor = 1.5;
         // (owner 2026-11-19: "Endurance costs for mobs need to be much higher ... If they get parried or evaded or
         // blocked, whatever they were trying to do should have a much bigger endurance cost, let's start with 3 times.
         // successfully blocking parrying or evading the player will restore as much ... Missed parry blocks or evades

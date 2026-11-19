@@ -434,7 +434,9 @@ func _unpark(oid: int, st: NpcState) -> void:
 	var v := p[0] as Npc
 	if not is_instance_valid(v):
 		return
-	if String(p[1]) != String(st.spawn.get("model", "")) or int(p[2]) != int(st.spawn.get("size", 50)) 			or int(p[3]) != int(st.spawn.get("flags", 0)) or v.info != st.info:
+	# (another living's figure under a reused object id - a fresh companion after a call or a role change, owner
+	# 2026-11-19: "respawning with different equipment" - is never taken: a different name builds a new one)
+	if String(p[1]) != String(st.spawn.get("model", "")) or int(p[2]) != int(st.spawn.get("size", 50)) 			or int(p[3]) != int(st.spawn.get("flags", 0)) or v.info != st.info 			or String(p[4]) != String(st.spawn.get("name", "")):
 		v.queue_free()
 		return
 	v.rebind(st)
@@ -972,6 +974,9 @@ func update_views(max_build: int) -> void:
 		PlayerData.target["health"] = target.state.health
 
 
+var _sheet_parts := ""
+
+
 func _message(d: Dictionary) -> void:
 	var t := int(d.type)
 	if String(d.text).begins_with("#WAL|"):               # your wallet (PlayerWallet.cs): the modern inventory shows it
@@ -1101,10 +1106,15 @@ func _message(d: Dictionary) -> void:
 	if String(d.text).begins_with("#EV|"):                # the dynamic events of this zone (DynamicEventManager.cs)
 		preload("res://game/ui/event_tracker.gd").receive(String(d.text).substr(4))
 		return
+	if String(d.text).begins_with("#CSHEETP|"):           # a piece of the companion sheet (the rest follows)
+		_sheet_parts += String(d.text).substr(9)
+		return
 	if String(d.text).begins_with("#CSHEET|"):            # your companion's character sheet (PersonalCompanions.Sheet)
+		var whole := _sheet_parts + String(d.text).substr(8)
+		_sheet_parts = ""
 		var cs = viewer.ui.get("companion_sheet") if viewer and viewer.ui else null
 		if cs:
-			cs.receive(String(d.text).substr(8))
+			cs.receive(whole)
 		return
 	if String(d.text).begins_with("#EVL|"):               # the /events window's list (DynamicEventsCommandHandler)
 		var ew = viewer.ui.get("events_window") if viewer and viewer.ui else null

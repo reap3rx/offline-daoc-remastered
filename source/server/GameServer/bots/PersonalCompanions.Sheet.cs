@@ -81,7 +81,11 @@ namespace DOL.GS
                     styles,
                     spells,
                 };
-                NewClient.Send(p, "#CSHEET|" + JsonSerializer.Serialize(sheet));
+                // in pieces (a system line holds well under 2 KB): "#CSHEETP|..." then the last as "#CSHEET|..."
+                string json = JsonSerializer.Serialize(sheet);
+                const int piece = 900;
+                for (int i = 0; i < json.Length; i += piece)
+                    NewClient.Send(p, (i + piece >= json.Length ? "#CSHEET|" : "#CSHEETP|") + json.Substring(i, Math.Min(piece, json.Length - i)));
                 return null;
             }
             catch (Exception ex)
