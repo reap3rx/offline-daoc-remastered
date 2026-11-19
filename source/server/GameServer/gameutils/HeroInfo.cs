@@ -88,11 +88,36 @@ namespace DOL.GS
             return p.Level;
         }
 
+        private static readonly ConcurrentDictionary<string, string> _groupLevels = new();
+
+        /// <summary>The party frame's levels (owner 2026-11-19: "as long as it goes up when the bot levels up (sometimes it
+        /// takes a bit to update)"): only a whole group-window update carries a member's level, and not every way a bot
+        /// levels sends one - so once a second, if any member's level changed, the window is sent again.</summary>
+        private static void GroupLevels(GamePlayer p)
+        {
+            if (p.Group == null)
+            {
+                _groupLevels.TryRemove(p.ObjectId, out _);
+                return;
+            }
+            var sb = new System.Text.StringBuilder();
+            foreach (GameLiving m in p.Group.GetMembersInTheGroup())
+                sb.Append(m.ObjectID).Append(':').Append(m.Level).Append(';');
+            string line = sb.ToString();
+            if (_groupLevels.TryGetValue(p.ObjectId, out string was) && was == line)
+                return;
+            bool first = was == null;
+            _groupLevels[p.ObjectId] = line;
+            if (!first)
+                p.Out.SendGroupWindowUpdate();
+        }
+
         private static void Tick(GamePlayer p)
         {
             PetTick(p);
             MonsterTiers.PushTiers(p);
             MonsterMoves.PushVitals(p);      // endurance / power lines under the plates
+            GroupLevels(p);
             int lv = FightingLevel(p);
             if (_sentLevel.TryGetValue(p.ObjectId, out int was) && was == lv)
                 return;
@@ -225,6 +250,7 @@ namespace DOL.GS
             {
                 _sentLevel.TryRemove(p.ObjectId, out _);
                 _sentPets.TryRemove(p.ObjectId, out _);
+                _groupLevels.TryRemove(p.ObjectId, out _);
                 MonsterTiers.Forget(p);
                 MonsterMoves.Forget(p);
             }
