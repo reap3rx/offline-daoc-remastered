@@ -68,7 +68,12 @@ namespace DOL.GS.GameEvents
 		/// <param name="args"></param>
 		public static void OnCharacterCreation(DOLEvent e, object sender, EventArgs args)
 		{
-			// Only act if enabled.
+			// No base classes (owner 2026-11-19: "once the character is created, they are a level 1 enchantress for example
+			// right when they enter, rather than needing a pop up to pick the class once in game"): the class chosen at
+			// creation is kept, whatever start_as_base_class says (it was still on, so creation turned an Enchantress
+			// into a Magician and ClassChoice then asked again in game).
+			return;
+#pragma warning disable CS0162
 			if (!START_AS_BASE_CLASS)
 				return;
 			
@@ -85,6 +90,7 @@ namespace DOL.GS.GameEvents
 			
 			if (chClass != null && chClass.ID != ch.Class)
 				ch.Class = chClass.ID;
+#pragma warning restore CS0162
 		}
 		
 	}
