@@ -36,7 +36,7 @@ namespace DOL.GS
     ///   44   Devastate (chain)               4 s stun                            Ultimate Demoralization around it
     ///   50   Annihilation (behind)           9 s stun and a grievous bleed       Blast of the Champion around it, Crawl
     /// Others (2, 15) as they were. Basic (a class learning the line later - not yet) keeps the line as it was.
-    /// Proc spells: ids 64100-64199, hidden line "Style Rework Effects".
+    /// Proc spells: ids 30801-30899, hidden line "Style Rework Effects".
     /// </summary>
     public static class StyleRework
     {
@@ -49,16 +49,18 @@ namespace DOL.GS
             Gigantic = 299, Recovery = 300, Demolish = 301, Shatter = 302, Devastate = 303, Annihilation = 304;
 
         // the proc spells
-        const int HamSnare = 64101, HamRoot = 64102, HamLanguor = 64103, DeepBleed = 64104, DebilityPulse = 64105,
-            Stun3 = 64106, BlastCourage = 64107, LethargySpread = 64108, Stagger = 64109, DemoralizeCone = 64110,
-            BlastBravery = 64111, Submission = 64112, Sunder = 64113, AtonyPulse = 64114, DrainAround = 64115,
-            Stun4 = 64116, UltDemoralize = 64117, GrievousBleed = 64118, BlastChampion = 64119, Crawl = 64120,
-            RageDrain = 64121;
+        // (ids 30801-30899: free in the database and in the scripts - the first try, 64101+, were the King's pets' summons)
+        const int HamSnare = 30801, HamRoot = 30802, HamLanguor = 30803, DeepBleed = 30804, DebilityPulse = 30805,
+            Stun3 = 30806, BlastCourage = 30807, LethargySpread = 30808, Stagger = 30809, DemoralizeCone = 30810,
+            BlastBravery = 30811, Submission = 30812, Sunder = 30813, AtonyPulse = 30814, DrainAround = 30815,
+            Stun4 = 30816, UltDemoralize = 30817, GrievousBleed = 30818, BlastChampion = 30819, Crawl = 30820,
+            RageDrain = 30821;
 
         /// <summary>Cleaving styles: (style id) - for every class that has them.</summary>
         static readonly HashSet<int> Cleaves = new() { Sweep };
         public const int CleaveArc = 120, CleaveExtra = 2;
         public const double CleaveFactor = 0.7, HeroCleaveFactor = 0.9;
+        public const ushort SweepFx = 474, SweepHitFx = 2143;   // (Blasting Gale's swirl; a rending slash)
 
         [GameServerStartedEvent]
         public static void OnServerStarted(DOLEvent e, object sender, EventArgs args)
@@ -200,7 +202,15 @@ namespace DOL.GS
                     st.Procs.Add(new StyleProcInfo(s, cls, 100));
         }
 
-        static void Hidden(DbSpell d) => SkillBase.AddScriptedSpell(HiddenLine, new Spell(d, 1));
+        static void Hidden(DbSpell d)
+        {
+            if (SkillBase.GetSpellByID(d.SpellID) is Spell taken)
+            {
+                Console.WriteLine($"[StyleRework] spell id {d.SpellID} is already {taken.Name} - {d.Name} not added");
+                return;
+            }
+            SkillBase.AddScriptedSpell(HiddenLine, new Spell(d, 1));
+        }
 
         static DbSpell Db(int id, string name, string type, double value = 0, double damage = 0, int damageType = 0, int duration = 0,
             int frequency = 0, int range = 0, int radius = 0, string target = "Enemy", int effect = 0, int icon = 0, string msg1 = "") =>
@@ -210,6 +220,42 @@ namespace DOL.GS
                 Duration = duration, Frequency = frequency, Range = range, Radius = radius, ClientEffect = effect,
                 Icon = icon != 0 ? icon : effect, Message1 = msg1, Description = name,
             };
+
+        // ------------------------------------------------------------------ the tooltip's line
+
+        static readonly Dictionary<(int, int), string> _about = new()
+        {
+            [(Hero, Rage)] = "Turn your parry into a counter: you get some endurance back.",
+            [(Champion, Rage)] = "Turn your parry into a counter: you drain your foe's endurance into your own.",
+            [(Hero, Sweep)] = "A wide sweep: also hits up to two more enemies in front of you, hard (90% of the blow).",
+            [(Champion, Sweep)] = "A wide sweep: also hits up to two more enemies in front of you (70% of the blow) and saps their dexterity and quickness.",
+            [(Hero, Hamstring)] = "From behind: cut its hamstring - it is rooted for a moment (any damage frees it). Stop one running at your healer.",
+            [(Champion, Hamstring)] = "From behind: Valor's Languor - a heavy snare that holds through damage. Stop one running at your healer.",
+            [(Hero, Force)] = "From the side: a deep bleed.",
+            [(Champion, Force)] = "From the side: Debility pulses from your foe, sapping the strength and constitution of all around it.",
+            [(Hero, Vigor)] = "After Celtic Rage: stuns for 3 seconds.",
+            [(Champion, Vigor)] = "After Celtic Rage: a Blast of Courage strikes your foe.",
+            [(Hero, Obliteration)] = "After Hibernian Force: a crushing blow that also slows its attacks.",
+            [(Champion, Obliteration)] = "After Hibernian Force: lethargy spreads from your foe - everything around it attacks slower.",
+            [(Hero, Frontal)] = "From the front: staggers it, breaking the blow it is winding up.",
+            [(Champion, Frontal)] = "From the front: a wave of Demoralization - everything in front of you attacks slower.",
+            [(Hero, Gigantic)] = "After Hibernian Vigor: a huge blow, surer to land.",
+            [(Champion, Gigantic)] = "After Hibernian Vigor: a huge blow and a Blast of Bravery.",
+            [(Hero, Recovery)] = "After it parries you: stuns for 6 seconds.",
+            [(Champion, Recovery)] = "After it parries you: Submission - its dexterity and quickness fall, so it parries less.",
+            [(Hero, Demolish)] = "After Obliteration: sunders its armour - your blows bite deeper.",
+            [(Champion, Demolish)] = "After Obliteration: Atony pulses from your foe, sapping the strength and constitution of all around it.",
+            [(Hero, Shatter)] = "After it blocks you: a bleed, and its guard is broken - it blocks half as often for a while.",
+            [(Champion, Shatter)] = "After it blocks you: Valor drains the endurance of everything around your foe.",
+            [(Hero, Devastate)] = "After Ultimate Recovery: stuns for 4 seconds.",
+            [(Champion, Devastate)] = "After Ultimate Recovery: Ultimate Demoralization - everything around your foe attacks much slower.",
+            [(Hero, Annihilation)] = "From behind: a massive blow, a long stun and a grievous bleed.",
+            [(Champion, Annihilation)] = "From behind: Blast of the Champion bursts around your foe, and Crawl all but stops it.",
+        };
+
+        /// <summary>The tooltip's first line for a style of a reshaped line, or null.</summary>
+        public static string Describe(Style st) =>
+            st != null && _about.TryGetValue((st.ClassID, st.ID), out string s) && st.Spec == LargeWeapons ? s : null;
 
         // ------------------------------------------------------------------ when a style lands (WeaponAction)
 
@@ -261,8 +307,9 @@ namespace DOL.GS
                     continue;
                 hit.Add(n);
             }
-            if (owner is GamePlayer p)
-                ActionCombat.Send(p, $"sweep|{reach}|{CleaveArc}");
+            // the sweep: a gust of wind around you (Blasting Gale's swirl and whoosh), a slash on everything it catches
+            foreach (GamePlayer v in owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                v.Out.SendSpellEffectAnimation(owner, owner, SweepFx, 0, false, 1);
             foreach (GameLiving t in hit)
             {
                 MonsterTiers.Touch(owner, t);
@@ -274,7 +321,10 @@ namespace DOL.GS
                 t.OnAttackedByEnemy(extra);
                 owner.DealDamage(extra);
                 foreach (GamePlayer v in owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                {
                     v.Out.SendCombatAnimation(null, t, 0, 0, 0, 0, 0x0A, t.HealthPercent);
+                    v.Out.SendSpellEffectAnimation(owner, t, SweepHitFx, 0, false, 1);
+                }
                 if (owner is GamePlayer op)
                     op.Out.SendMessage($"Your sweep hits {t.GetName(0, false)} for {dmg} damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
                 if (ad.StyleEffects != null)

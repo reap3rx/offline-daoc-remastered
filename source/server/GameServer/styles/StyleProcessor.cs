@@ -633,6 +633,12 @@ namespace DOL.GS.Styles
 		/// <param name="player"></param>
 		public static void DelveWeaponStyle(List<string> delveInfo, Style style, GamePlayer player)
 		{
+			// what it does, in a line (StyleRework: a class's version of a line)
+			if (StyleRework.Describe(style) is string what)
+			{
+				delveInfo.Add(what);
+				delveInfo.Add(" ");
+			}
 			delveInfo.Add(LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.WeaponType", style.GetRequiredWeaponName()));
 			string temp = LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Opening") + " ";
 			if (Style.eOpening.Offensive == style.OpeningRequirementType)
@@ -859,8 +865,10 @@ namespace DOL.GS.Styles
 						}
 					}
 
+					string effectLabel = temp;
 					foreach (StyleProcInfo proc in style.Procs)
 					{
+						temp = effectLabel;                // (each effect its own line - the second was added onto the first)
 						// RR4: we added all the procs to the style, now it's time to check for class ID
 						if (hasClassSpecificProc && proc.ClassId != player.CharacterClass.ID)
 							continue;

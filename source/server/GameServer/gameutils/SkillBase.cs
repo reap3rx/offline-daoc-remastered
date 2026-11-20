@@ -2104,6 +2104,31 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>An ability made in code (TauntShouts): known by its key, learned through a specialization (a class's
+		/// "...Career" spec teaches by character level).</summary>
+		public static void AddScriptedAbility(DbAbility dba, string specKey, int specLevel, int classId = 0)
+		{
+			m_syncLockUpdates.EnterWriteLock();
+			try
+			{
+				m_abilityIndex[dba.KeyName] = dba;
+				if (!m_specsAbilities.TryGetValue(specKey, out List<Tuple<string, byte, int, int>> list))
+				{
+					list = new List<Tuple<string, byte, int, int>>();
+					m_specsAbilities[specKey] = list;
+				}
+				if (!list.Exists(t => t.Item1 == dba.KeyName))
+				{
+					list.Add(new Tuple<string, byte, int, int>(dba.KeyName, (byte) specLevel, 1, classId));
+					list.Sort((i, j) => i.Item2.CompareTo(j.Item2));
+				}
+			}
+			finally
+			{
+				m_syncLockUpdates.ExitWriteLock();
+			}
+		}
+
 		/// <summary>Give a class a spell line through one of its specializations (TauntShouts: the fighters' shouts).</summary>
 		public static void AddSpecSpellLine(string specKey, SpellLine line, int classIdHint)
 		{

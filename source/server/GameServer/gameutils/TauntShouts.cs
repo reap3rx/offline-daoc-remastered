@@ -13,27 +13,29 @@ namespace DOL.GS
     /// Taunts are shouts (owner 2026-11-19: "drop the taunt and detaunt styles ... all fighter based classes (Hero,
     /// Champion, Blademaster, Paladin, Armsman, etc..) [get] a ranged single target shout, and then eventually an AoE taunt
     /// shout. Stealthers and Minstrels do not apply"; "Taunts ... need to be really powerful and not have big
-    /// cooldowns. I know on my champion, using the LW taunt style, I had to hit the mob multiple times"):
+    /// cooldowns"; "give icons and put in the abilities window"):
     ///   Challenge (level 5): the target's threat on you becomes its highest plus half again and a margin, and it turns
-    ///     on you at once - 1500 range, instant, 8 s.
-    ///   Battle Cry (level 20): the same on every monster within 600 of you - instant, 20 s.
-    /// The fighters' blows also make half again the threat (ThreatFactor), so a tank keeps what it takes between shouts.
-    /// A spell line, "Battle Cries" (a baseline line - your level teaches it), given each fighter class through its
-    /// Blades / Two Handed / Sword specialization. Bots that fight use them when a monster is on someone softer.
+    ///     on you at once - 1500 range, 8 s.
+    ///   Battle Cry (level 20): the same on every monster within 600 of you - 20 s.
+    /// Abilities, taught by each fighter class's career (its "...Career" specialization goes by your level), with the
+    /// client's own shout icons (Taunting Shout, Bolstering Roar). The fighters' blows also make half again the threat
+    /// (ThreatFactor). Bots that fight use them when a monster is on someone softer.
     /// </summary>
     public static class TauntShouts
     {
-        public const string LineKey = "Battle Cries";
-        public const int ChallengeId = 64190, BattleCryId = 64191;
+        public const string ChallengeKey = "Challenge", BattleCryKey = "Battle Cry";
+        public const int ChallengeLevel = 5, BattleCryLevel = 20;
+        public const int ChallengeRange = 1500, BattleCryRadius = 600;
+        public const int ChallengeReuseMs = 8000, BattleCryReuseMs = 20000;
+        public const ushort ShoutFx = 7353;                           // (the old taunt styles' own effect)
         public const double FighterThreat = 1.5;
 
-        /// <summary>Fighter classes and the specialization each one's shouts come through (one every one of them has).</summary>
-        public static readonly Dictionary<eCharacterClass, string> Fighters = new()
+        /// <summary>Fighter classes (their careers teach the shouts).</summary>
+        public static readonly HashSet<eCharacterClass> Fighters = new()
         {
-            [eCharacterClass.Hero] = "Blades", [eCharacterClass.Champion] = "Blades", [eCharacterClass.Blademaster] = "Blades",
-            [eCharacterClass.Armsman] = "Slash", [eCharacterClass.Paladin] = "Slash", [eCharacterClass.Mercenary] = "Slash",
-            [eCharacterClass.Warrior] = "Sword", [eCharacterClass.Thane] = "Sword", [eCharacterClass.Berserker] = "Sword",
-            [eCharacterClass.Savage] = "Hand to Hand", [eCharacterClass.Valkyrie] = "Sword",
+            eCharacterClass.Hero, eCharacterClass.Champion, eCharacterClass.Blademaster,
+            eCharacterClass.Armsman, eCharacterClass.Paladin, eCharacterClass.Mercenary,
+            eCharacterClass.Warrior, eCharacterClass.Thane, eCharacterClass.Berserker, eCharacterClass.Savage, eCharacterClass.Valkyrie,
         };
 
         public static bool IsFighter(GameLiving l)
@@ -44,7 +46,7 @@ namespace DOL.GS
                 GameBot b => b.CharacterClass?.ID ?? 0,
                 _ => 0
             };
-            return id != 0 && Fighters.ContainsKey((eCharacterClass) id);
+            return id != 0 && Fighters.Contains((eCharacterClass) id);
         }
 
         /// <summary>StandardMobBrain: a fighter's melee makes half again the threat.</summary>
@@ -66,25 +68,26 @@ namespace DOL.GS
 
         public static void Register()
         {
-            SkillBase.AddScriptedSpell(LineKey, new Spell(Db(ChallengeId, "Challenge", range: 1500, radius: 0, recast: 8, emote: "Taunt",
-                desc: "Shout a challenge: the target turns on you at once, and you hold more of its anger than anyone else."), 5));
-            SkillBase.AddScriptedSpell(LineKey, new Spell(Db(BattleCryId, "Battle Cry", range: 0, radius: 600, recast: 20, emote: "Roar",
-                desc: "A roar that turns every enemy around you on you at once."), 20));
-            int n = 0;
-            foreach (var (cls, spec) in Fighters)
+            var challenge = new DbAbility
             {
-                var classLine = new SpellLine(LineKey, LineKey, spec, true);
-                SkillBase.AddSpecSpellLine(spec, classLine, (int) cls);
+                KeyName = ChallengeKey, Name = ChallengeKey, IconID = 3464, InternalID = 3901, AbilityID = 3901,
+                Description = "Shout a challenge at your target (1500 range): it turns on you at once, and you hold more of its anger than anyone else. 8 second reuse.",
+            };
+            var cry = new DbAbility
+            {
+                KeyName = BattleCryKey, Name = BattleCryKey, IconID = 974, InternalID = 3902, AbilityID = 3902,
+                Description = "A roar that turns every enemy within 600 of you on you at once, and you hold more of their anger than anyone else. 20 second reuse.",
+            };
+            int n = 0;
+            foreach (eCharacterClass c in Fighters)
+            {
+                string career = c + "Career";
+                SkillBase.AddScriptedAbility(challenge, career, ChallengeLevel);
+                SkillBase.AddScriptedAbility(cry, career, BattleCryLevel);
                 n++;
             }
             Console.WriteLine($"[TauntShouts] Challenge and Battle Cry for {n} fighter classes");
         }
-
-        static DbSpell Db(int id, string name, int range, int radius, int recast, string emote, string desc) => new DbSpell
-        {
-            SpellID = id, Name = name, Type = "TauntShout", Target = "Enemy", Range = range, Radius = radius, RecastDelay = recast,
-            CastTime = 0, Power = 0, ClientEffect = 7353, Icon = 7353, SpellGroup = id, Description = desc, Message1 = emote,
-        };
 
         /// <summary>One monster turned on the shouter: its threat on them its highest plus half again and a margin.</summary>
         public static void Taunt(GameLiving shouter, GameNPC n)
@@ -101,21 +104,71 @@ namespace DOL.GS
                 n.StartAttack(shouter);
         }
 
+        static void Shout(GameLiving who, eEmote emote)
+        {
+            foreach (GamePlayer v in who.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                v.Out.SendEmoteAnimation(who, emote);
+        }
+
+        static bool Foe(GameLiving who, GameNPC n) =>
+            n != null && n.IsAlive && n.ObjectState == GameObject.eObjectState.Active && n.Brain is StandardMobBrain &&
+            MonsterTiers.Combatant(n) == null && GameServer.ServerRules.IsAllowedToAttack(who, n, true);
+
+        /// <summary>Challenge: the target (null: not a foe in range - why not, for a player).</summary>
+        public static string Challenge(GameLiving who, GameNPC target)
+        {
+            if (!Foe(who, target))
+                return "You must target an enemy to challenge.";
+            if (!who.IsWithinRadius(target, ChallengeRange))
+                return $"{target.GetName(0, true)} is too far away to hear your challenge.";
+            Shout(who, eEmote.Taunt);
+            Taunt(who, target);
+            foreach (GamePlayer v in who.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                v.Out.SendSpellEffectAnimation(who, target, ShoutFx, 0, false, 1);
+            Message.SystemToArea(who, $"{who.GetName(0, true)} challenges {target.GetName(0, false)}!", eChatType.CT_Emote, who);
+            return null;
+        }
+
+        /// <summary>Battle Cry: every foe within reach; how many turned.</summary>
+        public static int BattleCry(GameLiving who)
+        {
+            Shout(who, eEmote.Roar);
+            int count = 0;
+            foreach (GameNPC n in who.GetNPCsInRadius(BattleCryRadius))
+            {
+                if (!Foe(who, n))
+                    continue;
+                Taunt(who, n);
+                foreach (GamePlayer v in who.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                    v.Out.SendSpellEffectAnimation(who, n, ShoutFx, 0, false, 1);
+                count++;
+            }
+            foreach (GamePlayer v in who.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                v.Out.SendSpellEffectAnimation(who, who, ShoutFx, 0, false, 1);
+            Message.SystemToArea(who, $"{who.GetName(0, true)} lets out a battle cry!", eChatType.CT_Emote, who);
+            return count;
+        }
+
         // ------------------------------------------------------------------ bots
 
-        static readonly System.Runtime.CompilerServices.ConditionalWeakTable<GameBot, System.Runtime.CompilerServices.StrongBox<long>> _botNext = new();
+        sealed class BotTimes
+        {
+            public long Next, ChallengeReady, CryReady;
+        }
+
+        static readonly System.Runtime.CompilerServices.ConditionalWeakTable<GameBot, BotTimes> _bots = new();
 
         /// <summary>BotBrain.Think: a fighting fighter bot shouts when a monster is on someone softer (not a fighter): Battle
         /// Cry for two or more near it, Challenge for one.</summary>
         public static void BotThink(GameBot bot)
         {
-            if (bot == null || !bot.IsAlive || !bot.InCombat || !IsFighter(bot) || bot.IsCasting || bot.IsIncapacitated)
+            if (bot == null || !bot.IsAlive || !bot.InCombat || bot.Level < ChallengeLevel || !IsFighter(bot) || bot.IsIncapacitated)
                 return;
             long now = GameLoop.GameLoopTime;
-            var box = _botNext.GetValue(bot, _ => new System.Runtime.CompilerServices.StrongBox<long>(0));
-            if (now < box.Value)
+            BotTimes t = _bots.GetValue(bot, _ => new BotTimes());
+            if (now < t.Next)
                 return;
-            box.Value = now + 1000;
+            t.Next = now + 1000;
             var side = new HashSet<GameLiving>();
             if (bot.Group != null)
                 foreach (GameLiving m in bot.Group.GetMembersInTheGroup())
@@ -123,66 +176,59 @@ namespace DOL.GS
             if (MonsterTiers.Combatant(bot) is GameLiving lead)
                 side.Add(lead);
             var onSoft = new List<GameNPC>();
-            foreach (GameNPC n in bot.GetNPCsInRadius(1500))
-            {
-                if (!n.IsAlive || n.Brain is not StandardMobBrain || n.TargetObject is not GameLiving t || t == bot)
-                    continue;
-                if (side.Contains(t) && !IsFighter(t))
+            foreach (GameNPC n in bot.GetNPCsInRadius(ChallengeRange))
+                if (Foe(bot, n) && n.TargetObject is GameLiving tl && tl != bot && side.Contains(tl) && !IsFighter(tl))
                     onSoft.Add(n);
-            }
             if (onSoft.Count == 0)
                 return;
-            int near = onSoft.Count(n => n.IsWithinRadius(bot, 600));
-            Spell cry = SkillBase.GetSpellByID(BattleCryId), chal = SkillBase.GetSpellByID(ChallengeId);
-            SpellLine line = SkillBase.GetSpellLine(LineKey);
-            if (line == null)
-                return;
-            if (near >= 2 && cry != null && bot.Level >= 20 && bot.GetSkillDisabledDuration(cry) <= 0)
-                bot.CastSpell(cry, line);
-            else if (chal != null && bot.Level >= 5 && bot.GetSkillDisabledDuration(chal) <= 0)
+            int near = onSoft.Count(n => n.IsWithinRadius(bot, BattleCryRadius));
+            if (near >= 2 && bot.Level >= BattleCryLevel && now >= t.CryReady)
             {
-                GameNPC pick = onSoft.OrderBy(n => n.GetDistanceTo(bot)).First();
-                GameObject was = bot.TargetObject;
-                bot.TargetObject = pick;
-                bot.CastSpell(chal, line);
-                bot.TargetObject = was;
+                BattleCry(bot);
+                t.CryReady = now + BattleCryReuseMs;
+            }
+            else if (now >= t.ChallengeReady)
+            {
+                Challenge(bot, onSoft.OrderBy(n => n.GetDistanceTo(bot)).First());
+                t.ChallengeReady = now + ChallengeReuseMs;
             }
         }
     }
 }
 
-namespace DOL.GS.Spells
+namespace DOL.GS.SkillHandler
 {
-    /// <summary>A taunt shout (TauntShouts): every enemy it reaches turns on the shouter.</summary>
-    [SpellHandler(eSpellType.TauntShout)]
-    public class TauntShoutSpellHandler : SpellHandler
+    using DOL.GS.PacketHandler;
+
+    [SkillHandler(TauntShouts.ChallengeKey)]
+    public class ChallengeAbilityHandler : IAbilityActionHandler
     {
-        public TauntShoutSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
-
-        public override string ShortDescription => Spell.Radius > 0
-            ? "Every enemy around you turns on you."
-            : "The target turns on you, and you hold more of its anger than anyone else.";
-
-        public override bool StartSpell(GameLiving target)
+        public void Execute(Ability ab, GamePlayer player)
         {
-            // the shout itself: its emote for everyone near (Message1 carries which)
-            eEmote emote = Spell.Message1 == "Roar" ? eEmote.Roar : eEmote.Taunt;
-            foreach (GamePlayer v in Caster.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                v.Out.SendEmoteAnimation(Caster, emote);
-            return base.StartSpell(target);
-        }
-
-        public override void ApplyEffectOnTarget(GameLiving target) => OnDirectEffect(target);
-
-        public override void OnDirectEffect(GameLiving target)
-        {
-            if (target is not GameNPC n || !n.IsAlive)
+            if (player == null || !player.IsAlive)
                 return;
-            TauntShouts.Taunt(Caster, n);
-            SendEffectAnimation(n, 0, false, 1);
-            MessageToCaster($"{n.GetName(0, true)} turns on you!", eChatType.CT_Spell);
+            string why = TauntShouts.Challenge(player, player.TargetObject as GameNPC);
+            if (why != null)
+            {
+                player.Out.SendMessage(why, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            player.Out.SendMessage($"{player.TargetObject.GetName(0, true)} turns on you!", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+            player.DisableSkill(ab, TauntShouts.ChallengeReuseMs);
         }
+    }
 
-        public override double CalculateSpellResistChance(GameLiving target) => 0;
+    [SkillHandler(TauntShouts.BattleCryKey)]
+    public class BattleCryAbilityHandler : IAbilityActionHandler
+    {
+        public void Execute(Ability ab, GamePlayer player)
+        {
+            if (player == null || !player.IsAlive)
+                return;
+            int n = TauntShouts.BattleCry(player);
+            player.Out.SendMessage(n > 0 ? $"Your battle cry turns {n} {(n == 1 ? "enemy" : "enemies")} on you!" : "Your battle cry echoes, but no enemy is near.",
+                eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+            player.DisableSkill(ab, TauntShouts.BattleCryReuseMs);
+        }
     }
 }
