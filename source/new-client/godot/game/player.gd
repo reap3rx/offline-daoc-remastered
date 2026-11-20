@@ -878,7 +878,7 @@ const STAFF_TILT := {"lur_m": 20.0}           # degrees out from the body (dress
 ## A drawn one-hander tipped out from the body while running (owner 2026-11-20 bugs doc: "lurikeen males hold their
 ## weapons when they're running in a way that makes them clip into their heads. I think the weapon hold is actually
 ## slightly off for every race and sex"). Measured with tools/clip_measure.gd - a sword's nearest corner to the head
-## bone over the run cycle: Lurikeen male 0.08, Kobold male 0.12, Halfling female 0.14, the other males 0.15-0.19,
+## bone over the run cycle: Lurikeen male 0.08, Kobold male 0.12, Half Ogre female 0.14, the other males 0.15-0.19,
 ## the other females 0.22-0.37. 20 degrees out brings the males to 0.27-0.38 (Lurikeen 30: 0.20, Kobold 25: ~0.25,
 ## their own size). Only while the run plays (run_tilt, every frame): a swing or a guard keeps the client's grip.
 const RUN_TILT_SPEED := 140.0                 # degrees a second, in and out
