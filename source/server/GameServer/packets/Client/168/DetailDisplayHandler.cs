@@ -1036,6 +1036,13 @@ namespace DOL.GS.PacketHandler.Client.v168
 			}
 			else
 			{
+				// a rank that replaced an older one (SpellFamilies): say so (owner 2026-11-19: "in the tool tip of spell it can
+				// say something like 'A more powerful version of X' the previous spell it was")
+				if (spellLine != null && SpellFamilies.PreviousRank(spell, SkillBase.GetSpellList(spellLine.KeyName)) is Spell before)
+				{
+					output.Add($"A more powerful version of {before.Name}.");
+					output.Add(" ");
+				}
 				output.AddRange(spellHandler.DelveInfo);
 				//Subspells
 				if (spell.SubSpellID > 0)

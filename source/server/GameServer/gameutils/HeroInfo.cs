@@ -57,7 +57,7 @@ namespace DOL.GS
                         foreach (var (sp, had, next) in SpellFamilies.Roadmap(SkillBase.GetSpellList(line.KeyName), line.Level))
                         {
                             string kind = sp is Song || sp.NeedInstrument ? "g" : "p";
-                            string name = sp.Name + (next != null ? $" (becomes {next.Name} at {next.Level})" : "");
+                            string name = sp.Name;                  // (just the name: the client finds your spell by it)
                             rows.Add((sp.Level, kind, sp.Icon, had, line.Name + (line.IsBaseLine ? " (BASE)" : ""), name));
                         }
                     }

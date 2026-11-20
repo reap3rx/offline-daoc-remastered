@@ -15,10 +15,27 @@ namespace DOL.GS
     {
         public static object Key(Spell s)
         {
+            // pets are not ranks of each other (owner 2026-11-19: "New pets shouldn't replace older pets, because the pets
+            // have different utility (like Underhill Ally is a healer, Underhill Compatriot is a tank)"): each its own
+            if (IsPet(s))
+                return ("pet", s.ID);
             if (s.Group != 0)
                 return (s.Group, s.SpellType);
             return (s.SpellType, s.Target, s.Radius > 0, s.Range == 0 && s.Radius > 0, s.CastTime <= 0, s.DamageType,
                 s.Frequency > 0, s.Pulse > 0, s.NeedInstrument);
+        }
+
+        public static bool IsPet(Spell s) => s.SpellType.ToString().StartsWith("Summon") || s.SpellType == eSpellType.AstralPetSummon;
+
+        /// <summary>The rank before this one in its line (the spell it replaced), or null - its tooltip: "A more powerful
+        /// version of ...".</summary>
+        public static Spell PreviousRank(Spell spell, IEnumerable<Spell> lineSpells)
+        {
+            if (spell == null || lineSpells == null)
+                return null;
+            object k = Key(spell);
+            return lineSpells.Where(s => s.ID != spell.ID && (s.Level < spell.Level || s.Level == spell.Level && s.ID < spell.ID) && Equals(Key(s), k))
+                .OrderBy(s => s.Level).ThenBy(s => s.ID).LastOrDefault();
         }
 
         /// <summary>Only the best learned rank of each family, in the line's order (by level).</summary>

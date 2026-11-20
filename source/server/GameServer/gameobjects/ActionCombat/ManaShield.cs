@@ -66,6 +66,7 @@ namespace DOL.GS
 			}
 			if (p.IsCasting)
 				p.StopCurrentSpellcast();
+			ChannelCasting.Cancel(p);
 			p.ChangeMana(p, eManaChangeType.Spell, -cost);
 			state.Warding = true;
 			state.WardRaisedAt = GameLoop.GameLoopTime;

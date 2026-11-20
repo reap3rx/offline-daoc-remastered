@@ -269,6 +269,13 @@ namespace DOL.GS
         // pinned at level 17 to what Fiona's fights felt right with - styles, gear and a companion make up the rest)
         public static readonly double[] InCurve = { 0.80, 0.80, 0.87, 0.86, 0.69, 0.55, 0.45 };
         public static readonly double[] OutCurve = { 0.35, 0.35, 0.72, 0.92, 1.25, 1.52, 1.81 };
+        // A player's (or bot's) spells on top of that (owner 2026-11-19: "Spells feel really underpowered. Level 2, but
+        // it's only doing 1 - 3 damage on a green ... Overall though it seems that spell power needs to go up"): the curve
+        // was fitted to auto-attacks, and a caster has nothing else - no styles, no shield, a cast to stand through and the
+        // power it costs. Most at the low levels, where the first spells are weakest against the curve's 0.35.
+        // (stand-in Eldritch, 19 Nov: at level 2 an untrained Gleam Streak did 2-9 on a green of ~45 health at 3x - ten
+        // casts; now about four. At 20 a trained Sun Ray takes a red down in ~10, a blue in ~3.)
+        public static readonly double[] SpellCurve = { 7.5, 6.5, 2.4, 1.6, 1.5, 1.45, 1.4 };
 
         static double CurveAt(double[] curve, int level)
         {
@@ -291,6 +298,14 @@ namespace DOL.GS
         /// <summary>A fighter of this level's hits on a tiered monster, against DAoC's own damage.</summary>
         public static double OutFactor(sbyte tier, int level) => CurveAt(OutCurve, level) / Math.Pow(OutStep, ConGap(tier, level)) / Toughness;
 
+        /// <summary>A player's (or bot's) spell on a tiered monster: SpellCurve at its level (1 for anything else).</summary>
+        public static double SpellOut(GameLiving caster, GameLiving target)
+        {
+            if (target is not GameNPC tn || Tier(tn) == None || caster is not (GamePlayer or GameBot))
+                return 1.0;
+            return CurveAt(SpellCurve, caster.Level);
+        }
+
         static string TuningFile => System.IO.Path.Combine(GameServer.Instance.Configuration.RootDirectory, "tier-tuning.txt");
 
         /// <summary>Keep /tier tune's numbers across restarts (runtime\server\tier-tuning.txt: toughness, bite, the seven
@@ -300,7 +315,7 @@ namespace DOL.GS
             try
             {
                 var ci = System.Globalization.CultureInfo.InvariantCulture;
-                System.IO.File.WriteAllText(TuningFile, "v2 " + string.Join(" ", new[] { Toughness, Bite, InStep, OutStep }.Concat(InCurve).Concat(OutCurve)
+                System.IO.File.WriteAllText(TuningFile, "v2 " + string.Join(" ", new[] { Toughness, Bite, InStep, OutStep }.Concat(InCurve).Concat(OutCurve).Concat(SpellCurve)
                     .Select(v => v.ToString(ci))));
             }
             catch (Exception) { }
@@ -326,6 +341,8 @@ namespace DOL.GS
                     OutStep = v[3];
                     Array.Copy(v, 4, InCurve, 0, n);
                     Array.Copy(v, 4 + n, OutCurve, 0, n);
+                    if (v.Length >= 4 + 3 * n)
+                        Array.Copy(v, 4 + 2 * n, SpellCurve, 0, n);
                 }
             }
             catch (Exception) { }
@@ -699,7 +716,7 @@ namespace DOL.GS.Commands
 {
     [CmdAttribute("&tier", ePrivLevel.GM, "A monster's fixed con tier (MonsterTiers): show it, or set it",
         "/tier  (your target)", "/tier set <grey|green|blue|yellow|orange|red|purple>", "/tier zone  (the tally around you)",
-        "/tier tune [toughness|bite|instep|outstep <value> | in|out <level> <value> | in|out v1,..,v7]  (the power curve, live)")]
+        "/tier tune [toughness|bite|instep|outstep <value> | in|out|spell <level> <value> | in|out|spell v1,..,v7]  (the power curve, live)")]
     public class TierCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         static readonly string[] Names = { "grey", "green", "blue", "yellow", "orange", "red", "purple" };
@@ -715,7 +732,8 @@ namespace DOL.GS.Commands
                 if (args.Length > 3)
                 {
                     string what = args[2].ToLowerInvariant();
-                    double[] curve = what == "in" ? MonsterTiers.InCurve : what == "out" ? MonsterTiers.OutCurve : null;
+                    double[] curve = what == "in" ? MonsterTiers.InCurve : what == "out" ? MonsterTiers.OutCurve :
+                        what == "spell" ? MonsterTiers.SpellCurve : null;
                     if (curve != null && args.Length > 4 && int.TryParse(args[3], out int lv) &&
                         double.TryParse(args[4], System.Globalization.NumberStyles.Float, ci, out double cv) && cv > 0)
                     {
@@ -740,7 +758,8 @@ namespace DOL.GS.Commands
                 }
                 DisplayMessage(client, $"Toughness {MonsterTiers.Toughness:0.##}, bite {MonsterTiers.Bite:0.##}, steps in {MonsterTiers.InStep:0.##} out {MonsterTiers.OutStep:0.##}; " +
                     $"curve at levels {string.Join(",", MonsterTiers.CurveLevels)}: in {string.Join(",", MonsterTiers.InCurve.Select(x => x.ToString("0.###", ci)))}, " +
-                    $"out {string.Join(",", MonsterTiers.OutCurve.Select(x => x.ToString("0.###", ci)))}; you fight like {MonsterTiers.PowerTier(p.Level):0.0} - " +
+                    $"out {string.Join(",", MonsterTiers.OutCurve.Select(x => x.ToString("0.###", ci)))}, " +
+                    $"spell {string.Join(",", MonsterTiers.SpellCurve.Select(x => x.ToString("0.###", ci)))}; you fight like {MonsterTiers.PowerTier(p.Level):0.0} - " +
                     string.Join(", ", Names.Select((n, i) => $"{n} hits x{MonsterTiers.InFactor((sbyte) (i - 3), p.Level):0.##} takes x{MonsterTiers.OutFactor((sbyte) (i - 3), p.Level):0.##}")));
                 return;
             }

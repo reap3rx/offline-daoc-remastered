@@ -40,4 +40,36 @@ public sealed class UT_SpellFamilies
         Assert.That(none.have, Is.False);
         Assert.That(none.shown.Name, Is.EqualTo("Gleam Ray"));
     }
+
+    // owner 2026-11-19: "New pets shouldn't replace older pets, because the pets have different utility"
+    [Test]
+    public void PetsAreNeverRanksOfEachOther()
+    {
+        var spells = new Skill[]
+        {
+            S(10, "Underhill Ally", 5, "SummonUnderhill", group: 900), S(11, "Underhill Compatriot", 20, "SummonUnderhill", group: 900),
+        };
+        Assert.That(SpellFamilies.BestOnly(spells).Select(s => s.Name), Is.EquivalentTo(new[] { "Underhill Ally", "Underhill Compatriot" }));
+    }
+
+    // the tooltip's "A more powerful version of ..."
+    [Test]
+    public void ARankKnowsTheOneBeforeIt()
+    {
+        var line = new[] { S(1, "Gleam Ray", 1, group: 4101), S(2, "Moon Ray", 6, group: 4101), S(3, "Sun Ray", 17, group: 4101), S(4, "Other", 6) };
+        Assert.That(SpellFamilies.PreviousRank(line[2], line)?.Name, Is.EqualTo("Moon Ray"));
+        Assert.That(SpellFamilies.PreviousRank(line[1], line)?.Name, Is.EqualTo("Gleam Ray"));
+        Assert.That(SpellFamilies.PreviousRank(line[0], line), Is.Null);
+        Assert.That(SpellFamilies.PreviousRank(line[3], line), Is.Null);
+    }
+
+    // channelling: the quick mark comes sooner with dexterity
+    [Test]
+    public void TheQuickMarkComesSoonerWithDexterity()
+    {
+        Assert.That(ChannelCasting.QuickShare(60), Is.EqualTo(0.6).Within(1e-9));
+        Assert.That(ChannelCasting.QuickShare(110), Is.EqualTo(0.5).Within(1e-9));
+        Assert.That(ChannelCasting.QuickShare(250), Is.EqualTo(0.4).Within(1e-9));
+        Assert.That(ChannelCasting.QuickShare(10), Is.EqualTo(0.6).Within(1e-9));
+    }
 }

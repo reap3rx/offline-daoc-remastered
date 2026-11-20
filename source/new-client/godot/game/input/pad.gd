@@ -339,7 +339,7 @@ static func action_info(id: String) -> Array:
 			return a
 	if id.begins_with("qb"):
 		var f := id.trim_prefix("qb").split("_")
-		return [id, "Quickbar %s Slot %s" % [f[0], f[1]], "", "tap"]
+		return [id, "Quickbar %s Slot %s" % [f[0], f[1]], "", "held"]   # (held: its release lets a channel go)
 	return [id, id, id.to_upper(), "tap"]
 
 
@@ -570,7 +570,13 @@ func _do(act: String, down: bool) -> void:
 	if act.begins_with("qb"):
 		if down:
 			var f := act.trim_prefix("qb").split("_")
-			_use_slot(int(f[0]) - 1, int(f[1]) - 1)
+			var qb := int(f[0]) - 1
+			var sl := int(f[1]) - 1
+			if qb >= 0 and qb < PlayerData.pad_bars.size() and sl >= 0 and sl < PlayerData.SLOTS:
+				Server.channel_press(PlayerData.pad_bars[qb][sl], "pad:" + act)   # (held: channelled - ChannelCasting)
+			_use_slot(qb, sl)
+		else:
+			Server.channel_release("pad:" + act)
 		return
 	match act:
 		"jump":

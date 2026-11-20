@@ -621,7 +621,61 @@ func _apply_hidden_look() -> void:
 			mi.remove_meta("_hid_t")
 
 
+## The Mana Shield (owner 2026-11-19: "the staff parry animation. Have the animation hold (upper half only) the staff
+## out while the shield remains out"): the polearm / staff parry plays to where the staff is held out and stops there
+## while the shield is up - the upper body only: the legs stand or walk under it (Fig3Figure.set_lower). Let go, the
+## parry plays on to its end (the staff comes back).
+const WARD_HOLD := 0.4                  # (of the parry clip: the staff out)
+var _ward_pose := ""
+
+
+func ward_pose(on: bool) -> void:
+	if _anim == null:
+		return
+	if not on:
+		if _ward_pose != "" and _action == _ward_pose:
+			_anim.speed_scale = 1.0
+			_action_left = maxf(0.05, clip_seconds(_ward_pose) - _anim.current_animation_position)
+		_ward_pose = ""
+		return
+	if _ward_pose != "" and _action == _ward_pose:
+		return                                         # (already held: the server's ward|on after our own press)
+	leave_mount()
+	if dead:
+		return
+	var clip := ""
+	for c in ["parry_pole_high", "parry_pole_low"]:
+		if _anim.has_animation(c):
+			clip = c
+			break
+	if clip == "":
+		clip = WeaponModels.defend_clip(_anim, "staff", "parry")
+	if clip == "":
+		return
+	_one_shot(clip)
+	_ward_pose = clip
+	_defend_clip = ""
+	_defend_slow_left = 0.0
+
+
+## (every frame) the held pose: kept playing, stopped at the staff out; anything else taking over ends it.
+func _ward_hold() -> void:
+	if _ward_pose == "":
+		return
+	if dead or _action != _ward_pose or _anim == null:
+		_ward_pose = ""
+		if _anim:
+			_anim.speed_scale = 1.0
+		return
+	_action_left = 999.0
+	var hold := clip_seconds(_ward_pose) * WARD_HOLD
+	if String(_anim.current_animation) == _ward_pose and _anim.current_animation_position >= hold:
+		_anim.speed_scale = 0.0
+
+
 func flinch() -> void:
+	if _ward_pose != "":
+		return                                         # (the shield took the blow: the staff stays out)
 	var over_defense := _defend_clip != "" and _action == _defend_clip and _action_left > 0.0
 	if (_action_left <= 0.0 or over_defense) and not dead:
 		_defend_clip = ""
@@ -1844,6 +1898,7 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 	_body_offset = lerp_angle(_body_offset, target_offset, minf(1.0, delta * 10.0))
 	_apply_model_yaw()
 	_action_left -= delta
+	_ward_hold()
 	var moving := ahead != 0.0 or strafe != 0.0
 	# upper / lower body (claude 2026-11-09; owner: a swing on the move took its own baked step and slid along, facing
 	# where the body ran, not where you looked): while a swing, a style, a parry or an emote plays on the move, the
@@ -1866,6 +1921,8 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 			legs_speed = _sync("run", "run", speed)
 		if _model is Fig3Figure and (_model as Fig3Figure).action_twists(_action):
 			legs = ""                                      # a spin or a roll plays whole (Fig3Figure.action_twists)
+	elif _ward_pose != "" and grounded and not swimming and not dead and _anim and _anim.has_animation("idle"):
+		legs = "idle"                                      # (the Mana Shield held standing: the legs stand, only the arms parry)
 	# (how fast you turn - kept for the figure)
 	var facing := char_yaw + _body_offset
 	var yaw_rate := wrapf(facing - _last_facing, -PI, PI) / maxf(delta, 0.001) if not is_nan(_last_facing) else 0.0

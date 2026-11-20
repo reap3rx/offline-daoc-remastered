@@ -70,7 +70,7 @@ var _effects_bar: HBoxContainer
 var npc_dialog: NpcDialog
 var social_menu: Control                     # the interact menu (social_menu.gd: hold Interact on a bot, your pet)
 var trainer: TrainerWindow
-const TRANSIENT := ["npc_dialog", "story_dialog", "trainer", "merchant", "vault", "exchange", "guide", "info", "release", "siege", "emblem"]
+const TRANSIENT := ["npc_dialog", "story_dialog", "trainer", "merchant", "vault", "exchange", "guide", "info", "release", "siege", "emblem", "companion_sheet"]   # (the companion sheet: opened by its menu, never at login, empty)
 const INFO_W := 160.0                                     # the information window's width (interact.bmp is 300)
 const INFO_WIDE := 320.0                                  # ... for a server text with long lines (/stables routes)
 var _compass_letters: Control
@@ -354,6 +354,7 @@ func _build() -> void:
 		(info.get_node("Title") as Label).size.x = info.size.x - 27)
 	_build_release()
 	_build_cast_bar()
+	_build_channel_bar()
 	npc_dialog = NpcDialog.new()                          # NPC talk: its words and its [keywords] as choices
 	npc_dialog.resizable = true                           # (owner 2026-11-11: the modern frame, not npctalk.bmp)
 	npc_dialog.patch = [6, 6, 6, 6]
@@ -1422,6 +1423,74 @@ func _build_cast_bar() -> void:
 	_refresh_effects()
 
 
+## The channel bar (ChannelCasting.cs, owner 2026-11-19: "A cast bar shows the quick, normal and powered marks"): over
+## the quickbars while a spell's key is held - it fills toward the powered mark; let go at the quick mark (blue) for the
+## rank before, at the cast time (gold) for this one, held to the powered mark (violet) for the next. The name over it
+## is the one that would go off now.
+var _channel_bar: ChannelBar
+
+
+func _build_channel_bar() -> void:
+	_channel_bar = ChannelBar.new()
+	_channel_bar.size = Vector2(240, 30)
+	_channel_bar.position = Vector2(area().x * 0.5 - 120, area().y - 215)
+	_channel_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_channel_bar.visible = false
+	_channel_bar.z_index = 50                              # (over any window left open)
+	root.add_child(_channel_bar)
+	Server.channel_changed.connect(func():
+		_channel_bar.visible = not Server.channel.is_empty()
+		_channel_bar.position = Vector2(area().x * 0.5 - 120, area().y - 215)
+		_channel_bar.queue_redraw())
+
+
+class ChannelBar extends Control:
+	const QUICK := Color(0.45, 0.75, 1.0)
+	const NORMAL := Color(1.0, 0.78, 0.3)
+	const POWERED := Color(0.8, 0.5, 1.0)
+
+	func _process(_d: float) -> void:
+		if visible:
+			queue_redraw()
+
+	func _draw() -> void:
+		var c: Dictionary = Server.channel
+		if c.is_empty():
+			return
+		var el := float(Time.get_ticks_msec() - int(c.start))
+		var q := float(c.quick)
+		var n := float(c.normal)
+		var pw := float(c.powered)
+		var full := pw if pw > 0.0 else n
+		var bar := Rect2(0, 16, size.x, 12)
+		draw_rect(bar, Color(0.04, 0.04, 0.05, 0.85))
+		var col := NORMAL
+		var name := String(c.cur)
+		var lit := Color(0.7, 0.7, 0.7)
+		if q > 0.0 and el >= q and el < n:
+			col = QUICK
+			name = String(c.prev)
+			lit = QUICK
+		elif el >= n:
+			col = POWERED if pw > 0.0 and el >= pw else NORMAL
+			name = String(c.next) if pw > 0.0 and el >= pw else String(c.cur)
+			lit = col
+		elif q > 0.0:
+			col = QUICK.darkened(0.4)
+		var w := (size.x - 2.0) * clampf(el / maxf(full, 1.0), 0.0, 1.0)
+		draw_rect(Rect2(1, 17, w, 10), col)
+		for m in [[q, QUICK], [n, NORMAL], [pw, POWERED]]:
+			if float(m[0]) > 0.0:
+				var x := 1.0 + (size.x - 2.0) * clampf(float(m[0]) / maxf(full, 1.0), 0.0, 1.0)
+				draw_line(Vector2(x, 13), Vector2(x, 30), m[1], 2.0)
+		draw_rect(bar, Color(0.6, 0.5, 0.3, 0.9), false, 1.0)
+		var f := UiArt.font(true)
+		var t := name.to_upper()
+		var tw := f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, 10).x
+		draw_string_outline(f, Vector2((size.x - tw) * 0.5, 11), t, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, 3, Color(0, 0, 0, 0.9))
+		draw_string(f, Vector2((size.x - tw) * 0.5, 11), t, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, lit)
+
+
 func show_cast(spell_name: String, frac: float) -> void:
 	# owner 2026-10-10: the 1.65 client had no cast bar - the casting animation is the only cue. Kept built (hidden).
 	if true or frac < 0.0:
@@ -2064,6 +2133,21 @@ func _process_inner(_delta: float) -> void:
 			_clock.text = "%02d:%02d" % [t.hour, t.minute]
 
 
+## A held quickbar key let go: the channelled spell goes off (Server.channel_release).
+func _input(event: InputEvent) -> void:
+	if Server.channel_input != null and not event.is_echo() and ((event is InputEventKey and not event.pressed)
+			or (event is InputEventMouseButton and not event.pressed)):
+		Server.channel_release(_input_key(event))
+
+
+func _input_key(event: InputEvent) -> Variant:
+	if event is InputEventKey:
+		return int((event as InputEventKey).keycode)
+	if event is InputEventMouseButton:
+		return "m%d" % (event as InputEventMouseButton).button_index
+	return null
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if (event is InputEventKey and event.pressed and not event.echo) or (event is InputEventMouseButton and event.pressed):
 		if handle_input(event):
@@ -2157,6 +2241,7 @@ func handle_input(event: InputEvent) -> bool:
 	for bar in 3:
 		for slot in 10:
 			if Keybinds.pressed(event, "qb%d_%d" % [bar + 1, slot + 1]):
+				Server.channel_press(quickbars[bar].entry_at(slot), _input_key(event))   # (held: channelled)
 				quickbars[bar].use_slot(slot)
 				return true
 	for bank in 10:                                        # Shift+1-0: quickbar 1's bank (patch 1.54)

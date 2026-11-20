@@ -1056,6 +1056,9 @@ func _message(d: Dictionary) -> void:
 	if String(d.text).begins_with("#CFG|"):               # a setting kept on the character (HeroInfo.cs)
 		Server.cfg_line(String(d.text).substr(5))
 		return
+	if String(d.text).begins_with("#CH|"):                # a channelled cast (ChannelCasting.cs): the channel bar
+		Server.channel_line(String(d.text).substr(4))
+		return
 	if String(d.text).begins_with("#BOOK|"):              # the spellbook roadmap (HeroInfo.cs): the modern Hero panel
 		Server.book_line(String(d.text).substr(6))
 		return

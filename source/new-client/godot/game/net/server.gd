@@ -1326,6 +1326,40 @@ func store_cfg(key: String, value: String) -> void:
 	command("/clientcfg set %s %s" % [key, value])
 
 
+## Channelled casting (ChannelCasting.cs; owner 2026-11-19: "hold the spell button down to channel it"): a spell's key
+## held - "/channel hold" just before its UseSpell, "/channel release" when the key comes up. The server answers
+## "#CH|start|quickMs|normalMs|poweredMs|prev|cur|next" (channel = that, with when it started) and "#CH|end|name|how".
+signal channel_changed
+var channel := {}
+var channel_input: Variant = null              # the key / button holding it (a keycode, "m<button>", "pad:<name>")
+
+
+func channel_press(e: Dictionary, input: Variant) -> void:
+	if client == null or not String(e.get("id", "")).begins_with("srv:spell:"):
+		return
+	channel_input = input
+	command("/channel hold")
+
+
+func channel_release(input: Variant = null) -> void:
+	if channel_input == null or (input != null and input != channel_input):
+		return
+	channel_input = null
+	command("/channel release")
+
+
+func channel_line(text: String) -> void:
+	var f := text.split("|")
+	if f.size() >= 7 and f[0] == "start":
+		channel = {"start": Time.get_ticks_msec(), "quick": int(f[1]), "normal": int(f[2]), "powered": int(f[3]),
+				"prev": String(f[4]), "cur": String(f[5]), "next": String(f[6])}
+	elif f.size() >= 1 and f[0] == "end":
+		channel = {}
+		if f.size() >= 3 and f[1] != "" and f[2] != "normal":
+			PlayerData.message.emit("%s: %s" % ["QUICK" if f[2] == "quick" else "POWERED", f[1]], "spells")
+	channel_changed.emit()
+
+
 func request_book() -> void:
 	command("/book")
 

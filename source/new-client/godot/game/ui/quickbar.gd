@@ -95,6 +95,10 @@ func set_bank(b: int) -> void:
 	_refresh()
 
 
+func entry_at(i: int) -> Dictionary:
+	return _slots[i].entry() if i >= 0 and i < _slots.size() else {}
+
+
 func use_slot(i: int) -> void:
 	_slots[i].use()
 

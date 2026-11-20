@@ -13,6 +13,7 @@ var info := {}
 ## out their lives - the client's sparks flicker out of the hands instead of vanishing (owner 2026-11-01).
 var winding_down := false
 var timeline := false                       # set before adding to the tree: play the effect's timeline from 0
+var hold_at := -1.0                         # >= 0: the timeline stops there and holds (a held shield: the Mana Shield)
 var _bound_for := 0                         # the instance the animation tables belong to (copies rebind in _ready)
 var _anims: Array = []                      # {meshes, a}: nif_node_anims
 var _alphas: Array = []                     # {mat, aa}: material fades (alpha_anim)
@@ -223,6 +224,7 @@ func _bind() -> void:
 ## A pooled copy is used again (SpellFx): its timeline from the start, its particles emptied.
 func restart() -> void:
 	_time = 0.0
+	hold_at = -1.0
 	winding_down = false
 	for e in _emitters:
 		var p: GPUParticles3D = e.p
@@ -374,6 +376,8 @@ func _process(delta: float) -> void:
 
 func _step(delta: float) -> void:
 	_time += delta
+	if hold_at >= 0.0 and _time > hold_at:
+		_time = hold_at
 	if not _pivots.is_empty():
 		_face_pivots()
 	var now := fposmod(_time, _cycle) if _cycle > 0.0 and (timeline or not _anims.is_empty()) else _time

@@ -3264,6 +3264,7 @@ namespace DOL.GS.Spells
 
 			finalDamage *= MonsterTiers.SpellFactor(m_caster);              // a tiered monster's spells follow its fight level
 			finalDamage *= LevelScaling.DamageFactor(m_caster, ad.Target);   // GW2-style scaling down (LevelScaling.cs)
+			finalDamage *= MonsterTiers.SpellOut(m_caster, ad.Target);         // (a caster's spells: more against monsters)
 
 			// DoTs can only crit with Wild Arcana. This is handled by the DoTSpellHandler directly.
 			int criticalDamage = 0;

@@ -181,6 +181,8 @@ func on_line(text: String) -> void:
 				_win_cool = int(f[4])
 				_counter_cost = int(f[5]) if f.size() > 5 else 0
 				_can_ward = f.size() > 6 and f[6] == "1"
+				if _can_ward:
+					SpellFx.prefetch(WARD_ART)                  # (the shield's art loaded before it is first raised)
 		"windup":                                        # windup|oid|ms|kind (MonsterMoves.Code): n plain, s style, p positional, h heavy, c cone
 			if f.size() > 2:
 				_windup(int(f[1]), int(f[2]), String(f[3]) if f.size() > 3 else "n")
@@ -333,7 +335,7 @@ var _win_dodge := 100
 var _win_cool := 500
 var _can_ward := false                   # no parry / block / evade at all: right click is the Mana Shield (ManaShield.cs)
 var _warding := false
-var _bubble: MeshInstance3D
+var _bubble: Node3D                      # the Mana Shield's art on you (_show_bubble)
 var _parry_ready_at := 0
 var _last_parry_only := false                     # the last press was Parry Only (a shield's parry, the weapon's move)
 
@@ -385,31 +387,52 @@ func _ward_state(on: bool, why: String) -> void:
 		_flash("OUT OF POWER", Color(0.55, 0.7, 1.0))
 
 
-## The shield itself: a pale blue bubble around you, breathing, while it is up.
+## The shield itself (owner 2026-11-19: "use art from the game (like one of the mana AF buffs) ... have the art hold as
+## well, if possible. Phases out when dropped rather than instantly disappearing"): Lesser Powerward's shimmer
+## (ClientEffect 4301, hib_mshield1_hit) on you, its timeline held at its fullest while the shield is up; dropped, it
+## plays on to its own end - the client's fade - and goes. The staff held out: Player.ward_pose.
+const WARD_ART := 4301
+const WARD_ART_HOLD := 0.35                 # (of the effect's length: the shimmer at its fullest)
+
+
 func _show_bubble(on: bool) -> void:
 	var p := _player()
 	if p == null:
 		return
-	if on and not is_instance_valid(_bubble):
-		_bubble = MeshInstance3D.new()
-		var m := SphereMesh.new()
-		m.radius = 0.9
-		m.height = 2.2
-		m.radial_segments = 32
-		m.rings = 16
-		_bubble.mesh = m
-		var mat := StandardMaterial3D.new()
-		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		mat.albedo_color = Color(0.45, 0.65, 1.0, 0.16)
-		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-		mat.rim_enabled = false
-		_bubble.material_override = mat
-		_bubble.position = Vector3(0, 1.0, 0)
-		_bubble.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		p.add_child(_bubble)
-	if is_instance_valid(_bubble):
-		_bubble.visible = on
+	p.ward_pose(on)
+	var fx_id := int(SpellFx.effect(WARD_ART).get("target", 0))
+	var secs := float((SpellFx.data().get("fx", {}) as Dictionary).get(str(fx_id), {}).get("duration_s", 3.0))
+	if on:
+		if is_instance_valid(_bubble):
+			return
+		_bubble = SpellFx.play(fx_id, p, 1.8, true) if fx_id > 0 else null
+		var n := _ward_nif(_bubble)
+		if n:
+			n.hold_at = maxf(0.3, secs * WARD_ART_HOLD)
+		elif is_instance_valid(_bubble) and _bubble.name == "FxPending":
+			pass                                           # (still loading: SpellFx fills it, unheld)
+		return
+	if not is_instance_valid(_bubble):
+		_bubble = null
+		return
+	var was := _bubble
+	_bubble = null
+	var n := _ward_nif(was)
+	var left := 0.4
+	if n:
+		left = maxf(0.2, secs - maxf(n.hold_at, 0.0))
+		n.hold_at = -1.0                                   # (on to its end: it fades as the client's does)
+	get_tree().create_timer(left).timeout.connect(func(): SpellFx.release(was))
+
+
+func _ward_nif(node: Node) -> NifScene:
+	if not is_instance_valid(node):
+		return null
+	if node is NifScene:
+		return node
+	for c in node.find_children("*", "NifScene", true, false):
+		return c as NifScene
+	return null
 
 
 ## A blow the shield took: what reached your health, what your power paid - a Perfect Ward flashes.
@@ -422,8 +445,9 @@ func _warded(taken: int, power: int, perfect: bool) -> void:
 		_float_text(0, "WARD  -%d POWER" % power, blue, 34, 0.5)
 	if is_instance_valid(_bubble):
 		var t := create_tween()
-		_bubble.scale = Vector3.ONE * 1.12
-		t.tween_property(_bubble, "scale", Vector3.ONE, 0.25)
+		var k := _bubble.scale
+		_bubble.scale = k * 1.12
+		t.tween_property(_bubble, "scale", k, 0.25)
 	var now := Time.get_ticks_msec()
 	_windups = _windups.filter(func(w): return int(w.end) > now + 120)
 

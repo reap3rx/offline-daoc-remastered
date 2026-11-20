@@ -86,6 +86,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
             GetSkill(player, spellLineIndex, spellLevel, out Skill sk, out SpellLine sl);
 
+            if (sk is Spell held && sl != null && ChannelCasting.TryBegin(player, held, sl))
+                return;                                  // (a held key: channelled - ChannelCasting)
             if (sk is Spell spell && sl != null)
                 player.CastSpell(spell, sl);
             else if (sk is Styles.Style style)
