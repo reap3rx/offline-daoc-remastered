@@ -58,6 +58,7 @@ func setup_server(v: Node, zone_loader: ZoneLoader, p: Node3D) -> void:
 	bars.manager = self
 	add_child(bars)
 	Server.world.connect(_on_world)
+	Server.channel_changed.connect(_channel_released)
 	# a new region's world (a teleport to the Shrouded Isles): your speed as the server last sent it - it isn't sent
 	# again while it stays the same (owner 2026-10-14: a skald companion's speed song stopped working after a zone
 	# change until the group was re-formed)
@@ -1558,6 +1559,27 @@ func _cast_begin(oid: int, v: Node, ce: int, seconds: float) -> void:
 ## was casting at died, or once it broke off the cast to follow you - no spell effect, no interrupt): the hand glow
 ## and the casting pose go GATHER_GRACE_MS past the cast's time, or the moment the caster moves.
 const GATHER_GRACE_MS := 1500
+
+
+## A channelled spell let go that reached no one (a point-blank area spell with nothing near: no spell effect comes
+## back - owner 2026-11-19, Disenchanting Emission "does nothing"): your release still plays - the end motion and the
+## cast burst - instead of the gathering hanging on.
+func _channel_released() -> void:
+	if not Server.channel.is_empty() or Server.channel_last.is_empty() or String(Server.channel_last.how) == "fizzle":
+		return
+	var at := int(Server.channel_last.at)
+	await get_tree().create_timer(0.6).timeout
+	if int(Server.channel_last.get("at", -1)) != at or not Server.channel.is_empty():
+		return
+	var oid := Server.me_oid
+	var g: Array = _gathers.get(oid, [])
+	if g.is_empty():
+		return
+	_gathers.erase(oid)
+	var v := _view_of(oid)
+	if v is Player:
+		(v as Player).cast_end(true)
+	SpellFx.fire(int(g[0]), g[1], v as Node3D, _sounds_of(v))
 
 
 func _sweep_gathers() -> void:

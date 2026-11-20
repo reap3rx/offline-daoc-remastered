@@ -2196,6 +2196,7 @@ namespace DOL.GS.Spells
 			for (int i = 0; i < targets.Count; i++)
 			{
 				GameLiving targetInList = targets[i];
+				MonsterTiers.Touch(Caster, targetInList);   // (every monster an area spell reaches fights at the fight's level, not only the one targeted)
 
 				if (CheckSpellResist(targetInList))
 					continue;
