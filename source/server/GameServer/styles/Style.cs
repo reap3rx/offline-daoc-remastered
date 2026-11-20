@@ -132,6 +132,9 @@ namespace DOL.GS.Styles
 
         public int ClassID => baseStyle.ClassId;
 
+        /// <summary>The database row behind it (StyleRework reshapes a class's version of a line at start-up).</summary>
+        public DbStyle Db => baseStyle;
+
         public List<StyleProcInfo> Procs { get; } = new();
 
         /// <summary>

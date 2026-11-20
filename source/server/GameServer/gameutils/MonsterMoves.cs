@@ -158,6 +158,8 @@ namespace DOL.GS
                     tc /= 3;
                 chance = Math.Max(chance, tc);
             }
+            if (kind == Def.Block)
+                chance *= StyleRework.BlockFactor(owner);              // (a Hero's Shatter: its guard broken for a while)
             return chance * DefenseFactor(owner);
         }
 

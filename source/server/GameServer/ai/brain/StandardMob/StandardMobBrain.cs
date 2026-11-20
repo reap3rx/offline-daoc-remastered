@@ -280,6 +280,21 @@ namespace DOL.AI.Brain
         /// Checks whether living has someone on its aggrolist
         /// </summary>
         public virtual bool HasAggro => !AggroList.IsEmpty;
+
+        /// <summary>The highest base threat on the list (TauntShouts), 0 when empty.</summary>
+        public long TopAggro
+        {
+            get
+            {
+                long top = 0;
+                foreach (var pair in AggroList)
+                    top = Math.Max(top, pair.Value.Base);
+                return top;
+            }
+        }
+
+        /// <summary>A living's base threat (0 when not on the list).</summary>
+        public long AggroOf(GameLiving living) => living != null && AggroList.TryGetValue(living, out AggroAmount a) ? a.Base : 0;
         /// <summary>Entries on the aggro list (diagnostics).</summary>
         public int AggroCount => AggroList.Count;
 
@@ -758,7 +773,7 @@ namespace DOL.AI.Brain
                 AddToAggroList(controlledBrain.Owner, (int) (damage * 0.3));
             }
             else
-                AddToAggroList(attacker, damage);
+                AddToAggroList(attacker, (int) (damage * TauntShouts.ThreatFactor(attacker, ad)));   // (fighters' blows hold aggro)
         }
 
         #endregion

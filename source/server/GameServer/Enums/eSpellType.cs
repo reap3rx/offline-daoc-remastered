@@ -447,6 +447,8 @@ namespace DOL.GS
         VoidStep,
         MirrorImage,
         ThornWall,
-        VerdantPulse
+        VerdantPulse,
+        // Taunt shouts (TauntShouts.cs): every fighter's Challenge and Battle Cry
+        TauntShout
     }
 }

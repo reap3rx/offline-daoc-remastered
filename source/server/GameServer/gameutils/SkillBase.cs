@@ -2089,6 +2089,42 @@ namespace DOL.GS
 		/// After adding all styles call SortStyles to sort the list by level
 		/// </summary>
 		/// <param name="style"></param>
+		/// <summary>The style itself (not a copy) for a class: StyleRework changes them at start-up, before anyone logs in.</summary>
+		public static Style GetStyleRef(int styleID, int classId)
+		{
+			m_syncLockUpdates.EnterReadLock();
+			try
+			{
+				m_styleIndex.TryGetValue(new KeyValuePair<int, int>(styleID, classId), out Style style);
+				return style;
+			}
+			finally
+			{
+				m_syncLockUpdates.ExitReadLock();
+			}
+		}
+
+		/// <summary>Give a class a spell line through one of its specializations (TauntShouts: the fighters' shouts).</summary>
+		public static void AddSpecSpellLine(string specKey, SpellLine line, int classIdHint)
+		{
+			m_syncLockUpdates.EnterWriteLock();
+			try
+			{
+				m_spellLineIndex[line.KeyName] = line;
+				if (!m_specsSpellLines.TryGetValue(specKey, out List<Tuple<SpellLine, int>> lines))
+				{
+					lines = new List<Tuple<SpellLine, int>>();
+					m_specsSpellLines[specKey] = lines;
+				}
+				if (!lines.Exists(t => t.Item1.KeyName == line.KeyName && t.Item2 == classIdHint))
+					lines.Add(new Tuple<SpellLine, int>(line, classIdHint));
+			}
+			finally
+			{
+				m_syncLockUpdates.ExitWriteLock();
+			}
+		}
+
 		public static void AddScriptedStyle(Specialization spec, DbStyle style)
 		{
 			m_syncLockUpdates.EnterWriteLock();

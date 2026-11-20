@@ -85,6 +85,8 @@ namespace DOL.GS
                             proc.StartSpell(mainHandAttackData.Target);
                     }
 
+                    StyleRework.AfterStyle(_owner, mainHandAttackData);   // (cleaves, the class versions' extras)
+
                     break;
                 }
                 case eAttackResult.NoTarget:

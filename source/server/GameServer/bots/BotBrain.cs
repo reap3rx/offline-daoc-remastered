@@ -1231,6 +1231,7 @@ namespace DOL.AI.Brain
 
         public override void Think()
         {
+            TauntShouts.BotThink(BotBody);                 // (a fighter shouts a monster off someone softer)
             bool nativeSpeedTravelStarted;
             if (CompanionFollowPolicy.ObserveAndCancelBuffs(BotBody, out nativeSpeedTravelStarted))
             {

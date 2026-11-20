@@ -192,6 +192,9 @@ func on_line(text: String) -> void:
 		"cone":                                          # cone|oid|radius|arc|ms|heading: a sweep in front of it (MonsterMoves.Cone)
 			if f.size() > 5:
 				_cone(int(f[1]), int(f[2]), int(f[3]), int(f[4]), int(f[5]))
+		"sweep":                                         # sweep|reach|arc: your cleave (StyleRework) - its arc flashes
+			if f.size() > 2:
+				_sweep(int(f[1]), int(f[2]))
 		"cancel":                                        # cancel|oid: its wind-up / slam is off
 			if f.size() > 1:
 				_cancel_windups(int(f[1]))
@@ -592,6 +595,43 @@ func _cone(oid: int, radius: int, arc: int, ms: int, heading: int) -> void:
 	_grounds.append({"oid": oid, "node": root, "start": now, "end": now + ms})
 	if viewer and viewer.has_method("note_combat"):
 		viewer.note_combat()
+
+
+## Your cleave (a sweep style - StyleRework.Cleave): a bright arc of the weapon's reach flashes out in front of you and
+## fades (owner 2026-11-19: "consider gameplay, spell effects, sound effects").
+func _sweep(reach: int, arc: int) -> void:
+	var p := _player()
+	if p == null:
+		return
+	var r := reach * 0.025
+	var yaw: float = p.facing()                       # (forward: -Z turned by it)
+	var half := deg_to_rad(arc) * 0.5
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var steps := 18
+	for i in steps:
+		var a0 := yaw - half + 2.0 * half * i / steps
+		var a1 := yaw - half + 2.0 * half * (i + 1) / steps
+		for v in [Vector3(-sin(a0), 0, -cos(a0)) * r * 0.45, Vector3(-sin(a0), 0, -cos(a0)) * r, Vector3(-sin(a1), 0, -cos(a1)) * r,
+				Vector3(-sin(a0), 0, -cos(a0)) * r * 0.45, Vector3(-sin(a1), 0, -cos(a1)) * r, Vector3(-sin(a1), 0, -cos(a1)) * r * 0.45]:
+			st.add_vertex(v + Vector3(0, 0.9, 0))
+	var mi := MeshInstance3D.new()
+	mi.mesh = st.commit()
+	var mat := StandardMaterial3D.new()
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	mat.albedo_color = Color(1.0, 0.92, 0.7, 0.55)
+	mi.material_override = mat
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	get_tree().current_scene.add_child(mi)
+	mi.global_position = p.global_position
+	mi.scale = Vector3(0.7, 1, 0.7)
+	var t := create_tween().set_parallel(true)
+	t.tween_property(mi, "scale", Vector3(1.1, 1, 1.1), 0.28).set_ease(Tween.EASE_OUT)
+	t.tween_property(mat, "albedo_color:a", 0.0, 0.32)
+	t.chain().tween_callback(mi.queue_free)
 
 
 ## A monster raised its guard (MonsterMoves.TryGuard): it shows it - its parry / block / evade stance, again and again
