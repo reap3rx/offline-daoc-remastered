@@ -34,6 +34,19 @@ namespace DOL.GS
             (Tier.Superior, 80, 96, 98), (Tier.Legendary, 15, 99, 100),
         ];
 
+        /// <summary>A quality tier, rolled once more for each extra (the best kept: a harder monster's drop, LootByCon).</summary>
+        public static Tier RollTier(int extra)
+        {
+            Tier best = RollTier();
+            for (int i = 0; i < extra; i++)
+            {
+                Tier t = RollTier();
+                if (t > best)
+                    best = t;
+            }
+            return best;
+        }
+
         public static Tier RollTier()
         {
             int r = Util.Random(0, 999);
@@ -88,9 +101,9 @@ namespace DOL.GS
 
         /// <summary>A random drop made over by its tier: its quality, its word, a bonus line, maybe a proc and its glow,
         /// a better model, a dye; a Legendary one its own name. Returns the tier.</summary>
-        public static Tier Apply(GeneratedUniqueItem g, GamePlayer taker)
+        public static Tier Apply(GeneratedUniqueItem g, GamePlayer taker, int con = 0)
         {
-            Tier tier = RollTier();
+            Tier tier = RollTier(LootByCon.ExtraRolls(con));
             var row = Tiers.First(x => x.Tier == tier);
             g.Quality = Util.Random(row.QLo, row.QHi);
             int level = Math.Clamp(g.Level, 1, 50);

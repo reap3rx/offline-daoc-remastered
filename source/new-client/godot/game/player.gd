@@ -875,6 +875,42 @@ func refresh_gear() -> void:
 
 const STAFF_TILT := {"lur_m": 20.0}           # degrees out from the body (dress)
 
+## A drawn one-hander tipped out from the body while running (owner 2026-11-20 bugs doc: "lurikeen males hold their
+## weapons when they're running in a way that makes them clip into their heads. I think the weapon hold is actually
+## slightly off for every race and sex"). Measured with tools/clip_measure.gd - a sword's nearest corner to the head
+## bone over the run cycle: Lurikeen male 0.08, Kobold male 0.12, Halfling female 0.14, the other males 0.15-0.19,
+## the other females 0.22-0.37. 20 degrees out brings the males to 0.27-0.38 (Lurikeen 30: 0.20, Kobold 25: ~0.25,
+## their own size). Only while the run plays (run_tilt, every frame): a swing or a guard keeps the client's grip.
+const RUN_TILT_SPEED := 140.0                 # degrees a second, in and out
+
+
+static func run_tilt_for(race: String) -> float:
+	match race:
+		"lur_m": return 30.0
+		"kob_m": return 25.0
+		"hal_f": return 20.0
+	return 20.0 if race.ends_with("_m") else 0.0
+
+
+## Every frame (the player's figure, NPCs' and other players'): each drawn one-hander that Player.dress marked eases to
+## its race's tilt while a run clip plays, and back to the grip otherwise.
+static func run_tilt(gear: Array, anim: AnimationPlayer, delta: float) -> void:
+	if gear.is_empty() or anim == null:
+		return
+	var clip := String(anim.current_animation)
+	var running := clip == "run" or clip.begins_with("run_stop")
+	for at in gear:
+		if not is_instance_valid(at) or not (at as Node).has_meta("run_tilt") or (at as Node).get_child_count() == 0:
+			continue
+		var w := (at as Node).get_child(0) as Node3D
+		var want: float = float(at.get_meta("run_tilt")) if running else 0.0
+		var now: float = float(at.get_meta("tilt_now", 0.0))
+		if is_equal_approx(now, want):
+			continue
+		now = move_toward(now, want, RUN_TILT_SPEED * delta)
+		at.set_meta("tilt_now", now)
+		w.transform = (at.get_meta("grip") as Transform3D).rotated_local(Vector3(1, 0, 0), deg_to_rad(now))
+
 
 ## A figure's worn gear, shared with the character select screen (owner 2026-10-10: the staff / armour didn't show
 ## there): armour parts on a Fig3Figure (pipeline/build_armor.py), and the active weapon set on its bones. item_at:
@@ -992,6 +1028,10 @@ static func dress(model: Node3D, item_at: Callable, active_weapon: String, comba
 			w.rotate_object_local(Vector3(1, 0, 0), deg_to_rad(float(STAFF_TILT[(model as Fig3Figure).race])))
 		var at := BoneAttachment3D.new()
 		at.bone_name = bone
+		if in_hand and bone == "Bip01 R Held" and stance == "" and model is Fig3Figure \
+				and run_tilt_for((model as Fig3Figure).race) > 0.0:
+			at.set_meta("run_tilt", run_tilt_for((model as Fig3Figure).race))   # (run_tilt)
+			at.set_meta("grip", w.transform)
 		at.set_meta("shield", shield)
 		at.set_meta("back_kind", "shield" if shield else ("bow" if slung else "2h"))
 		skel.add_child(at)
@@ -1545,6 +1585,7 @@ func _fx_step() -> void:
 
 func _process(_delta: float) -> void:
 	_fx_step()
+	run_tilt(_gear, _anim, _delta)
 	var t_live := Time.get_ticks_usec()
 	_process_timed(_delta)
 	Perf.proc_add("player frame", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)

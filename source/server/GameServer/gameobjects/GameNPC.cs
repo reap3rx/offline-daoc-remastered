@@ -188,6 +188,9 @@ namespace DOL.GS
 		public int TierFightBase;                          // the level the current fight was set for (0: none yet)
 
 		/// <summary>The level a tiered monster fights at: stats move with it, health starts full.</summary>
+		/// <summary>The level alone, unseen and with nothing recomputed (LootByCon: drops made at a fight's level).</summary>
+		public void SetLevelQuiet(byte level) => m_level = level;
+
 		public void SetTierFightLevel(byte level)
 		{
 			base.Level = level;

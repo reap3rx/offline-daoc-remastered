@@ -748,7 +748,7 @@ namespace DOL.GS.Styles
 			{
 				if (st.AttackResultRequirement == Style.eAttackResultRequirement.Style && st.OpeningRequirementValue == style.ID)
 				{
-					temp = (temp == string.Empty ? st.Name : temp + LanguageMgr.GetTranslation(player.Client.Account.Language, "DetailDisplayHandler.HandlePacket.Or", st.Name));
+					temp = (temp == string.Empty ? st.Name : temp + " or " + st.Name);   // (the translation ran them together: "Galeor Thunderclap")
 				}
 			}
 

@@ -449,6 +449,9 @@ namespace DOL.GS
         ThornWall,
         VerdantPulse,
         // Taunt shouts (TauntShouts.cs): every fighter's Challenge and Battle Cry
-        TauntShout
+        TauntShout,
+        // The Quartermaster of Valor's potions (ValorPotions.cs)
+        ValorDraught,
+        ValorTonic
     }
 }

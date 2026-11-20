@@ -50,20 +50,36 @@ namespace DOL.UnitTests
         }
 
         [Test]
-        public void Treasure_LevelFollowsTheZoneAndThePlayer()
+        public void Treasure_LevelFollowsThePlayerWhereverItIs()
         {
-            // a level 50 in a level 5 zone: a level 7 chest, worth far less
+            // owner 2026-11-20: loot at your level no matter where - a level 50 in a level 5 zone: a level 50 chest (the cap)
             (int level, double scale) = TreasureChests.LevelFor(50, 5);
-            Assert.That(level, Is.EqualTo(7));
-            Assert.That(scale, Is.LessThan(0.3));
-            // a level 10 in a level 40 zone: a little above its own level, a little richer
+            Assert.That(level, Is.EqualTo(50));
+            Assert.That(scale, Is.EqualTo(1.0));
+            // a level 10 in a level 40 zone: its own level, a little richer (risk vs reward)
             (level, scale) = TreasureChests.LevelFor(10, 40);
-            Assert.That(level, Is.InRange(12, 15));
+            Assert.That(level, Is.EqualTo(11));
             Assert.That(scale, Is.GreaterThan(1.0));
             // at level: its own
             (level, scale) = TreasureChests.LevelFor(30, 30);
             Assert.That(level, Is.EqualTo(31));
             Assert.That(scale, Is.EqualTo(1.0));
+        }
+
+        [Test]
+        public void LootByCon_HarderMonstersPayBetter()
+        {
+            Assert.That(LootByCon.ExtraRolls(-2), Is.EqualTo(0));
+            Assert.That(LootByCon.ExtraRolls(3), Is.EqualTo(3));
+            Assert.That(LootByCon.CoinFactor(0), Is.EqualTo(1.0));
+            Assert.That(LootByCon.CoinFactor(3), Is.GreaterThan(LootByCon.CoinFactor(1)));
+            Assert.That(LootByCon.CoinFactor(-3), Is.LessThan(1.0));
+            // best of four rolls: Superior or better far more often than one roll's 9.5%
+            int good = 0;
+            for (int i = 0; i < 4000; i++)
+                if (LootOverhaul.RollTier(3) >= LootOverhaul.Tier.Superior)
+                    good++;
+            Assert.That(good / 4000.0, Is.InRange(0.25, 0.42));
         }
 
         [Test]

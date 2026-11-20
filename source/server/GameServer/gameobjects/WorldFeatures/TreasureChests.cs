@@ -250,21 +250,15 @@ public static class TreasureChests
         }
     }
 
-    /// <summary>The chest's level for `who`: theirs, held to just above the zone's in an easy zone, a little above
-    /// theirs in a hard one. scale: what the coin and experience are worth against a chest of their own level.</summary>
+    /// <summary>The chest's level for `who`: always just above theirs, wherever it is (owner 2026-11-20 bugs doc: "loot
+    /// that drops for you should be at level no matter where you get it, not based on zone. Includes chests"). A chest
+    /// in a zone harder than you still pays a quarter more coin and experience (risk vs reward). scale: what the coin
+    /// and experience are worth against a chest of their own level.</summary>
     public static (int Level, double Scale) LevelFor(int playerLevel, int zoneLevel)
     {
         playerLevel = Math.Clamp(playerLevel, 1, 50);
         zoneLevel = Math.Clamp(zoneLevel, 1, 50);
-        if (playerLevel > zoneLevel + 2)
-        {
-            int level = Math.Min(50, zoneLevel + 2);
-            double scale = Math.Max(0.15, Math.Pow((double)level / playerLevel, 2));
-            return (level, scale);
-        }
-        if (playerLevel < zoneLevel - 2)
-            return (Math.Min(50, playerLevel + 2 + Math.Min(3, (zoneLevel - playerLevel) / 5)), 1.25);
-        return (Math.Min(50, playerLevel + 1), 1.0);
+        return (Math.Min(50, playerLevel + 1), playerLevel < zoneLevel - 2 ? 1.25 : 1.0);
     }
 
     public static long CoinFor(int level, double scale, Random rng)

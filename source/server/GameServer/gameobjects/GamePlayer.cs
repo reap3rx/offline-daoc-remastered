@@ -6877,6 +6877,13 @@ namespace DOL.GS
                                             {
                                                 if (ScriptMgr.CreateSpellHandler(this, spell, potionEffectLine) is SpellHandler spellHandler)
                                                 {
+                                                    // a potion that can't be drunk now (a full pool, a tonic in a fight: ValorPotions.cs) - no charge spent
+                                                    if (spellHandler is IDrinkCheck dc && dc.WhyNot(this) is string why)
+                                                    {
+                                                        Out.SendMessage(why, eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                                                        return;
+                                                    }
+
                                                     if (spell.IsHealing && spell.CastTime == 0 && IsAttacking)
                                                     {
                                                         Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.UseSlot.CantUseAttacking", useItem.GetName(0, false)), eChatType.CT_System, eChatLoc.CL_SystemWindow);

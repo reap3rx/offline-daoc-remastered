@@ -85,7 +85,6 @@ namespace DOL.GS
         ];
         static readonly (string Id, string Name, int Price, int Model)[] Made =
         [
-            ("valor_heal_potions", "Healing draught for your level (10 uses)", 1, 2547), ("valor_power_potions", "Power draught for your level (10 uses)", 1, 2545),
             ("valor_dye_satchel", "A satchel of dye (an ordinary colour)", 1, 229),
         ];
         static readonly (string Id, string From, string Name)[] Elixirs =
@@ -121,6 +120,7 @@ namespace DOL.GS
                 t.IsTradable = true; t.Description = "A single stat buff for 20 minutes.";
                 if (fresh) GameServer.Database.AddObject(t); else GameServer.Database.SaveObject(t);
             }
+            ValorPotions.EnsureTemplates();
             if (GameServer.Database.FindObjectByKey<DbItemTemplate>("respec_single") is DbItemTemplate rs &&
                 GameServer.Database.FindObjectByKey<DbItemTemplate>("valor_respec_single") == null)
             {
@@ -158,6 +158,7 @@ namespace DOL.GS
             foreach (var f in Fitted) Add(f.Id);
             foreach (var m in Made) Add(m.Id);
             foreach (var e in Elixirs) Add(e.Id);
+            foreach (var v in ValorPotions.Kinds) Add(v.Id);
             foreach (var k in NoveltyPotions.Kinds) Add(k.Id);
             Add(LootUses.KitTokenId);
             Add("valor_respec_single");

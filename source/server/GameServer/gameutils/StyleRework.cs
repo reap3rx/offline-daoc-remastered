@@ -41,7 +41,7 @@ namespace DOL.GS
     public static class StyleRework
     {
         public const string HiddenLine = "Style Rework Effects";
-        public const int Hero = 44, Champion = 45;
+        public const int Hero = 44, Champion = 45, Blademaster = 43;
         public const string LargeWeapons = "Large Weapons";
 
         // Large Weapons' style ids
@@ -54,12 +54,24 @@ namespace DOL.GS
             Stun3 = 30806, BlastCourage = 30807, LethargySpread = 30808, Stagger = 30809, DemoralizeCone = 30810,
             BlastBravery = 30811, Submission = 30812, Sunder = 30813, AtonyPulse = 30814, DrainAround = 30815,
             Stun4 = 30816, UltDemoralize = 30817, GrievousBleed = 30818, BlastChampion = 30819, Crawl = 30820,
-            RageDrain = 30821;
+            RageDrain = 30821,
+            // (the other weapon lines)
+            Debility1 = 30822, Root3 = 30823, Stun5 = 30824, SubmissionPulse = 30825, HasteSelf = 30826, ParrySelf = 30827,
+            EvadeSelf = 30828, Dazed = 30829, Dent = 30830, Root6 = 30831, SmallBleed = 30832, TailBleed = 30833, BleedB1 = 30834,
+            BleedB2 = 30835, BleedB3 = 30836, HeavySnare = 30837;
 
-        /// <summary>Cleaving styles: (style id) - for every class that has them.</summary>
-        static readonly HashSet<int> Cleaves = new() { Sweep };
+        /// <summary>Cleaving styles: (class, style id) -> its arc, how many more it reaches, its share of the blow, extra reach.</summary>
+        static readonly Dictionary<(int, int), (int Arc, int Extra, double Factor, int Reach)> Cleaves = new();
         public const int CleaveArc = 120, CleaveExtra = 2;
         public const double CleaveFactor = 0.7, HeroCleaveFactor = 0.9;
+
+        /// <summary>A style that buffs you when it lands: (class, style id) -> spell ids cast on yourself (the Blademaster's
+        /// bursts of speed, parry and evade).</summary>
+        static readonly Dictionary<(int, int), int[]> SelfProcs = new();
+
+        /// <summary>A style whose off-hand strikes again: (class, style id) -> its share of the blow.</summary>
+        static readonly Dictionary<(int, int), double> OffhandStrikes = new();
+        public const double OffhandShare = 0.4;
         public const ushort SweepFx = 474, SweepHitFx = 2143;   // (Blasting Gale's swirl; a rending slash)
 
         [GameServerStartedEvent]
@@ -131,9 +143,164 @@ namespace DOL.GS
                     changed += Procs(cls, Shatter, new[] { DrainAround });
                 changed += Procs(cls, Devastate, hero ? new[] { Stun4 } : new[] { UltDemoralize });
                 changed += hero ? AddProcs(cls, Annihilation, new[] { GrievousBleed }) : Procs(cls, Annihilation, new[] { BlastChampion, Crawl });
+                Cleaves[(cls, Sweep)] = (CleaveArc, CleaveExtra, hero ? HeroCleaveFactor : CleaveFactor, 0);
             }
             Console.WriteLine($"[StyleRework] Large Weapons: {changed} style changes for the Hero and Champion");
+            Console.WriteLine($"[StyleRework] the other Hibernian lines: {OtherLines()} style changes");
+            Dump();
         }
+
+        // ------------------------------------------------------------------ the other Hibernian lines (agreed 20 Nov)
+        //   Hero: stuns, roots, bleeds, heavier chains.  Champion: Valor's debuffs around the target, blasts, drains.
+        //   Blademaster (the dual-wield duelist): bursts of attack speed, parry / evade up after a good opening, an off-hand
+        //   strike, bleeds that stack. Every class: the taunt / detaunt slots become a cleave and a new style.
+
+        static int OtherLines()
+        {
+            Hidden(Db(Debility1, "Debility", "StrengthConstitutionDebuff", value: 20, duration: 20, effect: 5401, icon: 5401));
+            Hidden(Db(Root3, "Rooted", "SpeedDecrease", value: 99, duration: 3, effect: 11310, icon: 11361, msg1: "You can't move!"));
+            Hidden(Db(Stun5, "Stunned", "StyleStun", duration: 5, effect: 2132));
+            Hidden(Db(SubmissionPulse, "Submission", "DexterityQuicknessDebuff", value: 25, duration: 20, radius: 300, effect: 5411, icon: 5411));
+            Hidden(Db(HasteSelf, "Blade Rush", "CombatSpeedBuff", value: 15, duration: 8, target: "Self", effect: 413, icon: 413,
+                msg1: "Your blades quicken!"));
+            Hidden(Db(ParrySelf, "Riposte Stance", "ParryBuff", value: 15, duration: 8, target: "Self", effect: 412, icon: 412,
+                msg1: "You fall into a riposte stance."));
+            Hidden(Db(EvadeSelf, "Light Feet", "EvadeBuff", value: 15, duration: 6, target: "Self", effect: 411, icon: 411,
+                msg1: "Your feet grow light."));
+            Hidden(Db(Dazed, "Dazed", "CombatSpeedDebuff", value: 20, duration: 6, effect: 2140, icon: 2140, msg1: "You are dazed!"));
+            Hidden(Db(Dent, "Dented Armor", "ArmorAbsorptionDebuff", value: 8, duration: 15, effect: 2140, icon: 2140));
+            Hidden(Db(Root6, "Rooted", "SpeedDecrease", value: 99, duration: 6, effect: 11310, icon: 11361, msg1: "You can't move!"));
+            Hidden(Db(SmallBleed, "Bleeding", "StyleBleeding", damage: 3, duration: 12, frequency: 40, damageType: 10, effect: 2130));
+            Hidden(Db(TailBleed, "Bleeding", "StyleBleeding", damage: 5, duration: 20, frequency: 40, damageType: 10, effect: 2130));
+            Hidden(Db(BleedB1, "Open Wound", "StyleBleeding", damage: 4, duration: 20, frequency: 40, damageType: 10, effect: 2130));
+            Hidden(Db(BleedB2, "Twin Wounds", "StyleBleeding", damage: 6, duration: 30, frequency: 40, damageType: 10, effect: 2130));
+            Hidden(Db(BleedB3, "Third Wound", "StyleBleeding", damage: 6, duration: 30, frequency: 40, damageType: 10, effect: 2130));
+            Hidden(Db(HeavySnare, "Pinned", "UnbreakableSpeedDecrease", value: 60, duration: 10, effect: 2135, icon: 2135,
+                msg1: "A spear pins your leg!"));
+
+            int n = 0;
+            const int H = Hero, C = Champion, B = Blademaster;
+            int[] none = new int[0];
+
+            // ---- Blades (Hero, Champion, Blademaster)
+            n += Procs(H, 246, new[] { Stagger }); About(H, 246, "After you parry: staggers it for 2 seconds.");
+            n += Procs(C, 246, new[] { RageDrain }); About(C, 246, "After you parry: you drain your foe's endurance into your own.");
+            n += AddProcs(B, 246, none); Self(B, 246, ParrySelf); About(B, 246, "After you parry: slows its attacks, and you fall into a riposte stance (parry up for 8 seconds).");
+            foreach (int c in new[] { H, C, B })
+            {
+                n += Reshape(c, 247, "Arcing Blade", 0, 0, 0, growth: 0.55, hit: 5, def: 0, end: 15, procs: c == C ? new[] { Debility1 } : none);
+                CleaveAt(c, 247, c == B ? 180 : CleaveArc, CleaveExtra, c == H ? HeroCleaveFactor : CleaveFactor);
+                n += Reshape(c, 248, "Guarded Strike", 0, 0, 0, growth: 0.45, hit: 0, def: 15, end: 10, procs: none);
+                About(c, 248, "A careful blow: your defense is raised until your next swing.");
+            }
+            About(H, 247, "A wide slash: also hits up to two more enemies in front of you, hard (90% of the blow).");
+            About(C, 247, "A wide slash: also hits up to two more enemies in front of you (70% of the blow) and saps their strength and constitution.");
+            About(B, 247, "A wide slash: also hits up to two more enemies around your front (70% of the blow).");
+            n += Procs(H, 249, new[] { Root3 }); About(H, 249, "From the side: roots it for 3 seconds (damage frees it).");
+            n += Procs(C, 249, new[] { LethargySpread }); About(C, 249, "From the side: lethargy spreads from your foe - everything around it attacks slower.");
+            n += AddProcs(B, 249, none); Self(B, 249, HasteSelf); About(B, 249, "From the side: snares it, and your blades quicken for 8 seconds.");
+            n += Procs(H, 256, new[] { Stun5, DeepBleed }); About(H, 256, "From behind: stuns for 5 seconds and leaves a deep bleed.");
+            n += Procs(C, 256, new[] { SubmissionPulse }); About(C, 256, "From behind: Submission spreads from your foe - all around it lose dexterity and quickness.");
+            n += Procs(B, 256, new[] { GrievousBleed }); Strike(B, 256); About(B, 256, "From behind: a grievous bleed, and your off-hand strikes again.");
+            n += Grow(H, 259, 0.2); n += Procs(H, 259, new[] { Stun4 }); About(H, 259, "After Revenging Blade: a heavy blow that stuns for 4 seconds.");
+            n += Procs(C, 259, new[] { BlastChampion }); About(C, 259, "After Revenging Blade: Blast of the Champion bursts around your foe.");
+            n += AddProcs(B, 259, none); Strike(B, 259); Self(B, 259, HasteSelf); About(B, 259, "After Revenging Blade: your off-hand strikes again and your blades quicken.");
+
+            // ---- Blunt (Hero, Champion, Blademaster)
+            foreach (int c in new[] { H, C, B })
+            {
+                n += Reshape(c, 262, "Shockwave", 0, 0, 0, growth: 0.55, hit: 5, def: 0, end: 15, procs: new[] { Dazed });
+                CleaveAt(c, 262, CleaveArc, CleaveExtra, c == H ? HeroCleaveFactor : CleaveFactor);
+                About(c, 262, $"A crushing sweep: also hits up to two more enemies in front of you ({(c == H ? 90 : 70)}% of the blow), and dazes all it hits (slower attacks).");
+                n += Reshape(c, 263, "Rattle", 0, 0, 0, growth: 0.5, hit: 5, def: 0, end: 10, procs: new[] { Dent });
+                About(c, 263, "A ringing blow that dents its armour: your blows bite a little deeper for 15 seconds.");
+            }
+            n += Procs(H, 264, new[] { Stun3 }); About(H, 264, "From the side: stuns for 3 seconds.");
+            n += Procs(C, 264, new[] { DebilityPulse }); About(C, 264, "From the side: Debility pulses from your foe, sapping the strength and constitution of all around it.");
+            n += AddProcs(B, 264, none); Self(B, 264, EvadeSelf); About(B, 264, "From the side: slows its attacks, and your feet grow light (evade up for 6 seconds).");
+            n += Procs(H, 269, new[] { Root6 }); About(H, 269, "From behind: roots it for 6 seconds (damage frees it). Stop one running at your healer.");
+            n += Procs(C, 269, new[] { Crawl }); About(C, 269, "From behind: Crawl - it can barely move, through damage.");
+            n += Grow(B, 269, 0.15); Strike(B, 269); About(B, 269, "From behind: a heavy blow, and your off-hand strikes again.");
+            n += Procs(H, 272, new[] { Stun3 }); About(H, 272, "After you parry: stuns for 3 seconds.");
+            n += Procs(C, 272, new[] { AtonyPulse }); About(C, 272, "After you parry: Atony pulses from your foe, sapping the strength and constitution of all around it.");
+            n += AddProcs(B, 272, none); Self(B, 272, HasteSelf); About(B, 272, "After you parry: slows its attacks, and your blades quicken.");
+            n += AddProcs(H, 274, new[] { Sunder }); About(H, 274, "After Stunning Blow: a long stun, and its armour is sundered.");
+            n += Procs(C, 274, new[] { BlastChampion, UltDemoralize }); About(C, 274, "After Stunning Blow: Blast of the Champion and Ultimate Demoralization burst around your foe.");
+            n += AddProcs(B, 274, none); Strike(B, 274); About(B, 274, "After Stunning Blow: a long stun, and your off-hand strikes again.");
+
+            // ---- Piercing (Hero, Champion, Blademaster)
+            n += Procs(H, 276, new[] { Root3 }); About(H, 276, "From behind: roots it for 3 seconds (damage frees it).");
+            n += Procs(C, 276, new[] { Submission }); About(C, 276, "From behind: Submission - its dexterity and quickness fall.");
+            n += AddProcs(B, 276, new[] { BleedB1 }); About(B, 276, "From behind: two wounds that bleed together.");
+            foreach (int c in new[] { H, C, B })
+            {
+                n += Reshape(c, 277, "Wasp Swarm", 0, 0, 0, growth: 0.5, hit: 10, def: 0, end: 15, procs: new[] { SmallBleed });
+                CleaveAt(c, 277, CleaveArc, CleaveExtra, c == H ? HeroCleaveFactor : CleaveFactor);
+                About(c, 277, $"A flurry of jabs: also hits up to two more enemies in front of you ({(c == H ? 90 : 70)}% of the blow), and each of them bleeds.");
+                n += Reshape(c, 279, "Scorpion's Tail", 2, 1, 0, growth: 0.6, hit: 10, def: 0, end: 10, procs: new[] { TailBleed });
+                About(c, 279, "From the side: a stinging thrust that leaves a bleed.");
+            }
+            n += AddProcs(H, 283, new[] { Stun3 }); About(H, 283, "From the side: snares it and stuns for 3 seconds.");
+            n += Procs(C, 283, new[] { LethargySpread }); About(C, 283, "From the side: lethargy spreads from your foe - everything around it attacks slower.");
+            n += AddProcs(B, 283, none); Self(B, 283, HasteSelf); About(B, 283, "From the side: snares it, and your blades quicken.");
+            About(H, 284, "After you evade: stuns for 5 seconds.");
+            n += Procs(C, 284, new[] { DrainAround }); About(C, 284, "After you evade: Valor drains the endurance of everything around your foe.");
+            n += AddProcs(B, 284, none); Self(B, 284, EvadeSelf); About(B, 284, "After you evade: stuns for 5 seconds, and your feet grow light (evade up).");
+            n += Procs(H, 289, new[] { GrievousBleed }); About(H, 289, "After Dragonspider: a grievous bleed.");
+            n += Procs(C, 289, new[] { BlastChampion }); About(C, 289, "After Dragonspider: Blast of the Champion bursts around your foe.");
+            n += AddProcs(B, 289, new[] { BleedB2, BleedB3 }); About(B, 289, "After Dragonspider: three wounds that bleed together.");
+
+            // ---- Celtic Spear (Hero)
+            n += Procs(H, 307, new[] { HeavySnare }); About(H, 307, "From behind: pins its leg - a heavy snare that holds through damage.");
+            n += Reshape(H, 308, "Flanking Spear", 2, 1, 0, growth: 0.6, hit: 10, def: 0, end: 10, procs: new[] { Root3 });
+            About(H, 308, "From the side: roots it for 3 seconds (damage frees it).");
+            n += Reshape(H, 309, "Sweeping Spear", 0, 0, 0, growth: 0.55, hit: 5, def: 0, end: 15, procs: none);
+            CleaveAt(H, 309, 150, CleaveExtra, HeroCleaveFactor, 75);
+            About(H, 309, "A long sweep of the spear: also hits up to two more enemies in a wide arc in front of you, further out than other sweeps (90% of the blow).");
+            n += Procs(H, 318, new[] { Stun4 }); About(H, 318, "From the side: stuns for 4 seconds.");
+
+            // ---- Celtic Dual (Blademaster)
+            n += Reshape(B, 322, "Gale Spin", 0, 0, 0, growth: 0.5, hit: 5, def: 0, end: 20, procs: none);
+            CleaveAt(B, 322, 360, 3, CleaveFactor);
+            About(B, 322, "Spin with both blades: also hits up to three more enemies all around you (70% of the blow).");
+            n += Reshape(B, 326, "Thunderclap", 0, 323, 7, growth: 0.8, hit: 10, def: 0, end: 10, procs: new[] { Stun3 });
+            About(B, 326, "After Snow Shower: both blades crash down - stuns for 3 seconds.");
+            n += AddProcs(B, 323, none); Self(B, 323, HasteSelf); About(B, 323, "From behind: snares it, and your blades quicken.");
+            n += AddProcs(B, 327, none); Self(B, 327, HasteSelf); About(B, 327, "From the side: stuns for 4 seconds, and your blades quicken.");
+            n += AddProcs(B, 333, none); Strike(B, 333); About(B, 333, "After Meteor Shower: a great bleed, and your off-hand strikes again.");
+            n += AddProcs(B, 334, none); Strike(B, 334); About(B, 334, "After Tempest: slows its attacks, and your off-hand strikes again.");
+            return n;
+        }
+
+        /// <summary>What each class's version of the reshaped lines does, written to style-rework.txt beside the server (a check).</summary>
+        static void Dump()
+        {
+            try
+            {
+                var sb = new System.Text.StringBuilder();
+                foreach (var cls in new[] { Hero, Champion, Blademaster })
+                    foreach (string spec in new[] { "Large Weapons", "Blades", "Blunt", "Piercing", "Celtic Spear", "Celtic Dual" })
+                        foreach (Style st in SkillBase.GetStyleList(spec, cls))
+                        {
+                            Style r = Ref(cls, st.ID) ?? st;
+                            string procs = string.Join(", ", r.Procs.Select(p => $"{p.Spell.Name}[{p.Spell.ID}]{(p.ClassId != 0 ? "" : "*")}"));
+                            string self = SelfProcs.TryGetValue((cls, r.ID), out int[] sp) ? " self:" + string.Join("/", sp) : "";
+                            string strike = OffhandStrikes.ContainsKey((cls, r.ID)) ? " +offhand" : "";
+                            string cleave = Cleaves.TryGetValue((cls, r.ID), out var c) ? $" cleave {c.Arc}deg x{c.Extra} {c.Factor}" : "";
+                            sb.AppendLine($"{cls} {spec} {r.SpecLevelRequirement,2} {r.Name} ({r.OpeningRequirementType} {r.OpeningRequirementValue} {r.AttackResultRequirement}) | {procs}{self}{strike}{cleave} | {Describe(r)}");
+                        }
+                System.IO.File.WriteAllText("style-rework.txt", sb.ToString());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("[StyleRework] dump: " + e.Message);
+            }
+        }
+
+        static void About(int cls, int id, string text) => _about[(cls, id)] = text;
+        static void Self(int cls, int id, params int[] spells) => SelfProcs[(cls, id)] = spells;
+        static void Strike(int cls, int id, double share = OffhandShare) => OffhandStrikes[(cls, id)] = share;
+        static void CleaveAt(int cls, int id, int arc, int extra, double factor, int reach = 0) => Cleaves[(cls, id)] = (arc, extra, factor, reach);
 
         // ------------------------------------------------------------------ the reshaping
 
@@ -255,7 +422,7 @@ namespace DOL.GS
 
         /// <summary>The tooltip's first line for a style of a reshaped line, or null.</summary>
         public static string Describe(Style st) =>
-            st != null && _about.TryGetValue((st.ClassID, st.ID), out string s) && st.Spec == LargeWeapons ? s : null;
+            st != null && _about.TryGetValue((st.ClassID, st.ID), out string s) ? s : null;
 
         // ------------------------------------------------------------------ when a style lands (WeaponAction)
 
@@ -269,8 +436,14 @@ namespace DOL.GS
                 return;
             try
             {
-                if (Cleaves.Contains(st.ID))
-                    Cleave(owner, ad, st);
+                if (Cleaves.TryGetValue((st.ClassID, st.ID), out var cl))
+                    Cleave(owner, ad, st, cl);
+                if (SelfProcs.TryGetValue((st.ClassID, st.ID), out int[] self))
+                    foreach (int id in self)
+                        if (SkillBase.GetSpellByID(id) is Spell sp)
+                            ScriptMgr.CreateSpellHandler(owner, sp, SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect))?.StartSpell(owner);
+                if (OffhandStrikes.TryGetValue((st.ClassID, st.ID), out double share))
+                    OffhandStrike(owner, ad, share);
                 if (st.Spec == LargeWeapons && st.ClassID == Hero)
                 {
                     if (st.ID == Rage)                        // the parry flows into the counter: endurance back
@@ -285,23 +458,46 @@ namespace DOL.GS
             }
         }
 
+        /// <summary>The Blademaster's second weapon strikes the same foe again for a share of the blow.</summary>
+        static void OffhandStrike(GameLiving owner, AttackData ad, double share)
+        {
+            GameLiving t = ad.Target;
+            if (t == null || !t.IsAlive)
+                return;
+            int dmg = Math.Max(1, (int) ((ad.Damage + ad.CriticalDamage) * share));
+            var extra = new AttackData
+            {
+                Attacker = owner, Target = t, Damage = dmg, DamageType = ad.DamageType, AttackType = ad.AttackType,
+                AttackResult = eAttackResult.HitUnstyled, Weapon = ad.Weapon, CausesCombat = true,
+            };
+            t.OnAttackedByEnemy(extra);
+            owner.DealDamage(extra);
+            foreach (GamePlayer v in owner.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+            {
+                v.Out.SendCombatAnimation(null, t, 0, 0, 0, 0, 0x0A, t.HealthPercent);
+                v.Out.SendSpellEffectAnimation(owner, t, SweepHitFx, 0, false, 1);
+            }
+            if (owner is GamePlayer p)
+                p.Out.SendMessage($"Your off-hand strikes {t.GetName(0, false)} again for {dmg} damage!", eChatType.CT_YouHit, eChatLoc.CL_SystemWindow);
+        }
+
         /// <summary>MonsterMoves.Defense: a broken guard blocks half as often.</summary>
         public static double BlockFactor(GameLiving defender) =>
             defender != null && _guardBroken.TryGetValue(defender, out StrongBox<long> until) && until.Value > GameLoop.GameLoopTime ? 0.5 : 1.0;
 
         /// <summary>The cleave: up to CleaveExtra more enemies in the arc in front of you take a share of the blow (and the
         /// style's procs - a Champion's Submission lands on all of them).</summary>
-        static void Cleave(GameLiving owner, AttackData ad, Style st)
+        static void Cleave(GameLiving owner, AttackData ad, Style st, (int Arc, int Extra, double Factor, int Reach) cl)
         {
-            int reach = Math.Max(150, owner.attackComponent.AttackRange) + 50;
-            double factor = st.ClassID == Hero ? HeroCleaveFactor : CleaveFactor;
+            int reach = Math.Max(150, owner.attackComponent.AttackRange) + 50 + cl.Reach;
+            double factor = cl.Factor;
             int dmg = Math.Max(1, (int) ((ad.Damage + ad.CriticalDamage) * factor));
             var hit = new List<GameLiving>();
             foreach (GameNPC n in owner.GetNPCsInRadius((ushort) reach))
             {
-                if (hit.Count >= CleaveExtra)
+                if (hit.Count >= cl.Extra)
                     break;
-                if (n == ad.Target || !n.IsAlive || n.ObjectState != GameObject.eObjectState.Active || !owner.IsObjectInFront(n, CleaveArc))
+                if (n == ad.Target || !n.IsAlive || n.ObjectState != GameObject.eObjectState.Active || (cl.Arc < 360 && !owner.IsObjectInFront(n, cl.Arc)))
                     continue;
                 if (!GameServer.ServerRules.IsAllowedToAttack(owner, n, true) || MonsterTiers.Combatant(n) != null)
                     continue;

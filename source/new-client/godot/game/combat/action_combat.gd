@@ -104,6 +104,8 @@ var _drag_from := Vector2.ZERO
 # the reticle: what's under the crosshair becomes your target (spells, pets, ranged - not only melee)
 const RETICLE_RANGE_M := 45.0
 const RETICLE_DWELL_MS := 200          # a new monster under the crosshair this long takes over the target
+const CRITTER_DWELL_MS := 2500         # a grey critter only after this long (owner 2026-11-20 bugs doc: "the cursor
+                                       # should ignore them unless the player looks at them for more than a few seconds")
 var _aim = null                        # the monster under the crosshair now (untyped: it may be gone)
 var _aim_since := 0
 var _aim_check_at := 0
@@ -1429,7 +1431,7 @@ func _soft_target() -> void:
 		var n: Npc = npcs.active[i]
 		if n == null or not is_instance_valid(n) or not n.state.alive or n.state.stealthed:
 			continue
-		if int(n.spawn.get("realm", 0)) != 0 or (int(n.spawn.get("flags", 0)) & Npc.FLAG_CANTTARGET):
+		if int(n.spawn.get("realm", 0)) != 0 or (int(n.spawn.get("flags", 0)) & Npc.FLAG_CANTTARGET) or _critter(n):
 			continue
 		var s := _aim_score(n, p, SOFT_ANGLE, SOFT_RANGE_M)
 		if s < best_score:
@@ -1623,6 +1625,10 @@ func _reticle_tick(p: Player, now: int) -> void:
 	var centre := get_viewport().get_visible_rect().size * 0.5
 	var hit: Npc = npcs.pick(cam, centre)
 	var best: Npc = hit if hit and _aimable(hit) and hit.global_position.distance_to(p.global_position) <= RETICLE_RANGE_M else null
+	var critter: Npc = null                                # a grey under the crosshair: taken only if nothing else is
+	if best and _critter(best):
+		critter = best
+		best = null
 	if best == null:
 		var from := cam.project_ray_origin(centre)
 		var fwd := cam.project_ray_normal(centre)
@@ -1639,16 +1645,31 @@ func _reticle_tick(p: Player, now: int) -> void:
 			var ang := rad_to_deg(fwd.angle_to(to))
 			var allow := maxf(2.5, rad_to_deg(atan2(maxf(0.6, n.height * 0.5), dist)))
 			if ang <= allow and ang < best_ang:
+				if _critter(n):
+					if critter == null:
+						critter = n
+					continue
 				best_ang = ang
 				best = n
+	if best == null:
+		best = critter
 	if best != _aim:
 		_aim = best
 		_aim_since = now
 	var cur = npcs.target
 	if _aim == null or (is_instance_valid(cur) and cur == _aim):
 		return
+	if _critter(_aim):                                     # a critter: only when you keep looking at it
+		if now - _aim_since >= CRITTER_DWELL_MS:
+			_select_quiet(_aim)
+		return
 	if not is_instance_valid(cur) or not cur.state.alive or now - _aim_since >= RETICLE_DWELL_MS:
 		_select_quiet(_aim)
+
+
+## A grey critter (MonsterTiers' grey: flavour wildlife) - the reticle and soft targeting pass over it.
+func _critter(n: Npc) -> bool:
+	return n != null and is_instance_valid(n) and n.tier() == -3
 
 
 ## Ally targeting (owner 2026-11-01): while the Target Allies key is held (Left Ctrl) the reticle and the lock look for

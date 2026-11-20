@@ -826,6 +826,8 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 		if visible != vis:
 			visible = vis
 	_pace(delta)
+	if not _weapon_nodes.is_empty():
+		Player.run_tilt(_weapon_nodes, anim, delta)   # a drawn one-hander clear of the head while running
 	if _lod:
 		_lod.rank = rank
 		_lod.hidden = manager != null and (manager as NpcManager).hidden(state)

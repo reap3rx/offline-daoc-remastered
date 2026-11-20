@@ -1686,6 +1686,26 @@ namespace DOL.GS.ServerRules
 
         public virtual void DropLoot(GameNPC killedNpc, GameObject killer, SortedSet<ItemOwnerTotalDamagePair> itemOwners)
         {
+            // a tiered monster's drops at the level its fight was set for, not where it was placed (LootByCon.cs)
+            byte real = killedNpc.Level, at = LootByCon.Level(killedNpc);
+            if (at == real)
+            {
+                DropLootAt(killedNpc, killer, itemOwners);
+                return;
+            }
+            killedNpc.SetLevelQuiet(at);
+            try
+            {
+                DropLootAt(killedNpc, killer, itemOwners);
+            }
+            finally
+            {
+                killedNpc.SetLevelQuiet(real);
+            }
+        }
+
+        void DropLootAt(GameNPC killedNpc, GameObject killer, SortedSet<ItemOwnerTotalDamagePair> itemOwners)
+        {
             List<GamePlayer> playersInRadius = killedNpc.GetPlayersInRadius(WorldMgr.INFO_DISTANCE);
 
             foreach (DbItemTemplate itemTemplate in LootMgr.GetLoot(killedNpc, killer))
@@ -1706,7 +1726,7 @@ namespace DOL.GS.ServerRules
                     bool rog = drop is GeneratedUniqueItem;
                     if (drop is GeneratedUniqueItem g)
                     {
-                        tier = LootOverhaul.Apply(g, taker);
+                        tier = LootOverhaul.Apply(g, taker, LootByCon.Con(killedNpc));
                         if (tier == LootOverhaul.Tier.Legendary)
                             LootUses.MaybeHeirloom(g);
                     }
@@ -1733,7 +1753,9 @@ namespace DOL.GS.ServerRules
 
             static void CreateMoney(GameNPC killedNpc, DbItemTemplate itemTemplate, SortedSet<ItemOwnerTotalDamagePair> itemOwners, List<GamePlayer> playersInRadius)
             {
-                GameMoney money = new(itemTemplate.Price, killedNpc)
+                // a harder monster pays more coin (LootByCon.cs)
+                long coin = Math.Max(1, (long) Math.Round(itemTemplate.Price * LootByCon.CoinFactor(LootByCon.Con(killedNpc))));
+                GameMoney money = new(coin, killedNpc)
                 {
                     Name = itemTemplate.Name,
                     Model = (ushort) itemTemplate.Model

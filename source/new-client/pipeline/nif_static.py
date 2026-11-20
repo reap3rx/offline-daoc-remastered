@@ -1360,6 +1360,17 @@ def particle_systems(nif, textures, warnings, node_anims=False):
                                                     or _controller(em, 'NiPathController') is not None):
             par = parent.get(id(em))
             em_anim = node_animation(em, world[id(par)] if par is not None else np.identity(4))
+        elif em is not None and id(em) in world:
+            # an emitter carried by an animated parent (owner 2026-11-20 bugs doc: the Hibernian heals' sparks "supposed
+            # to circle around the target ... instead it just stays put and flickers" - hib_heal*_hit's 'plazball' runs
+            # up a helix with its emitters under it): the whole chain from the root down, played in effect space
+            chain, x = [], em
+            while x is not None:
+                chain.append(x)
+                x = parent.get(id(x))
+            chain.reverse()
+            if any(_animated(n) for n in chain[:-1]):
+                em_anim = chain_animation(chain, np.identity(4))
         sr = c.get('start_random') or {'x': 0, 'y': 0, 'z': 0}
         mods = []
         mesh_quad = None
