@@ -57,8 +57,8 @@ namespace DOL.GS
             else
                 Owner.LastAttackTickPvP = GameLoop.GameLoopTime;
 
-            // NPCs interrupt with every DoT tick.
-            if (SpellHandler.Caster is GameNPC)
+            // NPCs interrupt with every DoT tick - but not a monster's on your side (MonsterMoves.MonsterOnSide).
+            if (SpellHandler.Caster is GameNPC && !MonsterMoves.MonsterOnSide(SpellHandler.Caster, Owner))
                 Owner.StartInterruptTimer(SpellHandler.Caster.SpellInterruptDuration, AttackData.eAttackType.Spell, SpellHandler.Caster);
         }
     }

@@ -393,6 +393,7 @@ func _ward_state(on: bool, why: String) -> void:
 ## plays on to its own end - the client's fade - and goes. The staff held out: Player.ward_pose.
 const WARD_ART := 4301
 const WARD_ART_HOLD := 0.35                 # (of the effect's length: the shimmer at its fullest)
+const WARD_FADE_S := 0.7                    # let go: the effect's last this-many seconds play (its fade)
 
 
 func _show_bubble(on: bool) -> void:
@@ -420,8 +421,14 @@ func _show_bubble(on: bool) -> void:
 	var n := _ward_nif(was)
 	var left := 0.4
 	if n:
-		left = maxf(0.2, secs - maxf(n.hold_at, 0.0))
-		n.hold_at = -1.0                                   # (on to its end: it fades as the client's does)
+		# (owner 2026-11-19: "could phase out slightly quicker, like a fade"): on from its last WARD_FADE_S - the
+		# effect's own fade - shrinking a little as it goes
+		var from := maxf(maxf(n.hold_at, 0.0), secs - WARD_FADE_S)
+		n.hold_at = -1.0
+		n.seek(from)
+		left = maxf(0.2, secs - from)
+		var k := was.scale
+		create_tween().tween_property(was, "scale", k * 0.85, left)
 	get_tree().create_timer(left).timeout.connect(func(): SpellFx.release(was))
 
 

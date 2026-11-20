@@ -30,7 +30,7 @@ namespace DOL.GS
 
             AttackData ad = bleedHandler.CalculateDamageToTarget(Owner);
             ad.Modifier = _nextTickDamage * SpellHandler.Target.GetResist(SpellHandler.Spell.DamageType) / -100;
-            ad.Damage = _nextTickDamage + ad.Modifier;
+            ad.Damage = System.Math.Min(_nextTickDamage + ad.Modifier, MonsterMoves.DotTickCap(SpellHandler.Caster, Owner, SpellHandler.Spell));
             bleedHandler.SendDamageMessages(ad);
 
             foreach (GamePlayer player in ad.Target.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))

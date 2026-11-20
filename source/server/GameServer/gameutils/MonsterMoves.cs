@@ -411,6 +411,25 @@ namespace DOL.GS
             };
         }
 
+        // Monsters' damage over time on your side (owner 2026-11-19: "Poisons and diseases ... are basically death
+        // sentences for [casters] ... ticking for 15 damage a tick, and did not allow any casting. DoTs should not
+        // interrupt casting at all ... no more than 20% of the player's health when it's run its course"): no
+        // interrupts, and each tick at most its share of DotShare of the victim's health.
+        public const double DotShare = 0.20;
+
+        /// <summary>A monster's spell on a player, a bot or a pet of theirs.</summary>
+        public static bool MonsterOnSide(GameLiving caster, GameLiving target) =>
+            caster is GameNPC && MonsterTiers.Combatant(caster) == null && target != null && MonsterTiers.Combatant(target) != null;
+
+        /// <summary>The most one tick of a monster's damage over time may do to your side (int.MaxValue otherwise).</summary>
+        public static int DotTickCap(GameLiving caster, GameLiving target, Spell s)
+        {
+            if (s == null || !MonsterOnSide(caster, target))
+                return int.MaxValue;
+            int ticks = (s.Frequency > 0 ? Math.Max(1, s.Duration / s.Frequency) : 1) + 1;   // (+1: the first tick at once)
+            return Math.Max(1, (int) Math.Ceiling(DotShare * target.MaxHealth / ticks));
+        }
+
         static void TryProc(GameNPC n, GameLiving target, Blow b, int c)
         {
             if (!target.IsAlive || c == 0 && b != Blow.Heavy)

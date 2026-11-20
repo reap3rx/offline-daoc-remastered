@@ -1332,6 +1332,8 @@ func store_cfg(key: String, value: String) -> void:
 signal channel_changed
 var channel := {}
 var channel_input: Variant = null              # the key / button holding it (a keycode, "m<button>", "pad:<name>")
+var channel_last := {}                         # how the last one ended: {name, how, at, stage} (the bar's farewell)
+var channel_fired_at := -100000
 
 
 func channel_press(e: Dictionary, input: Variant) -> void:
@@ -1352,11 +1354,15 @@ func channel_line(text: String) -> void:
 	var f := text.split("|")
 	if f.size() >= 7 and f[0] == "start":
 		channel = {"start": Time.get_ticks_msec(), "quick": int(f[1]), "normal": int(f[2]), "powered": int(f[3]),
-				"prev": String(f[4]), "cur": String(f[5]), "next": String(f[6])}
+				"prev": String(f[4]), "cur": String(f[5]), "next": String(f[6]), "dtype": int(f[7]) if f.size() > 7 else 0}
+		channel_last = {}
 	elif f.size() >= 1 and f[0] == "end":
+		var how := String(f[2]) if f.size() >= 3 else "fizzle"
+		channel_last = {"name": String(f[1]) if f.size() >= 2 else "", "how": how, "at": Time.get_ticks_msec(),
+				"dtype": int(channel.get("dtype", 0))}
+		if how != "fizzle":
+			channel_fired_at = Time.get_ticks_msec()
 		channel = {}
-		if f.size() >= 3 and f[1] != "" and f[2] != "normal":
-			PlayerData.message.emit("%s: %s" % ["QUICK" if f[2] == "quick" else "POWERED", f[1]], "spells")
 	channel_changed.emit()
 
 

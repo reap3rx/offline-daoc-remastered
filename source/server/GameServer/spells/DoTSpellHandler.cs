@@ -94,7 +94,8 @@ namespace DOL.GS.Spells
         public override void ApplyEffectOnTarget(GameLiving target)
         {
             base.ApplyEffectOnTarget(target);
-            target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
+            if (!MonsterMoves.MonsterOnSide(Caster, target))       // (a monster's DoT doesn't stop your casting)
+                target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
         }
 
         protected override GameSpellEffect CreateSpellEffect(GameLiving target, double effectiveness)
@@ -169,6 +170,12 @@ namespace DOL.GS.Spells
                 ad.CausesCombat = false;
 
             ad.CriticalDamage = (int) (ad.Damage * criticalDamagePercent);
+            int cap = MonsterMoves.DotTickCap(Caster, target, Spell);   // (a monster's: 20% of your health in all)
+            if (ad.Damage + ad.CriticalDamage > cap)
+            {
+                ad.Damage = Math.Min(ad.Damage, cap);
+                ad.CriticalDamage = Math.Max(0, cap - ad.Damage);
+            }
             SendDamageMessages(ad);
             DamageTarget(ad, false);
         }

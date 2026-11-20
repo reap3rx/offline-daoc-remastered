@@ -37,7 +37,8 @@ namespace DOL.GS.Spells
 
         public override void ApplyEffectOnTarget(GameLiving target)
         {
-            target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
+            if (!MonsterMoves.MonsterOnSide(Caster, target))       // (a monster's disease doesn't stop your casting)
+                target.StartInterruptTimer(target.SpellInterruptDuration, AttackData.eAttackType.Spell, Caster);
             base.ApplyEffectOnTarget(target);
         }
 

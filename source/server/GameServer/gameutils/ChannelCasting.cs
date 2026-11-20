@@ -11,23 +11,27 @@ namespace DOL.GS
     /// <summary>
     /// Channelled casting (owner 2026-11-19: "hold the spell button down to channel it ... Quick ... Normal ... Powered
     /// ... cast bar"). A spell with ranks in its family (SpellFamilies), held on its key, is channelled instead of cast:
-    ///   - let go before the quick mark (a tap, a click): it is cast as ever - the current rank at its own cast time;
-    ///   - let go between the quick mark and the cast time: the rank before it goes off at once (Quick);
-    ///   - let go once the cast time is reached: the current rank (Normal);
-    ///   - still held at the powered mark: the next rank - learned or not yet - goes off (Powered).
-    /// The quick mark is the cast time times 0.6, down to 0.4 with dexterity; the powered mark the cast time times
-    /// PoweredTimes. No rank before: no quick mark (an early release casts at the cast time); no rank after: no powered
-    /// mark (held, it goes off at the cast time). Moving or being interrupted breaks the channel. Each rank costs its own
-    /// power; the one that goes off is cast with no cast time of its own (the channel was its cast).
+    ///   - let go before the first mark: it fizzles (owner 2026-11-19: "if the spell button isn't being held down, the
+    ///     spell fizzles out (unless you get to one of the charge levels)");
+    ///   - let go between the quick mark and the cast time: the rank before it (Quick);
+    ///   - let go between the cast time and the powered mark: the current rank (Normal);
+    ///   - let go past the powered mark: the next rank - learned or not yet (Powered).
+    /// Nothing goes off until the key is let go ("it doesn't cast until you let go of the button even if you get to the
+    /// maximum charge"): the gathering holds. The quick mark is the cast time times 0.6, down to 0.4 with dexterity; the
+    /// powered mark the cast time times PoweredTimes. No rank before: no quick mark; no rank after: no powered mark.
+    /// Moving or being interrupted breaks the channel; held past MaxHoldMs it fizzles. Each rank costs its own power; the
+    /// one that goes off is cast with no cast time of its own (the channel was its cast).
     ///
     /// The client: "/channel hold" just before its UseSpell (the key is down) and "/channel release" when the key comes
-    /// up; told "#CH|start|quickMs|normalMs|poweredMs|prev|cur|next" and "#CH|end|name-or-empty".
+    /// up; told "#CH|start|quickMs|normalMs|poweredMs|prev|cur|next|damageType" and "#CH|end|name|how" (how: quick /
+    /// normal / powered, or fizzle with no name).
     /// </summary>
     public static class ChannelCasting
     {
         public const double PoweredTimes = 1.6;
         public const int MinQuickMs = 300;
         const int HoldPendingMs = 1500;
+        public const int MaxHoldMs = 30000;
 
         sealed class State
         {
@@ -37,7 +41,6 @@ namespace DOL.GS
             public int QuickMs, NormalMs, PoweredMs;
             public Spell Prev, Cur, Next;
             public SpellLine Line;
-            public bool Committed;                    // let go before the quick mark: the current rank at the cast time
             public int X, Y;
             public int Serial;
         }
@@ -66,8 +69,10 @@ namespace DOL.GS
             return (prev, next);
         }
 
+        // only spells against foes - damage and crowd control (owner 2026-11-19: "the spell charging has also affected
+        // buffs. I don't think it should work for those, only for offensive and crowd control spells")
         static bool Channelable(Spell s) =>
-            s != null && s.CastTime > 0 && !s.NeedInstrument && s is not Song && !s.IsPulsing && !SpellFamilies.IsPet(s);
+            s != null && s.IsHarmful && s.CastTime > 0 && !s.NeedInstrument && s is not Song && !s.IsPulsing && !SpellFamilies.IsPet(s);
 
         /// <summary>UseSpellHandler: a held key's spell. True when it is channelled (the cast is the channel's).</summary>
         public static bool TryBegin(GamePlayer p, Spell spell, SpellLine line)
@@ -98,7 +103,6 @@ namespace DOL.GS
             normal = Math.Max(500, normal);
             int dex = p.GetModified(eProperty.Dexterity);
             st.Active = true;
-            st.Committed = false;
             st.Start = GameLoop.GameLoopTime;
             st.NormalMs = normal;
             st.QuickMs = prev != null ? Math.Max(MinQuickMs, (int) (normal * QuickShare(dex))) : 0;
@@ -111,10 +115,10 @@ namespace DOL.GS
             st.Y = p.Y;
             int serial = ++st.Serial;
             p.Out.SendMessage($"You begin channelling {spell.Name}.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
-            int shown = st.PoweredMs > 0 ? st.PoweredMs : st.NormalMs;
+            // the gathering, held until the key comes up (its time: the longest a hold may last)
             foreach (GamePlayer v in p.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
-                v.Out.SendSpellCastAnimation(p, spell.ClientEffect, (ushort) Math.Max(1, shown / 100));
-            NewClient.Send(p, $"#CH|start|{st.QuickMs}|{st.NormalMs}|{st.PoweredMs}|{Clean(prev?.Name)}|{Clean(spell.Name)}|{Clean(next?.Name)}");
+                v.Out.SendSpellCastAnimation(p, spell.ClientEffect, (ushort) (MaxHoldMs / 100));
+            NewClient.Send(p, $"#CH|start|{st.QuickMs}|{st.NormalMs}|{st.PoweredMs}|{Clean(prev?.Name)}|{Clean(spell.Name)}|{Clean(next?.Name)}|{(int) spell.DamageType}");
             new ECSGameTimer(p, _ => Tick(p, st, serial), 100);
             return true;
         }
@@ -141,15 +145,9 @@ namespace DOL.GS
                 Cancel(p, st, $"{p.LastInterrupter?.GetName(0, true) ?? "Something"} breaks your channel!");
                 return 0;
             }
-            long el = GameLoop.GameLoopTime - st.Start;
-            if (st.PoweredMs > 0 && el >= st.PoweredMs && !st.Committed)
+            if (GameLoop.GameLoopTime - st.Start > MaxHoldMs)
             {
-                Fire(p, st, st.Next, "powered");
-                return 0;
-            }
-            if (el >= st.NormalMs && (st.Committed || st.PoweredMs <= 0))
-            {
-                Fire(p, st, st.Cur, "normal");
+                Cancel(p, st, "You hold the spell too long and it fizzles out.");
                 return 0;
             }
             return 100;
@@ -158,15 +156,17 @@ namespace DOL.GS
         /// <summary>"/channel release": the key came up.</summary>
         public static void Release(GamePlayer p)
         {
-            if (!_states.TryGetValue(p, out State st) || !st.Active || st.Committed)
+            if (!_states.TryGetValue(p, out State st) || !st.Active)
                 return;
             long el = GameLoop.GameLoopTime - st.Start;
-            if (st.QuickMs <= 0 ? el < st.NormalMs : el < st.QuickMs)
-                st.Committed = true;                    // a tap: cast as ever, at the cast time (Tick)
+            if (st.QuickMs > 0 ? el < st.QuickMs : el < st.NormalMs)
+                Cancel(p, st, "Your spell fizzles out - hold it longer.");
             else if (el < st.NormalMs)
                 Fire(p, st, st.Prev, "quick");
-            else
+            else if (st.PoweredMs <= 0 || el < st.PoweredMs)
                 Fire(p, st, st.Cur, "normal");
+            else
+                Fire(p, st, st.Next, "powered");
         }
 
         public static void Cancel(GamePlayer p)
@@ -181,7 +181,7 @@ namespace DOL.GS
             st.Serial++;
             foreach (GamePlayer v in p.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                 v.Out.SendInterruptAnimation(p);
-            NewClient.Send(p, "#CH|end|");
+            NewClient.Send(p, "#CH|end||fizzle");
             if (why != null)
                 p.Out.SendMessage(why, eChatType.CT_SpellResisted, eChatLoc.CL_SystemWindow);
         }

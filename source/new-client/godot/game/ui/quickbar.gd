@@ -314,6 +314,7 @@ class QuickSlot extends Control:
 	func _gui_input(event: InputEvent) -> void:
 		if event is InputEventMouseButton and event.pressed:
 			if event.button_index == MOUSE_BUTTON_LEFT and not event.double_click:
+				Server.channel_press(entry(), "m%d" % MOUSE_BUTTON_LEFT)   # (a spell held on the button: channelled)
 				use()
 				accept_event()
 			elif event.button_index == MOUSE_BUTTON_RIGHT:

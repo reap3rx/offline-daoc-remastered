@@ -1423,72 +1423,177 @@ func _build_cast_bar() -> void:
 	_refresh_effects()
 
 
-## The channel bar (ChannelCasting.cs, owner 2026-11-19: "A cast bar shows the quick, normal and powered marks"): over
-## the quickbars while a spell's key is held - it fills toward the powered mark; let go at the quick mark (blue) for the
-## rank before, at the cast time (gold) for this one, held to the powered mark (violet) for the next. The name over it
-## is the one that would go off now.
+## The channel (ChannelCasting.cs; owner 2026-11-19): over the quickbars while a spell's key is held, the name of the
+## spell that would go off, filling from grey to the spell's colour as it charges - the rank before it first (Moon Ray),
+## then flashing to the spell itself (Moon Streak) and filling again, then to the overcharged rank (Moon Blast). Full,
+## the name pulses and sparks with mana until the key is let go. Let go: the name of what went off flares and fades
+## (or FIZZLE drifts away, let go too soon). Three pips under it: the stages.
 var _channel_bar: ChannelBar
+const CHANNEL_W := 360.0
 
 
 func _build_channel_bar() -> void:
 	_channel_bar = ChannelBar.new()
-	_channel_bar.size = Vector2(240, 30)
-	_channel_bar.position = Vector2(area().x * 0.5 - 120, area().y - 215)
+	_channel_bar.size = Vector2(CHANNEL_W, 48)
 	_channel_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_channel_bar.visible = false
 	_channel_bar.z_index = 50                              # (over any window left open)
 	root.add_child(_channel_bar)
 	Server.channel_changed.connect(func():
-		_channel_bar.visible = not Server.channel.is_empty()
-		_channel_bar.position = Vector2(area().x * 0.5 - 120, area().y - 215)
+		_channel_bar.position = Vector2(area().x * 0.5 - CHANNEL_W * 0.5, area().y - 225)
+		_channel_bar.visible = true
 		_channel_bar.queue_redraw())
 
 
 class ChannelBar extends Control:
-	const QUICK := Color(0.45, 0.75, 1.0)
-	const NORMAL := Color(1.0, 0.78, 0.3)
-	const POWERED := Color(0.8, 0.5, 1.0)
+	const FAREWELL_MS := 650
+	const FONT_PX := 20
+	## eDamageType -> the colour a spell fills to
+	const COLORS := {0: Color(0.9, 0.9, 0.85), 1: Color(0.8, 0.78, 0.72), 2: Color(0.85, 0.85, 0.9), 3: Color(0.82, 0.8, 0.75),
+		10: Color(0.85, 0.35, 0.95), 11: Color(0.45, 0.8, 1.0), 12: Color(0.65, 0.55, 1.0), 13: Color(1.0, 0.55, 0.2),
+		14: Color(0.55, 0.85, 0.35), 15: Color(1.0, 0.92, 0.55)}
+	var _fill: Control
+	var _stage := -1
+	var _flash_at := -100000
+
+	func _ready() -> void:
+		_fill = Control.new()                              # the coloured name, clipped to how far it has filled
+		_fill.clip_contents = true
+		_fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_fill.draw.connect(_draw_fill)
+		add_child(_fill)
 
 	func _process(_d: float) -> void:
-		if visible:
-			queue_redraw()
+		if not visible:
+			return
+		if Server.channel.is_empty() and (Server.channel_last.is_empty() or Time.get_ticks_msec() - int(Server.channel_last.at) > FAREWELL_MS):
+			visible = false
+			_stage = -1
+			return
+		queue_redraw()
+		_fill.queue_redraw()
+
+	## [[name, from ms, to ms], ...] for the channel now
+	func _stages(c: Dictionary) -> Array:
+		var out := []
+		var at := 0.0
+		if int(c.quick) > 0 and String(c.prev) != "":
+			out.append([String(c.prev), 0.0, float(c.quick)])
+			at = float(c.quick)
+		out.append([String(c.cur), at, float(c.normal)])
+		if int(c.powered) > 0 and String(c.next) != "":
+			out.append([String(c.next), float(c.normal), float(c.powered)])
+		return out
+
+	func _color(dtype: int) -> Color:
+		return COLORS.get(dtype, Color(0.75, 0.85, 1.0))
+
+	## (name, fill 0..1, stage index, stages, full)
+	func _now() -> Array:
+		var c: Dictionary = Server.channel
+		var st := _stages(c)
+		var el := float(Time.get_ticks_msec() - int(c.start))
+		for i in st.size():
+			if el < float(st[i][2]):
+				var f := clampf((el - float(st[i][1])) / maxf(float(st[i][2]) - float(st[i][1]), 1.0), 0.0, 1.0)
+				return [String(st[i][0]), f, i, st, false]
+		return [String(st[-1][0]), 1.0, st.size() - 1, st, true]
+
+	func _text_pos(t: String, px: int) -> Vector2:
+		var f := UiArt.font(true)
+		var w := f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, px).x
+		return Vector2((size.x - w) * 0.5, 26)
 
 	func _draw() -> void:
-		var c: Dictionary = Server.channel
-		if c.is_empty():
-			return
-		var el := float(Time.get_ticks_msec() - int(c.start))
-		var q := float(c.quick)
-		var n := float(c.normal)
-		var pw := float(c.powered)
-		var full := pw if pw > 0.0 else n
-		var bar := Rect2(0, 16, size.x, 12)
-		draw_rect(bar, Color(0.04, 0.04, 0.05, 0.85))
-		var col := NORMAL
-		var name := String(c.cur)
-		var lit := Color(0.7, 0.7, 0.7)
-		if q > 0.0 and el >= q and el < n:
-			col = QUICK
-			name = String(c.prev)
-			lit = QUICK
-		elif el >= n:
-			col = POWERED if pw > 0.0 and el >= pw else NORMAL
-			name = String(c.next) if pw > 0.0 and el >= pw else String(c.cur)
-			lit = col
-		elif q > 0.0:
-			col = QUICK.darkened(0.4)
-		var w := (size.x - 2.0) * clampf(el / maxf(full, 1.0), 0.0, 1.0)
-		draw_rect(Rect2(1, 17, w, 10), col)
-		for m in [[q, QUICK], [n, NORMAL], [pw, POWERED]]:
-			if float(m[0]) > 0.0:
-				var x := 1.0 + (size.x - 2.0) * clampf(float(m[0]) / maxf(full, 1.0), 0.0, 1.0)
-				draw_line(Vector2(x, 13), Vector2(x, 30), m[1], 2.0)
-		draw_rect(bar, Color(0.6, 0.5, 0.3, 0.9), false, 1.0)
 		var f := UiArt.font(true)
-		var t := name.to_upper()
-		var tw := f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, 10).x
-		draw_string_outline(f, Vector2((size.x - tw) * 0.5, 11), t, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, 3, Color(0, 0, 0, 0.9))
-		draw_string(f, Vector2((size.x - tw) * 0.5, 11), t, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, lit)
+		var now := Time.get_ticks_msec()
+		if Server.channel.is_empty():
+			_fill.size = Vector2.ZERO
+			var l: Dictionary = Server.channel_last
+			if l.is_empty():
+				return
+			var k := clampf(float(now - int(l.at)) / FAREWELL_MS, 0.0, 1.0)
+			var fizz := String(l.how) == "fizzle"
+			var t := "FIZZLE" if fizz else String(l.name).to_upper()
+			var col: Color = Color(0.6, 0.6, 0.62) if fizz else _color(int(l.dtype)).lightened(0.25)
+			col.a = 1.0 - k
+			var px := int(FONT_PX * (1.0 + (0.0 if fizz else k * 0.35)))
+			var pos := _text_pos(t, px) + Vector2(0, k * (10.0 if fizz else -4.0))
+			draw_string_outline(f, pos, t, HORIZONTAL_ALIGNMENT_LEFT, -1, px, 4, Color(0, 0, 0, 0.8 * (1.0 - k)))
+			draw_string(f, pos, t, HORIZONTAL_ALIGNMENT_LEFT, -1, px, col)
+			if not fizz:                                   # the release: a ring of motes bursting out
+				var mid := Vector2(size.x * 0.5, 20)
+				for i in 14:
+					var a := TAU * i / 14.0
+					var r := 20.0 + k * 90.0
+					draw_circle(mid + Vector2(cos(a) * r * 1.8, sin(a) * r * 0.45), 2.2 * (1.0 - k), col)
+			return
+		var n := _now()
+		var nm: String = n[0]
+		var fill: float = n[1]
+		var stage: int = n[2]
+		var full: bool = n[4]
+		if stage != _stage:
+			if _stage >= 0:
+				_flash_at = now                            # the name changes: a flash
+			_stage = stage
+		var col := _color(int(Server.channel.get("dtype", 0)))
+		var t := nm.to_upper()
+		var pulse := (0.5 + 0.5 * sin(now / 90.0)) if full else 0.0
+		var flash := clampf(1.0 - float(now - _flash_at) / 260.0, 0.0, 1.0)
+		var px := int(FONT_PX * (1.0 + flash * 0.25 + pulse * 0.08))
+		var pos := _text_pos(t, px)
+		var w := f.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, px).x
+		# the glow behind the filled part
+		var glow := col
+		glow.a = 0.18 + 0.25 * fill + 0.3 * pulse
+		draw_rect(Rect2(pos.x - 8, pos.y - px - 2, (w + 16) * fill, px + 10), Color(glow, glow.a * 0.35))
+		# the grey name; the coloured one is drawn by _fill over it, clipped to the fill
+		draw_string_outline(f, pos, t, HORIZONTAL_ALIGNMENT_LEFT, -1, px, 4, Color(0, 0, 0, 0.85))
+		draw_string(f, pos, t, HORIZONTAL_ALIGNMENT_LEFT, -1, px, Color(0.42, 0.42, 0.45).lerp(Color.WHITE, flash))
+		_fill.position = Vector2.ZERO
+		_fill.size = Vector2(pos.x + w * fill, size.y)
+		_fill.set_meta("t", [t, pos, px, col, pulse, flash])
+		# the filling edge: a bright line and motes rising off it
+		var edge := pos.x + w * fill
+		if fill > 0.0 and not full:
+			draw_line(Vector2(edge, pos.y - px + 2), Vector2(edge, pos.y + 4), col.lightened(0.6), 2.0)
+			for i in 5:
+				var ph := fposmod(now / 600.0 + i * 0.2, 1.0)
+				var x := edge - 4.0 + 8.0 * fposmod(sin(i * 12.9898 + floorf(now / 600.0 + i * 0.2) * 3.1) * 43758.5, 1.0)
+				draw_circle(Vector2(x, pos.y - ph * (px + 8)), 1.6 * (1.0 - ph), Color(col.lightened(0.4), 1.0 - ph))
+		# full: sparks of mana crackling off the name
+		if full:
+			var tick := int(now / 70)
+			for i in 10:
+				var r1 := fposmod(sin((tick + i * 7) * 12.9898) * 43758.5453, 1.0)
+				var r2 := fposmod(sin((tick + i * 13) * 78.233) * 12543.1, 1.0)
+				var p0 := Vector2(pos.x + r1 * w, pos.y - px * 0.5 + (r2 - 0.5) * px * 1.3)
+				var dir := Vector2(r2 - 0.5, r1 - 0.5).normalized() * (6.0 + 10.0 * r2)
+				var mid := p0 + dir * 0.5 + Vector2(dir.y, -dir.x) * 0.35
+				var sc := col.lightened(0.5)
+				sc.a = 0.5 + 0.5 * pulse
+				draw_polyline(PackedVector2Array([p0, mid, p0 + dir]), sc, 1.4, true)
+		# the stages: a pip each, lit as reached
+		var st: Array = n[3]
+		var pw := 22.0
+		var x0 := size.x * 0.5 - (st.size() * pw + (st.size() - 1) * 6.0) * 0.5
+		for i in st.size():
+			var r := Rect2(x0 + i * (pw + 6.0), 36, pw, 4)
+			draw_rect(r, Color(0.1, 0.1, 0.12, 0.85))
+			var k := 1.0 if i < stage else (fill if i == stage else 0.0)
+			if k > 0.0:
+				draw_rect(Rect2(r.position, Vector2(pw * k, 4)), col if i == stage else col.darkened(0.3))
+
+	func _draw_fill() -> void:
+		if not _fill.has_meta("t") or Server.channel.is_empty():
+			return
+		var m: Array = _fill.get_meta("t")
+		var f := UiArt.font(true)
+		var col: Color = m[3]
+		var bright := col.lightened(0.15 + 0.35 * float(m[4]) + 0.5 * float(m[5]))
+		_fill.draw_string_outline(f, m[1], m[0], HORIZONTAL_ALIGNMENT_LEFT, -1, m[2], 4, Color(col.darkened(0.6), 0.9))
+		_fill.draw_string(f, m[1], m[0], HORIZONTAL_ALIGNMENT_LEFT, -1, m[2], bright)
 
 
 func show_cast(spell_name: String, frac: float) -> void:

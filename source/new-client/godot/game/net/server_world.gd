@@ -1522,6 +1522,8 @@ func _cast(d: Dictionary) -> void:
 		if by_oid.has(oid) and int(d.get("time", 0)) > 0:
 			_cast_late(oid, ce, int(d.time) / 10.0)
 		return
+	if int(d.get("time", 0)) == 0 and oid == Server.me_oid and Time.get_ticks_msec() - Server.channel_fired_at < 800:
+		return                                         # (a channel let go: its gathering stays for the spell's release - ChannelCasting)
 	_interrupt(oid, false)
 	if int(d.get("time", 0)) == 0:
 		# an instant (the server sends a harmful instant's cast at 0 s - SpellHandler): the old client showed no casting
