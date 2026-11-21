@@ -1394,6 +1394,8 @@ namespace DOL.GS.ServerRules
             long xpCap = CalculateXpCap();
             baseXpReward = Math.Min(baseXpReward, xpCap);
             baseXpReward = LevelScaling.KillExperience(playerToAward, killedNpc, baseXpReward);   // scaled down: very little
+            double zoneRate = ZoneRates.KillFactor(playerToAward);                                  // the zone's rate (ZoneRates.cs)
+            baseXpReward = (long) (baseXpReward * zoneRate);
 
             if (baseXpReward <= 0)
                 return;
@@ -1639,7 +1641,7 @@ namespace DOL.GS.ServerRules
 
                 System.Globalization.NumberFormatInfo format = System.Globalization.NumberFormatInfo.InvariantInfo;
 
-                playerToAward.Out.SendMessage($"Base XP: {baseXpReward.ToString("N0", format)} | Solo Cap : {xpCap.ToString("N0", format)} | %Cap: {(double) baseXpReward / xpCap * 100:0.##}%", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                playerToAward.Out.SendMessage($"Base XP: {baseXpReward.ToString("N0", format)} | Solo Cap : {xpCap.ToString("N0", format)} | %Cap: {(double) baseXpReward / xpCap * 100:0.##}% | Zone rate: x{zoneRate:0.0#}", eChatType.CT_System, eChatLoc.CL_SystemWindow);
 
                 if (playerToAward.XPLogState is eXPLogState.Verbose)
                 {
@@ -1754,7 +1756,10 @@ namespace DOL.GS.ServerRules
             static void CreateMoney(GameNPC killedNpc, DbItemTemplate itemTemplate, SortedSet<ItemOwnerTotalDamagePair> itemOwners, List<GamePlayer> playersInRadius)
             {
                 // a harder monster pays more coin (LootByCon.cs)
-                long coin = Math.Max(1, (long) Math.Round(itemTemplate.Price * LootByCon.CoinFactor(LootByCon.Con(killedNpc))));
+                GameLiving payee = itemOwners.Select(o => o.Owner switch { GameLiving l => l, Group g => g.LivingLeader, _ => null })
+                    .FirstOrDefault(o => o != null);
+                double zone = payee != null ? ZoneRates.KillFactor(payee) : 1.0;      // and the zone's rate (ZoneRates.cs)
+                long coin = Math.Max(1, (long) Math.Round(itemTemplate.Price * LootByCon.CoinFactor(LootByCon.Con(killedNpc)) * zone));
                 GameMoney money = new(coin, killedNpc)
                 {
                     Name = itemTemplate.Name,
@@ -1877,6 +1882,7 @@ namespace DOL.GS.ServerRules
             long xpCap = GameServer.ServerRules.GetExperienceForLiving(botToAward.Level);
             xpCap = (long)(xpCap * Properties.XP_CAP_PERCENT / 100.0 * killedNpc.ExceedXPCapAmount);
             baseXpReward = (long)(Math.Min(baseXpReward, xpCap) * damagePercent);
+            baseXpReward = (long)(baseXpReward * ZoneRates.KillFactor(botToAward));   // the zone's rate (ZoneRates.cs)
             if (baseXpReward <= 0)
                 return;
 

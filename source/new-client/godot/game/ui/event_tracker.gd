@@ -11,6 +11,26 @@ extends Control
 
 static var events: Array = []
 static var received_ms := 0
+## The zone panel over the events (owner 2026-11-20: "The UI would have to have the Zone information (above the Events)
+## Where it told you your XP rate at all times and what zone category it was"): the server's "#ZXP|" line every 30 s and
+## on a zone change (ZoneRates.cs) - {name, rating, rate, explore, next (minutes to the next drop, -1 none)}.
+static var zone_info := {}
+static var zone_ms := -1000000
+const ZONE_H := 34.0
+const RATING_COLOR := {"Peaceful": Color(0.55, 0.9, 0.5), "Wild": Color(0.95, 0.85, 0.4),
+		"Dangerous": Color(0.98, 0.6, 0.25), "Deadly": Color(0.95, 0.32, 0.28)}
+
+
+static func receive_zone(text: String) -> void:
+	var f := text.split("|")
+	if f.size() < 5:
+		return
+	zone_info = {"name": f[0], "rating": f[1], "rate": float(f[2]), "explore": float(f[3]), "next": int(f[4])}
+	zone_ms = Time.get_ticks_msec()
+
+
+static func _zone_shown() -> bool:
+	return not zone_info.is_empty() and Time.get_ticks_msec() - zone_ms < 95000
 
 const W := 214.0
 const GOLD := Color(1.0, 0.82, 0.35)
@@ -61,6 +81,33 @@ func _process(_delta: float) -> void:
 		queue_redraw()
 
 
+## The zone: its name and danger rating, and what its monsters pay you now (experience and coin), with the exploration
+## part and when it next drops.
+func _draw_zone(font: Font, thin: Font) -> void:
+	var z := zone_info
+	draw_rect(Rect2(0, 0, W, ZONE_H), Color(0.02, 0.02, 0.03, 0.62))
+	draw_rect(Rect2(0, 0, W, ZONE_H), Color(0.55, 0.45, 0.25, 0.7), false, 1.0)
+	_text(font, Vector2(8, 13), String(z.name).to_upper(), 10, GOLD)
+	var rating := String(z.rating)
+	var rc: Color = RATING_COLOR.get(rating, CREAM)
+	_text(font, Vector2(W - 8 - font.get_string_size(rating.to_upper(), HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x, 13), rating.to_upper(), 8, rc)
+	var rate := float(z.rate)
+	var line := "XP and coin x%s" % _num(rate)
+	var nxt := int(z.next)
+	if nxt >= 0:
+		line += "  -  drops in %d min" % maxi(1, nxt)
+	else:
+		line += "  -  well explored today"
+	_text(thin, Vector2(8, 27), line, 9, WIN if rate >= 1.2 else (CREAM if rate >= 1.0 else LOSE))
+
+
+static func _num(v: float) -> String:
+	var s := "%.2f" % v
+	while s.ends_with("0"):
+		s = s.substr(0, s.length() - 1)
+	return s.trim_suffix(".")
+
+
 func _player_m() -> Vector2:
 	if player == null:
 		return Vector2.INF
@@ -74,8 +121,9 @@ static func _dir(v: Vector2) -> String:
 
 ## The height the tracker draws now (the modern HUD's quest log sits under it).
 func content_height() -> float:
+	var zh := (ZONE_H + 4.0) * scale.y if _zone_shown() else 0.0
 	if Time.get_ticks_msec() - received_ms > 8000 or events.is_empty():
-		return 0.0
+		return zh
 	var h := 0.0
 	var far := 0
 	for e in events:
@@ -86,7 +134,7 @@ func content_height() -> float:
 			far += 1
 	if far > 0:
 		h += 16.0 + far * 13.0
-	return (h + 6.0) * scale.y
+	return (h + 6.0) * scale.y + zh
 
 
 func _draw() -> void:
@@ -96,10 +144,14 @@ func _draw() -> void:
 
 
 func _draw_timed() -> void:
-	if Time.get_ticks_msec() - received_ms > 8000 or events.is_empty():
-		return
 	var font := UiArt.font(true, "events")
 	var thin := UiArt.font(false, "events")
+	if _zone_shown():
+		_draw_zone(font, thin)
+		draw_set_transform(Vector2(0, ZONE_H + 4.0))
+	if Time.get_ticks_msec() - received_ms > 8000 or events.is_empty():
+		draw_set_transform(Vector2.ZERO)
+		return
 	var y := 0.0
 	var me := _player_m()
 	var near: Array = []

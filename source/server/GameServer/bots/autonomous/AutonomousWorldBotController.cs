@@ -2941,6 +2941,13 @@ namespace DOL.GS
                 return true;
 
             _recoverBeforeNextCampTarget = false;
+            ZoneRates.Touch(bot);                       // (its hours in this zone: ZoneRates' exploration)
+            // the zone has stopped paying (ZoneRates: under 1x once its exploration bonus has worn off) - a soloer moves on
+            if (bot.Group == null && !_camp.IsDungeon && ZoneRates.ShouldMoveOn(bot))
+            {
+                AbandonCamp(bot, $"{_camp.ZoneName} no longer pays well; looking for somewhere new");
+                return true;
+            }
 
             if (GameLoop.GameLoopTime < _nextTargetSearchTick)
                 return true;
@@ -3675,6 +3682,9 @@ namespace DOL.GS
             // This is the deployed selection point. Each distinct verified
             // location has one entry; outdoor draws are weighted by live spawns
             // (capped) with no distance or name preference.
+            // the zones that still pay at least 1x (ZoneRates: rating x exploration), when there are any
+            legalCells = ZoneRates.PreferPaying(bot, legalCells, camp =>
+                destinations.TryGetValue(camp.Id, out CampDestination d) ? WorldMgr.GetRegion(d.RegionId)?.GetZone(d.X, d.Y) : null);
             AutonomousBotDecisionEngine.Camp chosen = AutonomousBotDecisionEngine.SelectWithinEnvironment(
                 legalCells, environment, Random.Shared);
             bool usedDeathFallback = false;

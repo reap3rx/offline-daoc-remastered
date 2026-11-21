@@ -162,6 +162,13 @@ namespace DOL.GS
             return _zones.GetOrAdd(zone.ID, _ => Build(zone, region));
         }
 
+        /// <summary>The median level a zone's ordinary monsters were placed at (0: none) - ZoneRates' provisional rating.</summary>
+        public static int ZoneMedianLevel(Zone zone, Region region)
+        {
+            int[] l = Types(zone, region).Levels;
+            return l.Length == 0 ? 0 : l[l.Length / 2];
+        }
+
         static ZoneTypes Build(Zone zone, Region region)
         {
             var zt = new ZoneTypes();

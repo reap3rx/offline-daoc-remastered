@@ -1120,6 +1120,7 @@ namespace DOL.GS.DynamicEvents
                     ? GamePlayer.GetExperienceAmountForLevel(who.Level) - GamePlayer.GetExperienceAmountForLevel(who.Level - 1)
                     : GamePlayer.GetExperienceAmountForLevel(1);
                 long xp = (long) (Math.Max(0, levelXp) * r.XpPct / 100.0 * mult);
+                xp = (long) (xp * ZoneRates.EventFactor(who, $"{Chain.Def.Title}/{Def.Name}"));   // first time today: 1.5x (ZoneRates)
                 long copper = (long) (r.CopperPerLevel * who.Level * mult);
                 if (who is GameBot bot)
                 {
