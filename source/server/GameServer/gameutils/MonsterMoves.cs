@@ -19,7 +19,8 @@ namespace DOL.GS
     /// 100, it comes back by itself); players and bots use their real endurance. No stun from it.
     ///
     /// The ladder (owner's example), for humanoids with weapons:
-    ///   green   an anytime style, a bit faster and harder than a plain blow; a positional when it is at your side or back
+    ///   green   plain blows only (owner 2026-11-21), at an uneven pace
+    ///           (blue and up: an anytime style, a bit faster and harder than a plain blow; a positional at your side or back)
     ///   blue    + one reactive defence by its gear: a shield blocks, otherwise it parries; a guard stance (it holds its
     ///           weapon or shield up - attacking into it is mostly turned aside, and it answers with a counter)
     ///   yellow  + evades; a small frontal cone (strafe out of it)
@@ -211,7 +212,9 @@ namespace DOL.GS
         public static (Blow kind, int ms) Pick(GameNPC npc)
         {
             int c = Comp(npc);
-            if (c < 0)
+            // (owner 2026-11-21: "Greens should not be doing any special moves ... The only thing they should have is that
+            // auto attack speed variance") - a green only ever swings plainly
+            if (c <= 0)
                 return (Blow.Normal, NormalMs);
             State s = Of(npc);
             long now = GameLoop.GameLoopTime;
@@ -434,7 +437,7 @@ namespace DOL.GS
 
         static void TryProc(GameNPC n, GameLiving target, Blow b, int c)
         {
-            if (!target.IsAlive || c == 0 && b != Blow.Heavy)
+            if (!target.IsAlive || c <= 0)                  // (a green's blows carry nothing)
                 return;
             double chance = b == Blow.Heavy ? 0.3 + 0.05 * c : 0.03 + 0.015 * c;
             if (Util.RandomDouble() >= chance)

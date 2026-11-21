@@ -263,6 +263,17 @@ namespace DOL.GS
         /// monster is to bring down and how hard it hits (1 = the fitted curve as it is).</summary>
         public static double Toughness = 1.0, Bite = 1.0;
 
+        // Greens are fodder (owner 2026-11-21: "Greens are still too punishing on low level characters ... it takes too long
+        // and is too tough on low level characters and that will be super discouraging to a new player"): they take
+        // GreenTakes times the damage and hit GreenHits as hard - like half the health, with the bar looking as ever.
+        // (/tier tune greentakes|greenhits <v>)
+        public static double GreenTakes = 2.0, GreenHits = 0.75;
+
+        // Pressing the attack (owner 2026-11-21): each blow in a row a player (or bot) lands on a green or blue adds
+        // PressStep to the next, up to PressMax blows; a miss, a blow turned aside or PressWindowMs without one ends it.
+        public static double PressStep = 0.10;
+        public const int PressMax = 5, PressWindowMs = 4000;
+
         // The curve (owner 2026-11-19: "much too difficult now due to the damage numbers ... have them fight mobs of
         // every con. maybe at level 5, 15, 25, 35, 45, and 50 just to see how it feels, and then adjust the curve that
         // way"), fitted from the stand-in bench (TierCalibration): a monster level with you hits for InCurve(level) times
@@ -297,13 +308,53 @@ namespace DOL.GS
         }
 
         /// <summary>How many cons a tier stands above a fighter of this level (negative: below).</summary>
-        public static double ConGap(sbyte tier, int level) => Math.Clamp(tier, Grey, Purple) - PowerTier(level);
+        public static double ConGap(sbyte tier, int level)
+        {
+            double gap = Math.Clamp(tier, Grey, Purple) - PowerTier(level);
+            // (owner 2026-11-21: a green is never above anyone - at level 1 you still fight like one, not a step below)
+            return tier == Green ? Math.Min(0, gap) : gap;
+        }
 
         /// <summary>A tiered monster's hits on a fighter of this level, against DAoC's own damage.</summary>
-        public static double InFactor(sbyte tier, int level) => CurveAt(InCurve, level) * Math.Pow(InStep, ConGap(tier, level)) * Bite;
+        public static double InFactor(sbyte tier, int level) => CurveAt(InCurve, level) * Math.Pow(InStep, ConGap(tier, level)) * Bite *
+            (tier == Green ? GreenHits : 1.0);
 
         /// <summary>A fighter of this level's hits on a tiered monster, against DAoC's own damage.</summary>
-        public static double OutFactor(sbyte tier, int level) => CurveAt(OutCurve, level) / Math.Pow(OutStep, ConGap(tier, level)) / Toughness;
+        public static double OutFactor(sbyte tier, int level) => CurveAt(OutCurve, level) / Math.Pow(OutStep, ConGap(tier, level)) / Toughness *
+            (tier == Green ? GreenTakes : 1.0);
+
+        sealed class Pressing
+        {
+            public GameLiving Target;
+            public int Count;
+            public long At;
+        }
+
+        static readonly System.Runtime.CompilerServices.ConditionalWeakTable<GameLiving, Pressing> _pressing = new();
+
+        /// <summary>Blows in a row this attacker has landed on this monster (0 when the run has ended).</summary>
+        public static int PressCount(GameLiving attacker, GameLiving target) =>
+            _pressing.TryGetValue(attacker, out Pressing p) && p.Target == target && GameLoop.GameLoopTime - p.At <= PressWindowMs ? p.Count : 0;
+
+        /// <summary>AttackComponent, after every blow: a player's or bot's run of hits on a green or blue goes on, or ends.</summary>
+        public static void AfterBlow(AttackData ad)
+        {
+            if (ad?.Attacker is not (GamePlayer or GameBot) || ad.Target is not GameNPC n || n is GameBot)
+                return;
+            sbyte t = Tier(n);
+            if (t != Green && t != Blue)
+                return;
+            Pressing p = _pressing.GetValue(ad.Attacker, _ => new Pressing());
+            long now = GameLoop.GameLoopTime;
+            if (ad.IsHit)
+            {
+                p.Count = p.Target == n && now - p.At <= PressWindowMs ? Math.Min(PressMax, p.Count + 1) : 1;
+                p.Target = n;
+                p.At = now;
+            }
+            else if (ad.AttackResult is eAttackResult.Missed or eAttackResult.Evaded or eAttackResult.Parried or eAttackResult.Blocked or eAttackResult.Fumbled)
+                p.Count = 0;
+        }
 
         /// <summary>A player's (or bot's) spell on a tiered monster: SpellCurve at its level (1 for anything else).</summary>
         public static double SpellOut(GameLiving caster, GameLiving target)
@@ -323,7 +374,7 @@ namespace DOL.GS
             {
                 var ci = System.Globalization.CultureInfo.InvariantCulture;
                 System.IO.File.WriteAllText(TuningFile, "v2 " + string.Join(" ", new[] { Toughness, Bite, InStep, OutStep }.Concat(InCurve).Concat(OutCurve).Concat(SpellCurve)
-                    .Select(v => v.ToString(ci))));
+                    .Concat(new[] { GreenTakes, GreenHits, PressStep }).Select(v => v.ToString(ci))));
             }
             catch (Exception) { }
         }
@@ -350,6 +401,12 @@ namespace DOL.GS
                     Array.Copy(v, 4 + n, OutCurve, 0, n);
                     if (v.Length >= 4 + 3 * n)
                         Array.Copy(v, 4 + 2 * n, SpellCurve, 0, n);
+                    if (v.Length >= 4 + 3 * n + 3)
+                    {
+                        GreenTakes = v[4 + 3 * n];
+                        GreenHits = v[5 + 3 * n];
+                        PressStep = v[6 + 3 * n];
+                    }
                 }
             }
             catch (Exception) { }
@@ -522,6 +579,8 @@ namespace DOL.GS
                 GameLiving c = Combatant(attacker);
                 if (c != null && tn.TierFightBase > 0)
                     f = Out(c.Level, tn.TierFightBase) * OutFactor(Tier(tn), c.Level);
+                if (attacker is GamePlayer or GameBot)
+                    f *= 1.0 + PressStep * PressCount(attacker, tn);          // (pressing the attack on a green or blue)
                 return true;
             }
             if (attacker is GameNPC an && Tier(an) != None)
@@ -760,10 +819,14 @@ namespace DOL.GS.Commands
                         else if (what == "bite") MonsterTiers.Bite = v;
                         else if (what == "instep") MonsterTiers.InStep = v;
                         else if (what == "outstep") MonsterTiers.OutStep = v;
+                        else if (what == "greentakes") MonsterTiers.GreenTakes = v;
+                        else if (what == "greenhits") MonsterTiers.GreenHits = v;
+                        else if (what == "press") MonsterTiers.PressStep = v;
                     }
                     MonsterTiers.SaveTuning();
                 }
                 DisplayMessage(client, $"Toughness {MonsterTiers.Toughness:0.##}, bite {MonsterTiers.Bite:0.##}, steps in {MonsterTiers.InStep:0.##} out {MonsterTiers.OutStep:0.##}; " +
+                    $"greens take x{MonsterTiers.GreenTakes:0.##} and hit x{MonsterTiers.GreenHits:0.##}, pressing +{MonsterTiers.PressStep * 100:0}% a blow; " +
                     $"curve at levels {string.Join(",", MonsterTiers.CurveLevels)}: in {string.Join(",", MonsterTiers.InCurve.Select(x => x.ToString("0.###", ci)))}, " +
                     $"out {string.Join(",", MonsterTiers.OutCurve.Select(x => x.ToString("0.###", ci)))}, " +
                     $"spell {string.Join(",", MonsterTiers.SpellCurve.Select(x => x.ToString("0.###", ci)))}; you fight like {MonsterTiers.PowerTier(p.Level):0.0} - " +

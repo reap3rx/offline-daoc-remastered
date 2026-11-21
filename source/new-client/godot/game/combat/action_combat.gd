@@ -1536,7 +1536,8 @@ func _process_timed(_delta: float) -> void:
 	if _drawing and not _ranged():
 		Server.command("/ac cancel")
 		_end_draw(false)
-	p.charge_glow(_atk_down and now - _atk_at >= int(HOLD_S * 1000.0) and (_anytime_ready() or _counter_ready()))   # (no glow: nothing to fire)
+	var sweep: float = Pad.charge_of("style_aoe") if _drawn() else -1.0
+	p.charge_glow(_atk_down and now - _atk_at >= int(HOLD_S * 1000.0) and (_anytime_ready() or _counter_ready()) or sweep >= 1.0)   # (no glow: nothing to fire)
 	p.shoulder = Vector2(cam_side, cam_up)
 	if _layer.visible == GameUI.interface_hidden:
 		_layer.visible = not GameUI.interface_hidden       # Alt+Z hides its lights and defense text too
@@ -2238,8 +2239,13 @@ func _draw_hud() -> void:
 		hud.draw_circle(c, 1.6, cross)
 		for d in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
 			hud.draw_line(c + d * 6.0, c + d * 12.0, cross, 1.5)
+	# the controller's style button held for the sweep: the same ring as a power attack
+	var sweep: float = Pad.charge_of("style_aoe") if _drawn() else -1.0
+	if _show.get("charge", true) and sweep >= 0.0:
+		hud.draw_arc(c, 16.0, -PI * 0.5, -PI * 0.5 + TAU * sweep, 40,
+				Color(1.0, 0.82, 0.3) if sweep >= 1.0 else Color(1, 1, 1, 0.7), 2.5 if sweep >= 1.0 else 2.0)
 	# a held attack charging toward the anytime style
-	if _show.get("charge", true) and _atk_down and (_anytime_ready() or _counter_ready()):
+	elif _show.get("charge", true) and _atk_down and (_anytime_ready() or _counter_ready()):
 		var f := clampf((now - _atk_at) / (HOLD_S * 1000.0), 0.0, 1.0)
 		hud.draw_arc(c, 16.0, -PI * 0.5, -PI * 0.5 + TAU * f, 40,
 				Color(1.0, 0.82, 0.3) if f >= 1.0 else Color(1, 1, 1, 0.7), 2.5 if f >= 1.0 else 2.0)

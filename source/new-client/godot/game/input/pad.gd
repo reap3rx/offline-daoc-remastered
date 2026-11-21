@@ -130,6 +130,7 @@ var bar: Control = null                  # the controller bar (pad_bar.gd)
 var bindings := {}                       # input -> action id
 var caster := false                      # the character in the world is a caster or a healer: CASTER_PATH's set
 var hold_ms := 300                       # a button held this long is its ":hold" input
+const SWEEP_MS := 1000                   # ... but the sweep charges as long as a power attack (action_combat HOLD_S) and fires on release
 var look_speed := 1.0
 var invert_look := false
 
@@ -526,6 +527,9 @@ func _bound_button(name: String, pressed: bool, since: int) -> void:
 	if _pending.has(name):
 		var p: Array = _pending[name]
 		_pending.erase(name)
+		if bool(p[1]) and String(bindings.get(String(p[0]) + ":hold", "")) == "style_aoe":
+			_do("style_aoe", true)                         # the sweep, charged: it goes as you let go
+			return
 		if not bool(p[1]):
 			var act := String(bindings.get(String(p[0]), ""))
 			if act != "":
@@ -563,11 +567,30 @@ func _check_holds() -> void:
 	var now := Time.get_ticks_msec()
 	for name in _pending.keys():
 		var p: Array = _pending[name]
-		if not bool(p[1]) and _down.has(name) and now - int(_down[name]) >= hold_ms:
+		var act := String(bindings.get(String(p[0]) + ":hold", ""))
+		var need := SWEEP_MS if act == "style_aoe" else hold_ms
+		if not bool(p[1]) and _down.has(name) and now - int(_down[name]) >= need:
 			p[1] = true
-			var act := String(bindings.get(String(p[0]) + ":hold", ""))
-			if act != "":
+			if act != "" and act != "style_aoe":           # (the sweep waits for the release - charge_of shows it ready)
 				_start(name, act)
+
+
+## How far a held button has charged toward its hold action (0..1; -1 when none is charging): the sweep's glow.
+func charge_of(act: String) -> float:
+	var now := Time.get_ticks_msec()
+	for name in _pending.keys():
+		var p: Array = _pending[name]
+		if String(bindings.get(String(p[0]) + ":hold", "")) == act and _down.has(name):
+			return clampf(float(now - int(_down[name])) / float(SWEEP_MS if act == "style_aoe" else hold_ms), 0.0, 1.0)
+	return -1.0
+
+
+## The input a hold action sits on (its tap's slot on the bar): "x" for the sweep by default.
+func hold_input_of(act: String) -> String:
+	for k in bindings.keys():
+		if String(k).ends_with(":hold") and String(bindings[k]) == act:
+			return String(k).trim_suffix(":hold")
+	return ""
 
 
 ## What an action does: down = true when it starts (a tap's only call), false when a held one ends.

@@ -26,9 +26,10 @@ public sealed class UT_MonsterCurve
     [Test]
     public void TheStepIsTheSameEverywhere()
     {
-        double r = MonsterTiers.InFactor(MonsterTiers.Blue, 20) / MonsterTiers.InFactor(MonsterTiers.Green, 20);
+        // (a green's own softness - GreenHits / GreenTakes - is on top of the step)
+        double r = MonsterTiers.InFactor(MonsterTiers.Blue, 20) / (MonsterTiers.InFactor(MonsterTiers.Green, 20) / MonsterTiers.GreenHits);
         Assert.That(r, Is.EqualTo(MonsterTiers.InStep).Within(1e-9));
-        double o = MonsterTiers.OutFactor(MonsterTiers.Green, 33) / MonsterTiers.OutFactor(MonsterTiers.Blue, 33);
+        double o = MonsterTiers.OutFactor(MonsterTiers.Green, 33) / MonsterTiers.GreenTakes / MonsterTiers.OutFactor(MonsterTiers.Blue, 33);
         Assert.That(o, Is.EqualTo(MonsterTiers.OutStep).Within(1e-9));
     }
 

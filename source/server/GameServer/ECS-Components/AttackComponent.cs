@@ -1315,6 +1315,7 @@ namespace DOL.GS
                 ActionCombat.OnDefended(actionTarget, ad);
 
             HibernianKits.AfterDefense(ad);   // a Warden's block / parry, a Bard's evade
+            MonsterTiers.AfterBlow(ad);       // pressing the attack on a green or blue
 
             // Action Combat: a monster turning aside an action player's STYLE makes them stumble.
             if (playerOwner != null && ad.Style != null && ad.AttackResult is eAttackResult.Evaded or eAttackResult.Parried or eAttackResult.Blocked &&

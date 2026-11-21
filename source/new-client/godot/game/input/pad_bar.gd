@@ -247,6 +247,13 @@ class Cluster extends Control:
 				draw_rect(Rect2(pos - Vector2(2, 2), Vector2(SLOT + 4, SLOT + 4)), Color(1.0, 0.82, 0.3, 0.9), false, 2.0)
 				if act == "style_auto":
 					draw_string(font, pos + Vector2(3, SLOT - 3), lit, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, UiArt.GOLD_HI)
+			# the style button held for the sweep: a ring of border fills as it charges, gold and thick when it's ready
+			if input == Pad.hold_input_of("style_aoe"):
+				var ch: float = Pad.charge_of("style_aoe")
+				if ch >= 1.0:
+					draw_rect(Rect2(pos - Vector2(3, 3), Vector2(SLOT + 6, SLOT + 6)), Color(1.0, 0.82, 0.3, 0.6 + 0.4 * sin(Time.get_ticks_msec() * 0.015)), false, 3.0)
+				elif ch > 0.0:
+					draw_rect(Rect2(pos + Vector2(0, SLOT + 2), Vector2(SLOT * ch, 3)), Color(1, 1, 1, 0.8))
 			Pad.glyph(self, pos + Vector2(SLOT - 3, 3), String(buttons[i]))
 		# the outer column: the trigger, the bumper bars
 		var tags := []
