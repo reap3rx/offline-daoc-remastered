@@ -147,9 +147,11 @@ public sealed class UT_ActionCombat
         // Shields 1 (1 s) .. 50 (4 s): 8 / 9 / 10 with a small / medium / large shield at 50, the size alone at 1
         Assert.That(ActionCombat.BlockChainFor(1, 1), Is.EqualTo((1, 1000)));
         Assert.That(ActionCombat.BlockChainFor(1, 3), Is.EqualTo((3, 1000)));
-        Assert.That(ActionCombat.BlockChainFor(50, 1), Is.EqualTo((8, 4000)));
-        Assert.That(ActionCombat.BlockChainFor(50, 2), Is.EqualTo((9, 4000)));
-        Assert.That(ActionCombat.BlockChainFor(50, 3), Is.EqualTo((10, 4000)));
+        Assert.That(ActionCombat.BlockChainFor(50, 1), Is.EqualTo((4, 4000)));      // (+1 per 15 Shields, owner 2026-11-20)
+        Assert.That(ActionCombat.BlockChainFor(50, 2), Is.EqualTo((5, 4000)));
+        Assert.That(ActionCombat.BlockChainFor(50, 3), Is.EqualTo((6, 4000)));
+        Assert.That(ActionCombat.BlockChainFor(44, 3).Charges, Is.EqualTo(5));
+        Assert.That(ActionCombat.BlockChainFor(15, 3).Charges, Is.EqualTo(4));
         Assert.That(ActionCombat.BlockChainArc(1), Is.EqualTo(180));
         Assert.That(ActionCombat.BlockChainArc(2), Is.EqualTo(270));
         Assert.That(ActionCombat.BlockChainArc(3), Is.EqualTo(360));

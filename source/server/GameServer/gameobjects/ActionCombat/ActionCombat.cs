@@ -204,14 +204,16 @@ namespace DOL.GS
 
 		public static int RiposteLevel(GamePlayer player) => player.GetAbilityLevel(RiposteAbility);
 
-		/// <summary>Shields 1-50: 0-7 other monsters, plus the shield's size (1 small, 2 medium, 3 large), within 1-4 s.</summary>
+		/// <summary>Shields 1-50: one more attacker for every 15 Shields (Shield Mastery I-III at 15, 30, 45), plus the
+		/// shield's size (1 small, 2 medium, 3 large), within 1-4 s - a large shield at 45 covers 6 (owner 2026-11-20: "+1
+		/// targets for every 15 levels of shield, plus shield size ... 10 attackers might be too overpowered").</summary>
 		public static (int Charges, int WindowMs) BlockChainFor(int shieldSpec, int shieldSize)
 		{
 			if (shieldSpec <= 0)
 				return (0, 0);
 
 			int s = Math.Clamp(shieldSpec, 1, 50);
-			return ((s - 1) * 7 / 49 + Math.Clamp(shieldSize, 1, 3), 1000 + (s - 1) * 3000 / 49);
+			return (s / ShieldBoost.MasteryStep + Math.Clamp(shieldSize, 1, 3), 1000 + (s - 1) * 3000 / 49);
 		}
 
 		/// <summary>How far round a chained block reaches: small shield the front, medium 270 degrees, large all round.</summary>
