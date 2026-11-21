@@ -136,7 +136,10 @@ namespace DOL.GS
 					p.TakeDamage(ad.Attacker, eDamageType.Natural, 1, 0);
 			}
 			if (perfect && p.IsAlive)
+			{
 				p.ChangeMana(p, eManaChangeType.Spell, p.MaxMana * PerfectRefundPercent / 100);
+				HibernianKits.Bramble(p, ad.Attacker);       // (a Druid's Bramble Shield: root, then poison)
+			}
 			ActionCombat.Send(p, $"def|ward|{ad.Damage + through}|{paid}|{(perfect ? 1 : 0)}");
 			if (perfect)
 				p.Out.SendMessage($"Perfect ward! Your mana takes {ad.Attacker?.GetName(0, false)}'s blow: {paid} power spent, {ad.Damage} taken.",

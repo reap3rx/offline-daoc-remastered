@@ -150,6 +150,7 @@ namespace DOL.GS
             Console.WriteLine($"[StyleRework] Large Weapons: {changed} style changes for the Hero and Champion");
             Console.WriteLine($"[StyleRework] the other Hibernian lines: {OtherLines()} style changes");
             Console.WriteLine($"[StyleRework] shields: {ShieldLine()} style changes");
+            Console.WriteLine($"[StyleRework] Warden and Bard: {NatureLines()} style changes");
             Dump();
         }
 
@@ -281,7 +282,7 @@ namespace DOL.GS
             try
             {
                 var sb = new System.Text.StringBuilder();
-                foreach (var cls in new[] { Hero, Champion, Blademaster })
+                foreach (var cls in new[] { Hero, Champion, Blademaster, HibernianKits.Warden, HibernianKits.Bard })
                     foreach (string spec in new[] { "Large Weapons", "Blades", "Blunt", "Piercing", "Celtic Spear", "Celtic Dual" })
                         foreach (Style st in SkillBase.GetStyleList(spec, cls))
                         {
@@ -299,6 +300,56 @@ namespace DOL.GS
                 Console.WriteLine("[StyleRework] dump: " + e.Message);
             }
         }
+
+        // ------------------------------------------------------------------ the Warden's and the Bard's Blades / Blunt (agreed 20 Nov)
+        //   Warden: every style that lands heals the group around you (Verdant Strike - HibernianKits); the positionals pin
+        //   what runs - a snare from the side, a root from behind.  Bard: every style that lands is a Crescendo stack; the
+        //   positionals daze (slower attacks) and lull, the parry answers daze.  Both: the taunt slots a sweep and a new style.
+
+        static int NatureLines()
+        {
+            const int W = HibernianKits.Warden, D = HibernianKits.Bard;
+            int[] none = new int[0];
+            int n = 0;
+            foreach (int c in new[] { W, D })
+            {
+                n += Reshape(c, 247, "Arcing Blade", 0, 0, 0, growth: 0.5, hit: 5, def: 0, end: 15, procs: none);
+                CleaveAt(c, 247, CleaveArc, CleaveExtra, CleaveFactor);
+                n += Reshape(c, 248, "Guarded Strike", 0, 0, 0, growth: 0.45, hit: 0, def: 15, end: 10, procs: none);
+                n += Reshape(c, 262, "Shockwave", 0, 0, 0, growth: 0.5, hit: 5, def: 0, end: 15, procs: new[] { Dazed });
+                CleaveAt(c, 262, CleaveArc, CleaveExtra, CleaveFactor);
+                n += Reshape(c, 263, "Rattle", 0, 0, 0, growth: 0.5, hit: 5, def: 0, end: 10, procs: new[] { Dent });
+                About(c, 248, "A careful blow: your defense is raised until your next swing.");
+                About(c, 263, "A ringing blow that dents its armour: your blows bite a little deeper for 15 seconds.");
+            }
+            string heal = " Verdant Strike: your group around you is healed (more the closer they stand).";
+            string cresc = " A Crescendo stack (your next song pulse spends them).";
+            About(W, 247, "A wide slash: also hits up to two more enemies in front of you (70% of the blow)." + heal);
+            About(D, 247, "A wide slash: also hits up to two more enemies in front of you (70% of the blow)." + cresc);
+            About(W, 262, "A crushing sweep: also hits up to two more enemies in front of you (70% of the blow), and dazes all it hits." + heal);
+            About(D, 262, "A crushing sweep: also hits up to two more enemies in front of you (70% of the blow), and dazes all it hits." + cresc);
+            // positionals: the Warden pins, the Bard dazes and lulls
+            n += Procs(W, 249, new[] { HamSnare }); About(W, 249, "From the side: snares it for 8 seconds." + heal);
+            n += Procs(W, 264, new[] { HamSnare }); About(W, 264, "From the side: snares it for 8 seconds." + heal);
+            n += Procs(W, 256, new[] { Root6 }); About(W, 256, "From behind: roots it for 6 seconds (damage frees it). Stop one running at your healer." + heal);
+            n += Procs(W, 269, new[] { Root6 }); About(W, 269, "From behind: roots it for 6 seconds (damage frees it). Stop one running at your healer." + heal);
+            n += Procs(D, 249, new[] { Dazed }); About(D, 249, "From the side: dazes it - its attacks slow." + cresc);
+            n += Procs(D, 264, new[] { Dazed }); About(D, 264, "From the side: dazes it - its attacks slow." + cresc);
+            n += Procs(D, 256, new[] { HamSnare, Dazed }); About(D, 256, "From behind: snares and dazes it." + cresc);
+            n += Procs(D, 269, new[] { HamSnare, Dazed }); About(D, 269, "From behind: snares and dazes it." + cresc);
+            n += AddProcs(D, 246, new[] { Dazed }); About(D, 246, "After you parry: dazes it - its attacks slow." + cresc);
+            n += AddProcs(D, 272, new[] { Dazed }); About(D, 272, "After you parry: dazes it, and a stun." + cresc);
+            foreach (int id in new[] { 245, 246, 250, 251, 252, 253, 254, 255, 257, 258, 259, 260, 261, 265, 266, 267, 268, 270, 271, 272, 273, 274 })
+                if (Ref(W, id) is Style ws && Describe(ws) == null)
+                    About(W, id, "Verdant Strike: when it lands your group around you is healed (more the closer they stand).");
+            foreach (int id in new[] { 245, 250, 251, 252, 253, 254, 255, 257, 258, 259, 260, 261, 265, 266, 267, 268, 270, 271, 273, 274 })
+                if (Ref(D, id) is Style bs && Describe(bs) == null)
+                    About(D, id, "Crescendo: when it lands you gain a stack (up to 5); your next song pulse spends them on your group's health, endurance and power.");
+            return n;
+        }
+
+        /// <summary>A sweeping style (it hits more than its target): the held style button's (ActionCombat "aoe").</summary>
+        public static bool IsCleave(Style st) => st != null && Cleaves.ContainsKey((st.ClassID, st.ID));
 
         static void About(int cls, int id, string text) => _about[(cls, id)] = text;
         static void Self(int cls, int id, params int[] spells) => SelfProcs[(cls, id)] = spells;
@@ -498,6 +549,7 @@ namespace DOL.GS
                             ScriptMgr.CreateSpellHandler(owner, sp, SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect))?.StartSpell(owner);
                 if (OffhandStrikes.TryGetValue((st.ClassID, st.ID), out double share))
                     OffhandStrike(owner, ad, share);
+                HibernianKits.AfterStyle(owner, ad);       // (a Warden's Verdant Strike, a Bard's Crescendo)
                 if (st.Spec == Specs.Shields)
                 {
                     if (st.ID == Numb)

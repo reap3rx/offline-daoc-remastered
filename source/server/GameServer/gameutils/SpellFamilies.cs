@@ -17,6 +17,8 @@ namespace DOL.GS
         {
             // pets are not ranks of each other (owner 2026-11-19: "New pets shouldn't replace older pets, because the pets
             // have different utility (like Underhill Ally is a healer, Underhill Compatriot is a tank)"): each its own
+            if (HibernianKits.NatureSpirits.Contains(s.ID))
+                return ("pet", 5251);                    // (the Druid's nature spirit: one summon, its forms on the pet window)
             if (IsPet(s))
                 return ("pet", s.ID);
             if (s.Group != 0)

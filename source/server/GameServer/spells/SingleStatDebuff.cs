@@ -93,6 +93,28 @@ namespace DOL.GS.Spells
         protected override void SendUpdates(GameLiving target) { }
     }
 
+    /// <summary>The Bard's Dirge (HibernianKits): attacks slower and all six magic resists lower, by the same amount.</summary>
+    [SpellHandler(eSpellType.Dirge)]
+    public class DirgeDebuff(GameLiving caster, Spell spell, SpellLine line) : SingleStatDebuff(caster, spell, line)
+    {
+        public override string ShortDescription => $"Decreases {TargetPronoun} attack speed and magic resists by {Math.Abs(Spell.Value)}%.";
+        public override eProperty Property1 => eProperty.MeleeSpeed;
+        public override eProperty Property2 => eProperty.Resist_Heat;
+        public override eProperty Property3 => eProperty.Resist_Cold;
+        public override eProperty Property4 => eProperty.Resist_Matter;
+        public override eProperty Property5 => eProperty.Resist_Body;
+        public override eProperty Property6 => eProperty.Resist_Spirit;
+        public override eProperty Property7 => eProperty.Resist_Energy;
+        public override eBuffBonusCategory BonusCategory2 => eBuffBonusCategory.Debuff;
+        public override eBuffBonusCategory BonusCategory3 => eBuffBonusCategory.Debuff;
+        public override eBuffBonusCategory BonusCategory4 => eBuffBonusCategory.Debuff;
+        public override eBuffBonusCategory BonusCategory5 => eBuffBonusCategory.Debuff;
+        public override eBuffBonusCategory BonusCategory6 => eBuffBonusCategory.Debuff;
+        public override eBuffBonusCategory BonusCategory7 => eBuffBonusCategory.Debuff;
+
+        protected override void SendUpdates(GameLiving target) { }
+    }
+
     [SpellHandler(eSpellType.MeleeDamageDebuff)]
     public class MeleeDamageDebuff(GameLiving caster, Spell spell, SpellLine line) : SingleStatDebuff(caster, spell, line)
     {

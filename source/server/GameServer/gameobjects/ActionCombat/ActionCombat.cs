@@ -485,7 +485,8 @@ namespace DOL.GS
 			player.attackComponent.attackAction?.ExpediteMeleeTick();
 		}
 
-		/// <summary>"anytime", "position", "reactive" or "chain": queue the best usable style of that kind.</summary>
+		/// <summary>"anytime", "position", "reactive", "chain" or "aoe" (the held style button: the best sweep you know -
+		/// StyleRework's cleaves): queue the best usable style of that kind.</summary>
 		public static void QueueStyle(GamePlayer player, string kind)
 		{
 			ActionCombatState state = Get(player);
@@ -535,7 +536,7 @@ namespace DOL.GS
 			if (now < state.FumbledUntil)
 				return false;
 
-			if (kind == "anytime")
+			if (kind == "anytime" || kind == "aoe")
 				return SinceLastSwing(player) >= AnytimeSoonestMs(Math.Min(state.LastSwingFullMs, FullSwingMs(player)))
 					&& now - state.LastStyleAt >= StyleGapMs(Math.Min(state.LastStyleFullMs, FullSwingMs(player)));
 
@@ -600,10 +601,16 @@ namespace DOL.GS
 			AttackData last = player.attackComponent.attackAction?.LastAttackData;
 			Style best = null;
 			int bestScore = int.MinValue;
+			bool aoe = kind == "aoe";
 
 			foreach (Style style in player.styleComponent.GetStyleList())
 			{
-				if (KindOf(style) != kind)
+				if (KindOf(style) != (aoe ? "anytime" : kind))
+					continue;
+
+				// (owner 2026-11-20: the sweeps on a held style button - the tap / power attack keeps to the single-target ones)
+				bool cleave = StyleRework.IsCleave(style);
+				if (aoe && !cleave)
 					continue;
 
 				DbInventoryItem weapon = (eObjectType) style.WeaponTypeRequirement is eObjectType.Shield ? player.ActiveLeftWeapon : player.ActiveWeapon;
@@ -614,10 +621,13 @@ namespace DOL.GS
 				if (IsOpeningSpent(player, style))
 					continue;
 
-				if (!PickAllows(player, style, weapon))
+				if (!aoe && !PickAllows(player, style, weapon))
 					continue;
 
 				int score = style.SpecLevelRequirement * 10;
+
+				if (kind == "anytime" && cleave)
+					score -= 5000;
 
 				// A chain that follows the very style just landed beats a generic "after any hit" follow-up.
 				if (kind == "chain" && style.OpeningRequirementValue != 0)

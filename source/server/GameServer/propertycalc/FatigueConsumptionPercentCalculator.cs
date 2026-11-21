@@ -36,6 +36,7 @@ namespace DOL.GS.PropertyCalc
 		{
 			return Math.Max(1, 100
 				- living.BaseBuffBonusCategory[property] // less is faster = buff
+				- living.AbilityBonus[property] // (Warden's Vigor - HibernianKits)
 				+ living.DebuffCategory[property] // more is slower = debuff
 				- Math.Min(10, living.ItemBonus[property])); // ?
 		}

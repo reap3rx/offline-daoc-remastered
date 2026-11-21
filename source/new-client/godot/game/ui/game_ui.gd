@@ -61,6 +61,8 @@ var quest_abandon: Callable                               # QuestEngine.abandon 
 signal item_dropped_on_world(slot: int, screen_pos: Vector2)   # zone viewer: an NPC under it (smith repair, sell)
 var map_window: MapWindow
 const EventTrackerScript := preload("res://game/ui/event_tracker.gd")
+const SongWheelScript := preload("res://game/ui/song_wheel.gd")
+var song_wheel: Control
 var event_tracker: Control
 var casting = null                         # (the old standalone game's spells: always null with the server)
 var _cast_bar: Control
@@ -405,6 +407,9 @@ func _build() -> void:
 	_build_benefits()
 	event_tracker = EventTrackerScript.new()                       # dynamic events: top right, under the window buttons
 	root.add_child(event_tracker)
+	song_wheel = SongWheelScript.new()                             # the Bard's Song Wheel (held on its slot)
+	song_wheel.ui = self
+	root.add_child(song_wheel)
 	_place_event_tracker()
 	_build_warmap()
 	_build_quiver()
@@ -2264,6 +2269,9 @@ func _process_inner(_delta: float) -> void:
 
 ## A held quickbar key let go: the channelled spell goes off (Server.channel_release).
 func _input(event: InputEvent) -> void:
+	if song_wheel and song_wheel.holding() and not event.is_echo() and ((event is InputEventKey and not event.pressed)
+			or (event is InputEventMouseButton and not event.pressed)):
+		song_wheel.release(_input_key(event))
 	if Server.channel_input != null and not event.is_echo() and ((event is InputEventKey and not event.pressed)
 			or (event is InputEventMouseButton and not event.pressed)):
 		Server.channel_release(_input_key(event))
@@ -2370,6 +2378,9 @@ func handle_input(event: InputEvent) -> bool:
 	for bar in 3:
 		for slot in 10:
 			if Keybinds.pressed(event, "qb%d_%d" % [bar + 1, slot + 1]):
+				if SongWheelScript.is_wheel(quickbars[bar].entry_at(slot)) and song_wheel:
+					song_wheel.press(quickbars[bar].entry_at(slot), _input_key(event))   # (tap: a song; hold: the wheel)
+					return true
 				Server.channel_press(quickbars[bar].entry_at(slot), _input_key(event))   # (held: channelled)
 				quickbars[bar].use_slot(slot)
 				return true

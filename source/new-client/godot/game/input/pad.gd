@@ -21,6 +21,7 @@ signal layer_changed(layer: int)
 signal bindings_changed
 
 const PATH := "user://pad_bindings.cfg"
+const SongWheelScript := preload("res://game/ui/song_wheel.gd")
 ## A caster's or a healer's own set (owner 2026-11-16: "have the default controller binds for react, position, and chain
 ## be clear (not on the RB + X, Y, B) for controller when the character selects any of the mage classes (including the
 ## basic starting classes like Elementalist) or healer classes and their basic classes"): RB + X / Y / B are quickbar
@@ -66,6 +67,7 @@ const ACTIONS := [
 	["style_reactive", "Reactive Style", "REACT", "tap"],
 	["style_position", "Positional Style", "POSITION", "tap"],
 	["style_chain", "Chain Style", "CHAIN", "tap"],
+	["style_aoe", "Sweep Style (your best area strike)", "SWEEP", "tap"],
 	["interact", "Interact", "USE", "tap"],
 	["interact_menu", "Interact Menu (players, bots, your pet)", "MENU", "tap"],
 	["sheathe", "Weapon In / Out", "SHEATHE", "tap"],
@@ -93,7 +95,7 @@ const ACTIONS := [
 static func _defaults(for_caster := false) -> Dictionary:
 	# (owner 2026-11-12: "/pull ... default Up on the d-pad ... Autorun ... L3 ... Left on the d-pad will be default swap
 	# weapon, hold it to sheath weapon, and right will be torch"; nearest enemy LB + RB + X, you / your group LB + RB + Y)
-	var d := {"a": "jump", "b": "dodge", "b:hold": "sprint_hold", "x": "style_auto", "y": "interact", "y:hold": "interact_menu",
+	var d := {"a": "jump", "b": "dodge", "b:hold": "sprint_hold", "x": "style_auto", "x:hold": "style_aoe", "y": "interact", "y:hold": "interact_menu",
 			"up": "pull", "left": "weapon_cycle", "left:hold": "sheathe", "right": "torch", "down": "sit",
 			"l3": "run_lock", "r3": "lock_on", "rt": "attack", "lt": "defend",
 			"view": "hero", "view:hold": "menu_wheel", "menu": "escape"}
@@ -211,6 +213,10 @@ func load_bindings() -> void:
 				bindings["up:hold"] = "orders_wheel"
 			if String(bindings.get("lb+rb+b", "qb3_7")) == "qb3_7" and inputs_of("mount").is_empty():
 				bindings["lb+rb+b"] = "mount"
+		# version 5 (owner 2026-11-20): "the frontal cone AOE melee strikes ... map to holding the 'style' button"
+		if version < 5:
+			if String(bindings.get("x", "")) == "style_auto" and not bindings.has("x:hold") and inputs_of("style_aoe").is_empty():
+				bindings["x:hold"] = "style_aoe"
 		if from_shared:
 			for k in STYLE_KEYS:
 				if String(bindings.get(k, "")) == String(STYLE_KEYS[k]):
@@ -244,7 +250,7 @@ func save_bindings() -> void:
 	var cfg := ConfigFile.new()
 	for k in bindings:
 		cfg.set_value("bindings", k, bindings[k])
-	cfg.set_value("meta", "version", 4)
+	cfg.set_value("meta", "version", 5)
 	cfg.save(CASTER_PATH if caster else PATH)
 	bindings_changed.emit()
 
@@ -572,10 +578,16 @@ func _do(act: String, down: bool) -> void:
 			var f := act.trim_prefix("qb").split("_")
 			var qb := int(f[0]) - 1
 			var sl := int(f[1]) - 1
+			if qb >= 0 and qb < PlayerData.pad_bars.size() and sl >= 0 and sl < PlayerData.SLOTS \
+					and SongWheelScript.is_wheel(PlayerData.pad_bars[qb][sl]) and SongWheelScript.me:
+				SongWheelScript.me.press(PlayerData.pad_bars[qb][sl], "pad:" + act)   # (tap: a song; hold: the wheel)
+				return
 			if qb >= 0 and qb < PlayerData.pad_bars.size() and sl >= 0 and sl < PlayerData.SLOTS:
 				Server.channel_press(PlayerData.pad_bars[qb][sl], "pad:" + act)   # (held: channelled - ChannelCasting)
 			_use_slot(qb, sl)
 		else:
+			if SongWheelScript.me and SongWheelScript.me.release("pad:" + act):
+				return
 			Server.channel_release("pad:" + act)
 		return
 	match act:
@@ -619,6 +631,9 @@ func _do(act: String, down: bool) -> void:
 		"style_auto":
 			if a:
 				a.call("pad_style")
+		"style_aoe":
+			if a:
+				a.call("pad_style_aoe")
 		"style_reactive", "style_position", "style_chain":
 			if a:
 				a.call("pad_style", act.trim_prefix("style_"))

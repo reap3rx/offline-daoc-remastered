@@ -912,6 +912,10 @@ class PetPanel extends Part:
 	var _hover := -1
 	var _content_h := 0.0
 
+	## The commands: a Druid's also FORM - its nature spirit's bear / wolf / wisp in turn (HibernianKits.cs: /druidform).
+	func _cmds() -> Array:
+		return CMDS + [["FORM", "form"]] if PlayerData.class_id() == 47 else CMDS
+
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_STOP
 		clip_contents = false
@@ -921,11 +925,11 @@ class PetPanel extends Part:
 		return not PlayerData.pet.is_empty() and p.x >= 0 and p.x <= W and p.y >= 0 and p.y <= _content_h
 
 	func _btn_rect(i: int) -> Rect2:
-		var bw := (W - 8.0 - (CMDS.size() - 1) * 2.0) / CMDS.size()
+		var bw := (W - 8.0 - (_cmds().size() - 1) * 2.0) / _cmds().size()
 		return Rect2(4 + i * (bw + 2.0), BTN_Y, bw, BTN_H)
 
 	func _btn_at(p: Vector2) -> int:
-		for i in CMDS.size():
+		for i in _cmds().size():
 			if _btn_rect(i).has_point(p):
 				return i
 		return -1
@@ -939,7 +943,7 @@ class PetPanel extends Part:
 		elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			var i := _btn_at(event.position)
 			if i >= 0:
-				PlayerData.pet_command(String(CMDS[i][1]))
+				PlayerData.pet_command(String(_cmds()[i][1]))
 				queue_redraw()
 				accept_event()
 
@@ -953,14 +957,14 @@ class PetPanel extends Part:
 		var i := _btn_at(at)
 		if i < 0:
 			return null
-		var prev := UiArt.button(String(CMDS[i][0]), _btn_rect(i).size, 8)
+		var prev := UiArt.button(String(_cmds()[i][0]), _btn_rect(i).size, 8)
 		prev.modulate = Color(1, 1, 1, 0.8)
 		set_drag_preview(prev)
-		return {"kind": "petcmd", "id": String(CMDS[i][1]), "icon": -1, "name": "PET " + String(CMDS[i][1]).to_upper()}
+		return {"kind": "petcmd", "id": String(_cmds()[i][1]), "icon": -1, "name": "PET " + String(_cmds()[i][1]).to_upper()}
 
 	func _get_tooltip(at: Vector2) -> String:
 		var i := _btn_at(at)
-		return "" if i < 0 else "PET: %s (DRAG ONTO A QUICKBAR)" % String(CMDS[i][1]).to_upper()
+		return "" if i < 0 else "PET: %s (DRAG ONTO A QUICKBAR)" % String(_cmds()[i][1]).to_upper()
 
 	func _draw() -> void:
 		var t_draw := Time.get_ticks_usec()
@@ -990,12 +994,12 @@ class PetPanel extends Part:
 		draw_rect(Rect2(hb.position, Vector2(hb.size.x * hp, hb.size.y)), RED)
 		draw_rect(hb, Color(0, 0, 0, 0.6), false, 1.0)
 		text(thin, Vector2(hb.position.x, hb.position.y + 6.5), "%d%%" % roundi(hp * 100.0), 6, UiArt.CREAM, HORIZONTAL_ALIGNMENT_CENTER, hb.size.x)
-		for i in CMDS.size():
+		for i in _cmds().size():
 			var r := _btn_rect(i)
-			var on := String(CMDS[i][1]) == mode
+			var on := String(_cmds()[i][1]) == mode
 			draw_rect(r, Color(0.16, 0.13, 0.09, 0.95) if i == _hover else STONE)
 			draw_rect(r, RIM_HI if on or i == _hover else RIM, false, 1.0)
-			text(f, Vector2(r.position.x, r.position.y + 10.5), String(CMDS[i][0]), 7, UiArt.GOLD_HI if on else UiArt.CREAM,
+			text(f, Vector2(r.position.x, r.position.y + 10.5), String(_cmds()[i][0]), 7, UiArt.GOLD_HI if on else UiArt.CREAM,
 					HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
 		var y := BTN_Y + BTN_H + 4.0
 		if not fx.is_empty():

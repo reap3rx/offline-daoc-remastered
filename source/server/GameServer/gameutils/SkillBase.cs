@@ -2145,6 +2145,20 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>Spells taken out of a line (HibernianKits: the spellbooks trimmed, one spell a job). How many went.</summary>
+		public static int RemoveLineSpells(string lineKey, Predicate<Spell> which)
+		{
+			m_syncLockUpdates.EnterWriteLock();
+			try
+			{
+				return m_lineSpells.TryGetValue(lineKey, out List<Spell> spells) ? spells.RemoveAll(which) : 0;
+			}
+			finally
+			{
+				m_syncLockUpdates.ExitWriteLock();
+			}
+		}
+
 		/// <summary>Give a class a spell line through one of its specializations (TauntShouts: the fighters' shouts).</summary>
 		public static void AddSpecSpellLine(string specKey, SpellLine line, int classIdHint)
 		{

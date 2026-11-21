@@ -1457,6 +1457,7 @@ namespace DOL.GS
 
 			PlayerLedPullCoordinator.OnAttack(this, ad);
 			AutonomousDefensivePull.OnAttack(this, ad);
+			HibernianKits.OnAttackEnemy(this, ad);   // (a Druid's spirit on its target, its special)
 
 			if (this is GamePlayer player)
 				player.Stealth(false);

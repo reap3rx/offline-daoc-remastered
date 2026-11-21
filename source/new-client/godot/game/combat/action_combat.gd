@@ -1025,6 +1025,15 @@ func pad_style(kind := "") -> void:
 			return
 
 
+## The style button held (owner 2026-11-20: "tapping it would play the smart style, and holding it would do the AoE
+## strike"): your best sweep - an anytime style that hits more than its target (the server picks; nothing if none).
+func pad_style_aoe() -> void:
+	if not pad_ready() or not _drawn():
+		return
+	_soft_target()
+	Server.command("/ac style aoe")
+
+
 func pad_dodge(dir: Vector3) -> void:
 	if not pad_ready():
 		return

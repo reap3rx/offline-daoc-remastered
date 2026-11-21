@@ -38,6 +38,21 @@ namespace DOL.GS
             eCharacterClass.Warrior, eCharacterClass.Thane, eCharacterClass.Berserker, eCharacterClass.Savage, eCharacterClass.Valkyrie,
         };
 
+        /// <summary>Classes with Challenge but not Battle Cry (owner 2026-11-20: "Warden should get challenge, but not battle
+        /// cry"). Their blows make no extra threat.</summary>
+        public static readonly HashSet<eCharacterClass> ChallengeOnly = new() { eCharacterClass.Warden };
+
+        static bool CanChallenge(GameLiving l)
+        {
+            int id = l switch
+            {
+                GamePlayer p => p.CharacterClass?.ID ?? 0,
+                GameBot b => b.CharacterClass?.ID ?? 0,
+                _ => 0
+            };
+            return IsFighter(l) || id != 0 && ChallengeOnly.Contains((eCharacterClass) id);
+        }
+
         public static bool IsFighter(GameLiving l)
         {
             int id = l switch
@@ -86,7 +101,9 @@ namespace DOL.GS
                 SkillBase.AddScriptedAbility(cry, career, BattleCryLevel);
                 n++;
             }
-            Console.WriteLine($"[TauntShouts] Challenge and Battle Cry for {n} fighter classes");
+            foreach (eCharacterClass c in ChallengeOnly)
+                SkillBase.AddScriptedAbility(challenge, c + "Career", ChallengeLevel);
+            Console.WriteLine($"[TauntShouts] Challenge and Battle Cry for {n} fighter classes, Challenge for {ChallengeOnly.Count} more");
         }
 
         /// <summary>One monster turned on the shouter: its threat on them its highest plus half again and a margin.</summary>
@@ -162,7 +179,7 @@ namespace DOL.GS
         /// Cry for two or more near it, Challenge for one.</summary>
         public static void BotThink(GameBot bot)
         {
-            if (bot == null || !bot.IsAlive || !bot.InCombat || bot.Level < ChallengeLevel || !IsFighter(bot) || bot.IsIncapacitated)
+            if (bot == null || !bot.IsAlive || !bot.InCombat || bot.Level < ChallengeLevel || !CanChallenge(bot) || bot.IsIncapacitated)
                 return;
             long now = GameLoop.GameLoopTime;
             BotTimes t = _bots.GetValue(bot, _ => new BotTimes());
@@ -182,7 +199,7 @@ namespace DOL.GS
             if (onSoft.Count == 0)
                 return;
             int near = onSoft.Count(n => n.IsWithinRadius(bot, BattleCryRadius));
-            if (near >= 2 && bot.Level >= BattleCryLevel && now >= t.CryReady)
+            if (near >= 2 && bot.Level >= BattleCryLevel && IsFighter(bot) && now >= t.CryReady)
             {
                 BattleCry(bot);
                 t.CryReady = now + BattleCryReuseMs;

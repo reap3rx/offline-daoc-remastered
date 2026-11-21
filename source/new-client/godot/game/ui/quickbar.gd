@@ -1,5 +1,7 @@
 class_name Quickbar
 extends ClassicWindow
+
+const SongWheelScript := preload("res://game/ui/song_wheel.gd")
 ## One of the client's three quickbars (hbar_horz 372x33 / hbar_vert 32x372). The 32 px end square of the art holds
 ## (measured on the bitmaps, original pixels):
 ##   the move handle (0,0)-(11,11), the orientation button (19,0)-(32,11) which turns the bar vertical / horizontal,
@@ -313,7 +315,11 @@ class QuickSlot extends Control:
 	# 2026-10-10); right-click shows what it is; drag it off the bar to clear it
 	func _gui_input(event: InputEvent) -> void:
 		if event is InputEventMouseButton and event.pressed:
-			if event.button_index == MOUSE_BUTTON_LEFT and not event.double_click:
+			if event.button_index == MOUSE_BUTTON_LEFT and not event.double_click and SongWheelScript.is_wheel(entry()) \
+					and SongWheelScript.me:
+				SongWheelScript.me.press(entry(), "m%d" % MOUSE_BUTTON_LEFT)   # (tap: a song; hold: the wheel)
+				accept_event()
+			elif event.button_index == MOUSE_BUTTON_LEFT and not event.double_click:
 				Server.channel_press(entry(), "m%d" % MOUSE_BUTTON_LEFT)   # (a spell held on the button: channelled)
 				use()
 				accept_event()

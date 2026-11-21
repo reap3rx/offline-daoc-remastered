@@ -458,6 +458,9 @@ func pet_command(command: String) -> void:
 	if pet.is_empty():
 		message.emit("You don't have a pet.", "error")
 		return
+	if command == "form":                                  # a Druid's nature spirit: bear / wolf / wisp in turn
+		Server.command("/druidform next")
+		return
 	if command in ["aggressive", "defensive", "passive"]:
 		pet["mode"] = command
 	pet_order.emit(command)

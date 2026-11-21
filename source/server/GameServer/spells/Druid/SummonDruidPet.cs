@@ -76,6 +76,13 @@ namespace DOL.GS.Spells
 			return base.GetGamePet(template);
 		}
 
+		/// <summary>The nature spirit takes the form picked on the pet window (HibernianKits).</summary>
+		protected override void AddHandlers()
+		{
+			base.AddHandlers();
+			HibernianKits.OnSummoned(Caster, Pet, Spell);
+		}
+
 		public override bool CheckEndCast(GameLiving selectedTarget)
 		{
 			if (Caster is GamePlayer && ((GamePlayer)Caster).ControlledBrain != null)

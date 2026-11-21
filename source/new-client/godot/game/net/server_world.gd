@@ -1121,6 +1121,9 @@ func _message(d: Dictionary) -> void:
 	if String(d.text).begins_with("#ELV|"):               # the level you fight your target at (LevelScaling)
 		Server.set_fight_level(String(d.text).substr(5))
 		return
+	if String(d.text).begins_with("#SNG|"):               # the Song Wheel's songs (HibernianKits.cs)
+		preload("res://game/ui/song_wheel.gd").receive(String(d.text).substr(5))
+		return
 	if String(d.text).begins_with("#ZXP|"):               # the zone panel: name, rating, your rate here (ZoneRates.cs)
 		preload("res://game/ui/event_tracker.gd").receive_zone(String(d.text).substr(5))
 		return

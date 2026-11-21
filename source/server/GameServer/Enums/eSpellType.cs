@@ -452,6 +452,11 @@ namespace DOL.GS
         TauntShout,
         // The Quartermaster of Valor's potions (ValorPotions.cs)
         ValorDraught,
-        ValorTonic
+        ValorTonic,
+        // The Bard's Dirge (HibernianKits): slower attacks and lower magic resists
+        Dirge,
+        // The Druid's (HibernianKits): a stacking heal over time that Blooms; every buff on the group in one cast
+        Rejuvenation,
+        GiftOfTheWild
     }
 }

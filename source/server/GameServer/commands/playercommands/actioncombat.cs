@@ -11,7 +11,7 @@ namespace DOL.GS.Commands
 		ePrivLevel.Player,
 		"Action combat: click-to-swing melee with timed parry, block and dodge",
 		"/ac on | off | toggle | info",
-		"/ac swing | style <anytime|position|reactive|chain>",
+		"/ac swing | style <anytime|position|reactive|chain|aoe>",
 		"/ac parry | guard <on|off> | dodge")]
 	public class ActionCombatCommandHandler : AbstractCommandHandler, ICommandHandler
 	{
