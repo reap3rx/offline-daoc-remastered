@@ -64,7 +64,7 @@ namespace DOL.GS
         public const int RallyReuseMs = 30000, RallyRange = 1500, RallyJump = 800, AnthemReuse = 20;
         public const int CrescendoMax = 5, CrescendoTickMs = 5000, CrescendoForgetMs = 30000;
         public static readonly int[] BulwarkAt = { 2, 10, 18 }, WellspringAt = { 10, 20, 30, 40, 50 },
-            VigorAt = { 2, 12, 22, 32, 41 }, RallyAt = { 15, 30, 45 };
+            VigorAt = { 2, 12, 22, 32, 41 }, RallyAt = { 15, 30, 45 }, BardEvadeAt = { 1, 10, 25 };
         public const string BulwarkKey = "Nature's Bulwark", MendKey = "Verdant Mend", WellspringKey = "Wellspring",
             VigorKey = "Warden's Vigor", RallyKey = "Rallying Cry", WheelKey = "Song Wheel", MusicEvadeKey = "Music of Evasion";
 
@@ -294,6 +294,14 @@ namespace DOL.GS
                     "Music 1 about a third as often.",
             };
             SkillBase.AddScriptedAbility(evade, Specs.Music, 1, Bard);
+            // owner 2026-11-20: "Doesn't learn evade until level 10 ... Give them evade 1 at level 1, evade 2 at level 10, and
+            // evade 3 at level 25" (with Evade from level 1 a Bard has no mana shield either - ManaShield.CanWard)
+            if (SkillBase.GetDbAbility(DOL.GS.Abilities.Evade) is DbAbility ev)
+            {
+                SkillBase.RemoveSpecAbility("BardCareer", DOL.GS.Abilities.Evade);
+                for (int i = 0; i < BardEvadeAt.Length; i++)
+                    SkillBase.AddScriptedAbility(ev, "BardCareer", BardEvadeAt[i], 0, i + 1);
+            }
         }
 
         // ------------------------------------------------------------------ helpers

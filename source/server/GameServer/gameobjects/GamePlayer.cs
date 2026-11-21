@@ -5709,8 +5709,7 @@ namespace DOL.GS
 
             // Apply dps cap before quality and condition.
             // http://www.classesofcamelot.com/faq.asp?mode=view&cat=10
-            double weaponDps = weapon.DPS_AF * 0.1;
-            double dps = Math.Min(weaponDps, GetWeaponDpsCap());
+            double dps = TrainingWeapons.Dps(weapon, GetWeaponDpsCap(), Level);   // (a starter weapon: at the cap, more while new)
             dps *= 1 + GetModified(eProperty.DPS) * 0.01;
             return dps;
         }

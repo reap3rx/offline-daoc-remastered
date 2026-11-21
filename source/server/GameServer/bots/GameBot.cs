@@ -1526,12 +1526,11 @@ namespace DOL.GS
             if (weapon == null)
                 return 0;
 
-            double weaponDps = weapon.DPS_AF * 0.1;
             double dpsCap = 1.2 + 0.3 * Level;
             if (RealmLevel > 39)
                 dpsCap += 0.3;
 
-            double dps = Math.Min(weaponDps, dpsCap);
+            double dps = TrainingWeapons.Dps(weapon, dpsCap, Level);   // (a starter weapon: at the cap, more while new)
             return dps * (1 + GetModified(eProperty.DPS) * 0.01);
         }
 

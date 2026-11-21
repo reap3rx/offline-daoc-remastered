@@ -2129,6 +2129,20 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>An ability's database row by its key (null if unknown) - to teach it again elsewhere (HibernianKits).</summary>
+		public static DbAbility GetDbAbility(string keyName)
+		{
+			m_syncLockUpdates.EnterReadLock();
+			try
+			{
+				return m_abilityIndex.TryGetValue(keyName, out DbAbility dba) ? dba : null;
+			}
+			finally
+			{
+				m_syncLockUpdates.ExitReadLock();
+			}
+		}
+
 		/// <summary>A specialization stops teaching an ability (ShieldRework: Guard and Engage leave Shields). How many
 		/// rows went.</summary>
 		public static int RemoveSpecAbility(string specKey, string abilityKey)
