@@ -21,9 +21,9 @@ namespace DOL.GS
     /// from their old level range; bots move on when their rate drops under 1x; a Zone panel shows the rate):
     ///   Rate = the zone's rating factor x your exploration factor there. Monster kill experience and the coin monsters
     ///   drop are multiplied by it (AbstractServerRules).
-    ///   Exploration: your first time in a zone in 24 hours starts at 2x; every hour you spend in it takes 0.5 off, down to
-    ///   0.5x. 24 hours after that first visit it starts fresh. So a Deadly zone goes 2.8, 2.1, 1.4, 0.7; a Peaceful one
-    ///   1.6, 1.2, 0.8, 0.4.
+    ///   Exploration: a fresh zone pays 2x; every hour you spend in it takes 0.5 off, down to 0.5x, and every 2 hours spent
+    ///   anywhere else (logged out too) gives 0.5 back, up to 2x. So a Deadly zone goes 2.8, 2.1, 1.4, 0.7; a Peaceful one
+    ///   1.6, 1.2, 0.8, 0.4 - and roaming three or more zones keeps you well above 1x.
     ///   Ratings: a zone build's "rating" (scripts/zonebuilds/*.json); else from the median level its monsters were placed
     ///   at: under 15 Peaceful, 15-29 Wild, 30-44 Dangerous, 45+ Deadly (until each zone's review sets its own).
     /// Players' visits are kept with the character (DbCoreCharacterXCustomParam "zonevisits"); bots' in memory.
@@ -34,6 +34,12 @@ namespace DOL.GS
 
         public const double ExploreStart = 2.0, ExploreStep = 0.5, ExploreFloor = 0.5;
         public const double StepMinutes = 60, ResetHours = 24;
+        /// <summary>Away from a zone (elsewhere or logged out), its exploration comes back: half a minute of its hours for
+        /// every minute away - 0.5x back for every 2 hours, full 2x again 6 hours after its floor (owner 2026-11-20: "A
+        /// recovery rate is a great solution ... Go with that", instead of a reset 24 hours after the first visit, which a
+        /// 2-hour reset would have let two neighbouring zones ping-pong around).</summary>
+        public const double RecoverPerMinuteAway = 0.5;
+        const long AwaySeconds = 120;
         const string ParamKey = "zonevisits";
         const int TickMs = 30_000;
 
@@ -104,8 +110,8 @@ namespace DOL.GS
 
         sealed class Visit
         {
-            public long FirstUnix;          // seconds
-            public double Minutes;          // spent in the zone since
+            public long LastUnix;           // seconds: when it was last counted
+            public double Minutes;          // its hours drawn down (minutes spent there, less what time away gave back)
         }
 
         sealed class Visits
@@ -124,13 +130,32 @@ namespace DOL.GS
 
         static Visits Of(GameLiving who) => _visits.GetValue(who, w => w is GamePlayer p ? Load(p) : new Visits());
 
-        static Visit VisitIn(Visits v, Zone zone)
+        /// <summary>A zone's drawn-down minutes now, with what the time away has given back (no change made).</summary>
+        static double MinutesNow(Visit visit, long now)
+        {
+            if (visit == null)
+                return 0;
+            long gap = now - visit.LastUnix;
+            return gap > AwaySeconds ? Math.Max(0, visit.Minutes - gap / 60.0 * RecoverPerMinuteAway) : visit.Minutes;
+        }
+
+        static double MinutesNow(Visits v, Zone zone) =>
+            v.ByZone.TryGetValue(zone.ID, out Visit visit) ? MinutesNow(visit, NowUnix) : 0;
+
+        /// <summary>Their visit to the zone they're in, its time away settled.</summary>
+        static Visit Settle(Visits v, Zone zone)
         {
             long now = NowUnix;
-            if (!v.ByZone.TryGetValue(zone.ID, out Visit visit) || now - visit.FirstUnix >= ResetHours * 3600)
+            if (!v.ByZone.TryGetValue(zone.ID, out Visit visit))
             {
-                visit = new Visit { FirstUnix = now };
+                visit = new Visit { LastUnix = now };
                 v.ByZone[zone.ID] = visit;
+                v.Dirty = true;
+            }
+            else if (now - visit.LastUnix > AwaySeconds)
+            {
+                visit.Minutes = MinutesNow(visit, now);
+                visit.LastUnix = now;
                 v.Dirty = true;
             }
             return visit;
@@ -145,7 +170,7 @@ namespace DOL.GS
                 return;
             Visits v = Of(who);
             long now = GameLoop.GameLoopTime;
-            Visit visit = VisitIn(v, zone);
+            Visit visit = Settle(v, zone);
             if (v.LastZone == zone.ID && v.LastTick > 0)
             {
                 long gap = now - v.LastTick;
@@ -155,6 +180,7 @@ namespace DOL.GS
                     v.Dirty = true;
                 }
             }
+            visit.LastUnix = NowUnix;
             v.LastZone = zone.ID;
             v.LastTick = now;
         }
@@ -163,8 +189,7 @@ namespace DOL.GS
         {
             if (who == null || zone == null)
                 return 1.0;
-            Visit visit = VisitIn(Of(who), zone);
-            int steps = (int) Math.Floor(visit.Minutes / StepMinutes);
+            int steps = (int) Math.Floor(MinutesNow(Of(who), zone) / StepMinutes);
             return Math.Max(ExploreFloor, ExploreStart - ExploreStep * steps);
         }
 
@@ -194,10 +219,9 @@ namespace DOL.GS
         /// <summary>Minutes until the exploration factor here next drops (-1: at the floor).</summary>
         public static double MinutesToNextDrop(GameLiving who, Zone zone)
         {
-            Visit visit = VisitIn(Of(who), zone);
             if (ExploreFactor(who, zone) <= ExploreFloor)
                 return -1;
-            return StepMinutes - visit.Minutes % StepMinutes;
+            return StepMinutes - MinutesNow(Of(who), zone) % StepMinutes;
         }
 
         // ------------------------------------------------------------------ events
@@ -261,7 +285,7 @@ namespace DOL.GS
                         v.EventsDone[f[1]] = done;
                     else if (f.Length == 3 && int.TryParse(f[0], out int zone) && long.TryParse(f[1], out long first) &&
                         double.TryParse(f[2], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double min))
-                        v.ByZone[zone] = new Visit { FirstUnix = first, Minutes = min };
+                        v.ByZone[zone] = new Visit { LastUnix = first, Minutes = min };
                 }
             }
             catch (Exception e)
@@ -280,8 +304,8 @@ namespace DOL.GS
             if (!_visits.TryGetValue(p, out Visits v) || !v.Dirty)
                 return;
             long now = NowUnix;
-            string value = string.Join(";", v.ByZone.Where(kv => now - kv.Value.FirstUnix < ResetHours * 3600)
-                .Select(kv => $"{kv.Key}:{kv.Value.FirstUnix}:{kv.Value.Minutes.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)}")
+            string value = string.Join(";", v.ByZone.Where(kv => MinutesNow(kv.Value, now) > 0)
+                .Select(kv => $"{kv.Key}:{kv.Value.LastUnix}:{kv.Value.Minutes.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)}")
                 .Concat(v.EventsDone.Where(kv => now - kv.Value < ResetHours * 3600).Select(kv => $"e:{kv.Key}:{kv.Value}")));
             try
             {
