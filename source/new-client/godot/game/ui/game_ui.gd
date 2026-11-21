@@ -67,6 +67,8 @@ var _cast_bar: Control
 var _cast_fill: ColorRect
 var _cast_name: Label
 var _effects_bar: HBoxContainer
+var _debuffs_bar: HBoxContainer              # (debuffs, DoTs, bleeds: their own row over the buffs - _refresh_effects)
+var _effects_box: VBoxContainer
 var npc_dialog: NpcDialog
 var social_menu: Control                     # the interact menu (social_menu.gd: hold Interact on a bot, your pet)
 var trainer: TrainerWindow
@@ -576,8 +578,8 @@ func set_style(style: String, save := true) -> void:
 				w.restore(defaults[id][1])
 		if windows.has("minipet") and not PlayerData.pet.is_empty():
 			windows["minipet"].show_window()
-		if _effects_bar:
-			_effects_bar.position = client_pos(10, 4)
+		if _effects_box:
+			_effects_box.position = client_pos(10, 4)
 		_place_event_tracker()
 
 
@@ -1409,11 +1411,21 @@ func _build_cast_bar() -> void:
 	_cast_name.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_cast_bar.add_child(_cast_name)
 	# the client's spell effect icons: top left (default800.ini SpellEffect=10,4), each with its time left
+	# debuffs, DoTs and bleeds in their own row over the buffs, framed red (owner 2026-11-20: "Make debuffs/bleeds/DoTs
+	# be on a different line above the buffs on the UI, so they stand out")
+	_effects_box = VBoxContainer.new()
+	_effects_box.position = client_pos(10, 4)
+	_effects_box.add_theme_constant_override("separation", 2)
+	_effects_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(_effects_box)
+	_debuffs_bar = HBoxContainer.new()
+	_debuffs_bar.add_theme_constant_override("separation", 4)
+	_debuffs_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_effects_box.add_child(_debuffs_bar)
 	_effects_bar = HBoxContainer.new()
-	_effects_bar.position = client_pos(10, 4)
 	_effects_bar.add_theme_constant_override("separation", 4)
 	_effects_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(_effects_bar)
+	_effects_box.add_child(_effects_bar)
 	PlayerData.effects_changed.connect(_refresh_effects)
 	PlayerData.changed.connect(func():                      # constitution lost / restored shows or hides its icon
 		if (PlayerData.con_lost > 0) != _con_icon_shown:
@@ -1617,13 +1629,17 @@ var _effect_rows: Array = []                 # [icon TextureRect, time Label, ef
 func _refresh_effects() -> void:
 	for c in _effects_bar.get_children():
 		c.queue_free()
+	for c in _debuffs_bar.get_children():
+		c.queue_free()
 	_effect_rows.clear()
 	_con_icon_shown = PlayerData.con_lost > 0
 	if _con_icon_shown:
 		_effect_box(50, 0, "CONSTITUTION LOST: %d (A HEALER CAN RESTORE IT)" % PlayerData.con_lost, -1)
 	var effs := _player_effects()
 	for i in effs.size():
-		_effect_box(int(effs[i].icon), int(effs[i].border), String(effs[i].name).to_upper(), i, int(effs[i].get("fx", -1)))
+		_effect_box(int(effs[i].icon), int(effs[i].border), String(effs[i].name).to_upper(), i, int(effs[i].get("fx", -1)),
+				int(effs[i].get("negative", 0)) != 0)
+	_debuffs_bar.visible = _debuffs_bar.get_child_count() > 0
 	_tick_effects()
 
 
@@ -1654,7 +1670,7 @@ class EffectBox extends Control:
 		return null if d.is_empty() else ItemTooltip.text_box(String(d.caption), d.lines)
 
 
-func _effect_box(icon: int, border: int, tip: String, index: int, fx := -1) -> void:
+func _effect_box(icon: int, border: int, tip: String, index: int, fx := -1, debuff := false) -> void:
 	var box := EffectBox.new()
 	box.fx = fx
 	box.title = tip
@@ -1682,7 +1698,15 @@ func _effect_box(icon: int, border: int, tip: String, index: int, fx := -1) -> v
 	t.add_theme_constant_override("shadow_offset_x", 1)
 	t.add_theme_constant_override("shadow_offset_y", 1)
 	box.add_child(t)
-	_effects_bar.add_child(box)
+	if debuff:
+		var edge := ColorRect.new()                       # (a red frame behind it: a debuff)
+		edge.color = Color(0.6, 0.06, 0.05, 0.95)
+		edge.position = Vector2(-2, -2)
+		edge.size = Vector2(EFFECT_ICON + 4, EFFECT_ICON + 4)
+		edge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		edge.show_behind_parent = true
+		ic.add_child(edge)
+	(_debuffs_bar if debuff else _effects_bar).add_child(box)
 	_effect_rows.append([ic, t, index])
 
 

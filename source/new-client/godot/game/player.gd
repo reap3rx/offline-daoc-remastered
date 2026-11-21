@@ -877,19 +877,21 @@ const STAFF_TILT := {"lur_m": 20.0}           # degrees out from the body (dress
 
 ## A drawn one-hander tipped out from the body while running (owner 2026-11-20 bugs doc: "lurikeen males hold their
 ## weapons when they're running in a way that makes them clip into their heads. I think the weapon hold is actually
-## slightly off for every race and sex"). Measured with tools/clip_measure.gd - a sword's nearest corner to the head
-## bone over the run cycle: Lurikeen male 0.08, Kobold male 0.12, Half Ogre female 0.14, the other males 0.15-0.19,
-## the other females 0.22-0.37. 20 degrees out brings the males to 0.27-0.38 (Lurikeen 30: 0.20, Kobold 25: ~0.25,
-## their own size). Only while the run plays (run_tilt, every frame): a swing or a guard keeps the client's grip.
-const RUN_TILT_SPEED := 140.0                 # degrees a second, in and out
+## slightly off for every race and sex"). Measured with tools/clip_measure.gd / clip_measure3.gd - each weapon's nearest
+## corner to the head bone over the run cycle, 60 one-handers: short blunt weapons (maces, hammers, axes) come within
+## 1-8 cm of the head on every male (a Celt male's hammer 3 cm), and the 20-30 degrees of 2026-11-20 still left a
+## Lurikeen's mace at 12-14 cm - it still clipped (owner's video, 2026-11-20). 60 degrees out clears every weapon on
+## the Lurikeen and Kobold males (hammers 0.25-0.39), 45 the other males (0.39+) and the Half Ogre female (0.40+), 30 the
+## other females (0.19+ Lurikeen, 0.26+ Celt); past 60 nothing gains. Only while the run plays (run_tilt, every frame):
+## a swing or a guard keeps the client's grip.
+const RUN_TILT_SPEED := 240.0                 # degrees a second, in and out
 
 
 static func run_tilt_for(race: String) -> float:
 	match race:
-		"lur_m": return 30.0
-		"kob_m": return 25.0
-		"hal_f": return 20.0
-	return 20.0 if race.ends_with("_m") else 0.0
+		"lur_m", "kob_m": return 60.0
+		"hal_f": return 45.0
+	return 45.0 if race.ends_with("_m") else 30.0
 
 
 ## Every frame (the player's figure, NPCs' and other players'): each drawn one-hander that Player.dress marked eases to

@@ -1098,6 +1098,20 @@ func _message(d: Dictionary) -> void:
 			if kv.size() == 3:
 				vit[int(kv[0])] = [int(kv[1]), int(kv[2])]
 		return
+	if String(d.text).begins_with("#DBF|"):               # a monster's debuffs, over its plate (TargetDebuffs.cs): oid|icon:secs;..
+		var parts := String(d.text).substr(5).split("|")
+		if parts.size() >= 2:
+			var list := []
+			var now := Time.get_ticks_msec()
+			for e in parts[1].split(";", false):
+				var kv := e.split(":")
+				if kv.size() == 2:
+					list.append([int(kv[0]), now + int(kv[1]) * 1000 if int(kv[1]) > 0 else 0])
+			if list.is_empty():
+				debuffs.erase(int(parts[0]))
+			else:
+				debuffs[int(parts[0])] = list
+		return
 	if String(d.text).begins_with("#TIER|"):              # monsters' fixed con tiers (MonsterTiers.cs): oid:tier;...
 		for part in String(d.text).substr(6).split(";", false):
 			var kv := part.split(":")

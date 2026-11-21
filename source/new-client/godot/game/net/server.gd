@@ -1242,6 +1242,7 @@ func effects_list() -> Array:
 		var e: Dictionary = effects[k]
 		var ic := skill_icon("spell", int(e.icon))
 		out.append({"icon": int(ic[0]), "border": int(ic[1]), "name": String(e.name), "fx": int(e.icon),
+				"negative": int(e.get("negative", 0)),
 				"seconds": maxf(0.001, (int(e.until) - now) / 1000.0) if int(e.until) > 0 else 1e9})
 	return out
 

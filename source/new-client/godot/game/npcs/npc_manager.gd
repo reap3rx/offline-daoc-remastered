@@ -23,6 +23,7 @@ var target: Npc
 var tiers := {}                             # oid -> fixed con tier, -3 grey .. 3 purple (the server's MonsterTiers)
 var bot_tiers := {}                         # oid -> a bot's strength next to you as a con, -3 .. 3 (#BTIER)
 var vit := {}                               # oid -> [endurance %, power % or -1] (#VIT, the server's MonsterMoves)
+var debuffs := {}                           # oid -> [[spell icon, until msec or 0], ...] (#DBF, the server's TargetDebuffs)
 var _scenes := {}
 var _tick := 0.0
 var _frame := 0

@@ -58,7 +58,9 @@ namespace DOL.GS
             // (the other weapon lines)
             Debility1 = 30822, Root3 = 30823, Stun5 = 30824, SubmissionPulse = 30825, HasteSelf = 30826, ParrySelf = 30827,
             EvadeSelf = 30828, Dazed = 30829, Dent = 30830, Root6 = 30831, SmallBleed = 30832, TailBleed = 30833, BleedB1 = 30834,
-            BleedB2 = 30835, BleedB3 = 30836, HeavySnare = 30837;
+            BleedB2 = 30835, BleedB3 = 30836, HeavySnare = 30837,
+            // (shields)
+            Bulwark = 30838, BulwarkGroup = 30839, ShieldWallGroup = 30840;
 
         /// <summary>Cleaving styles: (class, style id) -> its arc, how many more it reaches, its share of the blow, extra reach.</summary>
         static readonly Dictionary<(int, int), (int Arc, int Extra, double Factor, int Reach)> Cleaves = new();
@@ -147,6 +149,7 @@ namespace DOL.GS
             }
             Console.WriteLine($"[StyleRework] Large Weapons: {changed} style changes for the Hero and Champion");
             Console.WriteLine($"[StyleRework] the other Hibernian lines: {OtherLines()} style changes");
+            Console.WriteLine($"[StyleRework] shields: {ShieldLine()} style changes");
             Dump();
         }
 
@@ -302,6 +305,57 @@ namespace DOL.GS
         static void Strike(int cls, int id, double share = OffhandShare) => OffhandStrikes[(cls, id)] = share;
         static void CleaveAt(int cls, int id, int arc, int extra, double factor, int reach = 0) => Cleaves[(cls, id)] = (arc, extra, factor, reach);
 
+        // ------------------------------------------------------------------ shields (agreed 20 Nov)
+        // Owner 2026-11-20: "Shield styles ... more defensive, with stuns only being on the side and back positionals, and the
+        // rest being enhancement to block timings, auto blocks, AF buffs for the individual or group (reactionary) that last
+        // like a minute ... Less damage overall, more utility" - and Slam "a root rather than an interrupt". Every class
+        // that carries a shield gets the same line (the styles are shared). Guard and Engage leave Shields; the extra
+        // attackers a timed block covers show as the Shield Mastery ability (ShieldBoost.Register).
+
+        const int Numb = 221, StunSt = 222, Disable = 223, Incapacitate = 224, Paralyze = 225, Bash = 226, Mangle = 227,
+            Slam = 228, Brutalize = 229;
+
+        static int ShieldLine()
+        {
+            Hidden(Db(Bulwark, "Bulwark", "ArmorAbsorptionBuff", value: 10, duration: 60, target: "Self", effect: 4301, icon: 4301,
+                msg1: "You brace behind your shield."));
+            Hidden(Db(BulwarkGroup, "Shield Line", "ArmorAbsorptionBuff", value: 8, duration: 60, radius: 1500, target: "Group",
+                effect: 4301, icon: 4301, msg1: "Your shield steadies your companions."));
+            Hidden(Db(ShieldWallGroup, "Shield Wall", "ArmorAbsorptionBuff", value: 10, duration: 30, radius: 1500, target: "Group",
+                effect: 4301, icon: 4301, msg1: "A wall of shields!"));
+            int n = 0;
+            for (int cls = 1; cls <= 70; cls++)
+            {
+                if (Ref(cls, Numb) == null)
+                    continue;
+                n += Reshape(cls, Numb, "Numb", 0, 0, 0, growth: 0.05, hit: 5, def: 10, end: 10, procs: new int[0]);
+                n += Reshape(cls, StunSt, "Stun", 1, 0, 4, growth: 0.4, hit: 10, def: 10, end: 15, procs: new int[0]);
+                n += Reshape(cls, Disable, "Disable", 2, 1, 0, growth: 0.45, hit: 10, def: 0, end: 15, procs: new[] { Stun3 });
+                n += Reshape(cls, Incapacitate, "Incapacitate", 1, 0, 4, growth: 0.4, hit: 10, def: 15, end: 15, procs: new int[0]);
+                n += Reshape(cls, Paralyze, "Paralyze", 2, 0, 0, growth: 0.45, hit: 10, def: 0, end: 15, procs: new[] { Stun4 });
+                n += Reshape(cls, Bash, "Bash", 1, 0, 4, growth: 0.4, hit: 10, def: 10, end: 15, procs: new int[0]);
+                n += Reshape(cls, Mangle, "Mangle", 2, 1, 0, growth: 0.5, hit: 10, def: 0, end: 15, procs: new[] { Stun5 });
+                n += Reshape(cls, Slam, "Slam", 0, 0, 0, growth: 0.45, hit: 10, def: 0, end: 20, procs: new[] { Root6 });
+                n += Reshape(cls, Brutalize, "Brutalize", 1, 0, 4, growth: 0.5, hit: 10, def: 20, end: 15, procs: new int[0]);
+                Self(cls, StunSt, Bulwark);
+                Self(cls, Bash, BulwarkGroup);
+                Self(cls, Brutalize, ShieldWallGroup);
+                About(cls, Numb, $"A light shield blow: for {ShieldBoost.WideBlockMs / 1000} seconds your block timing is {ShieldBoost.WideBlockBonusMs} ms more forgiving.");
+                About(cls, StunSt, "After you block: Bulwark - your armor absorbs 10% more damage for 60 seconds.");
+                About(cls, Disable, "From the side: stuns for 3 seconds.");
+                About(cls, Incapacitate, $"After you block: the next {ShieldBoost.AutoBlockCharges} blows from in front of you within {ShieldBoost.AutoBlockMs / 1000} seconds are blocked for you.");
+                About(cls, Paralyze, "From behind: stuns for 4 seconds.");
+                About(cls, Bash, "After you block: Shield Line - your group's armor absorbs 8% more damage for 60 seconds.");
+                About(cls, Mangle, "From the side: stuns for 5 seconds.");
+                About(cls, Slam, "Slams your foe in place: roots it for 6 seconds (damage frees it).");
+                About(cls, Brutalize, $"After you block: Shield Wall - every blow from in front of you is blocked for {ShieldBoost.ShieldWallMs / 1000} seconds, and your group's armor absorbs 10% more damage for 30 seconds.");
+            }
+            int gone = SkillBase.RemoveSpecAbility(Specs.Shields, Abilities.Guard) + SkillBase.RemoveSpecAbility(Specs.Shields, Abilities.Engage);
+            Console.WriteLine($"[StyleRework] shields: Guard / Engage rows taken from Shields: {gone}");
+            ShieldBoost.Register();
+            return n;
+        }
+
         // ------------------------------------------------------------------ the reshaping
 
         static Style Ref(int cls, int id) => SkillBase.GetStyleRef(id, cls);
@@ -444,6 +498,15 @@ namespace DOL.GS
                             ScriptMgr.CreateSpellHandler(owner, sp, SkillBase.GetSpellLine(GlobalSpellsLines.Combat_Styles_Effect))?.StartSpell(owner);
                 if (OffhandStrikes.TryGetValue((st.ClassID, st.ID), out double share))
                     OffhandStrike(owner, ad, share);
+                if (st.Spec == Specs.Shields)
+                {
+                    if (st.ID == Numb)
+                        ShieldBoost.WidenBlock(owner);
+                    else if (st.ID == Incapacitate)
+                        ShieldBoost.AutoBlock(owner, ShieldBoost.AutoBlockCharges, ShieldBoost.AutoBlockMs);
+                    else if (st.ID == Brutalize)
+                        ShieldBoost.AutoBlock(owner, 99, ShieldBoost.ShieldWallMs);
+                }
                 if (st.Spec == LargeWeapons && st.ClassID == Hero)
                 {
                     if (st.ID == Rage)                        // the parry flows into the counter: endurance back

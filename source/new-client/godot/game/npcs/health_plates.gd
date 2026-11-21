@@ -137,6 +137,7 @@ func _gather() -> void:
 				"boss": is_boss(n),
 				"frac": clampf(n.state.health, 0.0, 1.0), "cast": cast, "tgt": tgt2,
 				"vit": manager.vit.get(int(n.spawn.get("oid", -1)), [100, -1]) if "vit" in manager else [100, -1],
+				"dbf": _debuffs_of(n) if tgt2 else [],
 				"alpha": 1.0 if tgt2 or not have_target else 0.72,
 				"dist": n.global_position.distance_to(cam.global_position)})
 	# farther first, the target last (on top); then stacking: a plate that would cover one below it moves up over it
@@ -166,12 +167,32 @@ func _gather() -> void:
 			placed.append(p)
 
 
+## The debuffs on your target, over its name (owner 2026-11-20: "can we show them on the target nameplate, the icon?"):
+## the server's list (#DBF, TargetDebuffs.cs), each icon with its seconds left under it; the ones run out are dropped.
+const DEBUFF_PX := 26.0                     # icon size at 1080 lines and size 1.0
+
+
+func _debuffs_of(n: Npc) -> Array:
+	if not "debuffs" in manager:
+		return []
+	var now := Time.get_ticks_msec()
+	var out := []
+	for e in manager.debuffs.get(int(n.spawn.get("oid", -1)), []):
+		if int(e[1]) == 0 or int(e[1]) > now:
+			out.append(e)
+	return out
+
+
+func _debuff_h(p: Dictionary) -> float:
+	return 0.0 if (p.get("dbf", []) as Array).is_empty() else (DEBUFF_PX + 11.0) * float(p.s)
+
+
 ## The whole plate's box (name line, bar, cast bar) around its anchor over the head.
 func _rect_of(p: Dictionary) -> Rect2:
 	var s: float = p.s
 	var size: Vector2 = p.size
 	var name_h := _font.get_height(_name_px(p))
-	var h := name_h + size.y + (5.0 * s if float(p.cast) >= 0.0 else 0.0) + _lines_h(p)
+	var h := name_h + size.y + (5.0 * s if float(p.cast) >= 0.0 else 0.0) + _lines_h(p) + _debuff_h(p)
 	var left := _left_w(p)                             # (the level - and a boss's skull - to the left of the bar)
 	return Rect2(Vector2(p.at.x - size.x * 0.5 - left, p.at.y - h), Vector2(size.x + left, h))
 
@@ -244,9 +265,34 @@ func _draw_plates() -> void:
 		var size: Vector2 = p.size
 		var npx := _name_px(p)
 		var name_h := _font.get_height(npx)
+		var left := _left_w(p)
+		# its debuffs in a row over the name, centred, each with its seconds left
+		var dbf: Array = p.get("dbf", [])
+		if not dbf.is_empty():
+			var ip := DEBUFF_PX * s
+			var gap := 3.0 * s
+			var row_w := dbf.size() * ip + (dbf.size() - 1) * gap
+			var x0 := r.position.x + left + size.x * 0.5 - row_w * 0.5
+			var now := Time.get_ticks_msec()
+			var tpx := maxi(8, roundi(9.0 * s))
+			for k in dbf.size():
+				var e: Array = dbf[k]
+				var ic := Server.skill_icon("spell", int(e[0]))
+				var tex: Texture2D = ItemDb.icon(int(ic[0]))
+				var box := Rect2(Vector2(roundf(x0 + k * (ip + gap)), roundf(r.position.y)), Vector2(ip, ip))
+				_canvas.draw_rect(box.grow(1.5), Color(0.55, 0.05, 0.05, a))     # (a red edge: a debuff)
+				if tex:
+					_canvas.draw_texture_rect(tex, box, false, Color(1, 1, 1, a))
+				if int(e[1]) > 0:
+					var secs := ceili((int(e[1]) - now) / 1000.0)
+					var txt := "%d" % secs if secs < 60 else "%dm" % ceili(secs / 60.0)
+					var tw := _font.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, tpx).x
+					var tb := Vector2(box.position.x + ip * 0.5 - tw * 0.5, box.end.y + _font.get_ascent(tpx) + 1.0)
+					_canvas.draw_string_outline(_font, tb, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, tpx, 2, Color(0, 0, 0, 0.9 * a))
+					_canvas.draw_string(_font, tb, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, tpx, Color(1, 1, 1, a))
+			r.position.y += _debuff_h(p)
 		# the name, centred over the bar
 		var nw := _font.get_string_size(String(p.name), HORIZONTAL_ALIGNMENT_LEFT, -1, npx).x
-		var left := _left_w(p)
 		var base := Vector2(r.position.x + left + size.x * 0.5 - nw * 0.5, r.position.y + _font.get_ascent(npx))
 		var ncol := Color(1, 1, 1, a) if bool(p.tgt) else Color(0.92, 0.9, 0.85, a)
 		_canvas.draw_string_outline(_font, base, String(p.name), HORIZONTAL_ALIGNMENT_LEFT, -1, npx,

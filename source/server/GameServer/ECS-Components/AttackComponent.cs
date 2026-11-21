@@ -1501,6 +1501,8 @@ namespace DOL.GS
         public virtual bool CheckBlock(AttackData ad)
         {
             double blockChance = MonsterMoves.Defense(owner, ad, MonsterMoves.Def.Block, owner.TryBlock(ad, out int shieldSize));
+            if (owner is not GamePlayer && blockChance > 0 && ShieldBoost.TakeAutoBlock(owner, ad))
+                blockChance = 1.0;                       // (a shield style's held block: ShieldBoost)
             ad.BlockChance = blockChance * 100;
 
             if (blockChance > 0)

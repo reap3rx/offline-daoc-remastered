@@ -2106,7 +2106,7 @@ namespace DOL.GS
 
 		/// <summary>An ability made in code (TauntShouts): known by its key, learned through a specialization (a class's
 		/// "...Career" spec teaches by character level).</summary>
-		public static void AddScriptedAbility(DbAbility dba, string specKey, int specLevel, int classId = 0)
+		public static void AddScriptedAbility(DbAbility dba, string specKey, int specLevel, int classId = 0, int abilityLevel = 1)
 		{
 			m_syncLockUpdates.EnterWriteLock();
 			try
@@ -2117,11 +2117,27 @@ namespace DOL.GS
 					list = new List<Tuple<string, byte, int, int>>();
 					m_specsAbilities[specKey] = list;
 				}
-				if (!list.Exists(t => t.Item1 == dba.KeyName))
+				if (!list.Exists(t => t.Item1 == dba.KeyName && t.Item3 == abilityLevel))
 				{
-					list.Add(new Tuple<string, byte, int, int>(dba.KeyName, (byte) specLevel, 1, classId));
+					list.Add(new Tuple<string, byte, int, int>(dba.KeyName, (byte) specLevel, abilityLevel, classId));
 					list.Sort((i, j) => i.Item2.CompareTo(j.Item2));
 				}
+			}
+			finally
+			{
+				m_syncLockUpdates.ExitWriteLock();
+			}
+		}
+
+		/// <summary>A specialization stops teaching an ability (ShieldRework: Guard and Engage leave Shields). How many
+		/// rows went.</summary>
+		public static int RemoveSpecAbility(string specKey, string abilityKey)
+		{
+			m_syncLockUpdates.EnterWriteLock();
+			try
+			{
+				return m_specsAbilities.TryGetValue(specKey, out List<Tuple<string, byte, int, int>> list)
+					? list.RemoveAll(t => t.Item1 == abilityKey) : 0;
 			}
 			finally
 			{

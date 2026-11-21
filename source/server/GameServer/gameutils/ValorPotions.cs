@@ -79,8 +79,8 @@ namespace DOL.GS
                     {
                         SpellID = k.Spell, Name = k.Name, Type = k.Tonic ? "ValorTonic" : "ValorDraught", Target = "Self",
                         Value = Share(k.Pool, k.Tonic), DamageType = (int) k.Pool, Duration = k.Tonic ? TonicMinutes * 60 : 0,
-                        Frequency = k.Tonic ? PulseMs / 100 : 0, ClientEffect = k.Pool switch { Pool.Health => 4851, Pool.Power => 4301, _ => 411 },
-                        Icon = k.Pool switch { Pool.Health => 4851, Pool.Power => 4301, _ => 411 }, Description = k.Desc,
+                        Frequency = k.Tonic ? PulseMs / 100 : 0, ClientEffect = IconFor(k.Pool, k.Tonic),
+                        Icon = IconFor(k.Pool, k.Tonic), Description = k.Desc,
                         SpellGroup = k.Spell, SharedTimerGroup = k.Spell,   // (its own reuse: GamePlayer's potion timer goes by this)
                     };
                     SkillBase.AddScriptedSpell(GlobalSpellsLines.Item_Effects, new Spell(d, 1));
@@ -117,6 +117,14 @@ namespace DOL.GS
                 }
             }
         }
+
+        /// <summary>The game's own icons (owner 2026-11-20: the Tonic of Vigor showed a speed buff's): the regeneration
+        /// buffs' for the tonics, a heal / endurance restore / power buff for the draughts.</summary>
+        static int IconFor(Pool p, bool tonic) => (p, tonic) switch
+        {
+            (Pool.Health, true) => 8077, (Pool.Endurance, true) => 8079, (Pool.Power, true) => 8084,
+            (Pool.Health, false) => 4851, (Pool.Endurance, false) => 8064, _ => 979
+        };
 
         public static string Word(Pool p) => p switch { Pool.Health => "health", Pool.Endurance => "endurance", _ => "power" };
     }

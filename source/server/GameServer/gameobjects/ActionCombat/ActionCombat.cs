@@ -877,7 +877,8 @@ namespace DOL.GS
 
 			return kind switch
 			{
-				eActionDefense.Block => BlockWindowFor(player.GetModifiedSpecLevel(Specs.Shields), RealmAbilityLevel<RealmAbilities.MasteryOfBlocking>(player)),
+				eActionDefense.Block => BlockWindowFor(player.GetModifiedSpecLevel(Specs.Shields), RealmAbilityLevel<RealmAbilities.MasteryOfBlocking>(player))
+					+ ShieldBoost.WindowBonus(player),      // (Numb: a more forgiving block for a while)
 				eActionDefense.Dodge => DodgeWindowFor(player.GetAbilityLevel(Abilities.Evade), RealmAbilityLevel<RealmAbilities.AtlasOF_Dodger>(player)),
 				_ => ParryWindowFor(player.GetModifiedSpecLevel(Specs.Parry), RealmAbilityLevel<RealmAbilities.MasteryOfParrying>(player))
 			};
@@ -1089,6 +1090,17 @@ namespace DOL.GS
 					ad.ParryChance = 100;
 					return eAttackResult.Parried;
 				}
+			}
+
+			// A shield style's held block (Incapacitate, Shield Wall: ShieldBoost) - the blow blocked for you.
+			if (HasShield(player) && ShieldBoost.TakeAutoBlock(player, ad))
+			{
+				ad.ActionAuto = true;
+				ad.ActionDefense = eActionDefense.Block;
+				ad.ArmorHitLocation = player.CalculateArmorHitLocation(ad);
+				ad.ActionDamageFactor = Tired(player, BlockFactor(player, ad));
+				ad.BlockChance = 100;
+				return eAttackResult.Blocked;
 			}
 
 			// The chain a timed defense started: other monsters' blows turned aside the same way, one each.

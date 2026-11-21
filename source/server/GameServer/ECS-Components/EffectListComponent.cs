@@ -517,6 +517,7 @@ namespace DOL.GS
 
                             ServiceObjectStore.Add(effect);
                             effect.Owner.effectListComponent.RequestPlayerUpdate(EffectHelper.GetPlayerUpdateFromEffect(effect.EffectType));
+                            TargetDebuffs.Changed(effect.Owner);     // a monster's debuffs over its plate (TargetDebuffs.cs)
 
                             // Animations must be sent after calling `OnStartEffect` to prevent interrupts from interfering with them.
                             if (effect is ECSGameSpellEffect spellEffect and not ECSImmunityEffect)
@@ -913,6 +914,7 @@ namespace DOL.GS
                                 effect.OnStopEffect();
 
                             effect.Owner.effectListComponent.RequestPlayerUpdate(EffectHelper.GetPlayerUpdateFromEffect(effect.EffectType));
+                            TargetDebuffs.Changed(effect.Owner);
                         }
                         catch (Exception e)
                         {
