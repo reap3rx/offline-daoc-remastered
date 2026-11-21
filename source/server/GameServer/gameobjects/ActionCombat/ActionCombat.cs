@@ -101,7 +101,9 @@ namespace DOL.GS
 		public long NextReadyCheck;
 		// Archery: a drawn shot (normal or critical), held until it is loosed.
 		public bool Drawing;
-		public bool DrawCrit;
+		public bool DrawCrit;                  // (the Critical stage is in reach: Critical Shot known, a standing draw)
+		public string DrawKind = "archer";     // archer / basic (no bow spec: a pulling shot) / move (shooting on the move)
+		public int DrawQuickMs, DrawCritMs, DrawOverMs;
 		public long DrawStart;
 		public int DrawFullMs;
 		public bool Overdrawing;
@@ -861,6 +863,8 @@ namespace DOL.GS
 
 			if (cost > 0)
 				ChargeIfMissed(player, () => state.DodgeAt == now && !state.DodgeAnswered, cost, window);
+
+			HibernianKits.OnDodge(player);             // (a Bard's music may answer a dodge under attack)
 		}
 
 		/// <summary>When the window has closed: if the press caught nothing, its endurance is paid.</summary>
@@ -1282,21 +1286,83 @@ namespace DOL.GS
 		}
 
 		// ------------------------------------------------------------------ archery (bows, crossbows, thrown)
+		// Charged shots (owner 2026-11-20): one button, held - Quick shot -> Standard shot -> Critical shot -> Overdraw,
+		// "like casters charge spells". Let go after the quick point for a quick shot (less damage, a little less sure,
+		// shorter reach, sooner); at the full draw a standard shot; a little longer (Critical Shot known) a critical; held
+		// on past that, the bow overdraws (far harder, often wide, endurance burning). The draw times come from the bow,
+		// Quickness and Dexterity as before (AttackSpeed). Classes that can't train their bow (a Warden's or a Hero's
+		// shortbow) have a basic pulling shot: ready at the quick point, never stronger. The second button shoots on the
+		// move: you walk at half speed while drawing, up to a standard shot, for double the endurance.
 
 		public const int ShotDelayMs = 1000;          // the least time between two shots (owner 2026-10-26: no arrow spam)
-		public const int OverdrawGraceMs = 1200;      // held this long past full draw, the bow starts to overdraw
+		public const int OverdrawGraceMs = 1200;      // held this long past the last stage, the bow starts to overdraw
 		public const int DrawTickMs = 250;
 		public const double OverdrawDamage = 1.6;     // an overdrawn shot that lands
 		public const double OverdrawMiss = 0.40;
 		public const double FullDrawMiss = 0.03;
+		public const double QuickShare = 0.45;        // the quick point: this share of the full draw (at least ShotQuickMinMs)
+		public const int ShotQuickMinMs = 400;
+		public const double QuickReach = 0.75;        // a quick (and a basic) shot's reach: this share of the bow's
+		public const double BasicDamage = 0.6;        // a basic pulling shot's damage, whatever the hold
+		public const double CritShare = 0.35;         // the critical stage: this much again of the full draw (at least CritMinMs)
+		public const int CritMinMs = 600;
 
 		private static bool IsBow(DbInventoryItem weapon) => weapon != null && weapon.SlotPosition == Slot.RANGED;
 
+		/// <summary>The bow's own line can be trained by this character (a Ranger's Recurve Bow, a Scout's Longbow...).</summary>
+		public static bool CanSpecBow(GamePlayer player, DbInventoryItem weapon)
+		{
+			if (weapon == null)
+				return false;
+			string spec = SkillBase.ObjectTypeToSpec((eObjectType) weapon.Object_Type);
+			return spec != null && player.HasSpecialization(spec);
+		}
+
+		/// <summary>The stages of a draw from the full draw's time: (quick, critical, overdraw) in ms from the start.</summary>
+		public static (int Quick, int Crit, int Over) StagesFor(int fullMs, bool critKnown, string kind)
+		{
+			int quick = Math.Min(fullMs, Math.Max(ShotQuickMinMs, (int) (fullMs * QuickShare)));
+			if (kind == "basic")
+				return (quick, int.MaxValue, int.MaxValue);
+			if (kind == "move")
+				return (quick, int.MaxValue, int.MaxValue);
+			int crit = critKnown ? fullMs + Math.Max(CritMinMs, (int) (fullMs * CritShare)) : int.MaxValue;
+			int over = (critKnown ? crit : fullMs) + OverdrawGraceMs;
+			return (quick, crit, over);
+		}
+
+		public readonly record struct Stage(string Name, double Effectiveness, double Miss, double Reach, bool Critical);
+
 		/// <summary>
-		/// The shot button pressed (/ac draw normal|crit): the bow is drawn. Full draw takes what a shot takes in the
-		/// classic game (the critical shot's longer draw for a critical). The client roots you while you draw.
+		/// A shot by how long it was held (ms) against its stages: null when let go before the quick point. Quick: 55%..90%
+		/// damage, 10%..6% miss, 75% reach. Standard: 100%, 3%. Critical: always a critical (critMod), 3%. Overdrawn: 160%
+		/// and 40% miss (a critical's x1.3 and 45% when it was a critical draw). Basic: 60% and 8% at 75% reach, always.
 		/// </summary>
-		public static void StartDraw(GamePlayer player, bool crit)
+		public static Stage? StageFor(long held, int fullMs, (int Quick, int Crit, int Over) at, string kind, double critMod)
+		{
+			if (held < at.Quick)
+				return null;
+			if (kind == "basic")
+				return new Stage("quick", BasicDamage, 0.08, QuickReach, false);
+			if (held < fullMs)
+			{
+				double f = fullMs > at.Quick ? (held - at.Quick) / (double) (fullMs - at.Quick) : 1.0;
+				return new Stage("quick", 0.55 + 0.35 * f, 0.10 - 0.04 * f, QuickReach, false);
+			}
+			if (held >= at.Over)
+				return at.Crit != int.MaxValue
+					? new Stage("overdrawn", critMod * 1.3, OverdrawMiss + 0.05, 1.0, true)
+					: new Stage("overdrawn", OverdrawDamage, OverdrawMiss, 1.0, false);
+			if (held >= at.Crit)
+				return new Stage("critical", critMod, FullDrawMiss, 1.0, true);
+			return new Stage("full", 1.0, FullDrawMiss, 1.0, false);
+		}
+
+		/// <summary>
+		/// The shot button pressed (/ac draw normal | move): the bow is drawn. The client roots you while you draw (walks you at
+		/// half speed for a moving shot) and shows the stages: "draw|full|grace|crit|reach|quick|critMs|overMs|kind".
+		/// </summary>
+		public static void StartDraw(GamePlayer player, bool move)
 		{
 			ActionCombatState state = Get(player);
 
@@ -1317,17 +1383,18 @@ namespace DOL.GS
 				return;
 			}
 
+			bool archer = CanSpecBow(player, weapon);
+			string kind = !archer ? "basic" : move ? "move" : "archer";
+			int cost = RangeAttackComponent.DEFAULT_ENDURANCE_COST * (kind == "move" ? 2 : 1);
 			string refusal = null;
 
 			if (!player.IsAlive || player.IsIncapacitated)
 				refusal = "You can't draw your bow now.";
-			else if (crit && player.GetAbilityLevel(Abilities.Critical_Shot) <= 0)
-				refusal = "You haven't learned Critical Shot yet.";
 			else if (player.rangeAttackComponent.UpdateAmmo(weapon) == null)
 				refusal = "You must select a quiver slot to draw from!";
 			else if (!player.rangeAttackComponent.IsAmmoCompatible)
 				refusal = "You can't use your selected quiver slot with this weapon!";
-			else if (player.Endurance < (crit ? RangeAttackComponent.CRITICAL_SHOT_ENDURANCE_COST : RangeAttackComponent.DEFAULT_ENDURANCE_COST))
+			else if (player.Endurance < cost)
 				refusal = "You are too tired to draw your bow!";
 
 			if (refusal != null)
@@ -1337,17 +1404,23 @@ namespace DOL.GS
 				return;
 			}
 
-			// The full draw: the classic shot time (Quickness, archery speed, the critical shot's own draw).
+			// The full draw: the classic shot time (the bow, Quickness, archery speed).
 			RangeAttackComponent ranged = player.rangeAttackComponent;
 			eRangedAttackType before = ranged.RangedAttackType;
-			ranged.RangedAttackType = crit ? eRangedAttackType.Critical : eRangedAttackType.Normal;
-			int full = player.attackComponent.AttackSpeed(weapon);
+			ranged.RangedAttackType = eRangedAttackType.Normal;
+			int full = Math.Max(500, player.attackComponent.AttackSpeed(weapon));
 			ranged.RangedAttackType = before is eRangedAttackType.Critical ? eRangedAttackType.Normal : before;
 
+			bool critKnown = kind == "archer" && player.GetAbilityLevel(Abilities.Critical_Shot) > 0;
+			var stages = StagesFor(full, critKnown, kind);
 			state.Drawing = true;
-			state.DrawCrit = crit;
+			state.DrawCrit = critKnown;
+			state.DrawKind = kind;
 			state.DrawStart = GameLoop.GameLoopTime;
-			state.DrawFullMs = Math.Max(500, full);
+			state.DrawFullMs = full;
+			state.DrawQuickMs = stages.Quick;
+			state.DrawCritMs = stages.Crit;
+			state.DrawOverMs = stages.Over;
 			state.Overdrawing = false;
 			state.DrawTimer?.Stop();
 			state.DrawTimer = new ECSGameTimer(player, DrawTick, DrawTickMs);
@@ -1357,7 +1430,9 @@ namespace DOL.GS
 			if (player.TargetObject is GameLiving aimed)
 				reach -= (player.Z - aimed.Z) / 2;
 
-			Send(player, $"draw|{state.DrawFullMs}|{OverdrawGraceMs}|{(crit ? 1 : 0)}|{reach}");
+			int crit = stages.Crit == int.MaxValue ? 0 : stages.Crit;
+			int over = stages.Over == int.MaxValue ? 0 : stages.Over;
+			Send(player, $"draw|{full}|{OverdrawGraceMs}|{(critKnown ? 1 : 0)}|{reach}|{stages.Quick}|{crit}|{over}|{kind}");
 		}
 
 		private static int DrawTick(ECSGameTimer timer)
@@ -1384,7 +1459,7 @@ namespace DOL.GS
 
 			long held = GameLoop.GameLoopTime - state.DrawStart;
 
-			if (held > state.DrawFullMs + OverdrawGraceMs)
+			if (state.DrawOverMs != int.MaxValue && held > state.DrawOverMs)
 			{
 				// Overdrawn: the arms burn - endurance drains fast, and an empty pool ends it.
 				int drain = Math.Max(2, player.MaxEndurance * 3 / 100);
@@ -1425,10 +1500,7 @@ namespace DOL.GS
 			Send(player, "draw|0");
 		}
 
-		/// <summary>
-		/// The shot button let go (/ac loose): the arrow goes, as good as the draw. Early: weaker and likelier to miss
-		/// (a critical rarely crits). Full: hardly misses (a critical always crits). Overdrawn: far stronger, often misses.
-		/// </summary>
+		/// <summary>The shot button let go (/ac loose): the arrow goes, as good as the draw (StageFor).</summary>
 		public static void Loose(GamePlayer player)
 		{
 			ActionCombatState state = Get(player);
@@ -1437,9 +1509,9 @@ namespace DOL.GS
 				return;
 
 			long held = GameLoop.GameLoopTime - state.DrawStart;
-			bool crit = state.DrawCrit;
-			bool over = state.Overdrawing || held > state.DrawFullMs + OverdrawGraceMs;
 			int full = state.DrawFullMs;
+			string kind = state.DrawKind;
+			var at = (state.DrawQuickMs, state.DrawCritMs, state.Overdrawing ? Math.Min(state.DrawOverMs, (int) held) : state.DrawOverMs);
 			state.Drawing = false;
 			state.Overdrawing = false;
 			state.DrawTimer?.Stop();
@@ -1447,14 +1519,20 @@ namespace DOL.GS
 
 			DbInventoryItem weapon = player.ActiveWeapon;
 			GameLiving target = AttackableTarget(player);
+			double critMod = target != null ? Math.Clamp(2 + (player.EffectiveLevel - target.EffectiveLevel) * 0.075, 1.1, 2.0) : 2.0;
+			Stage? stage = StageFor(held, full, at, kind, critMod);
 			string refusal = null;
 
 			if (player.ActiveWeaponSlot is not eActiveWeaponSlot.Distance || !IsBow(weapon))
 				refusal = "";
+			else if (stage == null)
+				refusal = "You let go before the string was drawn back.";
 			else if (target == null)
 				refusal = "You need a target to shoot at.";
-			else if (!player.IsWithinRadius(target, player.attackComponent.AttackRange))
-				refusal = $"{target.GetName(0, true)} is too far away.";
+			else if (!player.IsWithinRadius(target, (int) (player.attackComponent.AttackRange * stage.Value.Reach)))
+				refusal = stage.Value.Reach < 1.0 && player.IsWithinRadius(target, player.attackComponent.AttackRange)
+					? $"{target.GetName(0, true)} is too far for a quick shot - draw it fully."
+					: $"{target.GetName(0, true)} is too far away.";
 			else if (!player.TargetInView)
 				refusal = $"You can't see {target.GetName(0, false)}.";
 			else if (!player.IsObjectInFront(target, 90))
@@ -1471,21 +1549,19 @@ namespace DOL.GS
 				return;
 			}
 
-			double f = Math.Clamp(held / (double) full, 0.0, 1.0);
-			double critMod = Math.Clamp(2 + (player.EffectiveLevel - target.EffectiveLevel) * 0.075, 1.1, 2.0);
-			ShotNumbers numbers = ShotFor(f, over, crit, critMod);
-			bool critical = crit && Util.Chance(numbers.CritChance);
-			double effectiveness = critical ? numbers.CritEffectiveness : numbers.Effectiveness;
-			double miss = numbers.Miss;
-			string quality = over ? "overdrawn" : f >= 1.0 ? "full" : "early";
+			Stage s = stage.Value;
+			bool critical = s.Critical;
 
-			// The arrow: endurance and ammunition, the release animation, then the hit when it gets there.
+			// The arrow: endurance and ammunition (twice the endurance on the move), the release, then the hit when it lands.
 			RangeAttackComponent ranged = player.rangeAttackComponent;
 			eRangedAttackType type = critical ? eRangedAttackType.Critical : eRangedAttackType.Normal;
 			ranged.RangedAttackType = type;
 			DbInventoryItem ammo = ranged.Ammo;
 			ranged.RemoveEnduranceAndAmmoOnShot();
 			ranged.RangedAttackType = eRangedAttackType.Normal;
+
+			if (kind == "move")
+				player.ChangeEndurance(player, eEnduranceChangeType.Spell, -RangeAttackComponent.DEFAULT_ENDURANCE_COST);
 
 			int ticksToTarget = player.GetDistanceTo(target) * 1000 / RangeAttackComponent.PROJECTILE_FLIGHT_SPEED;
 			byte flightDuration = (byte) (ticksToTarget > 350 ? 1 + (ticksToTarget - 350) / 75 : 1);
@@ -1499,7 +1575,7 @@ namespace DOL.GS
 				viewer.Out.SendCombatAnimation(player, target, (ushort) weapon.Model, 0x00, viewer.Out.BowShoot, flightDuration, 0x00, target.HealthPercent);
 			}
 
-			WeaponAction shot = new(player, target, weapon, effectiveness, full, type, ammo) { ActionMissChance = miss };
+			WeaponAction shot = new(player, target, weapon, s.Effectiveness, full, type, ammo) { ActionMissChance = s.Miss };
 			player.attackComponent.weaponAction = shot;
 			player.Stealth(false);
 
@@ -1509,15 +1585,16 @@ namespace DOL.GS
 				shot.Execute();
 
 			state.NextShotAt = GameLoop.GameLoopTime + ShotDelayMs;
-			Send(player, $"shot|{quality}|{(critical ? 1 : 0)}");
+			Send(player, $"shot|{s.Name}|{(critical ? 1 : 0)}");
 		}
 
 		public readonly record struct ShotNumbers(double Effectiveness, double CritEffectiveness, double CritChance, double Miss);
 
 		/// <summary>
-		/// A shot by its draw: f = share of the full draw (0..1), over = overdrawn. Normal: early 35%..100% damage and
-		/// 3%..53% miss, full 100% / 3%, overdrawn 160% / 40%. Critical: crit chance f^4 early (always when full or
-		/// overdrawn), the critical shot's damage (critMod; x1.3 overdrawn), miss 5%..65% early, 3% full, 45% overdrawn.
+		/// (The two-button draw before the charged shots - kept for its tests.) A shot by its draw: f = share of the full draw
+		/// (0..1), over = overdrawn. Normal: early 35%..100% damage and 3%..53% miss, full 100% / 3%, overdrawn 160% / 40%.
+		/// Critical: crit chance f^4 early (always when full or overdrawn), the critical shot's damage (critMod; x1.3
+		/// overdrawn), miss 5%..65% early, 3% full, 45% overdrawn.
 		/// </summary>
 		public static ShotNumbers ShotFor(double f, bool over, bool crit, double critMod)
 		{

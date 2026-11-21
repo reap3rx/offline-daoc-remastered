@@ -280,7 +280,7 @@ namespace DOL.GS
                 SkillBase.AddScriptedAbility(rally, Specs.Regrowth, RallyAt[i], Warden, i + 1);
             var wheel = new DbAbility
             {
-                KeyName = WheelKey, Name = WheelKey, IconID = 0, InternalID = 3915, AbilityID = 3915,
+                KeyName = WheelKey, Name = WheelKey, IconID = 228, InternalID = 3915, AbilityID = 3915,
                 Description = "Put it on your bar. Tap it: the song that fits the moment (healing when your group is hurt, the Dirge in a " +
                     "fight, power, endurance or speed otherwise). Hold it: a wheel of your songs - point at one and let go.",
             };
@@ -366,7 +366,7 @@ namespace DOL.GS
 
         sealed class KitState
         {
-            public long BulwarkReady, MendReady, CrescendoAt;
+            public long BulwarkReady, MendReady, CrescendoAt, MusicReady;
             public int Crescendo;
             public bool CrescendoTicking;
         }
@@ -455,6 +455,33 @@ namespace DOL.GS
         }
 
         // ------------------------------------------------------------------ the Bard: music answers an evade
+
+        public const int MusicCooldownMs = 1500, MusicDodgeReach = 400;
+
+        /// <summary>Music of Evasion at most once every MusicCooldownMs (an evade and the dodge that made it count once).</summary>
+        public static void MusicEvadeGated(GameLiving bard, GameLiving attacker)
+        {
+            KitState s = State(bard);
+            long now = GameLoop.GameLoopTime;
+            if (now < s.MusicReady)
+                return;
+            s.MusicReady = now + MusicCooldownMs;
+            MusicEvade(bard, attacker);
+        }
+
+        /// <summary>ActionCombat.PressDodge: a Bard's dodge with a monster on it (owner 2026-11-20: "Music of evasion isn't
+        /// doing anything after multiple dodges" - a dodge that slips out of reach evades nothing, so the music answers the
+        /// dodge itself while something near is attacking you).</summary>
+        public static void OnDodge(GamePlayer p)
+        {
+            if (ClassOf(p) != Bard || !p.IsAlive || !p.InCombat)
+                return;
+            GameNPC foe = p.GetNPCsInRadius(MusicDodgeReach).Cast<GameNPC>()
+                .Where(n => n.IsAlive && n.TargetObject == p && GameServer.ServerRules.IsAllowedToAttack(p, n, true))
+                .OrderBy(n => n.GetDistanceTo(p)).FirstOrDefault();
+            if (foe != null)
+                MusicEvadeGated(p, foe);
+        }
 
         public static void MusicEvade(GameLiving bard, GameLiving attacker)
         {
@@ -580,7 +607,7 @@ namespace DOL.GS
                 else if (cls == Warden && parried && (timed || dice))
                     VerdantMend(d);
                 else if (cls == Bard && evaded)
-                    MusicEvade(d, a);
+                    MusicEvadeGated(d, a);
             }
             catch (Exception e)
             {

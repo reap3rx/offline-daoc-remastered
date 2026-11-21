@@ -85,13 +85,19 @@ var _layer: CanvasLayer
 var hud: Control
 var _show := {}                        # part -> shown
 var _offset := {}                      # movable part -> offset from the screen centre
-# archery: a shot being drawn (Shot / Critical Shot held), as the server timed it
+# archery: a shot being drawn, as the server timed it (owner 2026-11-20: charged shots - one button held through
+# Quick -> Standard -> Critical -> Overdraw; the second button shoots on the move at half speed)
 const SHOT_DELAY_MS := 1000            # at least this long between shots (ActionCombat.ShotDelayMs)
 var _shot_ready_at := 0
 var _draw_pending := ""                # a shot button pressed while recovering: drawn as soon as it may
 var _drawing := false
-var _draw_button := ""                 # "ac_shot" / "ac_crit_shot": the one whose release looses it
-var _draw_crit := false
+var _draw_button := ""                 # "ac_shot" / "ac_crit_shot" (the moving shot): the one whose release looses it
+var _draw_crit := false                # the critical stage is in reach (Critical Shot known)
+var _draw_move := false                # a moving shot: walking at half speed, up to a standard shot
+var _draw_quick := 0                   # ms to the quick point (a shot can go)
+var _draw_crit_ms := 0                 # ms to the critical stage (0: none)
+var _draw_over_ms := 0                 # ms to the overdraw (0: none)
+var _draw_kind := "archer"             # archer / basic (no bow spec: a pulling shot) / move
 var _draw_at := 0                      # when the draw began (msec)
 var _draw_full := 0                    # ms to full draw (0: the server hasn't answered yet)
 var _draw_grace := 1200                # held this long past full, the bow overdraws
@@ -226,18 +232,25 @@ func on_line(text: String) -> void:
 				_draw_grace = int(f[2]) if f.size() > 2 else 1200
 				_draw_crit = f.size() > 3 and f[3] == "1"
 				_draw_reach = int(f[4]) if f.size() > 4 else 0
+				_draw_quick = int(f[5]) if f.size() > 5 else _draw_full
+				_draw_crit_ms = int(f[6]) if f.size() > 6 else 0
+				_draw_over_ms = int(f[7]) if f.size() > 7 else _draw_full + _draw_grace
+				_draw_kind = String(f[8]) if f.size() > 8 else "archer"
+				if _player() and _player().has_method("bow_retime"):
+					# the string comes back as the shot becomes ready (Quickness, Dexterity, the bow: the server's times)
+					_player().bow_retime(_draw_quick / 1000.0, (Time.get_ticks_msec() - _draw_at) / 1000.0)
 			elif _drawing:
 				_end_draw(false)
 			elif _player():
 				_player().bow_release(false)              # (refused as it was loosed: the aim lowered)
 		"overdraw":
 			_overdraw = true
-		"shot":                                          # shot|early / full / overdrawn|critical
+		"shot":                                          # shot|quick / full / critical / overdrawn|critical
 			if f.size() > 2:
-				if f[2] == "1":
-					_flash("CRITICAL SHOT!", Color(1.0, 0.85, 0.3))
-				elif f[1] == "overdrawn":
+				if f[1] == "overdrawn":
 					_flash("OVERDRAWN!", Color(1.0, 0.4, 0.3))
+				elif f[2] == "1":
+					_flash("CRITICAL SHOT!", Color(1.0, 0.85, 0.3))
 				elif f[1] == "full":
 					_flash("FULL DRAW", Color(0.85, 0.95, 1.0))
 		"poisons":                                       # poisons|set|model~count~name x4 (PoisonBag.SendState)
@@ -859,7 +872,8 @@ func _input(event: InputEvent) -> void:
 	var mouse := event is InputEventMouseButton
 	var echo: bool = event is InputEventKey and event.is_echo()
 	if not echo and not (mouse and p.action_cursor) and _ranged():
-		# a bow / crossbow out: Shot and Critical Shot draw while held and loose when let go
+		# a bow / crossbow out: Shot (charged: quick, standard, critical, overdraw) and the moving shot draw while held and
+		# loose when let go
 		for id in ["ac_shot", "ac_crit_shot"]:
 			if Keybinds.matches(event, id) and (mouse or event is InputEventKey):
 				if event.is_pressed():
@@ -973,7 +987,7 @@ func pad_attack(down: bool) -> void:
 		_attack_up(now)
 
 
-## LT: parry / block (sheathed: the first press draws) - a bow out: the critical shot.
+## LT: parry / block (sheathed: the first press draws) - a bow out: the moving shot (half speed, double endurance).
 func pad_defend(down: bool) -> void:
 	if _can_ward and not _ranged():
 		_ward(down)                                        # a caster holds LT: the Mana Shield
@@ -1392,13 +1406,16 @@ func _start_draw(button: String) -> void:
 		viewer._set_server_attack(true, false)            # the bow in hand (attack mode itself never auto-fires here)
 	_drawing = true
 	_draw_button = button
-	_draw_crit = button == "ac_crit_shot"
+	_draw_move = button == "ac_crit_shot"
+	_draw_crit = false
 	_draw_at = Time.get_ticks_msec()
 	_draw_full = 0
+	_draw_quick = 0
 	_overdraw = false
 	p.aiming = true
+	p.aim_move = _draw_move
 	p.bow_draw()
-	Server.command("/ac draw crit" if _draw_crit else "/ac draw normal")
+	Server.command("/ac draw move" if _draw_move else "/ac draw normal")
 
 
 func _loose() -> void:
@@ -1419,6 +1436,7 @@ func _end_draw(loosed: bool) -> void:
 	var p := _player()
 	if p:
 		p.aiming = false
+		p.aim_move = false
 		if not loosed:
 			p.bow_release(false)
 
@@ -2230,25 +2248,50 @@ func _draw_hud() -> void:
 		var r := clampf(float(now - _atk_at) / float(maxi(1, _style_at - _atk_at)), 0.0, 1.0)
 		hud.draw_arc(c, 16.0, 0.0, TAU, 40, Color(0, 0, 0, 0.3), 2.0)
 		hud.draw_arc(c, 16.0, -PI * 0.5, -PI * 0.5 + TAU * r, 40, Color(1, 1, 1, 0.45), 2.0)
-	# the bow's draw: a ring filling around the crosshair - gold when fully drawn, then red as it overdraws
+	# the bow's draw: a ring filling around the crosshair through its stages - white to the quick point (a quick shot
+	# can go), pale blue to the full draw (a standard shot), gold for the critical, then red as it overdraws; a basic
+	# pulling shot (no bow spec) and a moving shot stop at their last stage
 	if _drawing and _show.get("draw", true):
 		var held := now - _draw_at
 		var full := float(_draw_full) if _draw_full > 0 else 1.0e9
-		var fill := clampf(held / full, 0.0, 1.0)
+		var quick := float(_draw_quick) if _draw_quick > 0 else full
+		var crit := float(_draw_crit_ms) if _draw_crit_ms > 0 else -1.0
+		var over := float(_draw_over_ms) if _draw_over_ms > 0 else -1.0
 		var r := 26.0
+		var stage := ""
 		hud.draw_arc(c, r, 0.0, TAU, 48, Color(0, 0, 0, 0.35), 4.0)
-		if held < full:
-			hud.draw_arc(c, r, -PI * 0.5, -PI * 0.5 + TAU * fill, 48, Color(1, 1, 1, 0.85), 3.0)
-		elif held < full + _draw_grace and not _overdraw:
-			hud.draw_arc(c, r, 0.0, TAU, 48, Color(1.0, 0.82, 0.3), 3.5)          # full draw: loose now
+		if _draw_kind == "basic":
+			var fb := clampf(held / quick, 0.0, 1.0)
+			if held < quick:
+				hud.draw_arc(c, r, -PI * 0.5, -PI * 0.5 + TAU * fb, 48, Color(1, 1, 1, 0.85), 3.0)
+			else:
+				hud.draw_arc(c, r, 0.0, TAU, 48, Color(0.85, 0.95, 1.0), 3.5)
+				stage = "READY"
+		elif held < quick:
+			hud.draw_arc(c, r, -PI * 0.5, -PI * 0.5 + TAU * clampf(held / full, 0.0, 1.0), 48, Color(1, 1, 1, 0.55), 3.0)
+		elif held < full:
+			hud.draw_arc(c, r, -PI * 0.5, -PI * 0.5 + TAU * clampf(held / full, 0.0, 1.0), 48, Color(0.75, 0.9, 1.0, 0.95), 3.0)
+			stage = "QUICK"
+		elif (over < 0.0 or held < over) and not _overdraw and (crit < 0.0 or held < crit):
+			hud.draw_arc(c, r, 0.0, TAU, 48, Color(0.85, 0.95, 1.0), 3.5)
+			if crit > 0.0:
+				hud.draw_arc(c, r + 6.0, -PI * 0.5, -PI * 0.5 + TAU * clampf((held - full) / (crit - full), 0.0, 1.0), 48,
+						Color(1.0, 0.82, 0.3, 0.8), 2.0)
+			stage = "STANDARD"
+		elif (over < 0.0 or held < over) and not _overdraw:
+			hud.draw_arc(c, r, 0.0, TAU, 48, Color(1.0, 0.82, 0.3), 3.5)          # the critical stage: loose now
+			stage = "CRITICAL"
 		else:
-			var o := clampf((held - full - _draw_grace) / 2500.0, 0.0, 1.0)
+			var o := clampf((held - over) / 2500.0, 0.0, 1.0)
 			var pulse := 0.6 + 0.4 * sin(now * 0.02)
 			hud.draw_arc(c, r, 0.0, TAU, 48, Color(1.0, 0.82 * (1.0 - o), 0.3 * (1.0 - o), pulse), 3.5 + 2.0 * o)
 			hud.draw_arc(c, r + 6.0, -PI * 0.5, -PI * 0.5 + TAU * o, 48, Color(1.0, 0.2, 0.15, 0.9), 2.5)
-		if _draw_crit:
-			hud.draw_string(font, c + Vector2(-60, r + 22.0), "CRITICAL SHOT", HORIZONTAL_ALIGNMENT_CENTER, 120.0, 11,
-					Color(1.0, 0.85, 0.35, 0.9))
+			stage = "OVERDRAW"
+		if _draw_move:
+			stage = ("MOVING " + stage).strip_edges()
+		if stage != "":
+			hud.draw_string(font, c + Vector2(-60, r + 22.0), stage, HORIZONTAL_ALIGNMENT_CENTER, 120.0, 11,
+					Color(1.0, 0.85, 0.35, 0.9) if stage.ends_with("CRITICAL") else Color(0.9, 0.95, 1.0, 0.9))
 		# out of the bow's reach (the server's own range: the bow's type, Archery Range, the arrows, height): said here
 		var tgt = viewer.npcs.target if viewer and viewer.npcs else null
 		if _draw_reach > 0 and is_instance_valid(tgt):

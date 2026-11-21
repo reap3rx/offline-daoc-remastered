@@ -70,7 +70,7 @@ var _cast_fill: ColorRect
 var _cast_name: Label
 var _effects_bar: HBoxContainer
 var _debuffs_bar: HBoxContainer              # (debuffs, DoTs, bleeds: their own row over the buffs - _refresh_effects)
-var _effects_box: VBoxContainer
+var _effects_box: VBoxContainer            # (unused since 2026-11-20 - the debuff row follows the buff row instead)
 var npc_dialog: NpcDialog
 var social_menu: Control                     # the interact menu (social_menu.gd: hold Interact on a bot, your pet)
 var trainer: TrainerWindow
@@ -583,8 +583,8 @@ func set_style(style: String, save := true) -> void:
 				w.restore(defaults[id][1])
 		if windows.has("minipet") and not PlayerData.pet.is_empty():
 			windows["minipet"].show_window()
-		if _effects_box:
-			_effects_box.position = client_pos(10, 4)
+		if _effects_bar:
+			_effects_bar.position = client_pos(10, 4)
 		_place_event_tracker()
 
 
@@ -1418,19 +1418,17 @@ func _build_cast_bar() -> void:
 	# the client's spell effect icons: top left (default800.ini SpellEffect=10,4), each with its time left
 	# debuffs, DoTs and bleeds in their own row over the buffs, framed red (owner 2026-11-20: "Make debuffs/bleeds/DoTs
 	# be on a different line above the buffs on the UI, so they stand out")
-	_effects_box = VBoxContainer.new()
-	_effects_box.position = client_pos(10, 4)
-	_effects_box.add_theme_constant_override("separation", 2)
-	_effects_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(_effects_box)
+	# (owner 2026-11-20: the buff row stays where the HUD puts it - over the right quickbar - and the debuff row rides
+	# just above it: _place_debuffs, every frame; a container holding both had put them at the top left)
+	_effects_bar = HBoxContainer.new()
+	_effects_bar.position = client_pos(10, 4)
+	_effects_bar.add_theme_constant_override("separation", 4)
+	_effects_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(_effects_bar)
 	_debuffs_bar = HBoxContainer.new()
 	_debuffs_bar.add_theme_constant_override("separation", 4)
 	_debuffs_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_effects_box.add_child(_debuffs_bar)
-	_effects_bar = HBoxContainer.new()
-	_effects_bar.add_theme_constant_override("separation", 4)
-	_effects_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_effects_box.add_child(_effects_bar)
+	root.add_child(_debuffs_bar)
 	PlayerData.effects_changed.connect(_refresh_effects)
 	PlayerData.changed.connect(func():                      # constitution lost / restored shows or hides its icon
 		if (PlayerData.con_lost > 0) != _con_icon_shown:
@@ -1715,7 +1713,15 @@ func _effect_box(icon: int, border: int, tip: String, index: int, fx := -1, debu
 	_effect_rows.append([ic, t, index])
 
 
+## The debuff row just over the buff row, wherever the HUD (or EDIT UI) put that.
+func _place_debuffs() -> void:
+	if _debuffs_bar and _effects_bar:
+		_debuffs_bar.visible = _debuffs_bar.get_child_count() > 0 and _effects_bar.is_visible_in_tree()
+		_debuffs_bar.position = _effects_bar.position - Vector2(0, _debuffs_bar.size.y + 2.0)
+
+
 func _tick_effects() -> void:
+	_place_debuffs()
 	if _effect_rows.is_empty():
 		return
 	var effs := _player_effects()

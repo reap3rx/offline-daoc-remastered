@@ -139,6 +139,7 @@ var action_mode := false
 const FREE_TURN_RATE := 12.0             # action combat free look: how fast the body turns to where you run
 var action_cursor := false
 var aiming := false                     # drawing a bow in action combat: you stand to shoot (turning still aims)
+var aim_move := false                   # ... a moving shot: you walk at half speed while drawing (owner 2026-11-20)
 var _defend_clip := ""                  # the parry / block / evade you just tried (a blow landing cuts it off)
 var _defend_slow_left := 0.0            # ... and while it plays you move at half speed
 var cam_kick := 0.0                      # a landed blow's small camera jolt (decays)
@@ -510,6 +511,19 @@ func bow_draw() -> void:
 	leave_mount()
 	_one_shot(_ranged() + "_ready")
 	_bow_hold = true
+
+
+## The draw timed to the server's (ActionCombat: the quick point, from the bow, Quickness and Dexterity): the string
+## comes back as a shot becomes ready - the draw clip sped up or slowed to end then (owner 2026-11-20: "It must be
+## dynamic").
+func bow_retime(total_s: float, elapsed_s: float) -> void:
+	var clip := _ranged() + "_ready"
+	if _anim == null or _action != clip or String(_anim.current_animation) != clip:
+		return
+	var left_clip := maxf(0.05, clip_seconds(clip) - _anim.current_animation_position)
+	var left_time := maxf(0.1, total_s - elapsed_s)
+	_anim.speed_scale = clampf(left_clip / left_time, 0.25, 4.0)
+	_action_left = left_time
 
 
 func bow_release(fired: bool) -> void:
@@ -1829,7 +1843,7 @@ func _physics_step(delta: float) -> void:
 		wish = free_dir * wish.length()                 # free look: straight where you steer while the body turns to it
 	_defend_slow_left = maxf(0.0, _defend_slow_left - delta)
 	if aiming and action_mode:
-		wish = Vector3.ZERO
+		wish = wish * 0.5 if aim_move else Vector3.ZERO
 	if _dash_left > 0.0:                              # a dodge: a short burst on top of the run (Action Combat)
 		_dash_left -= delta
 		wish += _dash * clampf(_dash_left / 0.22, 0.0, 1.0)

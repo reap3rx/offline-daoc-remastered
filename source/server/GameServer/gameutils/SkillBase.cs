@@ -2129,6 +2129,23 @@ namespace DOL.GS
 			}
 		}
 
+		/// <summary>Every specialization stops teaching an ability (Archery: Rapid Fire is the quick shot now). How many rows went.</summary>
+		public static int RemoveAbilityEverywhere(string abilityKey)
+		{
+			m_syncLockUpdates.EnterWriteLock();
+			try
+			{
+				int n = 0;
+				foreach (List<Tuple<string, byte, int, int>> list in m_specsAbilities.Values)
+					n += list.RemoveAll(t => t.Item1 == abilityKey);
+				return n;
+			}
+			finally
+			{
+				m_syncLockUpdates.ExitWriteLock();
+			}
+		}
+
 		/// <summary>An ability's database row by its key (null if unknown) - to teach it again elsewhere (HibernianKits).</summary>
 		public static DbAbility GetDbAbility(string keyName)
 		{

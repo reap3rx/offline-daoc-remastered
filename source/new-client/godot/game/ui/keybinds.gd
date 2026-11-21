@@ -70,8 +70,8 @@ func _ready() -> void:
 	# purpose - in action combat A / D strafe and Q / E are free; R (Reply) is taken only while it is on.
 	for ac in [["action_toggle", "Action Combat On / Off", ["F9"]],
 			["ac_attack", "Action: Attack (tap swing, hold anytime style)", ["Left Mouse"]],
-			["ac_shot", "Action: Bow Shot (hold to draw, release to loose)", ["Left Mouse"]],
-			["ac_crit_shot", "Action: Critical Shot (hold to draw)", ["Right Mouse"]],
+			["ac_shot", "Action: Bow Shot (hold to charge: quick, standard, critical, overdraw; release to loose)", ["Left Mouse"]],
+			["ac_crit_shot", "Action: Moving Shot (hold to draw while walking; double endurance)", ["Right Mouse"]],
 			["ac_parry", "Action: Parry / Block", ["Right Mouse"]],
 			["ac_parry_only", "Action: Parry (not block, with a shield)", ["Shift+Right Mouse"]],
 			["ac_position", "Action: Position Style", ["Q"]],

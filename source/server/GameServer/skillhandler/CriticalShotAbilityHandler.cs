@@ -11,6 +11,13 @@ namespace DOL.GS.SkillHandler
 	{
 		public void Execute(Ability ab, GamePlayer player)
 		{
+			if (ActionCombat.IsActive(player))
+			{
+				player.Out.SendMessage("Critical Shot is part of your draw now: hold your shot past the full draw (the ring turns gold).",
+					eChatType.CT_System, eChatLoc.CL_SystemWindow);
+				return;
+			}
+
 			if (player.ActiveWeaponSlot != eActiveWeaponSlot.Distance)
 			{
                 player.Out.SendMessage(LanguageMgr.GetTranslation(player.Client.Account.Language, "Skill.Ability.CannotUse.CriticalShot.NoRangedWeapons"), eChatType.CT_Important, eChatLoc.CL_SystemWindow);

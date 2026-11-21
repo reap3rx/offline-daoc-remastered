@@ -2011,6 +2011,10 @@ namespace DOL.GS.PacketHandler.Client.v168
 		public static string DelveSong(GameClient client, int id)
 		{
 			Spell spell = SkillBase.GetSpellByTooltipID((ushort) id);
+
+			if (spell == null)                         // (a song made in code has no tooltip id - HibernianKits' Dirge, Hymn)
+				return $"(Spell (Index \"{(ushort) id}\") (Name \"(not found)\"))";
+
 			ISpellHandler spellHandler = ScriptMgr.CreateSpellHandler(client.Player, spell, SkillBase.GetSpellLine(GlobalSpellsLines.Reserved_Spells));
 
 			if (spellHandler == null)

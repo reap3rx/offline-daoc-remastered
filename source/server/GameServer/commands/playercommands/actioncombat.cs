@@ -88,7 +88,7 @@ namespace DOL.GS.Commands
 					CasterCounter.Release(player);
 					break;
 				case "draw":
-					ActionCombat.StartDraw(player, args.Length > 2 && args[2].ToLowerInvariant() == "crit");
+					ActionCombat.StartDraw(player, args.Length > 2 && args[2].ToLowerInvariant() == "move");   // (crit: the same charged draw)
 					break;
 				case "loose":
 					ActionCombat.Loose(player);
