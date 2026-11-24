@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -63,12 +63,24 @@ namespace DOL.GS
             public ushort Region;
             public int X, Y, Z;
             public ushort Heading;
+            /// <summary>The start choices' screen text (owner 2026-11-22: starting-zone choice at character creation): the
+            /// zone, its rating (peaceful / wild) and a line about it. The hub's are optional.</summary>
+            public string Zone, Rating, Blurb;
+            /// <summary>The realm's hard start (owner 2026-11-24: "one deadly zone being a starting location for the crazies" -
+            /// one per realm, in a Deadly zone's gentlest corner, labelled on the create screen): the tryhard bots favour it,
+            /// and it is given a class trainer (Trainer: x, y, z, heading) and a bind point (Bind: x, y, z) where the old world
+            /// has none (HardStarts.cs).</summary>
+            public bool Hard;
+            public int[] Trainer, Bind;
         }
 
         public sealed class Config
         {
             public bool Enabled = true;
             public Dictionary<string, Start> Starts = new();
+            /// <summary>More starting towns a new character may pick, per realm, after the hub (choice 0): choice n is
+            /// start_choices[realm][n - 1]. New bots are spread over all of them. Each is a level anchor too.</summary>
+            [JsonProperty("start_choices")] public Dictionary<string, List<Start>> StartChoices = new();
             [JsonProperty("gradient_weight")] public double GradientWeight = 0.65;
             [JsonProperty("boss_margin")] public int BossMargin = 8;
             [JsonProperty("boss_extra_max")] public int BossExtraMax = 6;
@@ -205,6 +217,7 @@ namespace DOL.GS
             foreach (var kv in _config.Zones)
                 if (ushort.TryParse(kv.Key, out ushort id))
                     _bands[id] = kv.Value;
+            AddStartAnchors(_config);
             // the zones' original levels and distances, from the database (as the world loads them)
             var levels = new Dictionary<ushort, List<int>>();
             var dist = new Dictionary<ushort, ZoneStats>();
@@ -270,6 +283,50 @@ namespace DOL.GS
             return _config?.Enabled == true && _config.Starts != null && _config.Starts.TryGetValue(((int) realm).ToString(), out Start s) &&
                    s != null && s.Region > 0 ? s : null;
         }
+
+        /// <summary>Every starting town of the realm, in the create screen's order: the hub first, then start_choices.
+        /// Empty when the bands are off.</summary>
+        public static IReadOnlyList<Start> StartsOf(eRealm realm)
+        {
+            Ensure();
+            return _config?.Enabled == true ? StartsOf(_config, realm) : Array.Empty<Start>();
+        }
+
+        /// <summary>The start a new character picked (0 the hub); an unknown choice is the hub.</summary>
+        public static Start StartChoice(eRealm realm, int choice)
+        {
+            IReadOnlyList<Start> all = StartsOf(realm);
+            return choice >= 0 && choice < all.Count ? all[choice] : StartOf(realm);
+        }
+
+        public static IReadOnlyList<Start> StartsOf(Config c, eRealm realm)
+        {
+            var all = new List<Start>();
+            string key = ((int) realm).ToString();
+            if (c?.Starts != null && c.Starts.TryGetValue(key, out Start hub) && hub != null && hub.Region > 0)
+                all.Add(hub);
+            else
+                return all;                                  // no hub: the database's StartupLocation as ever, no choices
+            if (c.StartChoices != null && c.StartChoices.TryGetValue(key, out List<Start> more) && more != null)
+                all.AddRange(more.Where(s => s != null && s.Region > 0));
+            return all;
+        }
+
+        /// <summary>Each start choice is a level anchor (the levels grow outward from every starting town), unless an
+        /// anchor already stands within 2000 units of it.</summary>
+        public static void AddStartAnchors(Config c)
+        {
+            if (c?.StartChoices == null)
+                return;
+            c.Anchors ??= new List<Anchor>();
+            foreach (List<Start> list in c.StartChoices.Values)
+                foreach (Start s in list ?? new List<Start>())
+                    if (s != null && s.Region > 0 && !c.Anchors.Any(a => a.Region == s.Region &&
+                            (double) (a.X - s.X) * (a.X - s.X) + (double) (a.Y - s.Y) * (a.Y - s.Y) < 2000.0 * 2000.0))
+                        c.Anchors.Add(new Anchor { Name = s.Name, Region = s.Region, X = s.X, Y = s.Y });
+        }
+
+        public static Config Parse(string json) => JsonConvert.DeserializeObject<Config>(json);
 
         /// <summary>A monster's level in the database, before the bands (its live level when not banded).</summary>
         public static byte UnbandedLevel(GameNPC npc) => npc?.UnbandedLevel > 0 ? npc.UnbandedLevel : npc?.Level ?? 0;

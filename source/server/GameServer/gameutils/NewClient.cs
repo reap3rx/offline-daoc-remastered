@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Runtime.CompilerServices;
 using System.Text;
 using DOL.GS.PacketHandler;
@@ -50,6 +53,43 @@ namespace DOL.GS
             byte[] b = Encoding.UTF8.GetBytes(line);
             if (b.Length > 60000)
                 return;                                        // (a packet's size is a u16; nothing sent is near it)
+            if (b.Length > MaxPiece)
+            {
+                // a packet over 2048 bytes is thrown away on the way out (PacketProcessor.ValidatePacketSize; the owner's
+                // second /zmark window, 2026-11-21): a long line goes in pieces, "#PART|id|i|n|piece", put back together
+                // by the client (server_world.gd) and handled whole
+                List<string> pieces = Split(line, MaxPiece);
+                int id = Interlocked.Increment(ref _partId);
+                for (int i = 0; i < pieces.Count; i++)
+                    SendRaw(p, Encoding.UTF8.GetBytes($"#PART|{id}|{i}|{pieces.Count}|{pieces[i]}"));
+                return;
+            }
+            SendRaw(p, b);
+        }
+
+        const int MaxPiece = 1800;
+        static int _partId;
+
+        /// <summary>Cut a line into pieces of at most <paramref name="maxBytes"/> UTF-8 bytes, never inside a character.</summary>
+        public static List<string> Split(string line, int maxBytes)
+        {
+            var pieces = new List<string>();
+            int start = 0;
+            while (start < line.Length)
+            {
+                int len = Math.Min(line.Length - start, maxBytes);
+                while (len > 1 && Encoding.UTF8.GetByteCount(line.AsSpan(start, len)) > maxBytes)
+                    len--;
+                if (len > 1 && start + len < line.Length && char.IsHighSurrogate(line[start + len - 1]))
+                    len--;
+                pieces.Add(line.Substring(start, len));
+                start += len;
+            }
+            return pieces;
+        }
+
+        static void SendRaw(GamePlayer p, byte[] b)
+        {
             using var pak = PooledObjectFactory.GetForTick<GSTCPPacketOut>().Init(LineCode);
             pak.WriteByte(KindLine);
             pak.WriteShort((ushort) b.Length);

@@ -1264,9 +1264,9 @@ namespace DOL.GS
 
                     damage *= LevelScaling.DamageFactor(ad.Attacker, ad.Target);   // GW2-style scaling down (LevelScaling.cs)
                     damage *= MonsterMoves.HitFactor(ad);   // a monster's style / heavy blow (MonsterMoves.cs)
-                    ad.Damage = (int) damage;
+                    ad.Damage = LevelScaling.Whole(damage, ad.ActionDamageFactor > 0);   // a hit always does some (LevelScaling.Whole)
                     ad.Modifier = (int) Math.Floor(resistModifier);
-                    ad.CriticalChance = CalculateCriticalChance(action);
+                    ad.CriticalChance = HibernianHybrids.CritChance(ad, CalculateCriticalChance(action));   // (an opener on an Exposed foe)
                     ad.CriticalDamage = CalculateCriticalDamage(ad);
 
                     if (actionPartial)
@@ -1315,6 +1315,9 @@ namespace DOL.GS
                 ActionCombat.OnDefended(actionTarget, ad);
 
             HibernianKits.AfterDefense(ad);   // a Warden's block / parry, a Bard's evade
+            HibernianHybrids.AfterDefense(ad);   // a Nightshade's Voidstep, a Valewalker's Reap
+            AlbionKits.AfterDefense(ad);
+            MidgardKits.AfterDefense(ad);        // a Warrior's Iron Stand, a Shadowblade's Hel's Mist         // a Friar's Blessed Guard / Light Feet, a Reaver's Riposte, an Infiltrator's Slip Away, Opportunist
             MonsterTiers.AfterBlow(ad);       // pressing the attack on a green or blue
 
             // Action Combat: a monster turning aside an action player's STYLE makes them stumble.
@@ -1687,6 +1690,8 @@ namespace DOL.GS
                 intercept = null;
                 brittleguard = null;
             }
+            else if (HibernianHybrids.Ambush(ad))
+                defenseDisabled = true;      // a Nightshade's first blow from stealth (Ambush)
 
             if (playerOwner != null)
             {
@@ -1737,6 +1742,13 @@ namespace DOL.GS
             }
 
             ad.DefensePenetration = ad.Attacker.attackComponent.CalculateDefensePenetration(ad.Weapon, ad.Target.Level);
+
+            // A Valewalker's Nature's Shield: arrows and bolts from in front turned aside (HibernianHybrids).
+            if (HibernianHybrids.NatureShieldBlocks(owner, ad))
+            {
+                ad.BlockChance = 100;
+                return eAttackResult.Blocked;
+            }
 
             // Action Combat: an action-mode defender's evade / parry / block are timed presses, not dice.
             bool actionDefender = playerOwner != null && ActionCombat.IsActive(playerOwner);

@@ -78,7 +78,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public virtual bool UnstealthCasterOnStart
 		{
-			get { return true; }
+			get { return !HibernianHybrids.QuietSpell(Caster, Spell) && !AlbionKits.QuietSpell(Caster, Spell); }   // (a Nightshade's Dart of Night, a Minstrel's Unseen Song)
 		}
 		
 		/// <summary>
@@ -86,7 +86,7 @@ namespace DOL.GS.Spells
 		/// </summary>
 		public virtual bool UnstealthCasterOnFinish
 		{
-			get { return true; }
+			get { return !HibernianHybrids.QuietSpell(Caster, Spell) && !AlbionKits.QuietSpell(Caster, Spell); }
 		}
 		
 		protected DbInventoryItem m_spellItem = null;
@@ -1306,6 +1306,8 @@ namespace DOL.GS.Spells
 		/// <returns>effective casting time in milliseconds</returns>
 		public virtual int CalculateCastingTime()
 		{
+			if (AlbionKits.TempoInstant(m_caster, Spell))
+				return 0;                                   // (a Minstrel's full Tempo: the mesmerize or stun is instant)
 			return m_caster.CalculateCastingTime(this);
 		}
 
@@ -1972,6 +1974,15 @@ namespace DOL.GS.Spells
 							}
 						}
 					}
+
+					// (owner 2026-11-23, Bugs & Fixes: "Player Bard/other auras and Spells should affect nearby bots/npcs.
+					// Bot's do. They should also affect event NPCs") - a player's helpful group spell (a song, an aura, a
+					// group heal or buff) also reaches the realm's bots, an event's people and the Host's soldiers near them
+					if (m_caster is GamePlayer && !Spell.IsHarmful && spellRange > 0)
+						foreach (GameNPC near in m_caster.GetNPCsInRadius((ushort) Math.Min(65000, spellRange)))
+							if (near.IsAlive && near.Realm == m_caster.Realm && !list.Contains(near) &&
+								(near is GameBot || near is DOL.GS.DynamicEvents.EventNpc { IsEnemy: false } || near is DOL.GS.DynamicEvents.LugSoldier))
+								list.Add(near);
 
 					break;
 				}
@@ -3283,7 +3294,7 @@ namespace DOL.GS.Spells
 				criticalDamage = (int) (finalDamage * criticalMod);
 			}
 
-			ad.Damage = (int) finalDamage;
+			ad.Damage = LevelScaling.Whole(finalDamage, finalDamage > 0);   // a spell that lands always does some (LevelScaling.Whole)
 			ad.CriticalDamage = criticalDamage;
 			ad.CriticalChance = criticalChance;
 			ad.Target.ModifyAttack(ad); // Attacked living may modify the attack data. Primarily used for keep doors and components.

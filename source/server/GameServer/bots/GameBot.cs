@@ -1691,6 +1691,7 @@ namespace DOL.GS
             if (!IsAutonomousWorldBot || amount <= 0)
                 return;
             AutonomousRealmPoints += amount;
+            DOL.GS.Reputation.ReputationService.OnRealmPoints(this, amount);   // realm reputation (scripts/reputation)
             RealmLevel = Math.Max(RealmLevel, AutonomousBotRealmPointRewards.RealmLevelFor(AutonomousRealmPoints));
             AutonomousStuckWatchdog.MarkProgress(this, eAutonomousProgressKind.RealmPoints);
             MarkAutonomousStateDirty();

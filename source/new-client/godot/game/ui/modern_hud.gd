@@ -69,7 +69,14 @@ func _load_custom() -> void:
 
 
 ## The pad's bar came up / went away (PadBar): the matching layout.
+## EDIT UI holds one layout while you arrange it (owner 2026-11-23: "it won't auto switch back to the KB/M UI when you
+## use a mouse to move controller UI elements around"): -1 free, 0 keyboard and mouse, 1 controller.
+var lock_mode := -1
+
+
 func set_pad_mode(on: bool) -> void:
+	if lock_mode >= 0:
+		on = lock_mode == 1
 	if on == pad_mode:
 		return
 	pad_mode = on
@@ -224,6 +231,8 @@ func movable() -> Array:
 		out.append(["effects", "YOUR EFFECTS", ui._effects_bar])
 	if ui.windows.has("compass"):
 		out.append(["compass", "COMPASS", ui.windows["compass"]])
+	if ui._channel_bar:                                    # (owner 2026-11-23: "needs to be movable in the edit ui")
+		out.append(["channel", "SPELL CHARGE", ui._channel_bar])
 	return out
 
 
@@ -250,6 +259,10 @@ func _save_custom() -> void:
 	UiArt.save_settings(cfg)
 
 
+const MINIMAP_MS := 100
+var _minimap_at := 0
+
+
 func _process(_delta: float) -> void:
 	var t_live := Time.get_ticks_usec()
 	_process_timed(_delta)
@@ -261,6 +274,9 @@ func _process_timed(_delta: float) -> void:
 		return
 	if Engine.get_process_frames() % 4 == 0:
 		orb.queue_redraw()
+	var now := Time.get_ticks_msec()
+	if now >= _minimap_at:                                 # (about ten times a second, however high the frame rate)
+		_minimap_at = now + MINIMAP_MS
 		minimap.queue_redraw()
 	if Engine.get_process_frames() % 10 == 0:
 		burden.refresh()
@@ -588,14 +604,15 @@ class QuestLog extends Part:
 						break
 				if obj == "":
 					obj = String(q.get("text", "")).split("\n")[0]
-				out.append([JournalWindow.LEVEL_TAIL.sub(String(q.get("name", "")), ""), obj])
+				var qn := String(q.get("name", ""))
+				out.append([JournalWindow.LEVEL_TAIL.sub(qn, ""), obj, JournalWindow.quest_level(qn)])
 		else:
 			for id in PlayerData.quests.keys():
 				var q := QuestDb.quest(String(id))
 				var steps: Array = q.get("steps", [])
 				var n := int(PlayerData.quests[id].get("step", 1))
 				var st: Dictionary = steps[n - 1] if n >= 1 and n <= steps.size() else {}
-				out.append([String(q.get("name", id)), String(st.get("text", ""))])
+				out.append([String(q.get("name", id)), String(st.get("text", "")), 0])
 		return out.slice(0, 6)
 
 	func _draw() -> void:
@@ -623,7 +640,16 @@ class QuestLog extends Part:
 		text(f, Vector2(8, y + 10), "QUESTS", 8, UiArt.DIM)
 		y += 16.0
 		for e in list:
-			text(f, Vector2(8, y + 10), _fit(f, String(e[0]).to_upper(), 9, QUEST_W - 16), 9, UiArt.GOLD_HI)
+			# (the recommended level, con-coloured when it's above you - JournalWindow.level_color)
+			var rec := int(e[2]) if e.size() > 2 else 0
+			var col := JournalWindow.level_color(rec, UiArt.GOLD_HI)
+			if rec > 0:
+				var lv := "LV %d" % rec
+				var lw := f.get_string_size(lv, HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x
+				text(f, Vector2(QUEST_W - 8 - lw, y + 10), lv, 8, col if col != UiArt.GOLD_HI else UiArt.DIM)
+				text(f, Vector2(8, y + 10), _fit(f, String(e[0]).to_upper(), 9, QUEST_W - 24 - lw), 9, col)
+			else:
+				text(f, Vector2(8, y + 10), _fit(f, String(e[0]).to_upper(), 9, QUEST_W - 16), 9, col)
 			y += 13.0
 			if String(e[1]) != "":
 				text(thin, Vector2(14, y + 9), _fit(thin, String(e[1]), 8, QUEST_W - 22), 8, UiArt.CREAM)

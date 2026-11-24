@@ -1,0 +1,184 @@
+{
+ "zone": 202,
+ "region": 200,
+ "realm": 3,
+ "prefix": "rep202",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sentinel's Oath-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 18,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 15
+   },
+   "lore": "The ring a Friend of the Sentinels is given: bronze, with the south road's milestone on it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "South-Road Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 18,
+   "bonuses": {
+    "Dex": 6,
+    "Qui": 6,
+    "Str": 3,
+    "Hits": 15
+   },
+   "lore": "A Sentinel's belt, scuffed from a thousand miles of road."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ceannai Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 26,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 22
+   },
+   "lore": "Bronze, with the town's gate worked into the clasp."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Treaty-Keeper Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 26,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 26,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Stamped with the ogham of the old treaty. It's meant to remind you."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of Ceannai",
+   "base": [
+    41,
+    26
+   ],
+   "level": 30,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 30,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Ceannai blue and silver. Only the Captains of Ceannai wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Well-Friend's Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 18,
+   "bonuses": {
+    "Qui": 6,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 11,
+    "Power": 2
+   },
+   "lore": "A hazelnut on a silver chain. The well's people know it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fili's Reed Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 18,
+   "bonuses": {
+    "Int": 6,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "Woven of marsh reed, the way the filid do it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Nine-Hazel Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 26,
+   "bonuses": {
+    "Emp": 9,
+    "Con": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "Hazel wood from all nine trees, bound in silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Still-Water Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 26,
+   "bonuses": {
+    "Int": 9,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "Glass-smooth stone from the well's bed. It's always cool."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of Connla's Well",
+   "base": [
+    41,
+    26
+   ],
+   "level": 30,
+   "bonuses": {
+    "Emp": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Green and silver, embroidered with hazel leaves. Only the Filid of Connla's Well wear it."
+  }
+ ]
+}

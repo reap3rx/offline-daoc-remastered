@@ -160,6 +160,10 @@ public static class AutonomousBotMapMarkers
                         ShouldRefreshStationaryInterior(interior, now - old.SentAtTick);
             if (send)
                 player.Out.SendMinotaurRelicMapUpdate(markerId, marker.Region, marker.X, marker.Y, marker.Z);
+            if (!previous.ContainsKey(markerId))
+                // the new client's map names the dot (owner 2026-11-23, Bugs & Fixes: hovering a dot should say the bot's
+                // name, not "a gamebot of your realm")
+                NewClient.Send(player, $"#BOTN|{markerId}|{bot.Name}");
             current[markerId] = send ? marker : old;
         }
 

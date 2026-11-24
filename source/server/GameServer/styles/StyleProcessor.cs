@@ -464,7 +464,7 @@ namespace DOL.GS.Styles
 		/// <param name="style">The style to be used</param>
 		/// <param name="weaponSpd">The weapon speed</param>
 		/// <returns>Endurance needed to use style</returns>
-		private static int CalculateEnduranceCost(GameLiving living, Style style, int weaponSpd, bool allowFreeProc = true)
+		internal static int CalculateEnduranceCost(GameLiving living, Style style, int weaponSpd, bool allowFreeProc = true)
 		{
 			// 1.108 - Valhallas Blessing now has a 75% chance to not use endurance.
 			// Apply Valkyrie RA5L effect

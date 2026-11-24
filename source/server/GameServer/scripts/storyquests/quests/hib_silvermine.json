@@ -2,6 +2,20 @@
   "name": "Silvermine Mountains",
   "npcs": [
     {
+      "id": "sm_fionnbarr",
+      "zone": 201,
+      "realm": 3,
+      "name": "Warden-Captain Fionnbarr",
+      "model": 337,
+      "level": 30,
+      "pos": [
+        575,
+        1086
+      ],
+      "guild": "Mine-Wardens of Howth",
+      "idle": "Howth and Ardagh pay us in silver to keep the mines safe. Lately we're earning it."
+    },
+    {
       "id": "breasal",
       "zone": 201,
       "realm": 3,
@@ -10,8 +24,7 @@
       "level": 10,
       "pos": [
         570,
-        1074,
-        136.4
+        1074
       ],
       "idle": "My grandfather raised that circle with his own two hands. Now it's walked off."
     },
@@ -24,8 +37,7 @@
       "level": 14,
       "pos": [
         552,
-        1093,
-        136.4
+        1093
       ],
       "idle": "Cathal went up the mountain to look for silver. The sheevra found him first."
     },
@@ -38,10 +50,105 @@
       "level": 20,
       "pos": [
         580,
-        1066,
-        136.4
+        1066
       ],
       "idle": "The sheevra mine the east slopes. They take what they need. Lately that includes people."
+    },
+    {
+      "id": "sm_maeve",
+      "zone": 201,
+      "realm": 3,
+      "name": "Mine-Steward Maeve",
+      "model": 365,
+      "level": 22,
+      "pos": [
+        815,
+        120
+      ],
+      "guild": "Mine-Wardens of Howth",
+      "idle": "Forty picks, thirty shovels, a dozen lamps. Every one of them stolen this month. Every one."
+    },
+    {
+      "id": "sm_ailbe",
+      "zone": 201,
+      "realm": 3,
+      "name": "Sentinel Ailbe",
+      "model": 337,
+      "level": 16,
+      "pos": [
+        520,
+        615
+      ],
+      "guild": "Mine-Wardens of Howth",
+      "idle": "The road-gang watches us from the trees. We watch them back. It's a very boring war."
+    },
+    {
+      "id": "sm_cliodhna",
+      "zone": 201,
+      "realm": 3,
+      "name": "Muirne of the Rowan",
+      "model": 365,
+      "level": 30,
+      "pos": [
+        500,
+        1448
+      ],
+      "guild": "Order of the Rowan",
+      "idle": "Druids who sell the land's own silver to the Azure Order. I taught some of them. I'll unteach them."
+    },
+    {
+      "id": "sm_ethna",
+      "zone": 201,
+      "realm": 3,
+      "name": "Sister Ethna",
+      "model": 365,
+      "level": 26,
+      "pos": [
+        1200,
+        1170
+      ],
+      "guild": "the Miners' Cairn",
+      "idle": "Forty-one names on the cairn. I say every one of them every night. Some nights they answer."
+    },
+    {
+      "id": "sm_tadhg",
+      "zone": 201,
+      "realm": 3,
+      "name": "Miner Tadhg",
+      "model": 337,
+      "level": 12,
+      "pos": [
+        620,
+        440
+      ],
+      "idle": "Forty tins. FORTY. That badger eats better than I do."
+    },
+    {
+      "id": "sm_senan",
+      "zone": 201,
+      "realm": 3,
+      "name": "Foreman Senan",
+      "model": 337,
+      "level": 18,
+      "pos": [
+        1170,
+        930
+      ],
+      "guild": "Mine-Wardens of Howth",
+      "idle": "Keep your head down on this road. They don't miss much, those archers."
+    },
+    {
+      "id": "sm_fiacc",
+      "zone": 201,
+      "realm": 3,
+      "name": "Trapper Fiacc",
+      "model": 337,
+      "level": 20,
+      "pos": [
+        1150,
+        640
+      ],
+      "idle": "Big as a pony, that badger. I've set traps for him. He eats the traps."
     },
     {
       "id": "cathal",
@@ -52,8 +159,7 @@
       "level": 12,
       "pos": [
         1450,
-        1066,
-        142.1
+        1066
       ],
       "during": [
         "sheevra_mine/s6"
@@ -61,6 +167,358 @@
     }
   ],
   "quests": [
+    {
+      "id": "sm_road_to_howth",
+      "title": "The Road to Howth",
+      "level": 1,
+      "giver": "sm_maeve",
+      "offer": "New to Ardagh? It's not much - a mine-steward, a smith and a lot of wind. The Mine-Wardens hold Howth, down the valley, and that's where the work is.\n\nWill you [carry my letter] to Warden-Captain Fionnbarr in Howth? Keep to the road south. The Stone Fields are on your right - don't stop to look at the stones. They look back.",
+      "accept": "carry my letter",
+      "topics": {},
+      "summary": "Mine-Steward Maeve in Ardagh has a letter for Warden-Captain Fionnbarr in Howth, down the valley.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "sm_fionnbarr",
+          "goal": "Take Maeve's letter to Warden-Captain Fionnbarr in Howth, about 1 km south down the road",
+          "say": "From Maeve? 'Spraggons in the tool-sheds again, send help.' She always says that.\n\nYou walked down from Ardagh on your own? Good. We've need of anyone who can. Look around Howth - there's work for you, and more out in the valley.",
+          "ending": "default",
+          "id": "s1"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Here - for the walk.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 60,
+            "copper_per_level": 53,
+            "marks": 5,
+            "items": [],
+            "choice": []
+          }
+        }
+      }
+    },
+    {
+      "id": "sm_rats_in_the_stores",
+      "title": "Rats in the Stores",
+      "level": 3,
+      "giver": "sm_fionnbarr",
+      "offer": "The miners' stores south of town have rat boys in them - not rats, rat BOYS, those little vermin-men from the south fields. They're eating the miners' flour and chewing the lamp-wicks.\n\nNot the Wardens' proper work, but somebody has to. Will you [clear the stores]?",
+      "accept": "clear the stores",
+      "topics": {},
+      "summary": "Rat boys have got into Howth's mining stores.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            640,
+            1160
+          ],
+          "radius": 40,
+          "goal": "Kill 4 rat boys in the stores, about 80 m south-east of Howth",
+          "target": "rat boy",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 201,
+          "at": [
+            645,
+            1165
+          ],
+          "goal": "Search the gnawed sacks in the stores (click the glinting spot)",
+          "clue": {
+            "name": "a gnawed flour sack",
+            "model": 1347
+          },
+          "text": "Flour everywhere - and in it, glittering, a pinch of pale silver dust. Not Howth silver. Too pale. It glows a little in the dark.",
+          "give": {
+            "name": "a pinch of pale silver dust"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_fionnbarr",
+          "goal": "Report to Warden-Captain Fionnbarr in Howth",
+          "say": "Silver dust in the flour? That's... odd. Rat boys don't mine.\n\nPale, you say. Glows. I've heard old miners talk of silver like that - moon-silver, from deep down where nobody should dig. Probably nothing. Take this.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq201_storekeeper_s_key_ring",
+              "sq201_rat_catcher_s_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sm_sentinel_post",
+      "title": "The Sentinel Post",
+      "level": 5,
+      "giver": "sm_ailbe",
+      "offer": "There's a road-gang camped in the trees just west of this post, and they've started robbing miners on the way to work. I hold the post with three men and a dog.\n\nThey've a lookout on a stump who flashes a mirror when we move. Will you [help hold the road]? Take out the youths first, then the lookout - or he'll have them all running.",
+      "accept": "help hold the road",
+      "topics": {},
+      "summary": "A road-gang just west of Sentinel Ailbe's post robs miners on their way to work.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            420,
+            640
+          ],
+          "radius": 40,
+          "goal": "Kill 4 villainous youths at the road-gang's camp, about 100 m west of Sentinel Ailbe",
+          "target": "villainous youth",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            420,
+            640
+          ],
+          "radius": 40,
+          "goal": "Defeat the road-gang lookout at the same camp",
+          "target": "road-gang lookout",
+          "count": 1,
+          "text": "The lookout drops his mirror. It's silver - pale silver - and on the back is scratched 'from the diggings, for the road'.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_ailbe",
+          "goal": "Bring the lookout's mirror to Sentinel Ailbe at the sentinel post",
+          "say": "Pale silver. A road-gang paid in silver from the diggings?\n\nSomebody up east has more silver than sense. Warden-Captain Fionnbarr down in Howth will want to hear of it. Good work.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the post - and from the dog, who likes you.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq201_lookout_s_signal_mirror",
+              "sq201_sentinel_post_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sm_stinky",
+      "title": "Stinky",
+      "level": 8,
+      "giver": "sm_tadhg",
+      "offer": "There's a badger up the hill there, north-west - Stinky, we call him. Huge, filthy and clever. He steals our lunch-tins - dozens of them - and carries them off to his sett.\n\nWe're hungry and we're furious. Will you [deal with Stinky]? And bring back the tins.",
+      "accept": "deal with Stinky",
+      "topics": {},
+      "summary": "Stinky, a huge and clever badger, steals the miners' lunch-tins. Miner Tadhg wants them back.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            506,
+            358
+          ],
+          "radius": 40,
+          "goal": "Defeat Stinky, the badger, at his sett about 140 m north-west of Miner Tadhg",
+          "target": "Stinky",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 201,
+          "at": [
+            510,
+            362
+          ],
+          "goal": "Search Stinky's sett (click the glinting spot)",
+          "clue": {
+            "name": "a heap of lunch-tins",
+            "model": 1347
+          },
+          "text": "Forty lunch-tins, licked clean. In the bottom of one, a lump of pale silver the size of a thumb - and a miner's name scratched on the lid: Cathal.",
+          "give": {
+            "name": "Cathal's lunch-tin"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_tadhg",
+          "goal": "Bring the lunch-tins to Miner Tadhg, south-east of Stinky's sett",
+          "say": "Cathal's tin. Grainne's man, from Howth - the one the sheevra took.\n\nAnd moon-silver in it. Whatever the sheevra have found up east, it's coming down the mountain one pinch at a time. Grainne should have this tin.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. The lads send their thanks - and their lunch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq201_lunch_tin_charm",
+              "sq201_stinky_s_collar_ring",
+              "sq201_badger_brush_sash"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sm_creeping_stones",
+      "title": "Creeping Stones",
+      "level": 4,
+      "giver": "breasal",
+      "offer": "Before you ask about my grandfather's circle - there's worse. The little stones in the fields north of town creep at night. Farmers find walls fallen and furrows filled in.\n\nWill you [catch the stones] at it? Bring me one. A small one.",
+      "accept": "catch the stones",
+      "topics": {},
+      "summary": "Small stones creep across the Stone Fields at night, knocking down walls.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            450,
+            800
+          ],
+          "radius": 40,
+          "goal": "Break 4 small walking rocks in the Stone Fields, about 330 m north-west of Howth",
+          "target": "small walking rock",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 201,
+          "at": [
+            455,
+            805
+          ],
+          "goal": "Pick up a still stone in the Stone Fields (click the glinting spot)",
+          "clue": {
+            "name": "a still, warm stone",
+            "model": 1347
+          },
+          "text": "A small stone, warm as a hand. In a crack on its underside, a fleck of pale silver, glowing.",
+          "give": {
+            "name": "a warm stone"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "breasal",
+          "goal": "Bring the stone to Breasal the Stonemason in Howth",
+          "say": "Warm. Stones aren't warm.\n\nAnd what's that in the crack? Silver? ...Grandfather used to say the old stones had hearts. I thought he meant it nicely.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this, for your trouble.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq201_creeping_pebble_charm",
+              "sq201_field_wall_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sm_seireadan",
+      "title": "The Stone-Singer",
+      "level": 6,
+      "giver": "breasal",
+      "offer": "The old stories say Seireadan sings to the stones. A creature of the west fields, older than Howth. If anything is waking them, it's that song.\n\nWill you [silence Seireadan]? He haunts the far west, past the lough.",
+      "accept": "silence Seireadan",
+      "topics": {},
+      "summary": "Seireadan, an old creature of the west, sings to the stones - and they've started to answer.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            168,
+            923
+          ],
+          "radius": 40,
+          "goal": "Defeat Seireadan, the stone-singer, about 470 m west of Howth",
+          "target": "Seireadan",
+          "count": 1,
+          "text": "Seireadan falls silent, and in the quiet you hear it: the stones are still singing, without him. Something else is calling them now.",
+          "give": {
+            "name": "Seireadan's singing stone"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "breasal",
+          "goal": "Return to Breasal the Stonemason in Howth",
+          "say": "Still singing? Without him?\n\nThen it isn't Seireadan. It's something they're singing TO. Gods. My grandfather's circle walked off last week. I didn't want to believe it was all one thing.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq201_stone_song_torc",
+              "sq201_singer_s_pebble_ring"
+            ]
+          }
+        }
+      },
+      "requires": "sm_creeping_stones"
+    },
     {
       "id": "walking_stones",
       "title": "The Walking Stones",
@@ -76,11 +534,10 @@
           "zone": 201,
           "at": [
             630,
-            360,
-            174.4
+            360
           ],
           "radius": 20,
-          "goal": "Go to the empty stone circle in the north",
+          "goal": "Go to the empty stone circle in the north, about 300 m south-west of Ardagh",
           "text": "Seven sockets in the turf, deep and fresh. Tracks - round, heavy, rolling tracks - going south-west.",
           "id": "s1"
         },
@@ -89,11 +546,10 @@
           "zone": 201,
           "at": [
             484,
-            706,
-            144.0
+            706
           ],
           "radius": 25,
-          "goal": "Round up the walking stones",
+          "goal": "Break 6 walking stones in the Stone Fields, about 400 m north of Howth",
           "mob": {
             "template": 60166254,
             "name": "small walking rock",
@@ -108,15 +564,14 @@
           "zone": 201,
           "at": [
             500,
-            640,
-            126.5
+            640
           ],
-          "goal": "Search where the stones gathered",
+          "goal": "Search where the stones gathered, a little north in the Stone Fields (click the glinting spot)",
           "clue": {
             "name": "a freshly carved ogham stick",
             "model": 1347
           },
-          "text": "An ogham stick: 'WAKE AND WALK, IN THE NAME OF GRUGOCH.' Spraggon work - bad spelling and all.",
+          "text": "An ogham stick: 'WAKE AND WALK, IN THE NAME OF GRUGOCH.' Spraggon work - bad spelling and all. Tied to it, a thread of pale silver wire.",
           "give": {
             "name": "an ogham stick"
           },
@@ -127,11 +582,10 @@
           "zone": 201,
           "at": [
             518,
-            616,
-            123.5
+            616
           ],
           "radius": 25,
-          "goal": "Fight through the spraggonolls",
+          "goal": "Kill 5 spraggonolls at the north end of the Stone Fields",
           "mob": {
             "template": 60166491,
             "name": "spraggonoll",
@@ -145,12 +599,11 @@
           "zone": 201,
           "at": [
             470,
-            560,
-            130.4
+            560
           ],
           "wake_m": 30,
-          "goal": "Confront the spraggon chief",
-          "text": "Grugoch sits down hard. 'Fine! FINE! They wanted to see the lough anyway! They TOLD me!'",
+          "goal": "Defeat the spraggon chief, about 550 m north of Howth",
+          "text": "Grugoch sits down hard. 'Fine! FINE! The silver told me to! It sings! They wanted to see the lough anyway! They TOLD me!'",
           "stages": [
             {
               "id": "b1",
@@ -158,8 +611,7 @@
               "name": "Chief Grugoch",
               "center": [
                 470,
-                560,
-                130.4
+                560
               ],
               "radius": 30,
               "time_s": 600,
@@ -194,8 +646,8 @@
         {
           "type": "choice",
           "npc": "breasal",
-          "goal": "Bring the ogham stick to Breasal",
-          "say": "The spraggon said the stones WANTED to walk? To see the lough?\n\nGrandfather used to say they were restless. I thought it was a story.\n\nWith that stick I can [put them to sleep] - back in the circle, standing, forever. Or I could [let them walk] to the lough, and grandfather's circle stands empty. Gods. I'm a mason. I didn't think I'd have to ask stones what they want.",
+          "goal": "Bring the ogham stick to Breasal the Stonemason in Howth",
+          "say": "The spraggon said the stones WANTED to walk? To see the lough? And the silver told him to?\n\nGrandfather used to say they were restless. I thought it was a story.\n\nWith that stick I can [put them to sleep] - back in the circle, standing, forever. Or I could [let them walk] to the lough, and grandfather's circle stands empty. Gods. I'm a mason. I didn't think I'd have to ask stones what they want.",
           "options": [
             {
               "keyword": "put them to sleep",
@@ -244,6 +696,472 @@
             ]
           }
         }
+      },
+      "requires": "sm_seireadan"
+    },
+    {
+      "id": "sm_night_field",
+      "title": "The Night Field",
+      "level": 10,
+      "giver": "sm_cliodhna",
+      "offer": "Breasal brought me his warm stone. I know what's in it. Moon-silver - silver from the deep vein under the east mountain, sealed by the old druids a thousand years ago. It sings, and the stones answer.\n\nSomeone has opened the vein. Help me pry the silver out of the stone ring in the fields tonight - it will fight. Will you [stand the night]? Bring a friend.",
+      "accept": "stand the night",
+      "topics": {},
+      "summary": "Moon-silver from a sealed vein is waking the stones. Muirne of the Rowan means to pry it out of a stone ring at night.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 201,
+          "at": [
+            420,
+            500
+          ],
+          "radius": 25,
+          "goal": "Go to the stone ring at the north end of the Stone Fields, about 550 m south-west of Ardagh",
+          "text": "A ring of small stones, rocking gently in place like sleepers. In the middle one, a pale light pulses.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 201,
+          "at": [
+            420,
+            500
+          ],
+          "wake_m": 30,
+          "goal": "Keep Muirne alive while she pries the silver out of the stones",
+          "text": "The silver comes free with a sound like a bell. Every stone in the ring stops - and the biggest stands up.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Muirne safe",
+              "center": [
+                420,
+                500
+              ],
+              "radius": 30,
+              "duration_s": 90,
+              "objective": "Keep Muirne safe",
+              "announce": "Muirne kneels and starts to work. The stones around you begin to grind.",
+              "protect": {
+                "template": 60163820,
+                "name": "Muirne of the Rowan",
+                "level": 12,
+                "model": 365
+              },
+              "waves": {
+                "every_s": 25,
+                "count": 2,
+                "from": [
+                  [
+                    432,
+                    506
+                  ],
+                  [
+                    410,
+                    490
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60166253,
+                    "name": "small walking rock",
+                    "level": [
+                      7,
+                      8
+                    ]
+                  },
+                  {
+                    "template": 60166254,
+                    "name": "small walking boulder",
+                    "level": [
+                      8,
+                      9
+                    ]
+                  }
+                ]
+              },
+              "thanks": "Got it. Got it! Gods, it's cold.",
+              "success": "They break off.",
+              "fail": "Muirne of the Rowan falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "the Ring-Warden",
+              "center": [
+                420,
+                500
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat the Ring-Warden",
+              "announce": "The ring's oldest stone heaves itself out of the turf. It wants its silver back.",
+              "boss": {
+                "template": 60167762,
+                "name": "the Ring-Warden",
+                "level": 12,
+                "health_mult": 2.2
+              },
+              "success": "the Ring-Warden falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_cliodhna",
+          "goal": "Speak to Muirne at the stone ring",
+          "say": "There. Feel it - cold, and singing. This came out of the deep vein, and somebody's selling it by the cartload.\n\nThe sheevra dig in the east. The rogue druids in the hollow have been very rich lately. I'll find out which. Thank you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this, from the Rowan.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq201_moon_silver_sliver_pendant"
+            ],
+            "choice": [
+              "sq201_ring_warden_s_shard_bracer",
+              "sq201_rowan_bound_belt"
+            ]
+          },
+          "wake_event": "silvermine_stones_walk"
+        }
+      },
+      "group": true,
+      "requires": "walking_stones"
+    },
+    {
+      "id": "sm_stolen_tools",
+      "title": "Stolen Tools",
+      "level": 9,
+      "giver": "sm_maeve",
+      "offer": "Forty picks. Thirty shovels. A dozen lamps. All stolen this month, all from Ardagh's tool-sheds, all at night.\n\nThe spraggons. I know it's the spraggons - they leave droppings everywhere. Their cache is in the west burrows. Will you [find our tools]?",
+      "accept": "find our tools",
+      "topics": {},
+      "summary": "Ardagh's mining tools are being stolen by spraggons.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            270,
+            230
+          ],
+          "radius": 40,
+          "goal": "Kill 4 spraggonites at their tool cache, about 550 m west of Ardagh",
+          "target": "spraggonite",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 201,
+          "at": [
+            275,
+            235
+          ],
+          "goal": "Search the tool cache (click the glinting spot)",
+          "clue": {
+            "name": "a heap of stolen tools",
+            "model": 1347
+          },
+          "text": "Picks stamped HOWTH, shovels stamped ARDAGH - and a tally scratched on a board: so many picks to 'the shiny men east', so many lamps.",
+          "give": {
+            "name": "a bundle of stamped picks"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_maeve",
+          "goal": "Bring the stolen picks to Mine-Steward Maeve in Ardagh",
+          "say": "'The shiny men east'? The sheevra - in their silver mail.\n\nSo the spraggons steal our tools and sell them to the sheevra, and the sheevra dig our silver with our picks. That's almost clever. I hate it.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Ardagh's sheds, with thanks.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq201_howth_stamped_pick_charm",
+              "sq201_tool_cache_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sm_tinker",
+      "title": "The Spraggon Tinker",
+      "level": 12,
+      "giver": "sm_maeve",
+      "offer": "Somebody among the spraggons can count, and trade, and keep a tally. Spraggons can't do any of that. Somebody's running them.\n\nThere's a tinker at the den mouth - bigger than the rest, with goggles. Will you [catch the tinker]?",
+      "accept": "catch the tinker",
+      "topics": {},
+      "summary": "A spraggon tinker at the den mouth runs the tool trade with the sheevra.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            160,
+            520
+          ],
+          "radius": 40,
+          "goal": "Defeat the spraggon tinker at the den mouth, about 720 m north-west of Howth",
+          "target": "spraggon tinker",
+          "count": 1,
+          "text": "The tinker falls in a clatter of gears. His ledger lists every pick and lamp - paid for in pale silver dust.",
+          "give": {
+            "name": "the tinker's ledger"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_maeve",
+          "goal": "Bring the tinker's ledger to Mine-Steward Maeve in Ardagh",
+          "say": "Paid in silver dust. That pale stuff the Wardens keep finding.\n\nThe tinker's just a trader. The den answers to two bosses - one called, I'm not joking, Boss. The other's Sargoth.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq201_tinker_s_ledger_strap_bracer",
+              "sq201_brass_gear_ring"
+            ]
+          }
+        }
+      },
+      "requires": "sm_stolen_tools"
+    },
+    {
+      "id": "sm_boss",
+      "title": "Boss",
+      "level": 15,
+      "giver": "sm_maeve",
+      "offer": "Boss. A spraggon who named himself Boss. He wears a crown of nails and sits on a throne of stolen buckets in the northern burrow.\n\nHe takes his cut of every pick the den sells. Will you [depose Boss]?",
+      "accept": "depose Boss",
+      "topics": {},
+      "summary": "Boss, the spraggon who named himself Boss, takes a cut of the den's stolen-tool trade.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            279,
+            204
+          ],
+          "radius": 40,
+          "goal": "Defeat Boss beside the spraggon tool cache, about 540 m west of Ardagh",
+          "target": "Boss",
+          "count": 1,
+          "text": "Boss topples off his bucket-throne. His crown rolls into the dirt. Under the throne, a sack of pale silver dust.",
+          "give": {
+            "name": "Boss's crown of nails"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_maeve",
+          "goal": "Bring Boss's crown to Mine-Steward Maeve in Ardagh",
+          "say": "A crown of NAILS. Our nails.\n\nOne more. Sargoth, down at the den mouth. The big one. You'll want friends.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this, and my compliments.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq201_crown_of_nails_torc",
+              "sq201_boss_s_pocket_watch_charm"
+            ]
+          }
+        }
+      },
+      "requires": "sm_tinker"
+    },
+    {
+      "id": "sm_sargoth",
+      "title": "Sargoth",
+      "level": 18,
+      "giver": "sm_maeve",
+      "offer": "Sargoth rules the den mouth. Every spraggon in the west answers to him, and every stolen pick passes him on the way to the sheevra.\n\nBring friends - lots of them - and [end the den's trade].",
+      "accept": "end the den's trade",
+      "topics": {},
+      "summary": "Sargoth rules the Spraggon Den's mouth, and every stolen tool passes him on its way to the sheevra.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            160,
+            520
+          ],
+          "radius": 40,
+          "goal": "Kill 4 spraggonilts at the den mouth, about 720 m north-west of Howth",
+          "target": "spraggonilt",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            149,
+            525
+          ],
+          "radius": 40,
+          "goal": "Defeat Sargoth, just inside the den mouth",
+          "target": "Sargoth",
+          "count": 1,
+          "text": "Sargoth falls with a crash that shakes the burrow. Somewhere deep in the den, a lot of spraggons start packing.",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "sm_maeve",
+          "goal": "Report to Mine-Steward Maeve in Ardagh",
+          "say": "The den's broken. The tools are coming home in barrow-loads.\n\nThe Wardens say we should [melt the tools] the sheevra touched and forge new ones, clean. The miners say [keep the tools] - a pick's a pick, and silver's silver. What do you think?",
+          "options": [
+            {
+              "keyword": "melt the tools",
+              "say": "Melt them. New picks, clean hands. The smith will be pleased.",
+              "ending": "melted"
+            },
+            {
+              "keyword": "keep the tools",
+              "say": "Keep them. Miners are practical people. A pick's a pick.",
+              "ending": "kept"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "melted": {
+          "text": "Take this, from Ardagh.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq201_howth_miners_token"
+            ],
+            "choice": [
+              "sq201_sargoth_s_tusk_ring",
+              "sq201_den_lord_s_mantle"
+            ]
+          }
+        },
+        "kept": {
+          "text": "Take this, from Ardagh.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq201_howth_miners_token"
+            ],
+            "choice": [
+              "sq201_sargoth_s_tusk_ring",
+              "sq201_den_lord_s_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sm_boss"
+    },
+    {
+      "id": "sm_ridge_archers",
+      "title": "Archers on the Spoil Heaps",
+      "level": 13,
+      "giver": "sm_senan",
+      "offer": "The sheevra have archers on the spoil heaps just up the road there. They shoot anything that walks - miners, Wardens, a cow last week. Nothing's moved on this road in days.\n\nWill you [clear the spoil heaps]? Bring me one of their arrows. I want to see what they're using.",
+      "accept": "clear the spoil heaps",
+      "topics": {},
+      "summary": "Sheevra archers on the spoil heaps shoot at anything on the mine road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            1250,
+            880
+          ],
+          "radius": 40,
+          "goal": "Kill 5 sheevra archers on the spoil heaps, about 90 m north-east of Foreman Senan",
+          "target": "sheevra archer",
+          "count": 5,
+          "give": {
+            "name": "a silver-tipped arrow"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_senan",
+          "goal": "Bring the sheevra arrow to Foreman Senan on the mine road",
+          "say": "Moon-silver arrowheads. They're tipping ARROWS with it.\n\nThey must have a mountain of the stuff. Grainne in Howth's been asking for help - her Cathal's one of the men they took to dig it.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq201_silver_tipped_arrow_charm",
+              "sq201_spoil_heap_bracer"
+            ]
+          }
+        }
       }
     },
     {
@@ -261,7 +1179,7 @@
         {
           "type": "talk",
           "npc": "odhran",
-          "goal": "Ask Ranger Odhran about the sheevra",
+          "goal": "Ask Ranger Odhran in Howth about the sheevra",
           "say": "They've archers on the ridge who'll shoot anything that walks. Get past those and you'll find the miners' tracks east, deep into the hills - the sheevra work their slaves at the far [diggings].",
           "keyword": "diggings",
           "id": "s1"
@@ -271,11 +1189,10 @@
           "zone": 201,
           "at": [
             1153,
-            744,
-            126.0
+            744
           ],
           "radius": 25,
-          "goal": "Kill the sheevra archers on the ridge",
+          "goal": "Kill 5 sheevra archers on the ridge, about 650 m north-east of Howth",
           "mob": {
             "template": 60165945,
             "name": "sheevra archer",
@@ -289,10 +1206,9 @@
           "zone": 201,
           "at": [
             1162,
-            762,
-            139.1
+            762
           ],
-          "goal": "Search the ridge",
+          "goal": "Search the ridge where the archers stood (click the glinting spot)",
           "clue": {
             "name": "a miner's broken pick",
             "model": 1347
@@ -305,11 +1221,10 @@
           "zone": 201,
           "at": [
             1440,
-            1050,
-            143.2
+            1050
           ],
           "radius": 20,
-          "goal": "Find the sheevra's far diggings",
+          "goal": "Find the sheevra's far diggings, about 840 m east of Howth",
           "text": "A raw hole in the hillside. Men in chains, hauling rock. Sheevra overseers with whips.",
           "id": "s4"
         },
@@ -318,11 +1233,10 @@
           "zone": 201,
           "at": [
             1450,
-            1060,
-            142.0
+            1060
           ],
           "wake_m": 30,
-          "goal": "Free the miners",
+          "goal": "Free the captive miners at the diggings",
           "text": "The sheevra break and run. The miners drop their chains and sit down, laughing and crying.",
           "stages": [
             {
@@ -331,8 +1245,7 @@
               "name": "Keep Cathal alive",
               "center": [
                 1450,
-                1060,
-                142.0
+                1060
               ],
               "radius": 30,
               "duration_s": 80,
@@ -350,13 +1263,11 @@
                 "from": [
                   [
                     1462,
-                    1066,
-                    142.4
+                    1066
                   ],
                   [
                     1440,
-                    1050,
-                    143.2
+                    1050
                   ]
                 ],
                 "mobs": [
@@ -382,8 +1293,7 @@
               "name": "Chieftain Morc",
               "center": [
                 1450,
-                1060,
-                142.0
+                1060
               ],
               "radius": 30,
               "time_s": 480,
@@ -404,8 +1314,8 @@
         {
           "type": "choice",
           "npc": "cathal",
-          "goal": "Talk to Cathal",
-          "say": "I found it, you know. The vein. That's why they kept me. Silver like nobody's seen since my grandfather's day - enough to make Grainne and me rich ten times over.\n\nIf we [claim the vein], the sheevra will come back for it. Every year. We'd need guards and walls and we'd never sleep easy. Or we [collapse the mine], and go home poor, and nobody fights over it ever again.",
+          "goal": "Talk to Cathal, the freed miner",
+          "say": "I found it, you know. The vein. That's why they kept me. Silver like nobody's seen since my grandfather's day - and below it, the pale stuff, the moon-silver, singing in the rock. Enough to make Grainne and me rich ten times over.\n\nIf we [claim the vein], the sheevra will come back for it. Every year. We'd need guards and walls and we'd never sleep easy. Or we [collapse the mine], and go home poor, and nobody fights over it ever again.",
           "options": [
             {
               "keyword": "claim the vein",
@@ -423,7 +1333,7 @@
         {
           "type": "talk",
           "npc": "grainne",
-          "goal": "Return to Grainne",
+          "goal": "Return to Grainne in Howth",
           "say": "He's home, and he's RICH, and he's hired six men with spears to guard a hole in a hill.\n\nThe sheevra will come back. He knows. I know. I married a fool. A rich fool. Here - take a share.",
           "ending": "claim",
           "id": "s7"
@@ -431,7 +1341,7 @@
         {
           "type": "talk",
           "npc": "grainne",
-          "goal": "Return to Grainne",
+          "goal": "Return to Grainne in Howth",
           "say": "He brought the mountain down on it. All that silver, and he buried it.\n\nAnd then he came home and slept for two days, and when he woke up he asked me what was for supper, like nothing happened. I've never loved him more.",
           "ending": "collapse",
           "id": "s8"
@@ -470,7 +1380,765 @@
             ]
           }
         }
+      },
+      "requires": "sm_ridge_archers"
+    },
+    {
+      "id": "sm_scar_nose",
+      "title": "Scar-Nose",
+      "level": 19,
+      "giver": "sm_fiacc",
+      "offer": "The sheevra keep a war-badger - Scar-nose, they call him - big as a pony and trained to run down any miner who escapes. He hunts these pastures now, just east of here.\n\nI found what was left of one of those miners last week. Will you [hunt Scar-nose]?",
+      "accept": "hunt Scar-nose",
+      "topics": {},
+      "summary": "Scar-nose, the sheevra's war-badger, runs down escaped miners on the High Pastures.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            1230,
+            609
+          ],
+          "radius": 40,
+          "goal": "Defeat Scar-nose, who prowls about 90 m east of Trapper Fiacc",
+          "target": "Scar-nose",
+          "count": 1,
+          "text": "Scar-nose goes down at last. His collar is sheevra silver, stamped with a chieftain's mark: Dergal.",
+          "give": {
+            "name": "Scar-nose's collar"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_fiacc",
+          "goal": "Bring Scar-nose's collar to Trapper Fiacc on the High Pastures",
+          "say": "Dergal's mark. Chieftain Dergal - he holds the main working in the east, they say. His overseer, Camlin, runs the diggings.\n\nWarden-Captain Fionnbarr in Howth will want this collar. Tell him the pastures are safe to cross again.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. The pastures thank you.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq201_scar_nose_s_silver_collar",
+              "sq201_badger_hide_bracer"
+            ]
+          }
+        }
       }
+    },
+    {
+      "id": "sm_overseer",
+      "title": "The Overseer",
+      "level": 23,
+      "giver": "sm_fionnbarr",
+      "offer": "Overseer Camlin works the slaves at the far diggings and keeps the sheevra's tallies. Cathal says he goes down to the workings every evening to count the silver.\n\nCatch him at the workings, away from Dergal's huts. Will you [catch Camlin]? Bring me his tallies.",
+      "accept": "catch Camlin",
+      "topics": {},
+      "summary": "Overseer Camlin keeps the sheevra's silver tallies and visits the far workings every evening.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 201,
+          "at": [
+            1420,
+            1090
+          ],
+          "radius": 25,
+          "goal": "Go to the far mine workings, about 820 m east of Howth",
+          "text": "Sheevra miners stacking pale ore by lamplight - and an overseer in silver with a whip and a tally-board.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 201,
+          "at": [
+            1425,
+            1095
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Overseer Camlin at the far workings",
+          "text": "Camlin falls, wounded, and crawls off into the dark toward the main working. His tally-board stays where it fell.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Overseer Camlin",
+              "center": [
+                1425,
+                1095
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Overseer Camlin at the far workings",
+              "announce": "'Howth scum? At MY workings?' The overseer snaps his whip.",
+              "boss": {
+                "template": 60164801,
+                "name": "Overseer Camlin",
+                "level": 24,
+                "health_mult": 2.2
+              },
+              "success": "Overseer Camlin falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60165947,
+                    "name": "sheevra miner",
+                    "level": [
+                      21,
+                      22
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "give": {
+            "name": "Camlin's tally-board"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_fionnbarr",
+          "goal": "Bring the overseer's tally to Warden-Captain Fionnbarr in Howth",
+          "say": "'Moon-silver: forty carts to the druids of the hollow. Paid in blue beads.'\n\nBlue beads. That's the Azure Order's coin - they burn men in wicker over in Connacht. What does a fire-cult want with forty carts of silver?",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq201_overseer_s_whip_handle_charm",
+              "sq201_tally_keeper_s_belt",
+              "sq201_freed_miner_s_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "sm_scar_nose"
+    },
+    {
+      "id": "sm_chieftain_dergal",
+      "title": "Chieftain Dergal",
+      "level": 26,
+      "giver": "sm_fionnbarr",
+      "offer": "Dergal is mustering his war-band at the lake camp below the mines, to march on Howth before we march on him.\n\nWe hit him there, in the open, before he's ready. Every Warden I have, and every friend you have. Will you [break the muster]?",
+      "accept": "break the muster",
+      "topics": {},
+      "summary": "Chieftain Dergal is mustering the sheevra war-band at the lake camp to march on Howth.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            1120,
+            1020
+          ],
+          "radius": 40,
+          "goal": "Kill 4 sheevra swordsmen at the lake camp, about 525 m east of Howth",
+          "target": "sheevra swordsman",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 201,
+          "at": [
+            1125,
+            1015
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Chieftain Dergal when he comes to the lake camp",
+          "text": "Dergal staggers, roars, and is dragged off by his guards toward the main working, bleeding. The muster breaks.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Chieftain Dergal",
+              "center": [
+                1125,
+                1015
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Chieftain Dergal when he comes to the lake camp",
+              "announce": "Chieftain Dergal in silver mail: 'Howth's diggers come to ME? Good. Saves me the walk.'",
+              "boss": {
+                "template": 60159138,
+                "name": "Chieftain Dergal",
+                "level": 27,
+                "health_mult": 2.6
+              },
+              "success": "Chieftain Dergal falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60165949,
+                    "name": "sheevra swordsman",
+                    "level": [
+                      23,
+                      24
+                    ]
+                  },
+                  {
+                    "template": 60165945,
+                    "name": "sheevra archer",
+                    "level": [
+                      23,
+                      24
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_fionnbarr",
+          "goal": "Return to Warden-Captain Fionnbarr in Howth",
+          "say": "He ran. Dragged off by his own guards, bleeding like a stuck pig.\n\nThe muster's broken, the valley's with us. When Howth's ready, we take the mine itself. Take this - and get some sleep.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Mine-Wardens of Howth.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq201_mine_warden_s_mantle"
+            ],
+            "choice": [
+              "sq201_dergal_s_silver_torc",
+              "sq201_lake_camp_banner_ring",
+              "sq201_ardagh_s_thanks"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sm_overseer"
+    },
+    {
+      "id": "sm_gray_miners",
+      "title": "The Gray Miners",
+      "level": 19,
+      "giver": "sm_ethna",
+      "offer": "The gray spectres at the Fallen Camp are the miners who died when the east shaft fell in. Forty-one of them. They walk the tents still, looking for the way out.\n\nSomething keeps them from resting. Will you [go to the camp] and find out what?",
+      "accept": "go to the camp",
+      "topics": {},
+      "summary": "The gray spectres of the Fallen Camp are miners who died in a collapse. Something keeps them from resting.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 201,
+          "at": [
+            1500,
+            1480
+          ],
+          "radius": 30,
+          "goal": "Go to the Fallen Camp, about 430 m south-east of the Miners' Cairn",
+          "text": "Tents still standing, rotted grey. Lamps still lit, burning cold blue. Gray shapes at the tent-flaps, turning towards you.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            1530,
+            1500
+          ],
+          "radius": 40,
+          "goal": "Kill 5 gray spectres among the miners' tents at the Fallen Camp",
+          "target": "gray spectre",
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 201,
+          "at": [
+            1535,
+            1505
+          ],
+          "goal": "Search the foreman's tent at the Fallen Camp (click the glinting spot)",
+          "clue": {
+            "name": "the foreman's tally-book",
+            "model": 1347
+          },
+          "text": "The last entry, in a shaking hand: 'Broke through below the old seal. Pale silver, singing. Then the deep wind came up the shaft.'",
+          "give": {
+            "name": "the foreman's tally-book"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_ethna",
+          "goal": "Bring the foreman's tally-book to Sister Ethna at the Miners' Cairn",
+          "say": "'Below the old seal.' They broke the druids' seal.\n\nSo the collapse wasn't an accident. They opened something, and it closed the mountain on them. Gods keep them.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. And say their names, if you can.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq201_miner_s_tally_stick_charm",
+              "sq201_cold_light_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sm_bones_of_the_camp",
+      "title": "Bones of the Camp",
+      "level": 23,
+      "giver": "sm_ethna",
+      "offer": "The miners' bones walk with the spectres - you saw them. They want burying, and the spectres won't rest until they are.\n\nGather what you can, and then [find the seal] at the collapsed shaft. If the druids' seal is broken, I want to see it.",
+      "accept": "find the seal",
+      "topics": {},
+      "summary": "The Fallen Camp's dead want burying, and Sister Ethna wants to see the broken seal.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            1530,
+            1500
+          ],
+          "radius": 40,
+          "goal": "Kill 5 skeletal pawns (the miners' bones) among the tents at the Fallen Camp",
+          "target": "miner's bones",
+          "count": 5,
+          "give": {
+            "name": "a pouch of miners' bones"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 201,
+          "at": [
+            1300,
+            1260
+          ],
+          "goal": "Search the collapsed shaft, about 135 m south-east of the Miners' Cairn (click the glinting spot)",
+          "clue": {
+            "name": "a cracked seal-stone",
+            "model": 1347
+          },
+          "text": "A great slab carved with ogham, split clean down the middle. Picks did that. On the far side, cold light and a smell of storms.",
+          "give": {
+            "name": "a fragment of the seal-stone"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_ethna",
+          "goal": "Return to Sister Ethna at the Miners' Cairn",
+          "say": "Split by picks. Sheevra picks.\n\nThe bones are buried; forty-one names said. But that seal held something in, and it's out now. The deamhan on the heights - they came up that shaft.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq201_seal_stone_fragment_ring",
+              "sq201_bone_dust_pouch_belt"
+            ]
+          }
+        }
+      },
+      "requires": "sm_gray_miners"
+    },
+    {
+      "id": "sm_up_the_shaft",
+      "title": "Up the Shaft",
+      "level": 27,
+      "giver": "sm_ethna",
+      "offer": "The deamhan pour out of the collapsed shaft every night, stone and storm. The Rowan say they guard what's below - whatever the sheevra woke.\n\nWill you [hold the shaft] long enough for me to see down it?",
+      "accept": "hold the shaft",
+      "topics": {},
+      "summary": "Deamhan pour out of the collapsed shaft. Sister Ethna wants to see what they guard.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            1300,
+            1260
+          ],
+          "radius": 40,
+          "goal": "Kill 4 deamhan creig at the collapsed shaft, about 135 m south-east of the Miners' Cairn",
+          "target": "deamhan creig",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            1300,
+            1260
+          ],
+          "radius": 40,
+          "goal": "Kill 2 mountain mephits at the collapsed shaft",
+          "target": "mountain mephit",
+          "count": 2,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_ethna",
+          "goal": "Return to Sister Ethna at the Miners' Cairn",
+          "say": "I looked. I wish I hadn't.\n\nDown in the vein, something big, wrapped round the moon-silver like a dragon round gold. It's been feeding on it. The sheevra dig AROUND it. It lets them, because it's growing.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. You'll need it for what comes next.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq201_deamhan_stone_bracer",
+              "sq201_storm_glass_pendant",
+              "sq201_heights_wanderer_s_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "sm_bones_of_the_camp"
+    },
+    {
+      "id": "sm_thing_in_the_vein",
+      "title": "The Thing in the Vein",
+      "level": 30,
+      "giver": "sm_ethna",
+      "offer": "It's growing, and the mountain groans with it. If it keeps feeding, it'll come up the shaft and down the valley, and Howth will be a memory.\n\nBring everyone you can. Go down to the sealed vein and [kill the Thing]. Then we seal it properly - or we don't.",
+      "accept": "kill the Thing",
+      "topics": {},
+      "summary": "A deamhan lord, the Thing in the Vein, feeds on the moon-silver at the bottom of the broken seal.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 201,
+          "at": [
+            1350,
+            1330
+          ],
+          "radius": 30,
+          "goal": "Go down to the sealed vein, about 220 m south-east of the Miners' Cairn",
+          "text": "A cavern of pale light. Moon-silver everywhere, veins of it singing in the walls - and coiled round the brightest seam, something vast and stony that opens its eyes.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            1350,
+            1330
+          ],
+          "radius": 40,
+          "goal": "Kill the Thing in the Vein",
+          "target": "the Thing in the Vein",
+          "count": 1,
+          "text": "The Thing in the Vein shudders and goes still, and the singing in the walls drops to a murmur. The gray lights at the Fallen Camp go out, one by one.",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "sm_ethna",
+          "goal": "Return to Sister Ethna at the Miners' Cairn",
+          "say": "The Thing is dead. The miners are resting - I felt them go.\n\nThe vein's still there. I can [seal the vein] again, the old way, and the moon-silver sleeps for another thousand years. Or Howth can [mine the vein] - carefully, with the Rowan watching - and be rich. The Rowan say seal it. The Wardens say mine it. You went down there. You choose.",
+          "options": [
+            {
+              "keyword": "seal the vein",
+              "say": "Sealed, then. Sleep. All of you, sleep.",
+              "ending": "sealed"
+            },
+            {
+              "keyword": "mine the vein",
+              "say": "Carefully, then. Very carefully. And the Rowan watch every cart.",
+              "ending": "mined"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "sealed": {
+          "text": "Take these, with the Rowan's thanks and forty-one others'.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq201_forty_one_names_cloak"
+            ],
+            "choice": [
+              "sq201_vein_heart_torc",
+              "sq201_deep_seal_ring",
+              "sq201_thing_slayer_s_bracer"
+            ]
+          },
+          "wake_event": "silvermine_deep_wind"
+        },
+        "mined": {
+          "text": "Take these, with the Rowan's thanks and forty-one others'.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq201_forty_one_names_cloak"
+            ],
+            "choice": [
+              "sq201_vein_heart_torc",
+              "sq201_deep_seal_ring",
+              "sq201_thing_slayer_s_bracer"
+            ]
+          },
+          "wake_event": "silvermine_deep_wind"
+        }
+      },
+      "group": true,
+      "requires": "sm_up_the_shaft"
+    },
+    {
+      "id": "sm_druid_stones",
+      "title": "The Druid Stones",
+      "level": 21,
+      "giver": "sm_cliodhna",
+      "offer": "Druids I trained are in the hollow south of here, at the old stones, working moon-silver into something. They don't answer my letters.\n\nGo and see. If they fight, [bring their satchels] - I want to know what they're making.",
+      "accept": "bring their satchels",
+      "topics": {},
+      "summary": "Rogue druids in the hollow are working moon-silver at the old stones.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            820,
+            1470
+          ],
+          "radius": 40,
+          "goal": "Kill 5 rogue druids at the druid stones, about 320 m east of Muirne's post",
+          "target": "rogue druid",
+          "count": 5,
+          "give": {
+            "name": "a rogue druid's satchel"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_cliodhna",
+          "goal": "Bring the druids' satchel to Muirne of the Rowan, about 350 m south of Howth",
+          "say": "Moon-silver, ground to dust. And blue-glass beads - the Azure Order's coin.\n\nThey're grinding it fine enough to burn. Fire that burns silver... Nictol would know. He was the best of us once. He lives alone in the south-west now, and he's gone strange.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq201_moon_dust_satchel_belt",
+              "sq201_turned_druid_s_ring"
+            ]
+          }
+        }
+      },
+      "requires": "sm_night_field"
+    },
+    {
+      "id": "sm_nictol",
+      "title": "Nictol the Unkempt",
+      "level": 24,
+      "giver": "sm_cliodhna",
+      "offer": "Nictol taught me the rowan rites. Now he lives in a hut of bones in the south-west and talks to the moon.\n\nHe won't talk to me. He might talk to you - or he might fight. Either way, [find what Nictol knows].",
+      "accept": "find what Nictol knows",
+      "topics": {},
+      "summary": "Nictol the Unkempt, once the best of the Rowan, lives alone in the south-west and has gone strange.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            122,
+            1597
+          ],
+          "radius": 40,
+          "goal": "Defeat Nictol the Unkempt at his hut, about 400 m west of Muirne",
+          "target": "Nictol the Unkempt",
+          "count": 1,
+          "text": "Nictol falls back against his hut, laughing and weeping. 'Moon-silver, moon-silver, burns blue, burns BLUE!'",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 201,
+          "at": [
+            125,
+            1590
+          ],
+          "goal": "Search Nictol's hut (click the glinting spot)",
+          "clue": {
+            "name": "Nictol's letters",
+            "model": 1347
+          },
+          "text": "Letters from 'the Broker': 'Grind it, and we'll carry it. The Voice of the Azure pays in beads. Silver fire opens the gate in Connacht faster than wood.'",
+          "give": {
+            "name": "the Broker's letters"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_cliodhna",
+          "goal": "Bring Nictol's letters to Muirne of the Rowan, about 350 m south of Howth",
+          "say": "'Silver fire opens the gate in Connacht faster than wood.'\n\nThe Voice of the Azure. In Connacht they burn men in wicker to feed a demon gate - Druidess Eabha writes of it. And our silver is making their fires burn hotter. The Broker. I want the Broker.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq201_hermit_s_hazel_staff_charm",
+              "sq201_unkempt_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "sm_druid_stones"
+    },
+    {
+      "id": "sm_moon_silver_broker",
+      "title": "The Moon-Silver Broker",
+      "level": 28,
+      "giver": "sm_cliodhna",
+      "offer": "The Broker keeps a camp in the far south of the hollow, with druids to guard him and a cart-road to Connacht.\n\nBring friends. [Stop the Broker], and every cart of moon-silver stops with him.",
+      "accept": "stop the Broker",
+      "topics": {},
+      "summary": "The Moon-Silver Broker sends moon-silver from the sheevra to the Azure Order in Connacht.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 201,
+          "at": [
+            900,
+            1560
+          ],
+          "radius": 40,
+          "goal": "Defeat the Moon-Silver Broker at his camp, about 415 m east of Muirne",
+          "target": "the Moon-Silver Broker",
+          "count": 1,
+          "text": "The Broker falls among his carts. His ledger lists every load: from the sheevra, through the hollow, to 'the Voice, in the Wicker Fields of Connacht'.",
+          "give": {
+            "name": "the Broker's ledger"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sm_cliodhna",
+          "goal": "Bring the broker's ledger to Muirne of the Rowan, about 350 m south of Howth",
+          "say": "The Wicker Fields. The Voice of the Azure himself.\n\nThe trail leaves our valley here. I'm sending this to Druidess Eabha in Ardee - the Rowan in Connacht will want it. And you, if you've the stomach for fire.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this, from the Rowan.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq201_broker_s_ledger_case"
+            ],
+            "choice": [
+              "sq201_blue_bead_breaker_ring",
+              "sq201_rowan_and_silver_torc"
+            ]
+          },
+          "wake_event": "silvermine_moon_silver_convoy"
+        }
+      },
+      "group": true,
+      "requires": "sm_nictol"
     }
   ]
 }

@@ -1,0 +1,184 @@
+{
+ "zone": 206,
+ "region": 200,
+ "realm": 3,
+ "prefix": "rep206",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ranger's Oath-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 3,
+    "Hits": 17
+   },
+   "lore": "The ring a Friend of the Rangers is given: plain iron, an arrow scratched inside."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Collory-Road Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 3,
+    "Hits": 17
+   },
+   "lore": "A ranger's belt, with loops for a dozen arrows and one flask."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Druim Cain Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
+   },
+   "lore": "Bronze, with the keep's gate worked into the clasp."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Waywatcher's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 30,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 30,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Worn by the rangers who watch the Collory road at night."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Collory Road",
+   "base": [
+    41,
+    26
+   ],
+   "level": 40,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 40,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Grey-green, with an arrow on the shoulder. Only the Wardens of the Collory Road wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hill-Friend's Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 20,
+   "bonuses": {
+    "Qui": 7,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 12,
+    "Power": 2
+   },
+   "lore": "A sprig of rowan and a scarlet thread. Midir's people know it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Etain's Ribbon Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Int": 7,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "A scarlet ribbon woven into green linen, the way they wear it in Caille."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Guest-Gift Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Emp": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "A guest-gift from under the hill. Gold, warm, and humming faintly with music."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moonlit Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 30,
+   "bonuses": {
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Silver from Moon Lake's shore. It shines a little in the dark."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of Bri Leith",
+   "base": [
+    41,
+    26
+   ],
+   "level": 40,
+   "bonuses": {
+    "Emp": 13,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 24
+   },
+   "lore": "Green and gold, embroidered with scarlet wings. Only the Beloved of Bri Leith wear it."
+  }
+ ]
+}

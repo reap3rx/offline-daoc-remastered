@@ -10,6 +10,7 @@ using DOL.Database;
 using DOL.Events;
 using DOL.GS.Commands;
 using DOL.GS.PacketHandler;
+using DOL.GS.Spells;
 
 namespace DOL.GS
 {
@@ -27,12 +28,33 @@ namespace DOL.GS
     /// </summary>
     public static class TierCalibration
     {
+        /// <summary>Classic: the 2026-11-19 bench (trained, plain armour, fights to a finish). Base: the one-footing
+        /// baseline (owner 2026-11-22: untrained, no armour, a plain blue-conned weapon, the monster's moves off) with
+        /// DAoC's own numbers (Raw) - what OutCurve and InCurve are fitted on. Spell: the same for a caster's best
+        /// untrained damage spell, the monster held at range. Check: the baseline again with the fitted numbers on.
+        /// Base, Spell and Check keep both sides alive (healed under 40%) for the whole fight and count every blow.</summary>
+        public enum Mode { Classic, Base, Spell, Check }
+
         public sealed class Case
         {
             public int Level;
             public eObjectType Armor;
             public sbyte Tier;
             public string Mob;
+        }
+
+        /// <summary>The bench's monster, while it fights with DAoC's own numbers (MonsterTiers.TryDamageFactor, SpellOut).</summary>
+        public static bool Raw(GameNPC n)
+        {
+            Run r = _run;
+            return r != null && n != null && n == r.Mob && r.Mode is Mode.Base or Mode.Spell;
+        }
+
+        /// <summary>The bench's monster with its moves off (MonsterMoves.Comp): plain swings, DAoC's own defences.</summary>
+        public static bool Quiet(GameNPC n)
+        {
+            Run r = _run;
+            return r != null && n != null && n == r.Mob && r.Mode != Mode.Classic;
         }
 
         sealed class Run
@@ -51,6 +73,14 @@ namespace DOL.GS
             public bool Armed;
             public Dictionary<string, int> Mine = new(), Theirs = new();
             public double FIn, FOut;
+            public Mode Mode;
+            public readonly List<double> PBlows = new(), MBlows = new();   // each swing's damage, % of the other's health (0: no hit)
+            public long PFirst, PLast, MFirst, MLast;
+            public int Casts, Landed;
+            public long NextCastAt;
+            public double CastPct;
+            public string SpellName = "";
+            public int WeaponLevel;
         }
 
         static Run _run;
@@ -66,11 +96,27 @@ namespace DOL.GS
                 return;
             string k = ad.AttackResult.ToString();
             d[k] = d.GetValueOrDefault(k) + 1;
+            if (r.Mode == Mode.Classic)
+                return;
+            bool hit = ad.AttackResult is eAttackResult.HitUnstyled or eAttackResult.HitStyle;
+            long now = GameLoop.GameLoopTime;
+            if (ad.Attacker == r.P)
+            {
+                r.PBlows.Add(hit ? (ad.Damage + ad.CriticalDamage) * 100.0 / Math.Max(1, r.Mob.MaxHealth) : 0);
+                if (r.PFirst == 0) r.PFirst = now;
+                r.PLast = now;
+            }
+            else
+            {
+                r.MBlows.Add(hit ? (ad.Damage + ad.CriticalDamage) * 100.0 / Math.Max(1, r.P.MaxHealth) : 0);
+                if (r.MFirst == 0) r.MFirst = now;
+                r.MLast = now;
+            }
         }
 
         public static readonly int[] DefaultLevels = { 5, 15, 25, 35, 45, 50 };
 
-        public static string Start(GamePlayer p, int[] levels, string[] mobs, int fightMs, bool allArmours)
+        public static string Start(GamePlayer p, int[] levels, string[] mobs, int fightMs, bool allArmours, Mode mode = Mode.Classic)
         {
             if (_run != null)
                 return "a run is going already (/calib stop)";
@@ -78,6 +124,20 @@ namespace DOL.GS
                 return "dismiss your pet first";
             eObjectType[] armours = ArmoursFor(p.Realm);
             var cases = new Queue<Case>();
+            if (mode is Mode.Base or Mode.Spell)
+            {
+                // DAoC's own numbers don't care about the con (the monster fights at your level): one fight per level and monster
+                foreach (int l in levels.OrderBy(x => x))
+                    foreach (string m in mobs)
+                        cases.Enqueue(new Case { Level = l, Armor = eObjectType.GenericItem, Tier = MonsterTiers.Yellow, Mob = m });
+            }
+            else if (mode == Mode.Check)
+            {
+                foreach (int l in levels.OrderBy(x => x))
+                    for (sbyte t = MonsterTiers.Green; t <= MonsterTiers.Purple; t++)
+                        cases.Enqueue(new Case { Level = l, Armor = eObjectType.GenericItem, Tier = t, Mob = mobs[0] });
+            }
+            else
             foreach (int l in levels.OrderBy(x => x))
                 foreach (eObjectType a in allArmours ? armours : new[] { armours[2] })
                     for (int mi = 0; mi < mobs.Length; mi++)
@@ -91,9 +151,12 @@ namespace DOL.GS
             foreach (string m in mobs.Distinct())
                 if (Template(m) == null)
                     return $"no monster called \"{m}\" in the database";
-            _run = new Run { P = p, PrivWas = p.Client.Account.PrivLevel, Cases = cases, Total = cases.Count, FightMs = fightMs };
-            _run.Out.AppendLine($"# calibration {DateTime.Now:yyyy-MM-dd HH:mm} - {p.Name}, {p.CharacterClass.Name}, toughness {MonsterTiers.Toughness}, bite {MonsterTiers.Bite}");
-            _run.Out.AppendLine("# level armour mob tier | result secs | taken %/s, biggest hit % | dealt %/s | to die s, to kill s");
+            _run = new Run { P = p, PrivWas = p.Client.Account.PrivLevel, Cases = cases, Total = cases.Count, FightMs = fightMs, Mode = mode };
+            _run.Out.AppendLine($"# calibration {DateTime.Now:yyyy-MM-dd HH:mm} - {p.Name}, {p.CharacterClass.Name}, mode {mode}, toughness {MonsterTiers.Toughness}, bite {MonsterTiers.Bite}");
+            if (mode == Mode.Classic)
+                _run.Out.AppendLine("# level armour mob tier | result secs | taken %/s, biggest hit % | dealt %/s | to die s, to kill s");
+            else
+                _run.Out.AppendLine("#B level mob tier secs | p: swings hit% mean%/swing meanHit% sdHit% interval | m: swings hit% mean%/swing meanHit% sdHit% interval | casts landed %/cast spell | in out | hp mobLevel mobHp weaponLevel");
             if (!FindSpot(_run))
                 Log(_run, "no quiet spot found: fighting where you stand");
             p.Client.Account.PrivLevel = (uint) ePrivLevel.Player;    // (a GM can't be attacked)
@@ -163,14 +226,23 @@ namespace DOL.GS
                 if (p.TargetObject != r.Mob)
                     p.TargetObject = r.Mob;
                 p.TargetInView = true;                            // (the client never confirmed a target the server set)
-                if (r.Mob.IsAlive && !p.attackComponent.AttackState)
+                if (r.Mode == Mode.Spell)
+                    CastAt(r, p);
+                else if (r.Mob.IsAlive && !p.attackComponent.AttackState)
                     p.attackComponent.RequestStartAttack(r.Mob);
                 if (!r.Armed)
                 {
                     // the clock starts when they meet (the monster's level, health and the fight's factors are set by
                     // then - MonsterTiers.Engage): both whole
-                    if (p.GetDistanceTo(r.Mob) > 260 && now - r.Start < 4000)
+                    if (r.Mode != Mode.Spell && p.GetDistanceTo(r.Mob) > 260 && now - r.Start < 4000)
                         return 250;
+                    if (r.Mode == Mode.Spell && r.Mob.TierFightBase <= 0 && now - r.Start < 6000)
+                        return 250;                         // (the first spell lands and sets its level)
+                    r.PBlows.Clear();
+                    r.MBlows.Clear();
+                    r.PFirst = r.PLast = r.MFirst = r.MLast = 0;
+                    r.Casts = r.Landed = 0;
+                    r.CastPct = 0;
                     r.Armed = true;
                     r.Mob.Health = r.Mob.MaxHealth;
                     Heal(p);
@@ -184,6 +256,8 @@ namespace DOL.GS
                     r.FOut = MonsterTiers.TryDamageFactor(p, r.Mob, out double fo) ? fo : 1;
                     return 250;
                 }
+                if (r.Mode != Mode.Classic)
+                    return KeepGoing(r, p, now);
                 int hp = p.Health;
                 if (hp < r.LastHp)
                 {
@@ -221,14 +295,22 @@ namespace DOL.GS
             r.Cur = c;
             while (p.Level < c.Level)
                 p.Level = (byte) Math.Min(c.Level, p.Level + 1);   // (level by level: the stat gains of each)
-            SetSpecs(p, c.Level);
-            Dress(p, c.Level, c.Armor);
+            if (r.Mode == Mode.Classic)
+            {
+                SetSpecs(p, c.Level);
+                Dress(p, c.Level, c.Armor);
+            }
+            else
+            {
+                Untrained(p);
+                r.WeaponLevel = DressBaseline(p, c.Level, r.Mode != Mode.Spell);
+            }
             if (r.Spot != null && p.GetDistanceTo(r.Spot) > 300)
                 p.MoveTo(p.CurrentRegionID, r.Spot.X, r.Spot.Y, r.Spot.Z, p.Heading);
             Heal(p);
 
             DbMob row = ZoneBuilds.CopyMob(Template(c.Mob));
-            Point2D front = p.GetPointFromHeading(p.Heading, 220);
+            Point2D front = p.GetPointFromHeading(p.Heading, r.Mode == Mode.Spell ? 900 : 220);
             row.X = front.X;
             row.Y = front.Y;
             row.Z = p.Z;
@@ -245,10 +327,13 @@ namespace DOL.GS
             mob.AddToWorld();
             MonsterTiers.SetTier(mob, c.Tier);
             r.Mob = mob;
-            if (mob.Brain is StandardMobBrain b)
+            if (r.Mode == Mode.Spell)
+                mob.MaxSpeedBase = 0;                           // (held at range: a blow would break every cast)
+            if (mob.Brain is StandardMobBrain b && r.Mode != Mode.Spell)
                 b.AddToAggroList(p, 1000);
             p.TargetObject = mob;
-            p.attackComponent.RequestStartAttack(mob);
+            if (r.Mode != Mode.Spell)
+                p.attackComponent.RequestStartAttack(mob);
             r.Start = GameLoop.GameLoopTime;
             r.LastHp = p.Health;
             r.LastMobHp = mob.Health;
@@ -256,11 +341,143 @@ namespace DOL.GS
             r.Armed = false;
         }
 
+        /// <summary>Base, Spell, Check: both kept on their feet for the whole fight (healed under 40%), every blow counted.</summary>
+        static int KeepGoing(Run r, GamePlayer p, long now)
+        {
+            if (r.Mob.ObjectState != GameObject.eObjectState.Active)
+            {
+                Finish(r, "gone");
+                return 250;
+            }
+            if (r.Mode == Mode.Spell)
+            {
+                int mhp = r.Mob.Health;
+                if (mhp < r.LastMobHp)
+                {
+                    r.Landed++;
+                    r.CastPct += (r.LastMobHp - mhp) * 100.0 / Math.Max(1, r.Mob.MaxHealth);
+                }
+                r.LastMobHp = mhp;
+                p.Mana = p.MaxMana;
+            }
+            if (p.Health < p.MaxHealth * 0.4)
+                Heal(p);
+            if (r.Mob.Health < r.Mob.MaxHealth * 0.4)
+                r.Mob.Health = r.Mob.MaxHealth;
+            r.LastMobHp = r.Mob.Health;
+            p.Endurance = p.MaxEndurance;
+            if (now - r.Start > r.FightMs)
+                Finish(r, "time");
+            return 250;
+        }
+
+        /// <summary>A caster's best damage spell, fired at the monster every three seconds: straight through its spell
+        /// handler (the same damage, resists and spread as a cast, without the cast bar and its queue).</summary>
+        static void CastAt(Run r, GamePlayer p)
+        {
+            long now = GameLoop.GameLoopTime;
+            if (!r.Mob.IsAlive || now < r.NextCastAt)
+                return;
+            r.NextCastAt = now + 3000;
+            var (spell, line) = BestDamageSpell(p);
+            if (spell == null)
+                return;
+            r.SpellName = $"{spell.Name} (L{spell.Level}, {spell.Damage} dmg, {line.Name})";
+            p.TargetObject = r.Mob;
+            ISpellHandler h = ScriptMgr.CreateSpellHandler(p, spell, line);
+            if (h == null)
+                return;
+            MonsterTiers.Touch(p, r.Mob);                       // (its fight level, as a cast would set it)
+            if (r.Armed)
+                r.Casts++;
+            h.StartSpell(r.Mob);
+        }
+
+        static (Spell, SpellLine) BestDamageSpell(GamePlayer p)
+        {
+            Spell best = null;
+            SpellLine bestLine = null;
+            foreach (var (line, skills) in p.GetAllUsableListSpells())
+                foreach (Skill sk in skills)
+                    if (sk is Spell sp && sp.Damage > 0 && sp.Target == eSpellTarget.ENEMY && sp.Radius == 0 &&
+                        (sp.SpellType is eSpellType.DirectDamage or eSpellType.Bolt or eSpellType.DirectDamageNoVariance) &&
+                        (best == null || sp.Damage > best.Damage))
+                    {
+                        best = sp;
+                        bestLine = line;
+                    }
+            return (best, bestLine);
+        }
+
+        /// <summary>No training: every specialization the character has back to 1.</summary>
+        static void Untrained(GamePlayer p)
+        {
+            foreach (Specialization s in p.GetSpecList())
+                s.Level = 1;
+            p.RefreshSpecDependantSkills(false);
+            p.Out.SendUpdatePlayerSkills(true);
+        }
+
+        /// <summary>The baseline's kit: no armour; a plain one-hand weapon (fine quality, no bonuses) at the level that cons
+        /// blue to this level, or nothing (a caster). Returns the weapon's level.</summary>
+        static int DressBaseline(GamePlayer p, int level, bool weapon)
+        {
+            foreach (DbInventoryItem it in p.Inventory.EquippedItems.ToList())
+                p.Inventory.RemoveItem(it);
+            int wl = Math.Max(1, MonsterTiers.LevelFor(level, MonsterTiers.Blue, level));
+            if (weapon)
+            {
+                var (wt, _, dmg) = WeaponFor(p.Realm);
+                DbItemTemplate w = Plain(p.Realm, (int) eInventorySlot.RightHandWeapon, (int) wt);
+                if (w != null)
+                {
+                    w.Level = wl;
+                    w.DPS_AF = Math.Min(165, 12 + 3 * wl);
+                    w.SPD_ABS = 37;
+                    w.Hand = 0;
+                    w.Type_Damage = (int) dmg;
+                    w.Item_Type = (int) eInventorySlot.RightHandWeapon;
+                    p.Inventory.AddItem(eInventorySlot.RightHandWeapon, GameInventoryItem.Create(w));
+                }
+            }
+            p.SwitchWeapon(eActiveWeaponSlot.Standard);
+            p.Out.SendCharStatsUpdate();
+            p.Out.SendUpdateWeaponAndArmorStats();
+            return wl;
+        }
+
+        static (int n, double hitPct, double mean, double meanHit, double sdHit) Stats(List<double> blows)
+        {
+            int n = blows.Count;
+            var hits = blows.Where(b => b > 0).ToList();
+            double mean = n > 0 ? blows.Sum() / n : 0, mh = hits.Count > 0 ? hits.Average() : 0;
+            double sd = hits.Count > 1 ? Math.Sqrt(hits.Sum(h => (h - mh) * (h - mh)) / (hits.Count - 1)) : 0;
+            return (n, n > 0 ? hits.Count * 100.0 / n : 0, mean, mh, sd);
+        }
+
+        static void FinishBaseline(Run r, Case c, double secs)
+        {
+            GamePlayer p = r.P;
+            var ps = Stats(r.PBlows);
+            var ms = Stats(r.MBlows);
+            double pInt = ps.n > 1 ? (r.PLast - r.PFirst) / 1000.0 / (ps.n - 1) : 0;
+            double mInt = ms.n > 1 ? (r.MLast - r.MFirst) / 1000.0 / (ms.n - 1) : 0;
+            double perCast = r.Casts > 0 ? r.CastPct / r.Casts : 0;
+            Log(r, string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                "B {0} {1} {2} {3:0.0} | p {4} {5:0.0} {6:0.###} {7:0.###} {8:0.###} {9:0.00} | m {10} {11:0.0} {12:0.###} {13:0.###} {14:0.###} {15:0.00} | " +
+                "c {16} {17} {18:0.###} {19} | f {20:0.###} {21:0.###} | hp {22} {23} {24} w {25}",
+                c.Level, c.Mob.Replace(' ', '_'), TierName(c.Tier), secs, ps.n, ps.hitPct, ps.mean, ps.meanHit, ps.sdHit, pInt,
+                ms.n, ms.hitPct, ms.mean, ms.meanHit, ms.sdHit, mInt, r.Casts, r.Landed, perCast, r.SpellName.Replace(' ', '_'),
+                r.FIn, r.FOut, p.MaxHealth, r.Mob.Level, r.Mob.MaxHealth, r.WeaponLevel));
+        }
+
         static void Finish(Run r, string result)
         {
             GamePlayer p = r.P;
             Case c = r.Cur;
             double secs = Math.Max(0.5, (GameLoop.GameLoopTime - r.Start) / 1000.0);
+            if (r.Mode != Mode.Classic)
+                FinishBaseline(r, c, secs);
             int mobMax = Math.Max(1, r.Mob.MaxHealth);
             double taken = r.Taken * 100.0 / p.MaxHealth / secs, dealt = r.Dealt * 100.0 / mobMax / secs;
             double big = r.BigHit * 100.0 / p.MaxHealth;
@@ -270,7 +487,8 @@ namespace DOL.GS
                 $" | mine {string.Join(",", r.Mine.Select(kv => kv.Key + " " + kv.Value))} | theirs {string.Join(",", r.Theirs.Select(kv => kv.Key + " " + kv.Value))}" +
                 $" | last {p.attackComponent.attackAction?.LastAttackData?.AttackResult}, front {p.IsObjectInFront(r.Mob, 120)}, heading {p.Heading} want {p.GetHeading(r.Mob)}" +
                 $" | swinging {p.attackComponent.AttackState}, {p.GetDistanceTo(r.Mob)} away, {p.ActiveWeapon?.Name ?? "no weapon"}, ac {ActionCombat.IsActive(p)}";
-            Log(r, line);
+            if (r.Mode == Mode.Classic)
+                Log(r, line);
             p.attackComponent.StopAttack();
             if (r.Mob.IsAlive || r.Mob.ObjectState == GameObject.eObjectState.Active)
                 r.Mob.Delete();
@@ -502,7 +720,9 @@ namespace DOL.GS.Commands
 {
     [CmdAttribute("&calib", ePrivLevel.GM, "The power curve's test bench (TierCalibration) - a test character only!",
         "/calib run [levels 5,15,..] [fight seconds] [mob names separated by ;]  (every armour type with the first mob)",
-        "/calib quick [levels] [secs] [mobs]  (the middle armour only)", "/calib stop")]
+        "/calib quick [levels] [secs] [mobs]  (the middle armour only)",
+        "/calib base|spell|check [levels] [secs] [mobs]  (the one-footing baseline: DAoC's own numbers, a caster's spells, the fitted numbers)",
+        "/calib stop")]
     public class CalibCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         public void OnCommand(GameClient client, string[] args)
@@ -513,7 +733,7 @@ namespace DOL.GS.Commands
                 TierCalibration.Stop("stopped");
                 return;
             }
-            if (sub != "run" && sub != "quick")
+            if (sub != "run" && sub != "quick" && sub != "base" && sub != "spell" && sub != "check")
             {
                 DisplaySyntax(client);
                 return;
@@ -523,7 +743,12 @@ namespace DOL.GS.Commands
             int secs = args.Length > 3 ? int.Parse(args[3]) : 30;
             string[] mobs = args.Length > 4 ? string.Join(' ', args.Skip(4)).Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 : new[] { "rowdy", "lough wolf" };
-            string msg = TierCalibration.Start(client.Player, levels, mobs, secs * 1000, sub == "run");
+            var mode = sub switch
+            {
+                "base" => TierCalibration.Mode.Base, "spell" => TierCalibration.Mode.Spell, "check" => TierCalibration.Mode.Check,
+                _ => TierCalibration.Mode.Classic
+            };
+            string msg = TierCalibration.Start(client.Player, levels, mobs, secs * 1000, sub == "run", mode);
             client.Out.SendMessage("[Calib] " + msg, eChatType.CT_System, eChatLoc.CL_SystemWindow);
         }
     }

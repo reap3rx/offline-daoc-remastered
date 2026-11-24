@@ -8,6 +8,198 @@
   {
    "story_reward": true,
    "scaled": true,
+   "name": "Toll-Chain Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 4
+   },
+   "lore": "A link of the chain the runaways put across the bridge, beaten into a bracer."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fisher's Knot Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 5,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 4
+   },
+   "lore": "Tadhg ties a fisher's knot in copper wire for anyone who helps him."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Runaway's Pledge Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 7,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 4,
+    "Power": 1
+   },
+   "lore": "A lead token the runaways swear on. Breandan's sons all wear one."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rowdy's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 7,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 6
+   },
+   "lore": "Studded, loud, and slightly too big. Like the rowdy who wore it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hazel-Sack Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 9,
+   "bonuses": {
+    "Int": 3,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "Woven from the drawstring of a smuggler's sack. It smells faintly of the well."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sentinel's Courier Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 9,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 9,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Plain leather, Ceannai-stamped. Couriers on the south road wear them."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Breandan's Chain",
+   "base": [
+    41,
+    29
+   ],
+   "level": 11,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 9
+   },
+   "lore": "The toll-master's chain of office. He made it himself, from the toll chain."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bridge-Warden's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 11,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 11,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Old Tadhg's father kept the bridge. This was his ring."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Turncoat's Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 11,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 9
+   },
+   "lore": "Breandan's sash: Connla green on one side, eriu brown on the other."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Salt-Crust Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 8,
+   "bonuses": {
+    "Emp": 3,
+    "Con": 1,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "River water, boiled down. What's left is sea salt."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fili's Reed Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 8,
+   "bonuses": {
+    "Int": 3,
+    "Emp": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "Marsh reed woven tight, the way the filid do it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
    "name": "False-Light Lantern Charm",
    "base": [
     41,
@@ -78,6 +270,461 @@
   {
    "story_reward": true,
    "scaled": true,
+   "name": "Drowned Sailor's Earring",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Qui": 4,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 7,
+    "Power": 1
+   },
+   "lore": "A gold earring, the kind sailors wear to pay for their own burial."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Night-Watch Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 12,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 10
+   },
+   "lore": "A watchman's bracer from Connla's docks, salt-stained."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tide-Mark Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 12,
+   "bonuses": {
+    "Emp": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A ring with a tide-line etched round it. The line is higher than it should be."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Morning Star Bell-Clapper",
+   "base": [
+    41,
+    29
+   ],
+   "level": 14,
+   "bonuses": {
+    "Emp": 5,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "The clapper of the Morning Star's bell, on a cord. It rang for the drowned."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bell-Ringer's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Grey and heavy, for standing on a cold quay all night."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ebb-Tide Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 14,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 12
+   },
+   "lore": "Sealskin, from the sailors' pier."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ant-Chitin Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 15,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 15,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Shaped from a giant ant's foreleg. Harder than iron and much lighter."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Scout's Compass Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 15,
+   "bonuses": {
+    "Int": 5,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 9
+   },
+   "lore": "A Sentinel scout's lodestone, in a twist of wire."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mandible Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 17,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "An ant soldier's mandible tip, set in bronze. Still sharp."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Road-Keeper's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 17,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 17,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "The belt of a Sentinel who keeps the south road clear."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hill-Scout's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 19,
+   "bonuses": {
+    "Dex": 6,
+    "Qui": 6,
+    "Str": 3,
+    "Hits": 16
+   },
+   "lore": "Bronze, light and plain. Scouts don't like anything that clinks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lost-Patrol Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 19,
+   "bonuses": {
+    "Emp": 6,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "Found on the floor of the great hill. It belonged to a Sentinel."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tunnel-Crawler's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 19,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 19,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Scuffed to the bone from crawling."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Old Queen's Crown-Plate",
+   "base": [
+    41,
+    29
+   ],
+   "level": 21,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 4,
+    "Hits": 18
+   },
+   "lore": "A plate of the Old Queen's head-carapace, hung on a chain."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Royal Jelly Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 21,
+   "bonuses": {
+    "Qui": 7,
+    "Con": 4,
+    "Dex": 4,
+    "Hits": 13,
+    "Power": 2
+   },
+   "lore": "Amber, with a drop of something golden inside."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hive-Heart Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 21,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 21,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Spun from ant silk. It doesn't tear."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moss-Light Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 16,
+   "bonuses": {
+    "Int": 5,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "A moss sheerie's light, given freely. It doesn't lie."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dancer's Anklet Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 16,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 3,
+    "Hits": 14
+   },
+   "lore": "Bells and moss. It jingles when you're about to be hit."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ring-Dancer's Circlet",
+   "base": [
+    41,
+    29
+   ],
+   "level": 18,
+   "bonuses": {
+    "Qui": 6,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 11,
+    "Power": 2
+   },
+   "lore": "Toadstool and silver wire. You feel like dancing. You don't."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lullaby Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 18,
+   "bonuses": {
+    "Emp": 6,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "It hums the sheeries' tune if you hold it to your ear."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Kirwyn's Trident Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 3,
+    "Hits": 17
+   },
+   "lore": "A merrow's ring, shaped like a trident. Kirwyn gave it freely, in the end."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Merrow-Scale Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 20,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 20,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Green scales that shine like wet stone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pier-Trader's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 3,
+    "Hits": 17
+   },
+   "lore": "Sailors' leather, merrow-stitched. The old trade."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hazel-Wood Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 22,
+   "bonuses": {
+    "Int": 7,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "Hazel wood, from the nine trees round the well. It's said to make you wiser. It doesn't, but it's very nice."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seanchai's Story-Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 22,
+   "bonuses": {
+    "Qui": 7,
+    "Con": 4,
+    "Dex": 4,
+    "Hits": 13,
+    "Power": 2
+   },
+   "lore": "Every patch on it is a story. Bebhinn knows them all."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Deep-Water Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 22,
+   "bonuses": {
+    "Emp": 7,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "A pearl from the bottom of the well. It's very cold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
    "name": "Treaty-Stick Charm",
    "base": [
     41,
@@ -143,6 +790,443 @@
     "Hits": 17
    },
    "lore": "Eriu weaving, taught to Orla in captivity. She's better at it than they are."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "War-Arrow Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 22,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 4,
+    "Hits": 19
+   },
+   "lore": "The head of the eriu war-arrow, snapped off and kept."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sentinel's Watch Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 22,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 22,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Ceannai-stamped. A Sentinel on watch wears one on each wrist."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Danderpaw's Claw Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 24,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "Danderpaw's claw, set in bronze."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Nasco's Net-Weight Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 24,
+   "bonuses": {
+    "Int": 8,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "A stone net-weight carved with Nasco's mark."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Solas's Watch-Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 24,
+   "bonuses": {
+    "Dex": 8,
+    "Qui": 8,
+    "Str": 4,
+    "Hits": 20
+   },
+   "lore": "The cloak of the eriu who watched the south road. It's the colour of dusk."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Palisade-Scout's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 25,
+   "bonuses": {
+    "Dex": 8,
+    "Qui": 8,
+    "Str": 4,
+    "Hits": 21
+   },
+   "lore": "A plain ring with a notch for every palisade post counted."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Totem-Splinter Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 25,
+   "bonuses": {
+    "Int": 8,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 4,
+    "Hits": 15
+   },
+   "lore": "A splinter of a clan totem, bound in bronze. It mutters."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Kedger's Fish-Scale Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 27,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 27,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Kaen Kedger's mantle of office: ten thousand fish scales, sewn one by one."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Chief-of-Chiefs Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 27,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 23
+   },
+   "lore": "Gold and river-pearl. The eriu clans would follow whoever wore it. Nobody will."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Well-Caller's Staff Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 27,
+   "bonuses": {
+    "Int": 9,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "The head of a well-caller's staff. It drips, always."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Huscarl's Arm-Ring",
+   "base": [
+    41,
+    33
+   ],
+   "level": 27,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 23
+   },
+   "lore": "Bronze, heavy, and stamped with a leaping salmon."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hazel-Gatherer's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 24,
+   "bonuses": {
+    "Int": 8,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "A ring of plaited hazel twig. It never dries out."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Nine-Hazel Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 24,
+   "bonuses": {
+    "Emp": 8,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "Nine hazelnuts on a cord. They rattle when the well stirs."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Stone-Singer's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 26,
+   "bonuses": {
+    "Emp": 9,
+    "Con": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "Taken from a well-caller. The ogham on it is a lullaby turned backwards."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Standing-Stone Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 26,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 26,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Grey stone, cut thin as leather. It shouldn't bend. It does."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ripple-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 26,
+   "bonuses": {
+    "Int": 9,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "A ring that leaves ripples in the air when you move your hand."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Arracht's Fang",
+   "base": [
+    41,
+    24
+   ],
+   "level": 27,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 23
+   },
+   "lore": "A fang as long as your forearm. The great ollipheist won't miss it. It has hundreds."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Serpent-Skin Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 27,
+   "bonuses": {
+    "Dex": 9,
+    "Qui": 9,
+    "Str": 4,
+    "Hits": 23
+   },
+   "lore": "Ollipheist hide. It's never quite still."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Upriver Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 27,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 27,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Found in Arracht's coils. Whoever wore it went upriver and didn't come back."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Orla's Song-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 28,
+   "bonuses": {
+    "Qui": 9,
+    "Con": 5,
+    "Dex": 5,
+    "Hits": 17,
+    "Power": 3
+   },
+   "lore": "Orla's ring. She says it sings the low part."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ceannai Lullaby Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 28,
+   "bonuses": {
+    "Emp": 9,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "Silver from Ceannai, with a lullaby engraved round it in ogham."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sinann's Tear",
+   "base": [
+    41,
+    24
+   ],
+   "level": 30,
+   "bonuses": {
+    "Emp": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "A drop of the river that never dries. Sinann wept it when she understood."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned-Hazel Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 30,
+   "bonuses": {
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Leaves of the nine hazels, green again, woven into grey wool."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Well-Keeper's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 30,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "The torc of the Lucht an Tobair, given to those who kept the well."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "River-Mouth Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 30,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
+   },
+   "lore": "Silver and green, the colours of the river where it meets the sea."
   }
  ]
 }

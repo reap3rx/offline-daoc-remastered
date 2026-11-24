@@ -1,0 +1,1129 @@
+{
+ "zone": 205,
+ "name": "Bog of Cullen",
+ "rating": "deadly",
+ "themes": [
+  "Alainn Bin",
+  "Siopa and the West Edge",
+  "The Siabra Marches",
+  "The Peat Cuttings",
+  "The Gemstone Tower",
+  "The Eastern Bog",
+  "The Keening Ground",
+  "The North Road"
+ ],
+ "notes": "Zone brief 2026-11-24 (Zone Reviews, Bog of Cullen tab), owner's answers: Deadly, a little harder than Lough Gur; the Glimmer holds the Gemstone Tower; Badb the purple; the Azure hostile here; the wildlife cut and more Glimmer. Coordinates are zone-local units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Badb": "purple",
+  "Riolda": "red",
+  "Kunsgnos": "orange",
+  "Madawg": "orange",
+  "Saemus": "orange",
+  "Muroi": "orange",
+  "Enan": "orange",
+  "Geas Bound Protector": "red"
+ },
+ "factions": {
+  "peat": {
+   "id": 9311,
+   "aggro": 70
+  },
+  "dead": {
+   "id": 9312,
+   "aggro": 90
+  },
+  "siabra": {
+   "id": 9313,
+   "aggro": 95,
+   "enemies": [
+    "azure_crusade"
+   ]
+  },
+  "glimmer": {
+   "id": 9314,
+   "aggro": 95,
+   "enemies": [
+    "azure_crusade"
+   ]
+  },
+  "crow": {
+   "id": 9315,
+   "aggro": 95
+  },
+  "azure_crusade": {
+   "id": 9316,
+   "aggro": 95,
+   "enemies": [
+    "glimmer",
+    "siabra"
+   ]
+  }
+ },
+ "members": {
+  "bog frog": {
+   "from": "bog frog",
+   "tier": "blue",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 300
+  },
+  "swamp hopper": {
+   "from": "swamp hopper",
+   "tier": "green",
+   "aggro": [
+    20,
+    300
+   ],
+   "roam": 300
+  },
+  "bog worm": {
+   "from": "bog worm",
+   "tier": "blue",
+   "aggro": [
+    40,
+    300
+   ],
+   "roam": 200
+  },
+  "black badger": {
+   "from": "black badger",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "bog creeper": {
+   "from": "bog creeper",
+   "tier": "yellow",
+   "faction": "peat",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "bog crawler": {
+   "from": "bog crawler",
+   "tier": "orange",
+   "faction": "peat",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 250
+  },
+  "morass leech": {
+   "from": "morass leech",
+   "tier": "yellow",
+   "faction": "peat",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "corpan side": {
+   "from": "corpan side",
+   "tier": "orange",
+   "aggro": [
+    85,
+    500
+   ],
+   "roam": 250
+  },
+  "detrital crab": {
+   "from": "detrital crab",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 200
+  },
+  "amadan touched": {
+   "from": "amadan touched",
+   "tier": "yellow",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 300
+  },
+  "deamhan hound": {
+   "from": "deamhan hound",
+   "tier": "orange",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 350
+  },
+  "far darrig": {
+   "from": "far darrig",
+   "tier": "yellow",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 300
+  },
+  "bog-horror": {
+   "from": "bog crawler",
+   "name": "bog-horror",
+   "tier": "red",
+   "faction": "peat",
+   "aggro": [
+    95,
+    550
+   ],
+   "size": 1.4,
+   "roam": 60,
+   "guards": {
+    "bog creeper": 2
+   }
+  },
+  "merman": {
+   "from": "merman",
+   "tier": "yellow",
+   "aggro": [
+    70,
+    400
+   ],
+   "roam": 150
+  },
+  "fog wraith": {
+   "from": "fog wraith",
+   "tier": "orange",
+   "faction": "dead",
+   "aggro": [
+    85,
+    500
+   ],
+   "roam": 300
+  },
+  "aughisky": {
+   "from": "aughisky",
+   "tier": "orange",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 400
+  },
+  "alp luachra": {
+   "from": "alp luachra",
+   "tier": "yellow",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "irewood sapling": {
+   "from": "irewood sapling",
+   "tier": "blue",
+   "aggro": [
+    40,
+    300
+   ],
+   "roam": 120
+  },
+  "irewood greenbark": {
+   "from": "irewood greenbark",
+   "tier": "yellow",
+   "aggro": [
+    70,
+    400
+   ],
+   "roam": 80
+  },
+  "lhiannan-sidhe": {
+   "from": "lhiannan-sidhe",
+   "tier": "red",
+   "faction": "glimmer",
+   "aggro": [
+    90,
+    500
+   ],
+   "roam": 150
+  },
+  "siabra seeker": {
+   "from": "siabra seeker",
+   "tier": "yellow",
+   "faction": "siabra",
+   "guild": "the Siabra of Cullen",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "siabra lookout": {
+   "from": "siabra lookout",
+   "tier": "yellow",
+   "faction": "siabra",
+   "guild": "the Siabra of Cullen",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 60
+  },
+  "siabra raider": {
+   "from": "siabra raider",
+   "tier": "orange",
+   "faction": "siabra",
+   "guild": "the Siabra of Cullen",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 200
+  },
+  "siabra mireguard": {
+   "from": "siabra mireguard",
+   "tier": "orange",
+   "faction": "siabra",
+   "guild": "the Siabra of Cullen",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 120
+  },
+  "siabra wayguard": {
+   "from": "siabra wayguard",
+   "tier": "orange",
+   "faction": "siabra",
+   "guild": "the Siabra of Cullen",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 120
+  },
+  "siabra venator": {
+   "from": "siabra venator",
+   "tier": "orange",
+   "faction": "siabra",
+   "guild": "the Siabra of Cullen",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 250
+  },
+  "siabra waterwalker": {
+   "from": "siabra waterwalker",
+   "tier": "red",
+   "faction": "siabra",
+   "guild": "the Siabra of Cullen",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 250
+  },
+  "siabra post-captain": {
+   "from": "siabra waterwalker",
+   "name": "siabra post-captain",
+   "tier": "red",
+   "faction": "siabra",
+   "guild": "the Siabra of Cullen",
+   "aggro": [
+    95,
+    600
+   ],
+   "size": 1.2,
+   "roam": 40,
+   "guards": {
+    "siabra mireguard": 2
+   }
+  },
+  "savage fishing bear": {
+   "from": "savage fishing bear",
+   "tier": "orange",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 350
+  },
+  "black wraith": {
+   "from": "black wraith",
+   "tier": "red",
+   "faction": "dead",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 250
+  },
+  "banshee": {
+   "from": "banshee",
+   "tier": "orange",
+   "faction": "dead",
+   "model": 1885,
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 200
+  },
+  "lesser banshee": {
+   "from": "lesser banshee",
+   "tier": "yellow",
+   "faction": "dead",
+   "model": 1885,
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "cronicorn": {
+   "from": "cronicorn",
+   "tier": "red",
+   "faction": "crow",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 100
+  },
+  "glimmerling": {
+   "from": "glimmerling",
+   "tier": "yellow",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 300
+  },
+  "glimmer ghoul": {
+   "from": "glimmer ghoul",
+   "tier": "orange",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 200
+  },
+  "glimmer ward": {
+   "from": "glimmer ward",
+   "tier": "orange",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 100
+  },
+  "glimmer griever": {
+   "from": "glimmer griever",
+   "tier": "orange",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 250
+  },
+  "glimmer striker": {
+   "from": "glimmer striker",
+   "tier": "red",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 150
+  },
+  "glimmer warshade": {
+   "from": "glimmer warshade",
+   "tier": "red",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 60,
+   "guards": {
+    "glimmer ward": 2
+   }
+  },
+  "bog light": {
+   "from": "glimmerling",
+   "name": "bog light",
+   "tier": "orange",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    95,
+    650
+   ],
+   "size": 0.8,
+   "roam": 400
+  },
+  "azure crusader": {
+   "from": "azure avenger",
+   "name": "azure crusader",
+   "tier": "orange",
+   "faction": "azure_crusade",
+   "guild": "the Order of the Azure",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 120
+  },
+  "azure cleanser": {
+   "from": "azure cleanser",
+   "tier": "orange",
+   "faction": "azure_crusade",
+   "guild": "the Order of the Azure",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 120
+  },
+  "azure banisher": {
+   "from": "azure banisher",
+   "tier": "red",
+   "faction": "azure_crusade",
+   "guild": "the Order of the Azure",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 60
+  },
+  "azure idolater": {
+   "from": "azure idolater",
+   "tier": "yellow",
+   "faction": "azure_crusade",
+   "guild": "the Order of the Azure",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 150
+  }
+ },
+ "sites": [
+  {
+   "id": "siopa_edge",
+   "kind": "wildlife",
+   "area": [
+    2400,
+    31200,
+    16800,
+    44000
+   ],
+   "spawn": {
+    "bog frog": 12,
+    "swamp hopper": 12,
+    "black badger": 9,
+    "deamhan hound": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "alainn_edge",
+   "kind": "wildlife",
+   "area": [
+    43200,
+    54000,
+    63200,
+    64000
+   ],
+   "spawn": {
+    "bog frog": 12,
+    "swamp hopper": 9,
+    "bog worm": 9,
+    "detrital crab": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "siabra_marches",
+   "kind": "wildlife",
+   "area": [
+    1600,
+    2400,
+    30400,
+    24000
+   ],
+   "spawn": {
+    "siabra seeker": 12,
+    "siabra raider": 12,
+    "siabra venator": 12,
+    "siabra waterwalker": 9,
+    "lesser banshee": 9,
+    "fog wraith": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "nw_water",
+   "kind": "wildlife",
+   "area": [
+    1600,
+    12000,
+    18000,
+    30400
+   ],
+   "spawn": {
+    "merman": 9,
+    "aughisky": 6,
+    "alp luachra": 9,
+    "fog wraith": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "nw_wood",
+   "kind": "wildlife",
+   "area": [
+    14400,
+    2000,
+    24000,
+    9200
+   ],
+   "spawn": {
+    "irewood sapling": 12,
+    "irewood greenbark": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "muroi_post",
+   "kind": "camp",
+   "at": [
+    12680,
+    12760
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "siabra post-captain": 1,
+    "siabra raider": 2,
+    "siabra lookout": 1
+   }
+  },
+  {
+   "id": "enan_post",
+   "kind": "camp",
+   "at": [
+    29040,
+    10640
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "siabra post-captain": 1,
+    "siabra venator": 2,
+    "siabra lookout": 1
+   }
+  },
+  {
+   "id": "wayguard_post",
+   "kind": "camp",
+   "at": [
+    20120,
+    32760
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "siabra wayguard": 4,
+    "deamhan hound": 2
+   }
+  },
+  {
+   "id": "causeway",
+   "kind": "camp",
+   "at": [
+    20880,
+    22400
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "siabra waterwalker": 2,
+    "siabra mireguard": 2
+   }
+  },
+  {
+   "id": "siabra_stilts",
+   "kind": "camp",
+   "at": [
+    5600,
+    7200
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "siabra post-captain": 1,
+    "siabra seeker": 2,
+    "siabra raider": 1
+   }
+  },
+  {
+   "id": "marches_round",
+   "kind": "patrol",
+   "route": [
+    [
+     8000,
+     12000
+    ],
+    [
+     18000,
+     8000
+    ],
+    [
+     28000,
+     12000
+    ],
+    [
+     18000,
+     18000
+    ]
+   ],
+   "spawn": {
+    "siabra waterwalker": 1,
+    "siabra venator": 2
+   }
+  },
+  {
+   "id": "peat_cuttings",
+   "kind": "wildlife",
+   "area": [
+    4000,
+    24000,
+    28800,
+    55200
+   ],
+   "spawn": {
+    "bog creeper": 17,
+    "morass leech": 14,
+    "corpan side": 9,
+    "detrital crab": 9,
+    "amadan touched": 9,
+    "far darrig": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "turf_cutters_hole",
+   "kind": "camp",
+   "at": [
+    22200,
+    36720
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "bog-horror": 1,
+    "bog creeper": 3
+   }
+  },
+  {
+   "id": "leech_pits",
+   "kind": "camp",
+   "at": [
+    16800,
+    47200
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "morass leech": 4,
+    "bog crawler": 1
+   }
+  },
+  {
+   "id": "gold_hoard",
+   "kind": "camp",
+   "at": [
+    12000,
+    52000
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "corpan side": 3,
+    "bog crawler": 1
+   }
+  },
+  {
+   "id": "tower_ground",
+   "kind": "wildlife",
+   "area": [
+    28000,
+    29600,
+    40800,
+    44800
+   ],
+   "spawn": {
+    "glimmer ghoul": 12,
+    "glimmer griever": 9,
+    "glimmerling": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "gemstone_tower",
+   "kind": "camp",
+   "at": [
+    35120,
+    38880
+   ],
+   "r": 640,
+   "respawn": 420,
+   "spawn": {
+    "glimmer warshade": 1,
+    "glimmer striker": 2,
+    "glimmer ward": 2
+   }
+  },
+  {
+   "id": "tower_gate",
+   "kind": "camp",
+   "at": [
+    32800,
+    41600
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "glimmer striker": 1,
+    "glimmer ghoul": 3
+   }
+  },
+  {
+   "id": "badbs_mound",
+   "kind": "camp",
+   "at": [
+    32800,
+    34400
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "cronicorn": 2
+   }
+  },
+  {
+   "id": "bog_lights_w",
+   "kind": "wildlife",
+   "area": [
+    6000,
+    20000,
+    30000,
+    52000
+   ],
+   "spawn": {
+    "bog light": 17,
+    "glimmerling": 9
+   },
+   "spacing": 260,
+   "time": "night"
+  },
+  {
+   "id": "bog_lights_e",
+   "kind": "wildlife",
+   "area": [
+    38000,
+    16000,
+    60000,
+    46000
+   ],
+   "spawn": {
+    "bog light": 17,
+    "glimmerling": 9
+   },
+   "spacing": 260,
+   "time": "night"
+  },
+  {
+   "id": "bog_lights_day",
+   "kind": "wildlife",
+   "area": [
+    24000,
+    18000,
+    44000,
+    30000
+   ],
+   "spawn": {
+    "glimmerling": 12,
+    "glimmer griever": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "lhiannan_reeds",
+   "kind": "camp",
+   "at": [
+    22400,
+    32000
+   ],
+   "r": 400,
+   "respawn": 600,
+   "spawn": {
+    "lhiannan-sidhe": 1,
+    "glimmerling": 2
+   }
+  },
+  {
+   "id": "lhiannan_east",
+   "kind": "camp",
+   "at": [
+    44000,
+    40000
+   ],
+   "r": 400,
+   "respawn": 600,
+   "spawn": {
+    "lhiannan-sidhe": 1,
+    "glimmerling": 2
+   }
+  },
+  {
+   "id": "eastern_bog",
+   "kind": "wildlife",
+   "area": [
+    38000,
+    14000,
+    62400,
+    46000
+   ],
+   "spawn": {
+    "savage fishing bear": 20,
+    "bog frog": 12,
+    "bog crawler": 12,
+    "siabra waterwalker": 6,
+    "bog worm": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "bear_wallow",
+   "kind": "camp",
+   "at": [
+    52000,
+    28000
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "savage fishing bear": 3
+   }
+  },
+  {
+   "id": "crawler_hollow",
+   "kind": "camp",
+   "at": [
+    42000,
+    24800
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "bog crawler": 3,
+    "bog creeper": 2
+   }
+  },
+  {
+   "id": "keening_ground",
+   "kind": "wildlife",
+   "area": [
+    34000,
+    45600,
+    62400,
+    54400
+   ],
+   "spawn": {
+    "black wraith": 14,
+    "banshee": 12,
+    "lesser banshee": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "keening_stones",
+   "kind": "camp",
+   "at": [
+    40160,
+    54360
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "banshee": 3,
+    "black wraith": 1
+   }
+  },
+  {
+   "id": "wraith_mire",
+   "kind": "camp",
+   "at": [
+    56160,
+    51400
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "black wraith": 3
+   }
+  },
+  {
+   "id": "north_road",
+   "kind": "wildlife",
+   "area": [
+    35200,
+    1200,
+    54000,
+    13200
+   ],
+   "spawn": {
+    "azure crusader": 9,
+    "azure cleanser": 9,
+    "azure idolater": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "azure_crusade_camp",
+   "kind": "camp",
+   "at": [
+    44800,
+    6400
+   ],
+   "r": 720,
+   "respawn": 300,
+   "spawn": {
+    "azure banisher": 1,
+    "azure crusader": 3,
+    "azure cleanser": 2,
+    "azure idolater": 2
+   }
+  },
+  {
+   "id": "azure_pyre",
+   "kind": "camp",
+   "at": [
+    39200,
+    13200
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "azure banisher": 1,
+    "azure cleanser": 2,
+    "azure idolater": 2
+   }
+  },
+  {
+   "id": "azure_column",
+   "kind": "patrol",
+   "route": [
+    [
+     44800,
+     8000
+    ],
+    [
+     42000,
+     16800
+    ],
+    [
+     38000,
+     26000
+    ],
+    [
+     42000,
+     16800
+    ]
+   ],
+   "spawn": {
+    "azure crusader": 2,
+    "azure cleanser": 1
+   }
+  },
+  {
+   "id": "dorocha_go",
+   "kind": "clear",
+   "at": [
+    35200,
+    39600
+   ],
+   "r": 2400,
+   "names": [
+    "far dorocha"
+   ]
+  },
+  {
+   "id": "household_goes",
+   "kind": "clear",
+   "at": [
+    50800,
+    45280
+   ],
+   "r": 1000,
+   "names": [
+    "Manius",
+    "Jannet",
+    "Deniela",
+    "Donal",
+    "Ide"
+   ]
+  },
+  {
+   "id": "alainn_bin",
+   "kind": "clear",
+   "at": [
+    51400,
+    52000
+   ],
+   "r": 3600,
+   "names": [
+    "black wraith",
+    "banshee",
+    "lesser banshee",
+    "bog frog",
+    "swamp hopper",
+    "bog worm",
+    "detrital crab"
+   ]
+  },
+  {
+   "id": "siopa",
+   "kind": "clear",
+   "at": [
+    9000,
+    37000
+   ],
+   "r": 2400,
+   "names": [
+    "bog frog",
+    "swamp hopper",
+    "black badger",
+    "deamhan hound"
+   ]
+  }
+ ]
+}

@@ -55,6 +55,35 @@ namespace DOL.GS
 
         public static bool IsTiered(GameObject o) => o is GameNPC n && Tier(n) != None;
 
+        // ------------------------------------------------------------------ named monsters: sturdier than their con
+
+        /// <summary>Owner 2026-11-22: "Any boss or named mob ... should have more health than a regular mob of their
+        /// con, probably at least 2x the health. Zone bosses more than that ... a yellow named mob should be more
+        /// challenging than a yellow red wolfhound." A named monster (its name starts with a capital: Nock, Bertha, the
+        /// Lady's own) takes half the damage of an ordinary one of its con - twice its health, in effect - unless set
+        /// otherwise here. Event and story bosses get theirs as health (EventCons).</summary>
+        public const double NamedSturdiness = 2.0;
+        static readonly System.Runtime.CompilerServices.ConditionalWeakTable<GameNPC, object> _sturdy = new();
+
+        public static void SetSturdiness(GameNPC n, double m)
+        {
+            if (n == null)
+                return;
+            _sturdy.Remove(n);
+            _sturdy.Add(n, m);
+        }
+
+        public static double Sturdiness(GameNPC n)
+        {
+            if (n == null)
+                return 1;
+            if (_sturdy.TryGetValue(n, out object m))
+                return (double) m;
+            return n is not EventNpc && n.Realm == eRealm.None && IsNamed(n.Name) ? NamedSturdiness : 1;
+        }
+
+        public static bool IsNamed(string name) => !string.IsNullOrEmpty(name) && char.IsUpper(name[0]);
+
         /// <summary>Set a tier by hand (a zone file, a GM): it sticks until changed again.</summary>
         public static void SetTier(GameNPC n, sbyte tier)
         {
@@ -242,58 +271,94 @@ namespace DOL.GS
 
         /// <summary>The level a monster fights at against a side of level <paramref name="b"/>: the same level, whatever its
         /// tier (owner 2026-11-19: everyone on one footing, "their level is what gives them access to their tools") -
-        /// how strong it is comes from its tier (TierStrength), not from DAoC's level gaps. Critters stay low; a purple
-        /// never drops below where it was placed.</summary>
-        public static int FightLevelFor(int b, sbyte tier, int baseLevel)
+        /// how strong it is comes from its tier (BaseSwings, BaseLasts), not from DAoC's level gaps. Critters stay low;
+        /// an epic encounter (a dragon, a raid boss) never drops below where it was placed.</summary>
+        public static int FightLevelFor(int b, sbyte tier, int baseLevel, bool epic = false)
         {
             b = Math.Clamp(b, 1, 100);
             if (tier == Grey)
                 return LevelFor(b, Grey, baseLevel);
-            if (tier == Purple)
+            if (tier == Purple && epic)
                 return Math.Max(baseLevel, b);
             return b;
         }
 
-        // ------------------------------------------------------------------ the power curve
+        // ------------------------------------------------------------------ one footing at every level
 
-        /// <summary>A tier's strength, a yellow being 1 (an even fight for a player whose own power is 1).</summary>
-        public static readonly double[] TierStrength = { 0.25, 0.55, 0.75, 1.0, 1.35, 1.8, 3.0 };   // grey .. purple
+        // Owner 2026-11-22 (replacing the power bands of 2026-11-19, where levels 1-12 fought like a green and 50 like a
+        // red): "I want a player who is wearing no armor, no weapons (or the same exact basic weapon relative to their
+        // level) auto attacking a monster of the same con to do the same amount of relative damage to a monster of the
+        // same con whether they're level 1 or level 50 ... The power for the level 50 will come with them having access
+        // to better armor with better stats and stat bonuses on it, and their skills and abilities they've unlocked."
+        //
+        // So a con is the same fight at every level. OutCurve and InCurve only even out DAoC's own numbers from level to
+        // level, fitted on the bench's baseline (TierCalibration, "/calib base": untrained, no armour, a plain
+        // blue-conned weapon, the monster's moves off): OutCurve(level) is what a green takes BaseSwings[green] swings of
+        // that baseline to bring down, InCurve(level) what takes a green BaseLasts[green] of its own swings to bring the
+        // baseline down. Each con then has its own fixed numbers - the owner's targets: a green in 10-12 swings, won 80-90%
+        // of the time; a blue an even trade; a yellow lost more often than not without gear and skills; then orange, red
+        // and purple on the same climb. Training, gear and abilities are the power on top (nothing here sees them).
+        // Fitted 22 Nov from the bench (tools: claude-work\fit, a race of swings with the bench's hit rates, damage spread
+        // and swing times, pressing counted): a green 12 swings before pressing (about 10.7 with it) and won 85% of the
+        // time, a blue 14 and 50%, a yellow 16 and 20%; an orange hits 1.35x as hard as a yellow, a red 1.8x, a purple 2.6x.
+        public static readonly double[] BaseSwings = { 4, 12, 14, 16, 21, 30, 50 };        // grey .. purple: baseline swings to bring it down (before pressing)
+        public static readonly double[] BaseLasts = { 37.06, 14.83, 12.15, 10.8, 8.0, 6.0, 4.15 };   // grey .. purple: its swings to bring the baseline down
+
+        /// <summary>A purple's strength by its zone's rating (owner 2026-11-22: "I like having a power cap on purples for
+        /// the peaceful or wild zones so that the dangerous and deadly zones still feel tougher even if you're fighting
+        /// purple in both"): Peaceful, Wild, Dangerous, Deadly, Elite. Epic encounters (dragons, raid bosses) stand outside it.</summary>
+        public static readonly double[] PurpleByRating = { 0.6, 0.75, 1.0, 1.25, 1.5 };
 
         /// <summary>Everyone's footing against monsters (tunable live with /tier tune): overall multipliers on how hard a
         /// monster is to bring down and how hard it hits (1 = the fitted curve as it is).</summary>
         public static double Toughness = 1.0, Bite = 1.0;
 
-        // Greens are fodder (owner 2026-11-21: "Greens are still too punishing on low level characters ... it takes too long
-        // and is too tough on low level characters and that will be super discouraging to a new player"): they take
-        // GreenTakes times the damage and hit GreenHits as hard - like half the health, with the bar looking as ever.
-        // (/tier tune greentakes|greenhits <v>)
-        public static double GreenTakes = 2.0, GreenHits = 0.75;
+        // Each tier's own fine-tuning on top (the /tier tune window, owner 2026-11-21: "so I can tune all tiers of hits,
+        // takes, and presses"), grey .. purple: TierHits times as hard it hits you, TierTakes times the damage it takes,
+        // and TierPress added to each blow in a row you land on it (0: no pressing on that tier). All 1 = the targets.
+        public static readonly double[] DefaultHits = { 1, 1, 1, 1, 1, 1, 1 };
+        public static readonly double[] DefaultTakes = { 1, 1, 1, 1, 1, 1, 1 };
+        public static readonly double[] DefaultPress = { 0, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10 };   // (every con but a critter: counted in the targets)
+        public static readonly double[] TierHits = (double[]) DefaultHits.Clone();
+        public static readonly double[] TierTakes = (double[]) DefaultTakes.Clone();
+        public static readonly double[] TierPress = (double[]) DefaultPress.Clone();
 
-        // Pressing the attack (owner 2026-11-21): each blow in a row a player (or bot) lands on a green or blue adds
-        // PressStep to the next, up to PressMax blows; a miss, a blow turned aside or PressWindowMs without one ends it.
-        public static double PressStep = 0.10;
+        static int Ix(sbyte tier) => Math.Clamp(tier, Grey, Purple) + 3;
+
+        public static double GreenTakes { get => TierTakes[1]; set => TierTakes[1] = value; }
+        public static double GreenHits { get => TierHits[1]; set => TierHits[1] = value; }
+
+        /// <summary>The bonus each blow in a row adds on this tier (0: pressing doesn't count there).</summary>
+        public static double PressStepFor(sbyte tier) => tier == None ? 0 : TierPress[Ix(tier)];
+
+        // Pressing the attack (owner 2026-11-21): each blow in a row a player (or bot) lands on a tier with a press step
+        // (every con but grey since 2026-11-22 - the owner had raised it on every tier) adds that step to the next, up to
+        // PressMax blows; a miss, a blow turned aside or PressWindowMs without one ends it.
         public const int PressMax = 5, PressWindowMs = 4000;
 
-        // The curve (owner 2026-11-19: "much too difficult now due to the damage numbers ... have them fight mobs of
-        // every con. maybe at level 5, 15, 25, 35, 45, and 50 just to see how it feels, and then adjust the curve that
-        // way"), fitted from the stand-in bench (TierCalibration): a monster level with you hits for InCurve(level) times
-        // DAoC's own damage and takes OutCurve(level) times yours, then each con above your band (PowerTier) multiplies
-        // its hits by InStep and divides yours by OutStep (and the other way for each below). The aim, in plain gear and
-        // plain auto-attacks: an even con takes about 25 s to bring down and would take about 50 s to bring you down.
-        public static double InStep = 1.6, OutStep = 1.55;
+        public static void ResetTierTuning()
+        {
+            Array.Copy(DefaultHits, TierHits, 7);
+            Array.Copy(DefaultTakes, TierTakes, 7);
+            Array.Copy(DefaultPress, TierPress, 7);
+        }
+
+        // (no longer used for damage - kept so /tier tune instep|outstep still parse)
+        public static double InStep = 1.0, OutStep = 1.0;
         public static readonly int[] CurveLevels = { 1, 5, 15, 25, 35, 45, 50 };
-        // (bench run 1, 19 Nov: the stand-in Celt Hero in plain reinforced armour, a rowdy and a lough wolf at every con:
-        // InCurve so an even con would take ~60 s to bring it down; OutCurve's shape from how fast it brought them down,
-        // pinned at level 17 to what Fiona's fights felt right with - styles, gear and a companion make up the rest)
-        public static readonly double[] InCurve = { 0.80, 0.80, 0.87, 0.86, 0.69, 0.55, 0.45 };
-        public static readonly double[] OutCurve = { 0.35, 0.35, 0.72, 0.92, 1.25, 1.52, 1.81 };
-        // A player's (or bot's) spells on top of that (owner 2026-11-19: "Spells feel really underpowered. Level 2, but
-        // it's only doing 1 - 3 damage on a green ... Overall though it seems that spell power needs to go up"): the curve
-        // was fitted to auto-attacks, and a caster has nothing else - no styles, no shield, a cast to stand through and the
-        // power it costs. Most at the low levels, where the first spells are weakest against the curve's 0.35.
-        // (stand-in Eldritch, 19 Nov: at level 2 an untrained Gleam Streak did 2-9 on a green of ~45 health at 3x - ten
-        // casts; now about four. At 20 a trained Sun Ray takes a red down in ~10, a blue in ~3.)
-        public static readonly double[] SpellCurve = { 7.5, 6.5, 2.4, 1.6, 1.5, 1.45, 1.4 };
+        // The baseline's level-to-level evening out (bench "/calib base", 22 Nov - see the calibration notes beside it):
+        // a green's blows on the baseline against DAoC's own, and the baseline's blows on a green against DAoC's own.
+        public static readonly double[] InCurve = { 0.2819, 0.3084, 0.3285, 0.3107, 0.2852, 0.2651, 0.2783 };
+        public static readonly double[] OutCurve = { 0.5661, 1.1162, 1.7668, 2.9405, 4.0483, 4.8905, 5.9102 };
+        // A caster's spells on top of OutCurve (bench "/calib spell"): the baseline caster's best untrained damage spell
+        // brings a green down in SpellCasts casts at every level (casters stand in cloth and pay power for every cast, so a
+        // little quicker than the baseline's swings). Training in the line raises it from there, as weapon training does
+        // (owner 2026-11-22: "Training in Way of the Sun, for example will increase the damage of the spells that fall
+        // under that line") - replacing the 2026-11-19 boost that had new mages destroying things.
+        // (bench "/calib spell", 22 Nov: an untrained Eldritch's best damage spell - Nil Bolt at 1, then Way of the
+        // Eclipse's Void spells by level - 12.9% of a monster's health a cast at level 1, 11% at 25, 7.4% at 50 before this)
+        public static readonly double[] SpellCurve = { 1.369, 0.4316, 0.4365, 0.309, 0.2375, 0.2882, 0.2295 };
+        public const double SpellCasts = 10;
 
         static double CurveAt(double[] curve, int level)
         {
@@ -307,21 +372,22 @@ namespace DOL.GS
             return curve[^1];
         }
 
-        /// <summary>How many cons a tier stands above a fighter of this level (negative: below).</summary>
-        public static double ConGap(sbyte tier, int level)
-        {
-            double gap = Math.Clamp(tier, Grey, Purple) - PowerTier(level);
-            // (owner 2026-11-21: a green is never above anyone - at level 1 you still fight like one, not a step below)
-            return tier == Green ? Math.Min(0, gap) : gap;
-        }
-
         /// <summary>A tiered monster's hits on a fighter of this level, against DAoC's own damage.</summary>
-        public static double InFactor(sbyte tier, int level) => CurveAt(InCurve, level) * Math.Pow(InStep, ConGap(tier, level)) * Bite *
-            (tier == Green ? GreenHits : 1.0);
+        public static double InFactor(sbyte tier, int level) =>
+            CurveAt(InCurve, level) * BaseLasts[1] / BaseLasts[Ix(tier)] * Bite * TierHits[Ix(tier)];
 
         /// <summary>A fighter of this level's hits on a tiered monster, against DAoC's own damage.</summary>
-        public static double OutFactor(sbyte tier, int level) => CurveAt(OutCurve, level) / Math.Pow(OutStep, ConGap(tier, level)) / Toughness *
-            (tier == Green ? GreenTakes : 1.0);
+        public static double OutFactor(sbyte tier, int level) =>
+            CurveAt(OutCurve, level) * BaseSwings[1] / BaseSwings[Ix(tier)] / Toughness * TierTakes[Ix(tier)];
+
+        /// <summary>A purple's zone cap (PurpleByRating) for this monster, split evenly between how long it lasts and how hard
+        /// it hits (so the fight as a whole is that much easier or harder); 1 for every other tier and for epics.</summary>
+        public static double PurpleCap(GameNPC n)
+        {
+            if (n == null || n is IGameEpicNpc || Tier(n) != Purple || n.CurrentZone == null)
+                return 1.0;
+            return Math.Sqrt(PurpleByRating[(int) ZoneRates.RatingOf(n.CurrentZone)]);
+        }
 
         sealed class Pressing
         {
@@ -342,7 +408,7 @@ namespace DOL.GS
             if (ad?.Attacker is not (GamePlayer or GameBot) || ad.Target is not GameNPC n || n is GameBot)
                 return;
             sbyte t = Tier(n);
-            if (t != Green && t != Blue)
+            if (PressStepFor(t) <= 0)
                 return;
             Pressing p = _pressing.GetValue(ad.Attacker, _ => new Pressing());
             long now = GameLoop.GameLoopTime;
@@ -359,7 +425,12 @@ namespace DOL.GS
         /// <summary>A player's (or bot's) spell on a tiered monster: SpellCurve at its level (1 for anything else).</summary>
         public static double SpellOut(GameLiving caster, GameLiving target)
         {
-            if (target is not GameNPC tn || Tier(tn) == None || caster is not (GamePlayer or GameBot))
+            if (target is not GameNPC tn || Tier(tn) == None || TierCalibration.Raw(tn))
+                return 1.0;
+            // an Animist's turrets and bombers are its spells too (owner 2026-11-21: turret spell power) - at its level
+            if (caster is GameNPC pet && (pet.Brain is TurretBrain or BomberBrain) && Combatant(pet) is GameLiving owner && owner != pet)
+                caster = owner;
+            if (caster is not (GamePlayer or GameBot))
                 return 1.0;
             return CurveAt(SpellCurve, caster.Level);
         }
@@ -373,12 +444,14 @@ namespace DOL.GS
             try
             {
                 var ci = System.Globalization.CultureInfo.InvariantCulture;
-                System.IO.File.WriteAllText(TuningFile, "v2 " + string.Join(" ", new[] { Toughness, Bite, InStep, OutStep }.Concat(InCurve).Concat(OutCurve).Concat(SpellCurve)
-                    .Concat(new[] { GreenTakes, GreenHits, PressStep }).Select(v => v.ToString(ci))));
+                System.IO.File.WriteAllText(TuningFile, "v4 " + string.Join(" ", new[] { Toughness, Bite }.Concat(InCurve).Concat(OutCurve).Concat(SpellCurve)
+                    .Concat(TierHits).Concat(TierTakes).Concat(TierPress).Select(v => v.ToString(ci))));
             }
             catch (Exception) { }
         }
 
+        /// <summary>Only a v4 file (2026-11-22, one footing at every level): the older ones were tuned against the power
+        /// bands, which are gone - they're left alone and the fitted defaults stand.</summary>
         static void LoadTuning()
         {
             try
@@ -387,33 +460,28 @@ namespace DOL.GS
                     return;
                 var ci = System.Globalization.CultureInfo.InvariantCulture;
                 string[] parts = System.IO.File.ReadAllText(TuningFile).Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length == 0 || parts[0] != "v2")
-                    return;                                      // (the first curve's numbers: they meant something else)
+                if (parts.Length == 0 || parts[0] != "v4")
+                    return;
                 double[] v = parts.Skip(1).Select(x => double.Parse(x, ci)).ToArray();
                 int n = CurveLevels.Length;
-                if (v.Length >= 4 + 2 * n)
-                {
-                    Toughness = v[0];
-                    Bite = v[1];
-                    InStep = v[2];
-                    OutStep = v[3];
-                    Array.Copy(v, 4, InCurve, 0, n);
-                    Array.Copy(v, 4 + n, OutCurve, 0, n);
-                    if (v.Length >= 4 + 3 * n)
-                        Array.Copy(v, 4 + 2 * n, SpellCurve, 0, n);
-                    if (v.Length >= 4 + 3 * n + 3)
-                    {
-                        GreenTakes = v[4 + 3 * n];
-                        GreenHits = v[5 + 3 * n];
-                        PressStep = v[6 + 3 * n];
-                    }
-                }
+                if (v.Length < 2 + 3 * n + 21)
+                    return;
+                Toughness = v[0];
+                Bite = v[1];
+                Array.Copy(v, 2, InCurve, 0, n);
+                Array.Copy(v, 2 + n, OutCurve, 0, n);
+                Array.Copy(v, 2 + 2 * n, SpellCurve, 0, n);
+                int at = 2 + 3 * n;
+                Array.Copy(v, at, TierHits, 0, 7);
+                Array.Copy(v, at + 7, TierTakes, 0, 7);
+                Array.Copy(v, at + 14, TierPress, 0, 7);
             }
             catch (Exception) { }
         }
 
-        /// <summary>The tier a player (or bot) of this level fights like in plain gear (owner 2026-11-19): 1-12 a green,
-        /// 13-24 a blue, 25-36 a yellow, 37-49 an orange, 50 a red - smoothly in between.</summary>
+        /// <summary>How strong a bot of this level looks next to you, as a con (its plate's border, BotStrengthTo): 1-12 a
+        /// green, 13-24 a blue, 25-36 a yellow, 37-49 an orange, 50 a red. (Until 2026-11-22 this was also everyone's
+        /// footing against monsters - the power bands; now a con is the same fight at every level.)</summary>
         public static double PowerTier(int level)
         {
             level = Math.Clamp(level, 1, 50);
@@ -428,18 +496,6 @@ namespace DOL.GS
             return Red;
         }
 
-        /// <summary>The strength of a tier, or of a power between tiers.</summary>
-        public static double Strength(double tier)
-        {
-            tier = Math.Clamp(tier, -3, 3);
-            int lo = (int) Math.Floor(tier);
-            if (lo >= 3)
-                return TierStrength[6];
-            double f = tier - lo;
-            return TierStrength[lo + 3] + (TierStrength[lo + 4] - TierStrength[lo + 3]) * f;
-        }
-
-        public static double Power(int level) => Strength(PowerTier(level));
 
         /// <summary>The one whose level counts on the players' side: a player, a bot, or the owner of a pet of either.</summary>
         public static GameLiving Combatant(GameLiving l) => l switch
@@ -527,7 +583,7 @@ namespace DOL.GS
             if (!hadAggro && body.TierFightBase > 0 && body.HealthPercent < 100)
                 return;                                         // still hurt from the last fight: keep its level
             int b = EngageLevel(side);
-            byte lvl = (byte) FightLevelFor(b, t, body.TierBaseLevel);
+            byte lvl = (byte) FightLevelFor(b, t, body.TierBaseLevel, body is IGameEpicNpc);
             if (body.TierFightBase == b && body.Level == lvl)
                 return;
             body.TierFightBase = b;
@@ -574,20 +630,34 @@ namespace DOL.GS
         public static bool TryDamageFactor(GameLiving attacker, GameLiving target, out double f)
         {
             f = 1.0;
+            if (target is GameNPC rt && TierCalibration.Raw(rt) || attacker is GameNPC ra && TierCalibration.Raw(ra))
+                return true;                                        // (the bench's baseline: DAoC's own numbers)
             if (target is GameNPC tn && Tier(tn) != None)
             {
                 GameLiving c = Combatant(attacker);
                 if (c != null && tn.TierFightBase > 0)
-                    f = Out(c.Level, tn.TierFightBase) * OutFactor(Tier(tn), c.Level);
+                    f = Out(c.Level, tn.TierFightBase) * OutFactor(Tier(tn), c.Level) / PurpleCap(tn);
+                f /= Sturdiness(tn);                                // (a named monster: twice the health of its con)
+                f *= ZoneRates.TakesIn(tn.CurrentZone);             // (a harder zone's monsters take a little less)
                 if (attacker is GamePlayer or GameBot)
-                    f *= 1.0 + PressStep * PressCount(attacker, tn);          // (pressing the attack on a green or blue)
+                    f *= 1.0 + PressStepFor(Tier(tn)) * PressCount(attacker, tn);   // (pressing the attack)
+                else if (c == null && attacker is GameNPC ally && ally.Realm != eRealm.None && ally.Level > tn.Level)
+                    // (owner 2026-11-23, Bugs & Fixes: once a player engages, "the NPCs for the event then attack them,
+                    // they do an extreme amount of damage") - the monster dropped to the player's fight level and the
+                    // realm's people (an event's guards, the Host's soldiers) kept their own: as if they fought at its level
+                    f *= Math.Max(0.05, Math.Pow(tn.Level / (double) ally.Level, 1.5));
                 return true;
             }
             if (attacker is GameNPC an && Tier(an) != None)
             {
                 GameLiving c = Combatant(target);
                 if (c != null && an.TierFightBase > 0)
-                    f = In(c.Level, an.TierFightBase) * InFactor(Tier(an), c.Level);
+                    f = In(c.Level, an.TierFightBase) * InFactor(Tier(an), c.Level) * PurpleCap(an)
+                        * ZoneRates.HitsIn(an.CurrentZone);         // (and hit a little harder)
+                else if (c == null && target is GameNPC tgt && tgt.Realm != eRealm.None && an.Level > tgt.Level)
+                    // an event's own people (the pedlar you're keeping alive) against a monster that took a high
+                    // fighter's level: as if it fought at theirs
+                    f = Math.Max(0.05, Math.Pow(tgt.Level / (double) an.Level, 1.5));
                 return true;
             }
             return false;
@@ -780,12 +850,37 @@ namespace DOL.GS
 
 namespace DOL.GS.Commands
 {
-    [CmdAttribute("&tier", ePrivLevel.GM, "A monster's fixed con tier (MonsterTiers): show it, or set it",
-        "/tier  (your target)", "/tier set <grey|green|blue|yellow|orange|red|purple>", "/tier zone  (the tally around you)",
-        "/tier tune [toughness|bite|instep|outstep <value> | in|out|spell <level> <value> | in|out|spell v1,..,v7]  (the power curve, live)")]
+    [CmdAttribute("&tier", ePrivLevel.Player, "A monster's fixed con tier (MonsterTiers): show it, set it, or tune the tiers",
+        "/tier tune  (the tuning window; anyone - test it out of GM mode, where monsters fight back)",
+        "/tier tune tier <grey..purple> hits|takes|press <value>  ·  /tier tune reset",
+        "/tier tune [toughness|bite|instep|outstep <value> | in|out|spell <level> <value> | in|out|spell v1,..,v7]  (the power curve, live)",
+        "/tier  (your target, GM)", "/tier set <grey|green|blue|yellow|orange|red|purple>  (GM)", "/tier zone  (the tally around you, GM)")]
     public class TierCommandHandler : AbstractCommandHandler, ICommandHandler
     {
         static readonly string[] Names = { "grey", "green", "blue", "yellow", "orange", "red", "purple" };
+
+        /// <summary>The /tier tune window's numbers for the modern client: "#TUNE|{json}".</summary>
+        public static string WindowJson(GamePlayer p)
+        {
+            var ci = System.Globalization.CultureInfo.InvariantCulture;
+            string N(double v) => v.ToString("0.###", ci);
+            var sb = new StringBuilder("{\"level\":").Append(p.Level)
+                .Append(",\"like\":0")
+                .Append(",\"toughness\":").Append(N(MonsterTiers.Toughness))
+                .Append(",\"bite\":").Append(N(MonsterTiers.Bite))
+                .Append(",\"tiers\":[");
+            for (int i = 0; i < 7; i++)
+            {
+                sbyte t = (sbyte) (i - 3);
+                if (i > 0) sb.Append(',');
+                sb.Append("{\"name\":\"").Append(Names[i]).Append("\",\"hits\":").Append(N(MonsterTiers.TierHits[i]))
+                    .Append(",\"takes\":").Append(N(MonsterTiers.TierTakes[i]))
+                    .Append(",\"press\":").Append(N(MonsterTiers.TierPress[i]))
+                    .Append(",\"nowHits\":").Append(N(MonsterTiers.InFactor(t, p.Level)))
+                    .Append(",\"nowTakes\":").Append(N(MonsterTiers.OutFactor(t, p.Level))).Append('}');
+            }
+            return sb.Append("]}").ToString();
+        }
 
         public void OnCommand(GameClient client, string[] args)
         {
@@ -794,8 +889,29 @@ namespace DOL.GS.Commands
             if (sub == "tune")
             {
                 var ci = System.Globalization.CultureInfo.InvariantCulture;
+                bool window = args.Length > 2 && args[2].ToLowerInvariant() == "window";
+                if (args.Length > 2 && args[2].ToLowerInvariant() == "reset")
+                {
+                    MonsterTiers.ResetTierTuning();
+                    MonsterTiers.SaveTuning();
+                    window = true;
+                }
+                else if (args.Length > 5 && args[2].ToLowerInvariant() == "tier")
+                {
+                    // /tier tune tier <name> hits|takes|press <v>
+                    int i = Array.IndexOf(Names, args[3].ToLowerInvariant());
+                    if (i >= 0 && double.TryParse(args[5], System.Globalization.NumberStyles.Float, ci, out double tv) && tv >= 0)
+                    {
+                        string what = args[4].ToLowerInvariant();
+                        if (what == "hits" && tv > 0) MonsterTiers.TierHits[i] = Math.Min(tv, 20);
+                        else if (what == "takes" && tv > 0) MonsterTiers.TierTakes[i] = Math.Min(tv, 20);
+                        else if (what == "press") MonsterTiers.TierPress[i] = Math.Min(tv, 2);
+                        MonsterTiers.SaveTuning();
+                    }
+                    window = true;
+                }
                 // /tier tune toughness|bite|instep|outstep <v>  ·  /tier tune in|out <level> <v>  ·  /tier tune in|out v1,v2,..
-                if (args.Length > 3)
+                else if (args.Length > 3)
                 {
                     string what = args[2].ToLowerInvariant();
                     double[] curve = what == "in" ? MonsterTiers.InCurve : what == "out" ? MonsterTiers.OutCurve :
@@ -813,24 +929,37 @@ namespace DOL.GS.Commands
                         if (all.Length == curve.Length && all.All(x => x > 0))
                             Array.Copy(all, curve, curve.Length);
                     }
-                    else if (double.TryParse(args[3], System.Globalization.NumberStyles.Float, ci, out double v) && v > 0)
+                    else if (double.TryParse(args[3], System.Globalization.NumberStyles.Float, ci, out double v) && v >= 0)
                     {
-                        if (what == "toughness") MonsterTiers.Toughness = v;
-                        else if (what == "bite") MonsterTiers.Bite = v;
-                        else if (what == "instep") MonsterTiers.InStep = v;
-                        else if (what == "outstep") MonsterTiers.OutStep = v;
-                        else if (what == "greentakes") MonsterTiers.GreenTakes = v;
-                        else if (what == "greenhits") MonsterTiers.GreenHits = v;
-                        else if (what == "press") MonsterTiers.PressStep = v;
+                        if (what == "toughness" && v > 0) MonsterTiers.Toughness = v;
+                        else if (what == "bite" && v > 0) MonsterTiers.Bite = v;
+                        else if (what == "instep" && v > 0) MonsterTiers.InStep = v;
+                        else if (what == "outstep" && v > 0) MonsterTiers.OutStep = v;
+                        else if (what == "greentakes" && v > 0) MonsterTiers.GreenTakes = v;
+                        else if (what == "greenhits" && v > 0) MonsterTiers.GreenHits = v;
+                        else if (what == "press") MonsterTiers.TierPress[1] = MonsterTiers.TierPress[2] = v;
                     }
                     MonsterTiers.SaveTuning();
+                    window |= args.Length == 4 && (args[2].ToLowerInvariant() is "toughness" or "bite");
                 }
-                DisplayMessage(client, $"Toughness {MonsterTiers.Toughness:0.##}, bite {MonsterTiers.Bite:0.##}, steps in {MonsterTiers.InStep:0.##} out {MonsterTiers.OutStep:0.##}; " +
-                    $"greens take x{MonsterTiers.GreenTakes:0.##} and hit x{MonsterTiers.GreenHits:0.##}, pressing +{MonsterTiers.PressStep * 100:0}% a blow; " +
+                else if (args.Length == 2)
+                    window = true;                              // (typed /tier tune: the window)
+                if (window && NewClient.Is(p))
+                {
+                    NewClient.Send(p, "#TUNE|" + WindowJson(p));
+                    return;
+                }
+                DisplayMessage(client, $"Toughness {MonsterTiers.Toughness:0.##}, bite {MonsterTiers.Bite:0.##}; " +
                     $"curve at levels {string.Join(",", MonsterTiers.CurveLevels)}: in {string.Join(",", MonsterTiers.InCurve.Select(x => x.ToString("0.###", ci)))}, " +
                     $"out {string.Join(",", MonsterTiers.OutCurve.Select(x => x.ToString("0.###", ci)))}, " +
-                    $"spell {string.Join(",", MonsterTiers.SpellCurve.Select(x => x.ToString("0.###", ci)))}; you fight like {MonsterTiers.PowerTier(p.Level):0.0} - " +
-                    string.Join(", ", Names.Select((n, i) => $"{n} hits x{MonsterTiers.InFactor((sbyte) (i - 3), p.Level):0.##} takes x{MonsterTiers.OutFactor((sbyte) (i - 3), p.Level):0.##}")));
+                    $"spell {string.Join(",", MonsterTiers.SpellCurve.Select(x => x.ToString("0.###", ci)))} - " +
+                    string.Join(", ", Names.Select((n, i) => $"{n} (hits x{MonsterTiers.TierHits[i]:0.##}, takes x{MonsterTiers.TierTakes[i]:0.##}, press +{MonsterTiers.TierPress[i] * 100:0}%) " +
+                        $"now hits x{MonsterTiers.InFactor((sbyte) (i - 3), p.Level):0.##} takes x{MonsterTiers.OutFactor((sbyte) (i - 3), p.Level):0.##}")));
+                return;
+            }
+            if (client.Account.PrivLevel < (uint) ePrivLevel.GM)
+            {
+                DisplayMessage(client, "Only /tier tune is open to everyone; the rest of /tier is for GMs.");
                 return;
             }
             if (sub == "zone")

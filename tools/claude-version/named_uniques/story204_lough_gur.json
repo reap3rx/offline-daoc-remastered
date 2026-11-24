@@ -8,17 +8,190 @@
   {
    "story_reward": true,
    "scaled": true,
+   "name": "Woodward's Twine Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 5,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 4
+   },
+   "lore": "Oisin ties up the saplings that walk too far. He has a lot of twine."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Culraid Thatch Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 5,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 5,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Plaited from a roof the walking wood tried to pull down."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Luch-Tail Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 4
+   },
+   "lore": "Luch tails, braided. They make a surprisingly good bracer."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thatcher's Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "A knot of straw from the first roof you saved."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lake-Road Boots-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 7,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 6
+   },
+   "lore": "A pebble from the lake road, worn smooth by people leaving Culraid."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sentinel's Token",
+   "base": [
+    41,
+    35
+   ],
+   "level": 7,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 6
+   },
+   "lore": "Ceannai's token, given to those who walk the road on their own."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Miller's Flour-Sack Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 29,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 29,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Tough sacking, stitched double. Eithne swears by it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Granary-Key Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 29,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 25
+   },
+   "lore": "The key to the mill's grain store, made into a ring."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Irusan's Claw Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 26
+   },
+   "lore": "In the old story the cat Irusan killed Luchtigern, king of the mice. This is a claw from a cat nearly as big."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mouse-King's Collar",
+   "base": [
+    41,
+    33
+   ],
+   "level": 30,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
+   },
+   "lore": "Bright metal, warm to the touch. It glows faintly at night."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
    "name": "Inn-Luck Harp Charm",
    "base": [
     41,
     24
    ],
-   "level": 23,
+   "level": 29,
    "bonuses": {
-    "Qui": 8,
-    "Con": 4,
-    "Dex": 4,
-    "Hits": 14,
+    "Qui": 10,
+    "Con": 5,
+    "Dex": 5,
+    "Hits": 17,
     "Power": 3
    },
    "lore": "A tiny harp of bog-oak. The luck of a house sixty years old is in it."
@@ -31,13 +204,13 @@
     41,
     32
    ],
-   "level": 23,
+   "level": 29,
    "bonuses": {
-    "Con": 8,
-    "Hits": 23,
-    "Body": 3,
-    "Crush": 3,
-    "Slash": 3
+    "Con": 10,
+    "Hits": 29,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
    },
    "lore": "The cluricaun king's belt. Let out several times."
   },
@@ -49,12 +222,12 @@
     41,
     33
    ],
-   "level": 23,
+   "level": 29,
    "bonuses": {
-    "Dex": 8,
-    "Qui": 8,
-    "Str": 4,
-    "Hits": 20
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 25
    },
    "lore": "Cluricauns ride the giant luch like ponies. This is from a saddle."
   },
@@ -66,14 +239,241 @@
     41,
     35
    ],
-   "level": 23,
+   "level": 29,
    "bonuses": {
-    "Str": 8,
-    "Con": 8,
-    "Dex": 4,
-    "Hits": 20
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 25
    },
    "lore": "The key to Tadhg's cellar, made into a ring. It opens other cellars too, you suspect."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Jetty-Song Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 31,
+   "bonuses": {
+    "Emp": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 19
+   },
+   "lore": "A harp-peg on a cord. Hum the old tune and it hums back."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lake-Watcher's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 31,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 31,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Grey wool, for long nights on the jetty."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Toll-Taker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 30,
+   "bonuses": {
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 26
+   },
+   "lore": "The gurites charged a toll on the south road. In blood, mostly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Road-Post Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 30,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 30,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Iron from the Sentinels' burned road post."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ferryman's Pole-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 32,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 5,
+    "Hits": 27
+   },
+   "lore": "Bog-oak and brass, from Colm's old ferry pole."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bill-of-Sale Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 32,
+   "bonuses": {
+    "Qui": 11,
+    "Con": 5,
+    "Dex": 5,
+    "Hits": 19,
+    "Power": 4
+   },
+   "lore": "Kept to remember them by."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cave-Mouth Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 33,
+   "bonuses": {
+    "Dex": 11,
+    "Qui": 11,
+    "Str": 6,
+    "Hits": 28
+   },
+   "lore": "From the ursine's trading post at the mouth of Treibh Caillte."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Unbound Wrist",
+   "base": [
+    41,
+    33
+   ],
+   "level": 33,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 33,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "The cord that tied him, worn as a promise."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tiomoid's Hill-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 34,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 6,
+    "Hits": 29
+   },
+   "lore": "Tiomoid kept the camp's watch. He never slept."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Trefor's Toll-Bag Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 34,
+   "bonuses": {
+    "Dex": 11,
+    "Qui": 11,
+    "Str": 6,
+    "Hits": 29
+   },
+   "lore": "Trefor kept the gurites' purse. It was heavier than it looked."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gurite-King's Crown-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 35,
+   "bonuses": {
+    "Int": 12,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 21
+   },
+   "lore": "Donnan's crown was a ring of gurite tolls. This was the best of them."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the South Road",
+   "base": [
+    41,
+    26
+   ],
+   "level": 35,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 35,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "The Sentinels' own, for the ones who took the road back."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hill-Camp Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 35,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 30
+   },
+   "lore": "Bronze, from the gurites' war-chest."
   },
   {
    "story_reward": true,
@@ -144,6 +544,497 @@
     "Slash": 4
    },
    "lore": "The alp luachra are newts that crawl into sleepers' mouths. The hide is very good leather."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wet-Footprint Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 32,
+   "bonuses": {
+    "Emp": 11,
+    "Con": 5,
+    "Power": 5,
+    "Hits": 19
+   },
+   "lore": "A pebble from the shore where the touched walked in."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Druid's Rush-Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 32,
+   "bonuses": {
+    "Int": 11,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 5,
+    "Hits": 19
+   },
+   "lore": "Siofra plaits them for anyone who sits with the touched a night."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Siofra's Rowan Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 34,
+   "bonuses": {
+    "Emp": 11,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "Rowan berries on red thread. The drowned won't cross it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lit-From-Within Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 34,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 34,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "From one of the drowned. The glow went out of it when they were laid to rest."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lhia's Mirror Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 35,
+   "bonuses": {
+    "Int": 12,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 21
+   },
+   "lore": "A muse's mirror. In it you look the way you'd like to."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Unsung Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 35,
+   "bonuses": {
+    "Emp": 12,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 21
+   },
+   "lore": "Silver, with no song on it at all. That's the point."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Frozen-Tear Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 33,
+   "bonuses": {
+    "Qui": 11,
+    "Con": 6,
+    "Dex": 6,
+    "Hits": 20,
+    "Power": 4
+   },
+   "lore": "A fairy's tear, frozen. It never melts."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mourner's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 33,
+   "bonuses": {
+    "Dex": 11,
+    "Qui": 11,
+    "Str": 6,
+    "Hits": 28
+   },
+   "lore": "Grey silk, from a melancholic fairy's girdle."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Grainne's Ribbon Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 35,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 35,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Grainne's hair-ribbon, wound round a bracer. She wanted you to have it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Empty-Chair Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 35,
+   "bonuses": {
+    "Int": 12,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 21
+   },
+   "lore": "Cut from the arm of the fairy queen's chair."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moonstone Circlet Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 36,
+   "bonuses": {
+    "Emp": 12,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 22
+   },
+   "lore": "A stone from the crown the queen left on her chair."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Far Liath's Grey Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 36,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 36,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "The grey men of the wood wear cloaks of mist. This one held."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lament-Breaker's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 37,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 31
+   },
+   "lore": "Moonstone and grey silver. It's quiet. Everything near it is quiet."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Sorrowing Wood",
+   "base": [
+    41,
+    26
+   ],
+   "level": 37,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 37,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Woven by the fairies after their queen was laid to rest. It's the first thing they've made in years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Unweeping Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 37,
+   "bonuses": {
+    "Qui": 12,
+    "Con": 6,
+    "Dex": 6,
+    "Hits": 22,
+    "Power": 4
+   },
+   "lore": "A melancholic fairy's ring. It used to be wet."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Silver Horseshoe Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 34,
+   "bonuses": {
+    "Qui": 11,
+    "Con": 6,
+    "Dex": 6,
+    "Hits": 20,
+    "Power": 4
+   },
+   "lore": "A silver horseshoe worn thin as a leaf. The Earl's horse threw it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Iron Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 34,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 6,
+    "Hits": 29
+   },
+   "lore": "From a dullahan's saddle."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Envoy's Thorn Seal",
+   "base": [
+    41,
+    35
+   ],
+   "level": 36,
+   "bonuses": {
+    "Int": 12,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 22
+   },
+   "lore": "The Unseelie Court's seal: a crowned woman in thorns."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moor-Walker's Boots-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 36,
+   "bonuses": {
+    "Dex": 12,
+    "Qui": 12,
+    "Str": 6,
+    "Hits": 31
+   },
+   "lore": "From the moor, where the envoy waited."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Herald's Glass Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 38,
+   "bonuses": {
+    "Int": 13,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 23
+   },
+   "lore": "The Glimmer's herald wore light like other men wear cloth. This is what was left."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Lake",
+   "base": [
+    41,
+    26
+   ],
+   "level": 38,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 38,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Aine's Circle's own, given to those who went out to the crannog."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lullaby Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 38,
+   "bonuses": {
+    "Emp": 13,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 23
+   },
+   "lore": "Dara's tune is scratched inside the band."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Azure Novice's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 32,
+   "bonuses": {
+    "Emp": 11,
+    "Con": 5,
+    "Power": 5,
+    "Hits": 19
+   },
+   "lore": "Blue enamel on iron. 'Burn the light.'"
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cleanser's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 32,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 5,
+    "Hits": 27
+   },
+   "lore": "An Azure cleanser's belt, with loops for torches."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Azure Wisp-Catcher Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 34,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 34,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Blue iron, banded. The wisps can't get a grip on it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blue Flame Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 34,
+   "bonuses": {
+    "Qui": 11,
+    "Con": 6,
+    "Dex": 6,
+    "Hits": 20,
+    "Power": 4
+   },
+   "lore": "A flame that burns blue in a glass bead. Only the Azure know how."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Siofra's Thanks",
+   "base": [
+    41,
+    35
+   ],
+   "level": 35,
+   "bonuses": {
+    "Emp": 12,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 21
+   },
+   "lore": "Rush and silver. 'Touched, not lost.'"
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Torch-Breaker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 35,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 30
+   },
+   "lore": "You broke the Azure's torch over your knee. This was its iron."
   }
  ]
 }

@@ -74,6 +74,22 @@ namespace DOL.GS.DynamicEvents
 
         public static void Trace(string line) => log.Info("Dynamic events: " + line);
 
+        // ---------------------------------------------------------------- what other systems hear (a zone's siege)
+
+        public static event Action<ChainRuntime, StageDef> StageBeginning;
+        public static event Action<ChainRuntime, StageDef, bool> StageEnded;
+        public static event Action<ChainRuntime, string> ChainEnded;
+
+        internal static void OnStageBeginning(ChainRuntime c, StageDef s) => Hear(() => StageBeginning?.Invoke(c, s));
+        internal static void OnStageEnded(ChainRuntime c, StageDef s, bool won) => Hear(() => StageEnded?.Invoke(c, s, won));
+        internal static void OnChainEnded(ChainRuntime c, string outcome) => Hear(() => ChainEnded?.Invoke(c, outcome));
+
+        static void Hear(Action a)
+        {
+            try { a(); }
+            catch (Exception ex) { log.Error("Dynamic events: a listener failed", ex); }
+        }
+
         [GameServerStartedEvent]
         public static void OnServerStart(DOLEvent e, object sender, EventArgs args)
         {
@@ -96,6 +112,7 @@ namespace DOL.GS.DynamicEvents
         public static void OnServerStop(DOLEvent e, object sender, EventArgs args)
         {
             _timer?.Stop();
+            try { ZoneSiege.Save(); } catch (Exception ex) { log.Warn("Zone sieges: can't save", ex); }
             foreach (ChainRuntime c in Chains)
                 c.Stage?.Finish(false);
             Chains.Clear();
@@ -137,6 +154,7 @@ namespace DOL.GS.DynamicEvents
                 }
             }
             log.Info($"Dynamic events: {Chains.Count} chains in {byZone.Count} zones");
+            ZoneSiege.Load(byZone.Values);
         }
 
         static void Add(Dictionary<int, ZoneEventsDef> byZone, string json, string from)
@@ -151,6 +169,14 @@ namespace DOL.GS.DynamicEvents
             {
                 log.Error($"Dynamic events: can't read {from}", ex);
             }
+        }
+
+        static readonly HashSet<string> _logged = new();
+
+        static void LogOnce(string what, Exception ex)
+        {
+            if (_logged.Add(what + ex.GetType().Name + ex.TargetSite?.Name))
+                log.Error($"Dynamic events: {what} failed (the events carry on)", ex);
         }
 
         static int Tick(ECSGameTimer timer)
@@ -168,10 +194,22 @@ namespace DOL.GS.DynamicEvents
                     try { c.End("fail", now); } catch { }
                 }
             }
-            if (++_ticks % 2 == 0)
-                Broadcast(now);
-            if (_ticks % 5 == 0)
-                BotsAtGivers();
+            try { ZoneSiege.Tick(now); }
+            catch (Exception ex) { log.Error("Zone sieges: tick failed", ex); }
+            // nothing here may throw out of the timer: an exception out of a timer's callback stops it, and every event with
+            // it (2026-11-22: a path-only start's wake point threw in the broadcast; no event ran again until a restart)
+            try
+            {
+                if (++_ticks % 2 == 0)
+                    Broadcast(now);
+            }
+            catch (Exception ex) { LogOnce("broadcast", ex); }
+            try
+            {
+                if (_ticks % 5 == 0)
+                    BotsAtGivers();
+            }
+            catch (Exception ex) { LogOnce("bots at givers", ex); }
             return 1000;
         }
 
@@ -189,7 +227,9 @@ namespace DOL.GS.DynamicEvents
                 {
                     if (c.Zone != p.CurrentZone || c.Region != p.CurrentRegion)
                         continue;
-                    object d = Describe(c, p, now);
+                    object d;
+                    try { d = Describe(c, p, now); }
+                    catch (Exception ex) { LogOnce("describing " + c.Def.Id, ex); continue; }
                     if (d != null)
                         list.Add(d);
                 }
@@ -215,11 +255,15 @@ namespace DOL.GS.DynamicEvents
                 StageRuntime s = c.Stage;
                 double dx = p.X - s.Center.X, dy = p.Y - s.Center.Y;
                 bool near = Math.Sqrt(dx * dx + dy * dy) <= s.RadiusUnits + 2400;    // within 60 m of its edge
+                // carrying a gather-and-deliver stage's things: the marker points to the giver to hand them to
+                int carried = s.Carried(p);
+                Vector3 mark = carried > 0 && c.Leader != null ? new Vector3(c.Leader.X, c.Leader.Y, c.Leader.Z) : s.Center;
                 return new
                 {
-                    id = c.Def.Id, title = c.Def.Title, stage = s.Def.Name, kind = s.Def.Type, objective = s.Def.Objective,
+                    id = c.Def.Id, title = c.Def.Title, stage = s.Def.Name, kind = s.Def.Type,
+                    objective = carried > 0 ? $"Bring what you carry ({carried}) to {c.Leader.Name}" : s.Def.Objective,
                     line = s.ProgressLine, progress = Math.Round(s.Progress, 3), time_left = s.TimeLeft,
-                    x = Math.Round(c.ZoneMetresX(s.Center.X), 1), y = Math.Round(c.ZoneMetresY(s.Center.Y), 1),
+                    x = Math.Round(c.ZoneMetresX(mark.X), 1), y = Math.Round(c.ZoneMetresY(mark.Y), 1),
                     r = s.Def.Radius, zone, levels = c.Def.Levels, near, state = s.Def.Type == "occupy" ? "occupied" : "active"
                 };
             }
@@ -288,7 +332,7 @@ namespace DOL.GS.DynamicEvents
             Vector3 bestAt = default;
             foreach (ChainRuntime c in Chains)
             {
-                if (c.Region != bot.CurrentRegion || c.Def.Levels == null || bot.Level < c.Def.Levels[0] - 2)
+                if (c.Region != bot.CurrentRegion || c.Def.Levels == null || bot.Level < c.Def.Levels[0] - 2 || bot.Level < c.Def.BotMinLevel)
                     continue;
                 Vector3 at;
                 if (c.Stage != null)
@@ -302,14 +346,17 @@ namespace DOL.GS.DynamicEvents
                 var mine = _botsAt.TryGetValue(c, out var m) ? m : _botsAt[c] = new Dictionary<GameBot, long>();
                 foreach (GameBot old in mine.Where(kv => kv.Value < now || !kv.Key.IsAlive).Select(kv => kv.Key).ToList())
                     mine.Remove(old);
-                if (mine.Count >= BotsPerEvent && !mine.ContainsKey(bot))
+                if (mine.Count >= (c.Def.Bots > 0 ? c.Def.Bots : BotsPerEvent) && !mine.ContainsKey(bot))
                     continue;
                 double dx = bot.X - at.X, dy = bot.Y - at.Y, d = Math.Sqrt(dx * dx + dy * dy);
-                if (d > 65000 || d >= bestD)
+                // a siege's chains (an island assault, its raids) call from anywhere in the region, and come first
+                // (owner's plan: "bots start heading for the staging camp")
+                double eff = c.Def.Manual ? d / 4 : d;
+                if ((!c.Def.Manual && d > 65000) || eff >= bestD)
                     continue;
                 best = c;
-                bestD = d;
-                bestAt = at;
+                bestD = eff;
+                bestAt = BotWaypoint?.Invoke(c, bot) ?? at;
             }
             if (best == null)
                 return false;
@@ -369,9 +416,33 @@ namespace DOL.GS.DynamicEvents
             }
             else
                 return false;
+            if (BotWaypoint?.Invoke(c, bot) is Vector3 way)
+            {
+                // across the water first (a siege's island): to the roane at the shore, fighting only what's on the way
+                at = way;
+                if (foe != null && !bot.IsWithinRadius(foe, 1500))
+                    foe = null;
+                doing = $"{c.Def.Title}: going to the roane ferry";
+            }
             if (_botsAt.TryGetValue(c, out var mine))
                 mine[bot] = now + 10 * 60_000;                  // still with it
             return true;
+        }
+
+        /// <summary>Where a bot must go first for a chain, if not to its place (a siege: the ferry on the shore while
+        /// the fight is on an island the bot isn't on). Set by ZoneSiege.</summary>
+        public static Func<ChainRuntime, GameBot, Vector3?> BotWaypoint;
+
+        /// <summary>The bots helping a chain now.</summary>
+        public static List<GameBot> BotsWith(ChainRuntime c)
+        {
+            lock (_botsAt)
+            {
+                long now = Now;
+                return _botsAt.TryGetValue(c, out var mine)
+                    ? mine.Where(kv => kv.Value >= now && kv.Key.IsAlive && kv.Key.ObjectState == GameObject.eObjectState.Active).Select(kv => kv.Key).ToList()
+                    : new List<GameBot>();
+            }
         }
 
         /// <summary>A bot sent to a waiting giver that has got there takes them up on it.</summary>

@@ -1,0 +1,97 @@
+{
+ "zone": 205,
+ "region": 200,
+ "realm": 3,
+ "prefix": "gt205",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gem-Warden's Visor Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 48,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 48,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "A shard of the Gem-Warden's visor of light, gone dark."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cloak of the Dark Tower",
+   "base": [
+    41,
+    26
+   ],
+   "level": 47,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 47,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Night-blue, for those who put out the Gemstone Tower. Only its quartermaster has them."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Keener's Lamp Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 47,
+   "bonuses": {
+    "Emp": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "A ring with a tiny lamp on it, never lit."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dark Gem Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 47,
+   "bonuses": {
+    "Int": 16,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "A chip of the red gem, set in bronze. It's cold now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Causeway Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 47,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 40
+   },
+   "lore": "Bog-oak from the siabra causeway, banded in iron."
+  }
+ ]
+}

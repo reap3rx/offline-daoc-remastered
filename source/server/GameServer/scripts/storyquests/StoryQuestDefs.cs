@@ -28,6 +28,7 @@ namespace DOL.GS.StoryQuests
         public string Idle;                            // said on a click when it has nothing for you
         public List<string> During = new();            // "<quest>/<step>": there only then (empty: always)
         [JsonProperty("brain")] public string Brain;   // "peace" (default for friendly), "wander"
+        public bool Replaces;                          // the zone's old NPC of this name (an old quest's giver) steps aside
     }
 
     public class StoryQuestDef
@@ -105,6 +106,7 @@ namespace DOL.GS.StoryQuests
         public string Text;                            // said / shown at the end
         public RewardsDef Rewards;                     // (default: the quest's)
         public bool Tragic;                            // the journal says so
+        [JsonProperty("wake_event")] public string WakeEvent;   // a dynamic event this ending sets off (a disturbance)
     }
 
     public class RewardsDef

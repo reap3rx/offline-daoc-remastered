@@ -976,10 +976,30 @@ func update_views(max_build: int) -> void:
 
 
 var _sheet_parts := ""
+var _parts := {}                         # a long line's pieces: id -> [pieces] (NewClient.Send splits lines over ~1.8 KB)
 
 
 func _message(d: Dictionary) -> void:
 	var t := int(d.type)
+	if String(d.text).begins_with("#PART|"):              # #PART|id|i|n|piece: put back together, then handled whole
+		var f := String(d.text).split("|", true, 4)
+		if f.size() < 5:
+			return
+		var n := int(f[3])
+		if not _parts.has(f[1]):
+			_parts[f[1]] = []
+			_parts[f[1]].resize(n)
+		var arr: Array = _parts[f[1]]
+		var i := int(f[2])
+		if i >= 0 and i < arr.size():
+			arr[i] = f[4]
+		if arr.has(null):
+			return
+		_parts.erase(f[1])
+		var whole := d.duplicate()
+		whole.text = "".join(PackedStringArray(arr))
+		_message(whole)
+		return
 	if String(d.text).begins_with("#WAL|"):               # your wallet (PlayerWallet.cs): the modern inventory shows it
 		preload("res://game/ui/modern_bags.gd").receive_wallet(String(d.text).substr(5))
 		return
@@ -1124,6 +1144,35 @@ func _message(d: Dictionary) -> void:
 	if String(d.text).begins_with("#SNG|"):               # the Song Wheel's songs (HibernianKits.cs)
 		preload("res://game/ui/song_wheel.gd").receive(String(d.text).substr(5))
 		return
+	if String(d.text).begins_with("#BOTN|"):              # a realm bot's map dot: its name (AutonomousBotMapMarkers)
+		var bn := String(d.text).substr(6).split("|", true, 1)
+		if bn.size() == 2:
+			Server.bot_names[int(bn[0])] = bn[1]
+		return
+	if String(d.text).begins_with("#SIEGE|"):             # the zone's siege in the zone panel (ZoneSiege.cs)
+		preload("res://game/ui/event_tracker.gd").receive_siege(String(d.text).substr(7))
+		return
+	if String(d.text).begins_with("#REP|"):               # the zone panel's reputation bars (ReputationService.Push)
+		preload("res://game/ui/event_tracker.gd").receive_rep(String(d.text).substr(5))
+		return
+	if String(d.text).begins_with("#REPW|"):              # the Reputation window (/rep, ReputationService.SendWindow)
+		var rw = viewer.ui.get("reputation_window") if viewer and viewer.ui else null
+		if rw:
+			rw.receive(String(d.text).substr(6))
+		return
+	if String(d.text).begins_with("#REPUP|"):             # a new rank with a faction or the realm: a moment for it
+		var ru := String(d.text).substr(7).split("|")
+		if ru.size() >= 2 and viewer and viewer.ui:
+			viewer.ui.center_message("%s: %s" % [ru[0].to_upper(), ru[1].to_upper()])
+			if ru.size() >= 3 and ru[2] != "":
+				viewer.ui.center_message("You may now be called %s" % ru[2], true)
+			var rws = viewer.ui.get("reputation_window")
+			if rws and rws.visible:
+				Server.command("/rep window")
+		return
+	if String(d.text).begins_with("#TITLES|"):            # the titles the bots near you wear (ReputationService.PushTitles)
+		NamePlates.receive_titles(String(d.text).substr(8))
+		return
 	if String(d.text).begins_with("#ZXP|"):               # the zone panel: name, rating, your rate here (ZoneRates.cs)
 		preload("res://game/ui/event_tracker.gd").receive_zone(String(d.text).substr(5))
 		return
@@ -1144,6 +1193,23 @@ func _message(d: Dictionary) -> void:
 		var ew = viewer.ui.get("events_window") if viewer and viewer.ui else null
 		if ew:
 			ew.receive(String(d.text).substr(5))
+		return
+	if String(d.text).begins_with("#TUNE|"):              # the /tier tune window's numbers (MonsterTiers.cs)
+		var tw = viewer.ui.get("tune_window") if viewer and viewer.ui else null
+		if tw:
+			tw.receive(String(d.text).substr(6))
+		return
+	if String(d.text).begins_with("#PRIV|"):              # your account level, and whether it may switch (DevMode.cs)
+		var pp := String(d.text).split("|")
+		if pp.size() >= 3:
+			Server.priv_level = int(pp[1])
+			Server.can_gm = pp[2] == "1"
+			Server.priv_changed.emit()
+		return
+	if String(d.text).begins_with("#ZMARK|"):             # the /zmark window's lists and nearby marks (ZoneMarks.cs)
+		var zw = viewer.ui.get("zmark_window") if viewer and viewer.ui else null
+		if zw:
+			zw.receive(String(d.text).substr(7))
 		return
 	if String(d.text).begins_with("#DLG|"):               # a story NPC talking to you (StoryDialog.cs): its window
 		var sd = viewer.ui.get("story_dialog") if viewer and viewer.ui else null
@@ -2711,7 +2777,7 @@ const RELIC_MODELS := [630, 631, 632, 633, 634, 635]     # objects.csv: the six 
 # ground objects that are used, not picked up (owner 2026-11-11): a treasure chest (TreasureChests - opening it), a
 # soulbind stone, a campfire and its pot (they tell you about themselves)
 const USE_MODELS := [1596, 32001, 32002, 32003, 32011, 32012, 32013, 32014, 32015, 32016, 32017, 32021, 32022, 32023,
-		32024, 32025, 32026, 32027]
+		32024, 32025, 32026, 32027, 32031]                       # (32031: a story quest's search spot - searched, not taken)
 var doors := {}                              # the client's door id -> {oid, name, health %, realm}: the server's doors
 var door_oids := {}                          # object id -> door id
 var target_door := 0                         # the targeted door's object id (its health on the target window)

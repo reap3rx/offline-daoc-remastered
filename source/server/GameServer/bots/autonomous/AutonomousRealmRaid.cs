@@ -647,7 +647,8 @@ namespace DOL.GS
         private static bool Available(string id) => !Raids.ContainsKey(id) &&
             Cooldowns.GetValueOrDefault(id) <= GameLoop.GameLoopTime && Bosses.TryGetValue(id, out var boss) &&
             boss.IsAlive && !boss.IsRespawning && boss.ObjectState == GameObject.eObjectState.Active &&
-            (id != "epic-albion" || !ApocInitializator.PickedTarget);
+            (id != "epic-albion" || !ApocInitializator.PickedTarget) &&
+            (id != "dragon-hibernia" || !DOL.GS.DynamicEvents.MusterCampaign.CuuldurachSealed);   // (the Muster's campaign opens his ring)
 
         private static bool TryStaging(Raid raid, int slot, out Vector3 staging)
         {

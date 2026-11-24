@@ -10,27 +10,64 @@
       "level": 8,
       "pos": [
         1362,
-        1262,
-        130.0
+        1262
       ],
       "idle": "My boys. Both my boys. One I put out, one ran after him."
     },
     {
-      "id": "colm_boy",
+      "id": "cn_daire",
       "zone": 207,
       "realm": 3,
-      "name": "Colm",
+      "name": "Constable Daire",
       "model": 337,
-      "level": 4,
+      "level": 22,
       "pos": [
-        930,
-        1100,
-        143.1
+        1355,
+        1280
       ],
-      "during": [
-        "rowdies/s4"
+      "guild": "Fianna of Druim Ligen",
+      "idle": "Ardee's quiet. I'd like it to stay quiet. That's the whole job."
+    },
+    {
+      "id": "cn_eabha",
+      "zone": 207,
+      "realm": 3,
+      "name": "Druidess Eabha",
+      "model": 365,
+      "level": 30,
+      "pos": [
+        1380,
+        1290
       ],
-      "size": 42
+      "guild": "Order of the Rowan",
+      "idle": "Rowan over the door, iron under the step. Old ways. They still work."
+    },
+    {
+      "id": "cn_conall",
+      "zone": 207,
+      "realm": 3,
+      "name": "Reeve Conall",
+      "model": 337,
+      "level": 18,
+      "pos": [
+        1295,
+        700
+      ],
+      "idle": "Sheep, salmon and siabra. Basar's three troubles, and two of them are tasty."
+    },
+    {
+      "id": "cn_gormlaith",
+      "zone": 207,
+      "realm": 3,
+      "name": "Seer Gormlaith",
+      "model": 365,
+      "level": 32,
+      "pos": [
+        1310,
+        690
+      ],
+      "guild": "Order of the Rowan",
+      "idle": "The farmhands laugh in their sleep now. That's not a good sign. It's never a good sign."
     },
     {
       "id": "fiachra",
@@ -41,9 +78,9 @@
       "level": 34,
       "pos": [
         1176,
-        70,
-        129.6
+        70
       ],
+      "guild": "Fianna of Druim Ligen",
       "idle": "My patrol went west. One came back. One's going to burn."
     },
     {
@@ -55,13 +92,140 @@
       "level": 24,
       "pos": [
         1160,
-        64,
-        129.6
+        64
       ],
+      "guild": "Fianna of Druim Ligen",
       "idle": "Azure robes, wicker men, and a lot of singing. The west's gone strange."
     },
     {
-      "id": "ronan",
+      "id": "cn_lorcan",
+      "zone": 207,
+      "realm": 3,
+      "name": "Lorcan the Jester",
+      "model": 318,
+      "level": 20,
+      "pos": [
+        1170,
+        75
+      ],
+      "guild": "of Druim Ligen",
+      "idle": "Why did the demon cross the river? To get to the other fire! ...No? Tough crowd.",
+      "size": 40
+    },
+    {
+      "id": "cn_ruadhnait",
+      "zone": 207,
+      "realm": 3,
+      "name": "Elder Ruadhnait",
+      "model": 365,
+      "level": 34,
+      "pos": [
+        330,
+        820
+      ],
+      "guild": "Order of the Rowan",
+      "idle": "The wood is old, and slow, and it does not forgive. Neither do I, much."
+    },
+    {
+      "id": "cn_cluricaun",
+      "zone": 207,
+      "realm": 3,
+      "name": "Mac an Ol",
+      "model": 318,
+      "level": 16,
+      "pos": [
+        230,
+        900
+      ],
+      "guild": "a cluricaun, retired",
+      "idle": "Retired. From what? From the lodge, from the cellar, from sobriety. Mostly sobriety.",
+      "size": 38
+    },
+    {
+      "id": "cn_brona",
+      "zone": 207,
+      "realm": 3,
+      "name": "Brona",
+      "model": 365,
+      "level": 8,
+      "pos": [
+        1020,
+        760
+      ],
+      "idle": "He'd never leave the flock. Never. Not Lochlann."
+    },
+    {
+      "id": "cn_seanan",
+      "zone": 207,
+      "realm": 3,
+      "name": "Old Seanan",
+      "model": 362,
+      "level": 14,
+      "pos": [
+        700,
+        860
+      ],
+      "guild": "keeper of the rings",
+      "idle": "Seven stones. My father kept them, and his father. Now look at them."
+    },
+    {
+      "id": "cn_ultan",
+      "zone": 207,
+      "realm": 3,
+      "name": "Fennid Ultan",
+      "model": 337,
+      "level": 26,
+      "pos": [
+        900,
+        610
+      ],
+      "guild": "Fianna of Druim Ligen",
+      "idle": "I watch the tents. The tents watch me. Neither of us likes it."
+    },
+    {
+      "id": "cn_muadhan",
+      "zone": 207,
+      "realm": 3,
+      "name": "Farmer Muadhan",
+      "model": 337,
+      "level": 20,
+      "pos": [
+        1365,
+        545
+      ],
+      "idle": "My boy laughs in his sleep. Then he gets up and walks."
+    },
+    {
+      "id": "cn_cuan",
+      "zone": 207,
+      "realm": 3,
+      "name": "Ferryman Cuan",
+      "model": 337,
+      "level": 22,
+      "pos": [
+        630,
+        340
+      ],
+      "idle": "Six crossed this month, all young, all going west. None came back across."
+    },
+    {
+      "id": "colm_boy",
+      "zone": 207,
+      "realm": 3,
+      "name": "Colm",
+      "model": 337,
+      "level": 4,
+      "pos": [
+        930,
+        1100
+      ],
+      "during": [
+        "rowdies/s4"
+      ],
+      "size": 42
+    },
+    {
+      "id": "cn_ronan",
       "zone": 207,
       "realm": 3,
       "name": "Ronan",
@@ -69,15 +233,118 @@
       "level": 25,
       "pos": [
         762,
-        168,
-        130.2
+        168
       ],
       "during": [
         "wickerman/s6"
       ]
+    },
+    {
+      "id": "cn_pookha",
+      "zone": 207,
+      "realm": 3,
+      "name": "the Grey Pookha",
+      "model": 414,
+      "level": 34,
+      "pos": [
+        1560,
+        560
+      ],
+      "guild": "of no court",
+      "during": [
+        "cn_pookha_bargain/s1",
+        "cn_pookha_bargain/s3"
+      ]
+    },
+    {
+      "id": "cn_finnegas",
+      "zone": 207,
+      "realm": 3,
+      "name": "Finnegas the Poet",
+      "model": 362,
+      "level": 40,
+      "pos": [
+        1415,
+        1028
+      ],
+      "guild": "a poet, fishing",
+      "idle": "Seven years I've sat by this water. Seven. Don't tell anyone; they'll want to sit here too."
     }
   ],
   "quests": [
+    {
+      "id": "cn_light_fingers",
+      "title": "Light Fingers",
+      "level": 4,
+      "giver": "cn_daire",
+      "offer": "Purses gone from the market, three days running. Nobody sees a thing, and then somebody's a week's wages short.\n\nIt's the villainous youths off the Tir na Nog road - I'd bet my boots. Will you [catch the thieves]? Start at the [stalls]; they always leave something.",
+      "accept": "catch the thieves",
+      "topics": {
+        "stalls": "The cheese-stall. Always the cheese-stall. Thieves like cheese."
+      },
+      "summary": "Purses are going missing in Ardee's market. Constable Daire blames the road-gang.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            1375,
+            1250
+          ],
+          "goal": "Search under the cheese-stall in Ardee's market, just north-east of Constable Daire (click the glinting spot)",
+          "clue": {
+            "name": "a scuffed spot under the cheese-stall",
+            "model": 1347
+          },
+          "text": "Boot prints in the dust, and a dropped bead - blue glass, cheap and bright. Nobody in Ardee wears blue glass.",
+          "give": {
+            "name": "a blue-glass bead"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            820,
+            1250
+          ],
+          "radius": 40,
+          "goal": "Kill 4 villainous youths at the road-gang's west lookout, about 550 m west of Ardee along the road",
+          "target": "villainous youth",
+          "count": 4,
+          "text": "One of them was carrying a purse with an Ardee baker's mark - and a dozen more of those blue beads.",
+          "give": {
+            "name": "a stolen purse"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_daire",
+          "goal": "Bring the stolen purse to Constable Daire in Ardee's market",
+          "say": "Old Brigid's purse. She'll weep.\n\nAnd these beads... blue glass. The youths are spending them like coin. Somebody's paying them in it. I don't like it, and I don't know why I don't like it.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this, for your trouble.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq207_market_stall_bracer",
+              "sq207_constable_s_whistle_charm"
+            ]
+          }
+        }
+      }
+    },
     {
       "id": "rowdies",
       "title": "Two Brothers",
@@ -93,11 +360,10 @@
           "zone": 207,
           "at": [
             934,
-            1167,
-            135.5
+            1167
           ],
           "radius": 25,
-          "goal": "Deal with the villainous youths on the road",
+          "goal": "Kill 5 villainous youths on the road west of Ardee (about 450 m), near the road-gang's camp",
           "mob": {
             "template": 60167680,
             "name": "villainous youth",
@@ -112,11 +378,10 @@
           "zone": 207,
           "at": [
             920,
-            1100,
-            141.4
+            1100
           ],
           "radius": 20,
-          "goal": "Find the rowdies' camp",
+          "goal": "Find the rowdies' camp at the road-gang's north lookout, about 500 m north-west of Ardee",
           "text": "A ragged camp of boys and young men. A little lad in a too-big cap is trying very hard to look tough.",
           "id": "s2"
         },
@@ -125,11 +390,10 @@
           "zone": 207,
           "at": [
             941,
-            1085,
-            153.1
+            1085
           ],
           "wake_m": 30,
-          "goal": "Face the rowdies' leader",
+          "goal": "Defeat the rowdies' leader at the north lookout",
           "text": "The young man drops his cudgel and sits down in the mud. 'Fine. FINE. Take him home. He's a terrible thief anyway.'",
           "stages": [
             {
@@ -138,8 +402,7 @@
               "name": "Ruairc the Rowdy",
               "center": [
                 941,
-                1085,
-                153.1
+                1085
               ],
               "radius": 30,
               "time_s": 600,
@@ -174,15 +437,15 @@
         {
           "type": "talk",
           "npc": "colm_boy",
-          "goal": "Talk to Colm",
-          "say": "Ruairc said I could be in the gang! I can throw a stone further than anyone! ...Is Mam cross?\n\nRuairc says he can't come home because Da said. But he wants to. He told me. He cries at night. Don't tell him I [told].",
+          "goal": "Talk to Colm, the little boy at the north lookout",
+          "say": "Ruairc said I could be in the gang! I can throw a stone further than anyone! ...Is Mam cross?\n\nRuairc says he can't come home because Da said. But he wants to. He cries at night. And a man in a blue robe pays him in pretty beads to keep the road busy. Don't tell him I [told].",
           "keyword": "told",
           "id": "s4"
         },
         {
           "type": "choice",
           "npc": "aine_mother",
-          "goal": "Bring Colm home to Aine",
+          "goal": "Go back to Aine in Ardee and tell her about her boys",
           "say": "COLM. You - come here. Come HERE.\n\n...You saw Ruairc? How did he look? Is he thin? Did he ask after me?\n\nHis father swore he'd never set foot in the house again. If I [bring both home], his father and I will have words, and maybe worse. Or I take [only Colm], and keep the peace, and Ruairc stays out there. Tell me what to do. I've been asking the fire all year.",
           "options": [
             {
@@ -232,7 +495,1097 @@
             ]
           }
         }
+      },
+      "requires": "cn_light_fingers"
+    },
+    {
+      "id": "cn_the_bead_man",
+      "title": "The Bead Man",
+      "level": 8,
+      "giver": "cn_daire",
+      "offer": "Colm told his mother about a man in a blue robe who pays the gang in beads. Blue robe - that's the Azure Order, the fire-worshippers up west. What do they want with Ardee's road?\n\nThe boy says the bead man comes to the gang's north lookout at dusk. Will you [meet the bead man]? Bring him to me if you can. Bring me his satchel if you can't.",
+      "accept": "meet the bead man",
+      "topics": {},
+      "summary": "A man in a blue robe pays the road-gang in blue-glass beads. He meets them at their north lookout.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            940,
+            1080
+          ],
+          "radius": 25,
+          "goal": "Go to the road-gang's north lookout, about 500 m north-west of Ardee",
+          "text": "A fire, a pot, three youths pretending not to wait for someone. Up the road, a lantern with a blue glass shade.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            945,
+            1075
+          ],
+          "radius": 25,
+          "goal": "Kill the bead man's 3 guards at the north lookout",
+          "mob": {
+            "template": 60167680,
+            "name": "bead man's bodyguard",
+            "level": 7,
+            "tier": "green"
+          },
+          "count": 3,
+          "text": "The bodyguards go down. The man with the blue lantern drops it and draws a knife.",
+          "id": "s2"
+        },
+        {
+          "type": "encounter",
+          "zone": 207,
+          "at": [
+            945,
+            1070
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the bead man when he comes to the north lookout",
+          "text": "The bead man folds up in the road. His satchel spills blue glass everywhere - and a folded note.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "the Bead Man",
+              "center": [
+                945,
+                1070
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Bead Man",
+              "announce": "A thin man in a blue robe, smiling with his mouth only. 'The road is ours to keep busy. Who sent you?'",
+              "boss": {
+                "template": 60158182,
+                "name": "the Bead Man",
+                "level": 9,
+                "health_mult": 1.8
+              },
+              "success": "the Bead Man falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60167680,
+                    "name": "villainous youth",
+                    "level": [
+                      7,
+                      8
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "give": {
+            "name": "the bead man's note"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_daire",
+          "goal": "Bring the bead man's note to Constable Daire in Ardee",
+          "say": "'Keep the road busy. Keep the Fianna looking south. The Voice thanks you.'\n\n...The Voice. That's what the Azure Order calls its high priest. Why would a fire-cult want the Fianna looking south? What's north? Druim Ligen. The gate. Gods.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. I'm sending the note to Champion Fiachra tonight.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq207_bead_man_s_satchel_belt",
+              "sq207_lookout_s_torc",
+              "sq207_blue_glass_ward"
+            ]
+          }
+        }
+      },
+      "requires": "rowdies"
+    },
+    {
+      "id": "cn_road_gang",
+      "title": "The Road-Gang",
+      "level": 9,
+      "giver": "cn_daire",
+      "offer": "No more beads, no more gang - that's my thinking. Their boss sits in the camp by the Tir na Nog road with every lad in Connacht who's lost his way.\n\nThe Fianna will back us. Take friends and [break the gang]. The lads who run, let them run home.",
+      "accept": "break the gang",
+      "topics": {},
+      "summary": "Without the bead man's pay the road-gang is shaky. Its boss still holds the camp by the Tir na Nog road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            935,
+            1165
+          ],
+          "radius": 40,
+          "goal": "Kill 4 rowdies at the road-gang's camp, about 450 m west of Ardee",
+          "target": "rowdy",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            935,
+            1165
+          ],
+          "radius": 40,
+          "goal": "Defeat the road-gang boss in the middle of the gang camp",
+          "target": "road-gang boss",
+          "count": 1,
+          "text": "The boss goes down. Half the camp throws down its cudgels; the other half runs for the hills - west, toward the Moors.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_daire",
+          "goal": "Return to Constable Daire in Ardee",
+          "say": "The road's quiet. Aine says Ruairc's been seen in the market buying bread with honest coin.\n\nThat's a good day's work. Take this - and keep an ear out. Fiachra says the blue robes are busy on the Moors, too.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Ardee, with thanks.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq207_tir_na_nog_road_cloak"
+            ],
+            "choice": [
+              "sq207_road_boss_s_knuckle_ring",
+              "sq207_hedgerow_sash"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "cn_the_bead_man"
+    },
+    {
+      "id": "cn_lost_flock",
+      "title": "The Lost Flock",
+      "level": 7,
+      "giver": "cn_brona",
+      "offer": "My Lochlann took the flock up onto the Moors last week, same as every year. The flock came back. He didn't.\n\nThe wind ghouls have been bad since spring - since the night somebody saw a blue fire crossing the heath. Will you [look for Lochlann]? His fold is just west of here, out past the ghoul hollows.",
+      "accept": "look for Lochlann",
+      "topics": {},
+      "summary": "Brona's husband, the shepherd Lochlann, went missing on the Moors, where the wind ghouls have grown bold.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            900,
+            760
+          ],
+          "radius": 25,
+          "goal": "Find Lochlann's sheep-fold, about 120 m west of Brona",
+          "text": "A stone fold, its gate open, wool on the thorns. The wind howls in the gaps - and in the howl, voices.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            905,
+            765
+          ],
+          "goal": "Search the sheep-fold for a sign of Lochlann (click the glinting spot)",
+          "clue": {
+            "name": "a scorched shepherd's crook",
+            "model": 1347
+          },
+          "text": "Lochlann's crook, burned at the head - not red-burned, blue-burned, the wood gone glassy. Tracks lead off toward the ghoul hollows.",
+          "give": {
+            "name": "Lochlann's scorched crook"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            880,
+            700
+          ],
+          "radius": 40,
+          "goal": "Kill 5 wind ghouls in the hollow just north-west of the fold",
+          "target": "wind ghoul",
+          "count": 5,
+          "text": "The last ghoul blows apart like smoke. In the hollow lies a cloak - Lochlann's - and no Lochlann.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_brona",
+          "goal": "Bring the scorched crook to Brona, on the Moors east of the fold",
+          "say": "Blue fire. Like the stories.\n\nHe'd want me to keep the flock going. So I will. Reeve Conall in Basar should hear about that fire - tell him, if you're passing.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. It's the best of what we had.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq207_shepherd_s_crook_charm",
+              "sq207_moor_wind_bracer"
+            ]
+          }
+        }
       }
+    },
+    {
+      "id": "cn_fallen_rings",
+      "title": "The Fallen Rings",
+      "level": 9,
+      "giver": "cn_seanan",
+      "offer": "The grave rings - the circles of standing stones round the barrows - kept the dead down for a thousand years. My family's kept the rings nearly as long. Now the dead walk out of them like it's market day.\n\nSomebody's knocked the ring-stones down. Will you [go to the rings] and find out who? The largest is just west of here.",
+      "accept": "go to the rings",
+      "topics": {},
+      "summary": "The dead are walking out of the Moors' old grave rings, and Old Seanan, their keeper, says somebody knocked the stones down.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            630,
+            870
+          ],
+          "radius": 25,
+          "goal": "Go to the largest grave ring, about 70 m west of Old Seanan",
+          "text": "Three of the seven stones are down. Not fallen - pushed, and burned where the hands went.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            630,
+            870
+          ],
+          "radius": 40,
+          "goal": "Kill 5 skeletal pawns at the grave ring",
+          "target": "skeletal pawn",
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            636,
+            876
+          ],
+          "goal": "Search the toppled stone in the grave ring (click the glinting spot)",
+          "clue": {
+            "name": "a toppled ring-stone",
+            "model": 1347
+          },
+          "text": "Scorched into the stone's face: a ring of little flames, the Azure Order's sign. And melted into the grass, a blue-glass bead.",
+          "give": {
+            "name": "a blue-scorched chip of stone"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_seanan",
+          "goal": "Bring the stone chip to Old Seanan by the grave rings",
+          "say": "The Azure Order's mark. Up here? They burn men in wicker over in the west. What do they want with old bones?\n\nThe ghouls rose the night of the blue fire, and the rings fell the same week. Somebody's stirring the whole Moor. Tell Reeve Conall in Basar.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. Put the dead back, and you've earned a dead man's pay.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq207_grave_ring_pendant",
+              "sq207_barrow_wight_s_girdle",
+              "sq207_pawn_s_grip_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cn_windaille_and_bas",
+      "title": "Windaille and Bas",
+      "level": 11,
+      "giver": "cn_conall",
+      "offer": "Lochlann's boy says the ghouls have a pair of masters - two great ones, called Windaille and Bas, who lair on the high ground above the siabra tents. The boy says the man with the blue lantern goes there at night.\n\nWill you [hunt Windaille and Bas]? Take a friend; they don't fight fair.",
+      "accept": "hunt Windaille and Bas",
+      "topics": {},
+      "summary": "Two great ghouls, Windaille and Bas, lead the wind ghouls - and a man with a blue lantern visits them at night.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            853,
+            523
+          ],
+          "radius": 40,
+          "goal": "Defeat Windaille, about 480 m west of Basar, just north-east of the siabra raiders' tents",
+          "target": "Windaille",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            853,
+            523
+          ],
+          "radius": 40,
+          "goal": "Defeat Bas, who keeps close beside Windaille",
+          "target": "Bas",
+          "count": 1,
+          "text": "Bas tears apart into a gale and is gone. Where the two of them laired: a lantern, its shade of blue glass.",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            860,
+            530
+          ],
+          "goal": "Search the lair where Windaille and Bas stood (click the glinting spot)",
+          "clue": {
+            "name": "a blue-shaded lantern",
+            "model": 1876
+          },
+          "text": "An Azure lantern, its fire still burning blue without oil. Under it, a scrap: 'Carry the fire over the rings each new moon until the Moor is ours.'",
+          "give": {
+            "name": "the fire-carrier's lantern"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_conall",
+          "goal": "Bring the blue-shaded lantern to Reeve Conall in Basar",
+          "say": "Every new moon. That's two days off.\n\nSomebody walks this out over the Moor on purpose. Rouses the ghouls, wakes the dead, keeps Basar and the Fianna busy. Two days. Will you be there?",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this - and be there.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq207_windaille_s_howl_bracer",
+              "sq207_fire_carrier_s_lantern_charm"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "cn_fallen_rings"
+    },
+    {
+      "id": "cn_fire_carrier",
+      "title": "The Fire-Carrier",
+      "level": 12,
+      "giver": "cn_conall",
+      "offer": "It's the new moon. If the boy's right, the fire-carrier walks the Moor tonight with his blue lantern, ring to ring.\n\nWait for him at the high stones. Bring friends. And [stop the fire-carrier], before the dead and the ghouls come with him.",
+      "accept": "stop the fire-carrier",
+      "topics": {},
+      "summary": "On the new moon an Azure fire-carrier walks the Moor, rousing the ghouls and the dead.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            960,
+            790
+          ],
+          "radius": 25,
+          "goal": "Go to the high stones on the Moors, about 350 m west of Basar, and wait there",
+          "text": "Midnight. The wind drops. Across the heath, a blue light comes walking, and the ghouls rise round it like dogs round a master.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 207,
+          "at": [
+            960,
+            790
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the fire-carrier when he comes to the high stones",
+          "text": "The fire-carrier falls and his blue fire gutters out. The ghouls stop. The wind goes back to being wind.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "the Fire-Carrier",
+              "center": [
+                960,
+                790
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Fire-Carrier",
+              "announce": "A hooded idolater lifts a blazing blue lantern. 'The Voice needs the Moor busy. You'll do as well as sheep.'",
+              "boss": {
+                "template": 60158182,
+                "name": "the Fire-Carrier",
+                "level": 13,
+                "health_mult": 2.0
+              },
+              "success": "the Fire-Carrier falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60167968,
+                    "name": "wind ghoul",
+                    "level": [
+                      10,
+                      11
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "give": {
+            "name": "the fire-carrier's brand"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "cn_conall",
+          "goal": "Bring the fire-carrier's brand to Reeve Conall in Basar",
+          "say": "An Azure brand. A fire that burns blue and doesn't need feeding.\n\nThe Fianna will want this - proof that the Azure Order is making war. But the druids in Ardee, the Rowan, say a fire like that should be put out properly, not carried about. Do I send it to [the Fianna], or to [the Rowan]?",
+          "options": [
+            {
+              "keyword": "the Fianna",
+              "say": "Druim Ligen, then. Fiachra can wave it under the high king's nose.",
+              "ending": "fianna"
+            },
+            {
+              "keyword": "the Rowan",
+              "say": "To Druidess Eabha. She'll know how to kill a fire like that.",
+              "ending": "rowan"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "fianna": {
+          "text": "Take this - from Basar, and from the Fianna.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq207_four_winds_cloak"
+            ],
+            "choice": [
+              "sq207_fianna_signal_horn_charm",
+              "sq207_rowan_berry_bracelet"
+            ]
+          },
+          "wake_event": "connacht_anger_sprites"
+        },
+        "rowan": {
+          "text": "Take this - from Basar, and from the Rowan.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq207_four_winds_cloak"
+            ],
+            "choice": [
+              "sq207_fianna_signal_horn_charm",
+              "sq207_rowan_berry_bracelet"
+            ]
+          },
+          "wake_event": "connacht_anger_sprites"
+        }
+      },
+      "group": true,
+      "requires": "cn_windaille_and_bas"
+    },
+    {
+      "id": "cn_angry_wood",
+      "title": "The Angry Wood",
+      "level": 13,
+      "giver": "cn_ruadhnait",
+      "offer": "The Irewood is the oldest wood in Connacht, and it's awake. It walks. It strikes. It has never done that in my lifetime.\n\nTrees don't wake for nothing. Something's hurting it. Will you [find the hurt]? Start on the east edge, where the young trees are angriest.",
+      "accept": "find the hurt",
+      "topics": {},
+      "summary": "The Irewood has woken and turned on everyone who walks in it. Elder Ruadhnait of the Rowan wants to know why.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            420,
+            560
+          ],
+          "radius": 25,
+          "goal": "Go to the east edge of the Irewood, about 280 m north of Elder Ruadhnait's grove",
+          "text": "Stumps. Dozens of them, fresh-cut, the sap still bleeding. And the saplings round them standing up on their roots.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            400,
+            600
+          ],
+          "radius": 40,
+          "goal": "Kill 4 irewood saplings at the edge of the wood",
+          "target": "irewood sapling",
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            425,
+            555
+          ],
+          "goal": "Search the cut stumps at the wood's edge (click the glinting spot)",
+          "clue": {
+            "name": "a stack of cut withies",
+            "model": 1347
+          },
+          "text": "Withies - long, whippy willow and hazel - cut and bundled, ready for weaving. Tied with blue cord. Enough for a wicker man three times the height of a house.",
+          "give": {
+            "name": "a bundle of withies"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_ruadhnait",
+          "goal": "Bring the cut withies to Elder Ruadhnait in the Rowan grove, in the Irewood (far west)",
+          "say": "Blue cord. The Azure Order.\n\nThey're cutting my wood to weave their wicker men. The wood knows. The wood will not forgive. And I'm not sure I want it to.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. The wood gave it - I asked nicely.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq207_withy_cord_belt",
+              "sq207_sapling_heart_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cn_cluricaun_lodge",
+      "title": "The Cluricaun Lodge",
+      "level": 15,
+      "giver": "cn_ruadhnait",
+      "offer": "The cluricauns know everything that happens in the Irewood. They see it all - usually twice, and through a glass.\n\nOne of them, Mac an Ol, was thrown out of the lodge and lives under a hedge north of here. He might talk, for a price. Will you [ask Mac an Ol]?",
+      "accept": "ask Mac an Ol",
+      "topics": {},
+      "summary": "A cluricaun thrown out of the Irewood lodge might know who's cutting the wood - for a price.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "cn_cluricaun",
+          "goal": "Talk to Mac an Ol, the retired cluricaun, about 130 m south-west of Elder Ruadhnait",
+          "say": "Who's cutting the wood? Course I know. Everybody knows. But knowing's thirsty work.\n\nThe brewer's lads took my old cellar, south of the lodge. Every cask in it is mine by rights. Clear 'em out and I'll [tell you everything].",
+          "keyword": "tell you everything",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            200,
+            1040
+          ],
+          "radius": 40,
+          "goal": "Kill 4 cluricauns in the old cellar, about 140 m south of Mac an Ol",
+          "target": "cluricaun",
+          "count": 4,
+          "text": "The cellar's yours - or Mac an Ol's. Behind the casks: a cart's wheel ruts, and blue cord snagged on a nail.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_cluricaun",
+          "goal": "Return to Mac an Ol, south-west of the Rowan grove",
+          "say": "Ahh. My cellar. My casks. My life's work.\n\nRight. The woodcutter's called Broc. Big lad in Azure blue, cuts by the old oaks on the east edge. Pays the brewer in blue beads to let his carts through the lodge woods. Every bead buys a barrel, see. Never trust a cluricaun with a barrel in sight. Except me.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "And take this. Don't drink it. Or do. I'm not your mam.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq207_cellar_key_ring",
+              "sq207_lodge_brewer_s_apron_cloak",
+              "sq207_cluricaun_thimble_charm"
+            ]
+          }
+        }
+      },
+      "requires": "cn_angry_wood"
+    },
+    {
+      "id": "cn_broc",
+      "title": "The Woodcutter",
+      "level": 17,
+      "giver": "cn_ruadhnait",
+      "offer": "Broc. An Azure woodcutter, with men and carts, felling my wood by the old oaks.\n\nI'm too old to swing anything heavier than a sickle. You aren't. Will you [stop Broc]? Find out how much more he means to cut.",
+      "accept": "stop Broc",
+      "topics": {},
+      "summary": "Broc the Woodcutter fells the Irewood for the Azure Order's wicker men.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            470,
+            520
+          ],
+          "radius": 40,
+          "goal": "Defeat Broc the Woodcutter at his camp, about 330 m north of Elder Ruadhnait's grove",
+          "target": "Broc the Woodcutter",
+          "count": 1,
+          "text": "Broc goes down among his own stumps. The irewoods stand very still round you, watching.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            478,
+            515
+          ],
+          "goal": "Search Broc's cart beside his camp (click the glinting spot)",
+          "clue": {
+            "name": "a woodcutter's cart",
+            "model": 1347
+          },
+          "text": "A tally stick with forty notches, and an order in a fine hand: 'Forty cartloads for the great burning. The Voice will repay the wood in fire.'",
+          "give": {
+            "name": "Broc's order-tally"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_ruadhnait",
+          "goal": "Bring Broc's tally to Elder Ruadhnait in the Rowan grove",
+          "say": "Forty cartloads. For one fire.\n\nWhat do they mean to burn, that needs a wicker man so large? ...And the wood. The wood's heart is sick. I can feel it from here. Come back to me when you've rested.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. The wood remembers who stopped the axe.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq207_woodcutter_s_axe_haft_bracer",
+              "sq207_order_tally_charm"
+            ]
+          }
+        }
+      },
+      "requires": "cn_cluricaun_lodge"
+    },
+    {
+      "id": "cn_heart_of_the_irewood",
+      "title": "The Heart of the Irewood",
+      "level": 20,
+      "giver": "cn_ruadhnait",
+      "offer": "The wood's heart is an elder irewood, older than Ardee. Broc's men poured azure fire into its roots - to make it angry, to keep the Rowan busy, I don't know.\n\nI can plant a seedling of the heart beside it and draw the blight out. It will fight me. Everything in the wood will fight me. Will you [stand with me]? Bring friends.",
+      "accept": "stand with me",
+      "topics": {},
+      "summary": "The Irewood's heart, an ancient elder irewood, is poisoned with azure fire. Elder Ruadhnait means to draw the blight out.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            300,
+            700
+          ],
+          "radius": 30,
+          "goal": "Go to the heart of the Irewood, about 120 m north of Elder Ruadhnait's grove",
+          "text": "A clearing round a tree so old it has no shape, only bulk. Its bark burns blue in the cracks. The ground shakes when it breathes.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 207,
+          "at": [
+            300,
+            700
+          ],
+          "wake_m": 30,
+          "goal": "Keep Elder Ruadhnait alive while she plants the seedling (the wood attacks in waves)",
+          "text": "The seedling takes. The blue fire in the Elder's bark flickers - and the Elder itself tears up its roots and walks.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Elder Ruadhnait safe",
+              "center": [
+                300,
+                700
+              ],
+              "radius": 30,
+              "duration_s": 120,
+              "objective": "Keep Elder Ruadhnait safe",
+              "announce": "Ruadhnait kneels and starts to sing. The whole wood answers - with branches.",
+              "protect": {
+                "template": 60163820,
+                "name": "Elder Ruadhnait",
+                "level": 20,
+                "model": 365
+              },
+              "waves": {
+                "every_s": 25,
+                "count": 2,
+                "from": [
+                  [
+                    312,
+                    706
+                  ],
+                  [
+                    290,
+                    690
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60168131,
+                    "name": "young irewood",
+                    "level": [
+                      17,
+                      18
+                    ]
+                  },
+                  {
+                    "template": 60162489,
+                    "name": "irewood sapling",
+                    "level": [
+                      16,
+                      17
+                    ]
+                  }
+                ]
+              },
+              "thanks": "The seedling's in. Now - the old one has to come down. Gently, if you can. You can't.",
+              "success": "They break off.",
+              "fail": "Elder Ruadhnait falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "the Blight-Burnt Elder",
+              "center": [
+                300,
+                700
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat the Blight-Burnt Elder",
+              "announce": "The Elder irewood looms over the clearing, blue fire pouring from its cracks. It does not know friend from foe any more.",
+              "boss": {
+                "template": 60168131,
+                "name": "the Blight-Burnt Elder",
+                "level": 22,
+                "health_mult": 2.4
+              },
+              "success": "the Blight-Burnt Elder falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "cn_ruadhnait",
+          "goal": "Speak to Elder Ruadhnait at the heart of the Irewood",
+          "say": "It's down. The blight is in the dead wood now, not the living.\n\nWe can [burn the blight] - fire against fire, and the Irewood is clean but scarred. Or we can [let it rot] slowly, as wood should, and trust the seedling to outgrow it. Slower. Kinder. Riskier.",
+          "options": [
+            {
+              "keyword": "burn the blight",
+              "say": "Fire against fire. The Azure Order would laugh. Let them.",
+              "ending": "burned"
+            },
+            {
+              "keyword": "let it rot",
+              "say": "As wood should. The seedling will be a heart in a hundred years. I won't see it. You might.",
+              "ending": "rotted"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "burned": {
+          "text": "Take this, from the grove.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq207_rowan_grove_sash"
+            ],
+            "choice": [
+              "sq207_heartwood_torc",
+              "sq207_blight_breaker_ring",
+              "sq207_seedling_mantle"
+            ]
+          },
+          "wake_event": "connacht_streaming_wisps"
+        },
+        "rotted": {
+          "text": "Take this, from the grove.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq207_rowan_grove_sash"
+            ],
+            "choice": [
+              "sq207_heartwood_torc",
+              "sq207_blight_breaker_ring",
+              "sq207_seedling_mantle"
+            ]
+          },
+          "wake_event": "connacht_streaming_wisps"
+        }
+      },
+      "group": true,
+      "requires": "cn_broc"
+    },
+    {
+      "id": "cn_blue_robes",
+      "title": "Blue Robes",
+      "level": 21,
+      "giver": "cn_cuan",
+      "offer": "Four lads from Ardee and two girls from Basar - I rowed them all across this month. Going west, they said, to find work. Nobody finds work in the west.\n\nThe Azure Order recruits at their camp just up the river from here. Go and [see who's joined], and find their list if they keep one.",
+      "accept": "see who's joined",
+      "topics": {},
+      "summary": "Young people from Ardee and Basar are going west to join the Azure Order.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            570,
+            300
+          ],
+          "radius": 25,
+          "goal": "Go to the Azure Order's camp, about 70 m north-west of Ferryman Cuan",
+          "text": "Blue tents, a fire burning without smoke, and a dozen young faces in new blue robes, chanting. Some of them you've seen in Ardee's market.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            556,
+            274
+          ],
+          "radius": 40,
+          "goal": "Kill 5 azure acolytes at the camp",
+          "target": "azure acolyte",
+          "count": 5,
+          "text": "The acolytes scatter. The new recruits run with them - or run home. You can't tell which.",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            560,
+            282
+          ],
+          "goal": "Search the recruiter's tent in the middle of the camp (click the glinting spot)",
+          "clue": {
+            "name": "the recruiter's writing-box",
+            "model": 1347
+          },
+          "text": "A list of names, each with a village and a price in beads. At the bottom: 'Enough hands for the great burning. The Voice wants them by the new moon after next.'",
+          "give": {
+            "name": "the recruiter's list"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_cuan",
+          "goal": "Bring the recruiter's list to Ferryman Cuan by the river",
+          "say": "Dara. Ciaran. The miller's girl. I rowed every one of them across.\n\n'The great burning.' They're building something enormous out there. Druidess Eabha in Ardee has to see this - take her word of it, if you're going that way.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. I'll be rowing them home, if I can.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq207_recruiter_s_list_case_belt",
+              "sq207_azure_stitch_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cn_withe",
+      "title": "The Oldest Wicker",
+      "level": 23,
+      "giver": "cn_eabha",
+      "offer": "The phantom wickermen are the ghosts of the burnings - each one a wicker man that burned with someone inside. The oldest is called Withe. He walks the north bank of the river past the fields and the others follow him.\n\nPut Withe down and the rest lose their way for a while. Will you [lay Withe to rest]?",
+      "accept": "lay Withe to rest",
+      "topics": {},
+      "summary": "Withe, the oldest of the phantom wickermen, leads the rest. He walks the north bank of the river past the Wicker Fields.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            880,
+            110
+          ],
+          "radius": 30,
+          "goal": "Find Withe, the oldest wicker man, on the river's north bank, about 300 m west of Druim Ligen",
+          "text": "A wicker giant, blackened, still smouldering in the wet grass. It turns slowly towards you.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            880,
+            110
+          ],
+          "radius": 40,
+          "goal": "Defeat Withe",
+          "target": "Withe",
+          "count": 1,
+          "text": "Withe sags and folds down into charred withies. For a moment, something inside it looks out at you - grateful, you think - and then it's just wicker.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_eabha",
+          "goal": "Return to Druidess Eabha in Ardee",
+          "say": "Withe's down. The wickermen will wander a few nights without him.\n\nFiachra's sent word from Druim Ligen - a patrol of his was taken by the Order, and one of them is meant for the next wicker. Go to him. Now.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. And hurry.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq207_withe_bark_ring",
+              "sq207_phantom_ash_charm"
+            ]
+          }
+        }
+      },
+      "requires": "cn_blue_robes"
     },
     {
       "id": "wickerman",
@@ -249,7 +1602,7 @@
         {
           "type": "talk",
           "npc": "scout_aine",
-          "goal": "Ask Scout Niamh about the Azure camp",
+          "goal": "Ask Scout Niamh at Druim Ligen about the Azure camp",
           "say": "They've idolaters chanting at the stones, west and north. Past them, a wicker man three times my height. Haunted, too - the old wickermen they've burned walk about at night. Go through the [idolaters] first. They'll raise the alarm otherwise.",
           "keyword": "idolaters",
           "id": "s1"
@@ -259,11 +1612,10 @@
           "zone": 207,
           "at": [
             684,
-            197,
-            128.4
+            197
           ],
           "radius": 25,
-          "goal": "Silence the azure idolaters",
+          "goal": "Kill 5 azure idolaters at the farther wicker circle, about 500 m west of Druim Ligen",
           "mob": {
             "template": 60158182,
             "name": "azure idolater",
@@ -277,10 +1629,9 @@
           "zone": 207,
           "at": [
             700,
-            192,
-            128.5
+            192
           ],
-          "goal": "Search the idolaters' altar",
+          "goal": "Search the idolaters' altar beside that circle (click the glinting spot)",
           "clue": {
             "name": "a patrol's broken spear",
             "model": 1347
@@ -293,11 +1644,10 @@
           "zone": 207,
           "at": [
             788,
-            153,
-            141.6
+            153
           ],
           "radius": 25,
-          "goal": "Destroy the phantom wickermen",
+          "goal": "Destroy 4 phantom wickermen at the nearer wicker circle, about 400 m west of Druim Ligen",
           "mob": {
             "template": 60164910,
             "name": "phantom wickerman",
@@ -311,11 +1661,10 @@
           "zone": 207,
           "at": [
             762,
-            168,
-            130.2
+            168
           ],
           "wake_m": 30,
-          "goal": "Free Ronan from the wicker man",
+          "goal": "Free Ronan from the wicker man at the nearer circle",
           "text": "The idolaters scatter. Ronan climbs down from the wicker man, coughing, a blue robe still over his arm.",
           "stages": [
             {
@@ -324,8 +1673,7 @@
               "name": "Keep Ronan alive",
               "center": [
                 762,
-                168,
-                130.2
+                168
               ],
               "radius": 30,
               "duration_s": 90,
@@ -343,13 +1691,11 @@
                 "from": [
                   [
                     774,
-                    174,
-                    130.5
+                    174
                   ],
                   [
                     752,
-                    158,
-                    131.9
+                    158
                   ]
                 ],
                 "mobs": [
@@ -375,8 +1721,7 @@
               "name": "Maelgwn, Voice of the Azure",
               "center": [
                 762,
-                168,
-                130.2
+                168
               ],
               "radius": 30,
               "time_s": 480,
@@ -396,8 +1741,8 @@
         },
         {
           "type": "choice",
-          "npc": "ronan",
-          "goal": "Talk to Ronan",
+          "npc": "cn_ronan",
+          "goal": "Talk to Ronan at the nearer wicker circle",
           "say": "They gave me this robe. Said I could take it and live, if I'd join. I didn't. But I could have. I thought about it.\n\nWith it, I could walk into any Azure camp in Hibernia. Find out what they're planning. Tell the Champions. If I [go undercover], nobody can know - not even my mother. Or I [come home], burn the robe, and forget the whole thing.",
           "options": [
             {
@@ -416,7 +1761,7 @@
         {
           "type": "talk",
           "npc": "fiachra",
-          "goal": "Report to Champion Fiachra",
+          "goal": "Report to Champion Fiachra at Druim Ligen",
           "say": "He's gone into the Azure, wearing their robe. His mother's been told he died a hero.\n\nGods. He's braver than I am. If word comes, it'll come to me. Take this - and say nothing to anyone.",
           "ending": "spy",
           "id": "s7"
@@ -424,7 +1769,7 @@
         {
           "type": "talk",
           "npc": "fiachra",
-          "goal": "Report to Champion Fiachra",
+          "goal": "Report to Champion Fiachra at Druim Ligen",
           "say": "Ronan's home. He burned the robe in the courtyard, and the whole keep cheered.\n\nOne man from six. It's not a victory. But it's one man. Take this.",
           "ending": "home",
           "id": "s8"
@@ -460,6 +1805,1049 @@
             "choice": [
               "sq207_champion_s_ring",
               "sq207_patrol_spear_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "cn_withe"
+    },
+    {
+      "id": "cn_names_for_the_fire",
+      "title": "Names for the Fire",
+      "level": 28,
+      "giver": "cn_eabha",
+      "offer": "Maelgwn was only a Voice - one of the Order's lesser priests. The Voice of the Azure, their high priest, still lives, and the great burning is still coming.\n\nThe idolaters at the circles chant from scrolls. Bring me one of their [fire-chants] and Elder Ruadhnait can read what they mean to burn.",
+      "accept": "fire-chants",
+      "topics": {},
+      "summary": "The great burning is still coming. Druidess Eabha wants the idolaters' fire-chant read.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            690,
+            200
+          ],
+          "radius": 40,
+          "goal": "Kill 5 azure idolaters at the farther wicker circle, about 500 m west of Druim Ligen, for their fire-chant",
+          "target": "azure idolater",
+          "count": 5,
+          "give": {
+            "name": "a fire-chant scroll"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_ruadhnait",
+          "goal": "Take the fire-chant scroll to Elder Ruadhnait in the Rowan grove, in the Irewood (far west)",
+          "say": "Old words. Older than the Order, older than me.\n\nIt's not a chant to a god. It's a chant to a door. 'Burn the wood, burn the hands, and the gate in the north opens wide for the fool-king's friends.' The [demon gate] at Druim Ligen. They're feeding it.",
+          "keyword": "demon gate",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_eabha",
+          "goal": "Return to Druidess Eabha in Ardee",
+          "say": "Feeding the gate. With fire. With people.\n\nThe great burning is south of the river, past the fields - the Order's biggest wicker. Ruadhnait says the new moon is in three days. We'll need everyone.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. You'll need it more than I will.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq207_fire_chant_scroll_case",
+              "sq207_idolater_s_ember_ring",
+              "sq207_rowan_thorn_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "wickerman"
+    },
+    {
+      "id": "cn_great_burning",
+      "title": "The Great Burning",
+      "level": 30,
+      "giver": "cn_eabha",
+      "offer": "Tonight. The great wicker stands south of the river, past the fields, and they've filled it with farmers from Ardee and Basar. When it burns, the gate at Druim Ligen opens.\n\nThe Fianna can't spare a man from the gate tonight. It's us. Bring every friend you have and [stop the burning].",
+      "accept": "stop the burning",
+      "topics": {},
+      "summary": "The Azure Order's great burning is tonight: a vast wicker man full of Ardee and Basar's farmers, to open the demon gate.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            790,
+            335
+          ],
+          "radius": 30,
+          "goal": "Go to the great wicker south of the river, about 470 m south-west of Druim Ligen",
+          "text": "A wicker man taller than any tree, packed with people. Idolaters chant in rings round it, torches high. Someone inside is screaming your name - the miller's girl, from the list.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 207,
+          "at": [
+            784,
+            325
+          ],
+          "wake_m": 30,
+          "goal": "Cut the captives loose from the great wicker and keep them alive",
+          "text": "The last captive tumbles out of the wicker and runs. The torches go down onto the empty wicker - and out of the smoke steps a tall man in a burning mask.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep the freed farmers alive",
+              "center": [
+                784,
+                325
+              ],
+              "radius": 30,
+              "duration_s": 120,
+              "objective": "Keep the freed farmers alive",
+              "announce": "You hack at the wicker. Idolaters come at you from every ring.",
+              "protect": {
+                "template": 60167226,
+                "name": "freed farmer",
+                "level": 26,
+                "model": 337
+              },
+              "waves": {
+                "every_s": 25,
+                "count": 3,
+                "from": [
+                  [
+                    796,
+                    331
+                  ],
+                  [
+                    774,
+                    315
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60158182,
+                    "name": "azure idolater",
+                    "level": [
+                      27,
+                      28
+                    ]
+                  },
+                  {
+                    "template": 60164910,
+                    "name": "phantom wickerman",
+                    "level": [
+                      28,
+                      29
+                    ]
+                  }
+                ]
+              },
+              "thanks": "Home! We're going home!",
+              "success": "They break off.",
+              "fail": "freed farmer falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Sciathan, Hand of the Voice",
+              "center": [
+                784,
+                325
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Sciathan",
+              "announce": "'You took the hands. Then you will be the wood.' Sciathan, Hand of the Voice of the Azure, raises his torch.",
+              "boss": {
+                "template": 60167712,
+                "name": "Sciathan, Hand of the Voice",
+                "level": 32,
+                "health_mult": 2.4
+              },
+              "success": "Sciathan, Hand of the Voice falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            784,
+            325
+          ],
+          "goal": "Search the ashes of the great wicker (click the glinting spot)",
+          "clue": {
+            "name": "a scorched letter-case",
+            "model": 1347
+          },
+          "text": "A letter in blue ink, sealed with a black fool's-cap: 'To the Voice, from the Amadan Dubh. My court's madness is yours, as agreed. Feed my gate and I will open it for you, and Connacht will burn blue.'",
+          "give": {
+            "name": "the Amadan Dubh's letter"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_eabha",
+          "goal": "Bring the scorched letter to Druidess Eabha in Ardee",
+          "say": "The Amadan Dubh. The fool-king of the north-east woods.\n\nSo that's the bargain: the fool lends the Order his madness - the Touched, the revels, the jester's tricks - and the Order's fires feed the gate he means to open. The Voice himself fled into the Wicker Fields. When the Rowan are strong enough, we'll go and get him.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take these. You saved forty people tonight. The Rowan won't forget it.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [
+              "sq207_great_wicker_ash_mantle"
+            ],
+            "choice": [
+              "sq207_hand_of_the_voice_signet",
+              "sq207_captive_s_rope_belt",
+              "sq207_druidess_s_rowan_torc"
+            ]
+          },
+          "wake_event": "connacht_wickermen"
+        }
+      },
+      "group": true,
+      "requires": "cn_names_for_the_fire"
+    },
+    {
+      "id": "cn_the_touched",
+      "title": "The Touched",
+      "level": 29,
+      "giver": "cn_muadhan",
+      "offer": "My boy gets up in the night and walks north-east, laughing. Most nights he's back at dawn, scratched and smiling. Some of the other lads don't come back at all.\n\nSeer Gormlaith says the ones who don't are the Touched - the Amadan's folk. Will you [follow the laughter] into the Fool's Court and see what it is that touches them? It's just up there, in the spiral trees.",
+      "accept": "follow the laughter",
+      "topics": {},
+      "summary": "Farmer Muadhan's boy sleepwalks into the Fool's Court, laughing. Some who go become the Amadan's Touched.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            1400,
+            470
+          ],
+          "radius": 30,
+          "goal": "Go to the edge of the Fool's Court, in the spiral trees about 80 m north of Farmer Muadhan",
+          "text": "The trees here grow in spirals. Somewhere ahead, pipes and laughter. The laughter doesn't stop for breath.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            1450,
+            420
+          ],
+          "radius": 40,
+          "goal": "Kill 5 amadan touched at the Fool's Court",
+          "target": "amadan touched",
+          "count": 5,
+          "text": "One of the Touched falls and laughs as he goes. In his hand: a farmhand's cap, a blue bead sewn into the band.",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            1455,
+            415
+          ],
+          "goal": "Search where the Touched danced, in the middle of the court (click the glinting spot)",
+          "clue": {
+            "name": "a farmhand's cap",
+            "model": 1347
+          },
+          "text": "A Basar cap with a blue-glass bead sewn in. The Azure Order's bead, in the fool-king's court. Somebody's sewing them into caps for the sleepwalkers.",
+          "give": {
+            "name": "a farmhand's cap with a blue bead"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_muadhan",
+          "goal": "Bring the farmhand's cap to Farmer Muadhan, about 140 m north-east of Basar",
+          "say": "A bead in the band. My own boy's cap - I sewed that band.\n\nSo that's how they find them: the bead calls, the sleeper walks. I'm burning every cap on this farm. Tell Seer Gormlaith in Basar - she'll know what it means.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. Wear it backwards, and the court won't call you.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq207_laughing_cap_charm",
+              "sq207_sleepwalker_s_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cn_famines_feast",
+      "title": "Famine's Feast",
+      "level": 32,
+      "giver": "cn_gormlaith",
+      "offer": "The Touched who never come home aren't kept for dancing. They're kept for the feast - Famine's feast. Famine is the fool-king's steward; he eats, and his guests starve, and the alp luachra sit inside them and eat too.\n\nThere are Basar folk at that table. Will you [end the feast]?",
+      "accept": "end the feast",
+      "topics": {},
+      "summary": "Famine, the Amadan's steward, keeps a feast where the Touched starve. There are Basar folk at the table.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            1420,
+            300
+          ],
+          "radius": 40,
+          "goal": "Kill 4 alp luachra round the revel, about 400 m north of Basar",
+          "target": "alp luachra",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            1482,
+            483
+          ],
+          "radius": 40,
+          "goal": "Defeat Famine, at the Fool's Court about 280 m north-east of Basar",
+          "target": "Famine",
+          "count": 1,
+          "text": "Famine falls across his own table. The guests blink, and look at their empty plates, and begin - very slowly - to cry.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_gormlaith",
+          "goal": "Return to Seer Gormlaith in Basar",
+          "say": "Seven of ours came home. Seven. Thin as rakes and laughing at nothing, but home.\n\nThe Amadan Dubh will know. A grey pookha came to my door last night and asked for you by name. Pookhas don't come to doors. Be careful.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. And eat something.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq207_famine_s_gnawed_torc",
+              "sq207_alp_skin_belt",
+              "sq207_feast_table_ring"
+            ]
+          }
+        }
+      },
+      "requires": "cn_the_touched"
+    },
+    {
+      "id": "cn_pookha_bargain",
+      "title": "A Pookha's Bargain",
+      "level": 35,
+      "giver": "cn_gormlaith",
+      "offer": "The grey pookha says he serves no court and wants to see the fool-king fall. He'll show you the way into the Amadan Dubh's hall - for a price.\n\nPookhas lie. Pookhas also keep bargains, to the letter. Will you [hear the pookha]? He waits on the east edge of the court.",
+      "accept": "hear the pookha",
+      "topics": {},
+      "summary": "A grey pookha offers the way to the Amadan Dubh's hall - for a price.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "cn_pookha",
+          "goal": "Talk to the Grey Pookha, east of the Fool's Court (about 270 m east of Basar)",
+          "say": "You came. Good. The fool-king's hall moves - you'll never find it on your own.\n\nMy price: the horn of Dorbal, the fool-king's huntsman. He took something of mine, long ago. Bring me his [horn], and I'll take you to the hall.",
+          "keyword": "horn",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            1487,
+            185
+          ],
+          "radius": 40,
+          "goal": "Defeat Dorbal, about 330 m east of Druim Ligen, for his horn",
+          "target": "Dorbal",
+          "count": 1,
+          "give": {
+            "name": "Dorbal's horn"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "cn_pookha",
+          "goal": "Bring the horn to the Grey Pookha, east of the Fool's Court",
+          "say": "Dorbal's horn. Oh, lovely. Give it here.\n\nWith it I can call the hunt - and I'll call it on the fool-king, as promised. Or you could keep it, and I'll still show you the hall, because I want him gone. But then I'll owe you, and you'll owe me, and pookhas collect. Do you [keep the bargain], or [break the bargain]?",
+          "options": [
+            {
+              "keyword": "keep the bargain",
+              "say": "A deal's a deal. Follow the hoofprints north. The hall is where they stop.",
+              "ending": "kept"
+            },
+            {
+              "keyword": "break the bargain",
+              "say": "...Broken. Well. I'll show you anyway. And one day I'll come for what you owe.",
+              "ending": "broken"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "kept": {
+          "text": "And a gift, for an honest dealer.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq207_pookha_hair_bracer",
+              "sq207_broken_bargain_ring"
+            ]
+          }
+        },
+        "broken": {
+          "text": "Keep the horn, then.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq207_dorbal_s_horn_charm"
+            ],
+            "choice": [
+              "sq207_pookha_hair_bracer",
+              "sq207_broken_bargain_ring"
+            ]
+          }
+        }
+      },
+      "requires": "cn_famines_feast"
+    },
+    {
+      "id": "cn_fool_kings_bargain",
+      "title": "The Fool-King's Bargain",
+      "level": 38,
+      "giver": "cn_gormlaith",
+      "offer": "The Amadan Dubh holds the other end of the Voice's bargain. While he lives, the bargain holds, and the gate will open.\n\nThe pookha's shown you the way. Take every friend you have, go into the fool-king's hall, and [break the bargain]. The Amadan Dubh dies, or he laughs at all of us forever.",
+      "accept": "break the bargain",
+      "topics": {},
+      "summary": "The Amadan Dubh, the fool-king of the north-east woods, holds the other end of the Azure Order's bargain.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            1480,
+            330
+          ],
+          "radius": 30,
+          "goal": "Go to the fool-king's hall, about 400 m south-east of Druim Ligen",
+          "text": "Trees bent into a hall, a floor of moss, a throne of antlers. Laughter from every side, and none of it is funny.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            1463,
+            157
+          ],
+          "radius": 40,
+          "goal": "Defeat the Touched, the fool-king's champion, about 300 m east of Druim Ligen",
+          "target": "Touched",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            1492,
+            312
+          ],
+          "radius": 40,
+          "goal": "Defeat the Amadan Dubh in his hall",
+          "target": "Amadan Dubh",
+          "count": 1,
+          "text": "The Amadan Dubh stops laughing. He falls without a sound, and the whole court goes quiet - quiet enough to hear a knot of blue and black cord slip from his fingers.",
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            1498,
+            318
+          ],
+          "goal": "Take up the bargain-knot where the Amadan Dubh fell (click the glinting spot)",
+          "clue": {
+            "name": "a knot of blue and black cord",
+            "model": 1347
+          },
+          "text": "The bargain itself, knotted in cord: blue for the Voice, black for the fool-king. With one hand gone, it's already coming loose.",
+          "give": {
+            "name": "the bargain-knot"
+          },
+          "id": "s4"
+        },
+        {
+          "type": "choice",
+          "npc": "cn_gormlaith",
+          "goal": "Bring the bargain-knot to Seer Gormlaith in Basar",
+          "say": "The bargain-knot. With the fool-king dead, half of it is just string.\n\nThe other half still binds the Voice to the gate. If I [burn the knot], the Voice loses the gate for good. If I [keep the knot], I can follow the thread to wherever the Voice hides, and the Rowan will know where to strike. Burn it, or keep it?",
+          "options": [
+            {
+              "keyword": "burn the knot",
+              "say": "Burn it. Let the Voice feel his gate go cold.",
+              "ending": "burned"
+            },
+            {
+              "keyword": "keep the knot",
+              "say": "Keep it. The thread runs west, to the Wicker Fields. I'll tell Eabha.",
+              "ending": "kept"
+            }
+          ],
+          "id": "s5"
+        }
+      ],
+      "endings": {
+        "burned": {
+          "text": "Take these, with the Rowan's thanks. Basar sleeps tonight.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq207_rowan_crowned_torc"
+            ],
+            "choice": [
+              "sq207_fool_king_s_bargain_knot",
+              "sq207_black_jester_s_motley_cloak",
+              "sq207_court_breaker_s_bracer"
+            ]
+          },
+          "wake_event": "connacht_fools_revel"
+        },
+        "kept": {
+          "text": "Take these, with the Rowan's thanks. Basar sleeps tonight.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq207_rowan_crowned_torc"
+            ],
+            "choice": [
+              "sq207_fool_king_s_bargain_knot",
+              "sq207_black_jester_s_motley_cloak",
+              "sq207_court_breaker_s_bracer"
+            ]
+          },
+          "wake_event": "connacht_fools_revel"
+        }
+      },
+      "group": true,
+      "requires": "cn_pookha_bargain"
+    },
+    {
+      "id": "cn_raider_tents",
+      "title": "Raiders' Tents",
+      "level": 25,
+      "giver": "cn_ultan",
+      "offer": "Siabra raiders, in those tents just west of here. They raid Basar's river, they raid the north road, and they never seem short of coin. Champion Fiachra posted me here to watch them.\n\nHe wants to know who pays them. Will you [raid the raiders]? Their captain's tent has a ledger, if you can get to it.",
+      "accept": "raid the raiders",
+      "topics": {},
+      "summary": "Siabra raiders camp near the demon gate and never seem short of coin. The Fianna want to know who pays them.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            810,
+            570
+          ],
+          "radius": 40,
+          "goal": "Kill 5 siabra raiders at their tents, about 100 m west of Fennid Ultan",
+          "target": "siabra raider",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            815,
+            575
+          ],
+          "goal": "Search the raid-captain's tent (click the glinting spot)",
+          "clue": {
+            "name": "a siabra raid-ledger",
+            "model": 1347
+          },
+          "text": "A ledger in the siabra hand: raids on Basar, raids on the north road, and every one paid for in blue-glass beads. 'Keep the Fianna on the river, away from the gate.'",
+          "give": {
+            "name": "the raid-ledger"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_ultan",
+          "goal": "Bring the raid-ledger to Fennid Ultan, on the rise east of the tents",
+          "say": "Beads again. The Azure Order pays the gang in Ardee, the fire-carrier on the Moors, now the siabra.\n\nAnd every one of them is told the same thing: keep the Fianna busy. Away from the gate. This goes to Fiachra at Druim Ligen tonight.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. Good work.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq207_raid_ledger_satchel_belt",
+              "sq207_siabra_tent_peg_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cn_watch_on_the_gate",
+      "title": "The Watch on the Gate",
+      "level": 30,
+      "giver": "fiachra",
+      "offer": "The demon gate south-west of the keep has smouldered for a hundred years. The Fianna watch it. That's what we're for.\n\nLately it doesn't smoulder. It burns - and it burns blue. Will you [go to the gate] and tell me why?",
+      "accept": "go to the gate",
+      "topics": {},
+      "summary": "The demon gate by Druim Ligen has begun to burn blue.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            990,
+            400
+          ],
+          "radius": 30,
+          "goal": "Go to the demon gate, about 380 m south-west of Druim Ligen",
+          "text": "A ring of scorched stone, the air above it shaking. The fire inside is blue now, not red, and things move in it.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            990,
+            400
+          ],
+          "radius": 40,
+          "goal": "Kill 6 manes demons at the gate",
+          "target": "manes demon",
+          "count": 6,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            985,
+            392
+          ],
+          "goal": "Search the gate's stones (click the glinting spot)",
+          "clue": {
+            "name": "the gate-stones",
+            "model": 1347
+          },
+          "text": "Blue glass, fused into the stones in streaks - as if someone had poured burning beads into the gate. Fed it. Not once: dozens of times.",
+          "give": {
+            "name": "a lump of fused gate-glass"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "fiachra",
+          "goal": "Bring the gate-glass to Champion Fiachra at Druim Ligen",
+          "say": "Somebody's feeding the gate. With the same blue glass they pay their rabble in.\n\nAnd somebody tells them when my watch changes - every raid comes the moment my sentinels swap. There's a mouth in this keep. Find it.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. And watch your back in the keep.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq207_gate_glass_pendant",
+              "sq207_watch_post_cloak",
+              "sq207_manes_fang_ring"
+            ]
+          }
+        }
+      },
+      "requires": "cn_raider_tents"
+    },
+    {
+      "id": "cn_jester",
+      "title": "The Jester at the Keep",
+      "level": 34,
+      "giver": "fiachra",
+      "offer": "A mouth in my keep. Somebody who knows when the watch changes and laughs about it.\n\nWe've a jester, Lorcan, who came last winter and makes the lads laugh. Too much. A jester sees everything and nobody sees him. Will you [watch the jester]? Talk to him. Search his things. Follow him if he goes out.",
+      "accept": "watch the jester",
+      "topics": {},
+      "summary": "Somebody in Druim Ligen tells the demons when the watch changes. Fiachra suspects the keep's new jester.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "cn_lorcan",
+          "goal": "Talk to Lorcan the Jester at Druim Ligen",
+          "say": "A hero! At my feet! Why did the hero cross the keep? To get to the jester! Ha!\n\nAsk me anything. I know a thousand jokes and one [secret]. The secret's the funniest.",
+          "keyword": "secret",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            1182,
+            90
+          ],
+          "goal": "Search the jester's corner, just south of Champion Fiachra (click the glinting spot)",
+          "clue": {
+            "name": "the jester's motley bag",
+            "model": 1347
+          },
+          "text": "Under the bells and the juggling balls: a letter in a fool's scrawl. 'Watch changes at the third bell. Tell Juliy, Juliy tells the gate. The Amadan sends his love.'",
+          "give": {
+            "name": "the jester's letter"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 207,
+          "at": [
+            1216,
+            449
+          ],
+          "radius": 40,
+          "goal": "Defeat Juliy the Jester, on the hill about 260 m north of Basar",
+          "target": "Juliy the Jester",
+          "count": 1,
+          "text": "Juliy falls with a jingle of bells. In his pouch: the watch-roster for the whole month, in Lorcan's hand.",
+          "id": "s3"
+        },
+        {
+          "type": "choice",
+          "npc": "fiachra",
+          "goal": "Report to Champion Fiachra at Druim Ligen",
+          "say": "Lorcan. The fool-king's man, in my own hall, eating my bread.\n\nI could [hang him] from the gate-tower, and every fool in the north will know what Druim Ligen does to spies. Or I could [turn him]: keep him, feed the court false watch-times, and spring a trap at the gate. What do you say?",
+          "options": [
+            {
+              "keyword": "hang him",
+              "say": "Hang him. And ring the third bell while he goes.",
+              "ending": "hanged"
+            },
+            {
+              "keyword": "turn him",
+              "say": "Turn him. He'll laugh for us now, or not at all.",
+              "ending": "turned"
+            }
+          ],
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "hanged": {
+          "text": "Take this. A hard thing done right.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [
+              "sq207_jester_s_bell_charm"
+            ],
+            "choice": [
+              "sq207_turncoat_s_belt",
+              "sq207_keep_watch_bracer"
+            ]
+          }
+        },
+        "turned": {
+          "text": "Take this. A clever thing done right.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [
+              "sq207_turncoat_s_belt"
+            ],
+            "choice": [
+              "sq207_jester_s_bell_charm",
+              "sq207_keep_watch_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "cn_watch_on_the_gate"
+    },
+    {
+      "id": "cn_close_the_gate",
+      "title": "Close the Gate",
+      "level": 40,
+      "giver": "fiachra",
+      "offer": "The bargain's broken, the jester's dealt with, and the fires are going out. But the gate's been fed so long that what's behind it is awake.\n\nThe Gate-Keeper - the thing that holds the gate from the other side - is coming through. If it comes through, it stays. Bring the best you have and [close the gate].",
+      "accept": "close the gate",
+      "topics": {},
+      "summary": "The demon gate has been fed so long that its Gate-Keeper is coming through.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 207,
+          "at": [
+            990,
+            400
+          ],
+          "radius": 30,
+          "goal": "Go to the demon gate, about 380 m south-west of Druim Ligen",
+          "text": "The gate is wide open, a wound of blue fire. Something enormous is pulling itself through it, a claw at a time.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 207,
+          "at": [
+            995,
+            395
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the Gate-Keeper when it comes through the gate",
+          "text": "The Gate-Keeper falls back through its own door, and the fire goes from blue to red to grey. The gate is just stones again. For now.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Ghastrach the Gate-Keeper",
+              "center": [
+                995,
+                395
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Ghastrach the Gate-Keeper",
+              "announce": "'The fool promised. The fires promised. You are not what was promised.' Ghastrach the Gate-Keeper steps into Connacht.",
+              "boss": {
+                "template": 12359,
+                "name": "Ghastrach the Gate-Keeper",
+                "level": 40,
+                "health_mult": 2.6
+              },
+              "success": "Ghastrach the Gate-Keeper falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 10107,
+                    "name": "manes demon",
+                    "level": [
+                      36,
+                      38
+                    ]
+                  },
+                  {
+                    "template": 12359,
+                    "name": "grumoz demon",
+                    "level": [
+                      37,
+                      39
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "give": {
+            "name": "the gate-keeper's chain"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "fiachra",
+          "goal": "Bring the gate-chain to Champion Fiachra at Druim Ligen",
+          "say": "Grey stones. I've not seen that gate grey in my whole life.\n\nThe Fianna will watch it - we always will. But tonight we watch a gate, not a door. Take this. And come and drink with us; the third bell's for you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Fianna of Druim Ligen.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq207_druim_ligen_champion_s_mantle"
+            ],
+            "choice": [
+              "sq207_gate_lord_s_iron_torc",
+              "sq207_ember_quench_ring",
+              "sq207_fian_oath_bracer"
+            ]
+          },
+          "wake_event": "connacht_gate_stirs"
+        }
+      },
+      "group": true,
+      "requires": "cn_jester"
+    },
+    {
+      "id": "cn_salmon_of_knowledge",
+      "title": "The Salmon of Knowledge",
+      "level": 10,
+      "giver": "cn_finnegas",
+      "offer": "Hush. Hush! There - did you see it? Silver, with spots like a scatter of stars. The Salmon of Knowledge. Who eats it knows everything there is to know.\n\nMy knees aren't what they were. Will you [catch it for me]? Don't eat it. Whatever you do, don't you eat it.",
+      "accept": "catch it for me",
+      "topics": {},
+      "summary": "An old poet by the river below Basar has spent seven years fishing for the Salmon of Knowledge.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 207,
+          "at": [
+            1424,
+            1030
+          ],
+          "goal": "Catch the salmon in the river bend a few steps east of Finnegas (click the glinting spot by the water)",
+          "clue": {
+            "name": "a silver salmon in the shallows",
+            "model": 1347
+          },
+          "text": "Your hands close on something cold and silver and furious. It looks at you. You'd swear it looks at you.",
+          "give": {
+            "name": "the Salmon of Knowledge"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cn_finnegas",
+          "goal": "Bring the salmon to Finnegas the Poet, by the river south of Basar",
+          "say": "Oh. Oh, look at it. Seven years.\n\nI'll cook it now. You watch the fire for me while I find the salt - and mind, if a blister rises on the skin, press it down. Don't [taste] it.",
+          "keyword": "taste",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "cn_finnegas",
+          "goal": "Mind the fire for Finnegas, then tell him what you know",
+          "say": "...You burned your thumb on it, didn't you. And you put your thumb in your mouth. Of course you did. They all do. Fionn did.\n\nWell. It's yours now, all of it - the knowing. Or some of it. Tell me true: do you [know everything] now, or do you [know nothing at all]?",
+          "options": [
+            {
+              "keyword": "know everything",
+              "say": "Then you know I'll be fishing another seven years. Go on. Take these, and stop looking at me like that.",
+              "ending": "wise"
+            },
+            {
+              "keyword": "know nothing at all",
+              "say": "Ha! The first honest answer anyone's given by this river. That's the start of wisdom. Take these.",
+              "ending": "honest"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "wise": {
+          "text": "Take these.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq207_thumb_of_knowledge",
+              "sq207_poet_s_hazel_charm"
+            ]
+          }
+        },
+        "honest": {
+          "text": "Take these.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq207_poet_s_hazel_charm"
+            ],
+            "choice": [
+              "sq207_thumb_of_knowledge"
             ]
           }
         }

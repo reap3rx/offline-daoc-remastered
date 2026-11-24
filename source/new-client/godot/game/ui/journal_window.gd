@@ -103,9 +103,10 @@ func _row(name: String, key: String) -> Control:
 	b.add_theme_font_override("font", UiArt.font(true, "quests"))
 	b.add_theme_font_size_override("font_size", UiArt.tsize(9, "quests"))
 	b.add_theme_constant_override("line_spacing", -2)
-	b.add_theme_color_override("font_color", UiArt.GOLD_HI if key == selected else UiArt.CREAM)
-	b.add_theme_color_override("font_hover_color", UiArt.GOLD_HI)
-	b.tooltip_text = name.to_upper()
+	var rec := quest_level(name)
+	b.add_theme_color_override("font_color", level_color(rec, UiArt.GOLD_HI if key == selected else UiArt.CREAM))
+	b.add_theme_color_override("font_hover_color", level_color(rec, UiArt.GOLD_HI))
+	b.tooltip_text = name.to_upper() + ("\nRecommended level %d" % rec if rec > 0 else "")
 	b.pressed.connect(func():
 		selected = key
 		refresh())
@@ -113,6 +114,23 @@ func _row(name: String, key: String) -> Control:
 
 
 static var LEVEL_TAIL := RegEx.create_from_string(" *\\(Level [0-9]+\\)$")
+static var LEVEL_NUM := RegEx.create_from_string("\\(Level ([0-9]+)\\)$")
+
+
+## A quest's recommended level, from the server's "(Level N)" tail (0: none given).
+static func quest_level(name: String) -> int:
+	var m := LEVEL_NUM.search(name)
+	return int(m.get_string(1)) if m else 0
+
+
+## Its title's colour: the recommended level's con colour when it's above you, else the usual (owner 2026-11-22: quests
+## can't be outleveled - they pay at your level - but "a level 4 doesn't go try to do a quest designed for power level of
+## 18 ... There's nothing stopping them from trying, but it will appear as a Purple con color text in their quest menu").
+static func level_color(rec: int, usual: Color) -> Color:
+	if rec <= 0 or PlayerData.level <= 0:
+		return usual
+	var con := ItemTooltip.con_value(rec, PlayerData.level)
+	return ItemTooltip.CON.get(con, usual) if con > 0 else usual
 
 
 func _server_list() -> void:
@@ -130,7 +148,12 @@ func _server_list() -> void:
 	else:
 		var q: Dictionary = Server.quests.get(int(selected.substr(3)), {})
 		var esc := func(t: String) -> String: return t.replace("[", "[lb]")   # "[Step #2]: ..." is text, not a tag
-		var lines := ["[b]%s[/b]" % esc.call(String(q.get("name", "")).to_upper()), "", esc.call(String(q.get("text", "")))]
+		var qname := String(q.get("name", ""))
+		var lines := ["[b]%s[/b]" % esc.call(LEVEL_TAIL.sub(qname, "").to_upper())]
+		var rec := quest_level(qname)
+		if rec > 0:                                    # the recommended level, con-coloured when it's above you
+			lines.append("[color=#%s]Recommended level %d[/color]" % [level_color(rec, Color8(154, 145, 132)).to_html(false), rec])
+		lines += ["", esc.call(String(q.get("text", "")))]
 		for g in q.get("goals", []):                       # a reward quest's goals, done ones ticked
 			lines.append(("[color=#7fd17f]DONE[/color]  " if bool(g.done) else "-  ") + esc.call(String(g.text)))
 		var si: Dictionary = Server.story_info.get(String(q.get("name", "")).to_lower(), {})

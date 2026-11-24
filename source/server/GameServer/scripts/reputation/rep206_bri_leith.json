@@ -1,0 +1,232 @@
+{
+ "zone": 206,
+ "name": "Valley of Bri Leith",
+ "levels": [
+  1,
+  40
+ ],
+ "factions": [
+  {
+   "key": "rangers_druim_cain",
+   "name": "the Rangers of Druim Cain",
+   "short": "Rangers",
+   "kin": [
+    "mag_mell_guard",
+    "fianna_druim_ligen",
+    "mine_wardens",
+    "sentinels_of_ceannai",
+    "watch_of_moher",
+    "host_of_lug",
+    "clann_of_alainn_bin"
+   ],
+   "titles": [
+    "Friend of the Rangers",
+    "Ranger of Druim Cain",
+    "Warden of the Collory Road"
+   ],
+   "speaker": "bl_fearghal",
+   "town": "Druim Cain",
+   "kills": [
+    "siog",
+    "waylayer",
+    "footpad",
+    "piller",
+    "fence",
+    "sloithi",
+    "changeling",
+    "lusmorebane",
+    "cradle",
+    "rage wolf",
+    "wolf",
+    "hound",
+    "fee lion",
+    "faerie steed",
+    "faerie drake",
+    "faerie horse",
+    "mikka",
+    "lashold",
+    "wilde",
+    "black wraith",
+    "wraith",
+    "poacher",
+    "far dorocha",
+    "dorocha",
+    "gan ceanach",
+    "pooka",
+    "dark man",
+    "huntsman",
+    "badger",
+    "erhael",
+    "nymir",
+    "watcher rylie"
+   ],
+   "quartermaster": {
+    "name": "Quartermaster Ciaran",
+    "guild": "Rangers of Druim Cain",
+    "model": 337,
+    "anchor": "bl_fearghal",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "Ranger kit, made for the road and the border. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep206_ranger_s_oath_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep206_collory_road_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep206_druim_cain_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep206_waywatcher_s_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep206_mantle_of_the_collory_road",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "muintir_etaine",
+   "name": "Muintir Etaine",
+   "short": "Muintir Etaine",
+   "kin": [
+    "lucht_feasa",
+    "order_of_the_rowan",
+    "lucht_an_tobair",
+    "seers_of_moher",
+    "aines_circle",
+    "keeners_of_cullen"
+   ],
+   "titles": [
+    "Friend of the Hill",
+    "Midir's Guest",
+    "Beloved of Bri Leith"
+   ],
+   "speaker": "bl_sarnat",
+   "town": "Caille",
+   "kills": [
+    "empyrean",
+    "gale",
+    "wind",
+    "druid",
+    "circle",
+    "riocard",
+    "ruadh",
+    "thorn",
+    "guardian stone",
+    "fuamnach",
+    "niy",
+    "hru",
+    "tric",
+    "sprite",
+    "wisp",
+    "orb",
+    "sheerie",
+    "barca",
+    "primrose",
+    "merman",
+    "rider",
+    "keeper of the veil",
+    "glare",
+    "fearan"
+   ],
+   "quartermaster": {
+    "name": "Hill-Keeper Una",
+    "guild": "Muintir Etaine",
+    "model": 365,
+    "anchor": "bl_sarnat",
+    "offset": [
+     -3,
+     3
+    ],
+    "greet": "The hill's gifts, for those the hill knows. Show me how well it knows you.",
+    "stock": [
+     {
+      "item": "rep206_hill_friend_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep206_etain_s_ribbon_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep206_guest_gift_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep206_moonlit_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep206_mantle_of_bri_leith",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "rangers_druim_cain",
+ "event_default": "rangers_druim_cain",
+ "quest_default": "muintir_etaine",
+ "quests": {
+  "bl_road_to_caille": "muintir_etaine",
+  "bl_brogans_tools": "rangers_druim_cain",
+  "bl_glamoured_miner": "rangers_druim_cain",
+  "bl_ore_paid": "rangers_druim_cain",
+  "bl_sloithi": "rangers_druim_cain",
+  "bl_dying_grove": "muintir_etaine",
+  "oak_heart": "muintir_etaine",
+  "bl_replanting": "muintir_etaine",
+  "bl_ruadhs_letters": "muintir_etaine",
+  "veil": "muintir_etaine",
+  "bl_host_searching": "muintir_etaine",
+  "bl_midirs_rider": "muintir_etaine",
+  "bl_blademaster": "muintir_etaine",
+  "bl_aideens_dreams": "muintir_etaine",
+  "bl_scarlet_fly": "muintir_etaine",
+  "bl_fair_swap": "muintir_etaine",
+  "bl_riocards_binding": "muintir_etaine",
+  "bl_hall_under_the_hill": "muintir_etaine",
+  "bl_waylayers": "rangers_druim_cain",
+  "bl_tower_horns": "rangers_druim_cain",
+  "bl_mikka": "rangers_druim_cain",
+  "bl_road_east": "rangers_druim_cain",
+  "bl_heights_watch": "muintir_etaine",
+  "bl_keepers_hut": "muintir_etaine",
+  "bl_hru": "muintir_etaine",
+  "bl_niy": "muintir_etaine",
+  "bl_fuamnach": "muintir_etaine"
+ },
+ "events": {
+  "bri_coruscating_mine": "rangers_druim_cain",
+  "bri_scarlet_fly": "muintir_etaine",
+  "bri_fairy_rade": "muintir_etaine",
+  "bri_druim_cain_rangers": "rangers_druim_cain",
+  "tower_giolladhe": "rangers_druim_cain",
+  "bri_fuamnachs_gale": "muintir_etaine",
+  "bri_changeling_swap": "muintir_etaine",
+  "bri_stones_rise": "muintir_etaine",
+  "bri_forest_gate_assault": "rangers_druim_cain",
+  "bri_forest_gate_raid": "rangers_druim_cain"
+ },
+ "realm": 3
+}

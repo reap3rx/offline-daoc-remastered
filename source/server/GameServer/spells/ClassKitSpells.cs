@@ -222,6 +222,12 @@ namespace DOL.GS.Spells
     {
         public ThornWallSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
+        // (a Theurgist's Wall of Ice is the same wall, of ice: AlbionKitSpells)
+        protected virtual ushort PropModel => 903;
+        protected virtual byte PropSize => 26;
+        protected virtual string PropName => "brambles";
+        protected virtual void OnProp(GameNPC prop) { }
+
         // (its Duration is how long its patch / images last, not a lasting effect on the target: always the direct effect)
         public override void ApplyEffectOnTarget(GameLiving target) => OnDirectEffect(target);
 
@@ -257,7 +263,7 @@ namespace DOL.GS.Spells
             for (int k = -2; k <= 2; k++)
                 points.Add(new Point3D((int) (centre.X + px * k * 110), (int) (centre.Y + py * k * 110), centre.Z));
             foreach (Point3D pt in points)
-                ClassKitSpellHelp.Prop(c, pt, 903, 26, "brambles", GameNPC.eFlags.PEACE | GameNPC.eFlags.DONTSHOWNAME, Spell.Duration);
+                OnProp(ClassKitSpellHelp.Prop(c, pt, PropModel, PropSize, PropName, GameNPC.eFlags.PEACE | GameNPC.eFlags.DONTSHOWNAME, Spell.Duration));
             long until = GameLoop.GameLoopTime + Spell.Duration;
             int reach = Math.Max(80, Spell.Radius);
             new ECSGameTimer(c, _ =>
@@ -281,6 +287,12 @@ namespace DOL.GS.Spells
     {
         public VerdantPulseSpellHandler(GameLiving caster, Spell spell, SpellLine line) : base(caster, spell, line) { }
 
+        // (a Cleric's Sanctuary is the same circle, of light: AlbionKitSpells)
+        protected virtual ushort PropModel => 1211;
+        protected virtual byte PropSize => 22;
+        protected virtual string PropName => "verdant shoots";
+        protected virtual void OnProp(GameNPC prop) { }
+
         // (its Duration is how long its patch / images last, not a lasting effect on the target: always the direct effect)
         public override void ApplyEffectOnTarget(GameLiving target) => OnDirectEffect(target);
 
@@ -299,7 +311,7 @@ namespace DOL.GS.Spells
             if (c?.CurrentRegion == null || !c.IsAlive)
                 return;
             var at = new Point3D(c.X, c.Y, c.Z);
-            ClassKitSpellHelp.Prop(c, at, 1211, 22, "verdant shoots", GameNPC.eFlags.PEACE | GameNPC.eFlags.DONTSHOWNAME, Spell.Duration);
+            OnProp(ClassKitSpellHelp.Prop(c, at, PropModel, PropSize, PropName, GameNPC.eFlags.PEACE | GameNPC.eFlags.DONTSHOWNAME, Spell.Duration));
             long until = GameLoop.GameLoopTime + Spell.Duration;
             int heal = Math.Max(5, (int) (Spell.Value * (c.Level + 5) / 55.0));
             new ECSGameTimer(c, _ =>

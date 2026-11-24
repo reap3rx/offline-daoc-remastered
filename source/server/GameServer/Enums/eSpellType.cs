@@ -457,6 +457,20 @@ namespace DOL.GS
         Dirge,
         // The Druid's (HibernianKits): a stacking heal over time that Blooms; every buff on the group in one cast
         Rejuvenation,
-        GiftOfTheWild
+        GiftOfTheWild,
+        // Albion's class kits (AlbionKits.cs / spells/AlbionKitSpells.cs)
+        RuneOfEmbers,
+        IceShell,
+        IceWall,
+        ThrallsSacrifice,
+        SimulacrumSwap,
+        Sanctuary,
+        AlbionBlessing,
+        // Midgard's class kits (MidgardKits.cs / spells/MidgardKitSpells.cs)
+        EinherjarCall,
+        ValhallaCharge,
+        GraspingBones,
+        MarchOfTheDead,
+        MycelialRing
     }
 }

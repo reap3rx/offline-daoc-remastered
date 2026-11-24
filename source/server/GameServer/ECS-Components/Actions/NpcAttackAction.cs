@@ -260,9 +260,9 @@ namespace DOL.GS
                 _windupEnd = now + ms;
                 _windupMs = ms;
                 if (kind == MonsterMoves.Blow.Slam)
-                    MonsterMoves.Tell(_npcOwner, $"ground|{_npcOwner.ObjectID}|{MonsterMoves.SlamRadius}|{ms}");
+                    MonsterMoves.TellAll(_npcOwner, $"ground|{_npcOwner.ObjectID}|{MonsterMoves.SlamRadius}|{ms}");
                 else if (kind == MonsterMoves.Blow.Cone)
-                    MonsterMoves.Tell(_npcOwner, $"cone|{_npcOwner.ObjectID}|{MonsterMoves.ConeRadius}|{MonsterMoves.ConeArc}|{ms}|{MonsterMoves.Of(_npcOwner).ConeHeading}");
+                    MonsterMoves.TellAll(_npcOwner, $"cone|{_npcOwner.ObjectID}|{MonsterMoves.ConeRadius}|{MonsterMoves.ConeArc}|{ms}|{MonsterMoves.Of(_npcOwner).ConeHeading}");
                 if (actionPlayer && kind != MonsterMoves.Blow.Slam)
                     ActionCombat.SendWindup((GamePlayer) _target, _npcOwner, ms, MonsterMoves.Code(_npcOwner, kind));
                 if (actionPlayer)

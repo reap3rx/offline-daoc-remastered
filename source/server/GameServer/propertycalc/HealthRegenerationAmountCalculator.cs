@@ -31,7 +31,12 @@ namespace DOL.GS.PropertyCalc
             // Reverted 1.87 changes.
             // From DoL's `living.Level * 0.6` above level 25, `10 + (living.Level * 0.2)` below level 26.
             // 15 health per tick at level 50 instead of 30.
-            double regen = 2.5 + living.Level * 0.25;
+            // (owner 2026-11-22: "there is no in-combat health regen unless you have a buff or proc that gives it to you.
+            // So, the baseline health regen needs to go") - a player or a bot (companions too) in a fight heals only by
+            // what a buff, a potion, a proc, an item or an ability gives; out of it, the rest floor below as before
+            bool playerSide = living is GamePlayer || living is GameBot;
+            bool noBaseline = playerSide && living.InCombat;
+            double regen = noBaseline ? 0.0 : 2.5 + living.Level * 0.25;
             int debuff = living.SpecBuffBonusCategory[property];
 
             if (debuff < 0)
@@ -50,7 +55,9 @@ namespace DOL.GS.PropertyCalc
             }
 
             regen *= ServerProperties.Properties.HEALTH_REGEN_AMOUNT_MODIFIER;
-            if (living is GamePlayer || living is GameBot)       // out of combat: GW2-style, full in seconds (ClassicRestRegeneration)
+            if (noBaseline)
+                return Math.Max(0, (int) regen);                 // (nothing at all without a regeneration effect)
+            if (playerSide)                                      // out of combat: GW2-style, full in seconds (ClassicRestRegeneration)
                 regen = Math.Max(regen, ClassicRestRegeneration.OutOfCombatFloor(living.InCombat, living.MaxHealth,
                     ClassicRestRegeneration.OutOfCombatInterval(living)));
             return Math.Max(1, (int) regen);

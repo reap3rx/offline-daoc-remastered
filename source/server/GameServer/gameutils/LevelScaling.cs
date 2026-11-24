@@ -107,16 +107,28 @@ namespace DOL.GS
             return Math.Max(0, fighter.Level - Cap(monster));
         }
 
+        /// <summary>A landed blow's or spell's damage as a whole number (owner 2026-11-22: "make sure that any hit does
+        /// some damage, even if resistances are factored in" - a level 1 did 0 to a green badger: 0.7 cut down to 0).
+        /// Cut down as it always was (the tuning stands), but a hit that lands never does less than 1. `landed` false (a
+        /// blow fully turned aside, a spell resisted to nothing): it may be 0.</summary>
+        public static int Whole(double damage, bool landed = true)
+        {
+            int whole = double.IsNaN(damage) || damage <= 0 ? 0 : (int) Math.Min(int.MaxValue, Math.Floor(damage));
+            return landed ? Math.Max(1, whole) : whole;
+        }
+
         /// <summary>Damage factor for an attack (melee or spell): the attacker's, against this target.</summary>
         public static double DamageFactor(GameLiving attacker, GameLiving target)
         {
             if (!Enabled || attacker == null || target == null)
                 return 1.0;
             // an event's allies and its monsters
+            // (a monster now fights at the level of whoever it fights - MonsterTiers, one footing at every level - so an
+            // event's own people, at their own level, are evened out against it as if it fought at theirs)
             if (attacker is EventNpc { IsEnemy: false, Role: EventRole.Ally or EventRole.Giver } && IsEventFoe(target))
-                return ALLY_OUT;
+                return ALLY_OUT * (target.Level > attacker.Level ? Math.Min(3.0, target.Level / (double) Math.Max(1, (int) attacker.Level)) : 1.0);
             if (target is EventNpc { IsEnemy: false, Role: EventRole.Ally or EventRole.Giver } && IsEventFoe(attacker))
-                return ALLY_IN;
+                return ALLY_IN * (attacker.Level > target.Level ? Math.Max(0.05, Math.Pow(target.Level / (double) attacker.Level, 1.5)) : 1.0);
             if (MonsterTiers.TryDamageFactor(attacker, target, out double tierFactor))
                 return tierFactor;                          // full scaling around the fight's level (MonsterTiers.cs)
             GameLiving you = Combatant(attacker);

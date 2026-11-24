@@ -1,0 +1,96 @@
+{
+ "zone": 201,
+ "region": 200,
+ "realm": 3,
+ "prefix": "rep201",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shaftwarden's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 3,
+    "Hits": 17
+   },
+   "lore": "A silver ring stamped with a pick: a Shaftwarden of Ardagh."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lamp-Bearer's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 3,
+    "Hits": 17
+   },
+   "lore": "A Warden's belt with a lamp-hook. Every Warden carries a light underground."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Silverhand Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
+   },
+   "lore": "A torc ending in two silver hands. Given to the Wardens Ardagh trusts with its silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pickguard Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 30,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 30,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Iron and silver, made to turn a pick-blow. Or a sheevra blade."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Airgetlam",
+   "base": [
+    41,
+    26
+   ],
+   "level": 40,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 40,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Grey and silver, a silver hand on the shoulder - Nuada's sign. Only the Airgetlam of the Wardens wear it."
+  }
+ ]
+}

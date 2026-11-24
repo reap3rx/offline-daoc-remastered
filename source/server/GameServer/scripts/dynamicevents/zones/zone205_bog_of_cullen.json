@@ -1,780 +1,2650 @@
 {
-  "zone": 205,
-  "region": 200,
-  "name": "Bog of Cullen",
-  "lore": "The Bog of Cullen: Siopa and Alainn Bin on the edges of a bog where the siabra walk on the water and things grow that should not.",
-  "chains": [
+ "zone": 205,
+ "region": 200,
+ "name": "Bog of Cullen",
+ "lore": "The Bog of Cullen: Siopa and Alainn Bin on the edges of a bog where the lights walk at night. The Glimmer has taken the Gemstone Tower in the middle of it, Cliodna's old tower, and the gems in its walls send its lights out over the water. The siabra guide them; the Order of the Azure has come down the north road to burn the bog; and Badb, the battle-crow, has settled on her mound to feed on the war.",
+ "chains": [
+  {
+   "id": "bog_of_cullen_waterwalkers",
+   "title": "The Siabra Waterwalkers",
+   "levels": [
+    42,
+    46
+   ],
+   "hint": "Siabra waterwalkers are crossing the marches with lights on poles...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "bog_of_cullen_waterwalkers",
-      "title": "The Siabra Waterwalkers",
-      "levels": [47, 52],
-      "hint": "Siabra are crossing the bog...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Siabra Camp",
-          "objective": "Clear the siabra camp",
-          "announce": "The siabra waterwalkers are massing in the bog for a raid. Strike first.",
-          "center": [730, 516, 122.2],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 30007,
-              "name": "siabra waterwalker",
-              "level": [49, 52]
-            },
-            {
-              "template": 60165983,
-              "name": "siabra lookout",
-              "level": [47, 47]
-            }
-          ],
-          "success": "You have cleared the siabra camp. The Siabra Marsh-Lord comes out to fight.",
-          "fail": "They hold the siabra camp. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Siabra Marsh-Lord",
-          "objective": "Defeat the Siabra Marsh-Lord",
-          "announce": "The Siabra Marsh-Lord stands at the siabra camp. Bring friends.",
-          "center": [730, 516, 122.2],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 30007,
-            "name": "The Siabra Marsh-Lord",
-            "level": 54,
-            "size": 65,
-            "pos": [730, 516, 122.2],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 30007,
-                "name": "siabra waterwalker",
-                "level": [49, 52]
-              }
-            ]
-          },
-          "success": "The Siabra Marsh-Lord falls. The way is safe again.",
-          "fail": "The Siabra Marsh-Lord slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu205_siabra_marsh_lord_s_jewel", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Siabra Waterwalkers Hold the Road to Siopa",
-          "objective": "Drive the siabra waterwalkers off the road to Siopa",
-          "announce": "With The Siabra Waterwalkers lost, the siabra waterwalkers have spread down onto the road to Siopa and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [554, 665, 122.2],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 30007,
-              "name": "siabra waterwalker",
-              "level": [49, 52]
-            },
-            {
-              "template": 60165983,
-              "name": "siabra lookout",
-              "level": [47, 47]
-            }
-          ],
-          "boss": {
-            "template": 30007,
-            "name": "Siabra waterwalker warleader",
-            "level": 53,
-            "pos": [554, 665, 122.2],
-            "health_mult": 2
-          },
-          "success": "The siabra waterwalkers are gone from the road to Siopa. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cormac has come out to set the road to Siopa right. The siabra waterwalkers are coming back for it!",
-          "center": [554, 665, 122.2],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cormac",
-            "level": 52,
-            "pos": [554, 665, 122.2],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [560, 580, 122.2],
-              [619, 610, 123.5],
-              [639, 673, 124.2]
-            ],
-            "mobs": [
-              {
-                "template": 30007,
-                "name": "siabra waterwalker",
-                "level": [49, 52]
-              },
-              {
-                "template": 60165983,
-                "name": "siabra lookout",
-                "level": [47, 47]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Siopa is safe again. Thank you.\"",
-          "success": "The siabra waterwalkers break and scatter. The road to Siopa is open again.",
-          "fail": "Roadwarden Cormac falls, and the siabra waterwalkers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "bog_of_cullen_bog_creepers",
-      "title": "The Bog Creepers",
-      "levels": [41, 47],
-      "hint": "Something stirs under the peat...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Ciaran the Peat-Cutter",
-          "objective": "Protect Ciaran the Peat-Cutter, who is loading his peat cart",
-          "announce": "Ciaran has cut too deep into the bog, and what was under the peat is crawling out. Hold it off while he loads his cart.",
-          "center": [606, 1090, 122.2],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Ciaran the Peat-Cutter",
-            "template": 60165763,
-            "level": 47,
-            "model": 355,
-            "equipment": "0ed6c49b-8e49-4a08-bcda-4d19b519422d",
-            "health_mult": 10,
-            "pos": [606, 1090, 122.2]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [634, 1170, 122.2],
-              [568, 1166, 122.7],
-              [525, 1116, 123.6]
-            ],
-            "mobs": [
-              {
-                "template": 60158591,
-                "name": "bog creeper",
-                "level": [42, 44]
-              },
-              {
-                "template": 60164164,
-                "name": "morass leech",
-                "level": [41, 43]
-              },
-              {
-                "template": 60158590,
-                "name": "bog crawler",
-                "level": [46, 47]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Ciaran the Peat-Cutter. \"They came from over there - let's finish this.\"",
-          "fail": "Ciaran the Peat-Cutter falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Peat Cuttings",
-          "objective": "Clear the peat cuttings",
-          "announce": "They came from the peat cuttings. Follow them back and clear it out.",
-          "center": [500, 1303, 125.9],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60158591,
-              "name": "bog creeper",
-              "level": [42, 44]
-            },
-            {
-              "template": 60164164,
-              "name": "morass leech",
-              "level": [41, 43]
-            },
-            {
-              "template": 60158590,
-              "name": "bog crawler",
-              "level": [46, 47]
-            }
-          ],
-          "success": "You have cleared the peat cuttings. The Cullen Bog-Horror comes out to fight.",
-          "fail": "They hold the peat cuttings. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Cullen Bog-Horror",
-          "objective": "Defeat the Cullen Bog-Horror",
-          "announce": "The Cullen Bog-Horror stands at the peat cuttings. Bring friends.",
-          "center": [500, 1303, 125.9],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60158590,
-            "name": "The Cullen Bog-Horror",
-            "level": 49,
-            "size": 54,
-            "pos": [500, 1303, 125.9],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60158591,
-                "name": "bog creeper",
-                "level": [42, 44]
-              }
-            ]
-          },
-          "success": "The Cullen Bog-Horror falls. The way is safe again.",
-          "fail": "The Cullen Bog-Horror slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu205_cullen_bog_horror_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Bog Creepers Hold the Road to Siopa",
-          "objective": "Drive the bog creepers off the road to Siopa",
-          "announce": "With The Bog Creepers lost, the bog creepers have spread down onto the road to Siopa and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [402, 967, 122.2],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60158591,
-              "name": "bog creeper",
-              "level": [42, 44]
-            },
-            {
-              "template": 60164164,
-              "name": "morass leech",
-              "level": [41, 43]
-            },
-            {
-              "template": 60158590,
-              "name": "bog crawler",
-              "level": [46, 47]
-            }
-          ],
-          "boss": {
-            "template": 60158591,
-            "name": "Bog creeper warleader",
-            "level": 48,
-            "pos": [402, 967, 122.2],
-            "health_mult": 2
-          },
-          "success": "The bog creepers are gone from the road to Siopa. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Aine has come out to set the road to Siopa right. The bog creepers are coming back for it!",
-          "center": [402, 967, 122.2],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Aine",
-            "level": 47,
-            "pos": [402, 967, 122.2],
-            "health_mult": 10,
-            "template": 60165763,
-            "model": 355,
-            "equipment": "0ed6c49b-8e49-4a08-bcda-4d19b519422d"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [477, 1007, 122.2],
-              [426, 1049, 122.2],
-              [360, 1041, 122.2]
-            ],
-            "mobs": [
-              {
-                "template": 60158591,
-                "name": "bog creeper",
-                "level": [42, 44]
-              },
-              {
-                "template": 60164164,
-                "name": "morass leech",
-                "level": [41, 43]
-              },
-              {
-                "template": 60158590,
-                "name": "bog crawler",
-                "level": [46, 47]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Siopa is safe again. Thank you.\"",
-          "success": "The bog creepers break and scatter. The road to Siopa is open again.",
-          "fail": "Roadwarden Aine falls, and the bog creepers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "bog_of_cullen_wayguards",
-      "title": "The Siabra Wayguards",
-      "levels": [40, 44],
-      "hint": "Sentinel Muirne is looking for help in Siopa.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Sentinel Muirne",
-        "template": 60165763,
-        "level": 45,
-        "model": 383,
-        "equipment": "05c1b6ca-3822-42b7-b457-1c2da8e8e306",
-        "guild": "Sentinels of Siopa",
-        "health_mult": 4,
-        "pos": [230, 966, 123.6],
-        "greet": "The siabra have set a wayguard post on our road and let their hounds loose on anyone who passes. We're going to clear it. Will you come? Say when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Siabra Camp",
+     "objective": "Clear the siabra camp",
+     "announce": "The siabra waterwalkers are out on the causeway, hanging new lights on the poles for the Glimmer. Break them before the road of lights is finished.",
+     "center": [
+      522,
+      560,
+      122.2
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 30007,
+       "name": "siabra waterwalker",
+       "level": [
+        44,
+        47
+       ]
       },
-      "guards": [
-        {
-          "name": "Sentinel",
-          "template": 60165763,
-          "level": 44,
-          "model": 383,
-          "equipment": "05c1b6ca-3822-42b7-b457-1c2da8e8e306",
-          "guild": "Sentinels of Siopa",
-          "health_mult": 2,
-          "count": 3
-        }
-      ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Wayguard Post",
-          "objective": "Go with Sentinel Muirne to the wayguard post",
-          "announce": "Sentinel Muirne leads the sentinels of Siopa out to the siabra wayguard post.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [228, 1018, 123.6],
-            [244, 1090, 123.6],
-            [252, 1194, 123.6],
-            [252, 1226, 123.6],
-            [260, 1234, 123.6]
-          ],
-          "ambushes": [
-            {
-              "at": 2,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 60165995,
-                  "name": "siabra wayguard",
-                  "level": [43, 44]
-                },
-                {
-                  "template": 60159814,
-                  "name": "deamhan hound",
-                  "level": [40, 42]
-                }
-              ]
-            }
-          ],
-          "success": "Sentinel Muirne reaches the wayguard post. \"There they are. Clear them out!\"",
-          "fail": "Sentinel Muirne falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Wayguard Post",
-          "objective": "Clear the wayguard post",
-          "announce": "Clear the wayguard post!",
-          "center": [258, 1237, 123.6],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60165995,
-              "name": "siabra wayguard",
-              "level": [43, 44]
-            },
-            {
-              "template": 60159814,
-              "name": "deamhan hound",
-              "level": [40, 42]
-            }
-          ],
-          "success": "You have cleared the wayguard post. Wayguard Captain Fiach comes out to fight.",
-          "fail": "They hold the wayguard post. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "Wayguard Captain Fiach",
-          "objective": "Defeat Wayguard Captain Fiach",
-          "announce": "Wayguard Captain Fiach stands at the wayguard post. Bring friends.",
-          "center": [258, 1237, 123.6],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60165995,
-            "name": "Wayguard Captain Fiach",
-            "level": 46,
-            "size": 70,
-            "pos": [258, 1237, 123.6],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60165995,
-                "name": "siabra wayguard",
-                "level": [43, 44]
-              }
-            ]
-          },
-          "success": "Wayguard Captain Fiach falls. Siopa will hear of this in the taverns tonight.",
-          "fail": "Wayguard Captain Fiach slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu205_wayguard_captain_fiach_s_jewel", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Siabra Wayguards Hold the Road to Siopa",
-          "objective": "Drive the siabra wayguards off the road to Siopa",
-          "announce": "With The Siabra Wayguards lost, the siabra wayguards have spread down onto the road to Siopa and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [209, 754, 124.3],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60165995,
-              "name": "siabra wayguard",
-              "level": [43, 44]
-            },
-            {
-              "template": 60159814,
-              "name": "deamhan hound",
-              "level": [40, 42]
-            }
-          ],
-          "boss": {
-            "template": 60165995,
-            "name": "Siabra wayguard warleader",
-            "level": 45,
-            "pos": [209, 754, 124.3],
-            "health_mult": 2
-          },
-          "success": "The siabra wayguards are gone from the road to Siopa. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cormac has come out to set the road to Siopa right. The siabra wayguards are coming back for it!",
-          "center": [209, 754, 124.3],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cormac",
-            "level": 44,
-            "pos": [209, 754, 124.3],
-            "health_mult": 10,
-            "template": 60165763,
-            "model": 383,
-            "equipment": "05c1b6ca-3822-42b7-b457-1c2da8e8e306"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [276, 807, 125.3],
-              [218, 839, 123.8],
-              [154, 820, 126.7]
-            ],
-            "mobs": [
-              {
-                "template": 60165995,
-                "name": "siabra wayguard",
-                "level": [43, 44]
-              },
-              {
-                "template": 60159814,
-                "name": "deamhan hound",
-                "level": [40, 42]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Siopa is safe again. Thank you.\"",
-          "success": "The siabra wayguards break and scatter. The road to Siopa is open again.",
-          "fail": "Roadwarden Cormac falls, and the siabra wayguards take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+      {
+       "template": 60165983,
+       "name": "siabra lookout",
+       "level": [
+        42,
+        42
+       ]
+      }
+     ],
+     "success": "You have cleared the siabra camp. The Siabra Marsh-Lord comes out to fight.",
+     "fail": "They hold the siabra camp. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "bog_of_cullen_siabra_raiders",
-      "title": "The Siabra Raiders",
-      "levels": [37, 39],
-      "hint": "Siabra raiders have dug in on the bog road...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Raiders' Camp",
-          "objective": "Clear the raiders' camp",
-          "announce": "Siabra raiders have made a camp on the bog road and rob every traveller between Siopa and Alainn Bin. Clear it.",
-          "center": [770, 207, 123.7],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60165988,
-              "name": "siabra raider",
-              "level": [37, 39]
-            },
-            {
-              "template": 60165986,
-              "name": "siabra mireguard",
-              "level": [38, 38]
-            }
-          ],
-          "success": "You have cleared the raiders' camp. The Mirelord comes out to fight.",
-          "fail": "They hold the raiders' camp. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Mirelord",
-          "objective": "Defeat the Mirelord",
-          "announce": "The Mirelord stands at the raiders' camp. Bring friends.",
-          "center": [770, 207, 123.7],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60165994,
-            "name": "The Mirelord",
-            "level": 41,
-            "size": 70,
-            "pos": [770, 207, 123.7],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60165988,
-                "name": "siabra raider",
-                "level": [37, 39]
-              }
-            ]
-          },
-          "success": "The Mirelord falls. The way is safe again.",
-          "fail": "The Mirelord slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu205_mirelord_s_belt", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Siabra Raiders Hold the Road to Siopa",
-          "objective": "Drive the siabra raiders off the road to Siopa",
-          "announce": "With The Siabra Raiders lost, the siabra raiders have spread down onto the road to Siopa and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [514, 373, 122.2],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60165988,
-              "name": "siabra raider",
-              "level": [37, 39]
-            },
-            {
-              "template": 60165986,
-              "name": "siabra mireguard",
-              "level": [38, 38]
-            }
-          ],
-          "boss": {
-            "template": 60165988,
-            "name": "Siabra raider warleader",
-            "level": 40,
-            "pos": [514, 373, 122.2],
-            "health_mult": 2
-          },
-          "success": "The siabra raiders are gone from the road to Siopa. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Ruadh has come out to set the road to Siopa right. The siabra raiders are coming back for it!",
-          "center": [514, 373, 122.2],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Ruadh",
-            "level": 39,
-            "pos": [514, 373, 122.2],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [531, 289, 125.3],
-              [585, 327, 123.9],
-              [597, 392, 123.6]
-            ],
-            "mobs": [
-              {
-                "template": 60165988,
-                "name": "siabra raider",
-                "level": [37, 39]
-              },
-              {
-                "template": 60165986,
-                "name": "siabra mireguard",
-                "level": [38, 38]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Siopa is safe again. Thank you.\"",
-          "success": "The siabra raiders break and scatter. The road to Siopa is open again.",
-          "fail": "Roadwarden Ruadh falls, and the siabra raiders take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "The Siabra Marsh-Lord",
+     "objective": "Defeat the Siabra Marsh-Lord",
+     "announce": "The Siabra Marsh-Lord stands at the siabra camp. Bring friends.",
+     "center": [
+      522,
+      560,
+      122.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 30007,
+      "name": "The Siabra Marsh-Lord",
+      "level": 49,
+      "size": 65,
+      "pos": [
+       522,
+       560,
+       122.2
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 30007,
+        "name": "siabra waterwalker",
+        "level": [
+         44,
+         47
+        ]
+       }
       ]
+     },
+     "success": "The Siabra Marsh-Lord falls. The way is safe again.",
+     "fail": "The Siabra Marsh-Lord slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu205_siabra_marsh_lord_s_jewel",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Siabra Waterwalkers Hold the Road to Siopa",
+     "objective": "Drive the siabra waterwalkers off the road to Siopa",
+     "announce": "With The Siabra Waterwalkers lost, the siabra waterwalkers have spread down onto the road to Siopa and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      554,
+      665,
+      122.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 30007,
+       "name": "siabra waterwalker",
+       "level": [
+        44,
+        47
+       ]
+      },
+      {
+       "template": 60165983,
+       "name": "siabra lookout",
+       "level": [
+        42,
+        42
+       ]
+      }
+     ],
+     "boss": {
+      "template": 30007,
+      "name": "Siabra waterwalker warleader",
+      "level": 48,
+      "pos": [
+       554,
+       665,
+       122.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The siabra waterwalkers are gone from the road to Siopa. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cormac has come out to set the road to Siopa right. The siabra waterwalkers are coming back for it!",
+     "center": [
+      554,
+      665,
+      122.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cormac",
+      "level": 47,
+      "pos": [
+       554,
+       665,
+       122.2
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        614,
+        695,
+        125.3
+       ],
+       [
+        504,
+        705,
+        122.2
+       ],
+       [
+        564,
+        605,
+        122.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 30007,
+        "name": "siabra waterwalker",
+        "level": [
+         44,
+         47
+        ]
+       },
+       {
+        "template": 60165983,
+        "name": "siabra lookout",
+        "level": [
+         42,
+         42
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Siopa is safe again. Thank you.\"",
+     "success": "The siabra waterwalkers break and scatter. The road to Siopa is open again.",
+     "fail": "Roadwarden Cormac falls, and the siabra waterwalkers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
+   ]
+  },
+  {
+   "id": "bog_of_cullen_bog_creepers",
+   "title": "The Bog Creepers",
+   "levels": [
+    40,
+    44
+   ],
+   "hint": "Something stirs under the turf-cutters' road...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Tomas the Peat-Cutter",
+     "objective": "Protect Tomas the Peat-Cutter, who is loading his peat cart",
+     "announce": "Ciaran has cut too deep into the bog, and what was under the peat is crawling out. Hold it off while he loads his cart.",
+     "center": [
+      480,
+      1000,
+      122.2
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Tomas the Peat-Cutter",
+      "template": 60165763,
+      "level": 46,
+      "model": 355,
+      "equipment": "0ed6c49b-8e49-4a08-bcda-4d19b519422d",
+      "health_mult": 10,
+      "pos": [
+       480,
+       1000,
+       122.2
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        540,
+        1030,
+        123.2
+       ],
+       [
+        430,
+        1040,
+        122.2
+       ],
+       [
+        490,
+        940,
+        123.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60158591,
+        "name": "bog creeper",
+        "level": [
+         41,
+         43
+        ]
+       },
+       {
+        "template": 60164164,
+        "name": "morass leech",
+        "level": [
+         40,
+         42
+        ]
+       },
+       {
+        "template": 60158590,
+        "name": "bog crawler",
+        "level": [
+         45,
+         46
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Tomas the Peat-Cutter. \"They came from over there - let's finish this.\"",
+     "fail": "Tomas the Peat-Cutter falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Peat Cuttings",
+     "objective": "Clear the peat cuttings",
+     "announce": "They came from the peat cuttings. Follow them back and clear it out.",
+     "center": [
+      555,
+      918,
+      122.2
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60158591,
+       "name": "bog creeper",
+       "level": [
+        41,
+        43
+       ]
+      },
+      {
+       "template": 60164164,
+       "name": "morass leech",
+       "level": [
+        40,
+        42
+       ]
+      },
+      {
+       "template": 60158590,
+       "name": "bog crawler",
+       "level": [
+        45,
+        46
+       ]
+      }
+     ],
+     "success": "You have cleared the peat cuttings. The Cullen Bog-Horror comes out to fight.",
+     "fail": "They hold the peat cuttings. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Cullen Bog-Horror",
+     "objective": "Defeat the Cullen Bog-Horror",
+     "announce": "The Cullen Bog-Horror stands at the peat cuttings. Bring friends.",
+     "center": [
+      555,
+      918,
+      122.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60158590,
+      "name": "The Cullen Bog-Horror",
+      "level": 48,
+      "size": 54,
+      "pos": [
+       555,
+       918,
+       122.2
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60158591,
+        "name": "bog creeper",
+        "level": [
+         41,
+         43
+        ]
+       }
+      ]
+     },
+     "success": "The Cullen Bog-Horror falls. The way is safe again.",
+     "fail": "The Cullen Bog-Horror slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu205_cullen_bog_horror_s_wristguard",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Bog Creepers Hold the Road to Siopa",
+     "objective": "Drive the bog creepers off the road to Siopa",
+     "announce": "With The Bog Creepers lost, the bog creepers have spread down onto the road to Siopa and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      402,
+      967,
+      122.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60158591,
+       "name": "bog creeper",
+       "level": [
+        41,
+        43
+       ]
+      },
+      {
+       "template": 60164164,
+       "name": "morass leech",
+       "level": [
+        40,
+        42
+       ]
+      },
+      {
+       "template": 60158590,
+       "name": "bog crawler",
+       "level": [
+        45,
+        46
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60158591,
+      "name": "Bog creeper warleader",
+      "level": 47,
+      "pos": [
+       402,
+       967,
+       122.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The bog creepers are gone from the road to Siopa. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Aine has come out to set the road to Siopa right. The bog creepers are coming back for it!",
+     "center": [
+      402,
+      967,
+      122.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Aine",
+      "level": 46,
+      "pos": [
+       402,
+       967,
+       122.2
+      ],
+      "health_mult": 10,
+      "template": 60165763,
+      "model": 355,
+      "equipment": "0ed6c49b-8e49-4a08-bcda-4d19b519422d"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        462,
+        997,
+        122.2
+       ],
+       [
+        352,
+        1007,
+        122.2
+       ],
+       [
+        412,
+        907,
+        122.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60158591,
+        "name": "bog creeper",
+        "level": [
+         41,
+         43
+        ]
+       },
+       {
+        "template": 60164164,
+        "name": "morass leech",
+        "level": [
+         40,
+         42
+        ]
+       },
+       {
+        "template": 60158590,
+        "name": "bog crawler",
+        "level": [
+         45,
+         46
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Siopa is safe again. Thank you.\"",
+     "success": "The bog creepers break and scatter. The road to Siopa is open again.",
+     "fail": "Roadwarden Aine falls, and the bog creepers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "bog_of_cullen_wayguards",
+   "title": "The Siabra Wayguards",
+   "levels": [
+    40,
+    44
+   ],
+   "hint": "Sentinel Una is looking for help in Siopa.",
+   "rest_s": 45,
+   "giver": {
+    "name": "Sentinel Una",
+    "template": 60165763,
+    "level": 45,
+    "model": 383,
+    "equipment": "05c1b6ca-3822-42b7-b457-1c2da8e8e306",
+    "guild": "the Clann of Alainn Bin",
+    "health_mult": 4,
+    "pos": [
+     230,
+     966,
+     123.6
+    ],
+    "greet": "The siabra have set a wayguard post on our road and let their hounds loose on anyone who passes. We're going to clear it. Will you come? Say when you're [ready].",
+    "accept": "ready",
+    "reply": "Good. Stay close - they will have watchers out. With me!",
+    "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "name": "Sentinel",
+     "template": 60165763,
+     "level": 44,
+     "model": 383,
+     "equipment": "05c1b6ca-3822-42b7-b457-1c2da8e8e306",
+     "guild": "the Clann of Alainn Bin",
+     "health_mult": 2,
+     "count": 3
+    }
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "escort",
+     "name": "The Road to Wayguard Post",
+     "objective": "Go with Sentinel Una to the wayguard post",
+     "announce": "Sentinel Una leads the Clann of Alainn Bin out to the siabra wayguard post.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       228,
+       1018,
+       123.6
+      ],
+      [
+       244,
+       1090,
+       123.6
+      ],
+      [
+       252,
+       1194,
+       123.6
+      ],
+      [
+       252,
+       1226,
+       123.6
+      ],
+      [
+       260,
+       1234,
+       123.6
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 2,
+       "count": 3,
+       "say": "Ambush! To me - hold together!",
+       "mobs": [
+        {
+         "template": 60165995,
+         "name": "siabra wayguard",
+         "level": [
+          43,
+          44
+         ]
+        },
+        {
+         "template": 60159814,
+         "name": "deamhan hound",
+         "level": [
+          40,
+          42
+         ]
+        }
+       ]
+      }
+     ],
+     "success": "Sentinel Una reaches the wayguard post. \"There they are. Clear them out!\"",
+     "fail": "Sentinel Una falls on the road. The others carry the body home.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "g2",
+     "type": "cull",
+     "name": "Clear Wayguard Post",
+     "objective": "Clear the wayguard post",
+     "announce": "Clear the wayguard post!",
+     "center": [
+      258,
+      1237,
+      123.6
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60165995,
+       "name": "siabra wayguard",
+       "level": [
+        43,
+        44
+       ]
+      },
+      {
+       "template": 60159814,
+       "name": "deamhan hound",
+       "level": [
+        40,
+        42
+       ]
+      }
+     ],
+     "success": "You have cleared the wayguard post. Wayguard Captain Fiach comes out to fight.",
+     "fail": "They hold the wayguard post. They will be bolder next time.",
+     "on_success": "g3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g3",
+     "type": "boss",
+     "name": "Wayguard Captain Fiach",
+     "objective": "Defeat Wayguard Captain Fiach",
+     "announce": "Wayguard Captain Fiach stands at the wayguard post. Bring friends.",
+     "center": [
+      258,
+      1237,
+      123.6
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60165995,
+      "name": "Wayguard Captain Fiach",
+      "level": 46,
+      "size": 70,
+      "pos": [
+       258,
+       1237,
+       123.6
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60165995,
+        "name": "siabra wayguard",
+        "level": [
+         43,
+         44
+        ]
+       }
+      ]
+     },
+     "success": "Wayguard Captain Fiach falls. Siopa will hear of this in the taverns tonight.",
+     "fail": "Wayguard Captain Fiach slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu205_wayguard_captain_fiach_s_jewel",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Siabra Wayguards Hold the Road to Siopa",
+     "objective": "Drive the siabra wayguards off the road to Siopa",
+     "announce": "With The Siabra Wayguards lost, the siabra wayguards have spread down onto the road to Siopa and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      209,
+      754,
+      124.3
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60165995,
+       "name": "siabra wayguard",
+       "level": [
+        43,
+        44
+       ]
+      },
+      {
+       "template": 60159814,
+       "name": "deamhan hound",
+       "level": [
+        40,
+        42
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60165995,
+      "name": "Siabra wayguard warleader",
+      "level": 45,
+      "pos": [
+       209,
+       754,
+       124.3
+      ],
+      "health_mult": 2
+     },
+     "success": "The siabra wayguards are gone from the road to Siopa. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cormac has come out to set the road to Siopa right. The siabra wayguards are coming back for it!",
+     "center": [
+      209,
+      754,
+      124.3
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cormac",
+      "level": 44,
+      "pos": [
+       209,
+       754,
+       124.3
+      ],
+      "health_mult": 10,
+      "template": 60165763,
+      "model": 383,
+      "equipment": "05c1b6ca-3822-42b7-b457-1c2da8e8e306"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        276,
+        807,
+        125.3
+       ],
+       [
+        218,
+        839,
+        123.8
+       ],
+       [
+        154,
+        820,
+        126.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60165995,
+        "name": "siabra wayguard",
+        "level": [
+         43,
+         44
+        ]
+       },
+       {
+        "template": 60159814,
+        "name": "deamhan hound",
+        "level": [
+         40,
+         42
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Siopa is safe again. Thank you.\"",
+     "success": "The siabra wayguards break and scatter. The road to Siopa is open again.",
+     "fail": "Roadwarden Cormac falls, and the siabra wayguards take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "bog_of_cullen_siabra_raiders",
+   "title": "The Siabra Raiders",
+   "levels": [
+    40,
+    44
+   ],
+   "hint": "Siabra raiders have dug in on the north-west marches...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Raiders' Camp",
+     "objective": "Clear the raiders' camp",
+     "announce": "Siabra raiders have made a camp on the bog road and rob every traveller between Siopa and Alainn Bin. Clear it.",
+     "center": [
+      317,
+      330,
+      123.6
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60165988,
+       "name": "siabra raider",
+       "level": [
+        40,
+        42
+       ]
+      },
+      {
+       "template": 60165986,
+       "name": "siabra mireguard",
+       "level": [
+        41,
+        41
+       ]
+      }
+     ],
+     "success": "You have cleared the raiders' camp. The Mirelord comes out to fight.",
+     "fail": "They hold the raiders' camp. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "The Mirelord",
+     "objective": "Defeat the Mirelord",
+     "announce": "The Mirelord stands at the raiders' camp. Bring friends.",
+     "center": [
+      317,
+      330,
+      123.6
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60165994,
+      "name": "The Mirelord",
+      "level": 44,
+      "size": 70,
+      "pos": [
+       317,
+       330,
+       123.6
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60165988,
+        "name": "siabra raider",
+        "level": [
+         40,
+         42
+        ]
+       }
+      ]
+     },
+     "success": "The Mirelord falls. The way is safe again.",
+     "fail": "The Mirelord slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu205_mirelord_s_belt",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Siabra Raiders Hold the Road to Siopa",
+     "objective": "Drive the siabra raiders off the road to Siopa",
+     "announce": "With The Siabra Raiders lost, the siabra raiders have spread down onto the road to Siopa and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      400,
+      460,
+      122.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60165988,
+       "name": "siabra raider",
+       "level": [
+        40,
+        42
+       ]
+      },
+      {
+       "template": 60165986,
+       "name": "siabra mireguard",
+       "level": [
+        41,
+        41
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60165988,
+      "name": "Siabra raider warleader",
+      "level": 43,
+      "pos": [
+       400,
+       460,
+       122.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The siabra raiders are gone from the road to Siopa. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Ruadh has come out to set the road to Siopa right. The siabra raiders are coming back for it!",
+     "center": [
+      400,
+      460,
+      122.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Ruadh",
+      "level": 42,
+      "pos": [
+       400,
+       460,
+       122.2
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        460,
+        490,
+        122.2
+       ],
+       [
+        350,
+        500,
+        122.2
+       ],
+       [
+        410,
+        400,
+        122.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60165988,
+        "name": "siabra raider",
+        "level": [
+         40,
+         42
+        ]
+       },
+       {
+        "template": 60165986,
+        "name": "siabra mireguard",
+        "level": [
+         41,
+         41
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Siopa is safe again. Thank you.\"",
+     "success": "The siabra raiders break and scatter. The road to Siopa is open again.",
+     "fail": "Roadwarden Ruadh falls, and the siabra raiders take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "bc_wisp_night",
+   "title": "Wisp-Night",
+   "levels": [
+    41,
+    45
+   ],
+   "time": "night",
+   "rest_s": 45,
+   "hint": "Lamplighter Nessa is gathering travellers in Siopa for the night road to Alainn Bin.",
+   "giver": {
+    "template": 60163820,
+    "model": 365,
+    "guild": "the Keeners of Cullen",
+    "name": "Lamplighter Nessa",
+    "level": 44,
+    "pos": [
+     236,
+     952,
+     123.6
+    ],
+    "health_mult": 5,
+    "greet": "Travellers for Alainn Bin, and the bog-lights out tonight. They lead you off the path, and the path is all there is out there. Walk with us? Say when you're [ready].",
+    "accept": "ready",
+    "reply": "Keep to my lamp. Whatever lights you see, they are not mine.",
+    "busy": "We're only just back. Later.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "template": 60165763,
+     "model": 383,
+     "equipment": "05c1b6ca-3822-42b7-b457-1c2da8e8e306",
+     "guild": "the Clann of Alainn Bin",
+     "name": "traveller",
+     "level": 40,
+     "count": 3,
+     "health_mult": 2
+    }
+   ],
+   "start": "e1",
+   "stages": [
+    {
+     "id": "e1",
+     "type": "escort",
+     "name": "The Night Road",
+     "objective": "Walk with Lamplighter Nessa and the travellers from Siopa to Alainn Bin",
+     "announce": "Lamplighter Nessa leads the travellers out of Siopa onto the night road. The bog-lights are already moving.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       240,
+       960,
+       123.6
+      ],
+      [
+       330,
+       1040,
+       122.2
+      ],
+      [
+       450,
+       1110,
+       122.2
+      ],
+      [
+       600,
+       1180,
+       122.2
+      ],
+      [
+       760,
+       1240,
+       122.2
+      ],
+      [
+       920,
+       1280,
+       123.6
+      ],
+      [
+       1080,
+       1300,
+       122.2
+      ],
+      [
+       1200,
+       1290,
+       122.2
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 2,
+       "count": 3,
+       "say": "Lights - off the path! Don't follow them!",
+       "mobs": [
+        {
+         "template": 60161430,
+         "name": "bog light",
+         "level": [
+          42,
+          44
+         ],
+         "guild": "the Glimmer"
+        },
+        {
+         "template": 60161430,
+         "name": "bog light",
+         "level": [
+          42,
+          44
+         ],
+         "guild": "the Glimmer"
+        }
+       ]
+      },
+      {
+       "at": 4,
+       "count": 4,
+       "say": "Siabra! They're leading the lights!",
+       "mobs": [
+        {
+         "template": 60165989,
+         "name": "siabra raider",
+         "level": [
+          42,
+          44
+         ],
+         "guild": "the Siabra of Cullen"
+        },
+        {
+         "template": 60161430,
+         "name": "bog light",
+         "level": [
+          42,
+          44
+         ],
+         "guild": "the Glimmer"
+        }
+       ]
+      },
+      {
+       "at": 6,
+       "count": 3,
+       "say": "Wraiths on the keening ground - keep moving!",
+       "mobs": [
+        {
+         "template": 60158463,
+         "name": "black wraith",
+         "level": [
+          43,
+          45
+         ]
+        },
+        {
+         "template": 60161430,
+         "name": "bog light",
+         "level": [
+          42,
+          44
+         ],
+         "guild": "the Glimmer"
+        }
+       ]
+      }
+     ],
+     "success": "The travellers come in under Alainn Bin's gate lamps. Nessa counts them twice.",
+     "fail": "Nessa's lamp goes out on the bog.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 24,
+      "copper_per_level": 160,
+      "tokens": 12,
+      "items": [
+       {
+        "id": "ev205_lamplighter_s_wick",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bc_the_keen",
+   "title": "The Keen",
+   "levels": [
+    42,
+    46
+   ],
+   "time": "night",
+   "rest_s": 30,
+   "hint": "The banshee is keening - and the wraiths are rising on the keening ground...",
+   "first_delay_s": [
+    600,
+    1500
+   ],
+   "interval_s": [
+    2400,
+    3600
+   ],
+   "start": "k1",
+   "stages": [
+    {
+     "id": "k1",
+     "type": "defend",
+     "name": "The Gate",
+     "objective": "Keep Keener Brid alive at Alainn Bin's north gate while she keens the dead down",
+     "announce": "The banshee of Cullen is keening, and the drowned dead of the bog are rising and coming for Alainn Bin. Keener Brid stands at the north gate to keen them back down - keep them off her!",
+     "center": [
+      1250,
+      1250,
+      122.2
+     ],
+     "radius": 60,
+     "duration_s": 180,
+     "protect": {
+      "template": 60163820,
+      "model": 365,
+      "guild": "the Keeners of Cullen",
+      "name": "Keener Brid",
+      "level": 45,
+      "pos": [
+       1250,
+       1250,
+       122.2
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 3,
+      "from": [
+       [
+        1180,
+        1180,
+        122.2
+       ],
+       [
+        1300,
+        1170,
+        123.6
+       ],
+       [
+        1120,
+        1250,
+        122.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60158463,
+        "name": "black wraith",
+        "level": [
+         43,
+         45
+        ]
+       },
+       {
+        "template": 60158249,
+        "name": "false banshee",
+        "level": [
+         43,
+         45
+        ],
+        "model": 1885
+       }
+      ]
+     },
+     "thanks": "\"They're down. Back in the bog where they belong. Thank you.\"",
+     "success": "The dead sink back into the bog - all but one, a false banshee, lit from inside.",
+     "fail": "The gate falls. The town's people stay indoors until dawn.",
+     "on_success": "k2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 110
+     }
+    },
+    {
+     "id": "k2",
+     "type": "boss",
+     "name": "the Glass Keener",
+     "objective": "Defeat the Glass Keener",
+     "announce": "The Glass Keener comes up the road, keening in a voice like breaking glass. Bring friends.",
+     "center": [
+      1250,
+      1250,
+      122.2
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60158249,
+      "name": "the Glass Keener",
+      "level": 47,
+      "model": 1885,
+      "size": 62,
+      "health_mult": 2.0,
+      "guild": "of the Glimmer"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60158463,
+        "name": "black wraith",
+        "level": [
+         43,
+         45
+        ]
+       }
+      ]
+     },
+     "success": "The Glass Keener shatters. The true keen goes on, far off, and then stops.",
+     "fail": "The Glass Keener goes back into the dark.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 160,
+      "items": [
+       {
+        "id": "ev205_glass_keener_s_shard",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bc_azure_march",
+   "title": "The Azure March",
+   "levels": [
+    42,
+    46
+   ],
+   "rest_s": 30,
+   "hint": "Blue banners on the north road - an Azure column is coming down with torches...",
+   "first_delay_s": [
+    600,
+    1800
+   ],
+   "interval_s": [
+    3000,
+    4200
+   ],
+   "start": "m1",
+   "stages": [
+    {
+     "id": "m1",
+     "type": "intercept",
+     "name": "The Torch-Bearers",
+     "objective": "Stop the Azure column before its torch-bearer reaches the peat",
+     "announce": "An Azure column is marching down the north road with torches for the peat. If the torch-bearer reaches the cuttings, the bog burns underground for a year. Stop him!",
+     "radius": 60,
+     "time_s": 900,
+     "alive": 4,
+     "speed": 120,
+     "path": [
+      [
+       1120,
+       200,
+       124.1
+      ],
+      [
+       1080,
+       360,
+       125.3
+      ],
+      [
+       1000,
+       520,
+       123.6
+      ],
+      [
+       900,
+       640,
+       123.6
+      ],
+      [
+       760,
+       720,
+       122.2
+      ],
+      [
+       640,
+       800,
+       123.4
+      ]
+     ],
+     "boss": {
+      "template": 60158172,
+      "name": "Azure torch-bearer",
+      "level": 46,
+      "size": 55,
+      "health_mult": 2.2,
+      "guild": "the Order of the Azure"
+     },
+     "mobs": [
+      {
+       "template": 60158171,
+       "name": "azure crusader",
+       "level": [
+        42,
+        44
+       ],
+       "guild": "the Order of the Azure"
+      },
+      {
+       "template": 60158173,
+       "name": "azure cleanser",
+       "level": [
+        42,
+        44
+       ],
+       "guild": "the Order of the Azure"
+      },
+      {
+       "template": 60158182,
+       "name": "azure idolater",
+       "level": [
+        41,
+        43
+       ],
+       "guild": "the Order of the Azure"
+      }
+     ],
+     "success": "The torch-bearer falls, and his torch hisses out in the bog-water.",
+     "fail": "The torch goes into the peat. Smoke rises from the cuttings.",
+     "on_success": "m2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 110
+     }
+    },
+    {
+     "id": "m2",
+     "type": "boss",
+     "name": "Column-Captain Sorlaith",
+     "objective": "Defeat Column-Captain Sorlaith",
+     "announce": "The column's captain comes on alone. 'Burn it, or the Glimmer has it. There is no third way.' Bring friends.",
+     "center": [
+      1000,
+      520,
+      123.6
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60158171,
+      "name": "Column-Captain Sorlaith",
+      "level": 47,
+      "size": 60,
+      "health_mult": 2.0,
+      "guild": "of the Order of the Azure"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60158171,
+        "name": "azure crusader",
+        "level": [
+         42,
+         44
+        ],
+        "guild": "the Order of the Azure"
+       }
+      ]
+     },
+     "success": "Sorlaith falls. The column breaks and runs back up the north road.",
+     "fail": "Sorlaith marches on toward the cuttings.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 160,
+      "items": [
+       {
+        "id": "ev205_sorlaith_s_blue_brand",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Cuttings Burn",
+     "objective": "Drive the Azure out of the burning cuttings",
+     "announce": "The Azure hold the turf-cutters' camp and the peat is smouldering under it. Drive them out so the cutters can flood the fire!",
+     "center": [
+      640,
+      800,
+      123.4
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 120,
+     "mobs": [
+      {
+       "template": 60158171,
+       "name": "azure crusader",
+       "level": [
+        42,
+        44
+       ],
+       "guild": "the Order of the Azure"
+      },
+      {
+       "template": 60158173,
+       "name": "azure cleanser",
+       "level": [
+        42,
+        44
+       ],
+       "guild": "the Order of the Azure"
+      },
+      {
+       "template": 60158182,
+       "name": "azure idolater",
+       "level": [
+        41,
+        43
+       ],
+       "guild": "the Order of the Azure"
+      }
+     ],
+     "boss": {
+      "template": 60158172,
+      "name": "Azure fire-warden",
+      "level": 45,
+      "pos": [
+       640,
+       800,
+       123.4
+      ],
+      "health_mult": 2.2,
+      "guild": "the Order of the Azure"
+     },
+     "success": "The Azure are gone. The turf-cutters flood the burning peat.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    }
+   ]
+  },
+  {
+   "id": "bc_cullen_gold",
+   "title": "The Cullen Gold",
+   "levels": [
+    41,
+    45
+   ],
+   "rest_s": 30,
+   "hint": "The turf-cutters have struck gold in the far cuttings - and the siabra have heard...",
+   "first_delay_s": [
+    300,
+    1200
+   ],
+   "interval_s": [
+    2100,
+    3000
+   ],
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "The Hoard",
+     "objective": "Keep Tomas the Peat-Cutter alive while he lifts the hoard",
+     "announce": "Tomas the Peat-Cutter has found another hoard in the far cuttings - collars, cups, a king's ransom of old gold. The siabra are coming for it. Keep them off him!",
+     "center": [
+      300,
+      1290,
+      123.6
+     ],
+     "radius": 60,
+     "duration_s": 180,
+     "protect": {
+      "template": 60161797,
+      "name": "Tomas the Peat-Cutter",
+      "level": 44,
+      "model": 337,
+      "pos": [
+       300,
+       1290,
+       123.6
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 3,
+      "from": [
+       [
+        360,
+        1220,
+        122.2
+       ],
+       [
+        240,
+        1220,
+        123.6
+       ],
+       [
+        380,
+        1340,
+        127.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60165989,
+        "name": "siabra raider",
+        "level": [
+         42,
+         44
+        ],
+        "guild": "the Siabra of Cullen"
+       },
+       {
+        "template": 60165986,
+        "name": "siabra mireguard",
+        "level": [
+         42,
+         44
+        ],
+        "guild": "the Siabra of Cullen"
+       }
+      ]
+     },
+     "thanks": "\"Got it all. Every piece. It glows, you know - it never used to.\"",
+     "success": "The hoard is out of the turf. The siabra's gold-reaver comes for it himself.",
+     "fail": "The siabra carry the gold off toward the tower.",
+     "on_success": "c2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 110
+     }
+    },
+    {
+     "id": "c2",
+     "type": "boss",
+     "name": "the Gold-Reaver",
+     "objective": "Defeat the siabra Gold-Reaver",
+     "announce": "The siabra Gold-Reaver wades out of the bog with a sack for the hoard. Bring friends.",
+     "center": [
+      300,
+      1290,
+      123.6
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 30007,
+      "name": "the Gold-Reaver",
+      "level": 47,
+      "size": 60,
+      "health_mult": 2.0,
+      "guild": "of the Siabra"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60165989,
+        "name": "siabra raider",
+        "level": [
+         42,
+         44
+        ],
+        "guild": "the Siabra of Cullen"
+       }
+      ]
+     },
+     "success": "The Gold-Reaver falls. His sack spills old gold over the turf.",
+     "fail": "The Gold-Reaver gets away with the hoard.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 160,
+      "items": [
+       {
+        "id": "ev205_cullen_gold_cup_charm",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bc_crows_field",
+   "title": "The Crow's Field",
+   "levels": [
+    43,
+    46
+   ],
+   "rest_s": 30,
+   "hint": "Blue banners and siabra spears on the open bog - and a great crow circling...",
+   "first_delay_s": [
+    1200,
+    2400
+   ],
+   "interval_s": [
+    3000,
+    4200
+   ],
+   "start": "f1",
+   "stages": [
+    {
+     "id": "f1",
+     "type": "clash",
+     "name": "The Battle on the Bog",
+     "objective": "Break the battle between the Azure and the siabra",
+     "announce": "An Azure column has run into a siabra war band on the open bog by the tower, and they're killing each other. Whoever wins comes for Alainn Bin next - break them both.",
+     "center": [
+      700,
+      700,
+      122.2
+     ],
+     "radius": 100,
+     "time_s": 900,
+     "kill": 16,
+     "alive": 12,
+     "mobs": [
+      {
+       "template": 60158171,
+       "name": "azure crusader",
+       "level": [
+        42,
+        44
+       ],
+       "guild": "the Order of the Azure",
+       "side": 0
+      },
+      {
+       "template": 60158173,
+       "name": "azure cleanser",
+       "level": [
+        42,
+        44
+       ],
+       "guild": "the Order of the Azure",
+       "side": 0
+      },
+      {
+       "template": 60158182,
+       "name": "azure idolater",
+       "level": [
+        41,
+        43
+       ],
+       "guild": "the Order of the Azure",
+       "side": 0
+      },
+      {
+       "template": 60165989,
+       "name": "siabra raider",
+       "level": [
+        42,
+        44
+       ],
+       "guild": "the Siabra of Cullen",
+       "side": 1
+      },
+      {
+       "template": 30007,
+       "name": "siabra waterwalker",
+       "level": [
+        43,
+        45
+       ],
+       "guild": "the Siabra of Cullen",
+       "side": 1
+      },
+      {
+       "template": 60165986,
+       "name": "siabra mireguard",
+       "level": [
+        42,
+        44
+       ],
+       "guild": "the Siabra of Cullen",
+       "side": 1
+      }
+     ],
+     "success": "Both sides reel back from each other - and something huge and black drops out of the sky onto the field.",
+     "fail": "The battle burns on until the bog is red.",
+     "on_success": "f2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 110
+     }
+    },
+    {
+     "id": "f2",
+     "type": "boss",
+     "name": "Badb's Shade",
+     "objective": "Drive off Badb's Shade",
+     "announce": "Badb's shade comes down on the dead - a crow as big as a horse. She's here to feed, and you're still standing. Bring friends.",
+     "center": [
+      700,
+      700,
+      122.2
+     ],
+     "radius": 80,
+     "time_s": 900,
+     "boss": {
+      "template": 60159503,
+      "name": "Badb's Shade",
+      "level": 48,
+      "model": 1883,
+      "size": 70,
+      "health_mult": 2.5,
+      "guild": "the Battle-Crow"
+     },
+     "adds": {
+      "every_s": 45,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60159503,
+        "name": "cronicorn",
+        "level": [
+         44,
+         46
+        ]
+       }
+      ]
+     },
+     "success": "Badb's shade lifts off the field with a scream like a war-horn and flies back to her mound.",
+     "fail": "Badb's shade feeds.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 24,
+      "copper_per_level": 180,
+      "items": [
+       {
+        "id": "ev205_battle_crow_s_feather",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bc_tower_assault",
+   "title": "Storm the Gemstone Tower",
+   "levels": [
+    44,
+    47
+   ],
+   "manual": true,
+   "bots": 10,
+   "min_people": 5,
+   "bot_min_level": 35,
+   "hint": "The Keeners are gathering a war band on the bog south-east of the Gemstone Tower.",
+   "rest_s": 15,
+   "start": "t1",
+   "giver": {
+    "template": 60163820,
+    "model": 365,
+    "guild": "the Keeners of Cullen",
+    "name": "Keener-Captain Muadhnait",
+    "level": 47,
+    "pos": [
+     1080,
+     1150,
+     122.2
+    ],
+    "health_mult": 4,
+    "greet": "The Glimmer holds the Gemstone Tower and its gems light the whole bog for it. Five at least - bots and all - and when you're ready, say [put out the tower].",
+    "accept": "put out the tower",
+    "reply": "Across the causeway, then the gems, then whatever keeps them. Keep together - the lights pull at you!",
+    "busy": "Not yet. Rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The tower is dark. The bog is ours.",
+    "regret": "Back! Back to the firm ground! We'll come again."
+   },
+   "guards": [
+    {
+     "template": 60165763,
+     "model": 383,
+     "equipment": "05c1b6ca-3822-42b7-b457-1c2da8e8e306",
+     "guild": "the Clann of Alainn Bin",
+     "name": "spear of the Clann",
+     "level": 44,
+     "count": 2
+    }
+   ],
+   "stages": [
+    {
+     "id": "t1",
+     "type": "cull",
+     "name": "The Causeway",
+     "objective": "Break the Glimmer's guard at the foot of the tower",
+     "announce": "Onto the tower's causeway! Ghouls and wards on every step - clear the way to the gems!",
+     "center": [
+      830,
+      1040,
+      123.5
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "kill": 20,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60161408,
+       "name": "glimmer ghoul",
+       "level": [
+        42,
+        44
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 60161424,
+       "name": "glimmer ward",
+       "level": [
+        43,
+        45
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 60161409,
+       "name": "glimmer griever",
+       "level": [
+        43,
+        45
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 30007,
+       "name": "siabra waterwalker",
+       "level": [
+        43,
+        45
+       ],
+       "guild": "the Siabra of Cullen"
+      }
+     ],
+     "success": "The causeway's clear. Above, the three great gems blaze in the walls.",
+     "fail": "The war band is driven back onto the bog.",
+     "on_success": "t2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 16,
+      "copper_per_level": 140,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "t2",
+     "type": "wards",
+     "name": "The Three Gems",
+     "objective": "Hold all three great gems at once while the Keeners break them",
+     "announce": "The three great gems - green, white and red. Stand at all three at once and the Keeners can keen them dark!",
+     "center": [
+      878,
+      972,
+      124.6
+     ],
+     "radius": 75,
+     "wards": [
+      [
+       850,
+       940,
+       123.6
+      ],
+      [
+       910,
+       950,
+       124.0
+      ],
+      [
+       880,
+       1010,
+       125.2
+      ]
+     ],
+     "ward_names": [
+      "the green gem",
+      "the white gem",
+      "the red gem"
+     ],
+     "ward_radius": 18,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 60161424,
+       "name": "glimmer ward",
+       "level": [
+        43,
+        45
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 60161409,
+       "name": "glimmer griever",
+       "level": [
+        43,
+        45
+       ],
+       "guild": "the Glimmer"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "Keeners' lamp",
+     "success": "The gems go dark one by one - and the Gem-Warden comes down out of the tower.",
+     "fail": "The gems blaze on. The war band falls back.",
+     "on_success": "t3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 16,
+      "copper_per_level": 140,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "t3",
+     "type": "boss",
+     "name": "the Gem-Warden",
+     "objective": "Defeat the Gem-Warden of the tower",
+     "announce": "The Gem-Warden, a knight of the Glimmer in armour of light: 'The King's eye does not close.'",
+     "center": [
+      878,
+      972,
+      124.6
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161425,
+      "name": "the Gem-Warden",
+      "level": 48,
+      "size": 65,
+      "health_mult": 2.4,
+      "guild": "Knight of the Glimmer"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60161421,
+        "name": "glimmer striker",
+        "level": [
+         44,
+         46
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161408,
+        "name": "glimmer ghoul",
+        "level": [
+         42,
+         44
+        ],
+        "guild": "the Glimmer"
+       }
+      ]
+     },
+     "success": "The Gem-Warden falls, and the Gemstone Tower goes dark. The Keeners light their own lamp at its top.",
+     "fail": "The Gem-Warden drives the war band out of the tower.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 240,
+      "tokens": 22,
+      "items": [
+       {
+        "id": "gt205_gem_warden_s_visor_charm",
+        "gold_chance": 50,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bc_tower_return",
+   "title": "The Light Comes Back",
+   "levels": [
+    45,
+    47
+   ],
+   "manual": true,
+   "bots": 10,
+   "bot_min_level": 35,
+   "hint": "The bog-lights are gathering round the dark tower - the Glimmer is coming back for it!",
+   "wake_m": 180,
+   "auto_fail_s": 900,
+   "start": "x1",
+   "stages": [
+    {
+     "id": "x1",
+     "type": "defend",
+     "name": "The Keeners' Lamp",
+     "objective": "Keep Lamp-Keeper Eimear alive at the top of the tower",
+     "announce": "Every light on the bog is coming for the tower at once. Hold the Keeners' lamp!",
+     "center": [
+      878,
+      972,
+      124.6
+     ],
+     "radius": 70,
+     "duration_s": 200,
+     "protect": {
+      "template": 60163820,
+      "model": 365,
+      "guild": "the Keeners of Cullen",
+      "name": "Lamp-Keeper Eimear",
+      "level": 46,
+      "pos": [
+       878,
+       972,
+       124.6
+      ],
+      "health_mult": 4
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 4,
+      "from": [
+       [
+        800,
+        900,
+        122.2
+       ],
+       [
+        960,
+        920,
+        123.8
+       ],
+       [
+        840,
+        1060,
+        123.1
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161430,
+        "name": "bog light",
+        "level": [
+         42,
+         44
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161408,
+        "name": "glimmer ghoul",
+        "level": [
+         42,
+         44
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161421,
+        "name": "glimmer striker",
+        "level": [
+         44,
+         46
+        ],
+        "guild": "the Glimmer"
+       }
+      ]
+     },
+     "success": "The first rush breaks - and a shape of light walks out of the bog to the tower door.",
+     "fail": "The lamp goes out, and the gems light again.",
+     "on_success": "x2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "tokens": 14
+     }
+    },
+    {
+     "id": "x2",
+     "type": "boss",
+     "name": "the Returning Light",
+     "objective": "Defeat the Returning Light",
+     "announce": "The Returning Light, Cuuldurach's own servant, come to relight his eye: 'This tower is the King's.'",
+     "center": [
+      878,
+      972,
+      124.6
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60161425,
+      "name": "the Returning Light",
+      "level": 48,
+      "size": 66,
+      "health_mult": 2.4,
+      "guild": "of the Glimmer"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60161421,
+        "name": "glimmer striker",
+        "level": [
+         44,
+         46
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161424,
+        "name": "glimmer ward",
+        "level": [
+         43,
+         45
+        ],
+        "guild": "the Glimmer"
+       }
+      ]
+     },
+     "success": "The Returning Light breaks. The tower stays dark - for now.",
+     "fail": "The gems blaze again. The tower is the Glimmer's.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 220,
+      "tokens": 20
+     }
+    }
+   ]
+  }
+ ],
+ "siege": {
+  "id": "gemstone_tower",
+  "name": "the Gemstone Tower",
+  "enemy": "the Glimmer",
+  "resolve_name": "The Keeners' resolve",
+  "enemy_name": "The Glimmer's hold",
+  "faction": "keeners_of_cullen",
+  "feeds": {
+   "bog_of_cullen_waterwalkers": 15,
+   "bc_wisp_night": 15,
+   "bc_the_keen": 10,
+   "bc_crows_field": 10,
+   "bc_azure_march": 5,
+   "bog_of_cullen_siabra_raiders": 10,
+   "bog_of_cullen_wayguards": 10,
+   "bog_of_cullen_bog_creepers": 5,
+   "bc_cullen_gold": 5
+  },
+  "feed_default": 5,
+  "quests": {
+   "bc_causeway": 15,
+   "bc_muse_light": 15,
+   "bc_tower_lights": 15,
+   "bc_three_gems": 20,
+   "bc_badb": 20,
+   "bc_lantern_bearer": 25
+  },
+  "enemy_feeds": {
+   "bog_of_cullen_waterwalkers": 15,
+   "bc_the_keen": 10
+  },
+  "enemy_default": 5,
+  "war_chain": "bog_of_cullen_waterwalkers",
+  "assault": "bc_tower_assault",
+  "raids": [],
+  "last_raid": "bc_tower_return",
+  "hold_h": 2,
+  "raid_gap_h": [
+   2,
+   1.5,
+   1.5
+  ],
+  "criers": [],
+  "bots_go_after_m": 30,
+  "open_text": "Hear me! The Keeners of Cullen mean to put out the Gemstone Tower! Keener-Captain Muadhnait waits on the bog south-east of it. If no one leads within the half-hour, the Keeners go without you.",
+  "taken_text": "The Gemstone Tower is dark! The Keeners have lit their own lamp at its top - go and see.",
+  "repelled_text": "The attack on the Gemstone Tower has been thrown back. The bog-lights grow bolder.",
+  "raid_text": "The bog-lights are gathering round the dark tower: the Glimmer is coming back for it!",
+  "held_text": "The light is driven off. The tower stays dark.",
+  "fall_text": "The Gemstone Tower has fallen. Its gems blaze again, and the Keeners must rebuild their resolve.",
+  "carry_text": "The Keeners lead you across the bog at a run.",
+  "carried_cry": "The war band wouldn't wait any longer - the Keeners have stormed {0}!",
+  "hostile_tier": "orange",
+  "sites": [
+   "gemstone_tower",
+   "tower_gate",
+   "tower_ground"
+  ],
+  "staging": [
+   1080,
+   1150,
+   122.2
+  ],
+  "landing": [
+   860,
+   1030,
+   123.6
+  ],
+  "area": [
+   878,
+   972,
+   110
+  ],
+  "camp_npcs": [
+   {
+    "kind": "marks",
+    "name": "Tower-Quartermaster Fionnuala",
+    "level": 46,
+    "pos": [
+     900,
+     1000,
+     125.9
+    ],
+    "template": 60163820,
+    "model": 365,
+    "guild": "the Keeners of Cullen",
+    "greet": "Tower-only stock, for those who put out the gems and those who keep the lamp.",
+    "stock": [
+     {
+      "item": "gt205_cloak_of_the_dark_tower",
+      "price": 60
+     },
+     {
+      "item": "gt205_keener_s_lamp_ring",
+      "price": 40
+     },
+     {
+      "item": "gt205_dark_gem_torc",
+      "price": 40
+     },
+     {
+      "item": "gt205_causeway_bracer",
+      "price": 40
+     },
+     {
+      "item": "tw_strong_draught_of_healing",
+      "price": 2
+     },
+     {
+      "item": "tw_strong_draught_of_power",
+      "price": 2
+     }
+    ]
+   },
+   {
+    "kind": "idle",
+    "name": "Lamp-Keeper Eimear",
+    "level": 46,
+    "pos": [
+     878,
+     972,
+     124.6
+    ],
+    "template": 60163820,
+    "model": 365,
+    "guild": "the Keeners of Cullen",
+    "greet": "The Keeners' lamp. As long as it burns, the gems stay dark.",
+    "idle": "Watch the bog at night. When the lights all turn toward the tower at once, they're coming."
+   },
+   {
+    "kind": "idle",
+    "name": "freed turf-cutter",
+    "model": 337,
+    "level": 35,
+    "pos": [
+     860,
+     940,
+     123.6
+    ],
+    "count": 3,
+    "guild": "",
+    "idle": "They had us carrying gems up the tower steps. Every night. I can still see the light when I close my eyes."
+   }
+  ],
+  "holdouts": [
+   {
+    "kind": "holdout",
+    "name": "glimmer holdout",
+    "template": 60161408,
+    "level": 45,
+    "pos": [
+     820,
+     900,
+     122.2
+    ],
+    "count": 3,
+    "tier": "orange",
+    "respawn_s": 300
+   },
+   {
+    "kind": "holdout",
+    "name": "glimmer ward holdout",
+    "template": 60161424,
+    "level": 45,
+    "pos": [
+     940,
+     1020,
+     123.6
+    ],
+    "count": 2,
+    "tier": "orange",
+    "respawn_s": 300
+   },
+   {
+    "kind": "holdout",
+    "name": "Glimmer Knight Aodhan",
+    "template": 60161425,
+    "level": 47,
+    "pos": [
+     950,
+     920,
+     123.6
+    ],
+    "count": 1,
+    "tier": "red",
+    "respawn_s": 900
+   }
   ]
+ }
 }

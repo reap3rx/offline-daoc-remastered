@@ -1,0 +1,62 @@
+{
+ "zone": 206,
+ "region": 200,
+ "realm": 3,
+ "prefix": "nu206",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gale-Elder's Breath",
+   "base": [
+    41,
+    24
+   ],
+   "level": 28,
+   "bonuses": {
+    "Int": 9,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "Won from the Gale-Elder when Fuamnach's Gale was ended. A little cold wind lives in it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cradle-Mother's Rattle",
+   "base": [
+    41,
+    24
+   ],
+   "level": 28,
+   "bonuses": {
+    "Qui": 9,
+    "Con": 5,
+    "Dex": 5,
+    "Hits": 17,
+    "Power": 3
+   },
+   "lore": "Won from the Cradle-Mother when The Changeling's Swap was ended. It rattles when nobody shakes it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Guardian Stone Ogham",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Emp": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Won from the Guardian Stone when The Stones Rise was ended. The ogham reads 'keep'."
+  }
+ ]
+}

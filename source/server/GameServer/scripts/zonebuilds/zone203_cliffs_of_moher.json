@@ -1,0 +1,1219 @@
+{
+ "zone": 203,
+ "name": "Cliffs of Moher",
+ "rating": "dangerous",
+ "themes": [
+  "Tir Urphost and the Watchtower",
+  "The Western Cliffs (the cliff dwellers)",
+  "The Coves and the Norse longphort",
+  "The Koalinth Rocks",
+  "The Fog Moor",
+  "The Eastern Cliff Path",
+  "The Distorters' Rift",
+  "The Sheerie Barrens",
+  "The Lurikeen Huts"
+ ],
+ "notes": "Zone brief 2026-11-23 (Zone Reviews, Cliffs of Moher tab), owner's answers: Dangerous, Wild-like toward Connacht; about 640 monsters; the Norse in a longphort and in landings; the Grey Man the purple. Coordinates are zone-local units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "The Grey Man": "purple",
+  "Grey Man": "purple",
+  "Chief Whelihan": "orange",
+  "Brarn": "orange",
+  "Coimirceoir": "red",
+  "fanged sinach": "red",
+  "Aoife": "orange",
+  "Gala": "orange",
+  "Bran the Giant": "yellow",
+  "Tawi Shon": "red"
+ },
+ "factions": {
+  "fog": {
+   "id": 9271,
+   "aggro": 70
+  },
+  "bocan": {
+   "id": 9272,
+   "aggro": 60
+  },
+  "winds": {
+   "id": 9273,
+   "aggro": 60
+  },
+  "sheerie": {
+   "id": 9274,
+   "aggro": 60
+  },
+  "rift": {
+   "id": 9275,
+   "aggro": 70
+  },
+  "circle": {
+   "id": 9276,
+   "aggro": 90
+  },
+  "dwellers": {
+   "id": 9277,
+   "aggro": 85,
+   "enemies": [
+    "norse"
+   ]
+  },
+  "koalinth": {
+   "id": 9278,
+   "aggro": 80
+  },
+  "norse": {
+   "id": 9279,
+   "aggro": 95,
+   "enemies": [
+    "dwellers"
+   ]
+  }
+ },
+ "members": {
+  "grass sheerie": {
+   "from": "grass sheerie",
+   "tier": "green",
+   "roam": 300
+  },
+  "fury sprite": {
+   "from": "fury sprite",
+   "tier": "green",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "bantam spectre": {
+   "from": "bantam spectre",
+   "tier": "blue",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "fog phantom": {
+   "from": "fog phantom",
+   "tier": "blue",
+   "faction": "fog",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 300
+  },
+  "giant beetle": {
+   "from": "giant beetle",
+   "tier": "blue",
+   "roam": 250
+  },
+  "bocan": {
+   "from": "bocan",
+   "tier": "blue",
+   "faction": "bocan",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "fetch": {
+   "from": "fetch",
+   "tier": "yellow",
+   "faction": "fog",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 250
+  },
+  "vindictive bocan": {
+   "from": "vindictive bocan",
+   "tier": "yellow",
+   "faction": "bocan",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 200
+  },
+  "bocan chieftain": {
+   "from": "vindictive bocan",
+   "name": "bocan chieftain",
+   "tier": "orange",
+   "faction": "bocan",
+   "aggro": [
+    80,
+    550
+   ],
+   "size": 1.2,
+   "roam": 100,
+   "guards": {
+    "vindictive bocan": 2
+   }
+  },
+  "gale spirit": {
+   "from": "Gale",
+   "name": "gale spirit",
+   "tier": "blue",
+   "faction": "winds",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 350
+  },
+  "rock sheerie": {
+   "from": "rock sheerie",
+   "tier": "yellow",
+   "faction": "sheerie",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 250
+  },
+  "summoned urdrock": {
+   "from": "summoned urdrock",
+   "tier": "yellow",
+   "faction": "sheerie",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "sheerie urdsummoner": {
+   "from": "sheerie urdsummoner",
+   "tier": "orange",
+   "faction": "sheerie",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 100,
+   "guards": {
+    "summoned urdrock": 2
+   }
+  },
+  "moheran distorter": {
+   "from": "moheran distorter",
+   "tier": "yellow",
+   "faction": "rift",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 250
+  },
+  "moheran beast": {
+   "from": "moheran beast",
+   "tier": "orange",
+   "faction": "rift",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 250
+  },
+  "cliff beetle": {
+   "from": "cliff beetle",
+   "tier": "yellow",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "mist wraith": {
+   "from": "mist wraith",
+   "tier": "yellow",
+   "faction": "fog",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 300
+  },
+  "fog wraith": {
+   "from": "fog wraith",
+   "tier": "yellow",
+   "faction": "fog",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 300
+  },
+  "zephyr wraith": {
+   "from": "zephyr wraith",
+   "tier": "orange",
+   "faction": "fog",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 300
+  },
+  "aughisky": {
+   "from": "aughisky",
+   "tier": "orange",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 400
+  },
+  "grovewood": {
+   "from": "grovewood",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 100
+  },
+  "wrath sprite": {
+   "from": "wrath sprite",
+   "tier": "blue",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 250
+  },
+  "vehement guardian": {
+   "from": "vehement guardian",
+   "tier": "orange",
+   "faction": "circle",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 80
+  },
+  "ancient aughisky": {
+   "from": "aughisky",
+   "name": "ancient aughisky",
+   "tier": "red",
+   "aggro": [
+    90,
+    650
+   ],
+   "size": 1.3,
+   "roam": 300
+  },
+  "fog lord": {
+   "from": "zephyr wraith",
+   "name": "fog lord",
+   "tier": "red",
+   "faction": "fog",
+   "aggro": [
+    90,
+    600
+   ],
+   "size": 1.2,
+   "roam": 150,
+   "guards": {
+    "fog wraith": 2
+   }
+  },
+  "rift-born": {
+   "from": "moheran beast",
+   "name": "rift-born",
+   "tier": "red",
+   "faction": "rift",
+   "aggro": [
+    90,
+    600
+   ],
+   "size": 1.3,
+   "roam": 100
+  },
+  "juvenile megafelid": {
+   "from": "juvenile megafelid",
+   "tier": "orange",
+   "aggro": [
+    85,
+    600
+   ],
+   "roam": 400
+  },
+  "hillock changeling": {
+   "from": "hillock changeling",
+   "tier": "blue",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 250
+  },
+  "cliff dweller": {
+   "from": "cliff dweller",
+   "tier": "yellow",
+   "faction": "dwellers",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 250
+  },
+  "cliff hanger": {
+   "from": "cliff hanger",
+   "tier": "blue",
+   "faction": "dwellers",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 200
+  },
+  "cliff dweller hunter": {
+   "from": "cliff dweller hunter",
+   "tier": "orange",
+   "faction": "dwellers",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 250
+  },
+  "cliff dweller spearman": {
+   "from": "cliff dweller spearman",
+   "tier": "orange",
+   "faction": "dwellers",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 200
+  },
+  "cliff dweller elder": {
+   "from": "cliff dweller hunter",
+   "name": "cliff dweller elder",
+   "tier": "red",
+   "faction": "dwellers",
+   "aggro": [
+    90,
+    600
+   ],
+   "size": 1.2,
+   "roam": 80,
+   "guards": {
+    "cliff dweller spearman": 2
+   }
+  },
+  "koalinth slinker": {
+   "from": "koalinth slinker",
+   "tier": "yellow",
+   "faction": "koalinth",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 250
+  },
+  "koalinth sentinel": {
+   "from": "koalinth sentinel",
+   "tier": "orange",
+   "faction": "koalinth",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 150
+  },
+  "koalinth tidecaller": {
+   "from": "koalinth slinker",
+   "name": "koalinth tidecaller",
+   "tier": "red",
+   "faction": "koalinth",
+   "aggro": [
+    90,
+    600
+   ],
+   "size": 1.2,
+   "roam": 80,
+   "guards": {
+    "koalinth sentinel": 2
+   }
+  },
+  "tidal sheerie": {
+   "from": "tidal sheerie",
+   "tier": "blue",
+   "faction": "koalinth",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "phaeghoul": {
+   "from": "phaeghoul",
+   "tier": "orange",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 250
+  },
+  "drowned fisher": {
+   "from": "drowned soul",
+   "name": "drowned fisher",
+   "tier": "yellow",
+   "faction": "fog",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "Norse raider": {
+   "from": "Viking Karl",
+   "name": "Norse raider",
+   "tier": "yellow",
+   "faction": "norse",
+   "realm": 0,
+   "plain": true,
+   "guild": "the Saltwolves",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 150
+  },
+  "Norse bowman": {
+   "from": "Viking Archer",
+   "name": "Norse bowman",
+   "tier": "yellow",
+   "faction": "norse",
+   "realm": 0,
+   "plain": true,
+   "guild": "the Saltwolves",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 80
+  },
+  "Norse huscarl": {
+   "from": "Chieftain Guard",
+   "name": "Norse huscarl",
+   "tier": "orange",
+   "faction": "norse",
+   "realm": 0,
+   "plain": true,
+   "guild": "the Saltwolves",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 80
+  },
+  "Norse skald": {
+   "from": "Skald of Midgard",
+   "name": "Norse skald",
+   "tier": "orange",
+   "faction": "norse",
+   "realm": 0,
+   "plain": true,
+   "guild": "the Saltwolves",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 60
+  },
+  "Norse hersir": {
+   "from": "Jarl Uffenlong",
+   "name": "Norse hersir",
+   "tier": "red",
+   "faction": "norse",
+   "realm": 0,
+   "plain": true,
+   "guild": "the Saltwolves",
+   "aggro": [
+    95,
+    650
+   ],
+   "size": 1.1,
+   "roam": 40,
+   "guards": {
+    "Norse huscarl": 2
+   }
+  }
+ },
+ "sites": [
+  {
+   "id": "east_meadows",
+   "kind": "wildlife",
+   "area": [
+    52000,
+    12000,
+    65200,
+    48000
+   ],
+   "spawn": {
+    "grass sheerie": 20,
+    "fury sprite": 17,
+    "giant beetle": 12,
+    "bantam spectre": 8,
+    "bocan": 8
+   },
+   "spacing": 280
+  },
+  {
+   "id": "connacht_road",
+   "kind": "wildlife",
+   "area": [
+    46000,
+    28000,
+    65200,
+    50000
+   ],
+   "spawn": {
+    "grass sheerie": 14,
+    "fury sprite": 10,
+    "bantam spectre": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "lurikeen_slopes",
+   "kind": "wildlife",
+   "area": [
+    46000,
+    4000,
+    60000,
+    12000
+   ],
+   "spawn": {
+    "vindictive bocan": 7,
+    "bocan": 10,
+    "giant beetle": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "lurikeen_huts",
+   "kind": "camp",
+   "at": [
+    53200,
+    5800
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "bocan chieftain": 1,
+    "vindictive bocan": 2
+   }
+  },
+  {
+   "id": "hut_carcasses",
+   "kind": "camp",
+   "at": [
+    51600,
+    8000
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "vindictive bocan": 3
+   }
+  },
+  {
+   "id": "town_fields",
+   "kind": "wildlife",
+   "area": [
+    34000,
+    10000,
+    46000,
+    28000
+   ],
+   "spawn": {
+    "fog phantom": 12,
+    "giant beetle": 10,
+    "bantam spectre": 7,
+    "fury sprite": 8,
+    "grass sheerie": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "north_downs",
+   "kind": "wildlife",
+   "area": [
+    18000,
+    3200,
+    44000,
+    11200
+   ],
+   "spawn": {
+    "fog phantom": 7,
+    "bocan": 7,
+    "gale spirit": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "rift",
+   "kind": "wildlife",
+   "area": [
+    46000,
+    18000,
+    54000,
+    40000
+   ],
+   "spawn": {
+    "moheran distorter": 14,
+    "cliff beetle": 8
+   },
+   "spacing": 280
+  },
+  {
+   "id": "rift_heart",
+   "kind": "camp",
+   "at": [
+    49600,
+    20800
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "moheran distorter": 4,
+    "moheran beast": 1,
+    "rift-born": 1
+   }
+  },
+  {
+   "id": "rift_lean_to",
+   "kind": "camp",
+   "at": [
+    51800,
+    20200
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "moheran distorter": 3
+   }
+  },
+  {
+   "id": "cliff_ridge",
+   "kind": "wildlife",
+   "area": [
+    36000,
+    24000,
+    46000,
+    42000
+   ],
+   "spawn": {
+    "cliff beetle": 10,
+    "aughisky": 5,
+    "fetch": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "cliff_path",
+   "kind": "wildlife",
+   "area": [
+    32000,
+    44000,
+    50000,
+    52000
+   ],
+   "spawn": {
+    "bocan": 10,
+    "fetch": 12,
+    "bantam spectre": 7,
+    "giant beetle": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "fetch_ledge",
+   "kind": "camp",
+   "at": [
+    44800,
+    49800
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "fetch": 4
+   },
+   "time": "night"
+  },
+  {
+   "id": "barrens",
+   "kind": "wildlife",
+   "area": [
+    40000,
+    50000,
+    64000,
+    60000
+   ],
+   "spawn": {
+    "rock sheerie": 15,
+    "gale spirit": 17,
+    "summoned urdrock": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "urd_circle",
+   "kind": "camp",
+   "at": [
+    40600,
+    53800
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "sheerie urdsummoner": 1,
+    "rock sheerie": 3
+   }
+  },
+  {
+   "id": "gale_eyrie",
+   "kind": "camp",
+   "at": [
+    54400,
+    58400
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "gale spirit": 5
+   }
+  },
+  {
+   "id": "fog_moor",
+   "kind": "wildlife",
+   "area": [
+    20000,
+    38000,
+    36000,
+    50000
+   ],
+   "spawn": {
+    "fog wraith": 15,
+    "mist wraith": 14,
+    "grovewood": 8,
+    "wrath sprite": 8,
+    "zephyr wraith": 3
+   },
+   "spacing": 280
+  },
+  {
+   "id": "moor_night",
+   "kind": "wildlife",
+   "area": [
+    20800,
+    38400,
+    35200,
+    49600
+   ],
+   "spawn": {
+    "fog wraith": 7,
+    "mist wraith": 7,
+    "zephyr wraith": 5
+   },
+   "spacing": 280,
+   "time": "night"
+  },
+  {
+   "id": "stone_circle",
+   "kind": "camp",
+   "at": [
+    20600,
+    41600
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "vehement guardian": 4
+   }
+  },
+  {
+   "id": "water_horses",
+   "kind": "camp",
+   "at": [
+    34800,
+    38000
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "aughisky": 3,
+    "ancient aughisky": 1
+   }
+  },
+  {
+   "id": "moor_heart",
+   "kind": "camp",
+   "at": [
+    31600,
+    45600
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "zephyr wraith": 2,
+    "mist wraith": 2
+   }
+  },
+  {
+   "id": "fog_lord_w",
+   "kind": "camp",
+   "at": [
+    24000,
+    47200
+   ],
+   "r": 400,
+   "respawn": 600,
+   "spawn": {
+    "fog lord": 1
+   },
+   "time": "night"
+  },
+  {
+   "id": "fog_lord_e",
+   "kind": "camp",
+   "at": [
+    34400,
+    48800
+   ],
+   "r": 400,
+   "respawn": 600,
+   "spawn": {
+    "fog lord": 1
+   },
+   "time": "night"
+  },
+  {
+   "id": "far_south",
+   "kind": "wildlife",
+   "area": [
+    22000,
+    54000,
+    38000,
+    60800
+   ],
+   "spawn": {
+    "juvenile megafelid": 8,
+    "hillock changeling": 12,
+    "moheran beast": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "cavern_mouth",
+   "kind": "camp",
+   "at": [
+    25600,
+    53600
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "koalinth sentinel": 2,
+    "koalinth slinker": 2
+   }
+  },
+  {
+   "id": "west_cliff_tops",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    6000,
+    20800,
+    24000
+   ],
+   "spawn": {
+    "cliff dweller": 12,
+    "cliff hanger": 10,
+    "cliff dweller hunter": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "south_cliff_tops",
+   "kind": "wildlife",
+   "area": [
+    12800,
+    36000,
+    22400,
+    54000
+   ],
+   "spawn": {
+    "cliff dweller": 10,
+    "cliff hanger": 7,
+    "cliff dweller hunter": 5,
+    "phaeghoul": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "ravine",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    25600,
+    22400,
+    34400
+   ],
+   "spawn": {
+    "cliff dweller": 8,
+    "cliff dweller spearman": 5,
+    "cliff dweller hunter": 3
+   },
+   "spacing": 280
+  },
+  {
+   "id": "dweller_hold",
+   "kind": "camp",
+   "at": [
+    16000,
+    31200
+   ],
+   "r": 640,
+   "respawn": 300,
+   "spawn": {
+    "cliff dweller elder": 1,
+    "cliff dweller": 3,
+    "cliff dweller hunter": 2
+   }
+  },
+  {
+   "id": "dweller_lookout",
+   "kind": "camp",
+   "at": [
+    13600,
+    20800
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "cliff dweller elder": 1,
+    "cliff dweller hunter": 2,
+    "cliff hanger": 2
+   }
+  },
+  {
+   "id": "dweller_nets",
+   "kind": "camp",
+   "at": [
+    14400,
+    40000
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "cliff dweller elder": 1,
+    "cliff dweller spearman": 3,
+    "cliff dweller": 1
+   }
+  },
+  {
+   "id": "grey_cairn",
+   "kind": "camp",
+   "at": [
+    15800,
+    18200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "fetch": 3
+   }
+  },
+  {
+   "id": "middle_cove",
+   "kind": "wildlife",
+   "area": [
+    4000,
+    19200,
+    10400,
+    30400
+   ],
+   "spawn": {
+    "cliff dweller spearman": 5,
+    "tidal sheerie": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "empty_camp",
+   "kind": "camp",
+   "at": [
+    8400,
+    25200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "drowned fisher": 4
+   },
+   "time": "night"
+  },
+  {
+   "id": "north_cove_drowned",
+   "kind": "camp",
+   "at": [
+    5600,
+    16000
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "drowned fisher": 3
+   },
+   "time": "night"
+  },
+  {
+   "id": "koalinth_rocks",
+   "kind": "wildlife",
+   "area": [
+    3600,
+    32000,
+    11200,
+    58000
+   ],
+   "spawn": {
+    "koalinth slinker": 14,
+    "tidal sheerie": 10,
+    "phaeghoul": 3
+   },
+   "spacing": 280
+  },
+  {
+   "id": "koalinth_landing",
+   "kind": "camp",
+   "at": [
+    5600,
+    37800
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "koalinth tidecaller": 1,
+    "koalinth slinker": 3
+   }
+  },
+  {
+   "id": "sea_stacks",
+   "kind": "camp",
+   "at": [
+    4880,
+    55080
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "koalinth tidecaller": 1,
+    "koalinth slinker": 3,
+    "tidal sheerie": 2
+   }
+  },
+  {
+   "id": "longphort",
+   "kind": "camp",
+   "at": [
+    7600,
+    9600
+   ],
+   "r": 720,
+   "respawn": 300,
+   "spawn": {
+    "Norse hersir": 1,
+    "Norse raider": 6,
+    "Norse bowman": 3,
+    "Norse skald": 1
+   }
+  },
+  {
+   "id": "longphort_ships",
+   "kind": "camp",
+   "at": [
+    5600,
+    12000
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "Norse hersir": 1,
+    "Norse raider": 4,
+    "Norse huscarl": 2
+   }
+  },
+  {
+   "id": "longphort_gate",
+   "kind": "camp",
+   "at": [
+    9600,
+    13200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "Norse bowman": 2,
+    "Norse raider": 3
+   }
+  },
+  {
+   "id": "longphort_shingle",
+   "kind": "patrol",
+   "route": [
+    [
+     8000,
+     13600
+    ],
+    [
+     7600,
+     17200
+    ],
+    [
+     8000,
+     20800
+    ],
+    [
+     7600,
+     17200
+    ]
+   ],
+   "spawn": {
+    "Norse raider": 2,
+    "Norse huscarl": 1
+   }
+  },
+  {
+   "id": "dummies_go",
+   "kind": "clear",
+   "at": [
+    32160,
+    33800
+   ],
+   "r": 1600,
+   "names": [
+    "target dummy"
+   ]
+  },
+  {
+   "id": "ghoulie_goes",
+   "kind": "clear",
+   "at": [
+    44960,
+    16000
+   ],
+   "r": 1200,
+   "names": [
+    "ghoulie"
+   ]
+  }
+ ]
+}

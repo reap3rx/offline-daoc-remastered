@@ -1,0 +1,194 @@
+{
+ "zone": 201,
+ "name": "Silvermine Mountains",
+ "levels": [
+  1,
+  35
+ ],
+ "factions": [
+  {
+   "key": "mine_wardens",
+   "name": "the Mine-Wardens of Howth",
+   "short": "Mine-Wardens",
+   "kin": [
+    "mag_mell_guard",
+    "fianna_druim_ligen",
+    "rangers_druim_cain",
+    "sentinels_of_ceannai",
+    "watch_of_moher",
+    "host_of_lug",
+    "clann_of_alainn_bin"
+   ],
+   "titles": [
+    "Shaftwarden",
+    "Silverhand",
+    "Airgetlam"
+   ],
+   "speaker": "sm_fionnbarr",
+   "town": "Howth",
+   "kills": [
+    "sheevra",
+    "spraggon",
+    "villainous",
+    "rowdy",
+    "road-gang",
+    "rat boy",
+    "walking rock",
+    "walking boulder",
+    "stone sheerie",
+    "rock clipper",
+    "badger",
+    "boar",
+    "lucragan",
+    "lucradan",
+    "beetle",
+    "frog",
+    "toad",
+    "feccan",
+    "mudman",
+    "crouch",
+    "bodachan",
+    "eirebug",
+    "stinky",
+    "boss",
+    "sargoth",
+    "scar-nose",
+    "dergal",
+    "camlin",
+    "tinker",
+    "greyback",
+    "druimne",
+    "muirgheal",
+    "pebble",
+    "rolling stone",
+    "tremain"
+   ],
+   "quartermaster": {
+    "name": "Quartermaster Niall Silverhand",
+    "guild": "Mine-Wardens of Howth",
+    "model": 337,
+    "anchor": "sm_fionnbarr",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "Wardens' kit, silver-bound. Show me you've earned it.",
+    "stock": [
+     {
+      "item": "rep201_shaftwarden_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep201_lamp_bearer_s_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep201_silverhand_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep201_pickguard_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep201_mantle_of_the_airgetlam",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "shared": [
+  "order_of_the_rowan"
+ ],
+ "quartermasters": [
+  {
+   "faction": "order_of_the_rowan",
+   "name": "Rowan-Keeper Orlagh",
+   "guild": "Order of the Rowan",
+   "model": 365,
+   "anchor": "sm_cliodhna",
+   "offset": [
+    -3,
+    3
+   ],
+   "greet": "Sadhbh in Ardee is my cousin. Same stock, same rules: the groves have to trust you first.",
+   "stock": [
+    {
+     "item": "rep207_rowan_friend_s_charm",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep207_grove_walker_s_bracer",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep207_keeper_s_berry_torc",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep207_withy_woven_belt",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep207_mantle_of_the_rowan",
+     "rank": "Legend",
+     "price": 150
+    }
+   ]
+  }
+ ],
+ "kill_default": "mine_wardens",
+ "event_default": "mine_wardens",
+ "quest_default": "mine_wardens",
+ "quests": {
+  "sm_road_to_howth": "mine_wardens",
+  "sm_rats_in_the_stores": "mine_wardens",
+  "sm_sentinel_post": "mine_wardens",
+  "sm_stinky": "mine_wardens",
+  "sm_creeping_stones": "order_of_the_rowan",
+  "sm_seireadan": "order_of_the_rowan",
+  "walking_stones": "order_of_the_rowan",
+  "sm_night_field": "order_of_the_rowan",
+  "sm_stolen_tools": "mine_wardens",
+  "sm_tinker": "mine_wardens",
+  "sm_boss": "mine_wardens",
+  "sm_sargoth": "mine_wardens",
+  "sm_ridge_archers": "mine_wardens",
+  "sheevra_mine": "mine_wardens",
+  "sm_scar_nose": "mine_wardens",
+  "sm_overseer": "mine_wardens",
+  "sm_chieftain_dergal": "mine_wardens",
+  "sm_gray_miners": "order_of_the_rowan",
+  "sm_bones_of_the_camp": "order_of_the_rowan",
+  "sm_up_the_shaft": "order_of_the_rowan",
+  "sm_thing_in_the_vein": "order_of_the_rowan",
+  "sm_druid_stones": "order_of_the_rowan",
+  "sm_nictol": "order_of_the_rowan",
+  "sm_moon_silver_broker": "order_of_the_rowan",
+  "sm_thing_in_the_vein:mined": "mine_wardens",
+  "sheevra_mine:collapse": "order_of_the_rowan"
+ },
+ "events": {
+  "silvermine_mountains_sheevra_warband": "mine_wardens",
+  "silvermine_mountains_gray_spectres": "order_of_the_rowan",
+  "silvermine_mountains_spraggon_warren": "mine_wardens",
+  "silvermine_mountains_walking_rocks": "mine_wardens",
+  "silvermine_stones_walk": "order_of_the_rowan",
+  "silvermine_moon_silver_convoy": "order_of_the_rowan",
+  "silvermine_badger_drive": "mine_wardens",
+  "silvermine_deep_wind": "order_of_the_rowan",
+  "silvermine_silver_mine_assault": "mine_wardens",
+  "silvermine_silver_mine_raid": "mine_wardens"
+ },
+ "realm": 3
+}

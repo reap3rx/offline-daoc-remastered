@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using DOL.GS.PacketHandler;
 
 namespace DOL.GS.Commands
@@ -8,6 +10,29 @@ namespace DOL.GS.Commands
         "Invite a specified or targeted player to join your group", "/invite <player>")]
     public class InviteCommandHandler : AbstractCommandHandler, ICommandHandler
     {
+        /// <summary>A bot of your realm by name (owner 2026-11-23, Bugs & Fixes: "/invite is not working to invite bots, says
+        /// No players online with that name ... /who revealed they were still online"): the bots /who lists are the world's
+        /// autonomous ones, which BotManager's own list didn't have. An exact name first, then one that starts with it -
+        /// only when no player of that name is online, and only when it fits one bot.</summary>
+        public static GameBot FindBot(string name, eRealm realm)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return null;
+            name = name.Trim();
+            if (BotManager.GetActiveBotByName(name, realm) is GameBot b)
+                return b;
+            var all = AutonomousBotRegistry.Snapshot()
+                .Where(x => x != null && x.Realm == realm && !x.IsTemporaryGroupHelper && x.ObjectState == GameObject.eObjectState.Active)
+                .ToList();
+            if (all.FirstOrDefault(x => string.Equals(x.Name, name, StringComparison.OrdinalIgnoreCase)) is GameBot exact)
+                return exact;
+            ClientService.Instance.GetPlayerByPartialName(name, out ClientService.PlayerGuessResult result);
+            if (result != ClientService.PlayerGuessResult.NOT_FOUND)
+                return null;
+            var part = all.Where(x => x.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase)).ToList();
+            return part.Count == 1 ? part[0] : null;
+        }
+
         public void OnCommand(GameClient client, string[] args)
         {
             if (client.Player.Group != null && client.Player.Group.Leader != client.Player)
@@ -22,7 +47,7 @@ namespace DOL.GS.Commands
             string targetName = string.Join(" ", args, 1, args.Length - 1);
             GamePlayer target;
 
-            if (args.Length >= 2 && BotManager.GetActiveBotByName(targetName, client.Player.Realm) is GameBot namedBot)
+            if (args.Length >= 2 && FindBot(targetName, client.Player.Realm) is GameBot namedBot)
             {
                 BotGroupInvite.TryInvite(client.Player, namedBot);
                 return;

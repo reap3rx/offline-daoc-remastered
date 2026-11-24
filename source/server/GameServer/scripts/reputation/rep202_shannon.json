@@ -1,0 +1,236 @@
+{
+ "zone": 202,
+ "name": "Shannon Estuary",
+ "levels": [
+  1,
+  40
+ ],
+ "factions": [
+  {
+   "key": "sentinels_of_ceannai",
+   "name": "the Sentinels of Ceannai",
+   "short": "Sentinels",
+   "kin": [
+    "mag_mell_guard",
+    "fianna_druim_ligen",
+    "mine_wardens",
+    "rangers_druim_cain",
+    "watch_of_moher",
+    "host_of_lug",
+    "clann_of_alainn_bin",
+    "southern_muster"
+   ],
+   "titles": [
+    "Friend of the Sentinels",
+    "Sentinel of the Shannon",
+    "Captain of Ceannai"
+   ],
+   "speaker": "sh_fionn",
+   "town": "Ceannai",
+   "kills": [
+    "eriu",
+    "henter",
+    "kedger",
+    "waylayer",
+    "ambusher",
+    "huscarl",
+    "warlord",
+    "well-caller",
+    "danderpaw",
+    "nasco",
+    "solas",
+    "kaen kedger",
+    "bodhmall",
+    "ant",
+    "queen",
+    "rowdy",
+    "villainous youth",
+    "toll",
+    "donncha",
+    "breandan",
+    "sandman",
+    "sand crab",
+    "albion",
+    "saltmarsh",
+    "spraggon",
+    "lugradan",
+    "skeletal",
+    "feccan",
+    "walking rock",
+    "bodachan"
+   ],
+   "quartermaster": {
+    "name": "Quartermaster Ronan",
+    "guild": "Sentinels of Ceannai",
+    "model": 337,
+    "anchor": "sh_fionn",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "Sentinel kit, made for the south road. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep202_sentinel_s_oath_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep202_south_road_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep202_ceannai_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep202_treaty_keeper_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep202_mantle_of_ceannai",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "lucht_an_tobair",
+   "name": "Lucht an Tobair",
+   "short": "Lucht an Tobair",
+   "kin": [
+    "lucht_feasa",
+    "order_of_the_rowan",
+    "muintir_etaine",
+    "seers_of_moher",
+    "aines_circle",
+    "keeners_of_cullen"
+   ],
+   "titles": [
+    "Friend of the Well",
+    "Hazel-Keeper",
+    "Fili of Connla's Well"
+   ],
+   "speaker": "sh_ciar",
+   "town": "Connla",
+   "kills": [
+    "drowned",
+    "driftwood",
+    "sinann",
+    "wave",
+    "elemental",
+    "flood",
+    "ollipheist",
+    "arracht",
+    "far liath",
+    "serpent",
+    "merrow",
+    "merman",
+    "kirwyn",
+    "sheerie",
+    "ring-dancer",
+    "lunantishee",
+    "cluricaun",
+    "sprite",
+    "hazel",
+    "zephyr",
+    "srandamar",
+    "lethe",
+    "muir",
+    "false light",
+    "captain"
+   ],
+   "quartermaster": {
+    "name": "Hazel-Keeper Doireann",
+    "guild": "Lucht an Tobair",
+    "model": 365,
+    "anchor": "sh_ciar",
+    "offset": [
+     -3,
+     3
+    ],
+    "greet": "The well's gifts, for those the well knows. Show me how well it knows you.",
+    "stock": [
+     {
+      "item": "rep202_well_friend_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep202_fili_s_reed_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep202_nine_hazel_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep202_still_water_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep202_mantle_of_connla_s_well",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "sentinels_of_ceannai",
+ "event_default": "sentinels_of_ceannai",
+ "quest_default": "lucht_an_tobair",
+ "quests": {
+  "sh_welcome_to_connla": "sentinels_of_ceannai",
+  "sh_toll": "sentinels_of_ceannai",
+  "sh_runaway_sons": "sentinels_of_ceannai",
+  "sh_hazel_smuggler": "sentinels_of_ceannai",
+  "sh_toll_master": "sentinels_of_ceannai",
+  "sh_salt_river": "lucht_an_tobair",
+  "false_light": "lucht_an_tobair",
+  "sh_drowned_watch": "lucht_an_tobair",
+  "sh_tide_bell": "lucht_an_tobair",
+  "sh_flooded_hills": "sentinels_of_ceannai",
+  "sh_ant_soldiers": "sentinels_of_ceannai",
+  "sh_hill_scouts": "sentinels_of_ceannai",
+  "sh_old_queen": "sentinels_of_ceannai",
+  "sh_failing_dance": "lucht_an_tobair",
+  "sh_ring_dancers": "lucht_an_tobair",
+  "sh_kirwyn": "lucht_an_tobair",
+  "sh_under_the_well": "lucht_an_tobair",
+  "eriu_hostage": "sentinels_of_ceannai",
+  "sh_war_arrow": "sentinels_of_ceannai",
+  "sh_lieutenants": "sentinels_of_ceannai",
+  "sh_war_camp_scout": "sentinels_of_ceannai",
+  "sh_kaen_kedger": "sentinels_of_ceannai",
+  "sh_hazel_thieves": "lucht_an_tobair",
+  "sh_well_callers": "lucht_an_tobair",
+  "sh_serpent_upriver": "lucht_an_tobair",
+  "sh_orla_at_the_well": "lucht_an_tobair",
+  "sh_sinann": "lucht_an_tobair"
+ },
+ "events": {
+  "shannon_estuary_giant_ants": "sentinels_of_ceannai",
+  "shannon_estuary_eriu_hunters": "sentinels_of_ceannai",
+  "shannon_estuary_sheerie_ring": "lucht_an_tobair",
+  "shannon_estuary_sandmen": "sentinels_of_ceannai",
+  "shannon_rising_tide": "lucht_an_tobair",
+  "shannon_bridge_toll": "sentinels_of_ceannai",
+  "shannon_hazel_harvest": "lucht_an_tobair",
+  "shannon_serpent_upriver": "lucht_an_tobair",
+  "shannon_well_wakes": "lucht_an_tobair",
+  "shannon_albion_landing": "sentinels_of_ceannai",
+  "shannon_war_camp_assault": "sentinels_of_ceannai",
+  "shannon_war_camp_raid_1": "sentinels_of_ceannai",
+  "shannon_war_camp_raid_2": "sentinels_of_ceannai",
+  "shannon_war_camp_last_stand": "sentinels_of_ceannai"
+ },
+ "realm": 3
+}

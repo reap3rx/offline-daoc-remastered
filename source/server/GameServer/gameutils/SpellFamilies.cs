@@ -19,8 +19,27 @@ namespace DOL.GS
             // have different utility (like Underhill Ally is a healer, Underhill Compatriot is a tank)"): each its own
             if (HibernianKits.NatureSpirits.Contains(s.ID))
                 return ("pet", 5251);                    // (the Druid's nature spirit: one summon, its forms on the pet window)
+            // Albion's pets that are one creature in ranks (owner 2026-11-24: "make sure the spell book isn't filled with
+            // weaker versions of the same spell once you learn one"): a Theurgist's elementals (one kind a line) and a
+            // Cabalist's simulacra - only the best; a Necromancer's three zombie servants are one. His other servants stay
+            // each their own, as in vanilla (an Abomination is not a Greater Necroservant).
+            if (s.SpellType is eSpellType.SummonTheurgistPet or eSpellType.SummonSimulacrum)
+                return ("pet", s.SpellType);
+            if (s.ID is >= 9401 and <= 9403)
+                return ("pet", 9401);
+            // Midgard's (owner 2026-11-24: lower commanders "can go away as soon as you learn the newest one"): a Bonedancer's
+            // commander and each of its six minion kinds (two a line, alternating ids: id / 10 is the kind) - only the best of
+            // each; a Spiritmaster's spirit fighter and a Hunter's companion are one pet in ranks
+            if (s.SpellType is eSpellType.SummonCommander or eSpellType.SummonMinion)
+                return ("pet", s.ID / 10);
+            if (s.SpellType is eSpellType.SummonSpiritFighter or eSpellType.SummonHunterPet)
+                return ("pet", s.SpellType);
             if (IsPet(s))
                 return ("pet", s.ID);
+            // ranks the old data gave groups of their own (a Cleric's Gift / Boon / Blessing of the Host, its Refiner's
+            // Strength / Purifying Strength / Mercybringer): one job each
+            if (s.SpellType is eSpellType.SpreadHeal or eSpellType.MeleeDamageBuff)
+                return (s.SpellType, s.Target);
             if (s.Group != 0)
                 return (s.Group, s.SpellType);
             return (s.SpellType, s.Target, s.Radius > 0, s.Range == 0 && s.Radius > 0, s.CastTime <= 0, s.DamageType,

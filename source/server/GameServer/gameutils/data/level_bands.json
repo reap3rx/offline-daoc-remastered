@@ -12,7 +12,70 @@
  "starts": {
   "1": {"name": "Cotswold", "region": 1, "x": 559646, "y": 511301, "z": 2456, "heading": 2064},
   "2": {"name": "Mularn", "region": 100, "x": 805891, "y": 724274, "z": 4680, "heading": 2587},
-  "3": {"name": "Mag Mell", "region": 200, "x": 346031, "y": 490867, "z": 5200, "heading": 2978}
+  "3": {"name": "Mag Mell", "region": 200, "x": 346031, "y": 490867, "z": 5200, "heading": 2978, "zone": "Lough Derg", "rating": "peaceful", "blurb": "The realm's first town, on the shore of Lough Derg. Gentle country, and the roads lead everywhere."}
+ },
+ "start_choices_comment": "start_choices (owner 2026-11-22): more starting towns a new character may pick on the create screen, after the hub (choice 0); new bots are spread over all of them at random. Each is a level anchor too (the levels grow outward from every starting town). The client shows the same list from content/rules/start_zones.json (a unit test keeps them the same). A wild start is harder (monsters nearer the town, and higher) but pays more (ZoneRates: wild 1.0x against peaceful 0.8x). The hard start (owner 2026-11-24, \"one deadly zone being a starting location for the crazies\"): one per realm in a Deadly zone - Hibernia's Culraid in Lough Gur - \"hard\": true, labelled on the create screen, favoured by the tryhard bots, given a trainer and a bind point (HardStarts.cs).",
+ "start_choices": {
+  "3": [
+   {
+    "name": "Ardee",
+    "region": 200,
+    "x": 342360,
+    "y": 469952,
+    "z": 5200,
+    "heading": 0,
+    "zone": "Connacht",
+    "rating": "peaceful",
+    "blurb": "A quiet market town among the groves and fields of Connacht, kept by the Fianna of Druim Ligen."
+   },
+   {
+    "name": "Ardagh",
+    "region": 200,
+    "x": 351968,
+    "y": 554864,
+    "z": 5104,
+    "heading": 1839,
+    "zone": "Silvermine Mountains",
+    "rating": "wild",
+    "blurb": "A small, windswept mining town at the top of the Silvermine valley. There's little here: the road runs south through wild country to Howth."
+   },
+   {
+    "name": "Brynach",
+    "region": 200,
+    "x": 410064,
+    "y": 527488,
+    "z": 2124,
+    "heading": 0,
+    "zone": "Valley of Bri Leith",
+    "rating": "wild",
+    "blurb": "A herders' town on the road from Lough Derg into the Valley of Bri Leith, where Midir's host rides and the wind has turned strange."
+   },
+   {
+    "name": "Connla",
+    "region": 200,
+    "x": 296320,
+    "y": 642000,
+    "z": 4864,
+    "heading": 0,
+    "zone": "Shannon Estuary",
+    "rating": "wild",
+    "blurb": "A busy port at the mouth of the Shannon, with ships, a teleporter and the eriu clans upriver. Wild country beyond the strand."
+   },
+   {
+    "name": "Culraid",
+    "region": 200,
+    "x": 298800,
+    "y": 687850,
+    "z": 4940,
+    "heading": 3242,
+    "zone": "Lough Gur",
+    "rating": "deadly",
+    "hard": true,
+    "blurb": "HARD START. A village in a walking wood on Lough Gur, a Deadly zone far from the capital. Only its edge is gentle.",
+    "trainer": [298700, 687690, 4945, 3242],
+    "bind": [298830, 687830, 4938]
+   }
+  ]
  },
  "anchors": [
   {"name": "Cotswold", "region": 1, "x": 559646, "y": 511301},
@@ -20,6 +83,7 @@
   {"name": "Mularn", "region": 100, "x": 805891, "y": 724274},
   {"name": "Aegir's Landing", "region": 151, "x": 288500, "y": 355600},
   {"name": "Mag Mell", "region": 200, "x": 346100, "y": 491380},
+  {"name": "Howth", "region": 200, "x": 342488, "y": 592304},
   {"name": "Domnann", "region": 181, "x": 423943, "y": 446276}
  ],
  "zones": {
@@ -62,10 +126,10 @@
   "156": {"name": "Iarnwood", "min": 48, "max": 60, "gradient": false},
 
   "200": {"name": "Lough Derg", "min": 0, "max": 10},
-  "207": {"name": "Connacht", "min": 6, "max": 16},
-  "201": {"name": "Silvermine Mts.", "min": 8, "max": 16},
-  "206": {"name": "Valley of Bri Leith", "min": 12, "max": 22},
-  "202": {"name": "Shannon Estuary", "min": 18, "max": 28},
+  "207": {"name": "Connacht", "min": 0, "max": 16},
+  "201": {"name": "Silvermine Mts.", "min": 2, "max": 16},
+  "206": {"name": "Valley of Bri Leith", "min": 2, "max": 24},
+  "202": {"name": "Shannon Estuary", "min": 2, "max": 30},
   "203": {"name": "Cliffs of Moher", "min": 24, "max": 34},
   "204": {"name": "Lough Gur", "min": 28, "max": 38},
   "205": {"name": "Bog of Cullen", "min": 36, "max": 46},

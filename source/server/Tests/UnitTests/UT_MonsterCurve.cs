@@ -5,8 +5,8 @@ using NUnit.Framework;
 namespace DOL.UnitTests;
 
 /// <summary>
-/// The fitted power curve (MonsterTiers.InFactor / OutFactor, owner 2026-11-19): each con above your band hits harder
-/// and takes longer to bring down, an even con the same at every level of the curve's shape, and the endurance rules of
+/// The fitted curve (MonsterTiers.InFactor / OutFactor, one footing at every level since 2026-11-22): each con up hits
+/// harder and takes longer to bring down, the curve is a green's numbers at each level, and the endurance rules of
 /// MonsterMoves (tired defences).
 /// </summary>
 [TestFixture, NonParallelizable]
@@ -24,25 +24,14 @@ public sealed class UT_MonsterCurve
     }
 
     [Test]
-    public void TheStepIsTheSameEverywhere()
+    public void AtTheCurvesPointsAGreenIsTheCurveItself()
     {
-        // (a green's own softness - GreenHits / GreenTakes - is on top of the step)
-        double r = MonsterTiers.InFactor(MonsterTiers.Blue, 20) / (MonsterTiers.InFactor(MonsterTiers.Green, 20) / MonsterTiers.GreenHits);
-        Assert.That(r, Is.EqualTo(MonsterTiers.InStep).Within(1e-9));
-        double o = MonsterTiers.OutFactor(MonsterTiers.Green, 33) / MonsterTiers.GreenTakes / MonsterTiers.OutFactor(MonsterTiers.Blue, 33);
-        Assert.That(o, Is.EqualTo(MonsterTiers.OutStep).Within(1e-9));
-    }
-
-    [Test]
-    public void AtTheCurvesPointsAnEvenConIsTheCurveItself()
-    {
-        // level 30.5 is a yellow's band centre; at the points the factor is the curve times the step to the gap
+        MonsterTiers.ResetTierTuning();
         for (int i = 0; i < MonsterTiers.CurveLevels.Length; i++)
         {
             int lv = MonsterTiers.CurveLevels[i];
-            double gap = MonsterTiers.ConGap(MonsterTiers.Yellow, lv);
-            Assert.That(MonsterTiers.InFactor(MonsterTiers.Yellow, lv),
-                Is.EqualTo(MonsterTiers.InCurve[i] * Math.Pow(MonsterTiers.InStep, gap) * MonsterTiers.Bite).Within(1e-9));
+            Assert.That(MonsterTiers.InFactor(MonsterTiers.Green, lv), Is.EqualTo(MonsterTiers.InCurve[i] * MonsterTiers.Bite).Within(1e-9));
+            Assert.That(MonsterTiers.OutFactor(MonsterTiers.Green, lv), Is.EqualTo(MonsterTiers.OutCurve[i] / MonsterTiers.Toughness).Within(1e-9));
         }
     }
 

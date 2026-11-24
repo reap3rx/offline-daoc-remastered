@@ -2,6 +2,34 @@
   "name": "Cliffs of Moher",
   "npcs": [
     {
+      "id": "cm_aodhan",
+      "zone": 203,
+      "realm": 3,
+      "name": "Watch-Captain Aodhan",
+      "model": 337,
+      "level": 36,
+      "pos": [
+        805,
+        388
+      ],
+      "guild": "the Watch of Moher",
+      "idle": "From the top of this tower you can see thirty miles of sea. On a clear day. We haven't had a clear day in a month."
+    },
+    {
+      "id": "cm_gormlaith",
+      "zone": 203,
+      "realm": 3,
+      "name": "Seer Gormlaith",
+      "model": 365,
+      "level": 34,
+      "pos": [
+        658,
+        522
+      ],
+      "guild": "the Seers of Moher",
+      "idle": "I read omens for a living. This month the omens are reading me."
+    },
+    {
       "id": "sorcha",
       "zone": 203,
       "realm": 3,
@@ -10,8 +38,7 @@
       "level": 16,
       "pos": [
         664,
-        514,
-        142.8
+        514
       ],
       "idle": "I saw myself on the cliffs. Myself. Smiling at me."
     },
@@ -24,8 +51,7 @@
       "level": 30,
       "pos": [
         676,
-        500,
-        142.7
+        500
       ],
       "idle": "A fetch at morning means long life. At evening, death. Nobody wants to say which it was."
     },
@@ -38,8 +64,7 @@
       "level": 34,
       "pos": [
         672,
-        498,
-        142.8
+        498
       ],
       "idle": "Every seventh year the sea takes a child. We call it the sea. It isn't the sea."
     },
@@ -52,22 +77,340 @@
       "level": 12,
       "pos": [
         168,
-        1056,
-        35.3
+        1056
       ],
       "during": [
         "koalinth_pact/s6"
       ],
       "size": 42
+    },
+    {
+      "id": "cm_dubhdara",
+      "zone": 203,
+      "realm": 3,
+      "name": "Fisher Dubhdara",
+      "model": 337,
+      "level": 26,
+      "pos": [
+        240,
+        560
+      ],
+      "idle": "I hid in the rocks when they came. I'm still hiding, if I'm honest. I just do it standing up now."
+    },
+    {
+      "id": "cm_muadhan",
+      "zone": 203,
+      "realm": 3,
+      "name": "Seer Muadhan",
+      "model": 337,
+      "level": 32,
+      "pos": [
+        600,
+        1000
+      ],
+      "guild": "the Seers of Moher",
+      "idle": "The stones of the circle used to hum. Now they hiss. Stones shouldn't hiss."
+    },
+    {
+      "id": "cm_conall",
+      "zone": 203,
+      "realm": 3,
+      "name": "Watchman Conall",
+      "model": 337,
+      "level": 28,
+      "pos": [
+        1220,
+        260
+      ],
+      "guild": "the Watch of Moher",
+      "idle": "The lurikeen who lived in those huts were friends of mine. The bocan ate them. Or worse."
     }
   ],
   "quests": [
     {
+      "id": "cm_connacht_road",
+      "title": "The Road from Connacht",
+      "level": 24,
+      "giver": "cm_aodhan",
+      "offer": "Welcome to the edge of the world. The road from Connacht is the only road we have, and the bocan from the lurikeen huts have been sitting on it.\n\nWill you [clear the road]? Watchman Conall is out at the huts. He'll tell you how bad it is.",
+      "accept": "clear the road",
+      "topics": {},
+      "summary": "Bocan from the old lurikeen huts are waylaying the Connacht road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            1300,
+            500
+          ],
+          "radius": 40,
+          "goal": "Drive off 5 bocan on the Connacht road, about 510 m east of Watch-Captain Aodhan",
+          "target": "bocan",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_conall",
+          "goal": "Report to Watchman Conall at the lurikeen huts, about 430 m east of Watch-Captain Aodhan",
+          "say": "Road's clear? Good. The bocan will be back, they always are.\n\nBut that's not what I'm watching. Look west, past the town. See the fog sitting on the sea? It's sat there for a month. No wind moves it. And things come out of it.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq203_roadwarden_s_bracer",
+              "sq203_bocan_tooth_charm"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cm_phantoms",
+      "title": "Phantoms in the Fields",
+      "level": 25,
+      "giver": "cm_conall",
+      "offer": "The fog phantoms come up off the sea at night and drift across the fields. They don't do much. They don't need to: nobody will go out to the barley.\n\nWill you [thin them out]? And see where they're coming from.",
+      "accept": "thin them out",
+      "topics": {},
+      "summary": "Fog phantoms drift over Tir Urphost's fields from the sea.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            950,
+            450
+          ],
+          "radius": 40,
+          "goal": "Break 5 fog phantoms in the fields, about 330 m south-west of Watchman Conall",
+          "target": "fog phantom",
+          "count": 5,
+          "text": "Every one of them drifts west as it fades - toward the cliffs, toward the sea.",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 203,
+          "at": [
+            470,
+            330
+          ],
+          "radius": 25,
+          "goal": "Follow the fog west to the cliff edge, about 750 m west of Watchman Conall",
+          "text": "Below you the cliffs drop to the sea. The fog sits on the water like wool, and somewhere in it, very faintly, oars.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_aodhan",
+          "goal": "Tell Watch-Captain Aodhan what you heard",
+          "say": "Oars. In the fog. Under the cliffs.\n\nThere's nothing out there to row. Not ours, anyway.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq203_fog_lantern_ring",
+              "sq203_field_warden_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "cm_connacht_road"
+    },
+    {
+      "id": "cm_missing_crew",
+      "title": "The Empty Camp",
+      "level": 26,
+      "giver": "cm_aodhan",
+      "offer": "There's a fishing camp in the middle cove, under the cliffs. Five men. They haven't come up for their bread in a week.\n\nWill you [go down to the cove]? Take the ravine path. There's a fisher hiding in the rocks there - Dubhdara - he sent up a boy with word. Talk to him.",
+      "accept": "go down to the cove",
+      "topics": {},
+      "summary": "A fishing crew in the middle cove under the cliffs has vanished.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "cm_dubhdara",
+          "goal": "Find Fisher Dubhdara in the rocks of the middle cove, about 590 m west of Watch-Captain Aodhan",
+          "say": "They came out of the fog. Big men. Shields. They took Breasal and Colm and the others and put them in the boats. I hid. Gods forgive me, I [hid].",
+          "keyword": "hid",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 203,
+          "at": [
+            210,
+            630
+          ],
+          "goal": "Search the empty fishing camp (click the glinting spot)",
+          "clue": {
+            "name": "a Norse axe-head",
+            "model": 1347
+          },
+          "text": "A broken axe-head, northern work, sunk in the door-post. Raven runes on the cheek. These weren't pirates. These were Norse.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_aodhan",
+          "goal": "Bring the axe-head to Watch-Captain Aodhan",
+          "say": "Raven runes. Norse.\n\nMidgard's longships, on our coast, and the watchtower never saw a sail. How? We see thirty miles on a clear day.\n\nOn a clear day.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq203_salvaged_axe_head_charm",
+              "sq203_fisher_s_oilskin_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "cm_phantoms"
+    },
+    {
+      "id": "cm_first_sail",
+      "title": "The First Sail",
+      "level": 27,
+      "giver": "cm_aodhan",
+      "offer": "I want to see them with my own eyes. Tonight I'll keep the beacon burning at the top of the tower and watch the fog. If they come up the watchtower road, I'll need someone between them and the beacon.\n\nWill you [keep the beacon] with me?",
+      "accept": "keep the beacon",
+      "topics": {},
+      "summary": "Watch-Captain Aodhan will watch for the Norse from the top of Moher Watchtower.",
+      "steps": [
+        {
+          "type": "encounter",
+          "zone": 203,
+          "at": [
+            800,
+            380
+          ],
+          "wake_m": 30,
+          "goal": "Keep the beacon-keeper alive at the watchtower",
+          "text": "The raiders break off and melt back into the fog toward the cliffs. Out at sea, for one moment, the fog opens: a longship, a raven sail - and on its prow a tall grey shape that isn't a man.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep the beacon-keeper safe",
+              "center": [
+                800,
+                380
+              ],
+              "radius": 30,
+              "duration_s": 100,
+              "objective": "Keep the beacon-keeper safe",
+              "announce": "The beacon roars up. Out of the fog on the watchtower road come Norsemen with axes.",
+              "protect": {
+                "template": 60163820,
+                "name": "the beacon-keeper",
+                "level": 26,
+                "model": 337
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    812,
+                    386
+                  ],
+                  [
+                    790,
+                    370
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60167667,
+                    "name": "Norse raider",
+                    "level": [
+                      25,
+                      26
+                    ]
+                  },
+                  {
+                    "template": 60167654,
+                    "name": "Norse bowman",
+                    "level": [
+                      25,
+                      26
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "the beacon-keeper falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_aodhan",
+          "goal": "Talk to Watch-Captain Aodhan",
+          "say": "You saw it too. Grey. Tall. Standing on their prow like a figurehead, and the fog wrapped round the ship like a cloak.\n\nThe Seers in town will know what that was. I'd rather not, but we'd better.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq203_watchtower_torc",
+              "sq203_beacon_keeper_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "cm_missing_crew"
+    },
+    {
       "id": "fetch",
       "title": "The Fetch",
-      "level": 18,
+      "level": 25,
       "giver": "sorcha",
-      "offer": "Three evenings ago I saw myself on the cliff path. My own face, my own shawl - walking toward me, smiling. Then gone.\n\nA fetch, Old [Lorcan] says. At evening, it means death. I'm twenty-two. Will you [find it]? Find it and - I don't know. Make it stop smiling.",
+      "offer": "Three evenings ago I saw myself on the cliff path. My own face, my own shawl - walking toward me, smiling. Then gone.\n\nA fetch, Old [Lorcan] says. At evening, it means death. I'm twenty-two years old. Will you [find it]? Find it before it finds me.",
       "accept": "find it",
       "topics": {
         "Lorcan": "Old Lorcan, by the well. He knows every omen there is, and believes in half of them."
@@ -78,7 +421,7 @@
           "type": "talk",
           "npc": "lorcan",
           "goal": "Ask Old Lorcan about fetches",
-          "say": "A fetch is the shape of a death, walking about early. Find it before it finds her, and kill it, and maybe the death goes elsewhere. Maybe. They walk the eastern cliffs where the [bocan] nest - those goblins will warn it you're coming, so deal with them first.",
+          "say": "A fetch is the shape of a death, walking about early. Find it before it finds her, and kill it, and maybe the death goes elsewhere. Maybe. They walk the eastern cliff path where the [bocan] are.",
           "keyword": "bocan",
           "id": "s1"
         },
@@ -87,16 +430,11 @@
           "zone": 203,
           "at": [
             850,
-            1200,
-            129.4
+            1180
           ],
-          "radius": 25,
-          "goal": "Clear the bocan from the cliff path",
-          "mob": {
-            "template": 60158578,
-            "name": "bocan",
-            "level": 16
-          },
+          "radius": 40,
+          "goal": "Clear the bocan from the eastern cliff path, about 690 m south of Sorcha",
+          "target": "bocan",
           "count": 5,
           "text": "One of them chatters something about 'the smiling lady' going east.",
           "id": "s2"
@@ -106,12 +444,11 @@
           "zone": 203,
           "at": [
             1116,
-            1240,
-            123.1
+            1240
           ],
           "radius": 20,
           "goal": "Follow the cliff path east",
-          "text": "Fetches drift on the clifftops - pale doubles of the living, wearing borrowed faces. None of them is hers. Yet.",
+          "text": "Fetches drift on the cliff tops - pale doubles of the living, wearing borrowed faces. None of them is hers. Yet.",
           "id": "s3"
         },
         {
@@ -119,16 +456,11 @@
           "zone": 203,
           "at": [
             1116,
-            1246,
-            122.5
+            1246
           ],
-          "radius": 25,
-          "goal": "Destroy the drifting fetches",
-          "mob": {
-            "template": 60160819,
-            "name": "fetch",
-            "level": 17
-          },
+          "radius": 40,
+          "goal": "Destroy 4 drifting fetches",
+          "target": "fetch",
           "count": 4,
           "id": "s4"
         },
@@ -137,8 +469,7 @@
           "zone": 203,
           "at": [
             1130,
-            1252,
-            122.5
+            1252
           ],
           "goal": "Search the cliff edge",
           "clue": {
@@ -153,8 +484,7 @@
           "zone": 203,
           "at": [
             1124,
-            1250,
-            122.3
+            1250
           ],
           "wake_m": 30,
           "goal": "Destroy Sorcha's fetch",
@@ -166,8 +496,7 @@
               "name": "Sorcha's Fetch",
               "center": [
                 1124,
-                1250,
-                122.3
+                1250
               ],
               "radius": 30,
               "time_s": 600,
@@ -176,7 +505,7 @@
               "boss": {
                 "template": 60160819,
                 "name": "Sorcha's Fetch",
-                "level": 20,
+                "level": 27,
                 "health_mult": 2.2,
                 "model": 365
               },
@@ -190,8 +519,8 @@
                     "template": 60160819,
                     "name": "fetch",
                     "level": [
-                      16,
-                      17
+                      24,
+                      25
                     ]
                   }
                 ]
@@ -204,7 +533,7 @@
           "type": "choice",
           "npc": "sorcha",
           "goal": "Return to Sorcha",
-          "say": "Is it gone? It is, isn't it. I can feel it. Like a weight off.\n\nIt said something. Before. I can see it in your face. What did it say?\n\n(The fetch said: 'You can't kill a death. Only move it. Someone else will walk off this cliff by Samhain.' You could tell her [the truth], or [say nothing].)",
+          "say": "Is it gone? It is, isn't it. I can feel it. Like a weight off.\n\nIt said something. Before. I can see it in your face. What did it say?\n\n(The fetch said: 'You can't kill a death. Only move it.' You could tell her [the truth], or [say nothing].)",
           "options": [
             {
               "keyword": "the truth",
@@ -256,11 +585,255 @@
       }
     },
     {
+      "id": "cm_fetches_everywhere",
+      "title": "A Death for Every Fetch",
+      "level": 26,
+      "giver": "cm_gormlaith",
+      "offer": "Sorcha's fetch wasn't the only one. There are dozens on the cliff path now. A fetch walks before a death - so dozens of deaths are coming, and soon.\n\nWill you [catch a fetch] for me? I need to see whose faces they wear. Bring me their glass - the little shine they leave when they break.",
+      "accept": "catch a fetch",
+      "topics": {},
+      "summary": "Seer Gormlaith wants to know whose faces the fetches on the cliff path are wearing.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            1120,
+            1245
+          ],
+          "radius": 40,
+          "goal": "Break 5 fetches on the fetch ledge at night, about 860 m south-east of Seer Gormlaith",
+          "target": "fetch",
+          "count": 5,
+          "text": "In the shine each one leaves, a face: a watchman, a fisher, a watchman, a watchman. All men of the coast.",
+          "give": {
+            "name": "fetch-glass"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_gormlaith",
+          "goal": "Bring the fetch-glass to Seer Gormlaith",
+          "say": "Watchmen. Fishers. The men who stand on this coast.\n\nThe deaths aren't coming to Tir Urphost. They're coming to the coves. And the fetches are walking there first, like hounds sent ahead.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq203_seer_s_mirror_ring",
+              "sq203_omen_knot_belt"
+            ]
+          }
+        }
+      },
+      "requires": "fetch"
+    },
+    {
+      "id": "cm_whose_death",
+      "title": "Where the Fetches Go",
+      "level": 27,
+      "giver": "cm_gormlaith",
+      "offer": "Follow them. Not the fetches on the path - the ones that walk west at night, toward the cliffs over the coves. Where they gather, something is calling them.\n\nWill you [follow the fetches]?",
+      "accept": "follow the fetches",
+      "topics": {},
+      "summary": "The fetches walk west at night, toward the cliffs over the coves. Something is calling them.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 203,
+          "at": [
+            395,
+            455
+          ],
+          "radius": 25,
+          "goal": "Follow the fetches west to a cairn on the cliff top, about 270 m west of Seer Gormlaith",
+          "text": "A cairn of grey stones on the cliff edge, wet in dry weather. The fetches stand round it like a congregation, facing the sea.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            395,
+            455
+          ],
+          "radius": 40,
+          "goal": "Break 3 fetches at the cairn",
+          "target": "fetch",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 203,
+          "at": [
+            398,
+            458
+          ],
+          "goal": "Search the cairn (click the glinting spot)",
+          "clue": {
+            "name": "a grey fleece",
+            "model": 1347
+          },
+          "text": "Tucked into the stones: a hank of grey fleece, wet as seaweed, cold as the sea. It smells of salt - and, underneath, of rotting roses.",
+          "give": {
+            "name": "the grey fleece"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_gormlaith",
+          "goal": "Bring the fleece to Seer Gormlaith",
+          "say": "A grey fleece. On a cairn. With the fetches round it.\n\nThe Fear Liath. The Grey Man - the fog that comes in off the sea and wrecks ships on the rocks. My grandmother's stories. I never believed my grandmother's stories.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq203_cairn_stone_charm",
+              "sq203_fetch_follower_s_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "cm_fetches_everywhere"
+    },
+    {
+      "id": "cm_grey_cairn",
+      "title": "The Grey Man",
+      "level": 29,
+      "giver": "cm_gormlaith",
+      "offer": "If it's the Grey Man, the stories say he can be named. Name a fog spirit and he has to listen. But to name him you need to stand in his fog when it's thickest, at the moor's heart, and speak through his wraiths.\n\nWill you [go to the moor]? Seer Muadhan will help. He knows the old words.",
+      "accept": "go to the moor",
+      "topics": {},
+      "summary": "Seer Gormlaith means to name the Grey Man, the fog spirit of the cliffs.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "cm_muadhan",
+          "goal": "Find Seer Muadhan near the stone circle on the moor, about 480 m south of Seer Gormlaith",
+          "say": "The Grey Man. Yes. I've felt him on the moor every night. When you're ready, go into the fog at the moor's heart and [call his name] - Fear Liath - and I'll hold the words.",
+          "keyword": "call his name",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            790,
+            1140
+          ],
+          "radius": 40,
+          "goal": "Break the wraiths at the moor's heart, about 240 m south-east of Seer Muadhan",
+          "target": "mist wraith",
+          "count": 4,
+          "text": "As the last wraith fades a voice comes out of the fog, everywhere at once: 'Who calls the Fear Liath? I hear you. I have a bargain to keep, and a lady to please. Go home.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_muadhan",
+          "goal": "Tell Seer Muadhan what the fog said",
+          "say": "'A lady to please.' He serves someone.\n\nThe Grey Man is old and proud and serves no one. Unless someone gave him something he couldn't refuse. Go back to Gormlaith. This is bigger than our coast.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq203_grey_man_s_fleece_mantle",
+              "sq203_fear_liath_ward",
+              "sq203_seventh_omen_ring"
+            ]
+          }
+        }
+      },
+      "requires": "cm_whose_death"
+    },
+    {
+      "id": "cm_tide_pools",
+      "title": "Cut Nets",
+      "level": 27,
+      "giver": "nuala",
+      "offer": "The koalinth on the south-west rocks have been cutting our nets. They never did that. They take a child every seventh year - Gods help us - but they never touched the nets.\n\nWill you [go to the rocks]? Something's changed down there.",
+      "accept": "go to the rocks",
+      "topics": {},
+      "summary": "The koalinth have started cutting the village's nets on the south-west rocks.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            140,
+            945
+          ],
+          "radius": 40,
+          "goal": "Drive off 5 koalinth slinkers at the koalinth landing, about 690 m south-west of Nuala the Net-Mender",
+          "target": "koalinth slinker",
+          "count": 5,
+          "text": "Among the cut nets: a coil of Norse rope, tarred, tied in a sea-knot no Hibernian uses.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "nuala",
+          "goal": "Bring the rope to Nuala",
+          "say": "Norse rope. On the koalinth rocks.\n\nThe koalinth don't trade. Not with us. Somebody's been talking to them. And this is the seventh year.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the village.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq203_net_mender_s_ring",
+              "sq203_tide_pool_charm"
+            ]
+          }
+        }
+      }
+    },
+    {
       "id": "koalinth_pact",
       "title": "The Seventh Year",
-      "level": 36,
+      "level": 30,
       "giver": "nuala",
-      "offer": "Every seventh year, a child of this village is lost to the sea. Swept off the rocks. We mourn them and we say it's the sea.\n\nThis is the seventh year, and last night my son Fintan was gone from his bed. Wet footprints on the floor - not his. Webbed. Will you [find Fintan]? Start at the old fishing camp on the west cliffs. That's where the last one went.",
+      "offer": "Every seventh year, a child of this village is lost to the sea. Swept off the rocks. We mourn them and we say it's the sea.\n\nThis is the seventh year, and last night my son Fintan was gone from his bed. The footprints on the floor were webbed. Will you [find Fintan]?",
       "accept": "find Fintan",
       "topics": {},
       "summary": "Every seventh year a child of Nuala's village is lost to the sea. This year it was her son - and the footprints were webbed.",
@@ -270,31 +843,25 @@
           "zone": 203,
           "at": [
             215,
-            630,
-            42.1
+            630
           ],
           "radius": 20,
-          "goal": "Go to the old fishing camp on the west cliffs",
-          "text": "The camp's been empty for years. On the door of the hut, scratched faintly: seven lines, and then seven more, and then seven more.",
+          "goal": "Go to the old fishing camp in the middle cove, about 480 m west of Nuala the Net-Mender",
+          "text": "The camp's empty - the Norse took the crew. On the door of the hut, scratched faintly: seven lines, and then seven more, and then seven more.",
           "id": "s1"
         },
         {
           "type": "kill",
           "zone": 203,
           "at": [
-            191,
-            828,
-            38.4
+            360,
+            1000
           ],
-          "radius": 25,
-          "goal": "Fight through the cliff dweller spearmen",
-          "mob": {
-            "template": 60159247,
-            "name": "cliff dweller spearman",
-            "level": 37
-          },
+          "radius": 40,
+          "goal": "Fight through the cliff dweller spearmen at their nets on the south cliff tops",
+          "target": "cliff dweller spearman",
           "count": 5,
-          "text": "The cliff dwellers fight like men defending something. When the last one falls, he says: 'The pact. You'll break the pact.'",
+          "text": "The cliff dwellers fight like men defending something. When the last one falls, he says: 'The pact. You'll break the pact. The Norse paid for it.'",
           "id": "s2"
         },
         {
@@ -302,8 +869,7 @@
           "zone": 203,
           "at": [
             212,
-            636,
-            42.0
+            636
           ],
           "goal": "Search the fishing camp's hut",
           "clue": {
@@ -321,16 +887,11 @@
           "zone": 203,
           "at": [
             172,
-            1047,
-            35.5
+            1047
           ],
-          "radius": 25,
-          "goal": "Fight through the koalinth on the southern rocks",
-          "mob": {
-            "template": 60162948,
-            "name": "koalinth slinker",
-            "level": 36
-          },
+          "radius": 40,
+          "goal": "Fight through 5 koalinth slinkers on the southern rocks",
+          "target": "koalinth slinker",
           "count": 5,
           "id": "s4"
         },
@@ -339,8 +900,7 @@
           "zone": 203,
           "at": [
             160,
-            1060,
-            35.1
+            1060
           ],
           "wake_m": 30,
           "goal": "Defeat the koalinth tide-caller",
@@ -352,8 +912,7 @@
               "name": "Tide-Caller Mairgread",
               "center": [
                 160,
-                1060,
-                35.1
+                1060
               ],
               "radius": 30,
               "time_s": 600,
@@ -362,7 +921,7 @@
               "boss": {
                 "template": 60162948,
                 "name": "Tide-Caller Mairgread",
-                "level": 40,
+                "level": 33,
                 "health_mult": 2.5
               },
               "success": "Tide-Caller Mairgread falls.",
@@ -375,8 +934,8 @@
                     "template": 60162948,
                     "name": "koalinth slinker",
                     "level": [
-                      35,
-                      36
+                      29,
+                      30
                     ]
                   }
                 ]
@@ -389,7 +948,7 @@
           "type": "talk",
           "npc": "fintan",
           "goal": "Talk to Fintan",
-          "say": "They were nice to me. They said I'd learn to breathe water. They said the other children did. Is Mam angry? Can I go [home]?",
+          "say": "They were nice to me. They said I'd learn to breathe water. They said the other children did. And the big men with the raven sail said I'd row for them, after. Is Mam angry? Can I go [home]?",
           "keyword": "home",
           "id": "s6"
         },
@@ -397,7 +956,7 @@
           "type": "choice",
           "npc": "nuala",
           "goal": "Bring Fintan home to Nuala",
-          "say": "FINTAN. Oh, my love.\n\n...And this? A ledger? In Old Eoghan's hand? 'Good fishing'?\n\nThey SOLD them. Every seventh year. My grandmother's sister - she's in here. I could [expose the elders] in front of the whole village. Or I could [burn the ledger], and keep my son, and keep the peace. They're old men. Half of them are dying.",
+          "say": "FINTAN. Oh, my love.\n\n...And this? A ledger? In Old Eoghan's hand? 'Good fishing'?\n\nThey SOLD them. Every seventh year. My grandmother's sister - she's in here. I could [expose the elders] in front of the whole village. Or I could [burn the ledger] and have my son home and say nothing.",
           "options": [
             {
               "keyword": "expose the elders",
@@ -446,7 +1005,990 @@
             ]
           }
         }
-      }
+      },
+      "requires": "cm_tide_pools"
+    },
+    {
+      "id": "cm_pact_sold",
+      "title": "The Pilots",
+      "level": 31,
+      "giver": "nuala",
+      "offer": "Fintan keeps talking about the big men with the raven sail. He says the koalinth were to teach him the way through the rocks - so he could steer for the Norse.\n\nThey're selling the sea-road. The koalinth know every rock on this coast. Will you [break the pilots]? There's a tidecaller at the sea-stacks in the far south who teaches them.",
+      "accept": "break the pilots",
+      "topics": {},
+      "summary": "The koalinth are teaching the Norse the way through the rocks of the coast.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            122,
+            1377
+          ],
+          "radius": 40,
+          "goal": "Defeat the koalinth tidecaller at the sea-stacks, about 1.0 km south-west of Nuala the Net-Mender",
+          "target": "koalinth tidecaller",
+          "count": 1,
+          "text": "On the tidecaller's belt: a chart of the coast in Norse runes, every rock marked, and a grey thread tied round it like a ribbon.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "nuala",
+          "goal": "Bring the chart to Nuala",
+          "say": "A pilot's chart. With a grey thread on it.\n\nThe Seers in town are saying 'Grey Man'. Old women's stories. ...Show this to Gormlaith. I'm keeping my son inside.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the village.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq203_sea_stack_bracer",
+              "sq203_pilot_s_knot_charm"
+            ]
+          }
+        }
+      },
+      "requires": "koalinth_pact"
+    },
+    {
+      "id": "cm_brarn",
+      "title": "Brarn",
+      "level": 32,
+      "giver": "nuala",
+      "offer": "Brarn is the koalinth chief on the rocks south of here. He made the pact with the elders long ago, and now he's sold it to the Norse.\n\nWill you [face Brarn]? Ask him who sold it. Then do what you think is right.",
+      "accept": "face Brarn",
+      "topics": {},
+      "summary": "Brarn, chief of the koalinth, has sold the sea-road to the Norse.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            194,
+            1248
+          ],
+          "radius": 40,
+          "goal": "Defeat Brarn on the southern rocks, about 890 m south-west of Nuala the Net-Mender",
+          "target": "Brarn",
+          "count": 1,
+          "text": "Brarn sinks onto the rocks. 'The grey one came out of the fog. He said the pact was his to sell, because the sea is his when the fog is on it. He said a lady in the east would make him a king of fogs. What could we do?'",
+          "id": "s1"
+        },
+        {
+          "type": "choice",
+          "npc": "nuala",
+          "goal": "Return to Nuala",
+          "say": "Brarn's beaten. The koalinth will be leaderless for a season.\n\nThe village can [end the pact] - no more children, no more 'good fishing', and the koalinth our enemies forever. Or [make a new pact] with whoever leads them next: the sea-road closed to the Norse, the children kept at home, and the fish we always had.",
+          "options": [
+            {
+              "keyword": "end the pact",
+              "say": "Ended, then. Let them be our enemies. At least they'll be honest ones.",
+              "ending": "ended"
+            },
+            {
+              "keyword": "make a new pact",
+              "say": "A new one. Written down. In front of everyone. I'll write it myself.",
+              "ending": "new"
+            }
+          ],
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "ended": {
+          "text": "From the village.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq203_brarn_s_shell_crown",
+              "sq203_koalinth_chief_ring",
+              "sq203_rock_road_cloak"
+            ]
+          }
+        },
+        "new": {
+          "text": "From the village.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq203_brarn_s_shell_crown",
+              "sq203_koalinth_chief_ring",
+              "sq203_rock_road_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "cm_pact_sold"
+    },
+    {
+      "id": "cm_dweller_raids",
+      "title": "Raiders on the Cliff Tops",
+      "level": 29,
+      "giver": "cm_aodhan",
+      "offer": "The cliff dwellers have come out of the ravine and onto the plateau. Three farms burned last week. They never came this far inland before.\n\nWill you [push them back]? And look at what they're carrying. Cliff dwellers don't burn farms for fun.",
+      "accept": "push them back",
+      "topics": {},
+      "summary": "The cliff dwellers have come up out of the ravine and are burning farms on the plateau.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            450,
+            700
+          ],
+          "radius": 40,
+          "goal": "Drive back 6 cliff dwellers in the ravine, about 470 m south-west of Watch-Captain Aodhan",
+          "target": "cliff dweller",
+          "count": 6,
+          "text": "One of them carries a purse: northern silver, Norse coins with a raven stamped on them.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_aodhan",
+          "goal": "Bring the purse to Watch-Captain Aodhan",
+          "say": "Norse silver. In a cliff dweller's purse.\n\nThey're not raiding for themselves. They're clearing the way.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq203_cliff_top_bracer",
+              "sq203_watchman_s_whistle_charm"
+            ]
+          }
+        }
+      },
+      "requires": "cm_first_sail"
+    },
+    {
+      "id": "cm_norse_silver",
+      "title": "Paid in Silver",
+      "level": 30,
+      "giver": "cm_aodhan",
+      "offer": "If the Norse are paying the cliff dwellers, someone keeps the tally. They have a lookout on the cliffs north of the ravine.\n\nWill you [find the tally]? I want to know what they're being paid for.",
+      "accept": "find the tally",
+      "topics": {},
+      "summary": "The Norse are paying the cliff dwellers in silver. Somebody keeps the tally.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            340,
+            520
+          ],
+          "radius": 40,
+          "goal": "Defeat the cliff dweller elder at the lookout, about 480 m west of Watch-Captain Aodhan",
+          "target": "cliff dweller elder",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 203,
+          "at": [
+            345,
+            525
+          ],
+          "goal": "Search the lookout (click the glinting spot)",
+          "clue": {
+            "name": "a tally of knots",
+            "model": 1347
+          },
+          "text": "A knotted cord: so many silver for the coves kept clear, so many for the watchtower road, so many for 'lights on the cliffs when the fog man calls'. And one big knot, for Whelihan's word.",
+          "give": {
+            "name": "the tally-cord"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_aodhan",
+          "goal": "Bring the tally to Watch-Captain Aodhan",
+          "say": "'Lights on the cliffs when the fog man calls.' The wreckers' lights. And 'Whelihan's word'.\n\nChief Whelihan. Their chief sold us. I want him.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq203_lookout_s_ring",
+              "sq203_raven_coin_belt"
+            ]
+          }
+        }
+      },
+      "requires": "cm_dweller_raids"
+    },
+    {
+      "id": "cm_spearmen",
+      "title": "The Nets",
+      "level": 31,
+      "giver": "cm_aodhan",
+      "offer": "Before Whelihan, his spearmen. They hold the nets on the south cliff tops - where they catch whoever climbs up from the koalinth rocks.\n\nWill you [break the nets]? Then Whelihan has nobody between him and us.",
+      "accept": "break the nets",
+      "topics": {},
+      "summary": "Chief Whelihan's spearmen hold the nets on the south cliff tops.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            360,
+            1000
+          ],
+          "radius": 40,
+          "goal": "Break 5 cliff dweller spearmen at the nets, about 760 m south-west of Watch-Captain Aodhan",
+          "target": "cliff dweller spearman",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            360,
+            1000
+          ],
+          "radius": 40,
+          "goal": "Defeat the cliff dweller elder at the nets",
+          "target": "cliff dweller elder",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_aodhan",
+          "goal": "Return to Watch-Captain Aodhan",
+          "say": "The nets are down. Now Whelihan.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq203_spear_breaker_s_bracer",
+              "sq203_nets_of_the_cliff_charm"
+            ]
+          }
+        }
+      },
+      "requires": "cm_norse_silver"
+    },
+    {
+      "id": "cm_whelihan",
+      "title": "Chief Whelihan",
+      "level": 34,
+      "giver": "cm_aodhan",
+      "offer": "Chief Whelihan sold the coast for Norse silver. He's at his hold above the ravine with his best around him.\n\nThis is GROUP work. Will you [face Whelihan]? Bring him to the Watch alive if you can. Dead if you must.",
+      "accept": "face Whelihan",
+      "topics": {},
+      "summary": "Chief Whelihan of the cliff dwellers sold the coast to the Norse.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            400,
+            780
+          ],
+          "radius": 40,
+          "goal": "Break the cliff dweller elder at the hold, about 560 m south-west of Watch-Captain Aodhan",
+          "target": "cliff dweller elder",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            646,
+            789
+          ],
+          "radius": 40,
+          "goal": "Defeat Chief Whelihan above the ravine",
+          "target": "Chief Whelihan",
+          "count": 1,
+          "text": "Whelihan goes down on one knee. 'Silver? You think I did it for silver? The grey man came out of the fog and said our people would drown, every one, unless we kept the coves for his friends. I kept my people alive. What did you keep?'",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "cm_aodhan",
+          "goal": "Return to Watch-Captain Aodhan",
+          "say": "Whelihan's beaten. His people will scatter without him.\n\nWe can [hang him] at the watchtower as a warning to the next chief. Or [send him back] to his people with a message: the Watch will protect the cliff dwellers from the Grey Man too, if they stop selling the coast.",
+          "options": [
+            {
+              "keyword": "hang him",
+              "say": "Hanged, then. The next chief will think twice. Gods, I hate this coast sometimes.",
+              "ending": "hanged"
+            },
+            {
+              "keyword": "send him back",
+              "say": "Back, then. With the message. If he keeps it, we've an ally. If he doesn't, I'll hang him myself.",
+              "ending": "sent"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "hanged": {
+          "text": "From the Watch.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq203_whelihan_s_chief_torc"
+            ],
+            "choice": [
+              "sq203_cliff_hold_mantle",
+              "sq203_sold_word_ring"
+            ]
+          }
+        },
+        "sent": {
+          "text": "From the Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq203_whelihan_s_chief_torc"
+            ],
+            "choice": [
+              "sq203_cliff_hold_mantle",
+              "sq203_sold_word_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "cm_spearmen"
+    },
+    {
+      "id": "cm_longphort_scout",
+      "title": "The Longphort",
+      "level": 30,
+      "giver": "cm_aodhan",
+      "offer": "The Norse have a camp in the north-west cove - a longphort, the old stories call them: a ship-fort, beached longships behind a stockade. They mean to stay.\n\nWill you [scout the longphort]? From the cliff top first. Then get close enough to count the bowmen.",
+      "accept": "scout the longphort",
+      "topics": {},
+      "summary": "The Norse have built a longphort, a fortified ship-camp, in the north-west cove.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 203,
+          "at": [
+            300,
+            250
+          ],
+          "radius": 30,
+          "goal": "Look down on the longphort from the cliff top, about 520 m west of Watch-Captain Aodhan",
+          "text": "Below: a stockade of sharpened logs, three longships drawn up on the shingle, smoke from a long hall. And Hibernians in chains carrying water from the stream.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            240,
+            330
+          ],
+          "radius": 40,
+          "goal": "Kill 4 Norse bowmen at the stockade gate",
+          "target": "Norse bowman",
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_aodhan",
+          "goal": "Report to Watch-Captain Aodhan",
+          "say": "Thralls. Our people. In chains.\n\nThe Watch will burn that longphort if it's the last thing we do. But first - the thralls.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq203_stockade_scout_s_ring",
+              "sq203_raven_rune_charm"
+            ]
+          }
+        }
+      },
+      "requires": "cm_first_sail"
+    },
+    {
+      "id": "cm_thralls",
+      "title": "The Thralls",
+      "level": 31,
+      "giver": "cm_dubhdara",
+      "offer": "Breasal. Colm. The others. They're in the longphort, in chains. I saw them carrying water.\n\nI hid once. I won't hide again. Will you [free them]? I'll show you the stream where they fetch water - they're guarded, but not well.",
+      "accept": "free them",
+      "topics": {},
+      "summary": "The fishing crew taken from the middle cove are thralls in the Norse longphort.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            200,
+            340
+          ],
+          "radius": 40,
+          "goal": "Kill 5 Norse raiders guarding the water-carriers on the shingle, about 220 m north of Fisher Dubhdara",
+          "target": "Norse raider",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 203,
+          "at": [
+            215,
+            360
+          ],
+          "goal": "Break the thralls' fetters (click the glinting spot)",
+          "clue": {
+            "name": "the thralls' fetters",
+            "model": 1347
+          },
+          "text": "The chains fall away. Breasal grips your arm. 'There's a skald in the camp, the jarl's singer. He sings every night about the grey man who brought them here. He knows everything.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_dubhdara",
+          "goal": "Bring the news to Fisher Dubhdara",
+          "say": "Breasal! Colm! ...All of them. All five.\n\nA skald who sings about the grey man. The Watch-Captain will want that singer.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the coves.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq203_thrall_chain_bracer",
+              "sq203_freed_man_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "cm_longphort_scout"
+    },
+    {
+      "id": "cm_skald",
+      "title": "The Skald's Saga",
+      "level": 33,
+      "giver": "cm_aodhan",
+      "offer": "The jarl's skald. If he sings about the grey man, he knows the bargain - who made it, and what for.\n\nWill you [bring me the saga]? The skald keeps by the beached ships. Take his harp, or his life, or both. I want the words.",
+      "accept": "bring me the saga",
+      "topics": {},
+      "summary": "Jarl Hrafn's skald sings every night of the grey man who brought the Norse to the Cliffs.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            140,
+            300
+          ],
+          "radius": 40,
+          "goal": "Kill 3 Norse huscarls by the beached longships, about 670 m west of Watch-Captain Aodhan",
+          "target": "Norse huscarl",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 203,
+          "at": [
+            145,
+            290
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Thorgeir the Skald",
+          "text": "Thorgeir drops his harp. 'Kill me, then. The saga's already sung. The grey man came to Hrafn's hall in a fog that walked across the sea from the east. He said: a lady of the forest court gives you this coast, and asks only that you keep Lug's people busy.'",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Thorgeir the Skald",
+              "center": [
+                145,
+                290
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Thorgeir the Skald",
+              "announce": "The jarl's skald puts down his harp and picks up an axe. 'Every saga needs a death in the middle.'",
+              "boss": {
+                "template": 60166154,
+                "name": "Thorgeir the Skald",
+                "level": 35,
+                "health_mult": 2.4
+              },
+              "success": "Thorgeir the Skald falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60159139,
+                    "name": "Norse huscarl",
+                    "level": [
+                      31,
+                      32
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_aodhan",
+          "goal": "Bring the saga to Watch-Captain Aodhan",
+          "say": "'A lady of the forest court.' 'Keep Lug's people busy.'\n\nThis was never about our coast. Someone in the east is bleeding the realm at the edges. I'll send to Tir na nOg. You - take this. And when the Watch goes for the longphort, be with us.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq203_skald_s_harp_peg_charm",
+              "sq203_saga_teller_s_ring",
+              "sq203_raven_banner_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "cm_thralls"
+    },
+    {
+      "id": "cm_raven_banner",
+      "title": "The Raven Banner",
+      "level": 35,
+      "giver": "cm_aodhan",
+      "offer": "Before the Watch attacks, I want their banner. A Norse war-band that loses its banner loses its luck - they believe it, and that's enough.\n\nWill you [take the banner]? It flies over the jarl's hall in the longphort.",
+      "accept": "take the banner",
+      "topics": {},
+      "summary": "Watch-Captain Aodhan wants the Norse raven banner from the longphort before the attack.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            190,
+            250
+          ],
+          "radius": 40,
+          "goal": "Fight through the Norse hersir at the jarl's hall, about 630 m west of Watch-Captain Aodhan",
+          "target": "Norse hersir",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 203,
+          "at": [
+            195,
+            255
+          ],
+          "goal": "Cut down the raven banner (click the glinting spot)",
+          "clue": {
+            "name": "the raven banner",
+            "model": 1347
+          },
+          "text": "The banner comes down: a black raven on red wool. Somewhere in the longphort a horn blows, and blows, and blows.",
+          "give": {
+            "name": "the raven banner"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_aodhan",
+          "goal": "Bring the banner to Watch-Captain Aodhan",
+          "say": "Their raven, in the dust. They'll know it in every longship on the coast by tonight.\n\nNow we burn the longphort. Watch-Sergeant Aedan is gathering the war band on the cliff top. Go with him.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq203_jarl_s_arm_ring",
+              "sq203_longphort_breaker_torc"
+            ]
+          }
+        }
+      },
+      "requires": "cm_skald"
+    },
+    {
+      "id": "cm_rift",
+      "title": "The Rift",
+      "level": 31,
+      "giver": "cm_gormlaith",
+      "offer": "The Grey Man is a sea-fog. But this fog doesn't come off the sea - it comes from the east, over the rift where the moheran distorters live. Something is coming through.\n\nWill you [go to the rift]? Bring me some of the fog. I know, I know. Do your best.",
+      "accept": "go to the rift",
+      "topics": {},
+      "summary": "Seer Gormlaith thinks the Grey Man's fog is coming through the distorters' rift in the east.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            1240,
+            520
+          ],
+          "radius": 40,
+          "goal": "Drive off 5 moheran distorters at the rift, about 580 m east of Seer Gormlaith",
+          "target": "moheran distorter",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 203,
+          "at": [
+            1245,
+            525
+          ],
+          "goal": "Catch the fog in the rift (click the glinting spot)",
+          "clue": {
+            "name": "a jar of grey fog",
+            "model": 1347
+          },
+          "text": "The fog pours through the rift from somewhere else, cold and thick. It smells of the sea - and under it, rotting roses. The same smell as the fleece.",
+          "give": {
+            "name": "a jar of fog"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_gormlaith",
+          "goal": "Bring the fog to Seer Gormlaith",
+          "say": "Rotting roses. Again.\n\nThis isn't sea-fog. It's a forest fog, a fae fog, and it's being poured into the Grey Man like wine into a cup. Who came through the rift with it? Someone must have.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq203_rift_shard_charm",
+              "sq203_distorter_hide_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "cm_grey_cairn"
+    },
+    {
+      "id": "cm_aoife",
+      "title": "The Lady from the Rift",
+      "level": 33,
+      "giver": "cm_gormlaith",
+      "offer": "Watchman Conall saw a woman by the inland cliffs, east of the rift - tall, pale, in grey-green silk, walking on the fog as if it were a road.\n\nWill you [find her]? Be careful. If she came through the rift, she isn't from here.",
+      "accept": "find her",
+      "topics": {},
+      "summary": "A pale woman in grey-green silk walks on the fog by the inland cliffs.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            1145,
+            987
+          ],
+          "radius": 40,
+          "goal": "Defeat Aoife on the inland cliffs, about 670 m south-east of Seer Gormlaith",
+          "target": "Aoife",
+          "count": 1,
+          "text": "Aoife laughs as she falls. 'You think I'm the lady? I'm her lady's maid's maid. My queen lends her fog to the Grey Man as she lent her wind to Fuamnach. She lends. She never gives. Go home, little mortal. The forest is waiting for you.'",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_gormlaith",
+          "goal": "Tell Seer Gormlaith what Aoife said",
+          "say": "'My queen.' 'The forest.' 'As she lent her wind to Fuamnach' - that's Bri Leith's story.\n\nThere's only one forest in Hibernia with a queen in it, and nobody comes back from there. We're a long way from it here. But it isn't a long way from us.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq203_aoife_s_thorn_ring",
+              "sq203_court_silk_belt"
+            ]
+          }
+        }
+      },
+      "requires": "cm_rift"
+    },
+    {
+      "id": "cm_fog_stone",
+      "title": "The Hissing Stones",
+      "level": 34,
+      "giver": "cm_muadhan",
+      "offer": "The stones of the circle are hissing. Someone has set a stone among them that doesn't belong - a fog-stone, I think, to anchor the Grey Man here.\n\nThe circle's guardians won't let anyone near. Will you [break the guardians]? Then find the stone that hisses.",
+      "accept": "break the guardians",
+      "topics": {},
+      "summary": "Someone has set a fog-stone in the stone circle on the moor to anchor the Grey Man.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            515,
+            1040
+          ],
+          "radius": 40,
+          "goal": "Break 3 vehement guardians at the stone circle, about 90 m south-west of Seer Muadhan",
+          "target": "vehement guardian",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 203,
+          "at": [
+            520,
+            1045
+          ],
+          "goal": "Find the stone that hisses (click the glinting spot)",
+          "clue": {
+            "name": "the fog-stone",
+            "model": 1347
+          },
+          "text": "One stone isn't granite: it's grey-green, cold, wet, carved with a crown of thorns. Fog seeps out of it like breath.",
+          "give": {
+            "name": "the fog-stone"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cm_muadhan",
+          "goal": "Bring the fog-stone to Seer Muadhan",
+          "say": "A crown of thorns. The Unseelie's mark, the old books say.\n\nWith this out of the circle, the Grey Man's thinner than he's been in a month. He'll be at his cairn, gathering himself. If you're going to face him, it's now.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq203_hissing_stone_torc",
+              "sq203_circle_warden_s_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "cm_aoife"
+    },
+    {
+      "id": "cm_grey_man",
+      "title": "The Fear Liath",
+      "level": 35,
+      "giver": "cm_gormlaith",
+      "offer": "The Grey Man is at his cairn on the cliff top above the coves, thin and angry, trying to pull his fog back together.\n\nThis is GROUP work - the hardest on the Cliffs. Bring the best you know. Will you [face the Grey Man]?",
+      "accept": "face the Grey Man",
+      "topics": {},
+      "summary": "The Grey Man, the fog spirit who brings the Norse to the Cliffs, waits at his cairn.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 203,
+          "at": [
+            395,
+            455
+          ],
+          "radius": 30,
+          "goal": "Go to the Grey Man's cairn on the cliff top, about 270 m west of Seer Gormlaith",
+          "text": "The fog is thin today, and you can see him: a tall grey shape, a man made of sea-fog, standing on the cairn with his back to you, looking east.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 203,
+          "at": [
+            393,
+            461
+          ],
+          "radius": 40,
+          "goal": "Defeat the Grey Man at his cairn",
+          "target": "Grey Man",
+          "count": 1,
+          "text": "The Grey Man comes apart like fog in sunlight. Before he goes he says, quite calmly: 'She'll lend it to someone else. She always does. The Queen in the forest never runs short of fog.'",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "cm_gormlaith",
+          "goal": "Return to Seer Gormlaith",
+          "say": "The fog's lifting. For the first time in a month I can see the sea.\n\nThe Grey Man will gather again - he's the sea-fog, he can't not be. The Seers can [bind him] to the cairn with the fog-stone's own magic, so he serves this coast and warns us of ships. Or we [scatter him] to the open sea, and let him be an ordinary fog again, wrecking whoever he likes far from here.",
+          "options": [
+            {
+              "keyword": "bind him",
+              "say": "Bound, then. A fog that warns of ships. My grandmother would be proud.",
+              "ending": "bound"
+            },
+            {
+              "keyword": "scatter him",
+              "say": "Scattered. Far out to sea. Gods help whoever sails there.",
+              "ending": "scattered"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "bound": {
+          "text": "Take these. From the Seers, and a coast that can see.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq203_fear_liath_s_grey_mantle"
+            ],
+            "choice": [
+              "sq203_clear_weather_ring",
+              "sq203_wrecker_bane_torc",
+              "sq203_thorn_crown_charm"
+            ]
+          }
+        },
+        "scattered": {
+          "text": "Take these. From the Seers, and a coast that can see.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq203_fear_liath_s_grey_mantle"
+            ],
+            "choice": [
+              "sq203_clear_weather_ring",
+              "sq203_wrecker_bane_torc",
+              "sq203_thorn_crown_charm"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "cm_fog_stone"
     }
   ]
 }

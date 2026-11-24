@@ -19,6 +19,9 @@ namespace DOL.GS;
 /// in a hundred is trapped: a burst of fire that kills everyone close by. An opened chest is gone; its place fills again
 /// somewhere else in the zone after 1 to 4 hours. Bots open the chests they come across.
 /// Chests appear zone by zone over the first minutes after a start (the spots are found on the navigation mesh).
+/// Owner 2026-11-22 (the Connacht brief): chests stand near monster spawns rather than anywhere - out in the wild only
+/// when a zone has too few camps - and a chest in a harder area (the monsters round it) has a better chance at better
+/// loot: more coin, finer armour, and a chance of a second piece (Danger, Bonus).
 /// </summary>
 public static class TreasureChests
 {
@@ -39,6 +42,7 @@ public static class TreasureChests
     {
         public Zone Zone;
         public List<WorldFeatureSpots.Spot> Pool = [];
+        public List<sbyte> Danger = [];                        // each pool spot's area: its monsters' usual con
         public int Level;                                      // the zone's typical monster level
         public readonly List<TreasureChest> Live = [];
         public readonly List<long> Pending = [];               // ticks when an opened chest's place fills again
@@ -129,21 +133,34 @@ public static class TreasureChests
         GameNPC[] mobs = zone.GetNPCsOfZone(eRealm.None).Where(n => n != null && n.Level > 0 && n is not GameBot).ToArray();
         z.Level = mobs.Length == 0 ? 10 : (int)Math.Round(mobs.Select(n => (double)n.Level).OrderBy(l => l).ElementAt(mobs.Length / 2));
         System.Numerics.Vector3[] camps = WorldFeatureSpots.CampsOf(zone);
+        // the monsters' cons where they stand (read here, on the game loop): a spot's danger is its neighbours'
+        (Vector3 Pos, sbyte Tier)[] tiers = zone.GetNPCsOfZone(eRealm.None)
+            .Where(n => n != null && n.Level > 0 && n is not GameBot && (n.Flags & GameNPC.eFlags.PEACE) == 0 && !MonsterTiers.IsNamed(n.Name))
+            .Select(n => (new Vector3(n.SpawnPoint.X, n.SpawnPoint.Y, n.SpawnPoint.Z), MonsterTiers.Tier(n)))
+            .Where(t => t.Item2 != MonsterTiers.None && t.Item2 != MonsterTiers.Unset).ToArray();
         int seed = Rng.Next();
         System.Threading.Tasks.Task.Run(() =>
         {
             try
             {
-                // the spots: three times as many at monster camps as in the wild, twice at ridges and coasts
+                // the spots: near monster spawns (owner 2026-11-22) - a ridge or a coast now and then, the wild only when
+                // the zone has too few camps to fill
                 List<WorldFeatureSpots.Spot> spots = WorldFeatureSpots.Sample(zone, 160, TownMargin, new Random(seed), camps);
                 if (spots.Count == 0)
                     return;
+                int campSpots = spots.Count(s => s.Kind == WorldFeatureSpots.Kind.Camp);
                 foreach (WorldFeatureSpots.Spot s in spots)
                 {
-                    int copies = s.Kind switch { WorldFeatureSpots.Kind.Camp => 3, WorldFeatureSpots.Kind.Wild => 1, _ => 2 };
+                    int copies = Copies(s.Kind, campSpots);
+                    sbyte danger = Danger(s.Pos, tiers);
                     for (int c = 0; c < copies; c++)
+                    {
                         z.Pool.Add(s);
+                        z.Danger.Add(danger);
+                    }
                 }
+                if (z.Pool.Count == 0)
+                    return;
                 Ready.Enqueue(z);
             }
             catch (Exception exception)
@@ -153,16 +170,49 @@ public static class TreasureChests
         });
     }
 
+    /// <summary>How many times a spot goes in the pool: camps (near monster spawns) eight times, ridges and coasts once,
+    /// the wild only in a zone with fewer camp spots than chests.</summary>
+    public static int Copies(WorldFeatureSpots.Kind kind, int campSpots) => kind switch
+    {
+        WorldFeatureSpots.Kind.Camp => 8,
+        WorldFeatureSpots.Kind.Wild => campSpots >= PerZone ? 0 : 1,
+        _ => 1,
+    };
+
+    public const float DangerRadius = 2000;                   // the monsters within 50 m make an area's danger
+
+    /// <summary>A spot's danger: the usual con (the median) of the monsters spawning within DangerRadius of it, named ones
+    /// aside; blue when there are none.</summary>
+    public static sbyte Danger(Vector3 at, (Vector3 Pos, sbyte Tier)[] tiers)
+    {
+        var near = tiers.Where(t => (t.Pos.X - at.X) * (t.Pos.X - at.X) + (t.Pos.Y - at.Y) * (t.Pos.Y - at.Y) < DangerRadius * DangerRadius)
+            .Select(t => t.Tier).OrderBy(t => t).ToList();
+        return near.Count == 0 ? MonsterTiers.Blue : near[near.Count / 2];
+    }
+
+    /// <summary>What a chest's area adds (owner 2026-11-22: "harder areas get a better chance at better loot"): coin and
+    /// experience times Coin, a second piece of armour ExtraPct times in a hundred, and the armour's quality from MinQuality
+    /// up. Blue and below: as before.</summary>
+    public static (double Coin, int ExtraPct, int MinQuality) Bonus(sbyte danger) => danger switch
+    {
+        >= MonsterTiers.Red => (1.75, 50, 99),
+        MonsterTiers.Orange => (1.45, 30, 98),
+        MonsterTiers.Yellow => (1.2, 15, 97),
+        _ => (1.0, 0, 96),
+    };
+
     private static void SpawnOne(ZoneState z)
     {
         for (int attempt = 0; attempt < 12; attempt++)
         {
-            WorldFeatureSpots.Spot s = z.Pool[Rng.Next(z.Pool.Count)];
+            int i = Rng.Next(z.Pool.Count);
+            WorldFeatureSpots.Spot s = z.Pool[i];
             if (z.Live.Any(c => c.ObjectState == GameObject.eObjectState.Active &&
                                 (long)(c.X - s.Pos.X) * (c.X - s.Pos.X) + (long)(c.Y - s.Pos.Y) * (c.Y - s.Pos.Y) < 1500L * 1500))
                 continue;                                            // (not two together)
             var chest = new TreasureChest(z.Level, Rng.Next(TrapOneIn) == 0)
             {
+                Danger = i < z.Danger.Count ? z.Danger[i] : MonsterTiers.Blue,
                 X = (int)s.Pos.X, Y = (int)s.Pos.Y, Z = (int)s.Pos.Z, Heading = (ushort)Rng.Next(4096),
                 CurrentRegionID = z.Zone.ZoneRegion.ID,
             };
@@ -186,12 +236,14 @@ public static class TreasureChests
             return null;
         for (int attempt = 0; attempt < 40; attempt++)
         {
-            WorldFeatureSpots.Spot s = z.Pool[Rng.Next(z.Pool.Count)];
+            int i = Rng.Next(z.Pool.Count);
+            WorldFeatureSpots.Spot s = z.Pool[i];
             long d2 = (long)(s.Pos.X - p.X) * (long)(s.Pos.X - p.X) + (long)(s.Pos.Y - p.Y) * (long)(s.Pos.Y - p.Y);
             if (d2 < 1500L * 1500 || d2 > 9000L * 9000)
                 continue;
             var chest = new TreasureChest(z.Level, false)
             {
+                Danger = i < z.Danger.Count ? z.Danger[i] : MonsterTiers.Blue,
                 X = (int)s.Pos.X, Y = (int)s.Pos.Y, Z = (int)s.Pos.Z, Heading = (ushort)Rng.Next(4096),
                 CurrentRegionID = z.Zone.ZoneRegion.ID,
             };
@@ -282,8 +334,11 @@ public static class TreasureChests
     {
         int whoLevel = who.Level;
         (int level, double scale) = LevelFor(whoLevel, chest.ZoneLevel);
+        (double bonus, int extraPct, int minQuality) = Bonus(chest.Danger);
+        scale *= bonus;
         long coin = CoinFor(level, scale, Rng);
-        DbItemTemplate armor = Armor(who, level);
+        DbItemTemplate armor = Armor(who, level, minQuality);
+        DbItemTemplate extra = Rng.Next(100) < extraPct ? Armor(who, level, minQuality) : null;
         if (who is GamePlayer player)
         {
             player.Out.SendMessage("You open the treasure chest!", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
@@ -298,7 +353,20 @@ public static class TreasureChests
                 else
                     player.Out.SendMessage("Your backpack is full - you leave the armor behind.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
             }
-            player.AddMoney(coin, "You find {0} in the chest.");
+            if (extra != null)
+            {
+                DbInventoryItem item2 = GameInventoryItem.Create(extra);
+                if (player.Inventory.AddItem(eInventorySlot.FirstEmptyBackpack, item2))
+                {
+                    InventoryLogging.LogInventoryAction(chest, player, eInventoryActionType.Loot, item2.Template, 1);
+                    player.Out.SendMessage($"Under it, {item2.Name}! Dangerous country hides better treasure.", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                }
+            }
+            // a Draught of Restoration now and then - more often in harder country (owner 2026-11-23)
+            if (Rng.Next(100) < 8 + Math.Max(0, (int) chest.Danger) * 4 && LootUses.RestorationTemplate() is DbItemTemplate draught &&
+                player.Inventory.AddTemplate(GameInventoryItem.Create(draught), 1, eInventorySlot.FirstBackpack, eInventorySlot.LastBackpack))
+                player.Out.SendMessage("Tucked in a corner: a Draught of Restoration.", eChatType.CT_Loot, eChatLoc.CL_SystemWindow);
+                        player.AddMoney(coin, "You find {0} in the chest.");
             InventoryLogging.LogInventoryAction(chest, player, eInventoryActionType.Loot, coin);
             long xp = ExperienceFor(player.ExperienceForNextLevel, player.ExperienceForCurrentLevel, scale, Rng);
             if (xp > 0 && player.Level < 50)
@@ -332,7 +400,7 @@ public static class TreasureChests
     }
 
     /// <summary>A piece of armour `who` can wear, of the chest's level and high quality (the world's random item maker).</summary>
-    private static DbItemTemplate Armor(GameLiving who, int level)
+    private static DbItemTemplate Armor(GameLiving who, int level, int minQuality = 96)
     {
         try
         {
@@ -347,7 +415,7 @@ public static class TreasureChests
             };
             var slot = (eInventorySlot)ArmorSlots[Rng.Next(ArmorSlots.Length)];
             DbItemTemplate t = new GeneratedUniqueItem(false, realm, cls, lvl, type, slot);
-            t.Quality = Rng.Next(96, 101);
+            t.Quality = Rng.Next(Math.Clamp(minQuality, 96, 100), 101);
             t.Condition = t.MaxCondition;
             t.Durability = t.MaxDurability;
             t.AllowAdd = true;          // kept with the item (a rolled one-off is never written without it: the chests'
@@ -366,6 +434,7 @@ public static class TreasureChests
 public class TreasureChest : GameStaticItem
 {
     public int ZoneLevel { get; }
+    public sbyte Danger { get; init; } = MonsterTiers.Blue;    // its area (TreasureChests.Danger): better loot when harder
     public bool Trapped { get; }
     public bool Opened { get; set; }
     public object State { get; set; }

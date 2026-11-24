@@ -130,6 +130,10 @@ namespace DOL.GS
 						firstBetterSpellFinal.SwapRemoveAt(index);
 					}
 				}
+
+				// one spell per job (SpellFamilies): ranks the old data split into groups of their own fold together too
+				if (living is GamePlayer && take == 1)
+					buffer[ls] = SpellFamilies.BestOnly(buffer[ls]);
 			}
 			
 			return buffer;
@@ -148,11 +152,12 @@ namespace DOL.GS
 			switch (line.Spec)
 			{
 				case Specs.Augmentation:
-					allow = true;
+					allow = false;                    // (Midgard's rework, owner 2026-11-24: a Healer or Shaman keeps only the best rank)
 					break;
 
 				case Specs.Enhancement:
-					if ((line.IsBaseLine || player.CharacterClass.ID == (int)eCharacterClass.Cleric) && player.CharacterClass.ID != (int)eCharacterClass.Heretic)
+					// (Albion's rework, owner 2026-11-24: one spell per job - a Cleric or Friar keeps only the best rank)
+					if (line.IsBaseLine && player.CharacterClass.ID is not ((int)eCharacterClass.Heretic or (int)eCharacterClass.Cleric or (int)eCharacterClass.Friar))
 						allow = true;
 
 					break;
@@ -164,7 +169,7 @@ namespace DOL.GS
 					break;
 
 				case Specs.Soulrending:
-					allow = true;
+					allow = false;                    // (a Reaver keeps only the best rank too - Albion's rework, 2026-11-24)
 					break;
 			}
 

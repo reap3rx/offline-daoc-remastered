@@ -1,0 +1,132 @@
+{
+ "zone": 201,
+ "region": 200,
+ "realm": 3,
+ "prefix": "mn201",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cloak of the Reopened Mine",
+   "base": [
+    41,
+    26
+   ],
+   "level": 25,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 25,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Slate grey, with the Hibernian knot in silver thread. Sewn at the mine for those who took it back."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moon-Silver Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 25,
+   "bonuses": {
+    "Int": 8,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 4,
+    "Hits": 15
+   },
+   "lore": "Moon-silver from the reopened workings, quieted by the Rowan. It hums, very softly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shaft-Silver Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 25,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 21
+   },
+   "lore": "Plain silver from the main working. The smith left the pick-marks in."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pick-and-Hammer Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 25,
+   "bonuses": {
+    "Dex": 8,
+    "Qui": 8,
+    "Str": 4,
+    "Hits": 21
+   },
+   "lore": "Worn by the Wardens who reopened the mine. Scuffed, every one."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dergal's Silver Helm",
+   "base": [
+    41,
+    29
+   ],
+   "level": 27,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 23
+   },
+   "lore": "Dergal's war-helm, beaten into a gorget. The sheevra will know it."
+  }
+ ],
+ "camp": {
+  "cloak": "mn201_cloak_of_the_reopened_mine",
+  "emblem": 44528,
+  "draughts": [
+   [
+    "Strong_Draught_of_Healing",
+    "mn201_miners_ale",
+    "Miners' Ale",
+    "Dark, bitter, and good for what ails you. Mostly."
+   ],
+   [
+    "Strong_Draught_of_Power",
+    "mn201_lamp_oil_tonic",
+    "Lamp-Oil Tonic",
+    "Not actually lamp oil. Probably. Clears the head."
+   ],
+   [
+    "Strong_Draught_of_Endurance",
+    "mn201_silver_dust_cordial",
+    "Silver-Dust Cordial",
+    "A pinch of silver dust in honey-wine. The miners swear by it."
+   ],
+   [
+    "Superior_Elixir_of_Instant_Healing",
+    "mn201_deep_shaft_elixir",
+    "Deep-Shaft Elixir",
+    "For when the roof comes down. Fast."
+   ],
+   [
+    "CombinedRegens_Draught",
+    "mn201_ardagh_stout",
+    "Ardagh Stout",
+    "Thick enough to stand a pick in. Everything comes back a little faster."
+   ]
+  ]
+ }
+}

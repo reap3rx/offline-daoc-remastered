@@ -133,7 +133,11 @@ func _gather() -> void:
 		# no level beside the bar any more (everyone fights on one footing, owner 2026-11-19): the border's colour
 		# says how strong it is next to you instead
 		_plates.append({"n": n, "at": at, "size": size, "s": s, "name": String(n.spawn.get("name", "")),
+				"title": String(NamePlates.titles.get(int(n.spawn.get("oid", -1)), "")),
 				"level": "", "lcol": n.con_color(PlayerData.level), "fill": fill, "edge": n.strength_color(),
+				# the name in the colour it had before the plate came up (its con colour; your realm's green)
+				# (owner 2026-11-23)
+				"ncol": NamePlates.FRIENDLY if n.is_friendly() else n.con_color(PlayerData.level),
 				"boss": is_boss(n),
 				"frac": clampf(n.state.health, 0.0, 1.0), "cast": cast, "tgt": tgt2,
 				"vit": manager.vit.get(int(n.spawn.get("oid", -1)), [100, -1]) if "vit" in manager else [100, -1],
@@ -183,6 +187,15 @@ func _debuffs_of(n: Npc) -> Array:
 	return out
 
 
+## A bot's reputation title (NamePlates.titles), small and gold over its name.
+func _title_px(p: Dictionary) -> int:
+	return maxi(8, roundi(_name_px(p) * 0.8))
+
+
+func _title_h(p: Dictionary) -> float:
+	return 0.0 if String(p.get("title", "")) == "" else _font.get_height(_title_px(p))
+
+
 func _debuff_h(p: Dictionary) -> float:
 	return 0.0 if (p.get("dbf", []) as Array).is_empty() else (DEBUFF_PX + 11.0) * float(p.s)
 
@@ -192,7 +205,7 @@ func _rect_of(p: Dictionary) -> Rect2:
 	var s: float = p.s
 	var size: Vector2 = p.size
 	var name_h := _font.get_height(_name_px(p))
-	var h := name_h + size.y + (5.0 * s if float(p.cast) >= 0.0 else 0.0) + _lines_h(p) + _debuff_h(p)
+	var h := name_h + size.y + (5.0 * s if float(p.cast) >= 0.0 else 0.0) + _lines_h(p) + _debuff_h(p) + _title_h(p)
 	var left := _left_w(p)                             # (the level - and a boss's skull - to the left of the bar)
 	return Rect2(Vector2(p.at.x - size.x * 0.5 - left, p.at.y - h), Vector2(size.x + left, h))
 
@@ -291,10 +304,24 @@ func _draw_plates() -> void:
 					_canvas.draw_string_outline(_font, tb, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, tpx, 2, Color(0, 0, 0, 0.9 * a))
 					_canvas.draw_string(_font, tb, txt, HORIZONTAL_ALIGNMENT_LEFT, -1, tpx, Color(1, 1, 1, a))
 			r.position.y += _debuff_h(p)
+		# a bot's title over its name
+		var title := String(p.get("title", ""))
+		if title != "":
+			var tpx2 := _title_px(p)
+			var tw2 := _font.get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, tpx2).x
+			var tb2 := Vector2(r.position.x + left + size.x * 0.5 - tw2 * 0.5, r.position.y + _font.get_ascent(tpx2))
+			var tc := NamePlates.TITLE_COLOR
+			tc.a = a
+			_canvas.draw_string_outline(_font, tb2, title, HORIZONTAL_ALIGNMENT_LEFT, -1, tpx2, maxi(2, roundi(tpx2 * 0.22)), Color(0, 0, 0, 0.85 * a))
+			_canvas.draw_string(_font, tb2, title, HORIZONTAL_ALIGNMENT_LEFT, -1, tpx2, tc)
+			r.position.y += _title_h(p)
 		# the name, centred over the bar
 		var nw := _font.get_string_size(String(p.name), HORIZONTAL_ALIGNMENT_LEFT, -1, npx).x
 		var base := Vector2(r.position.x + left + size.x * 0.5 - nw * 0.5, r.position.y + _font.get_ascent(npx))
-		var ncol := Color(1, 1, 1, a) if bool(p.tgt) else Color(0.92, 0.9, 0.85, a)
+		var ncol: Color = p.get("ncol", Color(0.92, 0.9, 0.85))
+		if bool(p.tgt):
+			ncol = ncol.lightened(0.2)                       # (your target's a touch brighter)
+		ncol.a = a
 		_canvas.draw_string_outline(_font, base, String(p.name), HORIZONTAL_ALIGNMENT_LEFT, -1, npx,
 				maxi(2, roundi(npx * 0.22)), Color(0, 0, 0, 0.85 * a))
 		_canvas.draw_string(_font, base, String(p.name), HORIZONTAL_ALIGNMENT_LEFT, -1, npx, ncol)

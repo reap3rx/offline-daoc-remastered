@@ -298,6 +298,37 @@ namespace DOL.UnitTests
             finally { foreach (var timer in timers) timer.Stop(); }
         }
 
+        // (owner 2026-11-22: "there is no in-combat health regen unless you have a buff or proc that gives it to you. So,
+        // the baseline health regen needs to go. If the bard's health regen chant on or a health regen potion was drank,
+        // then you can have some, but no baseline one.")
+        [Test]
+        public void InCombatHealthRegenIsOnlyWhatARegenerationEffectGives()
+        {
+            double previous = GS.ServerProperties.Properties.HEALTH_REGEN_AMOUNT_MODIFIER;
+            try
+            {
+                GS.ServerProperties.Properties.HEALTH_REGEN_AMOUNT_MODIFIER = 1;
+                var calc = new HealthRegenerationAmountCalculator();
+                Player human = Actor<Player>(); human.Class = new ClassBlademaster(); human.Level = 20;
+                RestBot bot = NewRestBot(typeof(ClassDruid));
+                foreach (GameLiving who in new GameLiving[] { human, bot })
+                {
+                    void Fight(bool on) { if (who is Player p) p.Fighting = on; else ((RestBot) who).Fighting = on; }
+                    Fight(true);
+                    Assert.That(calc.CalcValue(who, eProperty.HealthRegenerationAmount), Is.EqualTo(0), $"{who.GetType().Name}: no baseline in a fight");
+                    who.BaseBuffBonusCategory[eProperty.HealthRegenerationAmount] = 7;       // a regeneration chant or potion
+                    Assert.That(calc.CalcValue(who, eProperty.HealthRegenerationAmount), Is.EqualTo(7), $"{who.GetType().Name}: the effect's own amount");
+                    who.BaseBuffBonusCategory[eProperty.HealthRegenerationAmount] = 0;
+                    Fight(false);
+                    Assert.That(calc.CalcValue(who, eProperty.HealthRegenerationAmount), Is.GreaterThan(0), $"{who.GetType().Name}: out of a fight it heals");
+                }
+            }
+            finally
+            {
+                GS.ServerProperties.Properties.HEALTH_REGEN_AMOUNT_MODIFIER = previous;
+            }
+        }
+
         [SetUp] public void Setup()
         {
             _previous = GameServer.Instance;

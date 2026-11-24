@@ -8,6 +8,41 @@
   {
    "story_reward": true,
    "scaled": true,
+   "name": "Market-Stall Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 4
+   },
+   "lore": "Ardee's stall-holders wear these to keep their sleeves out of the butter."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Constable's Whistle-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "Daire's spare whistle. One blast and every dog in Ardee barks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
    "name": "Rowdy's Sling-Bracer",
    "base": [
     41,
@@ -78,6 +113,546 @@
   {
    "story_reward": true,
    "scaled": true,
+   "name": "Bead-Man's Satchel Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 8,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 1,
+    "Hits": 7
+   },
+   "lore": "It carried a fortune in blue glass. It carries your things now, which are worth more."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lookout's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 8,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 1,
+    "Hits": 7
+   },
+   "lore": "Twisted bronze off the gang's north lookout. Somebody's grandmother's, probably."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blue-Glass Ward",
+   "base": [
+    41,
+    24
+   ],
+   "level": 8,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 8,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "One of the Azure Order's beads, cracked on purpose. The Rowan say a broken bead can't buy anyone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Road-Boss's Knuckle Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 9,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Heavy, cruel and very well made. Like its owner, minus the well made."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tir na Nog Road Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 9,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 9,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "The road-wardens' grey. Constable Daire had it made for you."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hedgerow Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 9,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 2,
+    "Hits": 8
+   },
+   "lore": "Woven from hedge-thorn and tough as wire. The gang hid in the hedgerows. Now you know how."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shepherd's Crook Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 7,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 4,
+    "Power": 1
+   },
+   "lore": "Carved from the head of a scorched crook. It still smells of sheep."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moor-Wind Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 7,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 6
+   },
+   "lore": "Leather cured on the Moors. The wind gets into it and never quite leaves."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Grave-Ring Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 9,
+   "bonuses": {
+    "Emp": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "A chip of the ring-stone, holed and strung. The old dead slept better with it in place."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Wight's Girdle",
+   "base": [
+    41,
+    32
+   ],
+   "level": 9,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 9,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Bronze links from a broken grave. You put the bones back. You kept the belt."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pawn's Grip Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 9,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Off a skeleton's finger. It was holding on very tightly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Windaille's Howl-Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 11,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 9
+   },
+   "lore": "It whistles faintly when you run."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fire-Carrier's Lantern-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 11,
+   "bonuses": {
+    "Int": 4,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "The blue shade off the fire-carrier's lantern, cracked and set. It glows when the Azure Order is near."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Four Winds Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 12,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 12,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Grey, blue, white and black: a quarter for each wind. The Moor's shepherds bless it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fianna Signal-Horn Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 10
+   },
+   "lore": "A Fianna horn-tip. One note and Druim Ligen hears it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rowan-Berry Bracelet",
+   "base": [
+    41,
+    33
+   ],
+   "level": 12,
+   "bonuses": {
+    "Emp": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "Druidess Eabha sent it from Ardee. 'For the one who put the fire out.'"
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Withy-Cord Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 13,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 11
+   },
+   "lore": "Blue cord off a bundle of stolen withies. The Order of the Rowan took the colour out of it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sapling-Heart Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 13,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 13,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Living bark, gently taken. It grows a little in spring."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cellar-Key Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 15,
+   "bonuses": {
+    "Qui": 5,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 9,
+    "Power": 2
+   },
+   "lore": "Mac an Ol's cellar key, bent into a ring. He says he'll never need it again. He'll need it again."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lodge-Brewer's Apron Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 15,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 15,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "It has stains older than you. Some of them are ale."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cluricaun Thimble Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 15,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 13
+   },
+   "lore": "A thimble of whiskey, frozen in amber. A cluricaun's idea of a keepsake."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Woodcutter's Axe-Haft Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 17,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "Cut from Broc's own axe-haft. The wood is sorry about the rest of it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Order-Tally Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 17,
+   "bonuses": {
+    "Int": 6,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "A notched tally stick from Broc's cart. Forty notches, one cut through."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Heartwood Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 20,
+   "bonuses": {
+    "Emp": 7,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "A ring of living heartwood. Ruadhnait grew it round your neck while you slept, which you'll admit is a little alarming."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blight-Breaker Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 3,
+    "Hits": 17
+   },
+   "lore": "A ring of blight-burnt bark, hardened to iron. What hurt the Elder made this strong."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seedling Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 20,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 20,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Green as new leaves. It smells of rain after a hot day."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rowan-Grove Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Int": 7,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "The Order of the Rowan's sash, red with berries. They don't give it lightly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Recruiter's List-Case Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 21,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 4,
+    "Hits": 18
+   },
+   "lore": "A leather tube for rolled lists. The list in it is ash now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Azure-Stitch Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 21,
+   "bonuses": {
+    "Int": 7,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "Unpicked from an acolyte's robe. Blue thread holds a ward better than most."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Withe-Bark Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 23,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "From the oldest wickerman. It's still warm. It's always going to be warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Phantom-Ash Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 23,
+   "bonuses": {
+    "Emp": 8,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "Ash from a wicker that walked. The Rowan say it remembers who burned in it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
    "name": "Wicker-Ash Charm",
    "base": [
     41,
@@ -143,6 +718,582 @@
     "Hits": 23
    },
    "lore": "The haft of a patrol's spear, cut down and bound."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fire-Chant Scroll Case",
+   "base": [
+    41,
+    32
+   ],
+   "level": 28,
+   "bonuses": {
+    "Int": 9,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "It held the Order's fire-chant. Ruadhnait burned the scroll and gave you the case. 'The case did nothing wrong.'"
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Idolater's Ember Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 28,
+   "bonuses": {
+    "Dex": 9,
+    "Qui": 9,
+    "Str": 5,
+    "Hits": 24
+   },
+   "lore": "A blue ember sealed in glass. The Rowan put it out; the glass kept the colour."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rowan-Thorn Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 28,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 28,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Rowan wood and blackthorn, bound with red thread. Fire won't take it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Great-Wicker Ash Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 30,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 30,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Grey with ash from the great burning that never was. The Rowan wove a rowan-berry border into it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hand of the Voice Signet",
+   "base": [
+    41,
+    35
+   ],
+   "level": 30,
+   "bonuses": {
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Sciathan's ring: a blue flame on silver. The Rowan cracked the flame."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Captive's Rope Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 30,
+   "bonuses": {
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 26
+   },
+   "lore": "The rope that bound the Ardee farmers, cut and plaited by the farmers themselves."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Druidess's Rowan Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Emp": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Eabha's own torc of rowan and bronze. She says she has another. She doesn't."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Laughing Cap Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 29,
+   "bonuses": {
+    "Qui": 10,
+    "Con": 5,
+    "Dex": 5,
+    "Hits": 17,
+    "Power": 3
+   },
+   "lore": "A farmhand's cap with a blue bead sewn in the band. It giggles when you're not looking."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sleepwalker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 29,
+   "bonuses": {
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 25
+   },
+   "lore": "The Touched move like dancers. Something of that stays in the leather."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Famine's Gnawed Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 32,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 5,
+    "Hits": 27
+   },
+   "lore": "Famine chewed on it for a century. It tastes of nothing now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Alp-Skin Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 32,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 32,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "The alp luachra eat from inside. Their skins keep things out. Funny, that."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Feast-Table Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 32,
+   "bonuses": {
+    "Qui": 11,
+    "Con": 5,
+    "Dex": 5,
+    "Hits": 19,
+    "Power": 4
+   },
+   "lore": "A napkin ring from the Fool's Court, carved with laughing mouths."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dorbal's Horn Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 35,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 30
+   },
+   "lore": "Dorbal's horn - what the pookha didn't take."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pookha-Hair Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 35,
+   "bonuses": {
+    "Dex": 12,
+    "Qui": 12,
+    "Str": 6,
+    "Hits": 30
+   },
+   "lore": "Grey hair, plaited. The pookha gave it, so it's probably cursed. Probably only a little."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Broken-Bargain Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 35,
+   "bonuses": {
+    "Emp": 12,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 21
+   },
+   "lore": "A pookha's promise, broken. It's iron now. Pookhas hate iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fool-King's Bargain-Knot",
+   "base": [
+    41,
+    29
+   ],
+   "level": 38,
+   "bonuses": {
+    "Int": 13,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 23
+   },
+   "lore": "Blue cord and black, knotted together. The bargain, undone. It hums when you're lied to."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Black Jester's Motley Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 38,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 38,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Black and blue diamonds, the colours of the bargain. The bells have been taken off."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Court-Breaker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 38,
+   "bonuses": {
+    "Str": 13,
+    "Con": 13,
+    "Dex": 6,
+    "Hits": 32
+   },
+   "lore": "Iron, plain and heavy. Nothing in the Fool's Court can bear to touch it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rowan-Crowned Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 38,
+   "bonuses": {
+    "Emp": 13,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 23
+   },
+   "lore": "A torc woven with fresh rowan, never wilting. The Order's highest thanks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Raid-Ledger Satchel Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 25,
+   "bonuses": {
+    "Dex": 8,
+    "Qui": 8,
+    "Str": 4,
+    "Hits": 21
+   },
+   "lore": "The siabra captain kept her accounts in this. The Fianna keep it now, empty, as a reminder."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Siabra Tent-Peg Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 25,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 21
+   },
+   "lore": "Bone pegs, lashed together. The raiders' tents won't stand again."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gate-Glass Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Fused blue glass from the gate's stones. It's cold. Fire-glass shouldn't be cold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Watch-Post Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 30,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 30,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "The Fianna's gate-watch cloak, grey and heavy. It's seen a lot of bad nights."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Manes-Fang Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 30,
+   "bonuses": {
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 26
+   },
+   "lore": "A manes demon's tooth, in an iron band. It still tries to bite."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Jester's Bell Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 34,
+   "bonuses": {
+    "Qui": 11,
+    "Con": 6,
+    "Dex": 6,
+    "Hits": 20,
+    "Power": 4
+   },
+   "lore": "One bell from Lorcan's cap. It doesn't ring any more. You made sure."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Turncoat's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 34,
+   "bonuses": {
+    "Dex": 11,
+    "Qui": 11,
+    "Str": 6,
+    "Hits": 29
+   },
+   "lore": "Reversible: Fianna green on one side, fool's motley on the other."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Keep-Watch Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 34,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 6,
+    "Hits": 29
+   },
+   "lore": "Druim Ligen's gate-watch bracer. Fiachra's sentinels saluted when you put it on."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gate-Lord's Iron Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 40,
+   "bonuses": {
+    "Str": 13,
+    "Con": 13,
+    "Dex": 7,
+    "Hits": 34
+   },
+   "lore": "Wrought from the gate-lord's chain. It's cold and heavy and it doesn't care."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Druim Ligen Champion's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 40,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 40,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Green, with a silver fian-ring. Fiachra said you'd earned the green. Then he said it again, louder."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ember-Quench Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 40,
+   "bonuses": {
+    "Int": 13,
+    "Emp": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 24
+   },
+   "lore": "Blue fire, sealed in iron and drowned. Druidess Eabha sent it from Ardee."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fian-Oath Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 40,
+   "bonuses": {
+    "Dex": 13,
+    "Qui": 13,
+    "Str": 7,
+    "Hits": 34
+   },
+   "lore": "Bound with the old fian oath: never refuse a fight, never refuse a guest. One of those is easier."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thumb of Knowledge",
+   "base": [
+    41,
+    35
+   ],
+   "level": 10,
+   "bonuses": {
+    "Int": 3,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "Burned, a little, on one side. Put your thumb to it when you don't know what to do. It doesn't always help."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Poet's Hazel Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 10,
+   "bonuses": {
+    "Emp": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "Nine hazelnuts of wisdom fell into the well where the salmon was born. This is one of the shells."
   }
  ]
 }

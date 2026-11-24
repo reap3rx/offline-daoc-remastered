@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using DOL.Events;
 using DOL.GS.PacketHandler;
@@ -24,15 +24,48 @@ namespace DOL.GS
     }
 
     /// <summary>
-    /// Three open-air, road-facing Bounty Masters. They are script-owned, not
-    /// saved over existing village NPCs or monster spawns. Quest records, not
-    /// NPC objects, own individual players' progress.
+    /// One Bounty Master in each zone's main settlement, handing out hunts in that zone (ZoneBounties). They are
+    /// script-owned, not saved over existing village NPCs or monster spawns. Quest records, not NPC objects, own
+    /// individual players' progress. A bounty is claimed at any Bounty Master of your realm. More masters are one line
+    /// each in Places as each zone's review is done.
     /// </summary>
     public static class BountyMasterRuntime
     {
-        private static readonly Dictionary<eRealm, BountyMasterNPC> Masters = new();
+        private static readonly Dictionary<ushort, BountyMasterNPC> Masters = new();   // by zone
 
-        public static BountyMasterNPC GetMaster(eRealm realm) => Masters.TryGetValue(realm, out BountyMasterNPC npc) ? npc : null;
+        /// <summary>The masters: realm, name, region, x, y, z, heading, model, gender. Their zone comes from where they
+        /// stand.</summary>
+        private static readonly (eRealm Realm, string Name, ushort Region, int X, int Y, int Z, ushort Heading, ushort Model, eGender Gender)[] Places =
+        {
+            // Lough Derg: Mag Mell, offset from the stable/healer clusters, on the village approach
+            (eRealm.Hibernia, "Maelin Greenmantle", 200, 346750, 491480, 5200, 3416, 342, eGender.Female),
+            // Connacht: Ardee, on the east side of the market (the zone brief, 2026-11-22)
+            (eRealm.Hibernia, "Conn of the Hundred Hunts", 200, 342520, 469792, 5200, 1024, 337, eGender.Male),
+            // Silvermine Mountains: Howth (the south town - the game names it Howth; the north one is Ardagh), on the east edge of the town (the zone brief, 2026-11-22)
+            (eRealm.Hibernia, "Muirenn Trackwise", 200, 343688, 592864, 5460, 1024, 365, eGender.Female),
+            // Lough Gur: Innis Carthaig, by the jetties (the zone brief, 2026-11-24)
+            (eRealm.Hibernia, "Fiachna Lakewatch", 200, 333600, 719700, 4310, 1024, 337, eGender.Male),
+            // the Bog of Cullen: Alainn Bin, on the north road out of town (the zone brief, 2026-11-24)
+            (eRealm.Hibernia, "Roisin Bogtracker", 200, 403300, 764700, 4960, 0, 365, eGender.Female),
+            // Camelot Hills: Cotswold
+            (eRealm.Albion, "Dame Elowen Vale", 1, 560800, 511550, 2280, 761, 38, eGender.Female),
+            // Mularn's zone
+            (eRealm.Midgard, "Yrsa Wolfmark", 100, 804150, 724550, 4680, 2393, 218, eGender.Female),
+        };
+
+        /// <summary>Any master of a realm (the first placed), for older saved contracts.</summary>
+        public static BountyMasterNPC GetMaster(eRealm realm)
+        {
+            foreach (BountyMasterNPC m in Masters.Values)
+                if (m.Realm == realm)
+                    return m;
+            return null;
+        }
+
+        public static BountyMasterNPC GetMasterForZone(ushort zoneId) =>
+            zoneId != 0 && Masters.TryGetValue(zoneId, out BountyMasterNPC npc) ? npc : null;
+
+        public static ushort ZoneOf(BountyMasterNPC master) => master?.CurrentZone?.ID ?? 0;
 
         [ScriptLoadedEvent]
         public static void ScriptLoaded(DOLEvent e, object sender, EventArgs args)
@@ -40,11 +73,8 @@ namespace DOL.GS
             if (!ServerProperties.Properties.LOAD_QUESTS)
                 return;
 
-            // Deliberately offset from the stable/healer clusters and doorway
-            // lines, while remaining on their ground-level village approaches.
-            AddMaster(eRealm.Hibernia, "Maelin Greenmantle", 200, 346750, 491480, 5200, 3416, 342, eGender.Female);
-            AddMaster(eRealm.Albion, "Dame Elowen Vale", 1, 560800, 511550, 2280, 761, 38, eGender.Female);
-            AddMaster(eRealm.Midgard, "Yrsa Wolfmark", 100, 804150, 724550, 4680, 2393, 218, eGender.Female);
+            foreach (var p in Places)
+                AddMaster(p.Realm, p.Name, p.Region, p.X, p.Y, p.Z, p.Heading, p.Model, p.Gender);
 
             GameEventMgr.AddHandler(GamePlayerEvent.AcceptQuest, AcceptQuest);
             GameEventMgr.AddHandler(GamePlayerEvent.GameEntered, PlayerEntered);
@@ -72,9 +102,11 @@ namespace DOL.GS
 
         public static void UpdateIndicator(GamePlayer player)
         {
-            BountyMasterNPC master = player == null ? null : GetMaster(player.Realm);
-            if (master != null)
-                player.Out.SendNPCsQuestEffect(master, master.GetQuestIndicator(player));
+            if (player == null)
+                return;
+            foreach (BountyMasterNPC master in Masters.Values)
+                if (master.Realm == player.Realm && master.CurrentRegionID == player.CurrentRegionID)
+                    player.Out.SendNPCsQuestEffect(master, master.GetQuestIndicator(player));
         }
 
         private static void AddMaster(eRealm realm, string name, ushort regionId, int x, int y, int z,
@@ -109,7 +141,13 @@ namespace DOL.GS
             if (!master.AddToWorld())
                 return;
 
-            Masters[realm] = master;
+            ushort zone = ZoneOf(master);
+            if (zone == 0 || Masters.ContainsKey(zone))
+            {
+                master.Delete();
+                return;
+            }
+            Masters[zone] = master;
             master.AddQuestToGive(typeof(BountyQuest));
             GameEventMgr.AddHandler(master, GameObjectEvent.Interact, TalkToMaster);
             GameEventMgr.AddHandler(master, GameLivingEvent.WhisperReceive, TalkToMaster);
@@ -164,11 +202,33 @@ namespace DOL.GS
         }
 
         private const string OfferedDifficultyKey = "BountyOfferedDifficulty";
+        private const string OfferedZoneKey = "BountyOfferedZone";
+        private const string OfferedEventKey = "BountyOfferedEvent";
+
+        /// <summary>The event bounty last offered (a chain id), or null; read once when the quest is accepted.</summary>
+        internal static string TakeOfferedEvent(GamePlayer player)
+        {
+            if (player == null)
+                return null;
+            string id = player.TempProperties.GetProperty<string>(OfferedEventKey);
+            player.TempProperties.RemoveProperty(OfferedEventKey);
+            return id;
+        }
         private const string RerollDifficultyKey = "BountyRerollDifficulty";
         private const string UpdateDifficultyKey = "BountyUpdateDifficulty";
 
-        /// <summary>The difficulty last offered by the Bounty Master; read once when the quest is accepted.</summary>
+        /// <summary>The size last offered by a Bounty Master; read once when the quest is accepted.</summary>
         internal static BountyDifficulty TakeOfferedDifficulty(GamePlayer player) => TakeDifficulty(player, OfferedDifficultyKey);
+
+        /// <summary>The zone of the Bounty Master who made the offer; read once when the quest is accepted.</summary>
+        internal static ushort TakeOfferedZone(GamePlayer player)
+        {
+            if (player == null)
+                return 0;
+            ushort zone = player.TempProperties.GetProperty<ushort>(OfferedZoneKey);
+            player.TempProperties.RemoveProperty(OfferedZoneKey);
+            return zone;
+        }
 
         private static BountyDifficulty TakeDifficulty(GamePlayer player, string key)
         {
@@ -179,14 +239,15 @@ namespace DOL.GS
             return difficulty;
         }
 
-        private static string Lower(BountyDifficulty difficulty) =>
-            BountyDifficultyRules.DisplayName(difficulty).ToLowerInvariant();
+        private static string Lower(BountyDifficulty size) => ZoneBounties.SizeName(size).ToLowerInvariant();
 
         private static string Bulbs(BountyDifficulty difficulty, bool rerolled)
         {
             int bulbs = BountyDifficultyRules.Bulbs(difficulty, rerolled);
             return $"{bulbs} XP bulb{(bulbs == 1 ? "" : "s")}";
         }
+
+        private static string ZoneName(BountyMasterNPC master) => master?.CurrentZone?.Description ?? "these lands";
 
         private static void TalkToMaster(DOLEvent e, object sender, EventArgs args)
         {
@@ -198,40 +259,28 @@ namespace DOL.GS
             BountyQuest active = player.IsDoingQuest(typeof(BountyQuest)) as BountyQuest;
             if (e == GameObjectEvent.Interact)
             {
-                string update = active?.CanUpdateLegacy == true
-                    ? " This contract is from an older version: [update bounty] to swap it once, free, for a new hunt."
+                string swap = active?.CanSwapToZone == true
+                    ? $" Your contract is from the old realm-wide ledger: [swap bounty] to trade it, free, for a hunt in {ZoneName(master)}."
                     : string.Empty;
                 if (active == null)
                 {
-                    master.SayTo(player, player.Level >= 50
-                        ? "The roads have grown hungry for blood. I keep a ledger of those who threaten our folk. " +
-                          "Take [a bounty] when you are ready, or ask [how bounties work]."
-                        : "The roads have grown hungry for blood. Take a [normal bounty] at your level, a [hard bounty] " +
-                          "about 6 levels higher, or a [very hard bounty] about 12 higher. Or ask [how bounties work].");
+                    var live = ZoneBounties.LiveEvent(master.CurrentZone);
+                    string ev = live != null
+                        ? $" And {live.Def.Title} is under way right now: take an [event bounty] to help there."
+                        : string.Empty;
+                    master.SayTo(player, $"I keep {ZoneName(master)}'s ledger of those who threaten our folk. Take a [solo bounty], " +
+                        "a [small group bounty] for two to four of you, or a [large group bounty] for a full group. " +
+                        "Whatever your level, I pay at it when you return. Or ask [how bounties work]." + ev);
                 }
                 else if (active.IsReady)
                 {
-                    string refresh = player.Level > active.AssignedLevel
-                        ? " Or [refresh] this outleveled contract for free."
-                        : string.Empty;
-                    string reroll = active.AssignedLevel == 50
-                        ? "You may also [show location] or [reroll] for another foe."
-                        : "You may also [show location] or [reroll] at half XP.";
                     master.SayTo(player, $"You have felled {active.Target?.Name}. Choose [claim reward] to close the ledger. " +
-                        "Your target remains marked on its local map until you do. " + reroll + refresh + update);
+                        "Your target remains marked on its local map until you do. You may also [show location] or [reroll] at half pay." + swap);
                 }
                 else
                 {
-                    string refresh = player.Level > active.AssignedLevel
-                        ? " You have grown beyond this contract; [refresh] it for free at your current level."
-                        : string.Empty;
-                    string reroll = active.AssignedLevel == 50
-                        ? "for another great foe"
-                        : "for another target at half XP";
                     master.SayTo(player, $"Your mark is {active.Target?.Name} in {active.Target?.ZoneName}: " +
-                        $"{active.Progress}/{active.RequiredKills} slain. The red dot appears only on that zone's map. " +
-                        "Ask to [show location], or [reroll] " +
-                        $"{reroll}.{refresh}{update}");
+                        $"{active.Progress}/{active.RequiredKills} slain. Ask to [show location], or [reroll] for another target at half pay." + swap);
                 }
                 return;
             }
@@ -248,19 +297,20 @@ namespace DOL.GS
                     OfferBounty(master, player, active, BountyDifficulty.Normal);
                     return;
 
+                case "event bounty":
+                    OfferEventBounty(master, player, active);
+                    return;
+
                 case "how bounties work":
-                    master.SayTo(player, "A normal hunt is at your level, a hard hunt about 6 levels higher and a very hard hunt " +
-                        "about 12 higher. Where too few kinds of monster live at that exact level, the mark may be one or two levels lower " +
-                        "(never below 4 higher on hard or 10 higher on very hard). " +
-                        "They pay 2, 4 or 8 XP bulbs at your level and 1-3 class items 1, 3 or 5 levels above you. " +
-                        "Kills needed: 5 below level 20, 10 in your 20s, 15 in your 30s and 20 in your 40s.");
-                    master.SayTo(player, "The journal counts kills. Enter the target's zone or dungeon, then press BOUNTY MAP " +
-                        "to open its local map and see the red dot; it cannot show another zone. " +
-                        "Reroll freely, but XP is halved until you finish; a reroll keeps the difficulty or picks an easier one. " +
-                        "Outleveled contracts refresh free.");
-                    master.SayTo(player, "For an outdoor hunt, the marked camp is a lead: the same-named hostile monster " +
-                        "elsewhere in your realm counts too (on hard and very hard, only if it is at most one level below the mark). " +
-                        "Dungeon contracts still require their assigned dungeon.");
+                    master.SayTo(player, $"Every hunt is in {ZoneName(master)}. A solo hunt is 8 greens, 6 blues or 3 yellows. " +
+                        "A small group hunts 8 yellows or two of the oranges, the lieutenants. A large group goes after a red camp boss " +
+                        "or something worse. Bring friends or bots for the bigger ones; the con colours mean the same whatever your level.");
+                    master.SayTo(player, "I pay at your level when you claim, so a hunt is never wasted however long it takes: " +
+                        "2, 4 or 8 XP bulbs, 1-3 class items a little above your level, and 1, 3 or 8 Marks of Valor. " +
+                        "At level 50 the experience becomes gold, and a large group's hunt pays exceptional gear.");
+                    master.SayTo(player, "The journal counts kills; anyone in your group who is near counts. Press BOUNTY MAP for the " +
+                        "red dot on the zone's map. A reroll keeps the size or picks a smaller one, and pays half until you finish. " +
+                        "You can claim at any Bounty Master of the realm.");
                     return;
 
                 case "show location":
@@ -268,38 +318,32 @@ namespace DOL.GS
                     {
                         active.ShowMarker();
                         master.SayTo(player, $"Seek {active.Target?.Name} in {active.Target?.ZoneName}. " +
-                            "Enter that zone or dungeon, then open its local map to see the red bounty dot. " +
+                            "Open that zone's local map to see the red bounty dot. " +
                             "The journal's BOUNTY MAP button opens your current map; /bountylocation refreshes the marker.");
-                        if (active.Target?.IsDungeon == false && active.Target.IsEpic == false)
-                            master.SayTo(player, "This mark is one likely camp. The same-named hostile monster " +
-                                "in another outdoor part of your realm counts as well" +
-                                (active.Difficulty == BountyDifficulty.Normal ? "." : ", if it is at most one level below the mark."));
                     }
                     return;
 
                 case "reroll":
                     if (active == null)
                         return;
-                    if (active.AssignedLevel == 50 || active.Difficulty == BountyDifficulty.Normal)
+                    if (!active.IsZone)
                     {
-                        AskReroll(player, active, BountyDifficulty.Normal);
+                        AskReroll(player, active, active.Difficulty);
                         return;
                     }
-                    master.SayTo(player, active.Difficulty == BountyDifficulty.VeryHard
-                        ? "Reroll to which hunt? [reroll very hard], [reroll hard] or [reroll normal]. It pays half the XP of the one you choose."
-                        : "Reroll to which hunt? [reroll hard] or [reroll normal]. It pays half the XP of the one you choose.");
+                    master.SayTo(player, active.Difficulty switch
+                    {
+                        BountyDifficulty.VeryHard => "Reroll to which hunt? [reroll large group], [reroll small group] or [reroll solo]. It pays half of the one you choose.",
+                        BountyDifficulty.Hard => "Reroll to which hunt? [reroll small group] or [reroll solo]. It pays half of the one you choose.",
+                        _ => "Reroll for another solo hunt? [reroll solo]. It pays half."
+                    });
                     return;
 
+                case "swap bounty":
                 case "update bounty":
-                    if (active?.CanUpdateLegacy == true)
-                        master.SayTo(player, "Your contract was written under the old ledger. Choose a new hunt at your level, free: " +
-                            "[update normal], [update hard] or [update very hard]. Your current kill progress is replaced.");
-                    return;
-
-                case "refresh":
-                    if (active != null && player.Level > active.AssignedLevel)
-                        player.Out.SendCustomDialog("Replace this outleveled bounty with one at your current level, free of penalty? Your current kill progress will be lost.",
-                            ConfirmRefresh);
+                    if (active?.CanSwapToZone == true)
+                        master.SayTo(player, $"Trade your old contract, free, for a hunt in {ZoneName(master)}: " +
+                            "[swap solo], [swap small group] or [swap large group]. Your current kill progress is replaced.");
                     return;
 
                 case "claim reward":
@@ -313,54 +357,76 @@ namespace DOL.GS
             }
 
             BountyDifficulty choice;
-            if (text.EndsWith(" bounty") && BountyDifficultyRules.TryParseChoice(text[..^" bounty".Length], out choice))
+            if (text.EndsWith(" bounty") && ZoneBounties.TryParseSize(text[..^" bounty".Length], out choice))
                 OfferBounty(master, player, active, choice);
-            else if (text.StartsWith("reroll ") && BountyDifficultyRules.TryParseChoice(text["reroll ".Length..], out choice))
+            else if (text.StartsWith("reroll ") && ZoneBounties.TryParseSize(text["reroll ".Length..], out choice))
             {
-                if (active != null && active.AssignedLevel < 50 && choice <= active.Difficulty)
+                if (active != null && choice <= active.Difficulty)
                     AskReroll(player, active, choice);
             }
-            else if (text.StartsWith("update ") && BountyDifficultyRules.TryParseChoice(text["update ".Length..], out choice))
+            else if ((text.StartsWith("swap ") || text.StartsWith("update ")) &&
+                     ZoneBounties.TryParseSize(text[(text.IndexOf(' ') + 1)..], out choice))
             {
-                if (active?.CanUpdateLegacy == true)
+                if (active?.CanSwapToZone == true)
                 {
                     player.TempProperties.SetProperty(UpdateDifficultyKey, choice);
-                    player.Out.SendCustomDialog($"Replace your old bounty with a new {Lower(choice)} hunt at your level, free of penalty? " +
+                    player.Out.SendCustomDialog($"Trade your old bounty for a new {Lower(choice)} hunt in {ZoneName(master)}, free of penalty? " +
                         "Your current kill progress will be lost.", ConfirmUpdate);
                 }
             }
         }
 
-        private static void OfferBounty(BountyMasterNPC master, GamePlayer player, BountyQuest active, BountyDifficulty difficulty)
+        private static void OfferBounty(BountyMasterNPC master, GamePlayer player, BountyQuest active, BountyDifficulty size)
         {
             if (active != null || master.CanGiveQuest(typeof(BountyQuest), player) <= 0)
                 return;
 
-            if (player.Level >= 50)
-                difficulty = BountyDifficulty.Normal;
-            player.TempProperties.SetProperty(OfferedDifficultyKey, difficulty);
+            player.TempProperties.SetProperty(OfferedDifficultyKey, size);
+            player.TempProperties.SetProperty(OfferedZoneKey, ZoneOf(master));
+            player.TempProperties.RemoveProperty(OfferedEventKey);
 
-            int kills = BountyQuest.RequiredKillsForLevel(player.Level);
-            string where = difficulty switch
+            string what = size switch
             {
-                BountyDifficulty.Hard => "about 6 levels above you",
-                BountyDifficulty.VeryHard => "about 12 levels above you",
-                _ => "at your level"
+                BountyDifficulty.VeryHard => "a red camp boss or worse, for a full group",
+                BountyDifficulty.Hard => "yellows in number or the oranges, for two to four",
+                _ => "greens, blues or a few yellows, for one"
             };
-            string offer = player.Level >= 50
-                ? "Accept a great-foe bounty? Defeat one named boss and return for 100 gold and 1-3 exceptional class items. The red dot appears on the target's local map."
-                : $"Accept a {Lower(difficulty)} hunt? Slay {kills} monsters {where}; the journal tracks kills. " +
-                  $"Return for {Bulbs(difficulty, false)} at your level and 1-3 level " +
-                  $"{BountyDifficultyRules.GearLevel((byte)player.Level, difficulty)} class items. The red dot appears on the target's local map.";
+            string pay = player.Level >= 50
+                ? $"{ZoneBounties.CapGold(size, false)} gold, 1-3 {(size == BountyDifficulty.VeryHard ? "exceptional " : "")}class items"
+                : $"{Bulbs(size, false)} at your level, 1-3 level {BountyDifficultyRules.GearLevel((byte)player.Level, size)} class items";
+            string offer = $"Accept a {Lower(size)} hunt in {ZoneName(master)}? It points at {what}; the journal tracks kills. " +
+                $"Return for {pay} and {ZoneBounties.Marks(size, false)} Marks of Valor, paid at your level when you claim. " +
+                "The red dot appears on the zone's map.";
+            player.Out.SendQuestSubscribeCommand(master, QuestMgr.GetIDForQuestType(typeof(BountyQuest)), offer);
+        }
+
+        private static void OfferEventBounty(BountyMasterNPC master, GamePlayer player, BountyQuest active)
+        {
+            if (active != null || master.CanGiveQuest(typeof(BountyQuest), player) <= 0)
+                return;
+            var live = ZoneBounties.LiveEvent(master.CurrentZone);
+            if (live == null)
+            {
+                master.SayTo(player, "Nothing is stirring out there right now. Ask me again when you hear of trouble.");
+                return;
+            }
+            player.TempProperties.SetProperty(OfferedDifficultyKey, BountyDifficulty.Hard);
+            player.TempProperties.SetProperty(OfferedZoneKey, ZoneOf(master));
+            player.TempProperties.SetProperty(OfferedEventKey, live.Def.Id);
+            string offer = $"Accept an event bounty? Help with {live.Def.Title}: slay {ZoneBounties.EventKills} of its monsters " +
+                "(a boss counts 3). It pays as a small group's hunt, at your level when you claim: " +
+                $"{Bulbs(BountyDifficulty.Hard, false)}, 1-3 class items and {ZoneBounties.Marks(BountyDifficulty.Hard, false)} Marks of Valor.";
             player.Out.SendQuestSubscribeCommand(master, QuestMgr.GetIDForQuestType(typeof(BountyQuest)), offer);
         }
 
         private static void AskReroll(GamePlayer player, BountyQuest active, BountyDifficulty difficulty)
         {
             player.TempProperties.SetProperty(RerollDifficultyKey, difficulty);
-            player.Out.SendCustomDialog(active.AssignedLevel == 50
+            player.Out.SendCustomDialog(active.IsZone
+                    ? $"Choose a different {Lower(difficulty)} hunt? This bounty will pay only half ({Bulbs(difficulty, true)}), even after further rerolls."
+                    : active.AssignedLevel == 50
                     ? "Choose a different great foe? Level-50 gold and equipment rewards are unchanged."
-                    : $"Choose a different {Lower(difficulty)} monster? This bounty will pay only {Bulbs(difficulty, true)} " +
+                    : $"Choose a different monster? This bounty will pay only {BountyDifficultyRules.Bulbs(difficulty, true)} XP bulbs " +
                       "at its assigned level, even after further rerolls.",
                 ConfirmReroll);
         }
@@ -378,24 +444,24 @@ namespace DOL.GS
         {
             BountyDifficulty difficulty = TakeDifficulty(player, UpdateDifficultyKey);
             if (response != 0x01 || player?.IsDoingQuest(typeof(BountyQuest)) is not BountyQuest quest ||
-                !NearOwnMaster(player, out _))
+                !NearOwnMaster(player, out BountyMasterNPC master))
                 return;
-            quest.UpdateLegacy(difficulty);
+            quest.SwapToZone(ZoneOf(master), difficulty);
         }
 
-        private static void ConfirmRefresh(GamePlayer player, byte response)
-        {
-            if (response != 0x01 || player?.IsDoingQuest(typeof(BountyQuest)) is not BountyQuest quest ||
-                !NearOwnMaster(player, out _))
-                return;
-            quest.RefreshOutleveled();
-        }
-
+        /// <summary>The nearest Bounty Master of the player's realm within talking range, if any.</summary>
         private static bool NearOwnMaster(GamePlayer player, out BountyMasterNPC master)
         {
-            master = player == null ? null : GetMaster(player.Realm);
-            return master != null && master.CurrentRegionID == player.CurrentRegionID &&
-                   master.IsWithinRadius(player, 600);
+            master = null;
+            if (player == null)
+                return false;
+            foreach (BountyMasterNPC m in Masters.Values)
+                if (m.Realm == player.Realm && m.CurrentRegionID == player.CurrentRegionID && m.IsWithinRadius(player, 600))
+                {
+                    master = m;
+                    return true;
+                }
+            return false;
         }
 
         private static void AcceptQuest(DOLEvent e, object sender, EventArgs args)
@@ -414,7 +480,7 @@ namespace DOL.GS
         {
             if (sender is GamePlayer player && player.IsDoingQuest(typeof(BountyQuest)) is BountyQuest quest)
             {
-                quest.QuestGiver = GetMaster(player.Realm);
+                quest.QuestGiver = (quest.IsZone ? GetMasterForZone(quest.ZoneId) : null) ?? GetMaster(player.Realm);
                 quest.NormalizeLegacyOnLogin();
                 quest.ShowMarker();
                 UpdateIndicator(player);

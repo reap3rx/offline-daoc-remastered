@@ -8,6 +8,199 @@
   {
    "story_reward": true,
    "scaled": true,
+   "name": "Storekeeper's Key-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 5,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 5,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Every lock in Ardagh's stores. Most of them still work."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rat-Catcher's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 4
+   },
+   "lore": "Scratched to ribbons. The rats lost."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lookout's Signal Mirror",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "A scrap of polished silver the lookout used to flash signals. You can see your own nose in it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sentinel-Post Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 5,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 4
+   },
+   "lore": "Issue gear from the sentinel post. Ailbe's spare."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lunch-Tin Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 8,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 8,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "A miner's lunch-tin lid, dented by a badger's teeth. It still smells faintly of cheese."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Stinky's Collar Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 8,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 1,
+    "Hits": 7
+   },
+   "lore": "Stinky's own collar, cut down. Somebody once loved that badger. Probably."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Badger-Brush Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 8,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 1,
+    "Hits": 7
+   },
+   "lore": "Made from Stinky's shed fur. It does not smell of roses."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Creeping-Pebble Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "A pebble that inched across your palm while you weren't looking."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Field-Wall Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 5,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Dry-stone walling, the farmers' way. Not one stone moved."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Stone-Song Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 6,
+   "bonuses": {
+    "Int": 2,
+    "Emp": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 4
+   },
+   "lore": "Seireadan's voice, caught in a ring of granite. It hums when the stones move."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Singer's Pebble Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 6,
+   "bonuses": {
+    "Emp": 2,
+    "Con": 1,
+    "Power": 1,
+    "Hits": 4
+   },
+   "lore": "Polished smooth by a hundred years of singing."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
    "name": "Ogham-Stick Charm",
    "base": [
     41,
@@ -78,6 +271,249 @@
   {
    "story_reward": true,
    "scaled": true,
+   "name": "Moon-Silver Sliver Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 10,
+   "bonuses": {
+    "Emp": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "The first sliver of moon-silver anyone in Ardagh ever held. It's cold, and it hums, and you can't stop looking at it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ring-Warden's Shard Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 10,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "A shard of the ring-stone, bound in leather. It's still a little warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rowan-Bound Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 10,
+   "bonuses": {
+    "Int": 3,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "Muirne's work: rowan bark woven tight. 'Keeps the singing out of your head.'"
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Howth-Stamped Pick Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 9,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "A pick-head stamped HOWTH, shrunk to a charm. Maeve counted it back in."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tool-Cache Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 9,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 2,
+    "Hits": 8
+   },
+   "lore": "Every loop holds a tool. The spraggons had good taste in belts."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tinker's Ledger-Strap Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 12,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 10
+   },
+   "lore": "The tinker kept his ledger strapped to his arm. You keep your arm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Brass-Gear Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 12,
+   "bonuses": {
+    "Int": 4,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A tiny gear from a spraggon contraption. It turns, very slowly, by itself."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Crown-of-Nails Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 15,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 13
+   },
+   "lore": "Boss's crown, beaten flat into a torc. Fewer nails sticking out now. Mostly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Boss's Pocket-Watch Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 15,
+   "bonuses": {
+    "Qui": 5,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 9,
+    "Power": 2
+   },
+   "lore": "Stolen from a Howth merchant ten years ago. It's never once told the right time."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sargoth's Tusk Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 18,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 15
+   },
+   "lore": "A tusk off the biggest spraggon anyone's seen. Polished, it's almost pretty."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Den-Lord's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 18,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 18,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Patched from a dozen stolen sacks. Warmer than it looks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Howth Miners' Token",
+   "base": [
+    41,
+    24
+   ],
+   "level": 18,
+   "bonuses": {
+    "Emp": 6,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "Every miner in Howth chipped in for it. It says 'thank you' in very bad lettering."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Silver-Tipped Arrow Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 13,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 11
+   },
+   "lore": "An arrowhead of pale silver. The sheevra archers have the best arrows in Hibernia now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Spoil-Heap Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 13,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 13,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Dust-grey leather off a sheevra archer. It's been shot at, a lot."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
    "name": "Silver-Vein Ring",
    "base": [
     41,
@@ -144,6 +580,478 @@
     "Hits": 13
    },
    "lore": "Studded with silver nails pulled from the Silvermine rock."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Scar-Nose's Silver Collar",
+   "base": [
+    41,
+    29
+   ],
+   "level": 19,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 16
+   },
+   "lore": "A war-badger's collar, sheevra silver. It was made for a neck much thicker than yours."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Badger-Hide Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 19,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 19,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Thick, scarred and nearly arrow-proof."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Overseer's Whip-Handle Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 23,
+   "bonuses": {
+    "Qui": 8,
+    "Con": 4,
+    "Dex": 4,
+    "Hits": 14,
+    "Power": 3
+   },
+   "lore": "Camlin's whip, the lash cut off. The handle's all that's left. That's enough."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tally-Keeper's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 23,
+   "bonuses": {
+    "Int": 8,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "Camlin kept his tallies on a belt of notched leather. Every notch a cartload."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Freed-Miner's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 23,
+   "bonuses": {
+    "Dex": 8,
+    "Qui": 8,
+    "Str": 4,
+    "Hits": 20
+   },
+   "lore": "The miners Camlin worked gave it to you. They made it from his chains."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dergal's Silver Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 26,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 22
+   },
+   "lore": "The war-chief's torc, sheevra silver. Ardagh's smiths say it's the finest they've seen."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mine-Warden's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 26,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 26,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Grey with a silver pick. The Wardens give these to their own."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lake-Camp Banner Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 26,
+   "bonuses": {
+    "Dex": 9,
+    "Qui": 9,
+    "Str": 4,
+    "Hits": 22
+   },
+   "lore": "A ring cut from the sheevra lake camp's banner-pole."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ardagh's Thanks",
+   "base": [
+    41,
+    24
+   ],
+   "level": 26,
+   "bonuses": {
+    "Emp": 9,
+    "Con": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "Every miner in Ardagh put a coin in for it. It's mostly coins."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Miner's Tally-Stick Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 19,
+   "bonuses": {
+    "Int": 6,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "Forty-one notches, one for every miner. Ethna carved a forty-second for you."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cold-Light Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 19,
+   "bonuses": {
+    "Emp": 6,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "It glows faintly blue at night, like the camp."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seal-Stone Fragment Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 23,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 23,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "A chip of the druids' seal. Ogham runs round it: 'shut'."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bone-Dust Pouch Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 23,
+   "bonuses": {
+    "Emp": 8,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "The miners' bones, gathered and buried. You kept the pouch you carried them in."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Deamhan-Stone Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 27,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 23
+   },
+   "lore": "Hacked off a deamhan creig. It's still angry."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Storm-Glass Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 27,
+   "bonuses": {
+    "Int": 9,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "Lightning, caught in glass when a mephit died. It crackles."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Heights Wanderer's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 27,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 27,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Grey and heavy, for the sleet. You'll want it up there."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Vein-Heart Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Emp": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Moon-silver from the Thing's own heart, quieted. Ethna blessed it. It sings softly now, a lullaby."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Deep-Seal Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 30,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 30,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Carved from the new seal-stone, ogham and all: 'sleep'."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thing-Slayer's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 30,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
+   },
+   "lore": "Stone from the Thing's hide. Nothing in the valley will touch you while you wear it. Nothing alive."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Forty-One Names Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 30,
+   "bonuses": {
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Embroidered with the names of the miners of the Fallen Camp. Ethna stitched every one."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moon-Dust Satchel Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 21,
+   "bonuses": {
+    "Int": 7,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "A druid's satchel. The moon-silver dust in its seams still glitters."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Turned Druid's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 21,
+   "bonuses": {
+    "Emp": 7,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "A Rowan ring, its berries scraped off. Muirne wept when she saw it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hermit's Hazel Staff-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 24,
+   "bonuses": {
+    "Emp": 8,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "A knot of Nictol's staff. It was a good staff once."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Unkempt Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 24,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 24,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Nictol's cloak, cleaned. Three times. It's still not entirely clean."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Broker's Ledger Case",
+   "base": [
+    41,
+    32
+   ],
+   "level": 28,
+   "bonuses": {
+    "Int": 9,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "The Broker's accounts. Every cart to Connacht, every bead paid. The Rowan sent a copy to Ardee."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blue-Bead Breaker Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 28,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 5,
+    "Hits": 24
+   },
+   "lore": "A ring of crushed blue beads, set in silver. The Azure Order's coin, made worthless."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rowan-and-Silver Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 28,
+   "bonuses": {
+    "Emp": 9,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "Moon-silver, quieted, woven with rowan. Muirne's own making."
   }
  ]
 }

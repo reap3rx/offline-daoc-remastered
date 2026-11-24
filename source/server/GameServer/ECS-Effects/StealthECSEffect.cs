@@ -25,11 +25,13 @@ namespace DOL.GS
             OwnerPlayer.Out.SendPlayerModelTypeChange(OwnerPlayer, 3);
 
             foreach (ECSGameEffect speedBuff in OwnerPlayer.effectListComponent.GetSpellEffects(eEffect.MovementSpeedBuff))
-                speedBuff.Disable();
+                if (!AlbionKits.KeepsSongInStealth(OwnerPlayer, speedBuff))       // (a Minstrel's Unseen Song)
+                    speedBuff.Disable();
 
             // Cancel pulse effects.
             foreach (ECSPulseEffect pulseEffect in OwnerPlayer.effectListComponent.GetSpellEffects(eEffect.Pulse))
-                pulseEffect.End();
+                if (!AlbionKits.KeepsSongInStealth(OwnerPlayer, pulseEffect))
+                    pulseEffect.End();
 
             OwnerPlayer.Sprint(false);
 

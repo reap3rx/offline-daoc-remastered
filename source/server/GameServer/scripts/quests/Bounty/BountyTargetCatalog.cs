@@ -20,6 +20,8 @@ namespace DOL.GS
         public int SpawnCount { get; init; }
         public bool IsDungeon { get; init; }
         public bool IsEpic { get; init; }
+        /// <summary>A zone bounty's con tier (MonsterTiers), None for the older realm-wide hunts.</summary>
+        public sbyte Tier { get; init; } = MonsterTiers.None;
 
         public bool Matches(GameNPC npc)
         {

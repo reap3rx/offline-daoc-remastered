@@ -101,6 +101,8 @@ namespace DOL.GS.Commands
 		{
 			if (!player.IsWithinRadius(giver, WorldMgr.WHISPER_DISTANCE))
 				return false;
+			if (QuestCleanup.GuardTasksRetired)                // (owner 2026-11-21: "No /whisper tasks")
+				return QuestCleanup.TellAboutBounties(player, giver);
 			if (KillTask.CheckAvailability(player, giver))
 				return KillTask.BuildTask(player, giver);
 			if (MoneyTask.CheckAvailability(player, giver))

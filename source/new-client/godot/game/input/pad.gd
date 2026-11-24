@@ -60,6 +60,7 @@ const ACTIONS := [
 	["jump", "Jump", "JUMP", "held"],
 	["attack", "Attack (hold: power attack)", "ATTACK", "held"],
 	["defend", "Parry / Block", "PARRY", "held"],
+	["parry_only", "Parry Only (with a shield up: a parry, not a block)", "PARRY", "tap"],
 	["dodge", "Dodge", "DODGE", "tap"],
 	["sprint_hold", "Sprint (while held)", "SPRINT", "held"],
 	["sprint_toggle", "Sprint (toggle)", "SPRINT", "tap"],
@@ -97,7 +98,7 @@ static func _defaults(for_caster := false) -> Dictionary:
 	# weapon, hold it to sheath weapon, and right will be torch"; nearest enemy LB + RB + X, you / your group LB + RB + Y)
 	var d := {"a": "jump", "b": "dodge", "b:hold": "sprint_hold", "x": "style_auto", "x:hold": "style_aoe", "y": "interact", "y:hold": "interact_menu",
 			"up": "pull", "left": "weapon_cycle", "left:hold": "sheathe", "right": "torch", "down": "sit",
-			"l3": "run_lock", "r3": "lock_on", "rt": "attack", "lt": "defend",
+			"l3": "run_lock", "r3": "lock_on", "rt": "attack", "lt": "defend", "lt+rt": "parry_only",
 			"view": "hero", "view:hold": "menu_wheel", "menu": "escape"}
 	for i in 8:
 		d["lb+" + SLOTS[i]] = "qb1_%d" % (i + 1)
@@ -140,6 +141,7 @@ var _pending := {}                       # button name -> [input (with mods), it
 var _held_actions := {}                  # button name -> [action] down now (to let go on release)
 var _rt := false
 var _lt := false
+var _rt_chord := false                    # RT went down with LT held, on the LT + RT binding (Parry Only)
 var _flick := 0
 var _cursor := Vector2.ZERO
 var _cursor_shown := false
@@ -218,6 +220,10 @@ func load_bindings() -> void:
 		if version < 5:
 			if String(bindings.get("x", "")) == "style_auto" and not bindings.has("x:hold") and inputs_of("style_aoe").is_empty():
 				bindings["x:hold"] = "style_aoe"
+		# version 6 (owner 2026-11-23, Bugs & Fixes: "a way to parry when using a shield on controller ... default
+		# binding being LT + RT"): Parry Only on LT + RT, where it's still free
+		if version < 6 and not bindings.has("lt+rt") and inputs_of("parry_only").is_empty():
+			bindings["lt+rt"] = "parry_only"
 		if from_shared:
 			for k in STYLE_KEYS:
 				if String(bindings.get(k, "")) == String(STYLE_KEYS[k]):
@@ -251,7 +257,7 @@ func save_bindings() -> void:
 	var cfg := ConfigFile.new()
 	for k in bindings:
 		cfg.set_value("bindings", k, bindings[k])
-	cfg.set_value("meta", "version", 5)
+	cfg.set_value("meta", "version", 6)
 	cfg.save(CASTER_PATH if caster else PATH)
 	bindings_changed.emit()
 
@@ -293,7 +299,7 @@ func inputs_of(action: String) -> Array:
 ## button (owner 2026-11-10: "not let the player place skills ... onto core buttons"); holds, triggers, the bumpers on
 ## their own, the sticks' clicks and View / Menu are never slots.
 func slot_refusal(input: String) -> String:
-	if input.ends_with(":hold") or input in ["lt", "rt", "lb", "rb", "l3", "r3", "view", "menu"] \
+	if input.ends_with(":hold") or input in ["lt", "rt", "lt+rt", "lb", "rb", "l3", "r3", "view", "menu"] \
 			or input.ends_with("+l3") or input.ends_with("+r3"):
 		return "%s CAN'T HOLD A SKILL - USE THE D-PAD OR A FACE BUTTON, WITH LB / RB FOR MORE." % describe(input)
 	var act := String(bindings.get(input, ""))
@@ -624,6 +630,9 @@ func _do(act: String, down: bool) -> void:
 			Keybinds.pad_held["ac_crit_shot"] = down
 			if a:
 				a.call("pad_defend", down)
+		"parry_only":
+			if down and a and a.has_method("pad_parry_only"):
+				a.call("pad_parry_only")
 		"sprint_hold":
 			sprint_held = down
 		"zoom_in":
@@ -1265,6 +1274,18 @@ func _nav(dir: Vector2) -> void:
 		if score < best_score:
 			best_score = score
 			best = c
+	if best == null and cur and not get_tree().get_nodes_in_group("ui_modal").is_empty():
+		# a menu on screen (an item's or a person's): off its last entry the d-pad wraps round to the first, and back
+		# (owner 2026-11-23)
+		var far := -INF
+		for c in _usables():
+			if c == cur:
+				continue
+			var d2: Vector2 = here - _screen_rect(c).get_center()
+			var back := d2.dot(dir)
+			if back > far and absf(d2.cross(dir)) <= maxf(back, 1.0) * 2.5:
+				far = back
+				best = c
 	if best:
 		_point_at(best)
 
@@ -1435,17 +1456,25 @@ func _triggers() -> void:
 			_lt = lt_on
 		if _capture.is_valid():
 			if t[1]:
-				_finish_capture(String(t[0]))
+				_finish_capture("lt+rt" if t[0] == "rt" and _lt else String(t[0]))
 			continue
 		if t[1] and not world_mode():
 			continue                                       # (not in a window)
-		var act := String(bindings.get(String(t[0]), ""))
+		# LT + RT: RT pressed while LT is held is its own input (Parry Only by default), when it's bound
+		var input := String(t[0])
+		if input == "rt" and t[1] and _lt and bindings.has("lt+rt"):
+			input = "lt+rt"
+			_rt_chord = true
+		elif input == "rt" and not t[1] and _rt_chord:
+			input = "lt+rt"
+			_rt_chord = false
+		var act := String(bindings.get(input, ""))
 		if act == "":
 			continue
 		if t[1]:
-			_start(String(t[0]), act)
+			_start(input, act)
 		else:
-			_finish(String(t[0]))
+			_finish(input)
 
 
 func _look(delta: float) -> void:

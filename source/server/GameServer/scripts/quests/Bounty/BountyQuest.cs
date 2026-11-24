@@ -40,16 +40,18 @@ namespace DOL.GS.Quests
         }
 
         public override int MaxQuestCount => int.MaxValue;
-        public override int Level => AssignedLevel == 0 ? 1 : AssignedLevel;
-        public override string Name => FormatQuestName(Target, Difficulty);
+        // A zone bounty pays at your level whenever you claim it, so it always shows at your level.
+        public override int Level => IsZone ? Math.Max(1, (int)(m_questPlayer?.Level ?? 1)) : AssignedLevel == 0 ? 1 : AssignedLevel;
+        public override string Name => EventId != null ? $"Event Bounty: {FitPacketText(Target?.Name ?? "an event", TargetDisplayByteLimit)}"
+            : IsZone ? FormatZoneQuestName(Target, Difficulty) : FormatQuestName(Target, Difficulty);
 
         public override string Story =>
             "The roads are never safe for long. Take one hunt at a time, follow the mark on your map, " +
-            "and bring proof of the kill back to your realm's Bounty Master.";
+            "and bring proof of the kill back to a Bounty Master.";
 
         public override string Summary =>
-            "A random monster at your level (6 or 12 levels higher on hard or very hard), or a great named foe at level 50. " +
-            "Complete the hunt and return for equipment and experience.";
+            "A hunt in the Bounty Master's own zone, sized for one, a small group or a full group. " +
+            "It pays at your level when you return: experience, equipment and Marks of Valor.";
 
         public override string Conclusion => "The road is safer for your work. Another contract waits whenever you are ready.";
 
@@ -60,6 +62,10 @@ namespace DOL.GS.Quests
                 BountyTargetCandidate target = Target;
                 if (target == null)
                     return "Speak to a Bounty Master to receive a hunt.";
+                if (EventId != null)
+                    return FormatEventJournalDescription(target, Progress, RequiredKills, Step == 2, WasRerolled);
+                if (IsZone)
+                    return FormatZoneJournalDescription(target, Progress, RequiredKills, Step == 2, Difficulty, WasRerolled);
                 return FormatJournalDescription(target, AssignedLevel, WasRerolled,
                     Progress, RequiredKills, Step == 2, Difficulty);
             }
@@ -106,6 +112,33 @@ namespace DOL.GS.Quests
             return $"{action} {direction}";
         }
 
+        /// <summary>A zone bounty's journal text: the hunt, where, who it's sized for and that it pays at your level.
+        /// Kept under the old client's 255-byte limit like the realm-wide one.</summary>
+        public static string FormatZoneJournalDescription(BountyTargetCandidate target, int progress, int requiredKills,
+            bool ready, BountyDifficulty size, bool rerolled)
+        {
+            if (target == null)
+                return "Speak to a Bounty Master to receive a hunt.";
+            string targetName = FitPacketText(target.Name, TargetDisplayByteLimit);
+            string zoneName = FitPacketText(target.ZoneName, TargetDisplayByteLimit);
+            string action = ready
+                ? $"{progress}/{requiredKills} {targetName} slain. Return to a Bounty Master."
+                : $"Slay {targetName} ({ZoneBounties.TierName(target.Tier)}): {progress}/{requiredKills}.";
+            int bulbs = BountyDifficultyRules.Bulbs(size, rerolled);
+            string essential = $"{action} In {zoneName}. For {ZoneBounties.SizeWho(size)}. " +
+                $"Pays at your level: {bulbs} XP bulb{(bulbs == 1 ? "" : "s")}, gear, {ZoneBounties.Marks(size, rerolled)} Marks of Valor.";
+            string flavored = $"{GetHuntReason(target)} {essential}";
+            if (BaseServer.DefaultEncoding.GetByteCount(flavored) <= byte.MaxValue)
+                return flavored;
+            if (BaseServer.DefaultEncoding.GetByteCount(essential) <= byte.MaxValue)
+                return essential;
+            return $"{action} In {zoneName}.";
+        }
+
+        public static string FormatZoneQuestName(BountyTargetCandidate target, BountyDifficulty size) => target == null
+            ? "The Zone's Bounty"
+            : $"{ZoneBounties.SizeName(size)} Bounty: {FitPacketText(target.Name, TargetDisplayByteLimit)}";
+
         public static string FormatQuestName(BountyTargetCandidate target,
             BountyDifficulty difficulty = BountyDifficulty.Normal) => target == null
             ? "The Realm's Bounty"
@@ -135,6 +168,29 @@ namespace DOL.GS.Quests
         public BountyDifficulty Difficulty => BountyDifficultyRules.Parse(GetCustomProperty("difficulty"));
         public bool IsLegacyFormat => IsLegacyFormatValue(GetCustomProperty("format"));
 
+        /// <summary>A hunt in one Bounty Master's zone (the PvE overhaul's bounties), not a realm-wide one.</summary>
+        public bool IsZone => GetCustomProperty("scope") == ZoneBounties.Scope;
+
+        /// <summary>An older realm-wide contract, which any Bounty Master swaps once, free, for one of their zone's hunts.</summary>
+        public bool CanSwapToZone => !IsZone && Step is 1 or 2;
+        public ushort ZoneId => (ushort)ReadInt("zone");
+
+        /// <summary>An event bounty's chain (a dynamic event's id): any of that event's monsters count.</summary>
+        public string EventId => string.IsNullOrEmpty(GetCustomProperty("event")) ? null : GetCustomProperty("event");
+
+        public static string FormatEventJournalDescription(BountyTargetCandidate target, int progress, int requiredKills,
+            bool ready, bool rerolled)
+        {
+            string title = FitPacketText(target?.Name ?? "the event", TargetDisplayByteLimit);
+            string action = ready
+                ? $"{progress}/{requiredKills} of {title}'s foes slain. Return to a Bounty Master."
+                : $"Slay {title}'s monsters while it runs: {progress}/{requiredKills} (a boss counts 3).";
+            int bulbs = BountyDifficultyRules.Bulbs(BountyDifficulty.Hard, rerolled);
+            string s = $"{action} In {FitPacketText(target?.ZoneName ?? "", TargetDisplayByteLimit)}. " +
+                $"Pays at your level: {bulbs} XP bulbs, gear, {ZoneBounties.Marks(BountyDifficulty.Hard, rerolled)} Marks of Valor.";
+            return BaseServer.DefaultEncoding.GetByteCount(s) <= byte.MaxValue ? s : action;
+        }
+
         /// <summary>A 0.33-or-older leveling bounty the player may swap once, free.</summary>
         public bool CanUpdateLegacy => IsLegacyFormat && Step is 1 or 2 && AssignedLevel is >= 1 and < 50 &&
                                        m_questPlayer?.Level < 50;
@@ -157,7 +213,8 @@ namespace DOL.GS.Quests
 
                 // The catalog may change when a camp is temporarily wiped or
                 // respawning. A saved contract must remain huntable regardless.
-                BountyTargetCandidate live = BountyTargetCatalog.Resolve(m_questPlayer.Realm, AssignedLevel, id);
+                // A zone bounty is always its saved snapshot.
+                BountyTargetCandidate live = IsZone ? null : BountyTargetCatalog.Resolve(m_questPlayer.Realm, AssignedLevel, id);
                 if (live != null)
                     return _targetCache = live;
 
@@ -173,7 +230,8 @@ namespace DOL.GS.Quests
                     Z = ReadInt("z"),
                     RepresentativeMobId = id,
                     IsDungeon = GetCustomProperty("dungeon") == "1",
-                    IsEpic = GetCustomProperty("epic") == "1"
+                    IsEpic = GetCustomProperty("epic") == "1",
+                    Tier = int.TryParse(GetCustomProperty("tier"), out int tier) ? (sbyte)tier : MonsterTiers.None
                 };
             }
         }
@@ -194,26 +252,22 @@ namespace DOL.GS.Quests
 
         public override void OnQuestAssigned(GamePlayer player)
         {
-            QuestGiver = BountyMasterRuntime.GetMaster(player.Realm);
             BountyDifficulty difficulty = BountyMasterRuntime.TakeOfferedDifficulty(player);
+            ushort zoneId = BountyMasterRuntime.TakeOfferedZone(player);
+            string eventId = BountyMasterRuntime.TakeOfferedEvent(player);
+            QuestGiver = BountyMasterRuntime.GetMasterForZone(zoneId) ?? BountyMasterRuntime.GetMaster(player.Realm);
             string previousName = GetLastCompletedTargetName(player);
-            if (!Assign(player.Level, false, previousName, difficulty))
+            if (eventId != null ? !AssignEvent(eventId) : zoneId == 0 || !AssignZone(zoneId, difficulty, previousName, false))
             {
-                string kind = difficulty == BountyDifficulty.Normal || player.Level >= 50
-                    ? "bounty"
-                    : $"{BountyDifficultyRules.DisplayName(difficulty).ToLowerInvariant()} bounty";
-                player.Out.SendMessage(string.IsNullOrWhiteSpace(previousName)
-                        ? $"No safe {kind} could be selected right now. Please speak to the Bounty Master again."
-                        : $"No different monster is eligible for a {kind} at this level right now. Your last hunt will not be assigned twice in a row.",
+                string kind = $"{ZoneBounties.SizeName(difficulty).ToLowerInvariant()} bounty";
+                player.Out.SendMessage($"No {kind} is open in this zone right now. Please speak to the Bounty Master again in a little while.",
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
                 AbortQuest();
                 return;
             }
 
             base.OnQuestAssigned(player);
-            string label = Difficulty == BountyDifficulty.Normal
-                ? "New bounty"
-                : $"New {BountyDifficultyRules.DisplayName(Difficulty).ToLowerInvariant()} bounty";
+            string label = $"New {ZoneBounties.SizeName(Difficulty).ToLowerInvariant()} bounty";
             player.Out.SendMessage($"{label}: {Target.Name} in {Target.ZoneName}. {RequiredKills} kill{(RequiredKills == 1 ? "" : "s")} required.",
                 eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
         }
@@ -223,11 +277,16 @@ namespace DOL.GS.Quests
             // Any monster with the bounty target's name counts, whatever its level or where it stands (owner
             // 2026-10-17: "if I have that bounty any of them should count if the name matches"). The difficulty still
             // decides the target and the number of kills.
+            string eventId = EventId;
             if (e == GameLivingEvent.EnemyKilled && sender == m_questPlayer &&
                 args is EnemyKilledEventArgs killed && killed.Target is GameNPC npc && Step == 1 &&
-                CountsForBounty(Target, npc) && Goals.Count > 0)
+                (eventId != null ? ZoneBounties.CountsForEvent(eventId, npc)
+                    : IsZone ? ZoneBounties.Counts(Target, npc.Name, npc.Realm, npc.CurrentZone?.ID) : CountsForBounty(Target, npc)) &&
+                Goals.Count > 0)
             {
-                Goals[0].Advance();
+                int steps = eventId != null && ZoneBounties.IsEventBoss(npc) ? 3 : 1;
+                for (int i = 0; i < steps && !Goals[0].IsAchieved; i++)
+                    Goals[0].Advance();
                 if (Goals[0].IsAchieved)
                 {
                     Step = 2;
@@ -254,7 +313,7 @@ namespace DOL.GS.Quests
             if (m_questPlayer == null || Step is not (1 or 2))
                 return false;
 
-            if (AssignedLevel == 50)
+            if (!IsZone && AssignedLevel == 50)
                 difficulty = BountyDifficulty.Normal;
             else if (difficulty > Difficulty)
             {
@@ -264,7 +323,7 @@ namespace DOL.GS.Quests
             }
 
             BountyTargetCandidate previous = Target;
-            if (!Assign(AssignedLevel, true, previous?.Name, difficulty))
+            if (IsZone ? !AssignZone(ZoneId, difficulty, previous?.Name, true) : !Assign(AssignedLevel, true, previous?.Name, difficulty))
             {
                 m_questPlayer.Out.SendMessage("No different monster is available for this level right now. Your bounty and reward are unchanged.",
                     eChatType.CT_System, eChatLoc.CL_SystemWindow);
@@ -272,7 +331,9 @@ namespace DOL.GS.Quests
             }
 
             int bulbs = BountyDifficultyRules.Bulbs(Difficulty, true);
-            string rerollReward = AssignedLevel == 50
+            string rerollReward = IsZone
+                ? $"This {ZoneBounties.SizeName(Difficulty).ToLowerInvariant()} hunt now pays half: {bulbs} XP bulb{(bulbs == 1 ? "" : "s")} and {ZoneBounties.Marks(Difficulty, true)} Marks of Valor."
+                : AssignedLevel == 50
                 ? "The level-50 gold and gear reward is unchanged."
                 : $"This {BountyDifficultyRules.DisplayName(Difficulty).ToLowerInvariant()} contract now pays {bulbs} XP bulb{(bulbs == 1 ? "" : "s")} at its assigned level.";
             m_questPlayer.Out.SendMessage($"New target: {Target.Name} in {Target.ZoneName}. {rerollReward}",
@@ -283,7 +344,7 @@ namespace DOL.GS.Quests
         /// <summary>An outleveled contract may be replaced for free, including after a reroll.</summary>
         public bool RefreshOutleveled()
         {
-            if (m_questPlayer == null || m_questPlayer.Level <= AssignedLevel || Step is not (1 or 2))
+            if (IsZone || m_questPlayer == null || m_questPlayer.Level <= AssignedLevel || Step is not (1 or 2))
                 return false;
 
             BountyDifficulty difficulty = m_questPlayer.Level >= 50 ? BountyDifficulty.Normal : Difficulty;
@@ -329,7 +390,7 @@ namespace DOL.GS.Quests
         /// </summary>
         public void NormalizeLegacyOnLogin()
         {
-            if (m_questPlayer == null || !IsLegacyFormat || Step is not (1 or 2))
+            if (IsZone || m_questPlayer == null || !IsLegacyFormat || Step is not (1 or 2))
                 return;
 
             if (AssignedLevel is < 1 or >= 50)
@@ -380,7 +441,15 @@ namespace DOL.GS.Quests
                     return false;
 
                 string completedTargetName = Target?.Name;
-                BountyRewardResult reward = BountyRewardService.Grant(m_questPlayer, AssignedLevel, WasRerolled, Difficulty);
+                bool zone = IsZone;
+                ushort zoneId = ZoneId;
+                string eventId = EventId;
+                BountyDifficulty size = Difficulty;
+                // Honoured with the bounty's faction (the Bounty Master's town, or the event's): an extra item, half again the Marks
+                bool honoured = zone && DOL.GS.Reputation.ReputationService.BountyHonoured(m_questPlayer, zoneId, eventId);
+                BountyRewardResult reward = zone
+                    ? BountyRewardService.GrantZone(m_questPlayer, Difficulty, WasRerolled, honoured)
+                    : BountyRewardService.Grant(m_questPlayer, AssignedLevel, WasRerolled, Difficulty);
                 if (!reward.Granted)
                 {
                     m_questPlayer.Out.SendMessage(reward.Reason ?? "Your bounty reward cannot be delivered yet.",
@@ -396,10 +465,20 @@ namespace DOL.GS.Quests
                 m_questPlayer.RemoveFinishedQuest(this);
                 DeleteFromDatabase();
                 RememberCompletedTarget(m_questPlayer, completedTargetName);
-                m_questPlayer.Out.SendMessage(AssignedLevel == 50
+                string marks = reward.MarksGranted > 0 ? $" and {reward.MarksGranted} Mark{(reward.MarksGranted == 1 ? "" : "s")} of Valor" : string.Empty;
+                m_questPlayer.Out.SendMessage(zone
+                        ? reward.GoldGranted > 0
+                            ? $"Bounty paid: {reward.GoldGranted} gold, {reward.ItemCount} class item(s){marks}."
+                            : $"Bounty paid: {reward.ExperienceGranted:N0} experience, {reward.ItemCount} class item(s){marks}."
+                        : AssignedLevel == 50
                         ? $"Bounty paid: 100 gold and {reward.ItemCount} exceptional class item(s)."
                         : $"Bounty paid: {reward.ExperienceGranted:N0} experience and {reward.ItemCount} class item(s).",
                     eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                if (honoured)
+                    m_questPlayer.Out.SendMessage("Your standing paid too: an extra item and half again the Marks.",
+                        eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+                if (zone)
+                    DOL.GS.Reputation.ReputationService.OnBounty(m_questPlayer, zoneId, eventId, size);
                 BountyMasterRuntime.UpdateIndicator(m_questPlayer);
                 return true;
             }
@@ -433,6 +512,121 @@ namespace DOL.GS.Quests
                 return Array.Empty<BountyTargetCandidate>();
 
             return BountyTargetCatalog.ExcludeMonsterName(pool, previousName);
+        }
+
+        /// <summary>
+        /// A hunt in one zone: the size picks the con tier (ZoneBounties.Pool), the tier the kills. Also swaps an older
+        /// realm-wide contract (free) when a Bounty Master is asked to.
+        /// </summary>
+        public bool AssignZone(ushort zoneId, BountyDifficulty size, string previousName, bool rerolled)
+        {
+            Zone zone = WorldMgr.GetZone(zoneId);
+            if (m_questPlayer == null || zone == null)
+                return false;
+            BountyTargetCandidate[] choices = ZoneBounties.Pool(ZoneBounties.Targets(zone), size, previousName);
+            if (choices.Length == 0)
+                return false;
+
+            BountyTargetCandidate target = choices[Random.Shared.Next(choices.Length)];
+            int required = ZoneBounties.KillsFor(size, target.Tier, target.SpawnCount);
+
+            BountyMapMarkers.Clear(m_questPlayer);
+            lock (m_customProperties)
+            {
+                m_customProperties["scope"] = ZoneBounties.Scope;
+                m_customProperties.Remove("event");
+                m_customProperties["targetid"] = Safe(target.RepresentativeMobId);
+                m_customProperties["targetname"] = Safe(target.Name);
+                m_customProperties["targetlevel"] = "0";
+                m_customProperties["tier"] = target.Tier.ToString();
+                m_customProperties["assigned"] = Math.Clamp((int)m_questPlayer.Level, 1, 50).ToString();
+                m_customProperties["region"] = target.RegionId.ToString();
+                m_customProperties["zone"] = target.ZoneId.ToString();
+                m_customProperties["zonename"] = Safe(target.ZoneName);
+                m_customProperties["x"] = target.X.ToString();
+                m_customProperties["y"] = target.Y.ToString();
+                m_customProperties["z"] = target.Z.ToString();
+                m_customProperties["dungeon"] = "0";
+                m_customProperties["epic"] = "0";
+                m_customProperties["required"] = required.ToString();
+                m_customProperties["rerolled"] = rerolled || WasRerolled ? "1" : "0";
+                m_customProperties["difficulty"] = BountyDifficultyRules.Save(size);
+                m_customProperties["format"] = CurrentFormat;
+                m_customProperties["goal1Current"] = "0";
+                SaveCustomProperties();
+            }
+
+            _targetCache = target;
+            Step = 1;
+            RestoreGoal();
+            ShowMarker();
+            m_questPlayer.Out.SendQuestUpdate(this);
+            BountyMasterRuntime.UpdateIndicator(m_questPlayer);
+            return true;
+        }
+
+        /// <summary>An event bounty: help with a dynamic event running in the master's zone - any 6 of its monsters
+        /// (a boss counts 3), paid as a small group's hunt at your level (owner 2026-11-21, the plan's phase 3: the
+        /// Bounty Master "follows what's live").</summary>
+        public bool AssignEvent(string chainId)
+        {
+            BountyTargetCandidate t = ZoneBounties.EventTarget(chainId);
+            if (m_questPlayer == null || t == null)
+                return false;
+            BountyMapMarkers.Clear(m_questPlayer);
+            lock (m_customProperties)
+            {
+                m_customProperties["scope"] = ZoneBounties.Scope;
+                m_customProperties["event"] = Safe(chainId);
+                m_customProperties["targetid"] = Safe(chainId);
+                m_customProperties["targetname"] = Safe(t.Name);
+                m_customProperties["targetlevel"] = "0";
+                m_customProperties["tier"] = MonsterTiers.Yellow.ToString();
+                m_customProperties["assigned"] = Math.Clamp((int)m_questPlayer.Level, 1, 50).ToString();
+                m_customProperties["region"] = t.RegionId.ToString();
+                m_customProperties["zone"] = t.ZoneId.ToString();
+                m_customProperties["zonename"] = Safe(t.ZoneName);
+                m_customProperties["x"] = t.X.ToString();
+                m_customProperties["y"] = t.Y.ToString();
+                m_customProperties["z"] = t.Z.ToString();
+                m_customProperties["dungeon"] = "0";
+                m_customProperties["epic"] = "0";
+                m_customProperties["required"] = ZoneBounties.EventKills.ToString();
+                m_customProperties["rerolled"] = "0";
+                m_customProperties["difficulty"] = BountyDifficultyRules.Save(BountyDifficulty.Hard);
+                m_customProperties["format"] = CurrentFormat;
+                m_customProperties["goal1Current"] = "0";
+                SaveCustomProperties();
+            }
+            _targetCache = t;
+            Step = 1;
+            RestoreGoal();
+            ShowMarker();
+            m_questPlayer.Out.SendQuestUpdate(this);
+            BountyMasterRuntime.UpdateIndicator(m_questPlayer);
+            return true;
+        }
+
+        /// <summary>Swaps an older realm-wide contract, free, for a hunt in this master's zone.</summary>
+        public bool SwapToZone(ushort zoneId, BountyDifficulty size)
+        {
+            if (!CanSwapToZone)
+                return false;
+            bool keepHalf = WasRerolled;
+            lock (m_customProperties)
+                m_customProperties["rerolled"] = "0";
+            if (!AssignZone(zoneId, size, Target?.Name, keepHalf))
+            {
+                lock (m_customProperties)
+                    m_customProperties["rerolled"] = keepHalf ? "1" : "0";
+                m_questPlayer?.Out.SendMessage("No hunt of that size is open here right now. Your old bounty remains active.",
+                    eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return false;
+            }
+            m_questPlayer.Out.SendMessage($"Your old contract has been swapped without penalty. New {ZoneBounties.SizeName(Difficulty).ToLowerInvariant()} hunt: " +
+                $"{Target.Name} in {Target.ZoneName}, {RequiredKills} kill{(RequiredKills == 1 ? "" : "s")}.",
+                eChatType.CT_Important, eChatLoc.CL_SystemWindow);
+            return true;
         }
 
         private bool Assign(byte level, bool rerolled, string previousName,

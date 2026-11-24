@@ -1,0 +1,1104 @@
+{
+ "zone": 201,
+ "name": "Silvermine Mountains",
+ "rating": "wild",
+ "themes": [
+  "Miners' towns (Howth, Ardagh)",
+  "Walking stones",
+  "Spraggon Den",
+  "High Pastures (badgers, boulders)",
+  "Sheevra Mines",
+  "Druid's Hollow (rogue druids, luricaduanes)",
+  "Fallen Camp (gray spectres, the dead)",
+  "The Heights (deamhan)"
+ ],
+ "notes": "Zone brief 2026-11-22 (Zone Reviews, Silvermine tab), owner's notes: Wild (agreed), keep near 800 monsters, a few greens near Howth (a starting zone). The lake's little island is kept for the old blademaster. Coordinates are zone-local units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Scar-nose": "orange",
+  "Tracker Tremain": "yellow",
+  "Sargoth": "orange",
+  "Boss": "orange",
+  "Nictol the Unkempt": "orange",
+  "Ualtar": "yellow",
+  "Sapper": "yellow",
+  "Scuttle": "yellow",
+  "Stinky": "blue",
+  "Seireadan": "yellow",
+  "Rolling Stone": "orange",
+  "Pebble": "yellow"
+ },
+ "factions": {
+  "bandits": {
+   "id": 9221,
+   "aggro": 85
+  },
+  "beetles": {
+   "id": 9222,
+   "aggro": 40
+  },
+  "lucragans": {
+   "id": 9223,
+   "aggro": 40
+  },
+  "ratboys": {
+   "id": 9224,
+   "aggro": 60
+  },
+  "stones": {
+   "id": 9225,
+   "aggro": 50
+  },
+  "spraggons": {
+   "id": 9226,
+   "aggro": 50
+  },
+  "sheevra": {
+   "id": 9227,
+   "aggro": 90
+  },
+  "hollow": {
+   "id": 9228,
+   "aggro": 70
+  },
+  "dead": {
+   "id": 9229,
+   "aggro": 85
+  },
+  "deamhan": {
+   "id": 9230,
+   "aggro": 95
+  }
+ },
+ "members": {
+  "badger cub": {
+   "from": "badger cub",
+   "tier": "grey",
+   "roam": 300
+  },
+  "annoying lucradan": {
+   "from": "annoying lucradan",
+   "tier": "grey",
+   "roam": 300
+  },
+  "water beetle larva": {
+   "from": "water beetle larva",
+   "tier": "grey",
+   "roam": 250
+  },
+  "large frog": {
+   "from": "large frog",
+   "tier": "green",
+   "roam": 300
+  },
+  "hill toad": {
+   "from": "hill toad",
+   "tier": "green",
+   "roam": 300
+  },
+  "feccan": {
+   "from": "feccan",
+   "tier": "green",
+   "roam": 300
+  },
+  "mudman": {
+   "from": "mudman",
+   "tier": "green",
+   "roam": 300
+  },
+  "water beetle collector": {
+   "from": "water beetle collector",
+   "tier": "green",
+   "faction": "beetles",
+   "aggro": [
+    0,
+    0
+   ],
+   "roam": 300
+  },
+  "water beetle": {
+   "from": "water beetle",
+   "tier": "blue",
+   "faction": "beetles",
+   "aggro": [
+    0,
+    0
+   ],
+   "roam": 300
+  },
+  "river beetle drone": {
+   "from": "river beetle drone",
+   "tier": "blue",
+   "faction": "beetles",
+   "aggro": [
+    30,
+    350
+   ],
+   "roam": 300
+  },
+  "feckless lucragan": {
+   "from": "feckless lucragan",
+   "tier": "blue",
+   "faction": "lucragans",
+   "aggro": [
+    50,
+    450
+   ]
+  },
+  "wild crouch": {
+   "from": "wild crouch",
+   "tier": "blue",
+   "roam": 400
+  },
+  "bodachan sabhaill": {
+   "from": "bodachan sabhaill",
+   "tier": "blue",
+   "roam": 300
+  },
+  "large eirebug": {
+   "from": "large eirebug",
+   "tier": "blue",
+   "roam": 400
+  },
+  "rat boy": {
+   "from": "rat boy",
+   "tier": "blue",
+   "faction": "ratboys",
+   "aggro": [
+    60,
+    450
+   ]
+  },
+  "villainous youth": {
+   "from": "villainous youth",
+   "tier": "blue",
+   "faction": "bandits",
+   "aggro": [
+    60,
+    450
+   ]
+  },
+  "rowdy": {
+   "from": "rowdy",
+   "tier": "yellow",
+   "faction": "bandits",
+   "aggro": [
+    60,
+    450
+   ]
+  },
+  "gang lookout": {
+   "from": "rowdy",
+   "name": "road-gang lookout",
+   "tier": "yellow",
+   "faction": "bandits",
+   "aggro": [
+    80,
+    600
+   ],
+   "size": 1.1,
+   "guards": {
+    "villainous youth": 2
+   }
+  },
+  "small walking rock": {
+   "from": "small walking rock",
+   "tier": "blue",
+   "faction": "stones",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "small walking boulder": {
+   "from": "small walking boulder",
+   "tier": "yellow",
+   "faction": "stones",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "walking rock": {
+   "from": "walking rock",
+   "tier": "yellow",
+   "faction": "stones",
+   "aggro": [
+    40,
+    400
+   ],
+   "roam": 200
+  },
+  "stone sheerie": {
+   "from": "stone sheerie",
+   "tier": "yellow",
+   "faction": "stones",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 300
+  },
+  "rock clipper": {
+   "from": "rock clipper",
+   "tier": "orange",
+   "faction": "stones",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 150
+  },
+  "spraggon": {
+   "from": "spraggon",
+   "tier": "blue",
+   "faction": "spraggons",
+   "aggro": [
+    50,
+    450
+   ]
+  },
+  "spraggonite": {
+   "from": "spraggonite",
+   "tier": "blue",
+   "faction": "spraggons",
+   "aggro": [
+    50,
+    450
+   ]
+  },
+  "spraggonilt": {
+   "from": "spraggonilt",
+   "tier": "yellow",
+   "faction": "spraggons",
+   "aggro": [
+    50,
+    450
+   ]
+  },
+  "spraggonoll": {
+   "from": "spraggonoll",
+   "tier": "yellow",
+   "faction": "spraggons",
+   "aggro": [
+    50,
+    450
+   ]
+  },
+  "spraggonet": {
+   "from": "spraggonet",
+   "tier": "yellow",
+   "faction": "spraggons",
+   "aggro": [
+    50,
+    450
+   ]
+  },
+  "spraggon tinker": {
+   "from": "spraggonite",
+   "name": "spraggon tinker",
+   "tier": "orange",
+   "faction": "spraggons",
+   "aggro": [
+    60,
+    500
+   ],
+   "size": 1.15,
+   "guards": {
+    "spraggonilt": 2
+   }
+  },
+  "silvermine badger": {
+   "from": "silvermine badger",
+   "tier": "yellow",
+   "roam": 400
+  },
+  "badger boar": {
+   "from": "silvermine badger",
+   "name": "silvermine badger boar",
+   "tier": "orange",
+   "size": 1.25,
+   "roam": 300,
+   "guards": {
+    "silvermine badger": 2
+   }
+  },
+  "sheevra miner": {
+   "from": "sheevra miner",
+   "tier": "blue",
+   "faction": "sheevra",
+   "aggro": [
+    70,
+    500
+   ]
+  },
+  "sheevra swordsman": {
+   "from": "sheevra swordsman",
+   "tier": "yellow",
+   "faction": "sheevra",
+   "aggro": [
+    85,
+    550
+   ]
+  },
+  "sheevra archer": {
+   "from": "sheevra archer",
+   "tier": "yellow",
+   "faction": "sheevra",
+   "aggro": [
+    85,
+    600
+   ]
+  },
+  "sheevra skirmisher": {
+   "from": "sheevra skirmisher",
+   "tier": "yellow",
+   "faction": "sheevra",
+   "aggro": [
+    85,
+    550
+   ]
+  },
+  "sheevra chieftain": {
+   "from": "sheevra chieftain",
+   "tier": "orange",
+   "faction": "sheevra",
+   "aggro": [
+    90,
+    550
+   ],
+   "guards": {
+    "sheevra swordsman": 2
+   }
+  },
+  "luricaduane": {
+   "from": "luricaduane",
+   "tier": "blue",
+   "faction": "hollow",
+   "aggro": [
+    50,
+    450
+   ]
+  },
+  "enchanted luricaduane": {
+   "from": "enchanted luricaduane",
+   "tier": "yellow",
+   "faction": "hollow",
+   "aggro": [
+    60,
+    450
+   ]
+  },
+  "rogue druid": {
+   "from": "druid",
+   "name": "rogue druid",
+   "tier": "yellow",
+   "faction": "hollow",
+   "aggro": [
+    80,
+    500
+   ]
+  },
+  "cluricaun trip": {
+   "from": "cluricaun trip",
+   "tier": "blue",
+   "aggro": [
+    50,
+    400
+   ]
+  },
+  "Moon-Silver Broker": {
+   "from": "druid",
+   "name": "the Moon-Silver Broker",
+   "tier": "red",
+   "faction": "hollow",
+   "size": 1.2,
+   "guards": {
+    "rogue druid": 2
+   }
+  },
+  "gray spectre": {
+   "from": "gray spectre",
+   "tier": "yellow",
+   "faction": "dead",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "skeletal pawn": {
+   "from": "skeletal pawn",
+   "name": "miner's bones",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 150
+  },
+  "dew sheerie": {
+   "from": "dew sheerie",
+   "tier": "blue",
+   "roam": 300
+  },
+  "deamhan creig": {
+   "from": "deamhan creig",
+   "tier": "yellow",
+   "faction": "deamhan",
+   "aggro": [
+    90,
+    500
+   ],
+   "roam": 200
+  },
+  "deamhan aeir": {
+   "from": "deamhan aeir",
+   "tier": "orange",
+   "faction": "deamhan",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 400
+  },
+  "mountain mephit": {
+   "from": "mountain mephit",
+   "tier": "orange",
+   "faction": "deamhan",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 300
+  },
+  "Thing in the Vein": {
+   "from": "deamhan creig",
+   "name": "the Thing in the Vein",
+   "tier": "purple",
+   "faction": "deamhan",
+   "size": 1.8,
+   "roam": 60,
+   "guards": {
+    "deamhan creig": 3
+   }
+  },
+  "Stormlord": {
+   "from": "deamhan aeir",
+   "name": "Stormlord of the Heights",
+   "tier": "red",
+   "faction": "deamhan",
+   "size": 1.4,
+   "guards": {
+    "deamhan aeir": 2
+   }
+  }
+ },
+ "sites": [
+  {
+   "id": "ardagh_fields",
+   "kind": "wildlife",
+   "area": [
+    16800,
+    38000,
+    27600,
+    50000
+   ],
+   "spawn": {
+    "large frog": 18,
+    "hill toad": 14,
+    "feccan": 18,
+    "badger cub": 9,
+    "annoying lucradan": 9
+   },
+   "spacing": 280
+  },
+  {
+   "id": "ardagh_south",
+   "kind": "wildlife",
+   "area": [
+    16000,
+    48000,
+    28000,
+    53200
+   ],
+   "spawn": {
+    "mudman": 11,
+    "large frog": 7,
+    "feccan": 7,
+    "wild crouch": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "rat_stores",
+   "kind": "camp",
+   "at": [
+    25600,
+    46400
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "rat boy": 5
+   }
+  },
+  {
+   "id": "rat_warren",
+   "kind": "camp",
+   "at": [
+    18000,
+    50000
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "rat boy": 5
+   }
+  },
+  {
+   "id": "howth_road",
+   "kind": "wildlife",
+   "area": [
+    24000,
+    4800,
+    36000,
+    16800
+   ],
+   "spawn": {
+    "feckless lucragan": 14,
+    "water beetle collector": 9,
+    "water beetle": 9,
+    "wild crouch": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "north_shore",
+   "kind": "wildlife",
+   "area": [
+    28000,
+    15200,
+    36000,
+    19200
+   ],
+   "spawn": {
+    "river beetle drone": 11,
+    "water beetle": 7,
+    "water beetle larva": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "stone_fields",
+   "kind": "wildlife",
+   "area": [
+    12800,
+    14000,
+    27200,
+    36000
+   ],
+   "spawn": {
+    "small walking rock": 32,
+    "bodachan sabhaill": 18,
+    "hill toad": 11,
+    "wild crouch": 9
+   },
+   "spacing": 280
+  },
+  {
+   "id": "stone_ring_0",
+   "kind": "camp",
+   "at": [
+    16800,
+    20000
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "small walking rock": 4,
+    "small walking boulder": 2
+   },
+   "time": "night"
+  },
+  {
+   "id": "stone_ring_1",
+   "kind": "camp",
+   "at": [
+    24000,
+    31200
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "small walking rock": 4,
+    "small walking boulder": 2
+   },
+   "time": "night"
+  },
+  {
+   "id": "stone_ring_2",
+   "kind": "camp",
+   "at": [
+    15200,
+    30400
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "small walking rock": 4,
+    "small walking boulder": 2
+   },
+   "time": "night"
+  },
+  {
+   "id": "stone_ring_3",
+   "kind": "camp",
+   "at": [
+    22400,
+    16800
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "small walking rock": 4,
+    "small walking boulder": 2
+   },
+   "time": "night"
+  },
+  {
+   "id": "gang_camp",
+   "kind": "camp",
+   "at": [
+    16800,
+    25600
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "villainous youth": 5,
+    "rowdy": 3,
+    "gang lookout": 1
+   }
+  },
+  {
+   "id": "gang_road",
+   "kind": "patrol",
+   "route": [
+    [
+     16800,
+     25600
+    ],
+    [
+     20000,
+     30400
+    ],
+    [
+     22400,
+     38400
+    ],
+    [
+     20000,
+     30400
+    ]
+   ],
+   "spawn": {
+    "villainous youth": 2,
+    "rowdy": 1
+   }
+  },
+  {
+   "id": "spraggon_burrows",
+   "kind": "wildlife",
+   "area": [
+    4000,
+    6000,
+    16000,
+    28000
+   ],
+   "spawn": {
+    "spraggon": 22,
+    "spraggonite": 14,
+    "spraggonilt": 11,
+    "spraggonoll": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "den_mouth",
+   "kind": "camp",
+   "at": [
+    6400,
+    20800
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "spraggonilt": 4,
+    "spraggonoll": 3,
+    "spraggon tinker": 1
+   }
+  },
+  {
+   "id": "tool_cache",
+   "kind": "camp",
+   "at": [
+    10800,
+    9200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "spraggonite": 4,
+    "spraggonoll": 2
+   }
+  },
+  {
+   "id": "west_burrow",
+   "kind": "camp",
+   "at": [
+    8000,
+    15200
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "spraggon": 4,
+    "spraggonilt": 2
+   }
+  },
+  {
+   "id": "high_pastures",
+   "kind": "wildlife",
+   "area": [
+    46000,
+    6000,
+    65200,
+    24000
+   ],
+   "spawn": {
+    "silvermine badger": 32,
+    "walking rock": 18,
+    "stone sheerie": 9,
+    "spraggonet": 14
+   },
+   "spacing": 280
+  },
+  {
+   "id": "badger_sett",
+   "kind": "camp",
+   "at": [
+    56800,
+    13200
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "silvermine badger": 3,
+    "badger boar": 1
+   }
+  },
+  {
+   "id": "boulder_field",
+   "kind": "camp",
+   "at": [
+    50000,
+    16800
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "walking rock": 5,
+    "rock clipper": 1
+   }
+  },
+  {
+   "id": "spraggonet_rocks",
+   "kind": "camp",
+   "at": [
+    58000,
+    18800
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "spraggonet": 5
+   }
+  },
+  {
+   "id": "mine_slopes",
+   "kind": "wildlife",
+   "area": [
+    42000,
+    28000,
+    60000,
+    44000
+   ],
+   "spawn": {
+    "sheevra miner": 25,
+    "sheevra skirmisher": 14,
+    "sheevra archer": 14,
+    "stone sheerie": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "mine_huts",
+   "kind": "camp",
+   "at": [
+    56000,
+    28000
+   ],
+   "r": 560,
+   "respawn": 300,
+   "spawn": {
+    "sheevra swordsman": 6,
+    "sheevra archer": 3,
+    "sheevra chieftain": 1
+   }
+  },
+  {
+   "id": "mine_workings",
+   "kind": "camp",
+   "at": [
+    56800,
+    43600
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "sheevra miner": 6,
+    "sheevra swordsman": 3
+   }
+  },
+  {
+   "id": "spoil_heaps",
+   "kind": "camp",
+   "at": [
+    50000,
+    35200
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "sheevra archer": 4,
+    "sheevra skirmisher": 3
+   }
+  },
+  {
+   "id": "lake_camp",
+   "kind": "camp",
+   "at": [
+    44800,
+    40800
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "sheevra swordsman": 4,
+    "sheevra skirmisher": 2,
+    "sheevra miner": 3
+   }
+  },
+  {
+   "id": "dergal_goes",
+   "kind": "clear",
+   "at": [
+    59160,
+    27880
+   ],
+   "r": 600,
+   "names": [
+    "Chieftain Dergal"
+   ]
+  },
+  {
+   "id": "camlin_goes",
+   "kind": "clear",
+   "at": [
+    60880,
+    24800
+   ],
+   "r": 600,
+   "names": [
+    "Overseer Camlin"
+   ]
+  },
+  {
+   "id": "mine_road",
+   "kind": "patrol",
+   "route": [
+    [
+     56000,
+     28000
+    ],
+    [
+     50000,
+     35200
+    ],
+    [
+     44800,
+     40800
+    ],
+    [
+     50000,
+     35200
+    ]
+   ],
+   "spawn": {
+    "sheevra swordsman": 2,
+    "sheevra archer": 1
+   }
+  },
+  {
+   "id": "hollow",
+   "kind": "wildlife",
+   "area": [
+    27200,
+    54000,
+    40000,
+    65200
+   ],
+   "spawn": {
+    "luricaduane": 25,
+    "enchanted luricaduane": 11,
+    "cluricaun trip": 11
+   },
+   "spacing": 280
+  },
+  {
+   "id": "hollow_west",
+   "kind": "wildlife",
+   "area": [
+    10000,
+    53600,
+    27200,
+    65200
+   ],
+   "spawn": {
+    "luricaduane": 18,
+    "mudman": 7,
+    "water beetle larva": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "druid_stones",
+   "kind": "camp",
+   "at": [
+    32800,
+    58800
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "rogue druid": 5,
+    "enchanted luricaduane": 2
+   }
+  },
+  {
+   "id": "broker",
+   "kind": "camp",
+   "at": [
+    36000,
+    62400
+   ],
+   "r": 320,
+   "respawn": 1500,
+   "spawn": {
+    "Moon-Silver Broker": 1
+   }
+  },
+  {
+   "id": "fallen_camp",
+   "kind": "wildlife",
+   "area": [
+    54000,
+    52000,
+    65200,
+    65200
+   ],
+   "spawn": {
+    "gray spectre": 36,
+    "skeletal pawn": 22,
+    "mountain mephit": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "heights",
+   "kind": "wildlife",
+   "area": [
+    42000,
+    48000,
+    54000,
+    65200
+   ],
+   "spawn": {
+    "deamhan creig": 14,
+    "deamhan aeir": 18,
+    "large eirebug": 9,
+    "dew sheerie": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "miners_tents",
+   "kind": "camp",
+   "at": [
+    61200,
+    60000
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "gray spectre": 5,
+    "skeletal pawn": 4
+   }
+  },
+  {
+   "id": "collapsed_shaft",
+   "kind": "camp",
+   "at": [
+    52000,
+    50400
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "deamhan creig": 4,
+    "mountain mephit": 2
+   }
+  },
+  {
+   "id": "sealed_vein",
+   "kind": "camp",
+   "at": [
+    54000,
+    53200
+   ],
+   "r": 320,
+   "respawn": 3600,
+   "spawn": {
+    "Thing in the Vein": 1
+   }
+  },
+  {
+   "id": "storm_peak",
+   "kind": "camp",
+   "at": [
+    44400,
+    56000
+   ],
+   "r": 400,
+   "respawn": 1800,
+   "spawn": {
+    "Stormlord": 1
+   },
+   "time": "night"
+  }
+ ]
+}

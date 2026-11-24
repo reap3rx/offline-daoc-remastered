@@ -23,6 +23,41 @@ namespace DOL.GS
 
         public const string MapId = "loot_treasure_map";
         public const string KitTokenId = "valor_companion_kit";
+        /// <summary>The Draught of Restoration (owner 2026-11-23: "Marks of Valor merchant/chest loot drops: a constitution loss
+        /// cure potion (so you can heal your lost con from deaths in the field if you have one.)"): it gives back all the
+        /// constitution your deaths took, as a healer does, wherever you are.</summary>
+        public const string RestorationId = "valor_restoration_draught";
+
+        public static DbItemTemplate RestorationTemplate() => GameServer.Database.FindObjectByKey<DbItemTemplate>(RestorationId);
+
+        /// <summary>Makes the draught's template once (from a novelty potion's bottle).</summary>
+        public static void EnsureRestoration()
+        {
+            if (RestorationTemplate() != null || GameServer.Database.FindObjectByKey<DbItemTemplate>("novelty_glow") is not DbItemTemplate from)
+                return;
+            var t = (DbItemTemplate) from.Clone();
+            t.Id_nb = RestorationId;
+            t.Name = "Draught of Restoration";
+            t.Price = 6;
+            t.Description = "Gives back all the constitution your deaths have taken, as a healer would - wherever you are.";
+            t.AllowAdd = true;
+            GameServer.Database.AddObject(t);
+        }
+
+        static void Restore(GamePlayer p, DbInventoryItem item)
+        {
+            if (p.TotalConstitutionLostAtDeath <= 0)
+            {
+                p.Out.SendMessage("You have lost no constitution to restore.", eChatType.CT_System, eChatLoc.CL_SystemWindow);
+                return;
+            }
+            int back = p.TotalConstitutionLostAtDeath;
+            p.TotalConstitutionLostAtDeath = 0;
+            p.Inventory.RemoveCountFromStack(item, 1);
+            p.Emote(eEmote.Drink);
+            p.Out.SendCharStatsUpdate();
+            p.Out.SendMessage($"Warmth runs through you: {back} constitution restored.", eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+        }
         public const string HeirloomMark = "Heirloom";
 
         /// <summary>GamePlayer.UseSlot: one of these used. True when it was (used, or refused with a reason).</summary>
@@ -49,7 +84,12 @@ namespace DOL.GS
                     p.Inventory.RemoveCountFromStack(item, 1);
                 return true;
             }
-            return NoveltyPotions.TryUse(p, item);
+            if (item.Id_nb == RestorationId)
+            {
+                Restore(p, item);
+                return true;
+            }
+            return EasterEggs.ZoneEggs.TryUse(p, item) || NoveltyPotions.TryUse(p, item);
         }
 
         // ---------------------------------------------------------------- dyes

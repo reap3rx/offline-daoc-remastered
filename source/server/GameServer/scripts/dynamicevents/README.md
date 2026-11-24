@@ -129,3 +129,29 @@ nearest monster and recovering in between (`AutonomousWorldBotController.Refresh
 
 Damage to the event's monsters and kills count. Gold: at least half the best share; silver: at least 15%; bronze:
 anyone who took part or stood in the area for 15 s. Gold gets the full reward, silver 70%, bronze 40%.
+
+## Sieges (2026-11-22: Dergan Island)
+
+A zone's big objective is a `"siege"` block in its events file (ZoneSiege.cs), first used for Lough Derg's Dergan
+Island (the Lough Derg plan, Phase 6):
+
+- **Resolve.** The zone's chains won (`feeds`, else `feed_default`) and its story quests finished (`quests`) fill the
+  people's meter; a stage of a zone chain lost fills the enemy's (`enemy_feeds`, else `enemy_default`), which makes the
+  enemy's own chain (`war_chain`) come oftener and the assault's monsters tougher. Full: the `criers` (story NPC ids)
+  call it in the towns.
+- **The assault** (`assault`): an ordinary chain marked `"manual": true` (no clock starts it) with a giver at the
+  staging camp, there only while the assault is open; it sets out when `min_people` (players and bots, a player among
+  them) are at hand, and room for `bots` of them. Its first stage carries everyone at the giver to `landing`. The
+  island's own monsters (`sites`: zone build sites) are sent away for the fight. Its second stage is a `wards` stage:
+  `wards` (places) and `ward_names`, each with its keeper (`boss`) and `alive` guards; taken when none of them and one
+  of you stand within `ward_radius` m; all of them at once for `hold_s` wins; held ones are pushed back at every
+  `reinforce_s`.
+- **Held:** the sites stay empty, the `camp_npcs` stand (kinds: `marks` - sells `stock` for Marks of Valor, each item
+  at your level, 5% / 10% off at Familiar / Honoured with the siege's `faction`; `coin`; `ferry` - says [cross] to go
+  `to`; `idle`), and the `holdouts` (hostile, respawning) give the bounty master something to send you after.
+- **Raids:** `hold_h` real hours after it's taken, the first of `raids` becomes a disturbance at the camp (only while
+  someone is in the zone; `auto_fail_s` unanswered and it's lost); held off, the next comes `raid_gap_h` later, each
+  harder; after the listed ones, `last_raid` again and again. A raid lost: the place falls, the camp goes, the garrison
+  is back and both meters start over.
+- `/siege` shows it; a GM has `/siege resolve <n> | enemy <n> | open | capture | raid | fall | reset`. The state
+  outlasts a restart (`runtime/server/zone-sieges-state.json`). The new client shows it in the Zone panel (`#SIEGE|`).

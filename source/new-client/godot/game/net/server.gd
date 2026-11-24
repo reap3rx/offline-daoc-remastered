@@ -17,6 +17,9 @@ signal jumped(entry: Dictionary)                    # the server moved you insid
 signal world_entered                                # a character entering the world (its lists come again: LearnedPanel)
 
 var active := false                      # started by the launcher: the server is the game
+var priv_level := 1                      # your account's level: 1 player, 2+ GM (#PRIV from DevMode.cs)
+var can_gm := false                      # the account may switch GM mode in game (/devmode)
+signal priv_changed
 var host := "127.0.0.1"
 var account := ""
 var password := ""
@@ -33,6 +36,7 @@ var no_world := false                    # --no-world (tests only: the quest pro
 										 # no zone viewer, the packets only (tests/quest_driver.gd reads them)
 var init_at := -1000000                  # when PlayerInit went (ticks ms): the server restarts your saved buffs then
 var last_error := ""                     # shown on the character screen (a place this client hasn't built yet)
+var _start_zones := {}
 var classes := {}                        # content/rules/server_classes.json (pipeline/build_server_classes.py)
 var custom_class := true                 # the 0.36b server's Sluaghbinder; --custom-class=off on a 0.36 server (the
                                          # launcher reads the game's classes/enable_sluaghbinder switch)
@@ -442,7 +446,8 @@ func check_name(n: String) -> void:
 
 ## Creates a character on the server: race and class from the create screen, the 30 creation points on the class's
 ## three stats (+10 each - CharacterStatValidator), the figure look kept here (the server stores face bytes only).
-func create_character(realm: String, race_name: String, female: bool, class_id: int, char_name: String, look: Dictionary) -> String:
+func create_character(realm: String, race_name: String, female: bool, class_id: int, char_name: String, look: Dictionary,
+		start := 0) -> String:
 	var race_id := int(RACE_BY_NAME.get(race_name, 0))
 	if race_id == 0:
 		return "Unknown race."
@@ -476,8 +481,18 @@ func create_character(realm: String, race_name: String, female: bool, class_id: 
 	_pending = {"op": "create", "realm": realm, "name": char_name}
 	client.call("CreateCharacter", {"realm": int(REALM_IDS[realm]), "slot": slot, "name": char_name, "face": face,
 			"class_id": class_id, "race": race_id, "gender": 1 if female else 0,
-			"model": int(RACES[race_id][3 if female else 2]), "stats": stats})
+			"model": int(RACES[race_id][3 if female else 2]), "stats": stats, "start": start})
 	return ""
+
+
+## The starting towns a new character of this realm may pick (content/rules/start_zones.json, the server's
+## level_bands.json start_choices in the same order - owner 2026-11-22): [{name, zone, rating, blurb}], the hub first.
+func start_zones(realm: String) -> Array:
+	if _start_zones.is_empty():
+		var j = JSON.parse_string(FileAccess.get_file_as_string("res://content/rules/start_zones.json")) \
+				if FileAccess.file_exists("res://content/rules/start_zones.json") else null
+		_start_zones = j.get("realms", {}) if j is Dictionary else {}
+	return _start_zones.get(str(int(REALM_IDS.get(realm, 0))), [])
 
 
 func delete_character(realm: String, c: Dictionary) -> void:
@@ -644,6 +659,7 @@ func _on_world_inner(kind: String, d: Dictionary) -> void:
 			map_markers[int(d.id)] = Vector4(float(d.region), float(d.x), float(d.y), float(d.z))
 		"map_marker_remove":
 			map_markers.erase(int(d.id))
+			bot_names.erase(int(d.id))
 		"money":
 			on_money(d)
 		"points":
@@ -1196,6 +1212,15 @@ func take_detail(d: Dictionary) -> bool:
 ## The server's map markers (your realm's bots, region units) -> the map's dots: those in the zone you are in, in its
 ## metres, as WorldLink.bot_dots gave the game's own bots.
 var map_markers := {}                    # marker id -> Vector4(region, x, y, z)
+var bot_names := {}                      # a bot marker's id -> the bot's name (the "#BOTN|" line)
+
+
+## The name of the realm bot whose map dot is at p (bot_dots' metres), or "".
+func bot_name_at(p: Vector3) -> String:
+	for id in map_markers:
+		if int(id) < QUEST_MARKERS and _marker_here(map_markers[id]).is_equal_approx(p):
+			return String(bot_names.get(int(id), ""))
+	return ""
 
 
 func bot_dots() -> PackedVector3Array:
@@ -1331,6 +1356,7 @@ func store_cfg(key: String, value: String) -> void:
 ## held - "/channel hold" just before its UseSpell, "/channel release" when the key comes up. The server answers
 ## "#CH|start|quickMs|normalMs|poweredMs|prev|cur|next" (channel = that, with when it started) and "#CH|end|name|how".
 signal channel_changed
+signal channel_ground_release                  # a placed spell's key came up: set the ground target first (zone_viewer)
 var channel := {}
 var channel_input: Variant = null              # the key / button holding it (a keycode, "m<button>", "pad:<name>")
 var channel_last := {}                         # how the last one ended: {name, how, at, stage} (the bar's farewell)
@@ -1348,6 +1374,8 @@ func channel_release(input: Variant = null) -> void:
 	if channel_input == null or (input != null and input != channel_input):
 		return
 	channel_input = null
+	if int(channel.get("ground", 0)) > 0:
+		channel_ground_release.emit()              # (the ground target goes before the release that casts on it)
 	command("/channel release")
 
 
@@ -1355,7 +1383,8 @@ func channel_line(text: String) -> void:
 	var f := text.split("|")
 	if f.size() >= 7 and f[0] == "start":
 		channel = {"start": Time.get_ticks_msec(), "quick": int(f[1]), "normal": int(f[2]), "powered": int(f[3]),
-				"prev": String(f[4]), "cur": String(f[5]), "next": String(f[6]), "dtype": int(f[7]) if f.size() > 7 else 0}
+				"prev": String(f[4]), "cur": String(f[5]), "next": String(f[6]), "dtype": int(f[7]) if f.size() > 7 else 0,
+				"ground": int(f[8]) if f.size() > 8 else 0}       # (a turret: its range - it goes where the reticle points)
 		channel_last = {}
 	elif f.size() >= 1 and f[0] == "end":
 		var how := String(f[2]) if f.size() >= 3 else "fizzle"
@@ -1461,6 +1490,8 @@ func use_entry(id: String, player: Node3D, zone_id: int, target_in_view: bool) -
 	var ac = v.get("action_combat") if v else null
 	if smart:
 		pass
+	elif parts.size() >= 4 and parts[1] == "spell" and _friendly_at_crosshair(int(parts[2]), int(parts[3]), ac):
+		pass                                             # (action combat: the friendly at the crosshair, else you)
 	elif parts.size() >= 4 and parts[1] == "spell" and _heal_target(int(parts[2]), int(parts[3]), player):
 		pass                                             # (a heal: on whoever needs it most - no facing needed)
 	elif ac != null and ac.has_method("before_use"):
@@ -1487,6 +1518,39 @@ func use_entry(id: String, player: Node3D, zone_id: int, target_in_view: bool) -
 ## (as a share of their maximum) within the spell's reach, else you - never anyone outside your group, and no facing
 ## needed. Returns true when the spell was such a heal (its target is now selected).
 const SMART_HEAL_TYPES := ["Heal", "HealOverTime"]
+
+
+## A single-target friendly spell (a heal, a buff - target "Realm", no radius) in action combat or on the controller
+## (owner 2026-11-23, Bugs & Fixes): the friendly nearest the crosshair (an event's people too), else you - not the group's
+## lowest (that's the smart heals' job). True when it was such a spell (its target is now selected).
+func _friendly_at_crosshair(line: int, level: int, ac) -> bool:
+	if ac == null or not bool(ac.get("on")) or not ac.has_method("friendly_at_crosshair"):
+		return false
+	var s := _spell_of(line, level)
+	if s.is_empty() or String(s.get("target", "")) != "Realm" or int(s.get("radius", 0)) != 0:
+		return false
+	var reach := float(s.get("range", 0)) * 0.025
+	if not ac.friendly_at_crosshair(reach if reach > 0.0 else 45.0):
+		var v := viewer()
+		if v and v.has_method("target_self"):
+			v.target_self()
+	return true
+
+
+func _spell_of(line: int, level: int) -> Dictionary:
+	if line < 0 or line >= spell_lines.size():
+		return {}
+	var sp := {}
+	for e in (spell_lines[line].spells as Array):
+		if int(e.get("level", -1)) == level and String(e.get("kind", "spell")) == "spell":
+			sp = e
+			break
+	if sp.is_empty():
+		return {}
+	var s := ClassDb.spell(int(sp.get("id", 0)))
+	if s.is_empty() or String(s.get("name", "")) != String(sp.get("name", "")):
+		s = ClassDb.spell_by_name(String(sp.get("name", "")))
+	return s
 
 
 func _heal_target(line: int, level: int, player: Node3D) -> bool:

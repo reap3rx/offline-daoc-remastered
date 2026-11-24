@@ -26,6 +26,20 @@ const FULL := true
 ## trainer square (180 figures) a view's pose took 14-46 ms on a worker against 0.3 ms on the main thread, and frames
 ## took 400-490 ms; all on the main thread the worst frame was 74 ms (tests/walk_perf.gd, claude-work/livewalk.ps1).
 static var threaded := "--anim-threads" in OS.get_cmdline_user_args()
+
+## CHARACTER DETAIL DISTANCE (Options > Video; owner 2026-11-21: "make that a slider as well ... just like trees and grass.
+## That way we can allow people with different hardware to determine fidelity vs fps loss themselves"): beyond this
+## many metres a character - not your target or your group - is the cheap one whatever the load: posed FAR_POSE_S apart
+## (its skeleton rests between poses), no shadow, no sway, cloak swing, hair or look. Measured 2026-11-21: with ~100
+## characters in view a frame spent 30-40 ms on them, the graphics card 10. DETAIL_FULL (the slider's top): never.
+static var detail_m := 50.0
+const DETAIL_FULL := 300.0
+const FAR_POSE_S := 1.0 / 10.0
+
+
+## Beyond the detail distance (and not the one you're fighting or one of yours: rank 0).
+static func is_far(dist: float, rank_: int) -> bool:
+	return detail_m < DETAIL_FULL and dist > detail_m and rank_ > 0
 static var cam_pos := Vector3.ZERO
 static var cam_planes: Array[Plane] = []
 static var _snap_frame := -1
@@ -163,9 +177,10 @@ func step(delta: float, cam: Camera3D) -> void:
 			_shadow_tick(delta, last_dist)
 			# under load the farther views are posed less often (Perf.pose_from / pose_step; the clip keeps its
 			# speed - the time is carried)
-			var slow := rank >= Perf.pose_from
+			var far := is_far(last_dist, rank)
+			var slow := rank >= Perf.pose_from or far
 			_own_skeleton(slow)
-			if slow and _dt < Perf.pose_step:
+			if slow and _dt < (FAR_POSE_S if far else Perf.pose_step):
 				return
 			var tn := Time.get_ticks_usec()
 			anim.advance(_dt)
@@ -254,7 +269,7 @@ func _shadow_tick(delta: float, dist: float) -> void:
 	if _shadow_check > 0.0 or model == null:
 		return
 	_shadow_check = 0.5 + fmod(float(view.get_instance_id() % 97) * 0.0103, 0.25)   # (no shared RNG from threads)
-	var cast := dist <= Perf.npc_shadow_m
+	var cast := dist <= Perf.npc_shadow_m and not is_far(dist, rank)
 	if cast != _casting_shadow:
 		_casting_shadow = cast
 		_apply_shadow()

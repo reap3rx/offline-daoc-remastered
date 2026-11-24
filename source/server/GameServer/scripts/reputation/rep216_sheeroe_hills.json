@@ -1,0 +1,125 @@
+{
+ "zone": 216,
+ "name": "Sheeroe Hills",
+ "levels": [
+  45,
+  50
+ ],
+ "factions": [
+  {
+   "key": "southern_muster",
+   "name": "the Southern Muster",
+   "short": "the Muster",
+   "kin": [
+    "sentinels_of_ceannai",
+    "aines_circle",
+    "clann_of_alainn_bin",
+    "keeners_of_cullen"
+   ],
+   "titles": [
+    "Friend of the Muster",
+    "Spear of the South",
+    "Lightbreaker"
+   ],
+   "speaker": "sr_maeve",
+   "town": "the Healers' Camp",
+   "kills": [
+    "glimmer",
+    "azure",
+    "elfshot",
+    "subverter",
+    "pale horse",
+    "inquisitor",
+    "warlord",
+    "lightwarden",
+    "champion",
+    "maldahar",
+    "saumer",
+    "venlar",
+    "kelegur",
+    "zeit",
+    "arios",
+    "zanllvi",
+    "orist",
+    "xaquira",
+    "meldun",
+    "mianed",
+    "dsaldor",
+    "coseal",
+    "thror",
+    "cuuldurach"
+   ],
+   "quartermaster": {
+    "name": "Muster-Quartermaster Fearghus",
+    "guild": "the Southern Muster",
+    "model": 328,
+    "anchor": "sr_maeve",
+    "offset": [
+     4,
+     -3
+    ],
+    "greet": "Four halls' stores in one tent. The best of it goes to those the Muster trusts - show me your standing.",
+    "stock": [
+     {
+      "item": "rep216_friend_of_the_muster_s_ring",
+      "rank": "Trusted",
+      "price": 60
+     },
+     {
+      "item": "rep216_muster_marcher_s_belt",
+      "rank": "Trusted",
+      "price": 60
+     },
+     {
+      "item": "rep216_spear_of_the_south_torc",
+      "rank": "Honoured",
+      "price": 110
+     },
+     {
+      "item": "rep216_four_halls_bracer",
+      "rank": "Honoured",
+      "price": 110
+     },
+     {
+      "item": "rep216_mantle_of_the_lightbreaker",
+      "rank": "Legend",
+      "price": 200
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "southern_muster",
+ "event_default": "southern_muster",
+ "quest_default": "southern_muster",
+ "quests": {
+  "elfshot": "southern_muster",
+  "sh_subverters": "southern_muster",
+  "sh_four_notes": "southern_muster",
+  "azure_village": "southern_muster",
+  "sh_pale_pastures": "southern_muster",
+  "sh_young_captain": "southern_muster",
+  "sh_azure_captains": "southern_muster",
+  "sh_lords_west": "southern_muster",
+  "sh_lords_middle": "southern_muster",
+  "sh_lords_keepers": "southern_muster",
+  "sh_venlar": "southern_muster",
+  "sh_answer": "southern_muster",
+  "sh_saumer": "southern_muster",
+  "sh_broken_bargain": "southern_muster"
+ },
+ "events": {
+  "sh_cp1_assault": "southern_muster",
+  "sh_cp2_assault": "southern_muster",
+  "sh_cp3_assault": "southern_muster",
+  "sh_cp4_assault": "southern_muster",
+  "sh_cp1_counter": "southern_muster",
+  "sh_cp2_counter": "southern_muster",
+  "sh_cp3_counter": "southern_muster",
+  "sh_cp4_counter": "southern_muster",
+  "sh_princes_hollow": "southern_muster",
+  "sheeroe_hills_glimmer_wardens": "southern_muster",
+  "sheeroe_hills_hill_beacon": "southern_muster"
+ },
+ "realm": 3
+}

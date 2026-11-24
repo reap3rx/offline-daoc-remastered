@@ -1,933 +1,2737 @@
 {
-  "zone": 203,
-  "region": 200,
-  "name": "Cliffs of Moher",
-  "lore": "The Cliffs of Moher, where the sea-fog hides wraiths and the cliff dwellers hold the high ground above Tir Urphost.",
-  "chains": [
+ "zone": 203,
+ "region": 200,
+ "name": "Cliffs of Moher",
+ "lore": "The Cliffs of Moher: Tir Urphost on the plateau, the sea at the foot of the cliffs, and the fog. The Grey Man - the Fear Liath, the fog that wrecks ships - has made a bargain: he hides Norse longships in his fog and brings them in under the cliffs, and every death they cause is his. And the fog isn't his alone. It rolls in from the east.",
+ "chains": [
+  {
+   "id": "cliffs_of_moher_cliff_dwellers",
+   "title": "The Cliff Dwellers' Hold",
+   "levels": [
+    30,
+    34
+   ],
+   "hint": "War-cries from the cliff dwellers' hold above the ravine...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "cliffs_of_moher_cliff_dwellers",
-      "title": "The Cliff Dwellers' Hold",
-      "levels": [36, 40],
-      "hint": "Spears glint along the cliff tops...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Cliff Dwellers' Hold",
-          "objective": "Clear the cliff dwellers' hold",
-          "announce": "The cliff dwellers are raiding the coast from their hold. Fomhor leads them - bring him down.",
-          "center": [268, 755, 38.4],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60159245,
-              "name": "cliff dweller",
-              "level": [36, 38]
-            },
-            {
-              "template": 60159246,
-              "name": "cliff dweller hunter",
-              "level": [37, 38]
-            },
-            {
-              "template": 60159247,
-              "name": "cliff dweller spearman",
-              "level": [38, 40]
-            }
-          ],
-          "success": "You have cleared the cliff dwellers' hold. Fomhor the Cliff Chief comes out to fight.",
-          "fail": "They hold the cliff dwellers' hold. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Fomhor the Cliff Chief",
-          "objective": "Defeat Fomhor the Cliff Chief",
-          "announce": "Fomhor the Cliff Chief stands at the cliff dwellers' hold. Bring friends.",
-          "center": [268, 755, 38.4],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60159247,
-            "name": "Fomhor the Cliff Chief",
-            "level": 42,
-            "size": 67,
-            "pos": [268, 755, 38.4],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60159245,
-                "name": "cliff dweller",
-                "level": [36, 38]
-              }
-            ]
-          },
-          "success": "Fomhor the Cliff Chief falls. The way is safe again.",
-          "fail": "Fomhor the Cliff Chief slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu203_fomhor_the_cliff_chief_s_cloak", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Cliff Dwellers Hold the Road to Tir Urphost",
-          "objective": "Drive the cliff dwellers off the road to Tir Urphost",
-          "announce": "With The Cliff Dwellers' Hold lost, the cliff dwellers have spread down onto the road to Tir Urphost and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [472, 508, 132.0],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60159245,
-              "name": "cliff dweller",
-              "level": [36, 38]
-            },
-            {
-              "template": 60159246,
-              "name": "cliff dweller hunter",
-              "level": [37, 38]
-            },
-            {
-              "template": 60159247,
-              "name": "cliff dweller spearman",
-              "level": [38, 40]
-            }
-          ],
-          "boss": {
-            "template": 60159245,
-            "name": "Cliff dweller warleader",
-            "level": 41,
-            "pos": [472, 508, 132.0],
-            "health_mult": 2
-          },
-          "success": "The cliff dwellers are gone from the road to Tir Urphost. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Aine has come out to set the road to Tir Urphost right. The cliff dwellers are coming back for it!",
-          "center": [472, 508, 132.0],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Aine",
-            "level": 40,
-            "pos": [472, 508, 132.0],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [481, 593, 128.2],
-              [417, 574, 100.1],
-              [387, 515, 120.1]
-            ],
-            "mobs": [
-              {
-                "template": 60159245,
-                "name": "cliff dweller",
-                "level": [36, 38]
-              },
-              {
-                "template": 60159246,
-                "name": "cliff dweller hunter",
-                "level": [37, 38]
-              },
-              {
-                "template": 60159247,
-                "name": "cliff dweller spearman",
-                "level": [38, 40]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Tir Urphost is safe again. Thank you.\"",
-          "success": "The cliff dwellers break and scatter. The road to Tir Urphost is open again.",
-          "fail": "Roadwarden Aine falls, and the cliff dwellers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "cliffs_of_moher_fog_wraiths",
-      "title": "Fog on the Cliffs",
-      "levels": [27, 30],
-      "hint": "A thick fog is rolling in from the sea...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Sorcha the Beacon-Keeper",
-          "objective": "Protect Sorcha the Beacon-Keeper, who is keeping the beacon alight",
-          "announce": "The fog wraiths have come in with the fog to put out the beacon. Sorcha won't let it go out - help her.",
-          "center": [744, 1277, 135.6],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Sorcha the Beacon-Keeper",
-            "template": 60165764,
-            "level": 30,
-            "model": 328,
-            "equipment": "ca535672-1cb0-4c0f-8c39-cfa0eb1ae470",
-            "health_mult": 10,
-            "pos": [744, 1277, 135.6]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [660, 1293, 137.5],
-              [675, 1228, 137.1],
-              [731, 1193, 134.8]
-            ],
-            "mobs": [
-              {
-                "template": 60160937,
-                "name": "fog wraith",
-                "level": [28, 30]
-              },
-              {
-                "template": 60164102,
-                "name": "mist wraith",
-                "level": [27, 28]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Sorcha the Beacon-Keeper. \"They came from over there - let's finish this.\"",
-          "fail": "Sorcha the Beacon-Keeper falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Beacon",
-          "objective": "Clear the beacon",
-          "announce": "They came from the beacon. Follow them back and clear it out.",
-          "center": [524, 1122, 130.5],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60160937,
-              "name": "fog wraith",
-              "level": [28, 30]
-            },
-            {
-              "template": 60164102,
-              "name": "mist wraith",
-              "level": [27, 28]
-            }
-          ],
-          "success": "You have cleared the beacon. The Fog Banshee comes out to fight.",
-          "fail": "They hold the beacon. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Fog Banshee",
-          "objective": "Defeat the Fog Banshee",
-          "announce": "The Fog Banshee stands at the beacon. Bring friends.",
-          "center": [524, 1122, 130.5],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60160937,
-            "name": "The Fog Banshee",
-            "level": 32,
-            "size": 70,
-            "pos": [524, 1122, 130.5],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60160937,
-                "name": "fog wraith",
-                "level": [28, 30]
-              }
-            ]
-          },
-          "success": "The Fog Banshee falls. The way is safe again.",
-          "fail": "The Fog Banshee slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu203_fog_banshee_s_girdle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Fog Wraiths Hold the Road to Tir Urphost",
-          "objective": "Drive the fog wraiths off the road to Tir Urphost",
-          "announce": "With Fog on the Cliffs lost, the fog wraiths have spread down onto the road to Tir Urphost and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [733, 1026, 128.9],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60160937,
-              "name": "fog wraith",
-              "level": [28, 30]
-            },
-            {
-              "template": 60164102,
-              "name": "mist wraith",
-              "level": [27, 28]
-            }
-          ],
-          "boss": {
-            "template": 60160937,
-            "name": "Fog wraith warleader",
-            "level": 31,
-            "pos": [733, 1026, 128.9],
-            "health_mult": 2
-          },
-          "success": "The fog wraiths are gone from the road to Tir Urphost. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Ruadh has come out to set the road to Tir Urphost right. The fog wraiths are coming back for it!",
-          "center": [733, 1026, 128.9],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Ruadh",
-            "level": 30,
-            "pos": [733, 1026, 128.9],
-            "health_mult": 10,
-            "template": 60165764,
-            "model": 328,
-            "equipment": "ca535672-1cb0-4c0f-8c39-cfa0eb1ae470"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [705, 1106, 133.1],
-              [656, 1062, 129.2],
-              [654, 996, 127.7]
-            ],
-            "mobs": [
-              {
-                "template": 60160937,
-                "name": "fog wraith",
-                "level": [28, 30]
-              },
-              {
-                "template": 60164102,
-                "name": "mist wraith",
-                "level": [27, 28]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Tir Urphost is safe again. Thank you.\"",
-          "success": "The fog wraiths break and scatter. The road to Tir Urphost is open again.",
-          "fail": "Roadwarden Ruadh falls, and the fog wraiths take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "cliffs_of_moher_distorters",
-      "title": "The Moheran Distorters",
-      "levels": [17, 23],
-      "hint": "Sentinel Cathal is looking for help in Tir Urphost.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Sentinel Cathal",
-        "template": 60165764,
-        "level": 24,
-        "model": 387,
-        "equipment": "8ff82eba-56ee-4e7b-b447-0fb4d488fe42",
-        "guild": "Sentinels of Tir Urphost",
-        "health_mult": 4,
-        "pos": [693, 537, 142.1],
-        "greet": "The air out east is twisting - the distorters have opened a rift, and things are coming through. We're going to close it. With us? Tell me when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Cliff Dwellers' Hold",
+     "objective": "Clear the cliff dwellers' hold",
+     "announce": "The cliff dwellers are massing at their hold above the ravine - paid in Norse silver to keep the coves clear. Break them before they come up onto the plateau.",
+     "center": [
+      400,
+      780,
+      72.5
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60159245,
+       "name": "cliff dweller",
+       "level": [
+        30,
+        32
+       ]
       },
-      "guards": [
-        {
-          "name": "Sentinel",
-          "template": 60165764,
-          "level": 23,
-          "model": 387,
-          "equipment": "8ff82eba-56ee-4e7b-b447-0fb4d488fe42",
-          "guild": "Sentinels of Tir Urphost",
-          "health_mult": 2,
-          "count": 3
-        }
+      {
+       "template": 60159246,
+       "name": "cliff dweller hunter",
+       "level": [
+        31,
+        32
+       ]
+      },
+      {
+       "template": 60159247,
+       "name": "cliff dweller spearman",
+       "level": [
+        32,
+        34
+       ]
+      }
+     ],
+     "success": "You have cleared the cliff dwellers' hold. Fomhor the Cliff Chief comes out to fight.",
+     "fail": "They hold the cliff dwellers' hold. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "Fomhor the Cliff Chief",
+     "objective": "Defeat Fomhor the Cliff Chief",
+     "announce": "Fomhor the Cliff Chief stands at the cliff dwellers' hold. Bring friends.",
+     "center": [
+      400,
+      780,
+      72.5
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60159247,
+      "name": "Fomhor the Cliff Chief",
+      "level": 36,
+      "size": 67,
+      "pos": [
+       268,
+       755,
+       38.4
       ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Distorters' Rift",
-          "objective": "Go with Sentinel Cathal to the distorters' rift",
-          "announce": "Sentinel Cathal leads the sentinels of Tir Urphost to the distorters' rift.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [769, 469, 131.2],
-            [817, 421, 134.1],
-            [921, 421, 130.9],
-            [961, 429, 130.0],
-            [1033, 501, 131.4],
-            [1105, 573, 130.0],
-            [1177, 645, 130.0],
-            [1217, 685, 130.0]
-          ],
-          "ambushes": [
-            {
-              "at": 4,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 60164135,
-                  "name": "moheran distorter",
-                  "level": [17, 19]
-                },
-                {
-                  "template": 60160935,
-                  "name": "fog phantom",
-                  "level": [21, 23]
-                }
-              ]
-            }
-          ],
-          "success": "Sentinel Cathal reaches the distorters' rift. \"There they are. Clear them out!\"",
-          "fail": "Sentinel Cathal falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Distorters' Rift",
-          "objective": "Clear the distorters' rift",
-          "announce": "Clear the distorters' rift!",
-          "center": [1213, 681, 130.0],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60164135,
-              "name": "moheran distorter",
-              "level": [17, 19]
-            },
-            {
-              "template": 60160935,
-              "name": "fog phantom",
-              "level": [21, 23]
-            }
-          ],
-          "success": "You have cleared the distorters' rift. The Great Distorter comes out to fight.",
-          "fail": "They hold the distorters' rift. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "The Great Distorter",
-          "objective": "Defeat the Great Distorter",
-          "announce": "The Great Distorter stands at the distorters' rift. Bring friends.",
-          "center": [1213, 681, 130.0],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60164135,
-            "name": "The Great Distorter",
-            "level": 25,
-            "size": 70,
-            "pos": [1213, 681, 130.0],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60164135,
-                "name": "moheran distorter",
-                "level": [17, 19]
-              }
-            ]
-          },
-          "success": "The Great Distorter falls. Tir Urphost will hear of this in the taverns tonight.",
-          "fail": "The Great Distorter slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu203_great_distorter_s_belt", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Moheran Distorters Hold the Road to Tir Urphost",
-          "objective": "Drive the moheran distorters off the road to Tir Urphost",
-          "announce": "With The Moheran Distorters lost, the moheran distorters have spread down onto the road to Tir Urphost and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1090, 487, 127.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60164135,
-              "name": "moheran distorter",
-              "level": [17, 19]
-            },
-            {
-              "template": 60160935,
-              "name": "fog phantom",
-              "level": [21, 23]
-            }
-          ],
-          "boss": {
-            "template": 60164135,
-            "name": "Moheran distorter warleader",
-            "level": 24,
-            "pos": [1090, 487, 127.6],
-            "health_mult": 2
-          },
-          "success": "The moheran distorters are gone from the road to Tir Urphost. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cormac has come out to set the road to Tir Urphost right. The moheran distorters are coming back for it!",
-          "center": [1090, 487, 127.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cormac",
-            "level": 23,
-            "pos": [1090, 487, 127.6],
-            "health_mult": 10,
-            "template": 60165764,
-            "model": 387,
-            "equipment": "8ff82eba-56ee-4e7b-b447-0fb4d488fe42"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1173, 504, 140.2],
-              [1135, 559, 129.7],
-              [1070, 570, 135.9]
-            ],
-            "mobs": [
-              {
-                "template": 60164135,
-                "name": "moheran distorter",
-                "level": [17, 19]
-              },
-              {
-                "template": 60160935,
-                "name": "fog phantom",
-                "level": [21, 23]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Tir Urphost is safe again. Thank you.\"",
-          "success": "The moheran distorters break and scatter. The road to Tir Urphost is open again.",
-          "fail": "Roadwarden Cormac falls, and the moheran distorters take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60159245,
+        "name": "cliff dweller",
+        "level": [
+         30,
+         32
+        ]
+       }
       ]
+     },
+     "success": "Fomhor the Cliff Chief falls. The way is safe again.",
+     "fail": "Fomhor the Cliff Chief slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu203_fomhor_the_cliff_chief_s_cloak",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
     },
     {
-      "id": "tower_moher_watch",
-      "title": "The Siege of Moher Watchtower",
-      "levels": [31, 33],
-      "tower": "Moher Watchtower",
-      "hint": "A storm is gathering over the Moher Watchtower...",
-      "rest_s": 45,
-      "first_delay_s": [1800, 3600],
-      "interval_s": [5400, 9000],
-      "wake_m": 180,
-      "auto_fail_s": 600,
-      "start": "t1",
-      "merchant": {
-        "model": 328,
-        "equipment": "ca535672-1cb0-4c0f-8c39-cfa0eb1ae470",
-        "template": 60165764,
-        "name": "Quartermaster Maible",
-        "level": 38,
-        "pos": [811, 371, 130.0],
-        "stock": "tower_moher_watch",
-        "guild": "Marks of Valor",
-        "greet": "While Moher Watchtower stands, I can sell you what coin won't buy. Marks of Valor only."
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Cliff Dwellers Hold the Road to Tir Urphost",
+     "objective": "Drive the cliff dwellers off the road to Tir Urphost",
+     "announce": "With The Cliff Dwellers' Hold lost, the cliff dwellers have spread down onto the road to Tir Urphost and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      472,
+      508,
+      132.0
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60159245,
+       "name": "cliff dweller",
+       "level": [
+        30,
+        32
+       ]
       },
-      "stages": [
-        {
-          "id": "t1",
-          "type": "defend",
-          "name": "Hold Moher Watchtower",
-          "objective": "Keep Sentinel Cinead alive while the storm-spirits attack the tower",
-          "announce": "The storm-spirits are attacking Moher Watchtower! Sentinel Cinead calls for every sword nearby.",
-          "center": [802, 376, 130.0],
-          "radius": 60,
-          "duration_s": 240,
-          "protect": {
-            "model": 328,
-            "equipment": "ca535672-1cb0-4c0f-8c39-cfa0eb1ae470",
-            "template": 60165764,
-            "name": "Sentinel Cinead",
-            "level": 35,
-            "pos": [807, 385, 130.0],
-            "health_mult": 15
-          },
-          "waves": {
-            "every_s": 25,
-            "count": 3,
-            "from": [
-              [885, 411, 131.4],
-              [730, 430, 132.1],
-              [792, 287, 130.0]
-            ],
-            "mobs": [
-              {
-                "template": 60161616,
-                "name": "greater zephyr",
-                "level": [31, 33]
-              },
-              {
-                "template": 60158143,
-                "name": "aughisky",
-                "level": [31, 33]
-              }
-            ]
-          },
-          "thanks": "\"The tower holds! Drinks are on me when the quartermaster isn't looking.\"",
-          "success": "The storm-spirits break off the attack. Moher Watchtower holds.",
-          "fail": "Moher Watchtower has fallen to the storm-spirits.",
-          "on_success": "end",
-          "on_fail": "c1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 8 }
-        },
-        {
-          "id": "c1",
-          "type": "occupy",
-          "name": "Retake Moher Watchtower",
-          "objective": "Drive the storm-spirits out of Moher Watchtower",
-          "announce": "The storm-spirits hold Moher Watchtower. Its guards are gone, its quartermaster fled. It will take a war-band to win it back.",
-          "center": [802, 376, 130.0],
-          "radius": 50,
-          "count": 14,
-          "reinforce_s": 45,
-          "displace_m": 45,
-          "health_mult": 2.5,
-          "mobs": [
-            {
-              "template": 60161616,
-              "name": "greater zephyr",
-              "level": [34, 36]
-            },
-            {
-              "template": 60158143,
-              "name": "aughisky",
-              "level": [34, 36]
-            }
-          ],
-          "boss": {
-            "template": 60161616,
-            "name": "The Storm-Rider",
-            "level": 37,
-            "pos": [802, 376, 130.0],
-            "health_mult": 6
-          },
-          "success": "The Storm-Rider is dead and the tower is ours - for now. They will be back.",
-          "fail": "",
-          "on_success": "c2",
-          "on_fail": "c1",
-          "reward": { "xp_pct": 30, "copper_per_level": 250, "tokens": 25 }
-        },
-        {
-          "id": "c2",
-          "type": "defend",
-          "name": "Hold the Gate",
-          "objective": "Keep Sentinel Cinead alive until the garrison is back",
-          "announce": "Sentinel Cinead is raising the realm's colours again - and the storm-spirits are coming back for the tower!",
-          "center": [802, 376, 130.0],
-          "radius": 60,
-          "duration_s": 150,
-          "protect": {
-            "model": 328,
-            "equipment": "ca535672-1cb0-4c0f-8c39-cfa0eb1ae470",
-            "template": 60165764,
-            "name": "Sentinel Cinead",
-            "level": 35,
-            "pos": [807, 385, 130.0],
-            "health_mult": 15
-          },
-          "waves": {
-            "every_s": 25,
-            "count": 3,
-            "from": [
-              [885, 411, 131.4],
-              [730, 430, 132.1],
-              [792, 287, 130.0]
-            ],
-            "mobs": [
-              {
-                "template": 60161616,
-                "name": "greater zephyr",
-                "level": [31, 33]
-              },
-              {
-                "template": 60158143,
-                "name": "aughisky",
-                "level": [31, 33]
-              }
-            ]
-          },
-          "thanks": "\"Moher Watchtower is ours again. The quartermaster will be glad to see you.\"",
-          "success": "Moher Watchtower is held by the realm again. Its garrison and quartermaster are back.",
-          "fail": "Sentinel Cinead falls, and the storm-spirits take the tower back.",
-          "on_success": "end",
-          "on_fail": "c1",
-          "reward": { "xp_pct": 15, "copper_per_level": 120, "tokens": 10 }
-        }
-      ]
+      {
+       "template": 60159246,
+       "name": "cliff dweller hunter",
+       "level": [
+        31,
+        32
+       ]
+      },
+      {
+       "template": 60159247,
+       "name": "cliff dweller spearman",
+       "level": [
+        32,
+        34
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60159245,
+      "name": "Cliff dweller warleader",
+      "level": 35,
+      "pos": [
+       472,
+       508,
+       132.0
+      ],
+      "health_mult": 2
+     },
+     "success": "The cliff dwellers are gone from the road to Tir Urphost. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
     },
     {
-      "id": "cliffs_of_moher_koalinth_raid",
-      "title": "The Koalinth Landing",
-      "levels": [34, 39],
-      "hint": "Strange boats have come ashore below the cliffs...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Koalinth Landing",
-          "objective": "Clear the koalinth landing",
-          "announce": "The koalinth have come ashore below the cliffs and are building a landing. Throw them back into the sea.",
-          "center": [133, 945, 36.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60162948,
-              "name": "koalinth slinker",
-              "level": [34, 38]
-            },
-            {
-              "template": 30004,
-              "name": "tidal sheerie",
-              "level": [35, 39]
-            }
-          ],
-          "success": "You have cleared the koalinth landing. Koalinth Tidecaller comes out to fight.",
-          "fail": "They hold the koalinth landing. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Koalinth Tidecaller",
-          "objective": "Defeat Koalinth Tidecaller",
-          "announce": "Koalinth Tidecaller stands at the koalinth landing. Bring friends.",
-          "center": [133, 945, 36.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60162948,
-            "name": "Koalinth Tidecaller",
-            "level": 41,
-            "size": 70,
-            "pos": [133, 945, 36.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60162948,
-                "name": "koalinth slinker",
-                "level": [34, 38]
-              }
-            ]
-          },
-          "success": "Koalinth Tidecaller falls. The way is safe again.",
-          "fail": "Koalinth Tidecaller slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu203_koalinth_tidecaller_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Koalinth Slinkers Hold the Road to Tir Urphost",
-          "objective": "Drive the koalinth slinkers off the road to Tir Urphost",
-          "announce": "With The Koalinth Landing lost, the koalinth slinkers have spread down onto the road to Tir Urphost and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [538, 818, 90.4],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60162948,
-              "name": "koalinth slinker",
-              "level": [34, 38]
-            },
-            {
-              "template": 30004,
-              "name": "tidal sheerie",
-              "level": [35, 39]
-            }
-          ],
-          "boss": {
-            "template": 60162948,
-            "name": "Koalinth slinker warleader",
-            "level": 40,
-            "pos": [538, 818, 90.4],
-            "health_mult": 2
-          },
-          "success": "The koalinth slinkers are gone from the road to Tir Urphost. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Fiona has come out to set the road to Tir Urphost right. The koalinth slinkers are coming back for it!",
-          "center": [538, 818, 90.4],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Fiona",
-            "level": 39,
-            "pos": [538, 818, 90.4],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [500, 894, 126.8],
-              [457, 843, 89.4],
-              [464, 777, 80.8]
-            ],
-            "mobs": [
-              {
-                "template": 60162948,
-                "name": "koalinth slinker",
-                "level": [34, 38]
-              },
-              {
-                "template": 30004,
-                "name": "tidal sheerie",
-                "level": [35, 39]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Tir Urphost is safe again. Thank you.\"",
-          "success": "The koalinth slinkers break and scatter. The road to Tir Urphost is open again.",
-          "fail": "Roadwarden Fiona falls, and the koalinth slinkers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Aine has come out to set the road to Tir Urphost right. The cliff dwellers are coming back for it!",
+     "center": [
+      472,
+      508,
+      132.0
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Aine",
+      "level": 34,
+      "pos": [
+       472,
+       508,
+       132.0
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        481,
+        593,
+        128.2
+       ],
+       [
+        417,
+        574,
+        100.1
+       ],
+       [
+        387,
+        515,
+        120.1
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60159245,
+        "name": "cliff dweller",
+        "level": [
+         30,
+         32
+        ]
+       },
+       {
+        "template": 60159246,
+        "name": "cliff dweller hunter",
+        "level": [
+         31,
+         32
+        ]
+       },
+       {
+        "template": 60159247,
+        "name": "cliff dweller spearman",
+        "level": [
+         32,
+         34
+        ]
+       }
       ]
+     },
+     "thanks": "\"That's done - the road to Tir Urphost is safe again. Thank you.\"",
+     "success": "The cliff dwellers break and scatter. The road to Tir Urphost is open again.",
+     "fail": "Roadwarden Aine falls, and the cliff dwellers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
+   ]
+  },
+  {
+   "id": "cliffs_of_moher_fog_wraiths",
+   "title": "Fog on the Cliffs",
+   "levels": [
+    26,
+    31
+   ],
+   "hint": "The fog is rolling in over the moor, and the beacon is guttering...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Sorcha the Beacon-Keeper",
+     "objective": "Protect Sorcha the Beacon-Keeper, who is keeping the beacon alight",
+     "announce": "The Grey Man's fog is rolling over the moor, and the wraiths are in it, coming to put out the beacon. Sorcha won't let it go out - help her.",
+     "center": [
+      744,
+      1277,
+      135.6
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Sorcha the Beacon-Keeper",
+      "template": 60165764,
+      "level": 30,
+      "model": 328,
+      "equipment": "ca535672-1cb0-4c0f-8c39-cfa0eb1ae470",
+      "health_mult": 10,
+      "pos": [
+       744,
+       1277,
+       135.6
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        660,
+        1293,
+        137.5
+       ],
+       [
+        675,
+        1228,
+        137.1
+       ],
+       [
+        731,
+        1193,
+        134.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160937,
+        "name": "fog wraith",
+        "level": [
+         28,
+         30
+        ]
+       },
+       {
+        "template": 60164102,
+        "name": "mist wraith",
+        "level": [
+         27,
+         28
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Sorcha the Beacon-Keeper. \"They came from over there - let's finish this.\"",
+     "fail": "Sorcha the Beacon-Keeper falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Beacon",
+     "objective": "Clear the beacon",
+     "announce": "They came from the beacon. Follow them back and clear it out.",
+     "center": [
+      524,
+      1122,
+      130.5
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60160937,
+       "name": "fog wraith",
+       "level": [
+        28,
+        30
+       ]
+      },
+      {
+       "template": 60164102,
+       "name": "mist wraith",
+       "level": [
+        27,
+        28
+       ]
+      }
+     ],
+     "success": "You have cleared the beacon. The Fog Banshee comes out to fight.",
+     "fail": "They hold the beacon. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Fog Banshee",
+     "objective": "Defeat the Fog Banshee",
+     "announce": "The Fog Banshee stands at the beacon. Bring friends.",
+     "center": [
+      524,
+      1122,
+      130.5
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60160937,
+      "name": "The Fog Banshee",
+      "level": 32,
+      "size": 70,
+      "pos": [
+       524,
+       1122,
+       130.5
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60160937,
+        "name": "fog wraith",
+        "level": [
+         28,
+         30
+        ]
+       }
+      ]
+     },
+     "success": "The Fog Banshee falls. The way is safe again.",
+     "fail": "The Fog Banshee slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu203_fog_banshee_s_girdle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Fog Wraiths Hold the Road to Tir Urphost",
+     "objective": "Drive the fog wraiths off the road to Tir Urphost",
+     "announce": "With Fog on the Cliffs lost, the fog wraiths have spread down onto the road to Tir Urphost and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      733,
+      1026,
+      128.9
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60160937,
+       "name": "fog wraith",
+       "level": [
+        28,
+        30
+       ]
+      },
+      {
+       "template": 60164102,
+       "name": "mist wraith",
+       "level": [
+        27,
+        28
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60160937,
+      "name": "Fog wraith warleader",
+      "level": 31,
+      "pos": [
+       733,
+       1026,
+       128.9
+      ],
+      "health_mult": 2
+     },
+     "success": "The fog wraiths are gone from the road to Tir Urphost. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Ruadh has come out to set the road to Tir Urphost right. The fog wraiths are coming back for it!",
+     "center": [
+      733,
+      1026,
+      128.9
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Ruadh",
+      "level": 30,
+      "pos": [
+       733,
+       1026,
+       128.9
+      ],
+      "health_mult": 10,
+      "template": 60165764,
+      "model": 328,
+      "equipment": "ca535672-1cb0-4c0f-8c39-cfa0eb1ae470"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        705,
+        1106,
+        133.1
+       ],
+       [
+        656,
+        1062,
+        129.2
+       ],
+       [
+        654,
+        996,
+        127.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160937,
+        "name": "fog wraith",
+        "level": [
+         28,
+         30
+        ]
+       },
+       {
+        "template": 60164102,
+        "name": "mist wraith",
+        "level": [
+         27,
+         28
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Tir Urphost is safe again. Thank you.\"",
+     "success": "The fog wraiths break and scatter. The road to Tir Urphost is open again.",
+     "fail": "Roadwarden Ruadh falls, and the fog wraiths take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "cliffs_of_moher_distorters",
+   "title": "The Moheran Distorters",
+   "levels": [
+    24,
+    30
+   ],
+   "hint": "Sentinel Cathal is gathering the watch to go to the distorters' rift.",
+   "rest_s": 45,
+   "giver": {
+    "name": "Sentinel Cathal",
+    "template": 60165764,
+    "level": 31,
+    "model": 387,
+    "equipment": "8ff82eba-56ee-4e7b-b447-0fb4d488fe42",
+    "guild": "Sentinels of Tir Urphost",
+    "health_mult": 4,
+    "pos": [
+     693,
+     537,
+     142.1
+    ],
+    "greet": "The air out east is twisting - the distorters have opened a rift, and things are coming through. We're going to close it. With us? Tell me when you're [ready].",
+    "accept": "ready",
+    "reply": "Good. Stay close - they will have watchers out. With me!",
+    "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "name": "Sentinel",
+     "template": 60165764,
+     "level": 30,
+     "model": 387,
+     "equipment": "8ff82eba-56ee-4e7b-b447-0fb4d488fe42",
+     "guild": "Sentinels of Tir Urphost",
+     "health_mult": 2,
+     "count": 3
+    }
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "escort",
+     "name": "The Road to Distorters' Rift",
+     "objective": "Go with Sentinel Cathal to the distorters' rift",
+     "announce": "Sentinel Cathal leads the sentinels of Tir Urphost to the distorters' rift.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       769,
+       469,
+       131.2
+      ],
+      [
+       817,
+       421,
+       134.1
+      ],
+      [
+       921,
+       421,
+       130.9
+      ],
+      [
+       961,
+       429,
+       130.0
+      ],
+      [
+       1033,
+       501,
+       131.4
+      ],
+      [
+       1105,
+       573,
+       130.0
+      ],
+      [
+       1177,
+       645,
+       130.0
+      ],
+      [
+       1217,
+       685,
+       130.0
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 4,
+       "count": 3,
+       "say": "Ambush! To me - hold together!",
+       "mobs": [
+        {
+         "template": 60164135,
+         "name": "moheran distorter",
+         "level": [
+          24,
+          26
+         ]
+        },
+        {
+         "template": 60160935,
+         "name": "fog phantom",
+         "level": [
+          28,
+          30
+         ]
+        }
+       ]
+      }
+     ],
+     "success": "Sentinel Cathal reaches the distorters' rift. \"There they are. Clear them out!\"",
+     "fail": "Sentinel Cathal falls on the road. The others carry the body home.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "g2",
+     "type": "cull",
+     "name": "Clear Distorters' Rift",
+     "objective": "Clear the distorters' rift",
+     "announce": "Clear the distorters' rift!",
+     "center": [
+      1213,
+      681,
+      130.0
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60164135,
+       "name": "moheran distorter",
+       "level": [
+        24,
+        26
+       ]
+      },
+      {
+       "template": 60160935,
+       "name": "fog phantom",
+       "level": [
+        28,
+        30
+       ]
+      }
+     ],
+     "success": "You have cleared the distorters' rift. The Great Distorter comes out to fight.",
+     "fail": "They hold the distorters' rift. They will be bolder next time.",
+     "on_success": "g3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g3",
+     "type": "boss",
+     "name": "The Great Distorter",
+     "objective": "Defeat the Great Distorter",
+     "announce": "The Great Distorter stands at the distorters' rift. Bring friends.",
+     "center": [
+      1213,
+      681,
+      130.0
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60164135,
+      "name": "The Great Distorter",
+      "level": 32,
+      "size": 70,
+      "pos": [
+       1213,
+       681,
+       130.0
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60164135,
+        "name": "moheran distorter",
+        "level": [
+         24,
+         26
+        ]
+       }
+      ]
+     },
+     "success": "The Great Distorter falls. Tir Urphost will hear of this in the taverns tonight.",
+     "fail": "The Great Distorter slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu203_great_distorter_s_belt",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Moheran Distorters Hold the Road to Tir Urphost",
+     "objective": "Drive the moheran distorters off the road to Tir Urphost",
+     "announce": "With The Moheran Distorters lost, the moheran distorters have spread down onto the road to Tir Urphost and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1090,
+      487,
+      127.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60164135,
+       "name": "moheran distorter",
+       "level": [
+        24,
+        26
+       ]
+      },
+      {
+       "template": 60160935,
+       "name": "fog phantom",
+       "level": [
+        28,
+        30
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60164135,
+      "name": "Moheran distorter warleader",
+      "level": 31,
+      "pos": [
+       1090,
+       487,
+       127.6
+      ],
+      "health_mult": 2
+     },
+     "success": "The moheran distorters are gone from the road to Tir Urphost. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cormac has come out to set the road to Tir Urphost right. The moheran distorters are coming back for it!",
+     "center": [
+      1090,
+      487,
+      127.6
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cormac",
+      "level": 30,
+      "pos": [
+       1090,
+       487,
+       127.6
+      ],
+      "health_mult": 10,
+      "template": 60165764,
+      "model": 387,
+      "equipment": "8ff82eba-56ee-4e7b-b447-0fb4d488fe42"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1173,
+        504,
+        140.2
+       ],
+       [
+        1135,
+        559,
+        129.7
+       ],
+       [
+        1070,
+        570,
+        135.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60164135,
+        "name": "moheran distorter",
+        "level": [
+         24,
+         26
+        ]
+       },
+       {
+        "template": 60160935,
+        "name": "fog phantom",
+        "level": [
+         28,
+         30
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Tir Urphost is safe again. Thank you.\"",
+     "success": "The moheran distorters break and scatter. The road to Tir Urphost is open again.",
+     "fail": "Roadwarden Cormac falls, and the moheran distorters take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "tower_moher_watch",
+   "title": "The Siege of Moher Watchtower",
+   "levels": [
+    28,
+    34
+   ],
+   "tower": "Moher Watchtower",
+   "hint": "Smoke at Moher Watchtower: Norse raiders on the watchtower road!",
+   "rest_s": 45,
+   "first_delay_s": [
+    1800,
+    3600
+   ],
+   "interval_s": [
+    5400,
+    9000
+   ],
+   "wake_m": 180,
+   "auto_fail_s": 600,
+   "start": "t1",
+   "merchant": {
+    "model": 328,
+    "equipment": "ca535672-1cb0-4c0f-8c39-cfa0eb1ae470",
+    "template": 60165764,
+    "name": "Quartermaster Maible",
+    "level": 38,
+    "pos": [
+     811,
+     371,
+     130.0
+    ],
+    "stock": "tower_moher_watch",
+    "guild": "Marks of Valor",
+    "greet": "While Moher Watchtower stands, I can sell you what coin won't buy. Marks of Valor only."
+   },
+   "stages": [
+    {
+     "id": "t1",
+     "type": "defend",
+     "name": "Hold Moher Watchtower",
+     "objective": "Keep Sentinel Cinead alive while the storm-spirits attack the tower",
+     "announce": "A Norse raiding party has come up the watchtower road and is battering at the gate! Sentinel Cinead calls for every sword nearby.",
+     "center": [
+      802,
+      376,
+      130.0
+     ],
+     "radius": 60,
+     "duration_s": 240,
+     "protect": {
+      "model": 328,
+      "equipment": "ca535672-1cb0-4c0f-8c39-cfa0eb1ae470",
+      "template": 60165764,
+      "name": "Sentinel Cinead",
+      "level": 35,
+      "pos": [
+       807,
+       385,
+       130.0
+      ],
+      "health_mult": 15
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        885,
+        411,
+        131.4
+       ],
+       [
+        730,
+        430,
+        132.1
+       ],
+       [
+        792,
+        287,
+        130.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60167667,
+        "name": "Norse raider",
+        "level": [
+         30,
+         32
+        ],
+        "guild": "the Saltwolves"
+       },
+       {
+        "template": 60167654,
+        "name": "Norse bowman",
+        "level": [
+         30,
+         32
+        ],
+        "guild": "the Saltwolves"
+       },
+       {
+        "template": 60159139,
+        "name": "Norse huscarl",
+        "level": [
+         31,
+         33
+        ],
+        "guild": "the Saltwolves"
+       }
+      ]
+     },
+     "thanks": "\"The tower holds! Drinks are on me when the quartermaster isn't looking.\"",
+     "success": "The storm-spirits break off the attack. Moher Watchtower holds.",
+     "fail": "Moher Watchtower has fallen to the storm-spirits.",
+     "on_success": "end",
+     "on_fail": "c1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "c1",
+     "type": "occupy",
+     "name": "The Norse Hold the Watchtower",
+     "objective": "Drive the Norse out of Moher Watchtower",
+     "announce": "The Norse hold Moher Watchtower and its beacon is dark. Hersir Gunnvor is looting it - drive them out.",
+     "center": [
+      802,
+      376,
+      130.0
+     ],
+     "radius": 50,
+     "count": 14,
+     "reinforce_s": 45,
+     "displace_m": 45,
+     "health_mult": 2.5,
+     "mobs": [
+      {
+       "template": 60167667,
+       "name": "Norse raider",
+       "level": [
+        30,
+        32
+       ],
+       "guild": "the Saltwolves"
+      },
+      {
+       "template": 60167654,
+       "name": "Norse bowman",
+       "level": [
+        30,
+        32
+       ],
+       "guild": "the Saltwolves"
+      },
+      {
+       "template": 60159139,
+       "name": "Norse huscarl",
+       "level": [
+        31,
+        33
+       ],
+       "guild": "the Saltwolves"
+      }
+     ],
+     "boss": {
+      "template": 60162606,
+      "name": "Hersir Gunnvor",
+      "level": 34,
+      "pos": [
+       802,
+       376,
+       130.0
+      ],
+      "health_mult": 6,
+      "guild": "the Saltwolves"
+     },
+     "success": "The Storm-Rider is dead and the tower is ours - for now. They will be back.",
+     "fail": "",
+     "on_success": "c2",
+     "on_fail": "c1",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 250,
+      "tokens": 25
+     }
+    },
+    {
+     "id": "c2",
+     "type": "defend",
+     "name": "Hold the Gate",
+     "objective": "Keep Sentinel Cinead alive until the garrison is back",
+     "announce": "Sentinel Cinead is raising the realm's colours again - and the storm-spirits are coming back for the tower!",
+     "center": [
+      802,
+      376,
+      130.0
+     ],
+     "radius": 60,
+     "duration_s": 150,
+     "protect": {
+      "model": 328,
+      "equipment": "ca535672-1cb0-4c0f-8c39-cfa0eb1ae470",
+      "template": 60165764,
+      "name": "Sentinel Cinead",
+      "level": 35,
+      "pos": [
+       807,
+       385,
+       130.0
+      ],
+      "health_mult": 15
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        885,
+        411,
+        131.4
+       ],
+       [
+        730,
+        430,
+        132.1
+       ],
+       [
+        792,
+        287,
+        130.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60167667,
+        "name": "Norse raider",
+        "level": [
+         30,
+         32
+        ],
+        "guild": "the Saltwolves"
+       },
+       {
+        "template": 60167654,
+        "name": "Norse bowman",
+        "level": [
+         30,
+         32
+        ],
+        "guild": "the Saltwolves"
+       },
+       {
+        "template": 60159139,
+        "name": "Norse huscarl",
+        "level": [
+         31,
+         33
+        ],
+        "guild": "the Saltwolves"
+       }
+      ]
+     },
+     "thanks": "\"Moher Watchtower is ours again. The quartermaster will be glad to see you.\"",
+     "success": "Moher Watchtower is held by the realm again. Its garrison and quartermaster are back.",
+     "fail": "Sentinel Cinead falls, and the storm-spirits take the tower back.",
+     "on_success": "end",
+     "on_fail": "c1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 120,
+      "tokens": 10
+     }
+    }
+   ]
+  },
+  {
+   "id": "cliffs_of_moher_koalinth_raid",
+   "title": "The Koalinth Landing",
+   "levels": [
+    28,
+    33
+   ],
+   "hint": "The koalinth are coming ashore on the south-west rocks...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Koalinth Landing",
+     "objective": "Clear the koalinth landing",
+     "announce": "The koalinth have come ashore below the cliffs and are building a landing. Throw them back into the sea.",
+     "center": [
+      133,
+      945,
+      36.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60162948,
+       "name": "koalinth slinker",
+       "level": [
+        28,
+        32
+       ]
+      },
+      {
+       "template": 30004,
+       "name": "tidal sheerie",
+       "level": [
+        29,
+        33
+       ]
+      }
+     ],
+     "success": "You have cleared the koalinth landing. Koalinth Tidecaller comes out to fight.",
+     "fail": "They hold the koalinth landing. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "Koalinth Tidecaller",
+     "objective": "Defeat Koalinth Tidecaller",
+     "announce": "Koalinth Tidecaller stands at the koalinth landing. Bring friends.",
+     "center": [
+      133,
+      945,
+      36.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60162948,
+      "name": "Koalinth Tidecaller",
+      "level": 35,
+      "size": 70,
+      "pos": [
+       133,
+       945,
+       36.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60162948,
+        "name": "koalinth slinker",
+        "level": [
+         28,
+         32
+        ]
+       }
+      ]
+     },
+     "success": "Koalinth Tidecaller falls. The way is safe again.",
+     "fail": "Koalinth Tidecaller slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu203_koalinth_tidecaller_s_wristguard",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Koalinth Slinkers Hold the Road to Tir Urphost",
+     "objective": "Drive the koalinth slinkers off the road to Tir Urphost",
+     "announce": "With The Koalinth Landing lost, the koalinth slinkers have spread down onto the road to Tir Urphost and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      538,
+      818,
+      90.4
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60162948,
+       "name": "koalinth slinker",
+       "level": [
+        28,
+        32
+       ]
+      },
+      {
+       "template": 30004,
+       "name": "tidal sheerie",
+       "level": [
+        29,
+        33
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60162948,
+      "name": "Koalinth slinker warleader",
+      "level": 34,
+      "pos": [
+       538,
+       818,
+       90.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The koalinth slinkers are gone from the road to Tir Urphost. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Fiona has come out to set the road to Tir Urphost right. The koalinth slinkers are coming back for it!",
+     "center": [
+      538,
+      818,
+      90.4
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Fiona",
+      "level": 33,
+      "pos": [
+       538,
+       818,
+       90.4
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        500,
+        894,
+        126.8
+       ],
+       [
+        457,
+        843,
+        89.4
+       ],
+       [
+        464,
+        777,
+        80.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60162948,
+        "name": "koalinth slinker",
+        "level": [
+         28,
+         32
+        ]
+       },
+       {
+        "template": 30004,
+        "name": "tidal sheerie",
+        "level": [
+         29,
+         33
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Tir Urphost is safe again. Thank you.\"",
+     "success": "The koalinth slinkers break and scatter. The road to Tir Urphost is open again.",
+     "fail": "Roadwarden Fiona falls, and the koalinth slinkers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "cliffs_longships",
+   "title": "The Longships",
+   "levels": [
+    28,
+    34
+   ],
+   "rest_s": 20,
+   "bots": 8,
+   "bot_min_level": 22,
+   "hint": "Longships in the fog under the cliffs!",
+   "first_delay_s": [
+    3600,
+    7200
+   ],
+   "interval_s": [
+    10800,
+    14400
+   ],
+   "auto_fail_s": 900,
+   "wake_m": 400,
+   "start": "l1",
+   "stages": [
+    {
+     "id": "l1",
+     "type": "cull",
+     "name": "The Landing",
+     "objective": "Throw the Norse landing party back into the sea",
+     "announce": "Longships have come out of the fog into the middle cove under the cliffs, and the Saltwolves are coming ashore! Throw them back before they get up the ravine!",
+     "center": [
+      170,
+      630,
+      37.5
+     ],
+     "radius": 60,
+     "time_s": 900,
+     "kill": 16,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60167667,
+       "name": "Norse raider",
+       "level": [
+        30,
+        32
+       ],
+       "guild": "the Saltwolves"
+      },
+      {
+       "template": 60167667,
+       "name": "Norse raider",
+       "level": [
+        30,
+        32
+       ],
+       "guild": "the Saltwolves"
+      },
+      {
+       "template": 60167654,
+       "name": "Norse bowman",
+       "level": [
+        30,
+        32
+       ],
+       "guild": "the Saltwolves"
+      },
+      {
+       "template": 60166154,
+       "name": "Norse skald",
+       "level": [
+        31,
+        33
+       ],
+       "guild": "the Saltwolves"
+      }
+     ],
+     "success": "The landing party breaks - and their hersir jumps down from the prow to rally them.",
+     "fail": "The Norse are ashore. Their raiding parties are already climbing the ravine.",
+     "on_success": "l2",
+     "on_fail": "l3",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 120,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "l2",
+     "type": "boss",
+     "name": "Hersir Ketil Saltwolf",
+     "objective": "Defeat Hersir Ketil Saltwolf",
+     "announce": "Hersir Ketil Saltwolf wades ashore with an axe in each hand. 'The fog-man promised us an empty coast. Liar.' Bring friends.",
+     "center": [
+      170,
+      630,
+      37.5
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60162606,
+      "name": "Hersir Ketil Saltwolf",
+      "level": 34,
+      "size": 55,
+      "health_mult": 2.2,
+      "guild": "the Saltwolves"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60159139,
+        "name": "Norse huscarl",
+        "level": [
+         31,
+         33
+        ],
+        "guild": "the Saltwolves"
+       },
+       {
+        "template": 60167667,
+        "name": "Norse raider",
+        "level": [
+         30,
+         32
+        ],
+        "guild": "the Saltwolves"
+       }
+      ]
+     },
+     "success": "Ketil Saltwolf goes down in the surf. His crews drag him to the ships, and the longships back off into the fog.",
+     "fail": "Ketil rallies his crews on the shingle.",
+     "on_success": "end",
+     "on_fail": "l3",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 180,
+      "tokens": 16,
+      "items": [
+       {
+        "id": "nu203_saltwolf_s_arm_ring",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "l3",
+     "type": "occupy",
+     "name": "The Norse on the Shingle",
+     "objective": "Burn the Norse camp on the shingle",
+     "announce": "The Norse have a camp on the shingle of the middle cove, and their raiding parties are loose on the cliff paths, the fields and the watchtower road. Burn them out!",
+     "center": [
+      220,
+      650,
+      42.9
+     ],
+     "radius": 60,
+     "count": 12,
+     "reinforce_s": 120,
+     "health_mult": 1.2,
+     "mobs": [
+      {
+       "template": 60167667,
+       "name": "Norse raider",
+       "level": [
+        30,
+        32
+       ],
+       "guild": "the Saltwolves"
+      },
+      {
+       "template": 60167654,
+       "name": "Norse bowman",
+       "level": [
+        30,
+        32
+       ],
+       "guild": "the Saltwolves"
+      },
+      {
+       "template": 60159139,
+       "name": "Norse huscarl",
+       "level": [
+        31,
+        33
+       ],
+       "guild": "the Saltwolves"
+      },
+      {
+       "template": 60166154,
+       "name": "Norse skald",
+       "level": [
+        31,
+        33
+       ],
+       "guild": "the Saltwolves"
+      }
+     ],
+     "boss": {
+      "template": 60162606,
+      "name": "Hersir Ketil Saltwolf",
+      "level": 34,
+      "pos": [
+       220,
+       650,
+       42.9
+      ],
+      "health_mult": 2.2,
+      "guild": "the Saltwolves"
+     },
+     "success": "The camp burns. The longships pull away into the fog.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "l3",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 160,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "cliffs_fetch_night",
+   "title": "Fetch-Night",
+   "levels": [
+    26,
+    32
+   ],
+   "time": "night",
+   "rest_s": 30,
+   "hint": "Faces in the fog at Tir Urphost's edge - faces everyone knows...",
+   "first_delay_s": [
+    600,
+    1500
+   ],
+   "interval_s": [
+    2400,
+    3600
+   ],
+   "start": "n1",
+   "stages": [
+    {
+     "id": "n1",
+     "type": "defend",
+     "name": "The Doubles",
+     "objective": "Keep Druid Tobryn alive while he sings the fetches away",
+     "announce": "Fetches are walking into Tir Urphost out of the fog - doubles of the townsfolk, every one smiling. Druid Tobryn is singing them back to the dark. Keep them off him!",
+     "center": [
+      670,
+      510,
+      142.8
+     ],
+     "radius": 60,
+     "duration_s": 150,
+     "protect": {
+      "template": 60163820,
+      "name": "Druid Tobryn's singer",
+      "level": 30,
+      "pos": [
+       670,
+       510,
+       142.8
+      ],
+      "health_mult": 8,
+      "guild": "the Seers of Moher"
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 3,
+      "from": [
+       [
+        600,
+        560,
+        134.8
+       ],
+       [
+        740,
+        560,
+        133.1
+       ],
+       [
+        670,
+        440,
+        142.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160819,
+        "name": "fetch",
+        "level": [
+         26,
+         28
+        ]
+       },
+       {
+        "template": 60160819,
+        "name": "fetch",
+        "level": [
+         26,
+         28
+        ]
+       },
+       {
+        "template": 60160937,
+        "name": "fog wraith",
+        "level": [
+         28,
+         30
+        ]
+       }
+      ]
+     },
+     "thanks": "\"Gone. All of them. I counted my own face three times tonight.\"",
+     "success": "The fetches fade - all but one, tall and grey, that doesn't look like anyone in town.",
+     "fail": "The singer falls, and the fetches walk into the houses.",
+     "on_success": "n2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 100
+     }
+    },
+    {
+     "id": "n2",
+     "type": "boss",
+     "name": "the Grey Man's Fetch",
+     "objective": "Destroy the Grey Man's Fetch",
+     "announce": "The last fetch is the Grey Man's own double, come to see who's stopping him. Bring friends.",
+     "center": [
+      670,
+      510,
+      142.8
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60160819,
+      "name": "the Grey Man's Fetch",
+      "level": 33,
+      "model": 434,
+      "size": 60,
+      "health_mult": 2.0,
+      "guild": "of the Fog"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60160819,
+        "name": "fetch",
+        "level": [
+         26,
+         28
+        ]
+       }
+      ]
+     },
+     "success": "The Grey Man's Fetch tears like a fog bank in the wind. The town breathes out.",
+     "fail": "The fog closes over Tir Urphost.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu203_fetch_lantern",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Fetches Walk Tir Urphost",
+     "objective": "Drive the fetches out of Tir Urphost",
+     "announce": "The fetches walk Tir Urphost's lanes, and the townsfolk have shut themselves in. Drive them out!",
+     "center": [
+      670,
+      510,
+      142.8
+     ],
+     "radius": 60,
+     "count": 8,
+     "reinforce_s": 90,
+     "displace_m": 45,
+     "mobs": [
+      {
+       "template": 60160819,
+       "name": "fetch",
+       "level": [
+        26,
+        28
+       ]
+      },
+      {
+       "template": 60160937,
+       "name": "fog wraith",
+       "level": [
+        28,
+        30
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60160819,
+      "name": "fetch-warden",
+      "level": 31,
+      "pos": [
+       670,
+       510,
+       142.8
+      ],
+      "health_mult": 2
+     },
+     "success": "The last fetch fades. Doors open again.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    }
+   ]
+  },
+  {
+   "id": "cliffs_wreckers_lights",
+   "title": "The Wreckers' Lights",
+   "levels": [
+    28,
+    33
+   ],
+   "time": "night",
+   "rest_s": 30,
+   "hint": "Lights moving along the cliff tops - and a Hibernian ship out in the fog...",
+   "first_delay_s": [
+    600,
+    1500
+   ],
+   "interval_s": [
+    2400,
+    3600
+   ],
+   "start": "w1",
+   "stages": [
+    {
+     "id": "w1",
+     "type": "intercept",
+     "name": "The False Lights",
+     "objective": "Stop the cliff dwellers carrying the false lights along the cliffs",
+     "announce": "A Hibernian ship is feeling its way along the coast in the fog - and cliff dwellers are carrying lanterns along the cliff tops to lure her onto the rocks. Stop the light-bearer!",
+     "radius": 60,
+     "time_s": 900,
+     "alive": 4,
+     "speed": 120,
+     "path": [
+      [
+       480,
+       200,
+       131.3
+      ],
+      [
+       420,
+       300,
+       135.9
+      ],
+      [
+       380,
+       420,
+       132.2
+      ],
+      [
+       360,
+       560,
+       74.2
+      ],
+      [
+       340,
+       700,
+       53.9
+      ],
+      [
+       330,
+       820,
+       47.4
+      ]
+     ],
+     "boss": {
+      "template": 60159246,
+      "name": "light-bearer",
+      "level": 33,
+      "size": 55,
+      "health_mult": 2.2,
+      "guild": "the Wreckers"
+     },
+     "mobs": [
+      {
+       "template": 60159245,
+       "name": "cliff dweller",
+       "level": [
+        30,
+        32
+       ]
+      },
+      {
+       "template": 60159247,
+       "name": "cliff dweller spearman",
+       "level": [
+        31,
+        33
+       ]
+      }
+     ],
+     "success": "The light-bearer drops his lantern and it goes out. Far below, the ship's bell rings: she's turning for open water.",
+     "fail": "The ship follows the lights onto the rocks.",
+     "on_success": "w2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 100
+     }
+    },
+    {
+     "id": "w2",
+     "type": "boss",
+     "name": "the Wrecker-Chief",
+     "objective": "Defeat the Wrecker-Chief",
+     "announce": "The wreckers' chief, a cliff dweller with a sack of Norse silver on his belt, comes up the cliff path for whoever spoiled his night. Bring friends.",
+     "center": [
+      340,
+      700,
+      53.9
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60159247,
+      "name": "the Wrecker-Chief",
+      "level": 34,
+      "size": 60,
+      "health_mult": 2.0,
+      "guild": "the Wreckers"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60159247,
+        "name": "cliff dweller spearman",
+        "level": [
+         31,
+         33
+        ]
+       }
+      ]
+     },
+     "success": "The Wrecker-Chief falls. His sack spills Norse silver over the rocks.",
+     "fail": "The Wrecker-Chief gets away along the cliffs.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu203_wrecker_s_lantern",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cliffs_aughisky_run",
+   "title": "The Aughisky Run",
+   "levels": [
+    28,
+    33
+   ],
+   "rest_s": 30,
+   "hint": "Hoofbeats on the moor, and the smell of the sea...",
+   "first_delay_s": [
+    300,
+    1200
+   ],
+   "interval_s": [
+    2100,
+    3000
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "The Water-Horses",
+     "objective": "Drive the aughisky off the moor before they carry anyone into the sea",
+     "announce": "The aughisky have come up out of the sea onto the moor - water-horses that let you ride them, and then ride you into the waves. Drive them off!",
+     "center": [
+      860,
+      960,
+      130.0
+     ],
+     "radius": 60,
+     "time_s": 900,
+     "kill": 12,
+     "alive": 6,
+     "mobs": [
+      {
+       "template": 60158143,
+       "name": "aughisky",
+       "level": [
+        29,
+        31
+       ]
+      },
+      {
+       "template": 60158143,
+       "name": "aughisky",
+       "level": [
+        29,
+        31
+       ]
+      },
+      {
+       "template": 60160937,
+       "name": "fog wraith",
+       "level": [
+        28,
+        30
+       ]
+      }
+     ],
+     "success": "The herd scatters - and the herd's stallion comes out of the fog, kelp in its mane.",
+     "fail": "The water-horses run back to the sea with riders on their backs.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 100
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "the Kelp-Maned Stallion",
+     "objective": "Defeat the Kelp-Maned Stallion",
+     "announce": "The Kelp-Maned Stallion, father of every aughisky on this coast. Bring friends.",
+     "center": [
+      860,
+      960,
+      130.0
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60158143,
+      "name": "the Kelp-Maned Stallion",
+      "level": 34,
+      "size": 70,
+      "health_mult": 2.0,
+      "guild": "of the Sea"
+     },
+     "adds": {
+      "every_s": 45,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60158143,
+        "name": "aughisky",
+        "level": [
+         29,
+         31
+        ]
+       }
+      ]
+     },
+     "success": "The stallion falls, and the moor is quiet.",
+     "fail": "The stallion runs back into the sea.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu203_kelp_maned_bridle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cliffs_longphort_assault",
+   "title": "Burn the Longphort",
+   "levels": [
+    30,
+    35
+   ],
+   "manual": true,
+   "bots": 8,
+   "min_people": 4,
+   "bot_min_level": 22,
+   "hint": "The Watch is gathering a war band on the cliff top above the longphort.",
+   "rest_s": 15,
+   "start": "p1",
+   "giver": {
+    "name": "Watch-Sergeant Aedan",
+    "level": 33,
+    "pos": [
+     450,
+     330,
+     137.3
+    ],
+    "health_mult": 3,
+    "template": 60165769,
+    "model": 328,
+    "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+    "guild": "the Watch of Moher",
+    "greet": "Jarl Hrafn's longphort sits in the north-west cove like a tick on a dog. Four at least - bots and all - and when you're ready, say [burn the longphort].",
+    "accept": "burn the longphort",
+    "reply": "Down the cliff path! Mind the bowmen on the stockade - straight through to the jarl's hall!",
+    "busy": "Not yet. Rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The longphort burns. The cove is ours.",
+    "regret": "Back up the cliff! We'll come again."
+   },
+   "guards": [
+    {
+     "template": 60165769,
+     "model": 328,
+     "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+     "guild": "the Watch of Moher",
+     "name": "watchman of Moher",
+     "level": 30,
+     "count": 2
+    }
+   ],
+   "stages": [
+    {
+     "id": "p1",
+     "type": "cull",
+     "name": "The Shingle",
+     "objective": "Storm the shingle under the bowmen on the stockade",
+     "announce": "Onto the shingle! Norse bowmen on the stockade - clear the beach and the gate!",
+     "center": [
+      240,
+      320,
+      37.8
+     ],
+     "radius": 60,
+     "time_s": 900,
+     "kill": 20,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60167667,
+       "name": "Norse raider",
+       "level": [
+        30,
+        32
+       ],
+       "guild": "the Saltwolves"
+      },
+      {
+       "template": 60167667,
+       "name": "Norse raider",
+       "level": [
+        30,
+        32
+       ],
+       "guild": "the Saltwolves"
+      },
+      {
+       "template": 60167654,
+       "name": "Norse bowman",
+       "level": [
+        30,
+        32
+       ],
+       "guild": "the Saltwolves"
+      },
+      {
+       "template": 60159139,
+       "name": "Norse huscarl",
+       "level": [
+        31,
+        33
+       ],
+       "guild": "the Saltwolves"
+      }
+     ],
+     "success": "The gate's down. Inside, by the beached longships, Jarl Hrafn is waiting with his huscarls.",
+     "fail": "The war band is driven back up the cliff.",
+     "on_success": "p2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 16,
+      "copper_per_level": 120,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "p2",
+     "type": "boss",
+     "name": "Jarl Hrafn",
+     "objective": "Defeat Jarl Hrafn in his hall",
+     "announce": "Jarl Hrafn, raven on his shield: 'The fog-man gave me this coast. I keep what I'm given.'",
+     "center": [
+      190,
+      250,
+      37.7
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60162606,
+      "name": "Jarl Hrafn",
+      "level": 35,
+      "size": 62,
+      "health_mult": 2.2,
+      "guild": "Jarl of the Saltwolves"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60159139,
+        "name": "Norse huscarl",
+        "level": [
+         31,
+         33
+        ],
+        "guild": "the Saltwolves"
+       },
+       {
+        "template": 60166154,
+        "name": "Norse skald",
+        "level": [
+         31,
+         33
+        ],
+        "guild": "the Saltwolves"
+       }
+      ]
+     },
+     "success": "Jarl Hrafn falls among his ships. The Watch puts the torch to the longphort, and the Cliff Beacon is lit above the cove.",
+     "fail": "Hrafn drives the war band back into the sea-fog.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 220,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "lp203_jarl_hrafn_s_raven_shield_boss",
+        "gold_chance": 50,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cliffs_longphort_return",
+   "title": "Ulf Sea-Wolf",
+   "levels": [
+    31,
+    35
+   ],
+   "manual": true,
+   "bots": 8,
+   "bot_min_level": 22,
+   "hint": "A red sail in the fog: the jarl's brother has come back for the cove.",
+   "wake_m": 160,
+   "auto_fail_s": 900,
+   "start": "x1",
+   "stages": [
+    {
+     "id": "x1",
+     "type": "defend",
+     "name": "The Beacon",
+     "objective": "Keep Beacon-Keeper Niamh alive at the Cliff Beacon",
+     "announce": "Longships in the cove! Every Norseman Ulf could find. Hold the beacon!",
+     "center": [
+      190,
+      250,
+      37.7
+     ],
+     "radius": 70,
+     "duration_s": 200,
+     "protect": {
+      "template": 60165769,
+      "model": 328,
+      "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+      "guild": "the Watch of Moher",
+      "name": "Beacon-Keeper Niamh",
+      "level": 32,
+      "pos": [
+       190,
+       250,
+       37.7
+      ],
+      "health_mult": 4
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 4,
+      "from": [
+       [
+        140,
+        300,
+        36.2
+       ],
+       [
+        150,
+        200,
+        37.0
+       ],
+       [
+        230,
+        360,
+        37.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60167667,
+        "name": "Norse raider",
+        "level": [
+         30,
+         32
+        ],
+        "guild": "the Saltwolves"
+       },
+       {
+        "template": 60167654,
+        "name": "Norse bowman",
+        "level": [
+         30,
+         32
+        ],
+        "guild": "the Saltwolves"
+       },
+       {
+        "template": 60159139,
+        "name": "Norse huscarl",
+        "level": [
+         31,
+         33
+        ],
+        "guild": "the Saltwolves"
+       }
+      ]
+     },
+     "success": "The first rush breaks - and Ulf Sea-Wolf jumps down onto the shingle.",
+     "fail": "The beacon is thrown down.",
+     "on_success": "x2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 140,
+      "tokens": 14
+     }
+    },
+    {
+     "id": "x2",
+     "type": "boss",
+     "name": "Ulf Sea-Wolf",
+     "objective": "Defeat Ulf Sea-Wolf",
+     "announce": "Ulf Sea-Wolf, Hrafn's brother: 'You burned my brother's hall. I'll build a bigger one on your bones.'",
+     "center": [
+      190,
+      250,
+      37.7
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60162606,
+      "name": "Ulf Sea-Wolf",
+      "level": 35,
+      "size": 64,
+      "health_mult": 2.2,
+      "guild": "of the Saltwolves"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60159139,
+        "name": "Norse huscarl",
+        "level": [
+         31,
+         33
+        ],
+        "guild": "the Saltwolves"
+       },
+       {
+        "template": 60167667,
+        "name": "Norse raider",
+        "level": [
+         30,
+         32
+        ],
+        "guild": "the Saltwolves"
+       }
+      ]
+     },
+     "success": "Ulf falls. The cove holds - for now.",
+     "fail": "Ulf takes the cove back and the longphort rises again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 200,
+      "tokens": 20
+     }
+    }
+   ]
+  }
+ ],
+ "siege": {
+  "id": "longphort",
+  "name": "the Longphort",
+  "enemy": "the Saltwolves",
+  "resolve_name": "The Watch's resolve",
+  "enemy_name": "The Saltwolves' hold",
+  "faction": "watch_of_moher",
+  "feeds": {
+   "cliffs_longships": 20,
+   "tower_moher_watch": 15,
+   "cliffs_wreckers_lights": 10,
+   "cliffs_of_moher_cliff_dwellers": 10,
+   "cliffs_of_moher_fog_wraiths": 10,
+   "cliffs_fetch_night": 10,
+   "cliffs_of_moher_koalinth_raid": 5,
+   "cliffs_aughisky_run": 5,
+   "cliffs_of_moher_distorters": 5
+  },
+  "feed_default": 5,
+  "quests": {
+   "cm_first_sail": 10,
+   "cm_whelihan": 15,
+   "cm_longphort_scout": 15,
+   "cm_thralls": 15,
+   "cm_skald": 20,
+   "cm_grey_man": 20
+  },
+  "enemy_feeds": {
+   "cliffs_longships": 20,
+   "tower_moher_watch": 10
+  },
+  "enemy_default": 5,
+  "war_chain": "cliffs_longships",
+  "assault": "cliffs_longphort_assault",
+  "raids": [],
+  "last_raid": "cliffs_longphort_return",
+  "hold_h": 2,
+  "raid_gap_h": [
+   2,
+   1.5,
+   1.5
+  ],
+  "criers": [],
+  "bots_go_after_m": 30,
+  "open_text": "Hear me! The Watch of Moher means to burn Jarl Hrafn's longphort out of the north-west cove! Watch-Sergeant Aedan waits on the cliff top above it. If no one leads within the half-hour, the Watch goes without you.",
+  "taken_text": "The longphort is burning! The Watch holds the north-west cove and the Cliff Beacon is lit - go and see.",
+  "repelled_text": "The attack on the longphort has been thrown back. The Saltwolves grow bolder.",
+  "raid_text": "A red sail in the fog: the Norse are coming back for the cove!",
+  "held_text": "The Norse are thrown back into the sea. The cove holds.",
+  "fall_text": "The cove has fallen. The longphort is rising again, and the Watch must rebuild its resolve.",
+  "carry_text": "The Watch leads you down the cliff path at a run.",
+  "carried_cry": "The war band wouldn't wait any longer - the Watch has stormed {0}!",
+  "hostile_tier": "yellow",
+  "sites": [
+   "longphort",
+   "longphort_ships",
+   "longphort_gate",
+   "longphort_shingle"
+  ],
+  "staging": [
+   450,
+   330,
+   137.3
+  ],
+  "landing": [
+   250,
+   310,
+   40.3
+  ],
+  "area": [
+   190,
+   250,
+   110
+  ],
+  "camp_npcs": [
+   {
+    "kind": "marks",
+    "name": "Watch-Quartermaster Fiachna",
+    "level": 32,
+    "pos": [
+     215,
+     270,
+     38.4
+    ],
+    "template": 60165769,
+    "model": 328,
+    "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+    "guild": "the Watch of Moher",
+    "greet": "Cove-only stock, for those who burned the longphort and those who hold the beacon.",
+    "stock": [
+     {
+      "item": "lp203_cloak_of_the_cliff_beacon",
+      "price": 60
+     },
+     {
+      "item": "lp203_raven_shield_torc",
+      "price": 40
+     },
+     {
+      "item": "lp203_watch_ring_of_moher",
+      "price": 40
+     },
+     {
+      "item": "lp203_shingle_runner_s_bracer",
+      "price": 40
+     },
+     {
+      "item": "tw_strong_draught_of_healing",
+      "price": 2
+     },
+     {
+      "item": "tw_strong_draught_of_power",
+      "price": 2
+     }
+    ]
+   },
+   {
+    "kind": "coin",
+    "name": "Healer Brigid",
+    "model": 365,
+    "level": 28,
+    "pos": [
+     200,
+     230,
+     38.9
+    ],
+    "guild": "the Watch of Moher",
+    "greet": "Brews from Tir Urphost, carried down the cliff on my back. Coin, mind.",
+    "stock": [
+     {
+      "item": "lp203_cliff_top_draught"
+     },
+     {
+      "item": "lp203_sea_fog_tonic"
+     },
+     {
+      "item": "lp203_beacon_oil_cordial"
+     },
+     {
+      "item": "lp203_watchman_s_elixir"
+     },
+     {
+      "item": "lp203_urphost_mead"
+     }
+    ]
+   },
+   {
+    "kind": "idle",
+    "name": "freed thrall",
+    "model": 337,
+    "level": 20,
+    "pos": [
+     170,
+     260,
+     37.4
+    ],
+    "count": 3,
+    "guild": "",
+    "idle": "Two years at the oar. Two years. I'd forgotten what land smells like."
+   },
+   {
+    "kind": "idle",
+    "name": "Beacon-Keeper Niamh",
+    "level": 32,
+    "pos": [
+     190,
+     250,
+     37.7
+    ],
+    "template": 60165769,
+    "model": 328,
+    "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+    "guild": "the Watch of Moher",
+    "greet": "The Cliff Beacon's lit. Every ship on this coast can see it now - ours and theirs.",
+    "idle": "Watch the fog. When it thickens and there's no wind, they're coming."
+   }
+  ],
+  "holdouts": [
+   {
+    "kind": "holdout",
+    "name": "Norse holdout",
+    "template": 60167667,
+    "level": 32,
+    "pos": [
+     130,
+     320,
+     34.8
+    ],
+    "count": 3,
+    "tier": "yellow",
+    "respawn_s": 300
+   },
+   {
+    "kind": "holdout",
+    "name": "Norse archer holdout",
+    "template": 60167654,
+    "level": 32,
+    "pos": [
+     160,
+     190,
+     37.2
+    ],
+    "count": 2,
+    "tier": "yellow",
+    "respawn_s": 300
+   },
+   {
+    "kind": "holdout",
+    "name": "Huscarl Sigrid",
+    "template": 60159139,
+    "level": 34,
+    "pos": [
+     220,
+     200,
+     41.6
+    ],
+    "count": 1,
+    "tier": "orange",
+    "respawn_s": 900
+   }
   ]
+ }
 }

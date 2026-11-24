@@ -1,0 +1,96 @@
+{
+ "zone": 205,
+ "region": 200,
+ "realm": 3,
+ "prefix": "ev205",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lamplighter's Wick",
+   "base": [
+    41,
+    24
+   ],
+   "level": 44,
+   "bonuses": {
+    "Emp": 15,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 26
+   },
+   "lore": "Nessa's spare lamp-wick. It never lights a path that isn't there."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Glass Keener's Shard",
+   "base": [
+    41,
+    29
+   ],
+   "level": 46,
+   "bonuses": {
+    "Int": 15,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "A shard of the Glass Keener, on a cord. It keens very faintly in the wind."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sorlaith's Blue Brand",
+   "base": [
+    41,
+    33
+   ],
+   "level": 46,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 39
+   },
+   "lore": "An Azure captain's bracer, blue enamel, scorched."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cullen Gold Cup Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 45,
+   "bonuses": {
+    "Qui": 15,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 27,
+    "Power": 5
+   },
+   "lore": "A little gold cup from the hoard, three thousand years old."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Battle-Crow's Feather",
+   "base": [
+    41,
+    35
+   ],
+   "level": 47,
+   "bonuses": {
+    "Dex": 16,
+    "Qui": 16,
+    "Str": 8,
+    "Hits": 40
+   },
+   "lore": "A black feather, bound in a ring. You hear wings when you fight."
+  }
+ ]
+}

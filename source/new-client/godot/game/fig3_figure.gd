@@ -464,8 +464,10 @@ func apply(changes: Dictionary) -> void:
 		m.set_shader_parameter("tint_mode", 1)
 		var eyes: Array = meta.get("eyes", [])
 		if eyes.size() > 0:
-			m.set_shader_parameter("eye_tex", _tex(eyes[clampi(int(look.get("eyes", 0)), 0, eyes.size() - 1)]))
+			var etex := _tex(eyes[clampi(int(look.get("eyes", 0)), 0, eyes.size() - 1)])
+			m.set_shader_parameter("eye_tex", etex)
 			m.set_shader_parameter("has_eye", true)
+			m.set_shader_parameter("eye_box", _eye_box(etex))
 			var er = custom_colour("eyes")                 # (the creator's colour wheel: any iris colour)
 			m.set_shader_parameter("eye_tint", Color(pow(er.r, 2.2), pow(er.g, 2.2), pow(er.b, 2.2), 1.0) if er != null else Color(0, 0, 0, 0))
 		var tattoos: Array = meta.get("tattoos", [])
@@ -1855,6 +1857,42 @@ static func load_flow(key: String) -> Texture2D:
 	return t
 
 
+## Where the eyeball sits on the face texture (owner 2026-11-23: "darker skin makes eye whites dark as well"): the
+## eye-colour texture is white but for the iris, on the face's own UVs, so the iris's box gives the eyeball's place -
+## [centre u, centre v, half width, half height] grown to take in the white around it. The skin tone stays off it.
+static var _eye_boxes := {}
+
+
+static func _eye_box(etex: Texture2D) -> Vector4:
+	if etex == null:
+		return Vector4.ZERO
+	var key := etex.resource_path if etex.resource_path != "" else str(etex.get_instance_id())
+	if _eye_boxes.has(key):
+		return _eye_boxes[key]
+	var out := Vector4.ZERO
+	var img := etex.get_image()
+	if img:
+		if img.is_compressed():
+			img.decompress()
+		var w := img.get_width()
+		var h := img.get_height()
+		var lo := Vector2(INF, INF)
+		var hi := Vector2(-INF, -INF)
+		var step := maxi(1, w / 128)
+		for y in range(0, h, step):
+			for x in range(0, w, step):
+				var c := img.get_pixel(x, y)
+				if minf(c.r, minf(c.g, c.b)) < 0.85:
+					lo = lo.min(Vector2(x, y))
+					hi = hi.max(Vector2(x, y))
+		if hi.x >= lo.x:
+			var mid := (lo + hi) * 0.5 / Vector2(w, h)
+			var half := ((hi - lo) * 0.5 + Vector2(step, step)) / Vector2(w, h)
+			out = Vector4(mid.x, mid.y, half.x * 4.0, half.y * 3.0)
+	_eye_boxes[key] = out
+	return out
+
+
 func _tex(base: String) -> Texture2D:
 	var key := base.to_lower()
 	if _tex_cache.has(_texture_dir + key):
@@ -2046,6 +2084,7 @@ uniform sampler2D decal_tex : source_color, filter_linear_mipmap, repeat_enable;
 uniform vec3 tint : source_color = vec3(1.0);
 uniform int tint_mode = 0;
 uniform bool has_eye = false;
+uniform vec4 eye_box = vec4(0.0);                  // the eyeball on the face texture: centre uv, half size (Fig3Figure._eye_box)
 uniform bool has_decal = false;
 // a cloak's guild emblem (Emblems; the client's $insigniaTexture pixel shader): the pattern on the cloak's set 0 (UV2),
 // the logo on its set 2 (CUSTOM0), the cloak's own texture on set 1 - pattern x cloak x 2 x logo, in the client's gamma
@@ -2189,7 +2228,13 @@ void fragment() {
 		if (has_logo) g *= texture(logo_tex, logo_uv).r;
 		col = pow(clamp(g, 0.0, 1.0), vec3(2.2));
 	}
-	else if (tint_mode == 1) col *= tint;
+	else if (tint_mode == 1) {
+		col *= tint;
+		if (eye_box.z > 0.0) {                         // the eyeball keeps its own colours, not the skin tone
+			float ed = length((UV - eye_box.xy) / eye_box.zw);
+			col = mix(col, c.rgb, 1.0 - smoothstep(0.75, 1.0, ed));
+		}
+	}
 	else if (tint_mode == 2) col *= mix(tint, vec3(1.0), smoothstep(0.90, 0.99, c.a));
 	float ref = max(dot(tint, vec3(0.3, 0.59, 0.11)) * 0.45, 0.05);
 	if (layer_count > 0) {
@@ -2244,7 +2289,11 @@ void fragment() {
 	}
 	if (has_decal) {
 		vec4 d = texture(decal_tex, UV);
-		col *= mix(vec3(1.0), d.rgb * 2.0, d.a);
+		// the client doubles the decal in gamma space (grey 128 = no change); the texture reads linear here, where
+		// grey is 0.21 - doubled, 0.43: the whole face darkened (owner 2026-11-23, Bugs & Fixes: "Selecting a tattoo for
+		// Celts darkens their face considerably"). Back to gamma, doubled, and back to linear.
+		vec3 dg = pow(max(d.rgb, vec3(0.0)), vec3(1.0 / 2.2));
+		col *= mix(vec3(1.0), pow(dg * 2.0, vec3(2.2)), d.a);
 	}
 	ALBEDO = col;
 	ROUGHNESS = 0.85;

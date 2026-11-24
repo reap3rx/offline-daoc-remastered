@@ -1,0 +1,132 @@
+{
+ "zone": 206,
+ "region": 200,
+ "realm": 3,
+ "prefix": "fg206",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cloak of the Forest Gate",
+   "base": [
+    41,
+    26
+   ],
+   "level": 30,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 30,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Rowan-green, with the tree of Hibernia in grey thread. Given to those who opened the border."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rowan-Ward Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Emp": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Rowan wood bound in bronze, cut from the gate's own ward. The Queen's people won't touch it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gate-Ranger's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 30,
+   "bonuses": {
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 26
+   },
+   "lore": "A ranger's ring, worn smooth on a bowstring."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Borderer's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 30,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
+   },
+   "lore": "Hard leather, scored by black wraiths' claws."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dark Man's Cloak-Clasp",
+   "base": [
+    41,
+    24
+   ],
+   "level": 32,
+   "bonuses": {
+    "Int": 11,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 5,
+    "Hits": 19
+   },
+   "lore": "A clasp of black iron from the Dark Man's cloak. It is always cold, and always a little heavier at night."
+  }
+ ],
+ "camp": {
+  "cloak": "fg206_cloak_of_the_forest_gate",
+  "emblem": 41968,
+  "draughts": [
+   [
+    "Strong_Draught_of_Healing",
+    "fg206_ranger_s_flask",
+    "Ranger's Flask",
+    "Whatever the Rangers keep in it, it works. Don't ask."
+   ],
+   [
+    "Strong_Draught_of_Power",
+    "fg206_rowan_berry_cordial",
+    "Rowan-Berry Cordial",
+    "Bitter red berries in honey. It clears the head of glamours."
+   ],
+   [
+    "Strong_Draught_of_Endurance",
+    "fg206_moon_lake_water",
+    "Moon Lake Water",
+    "Drawn at night from Moon Lake. It tastes of silver."
+   ],
+   [
+    "Superior_Elixir_of_Instant_Healing",
+    "fg206_border_elixir",
+    "Border Elixir",
+    "For the first bad minute in the Cursed Forest. There will be one."
+   ],
+   [
+    "CombinedRegens_Draught",
+    "fg206_brynach_mead",
+    "Brynach Mead",
+    "The herders' mead. Everything comes back a little faster after a cup."
+   ]
+  ]
+ }
+}

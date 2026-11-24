@@ -50,6 +50,13 @@ namespace DOL.GS
 
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
+			// sealed in his son's light until the Southern Muster holds the hills (MusterCampaign.cs, owner 2026-11-24)
+			if (DOL.GS.DynamicEvents.MusterCampaign.CuuldurachSealed)
+			{
+				if ((source as GamePlayer ?? (source as GameSummonedPet)?.Owner as GamePlayer) is GamePlayer sealedFor)
+					sealedFor.Out.SendMessage("Your blow slides off a skin of light. The Glimmer King is sealed in his ring while his son's light holds the hills.", eChatType.CT_System, eChatLoc.CL_ChatWindow);
+				return;
+			}
 			if (DragonLairPlacement.CanReceiveDamageFrom(source))
 			{
 				if (!IsWithinRadius(spawnPoint, LairRadius))//dragon take 0 dmg is it's out of his lair
@@ -205,7 +212,7 @@ namespace DOL.GS
 		}
 		public override void StartAttack(GameObject target)
 		{
-			if (HibCuuldurachBrain.IsRestless)
+			if (HibCuuldurachBrain.IsRestless || DOL.GS.DynamicEvents.MusterCampaign.CuuldurachSealed)
 				return;
 			else
 				base.StartAttack(target);
@@ -332,6 +339,13 @@ namespace DOL.AI.Brain
 		}
 		public override void Think()
 		{
+			if (DOL.GS.DynamicEvents.MusterCampaign.CuuldurachSealed)
+			{
+				// sealed: he sleeps in his ring, whole, and nothing he does reaches out of it
+				ClearAggroList();
+				Body.Health = Body.MaxHealth;
+				return;
+			}
             bool encounterAggro = CheckProximityAggro();
             EncounterAdds.Tick(Body, AggroList.Select(static entry => entry.Key), encounterAggro, IsRestless);
             if (encounterAggro) DragonDiagnostics.Fighting(Body, AggroList.Count);

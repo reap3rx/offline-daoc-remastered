@@ -214,6 +214,36 @@ func _build_model() -> void:
 	tb = _pb("sounds+anim", tb)
 	_attach_effects()
 	_pb("effects", tb)
+	if String(spawn.get("name", "")).to_lower() in GLOW_NODES:
+		_glow_node(GLOW_NODES[String(spawn.get("name", "")).to_lower()])
+
+
+## Things you pick that give off a little light of their own (owner 2026-11-23: "have the glowcaps emit a small amount
+## of light"): name -> the light's colour. A soft light low over it, slowly breathing, and a faint glow on the model.
+const GLOW_NODES := {"glowcap": Color(0.45, 0.95, 0.75)}
+
+
+func _glow_node(col: Color) -> void:
+	var l := OmniLight3D.new()
+	l.name = "NodeGlow"
+	l.light_color = col
+	l.light_energy = 0.9
+	l.omni_range = 3.2
+	l.omni_attenuation = 1.6
+	l.shadow_enabled = false
+	l.position = Vector3(0, 0.35, 0)
+	add_child(l)
+	var tw := l.create_tween().set_loops()
+	tw.tween_property(l, "light_energy", 0.55, 1.6 + randf() * 0.6).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(l, "light_energy", 0.95, 1.6 + randf() * 0.6).set_trans(Tween.TRANS_SINE)
+	if model:
+		for m in model.find_children("*", "MeshInstance3D", true, false):
+			var mat := StandardMaterial3D.new()
+			mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+			mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+			mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+			mat.albedo_color = Color(col.r, col.g, col.b, 0.25)
+			(m as MeshInstance3D).material_overlay = mat
 
 
 ## The client's monster effects (build_monsters.py: monsters.csv Effect -> moneffects -> effect NIFs): glows, flames,
@@ -833,7 +863,8 @@ func _process_view(delta: float, cam: Camera3D) -> void:
 		_lod.hidden = manager != null and (manager as NpcManager).hidden(state)
 	if model is Fig3Figure:
 		var f := model as Fig3Figure
-		f.fx_on = rank < Perf.sway_n                    # (under load the farther figures lose the polish)
+		f.fx_on = rank < Perf.sway_n and not (_lod and AnimLod.is_far(_lod.last_dist, rank))   # (under load, or past
+		# the character detail distance, the farther figures lose the polish)
 		if Fig3Figure.sway_on and f.fx_on:
 			f.look_point = _look_point()
 		# a swing or a cast on the move (chasing you): its legs keep running under it, as yours (Fig3Figure.set_lower;

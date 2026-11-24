@@ -16,28 +16,41 @@
       "idle": "Lorcan wrote me a poem every day for a year. Then he wrote them for someone else."
     },
     {
-      "id": "lorcan_poet",
+      "id": "bc_fergal",
       "zone": 205,
       "realm": 3,
-      "name": "Lorcan the Poet",
+      "name": "Turf-Reeve Fergal",
       "model": 337,
       "level": 40,
       "pos": [
-        802,
-        1146,
+        238,
+        930,
+        123.6
+      ],
+      "guild": "Siopa",
+      "idle": "Siopa's a fort and a turf-yard. The turf keeps Alainn Bin warm. The road keeps the turf moving. The road is my whole job."
+    },
+    {
+      "id": "bc_tomas",
+      "zone": 205,
+      "realm": 3,
+      "name": "Tomas the Peat-Cutter",
+      "model": 337,
+      "level": 36,
+      "pos": [
+        480,
+        1000,
         122.2
       ],
-      "during": [
-        "lhiannan/s5",
-        "lhiannan/s7"
-      ]
+      "guild": "the Turf-Cutters",
+      "idle": "Thirty years cutting turf. You find things. Bog butter. A boot. Last week, a gold collar the size of my head."
     },
     {
       "id": "sadhbh",
       "zone": 205,
       "realm": 3,
       "name": "Old Sadhbh",
-      "model": 362,
+      "model": 365,
       "level": 48,
       "pos": [
         1300,
@@ -62,6 +75,53 @@
       "idle": "The Chieftess is well. Perfectly well. Please don't trouble her."
     },
     {
+      "id": "bc_ruairc",
+      "zone": 205,
+      "realm": 3,
+      "name": "Captain Ruairc",
+      "model": 337,
+      "level": 48,
+      "pos": [
+        1272,
+        1288,
+        123.6
+      ],
+      "guild": "the Clann of Alainn Bin",
+      "idle": "The Chieftess holds Alainn Bin. I hold everything she can see from her window. Lately, that's less."
+    },
+    {
+      "id": "bc_brid",
+      "zone": 205,
+      "realm": 3,
+      "name": "Keener Brid",
+      "model": 365,
+      "level": 44,
+      "pos": [
+        1240,
+        1250,
+        122.2
+      ],
+      "guild": "the Keeners of Cullen",
+      "idle": "We keen for the dead. Lately we read the lights too. A Keener has to know which lights mean a death."
+    },
+    {
+      "id": "lorcan_poet",
+      "zone": 205,
+      "realm": 3,
+      "name": "Lorcan the Poet",
+      "model": 337,
+      "level": 40,
+      "pos": [
+        802,
+        1146,
+        122.2
+      ],
+      "during": [
+        "lhiannan/s5",
+        "lhiannan/s7"
+      ]
+    },
+    {
       "id": "banshee_npc",
       "zone": 205,
       "realm": 3,
@@ -80,9 +140,413 @@
   ],
   "quests": [
     {
+      "id": "bc_siopa_road",
+      "title": "The Siopa Road",
+      "level": 36,
+      "giver": "bc_fergal",
+      "offer": "The siabra have put a post on the Siopa road - wayguards and their hounds, right across it. No turf's gone to Alainn Bin in a week.\n\nThe odd thing: the siabra used to rob the road. Now they just stand on it and turn people back. As if they're keeping it clear for something. Will you [clear the post]?",
+      "accept": "clear the post",
+      "topics": {},
+      "summary": "A siabra wayguard post on the Siopa road turns everyone back.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            503,
+            819,
+            124.9
+          ],
+          "radius": 25,
+          "goal": "Clear the siabra wayguard post about 290 m north-east of Turf-Reeve Fergal",
+          "mob": {
+            "template": 60165995,
+            "name": "siabra wayguard",
+            "level": 37
+          },
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 205,
+          "at": [
+            508,
+            824,
+            124.8
+          ],
+          "goal": "Search the wayguard post",
+          "clue": {
+            "name": "siabra orders, scratched on a glowing slate",
+            "model": 1347
+          },
+          "text": "A slate that glows, scratched with siabra marks. Fergal will want to see it: it's a map of the bog with lines drawn from the tower in the middle out to every road.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bc_fergal",
+          "goal": "Bring the slate to Turf-Reeve Fergal",
+          "say": "Lines from the Gemstone Tower to every road. They're not keeping the roads clear. They're keeping them dark - so whatever walks out of that tower at night can walk where it likes.\n\nThe Clann at Alainn Bin should see this. Captain Ruairc.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Siopa.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq205_turf_reeve_s_tally_ring",
+              "sq205_wayguard_iron_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bc_turf_gold",
+      "title": "The Cullen Gold",
+      "level": 37,
+      "giver": "bc_tomas",
+      "offer": "You heard about the collar? Everyone has. The siabra too, it seems - they've come for it twice, and for me with it.\n\nI've buried it again, out in the cuttings. Will you [stand by me] while I dig it up and get it to Alainn Bin? The Chieftess can keep it. I don't want it.",
+      "accept": "stand by me",
+      "topics": {},
+      "summary": "Tomas the Peat-Cutter found a gold collar in the turf, and the siabra want it.",
+      "steps": [
+        {
+          "type": "encounter",
+          "zone": 205,
+          "at": [
+            480,
+            1000,
+            122.2
+          ],
+          "wake_m": 30,
+          "goal": "Keep Tomas alive while he digs up the gold about 0 m east of Tomas the Peat-Cutter",
+          "text": "Tomas lifts the collar out of the turf. Even in daylight it glows faintly - and he swears it didn't, last week.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Tomas alive",
+              "center": [
+                480,
+                1000,
+                122.2
+              ],
+              "radius": 30,
+              "duration_s": 120,
+              "objective": "Keep Tomas alive",
+              "announce": "Tomas starts to dig. Out of the reeds come siabra raiders, running low.",
+              "protect": {
+                "template": 60161797,
+                "name": "Tomas the Peat-Cutter",
+                "level": 38,
+                "model": 337
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 3,
+                "from": [
+                  [
+                    492,
+                    1006,
+                    122.5
+                  ],
+                  [
+                    470,
+                    990,
+                    122.2
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60165989,
+                    "name": "siabra raider",
+                    "level": [
+                      36,
+                      37
+                    ]
+                  },
+                  {
+                    "template": 60165986,
+                    "name": "siabra mireguard",
+                    "level": [
+                      37,
+                      38
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "Tomas the Peat-Cutter falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bc_ruairc",
+          "goal": "Take Tomas and the gold to Captain Ruairc in Alainn Bin",
+          "say": "The Cullen gold. The old kings' hoard - there's more of it under that turf than in Tara.\n\nAnd it glows. Everything out there glows lately. Fergal's slate says the tower. I say the siabra serve something in that tower, and it wants gold - or light, or both.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Clann.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq205_cullen_gold_collar_charm",
+              "sq205_peat_cutter_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "bc_siopa_road"
+    },
+    {
+      "id": "bc_siabra_posts",
+      "title": "The Post-Captains",
+      "level": 38,
+      "giver": "bc_ruairc",
+      "offer": "Two siabra posts hold the north-west marches - Muroi's and Enan's. Their captains take orders from the tower and pass them on.\n\nWill you [break the posts]? Kill the captains. I want their seals.",
+      "accept": "break the posts",
+      "topics": {},
+      "summary": "Captain Ruairc wants the siabra post-captains Muroi and Enan dead.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            317,
+            319,
+            123.7
+          ],
+          "radius": 50,
+          "goal": "Kill Muroi, who holds the western siabra post about 1.4 km north-west of Captain Ruairc",
+          "target": "Muroi",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            726,
+            266,
+            123.6
+          ],
+          "radius": 50,
+          "goal": "Kill Enan, who holds the northern siabra post",
+          "target": "Enan",
+          "count": 1,
+          "text": "Enan's seal glows. Pressed to wax, it shows a crown of light - not a siabra mark at all.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bc_ruairc",
+          "goal": "Bring the seals to Captain Ruairc",
+          "say": "A crown of light. The Glimmer King's mark - the Azure crusaders on the north road wear it on their banners, crossed out.\n\nSo the siabra have a new king. One causeway left between the marches and the tower: Saemus holds it.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Clann.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq205_post_captain_s_seal_ring",
+              "sq205_stilt_walker_s_boots_charm"
+            ]
+          }
+        }
+      },
+      "requires": "bc_turf_gold"
+    },
+    {
+      "id": "bc_causeway",
+      "title": "The Causeway",
+      "level": 39,
+      "giver": "bc_ruairc",
+      "offer": "The causeway runs from the north marches into the middle of the bog, toward the tower. Saemus holds it with waterwalkers.\n\nAnd Fergal says there are poles along it, in a line, every forty paces - like lamp-posts. Will you [take the causeway]?",
+      "accept": "take the causeway",
+      "topics": {},
+      "summary": "Saemus and his waterwalkers hold the causeway to the tower, and there are poles along it like lamp-posts.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            522,
+            560,
+            122.2
+          ],
+          "radius": 25,
+          "goal": "Kill the siabra waterwalkers on the causeway about 1.0 km north-west of Captain Ruairc",
+          "mob": {
+            "template": 30007,
+            "name": "siabra waterwalker",
+            "level": 39
+          },
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            522,
+            547,
+            122.2
+          ],
+          "radius": 50,
+          "goal": "Kill Saemus at the head of the causeway",
+          "target": "Saemus",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 205,
+          "at": [
+            560,
+            600,
+            122.2
+          ],
+          "goal": "Look at the poles along the causeway",
+          "clue": {
+            "name": "a lantern-pole, hung with a glowing bead",
+            "model": 1347
+          },
+          "text": "Each pole carries a bead of glass with a light in it, and the lights lean toward the tower like flowers toward the sun. A road of lights, for walking on the bog at night.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "bc_ruairc",
+          "goal": "Report to Captain Ruairc",
+          "say": "A road of lights. The siabra built a lit road from the marches to the tower. For whom?\n\nThe Keeners will have a word for it. Old Sadhbh, or Brid. Me, I just want to burn it.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Clann.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq205_causeway_breaker_s_torc",
+              "sq205_lantern_pole_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "bc_siabra_posts"
+    },
+    {
+      "id": "bc_pages",
+      "title": "Pages in the Reeds",
+      "level": 39,
+      "giver": "fiona_harper",
+      "offer": "Pages. Lorcan's verse, stuck to the reeds all over the bog - and at night, Keener Brid says, they glow.\n\nBefore I ask anything else of you, will you [gather the pages]? I want to read what he's writing. Even if it's for her.",
+      "accept": "gather the pages",
+      "topics": {},
+      "summary": "Pages of Lorcan's verse are stuck to the reeds all over the bog, and they glow at night.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 205,
+          "at": [
+            560,
+            800,
+            123.6
+          ],
+          "goal": "Gather the glowing pages from the reeds by the causeway about 360 m north-east of Fiona the Harper",
+          "clue": {
+            "name": "pages of verse, faintly glowing",
+            "model": 1347
+          },
+          "text": "Lorcan's verse, in an old man's hand. Every line is about light: light on water, light in a tower, light that takes away weeping.",
+          "give": {
+            "name": "Lorcan's glowing pages"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            600,
+            760,
+            126.2
+          ],
+          "radius": 25,
+          "goal": "Put out the bog lights circling the pages",
+          "mob": {
+            "template": 60161430,
+            "name": "bog light",
+            "level": 39
+          },
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "fiona_harper",
+          "goal": "Bring the pages to Fiona",
+          "say": "He never wrote about light. He wrote about me, and rain, and his mother's kitchen. This is someone else's song in his hand.\n\nThe lhiannan-sidhe is a muse. Something is singing through her. Bring him [home] - whatever it takes.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Fiona.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq205_glowing_page_charm",
+              "sq205_harper_s_wrist_cord"
+            ]
+          }
+        }
+      }
+    },
+    {
       "id": "lhiannan",
       "title": "The Lhiannan-Sidhe",
-      "level": 42,
+      "level": 40,
       "giver": "fiona_harper",
       "offer": "Lorcan was my lover and the finest poet in Cullen. Last spring a lhiannan-sidhe found him - a faerie muse. They give a poet the best verses he'll ever write, and they drink his life to do it.\n\nHe wrote to me last month, from somewhere in the bog. The writing was an old man's. He's thirty. Will you [find Lorcan]?",
       "accept": "find Lorcan",
@@ -98,8 +562,8 @@
             123.6
           ],
           "radius": 20,
-          "goal": "Go into the bog by the siabra tower",
-          "text": "Siabra watch from the tower. Pages of verse are stuck to the reeds, soaked, the ink running.",
+          "goal": "Go into the bog by the siabra causeway",
+          "text": "Siabra watch from the posts. Pages of verse are stuck to the reeds, soaked, the ink running.",
           "id": "s1"
         },
         {
@@ -115,7 +579,7 @@
           "mob": {
             "template": 60165995,
             "name": "siabra wayguard",
-            "level": 43
+            "level": 40
           },
           "count": 5,
           "id": "s2"
@@ -152,7 +616,7 @@
           "mob": {
             "template": 60158591,
             "name": "bog creeper",
-            "level": 43
+            "level": 40
           },
           "count": 5,
           "id": "s4"
@@ -161,7 +625,7 @@
           "type": "talk",
           "npc": "lorcan_poet",
           "goal": "Find Lorcan",
-          "say": "Fiona sent you. Fiona. I wrote her a hundred poems and none of them were good enough. Now I write for HER, and every one is perfect.\n\nShe'll come at dusk. Look at me. I'm thirty. I don't care. I don't care. Do you understand - every [word]...",
+          "say": "Fiona sent you. Fiona. I wrote her a hundred poems and none of them were good enough. Now I write for HER, and every one is perfect - she brings the light, and the light brings the words.\n\nShe'll come at dusk. Look at me. I'm thirty. I don't care. Do you understand - every [word]...",
           "keyword": "word",
           "id": "s5"
         },
@@ -175,7 +639,7 @@
           ],
           "wake_m": 30,
           "goal": "Drive off the lhiannan-sidhe",
-          "text": "The lhiannan-sidhe falls back, hissing, into the mist. Lorcan clutches his chest and breathes like a man surfacing from deep water.",
+          "text": "The lhiannan-sidhe falls back, hissing, into the mist, and the light goes with her. Lorcan clutches his chest and breathes like a man surfacing from deep water.",
           "stages": [
             {
               "id": "b1",
@@ -189,11 +653,11 @@
               "radius": 30,
               "time_s": 600,
               "objective": "Drive off the Lhiannan-Sidhe",
-              "announce": "A woman more beautiful than the moon walks out of the mist. 'He is mine. He is my masterpiece.'",
+              "announce": "A woman more beautiful than the moon walks out of the mist, lit from inside. 'He is mine. He is my masterpiece. The light says so.'",
               "boss": {
-                "template": 60163259,
+                "template": 60163260,
                 "name": "the Lhiannan-Sidhe",
-                "level": 46,
+                "level": 44,
                 "health_mult": 2.6
               },
               "success": "the Lhiannan-Sidhe falls.",
@@ -206,8 +670,8 @@
                     "template": 60158591,
                     "name": "bog creeper",
                     "level": [
-                      42,
-                      43
+                      39,
+                      40
                     ]
                   }
                 ]
@@ -285,19 +749,269 @@
             ]
           }
         }
+      },
+      "requires": "bc_pages"
+    },
+    {
+      "id": "bc_muse_light",
+      "title": "Where the Muses Go",
+      "level": 41,
+      "giver": "bc_brid",
+      "offer": "Fiona's muse isn't the only one. There are lhiannan-sidhe all over the bog this year, and they all sing the same song now - light, light, light. They've found a better patron than poets.\n\nWill you [silence them]? The two that sing loudest are in the reeds by the tower and east of it.",
+      "accept": "silence them",
+      "topics": {},
+      "summary": "The lhiannan-sidhe of the bog all sing the Glimmer's song now.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            560,
+            800,
+            123.6
+          ],
+          "radius": 25,
+          "goal": "Silence the lhiannan-sidhe in the reeds by the causeway about 820 m north-west of Keener Brid",
+          "mob": {
+            "template": 60163260,
+            "name": "lhiannan-sidhe",
+            "level": 41
+          },
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            1100,
+            1000,
+            122.2
+          ],
+          "radius": 25,
+          "goal": "Silence the lhiannan-sidhe east of the tower",
+          "mob": {
+            "template": 60163260,
+            "name": "lhiannan-sidhe",
+            "level": 41
+          },
+          "count": 1,
+          "text": "With her last breath she sings one line clear: 'The lantern-bearer keeps the light, the light keeps the tower, the tower keeps the bog.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bc_brid",
+          "goal": "Report to Keener Brid",
+          "say": "The lantern-bearer. In the tower.\n\nSadhbh needs to hear this - but not now. Now she's listening to the banshee, and the banshee is keening for the Chieftess.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Keeners.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq205_unlit_muse_ring",
+              "sq205_keener_s_reed_belt"
+            ]
+          }
+        }
+      },
+      "requires": "lhiannan"
+    },
+    {
+      "id": "bc_keen_heard",
+      "title": "The Keen",
+      "level": 40,
+      "giver": "sadhbh",
+      "offer": "Listen. Do you hear it? No - you wouldn't, yet. The banshee of Cullen. She keens on her stone in the bog north of town, for a death in the old families.\n\nThe black wraiths have gathered round her stone. Will you [go to the stone]? Clear them away. I want to hear her plain.",
+      "accept": "go to the stone",
+      "topics": {},
+      "summary": "The banshee of Cullen keens on her stone north of Alainn Bin, and the black wraiths have gathered round it.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            1004,
+            1359,
+            122.2
+          ],
+          "radius": 25,
+          "goal": "Clear the black wraiths round the keening stones about 300 m west of Old Sadhbh",
+          "mob": {
+            "template": 60158463,
+            "name": "black wraith",
+            "level": 41
+          },
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 205,
+          "at": [
+            1010,
+            1350,
+            122.2
+          ],
+          "radius": 20,
+          "goal": "Stand by the keening stone and listen",
+          "text": "Far off, a woman keening. And another, nearer, keening wrong - too high, too bright, like a voice through glass.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sadhbh",
+          "goal": "Report to Old Sadhbh",
+          "say": "Two keeners. One's the banshee of Cullen; I'd know her anywhere. The other's false. Riolda - a banshee that walked into the lights, and keens for whatever they tell her to.\n\nAnd the true one keens for the Chieftess. Who isn't sick.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Keeners.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq205_keening_stone_charm",
+              "sq205_wraith_mud_bracer"
+            ]
+          }
+        }
       }
+    },
+    {
+      "id": "bc_riolda",
+      "title": "Riolda",
+      "level": 42,
+      "giver": "sadhbh",
+      "offer": "Riolda. A banshee who keens false. She walks the keening ground at night, and wherever she keens, the bog-lights come.\n\nShe'll drown the true keen in hers, and then nobody will know whose death is coming. Will you [silence Riolda]? Only at night. She's not there by day.",
+      "accept": "silence Riolda",
+      "topics": {},
+      "summary": "Riolda, a banshee who walked into the lights, keens false on the keening ground at night.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            1079,
+            1279,
+            122.2
+          ],
+          "radius": 50,
+          "goal": "Silence Riolda on the keening ground (at night) about 230 m west of Old Sadhbh",
+          "target": "Riolda",
+          "count": 1,
+          "text": "Riolda's keen breaks off. In the silence, clear and far, the true banshee: keening for the Chieftess, and under it a name. Conn.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sadhbh",
+          "goal": "Report to Old Sadhbh",
+          "say": "Conn. The steward.\n\nTwenty years he's served her. ...Look in his room, before I say a word to anyone. Find me proof.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Keeners.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq205_false_keener_s_veil_charm",
+              "sq205_keener_s_black_belt"
+            ]
+          }
+        }
+      },
+      "requires": "bc_keen_heard"
+    },
+    {
+      "id": "bc_steward_letters",
+      "title": "The Steward's Letters",
+      "level": 43,
+      "giver": "sadhbh",
+      "offer": "Conn's room is in the Chieftess' hall, and he locks it. He keeps his papers in a box under the floor; the maids know, maids always know.\n\nWill you [search his room] while he's at the market? Quietly.",
+      "accept": "search his room",
+      "topics": {},
+      "summary": "Old Sadhbh wants Steward Conn's hidden papers found.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 205,
+          "at": [
+            1322,
+            1338,
+            123.6
+          ],
+          "goal": "Search under the floor of Steward Conn's room about 20 m south-east of Old Sadhbh",
+          "clue": {
+            "name": "a box of letters sealed in blue wax",
+            "model": 1347
+          },
+          "text": "Letters sealed in blue wax - the Order of the Azure's. 'When the Chieftess is gone, your son will hold Alainn Bin, and Alainn Bin will open its gates to the Order and its torches. The bog must burn. Payment enclosed.' And a purse of Azure silver.",
+          "give": {
+            "name": "the Azure letters"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sadhbh",
+          "goal": "Bring the letters to Old Sadhbh",
+          "say": "The Azure. The Azure paid him.\n\nThey want the Chieftess dead so they can burn the bog - with the turf-cutters, and Siopa, and us, if we're in the way. Because of the lights.\n\nRight. Now we stop it. Properly. Bring friends.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Keeners.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq205_steward_s_ledger_ring",
+              "sq205_blue_wax_charm"
+            ]
+          }
+        }
+      },
+      "requires": "bc_riolda"
     },
     {
       "id": "keening",
       "title": "The Keening",
-      "level": 50,
+      "level": 44,
       "giver": "sadhbh",
-      "offer": "This is GROUP work, so bring friends you trust.\n\nThe banshee of Cullen has keened under the Chieftess' window every night for a week. A banshee keens for a death in the old families. But nobody is sick. Nobody is old. Nobody's dying.\n\nWhen a banshee keens for a death that hasn't come, it's because someone means to make it come. Will you [find out who]? Start with the [steward]. He's too calm.",
+      "offer": "This is GROUP work, so bring friends you trust.\n\nThe banshee of Cullen has keened under the Chieftess' window every night for a week. The letters say why: Conn poisons her for the Azure. But a poisoner never trusts poison alone.\n\nWill you [find out who] waits to finish it? Start with the [steward]. Let him think we know nothing.",
       "accept": "find out who",
       "topics": {
         "steward": "Conn. He runs the Chieftess' household. He's very calm. Far too calm."
       },
-      "summary": "GROUP. The banshee of Cullen keens nightly for the Chieftess - who isn't sick. Someone means her death.",
+      "summary": "GROUP. The banshee of Cullen keens nightly for the Chieftess. Steward Conn poisons her for the Azure - and someone waits to finish it.",
       "steps": [
         {
           "type": "talk",
@@ -320,7 +1034,7 @@
           "mob": {
             "template": 60158463,
             "name": "black wraith",
-            "level": 49
+            "level": 43
           },
           "count": 4,
           "text": "Among the wraith-mud, a dropped satchel - a steward's satchel, with a steward's seal.",
@@ -362,7 +1076,7 @@
           "type": "talk",
           "npc": "banshee_npc",
           "goal": "Speak with the banshee",
-          "say": "You hear me. Good. Few do, before.\n\nThe Chieftess' death is close. The steward pours it. And the siabra hunter waits in the bog to the west of my stone, to finish it if the poison is slow. Stop the [hunter]. I am so tired of keening.",
+          "say": "You hear me. Good. Few do, before.\n\nThe Chieftess' death is close. The steward pours it. And the siabra hunter waits in the bog to the west of my stone, to finish it if the poison is slow - bought with Azure silver, though siabra and Azure hate each other. Stop the [hunter]. I am so tired of keening.",
           "keyword": "hunter",
           "id": "s5"
         },
@@ -394,7 +1108,7 @@
               "boss": {
                 "template": 60165994,
                 "name": "Iuchra the Venator",
-                "level": 54,
+                "level": 48,
                 "health_mult": 3.0
               },
               "success": "Iuchra the Venator falls.",
@@ -407,8 +1121,8 @@
                     "template": 60165994,
                     "name": "siabra venator",
                     "level": [
-                      47,
-                      48
+                      42,
+                      43
                     ]
                   }
                 ]
@@ -421,7 +1135,7 @@
           "type": "choice",
           "npc": "sadhbh",
           "goal": "Return to Old Sadhbh",
-          "say": "The keening's stopped. I heard it stop at moonrise. And you have the vial. Conn.\n\nConn, who has served her twenty years. He wanted the chieftainship for his son - it's in his letters.\n\nThe Chieftess is too kind. She'll want to [banish him]. The old law says [death] for a poisoner. She'll ask me, and I'll ask you. You've seen more of it than I have.",
+          "say": "The keening's stopped. I heard it stop at moonrise. And you have the vial. Conn.\n\nConn, who has served her twenty years. He wanted the chieftainship for his son, and the Azure promised it.\n\nThe Chieftess is too kind. She'll want to [banish him]. The old law says [death] for a poisoner. She'll ask me, and I'll ask you. You've seen more of it than I have.",
           "options": [
             {
               "keyword": "banish him",
@@ -473,7 +1187,664 @@
           }
         }
       },
-      "group": true
+      "group": true,
+      "requires": "bc_steward_letters"
+    },
+    {
+      "id": "bc_azure_march",
+      "title": "The Azure March",
+      "level": 41,
+      "giver": "bc_ruairc",
+      "offer": "The Order of the Azure has come down the north road from the Sheeroe Hills. Crusaders, cleansers, banners with a crown crossed out. They say they're here for the lights.\n\nThey're burning turf-cutters' huts as they come. Will you [stop the march]? The north road, before they reach the cuttings.",
+      "accept": "stop the march",
+      "topics": {},
+      "summary": "The Order of the Azure marches down the north road, burning turf-cutters' huts.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            1050,
+            300,
+            123.8
+          ],
+          "radius": 25,
+          "goal": "Break the Azure crusaders on the north road about 1.0 km north of Captain Ruairc",
+          "mob": {
+            "template": 60158171,
+            "name": "azure crusader",
+            "level": 42
+          },
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bc_ruairc",
+          "goal": "Report to Captain Ruairc",
+          "say": "They fight like men who've already won. ...The Glimmer took the Sheeroe Hills from them. They mean to burn the bog to keep it from taking this too, and they don't much care who's standing on it.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Clann.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq205_crossed_crown_ring",
+              "sq205_torch_bearer_s_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bc_pyre",
+      "title": "The Pyre",
+      "level": 42,
+      "giver": "bc_ruairc",
+      "offer": "The Azure have built a pyre on the north edge of the bog - barrels of pitch, and their banishers praying over it. When it's lit, the fire goes into the peat, and peat burns for years. Underground. The whole bog.\n\nWill you [break the pyre]? Kill the banishers. Spill the pitch into the water.",
+      "accept": "break the pyre",
+      "topics": {},
+      "summary": "The Azure have built a pyre of pitch on the bog's north edge - lit, it would set the peat burning for years.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            980,
+            330,
+            124.6
+          ],
+          "radius": 25,
+          "goal": "Kill the azure banishers at the pyre about 1.0 km north of Captain Ruairc",
+          "mob": {
+            "template": 60158172,
+            "name": "azure banisher",
+            "level": 43
+          },
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 205,
+          "at": [
+            985,
+            335,
+            124.9
+          ],
+          "goal": "Spill the pitch barrels into the bog",
+          "clue": {
+            "name": "barrels of Azure pitch",
+            "model": 1347
+          },
+          "text": "The pitch glugs out into the black water and lies there. On the barrels, an order: 'Marshal Cathbarr: when the steward's work is done, fire the bog from the north. Alainn Bin will open its gates.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bc_ruairc",
+          "goal": "Report to Captain Ruairc",
+          "say": "'When the steward's work is done.' Conn. The Keeners were right.\n\nMarshal Cathbarr. He sits in the Azure camp on the north road with his banners. One more push and we go for him.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Clann.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq205_pitch_black_charm",
+              "sq205_banisher_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "bc_azure_march"
+    },
+    {
+      "id": "bc_cleansers",
+      "title": "The Cleansers",
+      "level": 43,
+      "giver": "bc_ruairc",
+      "offer": "Before we go for Cathbarr: his cleansers and idolaters are out in the eastern bog, hunting siabra and burning the reeds. The bears are fleeing into the turf-cutters' camps.\n\nWill you [thin them]? Cleansers and idolaters. Then we go.",
+      "accept": "thin them",
+      "topics": {},
+      "summary": "The Azure's cleansers and idolaters are burning the reeds of the eastern bog.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            1050,
+            420,
+            127.7
+          ],
+          "radius": 25,
+          "goal": "Kill the azure cleansers burning the reeds about 900 m north of Captain Ruairc",
+          "mob": {
+            "template": 60158173,
+            "name": "azure cleanser",
+            "level": 43
+          },
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            1100,
+            250,
+            123.6
+          ],
+          "radius": 25,
+          "goal": "Kill the azure idolaters",
+          "mob": {
+            "template": 60158182,
+            "name": "azure idolater",
+            "level": 43
+          },
+          "count": 4,
+          "text": "Overhead, a black crow, bigger than an eagle, circling the smoke. Badb. The battle-crow came down when the burning started.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bc_ruairc",
+          "goal": "Report to Captain Ruairc",
+          "say": "Badb. If she's circling, the fighting's not over. She always knows.\n\nRight. Cathbarr. Bring friends.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Clann.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq205_idol_breaker_s_ring",
+              "sq205_cleanser_s_smoke_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "bc_pyre"
+    },
+    {
+      "id": "bc_marshal",
+      "title": "Marshal Cathbarr",
+      "level": 45,
+      "giver": "bc_ruairc",
+      "offer": "GROUP work.\n\nMarshal Cathbarr of the Order of the Azure, in his camp on the north road, with his banners and his crusaders. He paid a steward to poison a chieftess so he could burn the bog.\n\nWe go in, we break him, the Azure go back to the hills. Say [for Alainn Bin] when your friends are ready.",
+      "accept": "for Alainn Bin",
+      "topics": {},
+      "summary": "GROUP. Break Marshal Cathbarr of the Azure in his camp on the north road.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 205,
+          "at": [
+            1080,
+            260,
+            123.6
+          ],
+          "radius": 25,
+          "goal": "Gather below the Azure camp on the north road about 1.0 km north of Captain Ruairc",
+          "text": "Blue banners with the crown crossed out. Somewhere a man is preaching about fire.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 205,
+          "at": [
+            1120,
+            160,
+            134.2
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Marshal Cathbarr in the Azure camp",
+          "text": "Cathbarr falls among his banners. 'You'll wish we'd burned it,' he says. 'When the Glimmer King comes down out of the hills - you'll wish.' Above, the great crow circles once, and goes back to her mound.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Marshal Cathbarr",
+              "center": [
+                1120,
+                160,
+                134.2
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Marshal Cathbarr",
+              "announce": "A tall man in blue enamel turns from his pyre-plans. 'Lantern-lovers. The Glimmer will thank you. Then it'll take your eyes.'",
+              "boss": {
+                "template": 60158172,
+                "name": "Marshal Cathbarr",
+                "level": 50,
+                "health_mult": 4.5
+              },
+              "success": "Marshal Cathbarr falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 22,
+                "count": 3,
+                "mobs": [
+                  {
+                    "template": 60158171,
+                    "name": "azure crusader",
+                    "level": [
+                      43,
+                      44
+                    ]
+                  },
+                  {
+                    "template": 60158173,
+                    "name": "azure cleanser",
+                    "level": [
+                      43,
+                      44
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "bc_ruairc",
+          "goal": "Report to Captain Ruairc",
+          "say": "The Azure are pulling back up the north road. Some of them - the young ones - want to stay. They say they hate the Glimmer as much as we do, and they're not wrong.\n\nWe could [take them in], under the Clann's eye. Or we [send them north] with the rest. Your call. You broke their marshal.",
+          "options": [
+            {
+              "keyword": "take them in",
+              "say": "Then they stay. Under the Clann's eye, and no torches. ...We'll see if a crusader can learn to cut turf.",
+              "ending": "taken"
+            },
+            {
+              "keyword": "send them north",
+              "say": "North, then. Every one. Let the Order keep its zealots.",
+              "ending": "sent"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "taken": {
+          "text": "From the Clann of Alainn Bin.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq205_mantle_of_alainn_bin"
+            ],
+            "choice": [
+              "sq205_marshal_s_blue_torc",
+              "sq205_crow_feather_charm"
+            ]
+          }
+        },
+        "sent": {
+          "text": "From the Clann of Alainn Bin.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq205_mantle_of_alainn_bin"
+            ],
+            "choice": [
+              "sq205_marshal_s_blue_torc",
+              "sq205_crow_feather_charm"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bc_cleansers"
+    },
+    {
+      "id": "bc_tower_lights",
+      "title": "Reading the Lights",
+      "level": 43,
+      "giver": "bc_brid",
+      "offer": "The bog-lights - the will-o'-the-wisps that lead travellers off the path. Every Keener reads them: a light over the water means a death. This year they all come from one place, and they all go back to it.\n\nWill you [hunt the bog-lights] at night? I want to see what they carry back.",
+      "accept": "hunt the bog-lights",
+      "topics": {},
+      "summary": "The bog-lights all come from the Gemstone Tower and go back to it.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            700,
+            900,
+            123.5
+          ],
+          "radius": 25,
+          "goal": "Put out the bog-lights near the tower, at night about 640 m north-west of Keener Brid",
+          "mob": {
+            "template": 60161430,
+            "name": "bog light",
+            "level": 43
+          },
+          "count": 6,
+          "text": "Each light, as it goes out, drops something: a speck of bright stone, like a chip off a gem.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bc_brid",
+          "goal": "Bring the bright chips to Keener Brid",
+          "say": "Gem-chips. From the Gemstone Tower's walls. The lights are pieces of the tower walking about.\n\nThe tower was Cliodna's, the northern queen's - she left it this spring. Something else moved in, and the gems in the walls answer to it now.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Keeners.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq205_bog_light_lantern_charm",
+              "sq205_wisp_reader_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bc_three_gems",
+      "title": "The Three Gems",
+      "level": 44,
+      "giver": "bc_brid",
+      "offer": "Three great gems in the tower's walls - green, white and red. The old tales say Cliodna set them there to watch the bog. Now they shine.\n\nWill you [look at the gems]? Get close. The wards at the gate will try to stop you.",
+      "accept": "look at the gems",
+      "topics": {},
+      "summary": "The three great gems in the Gemstone Tower's walls shine with the Glimmer's light.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            820,
+            1040,
+            123.0
+          ],
+          "radius": 25,
+          "goal": "Kill the glimmer wards at the tower gate about 470 m north-west of Keener Brid",
+          "mob": {
+            "template": 60161424,
+            "name": "glimmer ward",
+            "level": 44
+          },
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 205,
+          "at": [
+            870,
+            965,
+            123.7
+          ],
+          "goal": "Look at the great gems in the tower's walls",
+          "clue": {
+            "name": "the three great gems, shining",
+            "model": 1347
+          },
+          "text": "Green, white and red, each as big as a head, each blazing. Inside each, like a fly in amber, a little shape of light: a crowned man. Watching the bog.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bc_brid",
+          "goal": "Report to Keener Brid",
+          "say": "A crowned man. Cuuldurach - the Glimmer King, the dragon in the Sheeroe Hills. He's looking out of Cliodna's gems.\n\nBreak the gems and he's blind here. But they're kept, and the keeper is the lantern-bearer the muses sang about. That's for many hands. And Badb - Badb sits on her mound by the gate, and nothing passes her when she's hungry.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Keeners.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq205_ward_shard_bracer",
+              "sq205_three_gem_belt"
+            ]
+          }
+        }
+      },
+      "requires": "bc_tower_lights"
+    },
+    {
+      "id": "bc_badb",
+      "title": "The Crow on the Mound",
+      "level": 45,
+      "giver": "sadhbh",
+      "offer": "GROUP work - real war-band work.\n\nBadb. The battle-crow, the war-goddess's sister. She's come down on the mound by the tower because she smells war, and she's right: Azure, Glimmer, siabra, us. She feeds on it. While she sits there nobody reaches the tower gate.\n\nWill you [face Badb]? Bring everyone. A Keener will keen for whoever she takes.",
+      "accept": "face Badb",
+      "topics": {},
+      "summary": "GROUP. Badb, the battle-crow, sits on her mound by the Gemstone Tower and feeds on the war.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 205,
+          "at": [
+            781,
+            787,
+            122.2
+          ],
+          "radius": 50,
+          "goal": "Defeat Badb, the battle-crow, on her mound by the tower about 750 m north-west of Old Sadhbh",
+          "target": "Badb",
+          "count": 1,
+          "text": "Badb comes down out of the air as a woman, and stands, and laughs. 'Well fought. I'll come back when you've a better war.' Then she is a crow again, and gone.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sadhbh",
+          "goal": "Report to Old Sadhbh",
+          "say": "She'll be back. She always is. But not for a while.\n\nThe gate's open. Brid's waiting.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Keeners.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq205_battle_crow_s_pinion_torc",
+              "sq205_cronicorn_horn_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bc_three_gems"
+    },
+    {
+      "id": "bc_lantern_bearer",
+      "title": "The Lantern-Bearer",
+      "level": 46,
+      "giver": "bc_brid",
+      "offer": "GROUP work, the last of it here.\n\nThe lantern-bearer keeps the light, the light keeps the tower, the tower keeps the bog. Kill the keeper and the gems go dark, and Cuuldurach is blind in Cullen.\n\nSay [into the tower] when your friends are ready.",
+      "accept": "into the tower",
+      "topics": {},
+      "summary": "GROUP. The Glimmer's lantern-bearer keeps the light at the top of the Gemstone Tower.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 205,
+          "at": [
+            860,
+            1000,
+            124.6
+          ],
+          "radius": 25,
+          "goal": "Climb into the Gemstone Tower about 450 m north-west of Keener Brid",
+          "text": "The walls are warm. The great gems blaze. Somewhere above, someone is humming a song you've heard in Lough Gur.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 205,
+          "at": [
+            878,
+            972,
+            124.6
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the Glimmer's lantern-bearer at the top of the tower",
+          "text": "The lantern-bearer's lamp cracks, and one by one the great gems go dark - green, white, red. Out over the bog, every light goes out at once.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Lochru the Lantern-Bearer",
+              "center": [
+                878,
+                972,
+                124.6
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Lochru the Lantern-Bearer",
+              "announce": "A tall shape of light lifts a lamp. 'You put out a herald on a lake. You will not put out the King's own lantern.'",
+              "boss": {
+                "template": 60161425,
+                "name": "Lochru the Lantern-Bearer",
+                "level": 50,
+                "health_mult": 5.0
+              },
+              "success": "Lochru the Lantern-Bearer falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 20,
+                "count": 3,
+                "mobs": [
+                  {
+                    "template": 60161421,
+                    "name": "glimmer striker",
+                    "level": [
+                      45,
+                      46
+                    ]
+                  },
+                  {
+                    "template": 60161430,
+                    "name": "glimmerling",
+                    "level": [
+                      44,
+                      45
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "bc_brid",
+          "goal": "Report to Keener Brid",
+          "say": "Dark. The whole bog, dark, the way it should be at night. I could weep.\n\nThe tower is ours now - the Keeners'. We could [break the gems] so nothing can ever look through them again. Or we [keep the gems] and learn to look back through them - north, into the Sheeroe Hills, at him.",
+          "options": [
+            {
+              "keyword": "break the gems",
+              "say": "Broken, then. Nobody looks through Cliodna's eyes again. Nobody.",
+              "ending": "broken"
+            },
+            {
+              "keyword": "keep the gems",
+              "say": "Kept. And one night soon a Keener will look north through the red one - and the Glimmer King will look back.",
+              "ending": "kept"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "broken": {
+          "text": "From the Keeners of Cullen.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq205_mantle_of_the_keen"
+            ],
+            "choice": [
+              "sq205_lantern_bearer_s_glass_torc",
+              "sq205_dark_gem_ring"
+            ]
+          }
+        },
+        "kept": {
+          "text": "From the Keeners of Cullen.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq205_mantle_of_the_keen"
+            ],
+            "choice": [
+              "sq205_lantern_bearer_s_glass_torc",
+              "sq205_dark_gem_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bc_badb"
     }
   ]
 }

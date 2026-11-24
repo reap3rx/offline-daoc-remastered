@@ -1,0 +1,1609 @@
+{
+ "zone": 204,
+ "name": "Lough Gur",
+ "rating": "deadly",
+ "themes": [
+  "Innis Carthaig",
+  "Culraid and the Irewood (the hard start)",
+  "The North Fields",
+  "The Lake and the Earl's Shore",
+  "The West Shore and Treibh Caillte",
+  "The Gurite Hills",
+  "The Sorrowing Wood",
+  "The Deamhan Moor",
+  "The South-East Road",
+  "The Ursine East"
+ ],
+ "notes": "Zone brief 2026-11-24 (Zone Reviews, Lough Gur tab), owner's answers: Deadly, Dangerous toward the Shannon; Culraid the realm's hard start; no cull, about 700; the ursine out of Treibh Caillte in the east; the Azure neutral until the Azure Burning. Coordinates are zone-local units (metres x 40).",
+ "keep": [
+  "unseelie envoy",
+  "little unicorn",
+  "scanradh"
+ ],
+ "tiers": {
+  "Melancholic Fairy Queen": "purple",
+  "Luchtigern": "orange",
+  "Banghaisgidheach": "red",
+  "Tiomoid": "orange",
+  "Trefor": "orange",
+  "Sarsoureh": "orange",
+  "Lhia": "red",
+  "Ailbe": "orange",
+  "Smirky": "yellow",
+  "Smidget": "yellow",
+  "Curmie": "yellow",
+  "Brannigan": "yellow",
+  "unseelie envoy": "red",
+  "little unicorn": "grey",
+  "scanradh": "yellow"
+ },
+ "factions": {
+  "irewood": {
+   "id": 9291,
+   "aggro": 50
+  },
+  "luch": {
+   "id": 9292,
+   "aggro": 60
+  },
+  "cluricaun": {
+   "id": 9293,
+   "aggro": 40
+  },
+  "curmudgeon": {
+   "id": 9294,
+   "aggro": 60
+  },
+  "ants": {
+   "id": 9295,
+   "aggro": 60
+  },
+  "touched": {
+   "id": 9296,
+   "aggro": 80
+  },
+  "fairies": {
+   "id": 9297,
+   "aggro": 90
+  },
+  "deep": {
+   "id": 9298,
+   "aggro": 90,
+   "enemies": [
+    "ursine"
+   ]
+  },
+  "host": {
+   "id": 9299,
+   "aggro": 95
+  },
+  "glimmer": {
+   "id": 9302,
+   "aggro": 95,
+   "enemies": [
+    "azure"
+   ]
+  },
+  "gurite": {
+   "id": 9303,
+   "aggro": 90,
+   "enemies": [
+    "ursine"
+   ]
+  },
+  "deamhan": {
+   "id": 9304,
+   "aggro": 95
+  },
+  "ursine": {
+   "id": 9305,
+   "aggro": 95,
+   "enemies": [
+    "gurite",
+    "deep"
+   ]
+  },
+  "azure": {
+   "id": 9300,
+   "aggro": 40,
+   "enemies": [
+    "glimmer"
+   ],
+   "shared": true
+  }
+ },
+ "members": {
+  "irewood sapling": {
+   "from": "irewood sapling",
+   "tier": "blue",
+   "faction": "irewood",
+   "aggro": [
+    40,
+    300
+   ],
+   "roam": 120
+  },
+  "large luch": {
+   "from": "large luch",
+   "tier": "blue",
+   "faction": "luch",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 300
+  },
+  "luch catcher": {
+   "from": "luch catcher",
+   "tier": "green",
+   "faction": "luch",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 250
+  },
+  "field cluricaun": {
+   "from": "cluricaun",
+   "name": "cluricaun",
+   "tier": "green",
+   "faction": "cluricaun",
+   "aggro": [
+    20,
+    250
+   ],
+   "roam": 300
+  },
+  "curmudgeon scout": {
+   "from": "curmudgeon scout",
+   "tier": "blue",
+   "faction": "curmudgeon",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 250
+  },
+  "greater luch": {
+   "from": "greater luch",
+   "tier": "yellow",
+   "faction": "luch",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 300
+  },
+  "luch hunter": {
+   "from": "luch hunter",
+   "tier": "orange",
+   "faction": "luch",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 250
+  },
+  "cluricaun": {
+   "from": "cluricaun",
+   "tier": "yellow",
+   "faction": "cluricaun",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "cluricaun brawler": {
+   "from": "cluricaun",
+   "name": "cluricaun brawler",
+   "tier": "orange",
+   "faction": "cluricaun",
+   "aggro": [
+    70,
+    450
+   ],
+   "size": 1.2,
+   "roam": 150
+  },
+  "curmudgeon filcher": {
+   "from": "curmudgeon filcher",
+   "tier": "yellow",
+   "faction": "curmudgeon",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "dampwood mite": {
+   "from": "dampwood mite",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "giant ant": {
+   "from": "giant ant",
+   "tier": "yellow",
+   "faction": "ants",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 300
+  },
+  "savage fishing bear": {
+   "from": "savage fishing bear",
+   "tier": "orange",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 300
+  },
+  "lhiannan-sidhe": {
+   "from": "lhiannan-sidhe",
+   "tier": "red",
+   "faction": "touched",
+   "aggro": [
+    85,
+    500
+   ],
+   "roam": 150
+  },
+  "irewood greenbark": {
+   "from": "irewood greenbark",
+   "tier": "yellow",
+   "faction": "irewood",
+   "aggro": [
+    70,
+    400
+   ],
+   "roam": 80
+  },
+  "irewood elder": {
+   "from": "irewood greenbark",
+   "name": "irewood elder",
+   "tier": "orange",
+   "faction": "irewood",
+   "aggro": [
+    80,
+    450
+   ],
+   "size": 1.3,
+   "roam": 40
+  },
+  "melancholic fairy": {
+   "from": "melancholic fairy",
+   "tier": "orange",
+   "faction": "fairies",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 250
+  },
+  "militant melancholic fairy": {
+   "from": "militant melancholic fairy",
+   "tier": "red",
+   "faction": "fairies",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 150
+  },
+  "far liath": {
+   "from": "far liath",
+   "tier": "red",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 300
+  },
+  "alp luachra": {
+   "from": "alp luachra",
+   "tier": "yellow",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "amadan touched": {
+   "from": "amadan touched",
+   "tier": "yellow",
+   "faction": "touched",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 300
+  },
+  "black badger": {
+   "from": "black badger",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "merucha": {
+   "from": "merucha",
+   "tier": "orange",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 150
+  },
+  "merman": {
+   "from": "merman",
+   "tier": "yellow",
+   "aggro": [
+    70,
+    400
+   ],
+   "roam": 150
+  },
+  "arachnite": {
+   "from": "arachnite",
+   "tier": "yellow",
+   "faction": "deep",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 150
+  },
+  "troglodyte": {
+   "from": "troglodyte",
+   "tier": "orange",
+   "faction": "deep",
+   "aggro": [
+    85,
+    500
+   ],
+   "roam": 150
+  },
+  "lair worm": {
+   "from": "lair worm",
+   "tier": "yellow",
+   "faction": "deep",
+   "aggro": [
+    70,
+    400
+   ],
+   "roam": 100
+  },
+  "dullahan": {
+   "from": "dullahan",
+   "tier": "orange",
+   "faction": "host",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 250
+  },
+  "black wraith": {
+   "from": "black wraith",
+   "tier": "red",
+   "faction": "host",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 200
+  },
+  "pooka": {
+   "from": "pooka",
+   "tier": "red",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 350
+  },
+  "glimmer light": {
+   "from": "glimmerling",
+   "name": "glimmer light",
+   "tier": "orange",
+   "faction": "glimmer",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 300
+  },
+  "glimmer wisp": {
+   "from": "glimmer ward",
+   "name": "glimmer wisp",
+   "tier": "red",
+   "faction": "glimmer",
+   "aggro": [
+    95,
+    600
+   ],
+   "size": 0.8,
+   "roam": 200
+  },
+  "gurite footpad": {
+   "from": "gurite footpad",
+   "tier": "yellow",
+   "faction": "gurite",
+   "guild": "the Gurite Bands",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "gurite waylayer": {
+   "from": "gurite waylayer",
+   "tier": "orange",
+   "faction": "gurite",
+   "guild": "the Gurite Bands",
+   "aggro": [
+    85,
+    500
+   ],
+   "roam": 200
+  },
+  "gurite ambusher": {
+   "from": "gurite ambusher",
+   "tier": "yellow",
+   "faction": "gurite",
+   "guild": "the Gurite Bands",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 150
+  },
+  "gurite assailer": {
+   "from": "gurite assailer",
+   "tier": "orange",
+   "faction": "gurite",
+   "guild": "the Gurite Bands",
+   "aggro": [
+    85,
+    500
+   ],
+   "roam": 200
+  },
+  "gurite raider": {
+   "from": "gurite raider",
+   "tier": "orange",
+   "faction": "gurite",
+   "guild": "the Gurite Bands",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 200
+  },
+  "gurite lookout": {
+   "from": "gurite lookout",
+   "tier": "yellow",
+   "faction": "gurite",
+   "guild": "the Gurite Bands",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 60
+  },
+  "gurite seeker": {
+   "from": "gurite seeker",
+   "tier": "red",
+   "faction": "gurite",
+   "guild": "the Gurite Bands",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 100,
+   "guards": {
+    "gurite raider": 2
+   }
+  },
+  "gurite templar": {
+   "from": "gurite tempriar",
+   "name": "gurite templar",
+   "tier": "red",
+   "faction": "gurite",
+   "guild": "the Gurite Bands",
+   "aggro": [
+    90,
+    550
+   ],
+   "size": 1.15,
+   "roam": 60,
+   "guards": {
+    "gurite assailer": 2
+   }
+  },
+  "chipstone sheerie": {
+   "from": "chipstone sheerie",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 200
+  },
+  "deamhan hound": {
+   "from": "deamhan hound",
+   "tier": "orange",
+   "faction": "deamhan",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 350
+  },
+  "deamhan aeir": {
+   "from": "deamhan aeir",
+   "tier": "red",
+   "faction": "deamhan",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 350,
+   "plain": true
+  },
+  "deamhan tormentor": {
+   "from": "deamhan aeir",
+   "name": "deamhan tormentor",
+   "tier": "red",
+   "faction": "deamhan",
+   "aggro": [
+    95,
+    600
+   ],
+   "size": 1.3,
+   "roam": 150,
+   "plain": true,
+   "guards": {
+    "deamhan hound": 2
+   }
+  },
+  "far darrig": {
+   "from": "far darrig",
+   "tier": "yellow",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 300
+  },
+  "supernatural stallion": {
+   "from": "supernatural stallion",
+   "tier": "red",
+   "faction": "host",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 400
+  },
+  "ursine thrall": {
+   "from": "ursine thrall",
+   "tier": "yellow",
+   "faction": "ursine",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 120
+  },
+  "ursine dweller": {
+   "from": "ursine dweller",
+   "tier": "yellow",
+   "faction": "ursine",
+   "aggro": [
+    85,
+    500
+   ],
+   "roam": 150
+  },
+  "ursine warrior": {
+   "from": "ursine warrior",
+   "tier": "orange",
+   "faction": "ursine",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 150
+  },
+  "ursine patrol": {
+   "from": "ursine patrol",
+   "tier": "orange",
+   "faction": "ursine",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 60
+  },
+  "ursine shaman": {
+   "from": "ursine shaman",
+   "tier": "orange",
+   "faction": "ursine",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 80
+  },
+  "ursine sorcerer": {
+   "from": "ursine sorcerer",
+   "tier": "red",
+   "faction": "ursine",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 60
+  },
+  "ursine war-chief": {
+   "from": "ursine warrior",
+   "name": "ursine war-chief",
+   "tier": "red",
+   "faction": "ursine",
+   "aggro": [
+    95,
+    600
+   ],
+   "size": 1.25,
+   "roam": 40,
+   "guards": {
+    "ursine warrior": 2,
+    "ursine shaman": 1
+   }
+  },
+  "azure crusader": {
+   "from": "azure avenger",
+   "name": "azure crusader",
+   "tier": "orange",
+   "faction": "azure",
+   "guild": "the Order of the Azure",
+   "aggro": [
+    100,
+    500
+   ],
+   "roam": 80
+  },
+  "azure cleanser": {
+   "from": "azure cleanser",
+   "tier": "orange",
+   "faction": "azure",
+   "guild": "the Order of the Azure",
+   "aggro": [
+    100,
+    500
+   ],
+   "roam": 80
+  },
+  "azure banisher": {
+   "from": "azure banisher",
+   "tier": "red",
+   "faction": "azure",
+   "guild": "the Order of the Azure",
+   "aggro": [
+    100,
+    550
+   ],
+   "roam": 40
+  }
+ },
+ "sites": [
+  {
+   "id": "culraid_fields",
+   "kind": "wildlife",
+   "area": [
+    5600,
+    1600,
+    20800,
+    13200
+   ],
+   "spawn": {
+    "luch catcher": 12,
+    "large luch": 12,
+    "field cluricaun": 8,
+    "irewood sapling": 8
+   },
+   "spacing": 240
+  },
+  {
+   "id": "culraid_shannon_edge",
+   "kind": "wildlife",
+   "area": [
+    18000,
+    800,
+    32000,
+    10400
+   ],
+   "spawn": {
+    "large luch": 10,
+    "luch catcher": 6,
+    "curmudgeon scout": 6,
+    "field cluricaun": 4
+   },
+   "spacing": 240
+  },
+  {
+   "id": "irewood",
+   "kind": "wildlife",
+   "area": [
+    800,
+    10000,
+    17200,
+    20800
+   ],
+   "spawn": {
+    "irewood sapling": 16,
+    "irewood greenbark": 8,
+    "black badger": 6
+   },
+   "spacing": 240
+  },
+  {
+   "id": "irewood_heart",
+   "kind": "camp",
+   "at": [
+    9200,
+    16800
+   ],
+   "r": 560,
+   "respawn": 420,
+   "spawn": {
+    "irewood elder": 1,
+    "irewood greenbark": 3
+   }
+  },
+  {
+   "id": "culraid_luch_burrow",
+   "kind": "camp",
+   "at": [
+    16800,
+    12000
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "greater luch": 2,
+    "large luch": 3
+   }
+  },
+  {
+   "id": "north_fields_w",
+   "kind": "wildlife",
+   "area": [
+    20800,
+    8000,
+    38000,
+    22400
+   ],
+   "spawn": {
+    "greater luch": 12,
+    "large luch": 6,
+    "dampwood mite": 12,
+    "cluricaun": 6,
+    "giant ant": 6
+   },
+   "spacing": 240
+  },
+  {
+   "id": "north_fields_e",
+   "kind": "wildlife",
+   "area": [
+    36000,
+    1200,
+    52000,
+    18400
+   ],
+   "spawn": {
+    "greater luch": 10,
+    "dampwood mite": 10,
+    "cluricaun": 8,
+    "giant ant": 6,
+    "gurite footpad": 8
+   },
+   "spacing": 240
+  },
+  {
+   "id": "curmudgeon_hills",
+   "kind": "wildlife",
+   "area": [
+    44000,
+    1200,
+    58000,
+    12000
+   ],
+   "spawn": {
+    "curmudgeon scout": 8,
+    "curmudgeon filcher": 6
+   },
+   "spacing": 240
+  },
+  {
+   "id": "luch_runs",
+   "kind": "camp",
+   "at": [
+    51600,
+    28000
+   ],
+   "r": 560,
+   "respawn": 300,
+   "spawn": {
+    "luch hunter": 2,
+    "greater luch": 4
+   }
+  },
+  {
+   "id": "cluricaun_camp",
+   "kind": "camp",
+   "at": [
+    49440,
+    25840
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "cluricaun brawler": 1,
+    "cluricaun": 4
+   }
+  },
+  {
+   "id": "north_road_post",
+   "kind": "camp",
+   "at": [
+    41600,
+    6000
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "gurite footpad": 4,
+    "gurite waylayer": 1
+   }
+  },
+  {
+   "id": "dara_mill_burrow",
+   "kind": "camp",
+   "at": [
+    30400,
+    16800
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "luch hunter": 1,
+    "greater luch": 3
+   }
+  },
+  {
+   "id": "north_shore",
+   "kind": "wildlife",
+   "area": [
+    30400,
+    19200,
+    45200,
+    25600
+   ],
+   "spawn": {
+    "savage fishing bear": 8,
+    "dampwood mite": 8
+   },
+   "spacing": 240
+  },
+  {
+   "id": "lhia_bower",
+   "kind": "camp",
+   "at": [
+    34320,
+    23800
+   ],
+   "r": 400,
+   "respawn": 600,
+   "spawn": {
+    "lhiannan-sidhe": 2
+   }
+  },
+  {
+   "id": "west_shore",
+   "kind": "wildlife",
+   "area": [
+    1600,
+    22400,
+    18000,
+    41600
+   ],
+   "spawn": {
+    "alp luachra": 10,
+    "amadan touched": 8,
+    "black badger": 8,
+    "luch hunter": 4,
+    "arachnite": 6
+   },
+   "spacing": 240
+  },
+  {
+   "id": "dungeon_mouth",
+   "kind": "camp",
+   "at": [
+    10000,
+    26400
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "troglodyte": 2,
+    "lair worm": 2,
+    "arachnite": 2
+   }
+  },
+  {
+   "id": "merrow_pool",
+   "kind": "camp",
+   "at": [
+    11560,
+    31760
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "merucha": 2,
+    "merman": 2
+   }
+  },
+  {
+   "id": "sleeping_hollow",
+   "kind": "camp",
+   "at": [
+    11600,
+    43160
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "alp luachra": 4
+   }
+  },
+  {
+   "id": "touched_camp",
+   "kind": "camp",
+   "at": [
+    16800,
+    44720
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "amadan touched": 3
+   }
+  },
+  {
+   "id": "earls_shore",
+   "kind": "wildlife",
+   "area": [
+    24000,
+    27200,
+    31600,
+    46000
+   ],
+   "spawn": {
+    "dullahan": 8,
+    "pooka": 6,
+    "black wraith": 4
+   },
+   "spacing": 240
+  },
+  {
+   "id": "earls_barrow",
+   "kind": "camp",
+   "at": [
+    28000,
+    37200
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "dullahan": 3,
+    "black wraith": 1
+   }
+  },
+  {
+   "id": "south_shore",
+   "kind": "wildlife",
+   "area": [
+    31600,
+    43200,
+    46000,
+    48000
+   ],
+   "spawn": {
+    "pooka": 6,
+    "dampwood mite": 6,
+    "savage fishing bear": 4
+   },
+   "spacing": 240
+  },
+  {
+   "id": "lake_lights_w",
+   "kind": "wildlife",
+   "area": [
+    24000,
+    24000,
+    36000,
+    46000
+   ],
+   "spawn": {
+    "glimmer light": 10
+   },
+   "spacing": 240,
+   "time": "night"
+  },
+  {
+   "id": "lake_lights_e",
+   "kind": "wildlife",
+   "area": [
+    36000,
+    22400,
+    50000,
+    44000
+   ],
+   "spawn": {
+    "glimmer light": 8
+   },
+   "spacing": 240,
+   "time": "night"
+  },
+  {
+   "id": "crannog_lights",
+   "kind": "camp",
+   "at": [
+    37960,
+    34960
+   ],
+   "r": 320,
+   "respawn": 600,
+   "spawn": {
+    "glimmer wisp": 1,
+    "glimmer light": 2
+   },
+   "time": "night"
+  },
+  {
+   "id": "gurite_hills",
+   "kind": "wildlife",
+   "area": [
+    3600,
+    41600,
+    18400,
+    56800
+   ],
+   "spawn": {
+    "gurite raider": 8,
+    "gurite lookout": 6,
+    "gurite waylayer": 8,
+    "black badger": 4
+   },
+   "spacing": 240
+  },
+  {
+   "id": "gurite_camp",
+   "kind": "camp",
+   "at": [
+    6400,
+    47600
+   ],
+   "r": 640,
+   "respawn": 300,
+   "spawn": {
+    "gurite seeker": 1,
+    "gurite raider": 3,
+    "gurite lookout": 2
+   }
+  },
+  {
+   "id": "gurite_watch",
+   "kind": "camp",
+   "at": [
+    7000,
+    53200
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "gurite seeker": 1,
+    "gurite lookout": 2
+   }
+  },
+  {
+   "id": "south_road_post",
+   "kind": "camp",
+   "at": [
+    17600,
+    37600
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "gurite waylayer": 3,
+    "gurite lookout": 1
+   }
+  },
+  {
+   "id": "gurite_road",
+   "kind": "patrol",
+   "route": [
+    [
+     18000,
+     37600
+    ],
+    [
+     15200,
+     42000
+    ],
+    [
+     10400,
+     46000
+    ],
+    [
+     15200,
+     42000
+    ]
+   ],
+   "spawn": {
+    "gurite raider": 1,
+    "gurite waylayer": 2
+   }
+  },
+  {
+   "id": "sorrowing_wood",
+   "kind": "wildlife",
+   "area": [
+    17600,
+    42400,
+    30400,
+    64000
+   ],
+   "spawn": {
+    "melancholic fairy": 24,
+    "irewood greenbark": 8,
+    "far liath": 8
+   },
+   "spacing": 240
+  },
+  {
+   "id": "fairy_court",
+   "kind": "camp",
+   "at": [
+    21840,
+    52720
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "militant melancholic fairy": 2,
+    "melancholic fairy": 4
+   }
+  },
+  {
+   "id": "weeping_ring",
+   "kind": "camp",
+   "at": [
+    24000,
+    46000
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "melancholic fairy": 4
+   }
+  },
+  {
+   "id": "wood_edge",
+   "kind": "camp",
+   "at": [
+    20800,
+    59200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "militant melancholic fairy": 1,
+    "melancholic fairy": 3
+   }
+  },
+  {
+   "id": "deamhan_moor",
+   "kind": "wildlife",
+   "area": [
+    30400,
+    50000,
+    50400,
+    64000
+   ],
+   "spawn": {
+    "deamhan hound": 12,
+    "far darrig": 12,
+    "supernatural stallion": 4
+   },
+   "spacing": 240
+  },
+  {
+   "id": "deamhan_moor_night",
+   "kind": "wildlife",
+   "area": [
+    31200,
+    51200,
+    49600,
+    63200
+   ],
+   "spawn": {
+    "deamhan aeir": 20
+   },
+   "spacing": 240,
+   "time": "night"
+  },
+  {
+   "id": "deamhan_pit",
+   "kind": "camp",
+   "at": [
+    36000,
+    57600
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "deamhan tormentor": 1,
+    "deamhan hound": 2
+   },
+   "time": "night"
+  },
+  {
+   "id": "far_darrig_ring",
+   "kind": "camp",
+   "at": [
+    43600,
+    51200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "far darrig": 4
+   }
+  },
+  {
+   "id": "se_road",
+   "kind": "wildlife",
+   "area": [
+    50400,
+    44000,
+    64800,
+    63200
+   ],
+   "spawn": {
+    "gurite assailer": 10,
+    "gurite ambusher": 8,
+    "chipstone sheerie": 8
+   },
+   "spacing": 240
+  },
+  {
+   "id": "assailer_post",
+   "kind": "camp",
+   "at": [
+    58640,
+    52600
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "gurite templar": 1,
+    "gurite assailer": 3,
+    "gurite ambusher": 1
+   }
+  },
+  {
+   "id": "chipstone_ring",
+   "kind": "camp",
+   "at": [
+    56600,
+    59600
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "chipstone sheerie": 4
+   }
+  },
+  {
+   "id": "azure_camp",
+   "kind": "camp",
+   "at": [
+    60000,
+    47200
+   ],
+   "r": 640,
+   "respawn": 300,
+   "spawn": {
+    "azure banisher": 1,
+    "azure crusader": 4,
+    "azure cleanser": 3
+   }
+  },
+  {
+   "id": "azure_road",
+   "kind": "patrol",
+   "route": [
+    [
+     59200,
+     47200
+    ],
+    [
+     54400,
+     43200
+    ],
+    [
+     49600,
+     41600
+    ],
+    [
+     54400,
+     43200
+    ]
+   ],
+   "spawn": {
+    "azure crusader": 2,
+    "azure cleanser": 1
+   }
+  },
+  {
+   "id": "ursine_east_n",
+   "kind": "wildlife",
+   "area": [
+    51200,
+    11200,
+    64800,
+    24800
+   ],
+   "spawn": {
+    "ursine thrall": 8,
+    "ursine dweller": 8,
+    "ursine warrior": 6
+   },
+   "spacing": 240
+  },
+  {
+   "id": "ursine_east_s",
+   "kind": "wildlife",
+   "area": [
+    52000,
+    30400,
+    64800,
+    43200
+   ],
+   "spawn": {
+    "ursine thrall": 8,
+    "ursine dweller": 6,
+    "ursine warrior": 6,
+    "ursine shaman": 2
+   },
+   "spacing": 240
+  },
+  {
+   "id": "ursine_hold",
+   "kind": "camp",
+   "at": [
+    60000,
+    16800
+   ],
+   "r": 720,
+   "respawn": 360,
+   "spawn": {
+    "ursine war-chief": 1,
+    "ursine warrior": 3,
+    "ursine sorcerer": 1,
+    "ursine thrall": 2
+   }
+  },
+  {
+   "id": "ursine_lodge",
+   "kind": "camp",
+   "at": [
+    52800,
+    16800
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "ursine shaman": 2,
+    "ursine dweller": 3
+   }
+  },
+  {
+   "id": "ursine_den",
+   "kind": "camp",
+   "at": [
+    61600,
+    35200
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "ursine war-chief": 1,
+    "ursine sorcerer": 1,
+    "ursine dweller": 3,
+    "ursine thrall": 2
+   }
+  },
+  {
+   "id": "ursine_cave",
+   "kind": "camp",
+   "at": [
+    58000,
+    41200
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "ursine sorcerer": 1,
+    "ursine shaman": 1,
+    "ursine warrior": 2
+   }
+  },
+  {
+   "id": "ursine_crossing",
+   "kind": "camp",
+   "at": [
+    62400,
+    6400
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "ursine warrior": 2,
+    "ursine dweller": 2,
+    "ursine shaman": 1
+   }
+  },
+  {
+   "id": "ursine_rounds",
+   "kind": "patrol",
+   "route": [
+    [
+     52800,
+     12000
+    ],
+    [
+     59200,
+     22400
+    ],
+    [
+     60000,
+     32800
+    ],
+    [
+     59200,
+     22400
+    ]
+   ],
+   "spawn": {
+    "ursine patrol": 3
+   }
+  },
+  {
+   "id": "ursine_rounds_s",
+   "kind": "patrol",
+   "route": [
+    [
+     52000,
+     40000
+    ],
+    [
+     62000,
+     38400
+    ],
+    [
+     62400,
+     30400
+    ],
+    [
+     62000,
+     38400
+    ]
+   ],
+   "spawn": {
+    "ursine patrol": 2,
+    "ursine warrior": 1
+   }
+  },
+  {
+   "id": "roane_goes",
+   "kind": "clear",
+   "at": [
+    4880,
+    27360
+   ],
+   "r": 800,
+   "names": [
+    "breaker roane companion"
+   ]
+  },
+  {
+   "id": "stone_circle",
+   "kind": "clear",
+   "at": [
+    49200,
+    34400
+   ],
+   "r": 1800,
+   "names": [
+    "glimmer light",
+    "dampwood mite",
+    "savage fishing bear",
+    "ursine thrall",
+    "ursine dweller",
+    "ursine warrior"
+   ]
+  },
+  {
+   "id": "touched_folk",
+   "kind": "clear",
+   "at": [
+    17040,
+    44480
+   ],
+   "r": 1000,
+   "names": [
+    "amadan touched",
+    "alp luachra"
+   ]
+  },
+  {
+   "id": "culraid",
+   "kind": "clear",
+   "at": [
+    12000,
+    7600
+   ],
+   "r": 2400,
+   "names": [
+    "luch catcher",
+    "large luch",
+    "cluricaun",
+    "irewood sapling"
+   ]
+  },
+  {
+   "id": "innis_carthaig",
+   "kind": "clear",
+   "at": [
+    47000,
+    39600
+   ],
+   "r": 3200,
+   "names": [
+    "dampwood mite",
+    "savage fishing bear",
+    "pooka",
+    "glimmer light",
+    "ursine thrall",
+    "ursine dweller",
+    "ursine warrior"
+   ]
+  }
+ ]
+}

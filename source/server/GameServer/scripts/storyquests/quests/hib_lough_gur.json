@@ -2,6 +2,35 @@
   "name": "Lough Gur",
   "npcs": [
     {
+      "id": "ciaran_bard",
+      "zone": 204,
+      "realm": 3,
+      "name": "Ciaran the Bard",
+      "model": 337,
+      "level": 30,
+      "pos": [
+        312,
+        200,
+        123.7
+      ],
+      "idle": "My brother was the better poet. Ask anyone. Ask him - when he's sane."
+    },
+    {
+      "id": "lg_oisin",
+      "zone": 204,
+      "realm": 3,
+      "name": "Woodward Oisin",
+      "model": 337,
+      "level": 34,
+      "pos": [
+        304,
+        182,
+        122.9
+      ],
+      "guild": "Culraid",
+      "idle": "Mind the saplings. They look like saplings. That's the whole trick."
+    },
+    {
       "id": "tadhg_inn",
       "zone": 204,
       "realm": 3,
@@ -13,7 +42,7 @@
         1006,
         107.4
       ],
-      "idle": "Grandfather's harp hung over the bar sixty years. The luck of the house. Gone."
+      "idle": "Grandfather's harp hung over the bar sixty years. The luck of the house."
     },
     {
       "id": "dara",
@@ -30,18 +59,79 @@
       "idle": "I didn't drink anything. Much."
     },
     {
-      "id": "ciaran_bard",
+      "id": "lg_maeve",
       "zone": 204,
       "realm": 3,
-      "name": "Ciaran the Bard",
+      "name": "Sentinel Maeve",
+      "model": 365,
+      "level": 40,
+      "pos": [
+        1166,
+        986,
+        106.5
+      ],
+      "guild": "the Sentinels of Ceannai",
+      "idle": "Ceannai sent me south to keep the road. The road keeps getting longer."
+    },
+    {
+      "id": "lg_colm",
+      "zone": 204,
+      "realm": 3,
+      "name": "Ferryman Colm",
       "model": 337,
       "level": 30,
       "pos": [
-        312,
-        200,
-        123.7
+        1150,
+        1072,
+        106.8
       ],
-      "idle": "My brother was the better poet. Ask anyone. Ask him - when he's sane."
+      "guild": "the Lough Gur Ferry",
+      "idle": "Forty years on this lake and I never once saw it lit from underneath. Until this spring."
+    },
+    {
+      "id": "lg_eithne",
+      "zone": 204,
+      "realm": 3,
+      "name": "Eithne the Miller",
+      "model": 365,
+      "level": 28,
+      "pos": [
+        700,
+        380,
+        115.6
+      ],
+      "guild": "Eithne's Mill",
+      "idle": "The luch ate the seed corn, then the thatch, then the cat. I'm not joking about the cat."
+    },
+    {
+      "id": "lg_ceallach",
+      "zone": 204,
+      "realm": 3,
+      "name": "Druid Ceallach",
+      "model": 337,
+      "level": 44,
+      "pos": [
+        1230,
+        860,
+        113.4
+      ],
+      "guild": "Aine's Circle",
+      "idle": "Aine sits on the shore and combs her hair. Every child here knows that. The lights on the water aren't her."
+    },
+    {
+      "id": "lg_siofra",
+      "zone": 204,
+      "realm": 3,
+      "name": "Druid Siofra",
+      "model": 365,
+      "level": 38,
+      "pos": [
+        426,
+        1112,
+        121.3
+      ],
+      "guild": "Aine's Circle",
+      "idle": "Touched isn't lost. Touched is touched. They need a fire and somebody who listens."
     },
     {
       "id": "eoin",
@@ -58,15 +148,471 @@
       "during": [
         "amadan/s5"
       ]
+    },
+    {
+      "id": "lg_grainne",
+      "zone": 204,
+      "realm": 3,
+      "name": "Grainne",
+      "model": 365,
+      "level": 20,
+      "pos": [
+        552,
+        1316,
+        148.9
+      ],
+      "during": [
+        "lg_taken_girl/s2"
+      ]
+    },
+    {
+      "id": "lg_captive",
+      "zone": 204,
+      "realm": 3,
+      "name": "Bound Man",
+      "model": 362,
+      "level": 26,
+      "pos": [
+        254,
+        654,
+        162.1
+      ],
+      "during": [
+        "lg_bear_trade/s2"
+      ]
+    },
+    {
+      "id": "lg_ennis",
+      "zone": 204,
+      "realm": 3,
+      "name": "Brother Ennis",
+      "model": 354,
+      "level": 40,
+      "pos": [
+        1470,
+        1150,
+        129.2
+      ],
+      "guild": "the Order of the Azure",
+      "idle": "The Order of the Azure has one enemy: the Glimmer. Everything else is a matter of time."
     }
   ],
   "quests": [
     {
+      "id": "lg_walking_wood",
+      "title": "The Walking Wood",
+      "level": 2,
+      "giver": "lg_oisin",
+      "offer": "You started here? In Culraid? Brave, or nobody told you. Lough Gur eats the careless, and this corner's the only soft bit of it.\n\nFirst lesson: the trees round the village walk. The young ones, the saplings - they come right up to the houses at night and root in the garden. Will you [thin the saplings]? Strike low. They hate that.",
+      "accept": "thin the saplings",
+      "topics": {},
+      "summary": "The young trees of the Irewood walk into Culraid at night. Woodward Oisin wants them thinned.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            330,
+            250,
+            131.7
+          ],
+          "radius": 25,
+          "goal": "Thin the walking saplings about 70 m south of Woodward Oisin",
+          "mob": {
+            "template": 60162486,
+            "name": "irewood sapling",
+            "level": 3
+          },
+          "count": 5,
+          "text": "The last one stops, and its leaves go still, and it's only a tree again.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 204,
+          "at": [
+            360,
+            300,
+            137.4
+          ],
+          "goal": "Look at the root-ball of a felled sapling",
+          "clue": {
+            "name": "a sapling's root-ball, still twitching",
+            "model": 1347
+          },
+          "text": "The roots are pale, and there's a light in them - a faint, cold glow, like moonlight on water. Trees don't glow.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_oisin",
+          "goal": "Tell Woodward Oisin",
+          "say": "Glowing? ...They never glowed before this spring. Nothing round the lake did.\n\nWell. You're still alive, which is the first thing Culraid asks of anyone. Here.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Oisin.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_woodward_s_twine_belt",
+              "sq204_culraid_thatch_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "lg_luch_in_the_thatch",
+      "title": "Luch in the Thatch",
+      "level": 4,
+      "giver": "lg_oisin",
+      "offer": "Second lesson. The luch - the big mice, big as dogs - are in the thatch again. They nest in it, eat through it, and the roofs come down in the first rain.\n\nThe catchers are worse than the luch: they hunt them and leave the leavings on our doorsteps. Will you [clear the luch]?",
+      "accept": "clear the luch",
+      "topics": {},
+      "summary": "Luch are eating Culraid's thatch, and the luch catchers are worse.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            240,
+            120,
+            121.6
+          ],
+          "radius": 25,
+          "goal": "Kill the large luch nesting in Culraid's roofs about 90 m north-west of Woodward Oisin",
+          "mob": {
+            "template": 60163146,
+            "name": "large luch",
+            "level": 5
+          },
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            420,
+            150,
+            121.9
+          ],
+          "radius": 25,
+          "goal": "Drive off the luch catchers east of the village",
+          "mob": {
+            "template": 60163448,
+            "name": "luch catcher",
+            "level": 6
+          },
+          "count": 3,
+          "text": "One catcher has a string of luch tails round its neck - and a little bone harp-peg among them.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_oisin",
+          "goal": "Tell Woodward Oisin",
+          "say": "A harp-peg. Tadhg, at the inn at Innis Carthaig, lost a harp this spring - the whole lake heard him. The luch must have been through his cellar too.\n\nYou'll be going there sooner or later. Everyone does.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Oisin.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_luch_tail_bracer",
+              "sq204_thatcher_s_charm"
+            ]
+          }
+        }
+      },
+      "requires": "lg_walking_wood"
+    },
+    {
+      "id": "lg_road_to_the_lake",
+      "title": "The Road to the Lake",
+      "level": 7,
+      "giver": "lg_oisin",
+      "offer": "Last lesson, and then you're on your own. Innis Carthaig is on the far shore - the only real town on Lough Gur. The Sentinels of Ceannai keep it, and a woman called Maeve keeps them.\n\nThe road runs east through the fields. The greater luch hunt along it. Will you [walk the road]? Go carefully. It gets harder every step you take from here.",
+      "accept": "walk the road",
+      "topics": {},
+      "summary": "Woodward Oisin sends you from Culraid along the lake road to Sentinel Maeve in Innis Carthaig.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 204,
+          "at": [
+            620,
+            260,
+            126.4
+          ],
+          "radius": 25,
+          "goal": "Take the lake road east out of Culraid",
+          "text": "The fields open out. Far off, the lake shines - and something big moves in the barley.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            660,
+            300,
+            116.7
+          ],
+          "radius": 25,
+          "goal": "Kill the greater luch hunting the road",
+          "mob": {
+            "template": 60161603,
+            "name": "greater luch",
+            "level": 7
+          },
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_maeve",
+          "goal": "Report to Sentinel Maeve in Innis Carthaig",
+          "say": "From Culraid? On foot? Oisin's work, I suppose. He sends me one a season, and they're always tougher than they look.\n\nWelcome to Lough Gur. You'll find the work finds you here.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_lake_road_boots_charm",
+              "sq204_sentinel_s_token"
+            ]
+          }
+        }
+      },
+      "requires": "lg_luch_in_the_thatch"
+    },
+    {
+      "id": "lg_granaries",
+      "title": "The Granaries",
+      "level": 29,
+      "giver": "lg_maeve",
+      "offer": "The luch are into the mill on the north road. Eithne the Miller's holding the grain store with a shovel and her temper, and both are running out.\n\nWill you [hold the mill] with her? The hunters come in behind the swarm - big ones, the colour of old straw.",
+      "accept": "hold the mill",
+      "topics": {},
+      "summary": "The luch are swarming Eithne's mill on the north road.",
+      "steps": [
+        {
+          "type": "encounter",
+          "zone": 204,
+          "at": [
+            700,
+            380,
+            115.6
+          ],
+          "wake_m": 30,
+          "goal": "Keep Eithne alive while she seals the grain store about 760 m north-west of Sentinel Maeve",
+          "text": "The swarm breaks against the mill door. Eithne slams the bolt home.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Eithne the Miller alive",
+              "center": [
+                700,
+                380,
+                115.6
+              ],
+              "radius": 30,
+              "duration_s": 120,
+              "objective": "Keep Eithne the Miller alive",
+              "announce": "Eithne is nailing boards over the grain store door. 'Keep them OFF me!'",
+              "protect": {
+                "template": 60161797,
+                "name": "Eithne the Miller",
+                "level": 28,
+                "model": 365
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 3,
+                "from": [
+                  [
+                    712,
+                    386,
+                    115.6
+                  ],
+                  [
+                    690,
+                    370,
+                    115.6
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60161603,
+                    "name": "greater luch",
+                    "level": [
+                      28,
+                      29
+                    ]
+                  },
+                  {
+                    "template": 60163448,
+                    "name": "luch catcher",
+                    "level": [
+                      28,
+                      29
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "Eithne the Miller falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            760,
+            430,
+            113.8
+          ],
+          "radius": 25,
+          "goal": "Kill the luch hunters behind the swarm",
+          "mob": {
+            "template": 60163452,
+            "name": "luch hunter",
+            "level": 30
+          },
+          "count": 4,
+          "text": "The hunters wear collars - thin bands of bright metal. Someone put them there.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_maeve",
+          "goal": "Report to Sentinel Maeve",
+          "say": "Collars? On luch? ...There's an old story here, about the king of the mice. Luchtigern. I thought it was a story.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_miller_s_flour_sack_belt",
+              "sq204_granary_key_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "lg_luchtigern",
+      "title": "Luchtigern",
+      "level": 30,
+      "giver": "lg_maeve",
+      "offer": "Every child at Lough Gur knows the story. Luchtigern, the king of the mice, lived in a cave by the lake, until the great cat Irusan came and killed him.\n\nThe old folk say he's back. A luch the size of a pony, walking the west shore by day, with collared hunters round him. Will you [find Luchtigern]? Kill him if he's real.",
+      "accept": "find Luchtigern",
+      "topics": {},
+      "summary": "Luchtigern, the king of the mice in the old story, walks the west shore by day.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 204,
+          "at": [
+            470,
+            640,
+            120.5
+          ],
+          "goal": "Look for Luchtigern's trail on the west fields about 780 m north-west of Sentinel Maeve",
+          "clue": {
+            "name": "a trail of gnawed bones and bright metal",
+            "model": 1347
+          },
+          "text": "Gnawed bones, and among them a collar like the hunters' - bigger. It glows like the lake does at night.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            494,
+            665,
+            117.6
+          ],
+          "radius": 50,
+          "goal": "Kill Luchtigern, the king of the mice (by day, on the west fields)",
+          "target": "Luchtigern",
+          "count": 1,
+          "text": "Luchtigern falls. Round his neck, under the fur: a collar of the same bright metal, humming faintly.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_maeve",
+          "goal": "Report to Sentinel Maeve",
+          "say": "Bright metal. Glowing. The luch, the saplings in Culraid, the lake. It's all the same light.\n\nThe Circle up on the hill will want to know. Druid Ceallach. Tell him I sent you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_irusan_s_claw_torc",
+              "sq204_mouse_king_s_collar"
+            ]
+          }
+        }
+      },
+      "requires": "lg_granaries"
+    },
+    {
       "id": "cluricaun",
       "title": "The Cluricaun's Harp",
-      "level": 23,
+      "level": 29,
       "giver": "tadhg_inn",
-      "offer": "The cluricauns have been in my cellar every night since spring - drinking, singing, breaking things. I let it go. Every inn has cluricauns.\n\nBut three nights ago they took my grandfather's harp from over the bar. The luck of the house. Since then the ale's gone sour and the roof leaks. Will you [get the harp back]? Dara the [potboy] saw them go.",
+      "offer": "The cluricauns have been in my cellar every night since spring - drinking, singing, breaking things. I let it go. Every inn has cluricauns.\n\nBut three nights ago they took my grandfather's harp from over the bar. The luck of the house. Since then the ale's gone sour, the roof leaks, and there are lights on the lake at night. Will you [get the harp back]? Dara the [potboy] saw them go.",
       "accept": "get the harp back",
       "topics": {
         "potboy": "Dara. He's wiping tables. He's always wiping tables."
@@ -77,7 +623,7 @@
           "type": "talk",
           "npc": "dara",
           "goal": "Ask Dara the potboy what he saw",
-          "say": "They came up out of the cellar riding luch - giant mice! - and one of them had the harp, and they all went north-east singing. I followed a bit. They've a sort of camp out past the luch runs, in the [north-east].",
+          "say": "They came up out of the cellar riding luch - giant mice! - and one of them had the harp, and they all went north-east singing. I followed a bit. They've a sort of camp out by the luch runs, in the [north-east].",
           "keyword": "north-east",
           "id": "s1"
         },
@@ -90,11 +636,11 @@
             119.4
           ],
           "radius": 25,
-          "goal": "Deal with the cluricauns' luch mounts",
+          "goal": "Deal with the cluricauns' luch mounts at the luch runs",
           "mob": {
             "template": 60163146,
             "name": "large luch",
-            "level": 21
+            "level": 29
           },
           "count": 5,
           "id": "s2"
@@ -128,7 +674,7 @@
           "mob": {
             "template": 60159264,
             "name": "cluricaun",
-            "level": 22
+            "level": 29
           },
           "count": 5,
           "id": "s4"
@@ -143,7 +689,7 @@
           ],
           "wake_m": 30,
           "goal": "Defeat the cluricaun king",
-          "text": "The cluricaun king sits down, hiccups, and says: 'Fine. Take it. It's ours, though. Ask the innkeeper's grandda.'",
+          "text": "The cluricaun king sits down, hiccups, and says: 'Fine. Take it. It's ours, though. And play it, ye great lump - play it at the water at night, or the lights'll have the lot of ye.'",
           "stages": [
             {
               "id": "b1",
@@ -161,7 +707,7 @@
               "boss": {
                 "template": 60159264,
                 "name": "King Fiachra Ale-Belly",
-                "level": 26,
+                "level": 31,
                 "health_mult": 2.2
               },
               "success": "King Fiachra Ale-Belly falls.",
@@ -174,8 +720,8 @@
                     "template": 60159264,
                     "name": "cluricaun",
                     "level": [
-                      21,
-                      22
+                      28,
+                      29
                     ]
                   }
                 ]
@@ -188,7 +734,7 @@
           "type": "choice",
           "npc": "tadhg_inn",
           "goal": "Bring the harp back to Tadhg",
-          "say": "The harp! Oh, thank the gods - wait. What did he say? That it was THEIRS?\n\n...Grandfather did say he won it at dice. From a very small man. In a cellar. I thought it was a story.\n\nIf it's theirs, I should [give it back]. The luck of the house goes with it. Or I [keep it], and the cluricauns can sulk. It's been over that bar sixty years.",
+          "say": "The harp! Oh, thank the gods - wait. What did he say? That it was THEIRS? And something about the lights?\n\n...Grandfather did say he won it at dice. From a very small man. In a cellar. And he played it every night on the jetty, the old fool, and we laughed at him.\n\nIf it's theirs, I should [give it back]. Or I [keep it], and the cluricauns can sulk. It's been over that bar sixty years.",
           "options": [
             {
               "keyword": "give it back",
@@ -240,6 +786,570 @@
       }
     },
     {
+      "id": "lg_harp_tune",
+      "title": "Grandfather's Tune",
+      "level": 31,
+      "giver": "dara",
+      "offer": "Can I tell you something? Tadhg doesn't listen.\n\nHis grandda played that harp every night on the jetty. The same tune, over and over. Since the harp went, the lights came. I wrote the tune down once - I was learning. Will you [take the tune] to the druids on the hill? They'll know what it is.",
+      "accept": "take the tune",
+      "topics": {},
+      "summary": "Dara wrote down the tune Tadhg's grandfather played on the jetty every night - the lights came when it stopped.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 204,
+          "at": [
+            1120,
+            900,
+            75.6
+          ],
+          "radius": 20,
+          "goal": "Watch the lake from the north jetty at dusk about 120 m north-west of Dara the Potboy",
+          "text": "Out on the water, a pale light rises, hangs a moment over the crannog, and sinks. Something under the lake breathes out.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_ceallach",
+          "goal": "Take Dara's tune to Druid Ceallach at the stone circle",
+          "say": "Let me see. ...Oh. Oh, that's old. That's a lulling - a sleep-song. Somebody's grandfather sat on that jetty every night for sixty years singing the lake to sleep, and nobody knew.\n\nAnd now he's dead, and the harp's been gone, and the lake is waking up. And something is waking it on purpose.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq204_jetty_song_pendant",
+              "sq204_lake_watcher_s_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "lg_luchtigern"
+    },
+    {
+      "id": "lg_south_road",
+      "title": "The South Road",
+      "level": 30,
+      "giver": "lg_maeve",
+      "offer": "The gurites have the south road. They burned our road post on it last month, and the Sentinel who held it isn't talking - he's not anything, any more.\n\nThey don't just rob. People go down that road and don't come out the other end. Will you [take the road post back]?",
+      "accept": "take the road post back",
+      "topics": {},
+      "summary": "The gurites burned the Sentinels' post on the south road, and people who take that road vanish.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            440,
+            940,
+            121.2
+          ],
+          "radius": 25,
+          "goal": "Kill the gurite waylayers at the burned road post about 730 m west of Sentinel Maeve",
+          "mob": {
+            "template": 60161874,
+            "name": "gurite waylayer",
+            "level": 31
+          },
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 204,
+          "at": [
+            446,
+            946,
+            120.1
+          ],
+          "goal": "Search the road post",
+          "clue": {
+            "name": "a ledger of tolls",
+            "model": 1347
+          },
+          "text": "A gurite ledger. Tolls taken, and next to some names, not a sum but a word: 'south'. Eleven names this month. One of them was a Sentinel.",
+          "give": {
+            "name": "the gurite ledger"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_maeve",
+          "goal": "Bring the ledger to Sentinel Maeve",
+          "say": "'South'. They're not killing them. They're carrying them somewhere. The ferryman sees everything that crosses the lake - ask Colm.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_toll_taker_s_ring",
+              "sq204_road_post_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "lg_carried_south",
+      "title": "Carried South",
+      "level": 32,
+      "giver": "lg_colm",
+      "offer": "Gurites. Yes. Three times this spring, at night, a gurite boat crossing the south end of the lake with people in the bottom of it, tied. I didn't stop them. I've a wife.\n\nThey land on the south-east shore and go up the road to their post by the sheerie ring. Will you [follow them]?",
+      "accept": "follow them",
+      "topics": {},
+      "summary": "Ferryman Colm saw gurites carrying bound people across the lake to the south-east road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            1466,
+            1315,
+            130.8
+          ],
+          "radius": 25,
+          "goal": "Break the gurite assailers' post on the south-east road about 400 m south-east of Ferryman Colm",
+          "mob": {
+            "template": 60161866,
+            "name": "gurite assailer",
+            "level": 32
+          },
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 204,
+          "at": [
+            1475,
+            1325,
+            131.0
+          ],
+          "goal": "Search the assailers' post",
+          "clue": {
+            "name": "a strongbox of bright gems",
+            "model": 1347
+          },
+          "text": "Gems that glow on their own, and a bill of sale scratched on bark: 'Six, to the bear-folk at the cave-mouth west of the lake. Paid in light.'",
+          "give": {
+            "name": "the bark bill of sale"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_maeve",
+          "goal": "Bring the bill of sale to Sentinel Maeve",
+          "say": "The bear-folk. The ursine, out of Treibh Caillte - the lost tribe, under the hills. They've been coming up out of the caves all spring, and now I know why. They're buying people. With light.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_ferryman_s_pole_ring",
+              "sq204_bill_of_sale_charm"
+            ]
+          }
+        }
+      },
+      "requires": "lg_south_road"
+    },
+    {
+      "id": "lg_bear_trade",
+      "title": "The Bear-Folk",
+      "level": 33,
+      "giver": "lg_maeve",
+      "offer": "The ursine trade at the mouth of Treibh Caillte, on the west shore. If there's anyone still there, I want them back.\n\nWill you [go to the cave-mouth]? The things that come up out of those caves with the bears are no better than the bears.",
+      "accept": "go to the cave-mouth",
+      "topics": {},
+      "summary": "The ursine of Treibh Caillte buy the gurites' captives at the cave-mouth on the west shore.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            250,
+            660,
+            161.8
+          ],
+          "radius": 25,
+          "goal": "Clear the troglodytes at the mouth of Treibh Caillte about 1.0 km west of Sentinel Maeve",
+          "mob": {
+            "template": 60167283,
+            "name": "troglodyte",
+            "level": 33
+          },
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_captive",
+          "goal": "Free the bound man at the cave-mouth",
+          "say": "You're not a bear. Good. They took the others down an hour ago. Deep.\n\nThe bears don't eat them. They sit them in the dark, under a lamp that the gurites bring - a lamp full of that light - and the people go quiet, and start to glow, and the bears [kneel] to them. I don't know. I don't know what it is.",
+          "keyword": "kneel",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            300,
+            700,
+            161.5
+          ],
+          "radius": 25,
+          "goal": "Kill the ursine thralls guarding the trade-road",
+          "mob": {
+            "template": 60167489,
+            "name": "ursine thrall",
+            "level": 33
+          },
+          "count": 5,
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_maeve",
+          "goal": "Bring the bound man home to Sentinel Maeve",
+          "say": "Kneel to them. To people who glow.\n\nThe gurites sell the touched to the bear-folk, and the bear-folk worship the light in them. And whoever pays the gurites in glowing gems is making a church out of my road. It ends at the gurites' camp. All of it.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq204_cave_mouth_belt",
+              "sq204_unbound_wrist"
+            ]
+          }
+        }
+      },
+      "requires": "lg_carried_south"
+    },
+    {
+      "id": "lg_gurite_captains",
+      "title": "The Hill-Captains",
+      "level": 34,
+      "giver": "lg_maeve",
+      "offer": "Before we go for the camp, I want its legs cut. The gurites have two captains in the hills - Tiomoid keeps their watch, and Trefor keeps their purse.\n\nWill you [hunt them]? Both of them. The camp won't hold without them.",
+      "accept": "hunt them",
+      "topics": {},
+      "summary": "Sentinel Maeve wants the gurites' two hill-captains, Tiomoid and Trefor, dead before the camp is stormed.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            173,
+            1352,
+            154.2
+          ],
+          "radius": 50,
+          "goal": "Kill Tiomoid, who keeps the gurites' watch in the hills about 1.1 km west of Sentinel Maeve",
+          "target": "Tiomoid",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            149,
+            1295,
+            155.3
+          ],
+          "radius": 50,
+          "goal": "Kill Trefor, who keeps the gurites' purse",
+          "target": "Trefor",
+          "count": 1,
+          "text": "Trefor's purse is full of the glowing gems - and a note: 'Donnan: the herald will pay double for the next ten. Bring them to the crannog.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_maeve",
+          "goal": "Report to Sentinel Maeve",
+          "say": "The crannog. The island in the lake. The herald. ...Whoever that is, the druids should hear it. After we've burned that camp.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_tiomoid_s_hill_ring",
+              "sq204_trefor_s_toll_bag_belt"
+            ]
+          }
+        }
+      },
+      "requires": "lg_bear_trade"
+    },
+    {
+      "id": "lg_gurite_king",
+      "title": "The Gurite-King",
+      "level": 35,
+      "giver": "lg_maeve",
+      "offer": "GROUP work. Bring friends you'd trust with your back.\n\nThe gurite camp in the hills, south-west. Donnan calls himself their king, and he's the one the herald pays. We go in, we bring him down, and the south road is the realm's again.\n\nSay [we go], when you're ready.",
+      "accept": "we go",
+      "topics": {},
+      "summary": "GROUP. Storm the gurite camp in the hills and bring down Donnan, the Gurite-King.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 204,
+          "at": [
+            240,
+            1150,
+            150.8
+          ],
+          "radius": 25,
+          "goal": "Gather below the gurite camp in the hills about 940 m west of Sentinel Maeve",
+          "text": "Smoke from the camp. Lookouts on the rocks. Somewhere inside, someone is laughing.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 204,
+          "at": [
+            165,
+            1190,
+            154.4
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Donnan the Gurite-King in his camp",
+          "text": "Donnan goes down on one knee. 'The lights pay better than travellers,' he says, 'and they never ask for change.' Then he doesn't say anything.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Donnan the Gurite-King",
+              "center": [
+                165,
+                1190,
+                154.4
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Donnan the Gurite-King",
+              "announce": "A gurite in a crown of rings stands up from a chair made of saddles. 'Sentinels. And friends. Good - the herald pays more for the fighting kind.'",
+              "boss": {
+                "template": 60161871,
+                "name": "Donnan the Gurite-King",
+                "level": 38,
+                "health_mult": 4.0
+              },
+              "success": "Donnan the Gurite-King falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 22,
+                "count": 3,
+                "mobs": [
+                  {
+                    "template": 60161871,
+                    "name": "gurite raider",
+                    "level": [
+                      34,
+                      35
+                    ]
+                  },
+                  {
+                    "template": 60161869,
+                    "name": "gurite lookout",
+                    "level": [
+                      34,
+                      35
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "lg_maeve",
+          "goal": "Report to Sentinel Maeve",
+          "say": "The road is ours. And the gurites who are left? They're on their knees in the camp. Some of them were carried south themselves, once, and came back working for Donnan.\n\nCeannai's law says [hang them]. Mine says [send them north] to the Shannon with nothing - let them start again. You took the camp. You say.",
+          "options": [
+            {
+              "keyword": "hang them",
+              "say": "Hanged, then. The road will be quieter for it. Not better. Quieter.",
+              "ending": "hanged"
+            },
+            {
+              "keyword": "send them north",
+              "say": "North, then. With nothing but their boots. ...Some will come back to it. Some won't.",
+              "ending": "spared"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "hanged": {
+          "text": "From the Sentinels of Ceannai.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq204_mantle_of_the_south_road"
+            ],
+            "choice": [
+              "sq204_gurite_king_s_crown_ring",
+              "sq204_hill_camp_torc"
+            ]
+          }
+        },
+        "spared": {
+          "text": "From the Sentinels of Ceannai.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq204_mantle_of_the_south_road"
+            ],
+            "choice": [
+              "sq204_gurite_king_s_crown_ring",
+              "sq204_hill_camp_torc"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "lg_gurite_captains"
+    },
+    {
+      "id": "lg_touched_walk",
+      "title": "The Walkers",
+      "level": 32,
+      "giver": "lg_ceallach",
+      "offer": "The touched folk - the ones the amadan's touch sent mad - live in a camp in the south-west woods. Druid Siofra keeps them. She sends word: at night they walk down to the lake in a line, singing, toward the lights.\n\nSome of them don't come back. Will you [go to Siofra]?",
+      "accept": "go to Siofra",
+      "topics": {},
+      "summary": "The touched folk walk down to the lake at night, singing, toward the lights - and some don't come back.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "lg_siofra",
+          "goal": "Find Druid Siofra at the touched folk's camp about 840 m west of Druid Ceallach",
+          "say": "Every night. They get up, and smile, and walk to the water. I hold the ones I can. Something nests in the hollow on the way and gets at the sleepers too - the alp luachra. Clear the [hollow], and then watch the shore.",
+          "keyword": "hollow",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            290,
+            1079,
+            135.6
+          ],
+          "radius": 25,
+          "goal": "Clear the alp luachra from the sleeping-hollow",
+          "mob": {
+            "template": 60157767,
+            "name": "alp luachra",
+            "level": 32
+          },
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            680,
+            1000,
+            107.0
+          ],
+          "radius": 25,
+          "goal": "Put out the lights on the west shore where the touched walk in",
+          "mob": {
+            "template": 60161430,
+            "name": "glimmer light",
+            "level": 33
+          },
+          "count": 4,
+          "text": "Each light, as it goes out, makes a sound like someone sighing in their sleep.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_ceallach",
+          "goal": "Report to Druid Ceallach",
+          "say": "They sigh. Of course they sigh - they're not lights, they're lures. Somebody is fishing in Lough Gur, and the touched are the easiest fish.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq204_wet_footprint_charm",
+              "sq204_druid_s_rush_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
       "id": "amadan",
       "title": "The Amadan's Touch",
       "level": 33,
@@ -275,7 +1385,7 @@
           "mob": {
             "template": 60161874,
             "name": "gurite waylayer",
-            "level": 31
+            "level": 33
           },
           "count": 5,
           "id": "s2"
@@ -293,7 +1403,7 @@
           "mob": {
             "template": 60157767,
             "name": "alp luachra",
-            "level": 31
+            "level": 33
           },
           "count": 4,
           "text": "Under the leaves where they nested: a sleeping man's footprints, many nights over. He sleeps here, sometimes.",
@@ -312,7 +1422,7 @@
             "name": "a book of poems, rain-soaked",
             "model": 1347
           },
-          "text": "Eoin's book. Every page is full of verse in a dozen hands, all his. The last page: 'The fool says I may go home if someone fetches me. Nobody fetches me.'",
+          "text": "Eoin's book. Every page is full of verse in a dozen hands, all his. The last page: 'The fool says I may go home if someone fetches me. Nobody fetches me. The lights on the lake sing better than I do.'",
           "give": {
             "name": "Eoin's book of poems"
           },
@@ -367,8 +1477,8 @@
                     "template": 60157791,
                     "name": "amadan touched",
                     "level": [
-                      29,
-                      30
+                      32,
+                      33
                     ]
                   }
                 ]
@@ -380,7 +1490,7 @@
         {
           "type": "choice",
           "npc": "ciaran_bard",
-          "goal": "Bring Eoin home to Ciaran",
+          "goal": "Bring Eoin home to Ciaran in Culraid",
           "say": "Eoin. EOIN. You're - he's -\n\n...He's sane? He knows me? He's crying. Why is he crying?\n\nHe says the poems stopped when the fool died. He says he's empty. He says he wants to [go back] to the woods with the other touched folk, and look after them. Or I could [keep him home] until he's well. I've waited a year. You decide. I can't trust myself.",
           "options": [
             {
@@ -431,6 +1541,910 @@
           }
         }
       }
+    },
+    {
+      "id": "lg_drowned_return",
+      "title": "The Drowned Come Back",
+      "level": 34,
+      "giver": "lg_siofra",
+      "offer": "The ones who walked in and didn't come out - they came out last night. Drowned, and lit from inside like lanterns, and they came for the camp. For the others. They want company.\n\nI'm going to sing them to sleep, the way the old man on the jetty did. Will you [keep them off me] while I sing?",
+      "accept": "keep them off me",
+      "topics": {},
+      "summary": "The touched who drowned in the lake walk out again, lit from within, and come for the touched folk's camp.",
+      "steps": [
+        {
+          "type": "encounter",
+          "zone": 204,
+          "at": [
+            426,
+            1112,
+            121.3
+          ],
+          "wake_m": 30,
+          "goal": "Keep Druid Siofra alive while she sings the drowned to sleep",
+          "text": "Siofra's song goes on, and on, and the drowned stop, and lie down in the ferns one by one.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Druid Siofra alive",
+              "center": [
+                426,
+                1112,
+                121.3
+              ],
+              "radius": 30,
+              "duration_s": 150,
+              "objective": "Keep Druid Siofra alive",
+              "announce": "Siofra starts to sing - the jetty tune, Dara's tune. Out of the dark the drowned come walking, glowing.",
+              "protect": {
+                "template": 60163820,
+                "name": "Druid Siofra",
+                "level": 36,
+                "model": 365
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 3,
+                "from": [
+                  [
+                    438,
+                    1118,
+                    119.9
+                  ],
+                  [
+                    416,
+                    1102,
+                    121.8
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60157791,
+                    "name": "drowned touched",
+                    "level": [
+                      33,
+                      34
+                    ]
+                  },
+                  {
+                    "template": 60161430,
+                    "name": "glimmer light",
+                    "level": [
+                      33,
+                      34
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "Druid Siofra falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_siofra",
+          "goal": "Talk to Druid Siofra",
+          "say": "They're asleep. Properly asleep. The light went out of them when the song took.\n\nSo the song works. Ceallach needs to know - and he needs to know about Lhia. The lhiannan-sidhe on the north shore. She's been teaching the touched new songs. Not ours.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq204_siofra_s_rowan_charm",
+              "sq204_lit_from_within_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "lg_touched_walk"
+    },
+    {
+      "id": "lg_lhia",
+      "title": "Lhia",
+      "level": 35,
+      "giver": "lg_ceallach",
+      "offer": "A lhiannan-sidhe - a faerie muse - on the north shore. Lhia. She's always been there; she takes a poet a generation, and the poet thinks it was worth it.\n\nBut Siofra says she's teaching the touched songs. A muse doesn't teach - she takes. Unless someone's paying her in something better than poets. Will you [stop Lhia]?",
+      "accept": "stop Lhia",
+      "topics": {},
+      "summary": "Lhia, the lhiannan-sidhe of the north shore, is teaching the touched folk songs that lead them to the water.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            732,
+            732,
+            105.0
+          ],
+          "radius": 50,
+          "goal": "Kill Lhia, the lhiannan-sidhe of the lake shore about 510 m west of Druid Ceallach",
+          "target": "Lhia",
+          "count": 1,
+          "text": "Lhia falls, and her last breath is light - a long thread of it, that drifts out over the lake toward the crannog.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_ceallach",
+          "goal": "Report to Druid Ceallach",
+          "say": "Toward the crannog. Everything goes toward the crannog.\n\nThere's a thing on that island, and the lights are its fishing-lines. When we know what it is, we'll go out to it. Not before.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq204_lhia_s_mirror_pendant",
+              "sq204_unsung_ring"
+            ]
+          }
+        }
+      },
+      "requires": "lg_drowned_return"
+    },
+    {
+      "id": "lg_weeping",
+      "title": "The Weeping",
+      "level": 33,
+      "giver": "lg_ceallach",
+      "offer": "The fairies of the south wood have always been sad - they're the melancholic folk, it's in the name. But they weep now. Day and night. You can hear it from the moor road.\n\nAnd they've started taking travellers off that road. Will you [find out why]?",
+      "accept": "find out why",
+      "topics": {},
+      "summary": "The melancholic fairies of the Sorrowing Wood weep day and night, and take travellers off the moor road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            600,
+            1150,
+            143.3
+          ],
+          "radius": 25,
+          "goal": "Break the ring of weeping fairies at the wood's edge about 690 m south-west of Druid Ceallach",
+          "mob": {
+            "template": 60163914,
+            "name": "melancholic fairy",
+            "level": 34
+          },
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 204,
+          "at": [
+            605,
+            1155,
+            144.1
+          ],
+          "goal": "Search the weeping ring",
+          "clue": {
+            "name": "a frozen fairy's tear",
+            "model": 1347
+          },
+          "text": "A tear, frozen hard. Inside it, very small, the picture of a crowned woman walking away across water toward a light.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_ceallach",
+          "goal": "Bring the tear to Druid Ceallach",
+          "say": "Their queen. They're weeping for their queen. She walked into the lights. ...And they've been taking travellers to sit in her chair, because a court without a queen comes apart.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_frozen_tear_charm",
+              "sq204_mourner_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "lg_taken_girl",
+      "title": "The Girl in the Chair",
+      "level": 35,
+      "giver": "tadhg_inn",
+      "offer": "My niece. Grainne. She went up the moor road to her mother's and she didn't get there. The druids say the fairies take people now.\n\nShe's fourteen. Will you [bring her back]? Please.",
+      "accept": "bring her back",
+      "topics": {},
+      "summary": "Tadhg's niece Grainne was taken off the moor road by the fairies of the Sorrowing Wood.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            520,
+            1480,
+            166.9
+          ],
+          "radius": 25,
+          "goal": "Fight through the militant fairies at the wood's southern edge",
+          "mob": {
+            "template": 60164025,
+            "name": "militant melancholic fairy",
+            "level": 36
+          },
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_grainne",
+          "goal": "Find Grainne at the fairy court about 710 m south-west of Tadhg the Innkeeper",
+          "say": "I'm the queen now. They said. They put a crown on me and it's cold.\n\nThe real queen went to the lake. A light came for her and she went out on the water after it, and she was smiling, and they all cried. Can I go [home]? I don't want to be a queen.",
+          "keyword": "home",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "tadhg_inn",
+          "goal": "Bring Grainne home to Tadhg",
+          "say": "Grainne! Oh, girl. Oh, girl.\n\n...She says the queen walked to the lake after a light. Like the touched folk. Like everyone, this year. What is out there?",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Tadhg.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_grainne_s_ribbon_bracer",
+              "sq204_empty_chair_ring"
+            ]
+          }
+        }
+      },
+      "requires": "lg_weeping"
+    },
+    {
+      "id": "lg_queens_light",
+      "title": "The Queen's Light",
+      "level": 36,
+      "giver": "lg_ceallach",
+      "offer": "If the queen went out on the water, she came back - Siofra's seen her in the wood again, at the heart of the court, shining. Shining is the wrong word for a melancholic fairy.\n\nWill you [follow the queen's trail]? The far liath - the grey men - walk that wood now, and they don't belong to it either.",
+      "accept": "follow the queen's trail",
+      "topics": {},
+      "summary": "The Melancholic Fairy Queen walked into the lights and came back shining.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            640,
+            1260,
+            125.6
+          ],
+          "radius": 25,
+          "goal": "Kill the far liath walking the Sorrowing Wood about 710 m south-west of Druid Ceallach",
+          "mob": {
+            "template": 60160721,
+            "name": "far liath",
+            "level": 36
+          },
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 204,
+          "at": [
+            560,
+            1330,
+            153.6
+          ],
+          "goal": "Search the empty chair at the heart of the court",
+          "clue": {
+            "name": "a crown of moonstone, left on the chair",
+            "model": 1347
+          },
+          "text": "The queen's own crown, left behind. Under it, scratched into the seat: 'He promised the light would stop the weeping. It did.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_ceallach",
+          "goal": "Report to Druid Ceallach",
+          "say": "'He'. The herald. Whatever sits on the crannog promised a melancholic fairy her sorrow would stop - and the price was everything she was. And her court weeps, and takes children.\n\nShe has to be laid to rest. It'll take more than one of you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_moonstone_circlet_charm",
+              "sq204_far_liath_s_grey_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "lg_taken_girl"
+    },
+    {
+      "id": "lg_fairy_queen",
+      "title": "The Melancholic Queen",
+      "level": 37,
+      "giver": "lg_ceallach",
+      "offer": "GROUP work.\n\nThe Melancholic Fairy Queen sits in the heart of her court again, full of the Glimmer's light, and her court weeps round her. She's old, and strong, and she won't come quietly.\n\nWill you [lay her to rest]? Bring friends. Bring healers.",
+      "accept": "lay her to rest",
+      "topics": {},
+      "summary": "GROUP. The Melancholic Fairy Queen sits in the heart of her court, full of the Glimmer's light. Lay her to rest.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            546,
+            1318,
+            150.3
+          ],
+          "radius": 50,
+          "goal": "Defeat the Melancholic Fairy Queen in the heart of the Sorrowing Wood about 820 m south-west of Druid Ceallach",
+          "target": "Melancholic Fairy Queen",
+          "count": 1,
+          "text": "The queen falls, and the light goes out of her in a long sigh. For the first time in a year the wood is silent - and then, very softly, the fairies start to sing. Not weeping. Singing.",
+          "id": "s1"
+        },
+        {
+          "type": "choice",
+          "npc": "lg_ceallach",
+          "goal": "Report to Druid Ceallach",
+          "say": "Singing. You can hear it from here.\n\nThe court will need a queen. One of their own, this time. We could [let them choose], and hope the one they choose was never near the lake. Or the Circle could [crown one ourselves] - one we've watched, one we're sure of. That's a kind of taking too.",
+          "options": [
+            {
+              "keyword": "let them choose",
+              "say": "Let them choose. They've had enough taken from them.",
+              "ending": "choose"
+            },
+            {
+              "keyword": "crown one ourselves",
+              "say": "Then we'll choose. And we'll watch her. And one day they'll weep about that too.",
+              "ending": "crowned"
+            }
+          ],
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "choose": {
+          "text": "From Aine's Circle and the fairies.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq204_mantle_of_the_sorrowing_wood"
+            ],
+            "choice": [
+              "sq204_lament_breaker_s_torc",
+              "sq204_unweeping_ring"
+            ]
+          }
+        },
+        "crowned": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq204_mantle_of_the_sorrowing_wood"
+            ],
+            "choice": [
+              "sq204_lament_breaker_s_torc",
+              "sq204_unweeping_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "lg_queens_light"
+    },
+    {
+      "id": "lg_silver_shoes",
+      "title": "The Silver Shoes",
+      "level": 34,
+      "giver": "lg_ceallach",
+      "offer": "You know the story. Gearoid Iarla, the Earl, sleeps under Lough Gur with his army, and every seventh year he rides out round the lake on a horse shod with silver. When the shoes wear through he wakes for good.\n\nHe's been riding every night this spring. Every night. His host waits on the west shore for him. Will you [go to the Earl's barrow]? I want to see a shoe.",
+      "accept": "go to the Earl's barrow",
+      "topics": {},
+      "summary": "The Earl rides round Lough Gur every night now, not every seventh year - and his host waits on the west shore.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            700,
+            930,
+            106.6
+          ],
+          "radius": 25,
+          "goal": "Kill the dullahans at the Earl's barrow on the west shore about 530 m west of Druid Ceallach",
+          "mob": {
+            "template": 60160221,
+            "name": "dullahan",
+            "level": 35
+          },
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 204,
+          "at": [
+            705,
+            935,
+            106.4
+          ],
+          "goal": "Search the Earl's barrow",
+          "clue": {
+            "name": "a silver horseshoe, worn thin",
+            "model": 1347
+          },
+          "text": "A silver horseshoe, worn as thin as a leaf - a year's riding in a month. The nails glow faintly, the same light as the lake.",
+          "give": {
+            "name": "the silver horseshoe"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_ceallach",
+          "goal": "Bring the horseshoe to Druid Ceallach",
+          "say": "Worn thin in a month. Something is riding the Earl - spurring him round and round, to wear the shoes through.\n\nWhen they break, he wakes, and his army with him. A sleeping army under Lough Gur. Whoever wakes it, owns it.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_silver_horseshoe_charm",
+              "sq204_barrow_iron_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "lg_envoy",
+      "title": "The Envoy",
+      "level": 36,
+      "giver": "lg_maeve",
+      "offer": "A Sentinel saw something odd on the deamhan moor, south of the lake: a tall pale man in court clothes, standing still among the deamhan as if they were dogs. He's been there a week. Waiting for someone.\n\nI don't like court clothes on a moor. Will you [see who he is]? Mind the deamhan.",
+      "accept": "see who he is",
+      "topics": {},
+      "summary": "A pale man in court clothes waits among the deamhan on the moor south of the lake.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 204,
+          "at": [
+            1150,
+            1480,
+            155.0
+          ],
+          "radius": 25,
+          "goal": "Find the pale man on the deamhan moor about 490 m south of Sentinel Maeve",
+          "text": "He stands among the deamhan like a man among dogs. He sees you, and smiles, and puts his hand on his sword.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            1174,
+            1520,
+            164.0
+          ],
+          "radius": 50,
+          "goal": "Kill the unseelie envoy on the moor",
+          "target": "unseelie envoy",
+          "count": 1,
+          "text": "On the envoy: a letter, sealed with a crowned woman in thorns. 'From the Queen of the Unseelie Court to Cuuldurach, King of the Glimmer. The north for me, the south for you, and Lug between us. My envoy waits on the moor for your herald's answer.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_maeve",
+          "goal": "Bring the letter to Sentinel Maeve",
+          "say": "Cliodna. The Unseelie Queen. In the north they say she's behind everything wrong from Connacht to the Cliffs. And she's writing to the Glimmer King.\n\nThe herald. On the crannog. Take this to Ceallach. Then we go out to that island.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_envoy_s_thorn_seal",
+              "sq204_moor_walker_s_boots_charm"
+            ]
+          }
+        }
+      },
+      "requires": "lg_silver_shoes"
+    },
+    {
+      "id": "lg_crannog",
+      "title": "The Crannog",
+      "level": 38,
+      "giver": "lg_ceallach",
+      "offer": "GROUP work - the most of it you've done here.\n\nThe herald sits on the crannog - the island in the lake. The lights are his fishing-lines, the Earl's shoes his work, the gurites his paid men, the Queen of the Unseelie Court his correspondent. He is Cuuldurach's voice in the north.\n\nWade out with friends, and say [to the crannog].",
+      "accept": "to the crannog",
+      "topics": {},
+      "summary": "GROUP. The Glimmer's herald sits on the crannog in Lough Gur: Cuuldurach's voice in the north.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 204,
+          "at": [
+            940,
+            860,
+            109.4
+          ],
+          "radius": 25,
+          "goal": "Wade out to the crannog in the lake about 290 m west of Druid Ceallach",
+          "text": "The water is warm, and lit from below. On the island, something stands up, and it is made of light.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 204,
+          "at": [
+            949,
+            874,
+            105.6
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the Glimmer's herald on the crannog",
+          "text": "The herald comes apart into sparks, and the sparks sink, and the lake goes dark - properly dark, for the first time this year. Under the water, very far down, a horse stops stamping.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Fionnlugh, Herald of the Glimmer",
+              "center": [
+                949,
+                874,
+                105.6
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Fionnlugh, Herald of the Glimmer",
+              "announce": "A shape of white light turns on the crannog. 'The Glimmer King sends his greetings to Lough Gur. He will come for his army himself, in time. South-east, through the bog, as the light goes. Tell them.'",
+              "boss": {
+                "template": 60161425,
+                "name": "Fionnlugh, Herald of the Glimmer",
+                "level": 40,
+                "health_mult": 5.0
+              },
+              "success": "Fionnlugh, Herald of the Glimmer falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 20,
+                "count": 3,
+                "mobs": [
+                  {
+                    "template": 60161430,
+                    "name": "glimmer light",
+                    "level": [
+                      36,
+                      37
+                    ]
+                  },
+                  {
+                    "template": 60161424,
+                    "name": "glimmer wisp",
+                    "level": [
+                      37,
+                      38
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "lg_ceallach",
+          "goal": "Report to Druid Ceallach",
+          "say": "The lake's dark. The Earl's asleep. Dara's tune is all we need now, and Dara can play it.\n\nThe herald said south-east, through the bog. The Bog of Cullen. The Keeners there have been seeing lights all year. We should [warn the Keeners] - or we [keep the Circle home] and guard the lake, in case he comes back. The lake is what we're for.",
+          "options": [
+            {
+              "keyword": "warn the Keeners",
+              "say": "Then I'll send word to Old Sadhbh at Alainn Bin. And you - you go too. That's where this goes next.",
+              "ending": "south"
+            },
+            {
+              "keyword": "keep the Circle home",
+              "say": "Home, then. We'll sing the lake to sleep every night. You'll go south anyway; I can see it.",
+              "ending": "home"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "south": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq204_mantle_of_the_lake"
+            ],
+            "choice": [
+              "sq204_herald_s_glass_torc",
+              "sq204_lullaby_ring"
+            ]
+          }
+        },
+        "home": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq204_mantle_of_the_lake"
+            ],
+            "choice": [
+              "sq204_herald_s_glass_torc",
+              "sq204_lullaby_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "lg_envoy"
+    },
+    {
+      "id": "lg_azure_welcome",
+      "title": "The Order of the Azure",
+      "level": 32,
+      "giver": "lg_ennis",
+      "offer": "You've seen the lights on the lake. Good. Most people here call them pretty.\n\nThe Order of the Azure has fought the Glimmer since before your grandmother was born. In the south it took the Sheeroe Hills; it will not take Lough Gur. Will you [hunt the lights] for us? They come up off the water on the west shore.",
+      "accept": "hunt the lights",
+      "topics": {},
+      "summary": "Brother Ennis of the Order of the Azure wants the Glimmer's lights hunted off the lake.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            680,
+            1000,
+            107.0
+          ],
+          "radius": 25,
+          "goal": "Put out the Glimmer's lights on the west shore about 800 m west of Brother Ennis",
+          "mob": {
+            "template": 60161430,
+            "name": "glimmer light",
+            "level": 33
+          },
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_ennis",
+          "goal": "Report to Brother Ennis",
+          "say": "Six. Good. Six fewer eyes on this lake.\n\nYou'll do. The Order has more work - harder work. Come back when you have the stomach for it.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Order of the Azure.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq204_azure_novice_s_ring",
+              "sq204_cleanser_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "lg_azure_wisps",
+      "title": "The Wisps of the Crannog",
+      "level": 34,
+      "giver": "lg_ennis",
+      "offer": "The lights have keepers: wisps, brighter and harder, that come ashore at night near the crannog. Kill a keeper and its lights go out for a week.\n\nWill you [hunt the wisps]? You'll need to be on the north jetty at night. Bring blue fire if you have it. You don't. Bring friends.",
+      "accept": "hunt the wisps",
+      "topics": {},
+      "summary": "Brother Ennis wants the Glimmer's wisps hunted on the shore by the crannog.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 204,
+          "at": [
+            1000,
+            820,
+            74.3
+          ],
+          "radius": 25,
+          "goal": "Kill the glimmer wisps on the shore by the crannog about 570 m north-west of Brother Ennis",
+          "mob": {
+            "template": 60161424,
+            "name": "glimmer wisp",
+            "level": 35
+          },
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_ennis",
+          "goal": "Report to Brother Ennis",
+          "say": "Three keepers. The lake will be darker for it.\n\nNow. The real work. Come back when you're ready for it - and don't tell the druids. They're soft about this.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Order of the Azure.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq204_azure_wisp_catcher_bracer",
+              "sq204_blue_flame_charm"
+            ]
+          }
+        }
+      },
+      "requires": "lg_azure_welcome"
+    },
+    {
+      "id": "lg_azure_burning",
+      "title": "The Burning",
+      "level": 35,
+      "giver": "lg_ennis",
+      "offer": "The Glimmer fishes for the touched, and the touched go in the water and come out lanterns. You've seen it.\n\nSo the Order will take the bait away. Carry this torch to the touched folk's camp in the south-west woods and [light the signal] at its edge, where the trees are dry. My brothers will see it and come. The rest is ours to do.",
+      "accept": "light the signal",
+      "topics": {},
+      "summary": "Brother Ennis gives you a torch to light a signal at the touched folk's camp. The Azure mean to burn it.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 204,
+          "at": [
+            440,
+            1100,
+            120.3
+          ],
+          "radius": 20,
+          "goal": "Carry the Azure torch to the edge of the touched folk's camp about 1.0 km west of Brother Ennis",
+          "text": "The torch smells of pitch and lamp oil - a lot of lamp oil. Far more than a signal needs.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 204,
+          "at": [
+            446,
+            1106,
+            120.0
+          ],
+          "goal": "Look at the dry trees where the signal is to go",
+          "clue": {
+            "name": "a ring of oil-soaked brushwood round the camp",
+            "model": 1347
+          },
+          "text": "Brushwood, soaked in oil, piled in a ring round the whole camp - and a sealed order tucked in it: 'At the signal, fire the ring. What the Glimmer touches is already lost. Let none walk out. - Brother-Captain Ultan.'",
+          "give": {
+            "name": "the Azure order"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lg_siofra",
+          "goal": "Show Druid Siofra the order",
+          "say": "Let none walk out.\n\nThey'd burn them. All of them, in their sleep. Because a light touched them once.\n\nWe go now - into the trees, all of us - and when Ultan's crusaders come, they'll find you instead. The Azure will never forgive this. Good.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Druid Siofra and the touched folk.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq204_siofra_s_thanks",
+              "sq204_torch_breaker_s_bracer"
+            ]
+          },
+          "wake_event": "lg_azure_burning"
+        }
+      },
+      "requires": "lg_azure_wisps"
     }
   ]
 }

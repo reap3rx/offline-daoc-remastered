@@ -1,533 +1,1502 @@
 {
-  "zone": 208,
-  "region": 200,
-  "name": "Cursed Forest",
-  "lore": "The Cursed Forest, where the gan ceanach whisper to the lost and the leprechauns guard gold that was never theirs.",
-  "chains": [
+ "zone": 208,
+ "region": 200,
+ "name": "Cursed Forest",
+ "realm": 3,
+ "lore": "The Cursed Forest is the seat of the Unseelie Court. Queen Cliodna holds it in a fog that never lifts, and from here the court's whispers go north into every trouble of the realm - Silvermine, Connacht, Lough Derg, Bri Leith, the Cliffs - against King Lug Lamfhota. Only the King's Host can break it, checkpoint by checkpoint, to her seat.",
+ "chains": [
+  {
+   "id": "cf_cp1_assault",
+   "title": "The Host at The Hollow Road",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 6,
+   "hint": "Captain Eogan of the Host is forming up for the Hollow Road.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60157478,
+    "model": 362,
+    "guild": "the Host of Lug",
+    "name": "Captain Eogan",
+    "level": 50,
+    "pos": [
+     60,
+     1085,
+     161.2
+    ],
+    "health_mult": 5,
+    "greet": "The Hollow Road is the court's first wall: where the shelf comes down into the forest. Six at least - bots and all - and say [forward].",
+    "accept": "forward",
+    "reply": "Down off the shelf! Into the fog, and kill everything that isn't wearing the Host's green!",
+    "busy": "Not yet. The Host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "Hold here! The Host holds the Hollow Road - and the next thirty minutes are ours to use.",
+    "regret": "Fall back to the line! We'll go again."
+   },
+   "guards": [
     {
-      "id": "cursed_forest_levian_al",
-      "title": "The Levian-al Circle",
-      "levels": [50, 54],
-      "hint": "Whispers call from the northern woods...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Dark Circle",
-          "objective": "Clear the dark circle",
-          "announce": "The gan ceanach prince is calling the lost into his circle. Break it.",
-          "center": [599, 291, 126.5],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60163254,
-              "name": "levian-al",
-              "level": [50, 54]
-            },
-            {
-              "template": 60161197,
-              "name": "gan ceanach",
-              "level": [50, 53]
-            },
-            {
-              "template": 60166425,
-              "name": "spectral manslayer",
-              "level": [50, 53]
-            }
-          ],
-          "success": "You have cleared the dark circle. The Gan Ceanach Prince comes out to fight.",
-          "fail": "They hold the dark circle. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Gan Ceanach Prince",
-          "objective": "Defeat the Gan Ceanach Prince",
-          "announce": "The Gan Ceanach Prince stands at the dark circle. Bring friends.",
-          "center": [599, 291, 126.5],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60161197,
-            "name": "The Gan Ceanach Prince",
-            "level": 56,
-            "size": 70,
-            "pos": [599, 291, 126.5],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60163254,
-                "name": "levian-al",
-                "level": [50, 54]
-              }
-            ]
-          },
-          "success": "The Gan Ceanach Prince falls. The way is safe again.",
-          "fail": "The Gan Ceanach Prince slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu208_gan_ceanach_prince_s_cloak", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Levian-Als Hold the Road",
-          "objective": "Drive the levian-als off the road",
-          "announce": "With The Levian-al Circle lost, the levian-als have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [382, 368, 124.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60163254,
-              "name": "levian-al",
-              "level": [50, 54]
-            },
-            {
-              "template": 60161197,
-              "name": "gan ceanach",
-              "level": [50, 53]
-            },
-            {
-              "template": 60166425,
-              "name": "spectral manslayer",
-              "level": [50, 53]
-            }
-          ],
-          "boss": {
-            "template": 60163254,
-            "name": "Levian-al warleader",
-            "level": 55,
-            "pos": [382, 368, 124.6],
-            "health_mult": 2
-          },
-          "success": "The levian-als are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Fiona has come out to set the road right. The levian-als are coming back for it!",
-          "center": [382, 368, 124.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Fiona",
-            "level": 54,
-            "pos": [382, 368, 124.6],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [418, 291, 128.0],
-              [462, 340, 126.7],
-              [459, 406, 114.9]
-            ],
-            "mobs": [
-              {
-                "template": 60163254,
-                "name": "levian-al",
-                "level": [50, 54]
-              },
-              {
-                "template": 60161197,
-                "name": "gan ceanach",
-                "level": [50, 53]
-              },
-              {
-                "template": 60166425,
-                "name": "spectral manslayer",
-                "level": [50, 53]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The levian-als break and scatter. The road is open again.",
-          "fail": "Roadwarden Fiona falls, and the levian-als take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "cursed_forest_leprechaun_gold",
-      "title": "Leprechaun Gold",
-      "levels": [48, 55],
-      "hint": "Gold glints in the heart of the forest...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Ruadhan the Treasure-Hunter",
-          "objective": "Protect Ruadhan the Treasure-Hunter, who is digging up a crock of gold",
-          "announce": "Ruadhan has found a leprechaun's crock, and every poacher and leprechaun in the forest wants it. Keep him alive while he digs.",
-          "center": [892, 592, 134.6],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Ruadhan the Treasure-Hunter",
-            "template": 60161797,
-            "level": 55,
-            "model": 388,
-            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
-            "health_mult": 10,
-            "pos": [892, 592, 134.6]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [822, 544, 141.9],
-              [877, 508, 144.9],
-              [942, 523, 135.9]
-            ],
-            "mobs": [
-              {
-                "template": 60163224,
-                "name": "leprechaun",
-                "level": [48, 50]
-              },
-              {
-                "template": 60161034,
-                "name": "forest poacher",
-                "level": [53, 55]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Ruadhan the Treasure-Hunter. \"They came from over there - let's finish this.\"",
-          "fail": "Ruadhan the Treasure-Hunter falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Treasure Cairn",
-          "objective": "Clear the treasure cairn",
-          "announce": "They came from the treasure cairn. Follow them back and clear it out.",
-          "center": [851, 361, 126.7],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60163224,
-              "name": "leprechaun",
-              "level": [48, 50]
-            },
-            {
-              "template": 60161034,
-              "name": "forest poacher",
-              "level": [53, 55]
-            }
-          ],
-          "success": "You have cleared the treasure cairn. Seamus the Crock-Keeper comes out to fight.",
-          "fail": "They hold the treasure cairn. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Seamus the Crock-Keeper",
-          "objective": "Defeat Seamus the Crock-Keeper",
-          "announce": "Seamus the Crock-Keeper stands at the treasure cairn. Bring friends.",
-          "center": [851, 361, 126.7],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60163224,
-            "name": "Seamus the Crock-Keeper",
-            "level": 57,
-            "size": 70,
-            "pos": [851, 361, 126.7],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60163224,
-                "name": "leprechaun",
-                "level": [48, 50]
-              }
-            ]
-          },
-          "success": "Seamus the Crock-Keeper falls. The way is safe again.",
-          "fail": "Seamus the Crock-Keeper slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu208_seamus_the_crock_keeper_s_sash", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Leprechauns Hold the Road",
-          "objective": "Drive the leprechauns off the road",
-          "announce": "With Leprechaun Gold lost, the leprechauns have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1090, 462, 130.3],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60163224,
-              "name": "leprechaun",
-              "level": [48, 50]
-            },
-            {
-              "template": 60161034,
-              "name": "forest poacher",
-              "level": [53, 55]
-            }
-          ],
-          "boss": {
-            "template": 60163224,
-            "name": "Leprechaun warleader",
-            "level": 56,
-            "pos": [1090, 462, 130.3],
-            "health_mult": 2
-          },
-          "success": "The leprechauns are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cormac has come out to set the road right. The leprechauns are coming back for it!",
-          "center": [1090, 462, 130.3],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cormac",
-            "level": 55,
-            "pos": [1090, 462, 130.3],
-            "health_mult": 10,
-            "template": 60161797,
-            "model": 388,
-            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1012, 495, 134.1],
-              [1012, 429, 127.4],
-              [1060, 383, 124.4]
-            ],
-            "mobs": [
-              {
-                "template": 60163224,
-                "name": "leprechaun",
-                "level": [48, 50]
-              },
-              {
-                "template": 60161034,
-                "name": "forest poacher",
-                "level": [53, 55]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The leprechauns break and scatter. The road is open again.",
-          "fail": "Roadwarden Cormac falls, and the leprechauns take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "cursed_forest_cave_bears",
-      "title": "The Unearthed",
-      "levels": [49, 51],
-      "hint": "Something huge has dug its way up out of the earth...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Open Cave",
-          "objective": "Clear the open cave",
-          "announce": "The cave bears dug up from under the cursed forest have made a den in the open, and they are hungry. Kill them.",
-          "center": [292, 826, 124.6],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60167436,
-              "name": "unearthed cave bear",
-              "level": [49, 51]
-            }
-          ],
-          "success": "You have cleared the open cave. The Unearthed Sow comes out to fight.",
-          "fail": "They hold the open cave. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Unearthed Sow",
-          "objective": "Defeat the Unearthed Sow",
-          "announce": "The Unearthed Sow stands at the open cave. Bring friends.",
-          "center": [292, 826, 124.6],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60167436,
-            "name": "The Unearthed Sow",
-            "level": 53,
-            "size": 110,
-            "pos": [292, 826, 124.6],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60167436,
-                "name": "unearthed cave bear",
-                "level": [49, 51]
-              }
-            ]
-          },
-          "success": "The Unearthed Sow falls. The way is safe again.",
-          "fail": "The Unearthed Sow slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu208_unearthed_sow_s_bracer", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Unearthed Cave Bears Hold the Old Road",
-          "objective": "Drive the unearthed cave bears off the old road",
-          "announce": "With The Unearthed lost, the unearthed cave bears have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [452, 991, 127.8],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60167436,
-              "name": "unearthed cave bear",
-              "level": [49, 51]
-            }
-          ],
-          "boss": {
-            "template": 60167436,
-            "name": "Unearthed cave bear warleader",
-            "level": 52,
-            "pos": [452, 991, 127.8],
-            "health_mult": 2
-          },
-          "success": "The unearthed cave bears are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Aine has come out to set the old road right. The unearthed cave bears are coming back for it!",
-          "center": [452, 991, 127.8],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Aine",
-            "level": 51,
-            "pos": [452, 991, 127.8],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [367, 991, 127.7],
-              [393, 930, 125.8],
-              [455, 906, 120.7]
-            ],
-            "mobs": [
-              {
-                "template": 60167436,
-                "name": "unearthed cave bear",
-                "level": [49, 51]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The unearthed cave bears break and scatter. The old road is open again.",
-          "fail": "Roadwarden Aine falls, and the unearthed cave bears take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "template": 60157478,
+     "model": 362,
+     "guild": "the Host of Lug",
+     "name": "spear of the Host",
+     "level": 48,
+     "count": 3
     }
-  ]
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break The Hollow Road",
+     "objective": "Break the court's garrison at the Hollow Road",
+     "announce": "The Host is at the Hollow Road! Break the garrison!",
+     "center": [
+      430,
+      1080,
+      125.0
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 24,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60161227,
+       "name": "court thrall",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court"
+      },
+      {
+       "template": 60161227,
+       "name": "court thrall",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court"
+      },
+      {
+       "template": 60160524,
+       "name": "thrall-singer",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court"
+      },
+      {
+       "template": 60161197,
+       "name": "gan ceanach",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court"
+      }
+     ],
+     "success": "The garrison breaks.",
+     "fail": "The Host is thrown back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 140,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Breasal of the Thorns",
+     "objective": "Defeat Breasal of the Thorns",
+     "announce": "Breasal of the Thorns, smiling: 'The Queen said you'd come. She's looking forward to it.'",
+     "center": [
+      430,
+      1080,
+      125.0
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60167452,
+      "model": 334,
+      "name": "Breasal of the Thorns",
+      "level": 51,
+      "size": 62,
+      "health_mult": 4,
+      "guild": "Captain of the Court"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60161227,
+        "name": "court thrall",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court"
+       },
+       {
+        "template": 60167448,
+        "name": "unseelie darkblade",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court"
+       }
+      ]
+     },
+     "success": "Breasal of the Thorns falls. The Host plants the green banner at the Hollow Road.",
+     "fail": "The Host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 240,
+      "tokens": 16,
+      "items": [
+       {
+        "id": "cf208_breasal_s_thorn_brooch",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cf_cp2_assault",
+   "title": "The Host at The Ford of Sorrows",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 6,
+   "hint": "Captain Fedelm of the Host is forming up for the Ford of Sorrows.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60157478,
+    "model": 362,
+    "guild": "the Host of Lug",
+    "name": "Captain Fedelm",
+    "level": 50,
+    "pos": [
+     470,
+     1060,
+     124.6
+    ],
+    "health_mult": 5,
+    "greet": "The Ford of Sorrows. The dorocha water their horses there, and the Queen's wards hold the crossing. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "To the ford! Riders first - then the wards!",
+    "busy": "Not yet. The Host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "Hold here! The Host holds the Ford of Sorrows - and the next thirty minutes are ours to use.",
+    "regret": "Fall back to the line! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60157478,
+     "model": 362,
+     "guild": "the Host of Lug",
+     "name": "spear of the Host",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break The Ford of Sorrows",
+     "objective": "Break the court's garrison at the Ford of Sorrows",
+     "announce": "The Host is at the Ford of Sorrows! Break the garrison!",
+     "center": [
+      682,
+      867,
+      125.1
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 28,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60160718,
+       "name": "far dorocha",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court"
+      },
+      {
+       "template": 60160718,
+       "name": "far dorocha",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court"
+      },
+      {
+       "template": 60158464,
+       "name": "black wraith",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court"
+      },
+      {
+       "template": 60161227,
+       "name": "court thrall",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court"
+      }
+     ],
+     "success": "The garrison breaks.",
+     "fail": "The Host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "wards",
+     "name": "The Queen's Wards",
+     "objective": "Hold the three wards on the ford at once",
+     "announce": "The Queen's wards hold the ford - stand on all three at once and the Host's druids can unweave them!",
+     "wards": [
+      [
+       660,
+       850,
+       130.1
+      ],
+      [
+       707,
+       910,
+       124.5
+      ],
+      [
+       715,
+       835,
+       125.1
+      ]
+     ],
+     "ward_names": [
+      "the north bank",
+      "the ford",
+      "the south bank"
+     ],
+     "ward_radius": 24,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 60160718,
+       "name": "far dorocha",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court"
+      },
+      {
+       "template": 60158464,
+       "name": "black wraith",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "pennant of the Host",
+     "center": [
+      682,
+      867,
+      125.1
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the Host falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Rider-Captain Dubhan",
+     "objective": "Defeat Rider-Captain Dubhan",
+     "announce": "Rider-Captain Dubhan rides out of the water: 'Lug's dogs. The Host of the Air will run you down.'",
+     "center": [
+      682,
+      867,
+      125.1
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60160718,
+      "name": "Rider-Captain Dubhan",
+      "level": 51,
+      "size": 70,
+      "health_mult": 4.5,
+      "guild": "Captain of the Court"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60160718,
+        "name": "far dorocha",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court"
+       },
+       {
+        "template": 60158464,
+        "name": "black wraith",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court"
+       }
+      ]
+     },
+     "success": "Rider-Captain Dubhan falls. The Host plants the green banner at the Ford of Sorrows.",
+     "fail": "The Host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 26,
+      "copper_per_level": 280,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "cf208_dubhan_s_bridle_ring",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cf_cp3_assault",
+   "title": "The Host at The Hag-Wood",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 6,
+   "hint": "Captain Loegaire of the Host is forming up for the Hag-Wood.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60157478,
+    "model": 362,
+    "guild": "the Host of Lug",
+    "name": "Captain Loegaire",
+    "level": 50,
+    "pos": [
+     709,
+     842,
+     125.0
+    ],
+    "health_mult": 5,
+    "greet": "The Hag-Wood - the old women's wood. The druids say there's a tree at its heart that feeds them. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Into the Hag-Wood! Keep Senach alive - he's the only one who can burn that tree!",
+    "busy": "Not yet. The Host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "Hold here! The Host holds the Hag-Wood - and the next thirty minutes are ours to use.",
+    "regret": "Fall back to the line! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60157478,
+     "model": 362,
+     "guild": "the Host of Lug",
+     "name": "spear of the Host",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break The Hag-Wood",
+     "objective": "Break the court's garrison at the Hag-Wood",
+     "announce": "The Host is at the Hag-Wood! Break the garrison!",
+     "center": [
+      965,
+      705,
+      124.6
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 30,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60164285,
+       "name": "mummy hag",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court",
+       "size": 50
+      },
+      {
+       "template": 60164285,
+       "name": "mummy hag",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court",
+       "size": 50
+      },
+      {
+       "template": 60164286,
+       "name": "mummy hag witch",
+       "level": [
+        49,
+        51
+       ],
+       "guild": "the Unseelie Court",
+       "size": 48
+      },
+      {
+       "template": 60160524,
+       "name": "thrall-singer",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court"
+      }
+     ],
+     "success": "The garrison breaks.",
+     "fail": "The Host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 16,
+      "copper_per_level": 140,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "s2",
+     "type": "defend",
+     "name": "The Hag-Tree",
+     "objective": "Keep Druid Senach alive while he burns the hag-tree",
+     "announce": "Druid Senach of the Host is putting fire to the hag-tree - the hags are coming for him!",
+     "duration_s": 210,
+     "protect": {
+      "template": 60157478,
+      "model": 362,
+      "guild": "the Host of Lug",
+      "name": "Druid Senach",
+      "level": 50,
+      "pos": [
+       965,
+       705,
+       124.6
+      ],
+      "health_mult": 6
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 4,
+      "from": [
+       [
+        1040,
+        760,
+        125.8
+       ],
+       [
+        900,
+        640,
+        134.4
+       ],
+       [
+        1020,
+        620,
+        126.1
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60164285,
+        "name": "mummy hag",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court",
+        "size": 50
+       },
+       {
+        "template": 60164286,
+        "name": "mummy hag witch",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Unseelie Court",
+        "size": 48
+       },
+       {
+        "template": 60166605,
+        "name": "suitor spirit",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court"
+       }
+      ]
+     },
+     "center": [
+      965,
+      705,
+      124.6
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the Host falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 16,
+      "copper_per_level": 140,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Hag-Mother Bronach",
+     "objective": "Defeat Hag-Mother Bronach",
+     "announce": "Hag-Mother Bronach, laughing: 'Burn my tree, will you? I was old when your king was a babe.'",
+     "center": [
+      965,
+      705,
+      124.6
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60164286,
+      "name": "Hag-Mother Bronach",
+      "level": 52,
+      "size": 80,
+      "health_mult": 5,
+      "guild": "Captain of the Court"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 4,
+      "mobs": [
+       {
+        "template": 60164285,
+        "name": "mummy hag",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court",
+        "size": 50
+       },
+       {
+        "template": 60164286,
+        "name": "mummy hag witch",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Unseelie Court",
+        "size": 48
+       }
+      ]
+     },
+     "success": "Hag-Mother Bronach falls. The Host plants the green banner at the Hag-Wood.",
+     "fail": "The Host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 320,
+      "tokens": 24,
+      "items": [
+       {
+        "id": "cf208_bronach_s_hag_stone",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cf_cp4_assault",
+   "title": "The Host at The Thorn Gate",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 8,
+   "hint": "Captain Scathach Og of the Host is forming up for the Thorn Gate.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60157478,
+    "model": 362,
+    "guild": "the Host of Lug",
+    "name": "Captain Scathach Og",
+    "level": 50,
+    "pos": [
+     1000,
+     690,
+     124.6
+    ],
+    "health_mult": 5,
+    "greet": "The Thorn Gate. Past it is the Queen's Seat itself. Eight at least, and say [forward].",
+    "accept": "forward",
+    "reply": "The Thorn Gate! Hold the wards, open the gate, and bring down whoever keeps it!",
+    "busy": "Not yet. The Host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "Hold here! The Host holds the Thorn Gate - and the next thirty minutes are ours to use.",
+    "regret": "Fall back to the line! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60157478,
+     "model": 362,
+     "guild": "the Host of Lug",
+     "name": "spear of the Host",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break The Thorn Gate",
+     "objective": "Break the court's garrison at the Thorn Gate",
+     "announce": "The Host is at the Thorn Gate! Break the garrison!",
+     "center": [
+      1170,
+      640,
+      130.5
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 32,
+     "alive": 9,
+     "mobs": [
+      {
+       "template": 60165087,
+       "name": "Queen's Maid",
+       "level": [
+        49,
+        51
+       ],
+       "guild": "the Unseelie Court"
+      },
+      {
+       "template": 60158249,
+       "name": "bainshee",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court",
+       "model": 1885,
+       "size": 50
+      },
+      {
+       "template": 60167459,
+       "name": "unseelie scythewielder",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court"
+      },
+      {
+       "template": 60167448,
+       "name": "unseelie darkblade",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court"
+      }
+     ],
+     "success": "The garrison breaks.",
+     "fail": "The Host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 140,
+      "tokens": 14
+     }
+    },
+    {
+     "id": "s2",
+     "type": "wards",
+     "name": "The Thorn Gate",
+     "objective": "Hold the four thorn-wards at once",
+     "announce": "The Thorn Gate is woven shut - hold all four wards at once and it opens!",
+     "wards": [
+      [
+       1157,
+       617,
+       124.9
+      ],
+      [
+       1190,
+       610,
+       129.4
+      ],
+      [
+       1150,
+       670,
+       132.4
+      ],
+      [
+       1190,
+       670,
+       136.2
+      ]
+     ],
+     "ward_names": [
+      "the north-west thorn",
+      "the north-east thorn",
+      "the south-west thorn",
+      "the south-east thorn"
+     ],
+     "ward_radius": 22,
+     "hold_s": 35,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 60165087,
+       "name": "Queen's Maid",
+       "level": [
+        49,
+        51
+       ],
+       "guild": "the Unseelie Court"
+      },
+      {
+       "template": 60158249,
+       "name": "bainshee",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Unseelie Court",
+       "model": 1885,
+       "size": 50
+      }
+     ],
+     "reinforce_s": 35,
+     "flag": 466,
+     "flag_name": "pennant of the Host",
+     "center": [
+      1170,
+      640,
+      130.5
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the Host falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 140,
+      "tokens": 14
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "The Thorn Knight",
+     "objective": "Defeat The Thorn Knight",
+     "announce": "The Thorn Knight lowers his visor: 'No one passes to the Queen. No one ever has.'",
+     "center": [
+      1170,
+      640,
+      130.5
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60167452,
+      "model": 334,
+      "name": "The Thorn Knight",
+      "level": 52,
+      "size": 75,
+      "health_mult": 5.5,
+      "guild": "Captain of the Court"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 4,
+      "mobs": [
+       {
+        "template": 60165087,
+        "name": "Queen's Maid",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Unseelie Court"
+       },
+       {
+        "template": 60158249,
+        "name": "bainshee keener",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Unseelie Court",
+        "model": 1885,
+        "size": 58
+       }
+      ]
+     },
+     "success": "The Thorn Knight falls. The Host plants the green banner at the Thorn Gate.",
+     "fail": "The Host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 34,
+      "copper_per_level": 360,
+      "tokens": 28,
+      "items": [
+       {
+        "id": "cf208_thorn_knight_s_bracer",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cf_cp1_counter",
+   "title": "The Court Strikes Back at The Hollow Road",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "The court is coming back for the Hollow Road!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Hollow Road",
+     "objective": "Keep the Host's captain alive at the Hollow Road",
+     "announce": "The court is coming back for the Hollow Road! The Host will hold as long as it can - help them, or it falls!",
+     "center": [
+      430,
+      1080,
+      125.0
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60157478,
+      "model": 362,
+      "guild": "the Host of Lug",
+      "name": "Banner-Captain of the Hollow Road",
+      "level": 50,
+      "pos": [
+       430,
+       1080,
+       125.0
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        560,
+        1020,
+        125.0
+       ],
+       [
+        520,
+        1160,
+        124.3
+       ],
+       [
+        470,
+        960,
+        125.5
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161227,
+        "name": "court thrall",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court"
+       },
+       {
+        "template": 60161197,
+        "name": "gan ceanach",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court"
+       },
+       {
+        "template": 60167448,
+        "name": "unseelie darkblade",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The Host holds - and it's still the King's ground.",
+     "success": "The court breaks against the Host's line. The Hollow Road holds - and the clock starts again.",
+     "fail": "The banner falls. The court has the Hollow Road again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 180,
+      "tokens": 12
+     }
+    }
+   ]
+  },
+  {
+   "id": "cf_cp2_counter",
+   "title": "The Court Strikes Back at The Ford of Sorrows",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "The court is coming back for the Ford of Sorrows!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Ford of Sorrows",
+     "objective": "Keep the Host's captain alive at the Ford of Sorrows",
+     "announce": "The court is coming back for the Ford of Sorrows! The Host will hold as long as it can - help them, or it falls!",
+     "center": [
+      682,
+      867,
+      125.1
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60157478,
+      "model": 362,
+      "guild": "the Host of Lug",
+      "name": "Banner-Captain of the Ford",
+      "level": 50,
+      "pos": [
+       682,
+       867,
+       125.1
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        800,
+        860,
+        124.6
+       ],
+       [
+        760,
+        980,
+        133.6
+       ],
+       [
+        780,
+        760,
+        126.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160718,
+        "name": "far dorocha",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court"
+       },
+       {
+        "template": 60158464,
+        "name": "black wraith",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court"
+       },
+       {
+        "template": 60161227,
+        "name": "court thrall",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The Host holds - and it's still the King's ground.",
+     "success": "The court breaks against the Host's line. The Ford of Sorrows holds - and the clock starts again.",
+     "fail": "The banner falls. The court has the Ford of Sorrows again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "cf_cp3_counter",
+   "title": "The Court Strikes Back at The Hag-Wood",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "The court is coming back for the Hag-Wood!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Hag-Wood",
+     "objective": "Keep the Host's captain alive at the Hag-Wood",
+     "announce": "The court is coming back for the Hag-Wood! The Host will hold as long as it can - help them, or it falls!",
+     "center": [
+      965,
+      705,
+      124.6
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60157478,
+      "model": 362,
+      "guild": "the Host of Lug",
+      "name": "Banner-Captain of the Hag-Wood",
+      "level": 50,
+      "pos": [
+       965,
+       705,
+       124.6
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 5,
+      "from": [
+       [
+        1060,
+        700,
+        127.2
+       ],
+       [
+        1000,
+        800,
+        124.6
+       ],
+       [
+        1040,
+        620,
+        125.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60164285,
+        "name": "mummy hag",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court",
+        "size": 50
+       },
+       {
+        "template": 60164286,
+        "name": "mummy hag witch",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Unseelie Court",
+        "size": 48
+       },
+       {
+        "template": 60166605,
+        "name": "suitor spirit",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The Host holds - and it's still the King's ground.",
+     "success": "The court breaks against the Host's line. The Hag-Wood holds - and the clock starts again.",
+     "fail": "The banner falls. The court has the Hag-Wood again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 180,
+      "tokens": 16
+     }
+    }
+   ]
+  },
+  {
+   "id": "cf_cp4_counter",
+   "title": "The Court Strikes Back at The Thorn Gate",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "The court is coming back for the Thorn Gate!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Thorn Gate",
+     "objective": "Keep the Host's captain alive at the Thorn Gate",
+     "announce": "The court is coming back for the Thorn Gate! The Host will hold as long as it can - help them, or it falls!",
+     "center": [
+      1170,
+      640,
+      130.5
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60157478,
+      "model": 362,
+      "guild": "the Host of Lug",
+      "name": "Banner-Captain of the Thorn Gate",
+      "level": 50,
+      "pos": [
+       1170,
+       640,
+       130.5
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 5,
+      "from": [
+       [
+        1250,
+        640,
+        130.2
+       ],
+       [
+        1230,
+        560,
+        124.7
+       ],
+       [
+        1240,
+        730,
+        119.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60165087,
+        "name": "Queen's Maid",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Unseelie Court"
+       },
+       {
+        "template": 60158249,
+        "name": "bainshee",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court",
+        "model": 1885,
+        "size": 50
+       },
+       {
+        "template": 60158249,
+        "name": "bainshee keener",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Unseelie Court",
+        "model": 1885,
+        "size": 58
+       },
+       {
+        "template": 60167459,
+        "name": "unseelie scythewielder",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The Host holds - and it's still the King's ground.",
+     "success": "The court breaks against the Host's line. The Thorn Gate holds - and the clock starts again.",
+     "fail": "The banner falls. The court has the Thorn Gate again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 24,
+      "copper_per_level": 180,
+      "tokens": 18
+     }
+    }
+   ]
+  },
+  {
+   "id": "cf_queens_seat",
+   "title": "The Queen's Seat",
+   "levels": [
+    48,
+    50
+   ],
+   "manual": true,
+   "bots": 18,
+   "bot_min_level": 47,
+   "min_people": 12,
+   "hint": "Champion Lugaid is gathering the Host for the Queen's Seat.",
+   "rest_s": 15,
+   "start": "q1",
+   "giver": {
+    "template": 60157478,
+    "model": 362,
+    "guild": "the Host of Lug",
+    "name": "Champion Lugaid",
+    "level": 55,
+    "pos": [
+     1200,
+     630,
+     134.4
+    ],
+    "health_mult": 8,
+    "size": 58,
+    "greet": "The Queen's Seat. Cliodna herself. This is what the King sent us for - two groups at least, three if you can find them. Twelve, bots and all, then say [for the King].",
+    "accept": "for the King",
+    "reply": "For Lug Lamfhota! Healers to the back, curers with them - she rots what she touches. Forward!",
+    "busy": "Not yet. Gather.",
+    "cooldown_s": 180,
+    "thanks": "She's gone. The Queen is gone. The forest is the King's - for now.",
+    "regret": "Back! Back to the Thorn Gate! We'll come again."
+   },
+   "guards": [
+    {
+     "template": 60157478,
+     "model": 362,
+     "guild": "the Host of Lug",
+     "name": "spear of the Host",
+     "level": 50,
+     "count": 4
+    }
+   ],
+   "stages": [
+    {
+     "id": "q1",
+     "type": "boss",
+     "name": "Queen Cliodna",
+     "objective": "Defeat Queen Cliodna",
+     "announce": "Queen Cliodna rises from her seat: 'Lug's little soldiers, in my house. Come, then. Let me show you what I am.'",
+     "center": [
+      1320,
+      645,
+      119.0
+     ],
+     "radius": 90,
+     "time_s": 2700,
+     "boss": {
+      "template": 60167452,
+      "model": 347,
+      "name": "Queen Cliodna",
+      "level": 60,
+      "size": 62,
+      "health_mult": 25,
+      "guild": "Queen of the Unseelie Court"
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60158249,
+        "name": "bainshee",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Unseelie Court",
+        "model": 1885,
+        "size": 50
+       },
+       {
+        "template": 60158249,
+        "name": "bainshee keener",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Unseelie Court",
+        "model": 1885,
+        "size": 58
+       },
+       {
+        "template": 60165087,
+        "name": "Queen's Maid",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Unseelie Court"
+       }
+      ]
+     },
+     "success": "Cliodna's last wail breaks against the trees and she comes apart into mist. The fog over the forest begins to lift.",
+     "fail": "The Queen drives the Host from her seat.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 60,
+      "copper_per_level": 600,
+      "tokens": 60,
+      "items": [
+       {
+        "id": "cf208_cliodna_s_thorn_torc",
+        "gold_chance": 60,
+        "silver_chance": 25
+       },
+       {
+        "id": "cf208_bainshee_queen_s_veil",
+        "gold_chance": 60,
+        "silver_chance": 25
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
 }

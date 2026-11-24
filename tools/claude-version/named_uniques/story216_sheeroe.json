@@ -13,13 +13,13 @@
     41,
     29
    ],
-   "level": 42,
+   "level": 45,
    "bonuses": {
-    "Int": 14,
-    "Emp": 7,
-    "Dex": 7,
+    "Int": 15,
+    "Emp": 8,
+    "Dex": 8,
     "Power": 6,
-    "Hits": 25
+    "Hits": 27
    },
    "lore": "A glimmer-glass arrowhead. It points toward the Glimmer King's hosts, wherever they are."
   },
@@ -31,12 +31,12 @@
     41,
     24
    ],
-   "level": 42,
+   "level": 45,
    "bonuses": {
-    "Emp": 14,
-    "Con": 7,
+    "Emp": 15,
+    "Con": 8,
     "Power": 6,
-    "Hits": 25
+    "Hits": 27
    },
    "lore": "A healer's charm against the glimmer folk's arrows."
   },
@@ -48,12 +48,12 @@
     41,
     33
    ],
-   "level": 42,
+   "level": 45,
    "bonuses": {
-    "Str": 14,
-    "Con": 14,
-    "Dex": 7,
-    "Hits": 36
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 38
    },
    "lore": "An elfshot man made this, in his madness. It's very good."
   },
@@ -65,14 +65,85 @@
     41,
     26
    ],
-   "level": 42,
+   "level": 45,
    "bonuses": {
-    "Dex": 14,
-    "Qui": 14,
-    "Str": 7,
-    "Hits": 36
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 8,
+    "Hits": 38
    },
    "lore": "It catches the light and throws it back wrong."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Subverter's Glass Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 45,
+   "bonuses": {
+    "Int": 15,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 6,
+    "Hits": 27
+   },
+   "lore": "A ring of glimmer-glass, taken from a raging subverter's hand. It hums, faintly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Healer's Knotted Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 45,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 45,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Every knot a patient. Bebhinn ran out of rope."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Four-Note Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 46,
+   "bonuses": {
+    "Emp": 15,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "Ceallach strung a bead for every note of the King's call, and broke the last one."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Counter-Song Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 46,
+   "bonuses": {
+    "Qui": 15,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 28,
+    "Power": 5
+   },
+   "lore": "A druid's charm, sung over. It hums a fifth note, out of tune with the four."
   },
   {
    "story_reward": true,
@@ -82,13 +153,13 @@
     41,
     24
    ],
-   "level": 50,
+   "level": 47,
    "bonuses": {
-    "Qui": 17,
-    "Con": 9,
-    "Dex": 9,
-    "Hits": 31,
-    "Power": 6
+    "Qui": 16,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 28,
+    "Power": 5
    },
    "lore": "A little clay figure of a hearth, made by lurikeen children."
   },
@@ -100,13 +171,13 @@
     41,
     29
    ],
-   "level": 50,
+   "level": 47,
    "bonuses": {
-    "Int": 17,
-    "Emp": 9,
-    "Dex": 9,
+    "Int": 16,
+    "Emp": 8,
+    "Dex": 8,
     "Power": 7,
-    "Hits": 31
+    "Hits": 28
    },
    "lore": "An Azure cleanser's torc. Every link has a name scratched into it - the names of the cleansed."
   },
@@ -118,12 +189,12 @@
     41,
     33
    ],
-   "level": 50,
+   "level": 47,
    "bonuses": {
-    "Str": 17,
-    "Con": 17,
-    "Dex": 9,
-    "Hits": 44
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 40
    },
    "lore": "Leather from a pale horse of the hills. It never quite warms."
   },
@@ -135,10 +206,10 @@
     41,
     26
    ],
-   "level": 50,
+   "level": 47,
    "bonuses": {
-    "Con": 17,
-    "Hits": 52,
+    "Con": 16,
+    "Hits": 47,
     "Body": 6,
     "Crush": 6,
     "Slash": 6
@@ -153,14 +224,434 @@
     41,
     35
    ],
+   "level": 47,
+   "bonuses": {
+    "Dex": 16,
+    "Qui": 16,
+    "Str": 8,
+    "Hits": 40
+   },
+   "lore": "Taken from the Azure inquisitor who held the village."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pale Pasture Halter-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 46,
+   "bonuses": {
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 8,
+    "Hits": 39
+   },
+   "lore": "From a pale horse's halter. Lurikeen-sized."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pen-Breaker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 46,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 39
+   },
+   "lore": "The pen's bar, beaten into a bracer by a grateful smith."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Doubter's Blue Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 47,
+   "bonuses": {
+    "Emp": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "Ailill's own torc, the crown crossed out. He gave it up."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pitch-Cart Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 47,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 47,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Leather from the Inquisitor's pitch-carts. Smells of smoke."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dsaldor's Enamel Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 48,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 41
+   },
+   "lore": "Blue enamel, the crown crossed out. Dsaldor's own."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Coseal's Censer Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 48,
+   "bonuses": {
+    "Int": 16,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "A tiny censer on a ring. It still smokes, faintly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thror's Pyre-Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 48,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 48,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Singed at the hem from a hundred pyres."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lord Orist's Glass Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 47,
+   "bonuses": {
+    "Dex": 16,
+    "Qui": 16,
+    "Str": 8,
+    "Hits": 40
+   },
+   "lore": "It throws the light back wrong, like all their glass."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mianed's Upland Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 47,
+   "bonuses": {
+    "Int": 16,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "Cold, and very bright."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Kelegur's Shining Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 48,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 41
+   },
+   "lore": "It shines whether there's light or not."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Zeit's Griever Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 48,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 48,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Made from a griever's shell. It moans in the wind."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Meldun's Muster-Roll Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 48,
+   "bonuses": {
+    "Int": 16,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "A ring with a list engraved inside it. Every name crossed out."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Arios's Lamp-Glass Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 48,
+   "bonuses": {
+    "Qui": 16,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 29,
+    "Power": 5
+   },
+   "lore": "A sliver of a Glimmer lamp. It still remembers being lit."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Xaquira's Light-Woven Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 48,
+   "bonuses": {
+    "Dex": 16,
+    "Qui": 16,
+    "Str": 8,
+    "Hits": 41
+   },
+   "lore": "Woven, somehow, out of light. It is warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Venlar's Gate-Key Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 49,
+   "bonuses": {
+    "Int": 16,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "A key of light, bent into a torc. It opens nothing now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Ceannai Sentinels",
+   "base": [
+    41,
+    26
+   ],
+   "level": 49,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 49,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "The Sentinels' own, for those who broke the King's guard."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lord-Breaker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 49,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 42
+   },
+   "lore": "Ten lords. Ten notches."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Zanllvi's Sealing-Wax Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 49,
+   "bonuses": {
+    "Dex": 16,
+    "Qui": 16,
+    "Str": 8,
+    "Hits": 42
+   },
+   "lore": "The wax on it is gold, and still soft."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Answer-Bearer's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 49,
+   "bonuses": {
+    "Int": 16,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "The courier's belt. It carried the King's answer as far as the hollow."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Saumer's Ring-Stone Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Qui": 17,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 30,
+    "Power": 6
+   },
+   "lore": "A chip from the ring of stones. It is warm, and very old."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lightbreaker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 17,
+    "Con": 17,
+    "Dex": 8,
+    "Hits": 42
+   },
+   "lore": "For the one who broke the last of the King's lords."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the King's Answer",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Emp": 17,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "Aine's Circle's own, for the one who read the King's answer and knew what to do with it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Unlit Lantern Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 17,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "A Glimmer lamp, put out for good, bound in silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ring of the Broken Bargain",
+   "base": [
+    41,
+    35
+   ],
    "level": 50,
    "bonuses": {
     "Dex": 17,
     "Qui": 17,
-    "Str": 9,
-    "Hits": 44
+    "Str": 8,
+    "Hits": 42
    },
-   "lore": "Taken from the Azure inquisitor who held the village."
+   "lore": "Two seals - a crowned woman, a crowned man - cut in half and set together."
   }
  ]
 }

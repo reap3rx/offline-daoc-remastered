@@ -1,0 +1,95 @@
+{
+ "zone": 216,
+ "region": 200,
+ "realm": 3,
+ "prefix": "rep216",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Friend of the Muster's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 45,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 38
+   },
+   "lore": "Four little knots, one for each hall of the Muster."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Muster-Marcher's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 45,
+   "bonuses": {
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 8,
+    "Hits": 38
+   },
+   "lore": "A marching belt with a turf-spade, a sentinel's spear, a druid's sickle and a keener's comb on the buckle."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Spear of the South Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 48,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 41
+   },
+   "lore": "Bronze, with a spearhead clasp pointing south."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Four Halls Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 48,
+   "bonuses": {
+    "Emp": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "Carved with the Ceannai tower, Aine's stones, Alainn Bin's walls and the Keeners' comb."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Lightbreaker",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 50,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Night-dark. Only a Lightbreaker wears it."
+  }
+ ]
+}

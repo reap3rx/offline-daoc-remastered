@@ -1390,6 +1390,7 @@ namespace DOL.GS.ServerRules
 
             RewardRealmPoints();
             RewardBountyPoints();
+            DOL.GS.Reputation.ReputationService.OnKill(playerToAward, killedNpc, damagePercent);   // yellow and up: a little standing
 
             long xpCap = CalculateXpCap();
             baseXpReward = Math.Min(baseXpReward, xpCap);
@@ -1879,6 +1880,7 @@ namespace DOL.GS.ServerRules
             }
 
             double damagePercent = Math.Min(1.0, contribution.Damage / npcTotalDamageReceived);
+            DOL.GS.Reputation.ReputationService.OnKill(botToAward, killedNpc, damagePercent);      // bots earn standing as players do
             long xpCap = GameServer.ServerRules.GetExperienceForLiving(botToAward.Level);
             xpCap = (long)(xpCap * Properties.XP_CAP_PERCENT / 100.0 * killedNpc.ExceedXPCapAmount);
             baseXpReward = (long)(Math.Min(baseXpReward, xpCap) * damagePercent);

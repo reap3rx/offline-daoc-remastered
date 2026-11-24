@@ -63,6 +63,9 @@ namespace DOL.GS.Spells
             if (SpellLine.KeyName is GlobalSpellsLines.Mundane_Poisons && Caster.effectListComponent.ContainsEffectForEffectType(eEffect.Viper))
                 ad.Damage *= 2;
 
+            ad.Damage = (int) (ad.Damage * HibernianHybrids.DotFactor(Caster, target, Spell) * AlbionKits.DotFactor(Caster, target, this));   // (a Valewalker's Creeping Rot, an Infiltrator's Lingering Venom)
+            MidgardKits.BlightFeast(Caster, ad.Damage);   // (a Shaman's rot heals its most hurt groupmate)
+
             /* GameSpellEffect iWarLordEffect = FindEffectOnTarget(target, "CleansingAura");
             if (iWarLordEffect != null)
                 ad.Damage *= (int) (1.00 - iWarLordEffect.Spell.Value * 0.01);*/

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -201,6 +201,38 @@ namespace DOL.GS.GameEvents
 			FilterClassicSiLocationsForAutonomous(m_cachedLocations, realm, raceId, classId);
 
 		/// <summary>
+		/// A new bot's start (owner 2026-11-24, the hard starts: "The tryhard bots might favor this location on starting"):
+		/// every start equally likely, except a hard one - a tryhard picks it several times as often, a casual never (while
+		/// there's anywhere else). <paramref name="isHard"/> says which locations are hard starts.
+		/// </summary>
+		public static StartupLocation ChooseAutonomousLocation(IEnumerable<StartupLocation> locations, string personaTier,
+			Func<StartupLocation, bool> isHard, Random random = null)
+		{
+			StartupLocation[] choices = locations?.Where(location => location != null).ToArray() ?? Array.Empty<StartupLocation>();
+			if (choices.Length == 0)
+				return null;
+			random ??= Random.Shared;
+			double HardWeight() => personaTier switch { "tryhard" => 6.0, "casual" => 0.0, _ => 1.0 };
+			double[] w = choices.Select(c => isHard != null && isHard(c) ? HardWeight() : 1.0).ToArray();
+			double total = w.Sum();
+			if (total <= 0)
+				return choices[random.Next(choices.Length)];
+			double r = random.NextDouble() * total;
+			for (int i = 0; i < choices.Length; i++)
+			{
+				r -= w[i];
+				if (r < 0)
+					return choices[i];
+			}
+			return choices[^1];
+		}
+
+		/// <summary>Is this location one of the realm's hard starts (level_bands.json "hard")?</summary>
+		public static bool IsHardStart(StartupLocation location) =>
+			location != null && LevelBands.StartsOf((eRealm) location.RealmID)
+				.Any(s => s.Hard && s.Region == location.Region && s.X == location.XPos && s.Y == location.YPos);
+
+		/// <summary>
 		/// One equiprobable selection from already-authoritative startup rows.
 		/// Kept explicit so callers cannot accidentally turn row order, a capital,
 		/// or class/race duplicate count into a placement preference.
@@ -226,9 +258,12 @@ namespace DOL.GS.GameEvents
 			if (locations == null || !IsPlayerRealm(realm))
 				return Array.Empty<StartupLocation>();
 
-			if (LevelBands.StartOf(realm) is LevelBands.Start hub)   // the realm's hub town: new bots start there too
-				return new[] { new StartupLocation { Region = hub.Region, XPos = hub.X, YPos = hub.Y, ZPos = hub.Z, Heading = hub.Heading,
-					RealmID = (int) realm, MinVersion = 0, ClientRegionID = 0 } };
+			// the realm's starting towns (the hub and the start choices): new bots are spread over them at random, as
+			// players pick (owner 2026-11-22: bots "will also get randomly assigned one of the zones as their starting zone")
+			IReadOnlyList<LevelBands.Start> starts = LevelBands.StartsOf(realm);
+			if (starts.Count > 0)
+				return starts.Select(s => new StartupLocation { Region = s.Region, XPos = s.X, YPos = s.Y, ZPos = s.Z, Heading = s.Heading,
+					RealmID = (int) realm, MinVersion = 0, ClientRegionID = 0 }).ToArray();
 
 			return locations
 				.Where(location => location != null && location.MinVersion <= (int)GameClient.eClientVersion.Version168)
@@ -271,6 +306,29 @@ namespace DOL.GS.GameEvents
 				return null;
 			}
 				
+		}
+
+		/// <summary>
+		/// The starting town a new character picked on the create screen (choice 0 the hub, LevelBands start_choices
+		/// after it): moves and binds it there - only when the creation put it at the hub (not the tutorial).
+		/// </summary>
+		public static bool ApplyStartChoice(DbCoreCharacter ch, int choice)
+		{
+			if (ch == null || choice <= 0 || LevelBands.StartOf((eRealm) ch.Realm) is not LevelBands.Start hub)
+				return false;
+			if (ch.Region != hub.Region || ch.Xpos != hub.X || ch.Ypos != hub.Y)
+				return false;
+			IReadOnlyList<LevelBands.Start> starts = LevelBands.StartsOf((eRealm) ch.Realm);
+			if (choice >= starts.Count)
+				return false;
+			LevelBands.Start s = starts[choice];
+			ch.Xpos = s.X;
+			ch.Ypos = s.Y;
+			ch.Zpos = s.Z;
+			ch.Region = s.Region;
+			ch.Direction = s.Heading;
+			BindCharacter(ch);
+			return true;
 		}
 
 		/// <summary>

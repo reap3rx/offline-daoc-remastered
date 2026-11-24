@@ -1,0 +1,875 @@
+{
+ "zone": 208,
+ "name": "Cursed Forest",
+ "rating": "elite",
+ "themes": [
+  "The Hollow Road",
+  "The Ford of Sorrows",
+  "The Hag-Wood",
+  "The Thorn Gate",
+  "The Queen's Seat",
+  "The Hag Barrows",
+  "The Suitors' Glade",
+  "The Black Wraiths' Ring",
+  "The Siabra Hollow",
+  "Cnoc Aine",
+  "The West Shelf"
+ ],
+ "notes": "Zone brief 2026-11-24 (Zone Reviews, Cursed Forest tab), owner's answers: the Unseelie Court's seat; Elite; nothing below orange while the court holds it; six named purples; King Lug's campaign. Coordinates are zone-local units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Lady Aoibhinn of the Thorns": "purple",
+  "The Grey Suitor": "purple",
+  "Mother Carrion": "purple",
+  "Dorchu the Siabra-Lord": "purple",
+  "The Keener of Cnoc Aine": "purple",
+  "Fear Dubh": "purple",
+  "Queen's Maid": "red"
+ },
+ "factions": {
+  "court": {
+   "id": 9281,
+   "aggro": 95
+  },
+  "hags": {
+   "id": 9282,
+   "aggro": 95
+  },
+  "suitors": {
+   "id": 9283,
+   "aggro": 90
+  },
+  "siabra": {
+   "id": 9284,
+   "aggro": 95
+  },
+  "host": {
+   "id": 9285,
+   "aggro": 100
+  },
+  "bainshee": {
+   "id": 9286,
+   "aggro": 95
+  },
+  "goborchend": {
+   "id": 9287,
+   "aggro": 90
+  }
+ },
+ "members": {
+  "court thrall": {
+   "from": "geas-bound hewer",
+   "name": "court thrall",
+   "tier": "orange",
+   "faction": "court",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "thrall-singer": {
+   "from": "enthralled silvier",
+   "name": "thrall-singer",
+   "tier": "orange",
+   "faction": "court",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 150
+  },
+  "unseelie viewer": {
+   "from": "unseelie viewer",
+   "tier": "orange",
+   "faction": "court",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 200
+  },
+  "mummy hag": {
+   "from": "mummy hag",
+   "tier": "orange",
+   "faction": "hags",
+   "aggro": [
+    90,
+    500
+   ],
+   "size": 1.25,
+   "roam": 150
+  },
+  "suitor spirit": {
+   "from": "suitor spirit",
+   "tier": "orange",
+   "faction": "suitors",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 250
+  },
+  "corrupted siabra": {
+   "from": "ghostly siabra",
+   "name": "corrupted siabra",
+   "tier": "orange",
+   "faction": "siabra",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 200
+  },
+  "black wraith": {
+   "from": "black wraith",
+   "tier": "orange",
+   "faction": "court",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 250
+  },
+  "far dorocha": {
+   "from": "far dorocha",
+   "tier": "orange",
+   "faction": "host",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 350
+  },
+  "gan ceanach": {
+   "from": "gan ceanach",
+   "tier": "orange",
+   "faction": "court",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 250
+  },
+  "spectral manslayer": {
+   "from": "spectral manslayer",
+   "tier": "orange",
+   "faction": "court",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 250
+  },
+  "bainshee": {
+   "from": "banshee",
+   "name": "bainshee",
+   "tier": "orange",
+   "faction": "bainshee",
+   "model": 1885,
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 200
+  },
+  "cursed leprechaun": {
+   "from": "cursed leprechaun",
+   "tier": "orange",
+   "faction": "court",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 300
+  },
+  "finliath": {
+   "from": "finliath",
+   "tier": "orange",
+   "faction": "host",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 350
+  },
+  "goborchend gasher": {
+   "from": "goborchend gasher",
+   "tier": "orange",
+   "faction": "goborchend",
+   "aggro": [
+    90,
+    500
+   ],
+   "roam": 120
+  },
+  "goborchend wounder": {
+   "from": "goborchend wounder",
+   "tier": "orange",
+   "faction": "goborchend",
+   "aggro": [
+    90,
+    500
+   ],
+   "roam": 120
+  },
+  "unseelie overman": {
+   "from": "unseelie overman",
+   "tier": "red",
+   "faction": "court",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 120
+  },
+  "mummy hag witch": {
+   "from": "mummy hag wizard",
+   "name": "mummy hag witch",
+   "tier": "red",
+   "faction": "hags",
+   "aggro": [
+    95,
+    600
+   ],
+   "size": 1.2,
+   "roam": 100
+  },
+  "bainshee keener": {
+   "from": "banshee",
+   "name": "bainshee keener",
+   "tier": "red",
+   "faction": "bainshee",
+   "model": 1885,
+   "size": 1.15,
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 120
+  },
+  "Queen's Maid": {
+   "from": "Queen's Maid",
+   "tier": "red",
+   "faction": "court",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 60
+  },
+  "dorocha rider": {
+   "from": "far dorocha",
+   "name": "dorocha rider",
+   "tier": "red",
+   "faction": "host",
+   "size": 1.2,
+   "aggro": [
+    95,
+    700
+   ],
+   "roam": 300
+  },
+  "siabra reaver": {
+   "from": "ghostly siabra",
+   "name": "siabra reaver",
+   "tier": "red",
+   "faction": "siabra",
+   "size": 1.15,
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 120
+  },
+  "goborchend piercer": {
+   "from": "goborchend piercer",
+   "tier": "red",
+   "faction": "goborchend",
+   "aggro": [
+    95,
+    550
+   ],
+   "roam": 80
+  },
+  "court captain": {
+   "from": "unseelie overman",
+   "name": "court captain",
+   "tier": "purple",
+   "faction": "court",
+   "size": 1.3,
+   "aggro": [
+    100,
+    650
+   ],
+   "roam": 60
+  },
+  "Lady Aoibhinn of the Thorns": {
+   "from": "Queen's Maid",
+   "name": "Lady Aoibhinn of the Thorns",
+   "tier": "purple",
+   "faction": "court",
+   "size": 1.3,
+   "aggro": [
+    100,
+    650
+   ],
+   "roam": 40,
+   "guards": {
+    "Queen's Maid": 2
+   }
+  },
+  "The Grey Suitor": {
+   "from": "suitor spirit",
+   "name": "The Grey Suitor",
+   "tier": "purple",
+   "faction": "suitors",
+   "size": 1.4,
+   "aggro": [
+    100,
+    650
+   ],
+   "roam": 80,
+   "guards": {
+    "suitor spirit": 3
+   }
+  },
+  "Mother Carrion": {
+   "from": "mummy hag",
+   "name": "Mother Carrion",
+   "tier": "purple",
+   "faction": "hags",
+   "size": 1.6,
+   "aggro": [
+    100,
+    650
+   ],
+   "roam": 40,
+   "guards": {
+    "mummy hag": 2,
+    "mummy hag witch": 1
+   }
+  },
+  "Dorchu the Siabra-Lord": {
+   "from": "ghostly siabra",
+   "name": "Dorchu the Siabra-Lord",
+   "tier": "purple",
+   "faction": "siabra",
+   "size": 1.4,
+   "aggro": [
+    100,
+    650
+   ],
+   "roam": 60,
+   "guards": {
+    "siabra reaver": 2
+   }
+  },
+  "The Keener of Cnoc Aine": {
+   "from": "banshee",
+   "name": "The Keener of Cnoc Aine",
+   "tier": "purple",
+   "faction": "bainshee",
+   "model": 1885,
+   "size": 1.5,
+   "aggro": [
+    100,
+    700
+   ],
+   "roam": 60,
+   "guards": {
+    "bainshee": 3
+   }
+  },
+  "Fear Dubh": {
+   "from": "far dorocha",
+   "name": "Fear Dubh",
+   "tier": "purple",
+   "faction": "host",
+   "size": 1.5,
+   "aggro": [
+    100,
+    750
+   ],
+   "roam": 400,
+   "guards": {
+    "dorocha rider": 2
+   }
+  }
+ },
+ "sites": [
+  {
+   "id": "pocket_west",
+   "kind": "wildlife",
+   "area": [
+    4000,
+    12000,
+    10400,
+    48000
+   ],
+   "spawn": {
+    "far dorocha": 13,
+    "finliath": 10,
+    "cursed leprechaun": 8
+   },
+   "spacing": 300
+  },
+  {
+   "id": "west_riders",
+   "kind": "patrol",
+   "route": [
+    [
+     6800,
+     44000
+    ],
+    [
+     6800,
+     32000
+    ],
+    [
+     7200,
+     20000
+    ],
+    [
+     6800,
+     32000
+    ]
+   ],
+   "spawn": {
+    "dorocha rider": 1,
+    "far dorocha": 2
+   }
+  },
+  {
+   "id": "cp1_garrison",
+   "kind": "camp",
+   "at": [
+    17200,
+    43200
+   ],
+   "r": 640,
+   "respawn": 420,
+   "spawn": {
+    "court captain": 1,
+    "court thrall": 4,
+    "unseelie viewer": 2,
+    "unseelie overman": 1
+   }
+  },
+  {
+   "id": "cp1_wood",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    38000,
+    22400,
+    48000
+   ],
+   "spawn": {
+    "court thrall": 10,
+    "gan ceanach": 6,
+    "thrall-singer": 5
+   },
+   "spacing": 300
+  },
+  {
+   "id": "barrows",
+   "kind": "camp",
+   "at": [
+    24000,
+    52800
+   ],
+   "r": 560,
+   "respawn": 420,
+   "spawn": {
+    "Mother Carrion": 1,
+    "mummy hag": 3
+   }
+  },
+  {
+   "id": "pocket_barrows",
+   "kind": "wildlife",
+   "area": [
+    16800,
+    48800,
+    32800,
+    57600
+   ],
+   "spawn": {
+    "mummy hag": 13,
+    "mummy hag witch": 4,
+    "suitor spirit": 5
+   },
+   "spacing": 300
+  },
+  {
+   "id": "cp2_garrison",
+   "kind": "camp",
+   "at": [
+    27280,
+    34680
+   ],
+   "r": 640,
+   "respawn": 420,
+   "spawn": {
+    "court captain": 1,
+    "far dorocha": 3,
+    "court thrall": 3,
+    "unseelie overman": 1
+   }
+  },
+  {
+   "id": "cp2_banks",
+   "kind": "wildlife",
+   "area": [
+    22400,
+    30400,
+    33600,
+    40800
+   ],
+   "spawn": {
+    "far dorocha": 8,
+    "black wraith": 6,
+    "corrupted siabra": 5
+   },
+   "spacing": 300
+  },
+  {
+   "id": "fear_dubh",
+   "kind": "camp",
+   "at": [
+    33600,
+    43200
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "Fear Dubh": 1
+   }
+  },
+  {
+   "id": "suitors_glade",
+   "kind": "camp",
+   "at": [
+    20800,
+    16800
+   ],
+   "r": 560,
+   "respawn": 420,
+   "spawn": {
+    "The Grey Suitor": 1,
+    "suitor spirit": 2
+   }
+  },
+  {
+   "id": "glade_wood",
+   "kind": "wildlife",
+   "area": [
+    13200,
+    8800,
+    28000,
+    22400
+   ],
+   "spawn": {
+    "suitor spirit": 12,
+    "spectral manslayer": 8,
+    "gan ceanach": 5
+   },
+   "spacing": 300
+  },
+  {
+   "id": "wraith_ring",
+   "kind": "wildlife",
+   "area": [
+    28000,
+    10000,
+    42000,
+    22400
+   ],
+   "spawn": {
+    "black wraith": 13,
+    "spectral manslayer": 6,
+    "unseelie viewer": 5
+   },
+   "spacing": 300
+  },
+  {
+   "id": "wraith_ring_heart",
+   "kind": "camp",
+   "at": [
+    34400,
+    16000
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "court captain": 1,
+    "black wraith": 3,
+    "unseelie overman": 1
+   }
+  },
+  {
+   "id": "cp3_garrison",
+   "kind": "camp",
+   "at": [
+    38600,
+    28200
+   ],
+   "r": 640,
+   "respawn": 420,
+   "spawn": {
+    "court captain": 1,
+    "mummy hag": 3,
+    "mummy hag witch": 2,
+    "court thrall": 2
+   }
+  },
+  {
+   "id": "cp3_wood",
+   "kind": "wildlife",
+   "area": [
+    34400,
+    24000,
+    43200,
+    32800
+   ],
+   "spawn": {
+    "mummy hag": 9,
+    "thrall-singer": 5,
+    "unseelie viewer": 5
+   },
+   "spacing": 300
+  },
+  {
+   "id": "siabra_hollow",
+   "kind": "camp",
+   "at": [
+    46000,
+    46000
+   ],
+   "r": 560,
+   "respawn": 420,
+   "spawn": {
+    "Dorchu the Siabra-Lord": 1,
+    "corrupted siabra": 3
+   }
+  },
+  {
+   "id": "hollow_wood",
+   "kind": "wildlife",
+   "area": [
+    40000,
+    40000,
+    54000,
+    52800
+   ],
+   "spawn": {
+    "corrupted siabra": 13,
+    "siabra reaver": 4,
+    "cursed leprechaun": 5
+   },
+   "spacing": 300
+  },
+  {
+   "id": "pocket_goborchend",
+   "kind": "camp",
+   "at": [
+    36200,
+    56600
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "goborchend gasher": 3,
+    "goborchend wounder": 4,
+    "goborchend piercer": 1
+   }
+  },
+  {
+   "id": "cnoc_aine",
+   "kind": "camp",
+   "at": [
+    47200,
+    15200
+   ],
+   "r": 560,
+   "respawn": 420,
+   "spawn": {
+    "The Keener of Cnoc Aine": 1,
+    "bainshee keener": 1
+   }
+  },
+  {
+   "id": "cnoc_aine_slopes",
+   "kind": "wildlife",
+   "area": [
+    43200,
+    10000,
+    54000,
+    20800
+   ],
+   "spawn": {
+    "bainshee": 13,
+    "bainshee keener": 3,
+    "black wraith": 4
+   },
+   "spacing": 300
+  },
+  {
+   "id": "cp4_garrison",
+   "kind": "camp",
+   "at": [
+    46800,
+    25600
+   ],
+   "r": 640,
+   "respawn": 420,
+   "spawn": {
+    "court captain": 1,
+    "Queen's Maid": 2,
+    "unseelie overman": 2,
+    "bainshee": 2
+   }
+  },
+  {
+   "id": "cp4_wood",
+   "kind": "wildlife",
+   "area": [
+    43200,
+    22400,
+    49600,
+    30400
+   ],
+   "spawn": {
+    "court thrall": 8,
+    "bainshee": 5,
+    "gan ceanach": 4
+   },
+   "spacing": 300
+  },
+  {
+   "id": "queens_seat",
+   "kind": "camp",
+   "at": [
+    52800,
+    25800
+   ],
+   "r": 560,
+   "respawn": 420,
+   "spawn": {
+    "Lady Aoibhinn of the Thorns": 1,
+    "Queen's Maid": 3
+   }
+  },
+  {
+   "id": "seat_grounds",
+   "kind": "wildlife",
+   "area": [
+    50000,
+    22400,
+    56800,
+    30400
+   ],
+   "spawn": {
+    "Queen's Maid": 3,
+    "bainshee": 5,
+    "unseelie viewer": 4
+   },
+   "spacing": 300
+  },
+  {
+   "id": "east_wood",
+   "kind": "wildlife",
+   "area": [
+    50000,
+    32000,
+    58400,
+    40000
+   ],
+   "spawn": {
+    "corrupted siabra": 6,
+    "far dorocha": 5,
+    "bainshee": 4
+   },
+   "spacing": 300
+  },
+  {
+   "id": "middle_wood",
+   "kind": "wildlife",
+   "area": [
+    22400,
+    22400,
+    34400,
+    30400
+   ],
+   "spawn": {
+    "court thrall": 8,
+    "gan ceanach": 5,
+    "corrupted siabra": 4
+   },
+   "spacing": 300
+  },
+  {
+   "id": "court_road",
+   "kind": "patrol",
+   "route": [
+    [
+     18000,
+     43200
+    ],
+    [
+     27280,
+     34680
+    ],
+    [
+     38600,
+     28200
+    ],
+    [
+     46800,
+     25600
+    ],
+    [
+     38600,
+     28200
+    ],
+    [
+     27280,
+     34680
+    ]
+   ],
+   "spawn": {
+    "unseelie overman": 1,
+    "court thrall": 3
+   }
+  },
+  {
+   "id": "rangers_hide",
+   "kind": "clear",
+   "at": [
+    6400,
+    28000
+   ],
+   "r": 3200,
+   "names": [
+    "far dorocha",
+    "finliath",
+    "cursed leprechaun",
+    "dorocha rider"
+   ]
+  },
+  {
+   "id": "old_queen_goes",
+   "kind": "clear",
+   "at": [
+    52800,
+    25800
+   ],
+   "r": 2800,
+   "names": [
+    "Faerie Queen",
+    "Queen's Maid"
+   ]
+  }
+ ]
+}

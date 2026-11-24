@@ -8,18 +8,193 @@
   {
    "story_reward": true,
    "scaled": true,
+   "name": "Turf-Reeve's Tally Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 36,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 31
+   },
+   "lore": "Fergal counts every block of turf that leaves Siopa. This was his old tally-ring."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wayguard-Iron Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 36,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 36,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Siabra bog-iron, cold and heavy."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cullen Gold Collar Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 37,
+   "bonuses": {
+    "Qui": 12,
+    "Con": 6,
+    "Dex": 6,
+    "Hits": 22,
+    "Power": 4
+   },
+   "lore": "A link from the gold collar Tomas cut out of the turf. Bronze Age gold, warm as skin."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Peat-Cutter's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 37,
+   "bonuses": {
+    "Dex": 12,
+    "Qui": 12,
+    "Str": 6,
+    "Hits": 31
+   },
+   "lore": "Tomas's own. The buckle is a turf-spade."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Post-Captain's Seal Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 38,
+   "bonuses": {
+    "Int": 13,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 23
+   },
+   "lore": "Siabra captains seal their orders with light. This seal still glows."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Stilt-Walker's Boots-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 38,
+   "bonuses": {
+    "Dex": 13,
+    "Qui": 13,
+    "Str": 6,
+    "Hits": 32
+   },
+   "lore": "The siabra build their posts on stilts over the water."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Causeway-Breaker's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 39,
+   "bonuses": {
+    "Str": 13,
+    "Con": 13,
+    "Dex": 6,
+    "Hits": 33
+   },
+   "lore": "Bog-oak and bronze, from the causeway's first post."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lantern-Pole Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 39,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 39,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Cut from one of the poles that carried the lights."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Glowing-Page Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 39,
+   "bonuses": {
+    "Int": 13,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 6,
+    "Hits": 23
+   },
+   "lore": "A page of Lorcan's verse that glows in the dark."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Harper's Wrist-Cord",
+   "base": [
+    41,
+    33
+   ],
+   "level": 39,
+   "bonuses": {
+    "Emp": 13,
+    "Con": 6,
+    "Power": 6,
+    "Hits": 23
+   },
+   "lore": "Fiona's spare harp-strings, braided."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
    "name": "Muse's Kiss Pendant",
    "base": [
     41,
     29
    ],
-   "level": 42,
+   "level": 40,
    "bonuses": {
-    "Int": 14,
+    "Int": 13,
     "Emp": 7,
     "Dex": 7,
     "Power": 6,
-    "Hits": 25
+    "Hits": 24
    },
    "lore": "Cold silver, shaped like lips. It whispers rhymes."
   },
@@ -31,12 +206,12 @@
     41,
     35
    ],
-   "level": 42,
+   "level": 40,
    "bonuses": {
-    "Emp": 14,
+    "Emp": 13,
     "Con": 7,
     "Power": 6,
-    "Hits": 25
+    "Hits": 24
    },
    "lore": "Ash from a burned book of poems, sealed in glass."
   },
@@ -48,12 +223,12 @@
     41,
     33
    ],
-   "level": 42,
+   "level": 40,
    "bonuses": {
-    "Str": 14,
-    "Con": 14,
+    "Str": 13,
+    "Con": 13,
     "Dex": 7,
-    "Hits": 36
+    "Hits": 34
    },
    "lore": "Siabra bog-iron, cold and heavy."
   },
@@ -65,10 +240,10 @@
     41,
     26
    ],
-   "level": 42,
+   "level": 40,
    "bonuses": {
-    "Con": 14,
-    "Hits": 42,
+    "Con": 13,
+    "Hits": 40,
     "Body": 5,
     "Crush": 5,
     "Slash": 5
@@ -78,17 +253,157 @@
   {
    "story_reward": true,
    "scaled": true,
+   "name": "Unlit Muse Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 41,
+   "bonuses": {
+    "Emp": 14,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 25
+   },
+   "lore": "A muse's ring, with the light gone out of it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Keener's Reed Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 41,
+   "bonuses": {
+    "Con": 14,
+    "Hits": 41,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Brid weaves them from the reeds the lights won't touch."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Keening-Stone Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 40,
+   "bonuses": {
+    "Emp": 13,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 24
+   },
+   "lore": "A chip of the banshee's stone. It's always cold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wraith-Mud Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 40,
+   "bonuses": {
+    "Str": 13,
+    "Con": 13,
+    "Dex": 7,
+    "Hits": 34
+   },
+   "lore": "Black iron from the bog, where the drowned dead walk."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "False-Keener's Veil Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 42,
+   "bonuses": {
+    "Int": 14,
+    "Emp": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 25
+   },
+   "lore": "Riolda's veil, the light gone out of it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Keener's Black Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 42,
+   "bonuses": {
+    "Emp": 14,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 25
+   },
+   "lore": "Worn at every keening in Cullen for a hundred years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Steward's Ledger Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 43,
+   "bonuses": {
+    "Int": 14,
+    "Emp": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 26
+   },
+   "lore": "The ring Conn sealed the household's accounts with. And other things."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blue-Wax Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 43,
+   "bonuses": {
+    "Qui": 14,
+    "Con": 7,
+    "Dex": 7,
+    "Hits": 26,
+    "Power": 5
+   },
+   "lore": "Azure sealing wax, still bright."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
    "name": "Keener's Veil",
    "base": [
     41,
     26
    ],
-   "level": 50,
+   "level": 44,
    "bonuses": {
-    "Emp": 17,
-    "Con": 8,
-    "Power": 7,
-    "Hits": 30
+    "Emp": 15,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 26
    },
    "lore": "Sadhbh's own. She has keened for three chieftains in it."
   },
@@ -100,13 +415,13 @@
     41,
     29
    ],
-   "level": 50,
+   "level": 44,
    "bonuses": {
-    "Int": 17,
-    "Emp": 8,
-    "Dex": 8,
-    "Power": 7,
-    "Hits": 30
+    "Int": 15,
+    "Emp": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 26
    },
    "lore": "Empty now. The glass is very fine - sidhe glass."
   },
@@ -118,12 +433,12 @@
     41,
     35
    ],
-   "level": 50,
+   "level": 44,
    "bonuses": {
-    "Dex": 17,
-    "Qui": 17,
-    "Str": 8,
-    "Hits": 42
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 7,
+    "Hits": 37
    },
    "lore": "From the hand of a siabra assassin."
   },
@@ -135,12 +450,12 @@
     41,
     33
    ],
-   "level": 50,
+   "level": 44,
    "bonuses": {
-    "Str": 17,
-    "Con": 17,
-    "Dex": 8,
-    "Hits": 42
+    "Str": 15,
+    "Con": 15,
+    "Dex": 7,
+    "Hits": 37
    },
    "lore": "The black wraiths of Cullen are the dead who drowned in the bog. This one wore iron."
   },
@@ -152,15 +467,331 @@
     41,
     24
    ],
-   "level": 50,
+   "level": 44,
    "bonuses": {
-    "Qui": 17,
-    "Con": 8,
-    "Dex": 8,
-    "Hits": 30,
-    "Power": 6
+    "Qui": 15,
+    "Con": 7,
+    "Dex": 7,
+    "Hits": 26,
+    "Power": 5
    },
    "lore": "The Chieftess' own brooch, given in thanks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Crossed-Crown Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 41,
+   "bonuses": {
+    "Str": 14,
+    "Con": 14,
+    "Dex": 7,
+    "Hits": 35
+   },
+   "lore": "The Azure wear the Glimmer King's crown crossed out. So do you, now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Torch-Bearer's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 41,
+   "bonuses": {
+    "Con": 14,
+    "Hits": 41,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Scorched blue iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pitch-Black Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 42,
+   "bonuses": {
+    "Qui": 14,
+    "Con": 7,
+    "Dex": 7,
+    "Hits": 25,
+    "Power": 5
+   },
+   "lore": "A lump of the Azure's pitch, set in silver. It still smells of smoke."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Banisher's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 42,
+   "bonuses": {
+    "Int": 14,
+    "Emp": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 25
+   },
+   "lore": "An Azure banisher's belt, hung with blue glass."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Idol-Breaker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 43,
+   "bonuses": {
+    "Emp": 14,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 26
+   },
+   "lore": "The idolaters carry little crowns of light to burn. This is one, broken."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cleanser's Smoke-Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 43,
+   "bonuses": {
+    "Con": 14,
+    "Hits": 43,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "It smells of smoke for ever."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Marshal's Blue Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 45,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 38
+   },
+   "lore": "Cathbarr's torc of blue enamel, cracked."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of Alainn Bin",
+   "base": [
+    41,
+    26
+   ],
+   "level": 45,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 45,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "The Clann's own, for those who broke the Azure on the north road."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Crow-Feather Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 45,
+   "bonuses": {
+    "Qui": 15,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 27,
+    "Power": 5
+   },
+   "lore": "A feather Badb dropped over the battle. It's warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bog-Light Lantern Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 43,
+   "bonuses": {
+    "Int": 14,
+    "Emp": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 26
+   },
+   "lore": "A dead bog-light in a glass bead. It flickers when the Glimmer is near."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wisp-Reader's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 43,
+   "bonuses": {
+    "Emp": 14,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 26
+   },
+   "lore": "Brid reads the lights by the colour. This ring helps."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ward-Shard Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 44,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 44,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "From a glimmer ward, the tower's door-keepers."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Three-Gem Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 44,
+   "bonuses": {
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 7,
+    "Hits": 37
+   },
+   "lore": "Three chips of the tower's great gems, set in leather."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Battle-Crow's Pinion Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 45,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 38
+   },
+   "lore": "A pinion feather of Badb's, bound in bronze."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cronicorn Horn Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 45,
+   "bonuses": {
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 8,
+    "Hits": 38
+   },
+   "lore": "Badb's unicorns are black, and very old."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lantern-Bearer's Glass Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 46,
+   "bonuses": {
+    "Int": 15,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "The lantern-bearer's lamp, broken and bound. Dark now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Keen",
+   "base": [
+    41,
+    26
+   ],
+   "level": 46,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 46,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "The Keeners' own, for those who put out the tower's light."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dark-Gem Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 46,
+   "bonuses": {
+    "Emp": 15,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "A chip of the red gem, dark."
   }
  ]
 }

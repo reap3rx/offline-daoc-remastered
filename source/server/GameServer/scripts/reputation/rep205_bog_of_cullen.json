@@ -1,0 +1,215 @@
+{
+ "zone": 205,
+ "name": "Bog of Cullen",
+ "levels": [
+  30,
+  50
+ ],
+ "factions": [
+  {
+   "key": "clann_of_alainn_bin",
+   "name": "the Clann of Alainn Bin",
+   "short": "the Clann",
+   "kin": [
+    "mag_mell_guard",
+    "fianna_druim_ligen",
+    "mine_wardens",
+    "rangers_druim_cain",
+    "sentinels_of_ceannai",
+    "watch_of_moher",
+    "host_of_lug",
+    "southern_muster"
+   ],
+   "titles": [
+    "Friend of Alainn Bin",
+    "Bog-Warden",
+    "Champion of Cullen"
+   ],
+   "speaker": "bc_ruairc",
+   "town": "Alainn Bin",
+   "kills": [
+    "siabra",
+    "azure",
+    "cathbarr",
+    "sorlaith",
+    "torch-bearer",
+    "fire-warden",
+    "crusader",
+    "cleanser",
+    "banisher",
+    "idolater",
+    "bog creeper",
+    "bog crawler",
+    "morass leech",
+    "bog-horror",
+    "gold-reaver",
+    "muroi",
+    "enan",
+    "saemus",
+    "iuchra",
+    "venator",
+    "bear",
+    "crab",
+    "corpan",
+    "deamhan",
+    "far darrig",
+    "badger"
+   ],
+   "quartermaster": {
+    "name": "Clann-Quartermaster Donncha",
+    "guild": "the Clann of Alainn Bin",
+    "model": 337,
+    "anchor": "bc_ruairc",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "Clann kit, made for the bog. Show me your standing with the Clann.",
+    "stock": [
+     {
+      "item": "rep205_friend_of_alainn_bin_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep205_bog_road_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep205_bog_warden_s_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep205_turf_iron_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep205_mantle_of_cullen",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "keeners_of_cullen",
+   "name": "the Keeners of Cullen",
+   "short": "the Keeners",
+   "kin": [
+    "lucht_feasa",
+    "order_of_the_rowan",
+    "muintir_etaine",
+    "lucht_an_tobair",
+    "seers_of_moher",
+    "aines_circle",
+    "southern_muster"
+   ],
+   "titles": [
+    "Friend of the Keeners",
+    "Wisp-Reader",
+    "Voice of the Keen"
+   ],
+   "speaker": "bc_brid",
+   "town": "the keening-house of Alainn Bin",
+   "kills": [
+    "glimmer",
+    "bog light",
+    "lantern",
+    "gem-warden",
+    "returning light",
+    "wraith",
+    "banshee",
+    "keener",
+    "riolda",
+    "lhiannan",
+    "badb",
+    "cronicorn",
+    "fog",
+    "aughisky",
+    "merman",
+    "alp luachra",
+    "amadan",
+    "irewood"
+   ],
+   "quartermaster": {
+    "name": "Keener Aoife",
+    "guild": "the Keeners of Cullen",
+    "model": 365,
+    "anchor": "bc_brid",
+    "offset": [
+     -3,
+     3
+    ],
+    "greet": "The Keeners' gifts, for those who read the lights with us. Show me how well you read them.",
+    "stock": [
+     {
+      "item": "rep205_keeners_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep205_wisp_reader_s_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep205_wisp_reader_s_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep205_keening_stone_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep205_mantle_of_the_keen",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "clann_of_alainn_bin",
+ "event_default": "clann_of_alainn_bin",
+ "quest_default": "keeners_of_cullen",
+ "quests": {
+  "bc_siopa_road": "clann_of_alainn_bin",
+  "bc_turf_gold": "clann_of_alainn_bin",
+  "bc_siabra_posts": "clann_of_alainn_bin",
+  "bc_causeway": "clann_of_alainn_bin",
+  "bc_pages": "keeners_of_cullen",
+  "lhiannan": "keeners_of_cullen",
+  "bc_muse_light": "keeners_of_cullen",
+  "bc_keen_heard": "keeners_of_cullen",
+  "bc_riolda": "keeners_of_cullen",
+  "bc_steward_letters": "keeners_of_cullen",
+  "keening": "keeners_of_cullen",
+  "bc_azure_march": "clann_of_alainn_bin",
+  "bc_pyre": "clann_of_alainn_bin",
+  "bc_cleansers": "clann_of_alainn_bin",
+  "bc_marshal": "clann_of_alainn_bin",
+  "bc_tower_lights": "keeners_of_cullen",
+  "bc_three_gems": "keeners_of_cullen",
+  "bc_badb": "keeners_of_cullen",
+  "bc_lantern_bearer": "keeners_of_cullen"
+ },
+ "events": {
+  "bog_of_cullen_waterwalkers": "keeners_of_cullen",
+  "bog_of_cullen_bog_creepers": "clann_of_alainn_bin",
+  "bog_of_cullen_wayguards": "clann_of_alainn_bin",
+  "bog_of_cullen_siabra_raiders": "clann_of_alainn_bin",
+  "bc_wisp_night": "keeners_of_cullen",
+  "bc_the_keen": "keeners_of_cullen",
+  "bc_azure_march": "clann_of_alainn_bin",
+  "bc_cullen_gold": "clann_of_alainn_bin",
+  "bc_crows_field": "keeners_of_cullen",
+  "bc_tower_assault": "keeners_of_cullen",
+  "bc_tower_return": "keeners_of_cullen"
+ },
+ "realm": 3
+}

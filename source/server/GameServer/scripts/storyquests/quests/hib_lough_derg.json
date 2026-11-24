@@ -10,8 +10,7 @@
       "level": 6,
       "pos": [
         675,
-        194,
-        130.0
+        194
       ],
       "idle": "He doesn't cry like my baby. He doesn't smell like my baby. He's not my baby."
     },
@@ -20,12 +19,11 @@
       "zone": 200,
       "realm": 3,
       "name": "Wise-Woman Brid",
-      "model": 362,
+      "model": 365,
       "level": 20,
       "pos": [
         692,
-        176,
-        133.6
+        176
       ],
       "idle": "Brew water in an eggshell in front of a changeling and it'll speak. Ask me how I know."
     },
@@ -38,8 +36,7 @@
       "level": 10,
       "pos": [
         668,
-        762,
-        149.1
+        762
       ],
       "during": [
         "changeling/s5"
@@ -55,8 +52,7 @@
       "level": 13,
       "pos": [
         634,
-        1140,
-        136.2
+        1140
       ],
       "idle": "Seven years she was my wife. Seven good years."
     },
@@ -69,8 +65,7 @@
       "level": 4,
       "pos": [
         624,
-        1150,
-        136.2
+        1150
       ],
       "idle": "Mam's coming back. She said she would. She said.",
       "size": 40
@@ -84,13 +79,241 @@
       "level": 14,
       "pos": [
         1318,
-        846,
-        131.2
+        846
       ],
       "during": [
         "roane/s6",
         "roane/s7"
       ]
+    },
+    {
+      "id": "mandra",
+      "zone": 200,
+      "realm": 3,
+      "name": "Mandra",
+      "model": 430,
+      "level": 4,
+      "pos": [
+        702,
+        175
+      ],
+      "idle": "Sixteen, and he thinks he knows the world. I was sixteen once. I know exactly what he knows.",
+      "size": 48,
+      "replaces": true
+    },
+    {
+      "id": "dallan",
+      "zone": 200,
+      "realm": 3,
+      "name": "Dallan",
+      "model": 337,
+      "level": 6,
+      "pos": [
+        455,
+        380
+      ],
+      "guild": "villainous youth",
+      "during": [
+        "mandras_boy/s2",
+        "mandras_boy/s3"
+      ],
+      "size": 42
+    },
+    {
+      "id": "nessa",
+      "zone": 200,
+      "realm": 3,
+      "name": "Bonesetter Nessa",
+      "model": 365,
+      "level": 18,
+      "pos": [
+        664,
+        178
+      ],
+      "idle": "Bites, breaks and bad luck. Mostly bites, this season."
+    },
+    {
+      "id": "cormac",
+      "zone": 200,
+      "realm": 3,
+      "name": "Farmer Cormac",
+      "model": 337,
+      "level": 12,
+      "pos": [
+        706,
+        140
+      ],
+      "idle": "Turnips. A whole field. Dug up, bitten once each, and dropped."
+    },
+    {
+      "id": "rhian",
+      "zone": 200,
+      "realm": 3,
+      "name": "Rhian the Dyer",
+      "model": 365,
+      "level": 14,
+      "pos": [
+        697,
+        207
+      ],
+      "idle": "Woad for blue, weld for yellow, madder for red. And for pests - well. You'll see.",
+      "replaces": true
+    },
+    {
+      "id": "orlaith",
+      "zone": 200,
+      "realm": 3,
+      "name": "Orlaith the Herbwife",
+      "model": 365,
+      "level": 22,
+      "pos": [
+        438,
+        812
+      ],
+      "idle": "Glowcaps, dew, mere-weed. Everything worth having grows where the good folk are."
+    },
+    {
+      "id": "sabha",
+      "zone": 200,
+      "realm": 3,
+      "name": "Sabha",
+      "model": 112,
+      "level": 3,
+      "pos": [
+        209,
+        830
+      ],
+      "idle": "Sabha watches the water. Sabha likes fish.",
+      "size": 51,
+      "replaces": true
+    },
+    {
+      "id": "tavie",
+      "zone": 200,
+      "realm": 3,
+      "name": "Tavie",
+      "model": 310,
+      "level": 16,
+      "pos": [
+        574,
+        1125
+      ],
+      "idle": "A drum's a heart you can hold. Mine was stolen.",
+      "replaces": true
+    },
+    {
+      "id": "lady",
+      "zone": 200,
+      "realm": 3,
+      "name": "the Lady of the Mere",
+      "model": 603,
+      "level": 30,
+      "pos": [
+        252,
+        902
+      ],
+      "guild": "the Mere",
+      "during": [
+        "beautiful_music/s6",
+        "the_ladys_bargain/s5"
+      ],
+      "size": 55
+    },
+    {
+      "id": "cathbad",
+      "zone": 200,
+      "realm": 3,
+      "name": "Reeve Cathbad",
+      "model": 337,
+      "level": 20,
+      "pos": [
+        714,
+        214
+      ],
+      "idle": "Every sack counted in. Every sack counted out. And still the numbers lie."
+    },
+    {
+      "id": "fereinn",
+      "zone": 200,
+      "realm": 3,
+      "name": "Fereinn",
+      "model": 335,
+      "level": 19,
+      "pos": [
+        1229,
+        688
+      ],
+      "guild": "an exile",
+      "idle": "Siabra, yes. Not theirs. Not anyone's. Say what you came to say.",
+      "replaces": true
+    },
+    {
+      "id": "oran",
+      "zone": 200,
+      "realm": 3,
+      "name": "Seanchai Oran",
+      "model": 337,
+      "level": 30,
+      "pos": [
+        664,
+        213
+      ],
+      "idle": "Every barrow has a story. That one's story was 'stay shut'."
+    },
+    {
+      "id": "riona",
+      "zone": 200,
+      "realm": 3,
+      "name": "Riona",
+      "model": 327,
+      "level": 18,
+      "pos": [
+        860,
+        824
+      ],
+      "idle": "A month in a siabra pit. Ask me how I am. Go on.",
+      "replaces": true
+    },
+    {
+      "id": "ronan",
+      "zone": 200,
+      "realm": 3,
+      "name": "Ronan of the Roane",
+      "model": 337,
+      "level": 20,
+      "pos": [
+        1180,
+        1028
+      ],
+      "guild": "the Roane",
+      "idle": "The lake remembers everything. Lately it remembers blood."
+    },
+    {
+      "id": "cara",
+      "zone": 200,
+      "realm": 3,
+      "name": "Cara the Lorewoman",
+      "model": 365,
+      "level": 30,
+      "pos": [
+        602,
+        1142
+      ],
+      "idle": "Ask me about anything older than your grandmother. Newer things, ask the market."
+    },
+    {
+      "id": "lir",
+      "zone": 200,
+      "realm": 3,
+      "name": "Captain Lir",
+      "model": 337,
+      "level": 40,
+      "pos": [
+        676,
+        222
+      ],
+      "guild": "Mag Mell Guard",
+      "idle": "Mag Mell has walls on three sides. The fourth side is the lake. Think about that."
     }
   ],
   "quests": [
@@ -119,8 +342,7 @@
           "zone": 200,
           "at": [
             666,
-            734,
-            147.6
+            734
           ],
           "radius": 20,
           "goal": "Go to the blackthorn fairy fort in the south",
@@ -132,8 +354,7 @@
           "zone": 200,
           "at": [
             691,
-            748,
-            147.2
+            748
           ],
           "radius": 25,
           "goal": "Get past the lunantishee who guard the fort",
@@ -151,8 +372,7 @@
           "zone": 200,
           "at": [
             668,
-            760,
-            148.9
+            760
           ],
           "wake_m": 30,
           "goal": "Defeat the blackthorn warden",
@@ -164,8 +384,7 @@
               "name": "the Blackthorn Warden",
               "center": [
                 668,
-                760,
-                148.9
+                760
               ],
               "radius": 30,
               "time_s": 600,
@@ -288,8 +507,7 @@
           "zone": 200,
           "at": [
             1185,
-            1035,
-            116.5
+            1035
           ],
           "radius": 20,
           "goal": "Go to the north-east shore where the roane gather",
@@ -301,8 +519,7 @@
           "zone": 200,
           "at": [
             1266,
-            813,
-            126.1
+            813
           ],
           "radius": 25,
           "goal": "Hunt down the siabra skin-hunters",
@@ -320,8 +537,7 @@
           "zone": 200,
           "at": [
             1300,
-            830,
-            129.3
+            830
           ],
           "goal": "Search the skin-hunters' camp",
           "clue": {
@@ -336,8 +552,7 @@
           "zone": 200,
           "at": [
             1320,
-            846,
-            131.3
+            846
           ],
           "wake_m": 30,
           "goal": "Defeat the dergan skinner",
@@ -349,8 +564,7 @@
               "name": "Maol the Skinner",
               "center": [
                 1320,
-                846,
-                131.3
+                846
               ],
               "radius": 30,
               "time_s": 600,
@@ -463,6 +677,2568 @@
           }
         }
       }
+    },
+    {
+      "id": "youth_gone_wrong",
+      "title": "Youth Gone Wrong",
+      "level": 4,
+      "giver": "mandra",
+      "offer": "Oh - you're not one of them. Good. I've no time to talk. Two of the villainous youths came by the hall last night and said they'd be back for my son's [debts]. They said it like a promise.\n\nWill you [stand with me]? Just tonight. Just till they've gone.",
+      "accept": "stand with me",
+      "topics": {
+        "debts": "Dallan took their silver and wore their colours. Now they say he owes them, and if he won't pay, I will."
+      },
+      "summary": "Mandra's son Dallan has run off with the villainous youths, and the gang has come to collect his debts from her.",
+      "steps": [
+        {
+          "type": "encounter",
+          "zone": 200,
+          "at": [
+            706,
+            168
+          ],
+          "wake_m": 30,
+          "goal": "Stand with Mandra behind the hall",
+          "text": "The last of them runs for the trees, shouting that Dallan will hear of this. Mandra sits down hard on the step.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Mandra safe",
+              "center": [
+                706,
+                168
+              ],
+              "radius": 30,
+              "duration_s": 60,
+              "objective": "Keep Mandra safe",
+              "announce": "Two figures in gang colours step out from behind the hall, then two more. 'Where's the money, Mandra?'",
+              "protect": {
+                "template": 60167226,
+                "name": "Mandra",
+                "level": 4,
+                "model": 430
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 1,
+                "from": [
+                  [
+                    718,
+                    174
+                  ],
+                  [
+                    696,
+                    158
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60167680,
+                    "name": "villainous youth",
+                    "level": [
+                      4,
+                      5
+                    ]
+                  }
+                ]
+              },
+              "thanks": "Thank you. Thank you. They'll not come back tonight.",
+              "success": "They break off.",
+              "fail": "Mandra falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Scab",
+              "center": [
+                706,
+                168
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Scab",
+              "announce": "A big lad with a scabbed lip shoves through. 'Dallan's MY mate. His debts are MY debts.'",
+              "boss": {
+                "template": 60165444,
+                "name": "Scab",
+                "level": 6,
+                "health_mult": 1.6
+              },
+              "success": "Scab falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mandra",
+          "goal": "Talk to Mandra",
+          "say": "They called him one of theirs. My Dallan. He's sixteen, and soft, and he cries at lambing.\n\nThey camp in the woods west of the north road. Go and [look] for him. Don't hurt him. Please - whatever he's done, don't hurt him.",
+          "keyword": "look",
+          "id": "s2"
+        },
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            445,
+            395
+          ],
+          "radius": 30,
+          "goal": "Find the villainous youths' north camp",
+          "text": "Ragged tents, a fire, a dog. And a boy's blue coat with a mended elbow hung on a branch. Dallan is here, or was.",
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 200,
+          "at": [
+            430,
+            414
+          ],
+          "goal": "Search Dallan's corner of the camp",
+          "clue": {
+            "name": "Dallan's bedroll",
+            "model": 1882
+          },
+          "text": "Under the bedroll, a purse of new silver - more than a boy earns robbing the road in a year. Every coin is stamped with a red hand.",
+          "give": {
+            "name": "a purse of red-hand silver"
+          },
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "mandra",
+          "goal": "Bring the purse to Mandra",
+          "say": "Red hands. I've never seen coin like it.\n\nHe's alive. He's eating, by the weight of this. ...He's being paid, isn't he? Somebody's paying children to rob the road. Who does that? Who would ever pay for that?",
+          "ending": "default",
+          "id": "s5"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. It's not much. You stood behind my hall in the dark for a stranger.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [],
+            "choice": [
+              "sq200_mended_elbow_bracer",
+              "sq200_mother_s_worry_stone"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "mandras_boy",
+      "title": "Mandra's Boy",
+      "level": 6,
+      "giver": "mandra",
+      "offer": "I asked the guards about the red hand. Nobody knows it, or nobody will say.\n\nBut Dallan will. Go back to the north camp and [talk to him]. Talk, not fight. If the lieutenant's about, he won't say a word, so thin the camp out first.",
+      "accept": "talk to him",
+      "topics": {},
+      "summary": "Dallan is being paid in red-hand silver. Mandra wants to know why - and by whom.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            432,
+            408
+          ],
+          "radius": 40,
+          "goal": "Thin out the recruits at the north camp",
+          "target": "villainous youth recruit",
+          "count": 4,
+          "text": "With the recruits scattered, a boy in a blue coat slips away from the fire and waves you into the trees.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "dallan",
+          "goal": "Talk to Dallan",
+          "say": "You came from Mam. I know. She sends everyone.\n\nI'm not a fool. I know what they are. But listen: the lieutenant gets a purse every week from a man who doesn't talk like us. He talks like the folk across the lake. Red hand on the purse, red hand on his ring. He wants the road kept dangerous. Who'd [pay] for that?",
+          "keyword": "pay",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "dallan",
+          "goal": "Help Dallan decide",
+          "say": "If I go home now, they'll know I talked, and they'll come for Mam again. If I stay inside, I can find out who the man with the ring is.\n\nTell me. Do I [come home], or do I [stay inside]?",
+          "options": [
+            {
+              "keyword": "come home",
+              "say": "...Home, then. Tell her I'm coming. Tell her to hide the good bread.",
+              "next": "s4"
+            },
+            {
+              "keyword": "stay inside",
+              "say": "Right. I'll leave a white pebble on her gatepost every night I'm safe. Tell her to look.",
+              "next": "s5"
+            }
+          ],
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "mandra",
+          "goal": "Return to Mandra",
+          "say": "He walked in an hour ago, ate everything in the house and fell asleep at the table.\n\nHe says there's a man with a red ring. He says it like it frightens him. It frightens me.",
+          "ending": "home",
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "mandra",
+          "goal": "Return to Mandra",
+          "say": "He's staying. With them. To spy, he says, like a boy in a story.\n\nThere was a white pebble on the gatepost this morning. I put it in my pocket. I'll keep every one.",
+          "ending": "inside",
+          "id": "s5"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "He brought this home in his pocket. He wants you to have it.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [],
+            "choice": [
+              "sq200_gang_colour_sash",
+              "sq200_lambing_night_ring"
+            ]
+          }
+        },
+        "inside": {
+          "text": "Take this. For watching over him.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [],
+            "choice": [
+              "sq200_gang_colour_sash",
+              "sq200_spy_s_pebble"
+            ]
+          }
+        }
+      },
+      "requires": "youth_gone_wrong"
+    },
+    {
+      "id": "the_paymaster",
+      "title": "The Paymaster",
+      "level": 8,
+      "giver": "mandra",
+      "offer": "Dallan's sent word. The paymaster comes tonight to the east camp, the one on the hill above the north road. Dallan says he'll be there, at the fire, with the lieutenant's hand on his shoulder.\n\nCatch the man with the red ring and we'll know who's buying our road. Will you [go to the east camp]?",
+      "accept": "go to the east camp",
+      "topics": {},
+      "summary": "The man who pays the villainous youths in red-hand silver comes tonight to their east camp.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            528,
+            345
+          ],
+          "radius": 30,
+          "goal": "Go to the villainous youths' east camp",
+          "text": "The lieutenant's fire. A horse that isn't a Hibernian horse, tied in the trees. Dallan by the fire, pale, and the lieutenant's hand heavy on his shoulder.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 200,
+          "at": [
+            530,
+            330
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Lieutenant Corr",
+          "text": "Corr goes down hard. The horse in the trees is gone - the paymaster rode off the moment the swords came out. Something fell from his saddle.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Lieutenant Corr",
+              "center": [
+                530,
+                330
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Lieutenant Corr",
+              "announce": "'You brought a friend, Dallan? You brought a FRIEND?'",
+              "boss": {
+                "template": 60165444,
+                "name": "Lieutenant Corr",
+                "level": 9,
+                "health_mult": 1.9
+              },
+              "success": "Lieutenant Corr falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60165444,
+                    "name": "villainous youth thug",
+                    "level": [
+                      7,
+                      8
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 200,
+          "at": [
+            540,
+            322
+          ],
+          "goal": "Search where the paymaster's horse stood",
+          "clue": {
+            "name": "a dropped saddlebag",
+            "model": 1347
+          },
+          "text": "Orders, in a careful hand: 'Keep the north road bloody until the harvest is in. Keep the youths angry and paid. - R.' Sealed with a red hand.",
+          "give": {
+            "name": "the paymaster's orders"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "mandra",
+          "goal": "Bring the orders to Mandra",
+          "say": "'Keep the road bloody until the harvest is in.'\n\nWhat happens after the harvest? ...Dallan's safe, at least. He ran all the way home. I'll show these to Reeve Cathbad; he counts everything, he'll know who counts in red hands.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this, with my thanks. And his.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq200_paymaster_s_signet",
+              "sq200_lieutenant_s_bandolier"
+            ]
+          }
+        }
+      },
+      "requires": "mandras_boy"
+    },
+    {
+      "id": "break_the_gang",
+      "title": "Breaking the Gang",
+      "level": 9,
+      "giver": "mandra",
+      "offer": "Without Corr, the youths in the north are lost lambs. Half have gone home already.\n\nThe south camp is different. The ringleader there is a grown man, and cruel, and Dallan says the red-hand silver goes through him first. Break him and the gang breaks. Take friends. Will you [break the gang]?",
+      "accept": "break the gang",
+      "topics": {},
+      "summary": "The rowdy ringleader at the south camp holds the villainous youths together - and handles the red-hand silver.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            300,
+            1375
+          ],
+          "radius": 40,
+          "goal": "Fight through the rowdies at the south camp",
+          "target": "rowdy",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            300,
+            1375
+          ],
+          "radius": 40,
+          "goal": "Defeat the rowdy ringleader",
+          "target": "rowdy ringleader",
+          "count": 1,
+          "text": "The ringleader falls. The camp melts into the woods - and from the high road north comes shouting: the highwaymen who took his silver are out on the road.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mandra",
+          "goal": "Return to Mandra",
+          "say": "Dallan's home for good. He says the youths are going home too, in ones and twos - the ones with homes. The rest went to Mog, on the high road.\n\nYou gave me back my son. I can't give you anything like that. Take this.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "And Dallan says to watch the high road. Mog's lot will be desperate now.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq200_white_pebble_pendant"
+            ],
+            "choice": [
+              "sq200_ringleader_s_knuckle_ring",
+              "sq200_south_camp_cloak"
+            ]
+          },
+          "wake_event": "lough_derg_highway_robbery"
+        }
+      },
+      "group": true,
+      "requires": "the_paymaster"
+    },
+    {
+      "id": "balm_hunt",
+      "title": "Balm Hunt",
+      "level": 3,
+      "giver": "nessa",
+      "offer": "Cormac's boy came in with a bite on his leg the size of my hand. Rat boy, he says, up by the spring. It's gone angry.\n\nI can draw it with a balm, but I need two things I don't keep: [mud] from a mudman, and a rat boy's tail. Will you [fetch them]?",
+      "accept": "fetch them",
+      "topics": {
+        "mud": "Mudman mud has a bit of the curmudgeons' magic in it. Draws poison like nothing else. They shamble round the store east of town."
+      },
+      "summary": "Farmer Cormac's son was bitten by rat boys at the spring. Bonesetter Nessa needs the makings of a balm.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            912,
+            175
+          ],
+          "radius": 40,
+          "goal": "Take a tail from a rat boy at the hideout",
+          "target": "rat boy",
+          "count": 2,
+          "text": "A tail. A sorry thing. Nessa said any one would do.",
+          "give": {
+            "name": "a rat boy tail"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            1088,
+            162
+          ],
+          "radius": 40,
+          "goal": "Scrape mud from a mudman by the curmudgeons' store",
+          "target": "mudman",
+          "count": 1,
+          "text": "The mudman slumps into a heap that's mostly mud. You take a handful. It's warm, and it twitches.",
+          "give": {
+            "name": "a lump of mudman mud"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "nessa",
+          "goal": "Bring the makings to Nessa",
+          "say": "Good. Hold his leg. ...There. The swelling's going already.\n\nTadhg says it wasn't just rat boys at the spring. The spraggons and the lucradans were there too, all three at each other's throats. Over water, he says. Tell his father.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. And wash your hands before you eat anything.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq200_balm_tin_charm",
+              "sq200_rat_tail_lace"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "three_kinds_of_trouble",
+      "title": "Three Kinds of Trouble",
+      "level": 5,
+      "giver": "cormac",
+      "offer": "My fields are ruined. Not robbed - ruined. Dug, trampled, every turnip bitten once and dropped.\n\nNessa says the pests are fighting up at the spring, and I say they're fighting through my field to get there. Rhian the dyer has an idea about [marking] them. Daft, but I've none better. Will you [help Rhian]?",
+      "accept": "help Rhian",
+      "topics": {
+        "marking": "She wants to dye them. The raiders. So we know which of them comes down the hill at night. I said daft."
+      },
+      "summary": "Something crosses Cormac's fields every night. Rhian the dyer means to find out what, with dye.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "rhian",
+          "goal": "Ask Rhian about her plan",
+          "say": "Cormac thinks I'm daft. I'm not. Wild lucradans moult in autumn - hair everywhere. Spraggonolls carry bone charms. Rat boys, well, rat boys I can find by the smell.\n\nBring me lucradan hair and a spraggon charm and I'll brew a [dye] that clings to whatever made it. Splash the furrows, and in the morning we'll see whose feet are what colour.",
+          "keyword": "dye",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            488,
+            88
+          ],
+          "radius": 40,
+          "goal": "Gather hair from wild lucradans at the warren",
+          "target": "wild lucradan",
+          "count": 2,
+          "give": {
+            "name": "a fistful of lucradan hair"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            825,
+            100
+          ],
+          "radius": 40,
+          "goal": "Take a bone charm from a spraggonoll at the den",
+          "target": "spraggonoll",
+          "count": 2,
+          "give": {
+            "name": "a spraggonoll bone charm"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "rhian",
+          "goal": "Bring the makings to Rhian",
+          "say": "There. Three pots: blue for the lucradans, yellow for the spraggons, red for the rat boys. Off you go - splash Cormac's [furrows] and leave it a while.",
+          "keyword": "furrows",
+          "id": "s4"
+        },
+        {
+          "type": "search",
+          "zone": 200,
+          "at": [
+            714,
+            126
+          ],
+          "goal": "Splash the furrows in Cormac's field",
+          "clue": {
+            "name": "a dye-pot in the furrows",
+            "model": 1347
+          },
+          "text": "By the time you come back, the field is a mess of colour: blue prints, yellow prints, red prints - all of them heading not into the field but through it, north, towards the spring. And over the lot, the broad flat prints of something heavy that took no dye at all. It came from the east.",
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "cormac",
+          "goal": "Tell Cormac what you saw",
+          "say": "They're not raiding me. They're crossing me - all three, going for the spring.\n\nAnd something else coming from the east after them. Something with flat feet. I don't like the sound of that at all.",
+          "ending": "default",
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this, from Rhian and me. Proof that the daft idea worked.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [],
+            "choice": [
+              "sq200_woad_blue_gloves_charm",
+              "sq200_three_pot_belt"
+            ]
+          }
+        }
+      },
+      "requires": "balm_hunt"
+    },
+    {
+      "id": "the_spring_runs_dry",
+      "title": "The Spring Runs Dry",
+      "level": 7,
+      "giver": "cormac",
+      "offer": "I walked up to the spring this morning. It's a trickle. Forty years it's run full, and now it's a trickle. No wonder they're killing each other for it.\n\nSprings don't stop. Somebody's stopped it. Will you [find out who]?",
+      "accept": "find out who",
+      "topics": {},
+      "summary": "The hill spring north of Mag Mell has nearly run dry, and the three pest tribes are at war over what's left.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            700,
+            115
+          ],
+          "radius": 20,
+          "goal": "Go to the spring in the hills",
+          "text": "The basin is half dry, the mud around it churned by a hundred small feet. And a new ditch, neatly dug, leading east from the rock.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 200,
+          "at": [
+            732,
+            118
+          ],
+          "goal": "Search the new ditch",
+          "clue": {
+            "name": "a ditch-spade",
+            "model": 1347
+          },
+          "text": "A curmudgeon-made spade, left in the ditch. Its handle is carved with a little round scowling face: the mark of Grogan's people.",
+          "give": {
+            "name": "a curmudgeon ditch-spade"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            985,
+            150
+          ],
+          "radius": 25,
+          "goal": "Follow the ditch east",
+          "text": "The ditch runs east under the hill, straight to the curmudgeons' store - where a dam of packed mud holds the stolen water in a pond for their mill wheel. Flat-footed mudmen splash along its top.",
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 200,
+          "at": [
+            990,
+            152
+          ],
+          "wake_m": 30,
+          "goal": "Break the curmudgeons' dam",
+          "text": "Clabber tumbles off his dam. One good kick and the mud gives way; the water rushes back down the ditch towards the spring.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Clabber the Ditch-Digger",
+              "center": [
+                990,
+                152
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Clabber the Ditch-Digger",
+              "announce": "A curmudgeon in a mud-caked apron stands up on the dam. 'MY water! Dug it MYSELF!'",
+              "boss": {
+                "template": 60159548,
+                "name": "Clabber the Ditch-Digger",
+                "level": 8,
+                "health_mult": 1.8
+              },
+              "success": "Clabber the Ditch-Digger falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60164275,
+                    "name": "mudman",
+                    "level": [
+                      6,
+                      7
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s4"
+        },
+        {
+          "type": "choice",
+          "npc": "cormac",
+          "goal": "Return to Cormac",
+          "say": "The spring's running! I heard it from the house.\n\nAnd the pests are still up there, all three, and no less angry for it. They've had a taste of war now. I could [leave them be] - they'll settle, once there's water enough. Or the lads and I could [drive them off] the hill while they're tired.",
+          "options": [
+            {
+              "keyword": "leave them be",
+              "say": "Leave them be. ...Aye. They were here before the turnips.",
+              "ending": "peace"
+            },
+            {
+              "keyword": "drive them off",
+              "say": "Then I'll tell the lads. Keep your head down - you'll hear it from the house.",
+              "ending": "war"
+            }
+          ],
+          "id": "s5"
+        }
+      ],
+      "endings": {
+        "peace": {
+          "text": "Take this. And thank you for the water. I never thought to say that to anyone.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [],
+            "choice": [
+              "sq200_ditch_spade_bracer",
+              "sq200_spring_water_phial"
+            ]
+          }
+        },
+        "war": {
+          "text": "Take this. And stay clear of the spring for a while - or don't, if you like a fight.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [],
+            "choice": [
+              "sq200_ditch_spade_bracer",
+              "sq200_spring_water_phial"
+            ]
+          },
+          "wake_event": "lough_derg_hill_war"
+        }
+      },
+      "requires": "three_kinds_of_trouble"
+    },
+    {
+      "id": "grubbs_truce",
+      "title": "Grubb's Truce",
+      "level": 8,
+      "giver": "cormac",
+      "offer": "There's a spraggon up there calls himself Grubb Bigfist. King of the hill, he says, and now the spring's running he won't let the others near it.\n\nThe rat boys and the lucradans would go home if he let them drink. Will you [deal with Grubb]?",
+      "accept": "deal with Grubb",
+      "topics": {},
+      "summary": "Grubb Bigfist the spraggon holds the spring and won't share it, and the hill war goes on.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            700,
+            118
+          ],
+          "radius": 25,
+          "goal": "Go to the spring",
+          "text": "Grubb's spraggons hold the spring. The rat boys and lucradans watch from the rocks, thirsty and furious.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 200,
+          "at": [
+            704,
+            110
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Grubb Bigfist",
+          "text": "Grubb sits down in the spring with a splash and bursts into tears. The rat boys and lucradans creep down to drink, warily, and nobody bites anybody.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Grubb Bigfist",
+              "center": [
+                704,
+                110
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Grubb Bigfist",
+              "announce": "'Grubb's water! Grubb's hill! Grubb's EVERYTHING!'",
+              "boss": {
+                "template": 60166491,
+                "name": "Grubb Bigfist",
+                "level": 9,
+                "health_mult": 2.0
+              },
+              "success": "Grubb Bigfist falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60166472,
+                    "name": "spraggon",
+                    "level": [
+                      6,
+                      7
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cormac",
+          "goal": "Return to Cormac",
+          "say": "Quiet up there tonight. First quiet night since spring.\n\nThat ditch-spade's hanging over my door now. A reminder: when the little folk fight, look for who's stealing their water. Clabber said a man paid him for the mill. A man with a red ring.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this, with the thanks of every turnip I'll ever grow.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq200_truce_keeper_s_cloak"
+            ],
+            "choice": [
+              "sq200_bigfist_gauntlet_charm",
+              "sq200_hill_king_s_crown_ring"
+            ]
+          }
+        }
+      },
+      "requires": "the_spring_runs_dry"
+    },
+    {
+      "id": "dew_from_the_mere",
+      "title": "Dew from the Mere",
+      "level": 8,
+      "giver": "orlaith",
+      "offer": "Ailbhe gathers my glowcaps; that's the easy work. What I need now is dew from the mere in the west - the fae lake - gathered off the lily-pads before the sun's on them.\n\nIt's the best thing there is for a fever, and the good folk guard it like gold. Will you [gather the dew]?",
+      "accept": "gather the dew",
+      "topics": {},
+      "summary": "Orlaith the herbwife needs dew from the fae mere, and the fae don't share.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            256,
+            908
+          ],
+          "radius": 25,
+          "goal": "Go to the mere in the west",
+          "text": "Still water, white lilies, and a silence that feels like being watched. Out on the mere, tall pale shapes stand knee-deep, guarding something.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 200,
+          "at": [
+            262,
+            906
+          ],
+          "goal": "Gather dew from the lily-pads",
+          "clue": {
+            "name": "dew on the lily-pads",
+            "model": 1876
+          },
+          "text": "You fill the phial drop by drop. The watching shapes turn your way, all at once.",
+          "give": {
+            "name": "a phial of mere-dew"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            262,
+            910
+          ],
+          "radius": 25,
+          "goal": "Fend off the mere sprites",
+          "mob": {
+            "template": 30001,
+            "name": "mere sprite",
+            "level": 9,
+            "tier": "blue"
+          },
+          "count": 4,
+          "text": "The last sprite bursts into a shower of petals. Out on the water a woman's voice says, very clearly: 'Thief.'",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "orlaith",
+          "goal": "Bring the dew to Orlaith",
+          "say": "'Thief.' She said that? ...Ach.\n\nThey always want paying. That's the trouble with the good folk: they never give, they only lend, and the interest is murder.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this - and don't go back to the mere alone for a while.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq200_lily_dew_phial",
+              "sq200_thief_s_petal_charm"
+            ]
+          }
+        }
+      },
+      "requires": "changeling"
+    },
+    {
+      "id": "balance_of_nature",
+      "title": "Balance of Nature",
+      "level": 10,
+      "giver": "orlaith",
+      "offer": "There's a creature lives by the mere - Sabha, the fishers call it. Harmless. A go-between, my mother said.\n\nIf the Lady wants paying, Sabha will know the price. Take it a [fish] - it likes fish - and ask. Will you [speak to Sabha]?",
+      "accept": "speak to Sabha",
+      "topics": {
+        "fish": "Fresh, mind. From the shore, not the market. Sabha can tell."
+      },
+      "summary": "The Lady of the Mere calls you a thief. Sabha, the go-between by the mere, will know her price.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 200,
+          "at": [
+            246,
+            908
+          ],
+          "goal": "Find a fish on the mere shore",
+          "clue": {
+            "name": "a fisher's trap",
+            "model": 1347
+          },
+          "text": "One fat trout, still kicking. You leave a coin in the trap. It seems only fair, given the day you're having.",
+          "give": {
+            "name": "a fresh trout"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sabha",
+          "goal": "Give Sabha the fish",
+          "say": "Fish. Good fish. Sabha says thank you.\n\nThe Lady is angry. Her dew was taken. Price is music. The Lady has not heard music since the [drum] of Tir na mBeo stopped playing at the water. Drum is stolen. Bring the drum, play the drum - Lady forgives.",
+          "keyword": "drum",
+          "take": "a fresh trout",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "orlaith",
+          "goal": "Return to Orlaith",
+          "say": "Music. Of course it's music.\n\nTavie of Tir na mBeo used to drum by the mere every midsummer, and the fae came out of the lilies to listen. Her drum went missing in the spring. Go and see her - she's in Tir na mBeo, by the inn.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this, for your trouble with the fish.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq200_go_between_s_scale",
+              "sq200_trout_leather_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "dew_from_the_mere"
+    },
+    {
+      "id": "beautiful_music",
+      "title": "Beautiful Music",
+      "level": 12,
+      "giver": "tavie",
+      "offer": "My drum! My beautiful drum. Sprites took it - little red angry things, [anger sprites], came in the window, took it and laughed.\n\nI've heard it since, out east of the fae woods, somebody beating it badly. Will you [find my drum]?",
+      "accept": "find my drum",
+      "topics": {
+        "anger sprites": "Born of a bad temper, my granny said. They gather wherever someone's been cruel - lately that's the east, by the Dergan camps."
+      },
+      "summary": "Tavie's drum was stolen by anger sprites. The Lady of the Mere wants to hear it played again.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            780,
+            905
+          ],
+          "radius": 25,
+          "goal": "Hunt down the anger sprites",
+          "mob": {
+            "template": 60159273,
+            "name": "anger sprite",
+            "level": 11,
+            "tier": "green"
+          },
+          "count": 5,
+          "text": "One of them drops what it was beating on: a goatskin drum, split clean across.",
+          "give": {
+            "name": "Tavie's split drum"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "tavie",
+          "goal": "Bring the drum to Tavie",
+          "say": "Split. They've split it. ...It'll mend. It needs a new head.\n\nCurmudgeon-cured hide is the best there is, I hate to say. Their trappers cure it with something that stinks for a month and lasts a hundred years. Bring me a [hide].",
+          "keyword": "hide",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            1538,
+            988
+          ],
+          "radius": 40,
+          "goal": "Take a cured hide from a curmudgeon trapper in the east valley",
+          "target": "curmudgeon trapper",
+          "count": 2,
+          "give": {
+            "name": "a curmudgeon-cured hide"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "tavie",
+          "goal": "Bring the hide to Tavie",
+          "say": "There. Listen to that! ...Now, the Lady.\n\nI'll play at the mere, but I'll not go alone. The fae in the west aren't what they were. Meet me by the [water].",
+          "keyword": "water",
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 200,
+          "at": [
+            258,
+            910
+          ],
+          "wake_m": 30,
+          "goal": "Keep Tavie safe while she plays",
+          "text": "The drumming rolls out over the water. One by one the sprites stop and sit down in the reeds to listen. Out on the mere, a tall pale woman stands up from the lilies.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Tavie safe",
+              "center": [
+                258,
+                910
+              ],
+              "radius": 30,
+              "duration_s": 90,
+              "objective": "Keep Tavie safe",
+              "announce": "Tavie sits on a stone and starts to play. The water shivers, and the sprites come in a rush.",
+              "protect": {
+                "template": 60167226,
+                "name": "Tavie",
+                "level": 12,
+                "model": 310
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    272,
+                    914
+                  ],
+                  [
+                    244,
+                    918
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 30001,
+                    "name": "mere sprite",
+                    "level": [
+                      11,
+                      12
+                    ]
+                  }
+                ]
+              },
+              "thanks": "Did you hear it? Did you hear how the water answered?",
+              "success": "They break off.",
+              "fail": "Tavie falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "lady",
+          "goal": "Speak with the Lady of the Mere",
+          "say": "Twenty summers without the drum.\n\nYou took my dew, and you brought me music. The debt is paid. Tell your herbwife the mere is not her garden. She may take what she is [given]. No more.",
+          "keyword": "given",
+          "id": "s6"
+        },
+        {
+          "type": "talk",
+          "npc": "tavie",
+          "goal": "Return to Tavie",
+          "say": "She smiled at me. The Lady of the Mere smiled at ME.\n\nI'll play every midsummer now till I'm dead. Take this - for the hide, and the walk, and the company.",
+          "ending": "default",
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. Something to remember the music by.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq200_old_drumhead_charm"
+            ],
+            "choice": [
+              "sq200_midsummer_sash",
+              "sq200_cured_hide_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "balance_of_nature"
+    },
+    {
+      "id": "the_ladys_bargain",
+      "title": "The Lady's Bargain",
+      "level": 13,
+      "giver": "orlaith",
+      "offer": "'Only what she's given.' Hah.\n\nA fever went through Tir na mBeo last week, and do you know how much dew she's given me? None. Children are sick and she sits on her lilies.\n\nI need that dew. How you get it is up to you. Will you [get the dew]?",
+      "accept": "get the dew",
+      "topics": {},
+      "summary": "A fever in Tir na mBeo, and only the mere's dew will cure it. The Lady of the Mere won't give it.",
+      "steps": [
+        {
+          "type": "choice",
+          "npc": "orlaith",
+          "goal": "Decide how to get the dew",
+          "say": "So. Do you [take it] - with friends at your back, past her guardians and her - or do you go and [ask the Lady], and see what she wants this time?",
+          "options": [
+            {
+              "keyword": "take it",
+              "say": "Then take friends. She's older than this town, and she won't go quietly.",
+              "next": "s2"
+            },
+            {
+              "keyword": "ask the Lady",
+              "say": "Ask, then. Mind she doesn't ask for your name.",
+              "next": "s5"
+            }
+          ],
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            215,
+            862
+          ],
+          "radius": 40,
+          "goal": "Fight past the mere guardians",
+          "target": "mere guardian",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            200,
+            862
+          ],
+          "radius": 40,
+          "goal": "Defeat the Lady of the Mere",
+          "target": "Lady of the Mere",
+          "count": 1,
+          "text": "The Lady sinks into the mere without a sound, and the lilies close over her. The dew is yours. Nothing on the water moves.",
+          "give": {
+            "name": "the Lady's dew"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "orlaith",
+          "goal": "Bring the dew to Orlaith",
+          "say": "Enough for every child in Tir na mBeo, and to spare.\n\n...It's very quiet out at the mere now, Ailbhe says. No singing at all. I suppose that's the price. I suppose I'll get used to it.",
+          "ending": "took",
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "lady",
+          "goal": "Ask the Lady of the Mere",
+          "say": "Sick children. ...I am not cruel. I am old, and I have been robbed.\n\nVery well. Dew for the sick, every season, for as long as the herbwife plants foxglove and meadowsweet on my shore, for the bees. A [bargain].",
+          "keyword": "bargain",
+          "give": {
+            "name": "the Lady's dew"
+          },
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "orlaith",
+          "goal": "Bring the dew to Orlaith",
+          "say": "Foxglove and meadowsweet. For the bees.\n\nThat's all she wanted? A garden for the bees? Twenty years I've been stealing from her. ...Here. And send me your fevers, any time.",
+          "ending": "asked",
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "took": {
+          "text": "Take this. It's yours, I suppose. All of it's yours.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq200_drowned_lily_circlet_charm"
+            ],
+            "choice": [
+              "sq200_herbwife_s_satchel_belt",
+              "sq200_mere_guard_bracer"
+            ]
+          }
+        },
+        "asked": {
+          "text": "Take this. The Lady left it on my doorstep. With a bee on it.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [
+              "sq200_meadowsweet_mantle"
+            ],
+            "choice": [
+              "sq200_herbwife_s_satchel_belt",
+              "sq200_mere_guard_bracer"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "beautiful_music"
+    },
+    {
+      "id": "short_measures",
+      "title": "Short Measures",
+      "level": 9,
+      "giver": "cathbad",
+      "offer": "Forty sacks of barley in that granary at harvest. Thirty-one now. No door forced, no lock broken.\n\nGuardian Fionn says curmudgeons. I say curmudgeons can't walk through walls. Will you [look into it]?",
+      "accept": "look into it",
+      "topics": {},
+      "summary": "Barley is vanishing from Mag Mell's granary without a lock broken. Reeve Cathbad wants to know how.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 200,
+          "at": [
+            722,
+            226
+          ],
+          "goal": "Search the granary",
+          "clue": {
+            "name": "the granary floor",
+            "model": 1347
+          },
+          "text": "Under the last row of sacks, a hole - not dug from inside, but from below. The earth around it is wet clay, and it smells of the marsh.",
+          "give": {
+            "name": "a lump of wet clay"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            1060,
+            170
+          ],
+          "radius": 30,
+          "goal": "Follow the tunnel's line east",
+          "text": "The clay trail ends at the curmudgeons' store. Harvesters are packing barley sacks into carts - Mag Mell's sacks, with the reeve's own mark on them.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            1088,
+            162
+          ],
+          "radius": 40,
+          "goal": "Drive off the curmudgeon harvesters",
+          "target": "curmudgeon harvester",
+          "count": 4,
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 200,
+          "at": [
+            1096,
+            156
+          ],
+          "goal": "Search the carts",
+          "clue": {
+            "name": "a cart's tally-board",
+            "model": 1347
+          },
+          "text": "A board of notches: sacks in, sacks out. The 'out' notches are marked with a little red hand.",
+          "give": {
+            "name": "the curmudgeons' tally-board"
+          },
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "cathbad",
+          "goal": "Bring the tally-board to Cathbad",
+          "say": "Tunnels. Mudmen dig through clay like it's water.\n\nAnd a red hand on the tally. Mandra's lad talked about a red hand. I'm starting to think someone's buying our harvest and our troubles both.",
+          "ending": "default",
+          "id": "s5"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. You've a reeve's eye for a short measure.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [],
+            "choice": [
+              "sq200_reeve_s_tally_stick_charm",
+              "sq200_clay_caked_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "the_watchs_new_armour",
+      "title": "The Watch's New Armour",
+      "level": 10,
+      "giver": "cathbad",
+      "offer": "I'm putting a watch on the next cart, and the watch needs armour. Kylirean the armourer will stitch it if he has the [makings] - and he's fussy.\n\nBring him the makings, then ride with the cart. Will you [outfit the watch]?",
+      "accept": "outfit the watch",
+      "topics": {
+        "makings": "Lough wolf skins for the jerkins. Mudman chert for the studs - there's good flint in them, if you break them right."
+      },
+      "summary": "Reeve Cathbad's watch will guard the next grain cart, once Kylirean the armourer has the makings of their armour.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            420,
+            80
+          ],
+          "radius": 40,
+          "goal": "Take skins from lough wolves in the northern hills",
+          "target": "lough wolf",
+          "count": 3,
+          "give": {
+            "name": "lough wolf skins"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            1088,
+            162
+          ],
+          "radius": 40,
+          "goal": "Break chert from mudmen by the curmudgeons' store",
+          "target": "mudman",
+          "count": 2,
+          "give": {
+            "name": "mudman chert"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cathbad",
+          "goal": "Bring the makings to Cathbad",
+          "say": "Kylirean grumbled and sewed all night, and the watch looks like a watch now.\n\nThe cart goes out by the old mill road. Meet it at the [mill].",
+          "keyword": "mill",
+          "take": "lough wolf skins",
+          "id": "s3"
+        },
+        {
+          "type": "encounter",
+          "zone": 200,
+          "at": [
+            830,
+            755
+          ],
+          "wake_m": 30,
+          "goal": "Guard the grain cart on the mill road",
+          "text": "Tharl drops with a curse. In his belt pouch: a note in siabra script, and a wax seal - a red hand.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep the grain cart safe",
+              "center": [
+                830,
+                755
+              ],
+              "radius": 30,
+              "duration_s": 90,
+              "objective": "Keep the grain cart safe",
+              "announce": "Curmudgeons boil up out of the ditches on both sides of the road. 'GRAIN!'",
+              "protect": {
+                "template": 60158958,
+                "name": "the reeve's grain cart",
+                "level": 12,
+                "model": 413
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    842,
+                    761
+                  ],
+                  [
+                    820,
+                    745
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60159539,
+                    "name": "curmudgeon harvester",
+                    "level": [
+                      9,
+                      10
+                    ]
+                  }
+                ]
+              },
+              "thanks": "The carter wipes his face. 'Never again. Never, ever again.'",
+              "success": "They break off.",
+              "fail": "the reeve's grain cart falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Tharl the Trapper",
+              "center": [
+                830,
+                755
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Tharl the Trapper",
+              "announce": "A curmudgeon with a trap-chain over his shoulder steps out of the hedge. 'That's MY cart. Paid for.'",
+              "boss": {
+                "template": 60159548,
+                "name": "Tharl the Trapper",
+                "level": 12,
+                "health_mult": 2.0
+              },
+              "success": "Tharl the Trapper falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "give": {
+            "name": "Tharl's note"
+          },
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "cathbad",
+          "goal": "Bring the note to Cathbad",
+          "say": "Siabra script. I can't read it. Nobody in Mag Mell can.\n\nThere's a siabra exile on the east shore who sells what he knows, they say in Tir na mBeo. A siabra. Gods help us.",
+          "ending": "default",
+          "id": "s5"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. Kylirean made one extra. For the watch's best.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [],
+            "choice": [
+              "sq200_watchman_s_studded_belt",
+              "sq200_cadger_skin_bracer",
+              "sq200_tharl_s_trap_chain_charm"
+            ]
+          }
+        }
+      },
+      "requires": "short_measures"
+    },
+    {
+      "id": "lesser_of_two_evils",
+      "title": "The Lesser of Two Evils",
+      "level": 12,
+      "giver": "cathbad",
+      "offer": "Fereinn, the exile is called. He lives alone on the east shore, hated by both sides, which I suppose recommends him.\n\nTake him Tharl's note. Will you [find Fereinn]?",
+      "accept": "find Fereinn",
+      "topics": {},
+      "summary": "A siabra exile on the east shore can read Tharl's note - for a price.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "fereinn",
+          "goal": "Find Fereinn on the east shore",
+          "say": "Tharl's hand. Dergan wax.\n\nI'll read it. Not for coin - for a courtesy. A curmudgeon courier carries the next note of this kind today, on the shore road. Bring me his [plans], and I'll read you both.",
+          "keyword": "plans",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            1222,
+            722
+          ],
+          "radius": 25,
+          "goal": "Stop the curmudgeon courier on the shore road",
+          "mob": {
+            "template": 60159533,
+            "name": "curmudgeon courier",
+            "level": 13,
+            "tier": "blue"
+          },
+          "count": 1,
+          "text": "The courier squeals and drops a satchel.",
+          "give": {
+            "name": "the courier's plans"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "fereinn",
+          "goal": "Bring the plans to Fereinn",
+          "say": "Here is what they say. The curmudgeons sell your barley to the Dergan war camp. The camp feeds an army for the island. The one who pays is the warlord's quartermaster, and he signs with a red hand.\n\nNow. I could [keep the plans] - they're worth a great deal to the siabra who hate the warlord, my own people, and you'd have my friendship. Or you [take them] to your reeve, and I've done you a kindness for nothing. Choose.",
+          "options": [
+            {
+              "keyword": "keep the plans",
+              "say": "Then you have a friend on the east shore. Few can say that. None of them are siabra.",
+              "next": "s4"
+            },
+            {
+              "keyword": "take them",
+              "say": "As you like. Kindness is a habit I'm trying to keep.",
+              "next": "s5"
+            }
+          ],
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cathbad",
+          "goal": "Return to Cathbad",
+          "say": "You gave them to a siabra?\n\n...Well. He told you the truth, which is more than the curmudgeons ever did. The enemy of my enemy. I'll sleep badly.",
+          "ending": "siabra",
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "cathbad",
+          "goal": "Return to Cathbad",
+          "say": "The warlord's quartermaster. Feeding an army on Mag Mell barley.\n\nI'll take this to Guardian Fionn tonight. You've done Mag Mell a great service.",
+          "ending": "reeve",
+          "id": "s5"
+        }
+      ],
+      "endings": {
+        "siabra": {
+          "text": "Take this anyway. You found the truth, whoever has the paper.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq200_exile_s_ring"
+            ],
+            "choice": [
+              "sq200_courier_s_satchel_belt",
+              "sq200_reeve_s_seal_pendant"
+            ]
+          }
+        },
+        "reeve": {
+          "text": "Take this. It opens doors at any granary in the realm.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [
+              "sq200_reeve_s_seal_pendant"
+            ],
+            "choice": [
+              "sq200_exile_s_ring",
+              "sq200_courier_s_satchel_belt"
+            ]
+          }
+        }
+      },
+      "requires": "the_watchs_new_armour"
+    },
+    {
+      "id": "hughars_ledger",
+      "title": "Hughar's Ledger",
+      "level": 14,
+      "giver": "cathbad",
+      "offer": "The curmudgeons' go-between is Hughar the poacher - the one with the cruiach daemon hide that Alastriona swears was hers.\n\nHe keeps the ledger: every sack, every coin, every red hand. Bring me that ledger and Guardian Fionn can take it to the High King. Take friends. Hughar's no fool. Will you [take the ledger]?",
+      "accept": "take the ledger",
+      "topics": {},
+      "summary": "Hughar the poacher keeps the curmudgeons' ledger of every sack sold across the lake.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            1538,
+            988
+          ],
+          "radius": 40,
+          "goal": "Fight through the poachers in the east valley",
+          "target": "curmudgeon poacher",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            1529,
+            975
+          ],
+          "radius": 40,
+          "goal": "Defeat Hughar",
+          "target": "Hughar",
+          "count": 1,
+          "text": "Hughar goes down hard. In his pack: a fat ledger, a stolen cruiach daemon hide, and a purse of red-hand silver.",
+          "give": {
+            "name": "Hughar's ledger"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cathbad",
+          "goal": "Bring the ledger to Cathbad",
+          "say": "Every sack. Every coin. Three seasons of it, and all of it going across the lake to the Dergans.\n\nThey're not raiding us. They're provisioning. You don't provision for a raid. You provision for a war.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. And this - Alastriona says the hide is yours now.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq200_cruiach_hide_cloak"
+            ],
+            "choice": [
+              "sq200_poacher_s_ledger_charm",
+              "sq200_hughar_s_snare_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "lesser_of_two_evils"
+    },
+    {
+      "id": "bones_on_the_road",
+      "title": "Bones on the Road",
+      "level": 10,
+      "giver": "oran",
+      "offer": "Skeletons on the north road at night. The roadwardens have lost two good men to them.\n\nNow - the dead in that barrow have lain quiet for three hundred years. The dead don't [wake] on their own. Will you [go to the barrow]?",
+      "accept": "go to the barrow",
+      "topics": {
+        "wake": "Not by themselves. Someone has to call them, or let them out. That's the old law, and the old law's never been wrong yet."
+      },
+      "summary": "The dead of the old barrow by Mag Mell walk the roads at night. Seanchai Oran says the dead don't wake on their own.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            925,
+            292
+          ],
+          "radius": 40,
+          "goal": "Put down the skeletal pawns at the barrow",
+          "target": "skeletal pawn",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 200,
+          "at": [
+            930,
+            284
+          ],
+          "goal": "Examine the barrow's seal-stone",
+          "clue": {
+            "name": "the barrow's seal-stone",
+            "model": 1347
+          },
+          "text": "The great stone over the barrow door has been cracked - not by frost, not by age. Chisel marks, fresh ones. And pressed into the clay round the crack, the mark of a ring: a hand.",
+          "give": {
+            "name": "a clay print of a ring"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "oran",
+          "goal": "Bring the ring-print to Oran",
+          "say": "Someone opened it. On purpose.\n\nThe Parthanan farm folk saw lights in the Grey Wood before the bones came. Rest tonight. Tomorrow we look there.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. Old things for an old business.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq200_seal_stone_shard",
+              "sq200_barrow_bone_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "lights_in_the_grey_wood",
+      "title": "Lights in the Grey Wood",
+      "level": 12,
+      "giver": "oran",
+      "offer": "The Parthanan farmers say there were lights in the haunted wood - red ones - and singing that wasn't siabra singing.\n\nGo and [look]. By day, if you've any sense. The Grey Wood's bad enough by daylight.",
+      "accept": "look",
+      "topics": {},
+      "summary": "Red lights and strange singing in the haunted Grey Wood came before the dead walked.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            1380,
+            300
+          ],
+          "radius": 30,
+          "goal": "Go to the edge of the haunted wood",
+          "text": "Grey trees, grey moss, and a mist that never quite lifts. On the stumps: candle-ends of red wax, dozens of them, in a ring.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 200,
+          "at": [
+            1394,
+            292
+          ],
+          "goal": "Search the ring of candles",
+          "clue": {
+            "name": "a ring of red candles",
+            "model": 1876
+          },
+          "text": "Red wax, stamped with the same hand. And a scrap of paper: 'Every night you sing, the dead walk further. Sing until they reach Mag Mell.'",
+          "give": {
+            "name": "a scrap of the summoning"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            1394,
+            292
+          ],
+          "radius": 25,
+          "goal": "Drive off the mist wraiths",
+          "mob": {
+            "template": 60160936,
+            "name": "mist wraith",
+            "level": 13,
+            "tier": "blue"
+          },
+          "count": 4,
+          "text": "The wraiths come apart like cobweb. Behind them, in the mud, boot prints going south - towards the farm.",
+          "id": "s3"
+        },
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            1300,
+            478
+          ],
+          "radius": 30,
+          "goal": "Follow the trail to the Parthanan farm road",
+          "text": "The farm road. Fresh hoofprints, and a farmhand who will not look you in the eye.",
+          "id": "s4"
+        },
+        {
+          "type": "search",
+          "zone": 200,
+          "at": [
+            1312,
+            468
+          ],
+          "goal": "Search the farm",
+          "clue": {
+            "name": "a saddlebag in a hayrick",
+            "model": 1347
+          },
+          "text": "A letter in a careful hand: 'To the Summoner. Keep the barrow open until the harvest is in. Your fee waits at the outpost. - R.' The red hand again.",
+          "give": {
+            "name": "the letter to the Summoner"
+          },
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "oran",
+          "goal": "Bring the letter to Oran",
+          "say": "'Keep the barrow open until the harvest is in.' The same words as the gang's orders, Mandra says. The same R.\n\nSomeone wants Mag Mell busy - busy with bandits, busy with bones, busy with curmudgeons - until the harvest is in. And the Summoner will sing tonight. Listen.",
+          "ending": "default",
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. And stay indoors after dark, unless you mean to do something about it.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [],
+            "choice": [
+              "sq200_red_wax_candle_charm",
+              "sq200_grey_wood_mantle",
+              "sq200_hayrick_belt"
+            ]
+          },
+          "wake_event": "lough_derg_summoners_muster"
+        }
+      },
+      "requires": "bones_on_the_road"
+    },
+    {
+      "id": "rionas_revenge",
+      "title": "Riona's Revenge",
+      "level": 14,
+      "giver": "riona",
+      "offer": "You're the one who found the letter? Then hear me.\n\nThe siabra at the outpost on the east shore took me and kept me a month in a pit. Their chieftain, Dergal, wears a vest of runes - and every night a man in a grey hood came, and Dergal paid him in red-hand silver. The Summoner.\n\nI want Dergal dead, and I want that vest. Will you [take my revenge]?",
+      "accept": "take my revenge",
+      "topics": {},
+      "summary": "Riona was held by the siabra at the Dergan outpost, where Chieftain Dergal paid the Summoner.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            1462,
+            750
+          ],
+          "radius": 40,
+          "goal": "Cut through the siabra at the Dergan outpost",
+          "target": "siabra",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 200,
+          "at": [
+            1470,
+            742
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Chieftain Dergal",
+          "text": "Dergal falls. His runed vest smoulders; the runes match the marks on the barrow stone - binding runes, and unbinding.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Chieftain Dergal",
+              "center": [
+                1470,
+                742
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Chieftain Dergal",
+              "announce": "A siabra in a vest stitched with burning runes: 'The pit girl sent you? I should have kept her longer.'",
+              "boss": {
+                "template": 30000,
+                "name": "Chieftain Dergal",
+                "level": 16,
+                "health_mult": 2.2
+              },
+              "success": "Chieftain Dergal falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60161282,
+                    "name": "ghastly siabra",
+                    "level": [
+                      13,
+                      14
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "give": {
+            "name": "Dergal's runed vest"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "riona",
+          "goal": "Bring the vest to Riona",
+          "say": "Dead. Good.\n\nThose are unbinding runes - the same that cracked your barrow. Dergal taught the Summoner, and paid him. And Dergal was paid by the island. ...Here. Wear it, if you can stand the smell.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take it. It was always meant for someone who'd use it better than he did.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq200_dergal_s_runed_mantle"
+            ],
+            "choice": [
+              "sq200_pit_chain_bracer",
+              "sq200_riona_s_vengeance_ring"
+            ]
+          }
+        }
+      },
+      "requires": "lights_in_the_grey_wood"
+    },
+    {
+      "id": "the_summoner",
+      "title": "The Summoner",
+      "level": 16,
+      "giver": "oran",
+      "offer": "We know what he is now, and who pays him. The Summoner works at the barrow by night, singing the dead up.\n\nRiona says he'll run when he hears his paymaster's dead - unless someone stops him first. Bring friends, go to the barrow, and [end it].",
+      "accept": "end it",
+      "topics": {},
+      "summary": "The Summoner sings the dead out of the old barrow by Mag Mell, in the pay of the island.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            925,
+            300
+          ],
+          "radius": 30,
+          "goal": "Go to the old barrow",
+          "text": "The barrow door stands open. Inside, a man in a grey hood, singing, and the dead climbing up round him.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 200,
+          "at": [
+            925,
+            292
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the Summoner",
+          "text": "The Summoner falls. The song breaks off mid-note, and every skeleton in the barrow lies down at once, like tired men. On his hand, a heavy signet: a red hand on lake-blue enamel.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "the Summoner",
+              "center": [
+                925,
+                292
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Summoner",
+              "announce": "The singing stops. 'The bones are mine. The road is mine. Mag Mell will be the warlord's.' The dead turn towards you.",
+              "boss": {
+                "template": 60166617,
+                "name": "the Summoner",
+                "level": 18,
+                "health_mult": 2.5
+              },
+              "success": "the Summoner falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60166177,
+                    "name": "risen pawn",
+                    "level": [
+                      14,
+                      15
+                    ]
+                  },
+                  {
+                    "template": 60166174,
+                    "name": "risen minion",
+                    "level": [
+                      15,
+                      16
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "give": {
+            "name": "the Summoner's signet"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "oran",
+          "goal": "Bring the signet to Oran",
+          "say": "A red hand on lake blue.\n\nThat's the seal of Clan Derg, the old warlords of the lake. I thought them a story. A warlord, with coin enough to buy bandits and curmudgeons and the dead? ...Take this to the roane. The lake's going red.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. The barrow's quiet. That's your doing.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq200_summoner_s_signet"
+            ],
+            "choice": [
+              "sq200_barrow_song_pendant",
+              "sq200_gravewarden_s_girdle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "rionas_revenge"
+    },
+    {
+      "id": "what_the_roane_saw",
+      "title": "What the Roane Saw",
+      "level": 15,
+      "giver": "ronan",
+      "offer": "Muirne says you're a friend of the roane. Then hear what the roane see from the water.\n\nBoats cross to the island every night. Barley going over, men coming back. The Dergans are gathering under a warlord, and they hunt us because we see too much. Will you [learn what they are]? The lorewoman in Tir na mBeo knows the old stories.",
+      "accept": "learn what they are",
+      "topics": {},
+      "summary": "The roane see boats crossing to Dergan Island every night. Cara the lorewoman knows the old stories of the Dergans.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "cara",
+          "goal": "Ask Cara the Lorewoman about the Dergans",
+          "say": "Dergans. Siabra, of the unseelie court, that came through the Veil when the elves and lurikeens did, and never went home. Here they took the lake's name: Clan Derg, the red lake.\n\nTheir warlords cut their oaths on [war-stones] - uncut stones from the lake bed, carried by their furies. Bring me one and I'll read it for you.",
+          "keyword": "war-stones",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            1362,
+            1262
+          ],
+          "radius": 40,
+          "goal": "Take a war-stone from a dergan fury",
+          "target": "dergan fury",
+          "count": 2,
+          "give": {
+            "name": "an uncut war-stone"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cara",
+          "goal": "Bring the war-stone to Cara",
+          "say": "An oath-stone, cut with a warlord's name: Ruadhan. Ruadhan of the Red Hand.\n\n...R. The letters signed 'R.' He's on the island, and he's sworn to take the lake shore 'when the harvest is in'. Tell the [roane].",
+          "keyword": "roane",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "ronan",
+          "goal": "Return to Ronan of the Roane",
+          "say": "Ruadhan.\n\nThe roane will watch the war camp for you, from the water. Go when you're ready. And take this - from Muirne.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Muirne, with the roane's thanks.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq200_war_stone_pendant",
+              "sq200_lorewoman_s_ogham_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "roane"
+    },
+    {
+      "id": "the_war_camp",
+      "title": "Scouting the War Camp",
+      "level": 16,
+      "giver": "ronan",
+      "offer": "The war camp on the south shore is where Ruadhan's bands muster before they cross.\n\nGet close. Count them. Find out when they march. Will you [scout the camp]?",
+      "accept": "scout the camp",
+      "topics": {},
+      "summary": "Ruadhan's war bands muster at the Dergan war camp on the south shore.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            1262,
+            1118
+          ],
+          "radius": 20,
+          "goal": "Reach the high ground north of the war camp",
+          "text": "Below you: tents for a hundred, cookfires, siabra archers on the palisade - and Mag Mell's barley sacks piled under oilcloth.",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            1338,
+            1188
+          ],
+          "radius": 20,
+          "goal": "Circle round to the camp's east side",
+          "text": "The training ground beyond is busy: recruits drilling in lines, sergeants shouting in the siabra tongue. More than a war band. An army.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            1295,
+            1160
+          ],
+          "radius": 40,
+          "goal": "Thin the furies guarding the war tent",
+          "target": "dergan fury",
+          "count": 3,
+          "id": "s3"
+        },
+        {
+          "type": "search",
+          "zone": 200,
+          "at": [
+            1302,
+            1152
+          ],
+          "goal": "Search the war tent",
+          "clue": {
+            "name": "the war tent's muster roll",
+            "model": 1347
+          },
+          "text": "A muster roll: bands, numbers and a date, written in common so the curmudgeons can read it. 'Muster at the outpost. Cross when the harvest is in.' The harvest is in next week.",
+          "give": {
+            "name": "the muster roll"
+          },
+          "id": "s4"
+        },
+        {
+          "type": "talk",
+          "npc": "ronan",
+          "goal": "Return to Ronan",
+          "say": "Next week.\n\nTake it to the captain in Mag Mell. And thank you. The roane don't forget. ...Listen - the war bands are already moving on the east edge. They know someone was in the camp.",
+          "ending": "default",
+          "id": "s5"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. You've a roane's eyes now.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 80,
+            "copper_per_level": 65,
+            "marks": 9,
+            "items": [],
+            "choice": [
+              "sq200_muster_roll_satchel_belt",
+              "sq200_palisade_stake_bracer",
+              "sq200_roane_watcher_s_cloak"
+            ]
+          },
+          "wake_event": "lough_derg_dergan_war_bands"
+        }
+      },
+      "requires": "what_the_roane_saw"
+    },
+    {
+      "id": "orders_from_the_outpost",
+      "title": "Orders from the Outpost",
+      "level": 18,
+      "giver": "lir",
+      "offer": "So the roane were right, and the reeve, and old Oran, and a boy from a bandit camp. Ruadhan's been buying our troubles for a year.\n\nBefore I can move the guard, I need his orders in his own hand. The outpost on the east shore carries them to the war bands. Will you [take the orders]?",
+      "accept": "take the orders",
+      "topics": {},
+      "summary": "Captain Lir needs Ruadhan's own orders before he can move the guard. The Dergan outpost carries them.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 200,
+          "at": [
+            1462,
+            750
+          ],
+          "radius": 40,
+          "goal": "Silence the whistlers who watch the outpost road",
+          "target": "whistler",
+          "count": 2,
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 200,
+          "at": [
+            1462,
+            756
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the Dergan quartermaster",
+          "text": "The quartermaster falls before the fire catches. In his satchel: Ruadhan's orders, sealed in red.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Quartermaster Fiachna",
+              "center": [
+                1462,
+                756
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Quartermaster Fiachna",
+              "announce": "A Dergan in a quartermaster's sash snatches up a satchel. 'Burn the orders! BURN them!'",
+              "boss": {
+                "template": 60159917,
+                "name": "Quartermaster Fiachna",
+                "level": 19,
+                "health_mult": 2.2
+              },
+              "success": "Quartermaster Fiachna falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 60159913,
+                    "name": "dergan fury",
+                    "level": [
+                      16,
+                      17
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "give": {
+            "name": "Ruadhan's orders"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lir",
+          "goal": "Bring the orders to Captain Lir",
+          "say": "'Hold the island against all comers. When the harvest is in, cross and take Mag Mell's granary, then the town.' Signed: Ruadhan, warlord of the Red Lake.\n\nWell. Now I can move.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this, and the realm's thanks. You'll have more than that before we're done.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq200_quartermaster_s_sash",
+              "sq200_outpost_fire_ring",
+              "sq200_mag_mell_guard_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "the_war_camp"
+    },
+    {
+      "id": "the_roane_captives",
+      "title": "The Roane Captives",
+      "level": 19,
+      "giver": "ronan",
+      "offer": "One thing more, before your captain sails.\n\nRuadhan keeps roane in pens on the island's south shore. Our skins are his treasury. If the island is stormed, the guards will kill them first. Will you [free the captives] before then? Take friends. The island is his.",
+      "accept": "free the captives",
+      "topics": {},
+      "summary": "Ruadhan keeps roane captive in pens on Dergan Island's south shore.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 200,
+          "at": [
+            1068,
+            1492
+          ],
+          "radius": 25,
+          "goal": "Reach the pens on the island's south shore",
+          "text": "Pens of driftwood and net, and grey shapes inside them that turn their heads to watch you. A sergeant shouts.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 200,
+          "at": [
+            1062,
+            1486
+          ],
+          "wake_m": 30,
+          "goal": "Free the roane and hold the pens",
+          "text": "The pens are open. Roane slip into the water one by one, grey heads in the waves, and the last of them turns and sings something you'll never forget.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep the roane captives safe",
+              "center": [
+                1062,
+                1486
+              ],
+              "radius": 30,
+              "duration_s": 120,
+              "objective": "Keep the roane captives safe",
+              "announce": "You cut the first net. Every Dergan on the south shore comes running.",
+              "protect": {
+                "template": 60167226,
+                "name": "roane captive",
+                "level": 16,
+                "model": 365
+              },
+              "waves": {
+                "every_s": 25,
+                "count": 2,
+                "from": [
+                  [
+                    1074,
+                    1492
+                  ],
+                  [
+                    1052,
+                    1476
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60159913,
+                    "name": "dergan sergeant",
+                    "level": [
+                      18,
+                      19
+                    ]
+                  }
+                ]
+              },
+              "thanks": "The roane captive presses your hand, once, and is gone into the water.",
+              "success": "They break off.",
+              "fail": "roane captive falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Slavemaster Cuan",
+              "center": [
+                1062,
+                1486
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Slavemaster Cuan",
+              "announce": "A Dergan with a sealskin whip wades out of the shallows. 'My stock. MY treasury.'",
+              "boss": {
+                "template": 60159917,
+                "name": "Slavemaster Cuan",
+                "level": 21,
+                "health_mult": 2.4
+              },
+              "success": "Slavemaster Cuan falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "ronan",
+          "goal": "Return to Ronan",
+          "say": "Every one of them. Every one.\n\nRuadhan will know by morning. Tell your captain to be quick - and when the island is stormed, the roane will carry anyone who asks across the water. That's a promise.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this. The roane have long memories, and you're in all of them now.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq200_red_lake_mantle"
+            ],
+            "choice": [
+              "sq200_roane_song_pearl",
+              "sq200_pen_key_ring",
+              "sq200_slavemaster_s_bane"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "orders_from_the_outpost"
     }
   ]
 }

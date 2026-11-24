@@ -1,0 +1,184 @@
+{
+ "zone": 200,
+ "region": 200,
+ "realm": 3,
+ "prefix": "rep200",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shieldfriend's Band",
+   "base": [
+    41,
+    35
+   ],
+   "level": 10,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "The Mag Mell Guard give this band to those who have stood a watch beside them."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mag Mell Watch Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 10,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 10,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Worn by the town watch, and by the few outsiders they would trust with a gate."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sword-Oath Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 15,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 13
+   },
+   "lore": "Bronze, twisted thrice: one turn for the town, one for the lake, one for the oath."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lake Road Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 15,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 13
+   },
+   "lore": "Scuffed from years of riding the lake road between Mag Mell and the shore forts."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Red Hand Breaker",
+   "base": [
+    41,
+    26
+   ],
+   "level": 20,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 3,
+    "Hits": 17
+   },
+   "lore": "Lake-blue, with a red hand torn across. The Guard make one for each who earns the name."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rowan-Berry Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 10,
+   "bonuses": {
+    "Qui": 3,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 6,
+    "Power": 1
+   },
+   "lore": "Rowan berries on red thread, against the Good People's mischief. It works, mostly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wise-Woman's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 10,
+   "bonuses": {
+    "Emp": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "Brid wove it from willow and her own grey hair. Don't ask what the knots mean."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gift of the Good People",
+   "base": [
+    41,
+    35
+   ],
+   "level": 15,
+   "bonuses": {
+    "Int": 5,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 9
+   },
+   "lore": "A ring found on your pillow one morning, still cold with dew. Say thank you to no one."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hazel-Wand Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 15,
+   "bonuses": {
+    "Qui": 5,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 9,
+    "Power": 2
+   },
+   "lore": "Hazel for wisdom, bound in leather by someone who has walked the fairy roads."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Lucht Feasa",
+   "base": [
+    41,
+    26
+   ],
+   "level": 20,
+   "bonuses": {
+    "Int": 7,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "Grey as mist on the mere. The Good People step aside for whoever wears it."
+  }
+ ]
+}

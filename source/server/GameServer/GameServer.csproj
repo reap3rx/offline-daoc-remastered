@@ -92,6 +92,7 @@
         <EmbeddedResource Include="scripts\storyquests\items\*.json" LogicalName="StoryItems.%(Filename)%(Extension)" />
         <!-- zone rebuilds: who lives in a zone and where (gameutils/ZoneBuilds.cs) -->
         <EmbeddedResource Include="scripts\zonebuilds\*.json" LogicalName="ZoneBuilds.%(Filename)%(Extension)" />
+        <EmbeddedResource Include="scripts\reputation\*.json" LogicalName="Reputation.%(Filename)%(Extension)" />
         <EmbeddedResource Include="gameutils\data\level_bands.json" />
     </ItemGroup>
 </Project>

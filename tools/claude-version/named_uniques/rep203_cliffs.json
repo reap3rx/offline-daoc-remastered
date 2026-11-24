@@ -1,0 +1,184 @@
+{
+ "zone": 203,
+ "region": 200,
+ "realm": 3,
+ "prefix": "rep203",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Watchman's Oath-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 26,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 22
+   },
+   "lore": "The ring a Friend of the Watch is given: iron, with the watchtower on it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cliff-Path Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 26,
+   "bonuses": {
+    "Dex": 9,
+    "Qui": 9,
+    "Str": 4,
+    "Hits": 22
+   },
+   "lore": "A watchman's belt, with a rope coiled on it for the cliff paths."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Beacon Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 32,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 5,
+    "Hits": 27
+   },
+   "lore": "Bronze, with a tiny beacon worked into the clasp. It's warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cliff-Warden's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 32,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 32,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Worn by the wardens who walk the cliff tops in the fog."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Watch of Moher",
+   "base": [
+    41,
+    26
+   ],
+   "level": 36,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 36,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Sea-grey and beacon-red. Only the Watch-Captains of Moher wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Omen-Reader's Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 26,
+   "bonuses": {
+    "Qui": 9,
+    "Con": 4,
+    "Dex": 4,
+    "Hits": 16,
+    "Power": 3
+   },
+   "lore": "Seven tiny omens on a silver thread. The Seers know it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seer's Knotted Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 26,
+   "bonuses": {
+    "Int": 9,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "Knotted with the seven omens, the way the Seers do it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fetch-Glass Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 32,
+   "bonuses": {
+    "Emp": 11,
+    "Con": 5,
+    "Power": 5,
+    "Hits": 19
+   },
+   "lore": "A torc set with fetch-glass. It shows you a moment late."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Western-Edge Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 32,
+   "bonuses": {
+    "Int": 11,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 5,
+    "Hits": 19
+   },
+   "lore": "Carved with the last cliff before the sea."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Western Edge",
+   "base": [
+    41,
+    26
+   ],
+   "level": 36,
+   "bonuses": {
+    "Emp": 12,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 22
+   },
+   "lore": "Fog-grey, embroidered with seven omens. Only the Seers of the Western Edge wear it."
+  }
+ ]
+}

@@ -109,7 +109,7 @@ namespace DOL.GS
 			if (amountToBuy <= 0) return;
 
 			//Calculate the value of items
-			long totalValue = number * template.Price;
+			long totalValue = (long) Math.Round(number * template.Price * DOL.GS.Reputation.ReputationService.PriceFactor(player, this));   // standing here: 5-10% off
 
 			lock (player.Inventory.Lock)
 			{
@@ -163,7 +163,7 @@ namespace DOL.GS
 			if (amountToBuy <= 0) return;
 
 			//Calculate the value of items
-			long totalValue = number * template.Price;
+			long totalValue = (long) Math.Round(number * template.Price * DOL.GS.Reputation.ReputationService.PriceFactor(player, this));   // standing here: 5-10% off
 
 			lock (player.Inventory.Lock)
 			{

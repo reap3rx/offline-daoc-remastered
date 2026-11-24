@@ -8,10 +8,201 @@
   {
    "story_reward": true,
    "scaled": true,
-   "name": "Veil-Thread Bracelet",
+   "name": "Brogan's Pick-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 10
+   },
+   "lore": "A tiny silver pick on a thong. Every lurikeen miner wears one. Brogan had a spare."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ore-Cart Bracer",
    "base": [
     41,
     33
+   ],
+   "level": 12,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 12,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Cart iron, bent round a wrist. It has pushed a lot of ore."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Glamour-Ring of the Siog",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Qui": 5,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 8,
+    "Power": 2
+   },
+   "lore": "Cucugar's glamour-ring, its spell broken. It still makes your fingers itch."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lamp-Bearer's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 14,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 12
+   },
+   "lore": "A miner's lamp-belt. The lamp is long gone. The belt is very good."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fence's Tally-Stick Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 16,
+   "bonuses": {
+    "Int": 5,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "A siog fence's tally-stick: ore in, silver out. The last notch is very deep."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ranger-Issue Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 16,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "A plain ring, issued at Druim Cain to rangers who bring in good word."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Camp-Stalker's Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 16,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 3,
+    "Hits": 14
+   },
+   "lore": "Dark green, for creeping round a siog camp at night."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sloithi's Ore-Crown",
+   "base": [
+    41,
+    29
+   ],
+   "level": 18,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 15
+   },
+   "lore": "A crown of raw ore the siog chief wore. It weighs about as much as a goat."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mine-Mouth Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 18,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 18,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Iron from the mine's own gate."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Deep-Seam Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 18,
+   "bonuses": {
+    "Emp": 6,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "Silver from the deepest seam, where the lurikeen say the hill sings."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dying-Oak Leaf Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 14,
+   "bonuses": {
+    "Emp": 5,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "An oak leaf from the grove, gone brown in midsummer."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Grove-Watcher's Ring",
+   "base": [
+    41,
+    35
    ],
    "level": 14,
    "bonuses": {
@@ -20,6 +211,182 @@
     "Dex": 2,
     "Power": 2,
     "Hits": 8
+   },
+   "lore": "A ring of plaited oak root."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Oak-Heart Acorn",
+   "base": [
+    41,
+    24
+   ],
+   "level": 18,
+   "bonuses": {
+    "Emp": 6,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "A golden acorn from the heart of a sacred grove. It's warm, like something sleeping."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Siog Thief's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 18,
+   "bonuses": {
+    "Dex": 6,
+    "Qui": 6,
+    "Str": 3,
+    "Hits": 15
+   },
+   "lore": "The siog steal everything that isn't nailed down. This ring was stolen eleven times."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Renegade Druid Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 18,
+   "bonuses": {
+    "Int": 6,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "A druid's torc, from a druid who forgot what druids are for."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Grove-Keeper's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 18,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 18,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Green and brown, the colours of a grove that lives."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Replanted-Oak Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 19,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 19,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Oak bark, freshly grown. It smells of rain."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thorn-Hound's Collar Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 19,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 16
+   },
+   "lore": "Cut from a thorn-bound hound's collar. The thorns are dead now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ruadh's Black-Feather Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 20,
+   "bonuses": {
+    "Int": 7,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "Black feathers, every one from a crow that was paid to give it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wind-Charm Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 20,
+   "bonuses": {
+    "Qui": 7,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 12,
+    "Power": 2
+   },
+   "lore": "A broken wind-charm, yew and scarlet thread. It doesn't hum any more."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Caille Courier's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 3,
+    "Hits": 17
+   },
+   "lore": "The Muintir's couriers wear these between Caille and the hill."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Veil-Thread Bracelet",
+   "base": [
+    41,
+    33
+   ],
+   "level": 16,
+   "bonuses": {
+    "Int": 5,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
    },
    "lore": "A thread from the veil between worlds. It's very hard to see."
   },
@@ -31,12 +398,12 @@
     41,
     24
    ],
-   "level": 14,
+   "level": 16,
    "bonuses": {
     "Qui": 5,
-    "Con": 2,
-    "Dex": 2,
-    "Hits": 8,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 10,
     "Power": 2
    },
    "lore": "An apple from beyond the veil, cast in gold. Don't eat it. It's gold."
@@ -49,10 +416,10 @@
     41,
     35
    ],
-   "level": 14,
+   "level": 16,
    "bonuses": {
     "Con": 5,
-    "Hits": 14,
+    "Hits": 16,
     "Body": 2,
     "Crush": 2,
     "Slash": 2
@@ -67,56 +434,286 @@
     41,
     26
    ],
-   "level": 14,
+   "level": 16,
    "bonuses": {
     "Dex": 5,
     "Qui": 5,
-    "Str": 2,
-    "Hits": 12
+    "Str": 3,
+    "Hits": 14
    },
    "lore": "It glimmers faintly, like a veil wisp at the edge of sight."
   },
   {
    "story_reward": true,
    "scaled": true,
-   "name": "Oak-Heart Acorn",
+   "name": "Trampled-Fence Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 20,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 20,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Fence-iron from Tuathal's pasture, bent by a fairy horse."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Scarlet-Thread Charm",
    "base": [
     41,
     24
    ],
-   "level": 28,
+   "level": 20,
    "bonuses": {
-    "Emp": 9,
-    "Con": 5,
-    "Power": 4,
-    "Hits": 17
+    "Qui": 7,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 12,
+    "Power": 2
    },
-   "lore": "A golden acorn from the heart of a sacred grove. It's warm, like something sleeping."
+   "lore": "A scarlet thread off a rider's sleeve, knotted round a hoof-nail."
   },
   {
    "story_reward": true,
    "scaled": true,
-   "name": "Siog Thief's Ring",
+   "name": "Rider's Green-Gold Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 22,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 4,
+    "Hits": 19
+   },
+   "lore": "Green leather worked with gold. It belonged to someone who's been riding for a thousand years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Host-Message Ring",
    "base": [
     41,
     35
    ],
-   "level": 28,
+   "level": 22,
    "bonuses": {
-    "Dex": 9,
-    "Qui": 9,
-    "Str": 5,
-    "Hits": 24
+    "Int": 7,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 13
    },
-   "lore": "The siog steal everything that isn't nailed down. This ring was stolen eleven times."
+   "lore": "The ring the rider carried his message in. It's hollow, and it hums."
   },
   {
    "story_reward": true,
    "scaled": true,
-   "name": "Renegade Druid Torc",
+   "name": "Fairy-Steed Bridle Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 22,
+   "bonuses": {
+    "Qui": 7,
+    "Con": 4,
+    "Dex": 4,
+    "Hits": 13,
+    "Power": 2
+   },
+   "lore": "Silver bells on a green bridle. They ring when nothing moves them."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blademaster's Riding Gauntlet",
+   "base": [
+    41,
+    33
+   ],
+   "level": 24,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "Twenty years in the host's saddle wore it thin. It's still a fine gauntlet."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mortal Champion's Torc",
    "base": [
     41,
     29
+   ],
+   "level": 24,
+   "bonuses": {
+    "Dex": 8,
+    "Qui": 8,
+    "Str": 4,
+    "Hits": 20
+   },
+   "lore": "The torc he wore when the host took him. It's out of fashion by about twenty years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Golden-Hall Dream Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 20,
+   "bonuses": {
+    "Int": 7,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "Aideen's drawing of the hall she dreams of, folded small. The doors are exactly right."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wing-Scale Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Qui": 7,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 12,
+    "Power": 2
+   },
+   "lore": "A single scarlet wing-scale, set in silver. It's warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Menhir-Shelter Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 22,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 22,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Stone dust from the lake's menhir, bound in leather. Wind doesn't seem to reach you as hard."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wrath-Sprite's Ember Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 22,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 4,
+    "Hits": 19
+   },
+   "lore": "A wrath sprite's spark, gone dim and warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gale-Torn Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 22,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 4,
+    "Hits": 19
+   },
+   "lore": "Shredded by a wind out of a clear sky."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lusmorebane's Foxglove Crown",
+   "base": [
+    41,
+    29
+   ],
+   "level": 25,
+   "bonuses": {
+    "Qui": 8,
+    "Con": 4,
+    "Dex": 4,
+    "Hits": 15,
+    "Power": 3
+   },
+   "lore": "Foxgloves that never wilt, woven by the changelings' king. Lusmore was the man they gave a hump to. This was the one who did it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Aideen's Ribbon Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 25,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 25,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Aideen's scarlet ribbon, wrapped round a bracer. She insisted."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cradle-Ash Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 25,
+   "bonuses": {
+    "Emp": 8,
+    "Con": 4,
+    "Power": 4,
+    "Hits": 15
+   },
+   "lore": "Cut from the changelings' cradle, burned and scrubbed clean."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Riocard's Yew Wand",
+   "base": [
+    41,
+    24
    ],
    "level": 28,
    "bonuses": {
@@ -126,25 +723,529 @@
     "Power": 4,
     "Hits": 17
    },
-   "lore": "A druid's torc, from a druid who forgot what druids are for."
+   "lore": "Riocard's wand, broken or not as you chose. Yew, bound in scarlet thread, still faintly cold."
   },
   {
    "story_reward": true,
    "scaled": true,
-   "name": "Grove-Keeper's Mantle",
+   "name": "Bresal's-Heir Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 28,
+   "bonuses": {
+    "Emp": 9,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "Riocard's torc. He thought he was the heir of Bresal the druid. He was right, unfortunately."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Circle-Breaker Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 28,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 5,
+    "Hits": 24
+   },
+   "lore": "A shard of the binding-stone, set in bronze."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Etain's Third-Life Cloak",
    "base": [
     41,
     26
    ],
-   "level": 28,
+   "level": 30,
+   "bonuses": {
+    "Emp": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Scarlet and gold. Aideen wove it for you herself, whichever she chose."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hall-Under-the-Hill Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 30,
+   "bonuses": {
+    "Qui": 10,
+    "Con": 5,
+    "Dex": 5,
+    "Hits": 18,
+    "Power": 3
+   },
+   "lore": "Gold, warm, and humming with music."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Weaver's-Daughter Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 30,
+   "bonuses": {
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 26
+   },
+   "lore": "Brynach weaving, Nessa's best. Undyed, like a herder's."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Waylayer's Mask Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 25,
+   "bonuses": {
+    "Dex": 8,
+    "Qui": 8,
+    "Str": 4,
+    "Hits": 21
+   },
+   "lore": "A siog waylayer's face-mask. It smells of old cheese and older fear."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Road-Ranger's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 25,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 21
+   },
+   "lore": "Issued at Druim Cain to rangers who keep the road open."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tower-Watch Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 27,
    "bonuses": {
     "Con": 9,
-    "Hits": 28,
+    "Hits": 27,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "From Giolladhe's Tower's own watch. Dented on every side."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rage-Wolf Pelt Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 27,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 23
+   },
+   "lore": "A rage wolf's pelt. It still bristles in a fight."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hunting-Horn Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 27,
+   "bonuses": {
+    "Qui": 9,
+    "Con": 4,
+    "Dex": 4,
+    "Hits": 16,
+    "Power": 3
+   },
+   "lore": "A Wild Hunt horn, cracked. It still sounds, very faintly, if you listen."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mikka's Champion Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
+   },
+   "lore": "The host's champion wore this a thousand years. You've been warned: it's heavy."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Host-Champion's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 30,
+   "bonuses": {
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 26
+   },
+   "lore": "Gold and green, with a scarlet thread round the wrist."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Unhorsed Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 30,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
+   },
+   "lore": "A ring Mikka dropped when you put him in the grass."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Forest-Gate Scout's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 33,
+   "bonuses": {
+    "Dex": 11,
+    "Qui": 11,
+    "Str": 6,
+    "Hits": 28
+   },
+   "lore": "Rowan-marked, so the Queen's people won't touch the wearer. Mostly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wraith-Ward Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 33,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 33,
     "Body": 4,
     "Crush": 4,
     "Slash": 4
    },
-   "lore": "Green and brown, the colours of a grove that lives."
+   "lore": "Iron and rowan, against things that come out of the dark."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Border-Stone Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 33,
+   "bonuses": {
+    "Emp": 11,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "A chip off the Forest Gate's stones. It hums near the Cursed Forest."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Empyrean Shard Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 28,
+   "bonuses": {
+    "Int": 9,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "A shard of an empyrean sentinel. Sky-blue, and it whistles in the wind."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cold-Wind Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 28,
+   "bonuses": {
+    "Emp": 9,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "Frost forms on it, even in summer."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Keeper's Sky-Blue Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 31,
+   "bonuses": {
+    "Emp": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 19
+   },
+   "lore": "Rasa's own. Sky-blue, embroidered with clouds."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Freed-Keeper Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 31,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 31,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "From the door of Rasa's hut, where she held out a month."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Empyrean-Song Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 31,
+   "bonuses": {
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 19
+   },
+   "lore": "Rasa hums the empyreans' song into it. It hums it back."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hru's Stone-Guard Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 34,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 6,
+    "Hits": 29
+   },
+   "lore": "From Guardian Hru's own stones. It's heavier than a ring should be."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wind-Freed Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 34,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 34,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "An empyrean bracer, Fuamnach's wind sung out of it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Overseer Niy's Crest",
+   "base": [
+    41,
+    29
+   ],
+   "level": 37,
+   "bonuses": {
+    "Emp": 12,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 22
+   },
+   "lore": "Niy's crest of office. The wind still whistles through it, but it's only wind now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Eye-of-the-Ridge Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 37,
+   "bonuses": {
+    "Int": 12,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 22
+   },
+   "lore": "Niy saw the whole valley from that ridge. So does this ring, a little."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ridge-Wind Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 37,
+   "bonuses": {
+    "Dex": 12,
+    "Qui": 12,
+    "Str": 6,
+    "Hits": 31
+   },
+   "lore": "It flaps in a wind that isn't blowing."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fuamnach's Rowan Rod",
+   "base": [
+    41,
+    24
+   ],
+   "level": 40,
+   "bonuses": {
+    "Emp": 13,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 24
+   },
+   "lore": "The rod Fuamnach struck Etain with, a thousand years ago. Rowan. Rasa says the rowan was always meant to be on our side."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Eye-of-the-Wind Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 40,
+   "bonuses": {
+    "Int": 13,
+    "Emp": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 24
+   },
+   "lore": "Grey as a storm, and very still."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Jealous Wife's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 40,
+   "bonuses": {
+    "Qui": 13,
+    "Con": 7,
+    "Dex": 7,
+    "Hits": 24,
+    "Power": 4
+   },
+   "lore": "Gold, with a scarlet stone that never stops moving."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Stilled-Wind Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 40,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 40,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "The wind can't get past it."
   }
  ]
 }

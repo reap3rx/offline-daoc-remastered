@@ -66,6 +66,8 @@ func _ready() -> void:
 	# the guild window (owner 2026-10-17, a roster window beyond 1.65 - GuildWindow): Shift+G, free in every preset
 	actions.append({"id": "show_guild", "label": "Guild Window", "category": "Show",
 			"presets": {"rpg": ["Shift+G"], "fps": ["Shift+G"], "mmo": ["Shift+G"]}})
+	actions.append({"id": "show_reputation", "label": "Reputation Window", "category": "Show",
+			"presets": {"rpg": ["Shift+L"], "fps": ["Shift+L"], "mmo": ["Shift+L"]}})
 	# Action Combat (owner 2026-10-26, ActionCombatMode): its toggle and buttons. Q / E share the strafe keys on
 	# purpose - in action combat A / D strafe and Q / E are free; R (Reply) is taken only while it is on.
 	for ac in [["action_toggle", "Action Combat On / Off", ["F9"]],
@@ -76,6 +78,7 @@ func _ready() -> void:
 			["ac_parry_only", "Action: Parry (not block, with a shield)", ["Shift+Right Mouse"]],
 			["ac_position", "Action: Position Style", ["Q"]],
 			["ac_reactive", "Action: Reactive Style", ["E"]], ["ac_chain", "Action: Chain Style", ["R"]],
+			["ac_style", "Action: Style (tap: whichever is lit; hold: your sweep) - the controller's X", ["Mouse5"]],
 			["ac_dodge", "Action: Dodge", ["Middle Mouse"]], ["ac_cursor", "Action: Show Cursor (hold)", ["LAlt"]],
 			["ac_interact", "Action: Interact (doors, NPCs, loot)", ["F"]],
 			["ac_lock", "Action: Lock On (tap; hold + mouse to switch)", ["Mouse4"]],
@@ -202,6 +205,7 @@ func use_preset(name: String) -> void:
 ## Action Combat's buttons for melee and for the bow never work at once: one of each may share a key (Attack and
 ## Bow Shot on the left mouse ...) without taking it from the other (owner 2026-10-26).
 const CONTEXT := {"ac_attack": "melee", "ac_parry": "melee", "ac_parry_only": "melee", "ac_position": "melee", "ac_reactive": "melee",
+		"ac_style": "melee",
 		"ac_chain": "melee", "ac_shot": "ranged", "ac_crit_shot": "ranged", "poisons_swap": "melee",
 		"arrows_next": "ranged", "arrows_prev": "ranged"}
 

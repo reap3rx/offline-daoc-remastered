@@ -1,0 +1,184 @@
+{
+ "zone": 207,
+ "region": 200,
+ "realm": 3,
+ "prefix": "rep207",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fian Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 3,
+    "Hits": 17
+   },
+   "lore": "A plain silver ring with a running hound. Every fennid of Druim Ligen wears one."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Border-Watch Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 3,
+    "Hits": 17
+   },
+   "lore": "The Fianna's watch-belt, with a horn-loop and a whetstone pouch."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fennid's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
+   },
+   "lore": "Twisted bronze, given when a fennid has stood a hundred nights at the gate."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gate-Watch Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 30,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 30,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Scarred iron. The gate-watch wear them on the shield arm; the demons go for that one first."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Rigfennid",
+   "base": [
+    41,
+    26
+   ],
+   "level": 40,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 40,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Green and silver, the mantle of a captain of a fian. Fiachra has one. Now you do."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rowan-Friend's Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 20,
+   "bonuses": {
+    "Qui": 7,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 12,
+    "Power": 2
+   },
+   "lore": "Three rowan berries in amber. The groves know whoever carries it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Grove-Walker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 20,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 3,
+    "Hits": 17
+   },
+   "lore": "Soft leather, dyed with rowan. You walk quieter in it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Keeper's Berry Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Emp": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Rowan wood, turned and bound with bronze. A Keeper of the Groves wears it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Withy-Woven Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 30,
+   "bonuses": {
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Woven from Irewood withies the Order took back from the Azure carts. Better use for them."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Rowan",
+   "base": [
+    41,
+    26
+   ],
+   "level": 40,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 40,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Deep green, berried red at the hem. Only a Bandrui or Drui of the Rowan wears it."
+  }
+ ]
+}

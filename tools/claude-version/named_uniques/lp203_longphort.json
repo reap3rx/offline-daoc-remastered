@@ -1,0 +1,132 @@
+{
+ "zone": 203,
+ "region": 200,
+ "realm": 3,
+ "prefix": "lp203",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cloak of the Cliff Beacon",
+   "base": [
+    41,
+    26
+   ],
+   "level": 34,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 34,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Sea-grey, with a Hibernian knot in beacon-red. Given to those who burned the longphort."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Raven-Shield Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 34,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 6,
+    "Hits": 29
+   },
+   "lore": "Bronze, cut from the rim of a Norse shield. The raven's been filed off."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Watch-Ring of Moher",
+   "base": [
+    41,
+    35
+   ],
+   "level": 34,
+   "bonuses": {
+    "Dex": 11,
+    "Qui": 11,
+    "Str": 6,
+    "Hits": 29
+   },
+   "lore": "The Watch's ring: the tower, the beacon and the sea."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shingle-Runner's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 34,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 34,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Hard leather, scuffed from running across wet stones under arrows."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Jarl Hrafn's Raven Shield-Boss",
+   "base": [
+    41,
+    24
+   ],
+   "level": 35,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 30
+   },
+   "lore": "The iron boss of Jarl Hrafn's shield. Still dented where it stopped your blade."
+  }
+ ],
+ "camp": {
+  "cloak": "lp203_cloak_of_the_cliff_beacon",
+  "emblem": 44456,
+  "draughts": [
+   [
+    "Strong_Draught_of_Healing",
+    "lp203_cliff_top_draught",
+    "Cliff-Top Draught",
+    "Brewed in Tir Urphost and carried down the cliff. Salty."
+   ],
+   [
+    "Strong_Draught_of_Power",
+    "lp203_sea_fog_tonic",
+    "Sea-Fog Tonic",
+    "Clears the head of fog. Most of it."
+   ],
+   [
+    "Strong_Draught_of_Endurance",
+    "lp203_beacon_oil_cordial",
+    "Beacon-Oil Cordial",
+    "Don't ask what's in it. It keeps you going all night, like the beacon."
+   ],
+   [
+    "Superior_Elixir_of_Instant_Healing",
+    "lp203_watchman_s_elixir",
+    "Watchman's Elixir",
+    "For when the longships come out of the fog right on top of you."
+   ],
+   [
+    "CombinedRegens_Draught",
+    "lp203_urphost_mead",
+    "Urphost Mead",
+    "Heather mead from the plateau. Everything comes back a little faster after a cup."
+   ]
+  ]
+ }
+}

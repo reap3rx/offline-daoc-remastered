@@ -12,6 +12,7 @@ namespace DOL.GS
         public int GoldGranted { get; init; }
         public long MoneyGranted { get; init; }
         public int ItemCount { get; init; }
+        public int MarksGranted { get; init; }
     }
 
     public static class BountyRewardService
@@ -56,7 +57,61 @@ namespace DOL.GS
             long gold = assignedLevel == 50 ? Money.GetMoney(0, 0, 100, 0, 0) : 0;
             long xp = assignedLevel == 50 ? 0 : CalculateExperienceReward(
                 assignedLevel, rerolled, ServerProperties.Properties.XP_RATE, difficulty);
+            return Deliver(player, items, gold, xp, assignedLevel == 50 ? 100 : 0);
+        }
 
+        /// <summary>
+        /// Pays a zone bounty at the player's level now, so it can never be outleveled (owner 2026-11-21: "if you decide
+        /// to do a level 8 quest at level 34, you still get level appropriate rewards"): experience bulbs at that level
+        /// and gear a level or a few above it, by the bounty's size; at level 50, gold instead of experience, and a large
+        /// group's hunt pays exceptional gear. Every claim also pays Marks of Valor.
+        /// </summary>
+        public static BountyRewardResult GrantZone(GamePlayer player, BountyDifficulty size, bool rerolled, bool honoured = false)
+        {
+            if (player == null)
+                return new() { Reason = "Invalid bounty reward." };
+
+            byte level = (byte)Math.Clamp((int)player.Level, 1, 50);
+            int itemCount = Util.Random(1, 3) + (honoured ? 1 : 0);   // Honoured with the faction (scripts/reputation): one more
+            var items = new List<DbInventoryItem>(itemCount);
+            var playerClass = (eCharacterClass)player.CharacterClass.ID;
+            for (int i = 0; i < itemCount; i++)
+            {
+                GeneratedUniqueItem template = level == 50 && size == BountyDifficulty.VeryHard
+                    ? GenerateEpicItem(player.Realm, playerClass)
+                    : GenerateLevelingItem(player.Realm, playerClass, BountyDifficultyRules.GearLevel(level, size));
+                if (template == null)
+                    return new() { Reason = "No suitable equipment reward could be generated. Please try again." };
+                DbInventoryItem item = GameInventoryItem.Create<DbItemUnique>(template);
+                item.IsROG = true;
+                items.Add(item);
+            }
+
+            int goldCount = level == 50 ? ZoneBounties.CapGold(size, rerolled) : 0;
+            long xp = level == 50 ? 0 : CalculateExperienceReward(level, rerolled, ServerProperties.Properties.XP_RATE, size);
+            BountyRewardResult result = Deliver(player, items, Money.GetMoney(0, 0, goldCount, 0, 0), xp, goldCount);
+            if (result.Granted)
+            {
+                int marks = ZoneBounties.Marks(size, rerolled);
+                if (honoured)
+                    marks = (int)Math.Ceiling(marks * 1.5);
+                PlayerWallet.Add(player, "event_mark", marks);
+                result = new()
+                {
+                    Granted = true,
+                    ExperienceGranted = result.ExperienceGranted,
+                    GoldGranted = result.GoldGranted,
+                    MoneyGranted = result.MoneyGranted,
+                    ItemCount = result.ItemCount,
+                    MarksGranted = marks
+                };
+            }
+            return result;
+        }
+
+        private static BountyRewardResult Deliver(GamePlayer player, List<DbInventoryItem> items, long gold, long xp, int goldCount)
+        {
+            int itemCount = items.Count;
             // Reserve actual backpack slots before paying XP or gold. AddItem can
             // still reject an item, in which case restore the inventory and leave
             // the bounty unfinished for a safe retry.
@@ -97,7 +152,7 @@ namespace DOL.GS
             {
                 Granted = true,
                 ExperienceGranted = player.Experience - experienceBefore,
-                GoldGranted = assignedLevel == 50 ? 100 : 0,
+                GoldGranted = goldCount,
                 MoneyGranted = gold,
                 ItemCount = itemCount
             };

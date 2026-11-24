@@ -1,0 +1,7 @@
+{
+  "realms": {
+    "1": {"name": "Albion", "titles": ["Defender of Albion", "Hero of Albion", "Legend of Albion"]},
+    "2": {"name": "Midgard", "titles": ["Defender of Midgard", "Hero of Midgard", "Legend of Midgard"]},
+    "3": {"name": "Hibernia", "titles": ["Defender of Hibernia", "Hero of Hibernia", "Legend of Hibernia"]}
+  }
+}

@@ -1,581 +1,2047 @@
 {
-  "zone": 216,
-  "region": 200,
-  "name": "Sheeroe Hills",
-  "lore": "The Sheeroe Hills, where the glimmer host walks and the azure order hunts whatever it calls unclean.",
-  "chains": [
+ "zone": 216,
+ "region": 200,
+ "name": "Sheeroe Hills",
+ "realm": 3,
+ "lore": "The Sheeroe Hills are the Glimmer's own country: a maze of valleys where Cuuldurach the Glimmer King lies in his ring of stones, and every light in the south is his. The Order of the Azure lost the hills to him and fights on from the north. Only the Southern Muster - the Sentinels, Aine's Circle, the Clann and the Keeners together - can push in, valley by valley, to his son's hollow.",
+ "chains": [
+  {
+   "id": "sh_cp1_assault",
+   "title": "The Muster at The Glimmering Upland",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 6,
+   "hint": "Captain Brogan of Ceannai is forming the Muster up for the Glimmering Upland.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60165769,
+    "model": 328,
+    "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+    "guild": "the Southern Muster",
+    "name": "Captain Brogan of Ceannai",
+    "level": 50,
+    "pos": [
+     170,
+     860,
+     88.8
+    ],
+    "health_mult": 5,
+    "greet": "The Glimmering Upland, north of the camp. The first of the Glimmer's strongholds. Six at least - bots and all - and say [forward].",
+    "accept": "forward",
+    "reply": "Up onto the upland! Everything that shines, put it out!",
+    "busy": "Not yet. The Muster is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "Hold here! The Muster holds the Glimmering Upland - and the next thirty minutes are ours to use.",
+    "regret": "Fall back to the line! We'll go again."
+   },
+   "guards": [
     {
-      "id": "sheeroe_hills_glimmer_wardens",
-      "title": "The Glimmer Wardens",
-      "levels": [39, 46],
-      "hint": "A cold glimmer burns in the north-west...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Glimmer Gate",
-          "objective": "Clear the glimmer gate",
-          "announce": "The glimmer wardens are holding a gate open for the rest of the host. Close it.",
-          "center": [336, 331, 92.5],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 44038,
-              "name": "glimmer ward",
-              "level": [42, 46]
-            },
-            {
-              "template": 44011,
-              "name": "glimmer ghoul",
-              "level": [39, 43]
-            }
-          ],
-          "success": "You have cleared the glimmer gate. Glimmer Warden Faelan comes out to fight.",
-          "fail": "They hold the glimmer gate. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Glimmer Warden Faelan",
-          "objective": "Defeat Glimmer Warden Faelan",
-          "announce": "Glimmer Warden Faelan stands at the glimmer gate. Bring friends.",
-          "center": [336, 331, 92.5],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 44038,
-            "name": "Glimmer Warden Faelan",
-            "level": 48,
-            "size": 65,
-            "pos": [336, 331, 92.5],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 44038,
-                "name": "glimmer ward",
-                "level": [42, 46]
-              }
-            ]
-          },
-          "success": "Glimmer Warden Faelan falls. The way is safe again.",
-          "fail": "Glimmer Warden Faelan slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu216_glimmer_warden_faelan_s_belt", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Glimmer Wards Hold the Road",
-          "objective": "Drive the glimmer wards off the road",
-          "announce": "With The Glimmer Wardens lost, the glimmer wards have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [496, 496, 90.8],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 44038,
-              "name": "glimmer ward",
-              "level": [42, 46]
-            },
-            {
-              "template": 44011,
-              "name": "glimmer ghoul",
-              "level": [39, 43]
-            }
-          ],
-          "boss": {
-            "template": 44038,
-            "name": "Glimmer ward warleader",
-            "level": 47,
-            "pos": [496, 496, 90.8],
-            "health_mult": 2
-          },
-          "success": "The glimmer wards are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cormac has come out to set the road right. The glimmer wards are coming back for it!",
-          "center": [496, 496, 90.8],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cormac",
-            "level": 46,
-            "pos": [496, 496, 90.8],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [411, 496, 93.3],
-              [437, 435, 92.1],
-              [499, 411, 90.1]
-            ],
-            "mobs": [
-              {
-                "template": 44038,
-                "name": "glimmer ward",
-                "level": [42, 46]
-              },
-              {
-                "template": 44011,
-                "name": "glimmer ghoul",
-                "level": [39, 43]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The glimmer wards break and scatter. The road is open again.",
-          "fail": "Roadwarden Cormac falls, and the glimmer wards take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "sheeroe_hills_azure_crusade",
-      "title": "The Azure Crusade",
-      "levels": [45, 52],
-      "hint": "The azure order is on the march...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Riona the Seer",
-          "objective": "Protect Riona the Seer, who is reading the omens at her stone",
-          "announce": "The azure order has named Riona the seer unclean. Hold them off while she finishes her reading.",
-          "center": [1046, 449, 119.1],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Riona the Seer",
-            "template": 60161797,
-            "level": 52,
-            "model": 388,
-            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
-            "health_mult": 10,
-            "pos": [1046, 449, 119.1]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [947, 475, 164.9],
-              [976, 401, 117.5],
-              [1031, 365, 114.6]
-            ],
-            "mobs": [
-              {
-                "template": 44008,
-                "name": "azure cleanser",
-                "level": [45, 49]
-              },
-              {
-                "template": 44007,
-                "name": "azure banisher",
-                "level": [48, 52]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Riona the Seer. \"They came from over there - let's finish this.\"",
-          "fail": "Riona the Seer falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Seer's Stone",
-          "objective": "Clear the seer's stone",
-          "announce": "They came from the seer's stone. Follow them back and clear it out.",
-          "center": [838, 307, 123.9],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 44008,
-              "name": "azure cleanser",
-              "level": [45, 49]
-            },
-            {
-              "template": 44007,
-              "name": "azure banisher",
-              "level": [48, 52]
-            }
-          ],
-          "success": "You have cleared the seer's stone. The Azure Grand Inquisitor comes out to fight.",
-          "fail": "They hold the seer's stone. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Azure Grand Inquisitor",
-          "objective": "Defeat the Azure Grand Inquisitor",
-          "announce": "The Azure Grand Inquisitor stands at the seer's stone. Bring friends.",
-          "center": [838, 307, 123.9],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 44006,
-            "name": "The Azure Grand Inquisitor",
-            "level": 54,
-            "size": 65,
-            "pos": [838, 307, 123.9],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 44008,
-                "name": "azure cleanser",
-                "level": [45, 49]
-              }
-            ]
-          },
-          "success": "The Azure Grand Inquisitor falls. The way is safe again.",
-          "fail": "The Azure Grand Inquisitor slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu216_azure_grand_inquisitor_s_girdle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Azure Cleansers Hold the Road",
-          "objective": "Drive the azure cleansers off the road",
-          "announce": "With The Azure Crusade lost, the azure cleansers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [998, 142, 121.8],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 44008,
-              "name": "azure cleanser",
-              "level": [45, 49]
-            },
-            {
-              "template": 44007,
-              "name": "azure banisher",
-              "level": [48, 52]
-            }
-          ],
-          "boss": {
-            "template": 44008,
-            "name": "Azure cleanser warleader",
-            "level": 53,
-            "pos": [998, 142, 121.8],
-            "health_mult": 2
-          },
-          "success": "The azure cleansers are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cormac has come out to set the road right. The azure cleansers are coming back for it!",
-          "center": [998, 142, 121.8],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cormac",
-            "level": 52,
-            "pos": [998, 142, 121.8],
-            "health_mult": 10,
-            "template": 60161797,
-            "model": 388,
-            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1001, 227, 117.7],
-              [939, 203, 121.0],
-              [913, 142, 126.3]
-            ],
-            "mobs": [
-              {
-                "template": 44008,
-                "name": "azure cleanser",
-                "level": [45, 49]
-              },
-              {
-                "template": 44007,
-                "name": "azure banisher",
-                "level": [48, 52]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The azure cleansers break and scatter. The road is open again.",
-          "fail": "Roadwarden Cormac falls, and the azure cleansers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "sheeroe_hills_hill_beacon",
-      "title": "The Hill Beacon",
-      "levels": [48, 55],
-      "hint": "The beacon on the hill has gone dark...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Druid Saoirse",
-          "objective": "Protect Druid Saoirse, who is relighting the hill beacon",
-          "announce": "Druid Saoirse is relighting the beacon the glimmer put out, and they are coming back for it. Keep them off her.",
-          "center": [1407, 835, 92.6],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Druid Saoirse",
-            "template": 60161797,
-            "level": 55,
-            "model": 388,
-            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
-            "health_mult": 10,
-            "pos": [1407, 835, 92.6]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1356, 767, 82.9],
-              [1420, 751, 92.3],
-              [1466, 791, 91.2]
-            ],
-            "mobs": [
-              {
-                "template": 44037,
-                "name": "glimmer striker",
-                "level": [51, 55]
-              },
-              {
-                "template": 44030,
-                "name": "glimmer griever",
-                "level": [48, 52]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Druid Saoirse. \"They came from over there - let's finish this.\"",
-          "fail": "Druid Saoirse falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Glimmer Camp",
-          "objective": "Clear the glimmer camp",
-          "announce": "They came from the glimmer camp. Follow them back and clear it out.",
-          "center": [1448, 570, 88.5],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 44037,
-              "name": "glimmer striker",
-              "level": [51, 55]
-            },
-            {
-              "template": 44030,
-              "name": "glimmer griever",
-              "level": [48, 52]
-            }
-          ],
-          "success": "You have cleared the glimmer camp. The Glimmer Warlord comes out to fight.",
-          "fail": "They hold the glimmer camp. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Glimmer Warlord",
-          "objective": "Defeat the Glimmer Warlord",
-          "announce": "The Glimmer Warlord stands at the glimmer camp. Bring friends.",
-          "center": [1448, 570, 88.5],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 44039,
-            "name": "The Glimmer Warlord",
-            "level": 57,
-            "size": 65,
-            "pos": [1448, 570, 88.5],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 44037,
-                "name": "glimmer striker",
-                "level": [51, 55]
-              }
-            ]
-          },
-          "success": "The Glimmer Warlord falls. The way is safe again.",
-          "fail": "The Glimmer Warlord slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu216_glimmer_warlord_s_girdle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Glimmer Strikers Hold the Old Road",
-          "objective": "Drive the glimmer strikers off the old road",
-          "announce": "With The Hill Beacon lost, the glimmer strikers have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1440, 310, 119.8],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 44037,
-              "name": "glimmer striker",
-              "level": [51, 55]
-            },
-            {
-              "template": 44030,
-              "name": "glimmer griever",
-              "level": [48, 52]
-            }
-          ],
-          "boss": {
-            "template": 44037,
-            "name": "Glimmer striker warleader",
-            "level": 56,
-            "pos": [1440, 310, 119.8],
-            "health_mult": 2
-          },
-          "success": "The glimmer strikers are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Ruadh has come out to set the old road right. The glimmer strikers are coming back for it!",
-          "center": [1440, 310, 119.8],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Ruadh",
-            "level": 55,
-            "pos": [1440, 310, 119.8],
-            "health_mult": 10,
-            "template": 60161797,
-            "model": 388,
-            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1503, 368, 110.1],
-              [1443, 395, 103.4],
-              [1381, 371, 116.7]
-            ],
-            "mobs": [
-              {
-                "template": 44037,
-                "name": "glimmer striker",
-                "level": [51, 55]
-              },
-              {
-                "template": 44030,
-                "name": "glimmer griever",
-                "level": [48, 52]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The glimmer strikers break and scatter. The old road is open again.",
-          "fail": "Roadwarden Ruadh falls, and the glimmer strikers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "template": 60165769,
+     "model": 328,
+     "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+     "guild": "the Southern Muster",
+     "name": "spear of the Muster",
+     "level": 48,
+     "count": 3
     }
-  ]
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break The Glimmering Upland",
+     "objective": "Break the garrison at the Glimmering Upland",
+     "announce": "The Muster is at the Glimmering Upland! Break the garrison!",
+     "center": [
+      250,
+      250,
+      88.6
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 24,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60161408,
+       "name": "glimmer ghoul",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 60161424,
+       "name": "glimmer ward",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 60161402,
+       "name": "glimmer ardent",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 60161430,
+       "name": "glimmerling",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "the Glimmer"
+      }
+     ],
+     "success": "The garrison breaks.",
+     "fail": "The Muster is thrown back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 140,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Lightwarden Eochaid",
+     "objective": "Defeat Lightwarden Eochaid",
+     "announce": "Lightwarden Eochaid turns, blazing: 'The King sees you. He is not afraid.'",
+     "center": [
+      250,
+      250,
+      88.6
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161425,
+      "name": "Lightwarden Eochaid",
+      "level": 51,
+      "size": 65,
+      "health_mult": 4,
+      "guild": "Lord of the Glimmer"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60161424,
+        "name": "glimmer ward",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161408,
+        "name": "glimmer ghoul",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Glimmer"
+       }
+      ]
+     },
+     "success": "Lightwarden Eochaid falls. The Muster plants its banner at the Glimmering Upland.",
+     "fail": "The Muster is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 240,
+      "tokens": 16,
+      "items": [
+       {
+        "id": "sh216_upland_lord_s_glass_ring",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sh_cp2_assault",
+   "title": "The Muster at The Azure March",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 6,
+   "hint": "Captain Ronan of the Clann is forming the Muster up for the Azure March.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60165769,
+    "model": 328,
+    "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+    "guild": "the Southern Muster",
+    "name": "Captain Ronan of the Clann",
+    "level": 50,
+    "pos": [
+     330,
+     300,
+     93.0
+    ],
+    "health_mult": 5,
+    "greet": "The Azure March. The Order's last ground - and they'll fight us as soon as the Glimmer. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "To the march! Put out their pyres - then their Inquisitor!",
+    "busy": "Not yet. The Muster is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "Hold here! The Muster holds the Azure March - and the next thirty minutes are ours to use.",
+    "regret": "Fall back to the line! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60165769,
+     "model": 328,
+     "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+     "guild": "the Southern Muster",
+     "name": "spear of the Muster",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break The Azure March",
+     "objective": "Break the garrison at the Azure March",
+     "announce": "The Muster is at the Azure March! Break the garrison!",
+     "center": [
+      840,
+      300,
+      123.6
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 28,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60158173,
+       "name": "azure cleanser",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Order of the Azure"
+      },
+      {
+       "template": 60158173,
+       "name": "azure cleanser",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Order of the Azure"
+      },
+      {
+       "template": 60158171,
+       "name": "azure avenger",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Order of the Azure"
+      },
+      {
+       "template": 60158172,
+       "name": "azure banisher",
+       "level": [
+        49,
+        51
+       ],
+       "guild": "the Order of the Azure"
+      }
+     ],
+     "success": "The garrison breaks.",
+     "fail": "The Muster is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "wards",
+     "name": "The Azure Pyres",
+     "objective": "Hold the three pyres at once while the Muster puts them out",
+     "announce": "The Azure have three great pyres burning on the march - they mean to burn the whole hillside before the Glimmer has it. Stand at all three at once!",
+     "wards": [
+      [
+       800,
+       260,
+       123.7
+      ],
+      [
+       880,
+       280,
+       115.2
+      ],
+      [
+       840,
+       350,
+       121.0
+      ]
+     ],
+     "ward_names": [
+      "the north pyre",
+      "the east pyre",
+      "the south pyre"
+     ],
+     "ward_radius": 22,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 60158173,
+       "name": "azure cleanser",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Order of the Azure"
+      },
+      {
+       "template": 60158172,
+       "name": "azure banisher",
+       "level": [
+        49,
+        51
+       ],
+       "guild": "the Order of the Azure"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "pennant of the Muster",
+     "center": [
+      840,
+      300,
+      123.6
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the Muster falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "The Azure Grand Inquisitor",
+     "objective": "Defeat The Azure Grand Inquisitor",
+     "announce": "The Azure Grand Inquisitor: 'Lantern-lovers. You'll burn with the rest.'",
+     "center": [
+      840,
+      300,
+      123.6
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60158178,
+      "name": "The Azure Grand Inquisitor",
+      "level": 52,
+      "size": 65,
+      "health_mult": 4.5,
+      "guild": "of the Order of the Azure"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60158171,
+        "name": "azure avenger",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Order of the Azure"
+       },
+       {
+        "template": 60158172,
+        "name": "azure banisher",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Order of the Azure"
+       }
+      ]
+     },
+     "success": "The Grand Inquisitor falls among his pyres. A young Azure captain - Ailill - throws down his torch: 'He'd have burned the hills with the people in them. The Order is wrong. But the Glimmer King is still the enemy. When you go for the dragon, my host goes with you.'",
+     "fail": "The Muster is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 26,
+      "copper_per_level": 280,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "sh216_inquisitor_s_blue_torc",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sh_cp3_assault",
+   "title": "The Muster at The Middle Valleys",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 6,
+   "hint": "Captain Ruairc is forming the Muster up for the Middle Valleys.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60165769,
+    "model": 328,
+    "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+    "guild": "the Southern Muster",
+    "name": "Captain Ruairc",
+    "level": 50,
+    "pos": [
+     880,
+     360,
+     119.6
+    ],
+    "health_mult": 5,
+    "greet": "The Middle Valleys - the Glimmer's main host. Keener Brid comes with us to keen them dark. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Into the valleys! Keep Brid alive - her keen is the only dark we've got!",
+    "busy": "Not yet. The Muster is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "Hold here! The Muster holds the Middle Valleys - and the next thirty minutes are ours to use.",
+    "regret": "Fall back to the line! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60165769,
+     "model": 328,
+     "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+     "guild": "the Southern Muster",
+     "name": "spear of the Muster",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break The Middle Valleys",
+     "objective": "Break the garrison at the Middle Valleys",
+     "announce": "The Muster is at the Middle Valleys! Break the garrison!",
+     "center": [
+      1000,
+      780,
+      117.7
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 30,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60161409,
+       "name": "glimmer griever",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 60161409,
+       "name": "glimmer griever",
+       "level": [
+        48,
+        50
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 60161421,
+       "name": "glimmer striker",
+       "level": [
+        49,
+        51
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 60161425,
+       "name": "glimmer warshade",
+       "level": [
+        49,
+        51
+       ],
+       "guild": "the Glimmer"
+      }
+     ],
+     "success": "The garrison breaks.",
+     "fail": "The Muster is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 16,
+      "copper_per_level": 140,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "s2",
+     "type": "defend",
+     "name": "The Dark Lantern",
+     "objective": "Keep Keener Brid alive while she keens the valleys dark",
+     "announce": "Keener Brid has come up from Cullen to keen the valleys dark, the way she did the Gemstone Tower. The Glimmer is coming for her!",
+     "duration_s": 210,
+     "protect": {
+      "template": 60165769,
+      "model": 365,
+      "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+      "guild": "the Southern Muster",
+      "name": "Keener Brid",
+      "level": 50,
+      "pos": [
+       1000,
+       780,
+       117.7
+      ],
+      "health_mult": 6
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 4,
+      "from": [
+       [
+        1080,
+        800,
+        94.2
+       ],
+       [
+        940,
+        720,
+        170.1
+       ],
+       [
+        1060,
+        700,
+        142.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161409,
+        "name": "glimmer griever",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161421,
+        "name": "glimmer striker",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161425,
+        "name": "glimmer warshade",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       }
+      ]
+     },
+     "center": [
+      1000,
+      780,
+      117.7
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the Muster falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 16,
+      "copper_per_level": 140,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Warlord of the Valleys",
+     "objective": "Defeat Warlord of the Valleys",
+     "announce": "The Warlord of the Valleys: 'Brighter than you. Always brighter.'",
+     "center": [
+      1000,
+      780,
+      117.7
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161425,
+      "name": "Warlord of the Valleys",
+      "level": 52,
+      "size": 75,
+      "health_mult": 5,
+      "guild": "Lord of the Glimmer"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 4,
+      "mobs": [
+       {
+        "template": 60161421,
+        "name": "glimmer striker",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161425,
+        "name": "glimmer warshade",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       }
+      ]
+     },
+     "success": "Warlord of the Valleys falls. The Muster plants its banner at the Middle Valleys.",
+     "fail": "The Muster is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 320,
+      "tokens": 24,
+      "items": [
+       {
+        "id": "sh216_valley_warlord_s_bracer",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sh_cp4_assault",
+   "title": "The Muster at The East Valley",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 8,
+   "hint": "Keener-Captain Muadhnait is forming the Muster up for the East Valley.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60165769,
+    "model": 328,
+    "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+    "guild": "the Southern Muster",
+    "name": "Keener-Captain Muadhnait",
+    "level": 50,
+    "pos": [
+     1060,
+     820,
+     98.3
+    ],
+    "health_mult": 5,
+    "greet": "The East Valley, the King's own guard. Past it, the way to the Prince's Hollow. Eight at least, and say [forward].",
+    "accept": "forward",
+    "reply": "The East Valley! Hold the wards, open the way, and bring down the King's Champion!",
+    "busy": "Not yet. The Muster is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "Hold here! The Muster holds the East Valley - and the next thirty minutes are ours to use.",
+    "regret": "Fall back to the line! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60165769,
+     "model": 328,
+     "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+     "guild": "the Southern Muster",
+     "name": "spear of the Muster",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break The East Valley",
+     "objective": "Break the garrison at the East Valley",
+     "announce": "The Muster is at the East Valley! Break the garrison!",
+     "center": [
+      1420,
+      1000,
+      89.3
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 32,
+     "alive": 9,
+     "mobs": [
+      {
+       "template": 621,
+       "name": "glimmer deathwatcher",
+       "level": [
+        49,
+        51
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 622,
+       "name": "glimmer geist",
+       "level": [
+        49,
+        51
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 60161412,
+       "name": "glimmer knight",
+       "level": [
+        49,
+        51
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 60161412,
+       "name": "glimmer knight",
+       "level": [
+        49,
+        51
+       ],
+       "guild": "the Glimmer"
+      }
+     ],
+     "success": "The garrison breaks.",
+     "fail": "The Muster is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 140,
+      "tokens": 14
+     }
+    },
+    {
+     "id": "s2",
+     "type": "wards",
+     "name": "The King's Gate",
+     "objective": "Hold the four light-wards at once",
+     "announce": "The way south to the hollow is shut with light - hold all four wards at once and it opens!",
+     "wards": [
+      [
+       1400,
+       960,
+       122.6
+      ],
+      [
+       1440,
+       960,
+       91.4
+      ],
+      [
+       1400,
+       1040,
+       120.3
+      ],
+      [
+       1440,
+       1040,
+       87.0
+      ]
+     ],
+     "ward_names": [
+      "the north-west ward",
+      "the north-east ward",
+      "the south-west ward",
+      "the south-east ward"
+     ],
+     "ward_radius": 22,
+     "hold_s": 35,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 60161412,
+       "name": "glimmer knight",
+       "level": [
+        49,
+        51
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 622,
+       "name": "glimmer geist",
+       "level": [
+        49,
+        51
+       ],
+       "guild": "the Glimmer"
+      }
+     ],
+     "reinforce_s": 35,
+     "flag": 466,
+     "flag_name": "pennant of the Muster",
+     "center": [
+      1420,
+      1000,
+      89.3
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the Muster falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 140,
+      "tokens": 14
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "The King's Champion",
+     "objective": "Defeat The King's Champion",
+     "announce": "The King's Champion lowers a blade of light: 'None pass to the Prince.'",
+     "center": [
+      1420,
+      1000,
+      89.3
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161412,
+      "name": "The King's Champion",
+      "level": 52,
+      "size": 75,
+      "health_mult": 5.5,
+      "guild": "Lord of the Glimmer"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 4,
+      "mobs": [
+       {
+        "template": 60161412,
+        "name": "glimmer knight",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 621,
+        "name": "glimmer deathwatcher",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       }
+      ]
+     },
+     "success": "The King's Champion falls. The Muster plants its banner at the East Valley.",
+     "fail": "The Muster is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 34,
+      "copper_per_level": 360,
+      "tokens": 28,
+      "items": [
+       {
+        "id": "sh216_king_s_guard_belt",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sh_cp1_counter",
+   "title": "The Glimmer Strikes Back at The Glimmering Upland",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "The Glimmer is coming back for the Glimmering Upland!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold The Glimmering Upland",
+     "objective": "Keep the Muster's captain alive at the Glimmering Upland",
+     "announce": "The Glimmer is coming back for the Glimmering Upland! The Muster will hold as long as it can - help them, or it falls!",
+     "center": [
+      250,
+      250,
+      88.6
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60165769,
+      "model": 328,
+      "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+      "guild": "the Southern Muster",
+      "name": "Banner-Captain of the Muster",
+      "level": 50,
+      "pos": [
+       250,
+       250,
+       88.6
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        330,
+        320,
+        93.3
+       ],
+       [
+        200,
+        330,
+        91.5
+       ],
+       [
+        300,
+        180,
+        79.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161408,
+        "name": "glimmer ghoul",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161424,
+        "name": "glimmer ward",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161402,
+        "name": "glimmer ardent",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Glimmer"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The Muster holds.",
+     "success": "The Glimmer breaks against the Muster's line. The Glimmering Upland holds - and the clock starts again.",
+     "fail": "The banner falls. The Glimmer has the Glimmering Upland again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 180,
+      "tokens": 12
+     }
+    }
+   ]
+  },
+  {
+   "id": "sh_cp2_counter",
+   "title": "The Glimmer Strikes Back at The Azure March",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "The Glimmer is coming back for the Azure March!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold The Azure March",
+     "objective": "Keep the Muster's captain alive at the Azure March",
+     "announce": "The Glimmer is coming back for the Azure March! The Muster will hold as long as it can - help them, or it falls!",
+     "center": [
+      840,
+      300,
+      123.6
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60165769,
+      "model": 328,
+      "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+      "guild": "the Southern Muster",
+      "name": "Banner-Captain of the Muster",
+      "level": 50,
+      "pos": [
+       840,
+       300,
+       123.6
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        760,
+        260,
+        120.9
+       ],
+       [
+        920,
+        330,
+        119.5
+       ],
+       [
+        840,
+        220,
+        113.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161409,
+        "name": "glimmer griever",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161421,
+        "name": "glimmer striker",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161402,
+        "name": "glimmer ardent",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Glimmer"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The Muster holds.",
+     "success": "The Glimmer breaks against the Muster's line. The Azure March holds - and the clock starts again.",
+     "fail": "The banner falls. The Glimmer has the Azure March again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "sh_cp3_counter",
+   "title": "The Glimmer Strikes Back at The Middle Valleys",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "The Glimmer is coming back for the Middle Valleys!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold The Middle Valleys",
+     "objective": "Keep the Muster's captain alive at the Middle Valleys",
+     "announce": "The Glimmer is coming back for the Middle Valleys! The Muster will hold as long as it can - help them, or it falls!",
+     "center": [
+      1000,
+      780,
+      117.7
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60165769,
+      "model": 328,
+      "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+      "guild": "the Southern Muster",
+      "name": "Banner-Captain of the Muster",
+      "level": 50,
+      "pos": [
+       1000,
+       780,
+       117.7
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 5,
+      "from": [
+       [
+        1080,
+        800,
+        94.2
+       ],
+       [
+        940,
+        720,
+        170.1
+       ],
+       [
+        1060,
+        700,
+        142.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161409,
+        "name": "glimmer griever",
+        "level": [
+         48,
+         50
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161421,
+        "name": "glimmer striker",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161425,
+        "name": "glimmer warshade",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The Muster holds.",
+     "success": "The Glimmer breaks against the Muster's line. The Middle Valleys holds - and the clock starts again.",
+     "fail": "The banner falls. The Glimmer has the Middle Valleys again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 180,
+      "tokens": 16
+     }
+    }
+   ]
+  },
+  {
+   "id": "sh_cp4_counter",
+   "title": "The Glimmer Strikes Back at The East Valley",
+   "levels": [
+    45,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "The Glimmer is coming back for the East Valley!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold The East Valley",
+     "objective": "Keep the Muster's captain alive at the East Valley",
+     "announce": "The Glimmer is coming back for the East Valley! The Muster will hold as long as it can - help them, or it falls!",
+     "center": [
+      1420,
+      1000,
+      89.3
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60165769,
+      "model": 328,
+      "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+      "guild": "the Southern Muster",
+      "name": "Banner-Captain of the Muster",
+      "level": 50,
+      "pos": [
+       1420,
+       1000,
+       89.3
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 5,
+      "from": [
+       [
+        1420,
+        900,
+        94.8
+       ],
+       [
+        1460,
+        1080,
+        89.6
+       ],
+       [
+        1380,
+        1100,
+        158.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 621,
+        "name": "glimmer deathwatcher",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 622,
+        "name": "glimmer geist",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161412,
+        "name": "glimmer knight",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The Muster holds.",
+     "success": "The Glimmer breaks against the Muster's line. The East Valley holds - and the clock starts again.",
+     "fail": "The banner falls. The Glimmer has the East Valley again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 24,
+      "copper_per_level": 180,
+      "tokens": 18
+     }
+    }
+   ]
+  },
+  {
+   "id": "sh_princes_hollow",
+   "title": "The Prince's Hollow",
+   "levels": [
+    48,
+    50
+   ],
+   "manual": true,
+   "bots": 16,
+   "bot_min_level": 47,
+   "min_people": 10,
+   "hint": "Muster-Captain Niamh is gathering the Muster for the Prince's Hollow.",
+   "rest_s": 15,
+   "start": "q1",
+   "giver": {
+    "template": 60165769,
+    "model": 328,
+    "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+    "guild": "the Southern Muster",
+    "name": "Muster-Captain Niamh",
+    "level": 55,
+    "pos": [
+     1400,
+     1080,
+     133.9
+    ],
+    "health_mult": 8,
+    "size": 58,
+    "greet": "The Prince's Hollow. Maldahar, the Glimmer King's son, and the last thing between us and the King himself. Two groups at least - ten, bots and all - then say [for the south].",
+    "accept": "for the south",
+    "reply": "For the south! Healers to the back - he blinds whoever he looks at. Forward!",
+    "busy": "Not yet. Gather.",
+    "cooldown_s": 180,
+    "thanks": "The Prince is gone. The way to the King's ring is open - and the King knows it.",
+    "regret": "Back! Back to the valley! We'll come again."
+   },
+   "guards": [
+    {
+     "template": 60165769,
+     "model": 328,
+     "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+     "guild": "the Southern Muster",
+     "name": "spear of the Muster",
+     "level": 50,
+     "count": 4
+    }
+   ],
+   "stages": [
+    {
+     "id": "q1",
+     "type": "boss",
+     "name": "Maldahar the Glimmer Prince",
+     "objective": "Defeat Maldahar the Glimmer Prince",
+     "announce": "Maldahar the Glimmer Prince rises in his hollow, too bright to look at: 'My father sends his regards. He's been waiting for you since the lake.'",
+     "center": [
+      900,
+      1240,
+      63.9
+     ],
+     "radius": 85,
+     "time_s": 2400,
+     "boss": {
+      "template": 60163619,
+      "name": "Maldahar the Glimmer Prince",
+      "level": 58,
+      "size": 110,
+      "health_mult": 18,
+      "guild": "Prince of the Glimmer"
+     },
+     "adds": {
+      "every_s": 50,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60161425,
+        "name": "glimmer warshade",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161412,
+        "name": "glimmer knight",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       },
+       {
+        "template": 60161421,
+        "name": "glimmer striker",
+        "level": [
+         49,
+         51
+        ],
+        "guild": "the Glimmer"
+       }
+      ]
+     },
+     "success": "Maldahar comes apart into a storm of light that pours away south-east, into the King's ring. Across the hills the glow goes out, valley by valley.",
+     "fail": "The Prince drives the Muster from his hollow.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 55,
+      "copper_per_level": 550,
+      "tokens": 55,
+      "items": [
+       {
+        "id": "sh216_prince_s_crown_of_light",
+        "gold_chance": 60,
+        "silver_chance": 25
+       },
+       {
+        "id": "sh216_maldahar_s_glass_cloak",
+        "gold_chance": 60,
+        "silver_chance": 25
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sheeroe_hills_glimmer_wardens",
+   "title": "The Glimmer Wardens",
+   "levels": [
+    39,
+    46
+   ],
+   "hint": "A cold glimmer burns in the north-west...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Glimmer Gate",
+     "objective": "Clear the glimmer gate",
+     "announce": "The glimmer wardens are holding a gate open for the rest of the host. Close it.",
+     "center": [
+      336,
+      331,
+      92.5
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 44038,
+       "name": "glimmer ward",
+       "level": [
+        42,
+        46
+       ]
+      },
+      {
+       "template": 44011,
+       "name": "glimmer ghoul",
+       "level": [
+        39,
+        43
+       ]
+      }
+     ],
+     "success": "You have cleared the glimmer gate. Glimmer Warden Faelan comes out to fight.",
+     "fail": "They hold the glimmer gate. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "Glimmer Warden Faelan",
+     "objective": "Defeat Glimmer Warden Faelan",
+     "announce": "Glimmer Warden Faelan stands at the glimmer gate. Bring friends.",
+     "center": [
+      336,
+      331,
+      92.5
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 44038,
+      "name": "Glimmer Warden Faelan",
+      "level": 48,
+      "size": 65,
+      "pos": [
+       336,
+       331,
+       92.5
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 44038,
+        "name": "glimmer ward",
+        "level": [
+         42,
+         46
+        ]
+       }
+      ]
+     },
+     "success": "Glimmer Warden Faelan falls. The way is safe again.",
+     "fail": "Glimmer Warden Faelan slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu216_glimmer_warden_faelan_s_belt",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Glimmer Wards Hold the Road",
+     "objective": "Drive the glimmer wards off the road",
+     "announce": "With The Glimmer Wardens lost, the glimmer wards have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      496,
+      496,
+      90.8
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 44038,
+       "name": "glimmer ward",
+       "level": [
+        42,
+        46
+       ]
+      },
+      {
+       "template": 44011,
+       "name": "glimmer ghoul",
+       "level": [
+        39,
+        43
+       ]
+      }
+     ],
+     "boss": {
+      "template": 44038,
+      "name": "Glimmer ward warleader",
+      "level": 47,
+      "pos": [
+       496,
+       496,
+       90.8
+      ],
+      "health_mult": 2
+     },
+     "success": "The glimmer wards are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cormac has come out to set the road right. The glimmer wards are coming back for it!",
+     "center": [
+      496,
+      496,
+      90.8
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cormac",
+      "level": 46,
+      "pos": [
+       496,
+       496,
+       90.8
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        411,
+        496,
+        93.3
+       ],
+       [
+        437,
+        435,
+        92.1
+       ],
+       [
+        499,
+        411,
+        90.1
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 44038,
+        "name": "glimmer ward",
+        "level": [
+         42,
+         46
+        ]
+       },
+       {
+        "template": 44011,
+        "name": "glimmer ghoul",
+        "level": [
+         39,
+         43
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The glimmer wards break and scatter. The road is open again.",
+     "fail": "Roadwarden Cormac falls, and the glimmer wards take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "sheeroe_hills_hill_beacon",
+   "title": "The Hill Beacon",
+   "levels": [
+    48,
+    55
+   ],
+   "hint": "The beacon on the hill has gone dark...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Druid Saoirse",
+     "objective": "Protect Druid Saoirse, who is relighting the hill beacon",
+     "announce": "Druid Saoirse is relighting the beacon the glimmer put out, and they are coming back for it. Keep them off her.",
+     "center": [
+      1407,
+      835,
+      92.6
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Druid Saoirse",
+      "template": 60161797,
+      "level": 55,
+      "model": 388,
+      "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
+      "health_mult": 10,
+      "pos": [
+       1407,
+       835,
+       92.6
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1356,
+        767,
+        82.9
+       ],
+       [
+        1420,
+        751,
+        92.3
+       ],
+       [
+        1466,
+        791,
+        91.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 44037,
+        "name": "glimmer striker",
+        "level": [
+         51,
+         55
+        ]
+       },
+       {
+        "template": 44030,
+        "name": "glimmer griever",
+        "level": [
+         48,
+         52
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Druid Saoirse. \"They came from over there - let's finish this.\"",
+     "fail": "Druid Saoirse falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Glimmer Camp",
+     "objective": "Clear the glimmer camp",
+     "announce": "They came from the glimmer camp. Follow them back and clear it out.",
+     "center": [
+      1448,
+      570,
+      88.5
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 44037,
+       "name": "glimmer striker",
+       "level": [
+        51,
+        55
+       ]
+      },
+      {
+       "template": 44030,
+       "name": "glimmer griever",
+       "level": [
+        48,
+        52
+       ]
+      }
+     ],
+     "success": "You have cleared the glimmer camp. The Glimmer Warlord comes out to fight.",
+     "fail": "They hold the glimmer camp. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Glimmer Warlord",
+     "objective": "Defeat the Glimmer Warlord",
+     "announce": "The Glimmer Warlord stands at the glimmer camp. Bring friends.",
+     "center": [
+      1448,
+      570,
+      88.5
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 44039,
+      "name": "The Glimmer Warlord",
+      "level": 57,
+      "size": 65,
+      "pos": [
+       1448,
+       570,
+       88.5
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 44037,
+        "name": "glimmer striker",
+        "level": [
+         51,
+         55
+        ]
+       }
+      ]
+     },
+     "success": "The Glimmer Warlord falls. The way is safe again.",
+     "fail": "The Glimmer Warlord slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu216_glimmer_warlord_s_girdle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Glimmer Strikers Hold the Old Road",
+     "objective": "Drive the glimmer strikers off the old road",
+     "announce": "With The Hill Beacon lost, the glimmer strikers have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1440,
+      310,
+      119.8
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 44037,
+       "name": "glimmer striker",
+       "level": [
+        51,
+        55
+       ]
+      },
+      {
+       "template": 44030,
+       "name": "glimmer griever",
+       "level": [
+        48,
+        52
+       ]
+      }
+     ],
+     "boss": {
+      "template": 44037,
+      "name": "Glimmer striker warleader",
+      "level": 56,
+      "pos": [
+       1440,
+       310,
+       119.8
+      ],
+      "health_mult": 2
+     },
+     "success": "The glimmer strikers are gone from the old road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Ruadh has come out to set the old road right. The glimmer strikers are coming back for it!",
+     "center": [
+      1440,
+      310,
+      119.8
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Ruadh",
+      "level": 55,
+      "pos": [
+       1440,
+       310,
+       119.8
+      ],
+      "health_mult": 10,
+      "template": 60161797,
+      "model": 388,
+      "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1503,
+        368,
+        110.1
+       ],
+       [
+        1443,
+        395,
+        103.4
+       ],
+       [
+        1381,
+        371,
+        116.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 44037,
+        "name": "glimmer striker",
+        "level": [
+         51,
+         55
+        ]
+       },
+       {
+        "template": 44030,
+        "name": "glimmer griever",
+        "level": [
+         48,
+         52
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+     "success": "The glimmer strikers break and scatter. The old road is open again.",
+     "fail": "Roadwarden Ruadh falls, and the glimmer strikers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  }
+ ]
 }

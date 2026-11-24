@@ -1,803 +1,2367 @@
 {
-  "zone": 201,
-  "region": 200,
-  "name": "Silvermine Mts.",
-  "lore": "The Silvermine Mountains: Ardagh, Howth and the silver mines the sheevra fight for.",
-  "chains": [
+ "zone": 201,
+ "region": 200,
+ "name": "Silvermine Mts.",
+ "lore": "The Silvermine Mountains: Howth and Ardagh and the silver between them - the sheevra fighting the miners for the veins, stones that walk at night, and an old collapse in the south-east that let something out of the deep.",
+ "chains": [
+  {
+   "id": "silvermine_mountains_sheevra_warband",
+   "title": "The Sheevra Warband",
+   "levels": [
+    18,
+    24
+   ],
+   "hint": "The sheevra are massing at their lake camp below the mines...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "silvermine_mountains_sheevra_warband",
-      "title": "The Sheevra Warband",
-      "levels": [12, 15],
-      "hint": "The sheevra are sharpening their blades...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Sheevra Camp",
-          "objective": "Clear the sheevra camp",
-          "announce": "The sheevra have mustered to take the silver mines. Break the warband.",
-          "center": [1134, 1020, 185.6],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60165949,
-              "name": "sheevra swordsman",
-              "level": [12, 13]
-            },
-            {
-              "template": 60165945,
-              "name": "sheevra archer",
-              "level": [14, 14]
-            },
-            {
-              "template": 60165948,
-              "name": "sheevra skirmisher",
-              "level": [13, 15]
-            }
-          ],
-          "success": "You have cleared the sheevra camp. Dubhan the Sheevra Chief comes out to fight.",
-          "fail": "They hold the sheevra camp. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Dubhan the Sheevra Chief",
-          "objective": "Defeat Dubhan the Sheevra Chief",
-          "announce": "Dubhan the Sheevra Chief stands at the sheevra camp. Bring friends.",
-          "center": [1134, 1020, 185.6],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60165946,
-            "name": "Dubhan the Sheevra Chief",
-            "level": 17,
-            "size": 70,
-            "pos": [1134, 1020, 185.6],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60165949,
-                "name": "sheevra swordsman",
-                "level": [12, 13]
-              }
-            ]
-          },
-          "success": "Dubhan the Sheevra Chief falls. The way is safe again.",
-          "fail": "Dubhan the Sheevra Chief slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu201_dubhan_the_sheevra_chief_s_cloak", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Sheevra Swordsmans Hold the Road to Howth",
-          "objective": "Drive the sheevra swordsmans off the road to Howth",
-          "announce": "With The Sheevra Warband lost, the sheevra swordsmans have spread down onto the road to Howth and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [663, 906, 128.0],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60165949,
-              "name": "sheevra swordsman",
-              "level": [12, 13]
-            },
-            {
-              "template": 60165945,
-              "name": "sheevra archer",
-              "level": [14, 14]
-            },
-            {
-              "template": 60165948,
-              "name": "sheevra skirmisher",
-              "level": [13, 15]
-            }
-          ],
-          "boss": {
-            "template": 60165949,
-            "name": "Sheevra swordsman warleader",
-            "level": 16,
-            "pos": [663, 906, 128.0],
-            "health_mult": 2
-          },
-          "success": "The sheevra swordsmans are gone from the road to Howth. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Aine has come out to set the road to Howth right. The sheevra swordsmans are coming back for it!",
-          "center": [663, 906, 128.0],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Aine",
-            "level": 15,
-            "pos": [663, 906, 128.0],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [735, 860, 99.5],
-              [745, 926, 92.1],
-              [706, 979, 101.3]
-            ],
-            "mobs": [
-              {
-                "template": 60165949,
-                "name": "sheevra swordsman",
-                "level": [12, 13]
-              },
-              {
-                "template": 60165945,
-                "name": "sheevra archer",
-                "level": [14, 14]
-              },
-              {
-                "template": 60165948,
-                "name": "sheevra skirmisher",
-                "level": [13, 15]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Howth is safe again. Thank you.\"",
-          "success": "The sheevra swordsmans break and scatter. The road to Howth is open again.",
-          "fail": "Roadwarden Aine falls, and the sheevra swordsmans take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "silvermine_mountains_gray_spectres",
-      "title": "The Gray Spectres",
-      "levels": [17, 24],
-      "hint": "Grey shapes drift through the high passes...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Brother Cillian",
-          "objective": "Protect Brother Cillian, who is blessing the miners' shrine",
-          "announce": "Brother Cillian is blessing the shrine of the miners who died in the passes. Their spectres are coming for him.",
-          "center": [901, 1263, 128.4],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Brother Cillian",
-            "template": 60165767,
-            "level": 24,
-            "model": 365,
-            "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
-            "health_mult": 10,
-            "pos": [901, 1263, 128.4]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [842, 1324, 127.9],
-              [816, 1263, 125.4],
-              [842, 1202, 125.4]
-            ],
-            "mobs": [
-              {
-                "template": 60161575,
-                "name": "gray spectre",
-                "level": [22, 24]
-              },
-              {
-                "template": 60159811,
-                "name": "deamhan creig",
-                "level": [17, 18]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Brother Cillian. \"They came from over there - let's finish this.\"",
-          "fail": "Brother Cillian falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Miners' Shrine",
-          "objective": "Clear the miners' shrine",
-          "announce": "They came from the miners' shrine. Follow them back and clear it out.",
-          "center": [466, 1263, 130.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60161575,
-              "name": "gray spectre",
-              "level": [22, 24]
-            },
-            {
-              "template": 60159811,
-              "name": "deamhan creig",
-              "level": [17, 18]
-            }
-          ],
-          "success": "You have cleared the miners' shrine. The Gray Lady of Silvermine comes out to fight.",
-          "fail": "They hold the miners' shrine. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Gray Lady of Silvermine",
-          "objective": "Defeat the Gray Lady of Silvermine",
-          "announce": "The Gray Lady of Silvermine stands at the miners' shrine. Bring friends.",
-          "center": [466, 1263, 130.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60161575,
-            "name": "The Gray Lady of Silvermine",
-            "level": 26,
-            "size": 41,
-            "pos": [466, 1263, 130.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60161575,
-                "name": "gray spectre",
-                "level": [22, 24]
-              }
-            ]
-          },
-          "success": "The Gray Lady of Silvermine falls. The way is safe again.",
-          "fail": "The Gray Lady of Silvermine slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu201_gray_lady_of_silvermine_s_armband", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Gray Spectres Hold the Road to Howth",
-          "objective": "Drive the gray spectres off the road to Howth",
-          "announce": "With The Gray Spectres lost, the gray spectres have spread down onto the road to Howth and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [633, 1342, 124.5],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60161575,
-              "name": "gray spectre",
-              "level": [22, 24]
-            },
-            {
-              "template": 60159811,
-              "name": "deamhan creig",
-              "level": [17, 18]
-            }
-          ],
-          "boss": {
-            "template": 60161575,
-            "name": "Gray spectre warleader",
-            "level": 25,
-            "pos": [633, 1342, 124.5],
-            "health_mult": 2
-          },
-          "success": "The gray spectres are gone from the road to Howth. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Fiona has come out to set the road to Howth right. The gray spectres are coming back for it!",
-          "center": [633, 1342, 124.5],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Fiona",
-            "level": 24,
-            "pos": [633, 1342, 124.5],
-            "health_mult": 10,
-            "template": 60165767,
-            "model": 365,
-            "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [554, 1372, 164.5],
-              [556, 1306, 143.2],
-              [606, 1262, 127.7]
-            ],
-            "mobs": [
-              {
-                "template": 60161575,
-                "name": "gray spectre",
-                "level": [22, 24]
-              },
-              {
-                "template": 60159811,
-                "name": "deamhan creig",
-                "level": [17, 18]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Howth is safe again. Thank you.\"",
-          "success": "The gray spectres break and scatter. The road to Howth is open again.",
-          "fail": "Roadwarden Fiona falls, and the gray spectres take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "silvermine_mountains_spraggon_warren",
-      "title": "The Spraggon Warren",
-      "levels": [15, 19],
-      "hint": "Sentinel Aodh is looking for help in Ardagh.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Sentinel Aodh",
-        "template": 60165767,
-        "level": 20,
-        "model": 365,
-        "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
-        "guild": "Sentinels of Ardagh",
-        "health_mult": 4,
-        "pos": [771, 111, 128.0],
-        "greet": "The spraggons have dug a warren under the west road, and the road is falling in. We're going to collapse it on them. Come with us? Tell me when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Sheevra Camp",
+     "objective": "Clear the sheevra camp",
+     "announce": "The sheevra war-band musters at its lake camp, silver in every purse. Break it up before it marches on Howth.",
+     "center": [
+      1134,
+      1020,
+      185.6
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60165949,
+       "name": "sheevra swordsman",
+       "level": [
+        19,
+        20
+       ]
       },
-      "guards": [
-        {
-          "name": "Sentinel",
-          "template": 60165767,
-          "level": 19,
-          "model": 365,
-          "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
-          "guild": "Sentinels of Ardagh",
-          "health_mult": 2,
-          "count": 3
-        }
-      ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Spraggon Warren",
-          "objective": "Go with Sentinel Aodh to the spraggon warren",
-          "announce": "Sentinel Aodh leads the sentinels of Ardagh to the spraggon warren.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [743, 124, 126.8],
-            [695, 124, 128.2],
-            [591, 132, 129.7],
-            [487, 132, 130.1],
-            [455, 140, 130.2]
-          ],
-          "ambushes": [
-            {
-              "at": 2,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 60166484,
-                  "name": "spraggonilt",
-                  "level": [15, 19]
-                }
-              ]
-            }
-          ],
-          "success": "Sentinel Aodh reaches the spraggon warren. \"There they are. Clear them out!\"",
-          "fail": "Sentinel Aodh falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Spraggon Warren",
-          "objective": "Clear the spraggon warren",
-          "announce": "Clear the spraggon warren!",
-          "center": [451, 142, 130.3],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60166484,
-              "name": "spraggonilt",
-              "level": [15, 19]
-            }
-          ],
-          "success": "You have cleared the spraggon warren. Spraggon Chief Nuadh comes out to fight.",
-          "fail": "They hold the spraggon warren. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "Spraggon Chief Nuadh",
-          "objective": "Defeat Spraggon Chief Nuadh",
-          "announce": "Spraggon Chief Nuadh stands at the spraggon warren. Bring friends.",
-          "center": [451, 142, 130.3],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60166484,
-            "name": "Spraggon Chief Nuadh",
-            "level": 21,
-            "size": 44,
-            "pos": [451, 142, 130.3],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60166484,
-                "name": "spraggonilt",
-                "level": [15, 19]
-              }
-            ]
-          },
-          "success": "Spraggon Chief Nuadh falls. Ardagh will hear of this in the taverns tonight.",
-          "fail": "Spraggon Chief Nuadh slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu201_spraggon_chief_nuadh_s_pendant", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Spraggonilts Hold the Road to Ardagh",
-          "objective": "Drive the spraggonilts off the road to Ardagh",
-          "announce": "With The Spraggon Warren lost, the spraggonilts have spread down onto the road to Ardagh and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [820, 408, 126.0],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60166484,
-              "name": "spraggonilt",
-              "level": [15, 19]
-            }
-          ],
-          "boss": {
-            "template": 60166484,
-            "name": "Spraggonilt warleader",
-            "level": 20,
-            "pos": [820, 408, 126.0],
-            "health_mult": 2
-          },
-          "success": "The spraggonilts are gone from the road to Ardagh. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Fiona has come out to set the road to Ardagh right. The spraggonilts are coming back for it!",
-          "center": [820, 408, 126.0],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Fiona",
-            "level": 19,
-            "pos": [820, 408, 126.0],
-            "health_mult": 10,
-            "template": 60165767,
-            "model": 365,
-            "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [736, 423, 126.2],
-              [751, 358, 147.2],
-              [808, 324, 124.7]
-            ],
-            "mobs": [
-              {
-                "template": 60166484,
-                "name": "spraggonilt",
-                "level": [15, 19]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Ardagh is safe again. Thank you.\"",
-          "success": "The spraggonilts break and scatter. The road to Ardagh is open again.",
-          "fail": "Roadwarden Fiona falls, and the spraggonilts take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+      {
+       "template": 60165945,
+       "name": "sheevra archer",
+       "level": [
+        21,
+        21
+       ]
+      },
+      {
+       "template": 60165948,
+       "name": "sheevra skirmisher",
+       "level": [
+        20,
+        22
+       ]
+      }
+     ],
+     "success": "You have cleared the sheevra camp. Dubhan the Sheevra Chief comes out to fight.",
+     "fail": "They hold the sheevra camp. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "silvermine_mountains_walking_rocks",
-      "title": "The Walking Rocks",
-      "levels": [2, 3],
-      "hint": "Stones roll uphill in the lower passes...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Miner Fiach",
-          "objective": "Protect Miner Fiach, who is clearing the blocked adit",
-          "announce": "Miner Fiach is digging out the blocked adit, and the rocks of the rockfall have got up to stop him. Keep them off.",
-          "center": [323, 474, 187.1],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Miner Fiach",
-            "template": 60165767,
-            "level": 3,
-            "model": 365,
-            "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
-            "health_mult": 10,
-            "pos": [323, 474, 187.1]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [332, 555, 178.1],
-              [273, 543, 183.8],
-              [251, 486, 185.9]
-            ],
-            "mobs": [
-              {
-                "template": 60166253,
-                "name": "small walking rock",
-                "level": [2, 3]
-              },
-              {
-                "template": 60166254,
-                "name": "small walking boulder",
-                "level": [2, 3]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Miner Fiach. \"They came from over there - let's finish this.\"",
-          "fail": "Miner Fiach falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Rockfall",
-          "objective": "Clear the rockfall",
-          "announce": "They came from the rockfall. Follow them back and clear it out.",
-          "center": [162, 694, 129.0],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60166253,
-              "name": "small walking rock",
-              "level": [2, 3]
-            },
-            {
-              "template": 60166254,
-              "name": "small walking boulder",
-              "level": [2, 3]
-            }
-          ],
-          "success": "You have cleared the rockfall. The Grinding Stone comes out to fight.",
-          "fail": "They hold the rockfall. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Grinding Stone",
-          "objective": "Defeat the Grinding Stone",
-          "announce": "The Grinding Stone stands at the rockfall. Bring friends.",
-          "center": [162, 694, 129.0],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60167762,
-            "name": "The Grinding Stone",
-            "level": 5,
-            "size": 70,
-            "pos": [162, 694, 129.0],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60166253,
-                "name": "small walking rock",
-                "level": [2, 3]
-              }
-            ]
-          },
-          "success": "The Grinding Stone falls. The way is safe again.",
-          "fail": "The Grinding Stone slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu201_grinding_stone_s_cloak", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Small Walking Rocks Hold the Road to Howth",
-          "objective": "Drive the small walking rocks off the road to Howth",
-          "announce": "With The Walking Rocks lost, the small walking rocks have spread down onto the road to Howth and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [220, 901, 127.8],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60166253,
-              "name": "small walking rock",
-              "level": [2, 3]
-            },
-            {
-              "template": 60166254,
-              "name": "small walking boulder",
-              "level": [2, 3]
-            }
-          ],
-          "boss": {
-            "template": 60166253,
-            "name": "Small walking rock warleader",
-            "level": 4,
-            "pos": [220, 901, 127.8],
-            "health_mult": 2
-          },
-          "success": "The small walking rocks are gone from the road to Howth. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Fiona has come out to set the road to Howth right. The small walking rocks are coming back for it!",
-          "center": [220, 901, 127.8],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Fiona",
-            "level": 3,
-            "pos": [220, 901, 127.8],
-            "health_mult": 10,
-            "template": 60165767,
-            "model": 365,
-            "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [145, 860, 139.2],
-              [197, 819, 128.5],
-              [263, 827, 129.9]
-            ],
-            "mobs": [
-              {
-                "template": 60166253,
-                "name": "small walking rock",
-                "level": [2, 3]
-              },
-              {
-                "template": 60166254,
-                "name": "small walking boulder",
-                "level": [2, 3]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Howth is safe again. Thank you.\"",
-          "success": "The small walking rocks break and scatter. The road to Howth is open again.",
-          "fail": "Roadwarden Fiona falls, and the small walking rocks take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Dubhan the Sheevra Chief",
+     "objective": "Defeat Dubhan the Sheevra Chief",
+     "announce": "Dubhan the Sheevra Chief stands at the sheevra camp. Bring friends.",
+     "center": [
+      1134,
+      1020,
+      185.6
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60165946,
+      "name": "Dubhan the Sheevra Chief",
+      "level": 24,
+      "size": 70,
+      "pos": [
+       1134,
+       1020,
+       185.6
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60165949,
+        "name": "sheevra swordsman",
+        "level": [
+         19,
+         20
+        ]
+       }
       ]
+     },
+     "success": "Dubhan the Sheevra Chief falls. The way is safe again.",
+     "fail": "Dubhan the Sheevra Chief slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu201_dubhan_the_sheevra_chief_s_cloak",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Sheevra Swordsmans Hold the Road to Howth",
+     "objective": "Drive the sheevra swordsmans off the road to Howth",
+     "announce": "With The Sheevra Warband lost, the sheevra swordsmans have spread down onto the road to Howth and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      663,
+      906,
+      128.0
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60165949,
+       "name": "sheevra swordsman",
+       "level": [
+        19,
+        20
+       ]
+      },
+      {
+       "template": 60165945,
+       "name": "sheevra archer",
+       "level": [
+        21,
+        21
+       ]
+      },
+      {
+       "template": 60165948,
+       "name": "sheevra skirmisher",
+       "level": [
+        20,
+        22
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60165949,
+      "name": "Sheevra swordsman warleader",
+      "level": 23,
+      "pos": [
+       663,
+       906,
+       128.0
+      ],
+      "health_mult": 2
+     },
+     "success": "The sheevra swordsmans are gone from the road to Howth. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Aine has come out to set the road to Howth right. The sheevra swordsmans are coming back for it!",
+     "center": [
+      663,
+      906,
+      128.0
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Aine",
+      "level": 22,
+      "pos": [
+       663,
+       906,
+       128.0
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        735,
+        860,
+        99.5
+       ],
+       [
+        745,
+        926,
+        92.1
+       ],
+       [
+        706,
+        979,
+        101.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60165949,
+        "name": "sheevra swordsman",
+        "level": [
+         19,
+         20
+        ]
+       },
+       {
+        "template": 60165945,
+        "name": "sheevra archer",
+        "level": [
+         21,
+         21
+        ]
+       },
+       {
+        "template": 60165948,
+        "name": "sheevra skirmisher",
+        "level": [
+         20,
+         22
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Howth is safe again. Thank you.\"",
+     "success": "The sheevra swordsmans break and scatter. The road to Howth is open again.",
+     "fail": "Roadwarden Aine falls, and the sheevra swordsmans take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
+   ]
+  },
+  {
+   "id": "silvermine_mountains_gray_spectres",
+   "title": "The Gray Spectres",
+   "levels": [
+    22,
+    28
+   ],
+   "hint": "Cold lights over the Fallen Camp...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Brother Cillian",
+     "objective": "Protect Brother Cillian, who is blessing the miners' cairn",
+     "announce": "Brother Cillian is blessing the cairn of the miners who died in the collapse. Their spectres are coming for him.",
+     "center": [
+      1250,
+      1180,
+      127.4
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Brother Cillian",
+      "template": 60165767,
+      "level": 27,
+      "model": 365,
+      "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
+      "health_mult": 10,
+      "pos": [
+       1250,
+       1180,
+       127.4
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1320,
+        1260,
+        132.4
+       ],
+       [
+        1300,
+        1210,
+        131.1
+       ],
+       [
+        1220,
+        1250,
+        129.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161575,
+        "name": "gray spectre",
+        "level": [
+         25,
+         27
+        ]
+       },
+       {
+        "template": 60159811,
+        "name": "deamhan creig",
+        "level": [
+         20,
+         21
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Brother Cillian. \"They came from over there - let's finish this.\"",
+     "fail": "Brother Cillian falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear the Fallen Camp",
+     "objective": "Clear the fallen camp",
+     "announce": "They came from the fallen camp. Follow them back and clear it out.",
+     "center": [
+      1530,
+      1500,
+      261.5
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60161575,
+       "name": "gray spectre",
+       "level": [
+        25,
+        27
+       ]
+      },
+      {
+       "template": 60159811,
+       "name": "deamhan creig",
+       "level": [
+        20,
+        21
+       ]
+      }
+     ],
+     "success": "You have cleared the fallen camp. The Gray Lady of Silvermine comes out to fight.",
+     "fail": "They hold the fallen camp. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Gray Lady of Silvermine",
+     "objective": "Defeat the Gray Lady of Silvermine",
+     "announce": "The Gray Lady of Silvermine stands at the fallen camp. Bring friends.",
+     "center": [
+      1530,
+      1500,
+      261.5
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161575,
+      "name": "The Gray Lady of Silvermine",
+      "level": 29,
+      "size": 41,
+      "pos": [
+       1530,
+       1500,
+       261.5
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60161575,
+        "name": "gray spectre",
+        "level": [
+         25,
+         27
+        ]
+       }
+      ]
+     },
+     "success": "The Gray Lady of Silvermine falls. The way is safe again.",
+     "fail": "The Gray Lady of Silvermine slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu201_gray_lady_of_silvermine_s_armband",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Gray Spectres Hold the Mine Road",
+     "objective": "Drive the gray spectres off the mine road",
+     "announce": "With The Gray Spectres lost, the gray spectres have spread down onto the mine road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1150,
+      1150,
+      133.5
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60161575,
+       "name": "gray spectre",
+       "level": [
+        25,
+        27
+       ]
+      },
+      {
+       "template": 60159811,
+       "name": "deamhan creig",
+       "level": [
+        20,
+        21
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60161575,
+      "name": "Gray spectre warleader",
+      "level": 28,
+      "pos": [
+       1150,
+       1150,
+       133.5
+      ],
+      "health_mult": 2
+     },
+     "success": "The gray spectres are gone from the mine road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Fiona has come out to set the mine road right. The gray spectres are coming back for it!",
+     "center": [
+      1150,
+      1150,
+      133.5
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Fiona",
+      "level": 27,
+      "pos": [
+       1150,
+       1150,
+       133.5
+      ],
+      "health_mult": 10,
+      "template": 60165767,
+      "model": 365,
+      "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1200,
+        1220,
+        127.2
+       ],
+       [
+        1100,
+        1220,
+        157.4
+       ],
+       [
+        1180,
+        1100,
+        144.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161575,
+        "name": "gray spectre",
+        "level": [
+         25,
+         27
+        ]
+       },
+       {
+        "template": 60159811,
+        "name": "deamhan creig",
+        "level": [
+         20,
+         21
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the mine road is safe again. Thank you.\"",
+     "success": "The gray spectres break and scatter. The mine road is open again.",
+     "fail": "Roadwarden Fiona falls, and the gray spectres take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "silvermine_mountains_spraggon_warren",
+   "title": "The Spraggon Warren",
+   "levels": [
+    12,
+    17
+   ],
+   "hint": "Sentinel Aodh is looking for help in Ardagh.",
+   "rest_s": 45,
+   "giver": {
+    "name": "Sentinel Aodh",
+    "template": 60165767,
+    "level": 18,
+    "model": 365,
+    "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
+    "guild": "Sentinels of Ardagh",
+    "health_mult": 4,
+    "pos": [
+     771,
+     111,
+     128.0
+    ],
+    "greet": "The spraggons have dug a warren under the west road, and the road is falling in. We're going to collapse it on them. Come with us? Tell me when you're [ready].",
+    "accept": "ready",
+    "reply": "Good. Stay close - they will have watchers out. With me!",
+    "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "name": "Sentinel",
+     "template": 60165767,
+     "level": 17,
+     "model": 365,
+     "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
+     "guild": "Sentinels of Ardagh",
+     "health_mult": 2,
+     "count": 3
+    }
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "escort",
+     "name": "The Road to Spraggon Warren",
+     "objective": "Go with Sentinel Aodh to the spraggon warren",
+     "announce": "Sentinel Aodh leads the sentinels of Ardagh to the spraggon warren.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       743,
+       124,
+       126.8
+      ],
+      [
+       695,
+       124,
+       128.2
+      ],
+      [
+       591,
+       132,
+       129.7
+      ],
+      [
+       487,
+       132,
+       130.1
+      ],
+      [
+       455,
+       140,
+       130.2
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 2,
+       "count": 3,
+       "say": "Ambush! To me - hold together!",
+       "mobs": [
+        {
+         "template": 60166484,
+         "name": "spraggonilt",
+         "level": [
+          13,
+          17
+         ]
+        }
+       ]
+      }
+     ],
+     "success": "Sentinel Aodh reaches the spraggon warren. \"There they are. Clear them out!\"",
+     "fail": "Sentinel Aodh falls on the road. The others carry the body home.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "g2",
+     "type": "cull",
+     "name": "Clear Spraggon Warren",
+     "objective": "Clear the spraggon warren",
+     "announce": "Clear the spraggon warren!",
+     "center": [
+      451,
+      142,
+      130.3
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60166484,
+       "name": "spraggonilt",
+       "level": [
+        13,
+        17
+       ]
+      }
+     ],
+     "success": "You have cleared the spraggon warren. Spraggon Chief Nuadh comes out to fight.",
+     "fail": "They hold the spraggon warren. They will be bolder next time.",
+     "on_success": "g3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g3",
+     "type": "boss",
+     "name": "Spraggon Chief Nuadh",
+     "objective": "Defeat Spraggon Chief Nuadh",
+     "announce": "Spraggon Chief Nuadh stands at the spraggon warren. Bring friends.",
+     "center": [
+      451,
+      142,
+      130.3
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60166484,
+      "name": "Spraggon Chief Nuadh",
+      "level": 19,
+      "size": 44,
+      "pos": [
+       451,
+       142,
+       130.3
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60166484,
+        "name": "spraggonilt",
+        "level": [
+         13,
+         17
+        ]
+       }
+      ]
+     },
+     "success": "Spraggon Chief Nuadh falls. Ardagh will hear of this in the taverns tonight.",
+     "fail": "Spraggon Chief Nuadh slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu201_spraggon_chief_nuadh_s_pendant",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Spraggonilts Hold the Road to Ardagh",
+     "objective": "Drive the spraggonilts off the road to Ardagh",
+     "announce": "With The Spraggon Warren lost, the spraggonilts have spread down onto the road to Ardagh and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      820,
+      408,
+      126.0
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60166484,
+       "name": "spraggonilt",
+       "level": [
+        13,
+        17
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60166484,
+      "name": "Spraggonilt warleader",
+      "level": 18,
+      "pos": [
+       820,
+       408,
+       126.0
+      ],
+      "health_mult": 2
+     },
+     "success": "The spraggonilts are gone from the road to Ardagh. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Fiona has come out to set the road to Ardagh right. The spraggonilts are coming back for it!",
+     "center": [
+      820,
+      408,
+      126.0
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Fiona",
+      "level": 17,
+      "pos": [
+       820,
+       408,
+       126.0
+      ],
+      "health_mult": 10,
+      "template": 60165767,
+      "model": 365,
+      "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        736,
+        423,
+        126.2
+       ],
+       [
+        751,
+        358,
+        147.2
+       ],
+       [
+        808,
+        324,
+        124.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60166484,
+        "name": "spraggonilt",
+        "level": [
+         13,
+         17
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Ardagh is safe again. Thank you.\"",
+     "success": "The spraggonilts break and scatter. The road to Ardagh is open again.",
+     "fail": "Roadwarden Fiona falls, and the spraggonilts take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "silvermine_mountains_walking_rocks",
+   "title": "The Walking Rocks",
+   "levels": [
+    5,
+    9
+   ],
+   "hint": "Miner Fiach is in trouble in the Stone Fields...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Miner Fiach",
+     "objective": "Protect Miner Fiach, who is clearing the blocked adit",
+     "announce": "Miner Fiach is digging out the blocked adit, and the rocks of the rockfall have got up to stop him. Keep them off.",
+     "center": [
+      323,
+      474,
+      187.1
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Miner Fiach",
+      "template": 60165767,
+      "level": 7,
+      "model": 365,
+      "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
+      "health_mult": 10,
+      "pos": [
+       323,
+       474,
+       187.1
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        332,
+        555,
+        178.1
+       ],
+       [
+        273,
+        543,
+        183.8
+       ],
+       [
+        251,
+        486,
+        185.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60166253,
+        "name": "small walking rock",
+        "level": [
+         6,
+         7
+        ]
+       },
+       {
+        "template": 60166254,
+        "name": "small walking boulder",
+        "level": [
+         6,
+         7
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Miner Fiach. \"They came from over there - let's finish this.\"",
+     "fail": "Miner Fiach falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Rockfall",
+     "objective": "Clear the rockfall",
+     "announce": "They came from the rockfall. Follow them back and clear it out.",
+     "center": [
+      162,
+      694,
+      129.0
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60166253,
+       "name": "small walking rock",
+       "level": [
+        6,
+        7
+       ]
+      },
+      {
+       "template": 60166254,
+       "name": "small walking boulder",
+       "level": [
+        6,
+        7
+       ]
+      }
+     ],
+     "success": "You have cleared the rockfall. The Grinding Stone comes out to fight.",
+     "fail": "They hold the rockfall. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Grinding Stone",
+     "objective": "Defeat the Grinding Stone",
+     "announce": "The Grinding Stone stands at the rockfall. Bring friends.",
+     "center": [
+      162,
+      694,
+      129.0
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60167762,
+      "name": "The Grinding Stone",
+      "level": 9,
+      "size": 70,
+      "pos": [
+       162,
+       694,
+       129.0
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60166253,
+        "name": "small walking rock",
+        "level": [
+         6,
+         7
+        ]
+       }
+      ]
+     },
+     "success": "The Grinding Stone falls. The way is safe again.",
+     "fail": "The Grinding Stone slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu201_grinding_stone_s_cloak",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Small Walking Rocks Hold the Road to Howth",
+     "objective": "Drive the small walking rocks off the road to Howth",
+     "announce": "With The Walking Rocks lost, the small walking rocks have spread down onto the road to Howth and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      220,
+      901,
+      127.8
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60166253,
+       "name": "small walking rock",
+       "level": [
+        6,
+        7
+       ]
+      },
+      {
+       "template": 60166254,
+       "name": "small walking boulder",
+       "level": [
+        6,
+        7
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60166253,
+      "name": "Small walking rock warleader",
+      "level": 8,
+      "pos": [
+       220,
+       901,
+       127.8
+      ],
+      "health_mult": 2
+     },
+     "success": "The small walking rocks are gone from the road to Howth. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Fiona has come out to set the road to Howth right. The small walking rocks are coming back for it!",
+     "center": [
+      220,
+      901,
+      127.8
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Fiona",
+      "level": 7,
+      "pos": [
+       220,
+       901,
+       127.8
+      ],
+      "health_mult": 10,
+      "template": 60165767,
+      "model": 365,
+      "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        145,
+        860,
+        139.2
+       ],
+       [
+        197,
+        819,
+        128.5
+       ],
+       [
+        263,
+        827,
+        129.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60166253,
+        "name": "small walking rock",
+        "level": [
+         6,
+         7
+        ]
+       },
+       {
+        "template": 60166254,
+        "name": "small walking boulder",
+        "level": [
+         6,
+         7
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Howth is safe again. Thank you.\"",
+     "success": "The small walking rocks break and scatter. The road to Howth is open again.",
+     "fail": "Roadwarden Fiona falls, and the small walking rocks take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "silvermine_stones_walk",
+   "title": "The Night the Stones Walk",
+   "levels": [
+    6,
+    11
+   ],
+   "time": "night",
+   "rest_s": 40,
+   "hint": "Grinding and creaking from the Stone Fields after dark...",
+   "first_delay_s": [
+    300,
+    1200
+   ],
+   "interval_s": [
+    2400,
+    3600
+   ],
+   "start": "n1",
+   "stages": [
+    {
+     "id": "n1",
+     "type": "defend",
+     "name": "Farmer Lasair's Field",
+     "objective": "Keep Farmer Lasair alive in her potato field",
+     "announce": "The small stones are marching out of the Stone Fields onto Howth's potato fields, grinding everything flat. Farmer Lasair won't leave her crop!",
+     "center": [
+      600,
+      980,
+      130.5
+     ],
+     "radius": 60,
+     "duration_s": 150,
+     "protect": {
+      "template": 0,
+      "name": "Farmer Lasair",
+      "level": 8,
+      "model": 365,
+      "pos": [
+       600,
+       980,
+       130.5
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        560,
+        900,
+        131.5
+       ],
+       [
+        520,
+        940,
+        134.9
+       ],
+       [
+        640,
+        920,
+        129.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60166253,
+        "name": "small walking rock",
+        "level": [
+         6,
+         8
+        ]
+       },
+       {
+        "template": 60166254,
+        "name": "small walking boulder",
+        "level": [
+         8,
+         9
+        ]
+       }
+      ]
+     },
+     "thanks": "\"My spuds! You saved my spuds!\"",
+     "success": "The stones stop - and one, bigger than the rest, rolls out of the dark.",
+     "fail": "Farmer Lasair falls, and the stones grind her field to gravel.",
+     "on_success": "n2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 70
+     }
+    },
+    {
+     "id": "n2",
+     "type": "boss",
+     "name": "the Leading Stone",
+     "objective": "Defeat the Leading Stone",
+     "announce": "The Leading Stone, an old standing-stone with a sliver of silver glowing in its crack, grinds towards the farm. Bring friends.",
+     "center": [
+      600,
+      980,
+      130.5
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60167762,
+      "name": "the Leading Stone",
+      "level": 12,
+      "size": 70,
+      "health_mult": 2.0,
+      "guild": "of the Stone Fields"
+     },
+     "adds": {
+      "every_s": 45,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60166253,
+        "name": "small walking rock",
+        "level": [
+         6,
+         8
+        ]
+       }
+      ]
+     },
+     "success": "The Leading Stone cracks open. In its heart: a sliver of pale silver, cold as moonlight. The other stones settle where they stand.",
+     "fail": "The Leading Stone rolls on, and the field road is theirs.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 110,
+      "items": [
+       {
+        "id": "nu201_leading_stone_s_moon_sliver",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Stones Hold the Field Road",
+     "objective": "Drive the walking stones off the field road",
+     "announce": "The walking stones squat on the field road north of Howth. No cart gets past.",
+     "center": [
+      560,
+      900,
+      131.5
+     ],
+     "radius": 60,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60166253,
+       "name": "small walking rock",
+       "level": [
+        6,
+        8
+       ]
+      },
+      {
+       "template": 60166254,
+       "name": "small walking boulder",
+       "level": [
+        8,
+        9
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60167762,
+      "name": "field-road boulder",
+      "level": 10,
+      "pos": [
+       560,
+       900,
+       131.5
+      ],
+      "health_mult": 2
+     },
+     "success": "The field road is clear.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    }
+   ]
+  },
+  {
+   "id": "silvermine_moon_silver_convoy",
+   "title": "The Moon-Silver Convoy",
+   "levels": [
+    20,
+    26
+   ],
+   "rest_s": 40,
+   "hint": "A sheevra cart is on the road from the mines to the Druid's Hollow...",
+   "first_delay_s": [
+    300,
+    1200
+   ],
+   "interval_s": [
+    1800,
+    2700
+   ],
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "intercept",
+     "name": "The Cart",
+     "objective": "Stop the moon-silver cart before it reaches the Druid's Hollow",
+     "announce": "A sheevra cart heaped with pale moon-silver is rattling south from the mines to the rogue druids. Stop it!",
+     "radius": 60,
+     "time_s": 900,
+     "alive": 4,
+     "speed": 120,
+     "path": [
+      [
+       1200,
+       1150,
+       124.2
+      ],
+      [
+       1120,
+       1230,
+       158.8
+      ],
+      [
+       1050,
+       1300,
+       162.0
+      ],
+      [
+       990,
+       1380,
+       137.1
+      ],
+      [
+       950,
+       1450,
+       133.7
+      ],
+      [
+       880,
+       1490,
+       143.0
+      ],
+      [
+       850,
+       1500,
+       154.8
+      ]
+     ],
+     "boss": {
+      "template": 60158958,
+      "name": "moon-silver cart",
+      "level": 24,
+      "size": 64,
+      "model": 413,
+      "health_mult": 2.5,
+      "guild": "Sheevra Convoy"
+     },
+     "mobs": [
+      {
+       "template": 60165949,
+       "name": "sheevra swordsman",
+       "level": [
+        21,
+        23
+       ]
+      },
+      {
+       "template": 60165948,
+       "name": "sheevra skirmisher",
+       "level": [
+        22,
+        24
+       ]
+      }
+     ],
+     "success": "The cart goes over and moon-silver spills glowing across the road - and the druid who was waiting for it comes to take it anyway.",
+     "fail": "The cart rolls into the Druid's Hollow. The rogue druids have their silver.",
+     "on_success": "c2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 100
+     }
+    },
+    {
+     "id": "c2",
+     "type": "boss",
+     "name": "the Broker's Hand",
+     "objective": "Defeat Fiadhnait, the Broker's Hand",
+     "announce": "Fiadhnait, a rogue druid with a satchel of blue beads, steps out of the trees. 'That silver is paid for. The Voice in Connacht is waiting.' Bring friends.",
+     "center": [
+      950,
+      1450,
+      133.7
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 10120,
+      "name": "Fiadhnait, the Broker's Hand",
+      "level": 27,
+      "size": 58,
+      "health_mult": 2.0,
+      "guild": "Rogue Druid"
+     },
+     "adds": {
+      "every_s": 45,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 10120,
+        "name": "rogue druid",
+        "level": [
+         22,
+         24
+        ]
+       }
+      ]
+     },
+     "success": "Fiadhnait falls. Her satchel holds blue-glass beads - the Azure Order's coin - and a note for 'the Voice, in the Wicker Fields'.",
+     "fail": "Fiadhnait gathers up the silver and slips away south.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 160,
+      "items": [
+       {
+        "id": "nu201_fiadhnait_s_bead_satchel",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "silvermine_badger_drive",
+   "title": "The Badger Drive",
+   "levels": [
+    18,
+    24
+   ],
+   "rest_s": 40,
+   "hint": "Ardagh's herd is up on the High Pastures, and the badgers are hungry...",
+   "first_delay_s": [
+    300,
+    1200
+   ],
+   "interval_s": [
+    1800,
+    2700
+   ],
+   "start": "b1",
+   "stages": [
+    {
+     "id": "b1",
+     "type": "defend",
+     "name": "Ardagh's Herd",
+     "objective": "Keep Herder Dunlang alive while he drives Ardagh's herd home",
+     "announce": "Silvermine badgers - big as boars and twice as bad-tempered - are coming down on Ardagh's herd. Herder Dunlang needs a hand!",
+     "center": [
+      1300,
+      300,
+      126.7
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "template": 0,
+      "name": "Herder Dunlang",
+      "level": 20,
+      "model": 337,
+      "pos": [
+       1300,
+       300,
+       126.7
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        1350,
+        360,
+        126.5
+       ],
+       [
+        1250,
+        260,
+        130.8
+       ],
+       [
+        1380,
+        280,
+        167.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60166045,
+        "name": "silvermine badger",
+        "level": [
+         19,
+         21
+        ]
+       }
+      ]
+     },
+     "thanks": "\"Every cow home. Every one!\"",
+     "success": "The badgers fall back to their sett - all but one, grey and huge.",
+     "fail": "Herder Dunlang falls, and the herd scatters over the pastures.",
+     "on_success": "b2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 90
+     }
+    },
+    {
+     "id": "b2",
+     "type": "boss",
+     "name": "Old Greyback",
+     "objective": "Defeat Old Greyback",
+     "announce": "Old Greyback, the oldest boar of the High Pastures, comes for the herd himself. Bring friends.",
+     "center": [
+      1300,
+      300,
+      126.7
+     ],
+     "radius": 80,
+     "time_s": 900,
+     "boss": {
+      "template": 60166045,
+      "name": "Old Greyback",
+      "level": 25,
+      "size": 72,
+      "health_mult": 2.0,
+      "guild": "of the High Pastures"
+     },
+     "adds": {
+      "every_s": 45,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60166045,
+        "name": "silvermine badger",
+        "level": [
+         19,
+         21
+        ]
+       }
+      ]
+     },
+     "success": "Old Greyback lumbers off, beaten. Ardagh eats this winter.",
+     "fail": "Old Greyback scatters the herd.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 140,
+      "items": [
+       {
+        "id": "nu201_old_greyback_s_tusk",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "silvermine_deep_wind",
+   "title": "The Deep Wind",
+   "levels": [
+    26,
+    32
+   ],
+   "time": "night",
+   "rest_s": 40,
+   "hint": "A storm rides off the Heights - and something rides in it...",
+   "first_delay_s": [
+    300,
+    1200
+   ],
+   "interval_s": [
+    2400,
+    3600
+   ],
+   "start": "h1",
+   "stages": [
+    {
+     "id": "h1",
+     "type": "boss",
+     "name": "the Storm's Heart",
+     "objective": "Hunt down the Storm's Heart on the Heights",
+     "announce": "A cold storm pours off the Heights, and the deamhan aeir ride it. At its heart is something that wants out of the valley. Hunt it down!",
+     "center": [
+      1150,
+      1350,
+      181.4
+     ],
+     "radius": 90,
+     "time_s": 1500,
+     "path": [
+      [
+       1110,
+       1400,
+       236.2
+      ],
+      [
+       1200,
+       1450,
+       182.3
+      ],
+      [
+       1300,
+       1400,
+       175.6
+      ],
+      [
+       1250,
+       1300,
+       130.4
+      ],
+      [
+       1150,
+       1350,
+       181.4
+      ]
+     ],
+     "boss": {
+      "template": 60159810,
+      "name": "the Storm's Heart",
+      "level": 32,
+      "size": 70,
+      "health_mult": 2.0,
+      "guild": "of the Deep Wind"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60159810,
+        "name": "deamhan aeir",
+        "level": [
+         27,
+         29
+        ]
+       },
+       {
+        "template": 60159811,
+        "name": "deamhan creig",
+        "level": [
+         26,
+         28
+        ]
+       }
+      ]
+     },
+     "success": "The Storm's Heart breaks apart into sleet, and the wind drops. The deamhan scatter back to their peaks.",
+     "fail": "The storm blows itself out, and its heart goes back into the deep.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 180,
+      "items": [
+       {
+        "id": "nu201_storm_s_heart_stone",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "silvermine_silver_mine_assault",
+   "title": "Retake the Silver Mine",
+   "levels": [
+    20,
+    26
+   ],
+   "manual": true,
+   "bots": 8,
+   "min_people": 4,
+   "bot_min_level": 16,
+   "hint": "The Mine-Wardens are gathering a war band on the mine road.",
+   "rest_s": 15,
+   "start": "m1",
+   "giver": {
+    "name": "Warden-Sergeant Cass",
+    "level": 24,
+    "pos": [
+     1300,
+     720,
+     141.2
+    ],
+    "health_mult": 3,
+    "template": 60165767,
+    "model": 365,
+    "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
+    "guild": "Mine-Wardens of Howth",
+    "greet": "The sheevra have had our silver long enough. Four at least - bots and all - and when you're ready, say [take back the mine].",
+    "accept": "take back the mine",
+    "reply": "Up the mine road! Mind the archers on the spoil heaps - into the huts, and don't stop!",
+    "busy": "Not yet. Rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The mine is Howth's again. The silver's ours.",
+    "regret": "Fall back to the road! We'll come again."
+   },
+   "guards": [
+    {
+     "template": 60165767,
+     "model": 365,
+     "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
+     "guild": "Mine-Wardens of Howth",
+     "name": "Mine-Warden",
+     "level": 22,
+     "count": 2
+    }
+   ],
+   "stages": [
+    {
+     "id": "m1",
+     "type": "cull",
+     "name": "Storm the Huts",
+     "objective": "Clear the sheevra huts while their archers shoot from the spoil heaps",
+     "announce": "Into the huts! The sheevra archers are on the spoil heaps - keep moving!",
+     "center": [
+      1420,
+      700,
+      129.7
+     ],
+     "radius": 55,
+     "time_s": 900,
+     "kill": 20,
+     "alive": 9,
+     "mobs": [
+      {
+       "template": 60165949,
+       "name": "sheevra swordsman",
+       "level": [
+        21,
+        23
+       ]
+      },
+      {
+       "template": 60165945,
+       "name": "sheevra archer",
+       "level": [
+        21,
+        23
+       ]
+      },
+      {
+       "template": 60165945,
+       "name": "sheevra archer",
+       "level": [
+        21,
+        23
+       ]
+      },
+      {
+       "template": 60165948,
+       "name": "sheevra skirmisher",
+       "level": [
+        22,
+        24
+       ]
+      }
+     ],
+     "success": "The huts are ours. From the main working, a horn - Dergal and his overseer are coming out together.",
+     "fail": "The war band is driven back down the mine road.",
+     "on_success": "m2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 130,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "m2",
+     "type": "boss",
+     "name": "Chieftain Dergal",
+     "objective": "Defeat Chieftain Dergal and Overseer Camlin",
+     "announce": "Chieftain Dergal comes out of the main working in silver mail, Overseer Camlin at his side with a whip. 'Howth's diggers want their hole back? Come and take it.'",
+     "center": [
+      1460,
+      690,
+      125.4
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60159138,
+      "name": "Chieftain Dergal",
+      "level": 27,
+      "size": 62,
+      "equipment": "5cf6a14c-ba00-40c0-9659-3d5ef1d3dc92",
+      "guild": "Sheevra War-Chief"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60164801,
+        "name": "Overseer Camlin",
+        "level": [
+         25,
+         25
+        ]
+       },
+       {
+        "template": 60165949,
+        "name": "sheevra swordsman",
+        "level": [
+         21,
+         23
+        ]
+       },
+       {
+        "template": 60165945,
+        "name": "sheevra archer",
+        "level": [
+         21,
+         23
+        ]
+       }
+      ]
+     },
+     "success": "Dergal falls, and Camlin with him. The sheevra break for the high pastures. The Silver Mine is Howth's!",
+     "fail": "Dergal holds his mine. The war band breaks for the road.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 220,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "mn201_dergal_s_silver_helm",
+        "gold_chance": 50,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "silvermine_silver_mine_raid",
+   "title": "The Sheevra Come Back",
+   "levels": [
+    21,
+    27
+   ],
+   "manual": true,
+   "bots": 8,
+   "bot_min_level": 16,
+   "hint": "Horns on the high pastures: the sheevra are coming back for their silver.",
+   "wake_m": 160,
+   "auto_fail_s": 900,
+   "start": "x1",
+   "stages": [
+    {
+     "id": "x1",
+     "type": "defend",
+     "name": "The Mine Gate",
+     "objective": "Keep Mine-Steward Eoin alive at the mine",
+     "announce": "Sheevra from every slope! Hold the mine!",
+     "center": [
+      1440,
+      700,
+      126.9
+     ],
+     "radius": 70,
+     "duration_s": 200,
+     "protect": {
+      "template": 60165767,
+      "model": 365,
+      "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
+      "guild": "Mine-Wardens of Howth",
+      "name": "Mine-Steward Eoin",
+      "level": 24,
+      "pos": [
+       1440,
+       700,
+       126.9
+      ],
+      "health_mult": 4
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 4,
+      "from": [
+       [
+        1500,
+        740,
+        143.9
+       ],
+       [
+        1470,
+        640,
+        128.1
+       ],
+       [
+        1380,
+        640,
+        156.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60165949,
+        "name": "sheevra swordsman",
+        "level": [
+         21,
+         23
+        ]
+       },
+       {
+        "template": 60165945,
+        "name": "sheevra archer",
+        "level": [
+         21,
+         23
+        ]
+       },
+       {
+        "template": 60165948,
+        "name": "sheevra skirmisher",
+        "level": [
+         22,
+         24
+        ]
+       }
+      ]
+     },
+     "success": "The first rush breaks - and their war-chief comes up the slope.",
+     "fail": "The mine is overrun.",
+     "on_success": "x2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 140,
+      "tokens": 14
+     }
+    },
+    {
+     "id": "x2",
+     "type": "boss",
+     "name": "War-Chief Druimne",
+     "objective": "Defeat War-Chief Druimne",
+     "announce": "War-Chief Druimne, Dergal's sister, in her brother's silver: 'Every vein in this mountain is ours. Every one.'",
+     "center": [
+      1440,
+      700,
+      126.9
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60165946,
+      "name": "War-Chief Druimne",
+      "level": 27,
+      "size": 62,
+      "guild": "Sheevra War-Chief"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60165949,
+        "name": "sheevra swordsman",
+        "level": [
+         21,
+         23
+        ]
+       },
+       {
+        "template": 60165945,
+        "name": "sheevra archer",
+        "level": [
+         21,
+         23
+        ]
+       }
+      ]
+     },
+     "success": "Druimne falls. The mine holds - for now.",
+     "fail": "Druimne takes the mine back for the sheevra.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 200,
+      "tokens": 20
+     }
+    }
+   ]
+  }
+ ],
+ "siege": {
+  "id": "silver_mine",
+  "name": "the Silver Mine",
+  "enemy": "the sheevra",
+  "resolve_name": "Miners' resolve",
+  "enemy_name": "Sheevra strength",
+  "faction": "mine_wardens",
+  "feeds": {
+   "silvermine_mountains_sheevra_warband": 20,
+   "silvermine_moon_silver_convoy": 15,
+   "silvermine_badger_drive": 10,
+   "silvermine_mountains_spraggon_warren": 10,
+   "silvermine_mountains_walking_rocks": 5
+  },
+  "feed_default": 5,
+  "quests": {
+   "sm_ridge_archers": 10,
+   "sheevra_mine": 10,
+   "sm_scar_nose": 10,
+   "sm_overseer": 15,
+   "sm_chieftain_dergal": 25
+  },
+  "enemy_feeds": {
+   "silvermine_mountains_sheevra_warband": 20
+  },
+  "enemy_default": 5,
+  "war_chain": "silvermine_mountains_sheevra_warband",
+  "assault": "silvermine_silver_mine_assault",
+  "raids": [],
+  "last_raid": "silvermine_silver_mine_raid",
+  "hold_h": 2,
+  "raid_gap_h": [
+   2,
+   1.5,
+   1.5
+  ],
+  "criers": [],
+  "bots_go_after_m": 30,
+  "open_text": "Hear me! The Mine-Wardens say the sheevra can be driven out of the Silver Mine! Warden-Sergeant Cass waits on the mine road for a war band. If no one leads them within the half-hour, they'll go without you.",
+  "taken_text": "The Silver Mine is Howth's again! The Mine-Wardens are reopening the workings - go and see.",
+  "repelled_text": "The assault on the Silver Mine has been thrown back. The sheevra grow bolder.",
+  "raid_text": "The sheevra are coming back for the Silver Mine!",
+  "held_text": "The sheevra are beaten off. The Silver Mine holds.",
+  "fall_text": "The Silver Mine has fallen. The sheevra hold the workings again, and Howth must rebuild its resolve.",
+  "carry_text": "The Mine-Wardens lead you up the mine road at a run.",
+  "carried_cry": "The war band wouldn't wait any longer - the Mine-Wardens have stormed {0}!",
+  "hostile_tier": "yellow",
+  "sites": [
+   "mine_huts",
+   "mine_road"
+  ],
+  "staging": [
+   1300,
+   720,
+   141.2
+  ],
+  "landing": [
+   1410,
+   690,
+   129.9
+  ],
+  "area": [
+   1450,
+   690,
+   100
+  ],
+  "camp_npcs": [
+   {
+    "kind": "marks",
+    "name": "Warden-Quartermaster Ceallach",
+    "model": 337,
+    "level": 26,
+    "pos": [
+     1460,
+     720,
+     126.3
+    ],
+    "guild": "Mine-Wardens of Howth",
+    "greet": "Mine-only stock: silver from these very workings, for those who took them back and those who hold them.",
+    "stock": [
+     {
+      "item": "mn201_cloak_of_the_reopened_mine",
+      "price": 60
+     },
+     {
+      "item": "mn201_moon_silver_torc",
+      "price": 40
+     },
+     {
+      "item": "mn201_shaft_silver_ring",
+      "price": 40
+     },
+     {
+      "item": "mn201_pick_and_hammer_bracer",
+      "price": 40
+     },
+     {
+      "item": "tw_strong_draught_of_healing",
+      "price": 2
+     },
+     {
+      "item": "tw_strong_draught_of_power",
+      "price": 2
+     }
+    ]
+   },
+   {
+    "kind": "coin",
+    "name": "Brewer Gobnait",
+    "model": 365,
+    "level": 22,
+    "pos": [
+     1470,
+     670,
+     125.9
+    ],
+    "guild": "Mine-Wardens of Howth",
+    "greet": "Miners' brews. Dust in your throat all day, you want something stronger than water. Coin, mind.",
+    "stock": [
+     {
+      "item": "mn201_miners_ale"
+     },
+     {
+      "item": "mn201_lamp_oil_tonic"
+     },
+     {
+      "item": "mn201_silver_dust_cordial"
+     },
+     {
+      "item": "mn201_deep_shaft_elixir"
+     },
+     {
+      "item": "mn201_ardagh_stout"
+     }
+    ]
+   },
+   {
+    "kind": "idle",
+    "name": "Smith Flann",
+    "model": 337,
+    "level": 24,
+    "pos": [
+     1440,
+     670,
+     126.9
+    ],
+    "guild": "Mine-Wardens of Howth",
+    "greet": "Sheevra iron. Good stuff, honestly. I'm making horseshoes of it out of spite.",
+    "idle": "Ring of the hammer, ring of the pick. Sounds like home."
+   },
+   {
+    "kind": "idle",
+    "name": "Mine-Warden",
+    "level": 22,
+    "pos": [
+     1430,
+     710,
+     128.1
+    ],
+    "count": 3,
+    "template": 60165767,
+    "model": 365,
+    "equipment": "12fdc433-8617-4016-848a-b2bdd3508a64",
+    "guild": "Mine-Wardens of Howth",
+    "idle": "Keep your eyes on the high pastures. That's where they'll come from."
+   }
+  ],
+  "holdouts": [
+   {
+    "kind": "holdout",
+    "name": "sheevra holdout",
+    "template": 60165949,
+    "level": 23,
+    "pos": [
+     1500,
+     740,
+     143.9
+    ],
+    "count": 4,
+    "tier": "yellow",
+    "respawn_s": 300
+   },
+   {
+    "kind": "holdout",
+    "name": "sheevra tunnel-rat",
+    "template": 60165947,
+    "level": 22,
+    "pos": [
+     1490,
+     650,
+     127.8
+    ],
+    "count": 3,
+    "tier": "yellow",
+    "respawn_s": 300
+   },
+   {
+    "kind": "holdout",
+    "name": "Shaft-Boss Muirgheal",
+    "template": 60165946,
+    "level": 25,
+    "pos": [
+     1505,
+     730,
+     140.3
+    ],
+    "count": 1,
+    "tier": "orange",
+    "respawn_s": 900
+   }
   ]
+ }
 }

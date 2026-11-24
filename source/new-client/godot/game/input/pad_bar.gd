@@ -33,7 +33,7 @@ const ORDERS := [["FOLLOW", "/order follow"], ["COLUMN", "/order formation colum
 var _wheel: Array = []
 var _wheel_title := "MENU"
 const WHEEL := [["HERO", "hero"], ["BAGS", "bags"], ["ABILITIES", "skills"], ["STYLES", "ac_styles"], ["MAP", "map"],
-		["JOURNAL", "journal"], ["GUILD", "guild"], ["OPTIONS", "options"]]
+		["JOURNAL", "journal"], ["GUILD", "guild"], ["GROUP", "group"], ["OPTIONS", "options"]]
 
 
 func _ready() -> void:
@@ -75,6 +75,9 @@ func _process(_delta: float) -> void:
 	var ac = Pad.ac
 	var want := Pad.active and ac != null and is_instance_valid(ac) and bool(ac.get("on")) and ui != null \
 			and not bool(ui.get("hidden_all"))
+	var locked: int = int(ui.modern.get("lock_mode")) if ui and ui.get("modern") else -1
+	if locked >= 0:
+		want = locked == 1                                 # (EDIT UI on a layout: that layout's bar, whatever is in use)
 	if want != _shown:
 		_shown = want
 		left.visible = want
@@ -292,6 +295,27 @@ class Cluster extends Control:
 
 # ---------------------------------------------------------------- the menu wheel and the windows
 
+## The group, for the controller (owner 2026-11-23: "The controller radial menu needs an option for a Group Window
+## menu ... be able to do things like kick them, /buff them"): a menu of your group, the d-pad and A to pick one -
+## their own menu comes up (the server's: kick, buff, follow, assist, your companion's window,
+## whatever SocialMenuCommandHandler offers for them). Your own entry: your menu (leave the group, ...).
+func open_group() -> void:
+	if ui == null or ui.get("social_menu") == null:
+		return
+	var gm: Array = Server.group_members
+	if gm.is_empty():
+		PlayerData.message.emit("You are not in a group.", "system")
+		return
+	var entries := []
+	for m in gm:
+		var oid := int(m.get("oid", 0))
+		var me := oid == Server.me_oid
+		var label := "%s%s  L%d %s" % ["(YOU) " if me else "", String(m.get("name", "")), int(m.get("level", 0)),
+				String(m.get("class_name", ""))]
+		entries.append([label, func(): Server.command("/socialmenu %d" % oid if not me else "/socialmenu")])
+	ui.social_menu.open("Group", entries)
+
+
 func radial_shown() -> bool:
 	return _radial
 
@@ -363,6 +387,8 @@ func open_window(id: String) -> void:
 	if ui == null:
 		return
 	match id:
+		"group":
+			open_group()
 		"hero":
 			ui.open_hero("equipment")
 		"skills":

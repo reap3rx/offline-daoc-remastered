@@ -1,750 +1,3113 @@
 {
-  "zone": 202,
-  "region": 200,
-  "name": "Shannon Estuary",
-  "lore": "The Shannon Estuary: Connla and Ceannoi on the river mouth, where the eriu hunt the shallows and giant ants swarm the eastern shore.",
-  "chains": [
+ "zone": 202,
+ "region": 200,
+ "name": "Shannon Estuary",
+ "lore": "The Shannon Estuary: Connla on the strand, Ceannai on the south road, and Connla's Well in the east, where the river is born. In the old tale Sinann went to the well for the wisdom of the nine hazels and it rose up and drowned her, and her drowning became the river. Now the well is rising again: the sea runs up the river in calm weather, the ants are flooded out of their hills, the drowned walk the strand, and Kaen Kedger's well-callers sing at the standing stones.",
+ "chains": [
+  {
+   "id": "shannon_estuary_giant_ants",
+   "title": "The Giant Ants",
+   "levels": [
+    16,
+    24
+   ],
+   "hint": "The ants are pouring out of their flooded hills onto the south road...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "shannon_estuary_giant_ants",
-      "title": "The Giant Ants",
-      "levels": [21, 24],
-      "hint": "The ground crawls on the eastern shore...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Ant Hills",
-          "objective": "Clear the ant hills",
-          "announce": "The giant ants are swarming out of their hills. Their queen has come up with them - kill her.",
-          "center": [914, 865, 137.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12353,
-              "name": "giant ant",
-              "level": [21, 24]
-            }
-          ],
-          "success": "You have cleared the ant hills. The Ant Queen of the Shannon comes out to fight.",
-          "fail": "They hold the ant hills. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Ant Queen of the Shannon",
-          "objective": "Defeat the Ant Queen of the Shannon",
-          "announce": "The Ant Queen of the Shannon stands at the ant hills. Bring friends.",
-          "center": [914, 865, 137.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12353,
-            "name": "The Ant Queen of the Shannon",
-            "level": 26,
-            "size": 65,
-            "pos": [914, 865, 137.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12353,
-                "name": "giant ant",
-                "level": [21, 24]
-              }
-            ]
-          },
-          "success": "The Ant Queen of the Shannon falls. The way is safe again.",
-          "fail": "The Ant Queen of the Shannon slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu202_ant_queen_of_the_shannon_s_jewel", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Giant Ants Hold the Road",
-          "objective": "Drive the giant ants off the road",
-          "announce": "With The Giant Ants lost, the giant ants have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [880, 592, 122.1],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12353,
-              "name": "giant ant",
-              "level": [21, 24]
-            }
-          ],
-          "boss": {
-            "template": 12353,
-            "name": "Giant ant warleader",
-            "level": 25,
-            "pos": [880, 592, 122.1],
-            "health_mult": 2
-          },
-          "success": "The giant ants are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cormac has come out to set the road right. The giant ants are coming back for it!",
-          "center": [880, 592, 122.1],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cormac",
-            "level": 24,
-            "pos": [880, 592, 122.1],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [948, 643, 135.2],
-              [890, 676, 134.9],
-              [827, 658, 122.9]
-            ],
-            "mobs": [
-              {
-                "template": 12353,
-                "name": "giant ant",
-                "level": [21, 24]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The giant ants break and scatter. The road is open again.",
-          "fail": "Roadwarden Cormac falls, and the giant ants take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Ant Hills",
+     "objective": "Clear the ant hills",
+     "announce": "Salt water has flooded the ant hills from below, and the giant ants are pouring out onto the road. Their queen has come up with them - kill her.",
+     "center": [
+      914,
+      865,
+      137.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12353,
+       "name": "giant ant",
+       "level": [
+        17,
+        20
+       ]
+      }
+     ],
+     "success": "You have cleared the ant hills. The Ant Queen of the Shannon comes out to fight.",
+     "fail": "They hold the ant hills. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "shannon_estuary_eriu_hunters",
-      "title": "The Eriu Hunters",
-      "levels": [19, 22],
-      "hint": "Hunting horns sound on the river...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Fiachra the Ferryman",
-          "objective": "Protect Fiachra the Ferryman, who is mending his ferry",
-          "announce": "The eriu are hunting along the river, and Fiachra the ferryman is stuck mending his boat. Keep them off him.",
-          "center": [1303, 1218, 157.6],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Fiachra the Ferryman",
-            "template": 60161797,
-            "level": 22,
-            "model": 378,
-            "equipment": "a4467770-ab83-4fc8-ba4f-08b41de96d74",
-            "health_mult": 10,
-            "pos": [1303, 1218, 157.6]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1228, 1177, 141.8],
-              [1281, 1136, 126.5],
-              [1346, 1145, 156.0]
-            ],
-            "mobs": [
-              {
-                "template": 60160565,
-                "name": "eriu henter",
-                "level": [19, 22]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Fiachra the Ferryman. \"They came from over there - let's finish this.\"",
-          "fail": "Fiachra the Ferryman falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Ferry Landing",
-          "objective": "Clear the ferry landing",
-          "announce": "They came from the ferry landing. Follow them back and clear it out.",
-          "center": [1233, 957, 158.7],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60160565,
-              "name": "eriu henter",
-              "level": [19, 22]
-            }
-          ],
-          "success": "You have cleared the ferry landing. The Eriu Huntmaster comes out to fight.",
-          "fail": "They hold the ferry landing. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Eriu Huntmaster",
-          "objective": "Defeat the Eriu Huntmaster",
-          "announce": "The Eriu Huntmaster stands at the ferry landing. Bring friends.",
-          "center": [1233, 957, 158.7],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60160565,
-            "name": "The Eriu Huntmaster",
-            "level": 24,
-            "size": 70,
-            "pos": [1233, 957, 158.7],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60160565,
-                "name": "eriu henter",
-                "level": [19, 22]
-              }
-            ]
-          },
-          "success": "The Eriu Huntmaster falls. The way is safe again.",
-          "fail": "The Eriu Huntmaster slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu202_eriu_huntmaster_s_bracer", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Eriu Henters Hold the Road to Ceannoi",
-          "objective": "Drive the eriu henters off the road to Ceannoi",
-          "announce": "With The Eriu Hunters lost, the eriu henters have spread down onto the road to Ceannoi and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1070, 1215, 127.4],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60160565,
-              "name": "eriu henter",
-              "level": [19, 22]
-            }
-          ],
-          "boss": {
-            "template": 60160565,
-            "name": "Eriu henter warleader",
-            "level": 23,
-            "pos": [1070, 1215, 127.4],
-            "health_mult": 2
-          },
-          "success": "The eriu henters are gone from the road to Ceannoi. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Aine has come out to set the road to Ceannoi right. The eriu henters are coming back for it!",
-          "center": [1070, 1215, 127.4],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Aine",
-            "level": 22,
-            "pos": [1070, 1215, 127.4],
-            "health_mult": 10,
-            "template": 60161797,
-            "model": 378,
-            "equipment": "a4467770-ab83-4fc8-ba4f-08b41de96d74"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1050, 1132, 154.1],
-              [1115, 1143, 134.2],
-              [1153, 1197, 127.6]
-            ],
-            "mobs": [
-              {
-                "template": 60160565,
-                "name": "eriu henter",
-                "level": [19, 22]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Ceannoi is safe again. Thank you.\"",
-          "success": "The eriu henters break and scatter. The road to Ceannoi is open again.",
-          "fail": "Roadwarden Aine falls, and the eriu henters take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "shannon_estuary_sheerie_ring",
-      "title": "The Sheerie Ring",
-      "levels": [7, 12],
-      "hint": "Sentinel Ronnat is looking for help in Ceannoi.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Sentinel Ronnat",
-        "template": 60165769,
-        "level": 13,
-        "model": 328,
-        "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
-        "guild": "Sentinels of Ceannoi",
-        "health_mult": 4,
-        "pos": [964, 1567, 126.3],
-        "greet": "Three children followed the sheerie lights into the bog last night. I'm going to the sheerie ring to fetch them back. Will you come? Say when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
-      },
-      "guards": [
-        {
-          "name": "Sentinel",
-          "template": 60165769,
-          "level": 12,
-          "model": 328,
-          "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
-          "guild": "Sentinels of Ceannoi",
-          "health_mult": 2,
-          "count": 3
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "The Ant Queen of the Shannon",
+     "objective": "Defeat the Ant Queen of the Shannon",
+     "announce": "The Ant Queen of the Shannon stands at the ant hills. Bring friends.",
+     "center": [
+      914,
+      865,
+      137.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12353,
+      "name": "The Ant Queen of the Shannon",
+      "level": 22,
+      "size": 65,
+      "pos": [
+       914,
+       865,
+       137.8
       ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Sheerie Ring",
-          "objective": "Go with Sentinel Ronnat to the sheerie ring",
-          "announce": "Sentinel Ronnat sets out for the sheerie ring to fetch the lost children home.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [949, 1542, 126.0],
-            [933, 1510, 128.4],
-            [877, 1446, 157.8],
-            [877, 1358, 131.7],
-            [861, 1334, 126.5],
-            [829, 1302, 126.0],
-            [829, 1254, 126.3],
-            [813, 1230, 128.4],
-            [797, 1198, 129.1],
-            [749, 1142, 142.4],
-            [677, 1078, 146.2],
-            [661, 1062, 128.4],
-            [645, 1038, 136.2],
-            [613, 1022, 152.4],
-            [605, 998, 158.3]
-          ],
-          "ambushes": [
-            {
-              "at": 7,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 30002,
-                  "name": "moss sheerie",
-                  "level": [9, 12]
-                },
-                {
-                  "template": 60163477,
-                  "name": "lunantishee",
-                  "level": [8, 9]
-                }
-              ]
-            }
-          ],
-          "success": "Sentinel Ronnat reaches the sheerie ring. \"There they are. Clear them out!\"",
-          "fail": "Sentinel Ronnat falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Sheerie Ring",
-          "objective": "Clear the sheerie ring",
-          "announce": "Clear the sheerie ring!",
-          "center": [601, 994, 158.6],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 30002,
-              "name": "moss sheerie",
-              "level": [9, 12]
-            },
-            {
-              "template": 60163477,
-              "name": "lunantishee",
-              "level": [8, 9]
-            },
-            {
-              "template": 60159274,
-              "name": "cluricaun trip",
-              "level": [7, 9]
-            }
-          ],
-          "success": "You have cleared the sheerie ring. Queen Aoibheall comes out to fight.",
-          "fail": "They hold the sheerie ring. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "Queen Aoibheall",
-          "objective": "Defeat Queen Aoibheall",
-          "announce": "Queen Aoibheall stands at the sheerie ring. Bring friends.",
-          "center": [601, 994, 158.6],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 30002,
-            "name": "Queen Aoibheall",
-            "level": 14,
-            "size": 65,
-            "pos": [601, 994, 158.6],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 30002,
-                "name": "moss sheerie",
-                "level": [9, 12]
-              }
-            ]
-          },
-          "success": "Queen Aoibheall falls. Ceannoi will hear of this in the taverns tonight.",
-          "fail": "Queen Aoibheall slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu202_queen_aoibheall_s_torc", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Moss Sheeries Hold the Road",
-          "objective": "Drive the moss sheeries off the road",
-          "announce": "With The Sheerie Ring lost, the moss sheeries have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [420, 853, 121.2],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 30002,
-              "name": "moss sheerie",
-              "level": [9, 12]
-            },
-            {
-              "template": 60163477,
-              "name": "lunantishee",
-              "level": [8, 9]
-            },
-            {
-              "template": 60159274,
-              "name": "cluricaun trip",
-              "level": [7, 9]
-            }
-          ],
-          "boss": {
-            "template": 30002,
-            "name": "Moss sheerie warleader",
-            "level": 13,
-            "pos": [420, 853, 121.2],
-            "health_mult": 2
-          },
-          "success": "The moss sheeries are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Fiona has come out to set the road right. The moss sheeries are coming back for it!",
-          "center": [420, 853, 121.2],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Fiona",
-            "level": 12,
-            "pos": [420, 853, 121.2],
-            "health_mult": 10,
-            "template": 60165769,
-            "model": 328,
-            "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [504, 841, 119.3],
-              [487, 905, 121.3],
-              [429, 937, 121.3]
-            ],
-            "mobs": [
-              {
-                "template": 30002,
-                "name": "moss sheerie",
-                "level": [9, 12]
-              },
-              {
-                "template": 60163477,
-                "name": "lunantishee",
-                "level": [8, 9]
-              },
-              {
-                "template": 60159274,
-                "name": "cluricaun trip",
-                "level": [7, 9]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The moss sheeries break and scatter. The road is open again.",
-          "fail": "Roadwarden Fiona falls, and the moss sheeries take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12353,
+        "name": "giant ant",
+        "level": [
+         17,
+         20
+        ]
+       }
       ]
+     },
+     "success": "The Ant Queen of the Shannon falls. The way is safe again.",
+     "fail": "The Ant Queen of the Shannon slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu202_ant_queen_of_the_shannon_s_jewel",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
     },
     {
-      "id": "shannon_estuary_sandmen",
-      "title": "The Sandmen of the Strand",
-      "levels": [0, 4],
-      "hint": "The sand of the strand is walking...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Strand",
-          "objective": "Clear the strand",
-          "announce": "The sandmen have risen along the strand and drag fishermen into the dunes. Break them back into sand.",
-          "center": [282, 510, 144.3],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60165568,
-              "name": "sand crab",
-              "level": [0, 1]
-            },
-            {
-              "template": 60165575,
-              "name": "sandman",
-              "level": [2, 4]
-            }
-          ],
-          "success": "You have cleared the strand. The Tide-Turned comes out to fight.",
-          "fail": "They hold the strand. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Tide-Turned",
-          "objective": "Defeat the Tide-Turned",
-          "announce": "The Tide-Turned stands at the strand. Bring friends.",
-          "center": [282, 510, 144.3],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60165575,
-            "name": "The Tide-Turned",
-            "level": 6,
-            "size": 37,
-            "pos": [282, 510, 144.3],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60165568,
-                "name": "sand crab",
-                "level": [0, 1]
-              }
-            ]
-          },
-          "success": "The Tide-Turned falls. The way is safe again.",
-          "fail": "The Tide-Turned slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu202_tide_turned_s_mantle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Sand Crabs Hold the Road to Connla",
-          "objective": "Drive the sand crabs off the road to Connla",
-          "announce": "With The Sandmen of the Strand lost, the sand crabs have spread down onto the road to Connla and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [438, 609, 121.2],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60165568,
-              "name": "sand crab",
-              "level": [0, 1]
-            },
-            {
-              "template": 60165575,
-              "name": "sandman",
-              "level": [2, 4]
-            }
-          ],
-          "boss": {
-            "template": 60165568,
-            "name": "Sand crab warleader",
-            "level": 5,
-            "pos": [438, 609, 121.2],
-            "health_mult": 2
-          },
-          "success": "The sand crabs are gone from the road to Connla. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Fiona has come out to set the road to Connla right. The sand crabs are coming back for it!",
-          "center": [438, 609, 121.2],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Fiona",
-            "level": 4,
-            "pos": [438, 609, 121.2],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [355, 629, 121.2],
-              [366, 564, 124.6],
-              [421, 526, 125.2]
-            ],
-            "mobs": [
-              {
-                "template": 60165568,
-                "name": "sand crab",
-                "level": [0, 1]
-              },
-              {
-                "template": 60165575,
-                "name": "sandman",
-                "level": [2, 4]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Connla is safe again. Thank you.\"",
-          "success": "The sand crabs break and scatter. The road to Connla is open again.",
-          "fail": "Roadwarden Fiona falls, and the sand crabs take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Giant Ants Hold the Road",
+     "objective": "Drive the giant ants off the road",
+     "announce": "With The Giant Ants lost, the giant ants have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      880,
+      592,
+      122.1
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12353,
+       "name": "giant ant",
+       "level": [
+        17,
+        20
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12353,
+      "name": "Giant ant warleader",
+      "level": 21,
+      "pos": [
+       880,
+       592,
+       122.1
+      ],
+      "health_mult": 2
+     },
+     "success": "The giant ants are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cormac has come out to set the road right. The giant ants are coming back for it!",
+     "center": [
+      880,
+      592,
+      122.1
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cormac",
+      "level": 20,
+      "pos": [
+       880,
+       592,
+       122.1
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        948,
+        643,
+        135.2
+       ],
+       [
+        890,
+        676,
+        134.9
+       ],
+       [
+        827,
+        658,
+        122.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12353,
+        "name": "giant ant",
+        "level": [
+         17,
+         20
+        ]
+       }
       ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The giant ants break and scatter. The road is open again.",
+     "fail": "Roadwarden Cormac falls, and the giant ants take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
+   ]
+  },
+  {
+   "id": "shannon_estuary_eriu_hunters",
+   "title": "The Eriu Hunters",
+   "levels": [
+    20,
+    28
+   ],
+   "hint": "Eriu hunting horns on the river - the war-arrow has gone round the clans...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Fiachra the Ferryman",
+     "objective": "Protect Fiachra the Ferryman, who is mending his ferry",
+     "announce": "The eriu are hunting along the river, and Fiachra the ferryman is stuck mending his boat. Keep them off him.",
+     "center": [
+      1303,
+      1218,
+      157.6
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Fiachra the Ferryman",
+      "template": 60161797,
+      "level": 23,
+      "model": 378,
+      "equipment": "a4467770-ab83-4fc8-ba4f-08b41de96d74",
+      "health_mult": 10,
+      "pos": [
+       1303,
+       1218,
+       157.6
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1228,
+        1177,
+        141.8
+       ],
+       [
+        1281,
+        1136,
+        126.5
+       ],
+       [
+        1346,
+        1145,
+        156.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160565,
+        "name": "eriu henter",
+        "level": [
+         20,
+         23
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Fiachra the Ferryman. \"They came from over there - let's finish this.\"",
+     "fail": "Fiachra the Ferryman falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Ferry Landing",
+     "objective": "Clear the ferry landing",
+     "announce": "They came from the ferry landing. Follow them back and clear it out.",
+     "center": [
+      1233,
+      957,
+      158.7
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60160565,
+       "name": "eriu henter",
+       "level": [
+        20,
+        23
+       ]
+      }
+     ],
+     "success": "You have cleared the ferry landing. The Eriu Huntmaster comes out to fight.",
+     "fail": "They hold the ferry landing. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Eriu Huntmaster",
+     "objective": "Defeat the Eriu Huntmaster",
+     "announce": "The Eriu Huntmaster stands at the ferry landing. Bring friends.",
+     "center": [
+      1233,
+      957,
+      158.7
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60160565,
+      "name": "The Eriu Huntmaster",
+      "level": 25,
+      "size": 70,
+      "pos": [
+       1233,
+       957,
+       158.7
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60160565,
+        "name": "eriu henter",
+        "level": [
+         20,
+         23
+        ]
+       }
+      ]
+     },
+     "success": "The Eriu Huntmaster falls. The way is safe again.",
+     "fail": "The Eriu Huntmaster slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu202_eriu_huntmaster_s_bracer",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Eriu Henters Hold the Road to Ceannai",
+     "objective": "Drive the eriu henters off the road to Ceannai",
+     "announce": "With The Eriu Hunters lost, the eriu henters have spread down onto the road to Ceannai and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1070,
+      1215,
+      127.4
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60160565,
+       "name": "eriu henter",
+       "level": [
+        20,
+        23
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60160565,
+      "name": "Eriu henter warleader",
+      "level": 24,
+      "pos": [
+       1070,
+       1215,
+       127.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The eriu henters are gone from the road to Ceannai. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Aine has come out to set the road to Ceannai right. The eriu henters are coming back for it!",
+     "center": [
+      1070,
+      1215,
+      127.4
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Aine",
+      "level": 23,
+      "pos": [
+       1070,
+       1215,
+       127.4
+      ],
+      "health_mult": 10,
+      "template": 60161797,
+      "model": 378,
+      "equipment": "a4467770-ab83-4fc8-ba4f-08b41de96d74"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1050,
+        1132,
+        154.1
+       ],
+       [
+        1115,
+        1143,
+        134.2
+       ],
+       [
+        1153,
+        1197,
+        127.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160565,
+        "name": "eriu henter",
+        "level": [
+         20,
+         23
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Ceannai is safe again. Thank you.\"",
+     "success": "The eriu henters break and scatter. The road to Ceannai is open again.",
+     "fail": "Roadwarden Aine falls, and the eriu henters take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "shannon_estuary_sheerie_ring",
+   "title": "The Sheerie Ring",
+   "levels": [
+    12,
+    18
+   ],
+   "hint": "Sentinel Ronnat is looking for help in Ceannai.",
+   "rest_s": 45,
+   "giver": {
+    "name": "Sentinel Ronnat",
+    "template": 60165769,
+    "level": 18,
+    "model": 328,
+    "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+    "guild": "Sentinels of Ceannai",
+    "health_mult": 4,
+    "pos": [
+     964,
+     1567,
+     126.3
+    ],
+    "greet": "Three children followed the sheerie lights into the bog last night. I'm going to the sheerie ring to fetch them back. Will you come? Say when you're [ready].",
+    "accept": "ready",
+    "reply": "Good. Stay close - they will have watchers out. With me!",
+    "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "name": "Sentinel",
+     "template": 60165769,
+     "level": 17,
+     "model": 328,
+     "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+     "guild": "Sentinels of Ceannai",
+     "health_mult": 2,
+     "count": 3
+    }
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "escort",
+     "name": "The Road to Sheerie Ring",
+     "objective": "Go with Sentinel Ronnat to the sheerie ring",
+     "announce": "Sentinel Ronnat sets out for the sheerie ring to fetch the lost children home.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       949,
+       1542,
+       126.0
+      ],
+      [
+       933,
+       1510,
+       128.4
+      ],
+      [
+       877,
+       1446,
+       157.8
+      ],
+      [
+       877,
+       1358,
+       131.7
+      ],
+      [
+       861,
+       1334,
+       126.5
+      ],
+      [
+       829,
+       1302,
+       126.0
+      ],
+      [
+       829,
+       1254,
+       126.3
+      ],
+      [
+       813,
+       1230,
+       128.4
+      ],
+      [
+       797,
+       1198,
+       129.1
+      ],
+      [
+       749,
+       1142,
+       142.4
+      ],
+      [
+       677,
+       1078,
+       146.2
+      ],
+      [
+       661,
+       1062,
+       128.4
+      ],
+      [
+       645,
+       1038,
+       136.2
+      ],
+      [
+       613,
+       1022,
+       152.4
+      ],
+      [
+       605,
+       998,
+       158.3
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 7,
+       "count": 3,
+       "say": "Ambush! To me - hold together!",
+       "mobs": [
+        {
+         "template": 30002,
+         "name": "moss sheerie",
+         "level": [
+          14,
+          17
+         ]
+        },
+        {
+         "template": 60163477,
+         "name": "lunantishee",
+         "level": [
+          13,
+          14
+         ]
+        }
+       ]
+      }
+     ],
+     "success": "Sentinel Ronnat reaches the sheerie ring. \"There they are. Clear them out!\"",
+     "fail": "Sentinel Ronnat falls on the road. The others carry the body home.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "g2",
+     "type": "cull",
+     "name": "Clear Sheerie Ring",
+     "objective": "Clear the sheerie ring",
+     "announce": "Clear the sheerie ring!",
+     "center": [
+      601,
+      994,
+      158.6
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 30002,
+       "name": "moss sheerie",
+       "level": [
+        14,
+        17
+       ]
+      },
+      {
+       "template": 60163477,
+       "name": "lunantishee",
+       "level": [
+        13,
+        14
+       ]
+      },
+      {
+       "template": 60159274,
+       "name": "cluricaun trip",
+       "level": [
+        12,
+        14
+       ]
+      }
+     ],
+     "success": "You have cleared the sheerie ring. Queen Aoibheall comes out to fight.",
+     "fail": "They hold the sheerie ring. They will be bolder next time.",
+     "on_success": "g3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g3",
+     "type": "boss",
+     "name": "Queen Aoibheall",
+     "objective": "Defeat Queen Aoibheall",
+     "announce": "Queen Aoibheall stands at the sheerie ring. Bring friends.",
+     "center": [
+      601,
+      994,
+      158.6
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 30002,
+      "name": "Queen Aoibheall",
+      "level": 19,
+      "size": 65,
+      "pos": [
+       601,
+       994,
+       158.6
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 30002,
+        "name": "moss sheerie",
+        "level": [
+         14,
+         17
+        ]
+       }
+      ]
+     },
+     "success": "Queen Aoibheall falls. Ceannai will hear of this in the taverns tonight.",
+     "fail": "Queen Aoibheall slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu202_queen_aoibheall_s_torc",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Moss Sheeries Hold the Road",
+     "objective": "Drive the moss sheeries off the road",
+     "announce": "With The Sheerie Ring lost, the moss sheeries have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      420,
+      853,
+      121.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 30002,
+       "name": "moss sheerie",
+       "level": [
+        14,
+        17
+       ]
+      },
+      {
+       "template": 60163477,
+       "name": "lunantishee",
+       "level": [
+        13,
+        14
+       ]
+      },
+      {
+       "template": 60159274,
+       "name": "cluricaun trip",
+       "level": [
+        12,
+        14
+       ]
+      }
+     ],
+     "boss": {
+      "template": 30002,
+      "name": "Moss sheerie warleader",
+      "level": 18,
+      "pos": [
+       420,
+       853,
+       121.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The moss sheeries are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Fiona has come out to set the road right. The moss sheeries are coming back for it!",
+     "center": [
+      420,
+      853,
+      121.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Fiona",
+      "level": 17,
+      "pos": [
+       420,
+       853,
+       121.2
+      ],
+      "health_mult": 10,
+      "template": 60165769,
+      "model": 328,
+      "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        504,
+        841,
+        119.3
+       ],
+       [
+        487,
+        905,
+        121.3
+       ],
+       [
+        429,
+        937,
+        121.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 30002,
+        "name": "moss sheerie",
+        "level": [
+         14,
+         17
+        ]
+       },
+       {
+        "template": 60163477,
+        "name": "lunantishee",
+        "level": [
+         13,
+         14
+        ]
+       },
+       {
+        "template": 60159274,
+        "name": "cluricaun trip",
+        "level": [
+         12,
+         14
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The moss sheeries break and scatter. The road is open again.",
+     "fail": "Roadwarden Fiona falls, and the moss sheeries take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "shannon_estuary_sandmen",
+   "title": "The Sandmen of the Strand",
+   "levels": [
+    2,
+    6
+   ],
+   "hint": "The sand of the strand is walking, and it tastes of the sea...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Strand",
+     "objective": "Clear the strand",
+     "announce": "The sandmen have risen along the strand and drag fishermen into the dunes. Break them back into sand.",
+     "center": [
+      282,
+      510,
+      144.3
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60165568,
+       "name": "sand crab",
+       "level": [
+        2,
+        3
+       ]
+      },
+      {
+       "template": 60165575,
+       "name": "sandman",
+       "level": [
+        4,
+        6
+       ]
+      }
+     ],
+     "success": "You have cleared the strand. The Tide-Turned comes out to fight.",
+     "fail": "They hold the strand. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "The Tide-Turned",
+     "objective": "Defeat the Tide-Turned",
+     "announce": "The Tide-Turned stands at the strand. Bring friends.",
+     "center": [
+      282,
+      510,
+      144.3
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60165575,
+      "name": "The Tide-Turned",
+      "level": 8,
+      "size": 37,
+      "pos": [
+       282,
+       510,
+       144.3
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60165568,
+        "name": "sand crab",
+        "level": [
+         2,
+         3
+        ]
+       }
+      ]
+     },
+     "success": "The Tide-Turned falls. The way is safe again.",
+     "fail": "The Tide-Turned slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu202_tide_turned_s_mantle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Sand Crabs Hold the Road to Connla",
+     "objective": "Drive the sand crabs off the road to Connla",
+     "announce": "With The Sandmen of the Strand lost, the sand crabs have spread down onto the road to Connla and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      438,
+      609,
+      121.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60165568,
+       "name": "sand crab",
+       "level": [
+        2,
+        3
+       ]
+      },
+      {
+       "template": 60165575,
+       "name": "sandman",
+       "level": [
+        4,
+        6
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60165568,
+      "name": "Sand crab warleader",
+      "level": 7,
+      "pos": [
+       438,
+       609,
+       121.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The sand crabs are gone from the road to Connla. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Fiona has come out to set the road to Connla right. The sand crabs are coming back for it!",
+     "center": [
+      438,
+      609,
+      121.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Fiona",
+      "level": 6,
+      "pos": [
+       438,
+       609,
+       121.2
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        355,
+        629,
+        121.2
+       ],
+       [
+        366,
+        564,
+        124.6
+       ],
+       [
+        421,
+        526,
+        125.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60165568,
+        "name": "sand crab",
+        "level": [
+         2,
+         3
+        ]
+       },
+       {
+        "template": 60165575,
+        "name": "sandman",
+        "level": [
+         4,
+         6
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Connla is safe again. Thank you.\"",
+     "success": "The sand crabs break and scatter. The road to Connla is open again.",
+     "fail": "Roadwarden Fiona falls, and the sand crabs take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "shannon_rising_tide",
+   "title": "The Rising Tide",
+   "levels": [
+    10,
+    16
+   ],
+   "time": "night",
+   "rest_s": 40,
+   "hint": "The river is running backwards past Connla's quay...",
+   "first_delay_s": [
+    300,
+    1200
+   ],
+   "interval_s": [
+    2400,
+    3600
+   ],
+   "start": "t1",
+   "stages": [
+    {
+     "id": "t1",
+     "type": "defend",
+     "name": "The Quay",
+     "objective": "Keep Quay-Warden Sorcha alive while the river floods the docks",
+     "announce": "The tide is running UP the river in a dead calm, and the drowned are walking out of it onto Connla's quay! Quay-Warden Sorcha won't leave her post.",
+     "center": [
+      165,
+      690,
+      121.4
+     ],
+     "radius": 55,
+     "duration_s": 150,
+     "protect": {
+      "template": 60163820,
+      "name": "Quay-Warden Sorcha",
+      "level": 15,
+      "model": 365,
+      "pos": [
+       165,
+       690,
+       121.4
+      ],
+      "health_mult": 10,
+      "guild": "Connla"
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        130,
+        660,
+        117.9
+       ],
+       [
+        135,
+        720,
+        120.3
+       ],
+       [
+        150,
+        640,
+        121.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160165,
+        "name": "drowned sailor",
+        "level": [
+         11,
+         13
+        ]
+       },
+       {
+        "template": 60162022,
+        "name": "haunted driftwood",
+        "level": [
+         9,
+         11
+        ]
+       }
+      ]
+     },
+     "thanks": "\"The quay's still ours. Wet, but ours.\"",
+     "success": "The water steadies - and a figure in a rotted captain's coat wades up out of the river.",
+     "fail": "Quay-Warden Sorcha falls, and the river takes the docks.",
+     "on_success": "t2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "t2",
+     "type": "boss",
+     "name": "the Drowned Captain",
+     "objective": "Defeat the Drowned Captain",
+     "announce": "The Drowned Captain, a hundred years under the river, comes up the quay steps with his crew behind him. Bring friends.",
+     "center": [
+      165,
+      690,
+      121.4
+     ],
+     "radius": 60,
+     "time_s": 900,
+     "boss": {
+      "template": 60160165,
+      "name": "the Drowned Captain",
+      "level": 16,
+      "size": 60,
+      "health_mult": 2.0,
+      "guild": "of the River's Dead"
+     },
+     "adds": {
+      "every_s": 45,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60160165,
+        "name": "drowned sailor",
+        "level": [
+         11,
+         13
+        ]
+       }
+      ]
+     },
+     "success": "The Drowned Captain sinks back into the river, and the tide turns and runs down to the sea where it belongs.",
+     "fail": "The Drowned Captain takes the quay.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 130,
+      "items": [
+       {
+        "id": "nu202_drowned_captain_s_lantern",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Drowned Hold the Docks",
+     "objective": "Drive the drowned off Connla's quay",
+     "announce": "The drowned stand on Connla's quay in the river-water, looking inland. The docks are shut.",
+     "center": [
+      165,
+      690,
+      121.4
+     ],
+     "radius": 55,
+     "count": 8,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60160165,
+       "name": "drowned sailor",
+       "level": [
+        11,
+        13
+       ]
+      },
+      {
+       "template": 60162022,
+       "name": "haunted driftwood",
+       "level": [
+        9,
+        11
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60160165,
+      "name": "drowned bosun",
+      "level": 14,
+      "pos": [
+       165,
+       690,
+       121.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The docks are clear, and the water goes down.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 90,
+      "tokens": 6
+     }
+    }
+   ]
+  },
+  {
+   "id": "shannon_bridge_toll",
+   "title": "The Toll at Daigean Bridge",
+   "levels": [
+    5,
+    10
+   ],
+   "rest_s": 40,
+   "hint": "Shouting and a chain across the road at Daigean Bridge...",
+   "first_delay_s": [
+    300,
+    1200
+   ],
+   "interval_s": [
+    1800,
+    2700
+   ],
+   "start": "b1",
+   "stages": [
+    {
+     "id": "b1",
+     "type": "cull",
+     "name": "The Toll Gang",
+     "objective": "Break up the runaways' toll gang at the bridge",
+     "announce": "Connla's runaways have strung a chain across the bridge road above Daigean Bridge and are charging a toll - with cudgels. Break them up!",
+     "center": [
+      590,
+      470,
+      123.4
+     ],
+     "radius": 50,
+     "time_s": 900,
+     "kill": 10,
+     "alive": 5,
+     "mobs": [
+      {
+       "template": 60165444,
+       "name": "rowdy",
+       "level": [
+        6,
+        8
+       ]
+      },
+      {
+       "template": 60167680,
+       "name": "villainous youth",
+       "level": [
+        5,
+        7
+       ]
+      },
+      {
+       "template": 60167680,
+       "name": "villainous youth",
+       "level": [
+        5,
+        7
+       ]
+      }
+     ],
+     "success": "The gang scatters - and the biggest of them shoulders his way out of the toll hut.",
+     "fail": "The toll gang holds the bridge.",
+     "on_success": "b2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "b2",
+     "type": "boss",
+     "name": "Big Donncha",
+     "objective": "Defeat Big Donncha",
+     "announce": "Big Donncha, the gang's enforcer, a head taller than anyone in Connla: 'Two coppers to cross. Ten to leave.'",
+     "center": [
+      590,
+      470,
+      123.4
+     ],
+     "radius": 60,
+     "time_s": 900,
+     "boss": {
+      "template": 60165444,
+      "name": "Big Donncha",
+      "level": 10,
+      "size": 65,
+      "health_mult": 2.0,
+      "guild": "the Toll Gang"
+     },
+     "adds": {
+      "every_s": 45,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60167680,
+        "name": "villainous youth",
+        "level": [
+         5,
+         7
+        ]
+       }
+      ]
+     },
+     "success": "Big Donncha sits down in the road and cries. The chain comes down.",
+     "fail": "Big Donncha keeps the bridge.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 100,
+      "items": [
+       {
+        "id": "nu202_big_donncha_s_toll_chain",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Toll Gang Holds the Bridge",
+     "objective": "Clear the toll gang off Daigean Bridge",
+     "announce": "The runaways have the bridge, and nobody crosses without paying.",
+     "center": [
+      590,
+      470,
+      123.4
+     ],
+     "radius": 50,
+     "count": 8,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60165444,
+       "name": "rowdy",
+       "level": [
+        6,
+        8
+       ]
+      },
+      {
+       "template": 60167680,
+       "name": "villainous youth",
+       "level": [
+        5,
+        7
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60165444,
+      "name": "toll-collector",
+      "level": 8,
+      "pos": [
+       590,
+       470,
+       123.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The bridge is free.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 70,
+      "tokens": 5
+     }
+    }
+   ]
+  },
+  {
+   "id": "shannon_hazel_harvest",
+   "title": "The Hazel Harvest",
+   "levels": [
+    22,
+    28
+   ],
+   "rest_s": 40,
+   "hint": "Nuts are falling out of season under the nine hazels...",
+   "first_delay_s": [
+    300,
+    1200
+   ],
+   "interval_s": [
+    2100,
+    3000
+   ],
+   "start": "h1",
+   "stages": [
+    {
+     "id": "h1",
+     "type": "cull",
+     "name": "The Thieves in the Grove",
+     "objective": "Drive the eriu fisceres out of the hazel grove",
+     "announce": "The nine hazels are dropping their nuts out of season, and the eriu fisceres are in the grove with sacks! Every nut they take is a little of the well's wisdom gone.",
+     "center": [
+      1530,
+      820,
+      172.9
+     ],
+     "radius": 60,
+     "time_s": 900,
+     "kill": 12,
+     "alive": 6,
+     "mobs": [
+      {
+       "template": 60160564,
+       "name": "eriu fiscere",
+       "level": [
+        22,
+        24
+       ]
+      },
+      {
+       "template": 60160564,
+       "name": "eriu fiscere",
+       "level": [
+        22,
+        24
+       ]
+      },
+      {
+       "template": 60161154,
+       "name": "hazel sprite",
+       "level": [
+        22,
+        24
+       ]
+      }
+     ],
+     "success": "The fisceres run - and the oldest hazel shakes itself, and something steps out of the bark.",
+     "fail": "The fisceres strip the grove bare.",
+     "on_success": "h2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 100
+     }
+    },
+    {
+     "id": "h2",
+     "type": "boss",
+     "name": "the Hazel-Warden",
+     "objective": "Defeat the Hazel-Warden",
+     "announce": "The Hazel-Warden, the grove's own guardian, has woken angry and can't tell friend from thief. Bring friends.",
+     "center": [
+      1530,
+      820,
+      172.9
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60161608,
+      "name": "the Hazel-Warden",
+      "level": 28,
+      "size": 60,
+      "health_mult": 2.0,
+      "guild": "of the Nine Hazels"
+     },
+     "adds": {
+      "every_s": 45,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60161154,
+        "name": "hazel sprite",
+        "level": [
+         22,
+         24
+        ]
+       }
+      ]
+     },
+     "success": "The Hazel-Warden sinks back into its tree. A few nuts fall into your hands - freely given, this time.",
+     "fail": "The Hazel-Warden drives everyone out of the grove.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 140,
+      "items": [
+       {
+        "id": "nu202_hazel_warden_s_crown",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "shannon_serpent_upriver",
+   "title": "The Serpent Upriver",
+   "levels": [
+    26,
+    30
+   ],
+   "rest_s": 40,
+   "hint": "Something huge is moving in the reeds of the south-west shore...",
+   "first_delay_s": [
+    600,
+    1800
+   ],
+   "interval_s": [
+    2700,
+    3600
+   ],
+   "start": "u1",
+   "stages": [
+    {
+     "id": "u1",
+     "type": "boss",
+     "name": "Arracht",
+     "objective": "Hunt down Arracht",
+     "announce": "Arracht, the great ollipheist, is roaming the south-west shore on its way upriver to the well. It's the worst thing on the estuary - groups, or the strong.",
+     "center": [
+      400,
+      1310,
+      147.0
+     ],
+     "radius": 90,
+     "time_s": 1500,
+     "path": [
+      [
+       400,
+       1310,
+       147.0
+      ],
+      [
+       330,
+       1400,
+       168.6
+      ],
+      [
+       260,
+       1480,
+       133.0
+      ],
+      [
+       360,
+       1560,
+       143.5
+      ],
+      [
+       470,
+       1500,
+       116.4
+      ],
+      [
+       520,
+       1400,
+       139.0
+      ],
+      [
+       470,
+       1320,
+       169.5
+      ]
+     ],
+     "boss": {
+      "template": 60164641,
+      "name": "Arracht",
+      "level": 31,
+      "size": 90,
+      "health_mult": 2.2,
+      "guild": "the Great Ollipheist"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60164641,
+        "name": "young ollipheist",
+        "level": [
+         24,
+         26
+        ],
+        "size": 45
+       },
+       {
+        "template": 60160719,
+        "name": "far liath",
+        "level": [
+         26,
+         28
+        ]
+       }
+      ]
+     },
+     "success": "Arracht thrashes in the reeds and goes still. The shore is quiet for the first time in a month.",
+     "fail": "Arracht slides into the river and is gone upstream.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 180,
+      "items": [
+       {
+        "id": "nu202_arracht_s_scale",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "shannon_well_wakes",
+   "title": "The Well Wakes",
+   "levels": [
+    24,
+    30
+   ],
+   "rest_s": 30,
+   "hint": "The standing stones round Connla's Well are glowing...",
+   "first_delay_s": [
+    600,
+    1500
+   ],
+   "interval_s": [
+    2400,
+    3300
+   ],
+   "start": "w1",
+   "auto_fail_s": 1200,
+   "stages": [
+    {
+     "id": "w1",
+     "type": "wards",
+     "name": "The Singing Stones",
+     "objective": "Take the three singing stones from the well-callers and hold them together",
+     "announce": "The eriu well-callers are singing at the standing stones round Connla's Well, and the stones are answering - the water is rising! Take the stones from them: west, south and east, all at once!",
+     "center": [
+      1240,
+      770,
+      127.1
+     ],
+     "radius": 150,
+     "time_s": 1200,
+     "alive": 3,
+     "health_mult": 1.3,
+     "reinforce_s": 40,
+     "hold_s": 20,
+     "wards": [
+      [
+       1225,
+       690,
+       120.0
+      ],
+      [
+       1300,
+       775,
+       119.7
+      ],
+      [
+       1480,
+       680,
+       120.9
+      ]
+     ],
+     "ward_names": [
+      "west",
+      "south",
+      "east"
+     ],
+     "ward_radius": 20,
+     "boss": {
+      "template": 60160566,
+      "name": "eriu well-singer",
+      "level": 27,
+      "size": 55
+     },
+     "mobs": [
+      {
+       "template": 60160566,
+       "name": "eriu well-caller",
+       "level": [
+        24,
+        26
+       ]
+      },
+      {
+       "template": 60160566,
+       "name": "eriu kedger",
+       "level": [
+        25,
+        27
+       ]
+      },
+      {
+       "template": 60167807,
+       "name": "well-water elemental",
+       "level": [
+        25,
+        27
+       ]
+      }
+     ],
+     "success": "The last stone falls silent - but the pool heaves, and a great wave stands up out of it in the shape of a woman.",
+     "fail": "The stones sing on, and the well overflows.",
+     "on_success": "w2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 16,
+      "copper_per_level": 120,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "w2",
+     "type": "boss",
+     "name": "the Wave of Sinann",
+     "objective": "Break the Wave of Sinann",
+     "announce": "The Wave of Sinann - the drowned river's own herald - comes up the bank. 'Who stopped my singers?' Bring friends.",
+     "center": [
+      1240,
+      770,
+      127.1
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60161608,
+      "name": "the Wave of Sinann",
+      "level": 30,
+      "size": 70,
+      "health_mult": 2.0,
+      "guild": "Sinann's Herald"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60167807,
+        "name": "well-water elemental",
+        "level": [
+         25,
+         27
+        ]
+       }
+      ]
+     },
+     "success": "The Wave of Sinann crashes down and runs back into the pool. The water level drops - a little.",
+     "fail": "The Wave of Sinann floods the glade.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 160,
+      "items": [
+       {
+        "id": "nu202_wave_of_sinann_s_pearl",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Well Overflows",
+     "objective": "Drive the well's water back into the pool",
+     "announce": "Connla's Well has overflowed its stones. Its waters walk the glade as elementals, and the hazels are drowning.",
+     "center": [
+      1240,
+      770,
+      127.1
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 100,
+     "mobs": [
+      {
+       "template": 60167807,
+       "name": "well-water elemental",
+       "level": [
+        25,
+        27
+       ]
+      },
+      {
+       "template": 60161154,
+       "name": "hazel sprite",
+       "level": [
+        22,
+        24
+       ]
+      },
+      {
+       "template": 60160566,
+       "name": "eriu well-caller",
+       "level": [
+        24,
+        26
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60161608,
+      "name": "the Flood-Herald",
+      "level": 28,
+      "pos": [
+       1240,
+       770,
+       127.1
+      ],
+      "health_mult": 2
+     },
+     "success": "The water runs back into the pool. The glade is dry.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 16,
+      "copper_per_level": 110,
+      "tokens": 8
+     }
+    }
+   ]
+  },
+  {
+   "id": "shannon_albion_landing",
+   "title": "The Albion Landing",
+   "levels": [
+    20,
+    26
+   ],
+   "rest_s": 20,
+   "bots": 8,
+   "bot_min_level": 16,
+   "hint": "Sails off the north-west coast: Albion ships are putting in!",
+   "first_delay_s": [
+    3600,
+    7200
+   ],
+   "interval_s": [
+    10800,
+    14400
+   ],
+   "auto_fail_s": 900,
+   "wake_m": 400,
+   "start": "l1",
+   "stages": [
+    {
+     "id": "l1",
+     "type": "cull",
+     "name": "The Landing",
+     "objective": "Throw the Albion landing party back into the sea",
+     "announce": "Albion ships are in the bay north of Connla, and their boats are on the beach! The Saltmarsh Company means to dig in - throw them back into the sea before they do!",
+     "center": [
+      150,
+      390,
+      121.1
+     ],
+     "radius": 60,
+     "time_s": 900,
+     "kill": 16,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60167629,
+       "name": "Albion footman",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the Saltmarsh Company"
+      },
+      {
+       "template": 60167629,
+       "name": "Albion footman",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the Saltmarsh Company"
+      },
+      {
+       "template": 60157693,
+       "name": "Albion bowman",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the Saltmarsh Company"
+      },
+      {
+       "template": 60158751,
+       "name": "Albion friar",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the Saltmarsh Company"
+      }
+     ],
+     "success": "The landing party breaks - and their captain comes ashore himself to rally them.",
+     "fail": "The Albions are ashore and digging in. They have a beachhead.",
+     "on_success": "l2",
+     "on_fail": "l3",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 120,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "l2",
+     "type": "boss",
+     "name": "Captain Edric Saltmarsh",
+     "objective": "Defeat Captain Edric Saltmarsh",
+     "announce": "Captain Edric Saltmarsh of Albion wades ashore with his sergeants. 'Hibernia keeps poor watch. We'll have this coast by nightfall.' Bring friends.",
+     "center": [
+      150,
+      390,
+      121.1
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60158924,
+      "name": "Captain Edric Saltmarsh",
+      "level": 26,
+      "size": 55,
+      "health_mult": 2.2,
+      "guild": "the Saltmarsh Company"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60161836,
+        "name": "Albion sergeant",
+        "level": [
+         22,
+         24
+        ],
+        "guild": "the Saltmarsh Company"
+       },
+       {
+        "template": 60167629,
+        "name": "Albion footman",
+        "level": [
+         20,
+         22
+        ],
+        "guild": "the Saltmarsh Company"
+       }
+      ]
+     },
+     "success": "Captain Saltmarsh goes down in the surf. His men drag him back to the boats, and the sails turn for Albion.",
+     "fail": "Captain Saltmarsh rallies his men and they dig in on the dunes.",
+     "on_success": "end",
+     "on_fail": "l3",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 180,
+      "tokens": 16,
+      "items": [
+       {
+        "id": "nu202_saltmarsh_spyglass",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "l3",
+     "type": "occupy",
+     "name": "The Albion Beachhead",
+     "objective": "Burn out the Albion beachhead",
+     "announce": "The Albions hold a fortified camp on the dunes north of Connla, and their patrols are hunting Hibernians on the strand and the north bank. Burn them out!",
+     "center": [
+      200,
+      410,
+      133.6
+     ],
+     "radius": 60,
+     "count": 12,
+     "reinforce_s": 120,
+     "health_mult": 1.2,
+     "mobs": [
+      {
+       "template": 60167629,
+       "name": "Albion footman",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the Saltmarsh Company"
+      },
+      {
+       "template": 60157693,
+       "name": "Albion bowman",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the Saltmarsh Company"
+      },
+      {
+       "template": 60161836,
+       "name": "Albion sergeant",
+       "level": [
+        22,
+        24
+       ],
+       "guild": "the Saltmarsh Company"
+      },
+      {
+       "template": 60158751,
+       "name": "Albion friar",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the Saltmarsh Company"
+      }
+     ],
+     "boss": {
+      "template": 60158924,
+      "name": "Captain Edric Saltmarsh",
+      "level": 26,
+      "pos": [
+       200,
+       410,
+       133.6
+      ],
+      "health_mult": 2.2,
+      "guild": "the Saltmarsh Company"
+     },
+     "success": "The beachhead burns. The Saltmarsh Company's last boats pull away for Albion.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "l3",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 160,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "shannon_war_camp_assault",
+   "title": "Storm the Eriu War-Camp",
+   "levels": [
+    24,
+    30
+   ],
+   "manual": true,
+   "bots": 12,
+   "min_people": 6,
+   "bot_min_level": 20,
+   "hint": "The Sentinels are mustering at Ceannai to storm the eriu war-camp.",
+   "rest_s": 15,
+   "start": "w1",
+   "giver": {
+    "name": "Sentinel-Commander Grainne",
+    "level": 30,
+    "pos": [
+     960,
+     1530,
+     126.5
+    ],
+    "health_mult": 3,
+    "model": 365,
+    "template": 60165769,
+    "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+    "guild": "Sentinels of Ceannai",
+    "greet": "Kedger's war-camp holds the eriu woods, and while it stands his well-callers sing every night. Six at least - bots and all - and when you're ready, say [storm the camp].",
+    "accept": "storm the camp",
+    "reply": "Sentinels, with me! Through the palisade, down the totems, and Kedger in his longhouse - go!",
+    "busy": "Not yet. Rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The war-camp is ours. The eriu woods are open.",
+    "regret": "Fall back to Ceannai! We'll come again."
+   },
+   "guards": [
+    {
+     "template": 60165769,
+     "model": 328,
+     "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+     "guild": "Sentinels of Ceannai",
+     "name": "Sentinel of Ceannai",
+     "level": 26,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "w1",
+     "type": "cull",
+     "name": "The Palisade",
+     "objective": "Break the palisade gate under the eriu archers",
+     "announce": "The Sentinels run you up to the palisade! Eriu archers on the platforms - clear the gate!",
+     "center": [
+      1195,
+      1125,
+      126.4
+     ],
+     "radius": 55,
+     "time_s": 900,
+     "kill": 22,
+     "alive": 9,
+     "mobs": [
+      {
+       "template": 60160565,
+       "name": "eriu henter",
+       "level": [
+        25,
+        27
+       ]
+      },
+      {
+       "template": 60160565,
+       "name": "eriu henter",
+       "level": [
+        25,
+        27
+       ]
+      },
+      {
+       "template": 60160563,
+       "name": "eriu archer",
+       "level": [
+        25,
+        27
+       ]
+      },
+      {
+       "template": 60160563,
+       "name": "eriu archer",
+       "level": [
+        25,
+        27
+       ]
+      },
+      {
+       "template": 60160567,
+       "name": "eriu waylayer",
+       "level": [
+        26,
+        28
+       ]
+      }
+     ],
+     "success": "The gate is down. Inside, three clan totems carved with drowned faces, and kedgers chanting at them - every one standing makes the eriu stronger.",
+     "fail": "The war band is thrown back from the palisade.",
+     "on_success": "w2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 16,
+      "copper_per_level": 120,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "w2",
+     "type": "wards",
+     "name": "The Clan Totems",
+     "objective": "Pull down all three clan totems and hold them together",
+     "announce": "Three totems - the salmon, the otter and the drowned woman - and kedgers at each. Take all three at once: split up!",
+     "center": [
+      1260,
+      1120,
+      126.2
+     ],
+     "radius": 110,
+     "time_s": 1200,
+     "alive": 3,
+     "health_mult": 1.5,
+     "reinforce_s": 40,
+     "hold_s": 25,
+     "wards": [
+      [
+       1250,
+       1175,
+       145.6
+      ],
+      [
+       1325,
+       1180,
+       157.0
+      ],
+      [
+       1305,
+       1085,
+       126.2
+      ]
+     ],
+     "ward_names": [
+      "the salmon totem",
+      "the otter totem",
+      "the drowned woman"
+     ],
+     "ward_radius": 20,
+     "flag": 466,
+     "flag_name": "Banner of Ceannai",
+     "boss": {
+      "template": 60160566,
+      "name": "totem-kedger",
+      "level": 28,
+      "size": 55
+     },
+     "mobs": [
+      {
+       "template": 60160566,
+       "name": "eriu kedger",
+       "level": [
+        25,
+        27
+       ]
+      },
+      {
+       "template": 60160565,
+       "name": "eriu henter",
+       "level": [
+        25,
+        27
+       ]
+      },
+      {
+       "template": 60160563,
+       "name": "eriu archer",
+       "level": [
+        25,
+        27
+       ]
+      }
+     ],
+     "success": "The last totem cracks and falls. The chanting stops - and from the longhouse, Kaen Kedger roars.",
+     "fail": "The totems stand. The war band falls back.",
+     "on_success": "w3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 140,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "w3",
+     "type": "boss",
+     "name": "Kaen Kedger",
+     "objective": "Defeat Kaen Kedger in his longhouse",
+     "announce": "Kaen Kedger comes out of his longhouse in his cloak of fish scales, his huscarls round him: 'The river is ours. She promised it to me!'",
+     "center": [
+      1260,
+      1120,
+      126.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60160566,
+      "name": "Kaen Kedger",
+      "level": 30,
+      "size": 62,
+      "health_mult": 2.2,
+      "guild": "Chief of the Eriu"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60160565,
+        "name": "eriu huscarl",
+        "level": [
+         27,
+         29
+        ],
+        "size": 58
+       },
+       {
+        "template": 60160565,
+        "name": "eriu henter",
+        "level": [
+         25,
+         27
+        ]
+       }
+      ]
+     },
+     "success": "Kaen Kedger falls among his broken totems. The war-camp is the Sentinels' - and already they're raising the banner of Ceannai.",
+     "fail": "Kedger drives the war band out of his camp.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 220,
+      "tokens": 25,
+      "items": [
+       {
+        "id": "wc202_kaen_kedger_s_war_horn",
+        "gold_chance": 50,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "shannon_war_camp_raid_1",
+   "title": "The Clans Strike Back",
+   "levels": [
+    24,
+    30
+   ],
+   "manual": true,
+   "bots": 10,
+   "bot_min_level": 20,
+   "hint": "Eriu horns in the woods: the clans are coming for the war-camp...",
+   "wake_m": 160,
+   "auto_fail_s": 900,
+   "start": "r1",
+   "stages": [
+    {
+     "id": "r1",
+     "type": "defend",
+     "name": "Hold the Watch-Post",
+     "objective": "Keep Watch-Warden Cathal alive",
+     "announce": "Eriu war-bands are coming through the woods for the watch-post! Keep the watch-warden alive and the camp stands.",
+     "center": [
+      1260,
+      1120,
+      126.2
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "template": 60165769,
+      "model": 328,
+      "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+      "guild": "Sentinels of Ceannai",
+      "name": "Watch-Warden Cathal",
+      "level": 28,
+      "pos": [
+       1260,
+       1120,
+       126.2
+      ],
+      "health_mult": 3
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        1380,
+        1160,
+        157.1
+       ],
+       [
+        1300,
+        1020,
+        126.2
+       ],
+       [
+        1180,
+        1200,
+        135.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160565,
+        "name": "eriu henter",
+        "level": [
+         25,
+         27
+        ]
+       },
+       {
+        "template": 60160563,
+        "name": "eriu archer",
+        "level": [
+         25,
+         27
+        ]
+       }
+      ]
+     },
+     "thanks": "They're falling back into the trees. Well held!",
+     "success": "The eriu break and melt back into the woods. The watch-post stands.",
+     "fail": "Watch-Warden Cathal falls, and the watch-post with him.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 130,
+      "tokens": 12
+     }
+    }
+   ]
+  },
+  {
+   "id": "shannon_war_camp_raid_2",
+   "title": "The Second Raid",
+   "levels": [
+    24,
+    30
+   ],
+   "manual": true,
+   "bots": 10,
+   "bot_min_level": 20,
+   "hint": "More eriu horns this time - they mean to take the camp back...",
+   "wake_m": 160,
+   "auto_fail_s": 900,
+   "start": "r1",
+   "stages": [
+    {
+     "id": "r1",
+     "type": "defend",
+     "name": "Hold the Watch-Post",
+     "objective": "Keep Watch-Warden Cathal alive",
+     "announce": "Eriu war-bands are coming through the woods for the watch-post! Keep the watch-warden alive and the camp stands.",
+     "center": [
+      1260,
+      1120,
+      126.2
+     ],
+     "radius": 70,
+     "duration_s": 210,
+     "protect": {
+      "template": 60165769,
+      "model": 328,
+      "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+      "guild": "Sentinels of Ceannai",
+      "name": "Watch-Warden Cathal",
+      "level": 28,
+      "pos": [
+       1260,
+       1120,
+       126.2
+      ],
+      "health_mult": 3
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 4,
+      "from": [
+       [
+        1380,
+        1160,
+        157.1
+       ],
+       [
+        1300,
+        1020,
+        126.2
+       ],
+       [
+        1180,
+        1200,
+        135.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160565,
+        "name": "eriu henter",
+        "level": [
+         25,
+         27
+        ]
+       },
+       {
+        "template": 60160563,
+        "name": "eriu archer",
+        "level": [
+         25,
+         27
+        ]
+       },
+       {
+        "template": 60160567,
+        "name": "eriu waylayer",
+        "level": [
+         26,
+         28
+        ]
+       }
+      ]
+     },
+     "thanks": "They're falling back into the trees. Well held!",
+     "success": "The eriu break and melt back into the woods. The watch-post stands.",
+     "fail": "Watch-Warden Cathal falls, and the watch-post with him.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 130,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "shannon_war_camp_last_stand",
+   "title": "The Drowned-Speaker",
+   "levels": [
+    25,
+    30
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 20,
+   "hint": "Every eriu clan has answered the drowned-speaker's call. They're coming for the camp.",
+   "wake_m": 160,
+   "auto_fail_s": 900,
+   "start": "x1",
+   "stages": [
+    {
+     "id": "x1",
+     "type": "defend",
+     "name": "Every Clan at Once",
+     "objective": "Keep Watch-Warden Cathal alive against the whole eriu host",
+     "announce": "They come from every side of the woods at once. Hold the watch-post!",
+     "center": [
+      1260,
+      1120,
+      126.2
+     ],
+     "radius": 70,
+     "duration_s": 240,
+     "protect": {
+      "template": 60165769,
+      "model": 328,
+      "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+      "guild": "Sentinels of Ceannai",
+      "name": "Watch-Warden Cathal",
+      "level": 29,
+      "pos": [
+       1260,
+       1120,
+       126.2
+      ],
+      "health_mult": 3
+     },
+     "waves": {
+      "every_s": 20,
+      "count": 5,
+      "from": [
+       [
+        1380,
+        1160,
+        157.1
+       ],
+       [
+        1300,
+        1020,
+        126.2
+       ],
+       [
+        1180,
+        1200,
+        135.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160565,
+        "name": "eriu henter",
+        "level": [
+         25,
+         27
+        ]
+       },
+       {
+        "template": 60160563,
+        "name": "eriu archer",
+        "level": [
+         25,
+         27
+        ]
+       },
+       {
+        "template": 60160567,
+        "name": "eriu waylayer",
+        "level": [
+         26,
+         28
+        ]
+       },
+       {
+        "template": 60160565,
+        "name": "eriu huscarl",
+        "level": [
+         27,
+         29
+        ],
+        "size": 58
+       }
+      ]
+     },
+     "success": "The first rush breaks - and the clans' new war-chief walks out of the trees, dripping.",
+     "fail": "The watch-post is overrun.",
+     "on_success": "x2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 140,
+      "tokens": 16
+     }
+    },
+    {
+     "id": "x2",
+     "type": "boss",
+     "name": "Bodhmall the Drowned-Speaker",
+     "objective": "Defeat Bodhmall the Drowned-Speaker",
+     "announce": "Bodhmall the Drowned-Speaker, Kedger's chief well-caller, with river-water running from her mouth when she speaks: 'Sinann chose me now. The camp is hers.'",
+     "center": [
+      1260,
+      1120,
+      126.2
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60160566,
+      "name": "Bodhmall the Drowned-Speaker",
+      "level": 30,
+      "size": 60,
+      "health_mult": 2.2,
+      "guild": "Voice of Sinann"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60160565,
+        "name": "eriu huscarl",
+        "level": [
+         27,
+         29
+        ],
+        "size": 58
+       },
+       {
+        "template": 60160566,
+        "name": "eriu well-caller",
+        "level": [
+         24,
+         26
+        ]
+       },
+       {
+        "template": 60160565,
+        "name": "eriu henter",
+        "level": [
+         25,
+         27
+        ]
+       }
+      ]
+     },
+     "success": "Bodhmall falls. The camp holds - for now.",
+     "fail": "Bodhmall takes the war-camp back for the clans.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 200,
+      "tokens": 20
+     }
+    }
+   ]
+  }
+ ],
+ "siege": {
+  "id": "eriu_war_camp",
+  "name": "the Eriu War-Camp",
+  "enemy": "the eriu clans",
+  "resolve_name": "Ceannai's resolve",
+  "enemy_name": "The clans' strength",
+  "faction": "sentinels_of_ceannai",
+  "feeds": {
+   "shannon_estuary_eriu_hunters": 20,
+   "shannon_estuary_giant_ants": 10,
+   "shannon_hazel_harvest": 15,
+   "shannon_well_wakes": 15,
+   "shannon_bridge_toll": 5,
+   "shannon_rising_tide": 10,
+   "shannon_serpent_upriver": 10,
+   "shannon_estuary_sheerie_ring": 5,
+   "shannon_estuary_sandmen": 5,
+   "shannon_albion_landing": 10
+  },
+  "feed_default": 5,
+  "quests": {
+   "eriu_hostage": 10,
+   "sh_war_arrow": 10,
+   "sh_lieutenants": 15,
+   "sh_war_camp_scout": 15,
+   "sh_kaen_kedger": 25,
+   "sh_well_callers": 10,
+   "sh_sinann": 15
+  },
+  "enemy_feeds": {
+   "shannon_estuary_eriu_hunters": 20,
+   "shannon_well_wakes": 15,
+   "shannon_hazel_harvest": 10
+  },
+  "enemy_default": 5,
+  "war_chain": "shannon_estuary_eriu_hunters",
+  "assault": "shannon_war_camp_assault",
+  "raids": [
+   "shannon_war_camp_raid_1",
+   "shannon_war_camp_raid_2"
+  ],
+  "last_raid": "shannon_war_camp_last_stand",
+  "hold_h": 3,
+  "raid_gap_h": [
+   2,
+   1.5,
+   1
+  ],
+  "criers": [
+   "harbourmaster",
+   "brehon_aodh"
+  ],
+  "bots_go_after_m": 30,
+  "open_text": "Hear me! Ceannai's resolve is high - the eriu war-camp can be taken! Sentinel-Commander Grainne is mustering a war band at Ceannai. If no one leads them within the half-hour, the Sentinels will go without you.",
+  "taken_text": "The eriu war-camp is ours! The Sentinels hold it, and the eriu woods are open - go and see.",
+  "repelled_text": "The attack on the eriu war-camp has been thrown back. The clans grow bolder.",
+  "raid_text": "Eriu war-bands are making for the war-camp watch-post!",
+  "held_text": "The eriu raid is beaten off. The watch-post stands.",
+  "fall_text": "The war-camp has fallen. The eriu clans hold it again, and Ceannai must rebuild its resolve.",
+  "carry_text": "The Sentinels march you up through the woods to the war-camp at a run.",
+  "carried_cry": "The war band wouldn't wait any longer - the Sentinels have stormed {0}!",
+  "hostile_tier": "yellow",
+  "sites": [
+   "war_camp",
+   "war_camp_gate",
+   "totem_ring",
+   "kedger_huts"
+  ],
+  "staging": [
+   960,
+   1530,
+   126.5
+  ],
+  "landing": [
+   1160,
+   1135,
+   128.4
+  ],
+  "area": [
+   1260,
+   1120,
+   120
+  ],
+  "camp_npcs": [
+   {
+    "kind": "marks",
+    "name": "Quartermaster Ailbhe",
+    "model": 365,
+    "level": 28,
+    "pos": [
+     1245,
+     1105,
+     126.2
+    ],
+    "guild": "Sentinels of Ceannai",
+    "greet": "Camp-only stock, for those who took the war-camp and those who hold it.",
+    "stock": [
+     {
+      "item": "wc202_cloak_of_the_war_camp",
+      "price": 60
+     },
+     {
+      "item": "wc202_salmon_totem_torc",
+      "price": 40
+     },
+     {
+      "item": "wc202_sentinel_s_watch_ring",
+      "price": 40
+     },
+     {
+      "item": "wc202_palisade_breaker_s_bracer",
+      "price": 40
+     },
+     {
+      "item": "wc202_eriu_trophy_belt",
+      "price": 40
+     },
+     {
+      "item": "tw_strong_draught_of_healing",
+      "price": 2
+     },
+     {
+      "item": "tw_strong_draught_of_power",
+      "price": 2
+     }
+    ]
+   },
+   {
+    "kind": "coin",
+    "name": "Healer Muadhnait",
+    "model": 365,
+    "level": 26,
+    "pos": [
+     1270,
+     1100,
+     126.2
+    ],
+    "guild": "Sentinels of Ceannai",
+    "greet": "Ceannai brews, carried up the south road. Coin, mind.",
+    "stock": [
+     {
+      "item": "wc202_ceannai_field_draught"
+     },
+     {
+      "item": "wc202_hazel_milk"
+     },
+     {
+      "item": "wc202_river_salt_tonic"
+     },
+     {
+      "item": "wc202_sentinel_s_elixir"
+     },
+     {
+      "item": "wc202_connla_ale"
+     }
+    ]
+   },
+   {
+    "kind": "ferry",
+    "name": "Iasc's cousin Beag",
+    "model": 337,
+    "level": 20,
+    "pos": [
+     1230,
+     1140,
+     126.2
+    ],
+    "guild": "the River Ferry",
+    "greet": "Back to Connla? Down the river in an hour, if the eriu don't put a hole in us.",
+    "to": [
+     250,
+     675,
+     121.2
+    ]
+   },
+   {
+    "kind": "idle",
+    "name": "Watch-Warden Cathal",
+    "level": 28,
+    "pos": [
+     1260,
+     1125,
+     126.2
+    ],
+    "template": 60165769,
+    "model": 328,
+    "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+    "guild": "Sentinels of Ceannai",
+    "greet": "The Sentinels hold the war-camp now. When the clans come back - and they will - I'll need every blade.",
+    "idle": "Watch the trees. The eriu don't charge. They're just suddenly there."
+   },
+   {
+    "kind": "idle",
+    "name": "Sentinel of Ceannai",
+    "level": 26,
+    "pos": [
+     1285,
+     1130,
+     126.2
+    ],
+    "count": 3,
+    "template": 60165769,
+    "model": 328,
+    "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+    "guild": "Sentinels of Ceannai",
+    "idle": "First night in a month I haven't heard those totems chanting."
+   }
+  ],
+  "holdouts": [
+   {
+    "kind": "holdout",
+    "name": "eriu holdout",
+    "template": 60160565,
+    "level": 27,
+    "pos": [
+     1350,
+     1150,
+     156.5
+    ],
+    "count": 4,
+    "tier": "yellow",
+    "respawn_s": 300
+   },
+   {
+    "kind": "holdout",
+    "name": "eriu well-caller",
+    "template": 60160566,
+    "level": 26,
+    "pos": [
+     1320,
+     1060,
+     126.2
+    ],
+    "count": 2,
+    "tier": "yellow",
+    "respawn_s": 300
+   },
+   {
+    "kind": "holdout",
+    "name": "Holdout Huscarl Faolan",
+    "template": 60160565,
+    "level": 29,
+    "pos": [
+     1360,
+     1110,
+     152.8
+    ],
+    "count": 1,
+    "tier": "orange",
+    "respawn_s": 900
+   }
   ]
+ }
 }

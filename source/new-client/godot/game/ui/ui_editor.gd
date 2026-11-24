@@ -16,6 +16,7 @@ var _items: Array = []               # [{id, name, kind ("hud" / "ac"), ctrl}]
 var _drag := -1
 var _from := Vector2.ZERO
 var _hover := -1
+var _layout_pick: OptionButton
 
 
 func _ac():
@@ -41,6 +42,11 @@ func open(game_ui: GameUI) -> void:
 	if ui.modern and ui.modern.burden:                      # (the encumbered bag shows while you place it)
 		ui.modern.burden.preview = true
 		ui.modern.burden.refresh()
+	if ui._channel_bar:                                     # (the spell charge shows a sample while you place it)
+		ui._channel_bar.preview = true
+		ui._channel_bar.visible = true
+	if ui.modern:                                           # (the layout in use now stays while you arrange it)
+		ui.modern.set("lock_mode", 1 if ui.modern.pad_mode else 0)
 	_collect()
 	_build_panel()
 
@@ -119,9 +125,108 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
 		close()
 		get_viewport().set_input_as_handled()
+	elif event is InputEventJoypadButton:
+		_pad_button(event as InputEventJoypadButton)
+		get_viewport().set_input_as_handled()            # (the controller's buttons are the editor's while it is open)
+
+
+# ---------------------------------------------------------------- the controller (owner 2026-11-23: "UI editing on
+# controller. hitting A on it will allow you to lock in on an element and move it")
+# The d-pad picks a piece (the nearest that way), A takes hold of it, the left stick or the d-pad moves it, A again
+# puts it down (B too). Y switches the layout being arranged (keyboard and mouse / controller). B with nothing held, or
+# MENU, ends it.
+var _pad_sel := -1
+var _pad_held := false
+const PAD_SPEED := 700.0                       # pixels a second, the stick all the way over
+const PAD_NUDGE := 6.0                         # pixels a d-pad press while holding a piece
+
+
+func _pad_button(e: InputEventJoypadButton) -> void:
+	if not e.pressed:
+		return
+	if _items.is_empty():
+		return
+	if _pad_sel < 0 or _pad_sel >= _items.size():
+		_pad_sel = 0
+	var dirs := {JOY_BUTTON_DPAD_LEFT: Vector2.LEFT, JOY_BUTTON_DPAD_RIGHT: Vector2.RIGHT, JOY_BUTTON_DPAD_UP: Vector2.UP,
+			JOY_BUTTON_DPAD_DOWN: Vector2.DOWN}
+	match e.button_index:
+		JOY_BUTTON_A:
+			if _pad_held:
+				_let_go(_items[_pad_sel])
+				_pad_held = false
+			else:
+				_pad_held = true
+		JOY_BUTTON_B:
+			if _pad_held:
+				_let_go(_items[_pad_sel])
+				_pad_held = false
+			else:
+				close()
+				return
+		JOY_BUTTON_START:
+			close()
+			return
+		JOY_BUTTON_Y:
+			_switch_layout(not (ui.modern and ui.modern.pad_mode))
+		_:
+			if dirs.has(e.button_index):
+				var d: Vector2 = dirs[e.button_index]
+				if _pad_held:
+					_move(_items[_pad_sel], d * PAD_NUDGE)
+				else:
+					_pad_pick(d)
+	_hover = _pad_sel
+	_view.queue_redraw()
+
+
+## The nearest piece that way from the one picked (wrapping round to the far side when there is none).
+func _pad_pick(dir: Vector2) -> void:
+	var here := _rect(_items[_pad_sel]).get_center()
+	var best := -1
+	var best_score := INF
+	var far := -1
+	var far_d := -INF
+	for i in _items.size():
+		if i == _pad_sel:
+			continue
+		var r := _rect(_items[i])
+		if r.size == Vector2.ZERO:
+			continue
+		var d := r.get_center() - here
+		var along := d.dot(dir)
+		if along > 4.0:
+			var score := along + absf(d.cross(dir)) * 2.0
+			if score < best_score:
+				best_score = score
+				best = i
+		elif -along > far_d:
+			far_d = -along
+			far = i
+	_pad_sel = best if best >= 0 else (far if far >= 0 else _pad_sel)
+
+
+## Which layout is being arranged: the controller's or the keyboard and mouse one.
+func _switch_layout(pad: bool) -> void:
+	if ui.modern == null:
+		return
+	if _pad_held and _pad_sel >= 0 and _pad_sel < _items.size():
+		_let_go(_items[_pad_sel])
+	_pad_held = false
+	_drag = -1
+	ui.modern.set("lock_mode", 1 if pad else 0)
+	ui.modern.set_pad_mode(pad)
+	_collect()
+	_pad_sel = mini(_pad_sel, _items.size() - 1)
+	if _layout_pick and is_instance_valid(_layout_pick):
+		_layout_pick.select(1 if pad else 0)
 
 
 func _process(_d: float) -> void:
+	if _pad_held and _pad_sel >= 0 and _pad_sel < _items.size() and Pad.device >= 0:
+		var v := Vector2(Input.get_joy_axis(Pad.device, JOY_AXIS_LEFT_X), Input.get_joy_axis(Pad.device, JOY_AXIS_LEFT_Y))
+		if v.length() > 0.2:
+			_move(_items[_pad_sel], v * PAD_SPEED * _d)
 	if _had_ac:                                          # (Action Combat's own Esc ended its part: all of it ends)
 		var scene := get_tree().current_scene
 		var ac = scene.get("action_combat") if scene else null
@@ -147,7 +252,9 @@ func _draw_frames() -> void:
 		var r := _rect(_items[i])
 		if r.size == Vector2.ZERO:
 			continue
-		var hot := i == _drag or i == _hover
+		var hot := i == _drag or i == _hover or i == _pad_sel
+		if i == _pad_sel and _pad_held:
+			_view.draw_rect(r.grow(3.0), Color(0.45, 0.85, 1.0, 1.0), false, 2.0)   # (held by the controller)
 		_view.draw_rect(r, Color(1.0, 0.82, 0.35, 0.16 if hot else 0.07))
 		_view.draw_rect(r, Color(1.0, 0.82, 0.35, 1.0 if hot else 0.7), false, 2.0 if hot else 1.0)
 		var label := String(_items[i].name)
@@ -168,10 +275,23 @@ func _build_panel() -> void:
 	box.add_theme_constant_override("separation", 6)
 	_panel.add_child(box)
 	box.add_child(UiArt.label("EDIT UI", 12, UiArt.GOLD_HI))
-	var hint := UiArt.label("Drag any framed piece to move it. Windows move by their title bars.", 9, UiArt.CREAM)
+	var hint := UiArt.label("Drag any framed piece to move it. Windows move by their title bars. Controller: the d-pad "
+			+ "picks a piece, A takes hold of it (move it with the left stick), A puts it down, Y switches the layout, B ends.",
+			9, UiArt.CREAM)
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD
 	hint.custom_minimum_size = Vector2(250, 0)
 	box.add_child(hint)
+	if ui.modern:
+		box.add_child(UiArt.label("LAYOUT TO ARRANGE", 9, UiArt.DIM))
+		_layout_pick = OptionButton.new()
+		_layout_pick.add_item("KEYBOARD AND MOUSE")
+		_layout_pick.add_item("CONTROLLER")
+		_layout_pick.focus_mode = Control.FOCUS_NONE
+		_layout_pick.add_theme_font_override("font", UiArt.font(true))
+		_layout_pick.add_theme_font_size_override("font_size", 10)
+		_layout_pick.select(1 if ui.modern.pad_mode else 0)
+		_layout_pick.item_selected.connect(func(i: int): _switch_layout(i == 1))
+		box.add_child(_layout_pick)
 	var ac = _ac()
 	if ac:
 		box.add_child(UiArt.label("ACTION COMBAT - SHOW", 9, UiArt.DIM))
@@ -225,6 +345,12 @@ func close() -> void:
 	if _closed:
 		return
 	_closed = true
+	if ui and ui.modern and is_instance_valid(ui.modern):   # (back to following whatever is in use)
+		ui.modern.set("lock_mode", -1)
+		var pb = ui.modern._pad_bar()
+		ui.modern.set_pad_mode(pb != null and bool(pb.shown()))
+	if ui and is_instance_valid(ui._channel_bar):
+		ui._channel_bar.preview = false
 	if ui and ui.modern and is_instance_valid(ui.modern) and ui.modern.burden:
 		ui.modern.burden.preview = false
 		ui.modern.burden.refresh()

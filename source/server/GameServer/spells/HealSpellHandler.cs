@@ -114,6 +114,7 @@ namespace DOL.GS.Spells
 
             amount *= RelicMgr.GetRelicBonusModifier(Caster, eRelicType.Magic);
             amount *= effectiveness;
+            amount *= MidgardKits.HealFactor(Caster, target);   // (a Healer's Stillness)
 
             /*if (playerTarget != null)
             {

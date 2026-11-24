@@ -30,7 +30,9 @@ namespace DOL.GS
     /// </summary>
     public static class ZoneRates
     {
-        public enum Rating { Peaceful, Wild, Dangerous, Deadly }
+        /// <summary>(Elite added 2026-11-23, owner: "we will also need an Elite rating for a zone, which will be the Cursed
+        /// Forest and Sheeroe Hills" - the step past Deadly.)</summary>
+        public enum Rating { Peaceful, Wild, Dangerous, Deadly, Elite }
 
         public const double ExploreStart = 2.0, ExploreStep = 0.5, ExploreFloor = 0.5;
         public const double StepMinutes = 60, ResetHours = 24;
@@ -45,8 +47,33 @@ namespace DOL.GS
 
         public static double Factor(Rating r) => r switch
         {
-            Rating.Peaceful => 0.8, Rating.Wild => 1.0, Rating.Dangerous => 1.2, _ => 1.4
+            Rating.Peaceful => 0.8, Rating.Wild => 1.0, Rating.Dangerous => 1.2, Rating.Deadly => 1.4, _ => 1.6
         };
+
+        // ------------------------------------------------------------------ each rating a step harder
+
+        /// <summary>Each rating a step harder than the one below (owner 2026-11-23: "higher zone difficulty tiers [should]
+        /// actually feel more difficult. So blue mobs in Wild are slightly harder than blue mobs in Peaceful ... maybe their
+        /// attacks do a bit more damage (especially their special attacks) ... It shouldn't be so drastic that people are
+        /// confused ... but it should be noticeable"; the moderate steps chosen): per step above Peaceful a monster hits
+        /// HitStep harder, its special attacks (styles, heavy blows, cones, slams) SpecialStep harder in all, and it takes
+        /// TakeStep less damage. Elite (four steps): hits +32%, specials +48%, takes 12% less.</summary>
+        public const double HitStep = 0.08, SpecialStep = 0.12, TakeStep = 0.03;
+
+        public static int Step(Rating r) => (int) r;
+
+        /// <summary>How hard a monster of this rating hits, against the same con in a Peaceful zone.</summary>
+        public static double Hits(Rating r) => 1.0 + HitStep * Step(r);
+
+        /// <summary>A special attack's further factor on top of Hits (so a special is SpecialStep a step harder in all).</summary>
+        public static double SpecialExtra(Rating r) => (1.0 + SpecialStep * Step(r)) / Hits(r);
+
+        /// <summary>The damage a monster of this rating takes, against the same con in a Peaceful zone.</summary>
+        public static double Takes(Rating r) => 1.0 - TakeStep * Step(r);
+
+        public static double HitsIn(Zone z) => z == null ? 1.0 : Hits(RatingOf(z));
+        public static double SpecialExtraIn(Zone z) => z == null ? 1.0 : SpecialExtra(RatingOf(z));
+        public static double TakesIn(Zone z) => z == null ? 1.0 : Takes(RatingOf(z));
 
         // ------------------------------------------------------------------ ratings
 

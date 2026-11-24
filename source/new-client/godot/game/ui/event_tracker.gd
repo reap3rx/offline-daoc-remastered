@@ -18,7 +18,8 @@ static var zone_info := {}
 static var zone_ms := -1000000
 const ZONE_H := 34.0
 const RATING_COLOR := {"Peaceful": Color(0.55, 0.9, 0.5), "Wild": Color(0.95, 0.85, 0.4),
-		"Dangerous": Color(0.98, 0.6, 0.25), "Deadly": Color(0.95, 0.32, 0.28)}
+		"Dangerous": Color(0.98, 0.6, 0.25), "Deadly": Color(0.95, 0.32, 0.28),
+		"Elite": Color(0.78, 0.45, 0.98)}   # (Elite, 2026-11-23: past Deadly - the purple)
 
 
 static func receive_zone(text: String) -> void:
@@ -27,6 +28,45 @@ static func receive_zone(text: String) -> void:
 		return
 	zone_info = {"name": f[0], "rating": f[1], "rate": float(f[2]), "explore": float(f[3]), "next": int(f[4])}
 	zone_ms = Time.get_ticks_msec()
+
+
+## Your standing with the zone's two factions (owner 2026-11-22: reputation "can even be its own 'xp' bar in the Zone
+## window"): the server's "#REP|{zone, factions:[{name, rank, points, lo, hi, title}], realm, title}"
+## (ReputationService.Push), two thin bars under the rate line - its rank in its colour, how far to the next.
+static var rep_info := {}
+const REP_ROW := 15.0
+const RANK_COLOR := {"Unknown": Color(0.6, 0.57, 0.52), "Familiar": Color(0.93, 0.89, 0.78), "Trusted": Color(0.55, 0.85, 1.0),
+		"Honoured": Color(0.6, 1.0, 0.55), "Legend": Color(1.0, 0.85, 0.45)}
+
+
+static func receive_rep(text: String) -> void:
+	var d = JSON.parse_string(text)
+	rep_info = d if d is Dictionary else {}
+
+
+static func _rep_rows() -> Array:
+	var f = rep_info.get("factions")
+	return f if f is Array else []
+
+
+## The zone's siege (ZoneSiege.cs, owner 2026-11-22: Dergan Island): "#SIEGE|{name, state, resolve, enemy, line}" every
+## few seconds while you're in its zone - a row with its name and the resolve bar (or HELD), and a line under it.
+static var siege_info := {}
+static var siege_ms := 0
+
+
+static func receive_siege(text: String) -> void:
+	var d = JSON.parse_string(text)
+	siege_info = d if d is Dictionary else {}
+	siege_ms = Time.get_ticks_msec()
+
+
+static func _siege_shown() -> bool:
+	return not siege_info.is_empty() and Time.get_ticks_msec() - siege_ms < 15000
+
+
+static func zone_h() -> float:
+	return ZONE_H + REP_ROW * _rep_rows().size() + (REP_ROW * 2.0 if _siege_shown() else 0.0)
 
 
 static func _zone_shown() -> bool:
@@ -85,8 +125,9 @@ func _process(_delta: float) -> void:
 ## part and when it next drops.
 func _draw_zone(font: Font, thin: Font) -> void:
 	var z := zone_info
-	draw_rect(Rect2(0, 0, W, ZONE_H), Color(0.02, 0.02, 0.03, 0.62))
-	draw_rect(Rect2(0, 0, W, ZONE_H), Color(0.55, 0.45, 0.25, 0.7), false, 1.0)
+	var zh := zone_h()
+	draw_rect(Rect2(0, 0, W, zh), Color(0.02, 0.02, 0.03, 0.62))
+	draw_rect(Rect2(0, 0, W, zh), Color(0.55, 0.45, 0.25, 0.7), false, 1.0)
 	_text(font, Vector2(8, 13), String(z.name).to_upper(), 10, GOLD)
 	var rating := String(z.rating)
 	var rc: Color = RATING_COLOR.get(rating, CREAM)
@@ -99,6 +140,42 @@ func _draw_zone(font: Font, thin: Font) -> void:
 	else:
 		line += "  -  well explored today"
 	_text(thin, Vector2(8, 27), line, 9, WIN if rate >= 1.2 else (CREAM if rate >= 1.0 else LOSE))
+	# the zone's factions: your rank with each, and how far to the next
+	var y := ZONE_H - 3.0
+	for f in _rep_rows():
+		var rank := String(f.get("rank", "Unknown"))
+		var rc2: Color = RANK_COLOR.get(rank, CREAM)
+		var bw := 58.0
+		_text(thin, Vector2(8, y + 10), _fit(thin, "%s  %s" % [String(f.get("name", "")), rank.to_upper()], 8, W - 24 - bw), 8, rc2)
+		var lo := float(f.get("lo", 0))
+		var hi := float(f.get("hi", 0))
+		var frac := 1.0 if hi <= lo else clampf((float(f.get("points", 0)) - lo) / (hi - lo), 0.0, 1.0)
+		var bar := Rect2(W - 8 - bw, y + 4, bw, 6)
+		draw_rect(bar, Color(0.1, 0.08, 0.05, 0.9))
+		draw_rect(Rect2(bar.position, Vector2(bar.size.x * frac, bar.size.y)), rc2)
+		draw_rect(bar, Color(0.6, 0.5, 0.3, 0.9), false, 1.0)
+		y += REP_ROW
+	# the zone's siege: its name and how full the resolve is (or that it's held), and how it stands
+	if _siege_shown():
+		var st := String(siege_info.get("state", ""))
+		var held := st == "held"
+		var sc: Color = WIN if held else (GOLD if st in ["open", "assault"] else CREAM)
+		var bw2 := 58.0
+		_text(thin, Vector2(8, y + 10), _fit(thin, String(siege_info.get("name", "")).to_upper(), 8, W - 24 - bw2), 8, sc)
+		var bar2 := Rect2(W - 8 - bw2, y + 4, bw2, 6)
+		if held:
+			_text(thin, Vector2(W - 8 - thin.get_string_size("HELD", HORIZONTAL_ALIGNMENT_LEFT, -1, 8).x, y + 10), "HELD", 8, WIN)
+		else:
+			draw_rect(bar2, Color(0.1, 0.08, 0.05, 0.9))
+			draw_rect(Rect2(bar2.position, Vector2(bar2.size.x * clampf(float(siege_info.get("resolve", 0)) / 100.0, 0.0, 1.0), bar2.size.y)), GOLD)
+			var en := clampf(float(siege_info.get("enemy", 0)) / 100.0, 0.0, 1.0)
+			if en > 0.0:                                 # the enemy's strength: a red sliver under it
+				draw_rect(Rect2(bar2.position + Vector2(0, bar2.size.y), Vector2(bar2.size.x * en, 2)), LOSE)
+			draw_rect(bar2, Color(0.6, 0.5, 0.3, 0.9), false, 1.0)
+		y += REP_ROW
+		var sline := String(siege_info.get("line", ""))
+		_text(thin, Vector2(8, y + 10), _fit(thin, sline, 8, W - 16), 8, LOSE if sline.begins_with("Under attack") else DIM)
+		y += REP_ROW
 
 
 static func _num(v: float) -> String:
@@ -121,7 +198,7 @@ static func _dir(v: Vector2) -> String:
 
 ## The height the tracker draws now (the modern HUD's quest log sits under it).
 func content_height() -> float:
-	var zh := (ZONE_H + 4.0) * scale.y if _zone_shown() else 0.0
+	var zh := (zone_h() + 4.0) * scale.y if _zone_shown() else 0.0
 	if Time.get_ticks_msec() - received_ms > 8000 or events.is_empty():
 		return zh
 	var h := 0.0
@@ -148,7 +225,7 @@ func _draw_timed() -> void:
 	var thin := UiArt.font(false, "events")
 	if _zone_shown():
 		_draw_zone(font, thin)
-		draw_set_transform(Vector2(0, ZONE_H + 4.0))
+		draw_set_transform(Vector2(0, zone_h() + 4.0))
 	if Time.get_ticks_msec() - received_ms > 8000 or events.is_empty():
 		draw_set_transform(Vector2.ZERO)
 		return

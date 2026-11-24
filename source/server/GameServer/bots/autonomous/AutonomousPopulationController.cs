@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
@@ -294,8 +294,9 @@ public static partial class AutonomousPopulationController
         // Classic+SI start locations are equally likely. Capital is reached
         // only through the explicit no-valid-start fallback above or watchdog
         // recovery, never through a location preference here.
-        StartupLocation chosenLocation = StartupLocations.ChooseUniformAutonomousLocation(
-            valid.Select(candidate => candidate.Location), Random.Shared);
+        // (owner 2026-11-24: the tryhard bots favour the realm's hard start; the casual ones keep away from it)
+        StartupLocation chosenLocation = StartupLocations.ChooseAutonomousLocation(
+            valid.Select(candidate => candidate.Location), PersonaOf(record)?.Tier, StartupLocations.IsHardStart, Random.Shared);
         (StartupLocation location, Vector3 chosenPosition) = valid.First(candidate => ReferenceEquals(candidate.Location, chosenLocation));
         bot.CurrentRegionID = (ushort)location.Region;
         bot.X = (int)Math.Round(chosenPosition.X);

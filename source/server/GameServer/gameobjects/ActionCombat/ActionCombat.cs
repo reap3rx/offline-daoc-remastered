@@ -864,7 +864,8 @@ namespace DOL.GS
 			if (cost > 0)
 				ChargeIfMissed(player, () => state.DodgeAt == now && !state.DodgeAnswered, cost, window);
 
-			HibernianKits.OnDodge(player);             // (a Bard's music may answer a dodge under attack)
+			// (owner 2026-11-23, Bugs & Fixes: Music of Evasion "should only be on successful evades" - not every dodge
+			// pressed under attack: the music answers a blow the dodge actually avoided, HibernianKits' after-defense hook)
 		}
 
 		/// <summary>When the window has closed: if the press caught nothing, its endurance is paid.</summary>
@@ -1451,7 +1452,7 @@ namespace DOL.GS
 				return 0;
 			}
 
-			if (player.IsBeingInterruptedByOther)
+			if (player.IsBeingInterruptedByOther && !AlbionKits.SteadyDraw(player))   // (a Scout's Shield and Bow holds the draw)
 			{
 				CancelDraw(player, "Your shot is interrupted!");
 				return 0;
@@ -1577,7 +1578,16 @@ namespace DOL.GS
 
 			WeaponAction shot = new(player, target, weapon, s.Effectiveness, full, type, ammo) { ActionMissChance = s.Miss };
 			player.attackComponent.weaponAction = shot;
-			player.Stealth(false);
+
+			if (!HibernianHybrids.CamouflageShot(player, target, ticksToTarget) && !AlbionKits.HiddenNestShot(player, target, ticksToTarget))
+				player.Stealth(false);                                             // (a Ranger's Camouflage, a Scout's Hidden Nest keep you hidden)
+
+			if (s.Critical || s.Name == "overdrawn")                               // (Penetrating Arrow: on through to those behind)
+			{
+				HibernianHybrids.PierceThrough(player, target, weapon, s.Effectiveness, full, type, ammo, s.Miss, ticksToTarget);
+				AlbionKits.PinningShot(player, target, ticksToTarget);            // (a Scout's Pinning Shot)
+				MidgardKits.MarkThePrey(player, target, ticksToTarget);           // (a Hunter's Mark the Prey)
+			}
 
 			if (ticksToTarget > 0)
 				new ECSGameTimer(player, new ECSGameTimer.ECSTimerCallback(shot.Execute), ticksToTarget);

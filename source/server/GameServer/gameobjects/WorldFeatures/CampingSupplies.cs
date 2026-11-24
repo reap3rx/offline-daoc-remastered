@@ -225,7 +225,8 @@ public static class CampingSupplies
 
     private static bool SpawnSupplier(GameMerchant beside)
     {
-        double a = beside.Heading * Math.PI * 2 / 4096.0 + Math.PI / 2;    // a step to the merchant's side
+        var spot = TownNpcSpot.Beside(beside, 90);                       // out in the town square, clear of walls
+        var at = spot.At;
         var supplier = new GameMerchant
         {
             Name = "Camping Supplier",
@@ -235,10 +236,10 @@ public static class CampingSupplies
             Level = 30,
             Realm = beside.Realm,
             CurrentRegionID = beside.CurrentRegionID,
-            Heading = beside.Heading,
-            X = beside.X + (int)(Math.Sin(a) * -110),
-            Y = beside.Y + (int)(Math.Cos(a) * 110),
-            Z = beside.Z,
+            Heading = spot.Heading,
+            X = (int)at.X,
+            Y = (int)at.Y,
+            Z = (int)at.Z,
             TradeItems = _list,
             Flags = beside.Flags,
         };

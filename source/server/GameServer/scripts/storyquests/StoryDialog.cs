@@ -121,8 +121,7 @@ namespace DOL.GS.StoryQuests
                         choiceIds.Add(id);
             }
             RewardsDef first = endings.Select(x => x.r).FirstOrDefault(r => r != null);
-            int at = Math.Min(lvl, q.Level + 2);
-            long levelXp = at < 50 ? GamePlayer.GetExperienceAmountForLevel(at) - GamePlayer.GetExperienceAmountForLevel(at - 1) : 0;
+            long levelXp = StoryQuestManager.XpAtLevel(lvl);    // (paid at your level, whatever the quest's)
             return new
             {
                 xp_pct = first?.XpPct ?? 0,

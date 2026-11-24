@@ -57,6 +57,11 @@ namespace DOL.GS.Spells
 
                 if (spell != null && spell.SubSpellID == 0)
                 {
+                    if (ChannelCasting.ChannelledByShade(Spell))
+                    {
+                        spell = spell.Copy();             // (the shade channelled it: the servant casts it at once)
+                        spell.CastTime = 0;
+                    }
                     spell.Level = Spell.Level;
                     petBrain.OnOwnerFinishPetSpellCast(spell, SpellLine, target);
                 }

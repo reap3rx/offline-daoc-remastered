@@ -1,0 +1,255 @@
+{
+ "zone": 207,
+ "name": "Connacht",
+ "levels": [
+  1,
+  40
+ ],
+ "factions": [
+  {
+   "key": "fianna_druim_ligen",
+   "name": "the Fianna of Druim Ligen",
+   "short": "Fianna",
+   "kin": [
+    "mag_mell_guard",
+    "mine_wardens",
+    "rangers_druim_cain",
+    "sentinels_of_ceannai",
+    "watch_of_moher",
+    "host_of_lug",
+    "clann_of_alainn_bin"
+   ],
+   "titles": [
+    "Friend of the Fian",
+    "Fennid of Connacht",
+    "Rigfennid"
+   ],
+   "speaker": "fiachra",
+   "town": "Druim Ligen",
+   "kills": [
+    "villainous",
+    "rowdy",
+    "road-gang",
+    "gang",
+    "lucradan",
+    "lucragan",
+    "spraggon",
+    "wind ghoul",
+    "ghoul",
+    "skeletal",
+    "siabra",
+    "raider",
+    "demon",
+    "manes",
+    "grumoz",
+    "curmudgeon",
+    "bear",
+    "beetle",
+    "frog",
+    "toad",
+    "mudman",
+    "whelp",
+    "badger",
+    "wolf",
+    "eirebug",
+    "crouch",
+    "nipper",
+    "merucha",
+    "bocan",
+    "cnamh",
+    "windaille",
+    "bas",
+    "juliy",
+    "grimlach",
+    "morcant",
+    "gate",
+    "dullahan"
+   ],
+   "quartermaster": {
+    "name": "Quartermaster Bran",
+    "guild": "Fianna of Druim Ligen",
+    "model": 337,
+    "anchor": "fiachra",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The Fianna keep the border, and the border keeps the Fianna. Show me your standing and I'll show you the armoury.",
+    "stock": [
+     {
+      "item": "rep207_fian_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep207_border_watch_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep207_fennid_s_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep207_gate_watch_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep207_mantle_of_the_rigfennid",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "order_of_the_rowan",
+   "name": "the Order of the Rowan",
+   "short": "Order of the Rowan",
+   "kin": [
+    "lucht_feasa",
+    "muintir_etaine",
+    "lucht_an_tobair",
+    "seers_of_moher",
+    "aines_circle",
+    "keeners_of_cullen"
+   ],
+   "titles": [
+    "Rowan-Friend",
+    "Keeper of the Groves",
+    "Bandrui|Drui"
+   ],
+   "speaker": "cn_eabha",
+   "town": "Ardee",
+   "kills": [
+    "azure",
+    "idolater",
+    "acolyte",
+    "wicker",
+    "withe",
+    "irewood",
+    "cluricaun",
+    "wisp",
+    "sprite",
+    "lunantishee",
+    "sheerie",
+    "changeling",
+    "amadan",
+    "touched",
+    "alp luachra",
+    "pookha",
+    "famine",
+    "dorbal",
+    "walking rock",
+    "voice",
+    "misrule",
+    "revel",
+    "broc",
+    "woodcutter",
+    "fire-",
+    "blight",
+    "elder",
+    "druid",
+    "spectre",
+    "deamhan",
+    "luricaduane",
+    "mephit",
+    "bones",
+    "storm",
+    "thing in the vein",
+    "broker",
+    "nictol",
+    "fiadhnait",
+    "seireadan",
+    "ring-warden",
+    "leading stone"
+   ],
+   "quartermaster": {
+    "name": "Rowan-Keeper Sadhbh",
+    "guild": "Order of the Rowan",
+    "model": 365,
+    "anchor": "cn_eabha",
+    "offset": [
+     -3,
+     3
+    ],
+    "greet": "The Rowan's gifts are grown, not forged. They go to those the groves trust.",
+    "stock": [
+     {
+      "item": "rep207_rowan_friend_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep207_grove_walker_s_bracer",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep207_keeper_s_berry_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep207_withy_woven_belt",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep207_mantle_of_the_rowan",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "fianna_druim_ligen",
+ "event_default": "fianna_druim_ligen",
+ "quest_default": "fianna_druim_ligen",
+ "quests": {
+  "cn_light_fingers": "fianna_druim_ligen",
+  "rowdies": "fianna_druim_ligen",
+  "cn_the_bead_man": "fianna_druim_ligen",
+  "cn_road_gang": "fianna_druim_ligen",
+  "cn_lost_flock": "fianna_druim_ligen",
+  "cn_fallen_rings": "fianna_druim_ligen",
+  "cn_windaille_and_bas": "fianna_druim_ligen",
+  "cn_fire_carrier": "fianna_druim_ligen",
+  "cn_angry_wood": "order_of_the_rowan",
+  "cn_cluricaun_lodge": "order_of_the_rowan",
+  "cn_broc": "order_of_the_rowan",
+  "cn_heart_of_the_irewood": "order_of_the_rowan",
+  "cn_blue_robes": "order_of_the_rowan",
+  "cn_withe": "order_of_the_rowan",
+  "wickerman": "fianna_druim_ligen",
+  "cn_names_for_the_fire": "order_of_the_rowan",
+  "cn_great_burning": "order_of_the_rowan",
+  "cn_the_touched": "order_of_the_rowan",
+  "cn_famines_feast": "order_of_the_rowan",
+  "cn_pookha_bargain": "order_of_the_rowan",
+  "cn_fool_kings_bargain": "order_of_the_rowan",
+  "cn_raider_tents": "fianna_druim_ligen",
+  "cn_watch_on_the_gate": "fianna_druim_ligen",
+  "cn_jester": "fianna_druim_ligen",
+  "cn_close_the_gate": "fianna_druim_ligen",
+  "cn_salmon_of_knowledge": "order_of_the_rowan",
+  "cn_fire_carrier:rowan": "order_of_the_rowan",
+  "wickerman:spy": "fianna_druim_ligen"
+ },
+ "events": {
+  "connacht_wickermen": "order_of_the_rowan",
+  "connacht_streaming_wisps": "order_of_the_rowan",
+  "connacht_wind_ghouls": "fianna_druim_ligen",
+  "connacht_anger_sprites": "order_of_the_rowan",
+  "connacht_gate_stirs": "fianna_druim_ligen",
+  "connacht_fools_revel": "order_of_the_rowan",
+  "connacht_river_siabra": "fianna_druim_ligen",
+  "connacht_fishing_bears": "fianna_druim_ligen",
+  "connacht_wicker_fields_assault": "order_of_the_rowan",
+  "connacht_wicker_fields_raid": "order_of_the_rowan"
+ },
+ "realm": 3
+}

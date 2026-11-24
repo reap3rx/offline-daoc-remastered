@@ -1,740 +1,2016 @@
 {
-  "zone": 204,
-  "region": 200,
-  "name": "Lough Gur",
-  "lore": "Lough Gur, the enchanted lake, where the gurite bandits lurk in the hills and the luch swarm the fields.",
-  "chains": [
+ "zone": 204,
+ "region": 200,
+ "name": "Lough Gur",
+ "lore": "Lough Gur, the enchanted lake. The Earl sleeps under it with his army, and Aine sits on its shore combing her hair. Now there are lights on the water at night, and the lake people say the goddess has come back. She hasn't: the lights are the Glimmer, come north out of the Sheeroe Hills, and they are waking everything that sleeps in the lake.",
+ "chains": [
+  {
+   "id": "lough_gur_gurite_raiders",
+   "title": "The Gurite Raiders",
+   "levels": [
+    30,
+    36
+   ],
+   "hint": "Smoke over the Gurite Hills: the bandits are gathering for a raid on the south road...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "lough_gur_gurite_raiders",
-      "title": "The Gurite Raiders",
-      "levels": [37, 39],
-      "hint": "Gurite lookouts watch from the southern hills...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Gurite Camp",
-          "objective": "Clear the gurite camp",
-          "announce": "The gurite have a raiding camp in the southern hills. Break it.",
-          "center": [272, 1436, 161.4],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60161871,
-              "name": "gurite raider",
-              "level": [37, 39]
-            },
-            {
-              "template": 60161869,
-              "name": "gurite lookout",
-              "level": [37, 37]
-            }
-          ],
-          "success": "You have cleared the gurite camp. Gurite Warchief Donnan comes out to fight.",
-          "fail": "They hold the gurite camp. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Gurite Warchief Donnan",
-          "objective": "Defeat Gurite Warchief Donnan",
-          "announce": "Gurite Warchief Donnan stands at the gurite camp. Bring friends.",
-          "center": [272, 1436, 161.4],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60161871,
-            "name": "Gurite Warchief Donnan",
-            "level": 41,
-            "size": 70,
-            "pos": [272, 1436, 161.4],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60161871,
-                "name": "gurite raider",
-                "level": [37, 39]
-              }
-            ]
-          },
-          "success": "Gurite Warchief Donnan falls. The way is safe again.",
-          "fail": "Gurite Warchief Donnan slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu204_gurite_warchief_donnan_s_pendant", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Gurite Raiders Hold the Road",
-          "objective": "Drive the gurite raiders off the road",
-          "announce": "With The Gurite Raiders lost, the gurite raiders have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [354, 1221, 125.4],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60161871,
-              "name": "gurite raider",
-              "level": [37, 39]
-            },
-            {
-              "template": 60161869,
-              "name": "gurite lookout",
-              "level": [37, 37]
-            }
-          ],
-          "boss": {
-            "template": 60161871,
-            "name": "Gurite raider warleader",
-            "level": 40,
-            "pos": [354, 1221, 125.4],
-            "health_mult": 2
-          },
-          "success": "The gurite raiders are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Aine has come out to set the road right. The gurite raiders are coming back for it!",
-          "center": [354, 1221, 125.4],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Aine",
-            "level": 39,
-            "pos": [354, 1221, 125.4],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [390, 1298, 132.2],
-              [324, 1301, 133.3],
-              [276, 1255, 136.6]
-            ],
-            "mobs": [
-              {
-                "template": 60161871,
-                "name": "gurite raider",
-                "level": [37, 39]
-              },
-              {
-                "template": 60161869,
-                "name": "gurite lookout",
-                "level": [37, 37]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The gurite raiders break and scatter. The road is open again.",
-          "fail": "Roadwarden Aine falls, and the gurite raiders take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Gurite Camp",
+     "objective": "Clear the gurite camp",
+     "announce": "The gurites are massing at their camp in the hills for a raid on the south road. Break them before they ride - the Sentinels will thank you.",
+     "center": [
+      165,
+      1190,
+      154.5
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60161871,
+       "name": "gurite raider",
+       "level": [
+        30,
+        32
+       ]
+      },
+      {
+       "template": 60161869,
+       "name": "gurite lookout",
+       "level": [
+        30,
+        30
+       ]
+      }
+     ],
+     "success": "You have cleared the gurite camp. Gurite Warchief Donnan comes out to fight.",
+     "fail": "They hold the gurite camp. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "lough_gur_luch_swarm",
-      "title": "The Luch Swarm",
-      "levels": [24, 28],
-      "hint": "The fields are alive with luch...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Eithne the Miller",
-          "objective": "Protect Eithne the Miller, who is sealing the grain store",
-          "announce": "The luch are swarming the mill. Eithne the miller must seal the grain store - hold them off her.",
-          "center": [534, 799, 106.8],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Eithne the Miller",
-            "template": 60161797,
-            "level": 28,
-            "model": 388,
-            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
-            "health_mult": 10,
-            "pos": [534, 799, 106.8]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [500, 877, 108.7],
-              [455, 829, 123.6],
-              [458, 763, 123.1]
-            ],
-            "mobs": [
-              {
-                "template": 60161603,
-                "name": "greater luch",
-                "level": [24, 27]
-              },
-              {
-                "template": 60163448,
-                "name": "luch catcher",
-                "level": [25, 28]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Eithne the Miller. \"They came from over there - let's finish this.\"",
-          "fail": "Eithne the Miller falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Mill",
-          "objective": "Clear the mill",
-          "announce": "They came from the mill. Follow them back and clear it out.",
-          "center": [214, 919, 161.4],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60161603,
-              "name": "greater luch",
-              "level": [24, 27]
-            },
-            {
-              "template": 60163448,
-              "name": "luch catcher",
-              "level": [25, 28]
-            }
-          ],
-          "success": "You have cleared the mill. The Great Luch comes out to fight.",
-          "fail": "They hold the mill. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Great Luch",
-          "objective": "Defeat the Great Luch",
-          "announce": "The Great Luch stands at the mill. Bring friends.",
-          "center": [214, 919, 161.4],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60161603,
-            "name": "The Great Luch",
-            "level": 30,
-            "size": 67,
-            "pos": [214, 919, 161.4],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60161603,
-                "name": "greater luch",
-                "level": [24, 27]
-              }
-            ]
-          },
-          "success": "The Great Luch falls. The way is safe again.",
-          "fail": "The Great Luch slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu204_great_luch_s_eye", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Greater Luches Hold the Road",
-          "objective": "Drive the greater luches off the road",
-          "announce": "With The Luch Swarm lost, the greater luches have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [176, 647, 158.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60161603,
-              "name": "greater luch",
-              "level": [24, 27]
-            },
-            {
-              "template": 60163448,
-              "name": "luch catcher",
-              "level": [25, 28]
-            }
-          ],
-          "boss": {
-            "template": 60161603,
-            "name": "Greater luch warleader",
-            "level": 29,
-            "pos": [176, 647, 158.6],
-            "health_mult": 2
-          },
-          "success": "The greater luches are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Ruadh has come out to set the road right. The greater luches are coming back for it!",
-          "center": [176, 647, 158.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Ruadh",
-            "level": 28,
-            "pos": [176, 647, 158.6],
-            "health_mult": 10,
-            "template": 60161797,
-            "model": 388,
-            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [244, 697, 161.4],
-              [188, 731, 161.8],
-              [124, 714, 165.2]
-            ],
-            "mobs": [
-              {
-                "template": 60161603,
-                "name": "greater luch",
-                "level": [24, 27]
-              },
-              {
-                "template": 60163448,
-                "name": "luch catcher",
-                "level": [25, 28]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The greater luches break and scatter. The road is open again.",
-          "fail": "Roadwarden Ruadh falls, and the greater luches take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Gurite Warchief Donnan",
+     "objective": "Defeat Gurite Warchief Donnan",
+     "announce": "Gurite Warchief Donnan stands at the gurite camp. Bring friends.",
+     "center": [
+      165,
+      1190,
+      154.5
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161871,
+      "name": "Gurite Warchief Donnan",
+      "level": 34,
+      "size": 70,
+      "pos": [
+       165,
+       1190,
+       154.5
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60161871,
+        "name": "gurite raider",
+        "level": [
+         30,
+         32
+        ]
+       }
       ]
+     },
+     "success": "Gurite Warchief Donnan falls. The way is safe again.",
+     "fail": "Gurite Warchief Donnan slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu204_gurite_warchief_donnan_s_pendant",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
     },
     {
-      "id": "lough_gur_cluricaun_revel",
-      "title": "The Cluricaun Revel",
-      "levels": [17, 24],
-      "hint": "Drunken singing drifts over the eastern hills...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Revel",
-          "objective": "Clear the revel",
-          "announce": "The cluricauns have stolen a whole cellar and their revel is turning nasty. Break it up.",
-          "center": [1277, 350, 131.2],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60159264,
-              "name": "cluricaun",
-              "level": [22, 24]
-            },
-            {
-              "template": 60164845,
-              "name": "parthanan",
-              "level": [17, 18]
-            }
-          ],
-          "success": "You have cleared the revel. Old Cluricaun Ruadh comes out to fight.",
-          "fail": "They hold the revel. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Old Cluricaun Ruadh",
-          "objective": "Defeat Old Cluricaun Ruadh",
-          "announce": "Old Cluricaun Ruadh stands at the revel. Bring friends.",
-          "center": [1277, 350, 131.2],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60159264,
-            "name": "Old Cluricaun Ruadh",
-            "level": 26,
-            "size": 70,
-            "pos": [1277, 350, 131.2],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60159264,
-                "name": "cluricaun",
-                "level": [22, 24]
-              }
-            ]
-          },
-          "success": "Old Cluricaun Ruadh falls. The way is safe again.",
-          "fail": "Old Cluricaun Ruadh slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu204_old_cluricaun_ruadh_s_stone", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Cluricauns Hold the Road",
-          "objective": "Drive the cluricauns off the road",
-          "announce": "With The Cluricaun Revel lost, the cluricauns have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1097, 517, 111.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60159264,
-              "name": "cluricaun",
-              "level": [22, 24]
-            },
-            {
-              "template": 60164845,
-              "name": "parthanan",
-              "level": [17, 18]
-            }
-          ],
-          "boss": {
-            "template": 60159264,
-            "name": "Cluricaun warleader",
-            "level": 25,
-            "pos": [1097, 517, 111.6],
-            "health_mult": 2
-          },
-          "success": "The cluricauns are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cormac has come out to set the road right. The cluricauns are coming back for it!",
-          "center": [1097, 517, 111.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cormac",
-            "level": 24,
-            "pos": [1097, 517, 111.6],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1099, 432, 119.9],
-              [1160, 459, 120.9],
-              [1182, 521, 118.4]
-            ],
-            "mobs": [
-              {
-                "template": 60159264,
-                "name": "cluricaun",
-                "level": [22, 24]
-              },
-              {
-                "template": 60164845,
-                "name": "parthanan",
-                "level": [17, 18]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The cluricauns break and scatter. The road is open again.",
-          "fail": "Roadwarden Cormac falls, and the cluricauns take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Gurites Hold the South Road",
+     "objective": "Drive the gurite raiders off the road",
+     "announce": "The gurites hold the south road at the old road post, and they are stopping everyone. Drive them out.",
+     "center": [
+      440,
+      940,
+      121.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60161871,
+       "name": "gurite raider",
+       "level": [
+        30,
+        32
+       ]
+      },
+      {
+       "template": 60161869,
+       "name": "gurite lookout",
+       "level": [
+        30,
+        30
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60161871,
+      "name": "Gurite raider warleader",
+      "level": 33,
+      "pos": [
+       440,
+       940,
+       121.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The gurite raiders are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
     },
     {
-      "id": "lough_gur_gurite_ferry",
-      "title": "The Ferryman's Crossing",
-      "levels": [23, 27],
-      "hint": "Gurites watch the ferry crossing...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Ferryman Colm",
-          "objective": "Protect Ferryman Colm, who is caulking his ferry",
-          "announce": "Ferryman Colm's boat is the only way across, and the gurites mean to sink it. Keep them off him while he patches it.",
-          "center": [1370, 1284, 127.3],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Ferryman Colm",
-            "template": 60161797,
-            "level": 27,
-            "model": 388,
-            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
-            "health_mult": 10,
-            "pos": [1370, 1284, 127.3]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1455, 1297, 131.0],
-              [1420, 1354, 134.2],
-              [1355, 1368, 130.5]
-            ],
-            "mobs": [
-              {
-                "template": 60161866,
-                "name": "gurite assailer",
-                "level": [23, 24]
-              },
-              {
-                "template": 60161874,
-                "name": "gurite waylayer",
-                "level": [26, 27]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Ferryman Colm. \"They came from over there - let's finish this.\"",
-          "fail": "Ferryman Colm falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Gurite Camp",
-          "objective": "Clear the gurite camp",
-          "announce": "They came from the gurite camp. Follow them back and clear it out.",
-          "center": [1520, 1493, 153.4],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60161866,
-              "name": "gurite assailer",
-              "level": [23, 24]
-            },
-            {
-              "template": 60161874,
-              "name": "gurite waylayer",
-              "level": [26, 27]
-            }
-          ],
-          "success": "You have cleared the gurite camp. Gurite Captain Orlagh comes out to fight.",
-          "fail": "They hold the gurite camp. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Gurite Captain Orlagh",
-          "objective": "Defeat Gurite Captain Orlagh",
-          "announce": "Gurite Captain Orlagh stands at the gurite camp. Bring friends.",
-          "center": [1520, 1493, 153.4],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60161872,
-            "name": "Gurite Captain Orlagh",
-            "level": 29,
-            "size": 68,
-            "pos": [1520, 1493, 153.4],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60161866,
-                "name": "gurite assailer",
-                "level": [23, 24]
-              }
-            ]
-          },
-          "success": "Gurite Captain Orlagh falls. The way is safe again.",
-          "fail": "Gurite Captain Orlagh slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu204_gurite_captain_orlagh_s_bracer", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Gurite Assailers Hold the Old Road",
-          "objective": "Drive the gurite assailers off the old road",
-          "announce": "With The Ferryman's Crossing lost, the gurite assailers have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1506, 1098, 130.9],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60161866,
-              "name": "gurite assailer",
-              "level": [23, 24]
-            },
-            {
-              "template": 60161874,
-              "name": "gurite waylayer",
-              "level": [26, 27]
-            }
-          ],
-          "boss": {
-            "template": 60161866,
-            "name": "Gurite assailer warleader",
-            "level": 28,
-            "pos": [1506, 1098, 130.9],
-            "health_mult": 2
-          },
-          "success": "The gurite assailers are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Aine has come out to set the old road right. The gurite assailers are coming back for it!",
-          "center": [1506, 1098, 130.9],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Aine",
-            "level": 27,
-            "pos": [1506, 1098, 130.9],
-            "health_mult": 10,
-            "template": 60161797,
-            "model": 388,
-            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1569, 1155, 126.7],
-              [1509, 1183, 131.2],
-              [1447, 1160, 126.2]
-            ],
-            "mobs": [
-              {
-                "template": 60161866,
-                "name": "gurite assailer",
-                "level": [23, 24]
-              },
-              {
-                "template": 60161874,
-                "name": "gurite waylayer",
-                "level": [26, 27]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The gurite assailers break and scatter. The old road is open again.",
-          "fail": "Roadwarden Aine falls, and the gurite assailers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Keep Sentinel Brogan alive while he raises the road post again",
+     "announce": "Sentinel Brogan of Ceannai has come out to raise the road post again. The gurites are coming back for it!",
+     "center": [
+      440,
+      940,
+      121.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Sentinel Brogan",
+      "level": 32,
+      "pos": [
+       440,
+       940,
+       121.2
+      ],
+      "health_mult": 10,
+      "template": 60165769,
+      "model": 328,
+      "guild": "the Sentinels of Ceannai",
+      "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        500,
+        970,
+        114.2
+       ],
+       [
+        390,
+        980,
+        132.2
+       ],
+       [
+        450,
+        880,
+        123.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161871,
+        "name": "gurite raider",
+        "level": [
+         30,
+         32
+        ]
+       },
+       {
+        "template": 60161869,
+        "name": "gurite lookout",
+        "level": [
+         30,
+         30
+        ]
+       }
       ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The gurite raiders break and scatter. The road is open again.",
+     "fail": "Roadwarden Aine falls, and the gurite raiders take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
-  ]
+   ]
+  },
+  {
+   "id": "lough_gur_luch_swarm",
+   "title": "The Luch Swarm",
+   "levels": [
+    28,
+    33
+   ],
+   "hint": "The North Fields are alive with luch - Eithne's mill is under siege...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Eithne the Miller",
+     "objective": "Protect Eithne the Miller, who is sealing the grain store",
+     "announce": "The luch are swarming the mill. Eithne the miller must seal the grain store - hold them off her.",
+     "center": [
+      700,
+      380,
+      115.6
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Eithne the Miller",
+      "template": 60161797,
+      "level": 32,
+      "model": 388,
+      "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
+      "health_mult": 10,
+      "pos": [
+       700,
+       380,
+       115.6
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        760,
+        410,
+        114.5
+       ],
+       [
+        650,
+        420,
+        114.8
+       ],
+       [
+        710,
+        320,
+        113.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161603,
+        "name": "greater luch",
+        "level": [
+         28,
+         31
+        ]
+       },
+       {
+        "template": 60163448,
+        "name": "luch catcher",
+        "level": [
+         29,
+         32
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Eithne the Miller. \"They came from over there - let's finish this.\"",
+     "fail": "Eithne the Miller falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Mill",
+     "objective": "Clear the mill",
+     "announce": "They came from the mill. Follow them back and clear it out.",
+     "center": [
+      760,
+      430,
+      113.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60161603,
+       "name": "greater luch",
+       "level": [
+        28,
+        31
+       ]
+      },
+      {
+       "template": 60163448,
+       "name": "luch catcher",
+       "level": [
+        29,
+        32
+       ]
+      }
+     ],
+     "success": "You have cleared the mill. The Great Luch comes out to fight.",
+     "fail": "They hold the mill. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Luchtigern's Get",
+     "objective": "Defeat Luchtigern's Get",
+     "announce": "Out of the burrow comes one of Luchtigern's own get - a mouse the size of a calf. Bring friends.",
+     "center": [
+      760,
+      430,
+      113.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161603,
+      "name": "Luchtigern's Get",
+      "level": 34,
+      "size": 67,
+      "pos": [
+       760,
+       430,
+       113.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60161603,
+        "name": "greater luch",
+        "level": [
+         28,
+         31
+        ]
+       }
+      ]
+     },
+     "success": "Luchtigern's Get falls. Somewhere in the fields, something squeals with rage.",
+     "fail": "The Great Luch slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu204_great_luch_s_eye",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Greater Luches Hold the Road",
+     "objective": "Drive the greater luches off the road",
+     "announce": "With The Luch Swarm lost, the greater luches have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      620,
+      250,
+      128.1
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60161603,
+       "name": "greater luch",
+       "level": [
+        28,
+        31
+       ]
+      },
+      {
+       "template": 60163448,
+       "name": "luch catcher",
+       "level": [
+        29,
+        32
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60161603,
+      "name": "Greater luch warleader",
+      "level": 33,
+      "pos": [
+       620,
+       250,
+       128.1
+      ],
+      "health_mult": 2
+     },
+     "success": "The greater luches are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Keep Eithne the Miller alive while she seals the grain store",
+     "announce": "Eithne the Miller has come back to seal her grain store. The luch are coming back for it!",
+     "center": [
+      620,
+      250,
+      128.1
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Eithne the Miller",
+      "level": 32,
+      "pos": [
+       620,
+       250,
+       128.1
+      ],
+      "health_mult": 10,
+      "template": 60161797,
+      "model": 388,
+      "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        680,
+        280,
+        119.1
+       ],
+       [
+        570,
+        290,
+        121.9
+       ],
+       [
+        630,
+        190,
+        128.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161603,
+        "name": "greater luch",
+        "level": [
+         28,
+         31
+        ]
+       },
+       {
+        "template": 60163448,
+        "name": "luch catcher",
+        "level": [
+         29,
+         32
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The greater luches break and scatter. The road is open again.",
+     "fail": "Roadwarden Ruadh falls, and the greater luches take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "lough_gur_cluricaun_revel",
+   "title": "The Cluricaun Revel",
+   "levels": [
+    28,
+    33
+   ],
+   "hint": "Drunken singing from the cluricauns' camp by the luch runs...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Revel",
+     "objective": "Clear the revel",
+     "announce": "The cluricauns are revelling at their camp by the luch runs - drinking stolen ale and riding stolen luch. Aine's Circle says a revel like this calls things up out of the lake. Break it up.",
+     "center": [
+      1236,
+      646,
+      118.2
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60159264,
+       "name": "cluricaun",
+       "level": [
+        33,
+        35
+       ]
+      },
+      {
+       "template": 60164845,
+       "name": "parthanan",
+       "level": [
+        28,
+        29
+       ]
+      }
+     ],
+     "success": "You have cleared the revel. Old Cluricaun Ruadh comes out to fight.",
+     "fail": "They hold the revel. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "Old Cluricaun Ruadh",
+     "objective": "Defeat Old Cluricaun Ruadh",
+     "announce": "Old Cluricaun Ruadh stands at the revel. Bring friends.",
+     "center": [
+      1236,
+      646,
+      118.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60159264,
+      "name": "Old Cluricaun Ruadh",
+      "level": 37,
+      "size": 70,
+      "pos": [
+       1236,
+       646,
+       118.2
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60159264,
+        "name": "cluricaun",
+        "level": [
+         33,
+         35
+        ]
+       }
+      ]
+     },
+     "success": "Old Cluricaun Ruadh falls. The way is safe again.",
+     "fail": "Old Cluricaun Ruadh slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu204_old_cluricaun_ruadh_s_stone",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Cluricauns Hold the Road",
+     "objective": "Drive the cluricauns off the road",
+     "announce": "With The Cluricaun Revel lost, the cluricauns have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1120,
+      540,
+      111.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60159264,
+       "name": "cluricaun",
+       "level": [
+        33,
+        35
+       ]
+      },
+      {
+       "template": 60164845,
+       "name": "parthanan",
+       "level": [
+        28,
+        29
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60159264,
+      "name": "Cluricaun warleader",
+      "level": 36,
+      "pos": [
+       1120,
+       540,
+       111.6
+      ],
+      "health_mult": 2
+     },
+     "success": "The cluricauns are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cormac, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cormac has come out to set the road right. The cluricauns are coming back for it!",
+     "center": [
+      1120,
+      540,
+      111.6
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cormac",
+      "level": 35,
+      "pos": [
+       1120,
+       540,
+       111.6
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1180,
+        570,
+        116.4
+       ],
+       [
+        1070,
+        580,
+        107.0
+       ],
+       [
+        1130,
+        480,
+        115.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60159264,
+        "name": "cluricaun",
+        "level": [
+         33,
+         35
+        ]
+       },
+       {
+        "template": 60164845,
+        "name": "parthanan",
+        "level": [
+         28,
+         29
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The cluricauns break and scatter. The road is open again.",
+     "fail": "Roadwarden Cormac falls, and the cluricauns take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ],
+   "time": "night"
+  },
+  {
+   "id": "lough_gur_gurite_ferry",
+   "title": "The Ferryman's Crossing",
+   "levels": [
+    30,
+    35
+   ],
+   "hint": "Gurites are watching the ferry below Innis Carthaig...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Ferryman Colm",
+     "objective": "Protect Ferryman Colm, who is caulking his ferry",
+     "announce": "Gurites are coming down on the ferry below Innis Carthaig. Ferryman Colm has to get his boat off the shore - keep them off him.",
+     "center": [
+      1140,
+      1080,
+      106.7
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Ferryman Colm",
+      "template": 60161797,
+      "level": 34,
+      "model": 388,
+      "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
+      "health_mult": 10,
+      "pos": [
+       1140,
+       1080,
+       106.7
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1200,
+        1110,
+        116.5
+       ],
+       [
+        1090,
+        1120,
+        106.4
+       ],
+       [
+        1150,
+        1020,
+        105.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161866,
+        "name": "gurite assailer",
+        "level": [
+         30,
+         31
+        ]
+       },
+       {
+        "template": 60161874,
+        "name": "gurite waylayer",
+        "level": [
+         33,
+         34
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Ferryman Colm. \"They came from over there - let's finish this.\"",
+     "fail": "Ferryman Colm falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Gurite Camp",
+     "objective": "Clear the gurite camp",
+     "announce": "They came from the gurite camp. Follow them back and clear it out.",
+     "center": [
+      1466,
+      1315,
+      130.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60161866,
+       "name": "gurite assailer",
+       "level": [
+        30,
+        31
+       ]
+      },
+      {
+       "template": 60161874,
+       "name": "gurite waylayer",
+       "level": [
+        33,
+        34
+       ]
+      }
+     ],
+     "success": "You have cleared the gurite camp. Gurite Captain Orlagh comes out to fight.",
+     "fail": "They hold the gurite camp. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Gurite Captain Orlagh",
+     "objective": "Defeat Gurite Captain Orlagh",
+     "announce": "Gurite Captain Orlagh stands at the gurite camp. Bring friends.",
+     "center": [
+      1466,
+      1315,
+      130.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161872,
+      "name": "Gurite Captain Orlagh",
+      "level": 36,
+      "size": 68,
+      "pos": [
+       1466,
+       1315,
+       130.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60161866,
+        "name": "gurite assailer",
+        "level": [
+         30,
+         31
+        ]
+       }
+      ]
+     },
+     "success": "Gurite Captain Orlagh falls. The way is safe again.",
+     "fail": "Gurite Captain Orlagh slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu204_gurite_captain_orlagh_s_bracer",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Gurite Assailers Hold the Old Road",
+     "objective": "Drive the gurite assailers off the old road",
+     "announce": "With The Ferryman's Crossing lost, the gurite assailers have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1180,
+      1120,
+      114.4
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60161866,
+       "name": "gurite assailer",
+       "level": [
+        30,
+        31
+       ]
+      },
+      {
+       "template": 60161874,
+       "name": "gurite waylayer",
+       "level": [
+        33,
+        34
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60161866,
+      "name": "Gurite assailer warleader",
+      "level": 35,
+      "pos": [
+       1180,
+       1120,
+       114.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The gurite assailers are gone from the old road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Aine, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Aine has come out to set the old road right. The gurite assailers are coming back for it!",
+     "center": [
+      1180,
+      1120,
+      114.4
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Aine",
+      "level": 34,
+      "pos": [
+       1180,
+       1120,
+       114.4
+      ],
+      "health_mult": 10,
+      "template": 60161797,
+      "model": 388,
+      "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1240,
+        1150,
+        118.6
+       ],
+       [
+        1130,
+        1160,
+        112.3
+       ],
+       [
+        1190,
+        1060,
+        108.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161866,
+        "name": "gurite assailer",
+        "level": [
+         30,
+         31
+        ]
+       },
+       {
+        "template": 60161874,
+        "name": "gurite waylayer",
+        "level": [
+         33,
+         34
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+     "success": "The gurite assailers break and scatter. The old road is open again.",
+     "fail": "Roadwarden Aine falls, and the gurite assailers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "lg_lights_on_the_lake",
+   "title": "Lights on the Lake",
+   "levels": [
+    32,
+    36
+   ],
+   "time": "night",
+   "rest_s": 30,
+   "hint": "Pale lights on Lough Gur - and the touched folk are walking toward them...",
+   "first_delay_s": [
+    600,
+    1500
+   ],
+   "interval_s": [
+    2400,
+    3600
+   ],
+   "start": "l1",
+   "stages": [
+    {
+     "id": "l1",
+     "type": "intercept",
+     "name": "The Lure",
+     "objective": "Put out the light leading the touched folk to the water",
+     "announce": "A light has come up off the lake and is drifting toward the touched folk's camp - and the touched are following it, singing, down to the water. Put the light out before it reaches the shore!",
+     "radius": 60,
+     "time_s": 900,
+     "alive": 4,
+     "speed": 110,
+     "path": [
+      [
+       420,
+       1118,
+       121.5
+      ],
+      [
+       520,
+       1080,
+       137.3
+      ],
+      [
+       600,
+       1040,
+       106.2
+      ],
+      [
+       660,
+       990,
+       110.3
+      ],
+      [
+       700,
+       960,
+       106.5
+      ]
+     ],
+     "boss": {
+      "template": 60161424,
+      "name": "glimmer lure",
+      "level": 36,
+      "size": 45,
+      "health_mult": 2.2,
+      "guild": "the Glimmer"
+     },
+     "mobs": [
+      {
+       "template": 60161430,
+       "name": "glimmer light",
+       "level": [
+        34,
+        36
+       ],
+       "guild": "the Glimmer"
+      },
+      {
+       "template": 60157791,
+       "name": "drowned touched",
+       "level": [
+        32,
+        34
+       ]
+      }
+     ],
+     "success": "The lure goes out like a pinched candle. The touched stop, and blink, and one of them starts to cry.",
+     "fail": "The lure sinks into the lake, and the touched walk in after it.",
+     "on_success": "l2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 100
+     }
+    },
+    {
+     "id": "l2",
+     "type": "boss",
+     "name": "the Lantern on the Water",
+     "objective": "Defeat the Lantern on the Water",
+     "announce": "Out on the water, a bigger light turns toward you: the one the lures come from. It comes ashore. Bring friends.",
+     "center": [
+      700,
+      960,
+      106.5
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60161424,
+      "name": "the Lantern on the Water",
+      "level": 38,
+      "size": 65,
+      "health_mult": 2.0,
+      "guild": "the Glimmer"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60161430,
+        "name": "glimmer light",
+        "level": [
+         34,
+         36
+        ],
+        "guild": "the Glimmer"
+       }
+      ]
+     },
+     "success": "The Lantern breaks into sparks that hiss out in the shallows. The lake is dark again - for tonight.",
+     "fail": "The Lantern drifts back out over the water.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "ev204_lantern_glass",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Drowned Walk the Shore",
+     "objective": "Lay the drowned touched to rest",
+     "announce": "The touched who walked into the lake have walked out again - drowned, and lit from inside. They are on the west shore. Lay them to rest.",
+     "center": [
+      680,
+      1000,
+      107.0
+     ],
+     "radius": 70,
+     "count": 8,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60157791,
+       "name": "drowned touched",
+       "level": [
+        32,
+        34
+       ]
+      },
+      {
+       "template": 60161430,
+       "name": "glimmer light",
+       "level": [
+        34,
+        36
+       ],
+       "guild": "the Glimmer"
+      }
+     ],
+     "boss": {
+      "template": 60157791,
+      "name": "the first of the drowned",
+      "level": 35,
+      "pos": [
+       680,
+       1000,
+       107.0
+      ],
+      "health_mult": 2
+     },
+     "success": "The last of the drowned lies down in the reeds and is still.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    }
+   ]
+  },
+  {
+   "id": "lg_earls_ride",
+   "title": "The Earl's Ride",
+   "levels": [
+    34,
+    38
+   ],
+   "time": "night",
+   "rest_s": 30,
+   "bots": 8,
+   "bot_min_level": 25,
+   "hint": "The lake has gone still as glass. Somewhere under it, a horse is stamping...",
+   "first_delay_s": [
+    1800,
+    3600
+   ],
+   "interval_s": [
+    5400,
+    7200
+   ],
+   "wake_m": 300,
+   "start": "r1",
+   "stages": [
+    {
+     "id": "r1",
+     "type": "intercept",
+     "name": "The Earl Rides",
+     "objective": "Turn the Earl back before he rides the whole shore",
+     "announce": "Lough Gur has gone still. Then it breaks, and a rider comes up out of it on a horse shod with silver: Gearoid Iarla, the Earl, with his host behind him. He will ride the shore round to Innis Carthaig, halting three times. Turn him back under the lake!",
+     "radius": 70,
+     "time_s": 1500,
+     "alive": 3,
+     "speed": 150,
+     "path": [
+      [
+       700,
+       1120,
+       106.2
+      ],
+      [
+       640,
+       1000,
+       109.2
+      ],
+      [
+       660,
+       860,
+       108.2
+      ],
+      [
+       700,
+       720,
+       105.0
+      ],
+      [
+       800,
+       600,
+       105.0
+      ],
+      [
+       940,
+       560,
+       105.0
+      ],
+      [
+       1080,
+       600,
+       105.0
+      ],
+      [
+       1180,
+       700,
+       111.4
+      ],
+      [
+       1220,
+       840,
+       112.5
+      ]
+     ],
+     "stops": [
+      2,
+      5,
+      8
+     ],
+     "stop_s": 75,
+     "stop_count": 5,
+     "stop_says": [
+      "The Earl reins in on the west shore, and his host comes down off their horses round him. Fight them here!",
+      "The Earl halts at the north shore. The dullahans dismount - and the black wraiths come with them.",
+      "The Earl halts above Innis Carthaig, the last of his ride. Now - or he takes the shore!"
+     ],
+     "boss": {
+      "template": 60160221,
+      "name": "Gearoid Iarla",
+      "level": 38,
+      "size": 62,
+      "health_mult": 6.0,
+      "guild": "the Earl Beneath the Lake"
+     },
+     "mobs": [
+      {
+       "template": 60160221,
+       "name": "dullahan of the host",
+       "level": [
+        35,
+        37
+       ],
+       "guild": "the Earl's Host"
+      },
+      {
+       "template": 60158464,
+       "name": "black wraith of the host",
+       "level": [
+        36,
+        38
+       ],
+       "guild": "the Earl's Host"
+      },
+      {
+       "template": 60166634,
+       "name": "rider of the host",
+       "level": [
+        36,
+        38
+       ],
+       "guild": "the Earl's Host"
+      }
+     ],
+     "success": "Gearoid Iarla reels in the saddle and turns his horse to the water. 'Not yet,' he says, to no one. 'The shoes are not yet worn.' The lake closes over him, and his host after him.",
+     "fail": "The Earl reaches Innis Carthaig's shore and his host spreads out along it. They will not go back tonight.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 220,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "ev204_silver_horseshoe",
+        "gold_chance": 40,
+        "silver_chance": 20
+       },
+       {
+        "id": "ev204_earl_s_signet",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Earl's Host Holds the Shore",
+     "objective": "Drive the Earl's host back into the lake",
+     "announce": "The Earl's host holds the west shore of Lough Gur. Every night nobody answers, they will be stronger. Drive them back into the water!",
+     "center": [
+      700,
+      930,
+      106.6
+     ],
+     "radius": 80,
+     "count": 10,
+     "reinforce_s": 120,
+     "health_mult": 1.2,
+     "mobs": [
+      {
+       "template": 60160221,
+       "name": "dullahan of the host",
+       "level": [
+        35,
+        37
+       ],
+       "guild": "the Earl's Host"
+      },
+      {
+       "template": 60158464,
+       "name": "black wraith of the host",
+       "level": [
+        36,
+        38
+       ],
+       "guild": "the Earl's Host"
+      },
+      {
+       "template": 60166634,
+       "name": "rider of the host",
+       "level": [
+        36,
+        38
+       ],
+       "guild": "the Earl's Host"
+      }
+     ],
+     "boss": {
+      "template": 60166634,
+      "name": "the Earl's Captain",
+      "level": 37,
+      "pos": [
+       700,
+       930,
+       106.6
+      ],
+      "health_mult": 2.5,
+      "guild": "the Earl's Host"
+     },
+     "success": "The host breaks and goes back under the water.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 160,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "lg_fairy_taking",
+   "title": "The Fairy Taking",
+   "levels": [
+    32,
+    37
+   ],
+   "rest_s": 30,
+   "hint": "A traveller on the moor road - and weeping in the wood beside it...",
+   "first_delay_s": [
+    300,
+    1200
+   ],
+   "interval_s": [
+    2100,
+    3000
+   ],
+   "start": "t1",
+   "stages": [
+    {
+     "id": "t1",
+     "type": "intercept",
+     "name": "The Taking",
+     "objective": "Stop the fairies carrying the traveller into the Sorrowing Wood",
+     "announce": "The melancholic fairies have taken a traveller off the moor road and are carrying her into the Sorrowing Wood - to sit in their queen's empty chair. Stop the bearer before she's gone!",
+     "radius": 60,
+     "time_s": 900,
+     "alive": 4,
+     "speed": 120,
+     "path": [
+      [
+       760,
+       1220,
+       117.3
+      ],
+      [
+       700,
+       1260,
+       147.8
+      ],
+      [
+       640,
+       1300,
+       128.8
+      ],
+      [
+       580,
+       1320,
+       143.0
+      ],
+      [
+       550,
+       1318,
+       150.3
+      ]
+     ],
+     "boss": {
+      "template": 60164025,
+      "name": "fairy-bearer",
+      "level": 36,
+      "size": 50,
+      "health_mult": 2.2,
+      "guild": "the Sorrowing Wood"
+     },
+     "mobs": [
+      {
+       "template": 60163914,
+       "name": "melancholic fairy",
+       "level": [
+        33,
+        35
+       ]
+      },
+      {
+       "template": 60164025,
+       "name": "militant melancholic fairy",
+       "level": [
+        35,
+        37
+       ]
+      }
+     ],
+     "success": "The bearer falls, and the traveller - a girl from Innis Carthaig - sits up in the bracken and asks what happened.",
+     "fail": "The fairies carry her into the wood. Nobody sees her again.",
+     "on_success": "t2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 100
+     }
+    },
+    {
+     "id": "t2",
+     "type": "boss",
+     "name": "the Grieving Knight",
+     "objective": "Defeat the Grieving Knight",
+     "announce": "The queen's knight comes out of the wood, weeping, for the one who stopped them. Bring friends.",
+     "center": [
+      640,
+      1300,
+      128.8
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60164025,
+      "name": "the Grieving Knight",
+      "level": 38,
+      "size": 62,
+      "health_mult": 2.0,
+      "guild": "the Sorrowing Wood"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60163914,
+        "name": "melancholic fairy",
+        "level": [
+         33,
+         35
+        ]
+       }
+      ]
+     },
+     "success": "The Grieving Knight falls, still weeping.",
+     "fail": "The Grieving Knight goes back into the wood.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "ev204_grieving_knight_s_tear",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lg_deamhan_night",
+   "title": "Deamhan Night",
+   "levels": [
+    33,
+    38
+   ],
+   "time": "night",
+   "rest_s": 30,
+   "hint": "Hounds baying on the moor - the Sentinels' road post has lit its signal fire...",
+   "first_delay_s": [
+    600,
+    1500
+   ],
+   "interval_s": [
+    2400,
+    3600
+   ],
+   "start": "n1",
+   "stages": [
+    {
+     "id": "n1",
+     "type": "defend",
+     "name": "The Road Post",
+     "objective": "Keep Sentinel Orla alive at the road post until dawn's first watch",
+     "announce": "The deamhan are up on the moor, and they are coming for the Sentinels' road post. Sentinel Orla has lit the signal fire - hold the post with her!",
+     "center": [
+      1000,
+      1250,
+      114.8
+     ],
+     "radius": 60,
+     "duration_s": 180,
+     "protect": {
+      "template": 60165769,
+      "model": 328,
+      "equipment": "0b7ecfe0-b579-44bc-819f-753a18263762",
+      "guild": "the Sentinels of Ceannai",
+      "name": "Sentinel Orla",
+      "level": 36,
+      "pos": [
+       1000,
+       1250,
+       114.8
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 3,
+      "from": [
+       [
+        1060,
+        1330,
+        129.0
+       ],
+       [
+        920,
+        1320,
+        114.8
+       ],
+       [
+        1080,
+        1200,
+        108.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60159815,
+        "name": "deamhan hound",
+        "level": [
+         33,
+         35
+        ]
+       },
+       {
+        "template": 60159810,
+        "name": "deamhan aeir",
+        "level": [
+         34,
+         36
+        ]
+       }
+      ]
+     },
+     "thanks": "\"They went back into the dark. Thank you. I'll let the fire burn down now.\"",
+     "success": "The deamhan pull back - all but one, bigger than the rest, that comes up the road on its own.",
+     "fail": "The post falls, and the moor is the deamhan's.",
+     "on_success": "n2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 100
+     }
+    },
+    {
+     "id": "n2",
+     "type": "boss",
+     "name": "the Moor-Tormentor",
+     "objective": "Defeat the Moor-Tormentor",
+     "announce": "The Moor-Tormentor comes up the road for the fire. Bring friends.",
+     "center": [
+      1000,
+      1250,
+      114.8
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60159810,
+      "name": "the Moor-Tormentor",
+      "level": 38,
+      "size": 70,
+      "health_mult": 2.0,
+      "guild": "of the Moor"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60159815,
+        "name": "deamhan hound",
+        "level": [
+         33,
+         35
+        ]
+       }
+      ]
+     },
+     "success": "The Tormentor falls, and the moor goes quiet.",
+     "fail": "The Tormentor scatters the fire.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "ev204_signal_fire_brooch",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lg_azure_burning",
+   "title": "The Azure Burning",
+   "levels": [
+    33,
+    37
+   ],
+   "rest_s": 30,
+   "wake_m": 250,
+   "hint": "Torches on the road from the south-east - the Azure are coming for the touched folk's camp...",
+   "first_delay_s": [
+    1800,
+    3600
+   ],
+   "interval_s": [
+    4800,
+    7200
+   ],
+   "start": "b1",
+   "stages": [
+    {
+     "id": "b1",
+     "type": "defend",
+     "name": "The Touched Folk's Camp",
+     "objective": "Keep Druid Siofra alive while she leads the touched folk away",
+     "announce": "The Order of the Azure has come to burn the touched folk's camp, with the touched folk in it - 'already lost', they say. Druid Siofra of Aine's Circle is leading them out. Keep the crusaders off her!",
+     "center": [
+      420,
+      1118,
+      121.5
+     ],
+     "radius": 60,
+     "duration_s": 180,
+     "protect": {
+      "template": 60163820,
+      "model": 342,
+      "guild": "Aine's Circle",
+      "name": "Druid Siofra",
+      "level": 36,
+      "pos": [
+       420,
+       1118,
+       121.5
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 3,
+      "from": [
+       [
+        500,
+        1180,
+        120.8
+       ],
+       [
+        360,
+        1180,
+        124.1
+       ],
+       [
+        480,
+        1060,
+        122.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60158171,
+        "name": "azure crusader",
+        "level": [
+         34,
+         36
+        ],
+        "guild": "the Order of the Azure"
+       },
+       {
+        "template": 60158173,
+        "name": "azure cleanser",
+        "level": [
+         34,
+         36
+        ],
+        "guild": "the Order of the Azure"
+       }
+      ]
+     },
+     "thanks": "\"They're out. All of them. Touched, not lost - there's a difference, and the Azure never learned it.\"",
+     "success": "The touched folk are safe in the trees. The crusaders' captain comes on alone, with a torch.",
+     "fail": "The camp burns.",
+     "on_success": "b2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 100
+     }
+    },
+    {
+     "id": "b2",
+     "type": "boss",
+     "name": "Brother-Captain Ultan",
+     "objective": "Defeat Brother-Captain Ultan",
+     "announce": "Brother-Captain Ultan of the Azure: 'The Glimmer touched them. What the Glimmer touches, we burn. Stand aside or burn with them.' Bring friends.",
+     "center": [
+      420,
+      1118,
+      121.5
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60158172,
+      "name": "Brother-Captain Ultan",
+      "level": 38,
+      "size": 60,
+      "health_mult": 2.0,
+      "guild": "of the Order of the Azure"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60158171,
+        "name": "azure crusader",
+        "level": [
+         34,
+         36
+        ],
+        "guild": "the Order of the Azure"
+       },
+       {
+        "template": 60158172,
+        "name": "azure banisher",
+        "level": [
+         35,
+         37
+        ],
+        "guild": "the Order of the Azure"
+       }
+      ]
+     },
+     "success": "Brother-Captain Ultan falls. His torch goes out in the wet grass.",
+     "fail": "Ultan's crusaders put the camp to the torch.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "ev204_ultan_s_azure_seal",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
 }

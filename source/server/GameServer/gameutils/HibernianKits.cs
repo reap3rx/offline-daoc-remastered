@@ -175,7 +175,7 @@ namespace DOL.GS
         /// <summary>A class of its own baseline in a shared specialization (Warden / Druid / Bard all have Regrowth): a copy
         /// of the shared line holding only the spells kept, hinted to the class (Specialization picks it over the shared).
         /// How many spells it leaves out.</summary>
-        static int ClassBaseline(string spec, string fromLine, int cls, string key, Func<Spell, bool> keep)
+        internal static int ClassBaseline(string spec, string fromLine, int cls, string key, Func<Spell, bool> keep)
         {
             SpellLine src = SkillBase.GetSpellLine(fromLine, false);
             if (src == null)
@@ -195,7 +195,7 @@ namespace DOL.GS
         }
 
         /// <summary>The pulse of a chant / song taken from one of the class's own (its frequency, duration, instrument).</summary>
-        static void Chant(DbSpell d, Spell from)
+        internal static void Chant(DbSpell d, Spell from)
         {
             d.Pulse = 1;
             d.Frequency = from != null ? from.Frequency / 100 : 50;
@@ -458,6 +458,11 @@ namespace DOL.GS
 
         public const int MusicCooldownMs = 1500, MusicDodgeReach = 400;
 
+        /// <summary>Music of Evasion's mesmerizes can't be resisted (owner 2026-11-23: "Mobs should not be able to resist the
+        /// mezzes that proc. Sometimes it says the mob is enraged so it doesn't work") - no "enraged" below 75% health and no
+        /// resist roll. A true immunity (a boss's, or the short one after a mez) still holds.</summary>
+        public static bool IsMusicMez(int spellId) => spellId is MezProc or AoeMezProc;
+
         /// <summary>Music of Evasion at most once every MusicCooldownMs (an evade and the dodge that made it count once).</summary>
         public static void MusicEvadeGated(GameLiving bard, GameLiving attacker)
         {
@@ -624,13 +629,16 @@ namespace DOL.GS
             var seen = new HashSet<int>();
             foreach (var (line, skills) in p.GetAllUsableListSpells())
                 foreach (Skill sk in SpellFamilies.BestOnly(skills))
-                    if (sk is Spell sp && sp.NeedInstrument && sp.IsPulsing && seen.Add(sp.ID))
+                    if (sk is Spell sp && IsSong(sp, line) && seen.Add(sp.ID))
                         out_.Add((sp, line));
             foreach (var (sk, parent) in p.GetAllUsableSkills())    // (a hybrid's songs: its songs page)
-                if (sk is Spell sp && sp.NeedInstrument && sp.IsPulsing && parent is SpellLine line && seen.Add(sp.ID))
+                if (sk is Spell sp && parent is SpellLine line && IsSong(sp, line) && seen.Add(sp.ID))
                     out_.Add((sp, line));
             return out_;
         }
+
+        /// <summary>A song or chant for the wheel: a Bard's and Minstrel's instrument songs, a Skald's pulsing Battlesongs.</summary>
+        static bool IsSong(Spell sp, SpellLine line) => sp.IsPulsing && (sp.NeedInstrument || line?.KeyName == Specs.Battlesongs);
 
         /// <summary>/songwheel list: "#SNG|name;name;..." for the client's wheel.</summary>
         public static void SendSongs(GamePlayer p) =>
@@ -654,6 +662,7 @@ namespace DOL.GS
             {
                 if (hurt < 70) order.Add(eSpellType.HealthRegenBuff);
                 if (foes) order.Add(eSpellType.Dirge);
+                if (foes) order.Add(eSpellType.DamageAdd);          // (a Skald's Chant of Blood)
                 if (tired < 40) order.Add(eSpellType.EnduranceRegenBuff);
                 order.AddRange(new[] { eSpellType.HealthRegenBuff, eSpellType.EnduranceRegenBuff, eSpellType.AllMagicResistsBuff });
             }
@@ -819,6 +828,7 @@ namespace DOL.GS
         sealed class Rejuvenating
         {
             public GameLiving Healer;
+            public string Name;
             public int Stacks, PerTick, TicksLeft;
             public bool Ticking;
         }
@@ -837,10 +847,11 @@ namespace DOL.GS
                 int bloom = r.PerTick * r.Stacks * r.TicksLeft * 3 / 2;
                 r.Stacks = 0;
                 r.TicksLeft = 0;
-                Heal(healer, t, bloom, 4867, "Bloom");
+                Heal(healer, t, bloom, 4867, spell.Group == AlbionKits.Benediction ? "Absolution" : spell.Group == MidgardKits.EirsBlessing ? "Eir's Mercy" : "Bloom");
                 return;
             }
             r.Healer = healer;
+            r.Name = spell.Group == AlbionKits.Benediction ? "Benediction" : spell.Group == MidgardKits.EirsBlessing ? "Eir's Blessing" : "Rejuvenation";
             r.Stacks = Math.Min(RejuvMax, r.Stacks + 1);
             r.PerTick = Math.Max(r.PerTick, per);
             r.TicksLeft = RejuvTicks;
@@ -848,7 +859,7 @@ namespace DOL.GS
                 v.Out.SendSpellEffectAnimation(healer, t, spell.ClientEffect, 0, false, 1);
             if (healer is GamePlayer hp)
                 hp.Out.SendMessage($"{spell.Name} on {(t == healer ? "you" : t.GetName(0, false))}: {r.Stacks}/{RejuvMax}" +
-                    (r.Stacks == RejuvMax ? " - cast it again to Bloom!" : "."), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
+                    (r.Stacks == RejuvMax ? (spell.Group == AlbionKits.Benediction ? " - cast it again for Absolution!" : spell.Group == MidgardKits.EirsBlessing ? " - cast it again for Eir's Mercy!" : " - cast it again to Bloom!") : "."), eChatType.CT_Spell, eChatLoc.CL_SystemWindow);
             if (r.Ticking)
                 return;
             r.Ticking = true;
@@ -862,7 +873,7 @@ namespace DOL.GS
                     return 0;
                 }
                 r.TicksLeft--;
-                Heal(r.Healer, t, r.PerTick * r.Stacks, 4892, "Rejuvenation");
+                Heal(r.Healer, t, r.PerTick * r.Stacks, 4892, r.Name ?? "Rejuvenation");
                 return RejuvTickMs;
             }, RejuvTickMs);
         }

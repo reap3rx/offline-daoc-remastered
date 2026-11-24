@@ -1,0 +1,566 @@
+{
+ "zone": 216,
+ "name": "Sheeroe Hills",
+ "rating": "elite",
+ "themes": [
+  "The Healers' Valley",
+  "The Glimmering Upland",
+  "The Azure March",
+  "The Pale Pastures",
+  "The Middle Valleys",
+  "The East Valley",
+  "The Prince's Hollow",
+  "The Glimmer King's Ring"
+ ],
+ "notes": "Zone brief 2026-11-24 (Zone Reviews, Sheeroe Hills tab), owner's answers: Elite - nothing below orange while the Glimmer holds the hills; the ten Glimmer lords named purples; the Southern Muster's campaign. Coordinates are zone-local units (metres x 40).",
+ "keep": [
+  "Tailtiu guard"
+ ],
+ "tiers": {
+  "Glimmer Saumer": "purple",
+  "Glimmer Venlar": "purple",
+  "Glimmer Kelegur": "purple",
+  "Glimmer Zeit": "purple",
+  "Glimmer Arios": "purple",
+  "Glimmer Zanllvi": "purple",
+  "Glimmer Orist": "purple",
+  "Glimmer Xaquira": "purple",
+  "Glimmer Meldun": "purple",
+  "Glimmer Mianed": "purple",
+  "Azure Dsaldor": "purple",
+  "Azure Coseal": "red",
+  "Azure Thror": "red",
+  "Tailtiu guard": "red"
+ },
+ "factions": {
+  "glimmer": {
+   "id": 9321,
+   "aggro": 100,
+   "enemies": [
+    "azure"
+   ]
+  },
+  "azure": {
+   "id": 9322,
+   "aggro": 100,
+   "enemies": [
+    "glimmer"
+   ]
+  },
+  "touched": {
+   "id": 9323,
+   "aggro": 85
+  },
+  "horses": {
+   "id": 9324,
+   "aggro": 70
+  }
+ },
+ "members": {
+  "glimmerling": {
+   "from": "glimmerling",
+   "tier": "orange",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 300
+  },
+  "glimmer ghoul": {
+   "from": "glimmer ghoul",
+   "tier": "orange",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 250
+  },
+  "glimmer ward": {
+   "from": "glimmer ward",
+   "tier": "orange",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 120
+  },
+  "glimmer ardent": {
+   "from": "glimmer ardent",
+   "tier": "orange",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 250
+  },
+  "glimmer griever": {
+   "from": "glimmer griever",
+   "tier": "orange",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 250
+  },
+  "glimmer striker": {
+   "from": "glimmer striker",
+   "tier": "orange",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 200
+  },
+  "elfshot madman": {
+   "from": "elfshot madman",
+   "tier": "orange",
+   "faction": "touched",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 350
+  },
+  "raging subverter": {
+   "from": "raging subverter",
+   "tier": "orange",
+   "faction": "touched",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 300
+  },
+  "pale horse": {
+   "from": "pale horse",
+   "tier": "orange",
+   "faction": "horses",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 450
+  },
+  "azure cleanser": {
+   "from": "azure cleanser",
+   "tier": "orange",
+   "faction": "azure",
+   "guild": "the Order of the Azure",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 150
+  },
+  "azure avenger": {
+   "from": "azure avenger",
+   "tier": "orange",
+   "faction": "azure",
+   "guild": "the Order of the Azure",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 150
+  },
+  "glimmer warshade": {
+   "from": "glimmer warshade",
+   "tier": "red",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    100,
+    650
+   ],
+   "roam": 120
+  },
+  "glimmer deathwatcher": {
+   "from": "glimmer deathwatcher",
+   "tier": "orange",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    100,
+    650
+   ],
+   "roam": 200
+  },
+  "glimmer geist": {
+   "from": "glimmer geist",
+   "tier": "red",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    100,
+    650
+   ],
+   "roam": 250
+  },
+  "glimmer knight": {
+   "from": "glimmer knight",
+   "tier": "red",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "aggro": [
+    100,
+    700
+   ],
+   "roam": 120
+  },
+  "azure banisher": {
+   "from": "azure banisher",
+   "tier": "red",
+   "faction": "azure",
+   "guild": "the Order of the Azure",
+   "aggro": [
+    100,
+    650
+   ],
+   "roam": 100
+  },
+  "glimmer captain": {
+   "from": "glimmer knight",
+   "name": "glimmer captain",
+   "tier": "purple",
+   "faction": "glimmer",
+   "guild": "the Glimmer",
+   "size": 1.3,
+   "aggro": [
+    100,
+    700
+   ],
+   "roam": 60
+  },
+  "azure zealot-captain": {
+   "from": "azure avenger",
+   "name": "azure zealot-captain",
+   "tier": "purple",
+   "faction": "azure",
+   "guild": "the Order of the Azure",
+   "size": 1.25,
+   "aggro": [
+    100,
+    700
+   ],
+   "roam": 60
+  }
+ },
+ "sites": [
+  {
+   "id": "pocket_healers_valley",
+   "kind": "wildlife",
+   "area": [
+    3800,
+    12000,
+    9200,
+    63200
+   ],
+   "spawn": {
+    "elfshot madman": 16,
+    "raging subverter": 7,
+    "glimmerling": 16
+   },
+   "spacing": 300
+  },
+  {
+   "id": "healers_camp",
+   "kind": "clear",
+   "at": [
+    6000,
+    36000
+   ],
+   "r": 2800,
+   "names": [
+    "elfshot madman",
+    "raging subverter",
+    "glimmerling"
+   ]
+  },
+  {
+   "id": "west_ridge",
+   "kind": "wildlife",
+   "area": [
+    15200,
+    15200,
+    24000,
+    46400
+   ],
+   "spawn": {
+    "glimmer ward": 14,
+    "glimmer ardent": 16,
+    "glimmer griever": 9
+   },
+   "spacing": 300
+  },
+  {
+   "id": "cp1_garrison",
+   "kind": "camp",
+   "at": [
+    10000,
+    10000
+   ],
+   "r": 640,
+   "respawn": 420,
+   "spawn": {
+    "glimmer captain": 1,
+    "glimmer ward": 4,
+    "glimmer ghoul": 3,
+    "glimmer warshade": 1
+   }
+  },
+  {
+   "id": "cp1_upland",
+   "kind": "wildlife",
+   "area": [
+    4800,
+    2800,
+    16000,
+    17600
+   ],
+   "spawn": {
+    "glimmer ghoul": 13,
+    "glimmer ardent": 14,
+    "glimmer ward": 9
+   },
+   "spacing": 300
+  },
+  {
+   "id": "cp2_garrison",
+   "kind": "camp",
+   "at": [
+    33600,
+    12000
+   ],
+   "r": 640,
+   "respawn": 420,
+   "spawn": {
+    "azure zealot-captain": 1,
+    "azure banisher": 2,
+    "azure cleanser": 4,
+    "azure avenger": 2
+   }
+  },
+  {
+   "id": "cp2_march",
+   "kind": "wildlife",
+   "area": [
+    16000,
+    2000,
+    41200,
+    15200
+   ],
+   "spawn": {
+    "azure cleanser": 22,
+    "azure banisher": 13,
+    "azure avenger": 11
+   },
+   "spacing": 300
+  },
+  {
+   "id": "azure_pyre",
+   "kind": "camp",
+   "at": [
+    24000,
+    4800
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "azure banisher": 2,
+    "azure cleanser": 3
+   }
+  },
+  {
+   "id": "azure_east",
+   "kind": "wildlife",
+   "area": [
+    38800,
+    15600,
+    49200,
+    24800
+   ],
+   "spawn": {
+    "azure avenger": 9,
+    "azure cleanser": 7,
+    "glimmer ardent": 5
+   },
+   "spacing": 300
+  },
+  {
+   "id": "pocket_pale_pastures",
+   "kind": "wildlife",
+   "area": [
+    49600,
+    3600,
+    62400,
+    13600
+   ],
+   "spawn": {
+    "pale horse": 16,
+    "glimmer deathwatcher": 4
+   },
+   "spacing": 300
+  },
+  {
+   "id": "cp3_garrison",
+   "kind": "camp",
+   "at": [
+    40000,
+    31200
+   ],
+   "r": 640,
+   "respawn": 420,
+   "spawn": {
+    "glimmer captain": 1,
+    "glimmer striker": 3,
+    "glimmer griever": 3,
+    "glimmer warshade": 1
+   }
+  },
+  {
+   "id": "cp3_valleys",
+   "kind": "wildlife",
+   "area": [
+    28800,
+    26000,
+    50000,
+    38000
+   ],
+   "spawn": {
+    "glimmer griever": 18,
+    "glimmer striker": 13,
+    "glimmer warshade": 7
+   },
+   "spacing": 300
+  },
+  {
+   "id": "middle_host",
+   "kind": "patrol",
+   "route": [
+    [
+     30400,
+     28000
+    ],
+    [
+     40000,
+     30400
+    ],
+    [
+     48800,
+     33600
+    ],
+    [
+     40000,
+     30400
+    ]
+   ],
+   "spawn": {
+    "glimmer warshade": 1,
+    "glimmer striker": 2
+   }
+  },
+  {
+   "id": "cp4_garrison",
+   "kind": "camp",
+   "at": [
+    56800,
+    40000
+   ],
+   "r": 640,
+   "respawn": 420,
+   "spawn": {
+    "glimmer captain": 1,
+    "glimmer knight": 3,
+    "glimmer deathwatcher": 2,
+    "glimmer geist": 1
+   }
+  },
+  {
+   "id": "cp4_valley",
+   "kind": "wildlife",
+   "area": [
+    51600,
+    14400,
+    62000,
+    53600
+   ],
+   "spawn": {
+    "glimmer deathwatcher": 18,
+    "glimmer geist": 14,
+    "glimmer knight": 9,
+    "glimmer striker": 7
+   },
+   "spacing": 300
+  },
+  {
+   "id": "hollow_approach",
+   "kind": "wildlife",
+   "area": [
+    20400,
+    39000,
+    36400,
+    51400
+   ],
+   "spawn": {
+    "glimmer warshade": 11,
+    "glimmer griever": 14,
+    "glimmer ward": 7
+   },
+   "spacing": 300
+  },
+  {
+   "id": "south_band",
+   "kind": "wildlife",
+   "area": [
+    14400,
+    54000,
+    52000,
+    62000
+   ],
+   "spawn": {
+    "glimmer deathwatcher": 13,
+    "glimmer geist": 11,
+    "glimmer knight": 5
+   },
+   "spacing": 300
+  },
+  {
+   "id": "maldahar_waits",
+   "kind": "clear",
+   "at": [
+    36000,
+    49600
+   ],
+   "r": 1200,
+   "names": [
+    "Maldahar the Glimmer Prince"
+   ]
+  },
+  {
+   "id": "the_ring",
+   "kind": "clear",
+   "at": [
+    56400,
+    59000
+   ],
+   "r": 2800,
+   "names": [
+    "glimmer deathwatcher",
+    "glimmer geist",
+    "glimmer knight"
+   ]
+  }
+ ]
+}

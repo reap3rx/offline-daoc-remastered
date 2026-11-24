@@ -1,0 +1,1688 @@
+{
+ "zone": 202,
+ "name": "Shannon Estuary",
+ "rating": "wild",
+ "themes": [
+  "Connla and the strand",
+  "Merrow Island",
+  "The north bank and Daigean Bridge",
+  "The foothills",
+  "Connla's Well (Sinann)",
+  "The ant country",
+  "The sheerie ring",
+  "The ollipheist shore (deadly, by Lough Gur)",
+  "The eriu woods and Ceannai"
+ ],
+ "notes": "Zone brief 2026-11-23 (Zone Reviews, Shannon Estuary tab), owner's notes: Wild, blending to a deadly feel toward Lough Gur; about 750 monsters; Connla a starting zone; Sinann the purple at Connla's Well. Coordinates are zone-local units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Kirwyn": "orange",
+  "Srandamar": "orange",
+  "Lethe": "orange",
+  "Muir": "orange",
+  "Danderpaw": "orange",
+  "Nasco": "orange",
+  "Solas": "orange",
+  "Arracht": "red"
+ },
+ "factions": {
+  "shore": {
+   "id": 9251,
+   "aggro": 60
+  },
+  "runaways": {
+   "id": 9252,
+   "aggro": 60
+  },
+  "merrow": {
+   "id": 9253,
+   "aggro": 60
+  },
+  "sheerie": {
+   "id": 9254,
+   "aggro": 50
+  },
+  "winds": {
+   "id": 9255,
+   "aggro": 70
+  },
+  "spraggons": {
+   "id": 9256,
+   "aggro": 70
+  },
+  "ants": {
+   "id": 9257,
+   "aggro": 70
+  },
+  "eriu": {
+   "id": 9258,
+   "aggro": 80,
+   "enemies": [
+    "well"
+   ]
+  },
+  "well": {
+   "id": 9259,
+   "aggro": 70,
+   "enemies": [
+    "eriu"
+   ]
+  },
+  "serpents": {
+   "id": 9260,
+   "aggro": 90
+  },
+  "barrow": {
+   "id": 9261,
+   "aggro": 80
+  }
+ },
+ "members": {
+  "sand crab": {
+   "from": "sand crab",
+   "tier": "grey",
+   "roam": 250
+  },
+  "beach rat": {
+   "from": "beach rat",
+   "tier": "grey",
+   "roam": 300
+  },
+  "large frog": {
+   "from": "large frog",
+   "tier": "grey",
+   "roam": 250
+  },
+  "wiggle worm": {
+   "from": "wiggle worm",
+   "tier": "grey",
+   "roam": 150
+  },
+  "annoying lucradan": {
+   "from": "annoying lucradan",
+   "tier": "grey",
+   "roam": 300
+  },
+  "sandman": {
+   "from": "sandman",
+   "tier": "green",
+   "faction": "shore",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 250
+  },
+  "haunted driftwood": {
+   "from": "haunted driftwood",
+   "tier": "green",
+   "faction": "shore",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 200
+  },
+  "mudman": {
+   "from": "mudman",
+   "tier": "green",
+   "roam": 250
+  },
+  "hill toad": {
+   "from": "hill toad",
+   "tier": "green",
+   "roam": 250
+  },
+  "lugradan whelp": {
+   "from": "lugradan whelp",
+   "tier": "green",
+   "roam": 300
+  },
+  "spraggon": {
+   "from": "spraggon",
+   "tier": "green",
+   "aggro": [
+    20,
+    300
+   ],
+   "roam": 300
+  },
+  "water beetle collector": {
+   "from": "water beetle collector",
+   "tier": "green",
+   "roam": 250
+  },
+  "skeletal minion": {
+   "from": "skeletal minion",
+   "tier": "green",
+   "faction": "barrow",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 150
+  },
+  "skeletal pawn": {
+   "from": "skeletal pawn",
+   "tier": "blue",
+   "faction": "barrow",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "villainous youth": {
+   "from": "villainous youth",
+   "tier": "green",
+   "faction": "runaways",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 120
+  },
+  "rowdy": {
+   "from": "rowdy",
+   "tier": "blue",
+   "faction": "runaways",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 120
+  },
+  "toll-keeper": {
+   "from": "rowdy",
+   "name": "toll-keeper",
+   "tier": "yellow",
+   "faction": "runaways",
+   "aggro": [
+    70,
+    500
+   ],
+   "size": 1.1,
+   "guards": {
+    "rowdy": 2
+   }
+  },
+  "water beetle": {
+   "from": "water beetle",
+   "tier": "blue",
+   "roam": 250
+  },
+  "merrow": {
+   "from": "merrow",
+   "tier": "blue",
+   "faction": "merrow",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "merrow tidecaller": {
+   "from": "merrow",
+   "name": "merrow tidecaller",
+   "tier": "yellow",
+   "faction": "merrow",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 150
+  },
+  "merman": {
+   "from": "merman",
+   "name": "river merman",
+   "tier": "yellow",
+   "faction": "merrow",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "drowned sailor": {
+   "from": "drowned soul",
+   "name": "drowned sailor",
+   "tier": "yellow",
+   "faction": "shore",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 250
+  },
+  "moss sheerie": {
+   "from": "moss sheerie",
+   "tier": "blue",
+   "faction": "sheerie",
+   "aggro": [
+    40,
+    400
+   ],
+   "roam": 250
+  },
+  "lunantishee": {
+   "from": "lunantishee",
+   "tier": "blue",
+   "faction": "sheerie",
+   "aggro": [
+    40,
+    400
+   ],
+   "roam": 250
+  },
+  "cluricaun trip": {
+   "from": "cluricaun trip",
+   "tier": "blue",
+   "faction": "sheerie",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "ring-dancer": {
+   "from": "moss sheerie",
+   "name": "ring-dancer",
+   "tier": "yellow",
+   "faction": "sheerie",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 120
+  },
+  "bodachan sabhaill": {
+   "from": "bodachan sabhaill",
+   "tier": "blue",
+   "roam": 250
+  },
+  "small walking rock": {
+   "from": "small walking rock",
+   "tier": "blue",
+   "roam": 200
+  },
+  "feccan": {
+   "from": "feccan",
+   "tier": "blue",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "lesser zephyr": {
+   "from": "lesser zephyr",
+   "tier": "blue",
+   "faction": "winds",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 350
+  },
+  "walking rock": {
+   "from": "walking rock",
+   "tier": "yellow",
+   "roam": 200
+  },
+  "greater zephyr": {
+   "from": "greater zephyr",
+   "tier": "yellow",
+   "faction": "winds",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 300
+  },
+  "spraggonix": {
+   "from": "spraggonix",
+   "tier": "yellow",
+   "faction": "spraggons",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 250
+  },
+  "spraggonix elder": {
+   "from": "spraggonix elder",
+   "tier": "orange",
+   "faction": "spraggons",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 200,
+   "guards": {
+    "spraggonix": 2
+   }
+  },
+  "lugradan": {
+   "from": "lugradan",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 300
+  },
+  "giant ant": {
+   "from": "giant ant",
+   "tier": "yellow",
+   "faction": "ants",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 300
+  },
+  "ant worker": {
+   "from": "giant ant",
+   "name": "ant worker",
+   "tier": "blue",
+   "faction": "ants",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 300,
+   "size": 0.85
+  },
+  "ant soldier": {
+   "from": "giant ant",
+   "name": "ant soldier",
+   "tier": "orange",
+   "faction": "ants",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 200,
+   "size": 1.25,
+   "guards": {
+    "giant ant": 2
+   }
+  },
+  "The Old Queen": {
+   "from": "giant ant",
+   "name": "The Old Queen",
+   "tier": "red",
+   "faction": "ants",
+   "size": 1.8,
+   "roam": 30,
+   "guards": {
+    "ant soldier": 2
+   }
+  },
+  "eriu fiscere": {
+   "from": "eriu fiscere",
+   "tier": "blue",
+   "faction": "eriu",
+   "aggro": [
+    50,
+    450
+   ],
+   "roam": 250
+  },
+  "eriu ambusher": {
+   "from": "eriu ambusher",
+   "tier": "yellow",
+   "faction": "eriu",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 150
+  },
+  "eriu henter": {
+   "from": "eriu henter",
+   "tier": "yellow",
+   "faction": "eriu",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 250
+  },
+  "eriu kedger": {
+   "from": "eriu kedger",
+   "tier": "yellow",
+   "faction": "eriu",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 200
+  },
+  "eriu waylayer": {
+   "from": "eriu waylayer",
+   "tier": "orange",
+   "faction": "eriu",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 200
+  },
+  "eriu huscarl": {
+   "from": "eriu henter",
+   "name": "eriu huscarl",
+   "tier": "orange",
+   "faction": "eriu",
+   "aggro": [
+    85,
+    600
+   ],
+   "size": 1.15,
+   "roam": 150,
+   "guards": {
+    "eriu henter": 2
+   }
+  },
+  "eriu well-caller": {
+   "from": "eriu kedger",
+   "name": "eriu well-caller",
+   "tier": "yellow",
+   "faction": "eriu",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 100
+  },
+  "eriu warlord": {
+   "from": "eriu henter",
+   "name": "eriu warlord",
+   "tier": "red",
+   "faction": "eriu",
+   "aggro": [
+    95,
+    650
+   ],
+   "size": 1.3,
+   "roam": 120,
+   "guards": {
+    "eriu huscarl": 1,
+    "eriu henter": 2
+   }
+  },
+  "hazel sprite": {
+   "from": "fury sprite",
+   "name": "hazel sprite",
+   "tier": "blue",
+   "faction": "well",
+   "aggro": [
+    40,
+    400
+   ],
+   "roam": 200
+  },
+  "water elemental": {
+   "from": "water elemental",
+   "name": "well-water elemental",
+   "tier": "yellow",
+   "faction": "well",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 150
+  },
+  "greater water elemental": {
+   "from": "greater water elemental",
+   "name": "drowned-river elemental",
+   "tier": "orange",
+   "faction": "well",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 120
+  },
+  "Sinann": {
+   "from": "greater water elemental",
+   "name": "Sinann",
+   "tier": "purple",
+   "faction": "well",
+   "size": 1.4,
+   "roam": 30,
+   "guards": {
+    "greater water elemental": 2
+   }
+  },
+  "far liath": {
+   "from": "far liath",
+   "tier": "orange",
+   "faction": "serpents",
+   "aggro": [
+    85,
+    600
+   ],
+   "roam": 250
+  },
+  "ollipheist": {
+   "from": "ollipheist",
+   "tier": "orange",
+   "faction": "serpents",
+   "aggro": [
+    85,
+    600
+   ],
+   "roam": 300
+  },
+  "young ollipheist": {
+   "from": "ollipheist",
+   "name": "young ollipheist",
+   "tier": "yellow",
+   "faction": "serpents",
+   "aggro": [
+    70,
+    500
+   ],
+   "size": 0.75,
+   "roam": 300
+  },
+  "elder ollipheist": {
+   "from": "ollipheist",
+   "name": "elder ollipheist",
+   "tier": "red",
+   "faction": "serpents",
+   "aggro": [
+    95,
+    700
+   ],
+   "size": 1.4,
+   "roam": 200
+  }
+ },
+ "sites": [
+  {
+   "id": "strand_north",
+   "kind": "wildlife",
+   "area": [
+    5200,
+    10400,
+    13200,
+    22400
+   ],
+   "spawn": {
+    "sand crab": 10,
+    "beach rat": 8,
+    "sandman": 8,
+    "wiggle worm": 3
+   },
+   "spacing": 280
+  },
+  {
+   "id": "strand_south",
+   "kind": "wildlife",
+   "area": [
+    5200,
+    22400,
+    12000,
+    30400
+   ],
+   "spawn": {
+    "sand crab": 8,
+    "haunted driftwood": 5,
+    "sandman": 5,
+    "annoying lucradan": 3
+   },
+   "spacing": 280
+  },
+  {
+   "id": "wreck_sands",
+   "kind": "camp",
+   "at": [
+    7600,
+    23000
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "haunted driftwood": 3,
+    "sandman": 1
+   }
+  },
+  {
+   "id": "strand_drowned_n",
+   "kind": "camp",
+   "at": [
+    6000,
+    18800
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "drowned sailor": 3
+   },
+   "time": "night"
+  },
+  {
+   "id": "strand_drowned_s",
+   "kind": "camp",
+   "at": [
+    6400,
+    28800
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "drowned sailor": 3
+   },
+   "time": "night"
+  },
+  {
+   "id": "strand_drowned_w",
+   "kind": "camp",
+   "at": [
+    5600,
+    24800
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "drowned sailor": 2
+   },
+   "time": "night"
+  },
+  {
+   "id": "north_meadows",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    12000,
+    27200,
+    22400
+   ],
+   "spawn": {
+    "large frog": 10,
+    "mudman": 12,
+    "hill toad": 8,
+    "lugradan whelp": 8,
+    "beach rat": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "north_fields",
+   "kind": "wildlife",
+   "area": [
+    15200,
+    2400,
+    36000,
+    12000
+   ],
+   "spawn": {
+    "spraggon": 12,
+    "mudman": 8,
+    "hill toad": 7,
+    "water beetle collector": 7,
+    "large frog": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "bank_reeds",
+   "kind": "wildlife",
+   "area": [
+    24800,
+    12000,
+    40000,
+    20000
+   ],
+   "spawn": {
+    "water beetle collector": 8,
+    "water beetle": 7,
+    "large frog": 7,
+    "mudman": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "toll_gang",
+   "kind": "camp",
+   "at": [
+    23600,
+    18800
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "villainous youth": 4,
+    "rowdy": 3,
+    "toll-keeper": 1
+   }
+  },
+  {
+   "id": "toll_road",
+   "kind": "camp",
+   "at": [
+    21800,
+    17200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "villainous youth": 4,
+    "rowdy": 2
+   }
+  },
+  {
+   "id": "runaway_den",
+   "kind": "camp",
+   "at": [
+    19200,
+    15400
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "villainous youth": 3,
+    "rowdy": 3
+   }
+  },
+  {
+   "id": "bridge_road",
+   "kind": "patrol",
+   "route": [
+    [
+     16000,
+     21600
+    ],
+    [
+     18800,
+     20000
+    ],
+    [
+     21200,
+     17600
+    ],
+    [
+     18800,
+     20000
+    ]
+   ],
+   "spawn": {
+    "rowdy": 2,
+    "villainous youth": 1
+   }
+  },
+  {
+   "id": "barrow",
+   "kind": "camp",
+   "at": [
+    35600,
+    11600
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "skeletal minion": 5,
+    "skeletal pawn": 2
+   }
+  },
+  {
+   "id": "barrow_mound",
+   "kind": "camp",
+   "at": [
+    34400,
+    9200
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "skeletal minion": 3
+   },
+   "time": "night"
+  },
+  {
+   "id": "spraggon_holes",
+   "kind": "camp",
+   "at": [
+    34400,
+    4800
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "spraggon": 4,
+    "feccan": 2
+   }
+  },
+  {
+   "id": "merrow_island",
+   "kind": "camp",
+   "at": [
+    4800,
+    34600
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "merrow": 3,
+    "merrow tidecaller": 1
+   }
+  },
+  {
+   "id": "pier_reeds",
+   "kind": "camp",
+   "at": [
+    8600,
+    40000
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "water beetle": 3,
+    "merrow": 2
+   }
+  },
+  {
+   "id": "river_south_bank",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    33600,
+    28000,
+    40000
+   ],
+   "spawn": {
+    "water beetle": 8,
+    "merrow": 5,
+    "lunantishee": 5,
+    "moss sheerie": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "hy_brasil_fields",
+   "kind": "wildlife",
+   "area": [
+    18000,
+    28000,
+    32000,
+    36000
+   ],
+   "spawn": {
+    "cluricaun trip": 7,
+    "lunantishee": 7,
+    "hill toad": 5,
+    "water beetle": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "sheerie_woods",
+   "kind": "wildlife",
+   "area": [
+    7800,
+    40800,
+    19400,
+    49200
+   ],
+   "spawn": {
+    "moss sheerie": 14,
+    "lunantishee": 8,
+    "cluricaun trip": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "sheerie_ring",
+   "kind": "camp",
+   "at": [
+    13200,
+    44800
+   ],
+   "r": 560,
+   "respawn": 300,
+   "spawn": {
+    "moss sheerie": 5,
+    "ring-dancer": 2
+   }
+  },
+  {
+   "id": "ring_night",
+   "kind": "camp",
+   "at": [
+    12000,
+    43600
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "ring-dancer": 3
+   },
+   "time": "night"
+  },
+  {
+   "id": "serpent_reeds",
+   "kind": "wildlife",
+   "area": [
+    4000,
+    52000,
+    20000,
+    64000
+   ],
+   "spawn": {
+    "ollipheist": 10,
+    "young ollipheist": 10,
+    "far liath": 8
+   },
+   "spacing": 280
+  },
+  {
+   "id": "serpent_pool",
+   "kind": "camp",
+   "at": [
+    14400,
+    58800
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "ollipheist": 2,
+    "young ollipheist": 2,
+    "elder ollipheist": 1
+   }
+  },
+  {
+   "id": "liath_camp",
+   "kind": "camp",
+   "at": [
+    6000,
+    58400
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "far liath": 3
+   }
+  },
+  {
+   "id": "drowned_trees",
+   "kind": "camp",
+   "at": [
+    10400,
+    62400
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "ollipheist": 2,
+    "far liath": 1
+   }
+  },
+  {
+   "id": "deep_reeds",
+   "kind": "camp",
+   "at": [
+    18800,
+    63200
+   ],
+   "r": 400,
+   "respawn": 900,
+   "spawn": {
+    "elder ollipheist": 1,
+    "young ollipheist": 2
+   }
+  },
+  {
+   "id": "foothills",
+   "kind": "wildlife",
+   "area": [
+    57600,
+    1600,
+    64800,
+    12800
+   ],
+   "spawn": {
+    "small walking rock": 8,
+    "lesser zephyr": 8,
+    "walking rock": 7,
+    "greater zephyr": 5,
+    "feccan": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "high_meadow",
+   "kind": "wildlife",
+   "area": [
+    44000,
+    800,
+    52000,
+    10000
+   ],
+   "spawn": {
+    "bodachan sabhaill": 8,
+    "small walking rock": 7,
+    "lugradan": 5,
+    "lesser zephyr": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "imp_shrine",
+   "kind": "camp",
+   "at": [
+    59000,
+    3600
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "greater zephyr": 2,
+    "walking rock": 2
+   }
+  },
+  {
+   "id": "spraggonix_warren",
+   "kind": "camp",
+   "at": [
+    40000,
+    7600
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "spraggonix elder": 1,
+    "spraggonix": 2
+   }
+  },
+  {
+   "id": "lugradan_crag",
+   "kind": "camp",
+   "at": [
+    26000,
+    3600
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "lugradan": 3
+   }
+  },
+  {
+   "id": "fiscere_shore",
+   "kind": "wildlife",
+   "area": [
+    46000,
+    12000,
+    56800,
+    22400
+   ],
+   "spawn": {
+    "eriu fiscere": 14,
+    "hazel sprite": 7,
+    "water beetle": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "fiscere_nets",
+   "kind": "camp",
+   "at": [
+    48600,
+    16400
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "eriu fiscere": 4,
+    "eriu ambusher": 1
+   }
+  },
+  {
+   "id": "well_glades",
+   "kind": "wildlife",
+   "area": [
+    47200,
+    22400,
+    64000,
+    36000
+   ],
+   "spawn": {
+    "hazel sprite": 14,
+    "water elemental": 8,
+    "eriu fiscere": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "stones_north",
+   "kind": "camp",
+   "at": [
+    54000,
+    23000
+   ],
+   "r": 400,
+   "respawn": 3600,
+   "spawn": {
+    "Sinann": 1
+   }
+  },
+  {
+   "id": "stones_west",
+   "kind": "camp",
+   "at": [
+    49000,
+    27600
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "eriu well-caller": 2,
+    "eriu kedger": 1
+   }
+  },
+  {
+   "id": "stones_east",
+   "kind": "camp",
+   "at": [
+    59200,
+    27200
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "water elemental": 2,
+    "hazel sprite": 2
+   }
+  },
+  {
+   "id": "stones_south",
+   "kind": "camp",
+   "at": [
+    52000,
+    31000
+   ],
+   "r": 320,
+   "respawn": 360,
+   "spawn": {
+    "greater water elemental": 1,
+    "water elemental": 1
+   }
+  },
+  {
+   "id": "well_shallows",
+   "kind": "camp",
+   "at": [
+    57600,
+    29600
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "merman": 2
+   }
+  },
+  {
+   "id": "river_bend",
+   "kind": "camp",
+   "at": [
+    46720,
+    12840
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "merman": 2
+   }
+  },
+  {
+   "id": "hazel_grove",
+   "kind": "camp",
+   "at": [
+    61200,
+    32800
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "hazel sprite": 4
+   }
+  },
+  {
+   "id": "abbadona_goes",
+   "kind": "clear",
+   "at": [
+    56000,
+    44000
+   ],
+   "r": 1600,
+   "names": [
+    "Abbadona"
+   ]
+  },
+  {
+   "id": "ant_country_w",
+   "kind": "wildlife",
+   "area": [
+    24000,
+    38000,
+    40000,
+    50000
+   ],
+   "spawn": {
+    "giant ant": 14,
+    "ant worker": 14
+   },
+   "spacing": 280
+  },
+  {
+   "id": "ant_country_e",
+   "kind": "wildlife",
+   "area": [
+    40000,
+    26000,
+    47200,
+    40000
+   ],
+   "spawn": {
+    "giant ant": 10,
+    "ant worker": 10
+   },
+   "spacing": 280
+  },
+  {
+   "id": "ant_country_s",
+   "kind": "wildlife",
+   "area": [
+    36000,
+    40000,
+    46000,
+    46000
+   ],
+   "spawn": {
+    "giant ant": 8,
+    "ant worker": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "ant_hill_0",
+   "kind": "camp",
+   "at": [
+    39600,
+    30000
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "giant ant": 3,
+    "ant worker": 2
+   }
+  },
+  {
+   "id": "ant_hill_1",
+   "kind": "camp",
+   "at": [
+    39600,
+    46800
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "giant ant": 3,
+    "ant worker": 2
+   }
+  },
+  {
+   "id": "ant_hill_2",
+   "kind": "camp",
+   "at": [
+    25200,
+    51600
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "giant ant": 3,
+    "ant worker": 2
+   }
+  },
+  {
+   "id": "ant_hill_3",
+   "kind": "camp",
+   "at": [
+    22800,
+    63600
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "giant ant": 2,
+    "ant soldier": 1
+   }
+  },
+  {
+   "id": "ant_hill_4",
+   "kind": "camp",
+   "at": [
+    8400,
+    56400
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "giant ant": 2,
+    "ant soldier": 1
+   }
+  },
+  {
+   "id": "great_hill",
+   "kind": "camp",
+   "at": [
+    37200,
+    39600
+   ],
+   "r": 560,
+   "respawn": 3600,
+   "spawn": {
+    "The Old Queen": 1
+   }
+  },
+  {
+   "id": "great_hill_guard",
+   "kind": "camp",
+   "at": [
+    36000,
+    38400
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "ant soldier": 2,
+    "giant ant": 2
+   }
+  },
+  {
+   "id": "eriu_woods_n",
+   "kind": "wildlife",
+   "area": [
+    40000,
+    40000,
+    58000,
+    48000
+   ],
+   "spawn": {
+    "eriu henter": 14,
+    "eriu kedger": 7,
+    "eriu ambusher": 5,
+    "eriu fiscere": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "eriu_woods_s",
+   "kind": "wildlife",
+   "area": [
+    42000,
+    48000,
+    60000,
+    58000
+   ],
+   "spawn": {
+    "eriu henter": 12,
+    "eriu kedger": 7,
+    "eriu waylayer": 5,
+    "eriu ambusher": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "eriu_border",
+   "kind": "wildlife",
+   "area": [
+    44000,
+    58000,
+    64000,
+    64800
+   ],
+   "spawn": {
+    "eriu henter": 8,
+    "eriu waylayer": 7,
+    "eriu huscarl": 3
+   },
+   "spacing": 280
+  },
+  {
+   "id": "south_glades",
+   "kind": "wildlife",
+   "area": [
+    24000,
+    52000,
+    36000,
+    59200
+   ],
+   "spawn": {
+    "lunantishee": 7,
+    "cluricaun trip": 7,
+    "giant ant": 5,
+    "eriu ambusher": 3
+   },
+   "spacing": 280
+  },
+  {
+   "id": "war_camp",
+   "kind": "camp",
+   "at": [
+    50400,
+    44800
+   ],
+   "r": 640,
+   "respawn": 300,
+   "spawn": {
+    "eriu huscarl": 2,
+    "eriu henter": 4,
+    "eriu kedger": 2
+   }
+  },
+  {
+   "id": "war_camp_gate",
+   "kind": "camp",
+   "at": [
+    47200,
+    45200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "eriu henter": 3,
+    "eriu waylayer": 1
+   }
+  },
+  {
+   "id": "totem_ring",
+   "kind": "camp",
+   "at": [
+    52800,
+    47200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "eriu kedger": 3
+   }
+  },
+  {
+   "id": "kedger_huts",
+   "kind": "camp",
+   "at": [
+    50800,
+    42400
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "eriu kedger": 2,
+    "eriu henter": 2
+   }
+  },
+  {
+   "id": "danderpaw_den",
+   "kind": "camp",
+   "at": [
+    51200,
+    61600
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "eriu waylayer": 2
+   }
+  },
+  {
+   "id": "nasco_post",
+   "kind": "camp",
+   "at": [
+    26800,
+    60400
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "eriu henter": 3
+   }
+  },
+  {
+   "id": "solas_watch",
+   "kind": "camp",
+   "at": [
+    36400,
+    60000
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "eriu ambusher": 2,
+    "eriu henter": 1
+   }
+  },
+  {
+   "id": "warlord_hall",
+   "kind": "camp",
+   "at": [
+    58000,
+    62400
+   ],
+   "r": 480,
+   "respawn": 900,
+   "spawn": {
+    "eriu warlord": 1
+   }
+  },
+  {
+   "id": "waylay_road",
+   "kind": "camp",
+   "at": [
+    33600,
+    53200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "eriu waylayer": 2,
+    "eriu ambusher": 1
+   }
+  },
+  {
+   "id": "eriu_hunt",
+   "kind": "patrol",
+   "route": [
+    [
+     42000,
+     42000
+    ],
+    [
+     46000,
+     38000
+    ],
+    [
+     50000,
+     36000
+    ],
+    [
+     54000,
+     39200
+    ],
+    [
+     50000,
+     36000
+    ],
+    [
+     46000,
+     38000
+    ]
+   ],
+   "spawn": {
+    "eriu henter": 3
+   }
+  },
+  {
+   "id": "south_road",
+   "kind": "patrol",
+   "route": [
+    [
+     38400,
+     60800
+    ],
+    [
+     36000,
+     56000
+    ],
+    [
+     34000,
+     52000
+    ],
+    [
+     32000,
+     48000
+    ],
+    [
+     34000,
+     52000
+    ],
+    [
+     36000,
+     56000
+    ]
+   ],
+   "spawn": {
+    "eriu waylayer": 1,
+    "eriu henter": 1
+   }
+  },
+  {
+   "id": "kedger_goes",
+   "kind": "clear",
+   "at": [
+    50920,
+    45040
+   ],
+   "r": 1200,
+   "names": [
+    "Kaen Kedger"
+   ]
+  },
+  {
+   "id": "wind_ghouls_go",
+   "kind": "clear",
+   "at": [
+    29320,
+    50200
+   ],
+   "r": 1200,
+   "names": [
+    "wind ghoul"
+   ]
+  }
+ ]
+}

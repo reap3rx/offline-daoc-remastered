@@ -146,7 +146,8 @@ public partial class DaocClient : Node
 		w.ShortLE((ushort)(int)c["model"]);
 		var stats = (Godot.Collections.Array)c["stats"];  // STR DEX CON QUI INT PIE EMP CHA
 		for (int i = 0; i < 8; i++) w.Byte((byte)(int)stats[i]);
-		w.Bytes(new byte[43]);
+		w.Byte((byte)(c.ContainsKey("start") ? (int)c["start"] : 0));   // the starting town picked (0 the realm's hub; the
+		w.Bytes(new byte[42]);                        // server reads the first spare byte - LevelBands start_choices)
 		w.Byte((byte)(int)stats[2]);                  // constitution again
 		w.Byte(0);
 		Send(0xFF, w);

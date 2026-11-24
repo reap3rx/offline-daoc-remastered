@@ -1,0 +1,114 @@
+{
+ "zone": 204,
+ "region": 200,
+ "realm": 3,
+ "prefix": "ev204",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lantern Glass",
+   "base": [
+    41,
+    24
+   ],
+   "level": 36,
+   "bonuses": {
+    "Int": 12,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 22
+   },
+   "lore": "Won from the Lantern on the Water. A bead of the Glimmer's light, gone dark."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Silver Horseshoe",
+   "base": [
+    41,
+    29
+   ],
+   "level": 38,
+   "bonuses": {
+    "Qui": 13,
+    "Con": 6,
+    "Dex": 6,
+    "Hits": 23,
+    "Power": 4
+   },
+   "lore": "One of the Earl's horse's shoes, worn as thin as a leaf, on a chain."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Earl's Signet",
+   "base": [
+    41,
+    35
+   ],
+   "level": 38,
+   "bonuses": {
+    "Str": 13,
+    "Con": 13,
+    "Dex": 6,
+    "Hits": 32
+   },
+   "lore": "Gearoid Iarla's own ring. He dropped it turning back into the lake."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Grieving Knight's Tear",
+   "base": [
+    41,
+    24
+   ],
+   "level": 37,
+   "bonuses": {
+    "Emp": 12,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 22
+   },
+   "lore": "A fairy knight's tear, frozen. It's still sad."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Signal-Fire Brooch",
+   "base": [
+    41,
+    24
+   ],
+   "level": 37,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 37,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "From the Sentinels' road post on the deamhan moor."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ultan's Azure Seal",
+   "base": [
+    41,
+    35
+   ],
+   "level": 37,
+   "bonuses": {
+    "Dex": 12,
+    "Qui": 12,
+    "Str": 6,
+    "Hits": 31
+   },
+   "lore": "Brother-Captain Ultan's seal ring, the crown crossed out."
+  }
+ ]
+}

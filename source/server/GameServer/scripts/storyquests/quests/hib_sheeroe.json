@@ -7,11 +7,11 @@
       "realm": 3,
       "name": "Healer Bebhinn",
       "model": 365,
-      "level": 40,
+      "level": 46,
       "pos": [
-        300,
-        800,
-        168.9
+        140,
+        905,
+        89.8
       ],
       "guild": "Healers' Camp",
       "idle": "Elfshot. Every one of them. The glimmer folk's arrows don't kill - they do worse."
@@ -22,11 +22,11 @@
       "realm": 3,
       "name": "Lochlann",
       "model": 337,
-      "level": 38,
+      "level": 44,
       "pos": [
-        304,
-        806,
-        168.6
+        143,
+        910,
+        89.8
       ],
       "guild": "Healers' Camp",
       "idle": "(He stares at nothing and hums the same four notes, over and over.)"
@@ -39,12 +39,12 @@
       "model": 603,
       "level": 52,
       "pos": [
-        600,
-        150,
-        123.6
+        160,
+        915,
+        95.8
       ],
       "guild": "Lurikeen Exiles",
-      "idle": "The Azure took our village. They say they're cleansing it. Of us.",
+      "idle": "The Azure took our village in the north. They say they're cleansing it. Of us.",
       "size": 35
     },
     {
@@ -63,15 +63,60 @@
         "azure_village/s6"
       ],
       "size": 35
+    },
+    {
+      "id": "sr_maeve",
+      "zone": 216,
+      "realm": 3,
+      "name": "Sentinel-Captain Maeve",
+      "model": 365,
+      "level": 50,
+      "pos": [
+        145,
+        880,
+        88.9
+      ],
+      "guild": "the Sentinels of Ceannai",
+      "idle": "I followed the lights from Lough Gur to the bog, and the bog to here. This is where they come from. This is where they stop."
+    },
+    {
+      "id": "sr_ceallach",
+      "zone": 216,
+      "realm": 3,
+      "name": "Druid Ceallach",
+      "model": 337,
+      "level": 50,
+      "pos": [
+        155,
+        890,
+        89.8
+      ],
+      "guild": "Aine's Circle",
+      "idle": "On the lake we thought the lights were Aine. Here you can see what they really are. Look at them long enough and they look back."
+    },
+    {
+      "id": "sr_ailill",
+      "zone": 216,
+      "realm": 3,
+      "name": "Ailill of the Azure",
+      "model": 354,
+      "level": 46,
+      "pos": [
+        132,
+        888,
+        88.6
+      ],
+      "guild": "the Order of the Azure (a prisoner of the Muster)",
+      "idle": "Go on. Stare. A crusader in a camp full of the touched. They've fed me better than the Order ever did."
     }
   ],
   "quests": [
     {
       "id": "elfshot",
       "title": "Elfshot",
-      "level": 42,
+      "level": 45,
       "giver": "bebhinn",
-      "offer": "My husband Lochlann was elfshot - struck by a glimmer folk arrow. It doesn't kill. It takes the mind and leaves the man. He hums. That's all.\n\nThe arrows are glimmer-glass. If I had the arrowhead that struck him - the archer's own - I could draw the madness out. Will you [find the archer]? The madmen of the hills all took his arrows.",
+      "offer": "My husband Lochlann was elfshot - struck by a glimmer folk arrow. It doesn't kill. It takes the mind and leaves the man. He hums. That's all.\n\nThe arrows are glimmer-glass. If I had the arrowhead that struck him - the archer's own - I could draw the madness out. Will you [find the archer]? The madmen of the valley all took his arrows.",
       "accept": "find the archer",
       "topics": {},
       "summary": "Healer Bebhinn's husband was elfshot by a glimmer archer. With the archer's own arrowhead, she could cure him.",
@@ -80,51 +125,51 @@
           "type": "kill",
           "zone": 216,
           "at": [
-            375,
-            711,
-            144.9
+            160,
+            700,
+            91.7
           ],
           "radius": 25,
-          "goal": "Put the elfshot madmen to rest",
+          "goal": "Put the elfshot madmen to rest about 210 m north of Healer Bebhinn",
           "mob": {
-            "template": 44002,
+            "template": 60160411,
             "name": "elfshot madman",
-            "level": 38
+            "level": 46
           },
           "count": 5,
-          "text": "Each one has a glimmer-glass splinter in him. Each splinter points the same way - west.",
+          "text": "Each one has a glimmer-glass splinter in him. Each splinter points the same way - south, down the valley.",
           "id": "s1"
         },
         {
           "type": "search",
           "zone": 216,
           "at": [
-            365,
-            720,
-            174.8
+            165,
+            712,
+            91.2
           ],
           "goal": "Search the madmen's camp",
           "clue": {
             "name": "a glimmer-glass arrowhead",
             "model": 1347
           },
-          "text": "A spent arrowhead, glowing faintly. It tugs westward like a lodestone, toward the glimmerlings' hills.",
+          "text": "A spent arrowhead, glowing faintly. It tugs southward like a lodestone, down the valley toward the glimmerlings.",
           "id": "s2"
         },
         {
           "type": "kill",
           "zone": 216,
           "at": [
-            171,
-            788,
-            89.0
+            180,
+            1100,
+            90.0
           ],
           "radius": 25,
-          "goal": "Hunt down the glimmerlings",
+          "goal": "Hunt down the glimmerlings down the valley about 200 m south of Healer Bebhinn",
           "mob": {
-            "template": 44024,
+            "template": 60161430,
             "name": "glimmerling",
-            "level": 39
+            "level": 46
           },
           "count": 5,
           "id": "s3"
@@ -133,9 +178,9 @@
           "type": "encounter",
           "zone": 216,
           "at": [
-            190,
-            780,
-            90.0
+            200,
+            1150,
+            95.8
           ],
           "wake_m": 30,
           "goal": "Defeat the glimmer archer",
@@ -146,19 +191,19 @@
               "type": "boss",
               "name": "Glimmer Archer Saoth",
               "center": [
-                190,
-                780,
-                90.0
+                200,
+                1150,
+                95.8
               ],
               "radius": 30,
               "time_s": 600,
               "objective": "Defeat the Glimmer Archer",
               "announce": "A tall figure of glimmering glass draws a bow of light. 'More madmen for the King's hills.'",
               "boss": {
-                "template": 44038,
+                "template": 60161424,
                 "name": "Glimmer Archer Saoth",
-                "level": 45,
-                "health_mult": 2.6
+                "level": 47,
+                "health_mult": 2.8
               },
               "success": "Glimmer Archer Saoth falls.",
               "fail": "You fall back.",
@@ -167,11 +212,11 @@
                 "count": 2,
                 "mobs": [
                   {
-                    "template": 44024,
+                    "template": 60161430,
                     "name": "glimmerling",
                     "level": [
-                      38,
-                      39
+                      45,
+                      46
                     ]
                   }
                 ]
@@ -184,7 +229,7 @@
           "type": "choice",
           "npc": "bebhinn",
           "goal": "Bring the archer's arrowhead to Bebhinn",
-          "say": "That's it. The archer's own. I can feel it pulling.\n\nI can [break the arrow] in a healing rite, and draw the madness out of Lochlann. The arrowhead will be gone.\n\nOr - the Fianna came by this morning. They say an archer's arrowhead points to the Glimmer King's hosts wherever they march. It could save hundreds. They'd want me to [keep it] for them. And Lochlann would hum forever.",
+          "say": "That's it. The archer's own. I can feel it pulling.\n\nI can [break the arrow] in a healing rite, and draw the madness out of Lochlann. The arrowhead will be gone.\n\nOr - the Muster's captains say an archer's arrowhead points to the Glimmer King's hosts wherever they march. It could save hundreds. They'd want me to [keep it] for them. And Lochlann would hum forever.",
           "options": [
             {
               "keyword": "break the arrow",
@@ -193,7 +238,7 @@
             },
             {
               "keyword": "keep it",
-              "say": "...The Fianna will have it by morning. I'll sing his four notes with him. He likes it when I do.",
+              "say": "...The Muster will have it by morning. I'll sing his four notes with him. He likes it when I do.",
               "ending": "kept"
             }
           ],
@@ -236,9 +281,204 @@
       }
     },
     {
+      "id": "sh_subverters",
+      "title": "The Raging",
+      "level": 45,
+      "giver": "bebhinn",
+      "offer": "Not all of them only hum. Some of the elfshot - the ones struck twice, three times - go wild. Raging. They come down the valley at night and they don't stop, not for steel, not for fire.\n\nThe odd thing: they never come for the camp. They walk past it. South-east, always south-east. Will you [stop the raging] and find out what drives them?",
+      "accept": "stop the raging",
+      "topics": {},
+      "summary": "Raging subverters walk past the Healers' Camp at night, always south-east.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            250,
+            1080,
+            145.7
+          ],
+          "radius": 25,
+          "goal": "Stop the raging subverters on the valley floor about 210 m south-east of Healer Bebhinn",
+          "mob": {
+            "template": 60165127,
+            "name": "raging subverter",
+            "level": 46
+          },
+          "count": 5,
+          "text": "Every one of them has a glimmer-glass splinter behind the eyes - and every splinter is warm.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 216,
+          "at": [
+            255,
+            1085,
+            143.9
+          ],
+          "goal": "Search where the subverters fell",
+          "clue": {
+            "name": "a cluster of warm glimmer-glass",
+            "model": 1347
+          },
+          "text": "Splinters of glimmer-glass, and inside each, very faint, a light - as if the madness were burning in there like oil in a lamp.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bebhinn",
+          "goal": "Bring the glass to Healer Bebhinn",
+          "say": "Lamps. Gods help us. They aren't madmen - they're lamps. Every mind the Glimmer takes, it burns. And they walk south-east so they can burn where he wants them.\n\nCeallach of the Circle came down from Lough Gur with the Muster. He says he's heard Lochlann's four notes before - on the lake. Talk to him.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Healers' Camp.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq216_subverter_s_glass_ring",
+              "sq216_healer_s_knotted_belt"
+            ]
+          }
+        }
+      },
+      "requires": "elfshot"
+    },
+    {
+      "id": "sh_four_notes",
+      "title": "Four Notes",
+      "level": 46,
+      "giver": "sr_ceallach",
+      "offer": "Lochlann's four notes. I heard them on Lough Gur, from the lights over the crannog. It's a call - the Glimmer King's call - and the touched walk to it.\n\nA call can be answered with another song. I can sing one - a counter-song, the Circle's - out on the west ridge where the touched walk. But the Glimmer will hear me singing, and come. Will you [guard the song]?",
+      "accept": "guard the song",
+      "topics": {},
+      "summary": "The Glimmer King's call is four notes - and Druid Ceallach can sing a counter-song on the west ridge.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 216,
+          "at": [
+            420,
+            620,
+            92.4
+          ],
+          "radius": 25,
+          "goal": "Go out onto the west ridge about 380 m north-east of Druid Ceallach",
+          "text": "The valley glows. Far off, a line of the touched walks south-east, humming, in step.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 216,
+          "at": [
+            420,
+            620,
+            92.4
+          ],
+          "wake_m": 30,
+          "goal": "Keep Ceallach alive while he sings the counter-song",
+          "text": "The counter-song ends on a fifth note, out of tune with the four. Along the ridge the walking touched stop - and one by one they sit down in the grass, and weep, and are themselves.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Ceallach alive",
+              "center": [
+                420,
+                620,
+                92.4
+              ],
+              "radius": 30,
+              "duration_s": 150,
+              "objective": "Keep Ceallach alive",
+              "announce": "Ceallach begins to sing. Every light in the valley turns toward him.",
+              "protect": {
+                "template": 60165769,
+                "name": "Druid Ceallach",
+                "level": 50,
+                "model": 337
+              },
+              "waves": {
+                "every_s": 22,
+                "count": 3,
+                "from": [
+                  [
+                    432,
+                    626,
+                    92.3
+                  ],
+                  [
+                    410,
+                    610,
+                    92.4
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60161424,
+                    "name": "glimmer ward",
+                    "level": [
+                      46,
+                      47
+                    ]
+                  },
+                  {
+                    "template": 60161402,
+                    "name": "glimmer ardent",
+                    "level": [
+                      46,
+                      47
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "Druid Ceallach falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sr_ceallach",
+          "goal": "Walk back to the camp with Druid Ceallach",
+          "say": "It works. Not for long, and not for all - but it works. The call can be broken.\n\nSo he can be fought. That's what the Muster needed to hear. Maeve will want you - she's been reading what the Glimmer's captains carry.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq216_four_note_torc",
+              "sq216_counter_song_charm"
+            ]
+          }
+        }
+      },
+      "requires": "sh_subverters"
+    },
+    {
       "id": "azure_village",
       "title": "The Cleansed Village",
-      "level": 52,
+      "level": 47,
       "giver": "elder_cnoc",
       "offer": "This is GROUP work. The Azure Order are many, and they don't fear death.\n\nThey took our village in the northern hills. 'Cleansing', they call it. Of fae blood. Of us. We fled with what we could carry. Some didn't flee fast enough.\n\nWill you [take back the village]? Some of ours may still be alive inside.",
       "accept": "take back the village",
@@ -254,7 +494,7 @@
             120.0
           ],
           "radius": 20,
-          "goal": "Go to the lurikeen village in the north",
+          "goal": "Go to the lurikeen village in the north about 880 m north-east of Elder Cnoc",
           "text": "Lurikeen huts, painted over with blue sigils. Azure cleansers walk between them with censers, chanting.",
           "id": "s1"
         },
@@ -269,7 +509,7 @@
           "radius": 25,
           "goal": "Drive out the azure cleansers",
           "mob": {
-            "template": 44008,
+            "template": 60158173,
             "name": "azure cleanser",
             "level": 48
           },
@@ -289,7 +529,7 @@
             "name": "an Azure ledger",
             "model": 1347
           },
-          "text": "A ledger of names: lurikeen, and beside each, 'cleansed' - or 'held'. Seven names say 'held'. The pale horses carry them east, to the inquisitor's camp.",
+          "text": "A ledger of names: lurikeen, and beside each, 'cleansed' - or 'held'. Seven names say 'held'. The pale horses carry them east, to the pastures.",
           "give": {
             "name": "the Azure ledger"
           },
@@ -299,16 +539,16 @@
           "type": "kill",
           "zone": 216,
           "at": [
-            1000,
-            375,
-            116.9
+            1380,
+            200,
+            121.5
           ],
           "radius": 25,
           "goal": "Kill the pale horses that carry the prisoners east",
           "mob": {
-            "template": 44001,
+            "template": 60164831,
             "name": "pale horse",
-            "level": 51
+            "level": 49
           },
           "count": 4,
           "id": "s4"
@@ -328,7 +568,7 @@
             {
               "id": "b1",
               "type": "boss",
-              "name": "Inquisitor Ceallach of the Azure",
+              "name": "Inquisitor Cathal of the Azure",
               "center": [
                 700,
                 215,
@@ -339,19 +579,19 @@
               "objective": "Defeat the Inquisitor",
               "announce": "An Azure banisher in a mask of blue glass. 'The fae taint must be cleansed. All of it. Including whoever shelters it.'",
               "boss": {
-                "template": 44007,
-                "name": "Inquisitor Ceallach of the Azure",
-                "level": 56,
-                "health_mult": 3.0
+                "template": 60158172,
+                "name": "Inquisitor Cathal of the Azure",
+                "level": 50,
+                "health_mult": 3.2
               },
-              "success": "Inquisitor Ceallach of the Azure falls.",
+              "success": "Inquisitor Cathal of the Azure falls.",
               "fail": "You fall back.",
               "adds": {
                 "every_s": 25,
                 "count": 2,
                 "mobs": [
                   {
-                    "template": 44008,
+                    "template": 60158173,
                     "name": "azure cleanser",
                     "level": [
                       47,
@@ -421,6 +661,788 @@
         }
       },
       "group": true
+    },
+    {
+      "id": "sh_pale_pastures",
+      "title": "The Pale Pastures",
+      "level": 46,
+      "giver": "elder_cnoc",
+      "offer": "The ledger said 'held'. Held where? I sent my grandson to follow the pale horses. He came back. He says there's a pen in the pastures in the north-east, and more of ours in it than the ledger knew - and they're not only ours. Touched men, from this valley.\n\nThe Azure keep them to burn. Will you [break the pen]?",
+      "accept": "break the pen",
+      "topics": {},
+      "summary": "The Azure keep lurikeen and touched folk in a pen in the Pale Pastures, to burn.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            1380,
+            200,
+            121.5
+          ],
+          "radius": 25,
+          "goal": "Kill the pale horses guarding the pen about 1.4 km north-east of Elder Cnoc",
+          "mob": {
+            "template": 60164831,
+            "name": "pale horse",
+            "level": 47
+          },
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 216,
+          "at": [
+            1400,
+            215,
+            122.5
+          ],
+          "goal": "Break open the pen",
+          "clue": {
+            "name": "a pen of blue-painted stakes",
+            "model": 1347
+          },
+          "text": "The bar comes off. Lurikeen, and two touched men humming four notes, and a list nailed to the post: 'For the pyres of the Azure March, when the Inquisitor gives the word.'",
+          "id": "s2"
+        },
+        {
+          "type": "encounter",
+          "zone": 216,
+          "at": [
+            1400,
+            215,
+            122.5
+          ],
+          "wake_m": 30,
+          "goal": "Keep the freed prisoners' guide alive while they get clear",
+          "text": "The last of the prisoners slips over the ridge and away west, toward the camp.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Dorc alive",
+              "center": [
+                1400,
+                215,
+                122.5
+              ],
+              "radius": 30,
+              "duration_s": 120,
+              "objective": "Keep Dorc alive",
+              "announce": "Azure banishers come over the ridge with torches.",
+              "protect": {
+                "template": 60165769,
+                "name": "Cnoc's grandson Dorc",
+                "level": 40,
+                "model": 603
+              },
+              "waves": {
+                "every_s": 22,
+                "count": 3,
+                "from": [
+                  [
+                    1412,
+                    221,
+                    122.5
+                  ],
+                  [
+                    1390,
+                    205,
+                    122.2
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60158172,
+                    "name": "azure banisher",
+                    "level": [
+                      46,
+                      47
+                    ]
+                  },
+                  {
+                    "template": 60158173,
+                    "name": "azure cleanser",
+                    "level": [
+                      46,
+                      47
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "Cnoc's grandson Dorc falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "elder_cnoc",
+          "goal": "Report to Elder Cnoc",
+          "say": "All of them home. All of them.\n\n'When the Inquisitor gives the word.' There's an Azure man in this camp - the Muster caught him on the march. Ailill. He's been asking to talk to whoever broke that pen. I'd rather spit on him. But talk to him.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the lurikeen exiles.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq216_pale_pasture_halter_ring",
+              "sq216_pen_breaker_s_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "azure_village"
+    },
+    {
+      "id": "sh_young_captain",
+      "title": "The Young Captain",
+      "level": 47,
+      "giver": "sr_ailill",
+      "offer": "You broke the pen. Good. I mean that.\n\nI was a captain on the march. The Grand Inquisitor has decided the touched are the Glimmer's lamps - which they are - and so the Healers' Valley must burn, with every madman in it, and the healers too if they won't leave. The pitch-carts are already on the ridge road. I said no. That's why I'm here.\n\nWill you [stop the carts]? I'll tell you where they are. I can't go myself - nobody here would let me, and they'd be right.",
+      "accept": "stop the carts",
+      "topics": {},
+      "summary": "Ailill of the Azure says the Grand Inquisitor means to burn the Healers' Valley, touched folk and all.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            560,
+            560,
+            92.8
+          ],
+          "radius": 25,
+          "goal": "Kill the Azure banishers with the pitch-carts on the ridge road about 540 m north-east of Ailill of the Azure",
+          "mob": {
+            "template": 60158172,
+            "name": "azure banisher",
+            "level": 48
+          },
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 216,
+          "at": [
+            565,
+            565,
+            92.6
+          ],
+          "goal": "Search the pitch-carts",
+          "clue": {
+            "name": "an order in the Grand Inquisitor's hand",
+            "model": 1347
+          },
+          "text": "'Burn the valley from the ridge down. Then the Muster's camp, with whatever is in it. The Glimmer will have no lamps, and the south no friends of the fae. - the Grand Inquisitor.'",
+          "give": {
+            "name": "the Inquisitor's order"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sr_ailill",
+          "goal": "Bring the order to Ailill",
+          "say": "\"The Muster's camp, with whatever is in it.\" He'd have burned me with you.\n\nListen. The Order is wrong. I know that now. But the Glimmer King is still the enemy, and he's still in his ring. When the Muster takes the march and the Inquisitor falls - and he will fall to you - I'll gather whoever will follow me. Not the Order. Just the ones who came here to fight the Glimmer and still want to. When you go for the King, we go with you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Ailill.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq216_doubter_s_blue_torc",
+              "sq216_pitch_cart_belt"
+            ]
+          }
+        }
+      },
+      "requires": "sh_pale_pastures"
+    },
+    {
+      "id": "sh_azure_captains",
+      "title": "The Inquisitor's Captains",
+      "level": 48,
+      "giver": "elder_cnoc",
+      "offer": "GROUP work. Ailill says the Inquisitor's three captains - Dsaldor, Coseal and Thror - are the ones who light the pyres. Without them the Order can only preach.\n\nThey hold the march with the Inquisitor. Will you [break the captains]? Bring friends. Lots of friends.",
+      "accept": "break the captains",
+      "topics": {},
+      "summary": "GROUP. The Grand Inquisitor's three captains, Dsaldor, Coseal and Thror, light the Azure's pyres.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            756,
+            476,
+            119.6
+          ],
+          "radius": 50,
+          "goal": "Defeat Azure Dsaldor on the march about 740 m north-east of Elder Cnoc",
+          "target": "Azure Dsaldor",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            1076,
+            506,
+            121.8
+          ],
+          "radius": 50,
+          "goal": "Defeat Azure Thror",
+          "target": "Azure Thror",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            1197,
+            493,
+            120.8
+          ],
+          "radius": 50,
+          "goal": "Defeat Azure Coseal",
+          "target": "Azure Coseal",
+          "count": 1,
+          "text": "Coseal falls among his censers. 'Ailill,' he says. 'Ailill told you. Tell the boy - the Inquisitor will burn him first.'",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "elder_cnoc",
+          "goal": "Report to Elder Cnoc",
+          "say": "Three pyre-lighters gone. The lurikeen of the north will sleep tonight.\n\nThe Inquisitor's still on the march, with his pyres. That's for the whole Muster - the captains will call for it. And when he falls, I suppose Ailill gets his chance. ...I hope he takes it.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the lurikeen exiles.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq216_dsaldor_s_enamel_bracer",
+              "sq216_coseal_s_censer_ring",
+              "sq216_thror_s_pyre_cloak"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sh_young_captain"
+    },
+    {
+      "id": "sh_lords_west",
+      "title": "The Lords of the West",
+      "level": 47,
+      "giver": "sr_maeve",
+      "offer": "The Glimmer's host has lords - ten of them, named, each holding a stronghold. Kill the lord and the host there falls apart. I've seen it twice now.\n\nOrist holds the valley just north of this camp, and Mianed holds the upland. Will you [hunt the lords]? I want whatever they carry.",
+      "accept": "hunt the lords",
+      "topics": {},
+      "summary": "Sentinel-Captain Maeve wants the Glimmer lords Orist and Mianed dead.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            172,
+            630,
+            91.9
+          ],
+          "radius": 50,
+          "goal": "Defeat Glimmer Orist in the valley about 250 m north of Sentinel-Captain Maeve",
+          "target": "Glimmer Orist",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            253,
+            142,
+            87.3
+          ],
+          "radius": 50,
+          "goal": "Defeat Glimmer Mianed on the upland",
+          "target": "Glimmer Mianed",
+          "count": 1,
+          "text": "Mianed comes apart into light. Where he stood, a slate of glimmer-glass, scratched with names.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sr_maeve",
+          "goal": "Bring the slate to Sentinel-Captain Maeve",
+          "say": "Names. Not glimmer names - ours. 'Gearoid Iarla. Rider of the third rank.' 'Gearoid Iarla. Spear of the north shore.' It's a roll. The Earl's sleeping army, under Lough Gur.\n\nThat's what the silver shoes were for. The King wanted the Earl's host - for this war, for these hills. The Glimmer lords were to lead it.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels of Ceannai.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq216_lord_orist_s_glass_belt",
+              "sq216_mianed_s_upland_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sh_lords_middle",
+      "title": "The Lords of the Valleys",
+      "level": 48,
+      "giver": "sr_maeve",
+      "offer": "GROUP work. Three lords hold the west of the middle valleys together - Kelegur, Zeit and Meldun - close enough to come to each other's aid. They were to be the Earl's captains.\n\nWill you [take the three]? Together, or they'll take you.",
+      "accept": "take the three",
+      "topics": {},
+      "summary": "GROUP. The Glimmer lords Kelegur, Zeit and Meldun hold the west of the middle valleys together.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            460,
+            557,
+            92.4
+          ],
+          "radius": 50,
+          "goal": "Defeat Glimmer Kelegur about 450 m north-east of Sentinel-Captain Maeve",
+          "target": "Glimmer Kelegur",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            444,
+            679,
+            88.1
+          ],
+          "radius": 50,
+          "goal": "Defeat Glimmer Zeit",
+          "target": "Glimmer Zeit",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            430,
+            645,
+            91.6
+          ],
+          "radius": 60,
+          "goal": "Defeat Glimmer Meldun",
+          "target": "Glimmer Meldun",
+          "count": 1,
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "sr_maeve",
+          "goal": "Report to Sentinel-Captain Maeve",
+          "say": "Three captains with no army to lead. The Earl sleeps on, under his lake - and I'll ride round it myself every seventh year and count his horseshoes if I have to.\n\nTwo more lords in the middle valleys, Arios and Xaquira. They're not captains. Ceallach says they're keepers - of what, he won't say till he's sure.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels of Ceannai.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq216_kelegur_s_shining_torc",
+              "sq216_zeit_s_griever_bracer",
+              "sq216_meldun_s_muster_roll_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sh_lords_west"
+    },
+    {
+      "id": "sh_lords_keepers",
+      "title": "The Keepers of the Lamps",
+      "level": 48,
+      "giver": "sr_ceallach",
+      "offer": "Arios and Xaquira. The middle valleys' last two lords. They don't fight like the others - they hang back, and the lights gather round them. I think they keep the King's lamps: the touched folk the Glimmer has burned. Every light in these hills.\n\nWill you [put out the keepers]? If I'm right, the hills will be darker for it.",
+      "accept": "put out the keepers",
+      "topics": {},
+      "summary": "Druid Ceallach thinks the Glimmer lords Arios and Xaquira keep the King's lamps.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            753,
+            903,
+            92.8
+          ],
+          "radius": 50,
+          "goal": "Defeat Glimmer Xaquira about 600 m east of Druid Ceallach",
+          "target": "Glimmer Xaquira",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            1046,
+            813,
+            97.7
+          ],
+          "radius": 50,
+          "goal": "Defeat Glimmer Arios",
+          "target": "Glimmer Arios",
+          "count": 1,
+          "text": "Arios goes out like a candle, and for a breath the whole valley around him goes dark - then the lights come back, but fewer.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sr_ceallach",
+          "goal": "Report to Druid Ceallach",
+          "say": "Fewer. You saw it. Fewer lights.\n\nThe lights aren't the King. They're the King's - and they can be taken from him. But the last of them gather in his son's hollow, and the hollow's door is kept by Venlar, in the east. Maeve has the Sentinels ready for that one.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq216_arios_s_lamp_glass_charm",
+              "sq216_xaquira_s_light_woven_belt"
+            ]
+          }
+        }
+      },
+      "requires": "sh_lords_middle"
+    },
+    {
+      "id": "sh_venlar",
+      "title": "The Gate-Keeper",
+      "level": 49,
+      "giver": "sr_maeve",
+      "offer": "GROUP work, the hardest yet. Venlar holds the East Valley for the King - his guard-lord, the one who keeps the way to the Prince's Hollow. Deathwatchers and geists all round him, and knights.\n\nWill you [go for Venlar]? Bring everyone. The Sentinels will be at your back.",
+      "accept": "go for Venlar",
+      "topics": {},
+      "summary": "GROUP. Glimmer Venlar, the King's guard-lord, holds the East Valley and the way to the Prince's Hollow.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 216,
+          "at": [
+            1480,
+            600,
+            90.6
+          ],
+          "radius": 30,
+          "goal": "Go up the East Valley about 1.4 km east of Sentinel-Captain Maeve",
+          "text": "The East Valley is one long glow. Everything in it is watching you.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            1520,
+            573,
+            90.2
+          ],
+          "radius": 50,
+          "goal": "Defeat Glimmer Venlar",
+          "target": "Glimmer Venlar",
+          "count": 1,
+          "text": "Venlar drops to one knee, burning out. 'The Prince waits,' he says. 'He was told you'd come. He has a letter for you.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sr_maeve",
+          "goal": "Report to Sentinel-Captain Maeve",
+          "say": "A letter. For us? ...No. Not for us. Ceallach thinks he knows what it is. He's gone very quiet.\n\nTen lords. I've lost count of the Sentinels it took to follow the lights this far. Thank you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels of Ceannai.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq216_mantle_of_the_ceannai_sentinels"
+            ],
+            "choice": [
+              "sq216_venlar_s_gate_key_torc",
+              "sq216_lord_breaker_s_bracer"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sh_lords_keepers"
+    },
+    {
+      "id": "sh_answer",
+      "title": "The King's Answer",
+      "level": 49,
+      "giver": "sr_ceallach",
+      "offer": "In Lough Gur we took a letter off the Unseelie envoy: 'The north for me, the south for you, and Lug between us.' Cliodna, writing to the Glimmer King. The envoy waited on the moor for the King's answer - and it never came, because we killed the herald who carried it.\n\nThe King would have written it again, and sent it by a surer hand. His son's. Venlar says the Prince has a letter. Will you [find the answer]? Zanllvi guards the road to the hollow.",
+      "accept": "find the answer",
+      "topics": {},
+      "summary": "Druid Ceallach thinks the Glimmer King's answer to Cliodna's letter lies in the Prince's Hollow.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            712,
+            1154,
+            91.0
+          ],
+          "radius": 50,
+          "goal": "Defeat Glimmer Zanllvi on the road to the hollow about 620 m south-east of Druid Ceallach",
+          "target": "Glimmer Zanllvi",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 216,
+          "at": [
+            905,
+            1235,
+            63.5
+          ],
+          "goal": "Search the Prince's Hollow",
+          "clue": {
+            "name": "a letter sealed in gold wax",
+            "model": 1347
+          },
+          "text": "'To the Queen in the north, from the King in the south. Agreed: the north for you, the south for me, and Lug between us. But hear this. Your goborchend dig in your forest for the Eye, and I will not share Ireland with Balor's kind. When Lug falls, shut the Eye - or I will shut it, and you with it. My son carries this, and my son does not lose letters. - C.'",
+          "give": {
+            "name": "the King's answer"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sr_ceallach",
+          "goal": "Bring the King's answer to Druid Ceallach",
+          "say": "'Lug between us.' The whole year - the mines, the revels, the wind, the fog, the lights on the lake, the tower in the bog - one bargain. Two kings of the sidhe carving Ireland in half, and our King in the middle.\n\nAnd 'the Eye'. The Fomorian eye the goborchend were waking in the Cursed Forest. Cliodna was digging it up - and even the Glimmer King was afraid of it.\n\nOne more lord stands at the King's ring. Then we know where we are.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq216_zanllvi_s_sealing_wax_ring",
+              "sq216_answer_bearer_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "sh_venlar"
+    },
+    {
+      "id": "sh_saumer",
+      "title": "The Ring of Stones",
+      "level": 50,
+      "giver": "sr_maeve",
+      "offer": "GROUP work - and as hard as anything short of the King himself.\n\nSaumer. The oldest of the lords, and the strongest. He waits at the western edge of the King's ring, in the south. With him dead, there's nothing left between the Muster and the King but the King.\n\nWill you [face Saumer]? Bring every friend you have.",
+      "accept": "face Saumer",
+      "topics": {},
+      "summary": "GROUP. Glimmer Saumer, the oldest of the Glimmer lords, guards the edge of the King's ring.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 216,
+          "at": [
+            827,
+            1515,
+            83.2
+          ],
+          "radius": 50,
+          "goal": "Defeat Glimmer Saumer by the King's ring about 930 m south-east of Sentinel-Captain Maeve",
+          "target": "Glimmer Saumer",
+          "count": 1,
+          "text": "Saumer falls, and for a moment, far off to the east among the stones, something enormous lifts its head and looks your way.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sr_maeve",
+          "goal": "Report to Sentinel-Captain Maeve",
+          "say": "He looked at you? He looked at you. Gods.\n\nThe Muster's ready. Ceallach wants to talk to you first - he's decided something about that letter.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels of Ceannai.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq216_saumer_s_ring_stone_charm",
+              "sq216_lightbreaker_s_bracer"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sh_answer"
+    },
+    {
+      "id": "sh_broken_bargain",
+      "title": "The Broken Bargain",
+      "level": 50,
+      "giver": "sr_ceallach",
+      "offer": "Here's where we are.\n\nCliodna's north is broken - the King's Host holds her forest when it marches, and she has to rebuild herself every time. The Glimmer King's south is breaking - his lords are dead, and the Muster can take his son's hollow and open his ring. The bargain is over. Neither of them has half of anything.\n\nBut the letter. 'The Eye.' Something both of them feared enough to put in writing. What we do with the letter matters. Will you [hear me out]?",
+      "accept": "hear me out",
+      "topics": {},
+      "summary": "The bargain between the Unseelie Queen and the Glimmer King is broken - but the King's letter names the Fomorian Eye.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 216,
+          "at": [
+            300,
+            1000,
+            163.8
+          ],
+          "radius": 25,
+          "goal": "Walk with Druid Ceallach down the valley, away from the camp about 180 m south-east of Druid Ceallach",
+          "text": "The valley is darker than it was. Behind you, in the camp, someone is singing - Lochlann's four notes, with a fifth at the end.",
+          "id": "s1"
+        },
+        {
+          "type": "choice",
+          "npc": "sr_ceallach",
+          "goal": "Decide what becomes of the King's answer",
+          "say": "Two choices, and I can't make this one.\n\nWe [send it to Tara]. The King should know what was bargained over his head - and the druids of Tara should know that something under the Cursed Forest frightens dragons. They'll watch for it. Maybe too late; maybe not.\n\nOr we [burn it]. Here, tonight. Nobody learns there's an Eye, nobody goes digging for it out of greed or curiosity, and maybe it sleeps another thousand years. Maybe.",
+          "options": [
+            {
+              "keyword": "send it to Tara",
+              "say": "Then a rider leaves tonight. The King will read it, and the druids will watch the north. Whatever wakes there, it won't wake unseen.\n\nThe threat in the south is ended - for now. Go and finish it: the Muster's going for the hollow, and then the ring. Whatever comes after, it comes after.",
+              "ending": "tara"
+            },
+            {
+              "keyword": "burn it",
+              "say": "...There. Gold wax burns blue. Did you know that? Nobody will ever read it again.\n\nThe threat in the south is ended - for now. Go and finish it: the Muster's going for the hollow, and then the ring. And if something ever opens its eye in that forest, we'll be the only two in Ireland who aren't surprised.",
+              "ending": "burned"
+            }
+          ],
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "tara": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq216_mantle_of_the_king_s_answer"
+            ],
+            "choice": [
+              "sq216_unlit_lantern_torc",
+              "sq216_ring_of_the_broken_bargain"
+            ]
+          }
+        },
+        "burned": {
+          "text": "From Aine's Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq216_mantle_of_the_king_s_answer"
+            ],
+            "choice": [
+              "sq216_unlit_lantern_torc",
+              "sq216_ring_of_the_broken_bargain"
+            ]
+          }
+        }
+      },
+      "requires": "sh_saumer"
     }
   ]
 }

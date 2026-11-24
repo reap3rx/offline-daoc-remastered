@@ -143,6 +143,7 @@ var aim_move := false                   # ... a moving shot: you walk at half sp
 var _defend_clip := ""                  # the parry / block / evade you just tried (a blow landing cuts it off)
 var _defend_slow_left := 0.0            # ... and while it plays you move at half speed
 var cam_kick := 0.0                      # a landed blow's small camera jolt (decays)
+var cam_shake := 0.0                     # a hard hit taken - a monster's heavy blow, cone, slam: the view shakes (decays; ActionCombat._struck)
 var shoulder := Vector2.ZERO             # action combat's over-the-shoulder view: metres right / up (Camera3D offsets)
 var _dash := Vector3.ZERO               # a dodge's burst (world velocity, decays)
 const AC_BUTTONS := ["ac_attack", "ac_parry", "ac_position", "ac_reactive", "ac_chain", "ac_dodge", "ac_cursor",
@@ -901,11 +902,13 @@ const STAFF_TILT := {"lur_m": 20.0}           # degrees out from the body (dress
 const RUN_TILT_SPEED := 240.0                 # degrees a second, in and out
 
 
+## (owner 2026-11-23: the turn out to the side "looks awkward when they're running ... go back to their original
+## rotation (back to the left) and instead rotate forward some when they run". Measured again (clip_measure4.gd, 30
+## one-handers, nine races): turned about the grip's Y the blade tips forward and down and stays on the left, and it
+## clears the head better than the old turn - 45 degrees: 0.26-0.49 m on every race but the Lurikeen male, who needs
+## 75 (0.20 m; 60 out to the side gave 0.17).)
 static func run_tilt_for(race: String) -> float:
-	match race:
-		"lur_m", "kob_m": return 60.0
-		"hal_f": return 45.0
-	return 45.0 if race.ends_with("_m") else 30.0
+	return 75.0 if race == "lur_m" else 45.0
 
 
 ## Every frame (the player's figure, NPCs' and other players'): each drawn one-hander that Player.dress marked eases to
@@ -925,7 +928,7 @@ static func run_tilt(gear: Array, anim: AnimationPlayer, delta: float) -> void:
 			continue
 		now = move_toward(now, want, RUN_TILT_SPEED * delta)
 		at.set_meta("tilt_now", now)
-		w.transform = (at.get_meta("grip") as Transform3D).rotated_local(Vector3(1, 0, 0), deg_to_rad(now))
+		w.transform = (at.get_meta("grip") as Transform3D).rotated_local(Vector3(0, 1, 0), deg_to_rad(now))   # (forward)
 
 
 ## A figure's worn gear, shared with the character select screen (owner 2026-10-10: the staff / armour didn't show
@@ -1900,6 +1903,7 @@ func _physics_step(delta: float) -> void:
 	# the legs keep pace with how fast you really go - sprint, speed buffs, snares, wounds (owner 2026-10-31)
 	_animate(ahead, strafe, Vector2(wish.x, wish.z).length() if not swimming else speed, delta)
 	cam_kick = move_toward(cam_kick, 0.0, delta * 0.5)
+	cam_shake = move_toward(cam_shake, 0.0, delta * 0.06)
 	if camera:
 		var want := shoulder if action_mode else Vector2.ZERO
 		# the over-the-shoulder offset slides the view sideways past where the arm checked (owner 2026-10-28: in
@@ -1910,7 +1914,11 @@ func _physics_step(delta: float) -> void:
 		var rate := minf(1.0, delta * 6.0)
 		camera.h_offset = want.x if absf(want.x) < absf(camera.h_offset) else lerpf(camera.h_offset, want.x, rate)
 		camera.v_offset = want.y if absf(want.y) < absf(camera.v_offset) else lerpf(camera.v_offset, want.y, rate)
-	_pivot.rotation = Vector3(cam_pitch + cam_kick, cam_yaw, 0.0)
+	var shake := Vector2.ZERO
+	if cam_shake > 0.0:
+		var ts := Time.get_ticks_msec() * 0.001
+		shake = Vector2(sin(ts * 53.0), sin(ts * 41.0 + 1.7)) * cam_shake
+	_pivot.rotation = Vector3(cam_pitch + cam_kick + shake.x, cam_yaw + shake.y, 0.0)
 	_set_arm_length(delta)
 
 
@@ -1963,7 +1971,11 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 	# (Fig3Figure.set_lower)
 	var legs := ""
 	var legs_speed := 1.0
-	if moving and grounded and not swimming and not climbing and not dead and force_clip == "" and _action_left > 0.0:
+	# a song played on the move (owner 2026-11-23: "Don't let their music playing animation be interrupted by running
+	# ... their legs can still move ... let the top half animation still play"): the same split, the arms playing on
+	var song_moving := casting_spell and song_instrument > 0
+	if moving and grounded and not swimming and not climbing and not dead and force_clip == "" \
+			and (_action_left > 0.0 or song_moving):
 		if ahead < 0.0:
 			legs = "walk_back"
 			legs_speed = _sync("walk_back", "back", speed)
@@ -1995,7 +2007,7 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 		_cast_left -= delta
 		# moving ends the casting pose at once (as the old client: moving interrupts a cast - the server says so a
 		# moment later), and a cast nothing came back for ends after its time
-		if (moving and Server.active) or _cast_left < -CAST_GRACE:
+		if (moving and Server.active and song_instrument == 0) or _cast_left < -CAST_GRACE:
 			cast_end(false)
 	if moving and _action == "stand_up":
 		_action_left = 0.0                            # walking off from a sit goes straight into the run
@@ -2012,6 +2024,8 @@ func _animate(ahead: float, strafe: float, speed: float, delta: float) -> void:
 		# (owner 2026-10-14: combat while swimming as the original) - the figures have no swimming swings or casts
 		# (anims.csv / canims.csv), so the same full-body clips play at the surface
 		pass
+	elif song_moving and moving and grounded and not swimming and not climbing:
+		_play(_cast_clips[1])                         # the song's playing pose over the running legs (set_lower above)
 	elif climbing:
 		# the figure's anims.csv Ladder clip (Cat_CL_H_up.kfa, "climb up"): run backwards going down, held still
 		_play("ladder" if _anim and _anim.has_animation("ladder") else "idle", signf(_climb_vy))

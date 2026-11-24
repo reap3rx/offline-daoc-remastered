@@ -1,0 +1,60 @@
+{
+ "comment": "The starting towns a new character may pick on the create screen, per realm id (1 Albion, 2 Midgard, 3 Hibernia), in the server's order: the hub (choice 0), then the server's start_choices (source/server/GameServer/gameutils/data/level_bands.json - UT_StartZones keeps the two the same). Only the screen's text lives here; the server holds the places.",
+ "realms": {
+  "1": [
+   {
+    "name": "Cotswold",
+    "zone": "",
+    "rating": "",
+    "blurb": ""
+   }
+  ],
+  "2": [
+   {
+    "name": "Mularn",
+    "zone": "",
+    "rating": "",
+    "blurb": ""
+   }
+  ],
+  "3": [
+   {
+    "name": "Mag Mell",
+    "zone": "Lough Derg",
+    "rating": "peaceful",
+    "blurb": "The realm's first town, on the shore of Lough Derg. Gentle country, and the roads lead everywhere."
+   },
+   {
+    "name": "Ardee",
+    "zone": "Connacht",
+    "rating": "peaceful",
+    "blurb": "A quiet market town among the groves and fields of Connacht, kept by the Fianna of Druim Ligen."
+   },
+   {
+    "name": "Ardagh",
+    "zone": "Silvermine Mountains",
+    "rating": "wild",
+    "blurb": "A small, windswept mining town at the top of the Silvermine valley. There's little here: the road runs south through wild country to Howth."
+   },
+   {
+    "name": "Brynach",
+    "zone": "Valley of Bri Leith",
+    "rating": "wild",
+    "blurb": "A herders' town on the road from Lough Derg into the Valley of Bri Leith, where Midir's host rides and the wind has turned strange."
+   },
+   {
+    "name": "Connla",
+    "zone": "Shannon Estuary",
+    "rating": "wild",
+    "blurb": "A busy port at the mouth of the Shannon, with ships, a teleporter and the eriu clans upriver. Wild country beyond the strand."
+   },
+   {
+    "name": "Culraid",
+    "zone": "Lough Gur",
+    "rating": "deadly",
+    "hard": true,
+    "blurb": "HARD START. A village in a walking wood on Lough Gur, a Deadly zone far from the capital. Only its edge is gentle."
+   }
+  ]
+ }
+}

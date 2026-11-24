@@ -1157,7 +1157,7 @@ namespace DOL.AI.Brain
                 if (Body.GetDistanceTo(point) > 35)
                 {
                     CompanionFollowPolicy.BeginFormation(BotBody, raidPoint);
-                    Body.PathTo(raidPoint, Body.MaxSpeed);
+                    PathOrCrossTo(raidPoint, Body.MaxSpeed);
                 }
                 return;
             }
@@ -1186,12 +1186,48 @@ namespace DOL.AI.Brain
                     : Body.MaxSpeed;
                 _ambientWanderMovement = ambientWander;
                 if (companionTravel && !ambientWander)
-                    Body.PathTo(destination, speed);
+                    PathOrCrossTo(new Vector3(destination.X, destination.Y, destination.Z), speed);
                 else
                     Body.WalkTo(destination, speed);
             }
             else if (!Body.IsMoving)
                 _ambientWanderMovement = false;
+        }
+
+        /// <summary>A formation path, also when the leader is over a zone line. Detour meshes are per zone: a path to a slot
+        /// in the next zone fails, and a world bot's failed path stands it still - so a bot in your group waited at the
+        /// Connacht / Lough Derg line until you came back (owner 2026-11-23; the companion got over it by another way).
+        /// Here: path to the line on this side, then step over it straight; the next turn paths on in the new zone.</summary>
+        private void PathOrCrossTo(Vector3 destination, short speed)
+        {
+            Zone here = Body.CurrentZone;
+            Zone there = Body.CurrentRegion?.GetZone((int) destination.X, (int) destination.Y);
+            if (here == null || there == null || here == there)
+            {
+                Body.PathTo(destination, speed);
+                return;
+            }
+            Vector3 edge = ZoneEdgeToward(here, new Vector3(Body.X, Body.Y, Body.Z), destination);
+            if (Vector3.DistanceSquared(new Vector3(Body.X, Body.Y, 0), new Vector3(edge.X, edge.Y, 0)) > 300f * 300f)
+                Body.PathTo(edge, speed);
+            else
+                Body.WalkTo(new Point3D((int) destination.X, (int) destination.Y, (int) destination.Z), speed);
+        }
+
+        /// <summary>The point of this zone, just inside its edge, where the line from here to there leaves it.</summary>
+        public static Vector3 ZoneEdgeToward(Zone zone, Vector3 from, Vector3 to)
+        {
+            const float inset = 40f;
+            float x0 = zone.XOffset + inset, y0 = zone.YOffset + inset;
+            float x1 = zone.XOffset + zone.Width - inset, y1 = zone.YOffset + zone.Height - inset;
+            float t = 1f;
+            float dx = to.X - from.X, dy = to.Y - from.Y;
+            if (dx > 0 && to.X > x1) t = Math.Min(t, (x1 - from.X) / dx);
+            if (dx < 0 && to.X < x0) t = Math.Min(t, (x0 - from.X) / dx);
+            if (dy > 0 && to.Y > y1) t = Math.Min(t, (y1 - from.Y) / dy);
+            if (dy < 0 && to.Y < y0) t = Math.Min(t, (y0 - from.Y) / dy);
+            t = Math.Clamp(t, 0f, 1f);
+            return new Vector3(Math.Clamp(from.X + dx * t, x0, x1), Math.Clamp(from.Y + dy * t, y0, y1), from.Z + (to.Z - from.Z) * t);
         }
 
         private void MaybeIdleRoleplay()
@@ -1233,6 +1269,8 @@ namespace DOL.AI.Brain
         {
             TauntShouts.BotThink(BotBody);                 // (a fighter shouts a monster off someone softer)
             HibernianKits.BotThink(BotBody);               // (a Warden's Rallying Cry)
+            AlbionKits.BotThink(BotBody);                  // (a Friar's Call to Prayer, Zeal, Hold the Line, Opportunist)
+            MidgardKits.BotThink(BotBody);                 // (Iron Stand, Thunderstruck, Blood Rage, Kelgor's Howl)
             bool nativeSpeedTravelStarted;
             if (CompanionFollowPolicy.ObserveAndCancelBuffs(BotBody, out nativeSpeedTravelStarted))
             {
@@ -5133,6 +5171,22 @@ namespace DOL.AI.Brain
                     numNeedHealing = Math.Max(1, numNeedHealing);
                     if (stranger.HealthPercent < 35) numEmergency = Math.Max(1, numEmergency);
                 }
+            }
+
+            // An event's own people near a healer bot - the one the event is keeping alive, a giver and their guards -
+            // are healed too (owner 2026-11-23, Bugs & Fixes: "Healer bots should also attempt to heal event NPCs"),
+            // the worse off first; its own group comes first unless the event's one is worse off.
+            if (IsHealer && (spellTarget == null || spellTarget.HealthPercent >= 50) &&
+                DOL.GS.DynamicEvents.EventNpc.WoundedNear(Body, AutonomousNearbyHelp.Radius, 75) is GameLiving eventAlly &&
+                InSupportReach(eventAlly) && (spellTarget == null || eventAlly.HealthPercent < spellTarget.HealthPercent) &&
+                PathfindingProvider.Instance.HasLineOfSight(Body.CurrentZone, new(Body.X, Body.Y, Body.Z),
+                    new(eventAlly.X, eventAlly.Y, eventAlly.Z), PathfindingProvider.Instance.DefaultFilters))
+            {
+                spellTarget = eventAlly;
+                healingStranger = true;
+                amountToHeal = Math.Max(amountToHeal, eventAlly.MaxHealth - eventAlly.Health);
+                numNeedHealing = Math.Max(1, numNeedHealing);
+                if (eventAlly.HealthPercent < 35) numEmergency = Math.Max(1, numEmergency);
             }
 
             if (AutonomousRealmRaid.HasSharedSupport(BotBody))

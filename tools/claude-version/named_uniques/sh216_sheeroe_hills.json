@@ -1,0 +1,219 @@
+{
+ "zone": 216,
+ "region": 200,
+ "realm": 3,
+ "prefix": "sh216",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Upland Lord's Glass Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 47,
+   "bonuses": {
+    "Int": 16,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "Won from Lightwarden Eochaid on the Glimmering Upland. It shines in the dark, and it shouldn't."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Inquisitor's Blue Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 48,
+   "bonuses": {
+    "Emp": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "The Azure Grand Inquisitor's torc, the crown crossed out. Ailill wouldn't touch it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Valley Warlord's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 49,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 42
+   },
+   "lore": "Won from the Warlord of the Valleys. Brighter than you. Always brighter."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "King's Guard Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 50,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "The King's Champion's belt, won in the East Valley."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Prince's Crown of Light",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 17,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "Maldahar's circlet, worn as a torc. It went out when he did - mostly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Maldahar's Glass Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Qui": 17,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 30,
+    "Power": 6
+   },
+   "lore": "Woven glass, light as silk. It throws the sun back in your enemies' eyes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Southern Muster",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 50,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Four halls' colours in one mantle, given to those who stood in the Prince's Hollow."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lightbreaker's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 17,
+    "Con": 17,
+    "Dex": 8,
+    "Hits": 42
+   },
+   "lore": "Dark glass, bound in bronze. Whatever light it held, it holds no longer."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hollow-Breaker's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 50,
+   "bonuses": {
+    "Dex": 17,
+    "Qui": 17,
+    "Str": 8,
+    "Hits": 42
+   },
+   "lore": "Studded with dead glimmer-glass from the Prince's Hollow."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ring of the Dark Lantern",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Emp": 17,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "Keener Brid keened the valleys dark. This ring keeps a little of the dark."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bracer of the East Valley",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 17,
+    "Con": 17,
+    "Dex": 8,
+    "Hits": 42
+   },
+   "lore": "The Muster's bracer, for the ones who broke the King's guard."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Unshining Jewel",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Qui": 17,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 30,
+    "Power": 6
+   },
+   "lore": "A glimmer-stone from the hills, found the morning the glow went out. It doesn't shine. That's the point."
+  }
+ ]
+}

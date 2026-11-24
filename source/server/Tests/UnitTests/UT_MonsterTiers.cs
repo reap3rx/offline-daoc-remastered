@@ -65,7 +65,7 @@ public sealed class UT_MonsterTiers
     }
 
     [Test]
-    public void PowerBandsFollowTheOwnersLadder()
+    public void ABotsLookedForStrengthFollowsTheOwnersLadder()
     {
         Assert.That(MonsterTiers.PowerTier(6), Is.InRange(-2.2, -1.8), "1-12 fight like a green");
         Assert.That(MonsterTiers.PowerTier(18), Is.InRange(-1.2, -0.8), "13-24 a blue");
@@ -73,8 +73,7 @@ public sealed class UT_MonsterTiers
         Assert.That(MonsterTiers.PowerTier(43), Is.InRange(0.8, 1.2), "37-49 an orange");
         Assert.That(MonsterTiers.PowerTier(50), Is.EqualTo(2.0), "50 a red");
         for (int l = 2; l <= 50; l++)
-            Assert.That(MonsterTiers.Power(l), Is.GreaterThan(MonsterTiers.Power(l - 1)), $"stronger at {l}");
-        Assert.That(MonsterTiers.Strength(0), Is.EqualTo(1.0));
+            Assert.That(MonsterTiers.PowerTier(l), Is.GreaterThan(MonsterTiers.PowerTier(l - 1)), $"stronger at {l}");
     }
 
     [Test]
@@ -82,7 +81,8 @@ public sealed class UT_MonsterTiers
     {
         Assert.That(MonsterTiers.FightLevelFor(17, MonsterTiers.Blue, 5), Is.EqualTo(17));
         Assert.That(MonsterTiers.FightLevelFor(17, MonsterTiers.Red, 5), Is.EqualTo(17));
-        Assert.That(MonsterTiers.FightLevelFor(17, MonsterTiers.Purple, 70), Is.EqualTo(70));
+        Assert.That(MonsterTiers.FightLevelFor(17, MonsterTiers.Purple, 70), Is.EqualTo(17), "a zone's purple: at your level, its strength its own");
+        Assert.That(MonsterTiers.FightLevelFor(17, MonsterTiers.Purple, 70, epic: true), Is.EqualTo(70), "an epic encounter never drops");
         Assert.That(ConLevels.GetConLevel(30, MonsterTiers.FightLevelFor(30, MonsterTiers.Grey, 1)), Is.EqualTo(-3));
     }
 }

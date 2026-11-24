@@ -8,7 +8,392 @@
   {
    "story_reward": true,
    "scaled": true,
+   "name": "Fog-Walker's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 45,
+   "bonuses": {
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 8,
+    "Hits": 38
+   },
+   "lore": "Rangers' leather, with a rope knotted every pace: you count the knots to find your way back."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rowan-Thorn Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 45,
+   "bonuses": {
+    "Emp": 15,
+    "Con": 8,
+    "Power": 6,
+    "Hits": 27
+   },
+   "lore": "A rowan thorn in silver. The court's glamours slide off it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thrall-Breaker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 46,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 39
+   },
+   "lore": "Cut from the iron collar of a geas-bound miner. He asked you to keep it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Unbound Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 46,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 46,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Plain iron, no rune on it. Cormac says that's the point."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
    "name": "Crock-of-Gold Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 46,
+   "bonuses": {
+    "Qui": 15,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 28,
+    "Power": 5
+   },
+   "lore": "A single gold coin from a leprechaun's crock. It's always there when you check."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Iron-Cage Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 46,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 39
+   },
+   "lore": "Cold iron from a leprechaun cage. Fae folk flinch from it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Trapper's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 46,
+   "bonuses": {
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 8,
+    "Hits": 39
+   },
+   "lore": "Dull green and very quiet. The Queen's trappers wore them."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cobbler's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 46,
+   "bonuses": {
+    "Int": 15,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "Leprechauns are cobblers, really. This is a ring of shoe-leather and silver tacks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hide-Keeper's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 47,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 47,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "The Rangers' own torc, for whoever held the hide on a bad night."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Black-Mist Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 47,
+   "bonuses": {
+    "Int": 16,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "A wisp of a dorocha's mist, caught in glass. It's always trying to get out."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Suitor's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 46,
+   "bonuses": {
+    "Qui": 15,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 28,
+    "Power": 5
+   },
+   "lore": "A betrothal ring. The woman it was meant for never existed."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Glass-Heart Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 46,
+   "bonuses": {
+    "Int": 15,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "A heart of green glass. It beats, faintly, when someone lies to you."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Wight's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 47,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 40
+   },
+   "lore": "Bound with mummy-wrappings. Clean ones. Mostly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hag-Bane Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 47,
+   "bonuses": {
+    "Emp": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "Iron, with a hag-stone set in it: look through the hole and you see what's really there."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Unbetrothed Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 48,
+   "bonuses": {
+    "Qui": 16,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 29,
+    "Power": 5
+   },
+   "lore": "Niall's betrothal torc, never given. He wanted someone to wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Grey Suitor's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 48,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 48,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Mist-grey, and very old. It still smells of somebody's perfume."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Envoy's Seal-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 47,
+   "bonuses": {
+    "Int": 16,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "The court's seal: a crowned woman. Every letter north was sealed with it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Courier's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 47,
+   "bonuses": {
+    "Dex": 16,
+    "Qui": 16,
+    "Str": 8,
+    "Hits": 40
+   },
+   "lore": "A courier's arm-guard, slit for carrying letters."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Siabra-Lord's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 48,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 41
+   },
+   "lore": "Elven silver, black with the court's tarnish. It was a gift from King Lug, once."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Turncoat's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 48,
+   "bonuses": {
+    "Dex": 16,
+    "Qui": 16,
+    "Str": 8,
+    "Hits": 41
+   },
+   "lore": "Lug's green on one side, the court's black on the other. Dorchu wore it either way."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Keener's Veil",
+   "base": [
+    41,
+    26
+   ],
+   "level": 49,
+   "bonuses": {
+    "Emp": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "Grey as ash. Wear it and the bainshees' wail is only a sound."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cnoc Aine Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 49,
+   "bonuses": {
+    "Int": 16,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "A pebble from the bainshees' hill. It's cold, and it hums one note."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thorn-Lady's Brooch",
    "base": [
     41,
     24
@@ -21,15 +406,15 @@
     "Hits": 30,
     "Power": 6
    },
-   "lore": "A single gold coin from a leprechaun's crock. It's always there when you check."
+   "lore": "A brooch of black thorns. Lady Aoibhinn wore it over her heart, where the hag's heart was."
   },
   {
    "story_reward": true,
    "scaled": true,
-   "name": "Iron-Cage Bracer",
+   "name": "Lug's Promise",
    "base": [
     41,
-    33
+    35
    ],
    "level": 50,
    "bonuses": {
@@ -38,42 +423,60 @@
     "Dex": 8,
     "Hits": 42
    },
-   "lore": "Cold iron from a leprechaun cage. Fae folk flinch from it."
+   "lore": "A plain gold ring from the King's own treasury: given to those who carried the word of the plot to Tara."
   },
   {
    "story_reward": true,
    "scaled": true,
-   "name": "Poacher's Cloak",
+   "name": "Mantle of the Watchful",
    "base": [
     41,
     26
    ],
    "level": 50,
    "bonuses": {
-    "Dex": 17,
-    "Qui": 17,
-    "Str": 8,
-    "Hits": 42
+    "Con": 17,
+    "Hits": 50,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
    },
-   "lore": "Dull green and very quiet."
+   "lore": "The Host's green, for the ones who saw it coming."
   },
   {
    "story_reward": true,
    "scaled": true,
-   "name": "Cobbler's Ring",
+   "name": "Fomor-Rune Bracer",
    "base": [
     41,
-    35
+    33
    ],
-   "level": 50,
+   "level": 48,
    "bonuses": {
-    "Int": 17,
+    "Int": 16,
     "Emp": 8,
     "Dex": 8,
     "Power": 7,
-    "Hits": 30
+    "Hits": 29
    },
-   "lore": "Leprechauns are cobblers, really. This is a ring of shoe-leather and silver tacks."
+   "lore": "Copied runes, burned into leather. Mor says they're harmless copied. Mor says."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Goat-Skull Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 48,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 41
+   },
+   "lore": "A goborchend's little skull-charm. It bleats at night."
   },
   {
    "story_reward": true,
@@ -85,10 +488,10 @@
    ],
    "level": 50,
    "bonuses": {
-    "Str": 19,
-    "Con": 19,
-    "Dex": 9,
-    "Hits": 48
+    "Str": 17,
+    "Con": 17,
+    "Dex": 8,
+    "Hits": 42
    },
    "lore": "Twisted goat-horn, bound in bronze. The goborchend wear their horns as trophies; you wear theirs."
   },
@@ -102,11 +505,11 @@
    ],
    "level": 50,
    "bonuses": {
-    "Int": 19,
-    "Emp": 9,
-    "Dex": 9,
-    "Power": 8,
-    "Hits": 34
+    "Int": 17,
+    "Emp": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 30
    },
    "lore": "A chip from a goborchend altar. Druid Mor cleansed it. It's still red."
   },
@@ -120,10 +523,10 @@
    ],
    "level": 50,
    "bonuses": {
-    "Emp": 19,
-    "Con": 9,
-    "Power": 8,
-    "Hits": 34
+    "Emp": 17,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 30
    },
    "lore": "Green and brown and full of pockets."
   },
@@ -137,11 +540,11 @@
    ],
    "level": 50,
    "bonuses": {
-    "Con": 19,
-    "Hits": 56,
-    "Body": 7,
-    "Crush": 7,
-    "Slash": 7
+    "Con": 17,
+    "Hits": 50,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
    },
    "lore": "The goborchend are of the old Fomorian blood. Their bones are heavy and hard."
   },
@@ -155,12 +558,47 @@
    ],
    "level": 50,
    "bonuses": {
-    "Dex": 19,
-    "Qui": 19,
-    "Str": 9,
-    "Hits": 48
+    "Dex": 17,
+    "Qui": 17,
+    "Str": 8,
+    "Hits": 42
    },
    "lore": "Given to whoever first broke into a goborchend fort."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rider's-Bane Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 49,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 49,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Fear Dubh's bridle-iron, twisted into a torc."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Huntsman's Horn Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 49,
+   "bonuses": {
+    "Dex": 16,
+    "Qui": 16,
+    "Str": 8,
+    "Hits": 42
+   },
+   "lore": "A sliver of Fear Dubh's horn. Blow it and the court's hounds flinch."
   }
  ]
 }

@@ -1,848 +1,3003 @@
 {
-  "zone": 200,
-  "region": 200,
-  "name": "Lough Derg",
-  "lore": "Lough Derg: Mag Mell, Tir na mBeo and Mardagh round the red lake, where the ghostly siabra still walk the shore and the curmudgeons rob the harvest.",
-  "chains": [
+ "zone": 200,
+ "region": 200,
+ "name": "Lough Derg",
+ "lore": "Lough Derg: Mag Mell, Tir na mBeo and Mardagh round the red lake. The dead stir in the barrow and the haunted wood at night, the curmudgeons rob the harvest, the hill pests feud, the fae guard their woods, and the Dergans gather on their island.",
+ "chains": [
+  {
+   "id": "lough_derg_summoners_muster",
+   "title": "The Summoner's Muster",
+   "levels": [
+    10,
+    15
+   ],
+   "time": "night",
+   "hint": "Green fire flickers over the old barrow by Mag Mell...",
+   "first_delay_s": [
+    600,
+    1800
+   ],
+   "interval_s": [
+    2700,
+    4500
+   ],
+   "rest_s": 30,
+   "wake_m": 160,
+   "start": "m1",
+   "stages": [
     {
-      "id": "lough_derg_dergan_furies",
-      "title": "The Dergan Furies",
-      "levels": [12, 15],
-      "hint": "Shrieks carry over the eastern hills...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Furies' Ring",
-          "objective": "Clear the furies' ring",
-          "announce": "The dergan furies have gathered at their ring to curse the lake. Break the gathering.",
-          "center": [1472, 121, 128.4],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60159913,
-              "name": "dergan fury",
-              "level": [13, 15]
-            },
-            {
-              "template": 30000,
-              "name": "dergan enchanter",
-              "level": [12, 12]
-            },
-            {
-              "template": 60167883,
-              "name": "whistler",
-              "level": [13, 13]
-            }
-          ],
-          "success": "You have cleared the furies' ring. The Dergan Matron comes out to fight.",
-          "fail": "They hold the furies' ring. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Dergan Matron",
-          "objective": "Defeat the Dergan Matron",
-          "announce": "The Dergan Matron stands at the furies' ring. Bring friends.",
-          "center": [1472, 121, 128.4],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60159913,
-            "name": "The Dergan Matron",
-            "level": 17,
-            "size": 70,
-            "pos": [1472, 121, 128.4],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60159913,
-                "name": "dergan fury",
-                "level": [13, 15]
-              }
-            ]
-          },
-          "success": "The Dergan Matron falls. The way is safe again.",
-          "fail": "The Dergan Matron slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu200_dergan_matron_s_pendant", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Dergan Furys Hold the Road to Mag Mell",
-          "objective": "Drive the dergan furys off the road to Mag Mell",
-          "announce": "With The Dergan Furies lost, the dergan furys have spread down onto the road to Mag Mell and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1078, 145, 119.0],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60159913,
-              "name": "dergan fury",
-              "level": [13, 15]
-            },
-            {
-              "template": 30000,
-              "name": "dergan enchanter",
-              "level": [12, 12]
-            },
-            {
-              "template": 60167883,
-              "name": "whistler",
-              "level": [13, 13]
-            }
-          ],
-          "boss": {
-            "template": 60159913,
-            "name": "Dergan fury warleader",
-            "level": 16,
-            "pos": [1078, 145, 119.0],
-            "health_mult": 2
-          },
-          "success": "The dergan furys are gone from the road to Mag Mell. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Fiona has come out to set the road to Mag Mell right. The dergan furys are coming back for it!",
-          "center": [1078, 145, 119.0],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Fiona",
-            "level": 15,
-            "pos": [1078, 145, 119.0],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1133, 81, 120.7],
-              [1163, 140, 115.3],
-              [1141, 203, 90.2]
-            ],
-            "mobs": [
-              {
-                "template": 60159913,
-                "name": "dergan fury",
-                "level": [13, 15]
-              },
-              {
-                "template": 30000,
-                "name": "dergan enchanter",
-                "level": [12, 12]
-              },
-              {
-                "template": 60167883,
-                "name": "whistler",
-                "level": [13, 13]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Mag Mell is safe again. Thank you.\"",
-          "success": "The dergan furys break and scatter. The road to Mag Mell is open again.",
-          "fail": "Roadwarden Fiona falls, and the dergan furys take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "lough_derg_ghostly_siabra",
-      "title": "The Ghostly Siabra",
-      "levels": [11, 15],
-      "hint": "Grey shapes walk the southern shore...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Niamh the Lorekeeper",
-          "objective": "Protect Niamh the Lorekeeper, who is reading the names on the cairn",
-          "announce": "Niamh the lorekeeper is reading the names of the dead on the old cairn, to lay them. The siabra dead are not willing.",
-          "center": [639, 1427, 130.0],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Niamh the Lorekeeper",
-            "template": 60161797,
-            "level": 15,
-            "model": 388,
-            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9",
-            "health_mult": 10,
-            "pos": [639, 1427, 130.0]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [598, 1502, 133.6],
-              [557, 1449, 131.5],
-              [566, 1384, 138.6]
-            ],
-            "mobs": [
-              {
-                "template": 60161305,
-                "name": "ghostly siabra",
-                "level": [11, 12]
-              },
-              {
-                "template": 60161282,
-                "name": "ghastly siabra",
-                "level": [13, 15]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Niamh the Lorekeeper. \"They came from over there - let's finish this.\"",
-          "fail": "Niamh the Lorekeeper falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Lakeshore Cairn",
-          "objective": "Clear the lakeshore cairn",
-          "announce": "They came from the lakeshore cairn. Follow them back and clear it out.",
-          "center": [335, 1509, 134.6],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60161305,
-              "name": "ghostly siabra",
-              "level": [11, 12]
-            },
-            {
-              "template": 60161282,
-              "name": "ghastly siabra",
-              "level": [13, 15]
-            }
-          ],
-          "success": "You have cleared the lakeshore cairn. The Siabra Revenant comes out to fight.",
-          "fail": "They hold the lakeshore cairn. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Siabra Revenant",
-          "objective": "Defeat the Siabra Revenant",
-          "announce": "The Siabra Revenant stands at the lakeshore cairn. Bring friends.",
-          "center": [335, 1509, 134.6],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60161282,
-            "name": "The Siabra Revenant",
-            "level": 17,
-            "size": 70,
-            "pos": [335, 1509, 134.6],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60161305,
-                "name": "ghostly siabra",
-                "level": [11, 12]
-              }
-            ]
-          },
-          "success": "The Siabra Revenant falls. The way is safe again.",
-          "fail": "The Siabra Revenant slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu200_siabra_revenant_s_band", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Ghostly Siabras Hold the Road to Tir na mBeo",
-          "objective": "Drive the ghostly siabras off the road to Tir na mBeo",
-          "announce": "With The Ghostly Siabra lost, the ghostly siabras have spread down onto the road to Tir na mBeo and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [394, 1149, 130.0],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60161305,
-              "name": "ghostly siabra",
-              "level": [11, 12]
-            },
-            {
-              "template": 60161282,
-              "name": "ghastly siabra",
-              "level": [13, 15]
-            }
-          ],
-          "boss": {
-            "template": 60161305,
-            "name": "Ghostly siabra warleader",
-            "level": 16,
-            "pos": [394, 1149, 130.0],
-            "health_mult": 2
-          },
-          "success": "The ghostly siabras are gone from the road to Tir na mBeo. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Ruadh has come out to set the road to Tir na mBeo right. The ghostly siabras are coming back for it!",
-          "center": [394, 1149, 130.0],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Ruadh",
-            "level": 15,
-            "pos": [394, 1149, 130.0],
-            "health_mult": 10,
-            "template": 60161797,
-            "model": 388,
-            "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [445, 1217, 137.7],
-              [381, 1233, 138.6],
-              [325, 1197, 134.9]
-            ],
-            "mobs": [
-              {
-                "template": 60161305,
-                "name": "ghostly siabra",
-                "level": [11, 12]
-              },
-              {
-                "template": 60161282,
-                "name": "ghastly siabra",
-                "level": [13, 15]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Tir na mBeo is safe again. Thank you.\"",
-          "success": "The ghostly siabras break and scatter. The road to Tir na mBeo is open again.",
-          "fail": "Roadwarden Ruadh falls, and the ghostly siabras take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "lough_derg_curmudgeon_harvest",
-      "title": "The Curmudgeon Harvest",
-      "levels": [9, 12],
-      "hint": "Guardian Fionn is looking for help in Mag Mell.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Guardian Fionn",
-        "level": 13,
-        "model": 700,
-        "equipment": "ab492f98-cfbf-455d-beda-c1461200e021",
-        "guild": "Guardians of Mag Mell",
-        "health_mult": 4,
-        "pos": [684, 180, 133.6],
-        "greet": "The curmudgeons have stripped the north fields bare and carted the harvest off to their store. We're going to take it back. Will you come? Say when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
+     "id": "m1",
+     "type": "cull",
+     "name": "The Dead Rise",
+     "objective": "Put down the dead climbing out of the barrow",
+     "announce": "The old barrow is open, and the dead are climbing out of it in rows. Someone is calling them.",
+     "center": [
+      925,
+      292,
+      118.3
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "kill": 20,
+     "alive": 9,
+     "mobs": [
+      {
+       "template": 60166177,
+       "name": "risen pawn",
+       "level": [
+        10,
+        11
+       ]
       },
-      "guards": [
-        {
-          "name": "Guardian",
-          "level": 12,
-          "model": 700,
-          "equipment": "ab492f98-cfbf-455d-beda-c1461200e021",
-          "guild": "Guardians of Mag Mell",
-          "health_mult": 2,
-          "count": 3
-        }
-      ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Curmudgeons' Store",
-          "objective": "Go with Guardian Fionn to the curmudgeons' store",
-          "announce": "Guardian Fionn leads the guardians of Mag Mell out after the stolen harvest.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [728, 180, 131.1],
-            [784, 228, 136.5],
-            [832, 228, 131.7],
-            [936, 220, 127.3],
-            [1008, 220, 121.8],
-            [1048, 204, 119.5],
-            [1096, 156, 118.0],
-            [1128, 132, 117.8],
-            [1176, 100, 117.4],
-            [1280, 100, 117.3],
-            [1368, 100, 121.3],
-            [1400, 132, 119.3],
-            [1400, 236, 125.0],
-            [1384, 268, 125.3],
-            [1312, 348, 124.3],
-            [1304, 412, 125.0]
-          ],
-          "ambushes": [
-            {
-              "at": 8,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 60159539,
-                  "name": "curmudgeon harvester",
-                  "level": [9, 11]
-                },
-                {
-                  "template": 60159548,
-                  "name": "curmudgeon trapper",
-                  "level": [11, 12]
-                }
-              ]
-            }
-          ],
-          "success": "Guardian Fionn reaches the curmudgeons' store. \"There they are. Clear them out!\"",
-          "fail": "Guardian Fionn falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Curmudgeons' Store",
-          "objective": "Clear the curmudgeons' store",
-          "announce": "Clear the curmudgeons' store!",
-          "center": [1302, 412, 124.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60159539,
-              "name": "curmudgeon harvester",
-              "level": [9, 11]
-            },
-            {
-              "template": 60159548,
-              "name": "curmudgeon trapper",
-              "level": [11, 12]
-            }
-          ],
-          "success": "You have cleared the curmudgeons' store. Grogan the Curmudgeon King comes out to fight.",
-          "fail": "They hold the curmudgeons' store. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "Grogan the Curmudgeon King",
-          "objective": "Defeat Grogan the Curmudgeon King",
-          "announce": "Grogan the Curmudgeon King stands at the curmudgeons' store. Bring friends.",
-          "center": [1302, 412, 124.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60159536,
-            "name": "Grogan the Curmudgeon King",
-            "level": 14,
-            "size": 72,
-            "pos": [1302, 412, 124.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60159539,
-                "name": "curmudgeon harvester",
-                "level": [9, 11]
-              }
-            ]
-          },
-          "success": "Grogan the Curmudgeon King falls. Mag Mell will hear of this in the taverns tonight.",
-          "fail": "Grogan the Curmudgeon King slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu200_grogan_the_curmudgeon_king_s_amulet", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Curmudgeons Hold the Mill Road",
-          "objective": "Drive the curmudgeons off the mill road",
-          "announce": "The curmudgeons have the whole mill road now, and every cart that comes down it.",
-          "center": [830, 760, 123.9],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60159539,
-              "name": "curmudgeon harvester",
-              "level": [9, 11]
-            },
-            {
-              "template": 60159548,
-              "name": "curmudgeon trapper",
-              "level": [11, 12]
-            }
-          ],
-          "boss": {
-            "template": 60159539,
-            "name": "Grogan's Nephew",
-            "level": 13,
-            "pos": [830, 760, 123.9],
-            "health_mult": 2
-          },
-          "success": "The mill road is free. The miller will want her carts back.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Miller Brigid, who is righting the overturned carts",
-          "announce": "Miller Brigid is righting the overturned carts. The curmudgeons are coming back!",
-          "center": [830, 760, 123.9],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Miller Brigid",
-            "level": 12,
-            "pos": [830, 760, 123.9],
-            "health_mult": 10,
-            "model": 700,
-            "equipment": "ab492f98-cfbf-455d-beda-c1461200e021"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [826, 526, 92.0],
-              [872, 574, 90.1],
-              [869, 640, 94.3]
-            ],
-            "mobs": [
-              {
-                "template": 60159539,
-                "name": "curmudgeon harvester",
-                "level": [9, 11]
-              },
-              {
-                "template": 60159548,
-                "name": "curmudgeon trapper",
-                "level": [11, 12]
-              }
-            ]
-          },
-          "thanks": "\"The carts are rolling again - and not to the curmudgeons' store this time!\"",
-          "success": "The curmudgeon harvesters break and scatter. The road to Mag Mell is open again.",
-          "fail": "Miller Brigid falls, and the curmudgeon harvesters take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+      {
+       "template": 60166174,
+       "name": "risen minion",
+       "level": [
+        11,
+        12
+       ]
+      },
+      {
+       "template": 60166174,
+       "name": "barrow guard",
+       "level": [
+        13,
+        13
+       ],
+       "size": 60
+      }
+     ],
+     "success": "The ranks break. In the barrow's mouth a robed figure lifts its staff, and the ground answers.",
+     "fail": "There are too many. The dead stand in ranks round the barrow, waiting for their orders.",
+     "on_success": "m2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 90
+     }
     },
     {
-      "id": "lough_derg_barrow_bones",
-      "title": "The Bones by Mag Mell",
-      "levels": [1, 4],
-      "hint": "Guardian Niamh is looking for help in Mag Mell.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Guardian Niamh",
-        "level": 5,
-        "model": 700,
-        "equipment": "ab492f98-cfbf-455d-beda-c1461200e021",
-        "guild": "Mag Mell Guard",
-        "health_mult": 4,
-        "pos": [683, 183, 133.6],
-        "greet": "The old barrow outside Mag Mell has opened, and the dead have been walking the fields at night. I'll not ask farmers to face them. Will you come with me and put them back? Say when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
-      },
-      "guards": [
-        {
-          "name": "Guardian",
-          "level": 4,
-          "model": 700,
-          "equipment": "ab492f98-cfbf-455d-beda-c1461200e021",
-          "guild": "Mag Mell Guard",
-          "health_mult": 2,
-          "count": 3
-        }
+     "id": "m2",
+     "type": "boss",
+     "name": "The Summoner",
+     "objective": "Kill the Summoner before his army is ready",
+     "announce": "The Summoner stands in the barrow's mouth, raising the dead to march on Mag Mell. Bring friends.",
+     "center": [
+      925,
+      292,
+      118.3
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60166617,
+      "name": "the Summoner",
+      "level": 16,
+      "size": 60,
+      "pos": [
+       925,
+       292,
+       118.3
       ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Old Barrow",
-          "objective": "Go with Guardian Niamh to the old barrow",
-          "announce": "Guardian Niamh leads Mag Mell's newest adventurers out to the opened barrow.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [735, 228, 132.3],
-            [783, 260, 128.4],
-            [831, 260, 121.9],
-            [871, 300, 119.4],
-            [911, 300, 118.4]
-          ],
-          "ambushes": [
-            {
-              "at": 2,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 60166177,
-                  "name": "skeletal pawn",
-                  "level": [1, 2]
-                },
-                {
-                  "template": 60166174,
-                  "name": "skeletal minion",
-                  "level": [3, 4]
-                }
-              ]
-            }
-          ],
-          "success": "Guardian Niamh reaches the old barrow. \"There they are. Clear them out!\"",
-          "fail": "Guardian Niamh falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Old Barrow",
-          "objective": "Clear the old barrow",
-          "announce": "Clear the old barrow!",
-          "center": [908, 302, 118.4],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60166177,
-              "name": "skeletal pawn",
-              "level": [1, 2]
-            },
-            {
-              "template": 60166174,
-              "name": "skeletal minion",
-              "level": [3, 4]
-            }
-          ],
-          "success": "You have cleared the old barrow. The Bone Steward comes out to fight.",
-          "fail": "They hold the old barrow. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "The Bone Steward",
-          "objective": "Defeat the Bone Steward",
-          "announce": "The Bone Steward stands at the old barrow. Bring friends.",
-          "center": [908, 302, 118.4],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60166174,
-            "name": "The Bone Steward",
-            "level": 6,
-            "size": 70,
-            "pos": [908, 302, 118.4],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60166177,
-                "name": "skeletal pawn",
-                "level": [1, 2]
-              }
-            ]
-          },
-          "success": "The Bone Steward falls. Mag Mell will hear of this in the taverns tonight.",
-          "fail": "The Bone Steward slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu200_bone_steward_s_pendant", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Skeletal Pawns Hold the Road to Mag Mell",
-          "objective": "Drive the skeletal pawns off the road to Mag Mell",
-          "announce": "With The Bones by Mag Mell lost, the skeletal pawns have spread down onto the road to Mag Mell and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [642, 418, 125.4],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60166177,
-              "name": "skeletal pawn",
-              "level": [1, 2]
-            },
-            {
-              "template": 60166174,
-              "name": "skeletal minion",
-              "level": [3, 4]
-            }
-          ],
-          "boss": {
-            "template": 60166177,
-            "name": "Skeletal pawn warleader",
-            "level": 5,
-            "pos": [642, 418, 125.4],
-            "health_mult": 2
-          },
-          "success": "The skeletal pawns are gone from the road to Mag Mell. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Fiona has come out to set the road to Mag Mell right. The skeletal pawns are coming back for it!",
-          "center": [642, 418, 125.4],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Fiona",
-            "level": 4,
-            "pos": [642, 418, 125.4],
-            "health_mult": 10,
-            "model": 700,
-            "equipment": "ab492f98-cfbf-455d-beda-c1461200e021"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [672, 339, 128.0],
-              [720, 384, 103.6],
-              [721, 450, 99.0]
-            ],
-            "mobs": [
-              {
-                "template": 60166177,
-                "name": "skeletal pawn",
-                "level": [1, 2]
-              },
-              {
-                "template": 60166174,
-                "name": "skeletal minion",
-                "level": [3, 4]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Mag Mell is safe again. Thank you.\"",
-          "success": "The skeletal pawns break and scatter. The road to Mag Mell is open again.",
-          "fail": "Roadwarden Fiona falls, and the skeletal pawns take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+      "health_mult": 3,
+      "guild": "Bonecaller of the Red Lake"
+     },
+     "adds": {
+      "every_s": 45,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60166174,
+        "name": "risen minion",
+        "level": [
+         11,
+         12
+        ]
+       },
+       {
+        "template": 60166177,
+        "name": "risen pawn",
+        "level": [
+         10,
+         11
+        ]
+       }
       ]
+     },
+     "success": "The Summoner falls and the dead fall with him. On his body: a seal of red wax pressed with the mark of the Dergan warlord on the island.",
+     "fail": "The Summoner's army marches. They stop on the road to Mag Mell and hold it.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 160,
+      "items": [
+       {
+        "id": "nu200_bone_steward_s_pendant",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Skeletal Pawns Hold the Road to Mag Mell",
+     "objective": "Drive the skeletal pawns off the road to Mag Mell",
+     "announce": "With The Summoner's Muster lost, the skeletal pawns have spread down onto the road to Mag Mell and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      642,
+      418,
+      125.4
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60166177,
+       "name": "skeletal pawn",
+       "level": [
+        10,
+        12
+       ]
+      },
+      {
+       "template": 60166174,
+       "name": "skeletal minion",
+       "level": [
+        10,
+        12
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60166177,
+      "name": "Bone captain",
+      "level": 14,
+      "pos": [
+       642,
+       418,
+       125.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The skeletal pawns are gone from the road to Mag Mell. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Fiona has come out to set the road to Mag Mell right. The skeletal pawns are coming back for it!",
+     "center": [
+      642,
+      418,
+      125.4
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Fiona",
+      "level": 4,
+      "pos": [
+       642,
+       418,
+       125.4
+      ],
+      "health_mult": 10,
+      "model": 700,
+      "equipment": "ab492f98-cfbf-455d-beda-c1461200e021"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        672,
+        339,
+        128.0
+       ],
+       [
+        720,
+        384,
+        103.6
+       ],
+       [
+        721,
+        450,
+        99.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60166177,
+        "name": "skeletal pawn",
+        "level": [
+         1,
+         2
+        ]
+       },
+       {
+        "template": 60166174,
+        "name": "skeletal minion",
+        "level": [
+         3,
+         4
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Mag Mell is safe again. Thank you.\"",
+     "success": "The skeletal pawns break and scatter. The road to Mag Mell is open again.",
+     "fail": "Roadwarden Fiona falls, and the skeletal pawns take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
-  ]
+   ]
+  },
+  {
+   "id": "lough_derg_ghostly_siabra",
+   "title": "The Ghostly Siabra",
+   "levels": [
+    12,
+    16
+   ],
+   "time": "night",
+   "hint": "Pale shapes move among the haunted trees north-east of the lake...",
+   "first_delay_s": [
+    900,
+    2400
+   ],
+   "interval_s": [
+    2700,
+    4500
+   ],
+   "rest_s": 30,
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Niamh the Lorekeeper",
+     "objective": "Keep Niamh alive while she reads the old rites",
+     "announce": "Niamh the Lorekeeper has come to the edge of the haunted wood to lay its dead to rest. The dead don't want to go.",
+     "center": [
+      1340,
+      520,
+      127.9
+     ],
+     "radius": 70,
+     "duration_s": 150,
+     "protect": {
+      "name": "Niamh the Lorekeeper",
+      "level": 15,
+      "model": 365,
+      "pos": [
+       1340,
+       520,
+       127.9
+      ],
+      "health_mult": 3,
+      "guild": "Lorekeeper of Mardagh"
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        1440,
+        420,
+        132.8
+       ],
+       [
+        1480,
+        520,
+        126.4
+       ],
+       [
+        1400,
+        400,
+        131.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161304,
+        "name": "ghostly siabra",
+        "level": [
+         12,
+         13
+        ]
+       },
+       {
+        "template": 60161282,
+        "name": "ghastly siabra",
+        "level": [
+         13,
+         15
+        ]
+       }
+      ]
+     },
+     "thanks": "The words are said. Now we must go in and finish it - the one who keeps them here is in the wood.",
+     "success": "Niamh finishes the rite at the wood's edge. The way in is open.",
+     "fail": "Niamh falls, and the haunting deepens.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 90
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear the Grey Wood",
+     "objective": "Put down the restless dead among the trees",
+     "announce": "Into the grey wood - the dead are thick between the trees tonight.",
+     "center": [
+      1500,
+      260,
+      123.7
+     ],
+     "radius": 90,
+     "time_s": 1200,
+     "kill": 16,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60161304,
+       "name": "ghostly siabra",
+       "level": [
+        12,
+        13
+       ]
+      },
+      {
+       "template": 60161282,
+       "name": "ghastly siabra",
+       "level": [
+        13,
+        15
+       ]
+      },
+      {
+       "template": 60160936,
+       "name": "fog wraith",
+       "level": [
+        14,
+        15
+       ]
+      }
+     ],
+     "success": "The wood goes quiet. Then something old answers from its heart.",
+     "fail": "The dead hold the wood tonight.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 90
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Siabra Revenant",
+     "objective": "Defeat the Siabra Revenant",
+     "announce": "The Siabra Revenant rises at the heart of the haunted wood. Bring friends.",
+     "center": [
+      1500,
+      260,
+      123.7
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161282,
+      "name": "the Siabra Revenant",
+      "level": 17,
+      "size": 75,
+      "pos": [
+       1500,
+       260,
+       123.7
+      ],
+      "health_mult": 3
+     },
+     "adds": {
+      "every_s": 50,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60161304,
+        "name": "ghostly siabra",
+        "level": [
+         12,
+         13
+        ]
+       }
+      ]
+     },
+     "success": "The Revenant comes apart like mist in the morning. The haunting will be thinner for a while.",
+     "fail": "The Revenant drives you from the wood, and the dead spill out onto the farm road.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 160,
+      "items": [
+       {
+        "id": "nu200_siabra_revenant_s_band",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Ghostly Siabras Hold the Farm Road",
+     "objective": "Drive the ghostly siabras off the farm road",
+     "announce": "With The Ghostly Siabra lost, the ghostly siabras have spread down onto the farm road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1290,
+      470,
+      125.3
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60161305,
+       "name": "ghostly siabra",
+       "level": [
+        11,
+        12
+       ]
+      },
+      {
+       "template": 60161282,
+       "name": "ghastly siabra",
+       "level": [
+        13,
+        15
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60161305,
+      "name": "Ghostly siabra warleader",
+      "level": 16,
+      "pos": [
+       1290,
+       470,
+       125.3
+      ],
+      "health_mult": 2
+     },
+     "success": "The ghostly siabras are gone from the farm road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Ruadh, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Ruadh has come out to set the farm road right. The ghostly siabras are coming back for it!",
+     "center": [
+      1290,
+      470,
+      125.3
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Ruadh",
+      "level": 15,
+      "pos": [
+       1290,
+       470,
+       125.3
+      ],
+      "health_mult": 10,
+      "template": 60161797,
+      "model": 388,
+      "equipment": "72416435-a85d-4d1a-9887-a2ad716632c9"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        445,
+        1217,
+        137.7
+       ],
+       [
+        381,
+        1233,
+        138.6
+       ],
+       [
+        325,
+        1197,
+        134.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161305,
+        "name": "ghostly siabra",
+        "level": [
+         11,
+         12
+        ]
+       },
+       {
+        "template": 60161282,
+        "name": "ghastly siabra",
+        "level": [
+         13,
+         15
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Tir na mBeo is safe again. Thank you.\"",
+     "success": "The ghostly siabras break and scatter. The farm road is open again.",
+     "fail": "Roadwarden Ruadh falls, and the ghostly siabras take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "lough_derg_curmudgeon_harvest",
+   "title": "The Curmudgeon Harvest",
+   "levels": [
+    9,
+    13
+   ],
+   "hint": "Guardian Fionn is looking for help in Mag Mell.",
+   "rest_s": 30,
+   "giver": {
+    "name": "Guardian Fionn",
+    "level": 13,
+    "model": 700,
+    "equipment": "ab492f98-cfbf-455d-beda-c1461200e021",
+    "guild": "Guardians of Mag Mell",
+    "health_mult": 4,
+    "pos": [
+     684,
+     180,
+     130.0
+    ],
+    "greet": "The curmudgeons have stripped the north fields bare and carted the harvest off to their store. We're going to take it back. Will you come? Say when you're [ready].",
+    "accept": "ready",
+    "reply": "Good. Stay close - they will have watchers out. With me!",
+    "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "name": "Guardian",
+     "level": 12,
+     "model": 700,
+     "equipment": "ab492f98-cfbf-455d-beda-c1461200e021",
+     "guild": "Guardians of Mag Mell",
+     "health_mult": 2,
+     "count": 3
+    }
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "escort",
+     "name": "The Road to the Curmudgeons' Store",
+     "objective": "Go with Guardian Fionn to the curmudgeons' store",
+     "announce": "Guardian Fionn leads the way along the north shore to the curmudgeons' store.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       728,
+       180,
+       131.1
+      ],
+      [
+       784,
+       228,
+       136.5
+      ],
+      [
+       832,
+       228,
+       131.7
+      ],
+      [
+       936,
+       220,
+       127.3
+      ],
+      [
+       1008,
+       200,
+       127.3
+      ],
+      [
+       1060,
+       175,
+       120.8
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 3,
+       "count": 3,
+       "say": "Curmudgeon pickets! Hold together!",
+       "mobs": [
+        {
+         "template": 60159539,
+         "name": "curmudgeon harvester",
+         "level": [
+          9,
+          10
+         ]
+        },
+        {
+         "template": 60164275,
+         "name": "mudman",
+         "level": [
+          9,
+          10
+         ]
+        }
+       ]
+      }
+     ],
+     "success": "Guardian Fionn reaches the store. \"There's our grain. Take it back!\"",
+     "fail": "Guardian Fionn falls on the road.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "g2",
+     "type": "cull",
+     "name": "Clear the Curmudgeons' Store",
+     "objective": "Drive the curmudgeons out of their store",
+     "announce": "Clear the store!",
+     "center": [
+      1087,
+      162,
+      118.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60159539,
+       "name": "curmudgeon harvester",
+       "level": [
+        9,
+        10
+       ]
+      },
+      {
+       "template": 60159548,
+       "name": "curmudgeon trapper",
+       "level": [
+        10,
+        11
+       ]
+      },
+      {
+       "template": 60164275,
+       "name": "mudman",
+       "level": [
+        9,
+        10
+       ]
+      }
+     ],
+     "success": "The store is ours - but a cart heaped with stolen grain is already rattling off east!",
+     "fail": "They hold the store.",
+     "on_success": "g3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g3",
+     "type": "intercept",
+     "name": "Stop the Grain Cart",
+     "objective": "Stop the stolen-grain cart before it reaches the curmudgeon camp",
+     "announce": "The grain cart is making for the curmudgeons' camp at the Bri Leith edge. Stop it before it gets there!",
+     "radius": 60,
+     "time_s": 900,
+     "alive": 3,
+     "speed": 120,
+     "path": [
+      [
+       1095,
+       175,
+       116.0
+      ],
+      [
+       1270,
+       220,
+       91.4
+      ],
+      [
+       1240,
+       500,
+       121.9
+      ],
+      [
+       1265,
+       760,
+       124.8
+      ],
+      [
+       1420,
+       900,
+       140.1
+      ],
+      [
+       1520,
+       985,
+       141.5
+      ]
+     ],
+     "boss": {
+      "template": 60158958,
+      "name": "stolen grain cart",
+      "level": 12,
+      "size": 64,
+      "model": 413,
+      "health_mult": 2.5,
+      "guild": "Curmudgeon Harvest"
+     },
+     "mobs": [
+      {
+       "template": 60159533,
+       "name": "curmudgeon carter",
+       "level": [
+        10,
+        11
+       ]
+      },
+      {
+       "template": 60164275,
+       "name": "mudman",
+       "level": [
+        9,
+        10
+       ]
+      }
+     ],
+     "success": "The cart is stopped, the grain spilled across the road - and from the trees comes a furious bellow.",
+     "fail": "The cart rolls into the curmudgeon camp. The harvest is gone, and the curmudgeons are bolder for it.",
+     "on_success": "g4",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g4",
+     "type": "boss",
+     "name": "Grogan the Curmudgeon King",
+     "objective": "Defeat Grogan the Curmudgeon King",
+     "announce": "Grogan the Curmudgeon King has come for his grain himself. Bring friends.",
+     "center": [
+      1240,
+      480,
+      122.2
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60159536,
+      "name": "Grogan the Curmudgeon King",
+      "level": 15,
+      "size": 70,
+      "health_mult": 3
+     },
+     "adds": {
+      "every_s": 50,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60164275,
+        "name": "mudman",
+        "level": [
+         10,
+         11
+        ]
+       }
+      ]
+     },
+     "success": "Grogan falls. Mag Mell eats this winter.",
+     "fail": "Grogan drives you off, and his curmudgeons take the mill road.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 160,
+      "items": [
+       {
+        "id": "nu200_grogan_the_curmudgeon_king_s_amulet",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Curmudgeons Hold the Mill Road",
+     "objective": "Drive the curmudgeons off the mill road",
+     "announce": "The curmudgeons have the whole mill road now, and every cart that comes down it.",
+     "center": [
+      830,
+      760,
+      123.9
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60159539,
+       "name": "curmudgeon harvester",
+       "level": [
+        9,
+        11
+       ]
+      },
+      {
+       "template": 60159548,
+       "name": "curmudgeon trapper",
+       "level": [
+        11,
+        12
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60159539,
+      "name": "Grogan's Nephew",
+      "level": 13,
+      "pos": [
+       830,
+       760,
+       123.9
+      ],
+      "health_mult": 2
+     },
+     "success": "The mill road is free. The miller will want her carts back.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Miller Brigid, who is righting the overturned carts",
+     "announce": "Miller Brigid is righting the overturned carts. The curmudgeons are coming back!",
+     "center": [
+      830,
+      760,
+      123.9
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Miller Brigid",
+      "level": 12,
+      "pos": [
+       830,
+       760,
+       123.9
+      ],
+      "health_mult": 10,
+      "model": 700,
+      "equipment": "ab492f98-cfbf-455d-beda-c1461200e021"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        826,
+        526,
+        92.0
+       ],
+       [
+        872,
+        574,
+        90.1
+       ],
+       [
+        869,
+        640,
+        94.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60159539,
+        "name": "curmudgeon harvester",
+        "level": [
+         9,
+         11
+        ]
+       },
+       {
+        "template": 60159548,
+        "name": "curmudgeon trapper",
+        "level": [
+         11,
+         12
+        ]
+       }
+      ]
+     },
+     "thanks": "\"The carts are rolling again - and not to the curmudgeons' store this time!\"",
+     "success": "The curmudgeon harvesters break and scatter. The road to Mag Mell is open again.",
+     "fail": "Miller Brigid falls, and the curmudgeon harvesters take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "lough_derg_dergan_war_bands",
+   "title": "The Dergan War Bands",
+   "levels": [
+    13,
+    17
+   ],
+   "hint": "War drums beat in the south-east woods...",
+   "first_delay_s": [
+    600,
+    1500
+   ],
+   "interval_s": [
+    2400,
+    3600
+   ],
+   "rest_s": 30,
+   "start": "w1",
+   "stages": [
+    {
+     "id": "w1",
+     "type": "clash",
+     "name": "Battle at the Bri Leith Edge",
+     "objective": "Break the battle between the Dergans and the curmudgeons",
+     "announce": "A Dergan war band has fallen on the curmudgeons' camp at the Bri Leith edge. Whoever wins will be on the roads next.",
+     "center": [
+      1500,
+      960,
+      144.9
+     ],
+     "radius": 100,
+     "time_s": 900,
+     "kill": 16,
+     "alive": 12,
+     "mobs": [
+      {
+       "template": 60159913,
+       "name": "dergan fury",
+       "level": [
+        13,
+        14
+       ],
+       "side": 0
+      },
+      {
+       "template": 30000,
+       "name": "dergan enchanter",
+       "level": [
+        13,
+        14
+       ],
+       "side": 0
+      },
+      {
+       "template": 60167883,
+       "name": "whistler",
+       "level": [
+        13,
+        13
+       ],
+       "side": 0
+      },
+      {
+       "template": 60159536,
+       "name": "curmudgeon fighter",
+       "level": [
+        13,
+        14
+       ],
+       "side": 1
+      },
+      {
+       "template": 60159548,
+       "name": "curmudgeon trapper",
+       "level": [
+        12,
+        13
+       ],
+       "side": 1
+      },
+      {
+       "template": 60164275,
+       "name": "mudman",
+       "level": [
+        12,
+        13
+       ],
+       "side": 1
+      }
+     ],
+     "success": "Both sides reel back. Out of the Dergan line strides their war chief.",
+     "fail": "The Dergans carry the field, and march for the east shore road.",
+     "on_success": "w2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 90
+     }
+    },
+    {
+     "id": "w2",
+     "type": "boss",
+     "name": "War Chief Fiachra",
+     "objective": "Defeat War Chief Fiachra",
+     "announce": "War Chief Fiachra of the Dergans takes the field himself. Bring friends.",
+     "center": [
+      1500,
+      960,
+      144.9
+     ],
+     "radius": 90,
+     "time_s": 1200,
+     "boss": {
+      "template": 60159917,
+      "name": "War Chief Fiachra",
+      "level": 18,
+      "size": 70,
+      "health_mult": 3,
+      "guild": "Dergan War Band"
+     },
+     "adds": {
+      "every_s": 45,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60159913,
+        "name": "dergan fury",
+        "level": [
+         13,
+         14
+        ]
+       }
+      ]
+     },
+     "success": "Fiachra falls. He carries orders from the island - the warlord is gathering his strength.",
+     "fail": "Fiachra's war band marches on the east shore road.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 160,
+      "items": [
+       {
+        "id": "nu200_dergan_matron_s_pendant",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Dergans Hold the East Shore Road",
+     "objective": "Drive the Dergans off the east shore road",
+     "announce": "With The Dergan War Bands lost, the Dergans have spread down onto the east shore road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1230,
+      760,
+      122.3
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60159913,
+       "name": "dergan fury",
+       "level": [
+        13,
+        15
+       ]
+      },
+      {
+       "template": 30000,
+       "name": "dergan enchanter",
+       "level": [
+        12,
+        12
+       ]
+      },
+      {
+       "template": 60167883,
+       "name": "whistler",
+       "level": [
+        13,
+        13
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60159913,
+      "name": "Dergan war captain",
+      "level": 16,
+      "pos": [
+       1230,
+       760,
+       122.3
+      ],
+      "health_mult": 2
+     },
+     "success": "The Dergans are gone from the east shore road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Fiona, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Fiona has come out to set the east shore road right. The Dergans are coming back for it!",
+     "center": [
+      1230,
+      760,
+      122.3
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Fiona",
+      "level": 15,
+      "pos": [
+       1230,
+       760,
+       122.3
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1133,
+        81,
+        120.7
+       ],
+       [
+        1163,
+        140,
+        115.3
+       ],
+       [
+        1141,
+        203,
+        90.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60159913,
+        "name": "dergan fury",
+        "level": [
+         13,
+         15
+        ]
+       },
+       {
+        "template": 30000,
+        "name": "dergan enchanter",
+        "level": [
+         12,
+         12
+        ]
+       },
+       {
+        "template": 60167883,
+        "name": "whistler",
+        "level": [
+         13,
+         13
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Mag Mell is safe again. Thank you.\"",
+     "success": "The Dergans break and scatter. The east shore road is open again.",
+     "fail": "Roadwarden Fiona falls, and the Dergans take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "lough_derg_highway_robbery",
+   "title": "Highway Robbery",
+   "levels": [
+    3,
+    8
+   ],
+   "hint": "Shouts for help on the road south of Mag Mell...",
+   "first_delay_s": [
+    300,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2400
+   ],
+   "rest_s": 25,
+   "start": "r1",
+   "stages": [
+    {
+     "id": "r1",
+     "type": "defend",
+     "name": "Save the Pedlar",
+     "objective": "Keep Bram the pedlar alive",
+     "announce": "Villainous youths have jumped Bram the pedlar on the road south of Mag Mell!",
+     "center": [
+      690,
+      560,
+      124.1
+     ],
+     "radius": 60,
+     "duration_s": 120,
+     "protect": {
+      "template": 60167226,
+      "name": "Bram the Pedlar",
+      "level": 8,
+      "model": 154,
+      "pos": [
+       690,
+       560,
+       124.1
+      ],
+      "health_mult": 3
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        620,
+        480,
+        125.6
+       ],
+       [
+        600,
+        600,
+        140.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60167680,
+        "name": "villainous youth",
+        "level": [
+         4,
+         5
+        ]
+       },
+       {
+        "template": 60165444,
+        "name": "villainous youth thug",
+        "level": [
+         6,
+         7
+        ]
+       }
+      ]
+     },
+     "thanks": "They went that way - west, into the woods. Their leader's a big lout who calls himself Mog.",
+     "success": "The robbers scatter into the woods.",
+     "fail": "Bram is left in the road with empty pockets, or worse.",
+     "on_success": "r2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "r2",
+     "type": "boss",
+     "name": "Mog the Highwayman",
+     "objective": "Find and defeat Mog the Highwayman",
+     "announce": "Mog the Highwayman is waiting in the woods with Bram's goods.",
+     "center": [
+      560,
+      480,
+      128.3
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60165444,
+      "name": "Mog the Highwayman",
+      "level": 9,
+      "size": 60,
+      "pos": [
+       560,
+       480,
+       128.3
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 50,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60167680,
+        "name": "villainous youth",
+        "level": [
+         4,
+         5
+        ]
+       }
+      ]
+     },
+     "success": "Mog goes down. Bram gets his goods back - and the gang will think twice about that road.",
+     "fail": "Mog gets away with the loot.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 16,
+      "copper_per_level": 100
+     }
+    }
+   ]
+  },
+  {
+   "id": "lough_derg_hill_war",
+   "title": "The Hill War",
+   "levels": [
+    3,
+    9
+   ],
+   "hint": "The hill pests are at war again north of Mag Mell...",
+   "first_delay_s": [
+    600,
+    1200
+   ],
+   "interval_s": [
+    1800,
+    2700
+   ],
+   "rest_s": 25,
+   "start": "h1",
+   "stages": [
+    {
+     "id": "h1",
+     "type": "clash",
+     "name": "Battle for the Spring",
+     "objective": "Break up the battle for the hill spring",
+     "announce": "The spraggons have come for the hill spring, and the rat boys and lucradans have joined up to stop them. Nobody gets water while this lasts.",
+     "center": [
+      700,
+      115,
+      130.0
+     ],
+     "radius": 90,
+     "time_s": 900,
+     "kill": 14,
+     "alive": 10,
+     "mobs": [
+      {
+       "template": 60166472,
+       "name": "spraggon",
+       "level": [
+        4,
+        5
+       ],
+       "side": 0
+      },
+      {
+       "template": 60166491,
+       "name": "spraggonoll",
+       "level": [
+        6,
+        8
+       ],
+       "side": 0
+      },
+      {
+       "template": 60165164,
+       "name": "rat boy",
+       "level": [
+        4,
+        5
+       ],
+       "side": 1
+      },
+      {
+       "template": 60167940,
+       "name": "wild lucradan",
+       "level": [
+        6,
+        8
+       ],
+       "side": 1
+      }
+     ],
+     "success": "Both sides scatter - all but the big spraggonoll who started it.",
+     "fail": "The pests fight on, and the spring runs muddy.",
+     "on_success": "h2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "h2",
+     "type": "boss",
+     "name": "Grubb Bigfist",
+     "objective": "Defeat Grubb Bigfist, the spraggonoll who started it",
+     "announce": "Grubb Bigfist won't give up the spring. Bring friends.",
+     "center": [
+      700,
+      115,
+      130.0
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60166491,
+      "name": "Grubb Bigfist",
+      "level": 10,
+      "size": 70,
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 50,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60166472,
+        "name": "spraggon",
+        "level": [
+         4,
+         5
+        ]
+       }
+      ]
+     },
+     "success": "Grubb runs howling. The spring is the hills' again - for now.",
+     "fail": "Grubb holds the spring.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 16,
+      "copper_per_level": 100
+     }
+    }
+   ]
+  },
+  {
+   "id": "lough_derg_mushrooms",
+   "title": "Mushrooms for Mardagh",
+   "levels": [
+    7,
+    12
+   ],
+   "hint": "Ailbhe the alchemist is looking for help at the edge of the fae woods.",
+   "rest_s": 20,
+   "giver": {
+    "name": "Ailbhe the Alchemist",
+    "level": 12,
+    "model": 365,
+    "guild": "Alchemist of Mardagh",
+    "health_mult": 3,
+    "pos": [
+     430,
+     820,
+     122.8
+    ],
+    "greet": "Glowcaps! The fae woods are full of them this season, and I need a basketful for my brews. The fae don't like sharing. Will you pick some for me? Say when you're [ready].",
+    "accept": "ready",
+    "reply": "Bring them back to me here as you pick them - I'll count them in. And mind the little folk.",
+    "busy": "I'm still brewing the last batch. Come back a little later.",
+    "cooldown_s": 900,
+    "thanks": "Marvellous. These will make a fine brew - and here's something for your trouble."
+   },
+   "start": "s1",
+   "stages": [
+    {
+     "id": "s1",
+     "type": "gather",
+     "name": "Glowcaps for Ailbhe",
+     "objective": "Pick glowcaps in the fae woods (click them) and bring them to Ailbhe at the woods' edge",
+     "announce": "The glowcaps glimmer between the trees of the fae woods. The fae are watching.",
+     "center": [
+      300,
+      850,
+      107.2
+     ],
+     "radius": 130,
+     "time_s": 1200,
+     "kill": 15,
+     "alive": 5,
+     "node_count": 10,
+     "ambush_chance": 25,
+     "nodes": [
+      {
+       "template": 60165014,
+       "name": "glowcap",
+       "level": [
+        1,
+        1
+       ],
+       "size": 18,
+       "model": 820
+      }
+     ],
+     "mobs": [
+      {
+       "template": 30001,
+       "name": "moss sheerie",
+       "level": [
+        8,
+        10
+       ]
+      },
+      {
+       "template": 60159273,
+       "name": "cluricaun trip",
+       "level": [
+        7,
+        9
+       ]
+      },
+      {
+       "template": 60163477,
+       "name": "lunantishee",
+       "level": [
+        8,
+        9
+       ]
+      }
+     ],
+     "success": "Ailbhe's basket is full - and the fae have noticed what's missing.",
+     "fail": "The light fades and the glowcaps close up for the night.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 80
+     },
+     "deliver": true
+    },
+    {
+     "id": "s2",
+     "type": "boss",
+     "name": "The Fear Dearg",
+     "objective": "Defeat the Fear Dearg, who wants his mushrooms back",
+     "announce": "The Fear Dearg - the little red man of the woods - comes for his glowcaps. Bring friends.",
+     "center": [
+      300,
+      850,
+      107.2
+     ],
+     "radius": 80,
+     "time_s": 900,
+     "boss": {
+      "template": 60159273,
+      "name": "the Fear Dearg",
+      "level": 13,
+      "size": 60,
+      "health_mult": 2.5,
+      "guild": "Keeper of the Glowcaps"
+     },
+     "adds": {
+      "every_s": 50,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 30001,
+        "name": "moss sheerie",
+        "level": [
+         8,
+         10
+        ]
+       }
+      ]
+     },
+     "success": "The Fear Dearg vanishes with a laugh. Ailbhe gets her brew.",
+     "fail": "The Fear Dearg scatters the basket.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 110
+     }
+    }
+   ]
+  },
+  {
+   "id": "lough_derg_old_redjaw",
+   "title": "The Hunt for Old Redjaw",
+   "levels": [
+    14,
+    17
+   ],
+   "hint": "Hunters in Mag Mell talk of a huge red hound seen on the east plains...",
+   "first_delay_s": [
+    900,
+    1800
+   ],
+   "interval_s": [
+    3600,
+    5400
+   ],
+   "rest_s": 20,
+   "wake_m": 220,
+   "start": "p1",
+   "stages": [
+    {
+     "id": "p1",
+     "type": "boss",
+     "name": "Old Redjaw",
+     "objective": "Track down and kill Old Redjaw",
+     "announce": "Old Redjaw is out on the east plains - follow the tracks. He doesn't stay in one place.",
+     "center": [
+      1340,
+      740,
+      129.4
+     ],
+     "radius": 160,
+     "time_s": 1800,
+     "speed": 140,
+     "path": [
+      [
+       1250,
+       680,
+       120.4
+      ],
+      [
+       1340,
+       760,
+       130.2
+      ],
+      [
+       1430,
+       800,
+       139.5
+      ],
+      [
+       1360,
+       900,
+       135.4
+      ],
+      [
+       1280,
+       820,
+       127.4
+      ]
+     ],
+     "boss": {
+      "template": 60163148,
+      "name": "Old Redjaw",
+      "level": 18,
+      "size": 95,
+      "pos": [
+       1250,
+       680,
+       120.4
+      ],
+      "health_mult": 3
+     },
+     "adds": {
+      "every_s": 45,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60165231,
+        "name": "red wolfhound",
+        "level": [
+         13,
+         14
+        ]
+       }
+      ]
+     },
+     "success": "Old Redjaw is down. They'll be telling this one in Mag Mell for years.",
+     "fail": "Old Redjaw slips away into the woods.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 22,
+      "copper_per_level": 160
+     }
+    }
+   ]
+  },
+  {
+   "id": "lough_derg_dergan_island_assault",
+   "title": "The Taking of Dergan Island",
+   "levels": [
+    17,
+    22
+   ],
+   "manual": true,
+   "bots": 12,
+   "min_people": 8,
+   "hint": "The roane are waiting on the shore to carry a war band to Dergan Island.",
+   "rest_s": 15,
+   "start": "a1",
+   "giver": {
+    "name": "Muirne of the Roane",
+    "model": 365,
+    "level": 20,
+    "pos": [
+     1186,
+     1036,
+     116.6
+    ],
+    "guild": "the Roane",
+    "health_mult": 3,
+    "greet": "The roane will carry you over - but not a handful of you. Ruadhan has the whole island. Gather a war band here, eight at least, and when you are, tell me you're [ready to cross].",
+    "accept": "ready to cross",
+    "reply": "Into the water, all of you - hold on to us and don't let go. To the island!",
+    "busy": "We're not ready to go again yet. Rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The island is free. The roane will remember this for a hundred years.",
+    "regret": "Back to the water! We'll try again when we're stronger."
+   },
+   "guards": [
+    {
+     "template": 60161797,
+     "name": "Mag Mell guardsman",
+     "level": 18,
+     "guild": "Mag Mell Guard",
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "The Landing",
+     "objective": "Clear the beach under the siabra archers",
+     "announce": "The roane bring you up onto the north beach of Dergan Island. Arrows come down from the rocks - clear the beach!",
+     "center": [
+      1022,
+      1318,
+      124.1
+     ],
+     "radius": 45,
+     "time_s": 900,
+     "kill": 24,
+     "alive": 10,
+     "mobs": [
+      {
+       "template": 60159913,
+       "name": "dergan fury",
+       "level": [
+        18,
+        19
+       ]
+      },
+      {
+       "template": 60159913,
+       "name": "dergan sergeant",
+       "level": [
+        19,
+        20
+       ],
+       "size": 54
+      },
+      {
+       "template": 0,
+       "name": "siabra marksman",
+       "level": [
+        19,
+        20
+       ],
+       "model": 335,
+       "equipment": "8a3813aa-bace-4edd-a535-d7244e47cae2"
+      },
+      {
+       "template": 0,
+       "name": "siabra marksman",
+       "level": [
+        19,
+        20
+       ],
+       "model": 335,
+       "equipment": "8a3813aa-bace-4edd-a535-d7244e47cae2"
+      }
+     ],
+     "success": "The beach is ours. Above it, three ward-stones hum with siabra magic - the island's shield.",
+     "fail": "The war band is driven back into the water.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 110,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "a2",
+     "type": "wards",
+     "name": "The Wards",
+     "objective": "Take all three ward-stones and hold them together",
+     "announce": "Siabra keepers hold three ward-stones - west, east and south. Take all three at once: split up!",
+     "center": [
+      1025,
+      1405,
+      126.0
+     ],
+     "radius": 110,
+     "time_s": 1200,
+     "alive": 3,
+     "health_mult": 1.5,
+     "reinforce_s": 40,
+     "hold_s": 25,
+     "wards": [
+      [
+       986,
+       1380,
+       123.3
+      ],
+      [
+       1064,
+       1388,
+       121.7
+      ],
+      [
+       1046,
+       1462,
+       117.9
+      ]
+     ],
+     "ward_names": [
+      "west",
+      "east",
+      "south"
+     ],
+     "ward_radius": 20,
+     "flag": 466,
+     "flag_name": "Banner of Mag Mell",
+     "boss": {
+      "template": 30000,
+      "name": "siabra ward-keeper",
+      "level": 20,
+      "size": 55
+     },
+     "mobs": [
+      {
+       "template": 30000,
+       "name": "siabra spellweaver",
+       "level": [
+        19,
+        20
+       ]
+      },
+      {
+       "template": 60159913,
+       "name": "dergan fury",
+       "level": [
+        18,
+        19
+       ]
+      },
+      {
+       "template": 60159913,
+       "name": "dergan sergeant",
+       "level": [
+        19,
+        20
+       ],
+       "size": 54
+      }
+     ],
+     "success": "The last ward-stone cracks. The siabra shield over the island is gone - and Ruadhan knows it.",
+     "fail": "The wards hold. The war band falls back to the beach and the roane.",
+     "on_success": "a3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 140,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "a3",
+     "type": "boss",
+     "name": "Ruadhan of the Red Hand",
+     "objective": "Defeat Ruadhan, warlord of the Red Lake",
+     "announce": "Ruadhan of the Red Hand comes down from his hall with Nock and his tusslers. 'Mag Mell's dogs, on MY island?'",
+     "center": [
+      1025,
+      1400,
+      126.4
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60159917,
+      "name": "Ruadhan of the Red Hand",
+      "level": 22,
+      "size": 72,
+      "guild": "Warlord of the Red Lake"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 4,
+      "mobs": [
+       {
+        "template": 60164515,
+        "name": "Nock",
+        "level": [
+         20,
+         20
+        ]
+       },
+       {
+        "template": 60159917,
+        "name": "dergan tussler",
+        "level": [
+         19,
+         20
+        ]
+       },
+       {
+        "template": 60159917,
+        "name": "dergan champion",
+        "level": [
+         20,
+         21
+        ],
+        "size": 58
+       },
+       {
+        "template": 60159917,
+        "name": "dergan tussler",
+        "level": [
+         19,
+         20
+        ]
+       }
+      ]
+     },
+     "success": "Ruadhan falls, and the Red Hand banner with him. His warriors are still coming up from the shore!",
+     "fail": "Ruadhan holds his island. The war band breaks for the water.",
+     "on_success": "a4",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 220,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "isl200_ruadhan_s_red_hand",
+        "gold_chance": 50,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "a4",
+     "type": "defend",
+     "name": "Hold the Island",
+     "objective": "Keep the Mag Mell standard standing",
+     "announce": "Plant the standard! The last of Ruadhan's warriors are coming up from the beaches - hold!",
+     "center": [
+      1025,
+      1400,
+      126.4
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "template": 60161797,
+      "name": "Standard-Bearer Cass",
+      "level": 20,
+      "pos": [
+       1025,
+       1400,
+       126.4
+      ],
+      "health_mult": 3,
+      "guild": "Mag Mell Guard"
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 4,
+      "from": [
+       [
+        1046,
+        1470,
+        117.7
+       ],
+       [
+        990,
+        1330,
+        126.0
+       ],
+       [
+        1064,
+        1395,
+        122.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60159913,
+        "name": "dergan fury",
+        "level": [
+         18,
+         19
+        ]
+       },
+       {
+        "template": 60159913,
+        "name": "dergan sergeant",
+        "level": [
+         19,
+         20
+        ],
+        "size": 54
+       },
+       {
+        "template": 60159917,
+        "name": "dergan champion",
+        "level": [
+         20,
+         21
+        ],
+        "size": 58
+       },
+       {
+        "template": 0,
+        "name": "siabra marksman",
+        "level": [
+         19,
+         20
+        ],
+        "model": 335,
+        "equipment": "8a3813aa-bace-4edd-a535-d7244e47cae2"
+       }
+      ]
+     },
+     "thanks": "The standard stands. Dergan Island is Hibernian.",
+     "success": "The last of them break and swim for it. Dergan Island is taken!",
+     "fail": "The standard falls. The war band is driven off.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 160,
+      "tokens": 15
+     }
+    }
+   ],
+   "bot_min_level": 12
+  },
+  {
+   "id": "lough_derg_island_raid_1",
+   "title": "Raiders on the Beach",
+   "levels": [
+    17,
+    22
+   ],
+   "manual": true,
+   "bots": 10,
+   "hint": "Dergan boats are putting out from the east shore, making for the island camp...",
+   "wake_m": 160,
+   "auto_fail_s": 900,
+   "start": "r1",
+   "stages": [
+    {
+     "id": "r1",
+     "type": "defend",
+     "name": "Defend the Camp",
+     "objective": "Keep Camp-Warden Dara alive",
+     "announce": "Dergan boats are on the beaches! Keep the camp-warden alive and the camp stands.",
+     "center": [
+      1025,
+      1400,
+      126.4
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "template": 60161797,
+      "name": "Camp-Warden Dara",
+      "level": 20,
+      "pos": [
+       1025,
+       1400,
+       126.4
+      ],
+      "health_mult": 3,
+      "guild": "Mag Mell Guard"
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        1046,
+        1470,
+        117.7
+       ],
+       [
+        990,
+        1330,
+        126.0
+       ],
+       [
+        1064,
+        1395,
+        122.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60159913,
+        "name": "dergan fury",
+        "level": [
+         18,
+         19
+        ]
+       },
+       {
+        "template": 60159913,
+        "name": "dergan sergeant",
+        "level": [
+         19,
+         20
+        ],
+        "size": 54
+       },
+       {
+        "template": 0,
+        "name": "siabra marksman",
+        "level": [
+         19,
+         20
+        ],
+        "model": 335,
+        "equipment": "8a3813aa-bace-4edd-a535-d7244e47cae2"
+       }
+      ]
+     },
+     "thanks": "They're running back to their boats. Well held!",
+     "success": "The raiders break and swim for it. The camp stands.",
+     "fail": "Camp-Warden Dara falls, and the camp with her.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 120,
+      "tokens": 12
+     }
+    }
+   ],
+   "bot_min_level": 12
+  },
+  {
+   "id": "lough_derg_island_raid_2",
+   "title": "The Second Raid",
+   "levels": [
+    17,
+    22
+   ],
+   "manual": true,
+   "bots": 10,
+   "hint": "More Dergan boats this time - they mean to take the camp back...",
+   "wake_m": 160,
+   "auto_fail_s": 900,
+   "start": "r1",
+   "stages": [
+    {
+     "id": "r1",
+     "type": "defend",
+     "name": "Defend the Camp",
+     "objective": "Keep Camp-Warden Dara alive",
+     "announce": "Dergan boats are on the beaches! Keep the camp-warden alive and the camp stands.",
+     "center": [
+      1025,
+      1400,
+      126.4
+     ],
+     "radius": 70,
+     "duration_s": 210,
+     "protect": {
+      "template": 60161797,
+      "name": "Camp-Warden Dara",
+      "level": 20,
+      "pos": [
+       1025,
+       1400,
+       126.4
+      ],
+      "health_mult": 3,
+      "guild": "Mag Mell Guard"
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 4,
+      "from": [
+       [
+        1046,
+        1470,
+        117.7
+       ],
+       [
+        990,
+        1330,
+        126.0
+       ],
+       [
+        1064,
+        1395,
+        122.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60159913,
+        "name": "dergan fury",
+        "level": [
+         18,
+         19
+        ]
+       },
+       {
+        "template": 60159913,
+        "name": "dergan sergeant",
+        "level": [
+         19,
+         20
+        ],
+        "size": 54
+       },
+       {
+        "template": 0,
+        "name": "siabra marksman",
+        "level": [
+         19,
+         20
+        ],
+        "model": 335,
+        "equipment": "8a3813aa-bace-4edd-a535-d7244e47cae2"
+       },
+       {
+        "template": 60159917,
+        "name": "dergan tussler",
+        "level": [
+         19,
+         20
+        ]
+       }
+      ]
+     },
+     "thanks": "They're running back to their boats. Well held!",
+     "success": "The raiders break and swim for it. The camp stands.",
+     "fail": "Camp-Warden Dara falls, and the camp with her.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 120,
+      "tokens": 14
+     }
+    }
+   ],
+   "bot_min_level": 12
+  },
+  {
+   "id": "lough_derg_island_raid_3",
+   "title": "The Third Raid",
+   "levels": [
+    17,
+    22
+   ],
+   "manual": true,
+   "bots": 10,
+   "hint": "The lake is thick with Dergan boats. The camp's bells are ringing...",
+   "wake_m": 160,
+   "auto_fail_s": 900,
+   "start": "r1",
+   "stages": [
+    {
+     "id": "r1",
+     "type": "defend",
+     "name": "Defend the Camp",
+     "objective": "Keep Camp-Warden Dara alive",
+     "announce": "Dergan boats are on the beaches! Keep the camp-warden alive and the camp stands.",
+     "center": [
+      1025,
+      1400,
+      126.4
+     ],
+     "radius": 70,
+     "duration_s": 240,
+     "protect": {
+      "template": 60161797,
+      "name": "Camp-Warden Dara",
+      "level": 20,
+      "pos": [
+       1025,
+       1400,
+       126.4
+      ],
+      "health_mult": 3,
+      "guild": "Mag Mell Guard"
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 4,
+      "from": [
+       [
+        1046,
+        1470,
+        117.7
+       ],
+       [
+        990,
+        1330,
+        126.0
+       ],
+       [
+        1064,
+        1395,
+        122.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60159913,
+        "name": "dergan fury",
+        "level": [
+         18,
+         19
+        ]
+       },
+       {
+        "template": 60159913,
+        "name": "dergan sergeant",
+        "level": [
+         19,
+         20
+        ],
+        "size": 54
+       },
+       {
+        "template": 0,
+        "name": "siabra marksman",
+        "level": [
+         19,
+         20
+        ],
+        "model": 335,
+        "equipment": "8a3813aa-bace-4edd-a535-d7244e47cae2"
+       },
+       {
+        "template": 60159917,
+        "name": "dergan tussler",
+        "level": [
+         19,
+         20
+        ]
+       },
+       {
+        "template": 60159917,
+        "name": "dergan champion",
+        "level": [
+         20,
+         21
+        ],
+        "size": 58
+       }
+      ]
+     },
+     "thanks": "They're running back to their boats. Well held!",
+     "success": "The raiders break and swim for it. The camp stands.",
+     "fail": "Camp-Warden Dara falls, and the camp with her.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 18,
+      "copper_per_level": 120,
+      "tokens": 16
+     }
+    }
+   ],
+   "bot_min_level": 12
+  },
+  {
+   "id": "lough_derg_island_last_stand",
+   "title": "Ruadhan Returns",
+   "levels": [
+    18,
+    23
+   ],
+   "manual": true,
+   "bots": 12,
+   "hint": "A red sail on the lake: Ruadhan has come back for his island, with every Dergan he could find.",
+   "wake_m": 160,
+   "auto_fail_s": 900,
+   "start": "l1",
+   "stages": [
+    {
+     "id": "l1",
+     "type": "defend",
+     "name": "The Red Tide",
+     "objective": "Keep Camp-Warden Dara alive against the whole Dergan host",
+     "announce": "They come from every beach at once. Hold the camp!",
+     "center": [
+      1025,
+      1400,
+      126.4
+     ],
+     "radius": 70,
+     "duration_s": 240,
+     "protect": {
+      "template": 60161797,
+      "name": "Camp-Warden Dara",
+      "level": 21,
+      "pos": [
+       1025,
+       1400,
+       126.4
+      ],
+      "health_mult": 3,
+      "guild": "Mag Mell Guard"
+     },
+     "waves": {
+      "every_s": 20,
+      "count": 5,
+      "from": [
+       [
+        1046,
+        1470,
+        117.7
+       ],
+       [
+        990,
+        1330,
+        126.0
+       ],
+       [
+        1064,
+        1395,
+        122.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60159913,
+        "name": "dergan fury",
+        "level": [
+         18,
+         19
+        ]
+       },
+       {
+        "template": 60159913,
+        "name": "dergan sergeant",
+        "level": [
+         19,
+         20
+        ],
+        "size": 54
+       },
+       {
+        "template": 0,
+        "name": "siabra marksman",
+        "level": [
+         19,
+         20
+        ],
+        "model": 335,
+        "equipment": "8a3813aa-bace-4edd-a535-d7244e47cae2"
+       },
+       {
+        "template": 60159917,
+        "name": "dergan tussler",
+        "level": [
+         19,
+         20
+        ]
+       },
+       {
+        "template": 60159917,
+        "name": "dergan champion",
+        "level": [
+         20,
+         21
+        ],
+        "size": 58
+       }
+      ]
+     },
+     "success": "The first tide breaks - and Ruadhan himself wades ashore.",
+     "fail": "The camp is overrun.",
+     "on_success": "l2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 140,
+      "tokens": 16
+     }
+    },
+    {
+     "id": "l2",
+     "type": "boss",
+     "name": "Ruadhan Returned",
+     "objective": "Defeat Ruadhan again",
+     "announce": "'You took my island. I've come to take it back.' Ruadhan of the Red Hand, with his whole host behind him.",
+     "center": [
+      1025,
+      1400,
+      126.4
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60159917,
+      "name": "Ruadhan of the Red Hand",
+      "level": 23,
+      "size": 75,
+      "guild": "Warlord of the Red Lake"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 5,
+      "mobs": [
+       {
+        "template": 60164515,
+        "name": "Nock",
+        "level": [
+         20,
+         20
+        ]
+       },
+       {
+        "template": 60159917,
+        "name": "dergan tussler",
+        "level": [
+         19,
+         20
+        ]
+       },
+       {
+        "template": 60159917,
+        "name": "dergan champion",
+        "level": [
+         20,
+         21
+        ],
+        "size": 58
+       },
+       {
+        "template": 60159913,
+        "name": "dergan sergeant",
+        "level": [
+         19,
+         20
+        ],
+        "size": 54
+       }
+      ]
+     },
+     "success": "Ruadhan falls again. The island holds - for now.",
+     "fail": "Ruadhan stands over the camp. Dergan Island is lost.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 220,
+      "tokens": 25,
+      "items": [
+       {
+        "id": "isl200_ruadhan_s_red_hand",
+        "gold_chance": 40,
+        "silver_chance": 15
+       }
+      ]
+     }
+    }
+   ],
+   "bot_min_level": 12
+  }
+ ],
+ "siege": {
+  "id": "dergan_island",
+  "name": "Dergan Island",
+  "enemy": "the Dergans",
+  "resolve_name": "Hibernian resolve",
+  "enemy_name": "Dergan strength",
+  "faction": "mag_mell_guard",
+  "feeds": {
+   "lough_derg_summoners_muster": 15,
+   "lough_derg_ghostly_siabra": 15,
+   "lough_derg_dergan_war_bands": 25,
+   "lough_derg_curmudgeon_harvest": 10,
+   "lough_derg_old_redjaw": 10
+  },
+  "feed_default": 5,
+  "quests": {
+   "what_the_roane_saw": 10,
+   "orders_from_the_outpost": 10,
+   "the_roane_captives": 20,
+   "the_war_camp": 10
+  },
+  "enemy_feeds": {
+   "lough_derg_dergan_war_bands": 20
+  },
+  "enemy_default": 5,
+  "war_chain": "lough_derg_dergan_war_bands",
+  "assault": "lough_derg_dergan_island_assault",
+  "raids": [
+   "lough_derg_island_raid_1",
+   "lough_derg_island_raid_2",
+   "lough_derg_island_raid_3"
+  ],
+  "last_raid": "lough_derg_island_last_stand",
+  "hold_h": 3,
+  "raid_gap_h": [
+   2,
+   1.5,
+   1,
+   1
+  ],
+  "criers": [
+   "lir",
+   "cara",
+   "orlaith"
+  ],
+  "open_text": "Hear me! Hibernian resolve is high - Ruadhan's island can be taken! Muirne of the roane waits on the east shore, by Ronan of the Roane, to carry a war band across. If no one leads them within the hour, the war band will go without you.",
+  "taken_text": "Dergan Island is ours! The roane and the Guard are making camp on it - go and see.",
+  "repelled_text": "The assault on Dergan Island has been thrown back. The Dergans grow bolder.",
+  "raid_text": "Dergan raiders are making for the island camp!",
+  "held_text": "The Dergans' raid on the island is beaten off. The camp stands.",
+  "fall_text": "Dergan Island has fallen. The camp is gone, Ruadhan's warriors hold it again - and Mag Mell must rebuild its resolve.",
+  "hostile_tier": "yellow",
+  "sites": [
+   "dergan_island",
+   "dergan_island_south",
+   "island_sergeants_south",
+   "island_sergeants_mid",
+   "island_edge"
+  ],
+  "staging": [
+   1186,
+   1036,
+   116.6
+  ],
+  "landing": [
+   1021,
+   1309,
+   122.2
+  ],
+  "camp_npcs": [
+   {
+    "kind": "marks",
+    "name": "Quartermaster Eoghan",
+    "model": 337,
+    "level": 22,
+    "pos": [
+     1015,
+     1392,
+     126.3
+    ],
+    "guild": "Mag Mell Guard",
+    "greet": "Island-only stock, for those who took it and those who hold it. The Guard looks after its own.",
+    "stock": [
+     {
+      "item": "isl200_cloak_of_the_taken_isle",
+      "price": 60
+     },
+     {
+      "item": "isl200_lakewarden_s_bracer",
+      "price": 40
+     },
+     {
+      "item": "isl200_shore_fort_torc",
+      "price": 40
+     },
+     {
+      "item": "tw_strong_draught_of_healing",
+      "price": 2
+     },
+     {
+      "item": "tw_strong_draught_of_power",
+      "price": 2
+     },
+     {
+      "item": "tw_strong_draught_of_endurance",
+      "price": 2
+     }
+    ]
+   },
+   {
+    "kind": "marks",
+    "name": "Ronnat the Sealwife",
+    "model": 365,
+    "level": 18,
+    "pos": [
+     1035,
+     1392,
+     126.3
+    ],
+    "guild": "the Roane",
+    "greet": "Roane-made, every piece. We don't sell to just anyone - but you're not just anyone, not now.",
+    "stock": [
+     {
+      "item": "isl200_sealskin_mantle",
+      "price": 50
+     },
+     {
+      "item": "isl200_roane_pearl_necklace",
+      "price": 40
+     },
+     {
+      "item": "isl200_selkie_song_ring",
+      "price": 40
+     },
+     {
+      "item": "isl200_tide_woven_belt",
+      "price": 40
+     }
+    ]
+   },
+   {
+    "kind": "coin",
+    "name": "Alchemist Saoirse",
+    "model": 365,
+    "level": 20,
+    "pos": [
+     1025,
+     1410,
+     126.0
+    ],
+    "guild": "of Mardagh",
+    "greet": "Glowcap, mere-dew, fae-fire. Mardagh's best, brought all the way out here for you. Coin, mind - not marks.",
+    "stock": [
+     {
+      "item": "isl200_glowcap_draught"
+     },
+     {
+      "item": "isl200_mere_dew_tonic"
+     },
+     {
+      "item": "isl200_fae_fire_cordial"
+     },
+     {
+      "item": "isl200_red_lake_elixir"
+     },
+     {
+      "item": "isl200_blackthorn_brew"
+     }
+    ]
+   },
+   {
+    "kind": "idle",
+    "name": "Sergeant Niall",
+    "template": 60161797,
+    "level": 20,
+    "pos": [
+     1010,
+     1402,
+     125.4
+    ],
+    "guild": "Mag Mell Guard",
+    "greet": "Captain Lir sent us to hold this camp. The Dergans will be back - when they come, Camp-Warden Dara will need every blade.",
+    "idle": "Keep an eye on the water. They always come by boat, and they always come at the worst time."
+   },
+   {
+    "kind": "idle",
+    "name": "Mag Mell guardsman",
+    "template": 60161797,
+    "level": 18,
+    "pos": [
+     1040,
+     1404,
+     126.4
+    ],
+    "guild": "Mag Mell Guard",
+    "count": 3,
+    "idle": "First time I've slept on this island without one eye open."
+   },
+   {
+    "kind": "ferry",
+    "name": "Roane ferryman",
+    "model": 365,
+    "level": 14,
+    "pos": [
+     1022,
+     1312,
+     123.1
+    ],
+    "guild": "the Roane",
+    "greet": "Back to the shore?",
+    "to": [
+     1186,
+     1036,
+     116.6
+    ]
+   },
+   {
+    "kind": "ferry",
+    "name": "Roane ferrywoman",
+    "model": 365,
+    "level": 14,
+    "pos": [
+     1190,
+     1042,
+     117.1
+    ],
+    "guild": "the Roane",
+    "greet": "The island camp? Hold on to me.",
+    "to": [
+     1022,
+     1316,
+     123.5
+    ]
+   }
+  ],
+  "holdouts": [
+   {
+    "kind": "holdout",
+    "name": "dergan holdout",
+    "template": 60159913,
+    "level": 19,
+    "pos": [
+     1046,
+     1462,
+     117.9
+    ],
+    "count": 4,
+    "tier": "yellow",
+    "respawn_s": 300
+   },
+   {
+    "kind": "holdout",
+    "name": "siabra holdout",
+    "template": 30000,
+    "level": 19,
+    "pos": [
+     1060,
+     1430,
+     118.3
+    ],
+    "count": 3,
+    "tier": "yellow",
+    "respawn_s": 300
+   },
+   {
+    "kind": "holdout",
+    "name": "Holdout Captain Bres",
+    "template": 60159917,
+    "level": 21,
+    "pos": [
+     1050,
+     1470,
+     118.1
+    ],
+    "count": 1,
+    "tier": "red",
+    "respawn_s": 900
+   }
+  ],
+  "area": [
+   1030,
+   1400,
+   140
+  ],
+  "bots_go_after_m": 45
+ }
 }

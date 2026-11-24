@@ -84,6 +84,7 @@ func setup(z: ZoneLoader, follow: Node3D) -> bool:
 ## The grass reach / density changed: the fade follows the reach (48 / 70 m at 72), the tufts are planted again.
 func apply_settings() -> void:
 	_set_fade()
+	_job = {}
 	for c in _chunks.keys():
 		_chunks[c].queue_free()
 	_chunks.clear()
@@ -112,21 +113,57 @@ func _process_timed(_delta: float) -> void:
 	var centre := Vector2i(floori(p.x / CHUNK_M), floori(p.z / CHUNK_M))
 	var reach := ceili(radius_m / CHUNK_M)
 	var wanted := {}
+	var here := Vector2(p.x, p.z)
+	var nearest := Vector2i.MAX
+	var nearest_d := INF
 	for dz in range(-reach, reach + 1):
 		for dx in range(-reach, reach + 1):
 			var c := centre + Vector2i(dx, dz)
 			var mid := Vector2((c.x + 0.5) * CHUNK_M, (c.y + 0.5) * CHUNK_M)
-			if mid.distance_to(Vector2(p.x, p.z)) < radius_m + CHUNK_M * 0.71:
+			var d := mid.distance_to(here)
+			if d < radius_m + CHUNK_M * 0.71:
 				wanted[c] = true
+				if not _chunks.has(c) and d < nearest_d:
+					nearest_d = d
+					nearest = c
 	for c in _chunks.keys():
 		if not wanted.has(c):
 			_chunks[c].queue_free()
 			_chunks.erase(c)
-	var built := 0
-	for c in wanted:
-		if not _chunks.has(c) and built < 2:           # spread the work over frames
-			_chunks[c] = _build_chunk(c)
-			built += 1
+	if not _job.is_empty() and not wanted.has(_job.c):
+		_job = {}                                      # (walked away from it before it was done)
+	# Planting is spread over frames within a time budget, nearest chunk first, a cell at a time (2026-11-21: building a
+	# whole chunk or two in one frame cost 12-20 ms a frame for seconds at a time as you walked into new ground)
+	var deadline := Time.get_ticks_usec() + BUDGET_US
+	while Time.get_ticks_usec() < deadline:
+		if _job.is_empty():
+			if nearest == Vector2i.MAX:
+				return
+			_job = _start_job(nearest)
+			nearest = Vector2i.MAX                     # (one new chunk a frame at most)
+		if _step_job(_job, deadline):
+			_chunks[_job.c] = _finish_job(_job)
+			_job = {}
+
+
+## One chunk being planted: the cells done so far, its vertices so far.
+const BUDGET_US := 2500
+var _job := {}
+# its vertices so far (members, not in the dictionary: a packed array there is copied on every write)
+var _jv := PackedVector3Array()
+var _juv := PackedVector2Array()
+var _juv2 := PackedVector2Array()
+var _jcol := PackedColorArray()
+var _jn := PackedVector3Array()
+
+
+func _start_job(c: Vector2i) -> Dictionary:
+	_jv = PackedVector3Array()
+	_juv = PackedVector2Array()
+	_juv2 = PackedVector2Array()
+	_jcol = PackedColorArray()
+	_jn = PackedVector3Array()
+	return {"c": c, "cell": 0, "count": 0}
 
 
 func _cell_value(img: Image, x: float, z: float) -> int:
@@ -136,39 +173,57 @@ func _cell_value(img: Image, x: float, z: float) -> int:
 	return roundi(img.get_pixel(px, pz).r * 255.0)
 
 
-func _build_chunk(c: Vector2i) -> MeshInstance3D:
-	var st := SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+## Plants the job's next cells until the deadline; true once its last cell is in. (Each cell has its own seeded random
+## numbers, so a tuft grows where it always did, however the work is split.)
+func _step_job(job: Dictionary, deadline: int) -> bool:
 	var cell_m := float(zone.info.cell_m)              # 6.4 m: one grassmap / densemap cell
+	var cells := int(CHUNK_M / cell_m)
+	var c: Vector2i = job.c
 	var x0 := c.x * CHUNK_M
 	var z0 := c.y * CHUNK_M
-	var cells := int(CHUNK_M / cell_m)
-	var count := 0
-	for cz in cells:
-		for cx in cells:
-			var wx := x0 + (cx + 0.5) * cell_m
-			var wz := z0 + (cz + 0.5) * cell_m
-			if wx < 0 or wz < 0 or wx >= zone.info.size_m or wz >= zone.info.size_m:
-				continue
-			var density := _cell_value(_dense, wx, wz) / 255.0
-			var group := _cell_value(_grass, wx, wz) / 10
-			if density <= 0.0 or not _groups.has(group):
-				continue
-			var rng := RandomNumberGenerator.new()
-			rng.seed = hash(Vector2i(int(wx / cell_m), int(wz / cell_m)))
-			var n := int(round(density * MAX_PER_CELL * density_mult * rng.randf_range(0.7, 1.3)))
-			for k in n:
-				var x := wx + rng.randf_range(-0.5, 0.5) * cell_m
-				var z := wz + rng.randf_range(-0.5, 0.5) * cell_m
-				var y := zone.height_at(x, z)
-				if y < zone.water_level_at(x, z) - 0.3 and group != 5:
-					continue                               # only the underwater group grows below the surface
-				_add_tuft(st, _pick(group, rng), Vector3(x, y, z), rng)
-				count += 1
+	while int(job.cell) < cells * cells:
+		var i := int(job.cell)
+		job.cell = i + 1
+		var cx := i % cells
+		var cz := i / cells
+		var wx := x0 + (cx + 0.5) * cell_m
+		var wz := z0 + (cz + 0.5) * cell_m
+		if wx < 0 or wz < 0 or wx >= zone.info.size_m or wz >= zone.info.size_m:
+			continue
+		var density := _cell_value(_dense, wx, wz) / 255.0
+		var group := _cell_value(_grass, wx, wz) / 10
+		if density <= 0.0 or not _groups.has(group):
+			continue
+		var rng := RandomNumberGenerator.new()
+		rng.seed = hash(Vector2i(int(wx / cell_m), int(wz / cell_m)))
+		var n := int(round(density * MAX_PER_CELL * density_mult * rng.randf_range(0.7, 1.3)))
+		for k in n:
+			var x := wx + rng.randf_range(-0.5, 0.5) * cell_m
+			var z := wz + rng.randf_range(-0.5, 0.5) * cell_m
+			var y := zone.height_at(x, z)
+			if y < zone.water_level_at(x, z) - 0.3 and group != 5:
+				continue                               # only the underwater group grows below the surface
+			_add_tuft(job, _pick(group, rng), Vector3(x, y, z), rng)
+			job.count = int(job.count) + 1
+		if Time.get_ticks_usec() >= deadline:
+			return int(job.cell) >= cells * cells
+	return true
+
+
+func _finish_job(job: Dictionary) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	if count > 0:
-		mi.mesh = st.commit()
+	if int(job.count) > 0:
+		var arrays := []
+		arrays.resize(Mesh.ARRAY_MAX)
+		arrays[Mesh.ARRAY_VERTEX] = _jv
+		arrays[Mesh.ARRAY_NORMAL] = _jn
+		arrays[Mesh.ARRAY_COLOR] = _jcol
+		arrays[Mesh.ARRAY_TEX_UV] = _juv
+		arrays[Mesh.ARRAY_TEX_UV2] = _juv2
+		var mesh := ArrayMesh.new()
+		mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+		mi.mesh = mesh
 		mi.material_override = _material
 	add_child(mi)
 	return mi
@@ -183,7 +238,7 @@ func _pick(group: int, rng: RandomNumberGenerator) -> Dictionary:
 	return g.items[-1][0]
 
 
-func _add_tuft(st: SurfaceTool, item: Dictionary, pos: Vector3, rng: RandomNumberGenerator) -> void:
+func _add_tuft(st: Dictionary, item: Dictionary, pos: Vector3, rng: RandomNumberGenerator) -> void:
 	var s := 1.0 + rng.randf_range(-1.0, 1.0) * float(item.d_scale)
 	var h := (float(item.height) + rng.randf() * float(item.d_height)) * s
 	var l := (float(item.length) + rng.randf() * float(item.d_length)) * s
@@ -212,14 +267,12 @@ func _add_tuft(st: SurfaceTool, item: Dictionary, pos: Vector3, rng: RandomNumbe
 		_quad(st, pos - side, pos + side, pos + side + top, pos - side + top, u0, u1, v1, v0, tint, true)
 
 
-func _quad(st: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, d: Vector3, u0: float, u1: float, vb: float, vt: float,
+func _quad(_st: Dictionary, a: Vector3, b: Vector3, c: Vector3, d: Vector3, u0: float, u1: float, vb: float, vt: float,
 		tint: Color, upright: bool) -> void:
-	var verts := [a, b, c, a, c, d]
-	var uvs := [Vector2(u0, vb), Vector2(u1, vb), Vector2(u1, vt), Vector2(u0, vb), Vector2(u1, vt), Vector2(u0, vt)]
-	var top := [0.0, 0.0, 1.0, 0.0, 1.0, 1.0]
+	_jv.append_array(PackedVector3Array([a, b, c, a, c, d]))
+	_juv.append_array(PackedVector2Array([Vector2(u0, vb), Vector2(u1, vb), Vector2(u1, vt), Vector2(u0, vb), Vector2(u1, vt), Vector2(u0, vt)]))
+	var up := 1.0 if upright else 0.0
+	_juv2.append_array(PackedVector2Array([Vector2.ZERO, Vector2.ZERO, Vector2(up, 0), Vector2.ZERO, Vector2(up, 0), Vector2(up, 0)]))
 	for i in 6:
-		st.set_color(tint)
-		st.set_uv(uvs[i])
-		st.set_uv2(Vector2(top[i] if upright else 0.0, 0.0))
-		st.set_normal(Vector3.UP)
-		st.add_vertex(verts[i])
+		_jcol.append(tint)
+		_jn.append(Vector3.UP)

@@ -59,6 +59,7 @@ var _taps := {}
 var _dodge_ready_at := 0
 var _ready := "0000"
 var _counter_cost := 0                   # a caster with a staff: the held attack is the staff counter (its power cost; 0 = none)
+var _kstyle_at := -1                       # the keyboard's style button went down (ms; -1 up)
 var _has_anytime := false                 # an anytime style has lit this session (a held attack is then a charge)
 var _timer_until := 0
 var _style_at := 0                       # when the power attack can go (the server's timer: about 1 s after the last blow)
@@ -136,6 +137,17 @@ func setup(v: Node) -> void:
 	hud.gui_input.connect(_hud_input)
 	_layer.add_child(hud)
 	hud.visible = false
+	# the hazard warnings and the hard-hit flash: their own layer, shown whether action combat is on or not (a cone or a
+	# slam hits everyone standing in it)
+	_alert_layer = CanvasLayer.new()
+	_alert_layer.layer = 6
+	add_child(_alert_layer)
+	_alert = Control.new()
+	_alert.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_alert.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_alert.draw.connect(_draw_alert)
+	_alert_layer.add_child(_alert)
+	_prefetch_area_art()
 	_load_layout()
 	Server.client_cfg_changed.connect(_server_cfg)
 	Pad.attach(self, v)                                  # a gamepad plays action combat too (Pad)
@@ -200,6 +212,9 @@ func on_line(text: String) -> void:
 		"cone":                                          # cone|oid|radius|arc|ms|heading: a sweep in front of it (MonsterMoves.Cone)
 			if f.size() > 5:
 				_cone(int(f[1]), int(f[2]), int(f[3]), int(f[4]), int(f[5]))
+		"struck":                                        # struck|kind|amount|oid: a monster's special landed on you (MonsterMoves.Struck)
+			if f.size() > 2:
+				_struck(String(f[1]), int(f[2]), int(f[3]) if f.size() > 3 else 0)
 		"sweep":                                         # sweep|reach|arc: your cleave (StyleRework) - its arc flashes
 			if f.size() > 2:
 				_sweep(int(f[1]), int(f[2]))
@@ -529,87 +544,430 @@ var _grounds: Array = []                 # [{oid, node, start, end}] slams' circ
 var _guards := {}                        # oid -> {kind, until, next}: monsters holding their guard up
 
 
-## A slam's circle on the ground around the monster, filling up until it lands (MonsterMoves.Slam): get out of it.
+# ---------------------------------------------------------------- a monster's cone and slam: on the ground, on screen
+## (owner 2026-11-22: "The cone attacks come out a bit too fast to sidestep, and their art gets hidden in the ground. I'd
+## prefer that we use some sort of in-game effect to show where the area is going to come out if we can, maybe paired
+## with a different looking UI element.") The marking is a decal: it lies on the slope, the rocks and the floor, where
+## the old flat plate sank into a hillside. Its striped outline from the start, a brighter fill growing out from the
+## monster as it winds up - when the fill reaches the edge it lands - then a flash (and for a slam a shock ring and
+## dust) as it comes out. Standing in one puts a hazard sign at the top of the screen with the time left and an arrow
+## the quickest way out, and the screen's edge glows (_draw_alert). A rumble under a slam, a beast's cry before a sweep.
+const AREA_COLOR := {"c": Color(1.0, 0.5, 0.1), "g": Color(1.0, 0.18, 0.08)}
+const AREA_REACH := 40                   # units past the radius the server still catches (MonsterMoves.Area)
+const DECAL_DEPTH := 7.0                 # metres the marking reaches up and down the ground from the monster's feet
+const CONE_ARC := 100                    # MonsterMoves.ConeArc (its art is made ahead)
+static var _area_tex := {}               # "disc" / "disc_fill" / "wedge<arc>" / "wedge<arc>_fill" / "shock" -> Texture2D
+static var _glow_tex: Texture2D
+var _alert_layer: CanvasLayer
+var _alert: Control
+var _alert_drawn := false
+var _struck_kind := ""
+var _struck_at := -100000
+
+
+## A slam's circle around the monster (MonsterMoves.Slam): get out of it.
 func _ground(oid: int, radius: int, ms: int) -> void:
+	_area(oid, "g", radius, 360, ms, 0.0)
+
+
+## A cone in front of the monster, as it faced when it wound up (MonsterMoves.Cone): strafe out of it, or a timed dodge.
+## Small on purpose (owner 2026-11-19: "small frontal cones make melee players strafe").
+func _cone(oid: int, radius: int, arc: int, ms: int, heading: int) -> void:
+	_area(oid, "c", radius, arc, ms, Server.yaw_of(heading))
+
+
+func _area(oid: int, kind: String, radius: int, arc: int, ms: int, yaw: float) -> void:
 	var n := _view(oid)
 	if n == null:
 		return
 	var now := Time.get_ticks_msec()
-	var r := radius * 0.025
+	var r := (radius + AREA_REACH) * 0.025
+	var col: Color = AREA_COLOR.get(kind, AREA_COLOR.c)
+	var shape := "disc" if kind == "g" else "wedge%d" % arc
 	var root := Node3D.new()
-	var mat := StandardMaterial3D.new()
-	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.albedo_color = Color(1.0, 0.15, 0.1, 0.13)
-	mat.no_depth_test = false
-	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	var outer := MeshInstance3D.new()
-	var om := CylinderMesh.new()
-	om.top_radius = r
-	om.bottom_radius = r
-	om.height = 0.05
-	om.radial_segments = 48
-	outer.mesh = om
-	outer.material_override = mat
-	root.add_child(outer)
-	var fill := MeshInstance3D.new()
-	var fm := CylinderMesh.new()
-	fm.top_radius = r
-	fm.bottom_radius = r
-	fm.height = 0.06
-	fm.radial_segments = 48
-	fill.mesh = fm
-	var mat2 := mat.duplicate() as StandardMaterial3D
-	mat2.albedo_color = Color(1.0, 0.3, 0.1, 0.25)
-	fill.material_override = mat2
-	fill.scale = Vector3(0.01, 1, 0.01)
+	var outline := _area_decal(_area_texture(shape, arc), r, col, 0.85, 1.6)
+	outline.name = "Outline"
+	root.add_child(outline)
+	var fill := _area_decal(_area_texture(shape + "_fill", arc), r, col, 0.35, 2.4)
 	fill.name = "Fill"
+	fill.scale = Vector3(0.02, 1, 0.02)
 	root.add_child(fill)
 	get_tree().current_scene.add_child(root)
-	root.global_position = n.global_position + Vector3(0, 0.08, 0)
-	_grounds.append({"oid": oid, "node": root, "start": now, "end": now + ms})
+	root.global_position = n.global_position
+	root.rotation.y = yaw
+	_grounds.append({"oid": oid, "node": root, "start": now, "end": now + ms, "kind": kind, "r": r, "yaw": yaw,
+			"half": deg_to_rad(arc) * 0.5, "landed": false})
+	var snd := _sounds_at(n)
+	if snd:
+		if kind == "g":
+			snd.play_structure("s_earth_rumble0%d" % (1 + randi() % 6))
+		else:
+			snd.event("attack")
 	if viewer and viewer.has_method("note_combat"):
 		viewer.note_combat()
 
 
-## A cone's wedge on the ground in front of the monster, as it faced when it wound up, filling until it lands: strafe
-## out of it (or a timed dodge). Small on purpose (owner 2026-11-19: "small frontal cones make melee players strafe").
-func _cone(oid: int, radius: int, arc: int, ms: int, heading: int) -> void:
-	var n := _view(oid)
-	if n == null:
+func _area_decal(tex: Texture2D, r: float, col: Color, mix: float, energy: float) -> Decal:
+	var d := Decal.new()
+	d.size = Vector3(r * 2.0 / 0.96, DECAL_DEPTH, r * 2.0 / 0.96)   # (the art's edge at 0.96 of the box)
+	d.texture_albedo = tex
+	d.texture_emission = tex
+	d.albedo_mix = mix
+	d.modulate = col
+	d.emission_energy = energy
+	d.normal_fade = 0.45                               # (the ground and its slopes, not the sides of characters)
+	d.upper_fade = 0.15
+	d.lower_fade = 0.15
+	d.cull_mask = 1
+	return d
+
+
+## The cone's or slam's last moment: it comes out where it was marked.
+func _area_lands(g: Dictionary, n: Npc) -> void:
+	var node: Node3D = g.node
+	var kind := String(g.kind)
+	var col: Color = AREA_COLOR.get(kind, AREA_COLOR.c)
+	var fill := node.get_node_or_null("Fill") as Decal
+	var outline := node.get_node_or_null("Outline") as Decal
+	var tw := node.create_tween().set_parallel(true)
+	for d in [fill, outline]:
+		if d:
+			(d as Decal).scale = Vector3.ONE
+			(d as Decal).emission_energy = 6.0
+			tw.tween_property(d, "emission_energy", 0.0, 0.5).set_ease(Tween.EASE_OUT)
+			tw.tween_property(d, "modulate:a", 0.0, 0.5)
+	if kind == "g":
+		var shock := _area_decal(_area_texture("shock", 360), float(g.r), Color(1.0, 0.75, 0.45), 0.0, 7.0)
+		node.add_child(shock)
+		shock.scale = Vector3(0.25, 1, 0.25)
+		tw.tween_property(shock, "scale", Vector3(1.15, 1, 1.15), 0.35).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+		tw.tween_property(shock, "emission_energy", 0.0, 0.55)
+		_burst(node.global_position + Vector3(0, 0.2, 0), Color(0.75, 0.6, 0.45), 1.0, float(g.r) * 0.85)
+	else:
+		_burst(node.global_position + Vector3(sin(float(g.yaw)), 0, cos(float(g.yaw))) * float(g.r) * 0.5 + Vector3(0, 0.4, 0), col, 0.6)
+	var snd := _sounds_at(n)
+	if snd:
+		snd.play_structure("spell_earthhit" if kind == "g" else "s_shield_impactmedium0%d" % (1 + randi() % 4))
+	var p := _player()
+	if p and kind == "g" and p.global_position.distance_to(node.global_position) < float(g.r) * 2.5:
+		p.cam_shake = maxf(p.cam_shake, 0.008)            # (the ground shakes under you, hit or not)
+
+
+func _sounds_at(n: Npc) -> CharacterSounds:
+	if n and is_instance_valid(n) and n.sounds:
+		return n.sounds
+	var p := _player()
+	return p.sounds if p else null
+
+
+## Standing where it will land (as the server works it out: the slam's circle, the cone's arc from where the monster
+## stands - a little slack, better warned than not).
+func _inside(p: Node3D, g: Dictionary) -> bool:
+	var node: Node3D = g.node
+	if not is_instance_valid(node) or bool(g.landed):
+		return false
+	var d := p.global_position - node.global_position
+	var d2 := Vector2(d.x, d.z)
+	if d2.length() > float(g.r) + 0.4:
+		return false
+	if String(g.kind) == "g" or d2.length() < 0.5:
+		return true
+	var f := Vector2(sin(float(g.yaw)), cos(float(g.yaw)))
+	return absf(f.angle_to(d2)) <= float(g.half) + 0.06
+
+
+## The quickest way out, on screen (up: the way the camera looks): a slam's straight out from the monster, a cone's to
+## the side you are already on.
+func _way_out(p: Player, g: Dictionary) -> Vector2:
+	var node: Node3D = g.node
+	var d := p.global_position - node.global_position
+	var d2 := Vector2(d.x, d.z)
+	var w := Vector2.ZERO
+	if String(g.kind) == "g":
+		w = d2.normalized() if d2.length() > 0.2 else Vector2.ZERO
+	else:
+		var yaw := float(g.yaw)
+		var side := Vector2(cos(yaw), -sin(yaw))          # (square to the way it faces)
+		w = side if d2.dot(side) >= 0.0 else -side
+	if w == Vector2.ZERO or p.camera == null:
+		return Vector2.ZERO
+	var f3 := -p.camera.global_basis.z
+	var r3 := p.camera.global_basis.x
+	var fwd := Vector2(f3.x, f3.z).normalized()
+	var right := Vector2(r3.x, r3.z).normalized()
+	return Vector2(w.dot(right), -w.dot(fwd))
+
+
+## A monster's special landed on you (MonsterMoves.Struck; owner 2026-11-22: "make sure any new attacks like that have a
+## powerful seeming in-game effect and/or sound so you know you got hit with something hard"): the view shakes and
+## snaps back, the screen's edge flashes red, a burst where it hit, a hard thud and your cry - by how hard it was.
+## [strength, word on screen, colour] by MonsterMoves.Code.
+const STRUCK := {"s": [0.35, "", Color(1.0, 0.75, 0.3)], "p": [0.55, "FLANKED!", Color(1.0, 0.4, 0.85)],
+		"h": [0.8, "HEAVY BLOW!", Color(1.0, 0.45, 0.15)], "c": [0.85, "SWEPT!", Color(1.0, 0.5, 0.1)],
+		"g": [1.0, "SLAMMED!", Color(1.0, 0.2, 0.08)]}
+
+
+func _struck(kind: String, _amount: int, _oid: int) -> void:
+	if not STRUCK.has(kind):
+		return
+	var spec: Array = STRUCK[kind]
+	var k := float(spec[0])
+	_struck_kind = kind
+	_struck_at = Time.get_ticks_msec()
+	var p := _player()
+	if p == null:
+		return
+	p.cam_shake = maxf(p.cam_shake, 0.006 + 0.022 * k)
+	p.cam_kick = 0.02 + 0.035 * k                        # (the head snaps back)
+	if p.sounds:
+		p.sounds.event("pain_heavy" if k >= 0.75 else "pain_medium")
+		p.sounds.play_structure("spell_earthhit" if kind == "g" else "s_shield_impactmedium0%d" % (1 + randi() % 4))
+	var col: Color = spec[2]
+	_burst(p.global_position + Vector3(0, 1.2, 0), col, k)
+	_impact_flash(p, col, k)
+
+
+## A burst of sparks (or, with a ring, dust thrown up around it) that falls away.
+func _burst(at: Vector3, col: Color, k: float, ring := 0.0) -> void:
+	var scene := get_tree().current_scene
+	if scene == null:
+		return
+	var parts := GPUParticles3D.new()
+	parts.amount = int(16 + (40 if ring > 0.0 else 26) * k)
+	parts.one_shot = true
+	parts.explosiveness = 0.92
+	parts.lifetime = 0.8
+	parts.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	var pm := ParticleProcessMaterial.new()
+	if ring > 0.0:
+		pm.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_RING
+		pm.emission_ring_axis = Vector3.UP
+		pm.emission_ring_radius = ring
+		pm.emission_ring_inner_radius = ring * 0.25
+		pm.emission_ring_height = 0.1
+	pm.direction = Vector3(0, 1, 0)
+	pm.spread = 55.0 if ring > 0.0 else 80.0
+	pm.initial_velocity_min = 1.5 + 2.0 * k
+	pm.initial_velocity_max = 3.5 + 4.0 * k
+	pm.gravity = Vector3(0, -7.0, 0)
+	pm.damping_min = 1.0
+	pm.damping_max = 2.5
+	pm.scale_min = 0.6
+	pm.scale_max = 1.5
+	var gr := Gradient.new()
+	gr.set_color(0, Color(minf(col.r * 1.5, 1.5), minf(col.g * 1.5, 1.5), minf(col.b * 1.5, 1.5), 1.0))
+	gr.set_color(1, Color(col.r, col.g, col.b, 0.0))
+	var gt := GradientTexture1D.new()
+	gt.gradient = gr
+	pm.color_ramp = gt
+	parts.process_material = pm
+	var q := QuadMesh.new()
+	q.size = Vector2(0.14, 0.14) * ((2.2 if ring > 0.0 else 0.8) + k)
+	var mat := StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD if ring <= 0.0 else BaseMaterial3D.BLEND_MODE_MIX
+	mat.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	mat.vertex_color_use_as_albedo = true
+	mat.albedo_texture = _glow_texture()
+	q.material = mat
+	parts.draw_pass_1 = q
+	parts.visibility_aabb = AABB(Vector3(-14, -4, -14), Vector3(28, 12, 28))
+	scene.add_child(parts)
+	parts.global_position = at
+	parts.emitting = true
+	get_tree().create_timer(parts.lifetime + 0.6).timeout.connect(parts.queue_free)
+
+
+## The blow's flash on you: a burst of light at your chest that swells and fades in a third of a second.
+func _impact_flash(p: Node3D, col: Color, k: float) -> void:
+	var mi := MeshInstance3D.new()
+	var m := QuadMesh.new()
+	m.size = Vector2(1.4, 1.4) * (0.6 + k)
+	var mat := StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	mat.albedo_texture = _glow_texture()
+	mat.albedo_color = Color(col.r, col.g, col.b, 0.95)
+	m.material = mat
+	mi.mesh = m
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	p.add_child(mi)
+	mi.position = Vector3(0, 1.2, 0)
+	mi.scale = Vector3.ONE * 0.35
+	var tw := mi.create_tween().set_parallel(true)
+	tw.tween_property(mi, "scale", Vector3.ONE, 0.16).set_ease(Tween.EASE_OUT)
+	tw.tween_property(mat, "albedo_color:a", 0.0, 0.32)
+	tw.chain().tween_callback(mi.queue_free)
+
+
+static func _glow_texture() -> Texture2D:
+	if _glow_tex == null:
+		var g := Gradient.new()
+		g.set_color(0, Color(1, 1, 1, 1))
+		g.set_color(1, Color(1, 1, 1, 0))
+		var t := GradientTexture2D.new()
+		t.gradient = g
+		t.fill = GradientTexture2D.FILL_RADIAL
+		t.fill_from = Vector2(0.5, 0.5)
+		t.fill_to = Vector2(1.0, 0.5)
+		t.width = 64
+		t.height = 64
+		_glow_tex = t
+	return _glow_tex
+
+
+## The markings' art, drawn once: made on a worker as the world comes in so the first cone doesn't hitch.
+func _prefetch_area_art() -> void:
+	if _area_tex.has("shock"):
+		return
+	WorkerThreadPool.add_task(func():
+		var imgs := {}
+		for key in ["disc", "disc_fill", "wedge%d" % CONE_ARC, "wedge%d_fill" % CONE_ARC, "shock"]:
+			imgs[key] = _area_image(key, CONE_ARC)
+		_area_images_in.call_deferred(imgs), false, "area art")
+
+
+func _area_images_in(imgs: Dictionary) -> void:
+	for key in imgs:
+		if not _area_tex.has(key):
+			_area_tex[key] = ImageTexture.create_from_image(imgs[key])
+
+
+static func _area_texture(key: String, arc: int) -> Texture2D:
+	if not _area_tex.has(key):
+		_area_tex[key] = ImageTexture.create_from_image(_area_image(key, arc))
+	return _area_tex[key]
+
+
+## The art (white; the decal's colour tints it): its apex / centre in the middle, a cone pointing down the image (+Z,
+## turned by the monster's facing). Outline: a bright rim and faint hazard stripes inside; fill: solid with a bright
+## leading edge (it grows out as it winds up); shock: a ring.
+static func _area_image(key: String, arc: int) -> Image:
+	var size := 160
+	var half := deg_to_rad(arc) * 0.5
+	var fill := key.ends_with("_fill")
+	var disc := key.begins_with("disc")
+	var shock := key == "shock"
+	var img := Image.create(size, size, false, Image.FORMAT_RGBA8)
+	for y in size:
+		for x in size:
+			var u := (x + 0.5) / size * 2.0 - 1.0
+			var v := (y + 0.5) / size * 2.0 - 1.0
+			var d := sqrt(u * u + v * v) / 0.96            # 1: the reach
+			var edge := 1.0 - d                            # how far in from the edge (in reaches)
+			if not disc and not shock:
+				var ang := absf(atan2(u, v))                 # from the way it faces
+				edge = minf(edge, d * sin(half - ang)) if ang < half else -1.0
+			var a := 0.0
+			if shock:
+				a = exp(-pow((d - 0.9) / 0.07, 2.0))
+			elif fill:
+				a = 0.5 * smoothstep(-0.01, 0.03, edge) + 0.5 * exp(-pow((edge - 0.02) / 0.03, 2.0))
+			else:
+				var rim := exp(-pow((edge - 0.015) / 0.025, 2.0))
+				var stripe := 0.1 if fposmod((u + v) * 7.0, 1.0) < 0.5 else 0.0
+				a = maxf(rim, (0.2 + stripe) * smoothstep(-0.01, 0.02, edge))
+			a = clampf(a, 0.0, 1.0)
+			img.set_pixel(x, y, Color(a, a, a, a))
+	img.generate_mipmaps()
+	return img
+
+
+func _step_alert() -> void:
+	if _alert == null:
+		return
+	var busy := not _grounds.is_empty() or Time.get_ticks_msec() - _struck_at < 1000
+	if busy or _alert_drawn:
+		_alert.queue_redraw()
+	_alert_drawn = busy
+
+
+## The hazard sign (standing in a cone or a slam about to land) and the hard-hit flash: their own layer, apart from the
+## action HUD's rings and marks so they read as something else - get out, or you were hit hard.
+func _draw_alert() -> void:
+	if GameUI.interface_hidden:
+		return
+	var p := _player()
+	if p == null:
 		return
 	var now := Time.get_ticks_msec()
-	var r := radius * 0.025
-	var yaw := Server.yaw_of(heading)
-	var half := deg_to_rad(arc) * 0.5
-	var root := Node3D.new()
-	for part in [["Edge", Color(1.0, 0.45, 0.1, 0.16), 0.05], ["Fill", Color(1.0, 0.5, 0.1, 0.3), 0.06]]:
-		var st := SurfaceTool.new()
-		st.begin(Mesh.PRIMITIVE_TRIANGLES)
-		var steps := 20
-		for i in steps:
-			var a0 := yaw - half + 2.0 * half * i / steps
-			var a1 := yaw - half + 2.0 * half * (i + 1) / steps
-			st.add_vertex(Vector3(0, float(part[2]), 0))
-			st.add_vertex(Vector3(sin(a0), 0, cos(a0)) * r + Vector3(0, float(part[2]), 0))
-			st.add_vertex(Vector3(sin(a1), 0, cos(a1)) * r + Vector3(0, float(part[2]), 0))
-		var mi := MeshInstance3D.new()
-		mi.mesh = st.commit()
-		var mat := StandardMaterial3D.new()
-		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-		mat.albedo_color = part[1]
-		mi.material_override = mat
-		mi.name = String(part[0])
-		if part[0] == "Fill":
-			mi.scale = Vector3(0.01, 1, 0.01)
-		root.add_child(mi)
-	get_tree().current_scene.add_child(root)
-	root.global_position = n.global_position + Vector3(0, 0.05, 0)
-	_grounds.append({"oid": oid, "node": root, "start": now, "end": now + ms})
-	if viewer and viewer.has_method("note_combat"):
-		viewer.note_combat()
+	var size := _alert.size
+	var font := ThemeDB.fallback_font
+	# hit hard: the screen's edge flashes red, and the bigger ones say what hit you
+	var since := now - _struck_at
+	if STRUCK.has(_struck_kind) and since < 900:
+		var spec: Array = STRUCK[_struck_kind]
+		var k := float(spec[0])
+		if since < 650:
+			_edge_glow(size, Color(0.9, 0.06, 0.03, (1.0 - since / 650.0) * (0.35 + 0.5 * k)), 30.0 + 40.0 * k)
+		_draw_struck_word(String(spec[1]), spec[2], since, size, font)
+	# standing where one will land: the soonest
+	var danger: Dictionary = {}
+	for g in _grounds:
+		if _inside(p, g) and (danger.is_empty() or int(g.end) < int(danger.end)):
+			danger = g
+	if danger.is_empty():
+		return
+	var kind := String(danger.kind)
+	var col: Color = AREA_COLOR.get(kind, AREA_COLOR.c)
+	var total := maxf(1.0, float(int(danger.end) - int(danger.start)))
+	var t := clampf(float(now - int(danger.start)) / total, 0.0, 1.0)
+	var pulse := 0.5 + 0.5 * sin(now * (0.012 + 0.025 * t))
+	_edge_glow(size, Color(col.r, col.g * 0.7, col.b * 0.4, 0.22 + 0.3 * pulse), 40.0)
+	_draw_hazard(Vector2(size.x * 0.5, size.y * 0.24), kind, t, pulse, _way_out(p, danger), font)
+
+
+## What hit you, big and brief in the middle of the screen (it swells in, then fades).
+func _draw_struck_word(word: String, color: Color, since: int, size: Vector2, font: Font) -> void:
+	if word == "":
+		return
+	var a := clampf(1.0 - (since - 450) / 450.0, 0.0, 1.0)
+	var fs := int(lerpf(56.0, 40.0, clampf(since / 160.0, 0.0, 1.0)))
+	var col := color
+	col.a = a
+	var at := Vector2(0, size.y * 0.42)
+	_alert.draw_string_outline(font, at, word, HORIZONTAL_ALIGNMENT_CENTER, size.x, fs, 8, Color(0, 0, 0, 0.8 * a))
+	_alert.draw_string(font, at, word, HORIZONTAL_ALIGNMENT_CENTER, size.x, fs, col)
+
+
+## The hazard sign: a warning triangle, what's coming, the time left running out under it, and an arrow the way out.
+func _draw_hazard(at: Vector2, kind: String, t: float, pulse: float, out: Vector2, font: Font) -> void:
+	var col: Color = AREA_COLOR.get(kind, AREA_COLOR.c)
+	var tri := PackedVector2Array([at + Vector2(0, -36), at + Vector2(40, 32), at + Vector2(-40, 32)])
+	_alert.draw_colored_polygon(tri, Color(0.08, 0.03, 0.02, 0.88))
+	_alert.draw_polyline(PackedVector2Array([tri[0], tri[1], tri[2], tri[0]]), col.lerp(Color.WHITE, 0.45 * pulse), 4.0, true)
+	_alert.draw_string(font, at + Vector2(-30, 26), "!", HORIZONTAL_ALIGNMENT_CENTER, 60, 44, col.lerp(Color.WHITE, 0.5 * pulse))
+	var label := "GROUND SLAM - GET CLEAR!" if kind == "g" else "SWEEP - STEP TO THE SIDE!"
+	var lp := Vector2(at.x - 260, at.y + 64)
+	_alert.draw_string_outline(font, lp, label, HORIZONTAL_ALIGNMENT_CENTER, 520, 22, 6, Color(0, 0, 0, 0.85))
+	_alert.draw_string(font, lp, label, HORIZONTAL_ALIGNMENT_CENTER, 520, 22, col.lerp(Color.WHITE, 0.25))
+	var bar := Rect2(at.x - 100, at.y + 74, 200, 7)                # the time left, running out
+	_alert.draw_rect(bar, Color(0, 0, 0, 0.65))
+	_alert.draw_rect(Rect2(bar.position, Vector2(bar.size.x * (1.0 - t), bar.size.y)), col)
+	if out.length() > 0.01:
+		var dir := out.normalized()
+		var tip := at + dir * 104.0
+		var tail := at + dir * 58.0
+		var side := Vector2(-dir.y, dir.x)
+		var ac := col.lerp(Color.WHITE, 0.35 + 0.3 * pulse)
+		_alert.draw_line(tail, tip - dir * 10.0, Color(0, 0, 0, 0.7), 10.0, true)
+		_alert.draw_line(tail, tip - dir * 10.0, ac, 6.0, true)
+		_alert.draw_colored_polygon(PackedVector2Array([tip + dir * 4.0, tip - dir * 18.0 + side * 15.0, tip - dir * 18.0 - side * 15.0]), ac)
+
+
+## A glow along the screen's edges, fading inward.
+func _edge_glow(size: Vector2, col: Color, width: float) -> void:
+	var steps := 8
+	var w := width / steps
+	for i in steps:
+		var f := float(i) / steps
+		var c := col
+		c.a = col.a * (1.0 - f) * (1.0 - f)
+		var inset := f * width + w * 0.5
+		_alert.draw_rect(Rect2(Vector2(inset, inset), size - Vector2(inset, inset) * 2.0), c, false, w)
 
 
 ## Your cleave (a sweep style - StyleRework.Cleave): a bright arc of the weapon's reach flashes out in front of you and
@@ -711,13 +1069,29 @@ func _step_grounds() -> void:
 		var node: Node3D = g.node
 		if not is_instance_valid(node):
 			continue
-		if now > int(g.end) + 150:
-			node.queue_free()
+		if bool(g.landed):
+			if now > int(g.end) + 700:
+				node.queue_free()
+			else:
+				keep.append(g)
+			continue
+		var n := _view(int(g.oid))
+		if n == null or not n.is_alive():
+			node.queue_free()                                 # (it died, or went out of sight: nothing comes)
+			continue
+		node.global_position = n.global_position            # (it lands where the monster stands)
+		if now >= int(g.end):
+			g.landed = true
+			_area_lands(g, n)
+			keep.append(g)
 			continue
 		var t := clampf(float(now - int(g.start)) / maxf(1.0, float(int(g.end) - int(g.start))), 0.0, 1.0)
 		var fill := node.get_node_or_null("Fill") as Node3D
 		if fill:
-			fill.scale = Vector3(maxf(0.01, t), 1, maxf(0.01, t))
+			fill.scale = Vector3(maxf(0.02, t), 1, maxf(0.02, t))
+		var outline := node.get_node_or_null("Outline") as Decal
+		if outline:                                          # (its rim beats faster as it comes)
+			outline.emission_energy = 1.3 + 1.1 * (0.5 + 0.5 * sin(now * (0.008 + 0.022 * t)))
 		keep.append(g)
 	_grounds = keep
 
@@ -923,6 +1297,20 @@ func _input(event: InputEvent) -> void:
 	if mouse and not p.action_cursor and event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
 		get_viewport().set_input_as_handled()              # (unbound buttons do nothing while the mouse looks)
 		return
+	# the one style button, as the controller's X (owner 2026-11-23: "Keyboard needs a style button similar to what X
+	# does on a controller"): tapped, the smart style (whichever light is on); held a second, your sweep on letting go
+	if (event is InputEventKey or event is InputEventMouseButton) and not event.is_echo() and not _typing() \
+			and Keybinds.matches(event, "ac_style"):
+		if event.is_pressed():
+			_kstyle_at = now
+		elif _kstyle_at >= 0:
+			if now - _kstyle_at >= Pad.SWEEP_MS:
+				pad_style_aoe()
+			else:
+				pad_style()
+			_kstyle_at = -1
+		get_viewport().set_input_as_handled()
+		return
 	if not (event is InputEventKey or event is InputEventMouseButton) or not event.is_pressed() or event.is_echo():
 		return
 	var kinds := ["position", "reactive", "chain"]
@@ -1006,6 +1394,21 @@ func pad_defend(down: bool) -> void:
 		Server.command("/ac parry")
 		_last_parry_only = false
 		_player().action_defend("block" if _has_shield() else "parry")
+
+
+## Parry Only on the controller (owner 2026-11-23, Bugs & Fixes: "Need a way to parry when using a shield on
+## controller"): LT + RT by default - with a shield up, a parry instead of a block (to open a parry reaction), as Shift +
+## right mouse does.
+func pad_parry_only() -> void:
+	if not pad_ready() or _ranged():
+		return
+	var now := Time.get_ticks_msec()
+	if not _drawn():
+		_draw_weapon()
+	elif _parry_ok(now, true):
+		Server.command("/ac parry only")
+		_last_parry_only = true
+		_player().action_defend("parry")
 
 
 func _pad_shot(id: String, down: bool, now: int) -> void:
@@ -1144,6 +1547,42 @@ func _near_crosshair(p: Player, reach: float) -> Npc:
 	return best
 
 
+## A friendly spell on the controller or in action combat (owner 2026-11-23, Bugs & Fixes: "when casting a heal spell
+## (not the smart one reserved for groups) it will scan your cursor and heal the nearest friendly target to your cursor,
+## and if none, heal the player ... Same with any other friendly target spell"): the friendly closest to the crosshair -
+## an event's people, a bot or player of your realm, your pet - within `reach`, made your target. False when there's none
+## (or action combat is off): the caller targets you.
+func friendly_at_crosshair(reach: float) -> bool:
+	var p := _player()
+	if p == null or not on or p.camera == null:
+		return false
+	var npcs: NpcManager = viewer.npcs if viewer else null
+	if npcs == null:
+		return false
+	var centre := get_viewport().get_visible_rect().size * 0.5
+	var from := p.camera.project_ray_origin(centre)
+	var fwd := p.camera.project_ray_normal(centre)
+	var best: Npc = null
+	var best_ang := INF
+	for i in npcs.active:
+		var n: Npc = npcs.active[i]
+		if not is_instance_valid(n) or not n.state.alive or not n.is_friendly() or n.global_position.distance_to(p.global_position) > reach:
+			continue
+		var to := n.global_position + Vector3(0, n.height * 0.5, 0) - from
+		var dist := to.length()
+		if dist < 0.5 or fwd.dot(to) <= 0.0:
+			continue
+		var ang := rad_to_deg(fwd.angle_to(to))
+		var allow := maxf(10.0, rad_to_deg(atan2(maxf(1.2, n.height * 0.8), dist)))   # (a little looser than for foes)
+		if ang <= allow and ang < best_ang:
+			best_ang = ang
+			best = n
+	if best == null:
+		return false
+	_select_quiet(best)
+	return true
+
+
 ## Interact (owner 2026-10-26): what the crosshair is on - talk to an NPC (a monster: target it), open a door, pick
 ## up what lies on the ground, manage a companion - else the nearest of those in front of you within INTERACT_M.
 func _interact() -> void:
@@ -1221,6 +1660,9 @@ func _interact() -> void:
 			for d in z.doors:
 				if is_instance_valid(d):
 					consider.call(d, (d as Node3D).global_position, "door")
+		if is_instance_valid(z) and z.get("bindstones") is Array:
+			for b in z.bindstones:
+				consider.call(null, (z as Node3D).to_global(b), "bind")     # a bind stone: "bind here?"
 	var best = acc.best
 	if best == null:
 		PlayerData.message.emit("There is nothing here to use.", "system")
@@ -1234,6 +1676,9 @@ func _interact() -> void:
 		"door":
 			if sw and sw.has_method("request_door"):
 				sw.request_door(best[1])
+		"bind":
+			if viewer.has_method("offer_bind"):
+				viewer.offer_bind()
 
 
 ## An NPC's window (talk, merchant, vault, trainer) is open: the cursor is out for it until it closes (walking off
@@ -1492,6 +1937,7 @@ func _process(_delta: float) -> void:
 	var t_live := Time.get_ticks_usec()
 	_step_grounds()
 	_step_guards()
+	_step_alert()
 	_process_timed(_delta)
 	Perf.proc_add("action combat", Time.get_ticks_usec() - t_live)   # (the live log: process by part, and its hitch lines)
 

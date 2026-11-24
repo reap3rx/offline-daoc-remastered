@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using DOL.AI.Brain;
 using DOL.Database;
 using DOL.Events;
@@ -62,6 +62,14 @@ namespace DOL.GS
 		#endregion
 		public override bool AddToWorld()
 		{
+			// (claude 2026-11-24, owner: "move her, and her boss fight, to Cursed Forest ... that would mean removing her from
+			// Bog of Cullen") - her court is the Cursed Forest now, and she is fought there only at the end of King Lug's
+			// campaign (DynamicEvents/LugCampaign.cs, CliodnaRaid.cs). The Gemstone Tower's old spawn stays empty.
+			if (CurrentRegionID == 200 && X < 450560)
+			{
+				log.Info("Queen Cliodna: her court has moved to the Cursed Forest; the Bog of Cullen spawn stays empty.");
+				return false;
+			}
 			Name = "Queen Cliodna";
 			Model = 347;
 			Level = 70;

@@ -26,6 +26,14 @@ namespace DOL.GS.PacketHandler.Client.v168
 				return;
 			}
 
+			// a story quest's search spot is searched, not taken (owner 2026-11-23: the Get key on one said "You can't get
+			// that!")
+			if (target is DOL.GS.StoryQuests.StoryClue clue)
+			{
+				clue.Interact(client.Player);
+				return;
+			}
+
 			client.Player.PickupObject(target, false);
 		}
 	}

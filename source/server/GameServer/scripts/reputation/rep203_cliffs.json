@@ -1,0 +1,220 @@
+{
+ "zone": 203,
+ "name": "Cliffs of Moher",
+ "levels": [
+  20,
+  40
+ ],
+ "factions": [
+  {
+   "key": "watch_of_moher",
+   "name": "the Watch of Moher",
+   "short": "the Watch",
+   "kin": [
+    "mag_mell_guard",
+    "fianna_druim_ligen",
+    "mine_wardens",
+    "rangers_druim_cain",
+    "sentinels_of_ceannai",
+    "host_of_lug",
+    "clann_of_alainn_bin"
+   ],
+   "titles": [
+    "Friend of the Watch",
+    "Cliff-Warden",
+    "Watch-Captain of Moher"
+   ],
+   "speaker": "cm_aodhan",
+   "town": "Moher Watchtower",
+   "kills": [
+    "norse",
+    "hersir",
+    "huscarl",
+    "skald",
+    "jarl",
+    "saltwolf",
+    "thorgeir",
+    "ulf",
+    "cliff dweller",
+    "cliff hanger",
+    "whelihan",
+    "wrecker",
+    "koalinth",
+    "brarn",
+    "tidecaller",
+    "bocan",
+    "gunnvor",
+    "light-bearer",
+    "beetle",
+    "megafelid",
+    "changeling",
+    "phaeghoul",
+    "sinach"
+   ],
+   "quartermaster": {
+    "name": "Watch-Quartermaster Cairbre",
+    "guild": "the Watch of Moher",
+    "model": 337,
+    "anchor": "cm_aodhan",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "Watch kit, made for the cliffs and the fog. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep203_watchman_s_oath_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep203_cliff_path_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep203_beacon_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep203_cliff_warden_s_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep203_mantle_of_the_watch_of_moher",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "seers_of_moher",
+   "name": "the Seers of Moher",
+   "short": "the Seers",
+   "kin": [
+    "lucht_feasa",
+    "order_of_the_rowan",
+    "muintir_etaine",
+    "lucht_an_tobair",
+    "aines_circle",
+    "keeners_of_cullen"
+   ],
+   "titles": [
+    "Friend of the Seers",
+    "Omen-Reader",
+    "Seer of the Western Edge"
+   ],
+   "speaker": "cm_gormlaith",
+   "town": "Tir Urphost",
+   "kills": [
+    "fetch",
+    "grey man",
+    "fog",
+    "mist wraith",
+    "wraith",
+    "phantom",
+    "spectre",
+    "distorter",
+    "rift",
+    "aoife",
+    "aughisky",
+    "stallion",
+    "guardian",
+    "coimirceoir",
+    "sheerie",
+    "urdrock",
+    "urdsummoner",
+    "gale",
+    "gala",
+    "sprite",
+    "grovewood",
+    "drowned",
+    "tawi shon"
+   ],
+   "quartermaster": {
+    "name": "Seer-Keeper Ethne",
+    "guild": "the Seers of Moher",
+    "model": 365,
+    "anchor": "cm_gormlaith",
+    "offset": [
+     -3,
+     3
+    ],
+    "greet": "The Seers' gifts, for those the omens favour. Show me how well they favour you.",
+    "stock": [
+     {
+      "item": "rep203_omen_reader_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep203_seer_s_knotted_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep203_fetch_glass_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep203_western_edge_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep203_mantle_of_the_western_edge",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "watch_of_moher",
+ "event_default": "watch_of_moher",
+ "quest_default": "seers_of_moher",
+ "quests": {
+  "cm_connacht_road": "watch_of_moher",
+  "cm_phantoms": "watch_of_moher",
+  "cm_missing_crew": "watch_of_moher",
+  "cm_first_sail": "watch_of_moher",
+  "fetch": "seers_of_moher",
+  "cm_fetches_everywhere": "seers_of_moher",
+  "cm_whose_death": "seers_of_moher",
+  "cm_grey_cairn": "seers_of_moher",
+  "cm_tide_pools": "seers_of_moher",
+  "koalinth_pact": "seers_of_moher",
+  "cm_pact_sold": "seers_of_moher",
+  "cm_brarn": "seers_of_moher",
+  "cm_dweller_raids": "watch_of_moher",
+  "cm_norse_silver": "watch_of_moher",
+  "cm_spearmen": "watch_of_moher",
+  "cm_whelihan": "watch_of_moher",
+  "cm_longphort_scout": "watch_of_moher",
+  "cm_thralls": "watch_of_moher",
+  "cm_skald": "watch_of_moher",
+  "cm_raven_banner": "watch_of_moher",
+  "cm_rift": "seers_of_moher",
+  "cm_aoife": "seers_of_moher",
+  "cm_fog_stone": "seers_of_moher",
+  "cm_grey_man": "seers_of_moher"
+ },
+ "events": {
+  "cliffs_of_moher_cliff_dwellers": "watch_of_moher",
+  "cliffs_of_moher_fog_wraiths": "seers_of_moher",
+  "cliffs_of_moher_distorters": "seers_of_moher",
+  "tower_moher_watch": "watch_of_moher",
+  "cliffs_of_moher_koalinth_raid": "watch_of_moher",
+  "cliffs_longships": "watch_of_moher",
+  "cliffs_fetch_night": "seers_of_moher",
+  "cliffs_wreckers_lights": "watch_of_moher",
+  "cliffs_aughisky_run": "seers_of_moher",
+  "cliffs_longphort_assault": "watch_of_moher",
+  "cliffs_longphort_return": "watch_of_moher"
+ },
+ "realm": 3
+}

@@ -71,6 +71,7 @@ namespace DOL.GS.StoryQuests
                 foreach (string f in Directory.GetFiles(dir, "*.json"))
                     files[Path.GetFileName(f)] = File.ReadAllText(f, Encoding.UTF8);
             _quests.Clear();
+            _medianLevel.Clear();
             _npcDefs.Clear();
             foreach (var (name, json) in files.OrderBy(kv => kv.Key))
             {
@@ -85,8 +86,10 @@ namespace DOL.GS.StoryQuests
                     foreach (StoryQuestDef q in file.Quests)
                     {
                         q.File = file;
+                        // (owner 2026-11-22: "There's nothing stopping them from trying" - a quest's level is a
+                        // recommendation, shown con-coloured in the quest log, not a gate)
                         if (q.MinLevel <= 0)
-                            q.MinLevel = Math.Max(1, q.Level - 3);
+                            q.MinLevel = 1;
                         _quests[q.Id] = q;
                     }
                 }
@@ -164,8 +167,29 @@ namespace DOL.GS.StoryQuests
                 return null;
             npc.Health = npc.MaxHealth;
             _npcs[d.Id] = npc;
+            if (d.Replaces)
+                StepAside(d, z);
             return npc;
         }
+
+        /// <summary>The zone's old NPC of a story person's name (an old quest's giver, now in a story arc) leaves the world
+        /// until the next start, so there aren't two of them. Run again now and then (StoryQuestManager.Tick), in case
+        /// the world's NPCs came in after the story's.</summary>
+        static void StepAside(StoryNpcDef d, Zone z)
+        {
+            GameObject[] objects = z?.ZoneRegion?.Objects;
+            if (objects == null)
+                return;
+            foreach (GameObject o in objects)
+                if (o is GameNPC n && n is not StoryNpc && n is not StoryMob && n.CurrentZone == z && Same(n.Name, d.Name) &&
+                    n.ObjectState == GameObject.eObjectState.Active && !n.InCombat)
+                {
+                    n.RemoveFromWorld();
+                    log.Info($"Story quests: {d.Id} replaces the old {n.Name} ({n.InternalID})");
+                }
+        }
+
+        static long _nextAside;
 
         static eRealm RealmOf(ushort region) =>
             region >= 200 && region < 300 ? eRealm.Hibernia : region >= 100 && region < 200 ? eRealm.Midgard : eRealm.Albion;
@@ -459,20 +483,36 @@ namespace DOL.GS.StoryQuests
 
         // ---------------------------------------------------------------- rewards
 
+        /// <summary>An ending that sets off a dynamic event (the ringleader beaten, and Mog's highwaymen take the road): it
+        /// comes as a disturbance at its next chance - a night-only event waits for the night.</summary>
+        public static void WakeEvent(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return;
+            ChainRuntime c = DynamicEventManager.Chains.FirstOrDefault(x => Same(x.Def.Id, id));
+            if (c == null)
+                log.Warn($"Story quests: no event {id} to wake");
+            else if (!c.Active && !c.Dormant && c.Def.Giver == null)
+                c.NextStart = Math.Min(c.NextStart, Now);
+        }
+
+        /// <summary>One level's experience at this level (0 at 50).</summary>
+        public static long XpAtLevel(int lvl) =>
+            lvl < 50 ? GamePlayer.GetExperienceAmountForLevel(lvl) - GamePlayer.GetExperienceAmountForLevel(lvl - 1) : 0;
+
         public static void Reward(GamePlayer p, StoryQuest s, string ending, string chosen)
         {
             EndingDef e = ending != null && s.Def?.Endings != null && s.Def.Endings.TryGetValue(ending, out var ed) ? ed : null;
             RewardsDef r = e?.Rewards ?? s.Def?.Rewards;
             p.Out.SendMessage($"{s.Name} - {(e?.Tragic == true ? "a sad end" : "complete")}.", eChatType.CT_ScreenCenter, eChatLoc.CL_SystemWindow);
+            WakeEvent(e?.WakeEvent);
             if (r == null)
                 return;
             int lvl = p.Level;
-            // a share of a level at the quest's level (yours while you're below it): well past it, a tenth
-            int at = Math.Min(lvl, (s.Def?.Level ?? lvl) + 2);
-            long levelXp = at < 50 ? GamePlayer.GetExperienceAmountForLevel(at) - GamePlayer.GetExperienceAmountForLevel(at - 1) : 0;
-            int over = lvl - (s.Def?.Level ?? lvl);
-            double past = over <= 2 ? 1.0 : Math.Max(0.1, 1.0 - 0.15 * (over - 2));   // well past it: down to a tenth
-            long xp = (long) (Math.Max(0, levelXp) * r.XpPct / 100.0 * past);
+            // a share of a level at YOUR level, whatever the quest's (owner 2026-11-22: "you can't 'outlevel' quests ...
+            // you still get level appropriate rewards, since the goal is to make every zone relevant all the time")
+            long levelXp = XpAtLevel(lvl);
+            long xp = (long) (Math.Max(0, levelXp) * r.XpPct / 100.0);
             if (xp > 0 && lvl < 50)
                 p.GainExperience(eXPSource.Quest, xp, false);
             long copper = (long) r.CopperPerLevel * lvl;
@@ -528,6 +568,12 @@ namespace DOL.GS.StoryQuests
                             wanted.Add(d.Id);
                         Look(p, s);
                     }
+                }
+                if (now >= _nextAside)                      // (the old givers a story person replaces, still out of the way)
+                {
+                    _nextAside = now + 300_000;
+                    foreach (StoryNpcDef d in _npcDefs.Values.Where(d => d.Replaces && Npc(d.Id) != null))
+                        StepAside(d, ZoneOf(d.Zone));
                 }
                 // the people who are there only for a step: come, and go a while after nobody needs them
                 foreach (string id in wanted)
@@ -626,6 +672,7 @@ namespace DOL.GS.StoryQuests
         // ---------------------------------------------------------------- search: a thing to click
 
         static readonly ConcurrentDictionary<string, StoryClue> _clues = new();
+        public const ushort ClueModel = 32031;
 
         static void EnsureClue(GamePlayer p, StoryQuest s, StepDef st, Vector3 at)
         {
@@ -636,7 +683,10 @@ namespace DOL.GS.StoryQuests
             {
                 Owner = p, QuestId = s.QuestId, StepId = s.StepId,
                 Name = st.Clue?.Name ?? "something half-hidden",
-                Model = st.Clue?.Model > 0 ? st.Clue.Model : (ushort) 1574,
+                // the client's search spot, a golden glint (camp_objects.gd 32031) - not the clue's own model: a crate
+                // drew as one of the zone's crates (and the client hides a server object on top of a baked one, so the
+                // clue under Ardee's market stalls never showed at all - owner 2026-11-23)
+                Model = ClueModel,
                 X = (int) at.X, Y = (int) at.Y, Z = (int) at.Z, Heading = 0,
                 CurrentRegion = ZoneOf(st.Zone).ZoneRegion,
             };
@@ -690,6 +740,15 @@ namespace DOL.GS.StoryQuests
             return (int) Math.Ceiling(n * Math.Min(2.0, 1.0 + 0.15 * Math.Max(0, people - 1)));
         }
 
+        static readonly string[] TierNames = { "grey", "green", "blue", "yellow", "orange", "red", "purple" };
+
+        /// <summary>A tier's name as the zone builds write it, as MonsterTiers' value (null: none given).</summary>
+        public static sbyte? TierOf(string name)
+        {
+            int i = string.IsNullOrWhiteSpace(name) ? -1 : Array.FindIndex(TierNames, t => Same(t, name.Trim()));
+            return i < 0 ? null : (sbyte) (i - 3);
+        }
+
         static StoryMob MakeMob(NpcDef d, Zone z, Vector3 c, double radiusM, StoryQuestDef q)
         {
             if (d == null || z == null)
@@ -715,6 +774,9 @@ namespace DOL.GS.StoryQuests
             m.RoamingRange = 0;
             m.LoadedFromScript = true;
             m.SetOwnBrain(new StandardMobBrain { AggroLevel = 100, AggroRange = 450 });
+            // its con: as written, or the zone's ordinary one (EventCons.Trash - a story's fights are solo-sized)
+            sbyte tier = TierOf(d.Tier) ?? EventCons.Trash(ZoneRates.RatingOf(z));
+            MonsterTiers.SetTier(m, tier);
             if (!m.AddToWorld())
                 return null;
             m.HealthMult = Math.Max(1, d.HealthMult);
@@ -786,6 +848,21 @@ namespace DOL.GS.StoryQuests
                     .Cast<GameNPC>().ToList();
         }
 
+        static readonly ConcurrentDictionary<int, int> _medianLevel = new();
+
+        /// <summary>Whether a quest sits in the upper half of its zone's story quests by level (its boss a con up).</summary>
+        public static bool UpperHalf(StoryQuestDef q)
+        {
+            int zone = q?.Giver != null && _npcDefs.TryGetValue(q.Giver, out StoryNpcDef g) ? g.Zone : 0;
+            int median = _medianLevel.GetOrAdd(zone, zid =>
+            {
+                var levels = _quests.Values.Where(x => x.Giver != null && _npcDefs.TryGetValue(x.Giver, out StoryNpcDef gd) && gd.Zone == zid)
+                    .Select(x => x.Level).OrderBy(l => l).ToList();
+                return levels.Count == 0 ? 0 : levels[levels.Count / 2];
+            });
+            return q != null && q.Level >= median && median > 0;
+        }
+
         static void StartEncounter(GamePlayer p, StoryQuest s, StepDef st, Zone z)
         {
             string key = Key(p, s);
@@ -801,6 +878,10 @@ namespace DOL.GS.StoryQuests
                 Start = st.Start ?? st.Stages[0].Id,
                 Stages = st.Stages,
                 ZoneDef = zd,
+                // (owner 2026-11-22: story quests are solo or solo with a companion - their bosses by the zone's rating and
+                // the quest's level among the zone's; a GROUP quest's two cons more)
+                BossTier = EventCons.StoryBoss(ZoneRates.RatingOf(z), UpperHalf(s.Def), s.Def.Group),
+                HostileTier = EventCons.Trash(ZoneRates.RatingOf(z)),
             };
             GamePlayer owner = p;
             var chain = new ChainRuntime(def, z.ZoneRegion, z, Now)

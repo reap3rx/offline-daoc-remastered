@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace DOL.GS.DynamicEvents
@@ -21,6 +21,7 @@ namespace DOL.GS.DynamicEvents
         public string Lore;
         public int Realm;                          // the realm whose people live here (allies, givers); 0 = by region
         public List<ChainDef> Chains = new();
+        public SiegeDef Siege;                     // the zone's big objective (an island, a fort): ZoneSiege.cs
     }
 
     public class ChainDef
@@ -33,14 +34,22 @@ namespace DOL.GS.DynamicEvents
         [JsonProperty("interval_s")] public int[] IntervalS = { 1800, 2700 };
         [JsonProperty("rest_s")] public int RestS = 30;                  // between stages: time to sit and recover
         [JsonProperty("wake_m")] public double WakeM;                    // how near wakes it (0: its first stage's radius + 60 m)
+        public string Time;                        // "night" or "day": only then does it stir (a flare-up of the dark hours)
         [JsonProperty("auto_fail_s")] public int AutoFailS;              // a disturbance nobody answers in this long is lost
                                                                           // (its first stage's on_fail starts: a tower falls)
         public MerchantDef Merchant;               // stands at the place while it is held (not while an occupation runs)
+        public bool Manual;                        // started only by the zone's siege (ZoneSiege), never by the clock
+        public int Bots;                           // how many autonomous bots may join it (0: the usual six)
+        [JsonProperty("bot_min_level")] public int BotMinLevel;          // no bot below this joins (an elite island)
+        [JsonProperty("min_people")] public int MinPeople;               // a giver sets out only with this many (players
+                                                                          // and bots) at hand, a player among them
         public string Start;
         public GiverDef Giver;                     // set: started by talking to this NPC, not by the timer
         public List<NpcDef> Guards = new();        // the giver's party (with a giver): they follow and fight with them
         public List<StageDef> Stages = new();
         [JsonIgnore] public ZoneEventsDef ZoneDef;
+        [JsonIgnore] public sbyte? BossTier;       // a story quest's set-piece: its boss's con, fixed (EventCons.StoryBoss)
+        [JsonIgnore] public sbyte? HostileTier;    // and its ordinary monsters' (otherwise both by the zone's rating)
     }
 
     public class GiverDef : NpcDef
@@ -58,7 +67,7 @@ namespace DOL.GS.DynamicEvents
     public class StageDef
     {
         public string Id;
-        public string Type;                        // cull | defend | boss | escort | occupy
+        public string Type;                        // cull | defend | boss | escort | occupy | gather | intercept | clash
         public string Name;
         public string Objective;
         public string Announce;
@@ -90,6 +99,33 @@ namespace DOL.GS.DynamicEvents
         [JsonProperty("on_success")] public string OnSuccess = "end";
         [JsonProperty("on_fail")] public string OnFail = "end";
         public RewardDef Reward;
+        // gather: the things to pick up (nodes) - Count of them out at once, Kill of them wanted - and Mobs guarding the
+        // place (Alive of them about); a node picked has an AmbushChance % of a guardian jumping out
+        public List<MobDef> Nodes = new();
+        [JsonProperty("node_count")] public int NodeCount = 8;
+        [JsonProperty("ambush_chance")] public int AmbushChance = 20;
+        public string Gathered;                    // the words when a node is picked ("You gather a glowcap.")
+        // gather + deliver (owner 2026-11-23, Mushrooms for Mardagh: "Make the players deliver the mushrooms to the Alchemist ...
+        // Update doesn't happen until the mushrooms are delivered (see GW2's gather/deliver dynamic events)"): what you pick
+        // you carry, and it counts when you bring it to the event's giver
+        public bool Deliver;
+        // intercept: Boss is the convoy's leader, walking Path at Speed with Alive of Mobs about it; stop it before the end.
+        // boss: with a Path, the boss roams it while nobody fights it (a hunt)
+        public int Speed = 130;
+        // intercept with stops (a ride - Lough Gur's Earl, owner 2026-11-24: "I loved your idea of a moving boss"): at each of
+        // these path points the rider halts StopS seconds and StopCount of Mobs come down off their horses round him (StopSays
+        // the words at each); he rides on when the halt is over. Beaten anywhere wins; the ride's end is lost.
+        public List<int> Stops = new();
+        [JsonProperty("stop_s")] public int StopS = 75;
+        [JsonProperty("stop_count")] public int StopCount = 4;
+        [JsonProperty("stop_says")] public List<string> StopSays = new();
+        // wards: Wards are the places to take (Boss: each one's keeper, Alive of Mobs guarding it); a ward is taken when
+        // none of its guards stand within WardRadius and one of you does, lost again when they return and none of you
+        // is there; all of them taken at once for HoldS wins. While a ward is held they push back every ReinforceS.
+        public List<double[]> Wards = new();
+        [JsonProperty("ward_names")] public List<string> WardNames = new();
+        [JsonProperty("ward_radius")] public double WardRadius = 22;
+        [JsonProperty("hold_s")] public int HoldS = 25;
     }
 
     public class MobDef
@@ -100,10 +136,14 @@ namespace DOL.GS.DynamicEvents
         public byte Size;
         public ushort Model;
         public string Guild;                       // the line under the name (default: <the chain's title>)
+        public string Equipment;                   // an equipment template (a monster with no NpcTemplate of its own)
+        public int Side;                           // clash: which side (0 or 1); the two fight each other
     }
 
     public class NpcDef
     {
+        public string Tier;                        // story quest monsters: their con tier ("green" .. "purple"), so they
+                                                   // scale to whoever fights them like the zone's own (MonsterTiers)
         public int Template;
         public string Name;
         public int Level;

@@ -126,6 +126,10 @@ func _ready() -> void:
 		add_child(edges)
 		edges.setup(region)
 		player.edges = edges
+		var fog_patches: Node = preload("res://game/world/fog_patches.gd").new()   # misty places (data/fog_patches.json)
+		fog_patches.name = "FogPatches"
+		add_child(fog_patches)
+		fog_patches.setup(region)
 		if loading:
 			region.set_process(false)                       # (the loading screen builds the first neighbours itself)
 	# the owner's camera is locked to the client's zoom range; my test runs (and --free-camera) keep it unlocked
@@ -732,6 +736,8 @@ func _input(event: InputEvent) -> void:
 					pass                                         # a lot marker / relic: used (buy the lot, its deeds)
 				elif npcs is ServerWorld and (npcs as ServerWorld).house_click(player.camera, _rclick_from, true):
 					pass                                         # a house, a furniture / garden piece: its menu
+				elif bindstone_clicked(_rclick_from):
+					pass                                         # a bind stone: "bind here?"
 				elif companions:
 					var rb: Node3D = WorldLink.pick_bot(player.camera, _rclick_from)
 					if rb and bool(rb.get("companion")):       # your companion: its window (gear, training, tactics, stance)
@@ -1110,6 +1116,48 @@ func _gt_follow() -> void:
 	show_ground_target(pos)
 
 
+## A placed spell being channelled (an Animist's turret; owner 2026-11-21: "when you hold the button to charge the spell
+## you can see the target in which it will be placed, and as soon as you release it, it will release where the action
+## combat reticle is pointed (within the spell range)"): the ground target marker follows the reticle, held within the
+## spell's range, and is sent as the key comes up (Server.channel_ground_release), just before the release.
+var _chan_gt := Vector3.INF
+var _chan_gt_hooked := false
+
+
+func _channel_gt_follow() -> void:
+	if not _chan_gt_hooked:
+		_chan_gt_hooked = true
+		Server.channel_ground_release.connect(func():
+			if _chan_gt != Vector3.INF and Server.client and npcs is ServerWorld:
+				_send_gt(_chan_gt)
+			_chan_gt = Vector3.INF)
+	if player == null or player.camera == null:
+		return
+	var reach := float(int(Server.channel.get("ground", 0))) * 0.025
+	var hit = _gt_ray(_gt_screen())
+	var pos: Vector3
+	if hit != null:
+		pos = hit
+	else:                                              # (the sky: as far as it reaches, the way you look)
+		var fwd := -player.camera.global_transform.basis.z
+		fwd.y = 0.0
+		if fwd.length() < 0.01:
+			return
+		pos = player.global_position + fwd.normalized() * reach
+	var flat := pos - player.global_position
+	flat.y = 0.0
+	if hit == null or (reach > 0.0 and flat.length() > reach):
+		var xz := player.global_position + (flat.normalized() * reach if flat.length() > 0.01 else Vector3.ZERO)
+		var q := PhysicsRayQueryParameters3D.create(Vector3(xz.x, xz.y + 60.0, xz.z), Vector3(xz.x, xz.y - 120.0, xz.z),
+				ZoneLoader.LAYER_FLOOR)
+		var down := get_world_3d().direct_space_state.intersect_ray(q)
+		if down.is_empty():
+			return
+		pos = down.position
+	_chan_gt = pos
+	show_ground_target(pos)
+
+
 func _gt_release() -> void:
 	var held := Time.get_ticks_msec() - _gt_hold_at
 	_gt_hold_at = 0
@@ -1150,6 +1198,50 @@ func show_ground_target(at: Vector3) -> void:
 				(mi as MeshInstance3D).material_override = glow
 	_gt_marker.global_position = at
 	_gt_marker.visible = true
+
+
+## Bind stones you can use (owner 2026-11-23: "Make bindstones interactable, and it will pop up an options menu that
+## asks if you want to bind here"): the town stones are part of the zone's scenery (ZoneLoader.bindstones), so they are
+## found by where they stand. Right click one, or Interact beside it (action combat, the controller's Y).
+const BIND_REACH_M := 8.0
+
+
+## The bind stones of every loaded zone, in scene space.
+func bindstones() -> Array:
+	var out := []
+	var zs: Array = (region.zones as Dictionary).values() if region and region.get("zones") is Dictionary else [zone]
+	for z in zs:
+		if z != null and is_instance_valid(z):
+			for b in (z as ZoneLoader).bindstones:
+				out.append((z as ZoneLoader).to_global(b))
+	return out
+
+
+## The menu for a bind stone (the server checks you're at a bind point when you /bind).
+func offer_bind() -> void:
+	if ui and ui.get("social_menu"):
+		ui.social_menu.open("Bind Stone", [["Bind here", "/bind"], ["Not now", func(): pass]])
+
+
+## A right click on a bind stone: its menu (near enough), else "too far".
+func bindstone_clicked(screen_pos: Vector2) -> bool:
+	if player == null or player.camera == null:
+		return false
+	var from := player.camera.project_ray_origin(screen_pos)
+	var dir := player.camera.project_ray_normal(screen_pos)
+	for b in bindstones():
+		var mid: Vector3 = b + Vector3(0, 1.2, 0)
+		var along := (mid - from).dot(dir)
+		if along < 0.0 or along > 60.0:
+			continue
+		if (from + dir * along).distance_to(mid) > 1.6:
+			continue
+		if player.global_position.distance_to(b) > BIND_REACH_M:
+			PlayerData.message.emit("You are too far away to use the bind stone.", "error")
+		else:
+			offer_bind()
+		return true
+	return false
 
 
 func _click_door(screen_pos: Vector2) -> bool:
@@ -1266,6 +1358,8 @@ func _process_inner(delta: float) -> void:
 	_watch_npc_windows()
 	if _gt_hold_at > 0:
 		_gt_follow()
+	if Server.active and int(Server.channel.get("ground", 0)) > 0:
+		_channel_gt_follow()
 	if sky and zone:                                       # (zone-only sun shadow splits: SkySystem.set_shadow_zone)
 		sky.set_shadow_zone(int(region.current.info.id) if region and region.current else int(zone.info.id))
 	if PlayerData.target.get("self", false):             # your own target: your health as it changes

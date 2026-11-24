@@ -32,6 +32,7 @@ var _water_mats: Array[ShaderMaterial] = []
 ## The broadleaf trees' crowns (x, y, z in the zone's frame, w = reach): where AmbientLife's falling leaves start.
 var tree_crowns: Array[Vector4] = []
 var model_radius := {}                  # fixture model index -> its radius, metres at scale 1 (Foliage)
+var bindstones: Array[Vector3] = []     # the zone's bind stones (fixtures named "Bindstone"; zone-local): you can use them
 ## Trees that keep their needles (no falling leaves): by model name.
 const EVERGREEN := ["pine", "evergreen", "fir", "yew", "spruce", "cedar", "holly", "dead", "conifer"]
 
@@ -926,6 +927,9 @@ func _build_fixtures() -> void:
 			continue
 		var xforms: Array[Transform3D] = []
 		var crowns := bool(model.get("ambient_only", false)) and not evergreen(String(model.get("name", "")))
+		if String(model.get("name", "")).to_lower().contains("bindstone"):
+			for f in per_model[m]:
+				bindstones.append(Vector3(f.pos[0], f.pos[1], f.pos[2]))
 		for f in per_model[m]:
 			var basis := Basis(Vector3.UP, deg_to_rad(float(f.yaw))).scaled(Vector3.ONE * float(f.scale))
 			if f.has("basis"):                                 # dungeon pieces: a full rotation (columns x, y, z)

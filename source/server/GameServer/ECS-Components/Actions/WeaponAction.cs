@@ -106,7 +106,7 @@ namespace DOL.GS
             }
 
             // Unstealth before attack animation.
-            if (_owner is GamePlayer playerOwner)
+            if (_owner is GamePlayer playerOwner && !HibernianHybrids.KeepsHidden(playerOwner) && !AlbionKits.KeepsHidden(playerOwner))   // (a Ranger's Camouflage, a Scout's Hidden Nest)
                 playerOwner.Stealth(false);
 
             // Show the animation.

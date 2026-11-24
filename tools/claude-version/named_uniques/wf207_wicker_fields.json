@@ -1,0 +1,133 @@
+{
+ "zone": 207,
+ "region": 200,
+ "realm": 3,
+ "prefix": "wf207",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cloak of the Freed Fields",
+   "base": [
+    41,
+    26
+   ],
+   "level": 28,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 28,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Rowan green, with the Order's tree on it. Sewn in the grove for those who were there the day the fields were freed."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rowan-Ward Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 28,
+   "bonuses": {
+    "Emp": 9,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "A rowan twig bound in red thread. Fire won't come near it - or near you, much."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ash-and-Berry Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 28,
+   "bonuses": {
+    "Int": 9,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "Wicker ash and a rowan berry, sealed in bronze. What burned, and what grew back."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Grove-Tender's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 28,
+   "bonuses": {
+    "Dex": 9,
+    "Qui": 9,
+    "Str": 5,
+    "Hits": 24
+   },
+   "lore": "Worn by the druids who plant the grove. It smells of earth and smoke."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Voice of the Azure's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 31,
+   "bonuses": {
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 19
+   },
+   "lore": "Blue gold, the Voice's own. The Rowan quenched it in a holy well. It still glows, a little, when it's angry."
+  }
+ ],
+ "camp": {
+  "cloak": "wf207_cloak_of_the_freed_fields",
+  "emblem": 41928,
+  "draughts": [
+   [
+    "Strong_Draught_of_Healing",
+    "wf207_meadowsweet_draught",
+    "Meadowsweet Draught",
+    "Meadowsweet from the freed fields, steeped by the Rowan. It heals."
+   ],
+   [
+    "Strong_Draught_of_Power",
+    "wf207_elderflower_tonic",
+    "Elderflower Tonic",
+    "Elderflower and spring water. For the mind more than the body."
+   ],
+   [
+    "Strong_Draught_of_Endurance",
+    "wf207_rowan_berry_cordial",
+    "Rowan-Berry Cordial",
+    "Sharp, red and warming. The druids drink it before a long walk."
+   ],
+   [
+    "Superior_Elixir_of_Instant_Healing",
+    "wf207_ash_salve_elixir",
+    "Ash-Salve Elixir",
+    "Wicker ash and honey: the Rowan swear by it for burns, and for everything else."
+   ],
+   [
+    "CombinedRegens_Draught",
+    "wf207_grove_brew",
+    "Grove Brew",
+    "Everything the grove grows, in one bottle. Everything comes back a little faster."
+   ]
+  ]
+ }
+}

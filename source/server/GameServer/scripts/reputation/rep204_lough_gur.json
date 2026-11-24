@@ -1,0 +1,182 @@
+{
+ "zone": 204,
+ "name": "Lough Gur",
+ "levels": [
+  1,
+  40
+ ],
+ "shared": [
+  "sentinels_of_ceannai"
+ ],
+ "factions": [
+  {
+   "key": "aines_circle",
+   "name": "Aine's Circle",
+   "short": "the Circle",
+   "kin": [
+    "lucht_feasa",
+    "order_of_the_rowan",
+    "muintir_etaine",
+    "lucht_an_tobair",
+    "seers_of_moher",
+    "keeners_of_cullen",
+    "southern_muster"
+   ],
+   "titles": [
+    "Friend of the Circle",
+    "Stone-Keeper",
+    "Keeper of Lough Gur"
+   ],
+   "speaker": "lg_ceallach",
+   "town": "the stone circle above Innis Carthaig",
+   "kills": [
+    "glimmer",
+    "lantern",
+    "lure",
+    "wisp",
+    "dullahan",
+    "wraith",
+    "earl",
+    "host",
+    "stallion",
+    "fairy",
+    "melancholic",
+    "grieving",
+    "touched",
+    "drowned",
+    "amadan",
+    "lhia",
+    "lhiannan",
+    "far liath",
+    "pooka",
+    "merucha",
+    "irewood",
+    "herald",
+    "envoy",
+    "unseelie"
+   ],
+   "quartermaster": {
+    "name": "Circle-Keeper Aoibheann",
+    "guild": "Aine's Circle",
+    "model": 365,
+    "anchor": "lg_ceallach",
+    "offset": [
+     -3,
+     3
+    ],
+    "greet": "The Circle's gifts, for those who help us keep the lake asleep. Show me how well you've kept it.",
+    "stock": [
+     {
+      "item": "rep204_circle_friend_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep204_lulling_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep204_stone_keeper_s_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep204_lake_sleep_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep204_mantle_of_lough_gur",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "quartermasters": [
+  {
+   "faction": "sentinels_of_ceannai",
+   "name": "Quartermaster Lasairfhiona",
+   "guild": "the Sentinels of Ceannai",
+   "model": 365,
+   "anchor": "lg_maeve",
+   "offset": [
+    4,
+    3
+   ],
+   "greet": "Ronan keeps the stores at Ceannai; I keep them here. Same stock, same rules - show me your standing with the Sentinels.",
+   "stock": [
+    {
+     "item": "rep202_sentinel_s_oath_ring",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep202_south_road_belt",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep202_ceannai_torc",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep202_treaty_keeper_bracer",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep202_mantle_of_ceannai",
+     "rank": "Legend",
+     "price": 150
+    }
+   ]
+  }
+ ],
+ "kill_default": "sentinels_of_ceannai",
+ "event_default": "sentinels_of_ceannai",
+ "quest_default": "aines_circle",
+ "quests": {
+  "lg_walking_wood": "sentinels_of_ceannai",
+  "lg_luch_in_the_thatch": "sentinels_of_ceannai",
+  "lg_road_to_the_lake": "sentinels_of_ceannai",
+  "lg_granaries": "sentinels_of_ceannai",
+  "lg_luchtigern": "sentinels_of_ceannai",
+  "cluricaun": "sentinels_of_ceannai",
+  "lg_harp_tune": "aines_circle",
+  "lg_south_road": "sentinels_of_ceannai",
+  "lg_carried_south": "sentinels_of_ceannai",
+  "lg_bear_trade": "sentinels_of_ceannai",
+  "lg_gurite_captains": "sentinels_of_ceannai",
+  "lg_gurite_king": "sentinels_of_ceannai",
+  "lg_touched_walk": "aines_circle",
+  "amadan": "aines_circle",
+  "lg_drowned_return": "aines_circle",
+  "lg_lhia": "aines_circle",
+  "lg_weeping": "aines_circle",
+  "lg_taken_girl": "aines_circle",
+  "lg_queens_light": "aines_circle",
+  "lg_fairy_queen": "aines_circle",
+  "lg_silver_shoes": "aines_circle",
+  "lg_envoy": "sentinels_of_ceannai",
+  "lg_crannog": "aines_circle",
+  "lg_azure_welcome": "aines_circle",
+  "lg_azure_wisps": "aines_circle",
+  "lg_azure_burning": "aines_circle"
+ },
+ "events": {
+  "lough_gur_gurite_raiders": "sentinels_of_ceannai",
+  "lough_gur_luch_swarm": "sentinels_of_ceannai",
+  "lough_gur_cluricaun_revel": "aines_circle",
+  "lough_gur_gurite_ferry": "sentinels_of_ceannai",
+  "lg_lights_on_the_lake": "aines_circle",
+  "lg_earls_ride": "aines_circle",
+  "lg_fairy_taking": "aines_circle",
+  "lg_deamhan_night": "sentinels_of_ceannai",
+  "lg_azure_burning": "sentinels_of_ceannai"
+ },
+ "realm": 3
+}

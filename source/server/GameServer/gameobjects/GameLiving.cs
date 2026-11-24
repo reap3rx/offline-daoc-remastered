@@ -1346,6 +1346,20 @@ namespace DOL.GS
 		/// <param name="criticalAmount">the amount of critical damage</param>
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
+			if (AlbionKits.Shelled(this))
+				return;                              // (a Wizard's Ice Shell: nothing hurts it)
+			double taken = MidgardKits.TakenFactor(this, source);   // (a Midgard grip's risk or cover, a Hunter's marked prey)
+			if (taken != 1.0)
+			{
+				damageAmount = (int) Math.Round(damageAmount * taken);
+				criticalAmount = (int) Math.Round(criticalAmount * taken);
+			}
+			int whole = damageAmount + criticalAmount, left = AlbionKits.ThrallTakes(this, source, damageType, whole);
+			if (left < whole)
+			{
+				criticalAmount = Math.Max(0, criticalAmount - (whole - left));
+				damageAmount = left - criticalAmount;   // (a Sorcerer's Thrall's Sacrifice: its pet took a share)
+			}
 			base.TakeDamage(source, damageType, damageAmount, criticalAmount);
 			ActionCombat.ReportDamage(this, source, damageAmount, criticalAmount);   // floating combat text
 
@@ -1458,6 +1472,8 @@ namespace DOL.GS
 			PlayerLedPullCoordinator.OnAttack(this, ad);
 			AutonomousDefensivePull.OnAttack(this, ad);
 			HibernianKits.OnAttackEnemy(this, ad);   // (a Druid's spirit on its target, its special)
+			AlbionKits.OnAttackEnemy(this, ad);      // (a Cleric's Judgement)
+			MidgardKits.OnAttackEnemy(this, ad);     // (a Skald's shouts, a Runemaster's runes)
 
 			if (this is GamePlayer player)
 				player.Stealth(false);
@@ -1520,7 +1536,7 @@ namespace DOL.GS
 
 				if (ad.AttackType is not eAttackType.Spell || ad.Damage != 0)
 				{
-					if (IsStealthed && !effectListComponent.ContainsEffectForEffectType(eEffect.Vanish))
+					if (IsStealthed && !effectListComponent.ContainsEffectForEffectType(eEffect.Vanish) && !HibernianHybrids.Undetectable(this))
 						Stealth(false);
 				}
 
@@ -1887,6 +1903,7 @@ namespace DOL.GS
 		public virtual void DealDamage(AttackData ad)
 		{
 			ad.Target.TakeDamage(ad);
+			AlbionKits.AfterDeal(this, ad);          // (a Reaver's Soul Tether)
 		}
 
 		/// <summary>

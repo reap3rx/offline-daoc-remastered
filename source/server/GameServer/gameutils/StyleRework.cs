@@ -38,7 +38,7 @@ namespace DOL.GS
     /// Others (2, 15) as they were. Basic (a class learning the line later - not yet) keeps the line as it was.
     /// Proc spells: ids 30801-30899, hidden line "Style Rework Effects".
     /// </summary>
-    public static class StyleRework
+    public static partial class StyleRework
     {
         public const string HiddenLine = "Style Rework Effects";
         public const int Hero = 44, Champion = 45, Blademaster = 43;
@@ -60,7 +60,9 @@ namespace DOL.GS
             EvadeSelf = 30828, Dazed = 30829, Dent = 30830, Root6 = 30831, SmallBleed = 30832, TailBleed = 30833, BleedB1 = 30834,
             BleedB2 = 30835, BleedB3 = 30836, HeavySnare = 30837,
             // (shields)
-            Bulwark = 30838, BulwarkGroup = 30839, ShieldWallGroup = 30840;
+            Bulwark = 30838, BulwarkGroup = 30839, ShieldWallGroup = 30840,
+            // (the Nightshade, the Ranger and the Valewalker)
+            Exposed = 30841, DisengageRush = 30842;
 
         /// <summary>Cleaving styles: (class, style id) -> its arc, how many more it reaches, its share of the blow, extra reach.</summary>
         static readonly Dictionary<(int, int), (int Arc, int Extra, double Factor, int Reach)> Cleaves = new();
@@ -151,6 +153,9 @@ namespace DOL.GS
             Console.WriteLine($"[StyleRework] the other Hibernian lines: {OtherLines()} style changes");
             Console.WriteLine($"[StyleRework] shields: {ShieldLine()} style changes");
             Console.WriteLine($"[StyleRework] Warden and Bard: {NatureLines()} style changes");
+            Console.WriteLine($"[StyleRework] Nightshade, Ranger and Valewalker: {WildLines()} style changes");
+            Console.WriteLine($"[StyleRework] Albion: {AlbionLines()} style changes");
+            Console.WriteLine($"[StyleRework] Midgard: {MidgardLines()} style changes");
             Dump();
         }
 
@@ -282,8 +287,14 @@ namespace DOL.GS
             try
             {
                 var sb = new System.Text.StringBuilder();
-                foreach (var cls in new[] { Hero, Champion, Blademaster, HibernianKits.Warden, HibernianKits.Bard })
-                    foreach (string spec in new[] { "Large Weapons", "Blades", "Blunt", "Piercing", "Celtic Spear", "Celtic Dual" })
+                foreach (var cls in new[] { Hero, Champion, Blademaster, HibernianKits.Warden, HibernianKits.Bard,
+                    HibernianHybrids.Nightshade, HibernianHybrids.Ranger, HibernianHybrids.Valewalker,
+                    AlbionKits.Paladin, AlbionKits.Armsman, AlbionKits.Scout, AlbionKits.Minstrel, AlbionKits.Infiltrator,
+                    AlbionKits.Friar, AlbionKits.Mercenary, AlbionKits.Reaver, MidgardKits.Thane, MidgardKits.Warrior, MidgardKits.Shadowblade,
+                    MidgardKits.Skald, MidgardKits.Hunter, MidgardKits.Berserker, MidgardKits.Savage })
+                    foreach (string spec in new[] { "Large Weapons", "Blades", "Blunt", "Piercing", "Celtic Spear", "Celtic Dual", "Critical Strike", "Scythe",
+                        "Slash", "Crush", "Thrust", "Polearm", "Two Handed", "Dual Wield", "Flexible", "Staff",
+                        "Sword", "Axe", "Hammer", "Left Axe", "Hand to Hand", "Spear" })
                         foreach (Style st in SkillBase.GetStyleList(spec, cls))
                         {
                             Style r = Ref(cls, st.ID) ?? st;
@@ -345,6 +356,79 @@ namespace DOL.GS
             foreach (int id in new[] { 245, 250, 251, 252, 253, 254, 255, 257, 258, 259, 260, 261, 265, 266, 267, 268, 270, 271, 273, 274 })
                 if (Ref(D, id) is Style bs && Describe(bs) == null)
                     About(D, id, "Crescendo: when it lands you gain a stack (up to 5); your next song pulse spends them on your group's health, endurance and power.");
+            return n;
+        }
+
+        // ------------------------------------------------------------------ the Nightshade, the Ranger, the Valewalker (agreed 21 Nov)
+        //   Nightshade: the positionals bleed and leave it Exposed (a stealth opener on it always crits - HibernianHybrids);
+        //   the taunts sweep, the detaunts stay as real threat drops; Celtic Dual's Fade. Ranger: the positionals snare and
+        //   root to make room for the bow; Disengage. Valewalker: Reaping Arc, Bitter Harvest, Nature's Shield held 10 s.
+
+        static int WildLines()
+        {
+            Hidden(Db(Exposed, "Exposed", "ArmorAbsorptionDebuff", value: 8, duration: 15, effect: 2140, icon: 2140, msg1: "Your guard is open!"));
+            Hidden(Db(DisengageRush, "Disengage", "SpeedEnhancement", value: 150, duration: 4, target: "Self", effect: 5461, icon: 5461,
+                msg1: "You spring away!"));
+            const int N = HibernianHybrids.Nightshade, R = HibernianHybrids.Ranger, V = HibernianHybrids.Valewalker;
+            int[] none = new int[0];
+            int n = 0;
+            string exposed = " It is left Exposed for 15 seconds: a stealth opener on it always crits.";
+            // ---- the Nightshade: Blades and Piercing
+            n += Reshape(N, 247, "Arcing Blade", 0, 0, 0, growth: 0.5, hit: 5, def: 0, end: 15, procs: none);
+            CleaveAt(N, 247, CleaveArc, CleaveExtra, CleaveFactor);
+            About(N, 247, "A wide slash: also hits up to two more enemies in front of you (70% of the blow).");
+            n += Procs(N, 248, none); About(N, 248, "A slipping cut: your foe's anger at you falls to a quarter.");
+            n += AddProcs(N, 249, new[] { SmallBleed, Exposed }); About(N, 249, "From the side: snares and cuts it." + exposed);
+            n += Procs(N, 256, new[] { TailBleed, Exposed }); About(N, 256, "From behind: a bleeding wound." + exposed);
+            n += AddProcs(N, 276, new[] { Exposed }); About(N, 276, "From behind: a bleeding sting." + exposed);
+            n += Reshape(N, 277, "Wasp Swarm", 0, 0, 0, growth: 0.5, hit: 10, def: 0, end: 15, procs: new[] { SmallBleed });
+            CleaveAt(N, 277, CleaveArc, CleaveExtra, CleaveFactor);
+            About(N, 277, "A flurry of jabs: also hits up to two more enemies in front of you (70% of the blow), and each of them bleeds.");
+            n += Procs(N, 279, none); About(N, 279, "A quick sting and a step away: your foe's anger at you falls to a quarter.");
+            n += AddProcs(N, 283, new[] { SmallBleed, Exposed }); About(N, 283, "From the side: snares and cuts it." + exposed);
+            // ---- the Nightshade: Celtic Dual
+            n += Reshape(N, 322, "Shadow Flurry", 0, 0, 0, growth: 0.5, hit: 5, def: 0, end: 15, procs: none);
+            CleaveAt(N, 322, 90, 1, CleaveFactor);
+            About(N, 322, "Both blades in a narrow flurry: also hits one more enemy just in front of you (70% of the blow).");
+            n += Reshape(N, 326, "Fade", 0, 0, 0, growth: 0.3, hit: 10, def: 10, end: 10, procs: none);
+            Self(N, 326, EvadeSelf);
+            About(N, 326, "A feint and a fade: your foe's anger at you falls to a quarter, and your feet grow light (evade up for 6 seconds).");
+            // ---- the Nightshade: Critical Strike
+            About(N, 342, "Snares it, and breaks the spell it is casting.");
+            // ---- the Ranger: Blades and Piercing (make room for the bow)
+            n += Reshape(R, 247, "Arcing Blade", 0, 0, 0, growth: 0.5, hit: 5, def: 0, end: 15, procs: none);
+            CleaveAt(R, 247, CleaveArc, CleaveExtra, CleaveFactor);
+            About(R, 247, "A wide slash: also hits up to two more enemies in front of you (70% of the blow).");
+            n += Reshape(R, 248, "Guarded Strike", 0, 0, 0, growth: 0.45, hit: 0, def: 15, end: 10, procs: none);
+            About(R, 248, "A careful blow: your defense is raised until your next swing.");
+            n += Procs(R, 256, new[] { Root6 }); About(R, 256, "From behind: roots it for 6 seconds (damage frees it) - step back and draw.");
+            n += Procs(R, 276, new[] { Root3 }); About(R, 276, "From behind: roots it for 3 seconds (damage frees it).");
+            n += Reshape(R, 277, "Wasp Swarm", 0, 0, 0, growth: 0.5, hit: 10, def: 0, end: 15, procs: none);
+            CleaveAt(R, 277, CleaveArc, CleaveExtra, CleaveFactor);
+            About(R, 277, "A flurry of jabs: also hits up to two more enemies in front of you (70% of the blow).");
+            n += Reshape(R, 279, "Scorpion's Tail", 2, 1, 0, growth: 0.6, hit: 10, def: 0, end: 10, procs: new[] { HamSnare });
+            About(R, 279, "From the side: a thrust that snares it for 8 seconds.");
+            // ---- the Ranger: Celtic Dual
+            n += Reshape(R, 322, "Sweeping Gale", 0, 0, 0, growth: 0.5, hit: 5, def: 0, end: 15, procs: none);
+            CleaveAt(R, 322, CleaveArc, CleaveExtra, CleaveFactor);
+            About(R, 322, "Both blades in a wide sweep: also hits up to two more enemies in front of you (70% of the blow).");
+            n += Reshape(R, 326, "Disengage", 0, 0, 0, growth: 0.3, hit: 10, def: 0, end: 10, procs: new[] { Stagger });
+            Self(R, 326, DisengageRush);
+            About(R, 326, "A kick and a leap away: staggers it for 2 seconds, you run 50% faster for 4 seconds, and its anger at you halves.");
+            n += Procs(R, 323, new[] { Root6 }); About(R, 323, "From behind: roots it for 6 seconds (damage frees it) - step back and draw.");
+            n += AddProcs(R, 329, none); Self(R, 329, EvadeSelf); About(R, 329, "After you evade: snares it, and your feet grow light (evade up).");
+            // ---- the Valewalker: Scythe
+            // Reaper, the anytime opener at 2, was a detaunt (growth 0.055, 15 endurance) - owner 2026-11-23: "Reaper's Scythe
+            // anytime style does less damage than auto". Taunts and detaunts left the styles (agreed 2026-11-19): a plain
+            // anytime blow now, a little over auto at any spec, cheaper.
+            n += Reshape(V, 385, "Reaper", 0, 0, 0, growth: 0.55, hit: 5, def: 0, end: 8, procs: none);
+            About(V, 385, "A clean reaping stroke: more than a plain swing, for a little endurance.");
+            n += Reshape(V, 387, "Reaping Arc", 0, 0, 0, growth: 0.55, hit: 5, def: 0, end: 15, procs: none);
+            CleaveAt(V, 387, 180, CleaveExtra, CleaveFactor, 50);
+            About(V, 387, "A great reaping sweep: also hits up to two more enemies in a wide arc in front of you (70% of the blow).");
+            n += Reshape(V, 396, "Bitter Harvest", 0, 0, 0, growth: 0.7, hit: 5, def: 0, end: 12, procs: none);
+            About(V, 396, "A heavy reaping blow: 30% of its damage comes back to you as health.");
+            About(V, 394, "Nature's Shield: for 10 seconds, arrows and bolts from in front of you are turned aside.");
             return n;
         }
 
@@ -550,6 +634,9 @@ namespace DOL.GS
                 if (OffhandStrikes.TryGetValue((st.ClassID, st.ID), out double share))
                     OffhandStrike(owner, ad, share);
                 HibernianKits.AfterStyle(owner, ad);       // (a Warden's Verdant Strike, a Bard's Crescendo)
+                HibernianHybrids.AfterStyle(owner, ad);    // (Exposed, Fade, Creeping Rot, Reap...)
+                AlbionKits.AfterStyle(owner, ad);          // (Albion's: Sermon, Tempo, Soul Tether, chant surges, Marked...)
+                MidgardKits.AfterStyle(owner, ad);         // (Midgard's: the grip, rage, Saga, Marked, Twin Ambush...)
                 if (st.Spec == Specs.Shields)
                 {
                     if (st.ID == Numb)
@@ -574,7 +661,7 @@ namespace DOL.GS
         }
 
         /// <summary>The Blademaster's second weapon strikes the same foe again for a share of the blow.</summary>
-        static void OffhandStrike(GameLiving owner, AttackData ad, double share)
+        internal static void OffhandStrike(GameLiving owner, AttackData ad, double share)
         {
             GameLiving t = ad.Target;
             if (t == null || !t.IsAlive)

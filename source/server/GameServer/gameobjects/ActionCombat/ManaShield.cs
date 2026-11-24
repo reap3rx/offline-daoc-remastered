@@ -139,6 +139,9 @@ namespace DOL.GS
 			{
 				p.ChangeMana(p, eManaChangeType.Spell, p.MaxMana * PerfectRefundPercent / 100);
 				HibernianKits.Bramble(p, ad.Attacker);       // (a Druid's Bramble Shield: root, then poison)
+				HibernianHybrids.Sprout(p);                  // (an Animist's Sprouting Ward: a turret at its feet)
+				AlbionKits.HolyAegis(p, ad.Attacker);        // (a Cleric's Holy Aegis: a smite and a blinding)
+				MidgardKits.PerfectWard(p, ad.Attacker);     // (a Healer's Eir's Aegis: a mesmerize; a Shaman's Spore Ward: a disease)
 			}
 			ActionCombat.Send(p, $"def|ward|{ad.Damage + through}|{paid}|{(perfect ? 1 : 0)}");
 			if (perfect)

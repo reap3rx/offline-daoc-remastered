@@ -1,0 +1,130 @@
+{
+ "zone": 208,
+ "name": "Cursed Forest",
+ "levels": [
+  45,
+  50
+ ],
+ "factions": [
+  {
+   "key": "host_of_lug",
+   "name": "the Host of Lug",
+   "short": "the Host",
+   "kin": [
+    "mag_mell_guard",
+    "fianna_druim_ligen",
+    "mine_wardens",
+    "rangers_druim_cain",
+    "sentinels_of_ceannai",
+    "watch_of_moher",
+    "clann_of_alainn_bin"
+   ],
+   "titles": [
+    "Friend of the Host",
+    "Spear of Lug",
+    "Champion of the Lamfhota"
+   ],
+   "speaker": "cf_ailbhe",
+   "town": "the Rangers' Hide",
+   "kills": [
+    "court",
+    "thrall",
+    "unseelie",
+    "hag",
+    "suitor",
+    "siabra",
+    "wraith",
+    "dorocha",
+    "gan ceanach",
+    "manslayer",
+    "bainshee",
+    "leprechaun",
+    "finliath",
+    "goborchend",
+    "maid",
+    "aoibhinn",
+    "carrion",
+    "dorchu",
+    "keener",
+    "fear dubh",
+    "breasal",
+    "dubhan",
+    "bronach",
+    "thorn knight",
+    "cliodna",
+    "trapper",
+    "brannagh",
+    "bloodhorn"
+   ],
+   "quartermaster": {
+    "name": "Host-Quartermaster Fiacc",
+    "guild": "the Host of Lug",
+    "model": 362,
+    "anchor": "cf_ailbhe",
+    "offset": [
+     -4,
+     3
+    ],
+    "greet": "The King's own kit, for those who've earned the Host's trust. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep208_friend_of_the_host_s_ring",
+      "rank": "Trusted",
+      "price": 60
+     },
+     {
+      "item": "rep208_host_marcher_s_belt",
+      "rank": "Trusted",
+      "price": 60
+     },
+     {
+      "item": "rep208_spear_of_lug_torc",
+      "rank": "Honoured",
+      "price": 110
+     },
+     {
+      "item": "rep208_host_seer_s_bracer",
+      "rank": "Honoured",
+      "price": 110
+     },
+     {
+      "item": "rep208_mantle_of_the_lamfhota",
+      "rank": "Legend",
+      "price": 200
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "host_of_lug",
+ "event_default": "host_of_lug",
+ "quest_default": "host_of_lug",
+ "quests": {
+  "cf_into_the_fog": "host_of_lug",
+  "cf_thralls": "host_of_lug",
+  "leprechaun": "host_of_lug",
+  "cf_riders": "host_of_lug",
+  "cf_suitors": "host_of_lug",
+  "cf_barrows": "host_of_lug",
+  "cf_grey_suitor": "host_of_lug",
+  "cf_letters": "host_of_lug",
+  "cf_siabra": "host_of_lug",
+  "cf_keener": "host_of_lug",
+  "cf_lady_aoibhinn": "host_of_lug",
+  "cf_old_runes": "host_of_lug",
+  "goborchend": "host_of_lug",
+  "cf_fear_dubh": "host_of_lug"
+ },
+ "events": {
+  "cf_cp1_assault": "host_of_lug",
+  "cf_cp2_assault": "host_of_lug",
+  "cf_cp3_assault": "host_of_lug",
+  "cf_cp4_assault": "host_of_lug",
+  "cf_cp1_counter": "host_of_lug",
+  "cf_cp2_counter": "host_of_lug",
+  "cf_cp3_counter": "host_of_lug",
+  "cf_cp4_counter": "host_of_lug",
+  "cf_queens_seat": "host_of_lug"
+ },
+ "realm": 3
+}

@@ -29,6 +29,29 @@ const OCCLUDERS := ZoneLoader.LAYER_WALL | ZoneLoader.LAYER_FLOOR | ZoneLoader.L
 const RAYS_PER_FRAME := 24                  # wall checks a frame, shared by the names shown
 const RECHECK_MS := 120                     # a shown name's wall check is at most this old
 
+## The titles the bots around you wear (owner 2026-11-22: "ones who earn a title will use that title"): the server's
+## "#TITLES|oid=title;..." (ReputationService.PushTitles; "oid=" takes one away, "!" clears them all on a region change),
+## drawn under the name, over the guild.
+static var titles := {}
+const TITLE_COLOR := Color(0.96, 0.82, 0.46)
+
+
+static func receive_titles(text: String) -> void:
+	for part in text.split(";", false):
+		if part == "!":
+			titles.clear()
+			continue
+		var eq := part.find("=")
+		if eq <= 0:
+			continue
+		var oid := int(part.substr(0, eq))
+		var t := part.substr(eq + 1)
+		if t == "":
+			titles.erase(oid)
+		else:
+			titles[oid] = t
+
+
 var manager: NpcManager
 var _font: Font
 var _layer: CanvasLayer
@@ -129,7 +152,7 @@ func _process_inner(_delta: float) -> void:
 		var col: Color = Color.WHITE if n == manager.target else (FRIENDLY if n.is_friendly() else n.con_color(PlayerData.level))
 		var guild := String(n.spawn.get("guild", ""))
 		_names.append([eye.distance_squared_to(e[1]), cam.unproject_position(e[1]), String(n.spawn.name),
-				"<%s>" % guild if guild != "" else "", col])
+				"<%s>" % guild if guild != "" else "", col, String(titles.get(int(n.spawn.get("oid", -1)), ""))])
 	_names.sort_custom(func(a, b): return float(a[0]) > float(b[0]))   # farther first: the near ones on top
 
 
@@ -154,6 +177,10 @@ func _draw_names() -> void:
 		var col: Color = e[4]
 		if String(e[3]) != "":
 			bottom = _line(String(e[3]), roundf(at.x), bottom, guild_px, col)
+		if e.size() > 5 and String(e[5]) != "":
+			var tc := TITLE_COLOR
+			tc.a = col.a
+			bottom = _line(String(e[5]), roundf(at.x), bottom, guild_px, tc)
 		_line(String(e[2]), roundf(at.x), bottom, _size, col)
 
 

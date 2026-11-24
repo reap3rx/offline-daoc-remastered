@@ -57,6 +57,12 @@ func open(title: String, entries: Array) -> void:
 			_first = b
 		y += row
 	visible = true
+	# (owner 2026-11-23) on top of everything - a bag's item menu came up behind the Hero window - and the only thing
+	# the controller's d-pad can reach while it is open (Pad keeps to the newest "ui_modal"), wrapping top to bottom
+	move_to_front()
+	z_index = 100
+	if not is_in_group("ui_modal"):
+		add_to_group("ui_modal")
 	# the controller's pointer onto the first entry (the d-pad goes from there)
 	if _first and Pad.active:
 		await get_tree().process_frame
@@ -66,6 +72,8 @@ func open(title: String, entries: Array) -> void:
 
 func close() -> void:
 	visible = false
+	if is_in_group("ui_modal"):
+		remove_from_group("ui_modal")
 	for c in get_children():
 		c.queue_free()
 
@@ -104,6 +112,12 @@ func _gui_input(event: InputEvent) -> void:
 			and not Rect2(_box.position, _box.size).has_point(event.position):
 		close()
 		accept_event()
+
+
+func _process(_d: float) -> void:
+	# a window opened after it (a click, a key) stays under it
+	if visible and get_parent() and get_index() != get_parent().get_child_count() - 1:
+		move_to_front()
 
 
 func _input(event: InputEvent) -> void:

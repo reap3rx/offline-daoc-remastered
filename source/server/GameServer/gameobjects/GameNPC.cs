@@ -193,6 +193,10 @@ namespace DOL.GS
 
 		public void SetTierFightLevel(byte level)
 		{
+			// (owner 2026-11-23, Bugs & Fixes: "as soon as I engaged with the mob, their health would change, which would
+			// make it look like it filled up") - a monster already hurt (an event's people were on it first) keeps the
+			// share of its health it had; a fresh one starts full as before
+			double share = IsAlive && MaxHealth > 0 ? Math.Clamp(Health / (double) MaxHealth, 0.01, 1.0) : 1.0;
 			base.Level = level;
 			short[] s = MonsterTiers.StatsAt(this, level);
 			if (s != null)
@@ -202,7 +206,26 @@ namespace DOL.GS
 			}
 			else
 				SetStats();
-			Health = MaxHealth;
+			Health = Math.Max(1, (int) Math.Round(MaxHealth * share));
+		}
+
+		/// <summary>
+		/// (owner 2026-11-24: "if you kill a yellow at level 33 ... it gives what DAoC's experience would have been for
+		/// killing a level 33 yellow. If you're player level 5 and you kill a yellow, you'll get level 5 yellow EXP") - a
+		/// tiered monster fights at its fighter's level whatever its con (MonsterTiers.FightLevelFor), so it paid a
+		/// same-level kill for a green as for a red. It pays as a monster of its con at that level would in DAoC: the
+		/// level its con stands for (MonsterTiers.LevelFor - a yellow your level, a green a few below, an orange a few
+		/// above), DAoC's experience for that level. (The kill's cap, 1.25x a same-level kill, still applies.)
+		/// </summary>
+		public override long ExperienceValue
+		{
+			get
+			{
+				sbyte tier = MonsterTiers.Tier(this);
+				if (tier == MonsterTiers.None || TierFightBase <= 0)
+					return base.ExperienceValue;
+				return GetExperienceValueForLevel(MonsterTiers.LevelFor(TierFightBase, tier, TierBaseLevel));
+			}
 		}
 
 		public override byte GetDisplayLevel(GamePlayer player)
@@ -2737,6 +2760,9 @@ namespace DOL.GS
 
 			if (!text.Equals("task", StringComparison.OrdinalIgnoreCase))
 				return true;
+
+			if (DOL.GS.Quests.QuestCleanup.GuardTasksRetired)   // (owner 2026-11-21: "No /whisper tasks")
+				return DOL.GS.Quests.QuestCleanup.TellAboutBounties(player, targetLiving);
 
 			if (KillTask.CheckAvailability(player, targetLiving))
 				KillTask.BuildTask(player, targetLiving);

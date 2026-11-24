@@ -1,0 +1,230 @@
+{
+ "zone": 200,
+ "name": "Lough Derg",
+ "levels": [
+  1,
+  20
+ ],
+ "factions": [
+  {
+   "key": "mag_mell_guard",
+   "name": "the Mag Mell Guard",
+   "short": "Mag Mell Guard",
+   "titles": [
+    "Shieldfriend of Mag Mell",
+    "Sword of Mag Mell",
+    "Breaker of the Red Hand"
+   ],
+   "speaker": "lir",
+   "town": "Mag Mell",
+   "kills": [
+    "villainous",
+    "rowdy",
+    "highwayman",
+    "gang hound",
+    "ringleader",
+    "curmudgeon",
+    "mudman",
+    "dergan",
+    "lucradan",
+    "spraggon",
+    "rat boy",
+    "rat man",
+    "wolfhound",
+    "redjaw",
+    "wolf",
+    "badger",
+    "beetle",
+    "crab",
+    "toad",
+    "serpent"
+   ],
+   "quartermaster": {
+    "name": "Quartermaster Tadhg",
+    "guild": "Mag Mell Guard",
+    "model": 337,
+    "anchor": "lir",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The Guard looks after its own. Show me your standing and I'll show you the good stock.",
+    "stock": [
+     {
+      "item": "rep200_shieldfriend_s_band",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep200_mag_mell_watch_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep200_sword_oath_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep200_lake_road_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep200_mantle_of_the_red_hand_breaker",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   },
+   "kin": [
+    "fianna_druim_ligen",
+    "mine_wardens",
+    "rangers_druim_cain",
+    "sentinels_of_ceannai",
+    "watch_of_moher",
+    "host_of_lug",
+    "clann_of_alainn_bin"
+   ]
+  },
+  {
+   "key": "lucht_feasa",
+   "name": "the Lucht Feasa of Loch Dearg",
+   "short": "Lucht Feasa",
+   "titles": [
+    "Friend of the Wise",
+    "Friend of the Good People",
+    "Bean Feasa|Fear Feasa"
+   ],
+   "speaker": "brid",
+   "town": "Mag Mell",
+   "kills": [
+    "fairy",
+    "faerie",
+    "sheerie",
+    "lunantishee",
+    "druid",
+    "wisp",
+    "wraith",
+    "siabra",
+    "skeleton",
+    "ghost",
+    "shade",
+    "finliath",
+    "changeling",
+    "mere guardian",
+    "lady of the mere",
+    "ceo dubh",
+    "gravewarden",
+    "revenant",
+    "summoner",
+    "banshee",
+    "aillen",
+    "briarheart",
+    "fionnan",
+    "spirit",
+    "ghoul",
+    "zombie",
+    "bone",
+    "mist",
+    "phantom",
+    "spectre"
+   ],
+   "quartermaster": {
+    "name": "Sorcha of the Lucht Feasa",
+    "guild": "Lucht Feasa",
+    "model": 365,
+    "anchor": "brid",
+    "offset": [
+     -3,
+     3
+    ],
+    "greet": "Brid says you've a feel for the Otherworld. The Good People's gifts go only to those they trust.",
+    "stock": [
+     {
+      "item": "rep200_rowan_berry_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep200_wise_woman_s_bracer",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep200_gift_of_the_good_people",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep200_hazel_wand_belt",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep200_mantle_of_the_lucht_feasa",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   },
+   "kin": [
+    "order_of_the_rowan",
+    "muintir_etaine",
+    "lucht_an_tobair",
+    "seers_of_moher",
+    "aines_circle",
+    "keeners_of_cullen"
+   ]
+  }
+ ],
+ "kill_default": "mag_mell_guard",
+ "event_default": "mag_mell_guard",
+ "quest_default": "mag_mell_guard",
+ "quests": {
+  "youth_gone_wrong": "mag_mell_guard",
+  "mandras_boy": "mag_mell_guard",
+  "the_paymaster": "mag_mell_guard",
+  "break_the_gang": "mag_mell_guard",
+  "balm_hunt": "mag_mell_guard",
+  "three_kinds_of_trouble": "mag_mell_guard",
+  "the_spring_runs_dry": "mag_mell_guard",
+  "grubbs_truce": "mag_mell_guard",
+  "short_measures": "mag_mell_guard",
+  "the_watchs_new_armour": "mag_mell_guard",
+  "lesser_of_two_evils": "mag_mell_guard",
+  "hughars_ledger": "mag_mell_guard",
+  "what_the_roane_saw": "mag_mell_guard",
+  "the_war_camp": "mag_mell_guard",
+  "orders_from_the_outpost": "mag_mell_guard",
+  "the_roane_captives": "mag_mell_guard",
+  "changeling": "lucht_feasa",
+  "roane": "lucht_feasa",
+  "dew_from_the_mere": "lucht_feasa",
+  "balance_of_nature": "lucht_feasa",
+  "beautiful_music": "lucht_feasa",
+  "the_ladys_bargain": "lucht_feasa",
+  "bones_on_the_road": "lucht_feasa",
+  "lights_in_the_grey_wood": "lucht_feasa",
+  "rionas_revenge": "lucht_feasa",
+  "the_summoner": "lucht_feasa",
+  "the_ladys_bargain:took": "mag_mell_guard",
+  "lesser_of_two_evils:siabra": "lucht_feasa"
+ },
+ "events": {
+  "lough_derg_summoners_muster": "lucht_feasa",
+  "lough_derg_ghostly_siabra": "lucht_feasa",
+  "lough_derg_mushrooms": "lucht_feasa",
+  "lough_derg_curmudgeon_harvest": "mag_mell_guard",
+  "lough_derg_dergan_war_bands": "mag_mell_guard",
+  "lough_derg_highway_robbery": "mag_mell_guard",
+  "lough_derg_hill_war": "mag_mell_guard",
+  "lough_derg_old_redjaw": "mag_mell_guard",
+  "lough_derg_dergan_island_assault": "mag_mell_guard",
+  "lough_derg_island_raid_1": "mag_mell_guard",
+  "lough_derg_island_raid_2": "mag_mell_guard",
+  "lough_derg_island_raid_3": "mag_mell_guard",
+  "lough_derg_island_last_stand": "mag_mell_guard"
+ },
+ "realm": 3
+}

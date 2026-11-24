@@ -145,6 +145,1125 @@
     "Hits": 12
    },
    "lore": "Taken from a dergan who skinned the roane for their pelts. Scrub it as you like."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mended-Elbow Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 4
+   },
+   "lore": "Cut from the sleeve of a blue coat. Mandra mended that elbow four times."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mother's Worry-Stone",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Emp": 2,
+    "Con": 1,
+    "Power": 1,
+    "Hits": 3
+   },
+   "lore": "Worn smooth by a thumb, over a great many nights."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gang-Colour Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 6,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 5
+   },
+   "lore": "Blue and grey, the villainous youths' colours. Dallan wore it inside out the day he came home."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lambing-Night Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 6,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 6,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "A shepherd's ring, given to whoever sat up all night with the ewes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Spy's Pebble",
+   "base": [
+    41,
+    24
+   ],
+   "level": 6,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 4,
+    "Power": 1
+   },
+   "lore": "Dallan's signal: a white pebble on the gatepost meant 'I'm safe'."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Paymaster's Signet",
+   "base": [
+    41,
+    35
+   ],
+   "level": 8,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 1,
+    "Hits": 7
+   },
+   "lore": "A plain ring of dark iron, the red hand scraped off it. The weight is still good."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lieutenant's Bandolier",
+   "base": [
+    41,
+    32
+   ],
+   "level": 8,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 1,
+    "Hits": 7
+   },
+   "lore": "Corr's, with a dozen little pockets, every one of them empty now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ringleader's Knuckle-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 9,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Heavy, ugly and effective, like its last owner."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "South-Camp Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 9,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 9,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "The ringleader's own cloak, patched with the colours of every gang he broke to make his."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "White-Pebble Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 9,
+   "bonuses": {
+    "Qui": 3,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 5,
+    "Power": 1
+   },
+   "lore": "One of Dallan's white pebbles, bored through and strung. 'I'm safe.'"
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Balm-Tin Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Emp": 2,
+    "Con": 1,
+    "Power": 1,
+    "Hits": 3
+   },
+   "lore": "Nessa's old balm tin. It still smells of mudman and mint."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rat-Tail Lace",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 4
+   },
+   "lore": "Don't ask what the lace is made of."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Woad-Blue Gloves Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "Rhian's dyeing gloves, shrunk to a charm. Still blue. Always blue."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Three-Pot Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 5,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 4
+   },
+   "lore": "Hooks for three dye-pots: blue, yellow and red."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ditch-Spade Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 7,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 6
+   },
+   "lore": "Beaten from the blade of a curmudgeon's ditch-spade."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Spring-Water Phial",
+   "base": [
+    41,
+    29
+   ],
+   "level": 7,
+   "bonuses": {
+    "Int": 2,
+    "Emp": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 4
+   },
+   "lore": "Filled at the spring the morning it ran full again."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bigfist Gauntlet-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 8,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 1,
+    "Hits": 7
+   },
+   "lore": "A spraggon's knuckle-guard, far too big for any spraggon."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hill King's Crown-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 8,
+   "bonuses": {
+    "Qui": 3,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 5,
+    "Power": 1
+   },
+   "lore": "Grubb's pebble crown, the best pebble kept."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Truce-Keeper's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 8,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 8,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Rhian dyed it three colours, so nobody on the hill could call it theirs."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lily-Dew Phial",
+   "base": [
+    41,
+    29
+   ],
+   "level": 8,
+   "bonuses": {
+    "Int": 3,
+    "Emp": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "Never empty, never quite full. Smells of white lilies."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thief's Petal Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 8,
+   "bonuses": {
+    "Qui": 3,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 5,
+    "Power": 1
+   },
+   "lore": "A petal from a mere sprite. It curls away from your fingers."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Go-Between's Scale",
+   "base": [
+    41,
+    24
+   ],
+   "level": 10,
+   "bonuses": {
+    "Emp": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "Sabha shed it on purpose. You're nearly sure of that."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Trout-Leather Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 10,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 2,
+    "Hits": 8
+   },
+   "lore": "Supple, silver and faintly fishy."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Old Drumhead Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Int": 4,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "The split drumhead, cut round and bound in brass. It hums when it's struck."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Midsummer Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 12,
+   "bonuses": {
+    "Qui": 4,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 7,
+    "Power": 1
+   },
+   "lore": "Tavie wore it every midsummer for twenty years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cured-Hide Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 12,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 12,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Curmudgeon-cured. Stinks for a month, lasts a hundred years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Meadowsweet Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 13,
+   "bonuses": {
+    "Emp": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "Embroidered with foxglove and meadowsweet, for the bees."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned-Lily Circlet Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 13,
+   "bonuses": {
+    "Int": 4,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "A lily from the bottom of a silent mere. It never opens."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Herbwife's Satchel-Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 13,
+   "bonuses": {
+    "Qui": 4,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 8,
+    "Power": 1
+   },
+   "lore": "Orlaith's own. A pocket for everything, and one for dew."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mere-Guard Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 13,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 11
+   },
+   "lore": "Pale as bone and cold as deep water."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Reeve's Tally-Stick Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 9,
+   "bonuses": {
+    "Int": 3,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "Notched for every sack. The last notch is yours."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Clay-Caked Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 9,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 9,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "The clay won't come off. Cathbad says it's lucky."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Watchman's Studded Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 10,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Studded with mudman chert. Kylirean is very proud of it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cadger-Skin Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 10,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 2,
+    "Hits": 8
+   },
+   "lore": "Wolf-skin, the fur turned in. Warm on a night watch."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tharl's Trap-Chain Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 10,
+   "bonuses": {
+    "Qui": 3,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 6,
+    "Power": 1
+   },
+   "lore": "A link from Tharl's trap-chain. It still snaps shut on its own sometimes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Exile's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 12,
+   "bonuses": {
+    "Int": 4,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "Siabra silver, turned so the stone faces in. Fereinn's people will know what it means."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Courier's Satchel-Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 12,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 10
+   },
+   "lore": "It carried plans for a war. Now it carries your lunch."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Reeve's Seal Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 12,
+   "bonuses": {
+    "Emp": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "Cathbad's own seal, the barley sheaf. 'Show it at any granary in Hibernia.'"
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cruiach-Hide Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Alastriona's stolen hide, won back from Hughar. She says you've earned it more than she has."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Poacher's Ledger-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 14,
+   "bonuses": {
+    "Int": 5,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "The ledger's brass clasp. Every sack, every coin."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hughar's Snare-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 12
+   },
+   "lore": "A loop of poacher's wire, twisted into a ring."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seal-Stone Shard",
+   "base": [
+    41,
+    24
+   ],
+   "level": 10,
+   "bonuses": {
+    "Emp": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "A chip of the barrow's cracked seal-stone. Cold, always."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Bone Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 10,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Bound from the arm-bones of a skeletal pawn. They've stopped moving. Mostly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Red-Wax Candle Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Int": 4,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A stub of red wax, stamped with a hand. It won't light. You've tried."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Grey Wood Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 12,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 12,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Woven from the grey moss of the haunted wood. It keeps the mist off - and some of the cold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hayrick Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 12,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 10
+   },
+   "lore": "The farmhand who hid the saddlebag gave you this, and wouldn't look at you."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dergal's Runed Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Int": 5,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "Stitched from Dergal's vest. The runes still smoulder faintly - binding, and unbinding."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pit-Chain Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "A link of the chain that held Riona. She wanted it gone. You wanted it kept."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Riona's Vengeance Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 12
+   },
+   "lore": "Riona wore it in the pit, hidden in her mouth. She says it kept her sane."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Summoner's Signet",
+   "base": [
+    41,
+    35
+   ],
+   "level": 16,
+   "bonuses": {
+    "Int": 5,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "A red hand on lake-blue enamel: the seal of Clan Derg. The hand has been chiselled off."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Song Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 16,
+   "bonuses": {
+    "Emp": 5,
+    "Con": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "The Summoner's last note, caught in a bead of grey glass."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gravewarden's Girdle",
+   "base": [
+    41,
+    32
+   ],
+   "level": 16,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 16,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "The barrow's old guardians wore these. One of them gave it back."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "War-Stone Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 15,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 13
+   },
+   "lore": "An uncut stone from the lake bed, the warlord's name scratched out."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lorewoman's Ogham Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 15,
+   "bonuses": {
+    "Int": 5,
+    "Emp": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 9
+   },
+   "lore": "Cara carved it with the old names of the lake, before it was red."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Muster-Roll Satchel Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 16,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 3,
+    "Hits": 14
+   },
+   "lore": "It held the war camp's muster roll. You've kept the satchel."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Palisade-Stake Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 16,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "Cut from the war camp's palisade, the night you slipped through it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Roane-Watcher's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 16,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 16,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Grey as a seal's back. The roane gave it to those who watch for them."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Quartermaster's Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 18,
+   "bonuses": {
+    "Qui": 6,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 11,
+    "Power": 2
+   },
+   "lore": "Every pocket held a red-hand coin. Lir had them melted for the widows' fund."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Outpost-Fire Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 18,
+   "bonuses": {
+    "Int": 6,
+    "Emp": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "Snatched out of the fire with the orders. It's still warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mag Mell Guard Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 18,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 15
+   },
+   "lore": "Captain Lir's own issue. 'You've earned the green.'"
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Roane-Song Pearl",
+   "base": [
+    41,
+    29
+   ],
+   "level": 19,
+   "bonuses": {
+    "Emp": 6,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "The last captive sang into it as she went into the water. You can still hear it, very faintly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pen-Key Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 19,
+   "bonuses": {
+    "Dex": 6,
+    "Qui": 6,
+    "Str": 3,
+    "Hits": 16
+   },
+   "lore": "The key to the roane pens, bent into a ring. Nobody will use it again."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Slavemaster's Bane",
+   "base": [
+    41,
+    24
+   ],
+   "level": 19,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 16
+   },
+   "lore": "Cuan's whip-handle, broken in two and bound with sealskin."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Red Lake Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 19,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 19,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Lake-blue, with a red hand torn from it. Worn by those who broke the warlord's hold."
   }
  ]
 }

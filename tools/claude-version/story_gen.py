@@ -37,6 +37,10 @@ class Zone:
     # people
     def npc(self, id, name, at, kind='m', level=None, model=None, guild=None, idle=None, during=None, zone=None, size=None,
             hostile=False):
+        # the realm's "old" model is an old man's (owner 2026-11-23: "Orlaith the Herbwife is a male Celt") - a woman given it
+        # gets the realm's woman's model
+        if kind == 'f' and model in {m['old'] for m in REALM_MODELS.values()}:
+            model = REALM_MODELS[self.realm]['f']
         n = {'id': id, 'zone': self.zone if zone is None else zone, 'realm': self.realm, 'name': name,
              'model': model or REALM_MODELS[self.realm].get(kind, 9), 'level': level or 20, 'pos': list(at)}
         if guild:
@@ -109,6 +113,8 @@ class Zone:
             q['endings'][k] = {'text': e['text'], 'tragic': bool(e.get('tragic')),
                                'rewards': {'xp_pct': xp, 'copper_per_level': 50 + 3 * n, 'marks': marks,
                                            'items': e.get('items', []), 'choice': ch}}
+            if e.get('wake_event'):                              # (an ending can wake a dynamic event: EndingDef.WakeEvent)
+                q['endings'][k]['wake_event'] = e['wake_event']
         self.quests.append(q)
 
     def check(self):

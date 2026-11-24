@@ -72,7 +72,28 @@ namespace DOL.GS
         // only spells against foes - damage and crowd control (owner 2026-11-19: "the spell charging has also affected
         // buffs. I don't think it should work for those, only for offensive and crowd control spells")
         static bool Channelable(Spell s) =>
-            s != null && s.IsHarmful && s.CastTime > 0 && !s.NeedInstrument && s is not Song && !s.IsPulsing && !SpellFamilies.IsPet(s);
+            s != null && CastTimeOf(s) > 0 && !s.NeedInstrument && s is not Song && !s.IsPulsing &&
+            (IsPlaced(s) || s.IsHarmful && !SpellFamilies.IsPet(s));
+
+        // A Necromancer's spells (owner 2026-11-24: "make the upgrades and spell casting work like others (since you can
+        // cast some spells as a shade) with the charging"): the shade issues a PetSpell and the servant casts what it
+        // carries, so the cast time to channel is the servant's; the rank that goes off reaches the servant instant
+        // (ChannelledByShade - PetSpellHandler), the channel having been its cast.
+        static bool IsServantSpell(Spell s) => s != null && s.SpellType == eSpellType.PetSpell && s.SubSpellID > 0;
+
+        static Spell Carried(Spell s) => IsServantSpell(s) ? SkillBase.GetSpellByID(s.SubSpellID) : null;
+
+        static int CastTimeOf(Spell s) => Math.Max(s.CastTime, Carried(s)?.CastTime ?? 0);
+
+        static readonly ConditionalWeakTable<Spell, object> _channelled = new();
+
+        /// <summary>PetSpellHandler: this PetSpell was channelled by the shade - its servant casts it at once.</summary>
+        public static bool ChannelledByShade(Spell s) => s != null && _channelled.TryGetValue(s, out _);
+
+        /// <summary>A spell set down at your ground target (an Animist's turrets): channelled too, the client showing where it
+        /// will go - wherever the reticle points, within range - and setting the ground target there as the key comes up
+        /// (owner 2026-11-21: "as soon as you release it, it will release where the action combat reticle is pointed").</summary>
+        public static bool IsPlaced(Spell s) => s != null && s.SpellType is eSpellType.SummonAnimistFnF or eSpellType.SummonAnimistPet or eSpellType.SummonTheurgistPet;   // (a Theurgist's pets too - AlbionKits)
 
         /// <summary>UseSpellHandler: a held key's spell. True when it is channelled (the cast is the channel's).</summary>
         public static bool TryBegin(GamePlayer p, Spell spell, SpellLine line)
@@ -88,17 +109,20 @@ namespace DOL.GS
                 return false;                          // (the ordinary cast says why not)
             if (p.GetSkillDisabledDuration(spell) > 0)
                 return false;
+            if (IsServantSpell(spell) && (p.ControlledBrain?.Body is not GameNPC servant || !servant.IsAlive))
+                return false;                          // (no servant: PetSpellHandler says so)
             var (prev, next) = Ranks(spell, line);
             if (prev == null && next == null)
                 return false;
             int normal;
             try
             {
-                normal = ScriptMgr.CreateSpellHandler(p, spell, line) is SpellHandler sh ? p.CalculateCastingTime(sh) : spell.CastTime;
+                Spell timed = spell.CastTime > 0 ? spell : Carried(spell);
+                normal = ScriptMgr.CreateSpellHandler(p, timed, line) is SpellHandler sh ? p.CalculateCastingTime(sh) : timed.CastTime;
             }
             catch (Exception)
             {
-                normal = spell.CastTime;
+                normal = CastTimeOf(spell);
             }
             normal = Math.Max(500, normal);
             int dex = p.GetModified(eProperty.Dexterity);
@@ -118,7 +142,7 @@ namespace DOL.GS
             // the gathering, held until the key comes up (its time: the longest a hold may last)
             foreach (GamePlayer v in p.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                 v.Out.SendSpellCastAnimation(p, spell.ClientEffect, (ushort) (MaxHoldMs / 100));
-            NewClient.Send(p, $"#CH|start|{st.QuickMs}|{st.NormalMs}|{st.PoweredMs}|{Clean(prev?.Name)}|{Clean(spell.Name)}|{Clean(next?.Name)}|{(int) spell.DamageType}");
+            NewClient.Send(p, $"#CH|start|{st.QuickMs}|{st.NormalMs}|{st.PoweredMs}|{Clean(prev?.Name)}|{Clean(spell.Name)}|{Clean(next?.Name)}|{(int) spell.DamageType}|{(IsPlaced(spell) ? spell.Range : 0)}");
             new ECSGameTimer(p, _ => Tick(p, st, serial), 100);
             return true;
         }
@@ -135,6 +159,11 @@ namespace DOL.GS
                 return 0;
             }
             long dx = p.X - st.X, dy = p.Y - st.Y;
+            if (IsServantSpell(st.Cur) && (p.ControlledBrain?.Body is not GameNPC servant || !servant.IsAlive))
+            {
+                Cancel(p, st, "Your servant is gone and your channel breaks!");
+                return 0;
+            }
             if (dx * dx + dy * dy > 24 * 24 || p.IsStunned || p.IsMezzed || p.IsSilenced)
             {
                 Cancel(p, st, "You move and your channel breaks!");
@@ -193,6 +222,10 @@ namespace DOL.GS
             rank ??= st.Cur;
             Spell instant = rank.Copy();
             instant.CastTime = 0;                       // (the channel was its cast)
+            if (IsServantSpell(instant))
+                _channelled.AddOrUpdate(instant, true);  // (and its servant's: PetSpellHandler)
+            if (IsPlaced(rank))
+                p.GroundTargetInView = true;            // (the client placed it on what the reticle sees)
             NewClient.Send(p, $"#CH|end|{Clean(rank.Name)}|{how}");
             if (!p.CastSpell(instant, st.Line))
             {

@@ -101,6 +101,7 @@ namespace DOL.GS.GameEvents
 			return m_cachedClassEquipment
 				.Where(entry => entry.Key == 0 || entry.Key == characterClass)
 				.SelectMany(entry => entry.Value)
+				.Select(item => ForClass(item, characterClass))
 				.Where(item => item != null &&
 					item.Item_Type is >= Slot.RIGHTHAND and <= Slot.RANGED &&
 					(eObjectType)item.Object_Type != eObjectType.Shield &&
@@ -245,8 +246,49 @@ namespace DOL.GS.GameEvents
 			}
 		}
 
+		/// <summary>A class's own starter in place of the shared row: the Valewalker's training scythe (owner 2026-11-23:
+		/// "Valewalkers should start with a starting scythe rather than a staff" - the table gives Animists, Valewalkers and
+		/// the Sluaghbinder slot the same training staff).</summary>
+		private static DbItemTemplate ForClass(DbItemTemplate template, eCharacterClass cls) =>
+			cls == eCharacterClass.Valewalker && template?.Id_nb == "training_staff" ? TrainingScythe(template) : template;
+
+		private static DbItemTemplate _trainingScythe;
+
+		/// <summary>The training scythe: the training staff remade as a two-handed scythe (a training weapon by its id, so it
+		/// hits like a blue-conned weapon of your level - TrainingWeapons), kept in the database once made.</summary>
+		public static DbItemTemplate TrainingScythe(DbItemTemplate staff)
+		{
+			if (_trainingScythe != null)
+				return _trainingScythe;
+			DbItemTemplate t = GameServer.Database.FindObjectByKey<DbItemTemplate>("training_scythe");
+			if (t == null && staff != null)
+			{
+				t = new DbItemTemplate(staff)
+				{
+					Id_nb = "training_scythe",
+					Name = "training scythe",
+					Object_Type = (int) eObjectType.Scythe,
+					Model = 931,
+					Type_Damage = (int) eDamageType.Slash,
+					SPD_ABS = 38,
+					Weight = 30,
+				};
+				try
+				{
+					GameServer.Database.AddObject(t);
+				}
+				catch (Exception e)
+				{
+					log.Warn("Could not save the training scythe", e);
+				}
+			}
+			return _trainingScythe = t ?? staff;
+		}
+
 		private static DbItemTemplate GetCharacterStarterTemplate(DbItemTemplate template, DbCoreCharacter character)
 		{
+			if (character != null)
+				template = ForClass(template, (eCharacterClass) character.Class);
 			if (template == null || character == null || character.Realm != (int)eRealm.Hibernia ||
 				character.Class != (int)eCharacterClass.Acolyte)
 				return template;

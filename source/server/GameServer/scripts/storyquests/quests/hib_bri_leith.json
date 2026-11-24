@@ -2,18 +2,194 @@
   "name": "Valley of Bri Leith",
   "npcs": [
     {
+      "id": "bl_maelan",
+      "zone": 206,
+      "realm": 3,
+      "name": "Herder-Chief Maelan",
+      "model": 337,
+      "level": 24,
+      "pos": [
+        628,
+        1098
+      ],
+      "guild": "Brynach",
+      "idle": "Brynach's been a herders' town since before there were kings. We know the host rides. We just keep the cows in."
+    },
+    {
+      "id": "bl_fiona",
+      "zone": 206,
+      "realm": 3,
+      "name": "Roadwarden Fiona",
+      "model": 365,
+      "level": 26,
+      "pos": [
+        600,
+        1120
+      ],
+      "guild": "Rangers of Druim Cain",
+      "idle": "The road from Lough Derg to Druim Cain is mine to keep. Lately it's keeping me."
+    },
+    {
+      "id": "bl_nessa",
+      "zone": 206,
+      "realm": 3,
+      "name": "Nessa the Weaver",
+      "model": 365,
+      "level": 18,
+      "pos": [
+        612,
+        1125
+      ],
+      "idle": "Aideen's sixteen and dreams of a golden hall every night. I wish she'd dream of weaving."
+    },
+    {
+      "id": "bl_aideen",
+      "zone": 206,
+      "realm": 3,
+      "name": "Aideen",
+      "model": 365,
+      "level": 14,
+      "pos": [
+        615,
+        1132
+      ],
+      "idle": "Do you ever dream of a place so clearly you could find your way round it awake?"
+    },
+    {
+      "id": "bl_sarnat",
+      "zone": 206,
+      "realm": 3,
+      "name": "Sarnat of Caille",
+      "model": 365,
+      "level": 34,
+      "pos": [
+        912,
+        818
+      ],
+      "guild": "Muintir Etaine",
+      "idle": "Caille has kept the bargain with the hill for a thousand years. We don't break it. We don't let it be broken."
+    },
+    {
+      "id": "bl_fearghal",
+      "zone": 206,
+      "realm": 3,
+      "name": "Ranger-Commander Fearghal",
+      "model": 337,
+      "level": 36,
+      "pos": [
+        892,
+        100
+      ],
+      "guild": "Rangers of Druim Cain",
+      "idle": "Druim Cain holds the frontier. The Rangers hold everything between it and Lough Derg. Mostly."
+    },
+    {
       "id": "muirenn",
       "zone": 206,
       "realm": 3,
       "name": "Grandmother Muirenn",
-      "model": 362,
+      "model": 365,
       "level": 14,
       "pos": [
         905,
-        95,
-        45.6
+        95
       ],
       "idle": "Rian went through the veil at Samhain. He was ten. He's still ten, there."
+    },
+    {
+      "id": "druid_ennis",
+      "zone": 206,
+      "realm": 3,
+      "name": "Druid Ennis",
+      "model": 362,
+      "level": 30,
+      "pos": [
+        918,
+        82
+      ],
+      "idle": "The grove's oaks are dying. Their heart was stolen."
+    },
+    {
+      "id": "bl_brogan",
+      "zone": 206,
+      "realm": 3,
+      "name": "Brogan the Miner",
+      "model": 318,
+      "level": 14,
+      "pos": [
+        430,
+        240
+      ],
+      "guild": "Coruscating Mine",
+      "idle": "Forty years I dug that mine. Forty days the siog have had it. They don't even dig properly."
+    },
+    {
+      "id": "bl_tuathal",
+      "zone": 206,
+      "realm": 3,
+      "name": "Herder Tuathal",
+      "model": 337,
+      "level": 20,
+      "pos": [
+        560,
+        1300
+      ],
+      "idle": "Don't graze the south pasture after dusk. That's not a rule. That's advice from a man with nine fewer cows."
+    },
+    {
+      "id": "bl_caoimhe",
+      "zone": 206,
+      "realm": 3,
+      "name": "Fisher Caoimhe",
+      "model": 365,
+      "level": 22,
+      "pos": [
+        1080,
+        1350
+      ],
+      "idle": "The fish in Moon Lake come up to look at the moon. So do other things."
+    },
+    {
+      "id": "bl_maudalin",
+      "zone": 206,
+      "realm": 3,
+      "name": "Watch-Sergeant Maudalin",
+      "model": 365,
+      "level": 28,
+      "pos": [
+        140,
+        1300
+      ],
+      "guild": "Rangers of Druim Cain",
+      "idle": "Giolladhe's Tower watches the west road. The west road watches back."
+    },
+    {
+      "id": "bl_rasa",
+      "zone": 206,
+      "realm": 3,
+      "name": "Keeper Rasa",
+      "model": 365,
+      "level": 34,
+      "pos": [
+        1281,
+        357
+      ],
+      "guild": "Keeper of the Heights",
+      "idle": "I kept the empyreans for forty years. They were the sky's own children. Then the wind changed."
+    },
+    {
+      "id": "bl_fionnuala",
+      "zone": 206,
+      "realm": 3,
+      "name": "Ranger-Scout Fionnuala",
+      "model": 365,
+      "level": 30,
+      "pos": [
+        1420,
+        1000
+      ],
+      "guild": "Rangers of Druim Cain",
+      "idle": "Past those stones is the Cursed Forest. I've been in. Once. I don't talk about it."
     },
     {
       "id": "rian",
@@ -24,8 +200,7 @@
       "level": 10,
       "pos": [
         266,
-        946,
-        179.4
+        946
       ],
       "during": [
         "veil/s6"
@@ -33,30 +208,15 @@
       "size": 40
     },
     {
-      "id": "druid_ennis",
+      "id": "aoibheann",
       "zone": 206,
       "realm": 3,
-      "name": "Druid Ennis",
-      "model": 337,
-      "level": 30,
-      "pos": [
-        918,
-        82,
-        45.6
-      ],
-      "idle": "The grove's oaks are dying. Their heart was stolen."
-    },
-    {
-      "id": "ailbhe",
-      "zone": 206,
-      "realm": 3,
-      "name": "Ailbhe",
+      "name": "Aoibheann",
       "model": 365,
       "level": 24,
       "pos": [
         448,
-        450,
-        209.5
+        450
       ],
       "during": [
         "oak_heart/s6"
@@ -65,9 +225,760 @@
   ],
   "quests": [
     {
+      "id": "bl_road_to_caille",
+      "title": "The Road to Caille",
+      "level": 1,
+      "giver": "bl_maelan",
+      "offer": "New to Brynach? Welcome. We're herders - cows, sheep, the odd fairy horse when it wanders in.\n\nCaille, up the road north-east, is where the valley's business gets done. Will you [take the wool] to Sarnat there? She'll pay you, and she'll tell you what's what in Bri Leith. Keep to the road. If you hear hooves after dark, get off it.",
+      "accept": "take the wool",
+      "topics": {},
+      "summary": "Herder-Chief Maelan in Brynach has wool for Sarnat in Caille, up the road.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "bl_sarnat",
+          "goal": "Take Maelan's wool to Sarnat of Caille, about 420 m north-east of Brynach up the road",
+          "say": "Brynach wool! Maelan's the only one who still sends it carded.\n\nYou walked up from Brynach? Then you've seen the valley's easy half. Look around Caille - and out in the valley. There's work everywhere, and most of it has hooves or wings.",
+          "ending": "default",
+          "id": "s1"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Here - for the walk.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 60,
+            "copper_per_level": 53,
+            "marks": 5,
+            "items": [],
+            "choice": []
+          }
+        }
+      }
+    },
+    {
+      "id": "bl_brogans_tools",
+      "title": "Brogan's Tools",
+      "level": 12,
+      "giver": "bl_brogan",
+      "offer": "The siog took our camp at the Coruscating Mine, west of here. They're carting the ore off - and my tools with it, the thieving little louts.\n\nWill you [get my tools back]? They'll be in the carts by the camp. Knock a few footpads over while you're there.",
+      "accept": "get my tools back",
+      "topics": {},
+      "summary": "The siog took the lurikeen miners' camp at the Coruscating Mine. Brogan wants his tools back.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            190,
+            230
+          ],
+          "radius": 40,
+          "goal": "Kill 5 siog footpads round the ore carts, about 240 m west of Brogan",
+          "target": "siog footpad",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 206,
+          "at": [
+            195,
+            235
+          ],
+          "goal": "Search the ore carts (click the glinting spot)",
+          "clue": {
+            "name": "Brogan's tool-roll",
+            "model": 1347
+          },
+          "text": "Brogan's tools, rolled in oilcloth. Under them, a lump of the mine's ore - and scratched into it, a little sign like a twist of wind. Not siog work.",
+          "give": {
+            "name": "Brogan's tool-roll"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_brogan",
+          "goal": "Bring the tools to Brogan the Miner",
+          "say": "My tools! And - what's this on the ore? That's no mark of ours. Somebody's marking the ore for themselves.\n\nThe siog don't keep anything. They sell it. Somebody is buying our mine one cart at a time.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Coruscating Mine, with thanks.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq206_brogan_s_pick_charm",
+              "sq206_ore_cart_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bl_glamoured_miner",
+      "title": "The Glamoured Miner",
+      "level": 14,
+      "giver": "bl_brogan",
+      "offer": "Cucugar - my partner - is still up at the mine. Working for them. Digging for the siog with a glazed look and a ring on his finger I've never seen before.\n\nThat's glamour. Will you [bring Cucugar back]? Knock the pillers off him first. Then knock some sense into him. Gently.",
+      "accept": "bring Cucugar back",
+      "topics": {},
+      "summary": "Brogan's partner Cucugar digs for the siog under a glamour.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            300,
+            175
+          ],
+          "radius": 40,
+          "goal": "Kill 4 siog pillers at the mine mouth, about 150 m north-west of Brogan",
+          "target": "siog piller",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            218,
+            262
+          ],
+          "radius": 40,
+          "goal": "Subdue Miner Cucugar near the siog camp",
+          "target": "Miner Cucugar",
+          "count": 1,
+          "text": "Cucugar sits down hard. The ring slides off his finger and the glaze goes out of his eyes. 'Brogan? Is it Tuesday? Why am I so TIRED?'",
+          "give": {
+            "name": "Cucugar's glamour-ring"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_brogan",
+          "goal": "Bring Cucugar's ring to Brogan",
+          "say": "He's sleeping it off in my tent, the great lump. Thank you.\n\nThat ring isn't siog-made. Siog can't do glamours that strong. Somebody gave it to them.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take this, from both of us.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq206_glamour_ring_of_the_siog",
+              "sq206_lamp_bearer_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "bl_brogans_tools"
+    },
+    {
+      "id": "bl_ore_paid",
+      "title": "Where the Ore Goes",
+      "level": 16,
+      "giver": "bl_brogan",
+      "offer": "The siog have a fence at their camp - a big one, with a ledger. If anyone knows who's buying our ore, it's him.\n\nWill you [find the buyer]? The Rangers at Druim Cain will want to know too. Commander Fearghal's been asking.",
+      "accept": "find the buyer",
+      "topics": {},
+      "summary": "A siog fence at the camp below the mine knows who buys the stolen ore.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            250,
+            300
+          ],
+          "radius": 40,
+          "goal": "Defeat the siog fence at the siog camp, about 190 m south-west of Brogan",
+          "target": "siog fence",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 206,
+          "at": [
+            255,
+            305
+          ],
+          "goal": "Search the fence's ledger at the siog camp (click the glinting spot)",
+          "clue": {
+            "name": "the fence's ledger",
+            "model": 1347
+          },
+          "text": "In a careful siog hand: 'Ore, twelve carts - to the druid at the stones, for wind-charms. Paid in charms.' The stones: the Druid Circle, east of here.",
+          "give": {
+            "name": "the fence's ledger"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "reach",
+          "zone": 206,
+          "at": [
+            400,
+            400
+          ],
+          "radius": 25,
+          "goal": "Go and look at the Druid Circle from its edge, about 200 m south-east of the siog camp",
+          "text": "Stones on a hill, and druids among them in cloaks of black feathers - and an ore cart, half-unloaded, at the foot of the circle.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_fearghal",
+          "goal": "Take the ledger to Ranger-Commander Fearghal at Druim Cain",
+          "say": "Druids buying stolen ore for wind-charms. Wind-charms! In a valley where the wind's been wrong all year.\n\nThe Muintir in Caille will want this as much as I do. Good work. The Rangers won't forget it.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq206_fence_s_tally_stick_charm",
+              "sq206_ranger_issue_ring",
+              "sq206_camp_stalker_s_sash"
+            ]
+          }
+        }
+      },
+      "requires": "bl_glamoured_miner"
+    },
+    {
+      "id": "bl_sloithi",
+      "title": "Sloithi",
+      "level": 18,
+      "giver": "bl_brogan",
+      "offer": "The siog have a chief - Sloithi - squatting in our camp like it's his. While he's there the camp is theirs.\n\nWill you [throw Sloithi out]? Then I can decide whether we dig again or leave it be.",
+      "accept": "throw Sloithi out",
+      "topics": {},
+      "summary": "Sloithi, the siog chief, holds the miners' camp.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            261,
+            310
+          ],
+          "radius": 40,
+          "goal": "Defeat Sloithi at the siog camp",
+          "target": "Sloithi",
+          "count": 1,
+          "text": "Sloithi falls among his stolen pots. In his fist, a wind-charm - a twist of yew and scarlet thread - still humming.",
+          "id": "s1"
+        },
+        {
+          "type": "choice",
+          "npc": "bl_brogan",
+          "goal": "Return to Brogan the Miner",
+          "say": "Sloithi's out. Thank you.\n\nWe can [dig again] - the mine's rich, and the Rangers have promised a guard. Or we [let it rest]. The hill's been singing at night since the siog came. My granny would've said that's the hill telling us to stop.",
+          "options": [
+            {
+              "keyword": "dig again",
+              "say": "Dig again, then. Picks up, lads! And somebody keep an eye on the hill.",
+              "ending": "dig"
+            },
+            {
+              "keyword": "let it rest",
+              "say": "Rest, then. We'll go and dig in Lough Derg like ordinary people. Bah.",
+              "ending": "rest"
+            }
+          ],
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "dig": {
+          "text": "From the Coruscating Mine - the first ore of the new seam.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq206_sloithi_s_ore_crown",
+              "sq206_mine_mouth_bracer",
+              "sq206_deep_seam_ring"
+            ]
+          }
+        },
+        "rest": {
+          "text": "From the Coruscating Mine, closed with thanks.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq206_sloithi_s_ore_crown",
+              "sq206_mine_mouth_bracer",
+              "sq206_deep_seam_ring"
+            ]
+          }
+        }
+      },
+      "requires": "bl_ore_paid"
+    },
+    {
+      "id": "bl_dying_grove",
+      "title": "The Dying Grove",
+      "level": 14,
+      "giver": "druid_ennis",
+      "offer": "Our sacred grove in the western woods is dying. In midsummer, the leaves brown and the bark weeps.\n\nGo and look at the [heart-hollow] in the old oak. Something's wrong there, and my legs won't carry me down that far any more.",
+      "accept": "heart-hollow",
+      "topics": {},
+      "summary": "Druid Ennis's sacred grove in the western woods is dying in midsummer.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 206,
+          "at": [
+            180,
+            760
+          ],
+          "radius": 25,
+          "goal": "Go to the sacred grove in the western woods, about 1 km south-west of Druim Cain",
+          "text": "Old oaks, brown in midsummer. The grass round them is grey. Moss sheeries pick at the roots.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            180,
+            760
+          ],
+          "radius": 40,
+          "goal": "Drive off 5 moss sheeries gnawing the grove's roots",
+          "target": "moss sheerie",
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 206,
+          "at": [
+            185,
+            765
+          ],
+          "goal": "Search the heart-hollow of the oldest oak (click the glinting spot)",
+          "clue": {
+            "name": "the empty heart-hollow",
+            "model": 1347
+          },
+          "text": "The hollow where the oak-heart lay is empty. Little three-toed prints all round it - siog - and a smell of black feathers.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "druid_ennis",
+          "goal": "Return to Druid Ennis at Druim Cain",
+          "say": "Empty. Gods. The oak-heart is gone.\n\nSiog prints and black feathers. The siog steal. Druids in black feathers... I know who wears black feathers. I'll have to ask you to go after it.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the grove, while it lives.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq206_dying_oak_leaf_charm",
+              "sq206_grove_watcher_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "oak_heart",
+      "title": "The Oak-Heart",
+      "level": 18,
+      "giver": "druid_ennis",
+      "offer": "The grove's oak-heart has been stolen - a golden acorn that holds the life of every oak in our sacred grove. Without it they'll die by midwinter.\n\nThe siog took it. Siog take everything. But siog don't keep things - they sell them. Find their camp below the Coruscating Mine and you'll find who they sold it to. Will you [find the oak-heart]?",
+      "accept": "find the oak-heart",
+      "topics": {},
+      "summary": "The siog stole the golden oak-heart that keeps a sacred grove alive, and sold it on.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 206,
+          "at": [
+            250,
+            300
+          ],
+          "radius": 20,
+          "goal": "Find the siog camp below the Coruscating Mine, about 700 m south-west of Druim Cain",
+          "text": "A camp of stolen things - pots, boots, a church bell, a chicken. Siog everywhere, counting.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            250,
+            300
+          ],
+          "radius": 40,
+          "goal": "Fight through 5 siog footpads at the camp",
+          "target": "siog footpad",
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 206,
+          "at": [
+            245,
+            295
+          ],
+          "goal": "Search the siog's stolen goods (click the glinting spot)",
+          "clue": {
+            "name": "a ledger of stolen things",
+            "model": 1347
+          },
+          "text": "In a careful siog hand: 'One golden acorn. Sold to the druids at the stones. Paid: two wind-charms, one goat.' The stones - the Druid Circle, east.",
+          "give": {
+            "name": "the siog ledger"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            450,
+            420
+          ],
+          "radius": 40,
+          "goal": "Fight 4 renegade druids at the Druid Circle",
+          "target": "renegade druid",
+          "count": 4,
+          "id": "s4"
+        },
+        {
+          "type": "encounter",
+          "zone": 206,
+          "at": [
+            445,
+            440
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the renegade archdruid",
+          "text": "The archdruid falls. A young druid in green kneels by the stones, holding the golden acorn, weeping.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Archdruid Ruadh",
+              "center": [
+                445,
+                440
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Archdruid Ruadh",
+              "announce": "A druid in a cloak of black feathers raises a staff of thorn. 'The grove is ours to move. Ennis is old and blind - and Riocard pays better.'",
+              "boss": {
+                "template": 10120,
+                "name": "Archdruid Ruadh",
+                "level": 22,
+                "health_mult": 2.4
+              },
+              "success": "Archdruid Ruadh falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 10120,
+                    "name": "renegade druid",
+                    "level": [
+                      20,
+                      21
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "aoibheann",
+          "goal": "Talk to the young druid",
+          "say": "I'm Aoibheann. Ennis' apprentice. I - I helped them. I told them where the oak-heart was kept.\n\nRuadh said the old grove was dying anyway and we could plant a new one, away from the keeps and the wars. Riocard promised. I believed them. Take it. Take it back to Ennis. And tell him I'm [sorry].",
+          "keyword": "sorry",
+          "give": {
+            "name": "the oak-heart"
+          },
+          "id": "s6"
+        },
+        {
+          "type": "choice",
+          "npc": "druid_ennis",
+          "goal": "Return the oak-heart to Druid Ennis",
+          "say": "The oak-heart! The grove will live!\n\n...Aoibheann. My Aoibheann helped them.\n\nThe druids' law says an apprentice who betrays the grove is [turned out] - cast from the order, forever. Or I could [spare her], and take her back, and watch her every day. She was the best apprentice I ever had. That's why it hurts.",
+          "options": [
+            {
+              "keyword": "spare her",
+              "say": "Then she'll come home, and plant the oak-heart with her own hands, and tend the grove until it forgives her. And I'll forgive her sooner.",
+              "ending": "spared"
+            },
+            {
+              "keyword": "turned out",
+              "say": "...Then she's no druid. I'll tell her myself. It's the law, and the law is older than my heart.",
+              "ending": "turned_out"
+            }
+          ],
+          "id": "s7"
+        }
+      ],
+      "endings": {
+        "spared": {
+          "text": "Take this, from the grove.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq206_grove_keeper_s_mantle"
+            ],
+            "choice": [
+              "sq206_siog_thief_s_ring",
+              "sq206_renegade_druid_torc"
+            ]
+          }
+        },
+        "turned_out": {
+          "text": "Take this, from the grove.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 90,
+            "copper_per_level": 71,
+            "marks": 11,
+            "items": [
+              "sq206_oak_heart_acorn"
+            ],
+            "choice": [
+              "sq206_siog_thief_s_ring",
+              "sq206_renegade_druid_torc"
+            ]
+          }
+        }
+      },
+      "requires": "bl_dying_grove"
+    },
+    {
+      "id": "bl_replanting",
+      "title": "The Replanting",
+      "level": 19,
+      "giver": "druid_ennis",
+      "offer": "The oak-heart must go back into the old oak tonight, with a druid singing over it. Riocard's thorn-hounds will smell it.\n\nWill you [guard the planting]? Whoever sings it - Aoibheann or me - needs someone between them and the teeth.",
+      "accept": "guard the planting",
+      "topics": {},
+      "summary": "The oak-heart goes back into the sacred grove, and Riocard's thorn-hounds will come for it.",
+      "steps": [
+        {
+          "type": "encounter",
+          "zone": 206,
+          "at": [
+            182,
+            762
+          ],
+          "wake_m": 30,
+          "goal": "Guard the planting in the sacred grove",
+          "text": "The singing ends. The oak sighs - you hear it - and a green flush runs up its bark into the brown leaves.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep the grove-singer safe",
+              "center": [
+                182,
+                762
+              ],
+              "radius": 30,
+              "duration_s": 90,
+              "objective": "Keep the grove-singer safe",
+              "announce": "The singer kneels at the old oak and begins. Out of the woods come thorn-bound hounds, baying.",
+              "protect": {
+                "template": 60163820,
+                "name": "the grove-singer",
+                "level": 18,
+                "model": 365
+              },
+              "waves": {
+                "every_s": 25,
+                "count": 2,
+                "from": [
+                  [
+                    194,
+                    768
+                  ],
+                  [
+                    172,
+                    752
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60162144,
+                    "name": "thorn-bound hound",
+                    "level": [
+                      17,
+                      18
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "the grove-singer falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "druid_ennis",
+          "goal": "Return to Druid Ennis at Druim Cain",
+          "say": "I felt it from here. The grove breathed.\n\nThank you. Now - Riocard. A druid of the stones, paying siog in wind-charms. There's something under this, and it's cold.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the grove, alive again.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq206_replanted_oak_bracer",
+              "sq206_thorn_hound_s_collar_ring"
+            ]
+          }
+        }
+      },
+      "requires": "oak_heart"
+    },
+    {
+      "id": "bl_ruadhs_letters",
+      "title": "Ruadh's Letters",
+      "level": 20,
+      "giver": "druid_ennis",
+      "offer": "Ruadh kept a satchel. If he wrote to Riocard, the letters will be at the Circle still.\n\nWill you [fetch the satchel]? Then take what you find to Sarnat in Caille. If this is what I think it is, it's the Muintir's business more than mine.",
+      "accept": "fetch the satchel",
+      "topics": {},
+      "summary": "Archdruid Ruadh's satchel, left at the Druid Circle, may say what Riocard wants.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            450,
+            420
+          ],
+          "radius": 40,
+          "goal": "Kill 4 renegade druids at the Druid Circle",
+          "target": "renegade druid",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 206,
+          "at": [
+            440,
+            430
+          ],
+          "goal": "Search for Ruadh's satchel at the Druid Circle (click the glinting spot)",
+          "clue": {
+            "name": "Ruadh's satchel",
+            "model": 1347
+          },
+          "text": "Letters, in Riocard's hand: 'The Lady of the Wind will have her rival. The ore buys the charms; the charms raise the wind; the wind finds the girl. The Queen in the forest keeps her word.' Signed with a twist of wind.",
+          "give": {
+            "name": "Ruadh's letters"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_sarnat",
+          "goal": "Take Ruadh's letters to Sarnat of Caille",
+          "say": "'The Lady of the Wind will have her rival.'\n\nGods. Fuamnach. Midir's first wife - the one who turned Etain into a fly and blew her across Ireland. And 'the girl'.\n\nIf Fuamnach has woken, then somewhere in this valley Etain has been born again. And the Queen in the Cursed Forest is helping her. Thank you. I have a great deal to do.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Muintir, with my thanks.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq206_ruadh_s_black_feather_cloak",
+              "sq206_wind_charm_pendant",
+              "sq206_caille_courier_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "bl_replanting"
+    },
+    {
       "id": "veil",
       "title": "Beyond the Veil",
-      "level": 14,
+      "level": 16,
       "giver": "muirenn",
       "offer": "My grandson Rian went through the veil at Samhain. The veil wisps lit the way and he followed them into the Otherworld, laughing.\n\nIt's thin there still, in the west of the valley. The druids say a strong arm could reach through and pull him back. Will you [bring Rian home]? He's ten. He's always been ten, there.",
       "accept": "bring Rian home",
@@ -78,12 +989,11 @@
           "type": "reach",
           "zone": 206,
           "at": [
-            400,
-            900,
-            160.2
+            380,
+            920
           ],
           "radius": 20,
-          "goal": "Go to the thin place in the west of the valley",
+          "goal": "Go to the thin place in the west of the valley, about 940 m south-west of Druim Cain",
           "text": "Lights drift through the air - veil wisps - and between them, now and then, a glimpse of somewhere else: golden, endless, singing.",
           "id": "s1"
         },
@@ -91,17 +1001,12 @@
           "type": "kill",
           "zone": 206,
           "at": [
-            381,
-            916,
-            156.0
+            380,
+            920
           ],
-          "radius": 25,
-          "goal": "Scatter the veil wisps",
-          "mob": {
-            "template": 60167560,
-            "name": "veil wisp",
-            "level": 12
-          },
+          "radius": 40,
+          "goal": "Scatter 5 veil wisps at the thin place",
+          "target": "veil wisp",
           "count": 5,
           "text": "As they go out, the glimpses of the Otherworld get clearer.",
           "id": "s2"
@@ -111,10 +1016,9 @@
           "zone": 206,
           "at": [
             360,
-            930,
-            152.2
+            930
           ],
-          "goal": "Search the edge of the veil",
+          "goal": "Search the edge of the veil (click the glinting spot)",
           "clue": {
             "name": "a small boy's shoe",
             "model": 1347
@@ -126,18 +1030,13 @@
           "type": "kill",
           "zone": 206,
           "at": [
-            259,
-            961,
-            178.0
+            380,
+            920
           ],
-          "radius": 25,
-          "goal": "Break the empyrean orbs that hold the veil open",
-          "mob": {
-            "template": 60160471,
-            "name": "empyrean orb",
-            "level": 12
-          },
-          "count": 4,
+          "radius": 40,
+          "goal": "Break 2 empyrean orbs that hold the veil open",
+          "target": "empyrean orb",
+          "count": 2,
           "id": "s4"
         },
         {
@@ -145,8 +1044,7 @@
           "zone": 206,
           "at": [
             270,
-            950,
-            178.0
+            950
           ],
           "wake_m": 30,
           "goal": "Defeat the Keeper of the Veil",
@@ -158,8 +1056,7 @@
               "name": "Keeper of the Veil",
               "center": [
                 270,
-                950,
-                178.0
+                950
               ],
               "radius": 30,
               "time_s": 600,
@@ -195,14 +1092,14 @@
           "type": "talk",
           "npc": "rian",
           "goal": "Talk to Rian",
-          "say": "Is it time to go home? I was only gone a day. Wasn't I?\n\nI ate some apples. They were very good. The lady said if I ate them I'd have to [stay], but I could visit.",
+          "say": "Is it time to go home? I was only gone a day. Wasn't I?\n\nI ate some apples. They were very good. The lady said if I ate them I'd have to [stay], but I could visit. And the riders kept asking me if I'd seen a lady with red hair. I hadn't.",
           "keyword": "stay",
           "id": "s6"
         },
         {
           "type": "choice",
           "npc": "muirenn",
-          "goal": "Bring Rian home to Muirenn",
+          "goal": "Bring Rian home to Muirenn at Druim Cain",
           "say": "Rian! Rian - you're - oh.\n\nHe's ten. Still ten. And he ate their fruit. The druids say if he crosses back for good, every year he spent there catches up with him by morning. He'll wake up seventeen. His childhood gone in a night.\n\nOr he can [go back], and stay ten forever, and visit me at Samhain. I can't choose. [Bring him back], or let him go.",
           "options": [
             {
@@ -255,199 +1152,1170 @@
       }
     },
     {
-      "id": "oak_heart",
-      "title": "The Oak-Heart",
-      "level": 28,
-      "giver": "druid_ennis",
-      "offer": "The grove's oak-heart has been stolen - a golden acorn that holds the life of every oak in our sacred grove. Without it they'll die by midwinter.\n\nThe siog took it. Siog take everything. But siog don't keep things - they sell them. Find their camp west of the valley and you'll find who they sold it to. Will you [find the oak-heart]?",
-      "accept": "find the oak-heart",
+      "id": "bl_host_searching",
+      "title": "The Host Is Searching",
+      "level": 20,
+      "giver": "bl_tuathal",
+      "offer": "Fairy horses came through my pasture last night - right through the fence - and the riders on them looked into every byre and under every cart. Searching.\n\nWill you [follow them]? Knock a few of the horses off my grass, and see where the riders go. And what they're looking for.",
+      "accept": "follow them",
       "topics": {},
-      "summary": "The siog stole the golden oak-heart that keeps a sacred grove alive, and sold it on.",
+      "summary": "Midir's host is riding through the pastures, searching every byre.",
       "steps": [
-        {
-          "type": "reach",
-          "zone": 206,
-          "at": [
-            510,
-            630,
-            188.9
-          ],
-          "radius": 20,
-          "goal": "Find the siog camp in the west",
-          "text": "A camp of stolen things - pots, boots, a church bell, a chicken. Siog everywhere, counting.",
-          "id": "s1"
-        },
         {
           "type": "kill",
           "zone": 206,
           "at": [
+            480,
+            1450
+          ],
+          "radius": 40,
+          "goal": "Drive off 5 faerie horses on Tuathal's grazing, about 160 m south of Tuathal",
+          "target": "faerie horse",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 206,
+          "at": [
             500,
+            1460
+          ],
+          "goal": "Search the trampled fence for sign of the riders (click the glinting spot)",
+          "clue": {
+            "name": "a scarlet thread on a fence-nail",
+            "model": 1347
+          },
+          "text": "A scarlet thread, caught on a nail - from a rider's sleeve. Every rider of the host wears a scarlet thread. Like a sign. Like mourning.",
+          "give": {
+            "name": "a scarlet thread"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "reach",
+          "zone": 206,
+          "at": [
             620,
-            187.6
+            1420
           ],
           "radius": 25,
-          "goal": "Fight through the siog seekers",
-          "mob": {
-            "template": 60166076,
-            "name": "siog seeker",
-            "level": 28
+          "goal": "Watch the riders' camp from cover, about 120 m east",
+          "text": "Riders in green and gold round a fire that burns without smoke. One says it plainly, in the old tongue: 'She is in the valley again. The fly has come home. Find her before the wind does.'",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_tuathal",
+          "goal": "Return to Herder Tuathal",
+          "say": "'The fly has come home'? ...That's the old story. Etain, that Midir loved, turned into a scarlet fly.\n\nThey think she's here. In Bri Leith. Gods help whoever she is.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From my pasture, what's left of it.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq206_trampled_fence_bracer",
+              "sq206_scarlet_thread_charm"
+            ]
+          }
+        }
+      },
+      "requires": "veil"
+    },
+    {
+      "id": "bl_midirs_rider",
+      "title": "Midir's Rider",
+      "level": 22,
+      "giver": "bl_tuathal",
+      "offer": "The riders of Bri Leith carry messages between them in hollow rings. Take one, and we'll know what they know.\n\nWill you [take a rider's ring]? Mind - they don't go down easy, and they don't ride alone. Then take what you find to Sarnat in Caille; she reads their tongue.",
+      "accept": "take a rider's ring",
+      "topics": {},
+      "summary": "Midir's riders carry messages in hollow rings.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            670,
+            1450
+          ],
+          "radius": 40,
+          "goal": "Defeat 2 riders of Bri Leith at their camp, about 200 m south-east of Tuathal",
+          "target": "rider of Bri Leith",
+          "count": 2,
+          "text": "The last rider falls with a sound like a harp-string breaking. A hollow ring rolls out of his glove.",
+          "give": {
+            "name": "a rider's hollow ring"
           },
-          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_sarnat",
+          "goal": "Take the hollow ring to Sarnat of Caille",
+          "say": "'Seek her where the scarlet fly rests. The wind is rising - Fuamnach is awake.'\n\nSo Midir knows too. His host isn't hunting her. It's trying to find her first.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Muintir.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq206_rider_s_green_gold_belt",
+              "sq206_host_message_ring",
+              "sq206_fairy_steed_bridle_charm"
+            ]
+          }
+        }
+      },
+      "requires": "bl_host_searching"
+    },
+    {
+      "id": "bl_blademaster",
+      "title": "The Blademaster",
+      "level": 24,
+      "giver": "bl_tuathal",
+      "offer": "There's a man rides with the host - a mortal, a blademaster, carried off twenty years ago at a fair. My father knew him. He fights for them now and doesn't know his own name.\n\nWill you [bring him round]? Beat him, and the host's hold on him might break. Mind Mikka, their champion - he's never far off.",
+      "accept": "bring him round",
+      "topics": {},
+      "summary": "A mortal blademaster, carried off by Midir's host twenty years ago, rides with them still.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            645,
+            1367
+          ],
+          "radius": 40,
+          "goal": "Defeat The Blademaster on the pastures, about 110 m south-east of Tuathal - stay clear of Mikka",
+          "target": "The Blademaster",
+          "count": 1,
+          "text": "The Blademaster lowers his sword and looks at his hands. 'Twenty years? It was a day. One dance. ...Tell my mother I'm sorry. No - she'll be dead. Gods.'",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_tuathal",
+          "goal": "Return to Herder Tuathal",
+          "say": "He knew you? He spoke? Then he's free, or near enough.\n\nHe'll go back to them, mind. Twenty years in that saddle - there's nothing for him here now. But he'll go back knowing his own name. That's something.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From my father's old friend - he left this for whoever freed him.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq206_blademaster_s_riding_gauntlet",
+              "sq206_mortal_champion_s_torc"
+            ]
+          }
+        }
+      },
+      "requires": "bl_midirs_rider"
+    },
+    {
+      "id": "bl_aideens_dreams",
+      "title": "Aideen's Dreams",
+      "level": 20,
+      "giver": "bl_nessa",
+      "offer": "My Aideen dreams of a golden hall under a hill, and a lake with the moon in it, and a man with yellow hair who calls her by another name. Every night.\n\nSarnat in Caille says it's nothing. Sarnat looked very pale when she said it. Will you [talk to Aideen]? She'll tell a stranger more than her mother.",
+      "accept": "talk to Aideen",
+      "topics": {},
+      "summary": "Nessa's daughter Aideen dreams every night of a golden hall under a hill.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "bl_aideen",
+          "goal": "Talk to Aideen in Brynach",
+          "say": "The lake's the one past the pastures - Moon Lake. I've never been. But I know there's a [stone] on the shore with a hole in it, and I used to sit in the hole. I KNOW that. How do I know that?",
+          "keyword": "stone",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 206,
+          "at": [
+            1080,
+            1350
+          ],
+          "radius": 25,
+          "goal": "Go to the shore of Moon Lake, about 540 m south-east of Brynach",
+          "text": "A grey stone on the shore, with a hole worn through it - exactly a girl's size. The moon is on the water just as she said.",
           "id": "s2"
         },
         {
           "type": "search",
           "zone": 206,
           "at": [
-            452,
-            632,
-            182.4
+            1085,
+            1345
           ],
-          "goal": "Search the siog's stolen goods",
+          "goal": "Search the holed stone on the shore (click the glinting spot)",
           "clue": {
-            "name": "a ledger of stolen things",
+            "name": "a scarlet wing-scale",
             "model": 1347
           },
-          "text": "In a careful siog hand: 'One golden acorn. Sold to the druids at the stones, north. Paid: two silver, one goat.' The druids at the stones - renegades.",
+          "text": "In the hollow of the stone, a single scarlet scale off an insect's wing - much bigger than any insect's. It's warm as a hand.",
           "give": {
-            "name": "the siog ledger"
+            "name": "a scarlet wing-scale"
           },
           "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_sarnat",
+          "goal": "Take the wing-scale to Sarnat of Caille",
+          "say": "Scarlet. Warm.\n\nIt's her. Aideen - it's Etain's own name, in the old tongue. Etain, born a third time, in Brynach of all places, to a weaver.\n\nAnd Fuamnach's wind is rising. Don't tell Nessa. Not yet.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Muintir. And keep this between us.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq206_golden_hall_dream_charm",
+              "sq206_wing_scale_ring"
+            ]
+          }
+        }
+      },
+      "requires": "bl_ruadhs_letters"
+    },
+    {
+      "id": "bl_scarlet_fly",
+      "title": "Where the Fly Rests",
+      "level": 22,
+      "giver": "bl_caoimhe",
+      "offer": "There's a scarlet fly on the lake menhir, every night this month. A fly the size of a sparrow. And every night a cold wind comes down off the Heights hunting along the shore, and the wrath sprites go mad in it.\n\nWill you [keep the sprites off] the menhir tonight? I don't know what that fly is. I know it's frightened.",
+      "accept": "keep the sprites off",
+      "topics": {},
+      "summary": "A scarlet fly shelters on Moon Lake's menhir each night while a cold wind hunts the shore.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            1180,
+            1250
+          ],
+          "radius": 40,
+          "goal": "Kill 5 wrath sprites by the lake menhir, about 140 m north-east of Fisher Caoimhe",
+          "target": "wrath sprite",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 206,
+          "at": [
+            1200,
+            1230
+          ],
+          "radius": 25,
+          "goal": "Stand by the menhir as the wind comes",
+          "text": "The wind comes down off the Heights out of a clear sky and goes along the shore like a hand searching. It passes over the menhir - and passes on. On the stone, a scarlet fly folds its wings.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_caoimhe",
+          "goal": "Return to Fisher Caoimhe",
+          "say": "It missed her. The wind missed her. ...Her? Why did I say her?\n\nThe Muintir would want to know of this. Sarnat in Caille.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the lake. Thank you.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq206_menhir_shelter_bracer",
+              "sq206_wrath_sprite_s_ember_ring",
+              "sq206_gale_torn_belt"
+            ]
+          }
+        }
+      },
+      "requires": "bl_aideens_dreams"
+    },
+    {
+      "id": "bl_fair_swap",
+      "title": "Fair Swap",
+      "level": 25,
+      "giver": "bl_nessa",
+      "offer": "Last night something came to Aideen's bed and tried to put something else in it. Something that looked like her. I screamed and it ran - east, to the Hollow past the lake where the mad changelings live.\n\nThey want her. They'll come back. Will you [go to the Hollow] and make them stop?",
+      "accept": "go to the Hollow",
+      "topics": {},
+      "summary": "The mad changelings tried to swap Aideen for one of their own.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            1495,
+            1535
+          ],
+          "radius": 40,
+          "goal": "Kill 6 mad changelings at the changeling den, about 950 m east of Brynach",
+          "target": "mad changeling",
+          "count": 6,
+          "id": "s1"
         },
         {
           "type": "kill",
           "zone": 206,
           "at": [
-            458,
-            448,
-            210.5
+            1490,
+            1531
           ],
-          "radius": 25,
-          "goal": "Fight the renegade druids at the stones",
-          "mob": {
-            "template": 10120,
-            "name": "druid",
-            "level": 26
-          },
-          "count": 4,
-          "id": "s4"
+          "radius": 40,
+          "goal": "Defeat Lusmorebane, king of the Hollow",
+          "target": "Lusmorebane",
+          "count": 1,
+          "text": "Lusmorebane cackles as he falls. 'Paid for! The Lady of the Wind paid for her! Blow her away, blow her away...'",
+          "id": "s2"
         },
         {
-          "type": "encounter",
+          "type": "search",
           "zone": 206,
           "at": [
-            445,
-            458,
-            205.7
+            1500,
+            1540
           ],
-          "wake_m": 30,
-          "goal": "Defeat the renegade archdruid",
-          "text": "The archdruid falls. A young druid in green kneels by the stones, holding the golden acorn, weeping.",
-          "stages": [
-            {
-              "id": "b1",
-              "type": "boss",
-              "name": "Archdruid Ruadh",
-              "center": [
-                445,
-                458,
-                205.7
-              ],
-              "radius": 30,
-              "time_s": 600,
-              "objective": "Defeat Archdruid Ruadh",
-              "announce": "A druid in a cloak of black feathers raises a staff of thorn. 'The grove is ours to move. Ennis is old and blind.'",
-              "boss": {
-                "template": 10120,
-                "name": "Archdruid Ruadh",
-                "level": 31,
-                "health_mult": 2.4
-              },
-              "success": "Archdruid Ruadh falls.",
-              "fail": "You fall back.",
-              "adds": {
-                "every_s": 25,
-                "count": 2,
-                "mobs": [
-                  {
-                    "template": 10120,
-                    "name": "druid",
-                    "level": [
-                      25,
-                      26
-                    ]
-                  }
-                ]
-              }
-            }
-          ],
-          "id": "s5"
+          "goal": "Search the changelings' cradle in the den (click the glinting spot)",
+          "clue": {
+            "name": "a scarlet ribbon in the cradle",
+            "model": 1347
+          },
+          "text": "In a cradle of thorns: a doll made to look exactly like Aideen, and tied round its neck, one of Aideen's own scarlet ribbons.",
+          "give": {
+            "name": "Aideen's ribbon"
+          },
+          "id": "s3"
         },
         {
           "type": "talk",
-          "npc": "ailbhe",
-          "goal": "Talk to the young druid",
-          "say": "I'm Ailbhe. Ennis' apprentice. I - I helped them. I told them where the oak-heart was kept.\n\nRuadh said the old grove was dying anyway and we could plant a new one in the west, away from the keeps and the wars. I believed him. Take it. Take it back to Ennis. And tell him I'm [sorry].",
-          "keyword": "sorry",
-          "give": {
-            "name": "the oak-heart"
-          },
-          "id": "s6"
-        },
-        {
-          "type": "choice",
-          "npc": "druid_ennis",
-          "goal": "Return the oak-heart to Druid Ennis",
-          "say": "The oak-heart! The grove will live!\n\n...Ailbhe. My Ailbhe helped them.\n\nThe druids' law says an apprentice who betrays the grove is [turned out] - cast from the order, forever. Or I could [spare her], and take her back, and watch her every day. She was the best apprentice I ever had. That's why it hurts.",
-          "options": [
-            {
-              "keyword": "spare her",
-              "say": "Then she'll come home, and plant the oak-heart with her own hands, and tend the grove until it forgives her. And I'll forgive her sooner.",
-              "ending": "spared"
-            },
-            {
-              "keyword": "turned out",
-              "say": "...Then she's no druid. I'll tell her myself. It's the law, and the law is older than my heart.",
-              "ending": "turned_out"
-            }
-          ],
-          "id": "s7"
+          "npc": "bl_nessa",
+          "goal": "Return to Nessa the Weaver in Brynach",
+          "say": "Her ribbon. They had her ribbon.\n\n'The Lady of the Wind paid for her.' What lady? What wind? Why my daughter?\n\n...Sarnat knows. I can see it on her. Go and ask her. Make her tell you.",
+          "ending": "default",
+          "id": "s4"
         }
       ],
       "endings": {
-        "spared": {
-          "text": "Take this, from the grove.",
+        "default": {
+          "text": "Take this. From both of us - she wanted you to have the bracer.",
           "tragic": false,
           "rewards": {
-            "xp_pct": 90,
-            "copper_per_level": 71,
-            "marks": 11,
-            "items": [
-              "sq206_grove_keeper_s_mantle"
-            ],
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
             "choice": [
-              "sq206_siog_thief_s_ring",
-              "sq206_renegade_druid_torc"
+              "sq206_lusmorebane_s_foxglove_crown",
+              "sq206_aideen_s_ribbon_bracer",
+              "sq206_cradle_ash_ring"
+            ]
+          }
+        }
+      },
+      "requires": "bl_scarlet_fly"
+    },
+    {
+      "id": "bl_riocards_binding",
+      "title": "Riocard's Binding",
+      "level": 28,
+      "giver": "bl_sarnat",
+      "offer": "Riocard has bound Aideen somehow - a binding so the wind can find her wherever she runs. That's how Bresal did it in the old tale, for Fuamnach the first time.\n\nIt'll be at the Circle, in a binding-stone. Bring friends. Will you [break the binding]?",
+      "accept": "break the binding",
+      "topics": {},
+      "summary": "Riocard, the renegade druid at the Circle, has bound Aideen so Fuamnach's wind can find her.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            450,
+            420
+          ],
+          "radius": 40,
+          "goal": "Kill 6 renegade druids at the Druid Circle",
+          "target": "renegade druid",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            455,
+            425
+          ],
+          "radius": 40,
+          "goal": "Defeat Riocard, the renegade druid",
+          "target": "Riocard",
+          "count": 1,
+          "text": "Riocard falls among his stones. 'The Queen promised her... the Queen promised ME... a seat in the forest court...'",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 206,
+          "at": [
+            450,
+            415
+          ],
+          "goal": "Search the binding-stone in the middle of the Circle (click the glinting spot)",
+          "clue": {
+            "name": "a yew wand bound in scarlet",
+            "model": 1347
+          },
+          "text": "A yew wand, bound with scarlet thread, set upright in a hole in the stone. It's ice-cold, and it points - always - toward Brynach.",
+          "give": {
+            "name": "Riocard's yew wand"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "choice",
+          "npc": "bl_sarnat",
+          "goal": "Bring the yew wand to Sarnat of Caille",
+          "say": "The binding. Gods, it's still pointing at her.\n\nWe can [break the wand] - and the wind loses her, for good. Or we [keep the wand], bound as it is, and use it: it points to her for Fuamnach, but it can point Fuamnach to US. We'd know where she'll come. It's a terrible risk.",
+          "options": [
+            {
+              "keyword": "break the wand",
+              "say": "Broken. Feel that? The air's warmer already. She's safe from the wind, at least.",
+              "ending": "broken"
+            },
+            {
+              "keyword": "keep the wand",
+              "say": "Kept, then. Wrapped in rowan, in my strongbox. When Fuamnach comes, we'll know. Gods help us if we're wrong.",
+              "ending": "kept"
+            }
+          ],
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "broken": {
+          "text": "From the Muintir.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq206_riocard_s_yew_wand",
+              "sq206_bresal_s_heir_torc",
+              "sq206_circle_breaker_ring"
             ]
           }
         },
-        "turned_out": {
-          "text": "Take this, from the grove.",
-          "tragic": true,
+        "kept": {
+          "text": "From the Muintir.",
+          "tragic": false,
           "rewards": {
-            "xp_pct": 90,
-            "copper_per_level": 71,
-            "marks": 11,
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq206_riocard_s_yew_wand",
+              "sq206_bresal_s_heir_torc",
+              "sq206_circle_breaker_ring"
+            ]
+          }
+        }
+      },
+      "requires": "bl_fair_swap"
+    },
+    {
+      "id": "bl_hall_under_the_hill",
+      "title": "The Hall Under the Hill",
+      "level": 30,
+      "giver": "bl_aideen",
+      "offer": "Sarnat told me. Everything. I'm Etain - I was. A thousand years ago, and another life after that.\n\nThe riders came last night, to the edge of Brynach, and waited. They want me to come home - to Midir, under the hill. Mam wants me to stay. Will you [walk with me] to the riders? I need to see them before I choose.",
+      "accept": "walk with me",
+      "topics": {},
+      "summary": "Aideen, Etain born again, must choose between Midir's hall under the hill and her mortal life.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 206,
+          "at": [
+            670,
+            1440
+          ],
+          "radius": 25,
+          "goal": "Walk with Aideen to the riders' camp in the pastures, about 330 m south of Brynach",
+          "text": "The riders kneel as you come. The fire without smoke burns higher. One of them - yellow-haired, crowned - gets up, and Aideen's hand goes tight on your arm.",
+          "id": "s1"
+        },
+        {
+          "type": "choice",
+          "npc": "bl_aideen",
+          "goal": "Talk to Aideen in Brynach",
+          "say": "That was him. Midir. He looked at me like - like I'd been gone a day.\n\nIf I [go under the hill], I'm Etain, and I'm home, and Mam loses me. If I [stay in Brynach], I'm Aideen, and I weave, and I grow old, and he waits again. He's good at waiting. Tell me which.",
+          "options": [
+            {
+              "keyword": "go under the hill",
+              "say": "Then I'll go. At midsummer, from the lake stone. I'll come back at Samhain to see Mam - that's allowed. ...Tell her I chose it. Don't let her think I was taken.",
+              "ending": "hill"
+            },
+            {
+              "keyword": "stay in Brynach",
+              "say": "Then I'm Aideen. I'll weave. And when I'm old, if he's still waiting, maybe. ...Thank you. Mam's going to cry either way.",
+              "ending": "stay"
+            }
+          ],
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "hill": {
+          "text": "Take this. I made it for whoever helped me choose.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
             "items": [
-              "sq206_oak_heart_acorn"
+              "sq206_etain_s_third_life_cloak"
             ],
             "choice": [
-              "sq206_siog_thief_s_ring",
-              "sq206_renegade_druid_torc"
+              "sq206_hall_under_the_hill_ring",
+              "sq206_weaver_s_daughter_belt"
+            ]
+          }
+        },
+        "stay": {
+          "text": "Take this. I made it for whoever helped me choose.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq206_etain_s_third_life_cloak"
+            ],
+            "choice": [
+              "sq206_hall_under_the_hill_ring",
+              "sq206_weaver_s_daughter_belt"
+            ]
+          }
+        }
+      },
+      "requires": "bl_riocards_binding"
+    },
+    {
+      "id": "bl_waylayers",
+      "title": "Waylayers on the Road",
+      "level": 25,
+      "giver": "bl_fearghal",
+      "offer": "Siog waylayers are hitting carts on the Collory road between here and Caille, from the rocks west of the road. We've lost three carts and two rangers.\n\nWill you [clear the rocks]? Then look round for my rangers' arrows - I want to know where they made their stand.",
+      "accept": "clear the rocks",
+      "topics": {},
+      "summary": "Siog waylayers are hitting carts on the Collory road from the rocks west of it.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            760,
+            260
+          ],
+          "radius": 40,
+          "goal": "Kill 6 siog waylayers at the rocks west of the Collory road, about 220 m south-west of Druim Cain",
+          "target": "siog waylayer",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 206,
+          "at": [
+            765,
+            265
+          ],
+          "goal": "Search the ambush rocks for the rangers' last stand (click the glinting spot)",
+          "clue": {
+            "name": "a quiver of ranger arrows",
+            "model": 1347
+          },
+          "text": "A quiver of Druim Cain arrows, every one shot. Behind the rocks, a waylayer's purse - paid in wind-charms, like the ore.",
+          "give": {
+            "name": "a ranger quiver"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_fearghal",
+          "goal": "Return to Ranger-Commander Fearghal at Druim Cain",
+          "say": "Every arrow shot. They died well.\n\nWind-charms again. The same coin as the ore. Somebody's paying for this whole valley in wind.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq206_waylayer_s_mask_charm",
+              "sq206_road_ranger_s_ring"
             ]
           }
         }
       }
+    },
+    {
+      "id": "bl_tower_horns",
+      "title": "Horns at the Tower",
+      "level": 27,
+      "giver": "bl_maudalin",
+      "offer": "The Wild Hunt's horns are sounding round Giolladhe's Tower every night, and the rage wolves run with them. They're marking the tower for something.\n\nWill you [thin the wolves]? Then come back to me. If they're marking us, I want to know what for.",
+      "accept": "thin the wolves",
+      "topics": {},
+      "summary": "The Wild Hunt's horns sound round Giolladhe's Tower, and the rage wolves run with them.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            300,
+            1500
+          ],
+          "radius": 40,
+          "goal": "Kill 3 rage wolves at their run, about 260 m south-east of the tower",
+          "target": "rage wolf",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            300,
+            1450
+          ],
+          "radius": 40,
+          "goal": "Kill 4 faerie steeds near the run",
+          "target": "faerie steed",
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_maudalin",
+          "goal": "Return to Watch-Sergeant Maudalin at Giolladhe's Tower",
+          "say": "Fewer wolves. Good. And I found this while you were out: a horn-sign cut in the tower door. Riders' sign, Midir's - 'Not here. Search east.'\n\nSo the Hunt isn't after the tower. It's searching. Same as everyone this year.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the tower's stores.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq206_tower_watch_bracer",
+              "sq206_rage_wolf_pelt_cloak",
+              "sq206_hunting_horn_charm"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bl_mikka",
+      "title": "The Host's Champion",
+      "level": 30,
+      "giver": "bl_maudalin",
+      "offer": "Mikka. The host's champion. He rides the pastures south of here and he's put eleven rangers in the ground this year alone - for sport, between searches.\n\nThis is GROUP work. Will you [put Mikka down]? Not for good - he's sidhe, he'll be back. But long enough that the road breathes.",
+      "accept": "put Mikka down",
+      "topics": {},
+      "summary": "Mikka, champion of Midir's host, kills rangers on the pastures for sport.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            678,
+            1367
+          ],
+          "radius": 40,
+          "goal": "Defeat Mikka, the host's champion, on the pastures, about 560 m east of the tower",
+          "target": "Mikka",
+          "count": 1,
+          "text": "Mikka falls laughing. 'Well struck, mortal. Tell your Rangers - the host is not their enemy this year. The wind is. Look east.'",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_fearghal",
+          "goal": "Report to Ranger-Commander Fearghal at Druim Cain",
+          "say": "Mikka down! Eleven rangers, and you put him in the grass.\n\n'The wind is. Look east.' East is the Cursed Forest. Ronan's scouts say the border's thick with the Queen's people. I don't like any of this.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Rangers - and eleven of them who'd thank you.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq206_mikka_s_champion_torc",
+              "sq206_host_champion_s_bracer",
+              "sq206_unhorsed_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bl_tower_horns"
+    },
+    {
+      "id": "bl_road_east",
+      "title": "The Road East",
+      "level": 33,
+      "giver": "bl_fearghal",
+      "offer": "Scout Fionnuala is down on the east border, where the old road went into the Cursed Forest. It's been shut for years - the Queen's people hold the gate stones.\n\nWill you [go to Fionnuala] and see how thick they are? If we're going to open that gate, I need to know what it costs.",
+      "accept": "go to Fionnuala",
+      "topics": {},
+      "summary": "Ranger-Commander Fearghal wants to know what it would take to open the Forest Gate on the Cursed Forest border.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "bl_fionnuala",
+          "goal": "Find Ranger-Scout Fionnuala on the east border",
+          "say": "You came the long way. Good - the short way's through them.\n\nLook: black wraiths among the stones, poachers who never come back to their villages, and the far dorocha watching. Thin them, and I'll see what moves. [Ready]?",
+          "keyword": "ready",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            1540,
+            990
+          ],
+          "radius": 40,
+          "goal": "Kill 4 black wraiths among the gate stones, about 120 m east of Fionnuala",
+          "target": "black wraith",
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_fearghal",
+          "goal": "Report to Ranger-Commander Fearghal at Druim Cain",
+          "say": "Wraiths, poachers and the Dark Man watching. A war band could do it - four at least, and a druid to wake a ward.\n\nWe'll muster when the valley's ready. When the Rangers' resolve is up, we go. Thank you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq206_forest_gate_scout_s_belt",
+              "sq206_wraith_ward_bracer",
+              "sq206_border_stone_charm"
+            ]
+          }
+        }
+      },
+      "requires": "bl_mikka"
+    },
+    {
+      "id": "bl_heights_watch",
+      "title": "Wind off the Heights",
+      "level": 28,
+      "giver": "bl_sarnat",
+      "offer": "The wind comes off the Empyrean Heights, north-east. The empyreans live up there - the sky's own children, Keeper Rasa used to say. Rasa hasn't come down to Caille in a month.\n\nWill you [go up the Heights] and see? Carefully. The empyreans used to be gentle.",
+      "accept": "go up the Heights",
+      "topics": {},
+      "summary": "Fuamnach's wind comes off the Empyrean Heights, and Keeper Rasa hasn't been seen in a month.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            1250,
+            800
+          ],
+          "radius": 40,
+          "goal": "Kill 6 empyrean sentinels on the lower Heights, about 350 m east of Caille",
+          "target": "empyrean sentinel",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 206,
+          "at": [
+            1400,
+            700
+          ],
+          "goal": "Search the guardian stones on the Heights (click the glinting spot)",
+          "clue": {
+            "name": "a frost-carved stone",
+            "model": 1347
+          },
+          "text": "Frost on the stone in midsummer, carved by the wind itself: a long, cruel F. And the wind round the stones comes, very clearly, from the east - from the Cursed Forest.",
+          "give": {
+            "name": "a sketch of the frost-carving"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_sarnat",
+          "goal": "Return to Sarnat of Caille",
+          "say": "F. Fuamnach signs her wind.\n\nAnd it blows out of the Cursed Forest. The Queen has taken her in, then. Rasa - find Rasa. Her hut is high on the Heights. If anyone can turn the empyreans back, she can.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Muintir.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq206_empyrean_shard_charm",
+              "sq206_cold_wind_ring"
+            ]
+          }
+        }
+      },
+      "requires": "bl_aideens_dreams"
+    },
+    {
+      "id": "bl_keepers_hut",
+      "title": "The Keeper's Hut",
+      "level": 31,
+      "giver": "bl_sarnat",
+      "offer": "Rasa's hut is high on the Heights, north-east. If the empyreans have turned, she's trapped up there with them.\n\nWill you [find Rasa]? Bring friends - the Heights are hard going.",
+      "accept": "find Rasa",
+      "topics": {},
+      "summary": "Keeper Rasa is trapped in her hut on the Heights by the empyreans she kept.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 206,
+          "at": [
+            1250,
+            400
+          ],
+          "radius": 30,
+          "goal": "Climb to Keeper Rasa's hut on the Empyrean Heights, about 570 m north-east of Caille",
+          "text": "A small stone hut, its door barred from inside. Empyrean keepers circle it like hawks - and from inside, a woman's voice, hoarse, singing.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            1320,
+            420
+          ],
+          "radius": 40,
+          "goal": "Kill 5 empyrean keepers circling the hut",
+          "target": "empyrean keeper",
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_rasa",
+          "goal": "Talk to Keeper Rasa in her hut",
+          "say": "You came. A month I've sung at the door to keep them out. My own empyreans. The sky's children.\n\nIt's not them. It's the wind that's in them - her wind, Fuamnach's, blowing out of the Queen's forest. I can turn them back, one by one, if you break her lieutenants. Stay a while. I'll tell you how.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Take these. I've had a month to sort my things.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq206_keeper_s_sky_blue_belt",
+              "sq206_freed_keeper_bracer",
+              "sq206_empyrean_song_torc"
+            ]
+          }
+        }
+      },
+      "requires": "bl_heights_watch"
+    },
+    {
+      "id": "bl_hru",
+      "title": "Guardian Hru",
+      "level": 34,
+      "giver": "bl_rasa",
+      "offer": "Hru was the gentlest of my guardians. Now he holds the guardian stones for her, south of here, and the wind blows through him like a flute.\n\nWill you [break Hru's hold]? Beat him down, and I'll sing the wind out of him from here.",
+      "accept": "break Hru's hold",
+      "topics": {},
+      "summary": "Guardian Hru holds the guardian stones for Fuamnach.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            1428,
+            856
+          ],
+          "radius": 40,
+          "goal": "Defeat Guardian Hru at the guardian stones, about 520 m south of Rasa's hut",
+          "target": "Guardian Hru",
+          "count": 1,
+          "text": "Hru goes down, and up on the Heights you hear Rasa singing. The wind goes out of him with a sigh, and he stands, blinking, gentle.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_rasa",
+          "goal": "Return to Keeper Rasa",
+          "say": "I felt him come back. Thank you.\n\nNiy is next - and Niy is the strong one.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Heights.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq206_hru_s_stone_guard_ring",
+              "sq206_wind_freed_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "bl_keepers_hut"
+    },
+    {
+      "id": "bl_niy",
+      "title": "Niy the Overseer",
+      "level": 37,
+      "giver": "bl_rasa",
+      "offer": "Niy the Overseer holds the eastern ridge, the one that looks into the Cursed Forest. Her wind goes through him first.\n\nThis is GROUP work. Will you [break Niy]? While he stands, I can't reach the others.",
+      "accept": "break Niy",
+      "topics": {},
+      "summary": "Niy the Overseer holds the eastern ridge for Fuamnach.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            1506,
+            395
+          ],
+          "radius": 40,
+          "goal": "Defeat Niy the Overseer on the eastern ridge, about 230 m east of Rasa's hut",
+          "target": "Niy the Overseer",
+          "count": 1,
+          "text": "Niy falls on the ridge. Beyond it, the Cursed Forest is black to the horizon - and above the Heights, the wind howls a woman's name: hers.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bl_rasa",
+          "goal": "Return to Keeper Rasa",
+          "say": "Niy's free. Now she's alone up there, at the Eye of the Wind, on the highest point of the Heights.\n\nShe'll know you're coming. She'll want you to come.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Heights.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq206_overseer_niy_s_crest",
+              "sq206_eye_of_the_ridge_ring",
+              "sq206_ridge_wind_cloak"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bl_hru"
+    },
+    {
+      "id": "bl_fuamnach",
+      "title": "Fuamnach",
+      "level": 40,
+      "giver": "bl_rasa",
+      "offer": "Fuamnach is at the Eye of the Wind, the highest point of the Heights, north-east of here. Twice she drove Etain out. She will not do it a third time.\n\nThis is GROUP work - the hardest in the valley. Bring the best you know. Will you [face Fuamnach]?",
+      "accept": "face Fuamnach",
+      "topics": {},
+      "summary": "Fuamnach, Midir's jealous first wife, waits at the Eye of the Wind on the highest point of the Heights.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 206,
+          "at": [
+            1490,
+            190
+          ],
+          "radius": 30,
+          "goal": "Climb to the Eye of the Wind, about 270 m north-east of Rasa's hut",
+          "text": "A ring of stones on the summit, and in it a woman in grey with a rowan rod, the wind pouring off her toward Brynach. 'Again?' she says. 'Every time, someone. And every time, the Queen will lend me another wind.'",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 206,
+          "at": [
+            1520,
+            170
+          ],
+          "radius": 40,
+          "goal": "Defeat Fuamnach at the Eye of the Wind",
+          "target": "Fuamnach",
+          "count": 1,
+          "text": "Fuamnach falls, and the wind falls with her - all of it, all at once, so the silence rings. Far east, over the Cursed Forest, something laughs.",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "bl_rasa",
+          "goal": "Return to Keeper Rasa",
+          "say": "It's still. The whole valley's still.\n\nShe'll come back - she always comes back, while the Queen lends her wind. I can [scatter her] to the four winds, so it takes her a thousand years to gather herself again. Or I can [bind her] here, in the stones of the Eye, where I can watch her. Watched, she can't hide in the Queen's forest. Scattered, she can't hurt Aideen.",
+          "options": [
+            {
+              "keyword": "scatter her",
+              "say": "Scattered, then. A thousand years. Aideen will be dust - happy, I hope - before she's whole again.",
+              "ending": "scatter"
+            },
+            {
+              "keyword": "bind her",
+              "say": "Bound, then. I'll sit with her. Someone has to. And if the Queen comes for her, we'll know.",
+              "ending": "bind"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "scatter": {
+          "text": "Take these. From the Heights, the Muintir, and a girl in Brynach who'll never know your name.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq206_fuamnach_s_rowan_rod"
+            ],
+            "choice": [
+              "sq206_eye_of_the_wind_cloak",
+              "sq206_jealous_wife_s_ring",
+              "sq206_stilled_wind_bracer"
+            ]
+          }
+        },
+        "bind": {
+          "text": "Take these. From the Heights, the Muintir, and a girl in Brynach who'll never know your name.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq206_fuamnach_s_rowan_rod"
+            ],
+            "choice": [
+              "sq206_eye_of_the_wind_cloak",
+              "sq206_jealous_wife_s_ring",
+              "sq206_stilled_wind_bracer"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bl_niy"
     }
   ]
 }

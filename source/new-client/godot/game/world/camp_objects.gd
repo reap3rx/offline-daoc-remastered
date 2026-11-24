@@ -5,6 +5,8 @@ extends RefCounted
 ##   32011-32017  a campfire, tiers grey .. purple: the zones' stone ring with its burning logs (Midgard's ringed fire
 ##                pit for the better tiers), a warm flickering light, the fire a little livelier tier by tier
 ##   32021-32027  a cooking pot over a fire, tiers grey .. purple
+##   32031        a story quest's search spot (StoryQuestManager's clue): a small golden glint over the ground with a
+##                faint column of light, so it is found from a distance and never mistaken for the zone's own crates
 ## Models: pipeline/build_camping.py -> content/camping (the zones' fire models with their textures); the bind stones
 ## are housing's (content/housing/models).
 
@@ -17,8 +19,12 @@ const SOULBIND_SCALE := 0.75
 const DIR := "res://content/camping"
 
 
+const SEARCH_SPOT := 32031
+
+
 static func is_custom(model: int) -> bool:
-	return SOULBIND.has(model) or (model >= 32011 and model <= 32017) or (model >= 32021 and model <= 32027)
+	return SOULBIND.has(model) or (model >= 32011 and model <= 32017) or (model >= 32021 and model <= 32027) \
+			or model == SEARCH_SPOT
 
 
 ## The object's model, or null when its files are missing (the caller then shows the loot bag).
@@ -32,7 +38,66 @@ static func make(model: int) -> Node3D:
 		return _fire(model - 32010)
 	if model >= 32021 and model <= 32027:
 		return _pot(model - 32020)
+	if model == SEARCH_SPOT:
+		return _search_spot()
 	return null
+
+
+## A search spot (owner 2026-11-23: a quest's clue drew as a crate - one hidden by the market's own crates, one on a
+## river bank that said it was a salmon): a glinting golden mote at knee height that breathes, a soft light under it
+## and a faint column of light above, seen from across a field.
+static func _search_spot() -> Node3D:
+	var root := Node3D.new()
+	root.name = "SearchSpot"
+	var glow := StandardMaterial3D.new()
+	glow.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	glow.albedo_color = Color(1.0, 0.86, 0.45)
+	glow.emission_enabled = true
+	glow.emission = Color(1.0, 0.8, 0.35)
+	glow.emission_energy_multiplier = 2.5
+	var mote := MeshInstance3D.new()
+	var ball := SphereMesh.new()
+	ball.radius = 0.09
+	ball.height = 0.18
+	ball.material = glow
+	mote.mesh = ball
+	mote.position = Vector3(0, 0.45, 0)
+	mote.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	root.add_child(mote)
+	var beam_mat := StandardMaterial3D.new()
+	beam_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	beam_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	beam_mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	beam_mat.albedo_color = Color(1.0, 0.82, 0.4, 0.18)
+	beam_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	var beam := MeshInstance3D.new()
+	var cyl := CylinderMesh.new()
+	cyl.top_radius = 0.02
+	cyl.bottom_radius = 0.09
+	cyl.height = 3.5
+	cyl.cap_top = false
+	cyl.cap_bottom = false
+	cyl.material = beam_mat
+	beam.mesh = cyl
+	beam.position = Vector3(0, 0.45 + 1.75, 0)
+	beam.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	root.add_child(beam)
+	var light := OmniLight3D.new()
+	light.light_color = Color(1.0, 0.82, 0.45)
+	light.light_energy = 0.9
+	light.omni_range = 2.5
+	light.position = Vector3(0, 0.5, 0)
+	light.distance_fade_enabled = true
+	light.distance_fade_begin = 50.0
+	light.distance_fade_length = 15.0
+	root.add_child(light)
+	var tw := mote.create_tween().set_loops()               # it breathes: up and down, brighter and dimmer
+	tw.tween_property(mote, "position:y", 0.6, 1.1).set_trans(Tween.TRANS_SINE)
+	tw.tween_property(mote, "position:y", 0.45, 1.1).set_trans(Tween.TRANS_SINE)
+	var tl := light.create_tween().set_loops()
+	tl.tween_property(light, "light_energy", 1.4, 1.1)
+	tl.tween_property(light, "light_energy", 0.7, 1.1)
+	return root
 
 
 static func _fire(tier: int) -> Node3D:

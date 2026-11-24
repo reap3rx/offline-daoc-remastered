@@ -121,6 +121,7 @@ namespace DOL.GS
                 if (fresh) GameServer.Database.AddObject(t); else GameServer.Database.SaveObject(t);
             }
             ValorPotions.EnsureTemplates();
+            LootUses.EnsureRestoration();
             if (GameServer.Database.FindObjectByKey<DbItemTemplate>("respec_single") is DbItemTemplate rs &&
                 GameServer.Database.FindObjectByKey<DbItemTemplate>("valor_respec_single") == null)
             {
@@ -161,6 +162,7 @@ namespace DOL.GS
             foreach (var v in ValorPotions.Kinds) Add(v.Id);
             foreach (var k in NoveltyPotions.Kinds) Add(k.Id);
             Add(LootUses.KitTokenId);
+            Add(LootUses.RestorationId);
             Add("valor_respec_single");
             _list = list;
             return list;
@@ -290,12 +292,13 @@ namespace DOL.GS
                         .FirstOrDefault();
                     if (near == null)
                         continue;
-                    double a = near.Heading * Math.PI * 2 / 4096.0 + Math.PI / 2;
+                    var spot = TownNpcSpot.Beside(near, -90);              // the town square's other side, clear of walls
+                    var at = spot.At;
                     var q = new ValorQuartermaster
                     {
                         Name = "Quartermaster of Valor", GuildName = "Marks of Valor", Model = near.Model, Size = near.Size, Level = 40,
-                        Realm = near.Realm, CurrentRegionID = near.CurrentRegionID, Heading = near.Heading,
-                        X = near.X + (int) (Math.Sin(a) * 110), Y = near.Y - (int) (Math.Cos(a) * 110), Z = near.Z,
+                        Realm = near.Realm, CurrentRegionID = near.CurrentRegionID, Heading = spot.Heading,
+                        X = (int) at.X, Y = (int) at.Y, Z = (int) at.Z,
                         TradeItems = List(), Flags = near.Flags,
                     };
                     q.LoadedFromScript = true;

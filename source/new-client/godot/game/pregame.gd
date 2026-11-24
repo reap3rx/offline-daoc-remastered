@@ -150,6 +150,51 @@ func _ready() -> void:
 	for a in OS.get_cmdline_user_args():                 # test runs with the server: --auto-play=alb:Name
 		if a.begins_with("--auto-play=") and Server.active:
 			_auto_play.call_deferred(a.split("=", true, 1)[1])
+		if a.begins_with("--auto-create=") and Server.active:     # test runs: --auto-create=hib:Name:2[:shotfolder]
+			_auto_create.call_deferred(a.split("=", true, 1)[1])
+
+
+## A test run against the server: makes a character through the screens (the first class offered), picks the starting
+## town by its number on the start screen (saving a picture of it when a folder is given), then enters the world.
+func _auto_create(spec: String) -> void:
+	var r := spec.get_slice(":", 0)
+	var who := spec.get_slice(":", 1)
+	var pick := int(spec.get_slice(":", 2))
+	var folder := spec.get_slice(":", 3) if spec.get_slice_count(":") > 3 else ""
+	if spec.get_slice_count(":") > 4:                    # a Windows folder (E:\...)
+		folder = spec.split(":", true, 3)[3]
+	_pick_realm(r)
+	await get_tree().create_timer(2.0).timeout
+	_start_create()
+	draft.name = who
+	_check_server_class()
+	_show("create")
+	await get_tree().create_timer(0.5).timeout
+	_name_edit.text = who
+	_create_continue()                                   # the name check, then customize
+	for i in 40:
+		await get_tree().create_timer(0.25).timeout
+		if screen == "customize":
+			break
+	print("[auto-create] screen %s" % screen)
+	_customize_continue()                                # the start screen (more than one town) or straight on
+	await get_tree().create_timer(1.0).timeout
+	print("[auto-create] screen %s, %d towns" % [screen, Server.start_zones(realm).size()])
+	if screen == "start":
+		draft["start_choice"] = pick
+		_show("start")
+		if folder != "":
+			for i in 30:
+				await get_tree().process_frame
+			DirAccess.make_dir_recursive_absolute(folder)
+			get_viewport().get_texture().get_image().save_png("%s/start_screen.png" % folder)
+		_finish_create()
+	for i in 60:
+		await get_tree().create_timer(0.5).timeout
+		if screen == "select":
+			break
+	print("[auto-create] created; entering")
+	_auto_play(r + ":" + who)
 
 
 ## A test run against the server: that realm's character of that name enters the world (no clicks).
@@ -180,6 +225,7 @@ func _show(which: String) -> void:
 		"select": _build_select()
 		"create": _build_create()
 		"customize": _build_customize()
+		"start": _build_start()
 	_place_camera()
 
 
@@ -1298,8 +1344,100 @@ func _customize_continue() -> void:
 		else:
 			CharacterStore.update(Accounts.account, draft)
 		_show("select")
+	elif Server.active and Server.start_zones(realm).size() > 1:
+		_zoom = 1.0
+		_show("start")                                  # where the character begins, then _finish_create
 	else:
 		_finish_create()
+
+
+# ---------------------------------------------------------------- the starting town (owner 2026-11-22: "Peaceful zones and
+# wild zones will be offered as starting zones on character creation to help spread out players and bots ... Players will
+# be made aware that starting in a Wild zone is more difficult"). The towns are the server's (level_bands.json
+# start_choices, the hub first); content/rules/start_zones.json holds their names and text in the same order.
+
+const C_PEACEFUL := Color(0.55, 0.85, 0.5)
+const C_WILD := Color(1.0, 0.55, 0.3)
+const C_HARD := Color(1.0, 0.3, 0.25)            # a realm's hard start (owner 2026-11-24): a Deadly zone, labelled
+
+
+func _build_start() -> void:
+	_load_realm_scene()
+	_bare_frame()
+	_show_figure(_draft_character())
+	var zones: Array = Server.start_zones(realm)
+	var pick := clampi(int(draft.get("start_choice", 0)), 0, maxi(zones.size() - 1, 0))
+	draft["start_choice"] = pick
+	var shade := ColorRect.new()
+	shade.color = Color(0, 0, 0, 0.22)
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_at(shade, 1024 - 460, 0, 460, 768, "R")
+	var nm := _cpanel(20, 18, 270, 40, "L", 0.85)
+	_ctext(String(draft.get("name", "")).to_upper(), nm, 0, 4, 270, 32, 20, CREAM, HORIZONTAL_ALIGNMENT_CENTER)
+	var px := 1024.0 - 24.0 - 420.0
+	var head := _cpanel(px, 18, 420, 48, "R", 0.85)
+	_ctext("WHERE WILL YOU BEGIN?", head, 0, 4, 420, 40, 22, GOLD_HI, HORIZONTAL_ALIGNMENT_CENTER)
+	var y := 78.0
+	# (six towns since Culraid, the hard start: the cards shrink to fit above the note and the buttons)
+	var gap := 10.0 if zones.size() <= 5 else 6.0
+	var ch := clampf((540.0 - (zones.size() - 1) * gap) / maxf(zones.size(), 1), 84.0, 132.0)
+	for i in zones.size():
+		var z: Dictionary = zones[i]
+		var wild := String(z.get("rating", "")).to_lower() != "peaceful" and String(z.get("rating", "")) != ""
+		var hard := bool(z.get("hard", false))
+		var on := i == pick
+		var card := _cpanel(px, y, 420, ch, "R", 0.88 if on else 0.72, Color(1.0, 0.82, 0.4) if on else C_EDGE)
+		if on:
+			(card.get_theme_stylebox("panel") as StyleBoxFlat).set_border_width_all(2)
+		card.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		var idx := i
+		card.gui_input.connect(func(e: InputEvent):
+			if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
+				draft["start_choice"] = idx
+				_show("start"))
+		_ctext(String(z.get("name", "")).to_upper(), card, 14, 8, 260, 26, 21, GOLD_HI if on else GOLD)
+		_ctext(String(z.get("zone", "")).to_upper(), card, 14, 33, 260, 18, 12, DIM)
+		var rating := String(z.get("rating", "")).to_upper()
+		if hard:
+			rating = "HARD START"
+		if rating != "":
+			_ctext(rating, card, 280, 10, 126, 22, 15, C_HARD if hard else (C_WILD if wild else C_PEACEFUL), HORIZONTAL_ALIGNMENT_RIGHT)
+		var blurb := Label.new()
+		blurb.text = String(z.get("blurb", ""))
+		blurb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		blurb.add_theme_font_size_override("font_size", 13 if ch >= 96.0 else 11)
+		blurb.add_theme_color_override("font_color", CREAM)
+		blurb.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.9))
+		blurb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		blurb.position = Vector2(14, 54 if ch >= 96.0 else 50)
+		blurb.size = Vector2(392, ch - blurb.position.y - 4)
+		card.add_child(blurb)
+		# (owner 2026-11-23, Bugs & Fixes: the "HARDER START - BETTER REWARDS" line overlapped the zone's description,
+		# and the note below says it anyway: gone)
+		y += ch + gap
+	# what the ratings mean (ZoneRates: monster experience and coin 0.8x in a peaceful zone, 1.0x in a wild one)
+	var note_h := clampf(694.0 - y, 56.0, 74.0)
+	var note := _cpanel(px, y, 420, note_h, "R", 0.7)
+	var t := Label.new()
+	t.text = "Peaceful zones are gentler, and pay 0.8x experience. Wild zones are harder - tougher monsters come right up " + \
+			"to the town - but pay full experience. The HARD START is a Deadly zone: only for those who want it rough."
+	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	t.add_theme_font_size_override("font_size", 12)
+	t.add_theme_color_override("font_color", CREAM)
+	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	t.position = Vector2(12, 6)
+	t.size = Vector2(396, note_h - 10)
+	note.add_child(t)
+	# BACK, BEGIN
+	var bar := Control.new()
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_at(bar, 0, 700, _wext, 50, "L")
+	var back := _cbutton("<  BACK", bar, 24, 0, 190, 44, func(): _show("customize"), 18)
+	(back.get_theme_stylebox("normal") as StyleBoxFlat).bg_color = Color(0.45, 0.08, 0.07, 0.95)
+	var go := _cbutton("BEGIN IN %s" % String(zones[pick].get("name", "")).to_upper() if zones.size() > 0 else "BEGIN", bar,
+			_wext - 24 - 280, 0, 280, 44, _finish_create, 18)
+	(go.get_theme_stylebox("normal") as StyleBoxFlat).bg_color = Color(0.3, 0.21, 0.06, 0.96)
+	_status_line()
 
 
 ## 1.65 has no starting-location screen: a new character starts where the old server's StartupLocation table puts
@@ -1309,7 +1447,7 @@ func _finish_create() -> void:
 	if Server.active:
 		var race_name := String(RACES[realm][int(draft.race)][0])
 		var err := Server.create_character(realm, race_name, int(draft.gender) == 1, int(draft.class_id), String(draft.name),
-				draft.look)
+				draft.look, int(draft.get("start_choice", 0)))
 		if err != "":
 			_say(err)
 			return
@@ -1638,12 +1776,12 @@ func _place_camera() -> void:
 		"create":
 			_cam.position = CAM_POS                      # same camera, aimed at the character (owner's create shot)
 			_cam.look_at(SPOT + Vector3(0, 1.1, 0))
-		"customize":
+		"customize", "start":
 			# the client zooms in to the face (distance 40 units, target between the head bones); kept on the
 			# select camera's side so the backdrop stays the same, face centred in the open scene area
 			var head := _head_position()
 			var dir := to_cam.normalized()
-			if _body_view:                               # the whole figure (BODY)
+			if _body_view or screen == "start":          # the whole figure (BODY; the starting-town screen)
 				var mid := SPOT + Vector3(0, 0.95 * k, 0)
 				_cam.position = mid + dir * (3.3 * k * _zoom)
 				_cam.look_at(mid)
@@ -1690,7 +1828,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		_menu.hide_window()
 		get_viewport().set_input_as_handled()
 		return
-	if screen not in ["select", "create", "customize"]:
+	if screen not in ["select", "create", "customize", "start"]:
 		return
 	if event is InputEventMouseButton:
 		_drag = event.button_index if event.pressed else 0

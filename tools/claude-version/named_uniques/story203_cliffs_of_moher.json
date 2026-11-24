@@ -8,18 +8,158 @@
   {
    "story_reward": true,
    "scaled": true,
+   "name": "Roadwarden's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 24,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 24,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "The Watch gives one to anyone who keeps the Connacht road open."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bocan-Tooth Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 24,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "A bocan's tooth on a cord. It still tries to bite."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fog-Lantern Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 25,
+   "bonuses": {
+    "Int": 8,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 4,
+    "Hits": 15
+   },
+   "lore": "A ring with a chip of lantern-glass. It glows faintly in fog."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Field-Warden's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 25,
+   "bonuses": {
+    "Dex": 8,
+    "Qui": 8,
+    "Str": 4,
+    "Hits": 21
+   },
+   "lore": "Plain leather, with a bone whistle for calling the watch."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Salvaged Axe-Head Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 26,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 22
+   },
+   "lore": "A Norse axe-head, found in a Hibernian fishing hut."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fisher's Oilskin Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 26,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 26,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Stiff with salt. It has kept a lot of rain off a lot of fishermen."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Watchtower Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 27,
+   "bonuses": {
+    "Emp": 9,
+    "Con": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "Bronze, with the watchtower worked into the clasp."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Beacon-Keeper Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 27,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 27,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Scorched round the cuff by a hundred lightings of the beacon."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
    "name": "Fetch-Glass Pendant",
    "base": [
     41,
     29
    ],
-   "level": 18,
+   "level": 25,
    "bonuses": {
-    "Int": 6,
-    "Emp": 3,
-    "Dex": 3,
-    "Power": 3,
-    "Hits": 11
+    "Int": 8,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 4,
+    "Hits": 15
    },
    "lore": "A little mirror that shows you a moment late. You get used to it."
   },
@@ -31,13 +171,13 @@
     41,
     24
    ],
-   "level": 18,
+   "level": 25,
    "bonuses": {
-    "Qui": 6,
-    "Con": 3,
-    "Dex": 3,
-    "Hits": 11,
-    "Power": 2
+    "Qui": 8,
+    "Con": 4,
+    "Dex": 4,
+    "Hits": 15,
+    "Power": 3
    },
    "lore": "A comb of white bone. The fetch carried it; it is the only thing of hers it took."
   },
@@ -49,12 +189,12 @@
     41,
     33
    ],
-   "level": 18,
+   "level": 25,
    "bonuses": {
-    "Str": 6,
-    "Con": 6,
-    "Dex": 3,
-    "Hits": 15
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 21
    },
    "lore": "The bocan are goblins of the cliffs. This one's hide is tough as boot-leather."
   },
@@ -66,15 +206,172 @@
     41,
     26
    ],
-   "level": 18,
+   "level": 25,
    "bonuses": {
-    "Con": 6,
-    "Hits": 18,
-    "Body": 2,
-    "Crush": 2,
-    "Slash": 2
+    "Con": 8,
+    "Hits": 25,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
    },
    "lore": "Grey wool, weighted at the hem against the cliff wind."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seer's Mirror Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 26,
+   "bonuses": {
+    "Int": 9,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "A ring set with a tiny mirror. Seers use them to catch fetches looking."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Omen-Knot Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 26,
+   "bonuses": {
+    "Emp": 9,
+    "Con": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "Knotted with the seven omens. You can untie one, once."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cairn-Stone Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 27,
+   "bonuses": {
+    "Emp": 9,
+    "Con": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "A pebble from the Grey Man's cairn. It is always damp."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fetch-Follower's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 27,
+   "bonuses": {
+    "Dex": 9,
+    "Qui": 9,
+    "Str": 4,
+    "Hits": 23
+   },
+   "lore": "Soft leather, for walking quietly behind things that shouldn't know you're there."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Grey Man's Fleece Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 29,
+   "bonuses": {
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "Woven from the grey fleece, cleansed by the Seers. It still smells faintly of roses."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fear Liath Ward",
+   "base": [
+    41,
+    29
+   ],
+   "level": 29,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 29,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "A Seers' ward against the Grey Man. It works on fog, mostly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seventh-Omen Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 29,
+   "bonuses": {
+    "Qui": 10,
+    "Con": 5,
+    "Dex": 5,
+    "Hits": 17,
+    "Power": 3
+   },
+   "lore": "The seventh omen is 'the one you didn't see coming'. This ring is for that one."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Net-Mender's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 27,
+   "bonuses": {
+    "Dex": 9,
+    "Qui": 9,
+    "Str": 4,
+    "Hits": 23
+   },
+   "lore": "Nuala's spare. She mends nets with it on."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tide-Pool Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 27,
+   "bonuses": {
+    "Emp": 9,
+    "Con": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "A shell from the tide pools. Put it to your ear and the sea says your name."
   },
   {
    "story_reward": true,
@@ -84,13 +381,13 @@
     41,
     24
    ],
-   "level": 36,
+   "level": 30,
    "bonuses": {
-    "Int": 12,
-    "Emp": 6,
-    "Dex": 6,
-    "Power": 5,
-    "Hits": 22
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 18
    },
    "lore": "A blue-green scale, pierced and hung on a cord. The koalinth give them to children they claim."
   },
@@ -102,12 +399,12 @@
     41,
     35
    ],
-   "level": 36,
+   "level": 30,
    "bonuses": {
-    "Str": 12,
-    "Con": 12,
-    "Dex": 6,
-    "Hits": 31
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
    },
    "lore": "Cut from the koalinth tide-caller's own hand."
   },
@@ -119,12 +416,12 @@
     41,
     26
    ],
-   "level": 36,
+   "level": 30,
    "bonuses": {
-    "Emp": 12,
-    "Con": 6,
-    "Power": 5,
-    "Hits": 22
+    "Emp": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 18
    },
    "lore": "Woven of kelp and something finer. Water runs off it like off a seal."
   },
@@ -136,14 +433,595 @@
     41,
     33
    ],
-   "level": 36,
+   "level": 30,
    "bonuses": {
-    "Dex": 12,
-    "Qui": 12,
-    "Str": 6,
-    "Hits": 31
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 26
    },
    "lore": "Cliff-dweller work, bone and sinew."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sea-Stack Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 31,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 31,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Barnacled stone, ground smooth. Waves have been trying to break it for a thousand years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pilot's Knot Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 31,
+   "bonuses": {
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 19
+   },
+   "lore": "A sea-knot in tarred rope. It shows the way through rocks, if you can read it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Brarn's Shell Crown",
+   "base": [
+    41,
+    29
+   ],
+   "level": 32,
+   "bonuses": {
+    "Emp": 11,
+    "Con": 5,
+    "Power": 5,
+    "Hits": 19
+   },
+   "lore": "Brarn's crown of shells. It hums with the tide."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Koalinth Chief-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 32,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 5,
+    "Hits": 27
+   },
+   "lore": "A heavy ring of sea-gold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rock-Road Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 32,
+   "bonuses": {
+    "Dex": 11,
+    "Qui": 11,
+    "Str": 5,
+    "Hits": 27
+   },
+   "lore": "Sealskin, grey-green. It's never quite dry."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cliff-Top Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 29,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 25
+   },
+   "lore": "Cliff dweller work: bone and hide, stitched with gut."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Watchman's Whistle Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 29,
+   "bonuses": {
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 25
+   },
+   "lore": "A bone whistle. Every watchman on the cliffs carries one."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lookout's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 30,
+   "bonuses": {
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "A ring with a notch for sighting along. Cliff dweller lookouts use them."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Raven-Coin Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 30,
+   "bonuses": {
+    "Qui": 10,
+    "Con": 5,
+    "Dex": 5,
+    "Hits": 18,
+    "Power": 3
+   },
+   "lore": "A belt hung with Norse coins, taken from cliff dweller purses."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Spear-Breaker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 31,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 31,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Bound tight round the forearm, for catching spear-shafts."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Nets-of-the-Cliff Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 31,
+   "bonuses": {
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 26
+   },
+   "lore": "A knot from a cliff dweller's net, the kind they use to drop on you from above."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Whelihan's Chief-Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 34,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 6,
+    "Hits": 29
+   },
+   "lore": "The torc of the cliff dwellers' chief. It's heavier than it looks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cliff-Hold Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 34,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 34,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Hides stitched together the way the cliff dwellers do it. Warm as a house."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sold-Word Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 34,
+   "bonuses": {
+    "Qui": 11,
+    "Con": 6,
+    "Dex": 6,
+    "Hits": 20,
+    "Power": 4
+   },
+   "lore": "A ring with a raven on it, from a chief who sold his word."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Stockade-Scout's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 30,
+   "bonuses": {
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 26
+   },
+   "lore": "A ring with a notch for every stake counted."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Raven-Rune Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 30,
+   "bonuses": {
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "A raven rune, cut from a Norse shield."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thrall-Chain Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 31,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 31,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "A link of thrall-chain, broken and beaten into a bracer."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Freed Man's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 31,
+   "bonuses": {
+    "Qui": 10,
+    "Con": 5,
+    "Dex": 5,
+    "Hits": 19,
+    "Power": 3
+   },
+   "lore": "Breasal the fisher's own belt. He gave it to you when you cut his chain."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Skald's Harp-Peg Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 33,
+   "bonuses": {
+    "Qui": 11,
+    "Con": 6,
+    "Dex": 6,
+    "Hits": 20,
+    "Power": 4
+   },
+   "lore": "A harp peg of walrus ivory. It remembers every saga it ever held tight."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Saga-Teller's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 33,
+   "bonuses": {
+    "Int": 11,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "A Norse ring, engraved with the first line of a saga that hasn't finished yet."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Raven-Banner Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 33,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 33,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Cut from the longphort's banner. The raven looks the other way now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Jarl's Arm-Ring",
+   "base": [
+    41,
+    33
+   ],
+   "level": 35,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 30
+   },
+   "lore": "Thick gold, taken from Jarl Hrafn's own high seat."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Longphort-Breaker Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 35,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 30
+   },
+   "lore": "Iron and bronze, given to whoever broke into the longphort first."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rift-Shard Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 31,
+   "bonuses": {
+    "Int": 10,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 19
+   },
+   "lore": "A shard of solid air from the distorters' rift. It's lighter than nothing."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Distorter-Hide Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 31,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 31,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "It bends the light a little around your wrist."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Aoife's Thorn Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 33,
+   "bonuses": {
+    "Qui": 11,
+    "Con": 6,
+    "Dex": 6,
+    "Hits": 20,
+    "Power": 4
+   },
+   "lore": "A ring of twisted thorn, cold as frost. Aoife's."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Court-Silk Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 33,
+   "bonuses": {
+    "Int": 11,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "Grey-green silk, finer than any weaver in Hibernia could make."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hissing-Stone Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 34,
+   "bonuses": {
+    "Emp": 11,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "A sliver of the circle's stone, quiet again."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Circle-Warden's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 34,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 34,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Granite-grey, cut with the circle's ogham."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fear Liath's Grey Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 35,
+   "bonuses": {
+    "Int": 12,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 21
+   },
+   "lore": "The Grey Man's own mantle of fog, caught and woven. It's lighter than it should be."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Clear-Weather Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 35,
+   "bonuses": {
+    "Emp": 12,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 21
+   },
+   "lore": "Since you wore it, it hasn't rained on you once."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wrecker-Bane Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 35,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 30
+   },
+   "lore": "Given to whoever ended the wrecking of the Cliffs of Moher."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thorn-Crown Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 35,
+   "bonuses": {
+    "Qui": 12,
+    "Con": 6,
+    "Dex": 6,
+    "Hits": 21,
+    "Power": 4
+   },
+   "lore": "A chip of the fog-stone's thorn crown, cleansed. It still points east."
   }
  ]
 }

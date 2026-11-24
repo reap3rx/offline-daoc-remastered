@@ -10,8 +10,17 @@ extends ClassicWindow
 
 const HEALTH_PLATES := preload("res://game/npcs/health_plates.gd")
 const FLOAT_TEXT := preload("res://game/ui/float_text.gd")
-const PAGES := ["video", "audio", "controls", "interface", "chat", "windows", "controller", "text"]
-const PAGE_NAMES := ["VIDEO", "AUDIO", "CONTROLS", "INTERFACE", "CHAT", "WINDOWS"]
+const PAGES := ["video", "audio", "controls", "interface", "chat", "tools", "controller", "text"]
+const PAGE_NAMES := ["VIDEO", "AUDIO", "CONTROLS", "INTERFACE", "CHAT", "TOOLS"]
+## TOOLS (owner 2026-11-21: "Instead of those windows, I'd like that to be a Tools tab. It will have a button for all of
+## the tools you've made for me ... The ones that are behind the GM wall can be greyed out unless GM mode is
+## activated"): [caption, command, GM only, opens a window, what it does].
+const TOOLS := [
+	["TIER TUNING", "/tier tune", false, true, "EACH CON TIER'S HITS, TAKES AND PRESS, LIVE"],
+	["ZONE MARKS", "/zmark", false, true, "MARK A SPOT FOR THE ZONE'S DESIGN, WITH NOTES"],
+	["EVENTS", "/events", false, true, "THE EVENTS IN THIS ZONE"],
+	["ZONE BUILD REPORT", "/zonebuild", true, false, "WHAT THE ZONE REBUILDS PLACED (CHAT)"],
+	["CLASS GUIDE EXPORT", "/classguide", true, false, "WRITE EVERY CLASS TO CLASS-GUIDE.JSON"]]
 const RESOLUTIONS := [Vector2i(1280, 720), Vector2i(1366, 768), Vector2i(1600, 900), Vector2i(1920, 1080),
 		Vector2i(2560, 1080), Vector2i(2560, 1440), Vector2i(3440, 1440), Vector2i(3840, 2160)]
 const FPS_CAPS := [0, 30, 60, 75, 90, 120, 144, 165, 240, -1]   # 0 = monitor refresh (vsync), -1 = unlimited
@@ -121,7 +130,16 @@ func _current_mode() -> String:
 func show_window() -> void:
 	super.show_window()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if Server.active and not pregame:
+		Server.command("/devmode status")                  # the GM switch's state, for TOOLS
+		if not Server.priv_changed.is_connected(_on_priv):
+			Server.priv_changed.connect(_on_priv)
 	show_page(page)
+
+
+func _on_priv() -> void:
+	if visible and page == "tools":
+		show_page("tools")
 
 
 func hide_window() -> void:
@@ -134,6 +152,8 @@ func hide_window() -> void:
 
 func show_page(p: String) -> void:
 	settings = UiArt.load_settings()
+	if p == "windows":
+		p = "tools"
 	if not p in PAGES:
 		p = "video"
 	page = p
@@ -151,10 +171,32 @@ func show_page(p: String) -> void:
 		"controls": _controls()
 		"interface": _interface()
 		"chat": _chat()
-		"windows": _windows()
+		"tools": _tools()
+		"windows": _tools()
 		"controller": _controller()
 		"text": _text_page()
 	_scroll.scroll_vertical = 0
+	_fit_rows.call_deferred()
+
+
+## Every row inside the window's width (owner 2026-11-21: the window didn't stretch to hold the sliders and dropdowns
+## - a long label, or bigger text, pushed a row past the edge and the whole page with it): a row too wide wraps its
+## label onto two lines and lets its buttons' words clip, so the controls stay in view.
+func _fit_rows() -> void:
+	if not is_instance_valid(_list):
+		return
+	var avail := _scroll.size.x - 10.0
+	for row in _list.get_children():
+		if not (row is HBoxContainer) or (row as Control).get_combined_minimum_size().x <= avail:
+			continue
+		for c in row.get_children():
+			if c is Label and not (c as Label).clip_text:
+				(c as Label).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+				(c as Label).custom_minimum_size.x = 40.0
+			elif c is Label:
+				(c as Label).custom_minimum_size.x = 40.0
+			elif c is Button:
+				(c as Button).clip_text = true
 
 
 # --- rows -----------------------------------------------------------------------------------------------------
@@ -164,7 +206,8 @@ func _row(text: String, control: Control) -> void:
 	row.add_theme_constant_override("separation", 6)
 	var l := UiArt.label(text, 10, UiArt.CREAM)
 	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	l.custom_minimum_size.y = 20
+	l.custom_minimum_size = Vector2(40, 20)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART       # (a long label wraps: the control stays in the window)
 	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	row.add_child(l)
 	control.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -460,6 +503,11 @@ func _quality() -> void:
 	_hint("HOW FAR OUT THE BUSHES AND THICKETS ARE DRAWN BEFORE THEY FADE AWAY. FURTHER: LESS FADING IN AS YOU MOVE, FOR MORE GRAPHICS CARD TIME.")
 	_gfx_toggle("COMPRESSED TEXTURES", "compressed_textures")
 	_hint("KEEPS THE WORLD'S TEXTURES IN THE GRAPHICS CARD'S OWN COMPRESSED FORMAT: A QUARTER OF THE VIDEO MEMORY OR LESS AND FASTER LOADING, A LITTLE SOFTER UP CLOSE. EACH TEXTURE IS COMPRESSED THE FIRST TIME IT IS SEEN (THE FIRST VISIT TO A ZONE IS SLOWER), THEN KEPT. TAKES EFFECT AS ZONES LOAD - CHANGE ZONE OR RESTART TO SEE IT EVERYWHERE.")
+
+	_heading("CHARACTERS")
+	_gfx_slider("CHARACTER DETAIL DISTANCE", "character_detail", 10.0, 300.0, 5.0,
+			func(v: float): return "ALL" if v >= 300.0 else "%d M" % int(v))
+	_hint("HOW FAR OUT OTHER CHARACTERS ARE DRAWN IN FULL DETAIL. BEYOND IT THEY MOVE IN FEWER STEPS (10 A SECOND), CAST NO SHADOW AND LOSE THEIR CLOAK SWING AND SWAY - YOUR TARGET AND YOUR GROUP ALWAYS STAY FULL. NEARER: MUCH FASTER IN CROWDS (TOWNS, EVENTS, RAIDS) - IT IS YOUR PROCESSOR THAT DRAWS EVERY CHARACTER. ALL: EVERYONE IN FULL DETAIL.")
 
 	_heading("GRASS")
 	_gfx_slider("GRASS DISTANCE", "grass_distance", 30.0, 200.0, 5.0, func(v: float): return "%d M" % int(v))
@@ -799,7 +847,50 @@ func _chat() -> void:
 		_list.add_child(row)
 
 
-## WINDOWS (owner 2026-10-09): one button per window that puts it back where it was before it was closed; RESET
+## TOOLS: GM mode on the fly (/devmode, DevMode.cs), a button for each tool, and RESET ALL WINDOWS.
+func _tools() -> void:
+	_heading("GM MODE")
+	if pregame or not Server.active:
+		_hint("IN GAME ONLY.")
+	else:
+		var gm := _toggle(Server.priv_level > 1, func(v: bool):
+			Server.command("/devmode " + ("on" if v else "off"))
+			_status.text = "GM MODE %s" % ("ON" if v else "OFF"))
+		gm.disabled = not Server.can_gm
+		_row("GM MODE", gm)
+		_hint("SWITCHES THIS ACCOUNT BETWEEN GM AND PLAYER AT ONCE, AND IT STAYS THAT WAY NEXT LOGIN. ONLY FOR AN ACCOUNT THAT HAS LOGGED IN AS A GM." if Server.can_gm
+			else "THIS ACCOUNT HAS NEVER LOGGED IN AS A GM, SO IT CAN'T SWITCH.")
+	_heading("TOOLS")
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 6)
+	grid.add_theme_constant_override("v_separation", 5)
+	for t in TOOLS:
+		var b := UiArt.button(String(t[0]), Vector2(168, 20), 10)
+		var locked: bool = bool(t[2]) and Server.priv_level <= 1
+		b.disabled = locked or pregame or not Server.active
+		b.tooltip_text = String(t[4]) + ("  (GM MODE ONLY)" if bool(t[2]) else "")
+		var cmd := String(t[1])
+		var opens := bool(t[3])
+		b.pressed.connect(func():
+			Server.command(cmd)
+			_status.text = "%s" % String(t[0])
+			if opens:
+				hide_window())
+		grid.add_child(b)
+	_list.add_child(grid)
+	_hint("GREYED OUT: GM MODE ONLY. HOVER A BUTTON FOR WHAT IT DOES.")
+	_heading("WINDOWS")
+	var reset := UiArt.button("RESET ALL WINDOWS", Vector2(342, 20), 10)
+	reset.pressed.connect(func():
+		ui.reset_layout()
+		_status.text = "EVERY WINDOW IS BACK IN ITS DEFAULT PLACE")
+	if ui == null:
+		reset.disabled = true
+	_list.add_child(reset)
+
+
+## WINDOWS (owner 2026-10-09; replaced by TOOLS 2026-11-21, kept for reference): one button per window that puts it back where it was before it was closed; RESET
 ## puts every window back in its default place.
 func _windows() -> void:
 	_heading("WINDOWS")
@@ -854,7 +945,7 @@ func _windows() -> void:
 
 # --- the controller (owner 2026-11-10: "controller customization ... holding a button be a selectable input") -----
 
-const PAD_GROUPS := [["COMBAT", ["attack", "defend", "dodge", "jump", "sprint_hold", "sprint_toggle", "sheathe",
+const PAD_GROUPS := [["COMBAT", ["attack", "defend", "parry_only", "dodge", "jump", "sprint_hold", "sprint_toggle", "sheathe",
 		"weapon_cycle", "interact", "lock_on"]], ["STYLES", ["style_auto", "style_reactive", "style_position", "style_chain"]],
 		["TARGETING", ["target_enemy", "target_friend"]], ["MOVING ABOUT", ["run_lock", "pull", "sit", "torch"]],
 		["CAMERA", ["zoom_in", "zoom_out"]],

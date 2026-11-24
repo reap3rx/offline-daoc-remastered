@@ -1,0 +1,1515 @@
+{
+ "zone": 207,
+ "name": "Connacht",
+ "rating": "peaceful",
+ "themes": [
+  "Road-gang (villainous youth)",
+  "Hill pests (lucradans, spraggons)",
+  "Moors (wind ghouls, grave rings)",
+  "Irewood (irewoods, cluricauns, wisps)",
+  "Azure Order (idolaters, wickermen)",
+  "Demon Gate (demons, siabra raiders)",
+  "Fool's Court (the Amadan, the Touched, pookhas)",
+  "Wildlife (frogs, beetles, bears)",
+  "Lough Derg border (curmudgeons, wolves)"
+ ],
+ "notes": "Zone brief 2026-11-22 (Zone Reviews, Connacht tab), owner's notes: Peaceful (law and order round Ardee, Druim Ligen and the Tir na Nog gate), about 1,000 monsters (frogs and the like cut in favour of demons and filling out other areas), Lough Derg's kinds mixed in toward the Mag Mell border, more danger at the demon gate and the Wicker Fields. Coordinates are zone-local units (metres x 40).",
+ "keep": [
+  "parthanan",
+  "Parthanan Farm Controller"
+ ],
+ "tiers": {
+  "Chieftain Ultan": "orange",
+  "Follower of Ultan": "yellow",
+  "Rathil O'Carolan": "yellow",
+  "Juliy the Jester": "orange",
+  "Daewain": "yellow",
+  "Orik": "yellow",
+  "Sraoi": "yellow",
+  "Pikebane": "orange",
+  "Windaille": "yellow",
+  "Bas": "yellow",
+  "Lucan": "blue",
+  "Spykit": "green",
+  "Irewood Seedling": "blue",
+  "Famine": "orange",
+  "Dorbal": "orange",
+  "Touched": "orange",
+  "Amadan": "red",
+  "Amadan Dubh": "purple"
+ },
+ "factions": {
+  "bandits": {
+   "id": 9201,
+   "aggro": 85
+  },
+  "lucradans": {
+   "id": 9202,
+   "aggro": 40,
+   "enemies": [
+    "spraggons"
+   ]
+  },
+  "spraggons": {
+   "id": 9203,
+   "aggro": 40,
+   "enemies": [
+    "lucradans"
+   ]
+  },
+  "beetles": {
+   "id": 9204,
+   "aggro": 40
+  },
+  "azure": {
+   "id": 9205,
+   "aggro": 90,
+   "enemies": [
+    "irewood"
+   ]
+  },
+  "demons": {
+   "id": 9206,
+   "aggro": 100
+  },
+  "cluricauns": {
+   "id": 9207,
+   "aggro": 60
+  },
+  "court": {
+   "id": 9208,
+   "aggro": 75
+  },
+  "curmudgeons": {
+   "id": 9209,
+   "aggro": 80
+  },
+  "raiders": {
+   "id": 9210,
+   "aggro": 85
+  },
+  "irewood": {
+   "id": 9211,
+   "aggro": 40,
+   "enemies": [
+    "azure"
+   ]
+  }
+ },
+ "members": {
+  "badger cub": {
+   "from": "badger cub",
+   "tier": "grey",
+   "roam": 300
+  },
+  "annoying lucradan": {
+   "from": "annoying lucradan",
+   "tier": "grey",
+   "roam": 300
+  },
+  "water beetle larva": {
+   "from": "water beetle larva",
+   "tier": "grey",
+   "roam": 250
+  },
+  "large frog": {
+   "from": "large frog",
+   "tier": "green",
+   "roam": 300
+  },
+  "hill toad": {
+   "from": "hill toad",
+   "tier": "green",
+   "roam": 300
+  },
+  "eirebug": {
+   "from": "eirebug",
+   "tier": "green",
+   "roam": 400
+  },
+  "large eirebug": {
+   "from": "large eirebug",
+   "tier": "blue",
+   "roam": 400
+  },
+  "orchard nipper": {
+   "from": "orchard nipper",
+   "tier": "green",
+   "roam": 350
+  },
+  "wild crouch": {
+   "from": "wild crouch",
+   "tier": "green",
+   "roam": 400
+  },
+  "badger": {
+   "from": "badger",
+   "tier": "green",
+   "roam": 400
+  },
+  "lough wolf": {
+   "from": "lough wolf",
+   "tier": "blue",
+   "roam": 450
+  },
+  "fishing bear forager": {
+   "from": "fishing bear forager",
+   "tier": "blue",
+   "roam": 400
+  },
+  "fishing bear": {
+   "from": "fishing bear",
+   "tier": "yellow",
+   "roam": 350
+  },
+  "water beetle": {
+   "from": "water beetle",
+   "tier": "blue",
+   "faction": "beetles",
+   "aggro": [
+    0,
+    0
+   ],
+   "roam": 300
+  },
+  "water beetle collector": {
+   "from": "water beetle collector",
+   "tier": "green",
+   "faction": "beetles",
+   "aggro": [
+    0,
+    0
+   ],
+   "roam": 300
+  },
+  "lugradan whelp": {
+   "from": "lugradan whelp",
+   "tier": "green",
+   "roam": 250
+  },
+  "mudman": {
+   "from": "mudman",
+   "tier": "green",
+   "roam": 300
+  },
+  "faerie beetle": {
+   "from": "faerie beetle",
+   "tier": "blue",
+   "roam": 350
+  },
+  "villainous youth": {
+   "from": "villainous youth",
+   "tier": "green",
+   "faction": "bandits",
+   "aggro": [
+    60,
+    400
+   ]
+  },
+  "rowdy": {
+   "from": "rowdy",
+   "tier": "blue",
+   "faction": "bandits",
+   "aggro": [
+    60,
+    450
+   ]
+  },
+  "gang hound": {
+   "from": "lough wolf",
+   "name": "gang hound",
+   "tier": "green",
+   "faction": "bandits",
+   "aggro": [
+    80,
+    500
+   ]
+  },
+  "gang boss": {
+   "from": "rowdy",
+   "name": "road-gang boss",
+   "tier": "yellow",
+   "faction": "bandits",
+   "aggro": [
+    60,
+    500
+   ],
+   "size": 1.15,
+   "guards": {
+    "rowdy": 1,
+    "gang hound": 1
+   }
+  },
+  "feckless lucragan": {
+   "from": "feckless lucragan",
+   "tier": "green",
+   "faction": "lucradans",
+   "aggro": [
+    50,
+    450
+   ]
+  },
+  "wild lucradan": {
+   "from": "wild lucradan",
+   "tier": "blue",
+   "faction": "lucradans",
+   "aggro": [
+    50,
+    450
+   ]
+  },
+  "spraggon": {
+   "from": "spraggon",
+   "tier": "green",
+   "faction": "spraggons",
+   "aggro": [
+    50,
+    450
+   ]
+  },
+  "spraggonite": {
+   "from": "spraggonite",
+   "tier": "blue",
+   "faction": "spraggons",
+   "aggro": [
+    50,
+    450
+   ]
+  },
+  "spraggonoll": {
+   "from": "spraggonoll",
+   "tier": "yellow",
+   "faction": "spraggons",
+   "aggro": [
+    50,
+    450
+   ]
+  },
+  "curmudgeon harvester": {
+   "from": "curmudgeon harvester",
+   "tier": "blue",
+   "faction": "curmudgeons",
+   "aggro": [
+    80,
+    450
+   ]
+  },
+  "wandering curmudgeon": {
+   "from": "wandering curmudgeon",
+   "tier": "yellow",
+   "faction": "curmudgeons",
+   "aggro": [
+    80,
+    450
+   ]
+  },
+  "wind ghoul": {
+   "from": "wind ghoul",
+   "tier": "blue",
+   "roam": 600
+  },
+  "skeletal pawn": {
+   "from": "skeletal pawn",
+   "tier": "green",
+   "roam": 200
+  },
+  "skeletal minion": {
+   "from": "skeletal minion",
+   "tier": "blue",
+   "roam": 200
+  },
+  "ghostly siabra": {
+   "from": "ghostly siabra",
+   "tier": "yellow",
+   "roam": 400
+  },
+  "streaming wisp": {
+   "from": "streaming wisp",
+   "tier": "blue",
+   "roam": 500
+  },
+  "moss sheerie": {
+   "from": "moss sheerie",
+   "tier": "green",
+   "roam": 350
+  },
+  "anger sprite": {
+   "from": "anger sprite",
+   "tier": "blue",
+   "roam": 400
+  },
+  "changeling": {
+   "from": "changeling",
+   "tier": "green",
+   "aggro": [
+    60,
+    400
+   ]
+  },
+  "young irewood": {
+   "from": "young irewood",
+   "tier": "yellow",
+   "faction": "irewood",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 150
+  },
+  "irewood sapling": {
+   "from": "irewood sapling",
+   "tier": "blue",
+   "faction": "irewood",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 200
+  },
+  "cluricaun": {
+   "from": "cluricaun",
+   "tier": "blue",
+   "faction": "cluricauns",
+   "aggro": [
+    60,
+    400
+   ]
+  },
+  "cluricaun brewer": {
+   "from": "cluricaun",
+   "name": "cluricaun brewer",
+   "tier": "yellow",
+   "faction": "cluricauns",
+   "aggro": [
+    60,
+    450
+   ],
+   "size": 1.1,
+   "guards": {
+    "cluricaun": 2
+   }
+  },
+  "lunantishee": {
+   "from": "lunantishee",
+   "tier": "green",
+   "roam": 350
+  },
+  "walking rock": {
+   "from": "walking rock",
+   "tier": "yellow",
+   "roam": 200
+  },
+  "bocan": {
+   "from": "bocan",
+   "tier": "orange",
+   "roam": 150
+  },
+  "Withe": {
+   "from": "Withe",
+   "tier": "red",
+   "faction": "azure",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 120,
+   "guards": {
+    "phantom wickerman": 1
+   }
+  },
+  "The Dullahan": {
+   "from": "ghostly siabra",
+   "tier": "red",
+   "size": 1.35,
+   "aggro": [
+    100,
+    600
+   ]
+  },
+  "Old Cnamh": {
+   "from": "bocan",
+   "name": "Old Cnamh",
+   "tier": "red",
+   "size": 1.3,
+   "roam": 100,
+   "guards": {
+    "bocan": 1
+   }
+  },
+  "Broc the Woodcutter": {
+   "from": "azure idolater",
+   "name": "Broc the Woodcutter",
+   "tier": "orange",
+   "faction": "azure",
+   "aggro": [
+    90,
+    500
+   ],
+   "size": 1.15,
+   "guards": {
+    "azure idolater": 2
+   }
+  },
+  "azure idolater": {
+   "from": "azure idolater",
+   "tier": "yellow",
+   "faction": "azure",
+   "aggro": [
+    90,
+    500
+   ]
+  },
+  "azure acolyte": {
+   "from": "azure idolater",
+   "name": "azure acolyte",
+   "tier": "blue",
+   "faction": "azure",
+   "aggro": [
+    90,
+    450
+   ]
+  },
+  "phantom wickerman": {
+   "from": "phantom wickerman",
+   "tier": "orange",
+   "faction": "azure",
+   "aggro": [
+    90,
+    500
+   ],
+   "roam": 200
+  },
+  "manes demon": {
+   "from": "manes demon",
+   "tier": "yellow",
+   "faction": "demons",
+   "aggro": [
+    100,
+    550
+   ]
+  },
+  "grumoz demon": {
+   "from": "grumoz demon",
+   "tier": "orange",
+   "faction": "demons",
+   "aggro": [
+    100,
+    550
+   ]
+  },
+  "Grimlach of the Gate": {
+   "from": "grumoz demon",
+   "name": "Grimlach of the Gate",
+   "tier": "red",
+   "faction": "demons",
+   "size": 1.35,
+   "guards": {
+    "manes demon": 2
+   }
+  },
+  "siabra raider": {
+   "from": "siabra raider",
+   "tier": "yellow",
+   "faction": "raiders",
+   "aggro": [
+    85,
+    500
+   ]
+  },
+  "siabra raid-captain": {
+   "from": "siabra raider",
+   "name": "siabra raid-captain",
+   "tier": "orange",
+   "faction": "raiders",
+   "size": 1.15,
+   "guards": {
+    "siabra raider": 2
+   }
+  },
+  "amadan touched": {
+   "from": "amadan touched",
+   "tier": "yellow",
+   "faction": "court",
+   "aggro": [
+    80,
+    500
+   ]
+  },
+  "alp luachra": {
+   "from": "alp luachra",
+   "tier": "yellow",
+   "faction": "court",
+   "aggro": [
+    70,
+    450
+   ]
+  },
+  "pookha": {
+   "from": "pookha",
+   "tier": "orange",
+   "faction": "court",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 300
+  },
+  "merucha": {
+   "from": "merucha",
+   "tier": "yellow",
+   "roam": 350
+  }
+ },
+ "sites": [
+  {
+   "id": "ardee_ponds",
+   "kind": "wildlife",
+   "area": [
+    50000,
+    52000,
+    64000,
+    64000
+   ],
+   "spawn": {
+    "large frog": 27,
+    "water beetle larva": 15,
+    "water beetle collector": 11,
+    "hill toad": 11
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ardee_fields",
+   "kind": "wildlife",
+   "area": [
+    44000,
+    44000,
+    58000,
+    54000
+   ],
+   "spawn": {
+    "badger cub": 11,
+    "annoying lucradan": 11,
+    "orchard nipper": 15,
+    "eirebug": 15,
+    "badger": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ardee_east",
+   "kind": "wildlife",
+   "area": [
+    58000,
+    38000,
+    65200,
+    50000
+   ],
+   "spawn": {
+    "badger": 10,
+    "lough wolf": 8,
+    "hill toad": 10,
+    "badger cub": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "curmudgeon_mill",
+   "kind": "camp",
+   "at": [
+    53600,
+    40800
+   ],
+   "r": 360,
+   "respawn": 360,
+   "spawn": {
+    "curmudgeon harvester": 4,
+    "wandering curmudgeon": 1
+   }
+  },
+  {
+   "id": "curmudgeon_cart",
+   "kind": "patrol",
+   "route": [
+    [
+     53600,
+     40800
+    ],
+    [
+     59880,
+     44960
+    ],
+    [
+     64000,
+     50000
+    ],
+    [
+     59880,
+     44960
+    ]
+   ],
+   "spawn": {
+    "curmudgeon harvester": 2
+   }
+  },
+  {
+   "id": "mudman_pool_0",
+   "kind": "camp",
+   "at": [
+    49200,
+    47200
+   ],
+   "r": 240,
+   "respawn": 240,
+   "spawn": {
+    "mudman": 6
+   }
+  },
+  {
+   "id": "mudman_pool_1",
+   "kind": "camp",
+   "at": [
+    47200,
+    50400
+   ],
+   "r": 240,
+   "respawn": 240,
+   "spawn": {
+    "mudman": 6
+   }
+  },
+  {
+   "id": "mudman_pool_2",
+   "kind": "camp",
+   "at": [
+    52000,
+    44800
+   ],
+   "r": 240,
+   "respawn": 240,
+   "spawn": {
+    "mudman": 6
+   }
+  },
+  {
+   "id": "whelp_den_0",
+   "kind": "camp",
+   "at": [
+    42400,
+    51600
+   ],
+   "r": 240,
+   "respawn": 240,
+   "spawn": {
+    "lugradan whelp": 6
+   }
+  },
+  {
+   "id": "whelp_den_1",
+   "kind": "camp",
+   "at": [
+    44800,
+    56800
+   ],
+   "r": 240,
+   "respawn": 240,
+   "spawn": {
+    "lugradan whelp": 6
+   }
+  },
+  {
+   "id": "whelp_den_2",
+   "kind": "camp",
+   "at": [
+    40000,
+    55200
+   ],
+   "r": 240,
+   "respawn": 240,
+   "spawn": {
+    "lugradan whelp": 6
+   }
+  },
+  {
+   "id": "beetle_shore_0",
+   "kind": "camp",
+   "at": [
+    58000,
+    58000
+   ],
+   "r": 320,
+   "respawn": 240,
+   "spawn": {
+    "water beetle": 3,
+    "water beetle collector": 3
+   }
+  },
+  {
+   "id": "beetle_shore_1",
+   "kind": "camp",
+   "at": [
+    62000,
+    54000
+   ],
+   "r": 320,
+   "respawn": 240,
+   "spawn": {
+    "water beetle": 3,
+    "water beetle collector": 3
+   }
+  },
+  {
+   "id": "beetle_shore_2",
+   "kind": "camp",
+   "at": [
+    55200,
+    62000
+   ],
+   "r": 320,
+   "respawn": 240,
+   "spawn": {
+    "water beetle": 3,
+    "water beetle collector": 3
+   }
+  },
+  {
+   "id": "gang_camp",
+   "kind": "camp",
+   "at": [
+    37400,
+    46600
+   ],
+   "r": 560,
+   "respawn": 300,
+   "spawn": {
+    "villainous youth": 6,
+    "rowdy": 3,
+    "gang boss": 1,
+    "gang hound": 2
+   }
+  },
+  {
+   "id": "gang_lookout_n",
+   "kind": "camp",
+   "at": [
+    37600,
+    43200
+   ],
+   "r": 280,
+   "respawn": 300,
+   "spawn": {
+    "villainous youth": 3,
+    "rowdy": 1
+   }
+  },
+  {
+   "id": "gang_lookout_w",
+   "kind": "camp",
+   "at": [
+    32800,
+    50000
+   ],
+   "r": 280,
+   "respawn": 300,
+   "spawn": {
+    "villainous youth": 3,
+    "gang hound": 1
+   }
+  },
+  {
+   "id": "gang_road",
+   "kind": "patrol",
+   "route": [
+    [
+     37400,
+     46600
+    ],
+    [
+     30400,
+     53200
+    ],
+    [
+     24800,
+     56000
+    ],
+    [
+     30400,
+     53200
+    ]
+   ],
+   "spawn": {
+    "rowdy": 1,
+    "villainous youth": 2
+   }
+  },
+  {
+   "id": "tnn_road",
+   "kind": "wildlife",
+   "area": [
+    18000,
+    50000,
+    36000,
+    65200
+   ],
+   "spawn": {
+    "hill toad": 11,
+    "wild crouch": 11,
+    "eirebug": 11,
+    "badger cub": 8,
+    "lunantishee": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "lucradan_hills",
+   "kind": "wildlife",
+   "area": [
+    6000,
+    44000,
+    18000,
+    58000
+   ],
+   "spawn": {
+    "feckless lucragan": 15,
+    "wild lucradan": 15,
+    "lunantishee": 11
+   },
+   "spacing": 260
+  },
+  {
+   "id": "spraggon_hollow",
+   "kind": "wildlife",
+   "area": [
+    38000,
+    52000,
+    48000,
+    60000
+   ],
+   "spawn": {
+    "spraggon": 19,
+    "spraggonite": 10,
+    "spraggonoll": 3
+   },
+   "spacing": 260
+  },
+  {
+   "id": "moor_ghouls",
+   "kind": "wildlife",
+   "area": [
+    28000,
+    24000,
+    42000,
+    38000
+   ],
+   "spawn": {
+    "wind ghoul": 42,
+    "streaming wisp": 11,
+    "moss sheerie": 11
+   },
+   "spacing": 260
+  },
+  {
+   "id": "moor_south",
+   "kind": "wildlife",
+   "area": [
+    32000,
+    38000,
+    44000,
+    44000
+   ],
+   "spawn": {
+    "wind ghoul": 15,
+    "spraggonite": 11,
+    "hill toad": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "grave_ring_0",
+   "kind": "camp",
+   "at": [
+    25200,
+    34800
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "skeletal pawn": 5,
+    "skeletal minion": 2,
+    "ghostly siabra": 1
+   }
+  },
+  {
+   "id": "grave_ring_1",
+   "kind": "camp",
+   "at": [
+    21200,
+    39200
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "skeletal pawn": 5,
+    "skeletal minion": 2,
+    "ghostly siabra": 1
+   }
+  },
+  {
+   "id": "grave_ring_2",
+   "kind": "camp",
+   "at": [
+    30400,
+    32800
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "skeletal pawn": 5,
+    "skeletal minion": 2,
+    "ghostly siabra": 1
+   }
+  },
+  {
+   "id": "grave_ring_west",
+   "kind": "camp",
+   "at": [
+    10800,
+    46800
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "skeletal pawn": 4,
+    "ghostly siabra": 2
+   }
+  },
+  {
+   "id": "ghoul_hollow_0",
+   "kind": "camp",
+   "at": [
+    35200,
+    28000
+   ],
+   "r": 280,
+   "respawn": 300,
+   "spawn": {
+    "wind ghoul": 5
+   }
+  },
+  {
+   "id": "ghoul_hollow_1",
+   "kind": "camp",
+   "at": [
+    39200,
+    32000
+   ],
+   "r": 280,
+   "respawn": 300,
+   "spawn": {
+    "wind ghoul": 5
+   }
+  },
+  {
+   "id": "ghoul_hollow_2",
+   "kind": "camp",
+   "at": [
+    30400,
+    26400
+   ],
+   "r": 280,
+   "respawn": 300,
+   "spawn": {
+    "wind ghoul": 5
+   }
+  },
+  {
+   "id": "the_dullahan",
+   "kind": "patrol",
+   "time": "night",
+   "spawn": {
+    "The Dullahan": 1
+   },
+   "route": [
+    [
+     32800,
+     40000
+    ],
+    [
+     36000,
+     35200
+    ],
+    [
+     40000,
+     30400
+    ],
+    [
+     42400,
+     25600
+    ],
+    [
+     40000,
+     30400
+    ],
+    [
+     36000,
+     35200
+    ]
+   ]
+  },
+  {
+   "id": "sprite_thorns",
+   "kind": "wildlife",
+   "area": [
+    20800,
+    18000,
+    28800,
+    24800
+   ],
+   "spawn": {
+    "anger sprite": 19,
+    "changeling": 11,
+    "large eirebug": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "basar_river",
+   "kind": "wildlife",
+   "area": [
+    48000,
+    20000,
+    64000,
+    36000
+   ],
+   "spawn": {
+    "fishing bear forager": 11,
+    "fishing bear": 8,
+    "water beetle": 15,
+    "water beetle collector": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "basar_meadows",
+   "kind": "wildlife",
+   "area": [
+    42000,
+    28000,
+    52000,
+    40000
+   ],
+   "spawn": {
+    "orchard nipper": 11,
+    "badger": 8,
+    "large eirebug": 8,
+    "faerie beetle": 4
+   },
+   "spacing": 260
+  },
+  {
+   "id": "irewood_deep",
+   "kind": "wildlife",
+   "area": [
+    4000,
+    24000,
+    18000,
+    38000
+   ],
+   "spawn": {
+    "young irewood": 21,
+    "irewood sapling": 19,
+    "streaming wisp": 15
+   },
+   "spacing": 260
+  },
+  {
+   "id": "irewood_edge",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    18000,
+    22000,
+    26000
+   ],
+   "spawn": {
+    "irewood sapling": 15,
+    "streaming wisp": 11,
+    "faerie beetle": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "cluricaun_lodge",
+   "kind": "camp",
+   "at": [
+    10000,
+    37200
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "cluricaun": 6,
+    "cluricaun brewer": 1
+   }
+  },
+  {
+   "id": "cluricaun_cellar",
+   "kind": "camp",
+   "at": [
+    8000,
+    41600
+   ],
+   "r": 320,
+   "respawn": 360,
+   "spawn": {
+    "cluricaun": 4
+   }
+  },
+  {
+   "id": "walking_stones",
+   "kind": "camp",
+   "at": [
+    4800,
+    29200
+   ],
+   "r": 400,
+   "respawn": 420,
+   "spawn": {
+    "walking rock": 4
+   }
+  },
+  {
+   "id": "bocan_barrow",
+   "kind": "camp",
+   "at": [
+    1600,
+    31600
+   ],
+   "r": 240,
+   "respawn": 1800,
+   "spawn": {
+    "Old Cnamh": 1
+   }
+  },
+  {
+   "id": "woodcutter",
+   "kind": "camp",
+   "at": [
+    18800,
+    20800
+   ],
+   "r": 240,
+   "respawn": 900,
+   "spawn": {
+    "Broc the Woodcutter": 1
+   }
+  },
+  {
+   "id": "wicker_circle_e",
+   "kind": "camp",
+   "at": [
+    27600,
+    8000
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "azure idolater": 5,
+    "azure acolyte": 3,
+    "phantom wickerman": 2
+   }
+  },
+  {
+   "id": "wicker_circle_w",
+   "kind": "camp",
+   "at": [
+    31600,
+    6000
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "phantom wickerman": 3,
+    "azure idolater": 3
+   }
+  },
+  {
+   "id": "azure_camp",
+   "kind": "camp",
+   "at": [
+    22240,
+    10960
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "azure idolater": 4,
+    "azure acolyte": 4
+   }
+  },
+  {
+   "id": "azure_procession",
+   "kind": "patrol",
+   "route": [
+    [
+     22240,
+     10960
+    ],
+    [
+     27600,
+     8000
+    ],
+    [
+     31600,
+     6000
+    ],
+    [
+     27600,
+     8000
+    ]
+   ],
+   "spawn": {
+    "azure idolater": 1,
+    "azure acolyte": 2
+   }
+  },
+  {
+   "id": "voices_go",
+   "kind": "clear",
+   "at": [
+    28200,
+    7800
+   ],
+   "r": 1200,
+   "names": [
+    "Voice of the Azure"
+   ]
+  },
+  {
+   "id": "withe_moves",
+   "kind": "clear",
+   "at": [
+    31600,
+    6000
+   ],
+   "r": 800,
+   "names": [
+    "Withe"
+   ]
+  },
+  {
+   "id": "withe_bank",
+   "kind": "camp",
+   "at": [
+    35200,
+    4400
+   ],
+   "r": 240,
+   "respawn": 1800,
+   "spawn": {
+    "Withe": 1
+   }
+  },
+  {
+   "id": "wicker_edges",
+   "kind": "wildlife",
+   "area": [
+    14000,
+    4800,
+    38000,
+    18000
+   ],
+   "spawn": {
+    "azure acolyte": 11,
+    "faerie beetle": 8,
+    "irewood sapling": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "demon_gate",
+   "kind": "camp",
+   "at": [
+    39600,
+    16000
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "manes demon": 8,
+    "grumoz demon": 3
+   }
+  },
+  {
+   "id": "demon_pack_0",
+   "kind": "camp",
+   "at": [
+    37200,
+    13200
+   ],
+   "r": 240,
+   "respawn": 300,
+   "spawn": {
+    "manes demon": 3,
+    "grumoz demon": 1
+   }
+  },
+  {
+   "id": "demon_pack_1",
+   "kind": "camp",
+   "at": [
+    42400,
+    14400
+   ],
+   "r": 240,
+   "respawn": 300,
+   "spawn": {
+    "manes demon": 3,
+    "grumoz demon": 1
+   }
+  },
+  {
+   "id": "demon_pack_2",
+   "kind": "camp",
+   "at": [
+    41600,
+    18800
+   ],
+   "r": 240,
+   "respawn": 300,
+   "spawn": {
+    "manes demon": 3,
+    "grumoz demon": 1
+   }
+  },
+  {
+   "id": "demon_gate_lord",
+   "kind": "camp",
+   "at": [
+    39000,
+    16800
+   ],
+   "r": 240,
+   "respawn": 1200,
+   "spawn": {
+    "Grimlach of the Gate": 1
+   },
+   "time": "night"
+  },
+  {
+   "id": "gate_spill",
+   "kind": "wildlife",
+   "area": [
+    35200,
+    12000,
+    44800,
+    20000
+   ],
+   "spawn": {
+    "manes demon": 8,
+    "anger sprite": 11
+   },
+   "spacing": 260
+  },
+  {
+   "id": "raider_tents",
+   "kind": "camp",
+   "at": [
+    32400,
+    22800
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "siabra raider": 6,
+    "siabra raid-captain": 1
+   }
+  },
+  {
+   "id": "raider_road",
+   "kind": "patrol",
+   "route": [
+    [
+     32400,
+     22800
+    ],
+    [
+     40000,
+     26000
+    ],
+    [
+     50000,
+     27200
+    ],
+    [
+     40000,
+     26000
+    ]
+   ],
+   "spawn": {
+    "siabra raider": 2
+   }
+  },
+  {
+   "id": "druim_ligen_fields",
+   "kind": "wildlife",
+   "area": [
+    42000,
+    3200,
+    56000,
+    12000
+   ],
+   "spawn": {
+    "badger": 8,
+    "orchard nipper": 8,
+    "eirebug": 8,
+    "large eirebug": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "merucha_hill",
+   "kind": "wildlife",
+   "area": [
+    43200,
+    11200,
+    50000,
+    16800
+   ],
+   "spawn": {
+    "merucha": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "fools_court",
+   "kind": "wildlife",
+   "area": [
+    54000,
+    6000,
+    65200,
+    24000
+   ],
+   "spawn": {
+    "amadan touched": 16,
+    "alp luachra": 13,
+    "pookha": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "court_revel",
+   "kind": "camp",
+   "at": [
+    58800,
+    13200
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "amadan touched": 4,
+    "pookha": 1
+   }
+  }
+ ]
+}

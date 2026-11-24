@@ -409,9 +409,18 @@ var _quest_key := []
 func _zone_size_of(z: int) -> float:
 	if z == current_zone:
 		return zone_size
+	if _zone_sizes.has(z):
+		return _zone_sizes[z]
 	var info := "res://content/zones/zone%03d/zone.json" % z
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(info)) if FileAccess.file_exists(info) else null
-	return float((parsed as Dictionary).get("size_m", 1638.4)) if parsed is Dictionary else 1638.4
+	var s := float((parsed as Dictionary).get("size_m", 1638.4)) if parsed is Dictionary else 1638.4
+	_zone_sizes[z] = s
+	return s
+
+
+## Each zone's size, read once (2026-11-21: the minimap asked for its neighbours' every redraw, and each was its
+## zone.json - 200-400 KB - read and parsed again: 15-20 ms a minimap redraw, half the live log's hitches).
+var _zone_sizes := {}
 
 
 func zone_quest_marks(z: int) -> Array:
@@ -552,7 +561,8 @@ class MapView extends Control:
 			consider.call(_mark_frac(Vector2(float(e.x), float(e.y)) / 0.025), line)
 		if z == w.current_zone:
 			for b in WorldLink.bot_dots():
-				consider.call(_mark_frac(Vector2(b.x, b.z) / 0.025), "A GAMEBOT OF YOUR REALM")
+				var bname := Server.bot_name_at(b) if Server.active else ""
+				consider.call(_mark_frac(Vector2(b.x, b.z) / 0.025), bname.to_upper() if bname != "" else "A GAMEBOT OF YOUR REALM")
 			for c in WorldLink.companion_dots():
 				consider.call(_mark_frac(Vector2(c.x, c.z) / 0.025), "A COMPANION OF YOURS")
 		return best[0]

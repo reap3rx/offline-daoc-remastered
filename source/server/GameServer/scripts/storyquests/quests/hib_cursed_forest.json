@@ -9,30 +9,11 @@
       "model": 337,
       "level": 52,
       "pos": [
-        380,
-        742,
-        125.2
+        160,
+        700
       ],
-      "guild": "Rangers' Camp",
-      "idle": "The forest's cursed. The poachers make it worse."
-    },
-    {
-      "id": "seamus",
-      "zone": 208,
-      "realm": 3,
-      "name": "Seamus the Leprechaun",
-      "model": 603,
-      "level": 40,
-      "pos": [
-        500,
-        772,
-        112.4
-      ],
-      "during": [
-        "leprechaun/s3",
-        "leprechaun/s7"
-      ],
-      "size": 30
+      "guild": "Rangers of Druim Cain",
+      "idle": "You can't see twenty paces in this fog. That's the point of it. She doesn't want anyone seeing anything."
     },
     {
       "id": "druid_mor",
@@ -42,12 +23,55 @@
       "model": 365,
       "level": 56,
       "pos": [
-        386,
-        748,
-        124.1
+        166,
+        706
       ],
-      "guild": "Rangers' Camp",
-      "idle": "The goborchend have my brother Oisin. They'll have his blood at the dark of the moon."
+      "guild": "Rangers of Druim Cain",
+      "idle": "The fog isn't weather. It's a glamour, laid over the whole forest. Somebody very old is holding it up."
+    },
+    {
+      "id": "cf_ailbhe",
+      "zone": 208,
+      "realm": 3,
+      "name": "Seer Ailbhe of the Host",
+      "model": 365,
+      "level": 54,
+      "pos": [
+        154,
+        694
+      ],
+      "guild": "the Host of Lug",
+      "idle": "The King sent me to listen. Everything the court whispers, the trees whisper after it. If you know how to hear."
+    },
+    {
+      "id": "cf_cormac",
+      "zone": 208,
+      "realm": 3,
+      "name": "Cormac the Thrall",
+      "model": 362,
+      "level": 40,
+      "pos": [
+        172,
+        692
+      ],
+      "idle": "I was a miner in Silvermine. Then a lady smiled at me. That's all I remember until the rangers cut me loose."
+    },
+    {
+      "id": "seamus",
+      "zone": 208,
+      "realm": 3,
+      "name": "Seamus the Leprechaun",
+      "model": 603,
+      "level": 40,
+      "pos": [
+        300,
+        860
+      ],
+      "during": [
+        "leprechaun/s3",
+        "leprechaun/s7"
+      ],
+      "size": 30
     },
     {
       "id": "oisin",
@@ -58,39 +82,191 @@
       "level": 50,
       "pos": [
         912,
-        1392,
-        169.0
+        1392
       ],
       "during": [
         "goborchend/s6"
+      ]
+    },
+    {
+      "id": "cf_niall",
+      "zone": 208,
+      "realm": 3,
+      "name": "Niall the Suitor",
+      "model": 446,
+      "level": 46,
+      "pos": [
+        520,
+        430
+      ],
+      "during": [
+        "cf_grey_suitor/s1"
       ]
     }
   ],
   "quests": [
     {
-      "id": "leprechaun",
-      "title": "The Leprechauns' Cages",
-      "level": 50,
+      "id": "cf_into_the_fog",
+      "title": "Into the Fog",
+      "level": 45,
       "giver": "teague",
-      "offer": "Poachers in the forest are catching leprechauns. Cages of cold iron, so the little folk can't vanish. They sell them to lords who think a caged leprechaun means gold forever.\n\nIt doesn't. A caged leprechaun dies in a month. Will you [free them]? The poachers camp in the middle of the forest.",
+      "offer": "So you came down off the shelf and lived. Good start. The Rangers have kept this hide for a month, and in a month we haven't seen the far side of the forest once.\n\nThe court's riders hunt the shelf at night. Will you [scout the shelf] with me? I want to know how many there are.",
+      "accept": "scout the shelf",
+      "topics": {},
+      "summary": "The Rangers' Hide on the west shelf is all the Host has inside the Cursed Forest.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 208,
+          "at": [
+            180,
+            980
+          ],
+          "radius": 25,
+          "goal": "Scout the southern shelf, about 280 m south of Ranger Teague",
+          "text": "Hoofprints in the moss - big ones, unshod, and they don't sink in. Whatever rides here weighs nothing at all.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            200,
+            900
+          ],
+          "radius": 25,
+          "goal": "Drive off the far dorocha hunting the shelf",
+          "mob": {
+            "template": 60160718,
+            "name": "far dorocha",
+            "level": 48
+          },
+          "count": 4,
+          "text": "The last rider comes apart into black mist as it falls. On its saddle-cloth: a woman's crowned head, stitched in green.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "teague",
+          "goal": "Report to Ranger Teague",
+          "say": "A crowned woman, on the saddle-cloth. The court's riders have worn the Faerie Queen's colours a hundred years.\n\nBut the seer from the Host - Ailbhe - says it isn't the Faerie Queen any more. She says there's a new queen, and she wants a word with whoever came back from out there alive.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq208_fog_walker_s_belt",
+              "sq208_rowan_thorn_charm"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cf_thralls",
+      "title": "The Geas-Bound",
+      "level": 46,
+      "giver": "cf_cormac",
+      "offer": "Those men the court has working the Hollow Road - the thralls with the dead eyes - they're miners. Silvermine men. Coruscating Mine. The same lady smiled at all of us.\n\nEach one wears a geas-token. Break the man and you break the token. Will you [free them]? It's the only way. I'm sorry.",
       "accept": "free them",
       "topics": {},
-      "summary": "Poachers are catching leprechauns in cold-iron cages to sell to greedy lords.",
+      "summary": "The court's thralls on the Hollow Road are geas-bound miners from Silvermine.",
       "steps": [
         {
           "type": "kill",
           "zone": 208,
           "at": [
-            491,
-            758,
-            111.4
+            400,
+            1060
           ],
           "radius": 25,
-          "goal": "Kill the forest poachers",
+          "goal": "Break 6 court thralls on the Hollow Road, about 430 m south-east of Cormac the Thrall",
           "mob": {
-            "template": 60161034,
-            "name": "forest poacher",
-            "level": 51
+            "template": 60161227,
+            "name": "court thrall",
+            "level": 48
+          },
+          "count": 6,
+          "text": "Each one says a name as it dies - a real name, its own - and smiles, and is gone.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 208,
+          "at": [
+            440,
+            1100
+          ],
+          "goal": "Search the thralls' camp",
+          "clue": {
+            "name": "a heap of geas-tokens",
+            "model": 1347
+          },
+          "text": "Clay tokens, each stamped with a woman's crowned head and a name. Dozens of names. You know one: the overman at the Coruscating Mine, who swore the unseelie came out of the deep on their own.",
+          "give": {
+            "name": "a geas-token"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_cormac",
+          "goal": "Bring the geas-token to Cormac",
+          "say": "That's the overman's. He sold us. Or she bought him - it comes to the same.\n\nSo it was never the mine that went wrong. It was her. All of it, her.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Cormac.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq208_thrall_breaker_s_ring",
+              "sq208_unbound_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "cf_into_the_fog"
+    },
+    {
+      "id": "leprechaun",
+      "title": "The Leprechauns' Cages",
+      "level": 46,
+      "giver": "teague",
+      "offer": "The court's trappers are catching leprechauns. Cages of cold iron, so the little folk can't vanish. The Queen keeps them in her hall - a caged leprechaun is luck, and she's buying all the luck in Hibernia.\n\nA caged leprechaun dies in a month. Will you [free them]? The trappers work the woods below the shelf.",
+      "accept": "free them",
+      "topics": {},
+      "summary": "The Unseelie Queen's trappers are catching leprechauns in cold-iron cages.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            300,
+            860
+          ],
+          "radius": 25,
+          "goal": "Kill the Queen's trappers",
+          "mob": {
+            "template": 60161227,
+            "name": "Queen's trapper",
+            "level": 48
           },
           "count": 5,
           "id": "s1"
@@ -99,11 +275,10 @@
           "type": "search",
           "zone": 208,
           "at": [
-            500,
-            772,
-            112.4
+            300,
+            860
           ],
-          "goal": "Search the poachers' camp",
+          "goal": "Search the trappers' camp",
           "clue": {
             "name": "a row of cold-iron cages",
             "model": 1347
@@ -115,7 +290,7 @@
           "type": "talk",
           "npc": "seamus",
           "goal": "Free the last leprechaun",
-          "say": "OUT. Get me OUT. ...Ahh. Thank you. Thank you.\n\nSeamus is the name. The others - well. You saw. The poachers' chief has their gold, all five crocks, buried under the cave bears' den to the west. He'll be back for me. Unless you get there [first].",
+          "say": "OUT. Get me OUT. ...Ahh. Thank you.\n\nSeamus is the name. The others - well. You saw. The trapper-chief has their gold, all five crocks - the Queen pays in it - hidden in the old cave to the west. He'll be back for me. Unless you get there [first].",
           "keyword": "first",
           "id": "s3"
         },
@@ -123,64 +298,61 @@
           "type": "kill",
           "zone": 208,
           "at": [
-            320,
-            669,
-            123.8
+            230,
+            720
           ],
           "radius": 25,
-          "goal": "Drive the cave bears from their den",
+          "goal": "Drive the court's hounds from the cave",
           "mob": {
-            "template": 60167436,
-            "name": "unearthed cave bear",
-            "level": 50
+            "template": 60160859,
+            "name": "finliath",
+            "level": 48
           },
-          "count": 5,
-          "text": "Under the den: five crocks of gold, half-buried. And footsteps behind you.",
+          "count": 4,
+          "text": "In the cave: five crocks of gold, half-buried. And footsteps behind you.",
           "id": "s4"
         },
         {
           "type": "encounter",
           "zone": 208,
           "at": [
-            326,
-            672,
-            124.2
+            232,
+            724
           ],
           "wake_m": 30,
-          "goal": "Defeat the poachers' chief",
-          "text": "Brannagh falls into his own pit, among the gold.",
+          "goal": "Defeat the trapper-chief",
+          "text": "Brannagh falls among the gold.",
           "stages": [
             {
               "id": "b1",
               "type": "boss",
-              "name": "Brannagh the Poacher-Chief",
+              "name": "Brannagh the Trapper",
               "center": [
-                326,
-                672,
-                124.2
+                232,
+                724
               ],
               "radius": 30,
               "time_s": 600,
               "objective": "Defeat Brannagh",
-              "announce": "A big man with an iron net over his shoulder. 'That's MY gold, stranger. Five crocks. Five little dead men. Worth every one.'",
+              "announce": "A big man with an iron net over his shoulder and a crowned head on his collar. 'The Queen pays in luck, stranger. Five crocks. Five little dead men. She'll want yours too.'",
               "boss": {
-                "template": 60161034,
-                "name": "Brannagh the Poacher-Chief",
-                "level": 55,
+                "template": 60161227,
+                "name": "Brannagh the Trapper",
+                "level": 49,
                 "health_mult": 2.6
               },
-              "success": "Brannagh the Poacher-Chief falls.",
+              "success": "Brannagh the Trapper falls.",
               "fail": "You fall back.",
               "adds": {
                 "every_s": 25,
                 "count": 2,
                 "mobs": [
                   {
-                    "template": 60161034,
-                    "name": "forest poacher",
+                    "template": 60161227,
+                    "name": "Queen's trapper",
                     "level": [
-                      50,
-                      51
+                      47,
+                      48
                     ]
                   }
                 ]
@@ -212,7 +384,7 @@
           "type": "talk",
           "npc": "teague",
           "goal": "Return to Ranger Teague",
-          "say": "The poachers are done, and you came back with your pockets clinking.\n\nI won't ask. Seamus came by and said you'd earned it. He didn't look happy about it. Take this, from the rangers.",
+          "say": "The trappers are done, and you came back with your pockets clinking.\n\nI won't ask. Seamus came by and said you'd earned it. He didn't look happy about it. Take this, from the rangers.",
           "ending": "gold",
           "id": "s7"
         },
@@ -220,7 +392,7 @@
           "type": "talk",
           "npc": "teague",
           "goal": "Return to Ranger Teague",
-          "say": "The poachers are done. And Seamus came by and told me what you did with the gold.\n\nThe little folk will remember. That's worth more than gold, in this forest. Take this, from the rangers.",
+          "say": "The trappers are done. And Seamus came by and told me what you did with the gold.\n\nThe little folk will remember. That's worth more than gold, in this forest. Take this, from the rangers.",
           "ending": "buried",
           "id": "s8"
         }
@@ -238,7 +410,7 @@
             ],
             "choice": [
               "sq208_iron_cage_bracer",
-              "sq208_poacher_s_cloak"
+              "sq208_trapper_s_cloak"
             ]
           }
         },
@@ -254,7 +426,793 @@
             ],
             "choice": [
               "sq208_iron_cage_bracer",
-              "sq208_poacher_s_cloak"
+              "sq208_trapper_s_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "cf_into_the_fog"
+    },
+    {
+      "id": "cf_riders",
+      "title": "The Host of the Air",
+      "level": 47,
+      "giver": "teague",
+      "offer": "Fear Dubh knows we're here. He's the court's huntsman - the black rider - and his dorocha are coming for the hide tonight. I can hear the horns.\n\nWill you [hold the hide] with us?",
+      "accept": "hold the hide",
+      "topics": {},
+      "summary": "Fear Dubh's dorocha are coming for the Rangers' Hide.",
+      "steps": [
+        {
+          "type": "encounter",
+          "zone": 208,
+          "at": [
+            160,
+            720
+          ],
+          "wake_m": 30,
+          "goal": "Keep Ranger Teague alive at the hide",
+          "text": "The riders break off and go back into the fog. Somewhere east, a horn - not a hunting horn. A summons.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Teague alive",
+              "center": [
+                160,
+                720
+              ],
+              "radius": 30,
+              "duration_s": 120,
+              "objective": "Keep Teague alive",
+              "announce": "Hooves that make no sound on the moss. The dorocha come out of the fog at a gallop.",
+              "protect": {
+                "template": 60163820,
+                "name": "Ranger Teague",
+                "level": 50,
+                "model": 337
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 3,
+                "from": [
+                  [
+                    172,
+                    726
+                  ],
+                  [
+                    150,
+                    710
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60160718,
+                    "name": "far dorocha",
+                    "level": [
+                      47,
+                      48
+                    ]
+                  },
+                  {
+                    "template": 60160859,
+                    "name": "finliath",
+                    "level": [
+                      47,
+                      48
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "Ranger Teague falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "teague",
+          "goal": "Talk to Ranger Teague",
+          "say": "Held. Barely.\n\nThat horn at the end - that was the court calling them home. Something's happening at the Queen's Seat. Ailbhe will want to hear it.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq208_hide_keeper_s_torc",
+              "sq208_black_mist_charm"
+            ]
+          }
+        }
+      },
+      "requires": "cf_into_the_fog"
+    },
+    {
+      "id": "cf_suitors",
+      "title": "The Suitors",
+      "level": 46,
+      "giver": "cf_ailbhe",
+      "offer": "In the glade to the north there are men who walk in circles. They came courting the Queen's maids - beautiful women, they say, the most beautiful in Hibernia - and they never left. Now they're spirits, and still courting.\n\nWill you [go to the glade]? I want to know who they were courting.",
+      "accept": "go to the glade",
+      "topics": {},
+      "summary": "The suitor spirits in the north glade were lured into the forest by the Queen's maids.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            500,
+            440
+          ],
+          "radius": 25,
+          "goal": "Lay 5 suitor spirits to rest in the glade, about 430 m north-east of Seer Ailbhe of the Host",
+          "mob": {
+            "template": 60166605,
+            "name": "suitor spirit",
+            "level": 48
+          },
+          "count": 5,
+          "text": "Each says the same thing as it fades: 'Aoibhinn. Her name is Aoibhinn. Isn't she beautiful?'",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 208,
+          "at": [
+            530,
+            410
+          ],
+          "goal": "Search the glade's heart",
+          "clue": {
+            "name": "a mirror of black water",
+            "model": 1876
+          },
+          "text": "A pool, perfectly still. In it a woman of impossible beauty smiles at you - and as you watch, the smile stays and the face behind it rots to bone and leather. A hag. She was always a hag.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_ailbhe",
+          "goal": "Tell Seer Ailbhe what you saw",
+          "say": "A hag, under the beauty. All the Queen's maids are like that - the mummy hags of the barrows are what's under their glamour.\n\nLady Aoibhinn of the Thorns. I know that name. She's the Queen's own lady. The Queen's - not the Faerie Queen's. There's someone new on that seat.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Host.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq208_suitor_s_ring",
+              "sq208_glass_heart_charm"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cf_barrows",
+      "title": "Mother Carrion",
+      "level": 47,
+      "giver": "cf_ailbhe",
+      "offer": "The hags have barrows in the south-west. Under the glamour they're dead things - mummies, wrapped, a thousand years old - and the oldest of them is Mother Carrion. The maids go to her to have their faces put back on.\n\nWill you [break the barrows]? Bring me a hag-stone if you find one - I'll show you what to do with it.",
+      "accept": "break the barrows",
+      "topics": {},
+      "summary": "The Queen's maids are mummy hags under their glamour; Mother Carrion keeps the barrows.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            600,
+            1300
+          ],
+          "radius": 25,
+          "goal": "Break 6 mummy hags at the barrows, about 750 m south-east of Seer Ailbhe of the Host",
+          "mob": {
+            "template": 60164285,
+            "name": "mummy hag",
+            "level": 48
+          },
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 208,
+          "at": [
+            620,
+            1330
+          ],
+          "goal": "Search Mother Carrion's barrow",
+          "clue": {
+            "name": "a hag-stone on a thong",
+            "model": 1347
+          },
+          "text": "A stone with a hole worn through it. Look through it at the barrows and they're full of lovely sleeping women. Look again without it: wrappings, and teeth.",
+          "give": {
+            "name": "a hag-stone"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_ailbhe",
+          "goal": "Bring the hag-stone to Seer Ailbhe",
+          "say": "Good. Look at me through it. ...Still me? Good.\n\nNow you can see the court as it is. Keep it. You'll need it at the Seat - if the Host ever gets you there.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Host.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq208_barrow_wight_s_belt",
+              "sq208_hag_bane_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "cf_suitors"
+    },
+    {
+      "id": "cf_grey_suitor",
+      "title": "The Grey Suitor",
+      "level": 48,
+      "giver": "cf_ailbhe",
+      "offer": "The first suitor - the Grey Suitor - has been courting in that glade for three hundred years, and he keeps the others there. One of them still remembers he's alive: Niall, a lad from Druim Cain. He's half-spirit now.\n\nWill you [go for Niall]?",
+      "accept": "go for Niall",
+      "topics": {},
+      "summary": "The Grey Suitor keeps the suitor spirits in the glade; one, Niall, is still half alive.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "cf_niall",
+          "goal": "Find Niall in the glade, about 450 m north-east of Seer Ailbhe of the Host",
+          "say": "You can see me? Nobody can see me. ...She's so beautiful. I know what she is. I still love her. The Grey Suitor says we all will, forever. He's [coming].",
+          "keyword": "coming",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            520,
+            420
+          ],
+          "radius": 50,
+          "goal": "Defeat the Grey Suitor in the glade (a tall grey man in three hundred years of finery, with his suitors round him)",
+          "target": "The Grey Suitor",
+          "count": 1,
+          "text": "The Grey Suitor bows - courtly to the last - and fades. 'She'll come to us,' he says. 'One day she'll come.'",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "cf_niall",
+          "goal": "Talk to Niall",
+          "say": "He's gone. They're all going quiet. I can feel it.\n\nI could [go home] - what's left of me - to Druim Cain. I'd be a ghost in my mother's house. Or I could [stay and watch] - here, where I can see her hall. Somebody should, when the Host comes. I'd tell you what I see.",
+          "options": [
+            {
+              "keyword": "go home",
+              "say": "Home, then. Tell my mother I'm coming the long way.",
+              "ending": "home"
+            },
+            {
+              "keyword": "stay and watch",
+              "say": "Then I'll watch. When the Host comes to the Seat, I'll be in the trees. Look for me.",
+              "ending": "watch"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "From the Host.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq208_unbetrothed_torc"
+            ],
+            "choice": [
+              "sq208_grey_suitor_s_cloak"
+            ]
+          }
+        },
+        "watch": {
+          "text": "From the Host.",
+          "tragic": true,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq208_grey_suitor_s_cloak"
+            ],
+            "choice": [
+              "sq208_unbetrothed_torc"
+            ]
+          }
+        }
+      },
+      "requires": "cf_barrows"
+    },
+    {
+      "id": "cf_letters",
+      "title": "Letters North",
+      "level": 47,
+      "giver": "cf_ailbhe",
+      "offer": "The court sends envoys north - out of the forest, through Bri Leith, by night. One went into the Black Wraiths' ring with a satchel and didn't come out. The wraiths keep things.\n\nWill you [find the satchel]?",
+      "accept": "find the satchel",
+      "topics": {},
+      "summary": "A court envoy's satchel was lost in the Black Wraiths' ring.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            860,
+            400
+          ],
+          "radius": 25,
+          "goal": "Break 5 black wraiths in the ring, about 760 m north-east of Seer Ailbhe of the Host",
+          "mob": {
+            "template": 60158464,
+            "name": "black wraith",
+            "level": 48
+          },
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 208,
+          "at": [
+            870,
+            410
+          ],
+          "goal": "Search the ring for the envoy's satchel",
+          "clue": {
+            "name": "a courier's satchel",
+            "model": 1347
+          },
+          "text": "Letters, sealed with a crowned woman. To an overman at the Coruscating Mine: 'More hands.' To a Lord of Misrule in Connacht: 'Keep them dancing.' To Fuamnach, in Bri Leith: 'The wind, sister. The wind.' To the Grey Man of Moher: 'The fog is my gift. Use it.' Every one signed: C.",
+          "give": {
+            "name": "the court's letters"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_ailbhe",
+          "goal": "Bring the letters to Seer Ailbhe",
+          "say": "C.\n\nCliodna. The Queen of the Unseelie Court. She's moved her court here, into the Faerie Queen's old seat - and every trouble in the north in the last year is her hand.\n\nThe mines. The revels. The wind. The fog. It's all one thing, and it's all pointed south. At Tara. At the King.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Host.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq208_envoy_s_seal_ring",
+              "sq208_courier_s_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "cf_suitors"
+    },
+    {
+      "id": "cf_siabra",
+      "title": "The Siabra-Lord",
+      "level": 48,
+      "giver": "cf_ailbhe",
+      "offer": "The corrupted siabra in the south-east hollow were elves of the King's own court, once. Their lord, Dorchu, went over to Cliodna - and he knows the way to her seat.\n\nWill you [go to the hollow]? Bring me what he carries.",
+      "accept": "go to the hollow",
+      "topics": {},
+      "summary": "Dorchu the Siabra-Lord, once of King Lug's court, went over to the Unseelie Queen.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            1150,
+            1160
+          ],
+          "radius": 25,
+          "goal": "Break 6 corrupted siabra in the hollow, about 1.1 km south-east of Seer Ailbhe of the Host",
+          "mob": {
+            "template": 60161305,
+            "name": "corrupted siabra",
+            "level": 48
+          },
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            1150,
+            1150
+          ],
+          "radius": 50,
+          "goal": "Defeat Dorchu the Siabra-Lord in the heart of the hollow",
+          "target": "Dorchu the Siabra-Lord",
+          "count": 1,
+          "text": "Dorchu falls. 'Tell Lug,' he says. 'Tell him I was right. She's going to win.'",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 208,
+          "at": [
+            1160,
+            1145
+          ],
+          "goal": "Search Dorchu's body",
+          "clue": {
+            "name": "a folded map",
+            "model": 1347
+          },
+          "text": "A map of the forest, in elven ink: the Hollow Road, the Ford, the Hag-Wood, the Thorn Gate - and past it, the Seat. Four strongholds between the King and the Queen.",
+          "give": {
+            "name": "Dorchu's map"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_ailbhe",
+          "goal": "Bring the map to Seer Ailbhe",
+          "say": "Four strongholds. That's what the Host would have to break, one by one, and hold, all the way in.\n\nGeneral Fergna at Druim Cain needs this. Not yet - there's one more thing I need to know first. The bainshees.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Host.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq208_siabra_lord_s_torc",
+              "sq208_turncoat_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "cf_letters"
+    },
+    {
+      "id": "cf_keener",
+      "title": "The Keening",
+      "level": 49,
+      "giver": "cf_ailbhe",
+      "offer": "A bainshee keens for one family's dead before they die. On Cnoc Aine, the hill to the north-east, they're keening every night - all of them, together - and the Keener leads them.\n\nI need to hear whose name they're keening. Will you [take me up the hill]?",
+      "accept": "take me up the hill",
+      "topics": {},
+      "summary": "On Cnoc Aine the bainshees keen every night for someone who hasn't died yet.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            1170,
+            400
+          ],
+          "radius": 25,
+          "goal": "Clear the bainshees from the slopes of Cnoc Aine, about 1.1 km east of Seer Ailbhe of the Host",
+          "mob": {
+            "template": 60158249,
+            "name": "bainshee",
+            "level": 49,
+            "model": 1885
+          },
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 208,
+          "at": [
+            1180,
+            380
+          ],
+          "wake_m": 30,
+          "goal": "Keep Seer Ailbhe alive while she listens",
+          "text": "The keening stops. In the silence, Ailbhe says the name. Then she says it again, because she can't believe it.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Ailbhe alive",
+              "center": [
+                1180,
+                380
+              ],
+              "radius": 30,
+              "duration_s": 120,
+              "objective": "Keep Ailbhe alive",
+              "announce": "Ailbhe kneels on the hilltop and closes her eyes. The bainshees come out of the fog, wailing.",
+              "protect": {
+                "template": 60163820,
+                "name": "Seer Ailbhe",
+                "level": 52,
+                "model": 365
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 3,
+                "from": [
+                  [
+                    1192,
+                    386
+                  ],
+                  [
+                    1170,
+                    370
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60158249,
+                    "name": "bainshee",
+                    "level": [
+                      48,
+                      49
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "Seer Ailbhe falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            1180,
+            380
+          ],
+          "radius": 50,
+          "goal": "Silence the Keener of Cnoc Aine on the hilltop",
+          "target": "The Keener of Cnoc Aine",
+          "count": 1,
+          "text": "The Keener falls silent at last - and for the first time in a month, the hill is quiet.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_ailbhe",
+          "goal": "Talk to Seer Ailbhe",
+          "say": "Lug.\n\nThey're keening Lug Lamfhota. The King. Every bainshee in the forest, every night.\n\nA bainshee never keens wrong. Unless someone is making the keening true - and that's what all of it is for. The mines, the revels, the fog: the court is breaking the north so the King has to come north himself. Into her forest. To his death.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Host.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq208_keener_s_veil",
+              "sq208_cnoc_aine_charm"
+            ]
+          }
+        }
+      },
+      "requires": "cf_siabra"
+    },
+    {
+      "id": "cf_lady_aoibhinn",
+      "title": "The Lady of the Thorns",
+      "level": 50,
+      "giver": "cf_ailbhe",
+      "offer": "This is GROUP work, and hard.\n\nLady Aoibhinn of the Thorns is the Queen's own lady. She stands at the Seat, in front of Cliodna's chair, and she knows the whole of it. I want her answer - and I want the court to know we're coming.\n\nWill you [go to the Seat]? Take the hag-stone. Look at her through it.",
+      "accept": "go to the Seat",
+      "topics": {},
+      "summary": "GROUP. Lady Aoibhinn of the Thorns, the Unseelie Queen's own lady, knows the whole of the court's plot.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 208,
+          "at": [
+            1290,
+            650
+          ],
+          "radius": 25,
+          "goal": "Go to the edge of the Queen's Seat, about 1.1 km east of Seer Ailbhe of the Host",
+          "text": "An empty chair of black thorn on a mound of white stones, and in front of it, a lady in green so beautiful your eyes water. Through the hag-stone: a mummy, smiling.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            1320,
+            645
+          ],
+          "radius": 50,
+          "goal": "Defeat Lady Aoibhinn of the Thorns before the Queen's chair",
+          "target": "Lady Aoibhinn of the Thorns",
+          "count": 1,
+          "text": "'The Queen is out walking,' Lady Aoibhinn says as she falls into her wrappings and her bones. 'She'll be sorry she missed you.' The chair behind her is empty - but it's warm.",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "cf_ailbhe",
+          "goal": "Return to Seer Ailbhe",
+          "say": "She's dead, and the chair was empty, and warm. Cliodna knows we know.\n\nThere's only one way to that chair with her in it: the King's Host, stronghold by stronghold, the way Dorchu's map shows. General Fergna is at Druim Cain. Any champion of the realm can give him the word.\n\nI'm going to Tara myself, to tell the King to his face not to come north. Will you [carry the map] to the General, so the Host can march? Or [come to Tara] with me, and tell the King what you saw?",
+          "options": [
+            {
+              "keyword": "carry the map",
+              "say": "Then go. Druim Cain, the General. And when the Host goes in - go with it.",
+              "ending": "host"
+            },
+            {
+              "keyword": "come to Tara",
+              "say": "Then we'll ride tonight. The King should hear it from someone who's seen her chair.",
+              "ending": "tara"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "host": {
+          "text": "From the Host.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq208_mantle_of_the_watchful"
+            ],
+            "choice": [
+              "sq208_thorn_lady_s_brooch",
+              "sq208_lug_s_promise"
+            ]
+          }
+        },
+        "tara": {
+          "text": "From the King's own hand.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq208_lug_s_promise"
+            ],
+            "choice": [
+              "sq208_thorn_lady_s_brooch",
+              "sq208_mantle_of_the_watchful"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "cf_keener"
+    },
+    {
+      "id": "cf_old_runes",
+      "title": "The Old Runes",
+      "level": 48,
+      "giver": "druid_mor",
+      "offer": "The goborchend in the south have been quiet a hundred years. Now they're carving runes - Fomorian runes, the old blood's - on every tree round their fort. Someone taught them. Someone reminded them what they are.\n\nWill you [copy the runes] for me?",
+      "accept": "copy the runes",
+      "topics": {},
+      "summary": "The goborchend have begun carving Fomorian runes round their fort in the south.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            880,
+            1360
+          ],
+          "radius": 25,
+          "goal": "Break the goborchend guarding the carved trees",
+          "mob": {
+            "template": 60161461,
+            "name": "goborchend gasher",
+            "level": 49
+          },
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 208,
+          "at": [
+            870,
+            1340
+          ],
+          "goal": "Copy the runes on the oldest tree",
+          "clue": {
+            "name": "runes cut into an oak",
+            "model": 1876
+          },
+          "text": "An eye, closed - and beside it, fresh-cut, a crowned woman's head. The goborchend's runes are old. The crown is new.",
+          "give": {
+            "name": "a rubbing of the runes"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "druid_mor",
+          "goal": "Bring the rubbing to Druid Mor",
+          "say": "A closed eye. The Fomorian eye - Balor's kind. And the Queen's crown beside it.\n\nShe's made a bargain with them. Their eye for her war. Gods help us. They'll want a druid's blood for the waking - and my brother Oisin went south yesterday to look.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the druids.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq208_fomor_rune_bracer",
+              "sq208_goat_skull_charm"
             ]
           }
         }
@@ -263,24 +1221,23 @@
     {
       "id": "goborchend",
       "title": "The Goat-Headed Fort",
-      "level": 56,
+      "level": 50,
       "giver": "druid_mor",
-      "offer": "This is GROUP work, and hard. Bring the best you know.\n\nThe goborchend - goat-headed, Fomorian blood - have a fort in the south of the forest. They have my brother Oisin, a druid. At the dark of the moon they'll pour his blood on their altar to wake something old.\n\nWill you [go after Oisin]?",
+      "offer": "This is GROUP work, and hard. Bring the best you know.\n\nThe goborchend have Oisin. At the dark of the moon they'll pour his blood on their altar to wake the eye - the Queen's bargain, paid in my brother.\n\nWill you [go after Oisin]?",
       "accept": "go after Oisin",
       "topics": {},
-      "summary": "GROUP. The goat-headed goborchend have captured a druid to wake something old with his blood.",
+      "summary": "GROUP. The goborchend have captured a druid to wake a Fomorian eye - the Unseelie Queen's bargain.",
       "steps": [
         {
           "type": "reach",
           "zone": 208,
           "at": [
             880,
-            1360,
-            167.5
+            1360
           ],
           "radius": 20,
           "goal": "Go to the goborchend fort in the south",
-          "text": "Goat-skulls on poles. A wall of black stone. Inside, chanting, low and terrible.",
+          "text": "Goat-skulls on poles. A wall of black stone. Inside, chanting, low and terrible - and a woman's voice, sweet as honey, joining in.",
           "id": "s1"
         },
         {
@@ -288,15 +1245,14 @@
           "zone": 208,
           "at": [
             904,
-            1425,
-            169.0
+            1425
           ],
           "radius": 25,
           "goal": "Break the goborchend gashers on the wall",
           "mob": {
             "template": 60161461,
             "name": "goborchend gasher",
-            "level": 53
+            "level": 49
           },
           "count": 5,
           "id": "s2"
@@ -306,15 +1262,14 @@
           "zone": 208,
           "at": [
             895,
-            1402,
-            169.0
+            1402
           ],
           "radius": 25,
           "goal": "Cut down the goborchend wounders in the yard",
           "mob": {
             "template": 60161466,
             "name": "goborchend wounder",
-            "level": 54
+            "level": 50
           },
           "count": 4,
           "id": "s3"
@@ -324,15 +1279,14 @@
           "zone": 208,
           "at": [
             920,
-            1395,
-            169.0
+            1395
           ],
           "goal": "Search the fort's altar",
           "clue": {
             "name": "a blood-stained altar",
             "model": 1347
           },
-          "text": "The altar's carved with Fomorian runes. Mor would read them; you can only see the shape of them: an eye. A huge, closed eye.",
+          "text": "The altar's carved with Fomorian runes, and a crown. An eye, a huge closed eye - and a crowned woman holding the lid.",
           "id": "s4"
         },
         {
@@ -340,8 +1294,7 @@
           "zone": 208,
           "at": [
             912,
-            1392,
-            169.0
+            1392
           ],
           "wake_m": 30,
           "goal": "Defeat Bloodhorn before the rite",
@@ -353,17 +1306,16 @@
               "name": "Bloodhorn, Goborchend Chieftain",
               "center": [
                 912,
-                1392,
-                169.0
+                1392
               ],
               "radius": 30,
               "time_s": 600,
               "objective": "Defeat Bloodhorn",
-              "announce": "A goborchend twice the height of the others, horns dripping. 'The druid's blood opens the eye. Your blood will do as well.'",
+              "announce": "A goborchend twice the height of the others, horns dripping. 'The Queen promised us the eye. The druid's blood opens it. Your blood will do as well.'",
               "boss": {
                 "template": 60161466,
                 "name": "Bloodhorn, Goborchend Chieftain",
-                "level": 60,
+                "level": 52,
                 "health_mult": 3.2
               },
               "success": "Bloodhorn, Goborchend Chieftain falls.",
@@ -376,8 +1328,8 @@
                     "template": 60161461,
                     "name": "goborchend gasher",
                     "level": [
-                      52,
-                      53
+                      48,
+                      49
                     ]
                   }
                 ]
@@ -390,7 +1342,7 @@
           "type": "talk",
           "npc": "oisin",
           "goal": "Free Oisin",
-          "say": "Mor sent you? Of course. She's the clever one.\n\nThe eye - they were trying to open Balor's eye. Or one like it. Under the fort. Asleep. Mor needs to know. She'll need to choose what to [do] about it.",
+          "say": "Mor sent you? Of course. She's the clever one.\n\nThe eye - they were trying to open a Fomorian eye, under the fort. Asleep. The Queen wanted it open and looking south. Mor needs to know. She'll need to choose what to [do] about it.",
           "keyword": "do",
           "id": "s6"
         },
@@ -398,7 +1350,7 @@
           "type": "choice",
           "npc": "druid_mor",
           "goal": "Return to Druid Mor",
-          "say": "Oisin's alive. Thank every god.\n\nAnd under the fort - an eye. A Fomorian eye, sleeping. Oisin says it can be [sealed] forever - the druids' great rite, and it will cost me most of my power. Or [left sleeping], and watched, and studied - and perhaps used, one day, against Albion or Midgard. The Council would like that. I wouldn't.",
+          "say": "Oisin's alive. Thank every god.\n\nAnd under the fort - an eye. Oisin says it can be [sealed] forever - the druids' great rite, and it will cost me most of my power. Or [left sleeping], and watched, and studied - and perhaps turned on the Queen, one day. The Council would like that. I wouldn't.",
           "options": [
             {
               "keyword": "sealed",
@@ -450,7 +1402,76 @@
           }
         }
       },
-      "group": true
+      "group": true,
+      "requires": "cf_old_runes"
+    },
+    {
+      "id": "cf_fear_dubh",
+      "title": "The Black Rider",
+      "level": 49,
+      "giver": "teague",
+      "offer": "Fear Dubh rides out from the Ford every night and every night he comes closer to the hide. The Host can't march in while he hunts the shelf.\n\nWill you [ride him down]? He keeps to the woods south-east of the Ford. Bring friends - he doesn't hunt alone.",
+      "accept": "ride him down",
+      "topics": {},
+      "summary": "Fear Dubh, the court's black huntsman, hunts the Rangers from the Ford of Sorrows.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            780,
+            1040
+          ],
+          "radius": 25,
+          "goal": "Break the court's riders on the way to the Ford, about 710 m south-east of Ranger Teague",
+          "mob": {
+            "template": 60160718,
+            "name": "far dorocha",
+            "level": 49
+          },
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 208,
+          "at": [
+            840,
+            1080
+          ],
+          "radius": 120,
+          "goal": "Defeat Fear Dubh, the black rider, south-east of the Ford",
+          "target": "Fear Dubh",
+          "count": 1,
+          "text": "Fear Dubh's horse goes out from under him like smoke, and he follows it.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "teague",
+          "goal": "Report to Ranger Teague",
+          "say": "The black rider's down. For tonight, anyway - nothing of hers stays dead long in this fog.\n\nBut the shelf's ours. When the Host comes through the Forest Gate, it'll have a road to the Hollow Road. That's your doing.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq208_rider_s_bane_torc",
+              "sq208_huntsman_s_horn_charm"
+            ]
+          }
+        }
+      },
+      "requires": "cf_riders"
     }
   ]
 }

@@ -117,18 +117,19 @@ namespace DOL.GS.Commands
             bool sameGroup = group != null && other.Group == group;
             // by target, not by name: /invite <name> finds only your /spawn helpers among the bots (owner 2026-11-11: "No player
             // online with that name"); the menu has made them your target. A bot can't lead a group, so no Make Leader.
+            // (owner 2026-11-23, Bugs & Fixes: "Make Buff the top option, and kick from group the bottom option")
+            list.Add(("Buff", "/buff"));
             if (!sameGroup && (group == null || leader))
                 list.Add(("Invite to Group", "/invite"));
-            if (sameGroup && leader)
-                list.Add(("Kick from Group", "/disband " + other.Name));
-            if (sameGroup && !leader)
-                list.Add(("Leave Group", "/disband"));
-            list.Add(("Buff", "/buff"));
             list.Add(("Follow", "/follow"));
             list.Add(("Assist", "/assist"));
             list.Add(("Talk", "@talk:" + other.Name));
             if (other is GamePlayer real && real.Client != null && real.Client != me.Client)
                 list.Add(("Trade", "/tradewith"));
+            if (sameGroup && !leader)
+                list.Add(("Leave Group", "/disband"));
+            if (sameGroup && leader)
+                list.Add(("Kick from Group", "/disband " + other.Name));
             return list;
         }
     }

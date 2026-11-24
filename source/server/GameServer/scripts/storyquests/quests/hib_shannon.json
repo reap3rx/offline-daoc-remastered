@@ -2,20 +2,6 @@
   "name": "Shannon Estuary",
   "npcs": [
     {
-      "id": "maeve_widow",
-      "zone": 202,
-      "realm": 3,
-      "name": "Maeve",
-      "model": 365,
-      "level": 9,
-      "pos": [
-        240,
-        690,
-        121.2
-      ],
-      "idle": "Three years. I still set his place at table."
-    },
-    {
       "id": "harbourmaster",
       "zone": 202,
       "realm": 3,
@@ -24,10 +10,37 @@
       "level": 18,
       "pos": [
         226,
-        664,
-        121.2
+        664
       ],
-      "idle": "Ships come in, ships go out. Some don't come back. That's the sea."
+      "guild": "Connla",
+      "idle": "Ships come in, ships go out. Some don't come back. That's the sea. Lately it's the river too, and that's not right."
+    },
+    {
+      "id": "maeve_widow",
+      "zone": 202,
+      "realm": 3,
+      "name": "Maeve",
+      "model": 365,
+      "level": 9,
+      "pos": [
+        240,
+        690
+      ],
+      "idle": "Three years. I still set his place at table."
+    },
+    {
+      "id": "sh_ciar",
+      "zone": 202,
+      "realm": 3,
+      "name": "Ciar the Fili",
+      "model": 365,
+      "level": 30,
+      "pos": [
+        252,
+        668
+      ],
+      "guild": "Lucht an Tobair",
+      "idle": "The river tastes of salt as far up as the bridge. Rivers don't do that. Not unless something is pushing the sea up them."
     },
     {
       "id": "niall_ghost",
@@ -38,8 +51,7 @@
       "level": 12,
       "pos": [
         192,
-        574,
-        134.4
+        574
       ],
       "during": [
         "false_light/s6"
@@ -54,9 +66,9 @@
       "level": 30,
       "pos": [
         980,
-        1580,
-        126.0
+        1580
       ],
+      "guild": "Ceannai",
       "idle": "The law is the law. Even when it's ours that broke it."
     },
     {
@@ -68,10 +80,23 @@
       "level": 18,
       "pos": [
         970,
-        1572,
-        126.3
+        1572
       ],
       "idle": "Ferry's free, for now. The eriu haven't come down the river yet."
+    },
+    {
+      "id": "sh_fionn",
+      "zone": 202,
+      "realm": 3,
+      "name": "Captain Fionn",
+      "model": 337,
+      "level": 34,
+      "pos": [
+        992,
+        1575
+      ],
+      "guild": "Sentinels of Ceannai",
+      "idle": "The Sentinels keep the south road and the treaty. The treaty's broken. So now we just keep the road."
     },
     {
       "id": "orla",
@@ -82,23 +107,506 @@
       "level": 20,
       "pos": [
         1006,
-        1132,
-        143.4
+        1132
       ],
       "during": [
         "eriu_hostage/s4",
         "eriu_hostage/s5",
-        "eriu_hostage/s6"
+        "eriu_hostage/s6",
+        "sh_orla_at_the_well/s1"
       ]
+    },
+    {
+      "id": "sh_tadhg",
+      "zone": 202,
+      "realm": 3,
+      "name": "Old Tadhg",
+      "model": 337,
+      "level": 12,
+      "pos": [
+        640,
+        535
+      ],
+      "guild": "Fishers' Post",
+      "idle": "I've fished under Daigean Bridge sixty years. First year I've ever had to pay to do it."
+    },
+    {
+      "id": "sh_bebhinn",
+      "zone": 202,
+      "realm": 3,
+      "name": "Bebhinn the Seanchai",
+      "model": 365,
+      "level": 22,
+      "pos": [
+        585,
+        762
+      ],
+      "guild": "Hy Brasil camp",
+      "idle": "Everything that happens on this river has happened before, in a story. The trick is knowing which story."
+    },
+    {
+      "id": "sh_murchadh",
+      "zone": 202,
+      "realm": 3,
+      "name": "Bosun Murchadh",
+      "model": 337,
+      "level": 20,
+      "pos": [
+        228,
+        990
+      ],
+      "guild": "Sailors' Pier",
+      "idle": "The merrow used to trade with us off the pier. Fish for knives. They've stopped coming up."
+    },
+    {
+      "id": "sh_ruairi",
+      "zone": 202,
+      "realm": 3,
+      "name": "Sentinel-Scout Ruairi",
+      "model": 337,
+      "level": 24,
+      "pos": [
+        800,
+        880
+      ],
+      "guild": "Sentinels of Ceannai",
+      "idle": "The ants don't wander. Ants never wander. Something drove them out."
+    },
+    {
+      "id": "sh_ceallach",
+      "zone": 202,
+      "realm": 3,
+      "name": "Fili Ceallach",
+      "model": 362,
+      "level": 32,
+      "pos": [
+        1560,
+        640
+      ],
+      "guild": "Lucht an Tobair",
+      "idle": "Nine hazels round the well, and every one of them dropping nuts out of season. The well is awake."
     }
   ],
   "quests": [
+    {
+      "id": "sh_welcome_to_connla",
+      "title": "The Salt in the Barrels",
+      "level": 2,
+      "giver": "harbourmaster",
+      "offer": "New off the boat? Welcome to Connla - best port in Hibernia, whatever they tell you in Mag Mell.\n\nDo me a kindness. The fishers' post up at Daigean Bridge sent down three barrels of river eels, and every one of them's pickled in salt water. River water. Will you [ask Tadhg] what's going on up there? Follow the strand north, then the river east. He's the old one with the nets.",
+      "accept": "ask Tadhg",
+      "topics": {},
+      "summary": "Harbourmaster Cian in Connla wants to know why the river eels from Daigean Bridge came down tasting of the sea.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "sh_tadhg",
+          "goal": "Ask Old Tadhg at the fishers' post by Daigean Bridge, about 430 m east of Harbourmaster Cian",
+          "say": "Salt? Aye. Sixty years I've fished here and the river's been sweet as milk. This month it's salt as far up as the bridge, and the eels are coming up dead.\n\nAnd that's not the worst of it. Runaway lads from Connla have put a chain across the bridge and charge a toll to cross. Have a look round. There's work here for anyone with a sword.",
+          "ending": "default",
+          "id": "s1"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "Here - Cian said you'd want paying.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 60,
+            "copper_per_level": 53,
+            "marks": 5,
+            "items": [],
+            "choice": []
+          }
+        }
+      }
+    },
+    {
+      "id": "sh_toll",
+      "title": "The Toll at Daigean Bridge",
+      "level": 5,
+      "giver": "sh_tadhg",
+      "offer": "Those lads up the bridge road - Connla's runaways, villainous youths and rowdies - want a copper a crossing, and two for a fish. From ME.\n\nWill you [break the toll]? Knock a few of them about. Not too hard. Some of them are somebody's sons.",
+      "accept": "break the toll",
+      "topics": {},
+      "summary": "Connla's runaways have put a toll on Daigean Bridge.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            590,
+            470
+          ],
+          "radius": 40,
+          "goal": "Drive off 6 villainous youths at the toll chain on the bridge road, about 80 m north-west of Old Tadhg",
+          "target": "villainous youth",
+          "count": 6,
+          "text": "They scatter, shouting. One drops a purse heavy with tolls - and something else, a little sack that smells of nuts.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_tadhg",
+          "goal": "Return to Old Tadhg",
+          "say": "Ha! Did you see them run?\n\nWhat's in the sack? ...Hazelnuts. In this season? There's no hazel near the bridge bears this early. These come from a long way east. From the well, I'd say. Somebody's paying those lads in more than tolls.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the fishers' post.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq202_toll_chain_bracer",
+              "sq202_fisher_s_knot_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sh_runaway_sons",
+      "title": "Somebody's Sons",
+      "level": 7,
+      "giver": "harbourmaster",
+      "offer": "Tadhg sent word. Runaways at the bridge - and I'll wager half of them are Connla boys. My sister's boy Colm ran off at midsummer.\n\nWill you [find Colm]? He's sixteen, red hair, mouth like a gull. Knock the rowdies round him down and tell him his mother's frantic.",
+      "accept": "find Colm",
+      "topics": {},
+      "summary": "Harbourmaster Cian's nephew Colm ran off to join the runaways at Daigean Bridge.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            545,
+            430
+          ],
+          "radius": 40,
+          "goal": "Fight through 5 rowdies on the road to the bridge, about 400 m north-east of Harbourmaster Cian",
+          "target": "rowdy",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 202,
+          "at": [
+            482,
+            387
+          ],
+          "goal": "Search the runaways' den (click the glinting spot)",
+          "clue": {
+            "name": "Colm's satchel",
+            "model": 1347
+          },
+          "text": "A satchel with a name stitched inside it - COLM - and a scrap of paper: 'Breandan says the eriu pay a silver a sack for anyone who'll carry nuts north. Easy money. Back by harvest. Don't tell Mam.'",
+          "give": {
+            "name": "Colm's note"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "harbourmaster",
+          "goal": "Take Colm's note back to Harbourmaster Cian",
+          "say": "Carrying nuts for the eriu? For a silver a sack? The little fool.\n\nBreandan. I know that name - he ran off from the docks five years back. If he's taking eriu silver, the Sentinels need to hear of it. Thank you for this.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Connla.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_runaway_s_pledge_charm",
+              "sq202_rowdy_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "sh_toll"
+    },
+    {
+      "id": "sh_hazel_smuggler",
+      "title": "Nuts for the North",
+      "level": 9,
+      "giver": "sh_tadhg",
+      "offer": "Colm came home - his uncle dragged him by the ear - but the nuts keep coming over the bridge. Somebody at the toll camp keeps the tally.\n\nWill you [find the tally]? The Sentinels at Ceannai would give a lot to know who's buying hazelnuts from the well.",
+      "accept": "find the tally",
+      "topics": {},
+      "summary": "Somebody is smuggling hazelnuts from Connla's Well north over Daigean Bridge.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            590,
+            470
+          ],
+          "radius": 40,
+          "goal": "Defeat the toll-keeper at the toll chain on the bridge road, about 80 m north-west of Old Tadhg",
+          "target": "toll-keeper",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 202,
+          "at": [
+            595,
+            475
+          ],
+          "goal": "Search the toll camp (click the glinting spot)",
+          "clue": {
+            "name": "the toll camp's tally",
+            "model": 1347
+          },
+          "text": "A tally-stick and a strip of birch-bark in eriu ogham: 'Kedger's nuts. North to the buyers, silver back south. The well-callers want the price high - the more nuts are taken, the louder the well cries.'",
+          "give": {
+            "name": "the eriu tally"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_fionn",
+          "goal": "Take the tally to Captain Fionn at Ceannai, far to the south",
+          "say": "Kedger. Kaen Kedger, chief of the eriu - the same eriu we have a treaty with.\n\n'The louder the well cries.' I don't like that. I'll send to the filid. Lucht an Tobair keep the well; they'll know what it means. You've done the Sentinels a service.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels of Ceannai.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_hazel_sack_ring",
+              "sq202_sentinel_s_courier_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "sh_runaway_sons"
+    },
+    {
+      "id": "sh_toll_master",
+      "title": "Breandan",
+      "level": 11,
+      "giver": "sh_tadhg",
+      "offer": "Breandan himself's come down to the bridge. He calls himself the Toll-Master now, and he's got the rowdies building a gate.\n\nWill you [deal with Breandan]? Then we'll see what's to be done with the lads.",
+      "accept": "deal with Breandan",
+      "topics": {},
+      "summary": "Breandan, Connla's runaway leader and the eriu's smuggler, holds Daigean Bridge.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            545,
+            430
+          ],
+          "radius": 40,
+          "goal": "Kill 4 rowdies at the new gate, about 140 m north-west of Old Tadhg",
+          "target": "rowdy",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 202,
+          "at": [
+            590,
+            470
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Breandan the Toll-Master",
+          "text": "Breandan goes down on the bridge planks. 'They said it was only nuts,' he says. 'Only nuts! What harm's in nuts?'",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Breandan the Toll-Master",
+              "center": [
+                590,
+                470
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Breandan the Toll-Master",
+              "announce": "A big young man with a chain round his neck steps out of the toll hut. 'Two coppers to cross. Three for you.'",
+              "boss": {
+                "template": 60165444,
+                "name": "Breandan the Toll-Master",
+                "level": 12,
+                "health_mult": 2.2
+              },
+              "success": "Breandan the Toll-Master falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60165444,
+                    "name": "rowdy",
+                    "level": [
+                      9,
+                      10
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "sh_tadhg",
+          "goal": "Return to Old Tadhg",
+          "say": "So that's Breandan beaten. The lads are sitting on the bank like wet cats.\n\nThe Sentinels want them all [sent to Ceannai] to work off the tolls on the south road. Or we [send them home] to their mothers in Connla and say no more about it. They're boys. Mostly.",
+          "options": [
+            {
+              "keyword": "sent to Ceannai",
+              "say": "Ceannai it is. A year on the south road never killed anyone. Well. Not often.",
+              "ending": "ceannai"
+            },
+            {
+              "keyword": "send them home",
+              "say": "Home, then. Colm's mother will do worse to them than the Sentinels ever could.",
+              "ending": "home"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "ceannai": {
+          "text": "From the fishers' post, and the bridge that's free again.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_breandan_s_chain",
+              "sq202_bridge_warden_s_ring",
+              "sq202_turncoat_s_sash"
+            ]
+          }
+        },
+        "home": {
+          "text": "From the fishers' post, and the bridge that's free again.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_breandan_s_chain",
+              "sq202_bridge_warden_s_ring",
+              "sq202_turncoat_s_sash"
+            ]
+          }
+        }
+      },
+      "requires": "sh_hazel_smuggler"
+    },
+    {
+      "id": "sh_salt_river",
+      "title": "Salt in the River",
+      "level": 8,
+      "giver": "sh_ciar",
+      "offer": "Tadhg's eels died of salt. I've tasted the river from Connla to the bridge, and it's the sea, all the way up. In calm weather!\n\nLucht an Tobair keep Connla's Well, where the river is born. If the sea is coming up the river, something at the source is pulling it. Will you [walk the strand] with me - well, for me - and see what the tide has brought ashore?",
+      "accept": "walk the strand",
+      "topics": {},
+      "summary": "Ciar the Fili wants to know why the sea is running up the river in calm weather.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            230,
+            400
+          ],
+          "radius": 40,
+          "goal": "Break 5 sandmen on the strand, about 270 m north of Ciar the Fili",
+          "target": "sandman",
+          "count": 5,
+          "text": "The sandmen fall apart into wet sand - salt, through and through. They were made from the seabed.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 202,
+          "at": [
+            190,
+            575
+          ],
+          "goal": "Search the wreck sands (click the glinting spot)",
+          "clue": {
+            "name": "a sailor's bell",
+            "model": 1347
+          },
+          "text": "A ship's bell, green with weed, half-buried. Engraved on it: MORNING STAR. When the wind blows across it, it tolls - very faintly - by itself.",
+          "give": {
+            "name": "the Morning Star's bell"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_ciar",
+          "goal": "Bring the bell to Ciar the Fili in Connla",
+          "say": "The Morning Star. Maeve's husband's ship - it went down three years ago in calm weather. Calm weather, and a tide that came out of nowhere.\n\nThree years. This has been going on for three years and we didn't see it. Talk to Maeve. She'll know more than she's said.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Lucht an Tobair.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_salt_crust_charm",
+              "sq202_fili_s_reed_bracer"
+            ]
+          }
+        }
+      }
+    },
     {
       "id": "false_light",
       "title": "The False Light",
       "level": 10,
       "giver": "maeve_widow",
-      "offer": "Three years ago my husband's ship, the Morning Star, went down off the beach in calm weather. Calm! Now the driftwood from her walks the shore at night - it's haunted, the children say.\n\nI'm not a fool. But I'd like to know. Will you [find out] what happened to the Morning Star? The [harbourmaster] might help you, if he's sober.",
+      "offer": "Three years ago my husband's ship, the Morning Star, went down off the beach in calm weather. Calm! Now the driftwood from her walks the shore at night - it's haunted, the children say.\n\nI'm not a fool. But I'd like to know. Will you [find out] what really happened to the Morning Star?",
       "accept": "find out",
       "topics": {
         "harbourmaster": "Cian, on the quay. He's been harbourmaster thirty years. He drinks."
@@ -109,26 +617,21 @@
           "type": "kill",
           "zone": 202,
           "at": [
-            262,
-            725,
-            121.4
+            190,
+            575
           ],
-          "radius": 25,
-          "goal": "Lay the haunted driftwood to rest",
-          "mob": {
-            "template": 60162022,
-            "name": "haunted driftwood",
-            "level": 8
-          },
+          "radius": 40,
+          "goal": "Lay the haunted driftwood to rest on the wreck sands, about 130 m north-west of Maeve",
+          "target": "haunted driftwood",
           "count": 4,
-          "text": "On the last piece, carved deep, the ship's name: MORNING STAR. And scratched below it, fresh: 'LIGHTS. FALSE LIGHTS.'",
+          "text": "On the last piece, carved deep, the ship's name: MORNING STAR. And scratched below it, fresh: 'LIGHTS. FALSE LIGHTS. AND THE WATER CAME UP.'",
           "id": "s1"
         },
         {
           "type": "talk",
           "npc": "harbourmaster",
           "goal": "Ask the harbourmaster about the wreck",
-          "say": "False lights? ...Aye, the crew that washed up said they followed a light into the shallows - thought it was the harbour lamp. It wasn't. The moss sheerie on the south shore do that, for sport. Captain Niall's body was never found. The [wreck]'s still on the northern sands.",
+          "say": "False lights? ...Aye, the crew that washed up said they followed a light into the shallows - thought it was the harbour lamp. And then the sea came up under them like a hand. The moss sheeries on the south shore lead sailors astray, for sport. Captain Niall's body was never found. The [wreck] is still out on the northern sands.",
           "keyword": "wreck",
           "id": "s2"
         },
@@ -137,8 +640,7 @@
           "zone": 202,
           "at": [
             189,
-            571,
-            133.6
+            571
           ],
           "goal": "Search the wreck on the northern sands",
           "clue": {
@@ -153,11 +655,10 @@
           "zone": 202,
           "at": [
             324,
-            1109,
-            149.2
+            1109
           ],
           "radius": 25,
-          "goal": "Hunt down the moss sheerie on the south shore",
+          "goal": "Hunt down the moss sheeries at the sheerie ring, about 430 m south of Maeve",
           "mob": {
             "template": 30002,
             "name": "moss sheerie",
@@ -172,8 +673,7 @@
           "zone": 202,
           "at": [
             330,
-            1120,
-            143.5
+            1120
           ],
           "wake_m": 30,
           "goal": "Put out the false light",
@@ -185,13 +685,12 @@
               "name": "the False Light",
               "center": [
                 330,
-                1120,
-                143.5
+                1120
               ],
               "radius": 30,
               "time_s": 600,
               "objective": "Put out the False Light",
-              "announce": "A sheerie brighter than a harbour lamp rises out of the moss. 'Follow me, sailor. Follow me home.'",
+              "announce": "A sheerie brighter than a harbour lamp rises out of the moss. 'Follow me, sailor. Follow me home. The water's rising - you'll want to be home.'",
               "boss": {
                 "template": 30002,
                 "name": "the False Light",
@@ -222,8 +721,8 @@
           "type": "talk",
           "npc": "niall_ghost",
           "goal": "Go back to the wreck",
-          "say": "You put out the light. Thank you. I've been standing here three years waiting for someone to.\n\nI couldn't go to her. Not with the light still burning - it kept calling me back into the water. Is she well? Does she still set my place at [table]?",
-          "keyword": "table",
+          "say": "You put out the light. Thank you. I've been standing here three years waiting for someone to.\n\nIt wasn't only the light, you know. The sea came up under us in a dead calm, as if something under the river had breathed in. Tell Maeve - tell her [I'm sorry]. Tell her what she likes.",
+          "keyword": "I'm sorry",
           "id": "s6"
         },
         {
@@ -279,14 +778,695 @@
             ]
           }
         }
+      },
+      "requires": "sh_salt_river"
+    },
+    {
+      "id": "sh_drowned_watch",
+      "title": "The Drowned Watch",
+      "level": 12,
+      "giver": "sh_ciar",
+      "offer": "Niall isn't the only one walking. Every night now, more of them come up out of the shallows on the strand - drowned sailors, all the river's dead for a hundred years. They don't come to haunt. They come up looking inland, like men running from a flood.\n\nWill you [keep the watch] on the strand tonight? Lay them down. And find out what they're running from.",
+      "accept": "keep the watch",
+      "topics": {},
+      "summary": "Drowned sailors walk out of the shallows on the strand at night, as if running from a flood.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            150,
+            470
+          ],
+          "radius": 40,
+          "goal": "Lay 6 drowned sailors to rest on the strand at night, about 220 m north-west of Ciar the Fili",
+          "target": "drowned sailor",
+          "count": 6,
+          "text": "The last one grips your arm before it falls. 'It's rising,' it says, in a voice full of water. 'She's rising. Get to high ground.'",
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 202,
+          "at": [
+            300,
+            640
+          ],
+          "radius": 25,
+          "goal": "Climb the dune above Connla and look east up the river",
+          "text": "Moonlight on the river - and far off to the east, where Connla's Well should be, a glow on the water like a drowned lantern.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_ciar",
+          "goal": "Return to Ciar the Fili",
+          "say": "'She's rising.' The drowned said she.\n\nThere's only one she the river has ever had. Sinann. Gods. The old tale - she went to the well for its wisdom, and it drowned her, and she became the river. If the dead are running from her, she's waking.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Lucht an Tobair.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_drowned_sailor_s_earring",
+              "sq202_night_watch_bracer",
+              "sq202_tide_mark_ring"
+            ]
+          }
+        }
+      },
+      "requires": "false_light"
+    },
+    {
+      "id": "sh_tide_bell",
+      "title": "The Tide-Bell",
+      "level": 14,
+      "giver": "sh_ciar",
+      "offer": "The old filid hung a bell on the quay to ring the tide back - and the Morning Star's bell was cast from the same bronze. If I can hang it on the quay and ring the old peal, the sea may fall back down the river where it belongs. For a while.\n\nBut the drowned will come for it. They want to go home, and the bell sends them back to sleep. Will you [guard the bell]?",
+      "accept": "guard the bell",
+      "topics": {},
+      "summary": "Ciar the Fili will ring the Morning Star's bell on Connla's quay to send the tide back down the river.",
+      "steps": [
+        {
+          "type": "encounter",
+          "zone": 202,
+          "at": [
+            165,
+            690
+          ],
+          "wake_m": 30,
+          "goal": "Guard Ciar the Fili on the quay while she rings the bell",
+          "text": "The peal ends. The river shivers - and slowly, slowly, the water along the quay goes down a hand's breadth.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Ciar the Fili safe",
+              "center": [
+                165,
+                690
+              ],
+              "radius": 30,
+              "duration_s": 90,
+              "objective": "Keep Ciar the Fili safe",
+              "announce": "Ciar hangs the bell from the old post and begins the peal. Out of the shallows come the drowned, reaching for it.",
+              "protect": {
+                "template": 60163820,
+                "name": "Ciar the Fili",
+                "level": 14,
+                "model": 365
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    177,
+                    696
+                  ],
+                  [
+                    155,
+                    680
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60160165,
+                    "name": "drowned sailor",
+                    "level": [
+                      12,
+                      13
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "Ciar the Fili falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_ciar",
+          "goal": "Talk to Ciar the Fili",
+          "say": "It's down. A hand. Only a hand - but it's down.\n\nThe bell only buys time. Whatever is pushing the sea up the river is at the well. The Sentinels say the eriu have druids at the standing stones there. I'm going to need you again, I think. Not yet. When you're stronger.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Lucht an Tobair, and the quay.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq202_morning_star_bell_clapper",
+              "sq202_bell_ringer_s_cloak",
+              "sq202_ebb_tide_belt"
+            ]
+          }
+        }
+      },
+      "requires": "sh_drowned_watch"
+    },
+    {
+      "id": "sh_flooded_hills",
+      "title": "Flooded Out",
+      "level": 15,
+      "giver": "sh_ruairi",
+      "offer": "The giant ants are all over the south road. Ants don't wander - they keep to their hills. Something drove them out.\n\nWill you [look at the hills]? The nearest is north-east of here. Kill what you must and look inside.",
+      "accept": "look at the hills",
+      "topics": {},
+      "summary": "Sentinel-Scout Ruairi wants to know what drove the giant ants out of their hills.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            990,
+            750
+          ],
+          "radius": 40,
+          "goal": "Kill 5 giant ants round the ant hill, about 230 m north-east of Sentinel-Scout Ruairi",
+          "target": "giant ant",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 202,
+          "at": [
+            992,
+            752
+          ],
+          "goal": "Look into the ant hill (click the glinting spot)",
+          "clue": {
+            "name": "a flooded tunnel",
+            "model": 1347
+          },
+          "text": "The tunnel is full of water - salt water, a long way from the sea. Drowned ant larvae float in it. Something welled up from underneath, through the rock.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_ruairi",
+          "goal": "Return to Sentinel-Scout Ruairi",
+          "say": "Salt water. Under an ant hill. In the middle of the country.\n\nThen the ants aren't the trouble - they're running from it, same as us. But they're running onto the south road, and the road's ours to keep. We'll need to thin them.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_ant_chitin_bracer",
+              "sq202_scout_s_compass_charm"
+            ]
+          }
+        }
       }
+    },
+    {
+      "id": "sh_ant_soldiers",
+      "title": "The Soldiers",
+      "level": 17,
+      "giver": "sh_ruairi",
+      "offer": "The ants have soldiers now - big ones, guarding the hills like Sentinels on a gate. They're marching. Workers carry the larvae, soldiers walk alongside.\n\nWill you [break the march]? If the soldiers fall, the workers scatter, and the road's clear for a while.",
+      "accept": "break the march",
+      "topics": {},
+      "summary": "Ant soldiers are guarding the ants' march out of their flooded hills.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            900,
+            960
+          ],
+          "radius": 40,
+          "goal": "Kill 3 ant soldiers by the great hill, about 130 m south-east of Sentinel-Scout Ruairi",
+          "target": "ant soldier",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            800,
+            1100
+          ],
+          "radius": 40,
+          "goal": "Scatter 6 ant workers in the ant country",
+          "target": "ant worker",
+          "count": 6,
+          "text": "The workers drop what they carry and run - every one of them north-west, away from the east. Away from the well.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_ruairi",
+          "goal": "Return to Sentinel-Scout Ruairi",
+          "say": "North-west, every one of them. Away from the well.\n\nThe filid say the well's rising. The ants knew it before any of us. Good work.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_mandible_ring",
+              "sq202_road_keeper_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "sh_flooded_hills"
+    },
+    {
+      "id": "sh_hill_scouts",
+      "title": "The Lost Patrol",
+      "level": 19,
+      "giver": "sh_ruairi",
+      "offer": "Three of my scouts went into the great hill a week ago to see where the water comes from. They haven't come out.\n\nWill you [find my scouts]? The great hill is south-east of here, the biggest of them. Mind the soldiers.",
+      "accept": "find my scouts",
+      "topics": {},
+      "summary": "Three Sentinel scouts went into the great ant hill and haven't come out.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            930,
+            990
+          ],
+          "radius": 40,
+          "goal": "Fight through 4 giant ants at the great hill, about 170 m south-east of Sentinel-Scout Ruairi",
+          "target": "giant ant",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 202,
+          "at": [
+            935,
+            995
+          ],
+          "goal": "Search the mouth of the great hill (click the glinting spot)",
+          "clue": {
+            "name": "a Sentinel's map",
+            "model": 1347
+          },
+          "text": "A scout's map, scrawled in haste: the tunnels run east, under the ant country, all the way to Connla's Well. 'The water comes from the well. The Queen guards the way. Too many soldiers. Going back.' The last line is blotted.",
+          "give": {
+            "name": "the scouts' map"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_ruairi",
+          "goal": "Bring the map to Sentinel-Scout Ruairi",
+          "say": "The tunnels run to the well. Of course they do.\n\nAnd the Old Queen guards them. She's been in that hill longer than Ceannai's been a town. If my scouts are anywhere, they're past her.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_hill_scout_s_torc",
+              "sq202_lost_patrol_ring",
+              "sq202_tunnel_crawler_s_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "sh_ant_soldiers"
+    },
+    {
+      "id": "sh_old_queen",
+      "title": "The Old Queen",
+      "level": 21,
+      "giver": "sh_ruairi",
+      "offer": "The Old Queen sits in the great hill, with her soldiers round her. While she's there nobody gets into the tunnels - not my scouts, not anyone.\n\nThis is GROUP work. Will you [face the Old Queen]?",
+      "accept": "face the Old Queen",
+      "topics": {},
+      "summary": "The Old Queen of the giant ants holds the great hill, and the tunnels to the well beneath it.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            930,
+            990
+          ],
+          "radius": 40,
+          "goal": "Defeat the Old Queen at the great hill, about 170 m south-east of Sentinel-Scout Ruairi",
+          "target": "The Old Queen",
+          "count": 1,
+          "text": "The Old Queen goes down. Behind her, deep in the hill, three voices are shouting for help - and under them, very faint, the sound of water rising.",
+          "id": "s1"
+        },
+        {
+          "type": "choice",
+          "npc": "sh_ruairi",
+          "goal": "Return to Sentinel-Scout Ruairi",
+          "say": "You found them! All three, half-drowned but alive. Thank the gods.\n\nNow - the hill. We can [seal the tunnels], and the ants will settle and the road will be quiet, but we'll have no way under to the well. Or we [keep them open], and post Sentinels at the mouth, and use them. A way under the well might be worth a lot, soon.",
+          "options": [
+            {
+              "keyword": "seal the tunnels",
+              "say": "Sealed, then. Quiet road, quiet ants. I'll take that.",
+              "ending": "sealed"
+            },
+            {
+              "keyword": "keep them open",
+              "say": "Open, then. I'll put two scouts on the mouth. If the eriu want the well, they'll have to watch their feet.",
+              "ending": "open"
+            }
+          ],
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "sealed": {
+          "text": "From the Sentinels - and three scouts who owe you their lives.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq202_old_queen_s_crown_plate",
+              "sq202_royal_jelly_charm",
+              "sq202_hive_heart_cloak"
+            ]
+          }
+        },
+        "open": {
+          "text": "From the Sentinels - and three scouts who owe you their lives.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq202_old_queen_s_crown_plate",
+              "sq202_royal_jelly_charm",
+              "sq202_hive_heart_cloak"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sh_hill_scouts"
+    },
+    {
+      "id": "sh_failing_dance",
+      "title": "The Failing Dance",
+      "level": 16,
+      "giver": "sh_bebhinn",
+      "offer": "Every story about this river says the same thing: the sheeries dance in their ring in the south-west, and while they dance, the river sleeps. It's not a pretty story. It's a lullaby, and they've been singing it for a thousand years.\n\nThey've stopped. Will you [go and see why]? Carefully. A sheerie that isn't dancing is a sheerie that's angry.",
+      "accept": "go and see why",
+      "topics": {},
+      "summary": "Bebhinn the Seanchai says the sheeries' dance keeps the river asleep, and the dance has stopped.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 202,
+          "at": [
+            330,
+            1120
+          ],
+          "radius": 25,
+          "goal": "Go to the sheerie ring, about 440 m south-west of Bebhinn the Seanchai",
+          "text": "A ring of moss and toadstools, trampled flat. The sheeries drift round it without dancing, their lights dim. Three of them are lying on the ground, wet through - as if they'd been rained on from below.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            330,
+            1120
+          ],
+          "radius": 40,
+          "goal": "Drive off 5 moss sheeries that set on you",
+          "target": "moss sheerie",
+          "count": 5,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_bebhinn",
+          "goal": "Return to Bebhinn the Seanchai",
+          "say": "Rained on from below. The well's water is coming up through the ground even there.\n\nThe ring-dancers - the old ones who lead the dance - have turned on the others. They say there's no point dancing if the river's waking anyway. We have to change their minds.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Hy Brasil camp.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_moss_light_charm",
+              "sq202_dancer_s_anklet_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sh_ring_dancers",
+      "title": "The Ring-Dancers",
+      "level": 18,
+      "giver": "sh_bebhinn",
+      "offer": "The ring-dancers have stopped the dance on purpose. They want to be on the right side when the river wakes.\n\nWill you [stop the ring-dancers]? With them gone the young sheeries might dance again. They're simple things. They like a tune.",
+      "accept": "stop the ring-dancers",
+      "topics": {},
+      "summary": "The ring-dancers have stopped the sheeries' lullaby to curry favour with the waking river.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            300,
+            1090
+          ],
+          "radius": 40,
+          "goal": "Defeat 3 ring-dancers at the sheerie ring at night, about 430 m south-west of Bebhinn the Seanchai",
+          "target": "ring-dancer",
+          "count": 3,
+          "text": "The last ring-dancer gutters out. 'She promised,' it whispers. 'She promised us the whole river to dance on.'",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_bebhinn",
+          "goal": "Return to Bebhinn the Seanchai",
+          "say": "She promised. Sinann, it has to be - the river has no other she.\n\nThe young ones are dancing again, a little. It won't hold her long. The merrow off the sailors' pier know the river's bottom better than anyone. They'll know what's coming up it.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Hy Brasil camp.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq202_ring_dancer_s_circlet",
+              "sq202_lullaby_ring"
+            ]
+          }
+        }
+      },
+      "requires": "sh_failing_dance"
+    },
+    {
+      "id": "sh_kirwyn",
+      "title": "Kirwyn of the Merrow",
+      "level": 20,
+      "giver": "sh_murchadh",
+      "offer": "The merrow used to come up off the pier to trade - fish for knives, pearls for rope. Kirwyn, their chief, would sit on the end of the pier and drink our ale. They've stopped.\n\nNow they attack the boats. Will you [find Kirwyn]? Something has frightened them, or something has bought them.",
+      "accept": "find Kirwyn",
+      "topics": {},
+      "summary": "Bosun Murchadh's old trading partners, the merrow, have turned on the boats.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            120,
+            865
+          ],
+          "radius": 40,
+          "goal": "Fight off 4 merrow round Merrow Island, about 170 m north-west of Bosun Murchadh",
+          "target": "merrow",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            256,
+            990
+          ],
+          "radius": 40,
+          "goal": "Subdue Kirwyn of the merrow near the pier",
+          "target": "Kirwyn",
+          "count": 1,
+          "text": "Kirwyn sinks to the sand, gasping. 'Enough! Enough. We didn't want to. She's coming up the river from the well, and she drowns everything that won't serve her. We serve, or we drown. We're merrow. We can drown.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_murchadh",
+          "goal": "Return to Bosun Murchadh",
+          "say": "Merrow afraid of drowning. I never thought I'd hear it.\n\nKirwyn told me more, after, over the ale. Go and ask the seanchai what he said - it was about the well, and the old story, and it went over my head.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the sailors' pier.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_kirwyn_s_trident_ring",
+              "sq202_merrow_scale_bracer",
+              "sq202_pier_trader_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "sh_ring_dancers"
+    },
+    {
+      "id": "sh_under_the_well",
+      "title": "What Lies Under the Well",
+      "level": 22,
+      "giver": "sh_bebhinn",
+      "offer": "Kirwyn told Murchadh, and Murchadh told me: under Connla's Well there's a hollow, where the water first came up when it drowned Sinann. That's where she sleeps. And the eriu have druids at the stones round the well - well-callers - singing down into it.\n\nWill you [go to the well] and see? Take this sprig of sheerie moss. If she's awake, it'll go grey.",
+      "accept": "go to the well",
+      "topics": {},
+      "summary": "The merrow say Sinann sleeps in a hollow under Connla's Well, and eriu druids are singing her awake.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 202,
+          "at": [
+            1225,
+            690
+          ],
+          "radius": 30,
+          "goal": "Go to the standing stones on the west side of Connla's Well, about 640 m east of Bebhinn the Seanchai",
+          "text": "Standing stones round a still, glassy pool, nine hazels hanging over it. The water is too high - it's lapping the stones' feet. The sheerie moss in your hand goes grey.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            1225,
+            690
+          ],
+          "radius": 40,
+          "goal": "Drive off 3 eriu well-callers at the western stones",
+          "target": "eriu well-caller",
+          "count": 3,
+          "text": "As the last well-caller falls, the pool heaves - once - like something turning over in its sleep.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_bebhinn",
+          "goal": "Return to Bebhinn the Seanchai",
+          "say": "Grey. The moss went grey.\n\nShe's awake, then. Or nearly. Go to the filid at the well - Ceallach keeps the hermitage on the east shore. This is Lucht an Tobair's work now, and yours if you'll have it.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Hy Brasil camp, and every story I know.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_hazel_wood_torc",
+              "sq202_seanchai_s_story_cloak",
+              "sq202_deep_water_charm"
+            ]
+          }
+        }
+      },
+      "requires": "sh_kirwyn"
     },
     {
       "id": "eriu_hostage",
       "title": "The Eriu Hostage",
       "level": 20,
       "giver": "brehon_aodh",
-      "offer": "Five years ago this town made a treaty with the eriu upriver: our boats keep below the ford, theirs above. My daughter Orla went to them as surety - a hostage, by the old law. She was ten.\n\nLast month someone fished above the ford. Now the eriu say the treaty's broken and the hostage forfeit. Will you [bring Orla home]? Ask [Iasc] the ferryman - I think he knows who broke it.",
+      "offer": "Five years ago this town made a treaty with the eriu upriver: our boats keep below the ford, theirs above. My daughter Orla went to them as surety - a hostage, by the old law. She was ten.\n\nLast month someone fished above the ford. Now the eriu say the treaty's broken, and the law says a broken treaty is paid for with the hostage's life. Will you [bring Orla home]?",
       "accept": "bring Orla home",
       "topics": {
         "Iasc": "The ferryman, by the river. He hasn't met my eye in a month."
@@ -297,7 +1477,7 @@
           "type": "talk",
           "npc": "iasc",
           "goal": "Ask Iasc the ferryman about the broken treaty",
-          "say": "I know who fished above the ford. Me. The run was poor below and my children were hungry. I didn't think they'd notice one boat. I didn't think - about Orla. Gods forgive me. The eriu camp's up the [river].",
+          "say": "I know who fished above the ford. Me. The run was poor below and my children were hungry. I didn't think they'd notice one boat. I didn't think - about Orla. Gods forgive me.\n\nBut listen - the eriu came for me before I'd even pulled the net. As if they'd been waiting for someone to do it. Their hunting camp's up the [river].",
           "keyword": "river",
           "id": "s1"
         },
@@ -306,18 +1486,17 @@
           "zone": 202,
           "at": [
             1010,
-            1140,
-            144.7
+            1140
           ],
           "radius": 25,
-          "goal": "Fight through the eriu henters",
+          "goal": "Fight through the eriu henters, about 440 m north of Brehon Aodh",
           "mob": {
             "template": 60160565,
             "name": "eriu henter",
             "level": 20
           },
           "count": 5,
-          "text": "They fight hard but they don't hate you. 'The law,' one says as he falls. 'Your people broke the law.'",
+          "text": "They fight hard but they don't hate you. 'The law,' one says as he falls. 'Your people broke the law. Kedger said they would.'",
           "id": "s2"
         },
         {
@@ -325,23 +1504,22 @@
           "zone": 202,
           "at": [
             1000,
-            1150,
-            144.3
+            1150
           ],
-          "goal": "Search the eriu war-camp",
+          "goal": "Search the eriu hunting camp",
           "clue": {
             "name": "a broken treaty-stick",
             "model": 1347
           },
-          "text": "The ogham treaty-stick, snapped clean in two. It was the town's own copy. The eriu will have the other. Beside it, a girl's footprints - free, unchained, pacing.",
+          "text": "The ogham treaty-stick, snapped clean in two. It was the town's own copy. Beside it, a girl's footprints - free, unchained, pacing - and a sack of hazelnuts from the well.",
           "id": "s3"
         },
         {
           "type": "talk",
           "npc": "orla",
           "goal": "Find Orla",
-          "say": "Father sent you? Of course he did. He's very proper.\n\nThey've been good to me, you know. Five years. They taught me to weave and to fish and to sing their songs. And now they'll kill me, because the law says so. They don't want to. Their chief will come for me at [dusk].",
-          "keyword": "dusk",
+          "say": "Father sent you? Of course he did. He's very proper.\n\nThey've been good to me, you know. Five years. They taught me to weave and to fish and to sing their songs. And now they'll kill me, because the law says so - except it isn't the law. Kaen Kedger wanted the treaty broken. He wanted me. He keeps asking me to sing to the [well].",
+          "keyword": "well",
           "id": "s4"
         },
         {
@@ -349,12 +1527,11 @@
           "zone": 202,
           "at": [
             1006,
-            1128,
-            143.3
+            1128
           ],
           "wake_m": 30,
-          "goal": "Stand against the eriu chief",
-          "text": "The eriu chief kneels. 'Then it's done. The law's been answered with blood. Take her.'",
+          "goal": "Stand against the eriu chief of the hunting camp",
+          "text": "The eriu chief kneels. 'Then it's done. The law's been answered with blood. Take her - before Kedger hears.'",
           "stages": [
             {
               "id": "b1",
@@ -362,13 +1539,12 @@
               "name": "Chief Dorchadh of the Eriu",
               "center": [
                 1006,
-                1128,
-                143.3
+                1128
               ],
               "radius": 30,
               "time_s": 600,
               "objective": "Defeat Chief Dorchadh",
-              "announce": "An old eriu in a cloak of fish-scale. 'I'm sorry, girl. The law is the law.'",
+              "announce": "An old eriu in a cloak of fish-scale. 'I'm sorry, girl. The law is the law - and Kedger is the chief of chiefs now.'",
               "boss": {
                 "template": 60160566,
                 "name": "Chief Dorchadh of the Eriu",
@@ -399,7 +1575,7 @@
           "type": "choice",
           "npc": "orla",
           "goal": "Decide with Orla",
-          "say": "He's beaten, but they'll choose another chief by the next moon. And the treaty's still broken.\n\nFather could [renew the treaty] - pay the eriu the old fine for the broken one. It would ruin him. Or we go home and let the eriu come for [war], if they want it. They might not. They might.\n\nWhat should I tell him?",
+          "say": "He's beaten, but Kedger will send others. And the treaty's still broken.\n\nFather could [renew the treaty] - pay the eriu the old fine for the broken one. It would ruin him. Or we go home and let the eriu come for [war]. Either way - Kedger wants me for something at the well. I don't know what. I'm frightened of it.",
           "options": [
             {
               "keyword": "renew the treaty",
@@ -418,7 +1594,7 @@
           "type": "talk",
           "npc": "brehon_aodh",
           "goal": "Return to Brehon Aodh",
-          "say": "She's home. And the treaty is renewed - at a price that's cost me my house and two fields.\n\nIasc came to me and wept and offered his boat. I took it, and gave it back to him. The law is satisfied. So am I.",
+          "say": "She's home. And the treaty is renewed - at a price that's cost me my house and two fields.\n\nIasc came to me and wept and offered his boat. I took it, and gave it back to him. The law is satisfied. I am not. Kedger wanted her for something. I want to know what.",
           "ending": "treaty",
           "id": "s7"
         },
@@ -426,7 +1602,7 @@
           "type": "talk",
           "npc": "brehon_aodh",
           "goal": "Return to Brehon Aodh",
-          "say": "She's home. That's what matters.\n\nThe eriu have sent a war-arrow down the river. The town's arming. Orla stands at the window looking upriver, and won't tell me what she's thinking. Here. For bringing her back.",
+          "say": "She's home. That's what matters.\n\nThe eriu have sent a war-arrow down the river. The town's arming. Orla stands at the window looking upriver, toward the well, and won't tell me what she's thinking. Here.",
           "ending": "war",
           "id": "s8"
         }
@@ -465,6 +1641,762 @@
           }
         }
       }
+    },
+    {
+      "id": "sh_war_arrow",
+      "title": "The War-Arrow",
+      "level": 22,
+      "giver": "sh_fionn",
+      "offer": "Treaty or no treaty, Kedger has sent the war-arrow round the clans. Eriu waylayers on the south road - three carts gone this week.\n\nWill you [clear the south road]? And if you find a waylayer carrying orders, bring them to me.",
+      "accept": "clear the south road",
+      "topics": {},
+      "summary": "Kaen Kedger has sent the war-arrow round the eriu clans, and waylayers hold the south road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            840,
+            1330
+          ],
+          "radius": 40,
+          "goal": "Kill 4 eriu waylayers on the south road, about 290 m north-west of Captain Fionn",
+          "target": "eriu waylayer",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 202,
+          "at": [
+            845,
+            1335
+          ],
+          "goal": "Search the waylayers' camp (click the glinting spot)",
+          "clue": {
+            "name": "Kedger's orders",
+            "model": 1347
+          },
+          "text": "Birch-bark, eriu ogham: 'Hold the road. Let nothing north to Connla's Well. The well-callers need three more nights. When she rises, the river is ours, every clan is mine, and the Sentinels drown in their own town.'",
+          "give": {
+            "name": "Kedger's orders"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_fionn",
+          "goal": "Bring the orders to Captain Fionn",
+          "say": "'When she rises.' The filid keep saying it too. She - the river. Sinann.\n\nKedger isn't fighting a war with us. He's waiting for a flood to fight it for him. Then we don't wait. Kedger has three captains in the woods. We start with them.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels of Ceannai.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_war_arrow_charm",
+              "sq202_sentinel_s_watch_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "eriu_hostage"
+    },
+    {
+      "id": "sh_lieutenants",
+      "title": "Kedger's Captains",
+      "level": 24,
+      "giver": "sh_fionn",
+      "offer": "Kedger's three captains: Danderpaw in his den by the eastern border, Nasco at his post in the west woods, Solas on the watch just north of town.\n\nWill you [break the captains]? Without them the clans can't hold the woods, and Kedger is alone in his war-camp.",
+      "accept": "break the captains",
+      "topics": {},
+      "summary": "Kaen Kedger's three captains hold the eriu woods.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            912,
+            1509
+          ],
+          "radius": 40,
+          "goal": "Defeat Solas at the south watch, about 100 m north-west of Captain Fionn",
+          "target": "Solas",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            666,
+            1512
+          ],
+          "radius": 40,
+          "goal": "Defeat Nasco at his post in the west woods, about 330 m west of Captain Fionn",
+          "target": "Nasco",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            1282,
+            1539
+          ],
+          "radius": 40,
+          "goal": "Defeat Danderpaw in his den by the eastern border, about 290 m east of Captain Fionn",
+          "target": "Danderpaw",
+          "count": 1,
+          "text": "Danderpaw falls. 'Too late,' he laughs. 'Kedger has the well-callers. He doesn't need us any more. He doesn't need anyone.'",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_fionn",
+          "goal": "Return to Captain Fionn",
+          "say": "All three. Then Kedger's woods are open.\n\nHe's in his war-camp now, with his huscarls. The Sentinels can take it - not today, but soon, if Ceannai's resolve holds. Before that, I want eyes on that camp.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels of Ceannai.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq202_danderpaw_s_claw_ring",
+              "sq202_nasco_s_net_weight_charm",
+              "sq202_solas_s_watch_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "sh_war_arrow"
+    },
+    {
+      "id": "sh_war_camp_scout",
+      "title": "Eyes on the War-Camp",
+      "level": 25,
+      "giver": "sh_fionn",
+      "offer": "Kedger's war-camp is in the woods north-east of here - a palisade, archers on platforms, and clan totems the kedgers chant at. Every totem standing makes the eriu stronger, the filid say.\n\nWill you [scout the war-camp]? Count the huscarls, and look at those totems.",
+      "accept": "scout the war-camp",
+      "topics": {},
+      "summary": "Captain Fionn wants Kaen Kedger's war-camp scouted before the Sentinels move on it.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 202,
+          "at": [
+            1180,
+            1130
+          ],
+          "radius": 30,
+          "goal": "Scout the war-camp's gate, about 480 m north-east of Captain Fionn",
+          "text": "A palisade of sharpened logs, archers on the platforms, and beyond it clan totems carved with drowned faces. Huscarls at the gate. Too many.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            1320,
+            1180
+          ],
+          "radius": 40,
+          "goal": "Silence 3 eriu kedgers chanting at the totem ring",
+          "target": "eriu kedger",
+          "count": 3,
+          "text": "The chanting falters. One of the totems has a woman's face carved on it, with water pouring from her mouth. Sinann.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_fionn",
+          "goal": "Report to Captain Fionn",
+          "say": "Totems to Sinann. He's raising her with his whole clan behind him.\n\nThen we take the camp. Every Sentinel, every friend of Ceannai's. Win the estuary's resolve - its battles and its people - and we'll storm it. And you'll be at the front.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sentinels of Ceannai.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_palisade_scout_s_ring",
+              "sq202_totem_splinter_torc"
+            ]
+          }
+        }
+      },
+      "requires": "sh_lieutenants"
+    },
+    {
+      "id": "sh_kaen_kedger",
+      "title": "Kaen Kedger",
+      "level": 27,
+      "giver": "sh_fionn",
+      "offer": "This is it. Kaen Kedger, chief of the eriu, in his longhouse in the war-camp. Orla says he's been singing to the well every night through the totems.\n\nThis is GROUP work. Will you [face Kaen Kedger]?",
+      "accept": "face Kaen Kedger",
+      "topics": {},
+      "summary": "Kaen Kedger, chief of the eriu, waits in his war-camp longhouse.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            1260,
+            1120
+          ],
+          "radius": 40,
+          "goal": "Fight through 2 eriu huscarls in the war-camp, about 530 m north-east of Captain Fionn",
+          "target": "eriu huscarl",
+          "count": 2,
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 202,
+          "at": [
+            1262,
+            1118
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Kaen Kedger in his longhouse",
+          "text": "Kaen Kedger falls among his totems. 'Fool,' he gasps. 'It doesn't matter now. She's awake. She doesn't need me any more. She never did.'",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Kaen Kedger",
+              "center": [
+                1262,
+                1118
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Kaen Kedger",
+              "announce": "Kaen Kedger rises from a throne of driftwood, a fish-scale cloak on his shoulders. 'The river is ours. It was always ours. She promised.'",
+              "boss": {
+                "template": 60160566,
+                "name": "Kaen Kedger",
+                "level": 28,
+                "health_mult": 2.6
+              },
+              "success": "Kaen Kedger falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60160565,
+                    "name": "eriu huscarl",
+                    "level": [
+                      26,
+                      27
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "sh_fionn",
+          "goal": "Return to Captain Fionn",
+          "say": "Kedger down. The clans are leaderless.\n\nThe brehon says we [make a new treaty] with whoever leads the clans next, and give them back the river above the ford. The Sentinels say we [push them back] across the border and keep the river for Ceannai. Aodh won't decide. He says you've earned it.",
+          "options": [
+            {
+              "keyword": "make a new treaty",
+              "say": "A new treaty, then. Aodh will be glad. Orla will be gladder.",
+              "ending": "treaty"
+            },
+            {
+              "keyword": "push them back",
+              "say": "Back across the border. The Sentinels will hold the river. Let's hope we hold it better than the eriu did.",
+              "ending": "push"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "treaty": {
+          "text": "From the Sentinels, and from Ceannai.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq202_kedger_s_fish_scale_mantle"
+            ],
+            "choice": [
+              "sq202_chief_of_chiefs_torc",
+              "sq202_well_caller_s_staff_charm",
+              "sq202_huscarl_s_arm_ring"
+            ]
+          }
+        },
+        "push": {
+          "text": "From the Sentinels, and from Ceannai.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq202_kedger_s_fish_scale_mantle"
+            ],
+            "choice": [
+              "sq202_chief_of_chiefs_torc",
+              "sq202_well_caller_s_staff_charm",
+              "sq202_huscarl_s_arm_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sh_war_camp_scout"
+    },
+    {
+      "id": "sh_hazel_thieves",
+      "title": "The Hazel Thieves",
+      "level": 24,
+      "giver": "sh_ceallach",
+      "offer": "The nine hazels are dropping their nuts out of season, and the eriu fisceres gather them by the sackful and sell them north. Every nut taken from the well is a little of its wisdom gone - and the more is taken, the angrier the well grows.\n\nWill you [stop the thieves]? Then the hazel sprites may calm.",
+      "accept": "stop the thieves",
+      "topics": {},
+      "summary": "Eriu fisceres are stripping the hazels round Connla's Well.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            1215,
+            410
+          ],
+          "radius": 40,
+          "goal": "Drive off 6 eriu fisceres at their nets north of the well, about 410 m north-west of Fili Ceallach",
+          "target": "eriu fiscere",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            1530,
+            820
+          ],
+          "radius": 40,
+          "goal": "Calm 4 hazel sprites in the hazel grove (they won't calm any other way)",
+          "target": "hazel sprite",
+          "count": 4,
+          "text": "The sprites scatter like leaves. Under the hazels, the ground is soaked - well-water, welling up through the roots.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_ceallach",
+          "goal": "Return to Fili Ceallach",
+          "say": "The roots are drowning. The trees that gave the well its wisdom are drowning in it.\n\nShe's doing it on purpose, you know. Sinann. She went to these trees for wisdom and they drowned her. Now she's drowning them back.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Lucht an Tobair.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_hazel_gatherer_s_ring",
+              "sq202_nine_hazel_charm"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sh_well_callers",
+      "title": "The Well-Callers",
+      "level": 26,
+      "giver": "sh_ceallach",
+      "offer": "The eriu well-callers stand at the stones round the pool every night, singing her up. Kedger set them there, and they stay whether he lives or not.\n\nWill you [silence the stones]? All four sides: west, north, east and south. If they wake together, the well wakes with them.",
+      "accept": "silence the stones",
+      "topics": {},
+      "summary": "Eriu well-callers sing at the standing stones round Connla's Well, calling Sinann up.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            1225,
+            690
+          ],
+          "radius": 40,
+          "goal": "Silence 3 eriu well-callers at the western stones, about 340 m west of Fili Ceallach",
+          "target": "eriu well-caller",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            1480,
+            680
+          ],
+          "radius": 40,
+          "goal": "Drive off 2 well-water elementals at the eastern stones",
+          "target": "well-water elemental",
+          "count": 2,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            1300,
+            775
+          ],
+          "radius": 40,
+          "goal": "Break the drowned-river elemental at the southern stones",
+          "target": "drowned-river elemental",
+          "count": 1,
+          "text": "The elemental collapses into a wave and runs back into the pool. The water is higher than it was an hour ago.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_ceallach",
+          "goal": "Return to Fili Ceallach",
+          "say": "Higher. Even with the callers quiet, it's higher.\n\nShe doesn't need them any more. She's nearly up. There's one thing in all the old stories that ever sang her to sleep - her own blood. And there's a girl in Ceannai who is of Sinann's line. The brehon's daughter. Kedger knew it. That's why he wanted her.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Lucht an Tobair.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq202_stone_singer_s_torc",
+              "sq202_standing_stone_bracer",
+              "sq202_ripple_ring"
+            ]
+          }
+        }
+      },
+      "requires": "sh_hazel_thieves"
+    },
+    {
+      "id": "sh_serpent_upriver",
+      "title": "The Serpent Upriver",
+      "level": 27,
+      "giver": "sh_bebhinn",
+      "offer": "Arracht, the great ollipheist of the south-west shore, has started swimming upriver toward the well. The old stories say the serpents came out of the well with the river, and they go home to it when the river wakes.\n\nThe ollipheist shore is the worst of the estuary, by the Lough Gur border. Will you [find Arracht's trail]? Take friends.",
+      "accept": "find Arracht's trail",
+      "topics": {},
+      "summary": "Arracht, the great ollipheist, is swimming upriver toward Connla's Well.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            360,
+            1470
+          ],
+          "radius": 40,
+          "goal": "Kill 4 ollipheists at the serpent pool on the south-west shore, about 740 m south of Bebhinn the Seanchai",
+          "target": "ollipheist",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            470,
+            1580
+          ],
+          "radius": 40,
+          "goal": "Defeat the elder ollipheist in the deep reeds",
+          "target": "elder ollipheist",
+          "count": 1,
+          "text": "The elder ollipheist thrashes and goes still. In the reeds beyond it, a trail of flattened stems as wide as a cart heads north-east - toward the river, toward the well. Arracht is on the move.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_bebhinn",
+          "goal": "Return to Bebhinn the Seanchai",
+          "say": "On the move. Then the Lucht an Tobair will be hunting him along the shore - you'll hear the call when they do.\n\nGo to the brehon's daughter now. If anyone can sing the river down, it's her.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Hy Brasil camp.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_arracht_s_fang",
+              "sq202_serpent_skin_belt",
+              "sq202_upriver_ring"
+            ]
+          },
+          "wake_event": "shannon_serpent_upriver"
+        }
+      },
+      "requires": "sh_well_callers"
+    },
+    {
+      "id": "sh_orla_at_the_well",
+      "title": "The Brehon's Daughter",
+      "level": 28,
+      "giver": "brehon_aodh",
+      "offer": "The filid want Orla at the well. To sing. To sing to that - thing - the river. My daughter.\n\nShe wants to go. She says she's been dreaming of the water for five years, and now she knows why. Will you [take her to the well]? And bring her home. Bring her home again.",
+      "accept": "take her to the well",
+      "topics": {},
+      "summary": "Orla, of Sinann's line, will sing at Connla's Well to quiet the rising river.",
+      "steps": [
+        {
+          "type": "talk",
+          "npc": "orla",
+          "goal": "Talk to Orla, who is waiting at the old eriu hunting camp, about 450 m north of Brehon Aodh",
+          "say": "Father's told you, then. Don't look like that. I'm not afraid. Well. I am. But the eriu taught me their songs, and Mother taught me ours, and Ceallach says between them I have the whole lullaby.\n\nWhen you're [ready], I'll go up to the well.",
+          "keyword": "ready",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 202,
+          "at": [
+            1350,
+            600
+          ],
+          "wake_m": 30,
+          "goal": "Guard Orla at the northern stones while she sings",
+          "text": "Orla's song ends. The pool goes flat and still - and then, very slowly, it begins to rise again, and a woman's shape stands up out of it, made of water.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Orla safe while she sings",
+              "center": [
+                1350,
+                600
+              ],
+              "radius": 30,
+              "duration_s": 100,
+              "objective": "Keep Orla safe while she sings",
+              "announce": "Orla stands at the northern stones and sings down into the pool. The water answers - and so does everything in it.",
+              "protect": {
+                "template": 60163820,
+                "name": "Orla",
+                "level": 26,
+                "model": 365
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    1362,
+                    606
+                  ],
+                  [
+                    1340,
+                    590
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 60167807,
+                    "name": "well-water elemental",
+                    "level": [
+                      25,
+                      26
+                    ]
+                  },
+                  {
+                    "template": 60161154,
+                    "name": "hazel sprite",
+                    "level": [
+                      24,
+                      25
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "Orla falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sh_ceallach",
+          "goal": "Bring Orla to Fili Ceallach",
+          "say": "She held it. For a minute, she held the whole river still.\n\nAnd then Sinann stood up. She heard her own blood singing and she came up to see who it was. She won't go back down now. Not without a fight - a hard one. Orla's safe. Take her home first.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Ceannai, and from a father.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq202_orla_s_song_ring",
+              "sq202_ceannai_lullaby_torc"
+            ]
+          }
+        }
+      },
+      "requires": "sh_serpent_upriver"
+    },
+    {
+      "id": "sh_sinann",
+      "title": "Sinann",
+      "level": 30,
+      "giver": "sh_ceallach",
+      "offer": "Sinann stands at the northern stones of Connla's Well, the river pouring out of her, and the water rises every hour. She drowned for the well's wisdom. She means to drown the estuary for it.\n\nThis is GROUP work - the hardest in the estuary. Bring the best you know. Will you [face Sinann]?",
+      "accept": "face Sinann",
+      "topics": {},
+      "summary": "Sinann, the drowned spirit of the river, has risen at Connla's Well.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 202,
+          "at": [
+            1350,
+            605
+          ],
+          "radius": 30,
+          "goal": "Go to the northern stones of Connla's Well, about 210 m west of Fili Ceallach",
+          "text": "A woman made of the river stands among the stones, nine hazels bowing over her. 'I came for wisdom,' she says, 'and the well gave me water. A thousand years of water. Now I will give it back.'",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 202,
+          "at": [
+            1350,
+            575
+          ],
+          "radius": 40,
+          "goal": "Defeat Sinann at the northern stones",
+          "target": "Sinann",
+          "count": 1,
+          "text": "Sinann breaks like a wave on a rock - and for a moment, in the spray, there is a young woman with wet hair, looking very surprised, and then only water, falling back into the pool.",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "sh_ceallach",
+          "goal": "Return to Fili Ceallach",
+          "say": "The water's going down. All the way down the river to the sea. Listen - you can hear the estuary breathe out.\n\nShe'll gather again. She's the river; she can't not be. Lucht an Tobair can [lay her to rest] - sing her into the deep hollow under the well and seal it, so she sleeps for a thousand years. Or we can [give her the wisdom] she came for - a hazelnut from each of the nine trees, dropped into the well - and hope a wise river is a kinder one.",
+          "options": [
+            {
+              "keyword": "lay her to rest",
+              "say": "To rest, then. Orla will sing it with us. Sleep, Sinann. Sleep well, at last.",
+              "ending": "rest"
+            },
+            {
+              "keyword": "give her the wisdom",
+              "say": "Nine nuts, then, into the well. ...Look. The water's gone clear. I think she's laughing.",
+              "ending": "wisdom"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "rest": {
+          "text": "Take these. From the well, the Lucht an Tobair, and a river that's sleeping.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq202_sinann_s_tear"
+            ],
+            "choice": [
+              "sq202_drowned_hazel_cloak",
+              "sq202_well_keeper_s_torc",
+              "sq202_river_mouth_ring"
+            ]
+          }
+        },
+        "wisdom": {
+          "text": "Take these. From the well, the Lucht an Tobair, and a river that's thinking.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq202_sinann_s_tear"
+            ],
+            "choice": [
+              "sq202_drowned_hazel_cloak",
+              "sq202_well_keeper_s_torc",
+              "sq202_river_mouth_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sh_orla_at_the_well"
     }
   ]
 }

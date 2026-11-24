@@ -1,0 +1,79 @@
+{
+ "zone": 201,
+ "region": 200,
+ "realm": 3,
+ "prefix": "nu201",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Leading Stone's Moon-Sliver",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Emp": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "Won from the Leading Stone when The Night the Stones Walk was ended."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fiadhnait's Bead Satchel",
+   "base": [
+    41,
+    32
+   ],
+   "level": 27,
+   "bonuses": {
+    "Int": 9,
+    "Emp": 4,
+    "Dex": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "Won from Fiadhnait, the Broker's Hand, when The Moon-Silver Convoy was ended."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Old Greyback's Tusk",
+   "base": [
+    41,
+    24
+   ],
+   "level": 25,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 21
+   },
+   "lore": "Won from Old Greyback when The Badger Drive was ended."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Storm's Heart Stone",
+   "base": [
+    41,
+    29
+   ],
+   "level": 32,
+   "bonuses": {
+    "Int": 11,
+    "Emp": 5,
+    "Dex": 5,
+    "Power": 5,
+    "Hits": 19
+   },
+   "lore": "Won from the Storm's Heart when The Deep Wind was ended."
+  }
+ ]
+}

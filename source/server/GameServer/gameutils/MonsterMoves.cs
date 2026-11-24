@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 using DOL.AI.Brain;
+using DOL.Database;
 using DOL.GS.PacketHandler;
 using DOL.GS.Spells;
 
@@ -28,18 +29,25 @@ namespace DOL.GS
     ///   red     the same, more often; purple + a ground slam (the only big circles)
     /// Beasts (no weapon): a heavy, slower blow (its own weightier ring), bites that carry DAoC's procs - poison,
     /// disease, bleeding, a snare - and from yellow the same small cone.
-    /// Telegraphs go to action-mode players as "#AC|..." lines; bots and pets read them as well as they can (ReadChance).
+    /// Telegraphs go to action-mode players as "#AC|..." lines (a cone's or a slam's ground marking to every player near);
+    /// bots and pets read them as well as they can (ReadChance). A special that lands on a player tells them (Struck).
     /// </summary>
     public static class MonsterMoves
     {
         public enum Blow : byte { Normal, Style, Chain, Counter, Heavy, Cone, Slam }
         public enum Def : byte { Evade, Parry, Block }
 
-        public const int NormalMs = 600, StyleMs = 450, ChainMs = 400, CounterMs = 380, HeavyMs = 1100, ConeMs = 900, SlamMs = 1700;
+        // (owner 2026-11-22: "The cone attacks come out a bit too fast to sidestep" - 900 ms became 1500, and the slam's
+        // 1700 ms 2200: from melee reach a run takes ~0.6 s to clear the cone's side and ~1.5 s to leave the slam's circle,
+        // after the half second it takes to see it)
+        public const int NormalMs = 600, StyleMs = 450, ChainMs = 400, CounterMs = 380, HeavyMs = 1100, ConeMs = 1350, SlamMs = 2200;   // (cone 1500 -> 1350, owner 2026-11-23: "Make the cone attacks 10% faster")
         public const int SlamRadius = 350, ConeRadius = 320, ConeArc = 100;
         // (owner 2026-11-19 playtest: too much damage - a level 9's 141 health took 63 from a green's blow)
-        public const double StyleFactor = 1.3, PositionalFactor = 1.5, ChainFactor = 1.35, CounterFactor = 1.3,
-            HeavyFactor = 1.6, ConeFactor = 1.15, SlamFactor = 1.5;
+        // (owner 2026-11-22: "the mob's special attacks need a bit of a buff ... at least 10% stronger than they are" -
+        // each 10-17% up from 1.3 / 1.5 / 1.35 / 1.3 / 1.6 / 1.15 / 1.5; the cone and the slam most, as they are the
+        // ones you can walk out of. The cone and slam also start from a real plain blow now (Area), not a guess at armour)
+        public const double StyleFactor = 1.45, PositionalFactor = 1.65, ChainFactor = 1.5, CounterFactor = 1.45,
+            HeavyFactor = 1.8, ConeFactor = 1.35, SlamFactor = 1.75;
         // (owner 2026-11-19: "Endurance costs for mobs need to be much higher ... If they get parried or evaded or
         // blocked, whatever they were trying to do should have a much bigger endurance cost, let's start with 3 times.
         // successfully blocking parrying or evading the player will restore as much ... Missed parry blocks or evades
@@ -63,6 +71,7 @@ namespace DOL.GS
             public long NextSlamAt;
             public long NextConeAt;
             public ushort ConeHeading;
+            public bool ConeLocked;            // facing held on the cone while it winds up
             public double Stamina = 100;
             public long StaminaAt;
             public long HitAt;                 // when a foe last swung at it
@@ -87,8 +96,8 @@ namespace DOL.GS
         /// <summary>A monster's competence: 0 green .. 5 purple; -1 untiered, grey, a bot or a pet.</summary>
         public static int Comp(GameLiving l)
         {
-            if (l is not GameNPC n || n is GameBot)
-                return -1;
+            if (l is not GameNPC n || n is GameBot || TierCalibration.Quiet(n))
+                return -1;                                      // (the bench's baseline monster: its moves off)
             sbyte t = MonsterTiers.Tier(n);
             return t == MonsterTiers.None || t < MonsterTiers.Green ? -1 : t - MonsterTiers.Green;
         }
@@ -259,7 +268,10 @@ namespace DOL.GS
             s.TargetReacts = false;
             s.Positional = kind is Blow.Style or Blow.Chain or Blow.Counter && target != null && !target.IsObjectInFront(npc, 120);
             if (kind == Blow.Cone)
+            {
                 s.ConeHeading = target != null ? npc.GetHeading(target) : npc.Heading;
+                LockFacing(npc, s);
+            }
             Spend(s, kind == Blow.Normal ? 0 : CostOf(kind));   // (a plain blow costs only when it is turned aside)
         }
 
@@ -271,10 +283,42 @@ namespace DOL.GS
             Blow.Heavy => "h", Blow.Cone => "c", Blow.Slam => "g", _ => "n"
         };
 
+        /// <summary>A cone winding up holds the monster's facing on it until it lands (owner 2026-11-23: "lock their position
+        /// facing the cone until the attack completes. It's a good opportunity for the player to move and do a positional")
+        /// - released when the blow ends, or a moment after it should have, whatever happened.</summary>
+        static void LockFacing(GameNPC npc, State s)
+        {
+            lock (s)
+            {
+                npc.TurnTo(s.ConeHeading);
+                if (s.ConeLocked)
+                    return;
+                s.ConeLocked = true;
+                npc.DisableTurning(true);
+            }
+            new ECSGameTimer(npc, _ =>
+            {
+                UnlockFacing(npc, s);
+                return 0;
+            }, ConeMs + 600);
+        }
+
+        static void UnlockFacing(GameNPC npc, State s)
+        {
+            lock (s)
+            {
+                if (!s.ConeLocked)
+                    return;
+                s.ConeLocked = false;
+                npc.DisableTurning(false);
+            }
+        }
+
         public static void End(GameNPC npc)
         {
             if (!_states.TryGetValue(npc, out State s))
                 return;
+            UnlockFacing(npc, s);
             s.Last = s.Pending;
             s.Pending = Blow.Normal;
             s.Positional = false;
@@ -326,6 +370,7 @@ namespace DOL.GS
                 Blow.Heavy => HeavyFactor,
                 _ => 1.0
             };
+            f *= ZoneRates.SpecialExtraIn(an.CurrentZone);        // (a harder zone's specials step up more than its blows)
             return botRead ? 1.0 + (f - 1.0) * 0.25 : f;
         }
 
@@ -381,6 +426,8 @@ namespace DOL.GS
             {
                 GameNPC an = (GameNPC) ad.Attacker;
                 State s = Of(an);
+                if (s.Pending != Blow.Normal && ad.Target is GamePlayer struck)
+                    Struck(struck, an, Code(an, s.Pending), ad.Damage + ad.CriticalDamage);
                 if (s.Pending is Blow.Style or Blow.Counter && c >= 3)
                     s.ChainNext = true;
                 if (!Humanoid(an))
@@ -465,7 +512,7 @@ namespace DOL.GS
         public static void Cone(GameNPC npc)
         {
             ushort heading = Of(npc).ConeHeading;
-            Area(npc, ConeRadius, ConeFactor, "sweeps", v =>
+            Area(npc, ConeRadius, ConeFactor, "sweeps", "c", v =>
             {
                 int diff = Math.Abs(((npc.GetHeading(v) - heading) % 4096 + 4096 + 2048) % 4096 - 2048);
                 return diff * 360.0 / 4096.0 <= ConeArc / 2.0;
@@ -473,13 +520,14 @@ namespace DOL.GS
         }
 
         /// <summary>The slam lands (purple only): everyone on the players' side still inside the circle is hit.</summary>
-        public static void Slam(GameNPC npc) => Area(npc, SlamRadius, SlamFactor, "slams the ground and hits", _ => true);
+        public static void Slam(GameNPC npc) => Area(npc, SlamRadius, SlamFactor, "slams the ground and hits", "g", _ => true);
 
-        static void Area(GameNPC npc, int radius, double factor, string verb, Func<GameLiving, bool> inside)
+        static void Area(GameNPC npc, int radius, double factor, string verb, string code, Func<GameLiving, bool> inside)
         {
             if (!npc.IsAlive)
                 return;
-            double baseDamage = npc.attackComponent.WeaponDamage(npc.ActiveWeapon, null, 1.0, out _);
+            DbInventoryItem weapon = npc.ActiveWeapon;
+            double baseDamage = npc.attackComponent.WeaponDamage(weapon, null, 1.0, out double damageCap);
             var hit = new List<GameLiving>();
             foreach (GamePlayer p in npc.GetPlayersInRadius((ushort) (radius + 40)))
                 hit.Add(p);
@@ -500,10 +548,8 @@ namespace DOL.GS
                     StepOut(npc, v, radius);                    // a bot that saw it coming got out of it
                     continue;
                 }
-                double dmg = baseDamage * factor * 0.65;       // (about what armour would take off)
-                if (MonsterTiers.TryDamageFactor(npc, v, out double f))
-                    dmg *= f;
-                int amount = Math.Max(1, (int) dmg);
+                int amount = LevelScaling.Whole(PlainBlow(npc, weapon, v, baseDamage, damageCap) * factor
+                    * ZoneRates.SpecialExtraIn(npc.CurrentZone));   // (a harder zone's specials step up more)
                 v.TakeDamage(npc, eDamageType.Crush, amount, 0);
                 if (npc.Brain is StandardMobBrain b)
                     b.AddToAggroList(v, 1);
@@ -513,8 +559,45 @@ namespace DOL.GS
                         eChatType.CT_Damaged, eChatLoc.CL_SystemWindow);
                     if (ActionCombat.IsActive(vp))
                         ActionCombat.Send(vp, $"fct|0|{amount}|0|in");
+                    Struck(vp, npc, code, amount);
                 }
             }
+        }
+
+        /// <summary>What a plain blow of this monster's would do to this one (AttackComponent's own steps: its weapon skill
+        /// against the torso's armour, the crush resist, conversion, the damage cap, then the fight's scaling) - the cone
+        /// and the slam start from it (before 2026-11-22 a flat 0.65 stood in for the armour and the resist).</summary>
+        public static double PlainBlow(GameNPC npc, DbInventoryItem weapon, GameLiving v, double baseDamage, double damageCap)
+        {
+            double dmg = baseDamage;
+            try
+            {
+                double ws = npc.attackComponent.CalculateWeaponSkill(weapon, v, out _, out _, out _, out _);
+                double armorMod = AttackComponent.CalculateTargetArmor(v, eArmorSlot.TORSO, out _, out _);
+                DbInventoryItem armor = v.Inventory?.GetItem((eInventorySlot) eArmorSlot.TORSO);
+                dmg *= ws / Math.Max(1.0, armorMod);
+                dmg *= AttackComponent.CalculateTargetResistanceFactor(v, eDamageType.Crush, armor);
+                dmg *= AttackComponent.CalculateTargetConversionFactor(v);
+                dmg = Math.Min(dmg, damageCap);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"[MonsterMoves] plain blow {npc.Name} on {v.Name}: {e.Message}");
+                dmg = baseDamage * 0.65;                    // (the old stand-in for armour)
+            }
+            return Math.Max(0.0, dmg) * LevelScaling.DamageFactor(npc, v);
+        }
+
+        /// <summary>A monster's special landed on a player (owner 2026-11-22: "make sure any new attacks like that have a
+        /// powerful seeming in-game effect and/or sound so you know you got hit with something hard"): "#AC|struck|kind|
+        /// amount|oid" - the client shakes the view, flashes the screen's edge, bursts at you and plays a hard hit, by
+        /// kind (MonsterMoves.Code: s style, p positional, h heavy, c cone, g slam). Sent whether action combat is on or
+        /// not: the hit is felt either way.</summary>
+        public static void Struck(GamePlayer p, GameNPC by, string kind, int amount)
+        {
+            if (p?.Client == null || kind == "n")
+                return;
+            ActionCombat.Send(p, $"struck|{kind}|{amount}|{by?.ObjectID ?? 0}");
         }
 
         static void StepOut(GameNPC npc, GameLiving v, int radius)
@@ -532,6 +615,14 @@ namespace DOL.GS
             foreach (GamePlayer p in n.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
                 if (ActionCombat.IsActive(p))
                     ActionCombat.Send(p, line);
+        }
+
+        /// <summary>Send an "#AC|..." line to every player near a monster, action combat or not: a cone's or a slam's
+        /// ground marking (it hits whoever stands in it - everyone must see where it comes out).</summary>
+        public static void TellAll(GameNPC n, string line)
+        {
+            foreach (GamePlayer p in n.GetPlayersInRadius(WorldMgr.VISIBILITY_DISTANCE))
+                ActionCombat.Send(p, line);
         }
 
         // ------------------------------------------------------------------ the plates' endurance and power lines

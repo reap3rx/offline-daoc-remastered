@@ -249,6 +249,8 @@ namespace DOL.GS.PacketHandler.Client.v168
 
             public int NewConstitution { get; }
 
+            public int StartChoice { get; }
+
             public int CharacterSlot { get; set; } // 1125 support
 
             public int CustomizeType { get; set; } // 1125 support
@@ -320,7 +322,10 @@ namespace DOL.GS.PacketHandler.Client.v168
                     Empathy = packet.ReadByte();
                     Charisma = packet.ReadByte();
 
-                    packet.Skip(43);
+                    // the first of the 43 spare bytes: the starting town picked on our create screen (0 the hub; the old
+                    // client sends 0 - LevelBands start_choices, owner 2026-11-22)
+                    StartChoice = packet.ReadByte();
+                    packet.Skip(42);
                     
                     NewConstitution = packet.ReadByte();
                     // trailing 0x00
@@ -540,6 +545,10 @@ namespace DOL.GS.PacketHandler.Client.v168
             // Fire the character creation event
             // This is Where Most Creation Script should take over to update any data they would like !
             GameEventMgr.Notify(DatabaseEvent.CharacterCreated, null, new CharacterEventArgs(ch, client));
+
+            // the starting town picked on the create screen (after the creation scripts put it at the realm's hub)
+            if (pdata.StartChoice > 0 && DOL.GS.GameEvents.StartupLocations.ApplyStartChoice(ch, pdata.StartChoice) && log.IsInfoEnabled)
+                log.Info($"Character {pdata.CharName} starts at choice {pdata.StartChoice} ({ch.Region}: {ch.Xpos}, {ch.Ypos})");
 
             // write changes
             GameServer.Database.SaveObject(ch);

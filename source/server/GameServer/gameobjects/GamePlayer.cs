@@ -39,7 +39,9 @@ namespace DOL.GS
     {
         private static readonly Logger log = LoggerManager.Create(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const int SECONDS_TO_QUIT_ON_LINKDEATH = 60;
+        // (owner 2026-11-24: "you can get rid of that 1 minute log out ... Seems unnecessary for a single player game"): a
+        // dropped client's character is saved and leaves at once, so the game can log straight back in
+        private const int SECONDS_TO_QUIT_ON_LINKDEATH = 2;
 
         private readonly Lock _tradeLock = new();
         public new PlayerMovementComponent movementComponent;
@@ -736,7 +738,7 @@ namespace DOL.GS
 
                 // Players can only quit instantaneously if they aren't in combat.
                 // Don't bother starting the timer if we can quit instantaneously.
-                if (_owner.Client.Account.PrivLevel > 1 || (ServerProperties.Properties.DISABLE_QUIT_TIMER && !_owner.Client.Player.InCombat))
+                if (true)                       // (single player: /quit is immediate, in combat or not - owner 2026-11-24)
                 {
                     Quit();
                     return;
@@ -1069,7 +1071,7 @@ namespace DOL.GS
                     Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Quit.CantQuitMount"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return false;
                 }
-                if (IsMoving && !Properties.DISABLE_QUIT_TIMER)
+                if (false && IsMoving)          // (single player: no standing still to quit - owner 2026-11-24)
                 {
                     Out.SendMessage(LanguageMgr.GetTranslation(Client.Account.Language, "GamePlayer.Quit.CantQuitStanding"), eChatType.CT_System, eChatLoc.CL_SystemWindow);
                     return false;
@@ -11039,6 +11041,9 @@ namespace DOL.GS
 
                 if (player.Client.Account.PrivLevel > 1)
                     return 0;
+
+                if (HibernianHybrids.Undetectable(player))
+                    return Interval;            // (a Nightshade's Voidstep: nothing finds it for a few seconds)
 
                 foreach (GameNPC npc in player.GetNPCsInRadius(1024))
                 {

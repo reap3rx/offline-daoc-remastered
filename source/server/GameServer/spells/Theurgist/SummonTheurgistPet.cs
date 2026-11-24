@@ -104,6 +104,24 @@ namespace DOL.GS.Spells
 			return base.OnEffectExpires(effect, noMessages);
 		}
 
+		/// <summary>A Theurgist's pet goes where it aims (owner 2026-11-24, the Albion plan: "Theurgists also set their pets down
+		/// where they aim, the way Animists place turrets"): the ground target the channel's release set, within the spell's
+		/// range - else in front of it as before.</summary>
+		protected override void GetPetLocation(out int x, out int y, out int z, out ushort heading, out Region region)
+		{
+			if (Caster is GamePlayer p && p.GroundTarget is GroundTarget gt && gt.IsValid && p.IsWithinRadius(gt, Math.Max(500, Spell.Range > 0 ? Spell.Range : 1500)))
+			{
+				x = gt.X;
+				y = gt.Y;
+				z = gt.Z;
+				heading = p.Heading;
+				region = p.CurrentRegion;
+				return;
+			}
+			base.GetPetLocation(out x, out y, out z, out _, out region);
+			heading = Caster.Heading;
+		}
+
 		protected override GameSummonedPet GetGamePet(INpcTemplate template)
 		{
 			switch (m_petType)
@@ -138,10 +156,5 @@ namespace DOL.GS.Spells
 
 		protected override void SetBrainToOwner(IControlledBrain brain) { }
 
-		protected override void GetPetLocation(out int x, out int y, out int z, out ushort heading, out Region region)
-		{
-			base.GetPetLocation(out x, out y, out z, out _, out region);
-			heading = Caster.Heading;
-		}
 	}
 }

@@ -169,9 +169,11 @@ namespace DOL.GS.Spells
                     isImmune = !immunityEffect.CanApplyNewEffect(base.CalculateEffectDuration(target));
             }
 
+            bool music = HibernianKits.IsMusicMez(Spell.ID) || AlbionKits.TempoSure(this);   // a Bard's Music of Evasion, a Minstrel's Tempo: no enraged, no resist roll
+
             if (isImmune)
                 message = "Your target is immune to this effect!";
-            else if (target is GameNPC && target.HealthPercent < 75)
+            else if (target is GameNPC && target.HealthPercent < 75 && !music)
             {
                 message = "Your target is enraged and resists the spell!";
                 isImmune = true;
@@ -195,7 +197,7 @@ namespace DOL.GS.Spells
                 return true;
             }
 
-            return base.CheckSpellResist(target);
+            return !music && base.CheckSpellResist(target);
         }
 
         public override void OnDurationEffectApply(GameLiving target)
@@ -305,7 +307,7 @@ namespace DOL.GS.Spells
                 }*/
             }
 
-            return base.CheckSpellResist(target);
+            return !AlbionKits.TempoSure(this) && base.CheckSpellResist(target);   // (a Minstrel's Tempo: no resist roll)
         }
 
         public override void OnDurationEffectApply(GameLiving target)

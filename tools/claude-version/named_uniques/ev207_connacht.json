@@ -1,0 +1,79 @@
+{
+ "zone": 207,
+ "region": 200,
+ "realm": 3,
+ "prefix": "nu207",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Morcant's Gate-Ember",
+   "base": [
+    41,
+    24
+   ],
+   "level": 36,
+   "bonuses": {
+    "Int": 12,
+    "Emp": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 22
+   },
+   "lore": "Won from Morcant of the Gate when The Gate Stirs was ended. A coal of blue fire, quenched and cold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lord of Misrule's Antler Crown",
+   "base": [
+    41,
+    29
+   ],
+   "level": 37,
+   "bonuses": {
+    "Qui": 12,
+    "Con": 6,
+    "Dex": 6,
+    "Hits": 22,
+    "Power": 4
+   },
+   "lore": "Won from the Lord of Misrule when The Fool's Revel was ended. A circlet of antler and blue beads."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Scathach's River Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 21,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 4,
+    "Hits": 18
+   },
+   "lore": "Won from Captain Scathach when Siabra on the River was ended."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mother Pikebane's Claw",
+   "base": [
+    41,
+    24
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "Won from Mother Pikebane when The Fishing Bears' Bad Year was ended."
+  }
+ ]
+}

@@ -417,6 +417,9 @@ func _build() -> void:
 	_build_potions()
 	_build_ac_styles()
 	_build_events()
+	_build_tune()
+	_build_reputation()
+	_build_zmark()
 	_build_companion_sheet()
 	_build_story_dialog()
 	_build_guild()
@@ -1081,6 +1084,66 @@ func _build_events() -> void:
 	events_window.build()
 
 
+const ReputationWindow := preload("res://game/ui/reputation_window.gd")
+var reputation_window: ClassicWindow
+
+
+## The Reputation window (/rep, Shift+L): your standing with each faction and your realm, and your titles.
+func _build_reputation() -> void:
+	if not Server.active:
+		return
+	reputation_window = ReputationWindow.new()
+	reputation_window.resizable = true
+	reputation_window.patch = [6, 19, 13, 33]
+	reputation_window.min_size = ReputationWindow.BODY
+	reputation_window.max_size = ReputationWindow.BODY
+	reputation_window.size = ReputationWindow.BODY
+	var at := Vector2(area().x * 0.5 - ReputationWindow.BODY.x * 0.5, area().y * 0.5 - ReputationWindow.BODY.y * 0.5)
+	reputation_window.setup("reputation", "interact", Rect2(), at)
+	_add(reputation_window, at, false)
+	reputation_window.build()
+
+
+const TuneWindow := preload("res://game/ui/tune_window.gd")
+var tune_window: ClassicWindow
+
+
+## The /tier tune window: each con tier's hits, takes and press (MonsterTiers' tuning, live).
+func _build_tune() -> void:
+	if not Server.active:
+		return
+	tune_window = TuneWindow.new()
+	tune_window.resizable = true
+	tune_window.patch = [6, 19, 13, 33]
+	tune_window.min_size = TuneWindow.BODY
+	tune_window.max_size = TuneWindow.BODY
+	tune_window.size = TuneWindow.BODY
+	var at := Vector2(area().x * 0.5 - 250, area().y * 0.5 - 133)
+	tune_window.setup("tiertune", "interact", Rect2(), at)
+	_add(tune_window, at, false)
+	tune_window.build()
+
+
+const ZMarkWindow := preload("res://game/ui/zmark_window.gd")
+var zmark_window: ClassicWindow
+
+
+## The /zmark window: mark a spot for the zone's design (ZoneMarks.cs).
+func _build_zmark() -> void:
+	if not Server.active:
+		return
+	zmark_window = ZMarkWindow.new()
+	zmark_window.resizable = true
+	zmark_window.patch = [6, 19, 13, 33]
+	zmark_window.min_size = ZMarkWindow.BODY
+	zmark_window.max_size = ZMarkWindow.BODY
+	zmark_window.size = ZMarkWindow.BODY
+	var at := Vector2(area().x * 0.5 - 280, area().y * 0.5 - 180)
+	zmark_window.setup("zonemark", "interact", Rect2(), at)
+	_add(zmark_window, at, false)
+	zmark_window.build()
+
+
 const CompanionSheet := preload("res://game/ui/companion_sheet.gd")
 var companion_sheet: ClassicWindow
 
@@ -1455,7 +1518,8 @@ func _build_channel_bar() -> void:
 	_channel_bar.z_index = 50                              # (over any window left open)
 	root.add_child(_channel_bar)
 	Server.channel_changed.connect(func():
-		_channel_bar.position = Vector2(area().x * 0.5 - CHANNEL_W * 0.5, area().y - 225)
+		if not (modern and modern.custom.has("channel")):    # (EDIT UI put it somewhere: it stays there)
+			_channel_bar.position = Vector2(area().x * 0.5 - CHANNEL_W * 0.5, area().y - 225)
 		_channel_bar.visible = true
 		_channel_bar.queue_redraw())
 
@@ -1470,6 +1534,7 @@ class ChannelBar extends Control:
 	var _fill: Control
 	var _stage := -1
 	var _flash_at := -100000
+	var preview := false                               # EDIT UI is open: shown with a sample name to place it
 
 	func _ready() -> void:
 		_fill = Control.new()                              # the coloured name, clipped to how far it has filled
@@ -1478,7 +1543,46 @@ class ChannelBar extends Control:
 		_fill.draw.connect(_draw_fill)
 		add_child(_fill)
 
+	## The light you give off while you charge (owner 2026-11-23: "as you get to different levels of spell charge, the
+	## light you emit is brighter"): the spell's colour, brighter and wider with every stage reached, pulsing when full;
+	## it dies away when the spell goes off or fizzles.
+	var _light: OmniLight3D
+
+	func _update_light(d: float) -> void:
+		var v := get_tree().current_scene
+		var pl: Node3D = v.get("player") if v else null
+		if Server.channel.is_empty() or pl == null or not is_instance_valid(pl):
+			if _light and is_instance_valid(_light):
+				_light.light_energy = maxf(0.0, _light.light_energy - d * 6.0)
+				if _light.light_energy <= 0.0:
+					_light.queue_free()
+					_light = null
+			return
+		if _light == null or not is_instance_valid(_light) or _light.get_parent() != pl:
+			if _light and is_instance_valid(_light):
+				_light.queue_free()
+			_light = OmniLight3D.new()
+			_light.name = "ChargeLight"
+			_light.shadow_enabled = false
+			_light.omni_attenuation = 1.4
+			_light.position = Vector3(0, 1.2, 0.25)
+			_light.light_energy = 0.0
+			pl.add_child(_light)
+		var n := _now()
+		var level := float(int(n[2])) + float(n[1])          # 0 .. stages: how far it has charged
+		var full: bool = n[4]
+		var pulse := (0.5 + 0.5 * sin(Time.get_ticks_msec() / 90.0)) if full else 0.0
+		_light.light_color = _color(int(Server.channel.get("dtype", 0))).lightened(0.15)
+		var want := 0.35 + 0.8 * level + 0.6 * pulse
+		_light.light_energy = lerpf(_light.light_energy, want, clampf(d * 10.0, 0.0, 1.0))
+		_light.omni_range = 2.5 + 1.6 * level
+
 	func _process(_d: float) -> void:
+		_update_light(_d)
+		if preview:
+			visible = true
+			queue_redraw()
+			return
 		if not visible:
 			return
 		if Server.channel.is_empty() and (Server.channel_last.is_empty() or Time.get_ticks_msec() - int(Server.channel_last.at) > FAREWELL_MS):
@@ -1525,6 +1629,12 @@ class ChannelBar extends Control:
 		if Server.channel.is_empty():
 			_fill.size = Vector2.ZERO
 			var l: Dictionary = Server.channel_last
+			if preview and (l.is_empty() or now - int(l.at) > FAREWELL_MS):
+				var pt := "SPELL CHARGE"
+				var pp := _text_pos(pt, FONT_PX)
+				draw_string_outline(f, pp, pt, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_PX, 4, Color(0, 0, 0, 0.85))
+				draw_string(f, pp, pt, HORIZONTAL_ALIGNMENT_LEFT, -1, FONT_PX, _color(13))
+				return
 			if l.is_empty():
 				return
 			var k := clampf(float(now - int(l.at)) / FAREWELL_MS, 0.0, 1.0)
@@ -2003,7 +2113,7 @@ func reset_layout() -> void:
 ## The modern style's corner grips (owner 2026-11-03: scale a window by its corner, its shape kept): the modern
 ## windows and the shared ones that make sense to scale; classic puts them all back to their own size.
 func _set_scalable(on: bool) -> void:
-	for w in [bags, hero, map_window, journal, events_window]:
+	for w in [bags, hero, map_window, journal, events_window, tune_window, zmark_window]:
 		if w != null and is_instance_valid(w):
 			w.set_scalable(on)
 
@@ -2324,6 +2434,12 @@ func handle_input(event: InputEvent) -> bool:
 		return true
 	if Keybinds.pressed(event, "show_guild") and guild_window:
 		guild_window.toggle_window()
+		return true
+	if Keybinds.pressed(event, "show_reputation") and reputation_window:
+		if reputation_window.visible:
+			reputation_window.hide_window()
+		else:
+			Server.command("/rep window")
 		return true
 	if Keybinds.pressed(event, "show_map") and map_window:
 		map_window.player = player

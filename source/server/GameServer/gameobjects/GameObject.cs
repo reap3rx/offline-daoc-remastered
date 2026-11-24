@@ -741,6 +741,8 @@ namespace DOL.GS
 
 			foreach (DbDataQuest quest in GameServer.Database.SelectAllObjects<DbDataQuest>())
 			{
+				if (DOL.GS.Quests.QuestCleanup.IsDisabled(quest.ID))    // turned off as its zone was finished (QuestCleanup)
+					continue;
 				if (!newCache.TryGetValue(quest.StartRegionID, out List<DbDataQuest> list))
 				{
 					list = new();

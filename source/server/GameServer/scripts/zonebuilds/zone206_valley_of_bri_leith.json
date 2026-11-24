@@ -1,0 +1,1142 @@
+{
+ "zone": 206,
+ "name": "Valley of Bri Leith",
+ "rating": "wild",
+ "themes": [
+  "Brynach and the Lough Derg road",
+  "Giolladhe's Tower and the thin place",
+  "The Druid Circle (renegade druids)",
+  "The Coruscating Mine (the siog)",
+  "Caille and the fairy rings",
+  "Druim Cain and the Collory road",
+  "The Empyrean Heights (Fuamnach's wind)",
+  "Midir's Pastures (the host)",
+  "Moon Lake and the Changeling Hollow",
+  "The Cursed Forest border (the Unseelie's warning)"
+ ],
+ "notes": "Zone brief 2026-11-23 (Zone Reviews, Valley of Bri Leith tab), owner's notes: Wild, blending into Dangerous toward the Cursed Forest (Elite); the Empyrean Heights a difficult area; about 650 monsters; Brynach a starting zone. Coordinates are zone-local units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Mikka": "red",
+  "The Blademaster": "yellow",
+  "Keeper Rasa": "orange",
+  "Niy the Overseer": "red",
+  "Guardian Hru": "orange",
+  "Tric": "yellow",
+  "Nymir": "yellow",
+  "Erhael": "yellow",
+  "Riocard": "orange",
+  "Lusmorebane": "orange",
+  "Watcher Rylie": "yellow",
+  "Lashold": "orange",
+  "Wilde": "yellow",
+  "Glare": "blue",
+  "Fearan": "blue",
+  "Sloithi": "orange",
+  "Miner Cucugar": "blue"
+ },
+ "factions": {
+  "wind": {
+   "id": 9241,
+   "aggro": 90
+  },
+  "rings": {
+   "id": 9242,
+   "aggro": 60
+  },
+  "siog": {
+   "id": 9243,
+   "aggro": 80
+  },
+  "circle": {
+   "id": 9244,
+   "aggro": 80
+  },
+  "host": {
+   "id": 9245,
+   "aggro": 50
+  },
+  "lake": {
+   "id": 9246,
+   "aggro": 60
+  },
+  "hollow": {
+   "id": 9247,
+   "aggro": 85
+  },
+  "unseelie": {
+   "id": 9248,
+   "aggro": 95,
+   "enemies": [
+    "host"
+   ]
+  }
+ },
+ "members": {
+  "badger cub": {
+   "from": "badger cub",
+   "tier": "grey",
+   "roam": 300
+  },
+  "annoying lucradan": {
+   "from": "annoying lucradan",
+   "tier": "grey",
+   "roam": 300
+  },
+  "red deer": {
+   "from": "ambient stag 1",
+   "name": "red deer",
+   "tier": "grey",
+   "roam": 500
+  },
+  "barca": {
+   "from": "barca",
+   "tier": "green",
+   "roam": 300
+  },
+  "primrose": {
+   "from": "primrose",
+   "tier": "green",
+   "roam": 250
+  },
+  "moss sheerie": {
+   "from": "moss sheerie",
+   "tier": "green",
+   "roam": 300
+  },
+  "veil wisp": {
+   "from": "veil wisp",
+   "tier": "green",
+   "roam": 300
+  },
+  "empyrean orb": {
+   "from": "empyrean orb",
+   "tier": "green",
+   "roam": 250
+  },
+  "grass sheerie": {
+   "from": "grass sheerie",
+   "tier": "blue",
+   "roam": 300
+  },
+  "badger": {
+   "from": "badger",
+   "name": "valley badger",
+   "tier": "blue",
+   "roam": 350
+  },
+  "hill hound": {
+   "from": "hill hound",
+   "tier": "blue",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 400
+  },
+  "empyrean wisp": {
+   "from": "empyrean wisp",
+   "tier": "blue",
+   "faction": "wind",
+   "aggro": [
+    40,
+    400
+   ],
+   "roam": 350
+  },
+  "fury sprite": {
+   "from": "fury sprite",
+   "tier": "blue",
+   "faction": "rings",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "wrath sprite": {
+   "from": "wrath sprite",
+   "tier": "yellow",
+   "faction": "rings",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 250
+  },
+  "siog footpad": {
+   "from": "siog footpad",
+   "tier": "blue",
+   "faction": "siog",
+   "aggro": [
+    60,
+    450
+   ]
+  },
+  "siog piller": {
+   "from": "siog piller",
+   "tier": "yellow",
+   "faction": "siog",
+   "aggro": [
+    70,
+    500
+   ]
+  },
+  "siog seeker": {
+   "from": "siog seeker",
+   "tier": "yellow",
+   "faction": "siog",
+   "aggro": [
+    70,
+    500
+   ]
+  },
+  "siog waylayer": {
+   "from": "siog waylayer",
+   "tier": "yellow",
+   "faction": "siog",
+   "aggro": [
+    80,
+    550
+   ]
+  },
+  "siog fence": {
+   "from": "siog seeker",
+   "name": "siog fence",
+   "tier": "orange",
+   "faction": "siog",
+   "aggro": [
+    80,
+    550
+   ],
+   "size": 1.1,
+   "guards": {
+    "siog piller": 2
+   }
+  },
+  "renegade druid": {
+   "from": "druid",
+   "name": "renegade druid",
+   "tier": "yellow",
+   "faction": "circle",
+   "aggro": [
+    80,
+    500
+   ]
+  },
+  "thorn-bound hound": {
+   "from": "hill hound",
+   "name": "thorn-bound hound",
+   "tier": "yellow",
+   "faction": "circle",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 200
+  },
+  "circle-keeper": {
+   "from": "druid",
+   "name": "circle-keeper",
+   "tier": "orange",
+   "faction": "circle",
+   "aggro": [
+    80,
+    550
+   ],
+   "size": 1.1,
+   "guards": {
+    "renegade druid": 2
+   }
+  },
+  "faerie horse": {
+   "from": "faerie horse",
+   "tier": "blue",
+   "faction": "host",
+   "aggro": [
+    30,
+    350
+   ],
+   "roam": 500
+  },
+  "faerie steed": {
+   "from": "faerie steed",
+   "tier": "yellow",
+   "faction": "host",
+   "aggro": [
+    40,
+    400
+   ],
+   "roam": 450
+  },
+  "faerie drake": {
+   "from": "faerie drake",
+   "tier": "yellow",
+   "faction": "host",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 400
+  },
+  "fee lion": {
+   "from": "fee lion",
+   "tier": "yellow",
+   "faction": "host",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 350
+  },
+  "rage wolf": {
+   "from": "rage wolf",
+   "tier": "orange",
+   "faction": "host",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 400
+  },
+  "sidhe rider": {
+   "from": "sidhe draoi",
+   "name": "rider of Bri Leith",
+   "tier": "orange",
+   "faction": "host",
+   "aggro": [
+    70,
+    550
+   ],
+   "model": 326,
+   "roam": 300,
+   "guards": {
+    "faerie steed": 1
+   }
+  },
+  "merman": {
+   "from": "merman",
+   "name": "lake merman",
+   "tier": "yellow",
+   "faction": "lake",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "mad changeling": {
+   "from": "mad changeling",
+   "tier": "yellow",
+   "faction": "hollow",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 250
+  },
+  "hillock changeling": {
+   "from": "hillock changeling",
+   "tier": "orange",
+   "faction": "hollow",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 200
+  },
+  "empyrean watcher": {
+   "from": "empyrean watcher",
+   "tier": "blue",
+   "faction": "wind",
+   "aggro": [
+    60,
+    500
+   ],
+   "roam": 300
+  },
+  "empyrean sentinel": {
+   "from": "empyrean sentinel",
+   "tier": "yellow",
+   "faction": "wind",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 250
+  },
+  "empyrean keeper": {
+   "from": "empyrean keeper",
+   "tier": "yellow",
+   "faction": "wind",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 200
+  },
+  "empyrean guardian": {
+   "from": "empyrean guardian",
+   "tier": "orange",
+   "faction": "wind",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 250
+  },
+  "empyrean overseer": {
+   "from": "empyrean overseer",
+   "tier": "orange",
+   "faction": "wind",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 200,
+   "guards": {
+    "empyrean sentinel": 2
+   }
+  },
+  "empyrean elder": {
+   "from": "empyrean elder",
+   "tier": "red",
+   "faction": "wind",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 120,
+   "guards": {
+    "empyrean guardian": 2
+   }
+  },
+  "Fuamnach": {
+   "from": "empyrean elder",
+   "name": "Fuamnach",
+   "tier": "purple",
+   "faction": "wind",
+   "size": 1.25,
+   "roam": 40,
+   "model": 387,
+   "guards": {
+    "empyrean guardian": 3
+   }
+  },
+  "far dorocha": {
+   "from": "far dorocha",
+   "tier": "orange",
+   "faction": "unseelie",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 300
+  },
+  "gan ceanach": {
+   "from": "gan ceanach",
+   "tier": "orange",
+   "faction": "unseelie",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 300
+  },
+  "black wraith": {
+   "from": "black wraith",
+   "tier": "yellow",
+   "faction": "unseelie",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 250
+  },
+  "pooka": {
+   "from": "pooka",
+   "tier": "red",
+   "faction": "unseelie",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 200
+  }
+ },
+ "sites": [
+  {
+   "id": "brynach_fields",
+   "kind": "wildlife",
+   "area": [
+    17200,
+    40000,
+    31200,
+    50400
+   ],
+   "spawn": {
+    "barca": 14,
+    "primrose": 14,
+    "badger cub": 7,
+    "annoying lucradan": 7,
+    "red deer": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "lough_derg_road",
+   "kind": "wildlife",
+   "area": [
+    4800,
+    46000,
+    19200,
+    54000
+   ],
+   "spawn": {
+    "barca": 10,
+    "moss sheerie": 10,
+    "grass sheerie": 7,
+    "red deer": 3
+   },
+   "spacing": 280
+  },
+  {
+   "id": "west_woods",
+   "kind": "wildlife",
+   "area": [
+    0,
+    24000,
+    16800,
+    44000
+   ],
+   "spawn": {
+    "veil wisp": 14,
+    "empyrean orb": 8,
+    "moss sheerie": 10,
+    "grass sheerie": 10,
+    "badger": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "thin_place",
+   "kind": "camp",
+   "at": [
+    15200,
+    36800
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "veil wisp": 5,
+    "empyrean orb": 2
+   }
+  },
+  {
+   "id": "tower_wood",
+   "kind": "camp",
+   "at": [
+    9200,
+    50000
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "grass sheerie": 3,
+    "hill hound": 2
+   }
+  },
+  {
+   "id": "circle_slopes",
+   "kind": "wildlife",
+   "area": [
+    13200,
+    13200,
+    26000,
+    24000
+   ],
+   "spawn": {
+    "renegade druid": 10,
+    "thorn-bound hound": 8,
+    "siog seeker": 7,
+    "hill hound": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "druid_circle",
+   "kind": "camp",
+   "at": [
+    18000,
+    16800
+   ],
+   "r": 560,
+   "respawn": 300,
+   "spawn": {
+    "renegade druid": 5,
+    "circle-keeper": 1
+   }
+  },
+  {
+   "id": "thorn_kennel",
+   "kind": "camp",
+   "at": [
+    22400,
+    20800
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "thorn-bound hound": 4
+   }
+  },
+  {
+   "id": "mine_slopes",
+   "kind": "wildlife",
+   "area": [
+    1600,
+    5600,
+    16800,
+    16800
+   ],
+   "spawn": {
+    "siog footpad": 17,
+    "siog piller": 10,
+    "hill hound": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "siog_camp",
+   "kind": "camp",
+   "at": [
+    10000,
+    12000
+   ],
+   "r": 560,
+   "respawn": 300,
+   "spawn": {
+    "siog footpad": 5,
+    "siog piller": 3,
+    "siog fence": 1
+   }
+  },
+  {
+   "id": "mine_mouth",
+   "kind": "camp",
+   "at": [
+    12000,
+    7000
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "siog piller": 4,
+    "siog footpad": 2
+   }
+  },
+  {
+   "id": "ore_carts",
+   "kind": "camp",
+   "at": [
+    7600,
+    9200
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "siog footpad": 4
+   }
+  },
+  {
+   "id": "caille_rings",
+   "kind": "wildlife",
+   "area": [
+    28000,
+    24000,
+    44000,
+    40000
+   ],
+   "spawn": {
+    "empyrean wisp": 14,
+    "fury sprite": 10,
+    "moss sheerie": 10,
+    "red deer": 5,
+    "badger": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "ring_0",
+   "kind": "camp",
+   "at": [
+    31200,
+    26400
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "fury sprite": 3,
+    "wrath sprite": 1
+   },
+   "time": "night"
+  },
+  {
+   "id": "ring_1",
+   "kind": "camp",
+   "at": [
+    42400,
+    30400
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "fury sprite": 3,
+    "wrath sprite": 1
+   },
+   "time": "night"
+  },
+  {
+   "id": "ring_2",
+   "kind": "camp",
+   "at": [
+    40000,
+    38000
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "fury sprite": 3,
+    "wrath sprite": 1
+   },
+   "time": "night"
+  },
+  {
+   "id": "ring_3",
+   "kind": "camp",
+   "at": [
+    30400,
+    38400
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "fury sprite": 3,
+    "wrath sprite": 1
+   },
+   "time": "night"
+  },
+  {
+   "id": "middle_meadows",
+   "kind": "wildlife",
+   "area": [
+    24000,
+    12000,
+    42000,
+    24800
+   ],
+   "spawn": {
+    "red deer": 8,
+    "badger": 10,
+    "hill hound": 8,
+    "grass sheerie": 8
+   },
+   "spacing": 280
+  },
+  {
+   "id": "herders_fold",
+   "kind": "camp",
+   "at": [
+    40000,
+    24400
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "siog seeker": 4,
+    "siog waylayer": 2
+   }
+  },
+  {
+   "id": "collory_road",
+   "kind": "patrol",
+   "route": [
+    [
+     35600,
+     6400
+    ],
+    [
+     35200,
+     12800
+    ],
+    [
+     36000,
+     19200
+    ],
+    [
+     36400,
+     24800
+    ],
+    [
+     36000,
+     19200
+    ],
+    [
+     35200,
+     12800
+    ]
+   ],
+   "spawn": {
+    "siog waylayer": 2,
+    "siog seeker": 1
+   }
+  },
+  {
+   "id": "waylay_rocks",
+   "kind": "camp",
+   "at": [
+    30400,
+    10400
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "siog waylayer": 3,
+    "siog seeker": 1
+   }
+  },
+  {
+   "id": "heights_low",
+   "kind": "wildlife",
+   "area": [
+    42000,
+    22000,
+    62000,
+    44000
+   ],
+   "spawn": {
+    "empyrean watcher": 14,
+    "empyrean sentinel": 14,
+    "empyrean wisp": 10
+   },
+   "spacing": 280
+  },
+  {
+   "id": "heights_high",
+   "kind": "wildlife",
+   "area": [
+    44000,
+    6000,
+    64000,
+    22400
+   ],
+   "spawn": {
+    "empyrean sentinel": 14,
+    "empyrean keeper": 10,
+    "empyrean guardian": 14
+   },
+   "spacing": 280
+  },
+  {
+   "id": "rasa_hut",
+   "kind": "camp",
+   "at": [
+    52800,
+    16800
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "empyrean keeper": 3,
+    "empyrean sentinel": 2
+   }
+  },
+  {
+   "id": "overseer_ridge",
+   "kind": "camp",
+   "at": [
+    58800,
+    16800
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "empyrean overseer": 1,
+    "empyrean guardian": 2
+   }
+  },
+  {
+   "id": "guardian_stones",
+   "kind": "camp",
+   "at": [
+    56000,
+    28000
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "empyrean guardian": 3,
+    "empyrean sentinel": 2
+   }
+  },
+  {
+   "id": "elders_spire",
+   "kind": "camp",
+   "at": [
+    56200,
+    8600
+   ],
+   "r": 480,
+   "respawn": 900,
+   "spawn": {
+    "empyrean elder": 1
+   }
+  },
+  {
+   "id": "eye_of_the_wind",
+   "kind": "camp",
+   "at": [
+    60800,
+    6800
+   ],
+   "r": 400,
+   "respawn": 3600,
+   "spawn": {
+    "Fuamnach": 1
+   }
+  },
+  {
+   "id": "pastures_west",
+   "kind": "wildlife",
+   "area": [
+    2400,
+    55200,
+    24000,
+    64000
+   ],
+   "spawn": {
+    "faerie horse": 17,
+    "faerie steed": 10,
+    "faerie drake": 10,
+    "fee lion": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "pastures_east",
+   "kind": "wildlife",
+   "area": [
+    24000,
+    55200,
+    44000,
+    64000
+   ],
+   "spawn": {
+    "faerie horse": 10,
+    "faerie steed": 10,
+    "faerie drake": 10,
+    "fee lion": 7,
+    "rage wolf": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "rade_camp",
+   "kind": "camp",
+   "at": [
+    26800,
+    58000
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "sidhe rider": 2,
+    "faerie steed": 3
+   }
+  },
+  {
+   "id": "wolf_run",
+   "kind": "camp",
+   "at": [
+    12000,
+    60000
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "rage wolf": 3
+   }
+  },
+  {
+   "id": "lion_rocks",
+   "kind": "camp",
+   "at": [
+    38000,
+    59200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "fee lion": 4
+   }
+  },
+  {
+   "id": "lake_west",
+   "kind": "wildlife",
+   "area": [
+    39200,
+    46000,
+    44800,
+    56000
+   ],
+   "spawn": {
+    "merman": 7,
+    "wrath sprite": 7,
+    "moss sheerie": 7
+   },
+   "spacing": 280
+  },
+  {
+   "id": "lake_shore_n",
+   "kind": "camp",
+   "at": [
+    50000,
+    46800
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "merman": 4
+   }
+  },
+  {
+   "id": "lake_shore_e",
+   "kind": "camp",
+   "at": [
+    60000,
+    52000
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "merman": 3,
+    "wrath sprite": 2
+   }
+  },
+  {
+   "id": "wrath_menhir",
+   "kind": "camp",
+   "at": [
+    47200,
+    50000
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "wrath sprite": 4
+   }
+  },
+  {
+   "id": "hollow",
+   "kind": "wildlife",
+   "area": [
+    55200,
+    58800,
+    64800,
+    64800
+   ],
+   "spawn": {
+    "mad changeling": 17,
+    "hillock changeling": 5
+   },
+   "spacing": 280
+  },
+  {
+   "id": "changeling_den",
+   "kind": "camp",
+   "at": [
+    59800,
+    61400
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "mad changeling": 5,
+    "hillock changeling": 1
+   }
+  },
+  {
+   "id": "changeling_cradles",
+   "kind": "camp",
+   "at": [
+    52000,
+    62400
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "mad changeling": 4
+   },
+   "time": "night"
+  },
+  {
+   "id": "cf_edge_n",
+   "kind": "wildlife",
+   "area": [
+    62400,
+    24000,
+    65200,
+    46000
+   ],
+   "spawn": {
+    "black wraith": 20,
+    "far dorocha": 20,
+    "gan ceanach": 10
+   },
+   "spacing": 280
+  },
+  {
+   "id": "forest_gate",
+   "kind": "camp",
+   "at": [
+    62400,
+    38400
+   ],
+   "r": 720,
+   "respawn": 360,
+   "spawn": {
+    "far dorocha": 7,
+    "black wraith": 8,
+    "gan ceanach": 6
+   }
+  },
+  {
+   "id": "gate_wood",
+   "kind": "camp",
+   "at": [
+    63200,
+    44800
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "gan ceanach": 6,
+    "black wraith": 6
+   }
+  },
+  {
+   "id": "pooka_hollow",
+   "kind": "camp",
+   "at": [
+    64000,
+    31200
+   ],
+   "r": 320,
+   "respawn": 1200,
+   "spawn": {
+    "pooka": 1
+   },
+   "time": "night"
+  }
+ ]
+}

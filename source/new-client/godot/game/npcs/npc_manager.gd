@@ -606,7 +606,7 @@ var _rank_left := 0.0
 var _ranked := false
 
 func _rank() -> void:
-	if Perf.sway_n >= Perf.NO_LIMIT and Perf.pose_from >= Perf.NO_LIMIT:
+	if Perf.sway_n >= Perf.NO_LIMIT and Perf.pose_from >= Perf.NO_LIMIT and AnimLod.detail_m >= AnimLod.DETAIL_FULL:
 		if _ranked:
 			_ranked = false
 			for i in active:
