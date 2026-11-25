@@ -1,0 +1,666 @@
+{
+ "zone": 103,
+ "name": "Gotar",
+ "rating": "wild",
+ "themes": [
+  "Fort Atla, Nalliten and the svartalf trading post (quiet)",
+  "The north lakes and the wildling camp",
+  "The scale-traders on the trade road (the south thread: svartalf turned by the drakulv)",
+  "The drowned longship (east shore)",
+  "The hobgoblin woods and the spirit hills (south)",
+  "The seithkonur's circle and the drakelings on the southern edge"
+ ],
+ "notes": "Midgard's plan 2026-11-24, round 2: Wild; the south thread's svartalf scale-traders and drakulv preacher. Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Black Rixtas": "orange",
+  "Thraxia": "orange",
+  "Jordande": "orange",
+  "Salix": "yellow",
+  "Vidalf": "yellow",
+  "Twitchclaw": "yellow"
+ },
+ "factions": {
+  "wolves": {
+   "id": 9631,
+   "aggro": 60
+  },
+  "imps": {
+   "id": 9632,
+   "aggro": 40
+  },
+  "hobgoblins": {
+   "id": 9633,
+   "aggro": 50
+  },
+  "spirits": {
+   "id": 9634,
+   "aggro": 60
+  },
+  "drowned": {
+   "id": 9635,
+   "aggro": 70
+  },
+  "svartalf": {
+   "id": 9636,
+   "aggro": 75
+  },
+  "brood": {
+   "id": 9637,
+   "aggro": 80
+  },
+  "seith": {
+   "id": 9638,
+   "aggro": 70
+  }
+ },
+ "members": {
+  "wolf nipper": {
+   "from": "wolf nipper",
+   "tier": "blue",
+   "faction": "wolves",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 300
+  },
+  "wildling": {
+   "from": "wildling",
+   "tier": "yellow",
+   "faction": "wolves",
+   "guild": "the Grey Hames",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "coastal wolf": {
+   "from": "coastal wolf",
+   "tier": "yellow",
+   "faction": "wolves",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 350
+  },
+  "pine imp": {
+   "from": "pine imp",
+   "tier": "blue",
+   "faction": "imps",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 250
+  },
+  "wood imp": {
+   "from": "wood imp",
+   "tier": "green",
+   "faction": "imps",
+   "roam": 250
+  },
+  "dryad sprout": {
+   "from": "dryad sprout",
+   "tier": "green",
+   "roam": 150
+  },
+  "dryad sprig": {
+   "from": "dryad sprig",
+   "tier": "blue",
+   "roam": 150
+  },
+  "sapherd": {
+   "from": "sapherd",
+   "tier": "blue",
+   "roam": 150
+  },
+  "wild hog": {
+   "from": "wild hog",
+   "tier": "green",
+   "roam": 300
+  },
+  "tawny lynx": {
+   "from": "tawny lynx",
+   "tier": "blue",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 300
+  },
+  "smiera-gatto": {
+   "from": "smiera-gatto",
+   "tier": "green",
+   "roam": 300
+  },
+  "water snake": {
+   "from": "water snake",
+   "tier": "blue",
+   "roam": 200
+  },
+  "water strider": {
+   "from": "water strider",
+   "tier": "green",
+   "roam": 200
+  },
+  "green serpent": {
+   "from": "green serpent",
+   "tier": "green",
+   "roam": 200
+  },
+  "hobgoblin fish-catcher": {
+   "from": "hobgoblin fish-catcher",
+   "tier": "blue",
+   "faction": "hobgoblins",
+   "roam": 250
+  },
+  "hobgoblin snagger": {
+   "from": "hobgoblin snagger",
+   "tier": "blue",
+   "faction": "hobgoblins",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "hobgoblin prowler": {
+   "from": "hobgoblin prowler",
+   "tier": "yellow",
+   "faction": "hobgoblins",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 300
+  },
+  "hobgoblin pincher": {
+   "from": "hobgoblin pincher",
+   "tier": "blue",
+   "faction": "hobgoblins",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "host of the wind": {
+   "from": "host of the wind",
+   "tier": "yellow",
+   "faction": "spirits",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 300
+  },
+  "host of the earth": {
+   "from": "host of the earth",
+   "tier": "yellow",
+   "faction": "spirits",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "wind wisp": {
+   "from": "wind wisp",
+   "tier": "blue",
+   "faction": "spirits",
+   "roam": 300
+  },
+  "drowned soul": {
+   "from": "drowned soul",
+   "tier": "blue",
+   "faction": "drowned",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "skeletal oarsman": {
+   "from": "skeletal oarsman",
+   "tier": "yellow",
+   "faction": "drowned",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 150
+  },
+  "skeletal seafarer": {
+   "from": "skeletal seafarer",
+   "tier": "yellow",
+   "faction": "drowned",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 150
+  },
+  "rattling skeleton": {
+   "from": "rattling skeleton",
+   "tier": "blue",
+   "faction": "drowned",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 150
+  },
+  "carrion crawler": {
+   "from": "carrion crawler",
+   "tier": "blue",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 200
+  },
+  "carrion eater": {
+   "from": "carrion eater",
+   "tier": "yellow",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "svartalf outcast": {
+   "from": "svartalf outcast",
+   "tier": "yellow",
+   "faction": "svartalf",
+   "guild": "the Scale-Traders",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "svartalf guard": {
+   "from": "svartalf guard",
+   "tier": "yellow",
+   "faction": "svartalf",
+   "guild": "the Scale-Traders",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 100
+  },
+  "dragon-preacher": {
+   "from": "drakulv missionary",
+   "tier": "yellow",
+   "name": "dragon-preacher",
+   "faction": "svartalf",
+   "guild": "Gjalpinulva's Missionaries",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 80,
+   "guards": {
+    "svartalf guard": 1
+   }
+  },
+  "envy drakeling": {
+   "from": "envy drakeling",
+   "tier": "yellow",
+   "faction": "brood",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "seithkona": {
+   "from": "seithkona",
+   "tier": "yellow",
+   "faction": "seith",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 120
+  },
+  "gotawitch": {
+   "from": "gotawitch",
+   "tier": "yellow",
+   "faction": "seith",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 120
+  },
+  "seithr orb": {
+   "from": "seithr orb",
+   "tier": "blue",
+   "faction": "seith",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 80
+  },
+  "perfidious pook": {
+   "from": "perfidious pook",
+   "tier": "yellow",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "spindly rock crab": {
+   "from": "spindly rock crab",
+   "tier": "blue",
+   "roam": 200
+  }
+ },
+ "sites": [
+  {
+   "id": "fort_atla",
+   "kind": "clear",
+   "at": [
+    28360,
+    12800
+   ],
+   "r": 4800,
+   "names": [
+    "wild hog",
+    "wood imp",
+    "pine imp",
+    "dryad sprout",
+    "wolf nipper",
+    "hobgoblin snagger",
+    "water strider",
+    "green serpent",
+    "smiera-gatto",
+    "rattling skeleton"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "nalliten",
+   "kind": "clear",
+   "at": [
+    49600,
+    34560
+   ],
+   "r": 4000,
+   "names": [
+    "wild hog",
+    "wood imp",
+    "pine imp",
+    "dryad sprout",
+    "wolf nipper",
+    "hobgoblin snagger",
+    "water strider",
+    "green serpent",
+    "smiera-gatto",
+    "rattling skeleton"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "svartalf_post",
+   "kind": "clear",
+   "at": [
+    19480,
+    27920
+   ],
+   "r": 1800,
+   "names": [
+    "wild hog",
+    "wood imp",
+    "pine imp",
+    "dryad sprout",
+    "wolf nipper",
+    "hobgoblin snagger",
+    "water strider",
+    "green serpent",
+    "smiera-gatto",
+    "rattling skeleton"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "north_lakes",
+   "kind": "wildlife",
+   "area": [
+    16800,
+    3200,
+    36000,
+    34800
+   ],
+   "spawn": {
+    "wolf nipper": 50,
+    "hobgoblin fish-catcher": 34,
+    "water snake": 25,
+    "wild hog": 25,
+    "hobgoblin snagger": 25,
+    "water strider": 25,
+    "green serpent": 17
+   },
+   "spacing": 260
+  },
+  {
+   "id": "wildling_camp",
+   "kind": "camp",
+   "at": [
+    25600,
+    22400
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "wildling": 5,
+    "wolf nipper": 3
+   }
+  },
+  {
+   "id": "north_west_woods",
+   "kind": "wildlife",
+   "area": [
+    2400,
+    3200,
+    18000,
+    28000
+   ],
+   "spawn": {
+    "dryad sprout": 34,
+    "dryad sprig": 34,
+    "sapherd": 34,
+    "smiera-gatto": 25
+   },
+   "spacing": 260
+  },
+  {
+   "id": "middle_woods",
+   "kind": "wildlife",
+   "area": [
+    4000,
+    15200,
+    53600,
+    44000
+   ],
+   "spawn": {
+    "pine imp": 42,
+    "wood imp": 42,
+    "tawny lynx": 34,
+    "dryad sprig": 25,
+    "coastal wolf": 17
+   },
+   "spacing": 260
+  },
+  {
+   "id": "drowned_shore",
+   "kind": "wildlife",
+   "area": [
+    36800,
+    14800,
+    48000,
+    20800
+   ],
+   "spawn": {
+    "drowned soul": 34,
+    "skeletal oarsman": 17,
+    "rattling skeleton": 17
+   },
+   "spacing": 260
+  },
+  {
+   "id": "drowned_ship",
+   "kind": "camp",
+   "at": [
+    42280,
+    18960
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "skeletal oarsman": 3,
+    "skeletal seafarer": 3
+   }
+  },
+  {
+   "id": "east_coast",
+   "kind": "wildlife",
+   "area": [
+    52000,
+    20000,
+    64000,
+    50000
+   ],
+   "spawn": {
+    "spindly rock crab": 25,
+    "perfidious pook": 25,
+    "tawny lynx": 17
+   },
+   "spacing": 260
+  },
+  {
+   "id": "hobgoblin_woods",
+   "kind": "wildlife",
+   "area": [
+    26400,
+    39200,
+    44000,
+    57600
+   ],
+   "spawn": {
+    "hobgoblin prowler": 34,
+    "hobgoblin pincher": 34
+   },
+   "spacing": 260
+  },
+  {
+   "id": "spirit_hills",
+   "kind": "wildlife",
+   "area": [
+    6400,
+    40800,
+    37200,
+    64000
+   ],
+   "spawn": {
+    "host of the wind": 42,
+    "host of the earth": 34,
+    "wind wisp": 34
+   },
+   "spacing": 260
+  },
+  {
+   "id": "carrion_vale",
+   "kind": "wildlife",
+   "area": [
+    36000,
+    48000,
+    60000,
+    63200
+   ],
+   "spawn": {
+    "carrion crawler": 34,
+    "carrion eater": 25
+   },
+   "spacing": 260
+  },
+  {
+   "id": "seith_circle",
+   "kind": "camp",
+   "at": [
+    39600,
+    56800
+   ],
+   "r": 400,
+   "respawn": 420,
+   "spawn": {
+    "seithkona": 2,
+    "gotawitch": 3,
+    "seithr orb": 3
+   }
+  },
+  {
+   "id": "seithkona_ring",
+   "kind": "camp",
+   "at": [
+    4800,
+    55600
+   ],
+   "r": 360,
+   "respawn": 420,
+   "spawn": {
+    "seithkona": 3
+   }
+  },
+  {
+   "id": "southern_edge",
+   "kind": "wildlife",
+   "area": [
+    28000,
+    60800,
+    46000,
+    65200
+   ],
+   "spawn": {
+    "envy drakeling": 25
+   },
+   "spacing": 260
+  },
+  {
+   "id": "scale_traders",
+   "kind": "camp",
+   "at": [
+    20800,
+    30400
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "svartalf outcast": 4,
+    "svartalf guard": 2,
+    "dragon-preacher": 1
+   }
+  },
+  {
+   "id": "trade_road",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    30400,
+    36000,
+    48800
+   ],
+   "spawn": {
+    "svartalf outcast": 34
+   },
+   "spacing": 260
+  }
+ ]
+}

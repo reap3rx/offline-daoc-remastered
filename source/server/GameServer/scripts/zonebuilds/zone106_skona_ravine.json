@@ -1,0 +1,817 @@
+{
+ "zone": 106,
+ "name": "Skona Ravine",
+ "rating": "dangerous",
+ "themes": [
+  "The Seithkona Circle (north-east), the Stor Gothi's camp and Tradande's camp",
+  "The north woods and the frog meadows",
+  "Ulfhamr, the werewolf hold (middle) - the siege",
+  "The wolfaur headsmen's hunting grounds (south)",
+  "The timberland and the sidhe of the western shore",
+  "The whispering grove (south-west) and the dryad wood (south-east)",
+  "The drake trail out of Malmohus (south-east)"
+ ],
+ "notes": "Midgard's plan 2026-11-25, round 3: Dangerous; the west thread's werewolf stronghold, Ulfhamr, is the siege. Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "werewolf captain": "red",
+  "Captain Gruff": "red",
+  "Werewolf Shaman": "red",
+  "werewolf courier": "orange",
+  "Mokerkialfi": "purple",
+  "Storslange": "purple",
+  "Nagoltooth": "red",
+  "Cargila": "red",
+  "Fjalar": "red",
+  "Galar": "red",
+  "Askafroa": "red",
+  "Leildolf": "red",
+  "Zrit-Zrit": "red",
+  "Stripe": "red",
+  "Thasior": "orange",
+  "Vindvasen": "orange",
+  "Furf": "orange",
+  "Pellinistra": "orange",
+  "Lasaer": "orange",
+  "Krrrck": "orange",
+  "wolfaur gladiator": "red"
+ },
+ "factions": {
+  "wood": {
+   "id": 9661,
+   "aggro": 60
+  },
+  "sidhe": {
+   "id": 9662,
+   "aggro": 80
+  },
+  "dryads": {
+   "id": 9663,
+   "aggro": 70
+  },
+  "drakes": {
+   "id": 9664,
+   "aggro": 85,
+   "enemies": [
+    "wolves"
+   ]
+  },
+  "wolves": {
+   "id": 9665,
+   "aggro": 90,
+   "enemies": [
+    "drakes"
+   ]
+  }
+ },
+ "members": {
+  "wood rat": {
+   "from": "wood rat",
+   "tier": "blue",
+   "roam": 200
+  },
+  "brush cat": {
+   "from": "brush cat",
+   "tier": "yellow",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 350
+  },
+  "tree spirit": {
+   "from": "tree spirit",
+   "tier": "yellow",
+   "faction": "wood",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 150
+  },
+  "woodland badger": {
+   "from": "woodland badger",
+   "tier": "blue",
+   "roam": 200
+  },
+  "timberland badger": {
+   "from": "timberland badger",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 200
+  },
+  "timber cat": {
+   "from": "timber cat",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 350
+  },
+  "battle-scarred mauler": {
+   "from": "battle-scarred mauler",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 300
+  },
+  "young wolverine": {
+   "from": "young wolverine",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 300
+  },
+  "callow wolverine": {
+   "from": "callow wolverine",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 300
+  },
+  "wolverine": {
+   "from": "wolverine",
+   "tier": "red",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 250
+  },
+  "giant tree frog": {
+   "from": "giant tree frog",
+   "tier": "blue",
+   "roam": 200
+  },
+  "great tingler": {
+   "from": "great tingler",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "wind spirit": {
+   "from": "wind spirit",
+   "tier": "yellow",
+   "faction": "wood",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "moss maiden": {
+   "from": "moss maiden",
+   "tier": "orange",
+   "faction": "wood",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "green orm": {
+   "from": "green orm",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "sidhe gaoite": {
+   "from": "sidhe gaoite",
+   "tier": "orange",
+   "faction": "sidhe",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "sidhe draoi": {
+   "from": "sidhe draoi",
+   "tier": "red",
+   "faction": "sidhe",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 80
+  },
+  "whispering willow": {
+   "from": "whispering willow",
+   "tier": "orange",
+   "faction": "wood",
+   "aggro": [
+    70,
+    400
+   ],
+   "roam": 20
+  },
+  "elder skogsfru": {
+   "from": "elder skogsfru",
+   "tier": "orange",
+   "faction": "wood",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "dryad blossom": {
+   "from": "dryad blossom",
+   "tier": "yellow",
+   "faction": "dryads",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 150
+  },
+  "dryad greenthumb": {
+   "from": "dryad greenthumb",
+   "tier": "orange",
+   "faction": "dryads",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "treekeep": {
+   "from": "treekeep",
+   "tier": "red",
+   "faction": "dryads",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 60
+  },
+  "young silverscale drake": {
+   "from": "young silverscale drake",
+   "tier": "orange",
+   "faction": "drakes",
+   "guild": "out of Malmohus",
+   "aggro": [
+    75,
+    500
+   ],
+   "roam": 250
+  },
+  "werewolf": {
+   "from": "werewolf",
+   "tier": "yellow",
+   "faction": "wolves",
+   "guild": "Fenrir's Kin",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 300
+  },
+  "werewolf skulker": {
+   "from": "werewolf skulker",
+   "tier": "yellow",
+   "faction": "wolves",
+   "guild": "Fenrir's Kin",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 300
+  },
+  "werewolf guard": {
+   "from": "werewolf guard",
+   "tier": "orange",
+   "faction": "wolves",
+   "guild": "Fenrir's Kin",
+   "aggro": [
+    75,
+    500
+   ],
+   "roam": 150
+  },
+  "werewolf warder": {
+   "from": "werewolf warder",
+   "tier": "orange",
+   "faction": "wolves",
+   "guild": "Fenrir's Kin",
+   "aggro": [
+    75,
+    500
+   ],
+   "roam": 150
+  },
+  "wolfaur headsman": {
+   "from": "wolfaur headsman",
+   "tier": "orange",
+   "faction": "wolves",
+   "guild": "Fenrir's Kin",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 300
+  },
+  "werewolf lieutenant": {
+   "from": "werewolf lieutenant",
+   "tier": "red",
+   "faction": "wolves",
+   "guild": "Fenrir's Kin",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 100
+  },
+  "Hold-Warden Vargbjorn": {
+   "from": "werewolf captain",
+   "tier": "red",
+   "name": "Hold-Warden Vargbjorn",
+   "size": 1.2,
+   "faction": "wolves",
+   "guild": "Warden of Ulfhamr",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 40,
+   "guards": {
+    "werewolf guard": 2
+   }
+  }
+ },
+ "sites": [
+  {
+   "id": "stor_gothi_camp",
+   "kind": "clear",
+   "at": [
+    24160,
+    23200
+   ],
+   "r": 2800,
+   "names": [
+    "wood rat",
+    "brush cat",
+    "tree spirit",
+    "woodland badger",
+    "timberland badger",
+    "timber cat",
+    "battle-scarred mauler",
+    "young wolverine",
+    "callow wolverine",
+    "wolverine",
+    "giant tree frog",
+    "great tingler",
+    "wind spirit",
+    "moss maiden",
+    "green orm",
+    "sidhe gaoite",
+    "sidhe draoi",
+    "whispering willow",
+    "elder skogsfru",
+    "dryad blossom",
+    "dryad greenthumb",
+    "treekeep",
+    "young silverscale drake",
+    "werewolf",
+    "werewolf skulker",
+    "werewolf guard",
+    "werewolf warder",
+    "wolfaur headsman",
+    "werewolf lieutenant",
+    "Hold-Warden Vargbjorn",
+    "seithkona"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "tradande_camp",
+   "kind": "clear",
+   "at": [
+    47000,
+    32200
+   ],
+   "r": 2400,
+   "names": [
+    "wood rat",
+    "brush cat",
+    "tree spirit",
+    "woodland badger",
+    "timberland badger",
+    "timber cat",
+    "battle-scarred mauler",
+    "young wolverine",
+    "callow wolverine",
+    "wolverine",
+    "giant tree frog",
+    "great tingler",
+    "wind spirit",
+    "moss maiden",
+    "green orm",
+    "sidhe gaoite",
+    "sidhe draoi",
+    "whispering willow",
+    "elder skogsfru",
+    "dryad blossom",
+    "dryad greenthumb",
+    "treekeep",
+    "young silverscale drake",
+    "werewolf",
+    "werewolf skulker",
+    "werewolf guard",
+    "werewolf warder",
+    "wolfaur headsman",
+    "werewolf lieutenant",
+    "Hold-Warden Vargbjorn",
+    "seithkona"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "seithkona_circle",
+   "kind": "clear",
+   "at": [
+    54520,
+    10240
+   ],
+   "r": 3200,
+   "names": [
+    "wood rat",
+    "brush cat",
+    "tree spirit",
+    "woodland badger",
+    "timberland badger",
+    "timber cat",
+    "battle-scarred mauler",
+    "young wolverine",
+    "callow wolverine",
+    "wolverine",
+    "giant tree frog",
+    "great tingler",
+    "wind spirit",
+    "moss maiden",
+    "green orm",
+    "sidhe gaoite",
+    "sidhe draoi",
+    "whispering willow",
+    "elder skogsfru",
+    "dryad blossom",
+    "dryad greenthumb",
+    "treekeep",
+    "young silverscale drake",
+    "werewolf",
+    "werewolf skulker",
+    "werewolf guard",
+    "werewolf warder",
+    "wolfaur headsman",
+    "werewolf lieutenant",
+    "Hold-Warden Vargbjorn",
+    "seithkona"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "bard_rest",
+   "kind": "clear",
+   "at": [
+    25280,
+    49120
+   ],
+   "r": 1400,
+   "names": [
+    "wood rat",
+    "brush cat",
+    "tree spirit",
+    "woodland badger",
+    "timberland badger",
+    "timber cat",
+    "battle-scarred mauler",
+    "young wolverine",
+    "callow wolverine",
+    "wolverine",
+    "giant tree frog",
+    "great tingler",
+    "wind spirit",
+    "moss maiden",
+    "green orm",
+    "sidhe gaoite",
+    "sidhe draoi",
+    "whispering willow",
+    "elder skogsfru",
+    "dryad blossom",
+    "dryad greenthumb",
+    "treekeep",
+    "young silverscale drake",
+    "werewolf",
+    "werewolf skulker",
+    "werewolf guard",
+    "werewolf warder",
+    "wolfaur headsman",
+    "werewolf lieutenant",
+    "Hold-Warden Vargbjorn",
+    "seithkona"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "thorvald_rest",
+   "kind": "clear",
+   "at": [
+    6480,
+    44000
+   ],
+   "r": 1400,
+   "names": [
+    "wood rat",
+    "brush cat",
+    "tree spirit",
+    "woodland badger",
+    "timberland badger",
+    "timber cat",
+    "battle-scarred mauler",
+    "young wolverine",
+    "callow wolverine",
+    "wolverine",
+    "giant tree frog",
+    "great tingler",
+    "wind spirit",
+    "moss maiden",
+    "green orm",
+    "sidhe gaoite",
+    "sidhe draoi",
+    "whispering willow",
+    "elder skogsfru",
+    "dryad blossom",
+    "dryad greenthumb",
+    "treekeep",
+    "young silverscale drake",
+    "werewolf",
+    "werewolf skulker",
+    "werewolf guard",
+    "werewolf warder",
+    "wolfaur headsman",
+    "werewolf lieutenant",
+    "Hold-Warden Vargbjorn",
+    "seithkona"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "north_woods",
+   "kind": "wildlife",
+   "area": [
+    13200,
+    3200,
+    48800,
+    21600
+   ],
+   "spawn": {
+    "wood rat": 34,
+    "brush cat": 34,
+    "werewolf skulker": 26,
+    "tree spirit": 22,
+    "young wolverine": 17
+   },
+   "spacing": 260
+  },
+  {
+   "id": "frog_meadows",
+   "kind": "wildlife",
+   "area": [
+    37600,
+    3600,
+    60800,
+    22400
+   ],
+   "spawn": {
+    "giant tree frog": 34,
+    "great tingler": 17,
+    "brush cat": 17
+   },
+   "spacing": 260
+  },
+  {
+   "id": "wind_heights",
+   "kind": "wildlife",
+   "area": [
+    48000,
+    22400,
+    60000,
+    41600
+   ],
+   "spawn": {
+    "wind spirit": 34,
+    "young wolverine": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "east_edge",
+   "kind": "wildlife",
+   "area": [
+    60000,
+    14800,
+    64800,
+    27200
+   ],
+   "spawn": {
+    "werewolf": 22
+   },
+   "spacing": 260
+  },
+  {
+   "id": "werewolf_lands",
+   "kind": "wildlife",
+   "area": [
+    22400,
+    24000,
+    46000,
+    38400
+   ],
+   "spawn": {
+    "werewolf guard": 26,
+    "werewolf warder": 26,
+    "wolfaur headsman": 17,
+    "callow wolverine": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ulfhamr",
+   "kind": "camp",
+   "at": [
+    36800,
+    28800
+   ],
+   "r": 640,
+   "respawn": 900,
+   "spawn": {
+    "Hold-Warden Vargbjorn": 1,
+    "werewolf lieutenant": 2,
+    "werewolf warder": 3
+   }
+  },
+  {
+   "id": "ulfhamr_yard",
+   "kind": "camp",
+   "at": [
+    34400,
+    32000
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "werewolf guard": 4,
+    "wolfaur headsman": 2
+   }
+  },
+  {
+   "id": "headsmen_hunt",
+   "kind": "wildlife",
+   "area": [
+    26400,
+    38400,
+    52000,
+    60000
+   ],
+   "spawn": {
+    "wolfaur headsman": 26,
+    "moss maiden": 26,
+    "woodland badger": 26,
+    "wolverine": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "timberland",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    15200,
+    25600,
+    48800
+   ],
+   "spawn": {
+    "timber cat": 34,
+    "timberland badger": 34,
+    "battle-scarred mauler": 17
+   },
+   "spacing": 260
+  },
+  {
+   "id": "west_shore",
+   "kind": "wildlife",
+   "area": [
+    3200,
+    7600,
+    10000,
+    53200
+   ],
+   "spawn": {
+    "green orm": 34
+   },
+   "spacing": 260
+  },
+  {
+   "id": "sidhe_strand",
+   "kind": "wildlife",
+   "area": [
+    3600,
+    33600,
+    10400,
+    55600
+   ],
+   "spawn": {
+    "sidhe gaoite": 26
+   },
+   "spacing": 260
+  },
+  {
+   "id": "sidhe_ring",
+   "kind": "camp",
+   "at": [
+    6600,
+    46000
+   ],
+   "r": 400,
+   "respawn": 900,
+   "spawn": {
+    "sidhe draoi": 2,
+    "sidhe gaoite": 2
+   }
+  },
+  {
+   "id": "whispering_grove",
+   "kind": "wildlife",
+   "area": [
+    2000,
+    49200,
+    24800,
+    63200
+   ],
+   "spawn": {
+    "whispering willow": 26,
+    "elder skogsfru": 26
+   },
+   "spacing": 260
+  },
+  {
+   "id": "dryad_wood",
+   "kind": "wildlife",
+   "area": [
+    52800,
+    42000,
+    62800,
+    62000
+   ],
+   "spawn": {
+    "dryad blossom": 26,
+    "dryad greenthumb": 17
+   },
+   "spacing": 260
+  },
+  {
+   "id": "treekeep_grove",
+   "kind": "camp",
+   "at": [
+    58000,
+    60000
+   ],
+   "r": 480,
+   "respawn": 900,
+   "spawn": {
+    "treekeep": 2,
+    "dryad greenthumb": 2
+   }
+  },
+  {
+   "id": "drake_trail",
+   "kind": "wildlife",
+   "area": [
+    52000,
+    46000,
+    62400,
+    56000
+   ],
+   "spawn": {
+    "young silverscale drake": 17
+   },
+   "spacing": 260
+  }
+ ]
+}

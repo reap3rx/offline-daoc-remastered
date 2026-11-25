@@ -1,0 +1,739 @@
+{
+ "zone": 105,
+ "name": "Myrkwood Forest",
+ "rating": "deadly",
+ "themes": [
+  "Galplen (the HARD START) and Gna Faste",
+  "The willow-wood and the volva's hut (west of Galplen)",
+  "The tinglers and the arachite nest (west)",
+  "The werewolves of the west wood and Ulfhedinn Grimolf",
+  "The troll barrows and the worg run (middle)",
+  "The mora of the south",
+  "The missionaries' camp with the svartalf (south-east)"
+ ],
+ "notes": "Midgard's plan 2026-11-24, round 2: Deadly - the HARD START at Galplen; the threads cross (werewolves and drakulv both hunt the volva). Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Tingler Webmother": "purple",
+  "Baron Falwur": "red",
+  "Anakol": "red",
+  "Noble Werewolf Alina": "red",
+  "Priest Thaxtix": "red",
+  "Priestess Araxia": "red",
+  "Great Worg": "red",
+  "Haglion's minion": "orange",
+  "minion of Haglion": "orange",
+  "Sorrow": "red"
+ },
+ "factions": {
+  "willows": {
+   "id": 9651,
+   "aggro": 70
+  },
+  "tinglers": {
+   "id": 9652,
+   "aggro": 80
+  },
+  "arachite": {
+   "id": 9653,
+   "aggro": 85
+  },
+  "dead": {
+   "id": 9654,
+   "aggro": 85
+  },
+  "trolls": {
+   "id": 9655,
+   "aggro": 85
+  },
+  "mora": {
+   "id": 9656,
+   "aggro": 85
+  },
+  "wolves": {
+   "id": 9657,
+   "aggro": 90
+  },
+  "drakulv": {
+   "id": 9658,
+   "aggro": 90
+  }
+ },
+ "members": {
+  "myrkcat": {
+   "from": "myrkcat",
+   "tier": "yellow",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 300
+  },
+  "giant bull frog": {
+   "from": "giant bull frog",
+   "tier": "blue",
+   "roam": 200
+  },
+  "carrion eater": {
+   "from": "carrion eater",
+   "tier": "yellow",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "hog-nose slither": {
+   "from": "hog-nose slither",
+   "tier": "orange",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "venomspitter": {
+   "from": "venomspitter",
+   "tier": "orange",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "weeping willow": {
+   "from": "weeping willow",
+   "tier": "orange",
+   "faction": "willows",
+   "aggro": [
+    70,
+    400
+   ],
+   "roam": 20
+  },
+  "shrieking willow": {
+   "from": "shrieking willow",
+   "tier": "red",
+   "faction": "willows",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 20
+  },
+  "tingler": {
+   "from": "tingler",
+   "tier": "orange",
+   "faction": "tinglers",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "great tingler": {
+   "from": "great tingler",
+   "tier": "red",
+   "faction": "tinglers",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 150
+  },
+  "arachite greensilk": {
+   "from": "arachite greensilk",
+   "tier": "orange",
+   "faction": "arachite",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "arachite shadowslinker": {
+   "from": "arachite shadowslinker",
+   "tier": "orange",
+   "faction": "arachite",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "arachite weblasher": {
+   "from": "arachite weblasher",
+   "tier": "orange",
+   "faction": "arachite",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "arachite priest": {
+   "from": "arachite priest",
+   "tier": "red",
+   "faction": "arachite",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 80
+  },
+  "death spider": {
+   "from": "death spider",
+   "tier": "red",
+   "faction": "arachite",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 150
+  },
+  "haunt": {
+   "from": "haunt",
+   "tier": "orange",
+   "faction": "dead",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "myrk shadow": {
+   "from": "myrk shadow",
+   "tier": "orange",
+   "faction": "dead",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "undead woodcarver": {
+   "from": "undead woodcarver",
+   "tier": "orange",
+   "faction": "dead",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "undead explorer": {
+   "from": "undead explorer",
+   "tier": "yellow",
+   "faction": "dead",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "brittle skeleton": {
+   "from": "brittle skeleton",
+   "tier": "yellow",
+   "faction": "dead",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 150
+  },
+  "decaying norseman": {
+   "from": "decaying norseman",
+   "tier": "orange",
+   "faction": "dead",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "decaying troll": {
+   "from": "decaying troll",
+   "tier": "red",
+   "faction": "trolls",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 150
+  },
+  "corpse eater": {
+   "from": "corpse eater",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "mora dancer": {
+   "from": "mora dancer",
+   "tier": "orange",
+   "faction": "mora",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "mora rider": {
+   "from": "mora rider",
+   "tier": "red",
+   "faction": "mora",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 300
+  },
+  "dark hound": {
+   "from": "dark hound",
+   "tier": "orange",
+   "faction": "mora",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 350
+  },
+  "soul sinker": {
+   "from": "soul sinker",
+   "tier": "orange",
+   "faction": "mora",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "gray worg": {
+   "from": "gray worg",
+   "tier": "orange",
+   "faction": "wolves",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 350
+  },
+  "ridgeback worg": {
+   "from": "ridgeback worg",
+   "tier": "red",
+   "faction": "wolves",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 350
+  },
+  "werewolf": {
+   "from": "werewolf",
+   "tier": "red",
+   "faction": "wolves",
+   "guild": "Fenrir's Kin",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 250
+  },
+  "minor werewolf noble": {
+   "from": "minor werewolf noble",
+   "tier": "red",
+   "faction": "wolves",
+   "guild": "Fenrir's Kin",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 150
+  },
+  "svartalf watcher": {
+   "from": "svartalf watcher",
+   "tier": "orange",
+   "faction": "drakulv",
+   "guild": "the Scale-Traders",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 150
+  },
+  "svartalf predator": {
+   "from": "svartalf predator",
+   "tier": "red",
+   "faction": "drakulv",
+   "guild": "the Scale-Traders",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 200
+  },
+  "svartalf sorcerer": {
+   "from": "svartalf sorcerer",
+   "tier": "red",
+   "faction": "drakulv",
+   "guild": "the Scale-Traders",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 100
+  },
+  "dragon-preacher": {
+   "from": "drakulv missionary",
+   "tier": "red",
+   "name": "dragon-preacher",
+   "faction": "drakulv",
+   "guild": "Gjalpinulva's Missionaries",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 80
+  },
+  "Wyrm-Deacon Bersi": {
+   "from": "drakulv missionary",
+   "tier": "purple",
+   "name": "Wyrm-Deacon Bersi",
+   "size": 1.25,
+   "faction": "drakulv",
+   "guild": "First of the Missionaries",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 40,
+   "guards": {
+    "svartalf sorcerer": 1,
+    "dragon-preacher": 1
+   }
+  },
+  "Ulfhedinn Grimolf": {
+   "from": "werewolf",
+   "tier": "purple",
+   "name": "Ulfhedinn Grimolf",
+   "size": 1.35,
+   "faction": "wolves",
+   "guild": "Lord of the West Wood",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 60,
+   "guards": {
+    "werewolf": 2
+   }
+  }
+ },
+ "sites": [
+  {
+   "id": "galplen",
+   "kind": "clear",
+   "at": [
+    43640,
+    25080
+   ],
+   "r": 4800,
+   "names": [
+    "myrkcat",
+    "giant bull frog",
+    "hog-nose slither",
+    "weeping willow",
+    "tingler",
+    "haunt",
+    "carrion eater"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "gna_faste",
+   "kind": "clear",
+   "at": [
+    34200,
+    36480
+   ],
+   "r": 2800,
+   "names": [
+    "myrkcat",
+    "giant bull frog",
+    "hog-nose slither",
+    "weeping willow",
+    "tingler",
+    "haunt",
+    "carrion eater"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "volva_hut",
+   "kind": "clear",
+   "at": [
+    24800,
+    20800
+   ],
+   "r": 1600,
+   "names": [
+    "myrkcat",
+    "giant bull frog",
+    "hog-nose slither",
+    "weeping willow",
+    "tingler",
+    "haunt",
+    "carrion eater"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "galplen_outskirts",
+   "kind": "wildlife",
+   "area": [
+    37200,
+    16800,
+    53200,
+    30400
+   ],
+   "spawn": {
+    "myrkcat": 29,
+    "giant bull frog": 29,
+    "carrion eater": 22
+   },
+   "spacing": 260
+  },
+  {
+   "id": "eastern_marsh",
+   "kind": "wildlife",
+   "area": [
+    54400,
+    19200,
+    64000,
+    36000
+   ],
+   "spawn": {
+    "hog-nose slither": 22,
+    "venomspitter": 14
+   },
+   "spacing": 260
+  },
+  {
+   "id": "willow_wood",
+   "kind": "wildlife",
+   "area": [
+    15600,
+    14400,
+    35200,
+    36000
+   ],
+   "spawn": {
+    "weeping willow": 65,
+    "haunt": 29
+   },
+   "spacing": 260
+  },
+  {
+   "id": "north_ridge",
+   "kind": "wildlife",
+   "area": [
+    13200,
+    1600,
+    58000,
+    12000
+   ],
+   "spawn": {
+    "haunt": 29,
+    "arachite greensilk": 29,
+    "undead woodcarver": 22
+   },
+   "spacing": 260
+  },
+  {
+   "id": "dead_hills",
+   "kind": "wildlife",
+   "area": [
+    40000,
+    9200,
+    64000,
+    16800
+   ],
+   "spawn": {
+    "undead woodcarver": 29,
+    "brittle skeleton": 22,
+    "undead explorer": 22,
+    "corpse eater": 14
+   },
+   "spacing": 260
+  },
+  {
+   "id": "tingler_hollows",
+   "kind": "wildlife",
+   "area": [
+    2800,
+    16800,
+    26400,
+    35200
+   ],
+   "spawn": {
+    "tingler": 36,
+    "great tingler": 14
+   },
+   "spacing": 260
+  },
+  {
+   "id": "arachite_nest",
+   "kind": "camp",
+   "at": [
+    10400,
+    22400
+   ],
+   "r": 560,
+   "respawn": 600,
+   "spawn": {
+    "arachite priest": 2,
+    "arachite weblasher": 3,
+    "arachite shadowslinker": 3
+   }
+  },
+  {
+   "id": "arachite_west",
+   "kind": "wildlife",
+   "area": [
+    2800,
+    17600,
+    18000,
+    28800
+   ],
+   "spawn": {
+    "arachite shadowslinker": 22,
+    "arachite weblasher": 14,
+    "death spider": 11
+   },
+   "spacing": 260
+  },
+  {
+   "id": "worg_run",
+   "kind": "wildlife",
+   "area": [
+    23600,
+    34000,
+    36000,
+    46400
+   ],
+   "spawn": {
+    "gray worg": 29,
+    "ridgeback worg": 14
+   },
+   "spacing": 260
+  },
+  {
+   "id": "werewolf_wood",
+   "kind": "wildlife",
+   "area": [
+    8000,
+    38000,
+    22800,
+    48000
+   ],
+   "spawn": {
+    "werewolf": 22,
+    "minor werewolf noble": 11,
+    "gray worg": 14
+   },
+   "spacing": 260
+  },
+  {
+   "id": "werewolf_lord",
+   "kind": "camp",
+   "at": [
+    15200,
+    43600
+   ],
+   "r": 480,
+   "respawn": 1200,
+   "spawn": {
+    "Ulfhedinn Grimolf": 1
+   }
+  },
+  {
+   "id": "troll_barrows",
+   "kind": "wildlife",
+   "area": [
+    29600,
+    35200,
+    60800,
+    55600
+   ],
+   "spawn": {
+    "decaying troll": 22,
+    "decaying norseman": 18,
+    "myrk shadow": 29,
+    "venomspitter": 14
+   },
+   "spacing": 260
+  },
+  {
+   "id": "mora_south",
+   "kind": "wildlife",
+   "area": [
+    26400,
+    47600,
+    51200,
+    62400
+   ],
+   "spawn": {
+    "mora dancer": 36,
+    "mora rider": 18,
+    "dark hound": 22,
+    "soul sinker": 18
+   },
+   "spacing": 260
+  },
+  {
+   "id": "shrieking_grove",
+   "kind": "wildlife",
+   "area": [
+    14400,
+    53600,
+    24000,
+    61200
+   ],
+   "spawn": {
+    "shrieking willow": 22
+   },
+   "spacing": 260
+  },
+  {
+   "id": "svartalf_south",
+   "kind": "wildlife",
+   "area": [
+    37200,
+    50400,
+    62400,
+    56800
+   ],
+   "spawn": {
+    "svartalf watcher": 22,
+    "svartalf predator": 7
+   },
+   "spacing": 260
+  },
+  {
+   "id": "missionary_camp",
+   "kind": "camp",
+   "at": [
+    44000,
+    52800
+   ],
+   "r": 480,
+   "respawn": 1200,
+   "spawn": {
+    "Wyrm-Deacon Bersi": 1,
+    "svartalf watcher": 3
+   }
+  }
+ ]
+}

@@ -1,0 +1,138 @@
+{
+ "zone": 102,
+ "region": 100,
+ "realm": 2,
+ "prefix": "uf102",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blood-Hall Breaker's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 19,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 19,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Huginfel red, a broken chain on the back. Given to those who broke the Blood-Hall."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cut-Chain Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 19,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 16
+   },
+   "lore": "A link of thrall-chain, cut and hammered round."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shieldwall Boss Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 19,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 16
+   },
+   "lore": "Iron, with a shield-boss clasp."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thrall-Pen Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 19,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 19,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Oak from the thrall-pens, banded in iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hrolf's Oath-Scarred Pelt",
+   "base": [
+    41,
+    26
+   ],
+   "level": 21,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 4,
+    "Hits": 18
+   },
+   "lore": "The jarl's wolf-pelt, cut with his oaths."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Haxa-Mother's Steaming Bowl",
+   "base": [
+    41,
+    24
+   ],
+   "level": 21,
+   "bonuses": {
+    "Pie": 7,
+    "Int": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "The blood in it steams, and never cools."
+  }
+ ],
+ "camp": {
+  "cloak": "uf102_blood_hall_breaker_s_cloak",
+  "emblem": 32000,
+  "draughts": [
+   [
+    "Strong_Draught_of_Healing",
+    "uf102_hall_ale",
+    "Hall Ale",
+    "Unn's own brewing. Better than the Blodfelag ever got."
+   ],
+   [
+    "Strong_Draught_of_Power",
+    "uf102_juniper_draught",
+    "Juniper Draught",
+    "Bitter and clean. It clears the head."
+   ],
+   [
+    "CombinedRegens_Draught",
+    "uf102_freedwoman_s_mead",
+    "Freedwoman's Mead",
+    "Brewed by free hands. Everything comes back a little faster after a cup."
+   ]
+  ]
+ }
+}

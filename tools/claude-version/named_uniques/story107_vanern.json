@@ -162,6 +162,461 @@
     "Hits": 42
    },
    "lore": "Gunnvor's own. Rune-carved and spell-hard."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mud-Crab Shell Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 36,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 36,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Crab-shell plates, lacquered black."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Swamp-Warden's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 36,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 31
+   },
+   "lore": "Bog-iron, the Wardens' raven on it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Viper-Fang Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 38,
+   "bonuses": {
+    "Str": 13,
+    "Con": 13,
+    "Dex": 6,
+    "Hits": 32
+   },
+   "lore": "Two fangs, still faintly wet."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Reed-Walker's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 38,
+   "bonuses": {
+    "Dex": 13,
+    "Qui": 13,
+    "Str": 6,
+    "Hits": 32
+   },
+   "lore": "Woven reeds over leather."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Clay-Jotun Knuckle Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 39,
+   "bonuses": {
+    "Str": 13,
+    "Con": 13,
+    "Dex": 6,
+    "Hits": 33
+   },
+   "lore": "A ring of fired clay, very hard."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pit-Digger's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 39,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 39,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Mud-caked, iron-buckled."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Broken-Chain Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 40,
+   "bonuses": {
+    "Str": 13,
+    "Con": 13,
+    "Dex": 7,
+    "Hits": 34
+   },
+   "lore": "A cut length of hagbui chain, worn as a bracer."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Jotun-Tear Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 40,
+   "bonuses": {
+    "Pie": 13,
+    "Int": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 24
+   },
+   "lore": "A grey stone. They say it's a jotun's tear."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Crippled Giant's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 42,
+   "bonuses": {
+    "Con": 14,
+    "Hits": 42,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "A ring big enough for a thumb. A jotun's little finger, once."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rune-Lifted Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 42,
+   "bonuses": {
+    "Int": 14,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 25
+   },
+   "lore": "Grey, with Gunnvor's runes of unbinding."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Orm-Runner's Whip-Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 42,
+   "bonuses": {
+    "Dex": 14,
+    "Qui": 14,
+    "Str": 7,
+    "Hits": 36
+   },
+   "lore": "A jotun's whip, cut down to a belt."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Enslaved Orm Scale Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 42,
+   "bonuses": {
+    "Con": 14,
+    "Hits": 42,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "A dull green scale, scarred by a harness."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Outcast's Frost-Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 44,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 7,
+    "Hits": 37
+   },
+   "lore": "Iron rimed with frost that never melts."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ice-Hauler's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 44,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 44,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Fur over iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "King's Huscarl Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 44,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 44,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "The King's blue, heavy wool. Gisli's spare."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Spider-Silk Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 43,
+   "bonuses": {
+    "Con": 14,
+    "Hits": 43,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Grey silk, very strong."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rune-Thread Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 43,
+   "bonuses": {
+    "Pie": 14,
+    "Int": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 26
+   },
+   "lore": "Spider-silk wound round a rune-stone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Breaker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 41,
+   "bonuses": {
+    "Int": 14,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 25
+   },
+   "lore": "Silver, against the dead."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Berserker-Bane Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 41,
+   "bonuses": {
+    "Str": 14,
+    "Con": 14,
+    "Dex": 7,
+    "Hits": 35
+   },
+   "lore": "Heavy leather, iron-studded."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Spiritmaster's Bone Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 43,
+   "bonuses": {
+    "Pie": 14,
+    "Int": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 26
+   },
+   "lore": "A finger-bone, wound with rune-thread."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Ward Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 43,
+   "bonuses": {
+    "Int": 14,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 26
+   },
+   "lore": "Rowan and silver, against the dead."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Runemaster's Black Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 46,
+   "bonuses": {
+    "Pie": 15,
+    "Int": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "Black iron, cold, carved with barrow-runes - now broken."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hrafnsholm Warden's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 46,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 46,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "The Wardens' raven, black on grey."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thane-Breaker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 46,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 39
+   },
+   "lore": "A hagbui thane's ring, the runes ground off."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Watch-Hold Scout's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 45,
+   "bonuses": {
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 8,
+    "Hits": 38
+   },
+   "lore": "Bog-iron, the Wardens' raven."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wardens' Oath-Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 45,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 45,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "The Wardens' belt, given to those who stand with them."
   }
  ]
 }

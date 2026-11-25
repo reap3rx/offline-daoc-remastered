@@ -1,0 +1,630 @@
+{
+ "zone": 100,
+ "name": "Vale of Mularn",
+ "rating": "peaceful",
+ "themes": [
+  "Mularn, Haggerfel and the Jordheim road (quiet)",
+  "The huldu woods (west, the hidden folk)",
+  "The wood-eater hive (south)",
+  "Darkness Falls and the hound ridge (the wolves' first sign)",
+  "The Vendo Caverns (north: a dragon-preacher at the mouth)",
+  "The middle hills and the lake"
+ ],
+ "notes": "Midgard's plan 2026-11-24, round 1: Peaceful - the hub; both threads' first signs (the hounds at Darkness Falls, the dragon-preacher at the Vendo Caverns). Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Vasa": "blue",
+  "Gors": "blue",
+  "Rasczel": "yellow",
+  "Vrede": "yellow"
+ },
+ "factions": {
+  "goblins": {
+   "id": 9601,
+   "aggro": 40
+  },
+  "dead": {
+   "id": 9602,
+   "aggro": 60
+  },
+  "hillfolk": {
+   "id": 9603,
+   "aggro": 50
+  },
+  "hive": {
+   "id": 9604,
+   "aggro": 50
+  },
+  "huldu": {
+   "id": 9605,
+   "aggro": 50
+  },
+  "hounds": {
+   "id": 9606,
+   "aggro": 80
+  },
+  "vendo": {
+   "id": 9607,
+   "aggro": 70
+  }
+ },
+ "members": {
+  "small hill cat": {
+   "from": "small hill cat",
+   "tier": "green",
+   "roam": 300
+  },
+  "hill cat": {
+   "from": "hill cat",
+   "tier": "blue",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 300
+  },
+  "little water goblin": {
+   "from": "little water goblin",
+   "tier": "green",
+   "faction": "goblins",
+   "roam": 200
+  },
+  "hobgoblin prankster": {
+   "from": "hobgoblin prankster",
+   "tier": "green",
+   "faction": "goblins",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 250
+  },
+  "hobgoblin snake-finder": {
+   "from": "hobgoblin snake-finder",
+   "tier": "green",
+   "faction": "goblins",
+   "roam": 250
+  },
+  "mud snake": {
+   "from": "mud snake",
+   "tier": "green",
+   "roam": 200
+  },
+  "vein spiderling": {
+   "from": "vein spiderling",
+   "tier": "green",
+   "roam": 200
+  },
+  "vein spider": {
+   "from": "vein spider",
+   "tier": "blue",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 200
+  },
+  "wild hog": {
+   "from": "wild hog",
+   "tier": "green",
+   "roam": 300
+  },
+  "young lynx": {
+   "from": "young lynx",
+   "tier": "blue",
+   "roam": 300
+  },
+  "black mauler cub": {
+   "from": "black mauler cub",
+   "tier": "green",
+   "roam": 250
+  },
+  "meandering spirit": {
+   "from": "meandering spirit",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 200
+  },
+  "hill person": {
+   "from": "hill person",
+   "tier": "blue",
+   "faction": "hillfolk",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "young grendelorm": {
+   "from": "young grendelorm",
+   "tier": "blue",
+   "roam": 200
+  },
+  "wood-eater": {
+   "from": "wood-eater",
+   "tier": "green",
+   "faction": "hive",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 200
+  },
+  "wood-eater alate": {
+   "from": "wood-eater alate",
+   "tier": "blue",
+   "faction": "hive",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "wood-eater soldier": {
+   "from": "wood-eater soldier",
+   "tier": "blue",
+   "faction": "hive",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 150
+  },
+  "wood-eater worker": {
+   "from": "wood-eater worker",
+   "tier": "green",
+   "faction": "hive",
+   "roam": 150
+  },
+  "wood-eater hunter": {
+   "from": "wood-eater hunter",
+   "tier": "blue",
+   "faction": "hive",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "wood-eater royal guard": {
+   "from": "wood-eater royal guard",
+   "tier": "yellow",
+   "faction": "hive",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 60
+  },
+  "wood-eater king": {
+   "from": "wood-eater king",
+   "tier": "yellow",
+   "faction": "hive",
+   "aggro": [
+    60,
+    400
+   ],
+   "size": 1.2,
+   "roam": 40,
+   "guards": {
+    "wood-eater royal guard": 2
+   }
+  },
+  "huldu stalker": {
+   "from": "huldu stalker",
+   "tier": "blue",
+   "faction": "huldu",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "huldu hunter": {
+   "from": "huldu hunter",
+   "tier": "blue",
+   "faction": "huldu",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "huldu lurker": {
+   "from": "huldu lurker",
+   "tier": "green",
+   "faction": "huldu",
+   "roam": 200
+  },
+  "huldu outcast": {
+   "from": "huldu outcast",
+   "tier": "green",
+   "faction": "huldu",
+   "roam": 200
+  },
+  "phantom hound": {
+   "from": "phantom hound",
+   "tier": "blue",
+   "faction": "hounds",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 350
+  },
+  "rabid wolfhound": {
+   "from": "rabid wolfhound",
+   "tier": "yellow",
+   "faction": "hounds",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 400
+  },
+  "vendo warrior": {
+   "from": "vendo warrior",
+   "tier": "blue",
+   "faction": "vendo",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "vendo shaman": {
+   "from": "vendo shaman",
+   "tier": "blue",
+   "faction": "vendo",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 150
+  },
+  "vendo bone-collector": {
+   "from": "vendo bone-collector",
+   "tier": "blue",
+   "faction": "vendo",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "vendo stalker": {
+   "from": "vendo stalker",
+   "tier": "yellow",
+   "faction": "vendo",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 250
+  },
+  "vendo flayer": {
+   "from": "vendo flayer",
+   "tier": "yellow",
+   "faction": "vendo",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 100
+  },
+  "hobyah": {
+   "from": "hobyah",
+   "tier": "blue",
+   "faction": "vendo",
+   "aggro": [
+    40,
+    400
+   ],
+   "roam": 250
+  },
+  "dragon-preacher": {
+   "from": "drakulv missionary",
+   "tier": "yellow",
+   "name": "dragon-preacher",
+   "faction": "vendo",
+   "guild": "Gjalpinulva's Missionaries",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 60,
+   "guards": {
+    "vendo flayer": 1
+   }
+  }
+ },
+ "sites": [
+  {
+   "id": "mularn",
+   "kind": "clear",
+   "at": [
+    49800,
+    52800
+   ],
+   "r": 4800,
+   "names": [
+    "small hill cat",
+    "hill cat",
+    "hobgoblin prankster",
+    "little water goblin",
+    "mud snake",
+    "vein spiderling",
+    "wild hog"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "haggerfel",
+   "kind": "clear",
+   "at": [
+    52000,
+    30000
+   ],
+   "r": 4400,
+   "names": [
+    "small hill cat",
+    "hill cat",
+    "hobgoblin prankster",
+    "little water goblin",
+    "mud snake",
+    "vein spiderling",
+    "wild hog"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "fort_veldon",
+   "kind": "clear",
+   "at": [
+    46200,
+    6800
+   ],
+   "r": 4000,
+   "names": [
+    "small hill cat",
+    "hill cat",
+    "hobgoblin prankster",
+    "little water goblin",
+    "mud snake",
+    "vein spiderling",
+    "wild hog"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "jordheim_gate",
+   "kind": "clear",
+   "at": [
+    49200,
+    60000
+   ],
+   "r": 2800,
+   "names": [
+    "small hill cat",
+    "hill cat",
+    "hobgoblin prankster",
+    "little water goblin",
+    "mud snake",
+    "vein spiderling",
+    "wild hog"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "mularn_meadows",
+   "kind": "wildlife",
+   "area": [
+    36000,
+    38000,
+    60000,
+    58400
+   ],
+   "spawn": {
+    "small hill cat": 49,
+    "hobgoblin prankster": 35,
+    "little water goblin": 28,
+    "mud snake": 21,
+    "vein spiderling": 21,
+    "hobgoblin snake-finder": 14
+   },
+   "spacing": 260
+  },
+  {
+   "id": "haggerfel_fields",
+   "kind": "wildlife",
+   "area": [
+    38000,
+    16800,
+    60000,
+    38000
+   ],
+   "spawn": {
+    "wild hog": 28,
+    "young lynx": 28,
+    "black mauler cub": 21,
+    "hobgoblin snake-finder": 21,
+    "meandering spirit": 14,
+    "small hill cat": 21
+   },
+   "spacing": 260
+  },
+  {
+   "id": "wood_eater_reach",
+   "kind": "wildlife",
+   "area": [
+    28000,
+    42000,
+    44000,
+    58400
+   ],
+   "spawn": {
+    "wood-eater": 42,
+    "wood-eater alate": 14,
+    "wood-eater hunter": 10
+   },
+   "spacing": 260
+  },
+  {
+   "id": "wood_eater_hive",
+   "kind": "camp",
+   "at": [
+    34400,
+    50400
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "wood-eater soldier": 4,
+    "wood-eater worker": 5
+   }
+  },
+  {
+   "id": "hive_throne",
+   "kind": "camp",
+   "at": [
+    31200,
+    48800
+   ],
+   "r": 360,
+   "respawn": 900,
+   "spawn": {
+    "wood-eater king": 1
+   }
+  },
+  {
+   "id": "huldu_woods",
+   "kind": "wildlife",
+   "area": [
+    6000,
+    32000,
+    26000,
+    54000
+   ],
+   "spawn": {
+    "huldu stalker": 35,
+    "huldu hunter": 35,
+    "huldu lurker": 21,
+    "huldu outcast": 14
+   },
+   "spacing": 260
+  },
+  {
+   "id": "huldu_ring",
+   "kind": "camp",
+   "at": [
+    10800,
+    37200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "huldu stalker": 3,
+    "huldu hunter": 2
+   }
+  },
+  {
+   "id": "middle_hills",
+   "kind": "wildlife",
+   "area": [
+    14000,
+    14000,
+    38000,
+    38000
+   ],
+   "spawn": {
+    "hill person": 42,
+    "small hill cat": 28,
+    "vein spider": 28,
+    "young grendelorm": 35,
+    "hill cat": 21
+   },
+   "spacing": 260
+  },
+  {
+   "id": "hound_ridge",
+   "kind": "wildlife",
+   "area": [
+    24000,
+    12000,
+    35200,
+    33600
+   ],
+   "spawn": {
+    "rabid wolfhound": 24,
+    "phantom hound": 21
+   },
+   "spacing": 260
+  },
+  {
+   "id": "darkness_falls",
+   "kind": "camp",
+   "at": [
+    9200,
+    25600
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "phantom hound": 5
+   }
+  },
+  {
+   "id": "vendo_hills",
+   "kind": "wildlife",
+   "area": [
+    18000,
+    8800,
+    42000,
+    28000
+   ],
+   "spawn": {
+    "vendo warrior": 21,
+    "vendo shaman": 21,
+    "vendo bone-collector": 21,
+    "vendo stalker": 10,
+    "hobyah": 18
+   },
+   "spacing": 260
+  },
+  {
+   "id": "vendo_mouth",
+   "kind": "camp",
+   "at": [
+    28000,
+    7000
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "vendo flayer": 2,
+    "vendo shaman": 2,
+    "dragon-preacher": 1
+   }
+  },
+  {
+   "id": "lake_shore",
+   "kind": "wildlife",
+   "area": [
+    6000,
+    6000,
+    24000,
+    24800
+   ],
+   "spawn": {
+    "young grendelorm": 21,
+    "little water goblin": 21,
+    "mud snake": 14
+   },
+   "spacing": 260
+  }
+ ]
+}

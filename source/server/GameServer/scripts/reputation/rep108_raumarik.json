@@ -1,0 +1,160 @@
+{
+ "zone": 108,
+ "name": "Raumarik",
+ "levels": [
+  44,
+  54
+ ],
+ "realm": 2,
+ "factions": [
+  {
+   "key": "kings_host",
+   "name": "King Eirik's Host",
+   "short": "the Host",
+   "kin": [
+    "eiriks_huscarls",
+    "steading_league",
+    "huginfel_shieldwall",
+    "galplen_woodwards",
+    "khizil_forge",
+    "wolfsbane_rangers",
+    "vanern_wardens"
+   ],
+   "titles": [
+    "Host-Friend",
+    "Moon-Warden",
+    "Breaker of Hati"
+   ],
+   "speaker": "rk_steinar",
+   "town": "the trappers' camp",
+   "kills": [
+    "fenrir",
+    "winterwolf",
+    "winter wolf",
+    "wraith",
+    "wight",
+    "lich",
+    "icestrider",
+    "frost bound",
+    "broadleaf",
+    "bounty hunter",
+    "wolverine",
+    "wyvern",
+    "cyclops",
+    "undead"
+   ],
+   "quartermaster": {
+    "name": "Host-Quartermaster Gudrun",
+    "guild": "King Eirik's Host",
+    "model": 168,
+    "anchor": "rk_steinar",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The Host's stores, for those who march with it. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep108_host_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep108_king_s_host_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep108_moon_warden_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep108_frost_iron_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep108_mantle_of_hati_s_breaker",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "shared": [
+  "seithkona_circle"
+ ],
+ "quartermasters": [
+  {
+   "faction": "seithkona_circle",
+   "name": "Seithkona Thordis",
+   "guild": "the Seithkona Circle",
+   "model": 157,
+   "anchor": "rk_ylva",
+   "offset": [
+    4,
+    3
+   ],
+   "greet": "The Circle's gifts, carried north. Same as Skona's. Show me your standing with the Circle.",
+   "stock": [
+    {
+     "item": "rep106_circle_friend_s_charm",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep106_moon_reader_s_ring",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep106_moon_phase_bracer",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep106_wolfsbane_sworn_torc",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep106_mantle_of_the_moon_stone",
+     "rank": "Legend",
+     "price": 150
+    }
+   ]
+  }
+ ],
+ "kill_default": "kings_host",
+ "event_default": "kings_host",
+ "quest_default": "kings_host",
+ "quests": {
+  "red_dagger": "kings_host",
+  "grani": "kings_host",
+  "rk_chillers": "kings_host",
+  "rk_frostweavers": "kings_host",
+  "rk_wraiths": "seithkona_circle",
+  "rk_wights": "seithkona_circle",
+  "rk_winterwolves": "kings_host",
+  "rk_bears": "kings_host",
+  "rk_soldiers": "kings_host",
+  "rk_mystics": "seithkona_circle",
+  "rk_kings_march": "kings_host"
+ },
+ "events": {
+  "rk_cp1_assault": "kings_host",
+  "rk_cp1_counter": "kings_host",
+  "rk_cp2_assault": "kings_host",
+  "rk_cp2_counter": "kings_host",
+  "rk_cp3_assault": "kings_host",
+  "rk_cp3_counter": "kings_host",
+  "rk_cp4_assault": "kings_host",
+  "rk_cp4_counter": "kings_host",
+  "rk_hatis_howe": "kings_host",
+  "raumarik_icestriders": "kings_host",
+  "raumarik_white_wights": "seithkona_circle",
+  "raumarik_frost_bears": "kings_host"
+ }
+}

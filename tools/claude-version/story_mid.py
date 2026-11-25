@@ -6,8 +6,8 @@ M, F = 213, 168
 ZONES = []
 
 # ======================================================================================================== Vale of Mularn
+# (claude 2026-11-24: Vale of Mularn is story_mularn.py now, with the zone's rebuild - these two are kept there by id)
 z = Zone(100, 'Vale of Mularn', 2, 'mid_mularn')
-ZONES.append(z)
 z.npc('sigrun', 'Sigrun Tovesdottir', [1250, 1301], 'f', 6, idle="Hallvard. You haven't seen a big, slow, kind man called Hallvard? No. Of course not.")
 z.npc('grima', 'Old Grima', [1240, 1243], 'f', 20, model=157, idle="The hidden folk are older than the jarls. Older than the gods, some say. Only fools say it loudly.")
 z.npc('hallvard', 'Hallvard', [262, 878], 'm', 7, during=['huldra/hallvard', 'huldra/choose'])
@@ -75,8 +75,8 @@ z.quest('gormr', 'The Houndmaster\'s Law', 12, 'bjarki',
          'spared': {'text': "Take something.", 'items': [it_spring], 'choice': [it_fetish, it_kennel]}})
 
 # ========================================================================================================= East Svealand
+# (claude 2026-11-24: East Svealand is story_east_svealand.py now, with the zone's rebuild - these two are kept there by id)
 z = Zone(101, 'East Svealand', 2, 'mid_east_svealand')
-ZONES.append(z)
 z.npc('gunnhild', 'Gunnhild the Freewoman', [1310, 430], 'f', 10, idle="I wore a collar eleven years. I don't wear anything round my neck now. Not even beads.")
 z.npc('orm_thrallmaster', 'Orm the Thrall-Master', [1066, 203], 'm', 14, idle="A thrall's a thrall. Gods made them so. Ask me about their prices, not their feelings.")
 z.npc('ketil', 'Ketil', [508, 1004], 'm', 6, during=['thrall_price/ketil', 'thrall_price/choose'])
@@ -142,7 +142,7 @@ z.quest('tomte_due', "The Tomte's Due", 11, 'ragna',
 
 # ========================================================================================================= West Svealand
 z = Zone(102, 'West Svealand', 2, 'mid_west_svealand')
-ZONES.append(z)
+# ZONES.append(z)   (rebuilt 2026-11-25 by story_west_svealand.py, "Midgard - the plan" round 2)
 z.npc('asvor', 'Asvor Eyvindsmother', [1388, 1152], 'f', 15, idle="My son swore an oath to wolves. Now the wolves hunt him for breaking it.")
 z.npc('halvdan_scout', 'Halvdan the Scout', [1378, 1132], 'm', 18, idle="The blood-fellowship? Raiders with a creed. Worse than raiders without one.")
 z.npc('eyvind', 'Eyvind Asvorsson', [1172, 1344], 'm', 14, during=['oathbreaker/eyvind', 'oathbreaker/choose'])
@@ -216,7 +216,7 @@ z.quest('wolf_cord', 'The Wolf-Cord', 20, 'gothi_valbrand',
 
 # ================================================================================================================= Gotar
 z = Zone(103, 'Gotar', 2, 'mid_gotar')
-ZONES.append(z)
+# ZONES.append(z)   (rebuilt 2026-11-25 by story_gotar.py, "Midgard - the plan" round 2)
 z.npc('torunn', 'Torunn', [710, 332], 'f', 6, idle="My boy Eilif plays the fiddle. He plays it far too well.")
 z.npc('skald_hrafn', 'Old Skald Hrafn', [720, 300], 'm', 20, model=157, idle="Every tune worth playing was stolen from somewhere. Most of the best from water.")
 z.npc('eilif', 'Eilif', [392, 1248], 'm', 5, size=40, during=['nacken/eilif', 'nacken/tune'])
@@ -286,7 +286,7 @@ z.quest('rune_stave', 'The Stolen Rune-Stave', 14, 'alfdis',
 
 # ============================================================================================================ Muspelheim
 z = Zone(104, 'Muspelheim', 2, 'mid_muspelheim')
-ZONES.append(z)
+# ZONES.append(z)   (rebuilt 2026-11-25 by story_muspelheim.py, "Midgard - the plan" round 3)
 z.npc('dagny', 'Dagny Dagnarsdottir', [1282, 130], 'f', 25, guild='Explorer', idle="My father mapped half of Muspelheim. I mean to map the other half.")
 z.npc('hrafnhild', 'Hrafnhild of the Dverge', [585, 1282], 'f', 28, model=M, size=40, idle="Cold-folk. You smell of snow.")
 z.npc('dagnar', 'Dagnar the Mapmaker', [598, 1294], 'm', 30, model=157, during=['dagnar/dagnar', 'dagnar/maps'])
@@ -356,7 +356,7 @@ z.quest('ragnvald', 'The Lay of Ragnvald', 32, 'sven_ashbeard',
 
 # ======================================================================================================== Myrkwood Forest
 z = Zone(105, 'Myrkwood Forest', 2, 'mid_myrkwood')
-ZONES.append(z)
+# ZONES.append(z)   (rebuilt 2026-11-25 by story_myrkwood.py, "Midgard - the plan" round 2)
 z.npc('ottar', 'Ottar Woodcutter', [1100, 640], 'm', 12, idle="I cut trees. That's all. That's all I ever did.")
 z.npc('sunniva', 'Sunniva', [1112, 646], 'f', 4, size=40, idle="(She opens her mouth, and nothing comes out. Tears roll down her face, silently, and she points west.)")
 z.npc('asgerd', 'Asgerd', [1122, 612], 'f', 16, idle="My husband hasn't slept a night through since winter. Something rides him.")
@@ -419,7 +419,7 @@ z.quest('mora', 'Hoofbeats in the Night', 17, 'asgerd',
 
 # ========================================================================================================== Skona Ravine
 z = Zone(106, 'Skona Ravine', 2, 'mid_skona')
-ZONES.append(z)
+# ZONES.append(z)   (rebuilt 2026-11-25 by story_skona.py, "Midgard - the plan" round 3)
 z.npc('hallgerd', 'Hallgerd Rindasdottir', [1170, 812], 'f', 26, idle="My husband Bard was bitten at the new moon. The full moon's in nine days.")
 z.npc('ulfrun', 'Seithkona Ulfrun', [1182, 796], 'f', 34, idle="Wolfsbane and warder's blood. I've seen it work. Once.")
 z.npc('bard', 'Bard', [632, 1228], 'm', 28, during=['moonbound/bard', 'moonbound/cure'])
@@ -490,7 +490,7 @@ z.quest('sidhe_maps', "The Sidhe's Maps", 34, 'eyvor',
 
 # ========================================================================================================= Vanern Swamp
 z = Zone(107, 'Vanern Swamp', 2, 'mid_vanern')
-ZONES.append(z)
+# ZONES.append(z)   (rebuilt 2026-11-25 by story_vanern.py, "Midgard - the plan" round 3)
 z.npc('thorgunna', 'Thorgunna', [1200, 1150], 'f', 36, idle="My Alf drowned in the swamp four winters ago. He came to my door last night.")
 z.npc('clay_boy', 'the Clay Boy', [702, 942], 'm', 20, size=35, during=['clay_child/boy'])
 z.npc('gunnvor', 'Runemistress Gunnvor', [1210, 1140], 'f', 48, idle="My brother went into the hagbui barrows for a sword. The hagbui keep what goes in.")
@@ -550,7 +550,7 @@ z.quest('barrow_brother', 'The Unburied Thane', 50, 'gunnvor',
 
 # ============================================================================================================== Raumarik
 z = Zone(108, 'Raumarik', 2, 'mid_raumarik')
-ZONES.append(z)
+# ZONES.append(z)   (rebuilt 2026-11-25 by story_raumarik.py, "Midgard - the plan" round 4)
 z.npc('einar_trapper', 'Einar the Trapper', [1100, 902], 'm', 48, model=157, guild="Trapper's Camp", idle="I've trapped this valley forty years. Never caught anything like her.")
 z.npc('sigrid', 'Sigrid', [1106, 906], 'f', 48, guild='Red Dagger', idle="Don't stand between me and the door. Habit.")
 z.npc('hroald', 'Hroald Horse-Breeder', [1094, 896], 'm', 52, guild="Trapper's Camp", idle="Sleipnir's get still run wild in the west. Eight legs, and the gods' own blood.")
@@ -613,7 +613,7 @@ z.quest('grani', "Sleipnir's Get", 54, 'hroald',
 
 # ============================================================================================================== Malmohus
 z = Zone(116, 'Malmohus', 2, 'mid_malmohus')
-ZONES.append(z)
+# ZONES.append(z)   (rebuilt 2026-11-25 by story_malmohus.py, "Midgard - the plan" round 4)
 z.npc('halla', 'Halla Bjornsdottir', [1000, 502], 'f', 40, guild="Hunters' Camp", idle="My brother found a god in Malmohus. A dragon one.")
 z.npc('bjorn_convert', 'Bjorn the Convert', [662, 280], 'm', 36, during=['missionary/bjorn'])
 z.npc('svein_smith', 'Svein Hammerhand', [1006, 494], 'm', 50, guild="Hunters' Camp", idle="Svartalfar forging Norse steel. My steel, near enough.")

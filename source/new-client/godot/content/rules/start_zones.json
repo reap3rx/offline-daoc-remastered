@@ -42,9 +42,33 @@
   "2": [
    {
     "name": "Mularn",
-    "zone": "",
-    "rating": "",
-    "blurb": ""
+    "zone": "Vale of Mularn",
+    "rating": "peaceful",
+    "blurb": "Midgard's first town, in the green vale below Jordheim. Gentle country, and the roads lead everywhere."
+   },
+   {
+    "name": "Audliten",
+    "zone": "East Svealand",
+    "rating": "peaceful",
+    "blurb": "A lakeside town in East Svealand, wolf country. The Steading-League keeps the farms here - and the wolves have grown bold."
+   },
+   {
+    "name": "Huginfel",
+    "zone": "West Svealand",
+    "rating": "wild",
+    "blurb": "A frontier town in West Svealand, held by the Huginfel Shieldwall. To the west the Blodfelag swear blood-oaths to the Wolf's children, and snow falls in summer."
+   },
+   {
+    "name": "Fort Atla",
+    "zone": "Gotar",
+    "rating": "wild",
+    "blurb": "A King's fort on Gotar's north lakes, held by Eirik's Huscarls. South of it the svartalf sell dragon-scale on the trade road."
+   },
+   {
+    "name": "Galplen",
+    "zone": "Myrkwood Forest",
+    "rating": "deadly",
+    "blurb": "HARD START. A woodwards' town in the Myrkwood, a Deadly forest of werewolves and dragon-priests far from Jordheim. Only the town's doorstep is gentle."
    }
   ],
   "3": [

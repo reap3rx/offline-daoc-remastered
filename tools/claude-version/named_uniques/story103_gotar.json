@@ -144,6 +144,516 @@
     "Hits": 12
    },
    "lore": "A troll-flayer's ring, hooked like a skinning knife."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Nipper-Tooth Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 12,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 10
+   },
+   "lore": "A ring of wolf-pup teeth. Fort Atla's soldiers wear them for luck."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lakeshore Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 12,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 10
+   },
+   "lore": "Fish-leather, very supple."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fish-Catcher's Net Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 13,
+   "bonuses": {
+    "Qui": 4,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 8,
+    "Power": 1
+   },
+   "lore": "A knot of hobgoblin net. Lucky, they say."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fort Atla Gate Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 13,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 13,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Iron, the fort's mark on it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wildling's Bone Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "Bone and sinew, wildling-work."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lake-Hunter's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Reed-grey, for lying still by the water."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned Bell Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 14,
+   "bonuses": {
+    "Pie": 5,
+    "Int": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "A ship's bell no bigger than a thumb. It rings by itself at night."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Salt-Stiff Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 14,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 12
+   },
+   "lore": "Cut from the ship's rigging."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Oarsman's Grip Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 16,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "Worn smooth by a dead man's rowing."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ship-Wreck Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 16,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 16,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Green bronze, from the ship's fittings."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Scale-Cargo Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 16,
+   "bonuses": {
+    "Pie": 5,
+    "Int": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "A red scale, hot to the touch, on a ship's chain."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Svartalf Outcast's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 15,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 13
+   },
+   "lore": "Black iron, filed thin."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Trade-Road Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 15,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 15,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Road-dust grey, with deep pockets."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Scale-Trader's Ledger Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 17,
+   "bonuses": {
+    "Pie": 6,
+    "Int": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "A page of the ledger, folded small. The numbers are all in gold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Runecaster's Stave-Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 17,
+   "bonuses": {
+    "Int": 6,
+    "Con": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "A belt hung with little rune-staves."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Preacher's Scale Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 20,
+   "bonuses": {
+    "Pie": 7,
+    "Int": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "Dragon-scale on red cord. It's warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Nalliten Rune-Ward Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 20,
+   "bonuses": {
+    "Int": 7,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "Carved with Runa's ward-runes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Unburnt Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 20,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 20,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "It doesn't scorch, even in the preacher's fire."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wind-Host Feather Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 16,
+   "bonuses": {
+    "Pie": 5,
+    "Int": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "A grey feather that won't lie still."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Earth-Host Stone Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 16,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 16,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "A ring of plain stone, very heavy."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pook-Trick Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 17,
+   "bonuses": {
+    "Qui": 6,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 10,
+    "Power": 2
+   },
+   "lore": "It turns on your finger when you're not looking."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Coast-Walker's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 17,
+   "bonuses": {
+    "Dex": 6,
+    "Qui": 6,
+    "Str": 3,
+    "Hits": 14
+   },
+   "lore": "Crab-shell plates on sealskin."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Carrion-Bane Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 18,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 15
+   },
+   "lore": "Iron studs, for knocking carrion-eaters off."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Warm-Earth Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 18,
+   "bonuses": {
+    "Pie": 6,
+    "Int": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "A stone from the vale. It's warm in your hand."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Envy-Scale Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 19,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 16
+   },
+   "lore": "A drakeling's scale, green-gold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drake-Hunter's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 19,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 19,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Scorched at the hem."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gotawitch's Bone Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 21,
+   "bonuses": {
+    "Pie": 7,
+    "Int": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "Knucklebones on a thong. They click when trouble's coming."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seith-Breaker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 21,
+   "bonuses": {
+    "Int": 7,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "Rowan and silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Circle-Stone Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 21,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 21,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "A ring cut from the circle's stone."
   }
  ]
 }

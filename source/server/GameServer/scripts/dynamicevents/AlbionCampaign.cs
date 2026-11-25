@@ -28,14 +28,13 @@ namespace DOL.GS.DynamicEvents
     /// </summary>
     public class AlbionCampaign
     {
-        public const ushort Region = 1;
         public const int Checkpoints = 4;
         public static readonly TimeSpan Window = TimeSpan.FromMinutes(30);
         public static readonly TimeSpan VictoryHold = TimeSpan.FromHours(4);
         public static readonly TimeSpan Rest = TimeSpan.FromMinutes(20);
         public const string PocketPrefix = "pocket_";
-        public const int SoldierTemplate = 60167630;                     // Albion's garrison look (Black Mountains North's)
-        public const string SoldierEquipment = "38762ab0-5f99-47cd-85b0-0bfaa37d71f9";
+        public const int AlbionSoldierTemplate = 60167630;               // Albion's garrison look (Black Mountains North's)
+        public const string AlbionSoldierEquipment = "38762ab0-5f99-47cd-85b0-0bfaa37d71f9";
 
         // ------------------------------------------------------------------ what each campaign is
 
@@ -51,6 +50,14 @@ namespace DOL.GS.DynamicEvents
         public string CaptainName, SpearName, ArcherName;
         public string TooLow, Marching, NoOne, Victorious, Expired, PushedOut, CounterWord, HeldWord, Started;
         public Func<List<SiegeNpcDef>> Camp;
+        // (Midgard's plan, round 4, 2026-11-25: the same campaign for Midgard's two - the realm, its region, its soldiers' look,
+        // its host's faction and its words are each campaign's own; Albion's two keep what they had)
+        public ushort Region = 1;
+        public eRealm Side = eRealm.Albion;
+        public int SoldierTemplate = AlbionSoldierTemplate;
+        public string SoldierEquipment = AlbionSoldierEquipment;
+        public string HostFaction, RaidPlaceName, WhereName;
+        public bool EnemyIsOne;                     // "Morgana's host comes back"; "the giants come back"
 
         // ------------------------------------------------------------------ the two
 
@@ -58,7 +65,7 @@ namespace DOL.GS.DynamicEvents
         {
             Key = "lake", Title = "The Lake Host", Guild = "the Knights of the Lake", Enemy = "Morgana's host", Prefix = "lb_cp",
             RaidChain = "lb_gate_of_annwn", LiftKey = "llyn_barfog", StateFile = "lake-campaign-state.json", Word = "for the Lady",
-            Zone = 7, MinLevel = 45,
+            Zone = 7, MinLevel = 45, HostFaction = "knights_of_the_lake", RaidPlaceName = "the Gate of Annwn", WhereName = "Llyn Barfog", EnemyIsOne = true,
             Names = new[] { "the Barfog merchants", "the Afanc's Shore", "the Bwgan Hills", "the Western Shore", "the Fay Wood" },
             Posts = new[]
             {
@@ -115,7 +122,7 @@ namespace DOL.GS.DynamicEvents
         {
             Key = "moor", Title = "The Dragon-Watch", Guild = "the Dragon-Watch", Enemy = "the giants", Prefix = "dm_cp",
             RaidChain = "dm_giants_throne", LiftKey = "dartmoor", StateFile = "moor-campaign-state.json", Word = "wake the Watch",
-            Zone = 4, MinLevel = 50,
+            Zone = 4, MinLevel = 50, HostFaction = "dragon_watch", RaidPlaceName = "the Giants' Throne", WhereName = "Dartmoor",
             Names = new[] { "Grimspound", "the Stonecrush Diggings", "the Pony Moor", "the Stonecallers' Ring", "the Pounders' Road" },
             Posts = new[]
             {
@@ -171,7 +178,7 @@ namespace DOL.GS.DynamicEvents
             }
         };
 
-        public static readonly AlbionCampaign[] All = { Lake, Moor };
+        public static readonly AlbionCampaign[] All = { Lake, Moor, MidgardCampaigns.Winter, MidgardCampaigns.Wyrm };
 
         // ------------------------------------------------------------------ the state
 
@@ -191,7 +198,7 @@ namespace DOL.GS.DynamicEvents
         }
 
         public State S = new();
-        bool _running;
+        internal bool _running;
         readonly Dictionary<int, List<GameNPC>> _posts = new();
         readonly List<GameNPC> _camp = new();
         readonly List<GameNPC> _hidden = new();
@@ -284,6 +291,10 @@ namespace DOL.GS.DynamicEvents
         /// Dragon-Watch holds the moor. (Before the campaign is loaded, and in the tests, nothing is sealed.)</summary>
         public static bool GolestandtSealed => Moor._running && !IsWon(Moor.S);
 
+        /// <summary>For Gjalpinulva (MidGjalpinulva.cs) and the bots' realm raids: sealed under Malmohus until the Dragon-Oath holds
+        /// the south (Midgard's plan, round 4). (Before the campaign is loaded, and in the tests, nothing is sealed.)</summary>
+        public static bool GjalpinulvaSealed => MidgardCampaigns.Wyrm._running && !IsWon(MidgardCampaigns.Wyrm.S);
+
         public string Line(State s, DateTime nowUtc)
         {
             string Clock(DateTime until)
@@ -304,12 +315,12 @@ namespace DOL.GS.DynamicEvents
                 case Phase.Victory:
                     return $"{Cap(Where)} is {Title.Replace("The ", "the ")}'s - {Clock(s.VictoryUntilUtc)}";
                 default:
-                    return $"{Cap(Enemy)} {(Key == "lake" ? "holds" : "hold")} {Where}";
+                    return $"{Cap(Enemy)} {(EnemyIsOne ? "holds" : "hold")} {Where}";
             }
         }
 
-        public string RaidPlace => Key == "lake" ? "the Gate of Annwn" : "the Giants' Throne";
-        public string Where => Key == "lake" ? "Llyn Barfog" : "Dartmoor";
+        public string RaidPlace => RaidPlaceName;
+        public string Where => WhereName;
 
         public static double Progress(State s) => s.Phase switch
         {
@@ -434,7 +445,7 @@ namespace DOL.GS.DynamicEvents
                     Hold(a);
                     Sweep();
                     string next = a == Checkpoints ? RaidPlace + " itself" : Names[a + 1];
-                    Tell($"{Cap(Names[a])} is {Title.Replace("The ", "the ")}'s! {Cap(next)} within the half-hour - or {Enemy} come{(Key == "lake" ? "s" : "")} back.");
+                    Tell($"{Cap(Names[a])} is {Title.Replace("The ", "the ")}'s! {Cap(next)} within the half-hour - or {Enemy} come{(EnemyIsOne ? "s" : "")} back.");
                 }
             }
             else if (k > 0 && S.Counter == c.Def.Id)
@@ -442,7 +453,7 @@ namespace DOL.GS.DynamicEvents
                 if (outcome == "success")
                 {
                     CounterHeld(S, now);
-                    Tell($"{Cap(Enemy)} break{(Key == "lake" ? "s" : "")} against the line at {Names[k]}. It holds - and the clock starts again.");
+                    Tell($"{Cap(Enemy)} break{(EnemyIsOne ? "s" : "")} against the line at {Names[k]}. It holds - and the clock starts again.");
                 }
                 else
                 {
@@ -642,7 +653,7 @@ namespace DOL.GS.DynamicEvents
             n.Model = SoldierModel;
             n.Size = (byte) (captain ? 58 : 52);
             n.Level = level;
-            n.Realm = eRealm.Albion;
+            n.Realm = Side;
             n.LoadEquipmentTemplateFromDatabase(SoldierEquipment);
             double a = Util.RandomDouble() * Math.PI * 2, d = r * Math.Sqrt(Util.RandomDouble());
             n.X = (int) (c.X + Math.Cos(a) * d);
@@ -666,7 +677,7 @@ namespace DOL.GS.DynamicEvents
             Region region = WorldMgr.GetRegion(Region);
             if (region == null)
                 return;
-            var host = new SiegeRuntime(new SiegeDef { Id = Key + "_host", Name = Guild, Faction = Key == "lake" ? "knights_of_the_lake" : "dragon_watch" });
+            var host = new SiegeRuntime(new SiegeDef { Id = Key + "_host", Name = Guild, Faction = HostFaction });
             Vector3 c = At(Seat);
             foreach (SiegeNpcDef d in Camp())
             {
@@ -678,7 +689,7 @@ namespace DOL.GS.DynamicEvents
                 n.Model = d.Model;
                 n.Size = 54;
                 n.Level = 55;
-                n.Realm = eRealm.Albion;
+                n.Realm = Side;
                 n.Flags |= GameNPC.eFlags.PEACE;
                 n.LoadEquipmentTemplateFromDatabase(SoldierEquipment);
                 n.X = (int) (c.X + d.Pos[0] * 40);
@@ -758,7 +769,7 @@ namespace DOL.GS.DynamicEvents
 
         void Realm(string text)
         {
-            foreach (GamePlayer p in ClientService.Instance.GetPlayers().Where(p => p.Realm == eRealm.Albion))
+            foreach (GamePlayer p in ClientService.Instance.GetPlayers().Where(p => p.Realm == Side))
                 p.Out.SendMessage($"[{Title}] {text}", eChatType.CT_Important, eChatLoc.CL_SystemWindow);
         }
 
@@ -794,7 +805,7 @@ namespace DOL.GS.DynamicEvents
             g.Model = MarshalModel;
             g.Size = 58;
             g.Level = 65;
-            g.Realm = eRealm.Albion;
+            g.Realm = Side;
             g.Flags |= GameNPC.eFlags.PEACE;
             g.LoadEquipmentTemplateFromDatabase(SoldierEquipment);
             Vector3 at = At(MarshalAt);
@@ -834,7 +845,7 @@ namespace DOL.GS.DynamicEvents
         // ------------------------------------------------------------------ GM
 
         public string Status() => $"{Title}: {S.Phase}, holding {S.Held} ({(S.Held >= 0 && S.Held < Names.Length ? Names[S.Held] : "-")}), " +
-            $"{Line(S, DateTime.UtcNow)}; counter {S.Counter ?? "none"}" + (Key == "moor" ? $"; Golestandt {(GolestandtSealed ? "sealed" : "open")}" : "") +
+            $"{Line(S, DateTime.UtcNow)}; counter {S.Counter ?? "none"}" + (Key == "moor" ? $"; Golestandt {(GolestandtSealed ? "sealed" : "open")}" : Key == "wyrm" ? $"; Gjalpinulva {(GjalpinulvaSealed ? "sealed" : "open")}" : "") +
             $"; won {S.Wins}, lost {S.Losses}";
 
         public void Gm(GamePlayer p, string sub, string arg)
@@ -927,7 +938,26 @@ namespace DOL.GS.DynamicEvents
                 return;
             if (client.Account.PrivLevel > (uint) ePrivLevel.Player && args.Length > 2 && AlbionCampaign.For(args[1].ToLowerInvariant()) is AlbionCampaign c)
                 c.Gm(p, args[2].ToLowerInvariant(), args.Length > 3 ? args[3] : null);
-            foreach (AlbionCampaign k in AlbionCampaign.All)
+            foreach (AlbionCampaign k in AlbionCampaign.All.Where(k => k.Side == eRealm.Albion))
+                DisplayMessage(client, k.Status());
+        }
+    }
+
+    [Cmd("&midcampaign", ePrivLevel.Player,
+        "Midgard's campaigns: the King's March on Raumarik, the Dragon-Oath on Malmohus",
+        "/midcampaign - how they stand",
+        "GM: /midcampaign <winter|wyrm> start | take <1-4> | counter | win | expire | reset")]
+    public class MidgardCampaignCommandHandler : Commands.AbstractCommandHandler, Commands.ICommandHandler
+    {
+        public void OnCommand(GameClient client, string[] args)
+        {
+            GamePlayer p = client?.Player;
+            if (p == null)
+                return;
+            if (client.Account.PrivLevel > (uint) ePrivLevel.Player && args.Length > 2 && AlbionCampaign.For(args[1].ToLowerInvariant()) is AlbionCampaign c &&
+                c.Side == eRealm.Midgard)
+                c.Gm(p, args[2].ToLowerInvariant(), args.Length > 3 ? args[3] : null);
+            foreach (AlbionCampaign k in AlbionCampaign.All.Where(k => k.Side == eRealm.Midgard))
                 DisplayMessage(client, k.Status());
         }
     }

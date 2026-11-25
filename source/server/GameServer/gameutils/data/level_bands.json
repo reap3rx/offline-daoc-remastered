@@ -11,11 +11,17 @@
  "dungeon_exclude_comment": "Darkness Falls (its own ladder, for every level), the capitals, Stonehenge Barrows (its levels are its own 30-45 story; Salisbury hardly moved), Avalon City and Krondon (SI end dungeons).",
  "starts": {
   "1": {"name": "Cotswold", "region": 1, "x": 559646, "y": 511301, "z": 2456, "heading": 2064, "zone": "Camelot Hills", "rating": "peaceful", "blurb": "Albion's first town, in the green hills below Camelot. Gentle country, and the roads lead everywhere."},
-  "2": {"name": "Mularn", "region": 100, "x": 805891, "y": 724274, "z": 4680, "heading": 2587},
+  "2": {"name": "Mularn", "region": 100, "x": 805891, "y": 724274, "z": 4680, "heading": 2587, "zone": "Vale of Mularn", "rating": "peaceful", "blurb": "Midgard's first town, in the green vale below Jordheim. Gentle country, and the roads lead everywhere."},
   "3": {"name": "Mag Mell", "region": 200, "x": 346031, "y": 490867, "z": 5200, "heading": 2978, "zone": "Lough Derg", "rating": "peaceful", "blurb": "The realm's first town, on the shore of Lough Derg. Gentle country, and the roads lead everywhere."}
  },
  "start_choices_comment": "start_choices (owner 2026-11-22): more starting towns a new character may pick on the create screen, after the hub (choice 0); new bots are spread over all of them at random. Each is a level anchor too (the levels grow outward from every starting town). The client shows the same list from content/rules/start_zones.json (a unit test keeps them the same). A wild start is harder (monsters nearer the town, and higher) but pays more (ZoneRates: wild 1.0x against peaceful 0.8x). The hard start (owner 2026-11-24, \"one deadly zone being a starting location for the crazies\"): one per realm in a Deadly zone - Hibernia's Culraid in Lough Gur - \"hard\": true, labelled on the create screen, favoured by the tryhard bots, given a trainer and a bind point (HardStarts.cs).",
  "start_choices": {
+    "2": [
+      {"name": "Audliten", "region": 100, "x": 726496, "y": 760480, "z": 4566, "heading": 2048, "zone": "East Svealand", "rating": "peaceful", "blurb": "A lakeside town in East Svealand, wolf country. The Steading-League keeps the farms here - and the wolves have grown bold."},
+      {"name": "Huginfel", "region": 100, "x": 711520, "y": 783920, "z": 4672, "heading": 1024, "zone": "West Svealand", "rating": "wild", "blurb": "A frontier town in West Svealand, held by the Huginfel Shieldwall. To the west the Blodfelag swear blood-oaths to the Wolf's children, and snow falls in summer."},
+      {"name": "Fort Atla", "region": 100, "x": 749256, "y": 815616, "z": 4408, "heading": 2048, "zone": "Gotar", "rating": "wild", "blurb": "A King's fort on Gotar's north lakes, held by Eirik's Huscarls. South of it the svartalf sell dragon-scale on the trade road."},
+      {"name": "Galplen", "region": 100, "x": 797304, "y": 893432, "z": 4744, "heading": 2048, "zone": "Myrkwood Forest", "rating": "deadly", "hard": true, "blurb": "HARD START. A woodwards' town in the Myrkwood, a Deadly forest of werewolves and dragon-priests far from Jordheim. Only the town's doorstep is gentle.", "trainer": [797144, 893272, 4744, 2048], "bind": [797304, 893432, 4744]}
+    ],
   "1": [
    {"name": "Humberton", "region": 1, "x": 508728, "y": 477760, "z": 2284, "heading": 2048, "zone": "Black Mountains South", "rating": "peaceful",
     "blurb": "A keep town in the southern Black Mountains, held by the Pendragon's Watch. The monks of Vetusta Abbey wait here for their abbey back."},

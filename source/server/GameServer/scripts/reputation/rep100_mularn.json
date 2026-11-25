@@ -1,0 +1,190 @@
+{
+ "zone": 100,
+ "name": "Vale of Mularn",
+ "levels": [
+  1,
+  12
+ ],
+ "realm": 2,
+ "factions": [
+  {
+   "key": "eiriks_huscarls",
+   "name": "King Eirik's Huscarls",
+   "short": "the Huscarls",
+   "kin": [
+    "steading_league",
+    "huginfel_shieldwall",
+    "galplen_woodwards",
+    "khizil_forge",
+    "wolfsbane_rangers",
+    "vanern_wardens",
+    "kings_host"
+   ],
+   "titles": [
+    "Huscarl-Friend",
+    "Shield of Jordheim",
+    "Eirik's Champion"
+   ],
+   "speaker": "md_ragnhild",
+   "town": "Mularn",
+   "kills": [
+    "hobgoblin",
+    "water goblin",
+    "wood-eater",
+    "vendo",
+    "hobyah",
+    "preacher",
+    "missionary",
+    "wolfhound",
+    "phantom hound",
+    "spider",
+    "snake",
+    "drakeling",
+    "dirge",
+    "ghoul",
+    "skeleton",
+    "tomte",
+    "lupine",
+    "wildling",
+    "hame"
+   ],
+   "quartermaster": {
+    "name": "Huscarl-Quartermaster Bjorn",
+    "guild": "King Eirik's Huscarls",
+    "model": 213,
+    "anchor": "md_ragnhild",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The King's stores, for those the King can count on. Show me your standing with the Huscarls.",
+    "stock": [
+     {
+      "item": "rep100_huscarl_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep100_jordheim_road_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep100_shield_of_jordheim_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep100_eirik_s_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep100_mantle_of_eirik_s_champion",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "haggerfel_volur",
+   "name": "the Volur of Haggerfel",
+   "short": "the Volur",
+   "kin": [
+    "nalliten_runecasters",
+    "seidr_folk",
+    "seithkona_circle",
+    "volur_oath"
+   ],
+   "titles": [
+    "Seer-Friend",
+    "Well-Reader",
+    "Keeper of the Well"
+   ],
+   "speaker": "md_ingrith",
+   "town": "Haggerfel",
+   "kills": [
+    "huldu",
+    "spirit",
+    "hill person",
+    "grendelorm",
+    "shaman",
+    "bone-collector",
+    "phantom",
+    "ghost"
+   ],
+   "quartermaster": {
+    "name": "Volva Thordis",
+    "guild": "the Volur of Haggerfel",
+    "model": 157,
+    "anchor": "md_ingrith",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The well's gifts, for those who listen to it. Show me your standing with the Volur.",
+    "stock": [
+     {
+      "item": "rep100_seer_friend_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep100_well_reader_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep100_nine_knot_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep100_shield_of_jordheim_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep100_mantle_of_the_well_keeper",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "eiriks_huscarls",
+ "event_default": "eiriks_huscarls",
+ "quest_default": "eiriks_huscarls",
+ "quests": {
+  "huldra": "haggerfel_volur",
+  "gormr": "eiriks_huscarls",
+  "md_pranksters": "eiriks_huscarls",
+  "md_water_goblins": "eiriks_huscarls",
+  "md_spiderlings": "eiriks_huscarls",
+  "md_snake_finders": "eiriks_huscarls",
+  "md_wood_eaters": "eiriks_huscarls",
+  "md_hive_hunters": "eiriks_huscarls",
+  "md_hive_king": "eiriks_huscarls",
+  "md_lurkers": "haggerfel_volur",
+  "md_outcasts": "haggerfel_volur",
+  "md_huldu_ring": "haggerfel_volur",
+  "md_phantom_hounds": "eiriks_huscarls",
+  "md_wolfhounds": "eiriks_huscarls",
+  "md_frost_tracks": "eiriks_huscarls",
+  "md_bone_collectors": "haggerfel_volur",
+  "md_vendo_shamans": "haggerfel_volur",
+  "md_preacher": "eiriks_huscarls",
+  "md_two_signs": "haggerfel_volur"
+ },
+ "events": {
+  "md_moon_howler": "eiriks_huscarls",
+  "md_red_eye_sermon": "haggerfel_volur",
+  "vale_of_mularn_vendo_barrow": "eiriks_huscarls",
+  "vale_of_mularn_huldu": "haggerfel_volur",
+  "vale_of_mularn_wood_eaters": "eiriks_huscarls",
+  "tower_veldon_watch": "eiriks_huscarls",
+  "vale_of_mularn_hobgoblin_pranks": "eiriks_huscarls"
+ }
+}

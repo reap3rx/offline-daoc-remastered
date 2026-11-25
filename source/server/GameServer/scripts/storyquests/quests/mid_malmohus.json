@@ -46,13 +46,43 @@
       ],
       "guild": "Hunters' Camp",
       "idle": "Svartalfar forging Norse steel. My steel, near enough."
+    },
+    {
+      "id": "mh_asa",
+      "zone": 116,
+      "realm": 2,
+      "name": "Volva Asa",
+      "model": 168,
+      "level": 54,
+      "pos": [
+        1015,
+        505,
+        75.3
+      ],
+      "guild": "the Oath of the Volur",
+      "idle": "The volur came south with the Oath. We'll go home with it, or not at all."
+    },
+    {
+      "id": "mh_ketil",
+      "zone": 116,
+      "realm": 2,
+      "name": "Huscarl Ketil",
+      "model": 213,
+      "level": 54,
+      "pos": [
+        995,
+        515,
+        68.2
+      ],
+      "guild": "King Eirik's Huscarls",
+      "idle": "The King lent the volur his huscarls. He wants them back. Most of them."
     }
   ],
   "quests": [
     {
       "id": "missionary",
       "title": "The Dragon's Missionary",
-      "level": 40,
+      "level": 50,
       "giver": "halla",
       "offer": "My brother Bjorn came to Malmohus to hunt with me. Then the drakulv missionaries got to him - the dragon-worshippers. He's taken their scale and their name. He preaches with them in the northern tents.\n\nHe's soft-hearted. They found the soft place and pressed. Will you [find Bjorn]? Talk to him. He won't listen to me.",
       "accept": "find Bjorn",
@@ -402,6 +432,579 @@
         }
       },
       "group": true
+    },
+    {
+      "id": "mh_missionaries",
+      "title": "The Missionary Road",
+      "level": 51,
+      "giver": "mh_ketil",
+      "offer": "Every missionary who ever walked into Midgard came down the road west of here. They still do - and they still walk back with converts.\n\nWill you [close the road]?",
+      "accept": "close the road",
+      "topics": {},
+      "summary": "Drakulv missionaries walk Malmohus's missionary road, north into Midgard and back with converts.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            500,
+            300,
+            95.4
+          ],
+          "radius": 50,
+          "goal": "Close the road to the drakulv missionaries about 540 m north-west of Huscarl Ketil",
+          "target": "drakulv missionary",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mh_ketil",
+          "goal": "Tell Huscarl Ketil",
+          "say": "Closed, for a day. The Oath will close it for good. The road's the first post we take.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq116_road_breaker_s_ring",
+              "sq116_missionary_robe_sash"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "mh_patrols",
+      "title": "The Patrols",
+      "level": 52,
+      "giver": "bjorn_convert",
+      "offer": "I walked with the drakulv once. I know their patrols - they walk the north roads in fours, and they take anyone alone. Break them.\n\nWill you [break the patrols]?",
+      "accept": "break the patrols",
+      "topics": {},
+      "summary": "Patrolling drakulv walk Malmohus's north roads in fours and take anyone alone.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            700,
+            450,
+            70.6
+          ],
+          "radius": 50,
+          "goal": "Break the patrolling drakulv about 170 m south of Bjorn the Convert",
+          "target": "patrolling drakulv",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bjorn_convert",
+          "goal": "Tell Bjorn the Convert",
+          "say": "Good. I prayed to her once. Now I pray she stays asleep.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq116_patrol_breaker_s_bracer",
+              "sq116_convert_s_return_charm"
+            ]
+          }
+        }
+      },
+      "requires": "mh_missionaries"
+    },
+    {
+      "id": "mh_infiltrators",
+      "title": "The Infiltrators",
+      "level": 53,
+      "giver": "svein_smith",
+      "offer": "Svartalf infiltrators creep up to the camp at night - they want my forge-marks, my steel. They sell everything to the drakulv.\n\nWill you [hunt them]?",
+      "accept": "hunt them",
+      "topics": {},
+      "summary": "Svartalf infiltrators creep up to Halla's camp at night for the drakulv.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            1250,
+            350,
+            100.6
+          ],
+          "radius": 50,
+          "goal": "Hunt the svartalf infiltrators about 280 m north-east of Svein Hammerhand",
+          "target": "svartalf infiltrator",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "svein_smith",
+          "goal": "Tell Svein Hammerhand",
+          "say": "Good. Every one is a forge-mark they won't sell.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq116_infiltrator_s_shadow_ring",
+              "sq116_foist_watcher_s_cloak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "mh_bloodbinders",
+      "title": "The Bloodbinders",
+      "level": 55,
+      "giver": "mh_asa",
+      "offer": "The svartalf bloodbinders in the foist bind their own blood to the dragon's for her scale. They're her svartalf now - and they keep the foist warded.\n\nBring friends. Will you [break the bloodbinders]?",
+      "accept": "break the bloodbinders",
+      "topics": {},
+      "summary": "Svartalf bloodbinders bind their blood to Gjalpinulva's in the Svartalf Foist.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            1400,
+            600,
+            102.1
+          ],
+          "radius": 60,
+          "goal": "Break the svartalf bloodbinders about 400 m east of Volva Asa",
+          "target": "svartalf bloodbinder",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 116,
+          "at": [
+            1405,
+            610,
+            101.0
+          ],
+          "goal": "Search the bloodbinders' altar",
+          "clue": {
+            "name": "a bowl of dark blood and red scale",
+            "model": 1347
+          },
+          "text": "The blood in the bowl moves on its own. Scratched under it: 'For the Mother's waking. When the Hierophant has her name, every bound drop wakes with her.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mh_asa",
+          "goal": "Tell Volva Asa",
+          "say": "Every bound drop wakes with her. The svartalf don't know what they sold. The foist is the second post - the Oath will break it.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Oath of the Volur.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq116_bloodbinder_s_rune_torc",
+              "sq116_blood_ward_bracer",
+              "sq116_scale_price_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "mh_infiltrators"
+    },
+    {
+      "id": "mh_vargs",
+      "title": "The Drakulv's Hounds",
+      "level": 54,
+      "giver": "halla",
+      "offer": "The scaled vargs - the drakulv breed them, half wolf, half drake. They run the backwoods and the lines. I hunt them, when I can.\n\nWill you [hunt with me]?",
+      "accept": "hunt with me",
+      "topics": {},
+      "summary": "The drakulv's scaled vargs, half wolf and half drake, run Malmohus's backwoods.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            400,
+            700,
+            73.7
+          ],
+          "radius": 50,
+          "goal": "Hunt the scaled varg snarlers about 630 m west of Halla Bjornsdottir",
+          "target": "scaled varg snarler",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "halla",
+          "goal": "Tell Halla Bjornsdottir",
+          "say": "Good hunting. I'll make a cloak of the next one.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq116_varg_scale_belt",
+              "sq116_snarler_fang_ring"
+            ]
+          }
+        }
+      },
+      "requires": "mh_patrols"
+    },
+    {
+      "id": "mh_armguards",
+      "title": "The Armguard Lines",
+      "level": 55,
+      "giver": "mh_ketil",
+      "offer": "The drakulv dig in across the middle of Malmohus - armguards and axehands. Thin them, and the Oath can take the lines.\n\nWill you [thin the lines]?",
+      "accept": "thin the lines",
+      "topics": {},
+      "summary": "Drakulv armguards and axehands dig in across the middle of Malmohus.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            550,
+            850,
+            76.4
+          ],
+          "radius": 50,
+          "goal": "Thin the drakulv armguards about 560 m south-west of Huscarl Ketil",
+          "target": "drakulv armguard",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            900,
+            950,
+            72.6
+          ],
+          "radius": 50,
+          "goal": "Thin the drakulv axehands",
+          "target": "drakulv axehand",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mh_ketil",
+          "goal": "Tell Ketil",
+          "say": "Thinner. The sacrificers on the lines keep the rite going for the temple. Asa wants to hear about them.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq116_armguard_s_scale_bracer",
+              "sq116_line_breaker_s_torc"
+            ]
+          }
+        }
+      },
+      "requires": "mh_vargs"
+    },
+    {
+      "id": "mh_sacrificers",
+      "title": "The Rite",
+      "level": 56,
+      "giver": "mh_asa",
+      "offer": "The sacrificers keep the rite burning on the lines - blood and fire, to keep the dragon's sleep light, so she'll wake quick when her name's spoken.\n\nBring friends. Will you [break the rite]?",
+      "accept": "break the rite",
+      "topics": {},
+      "summary": "Drakulv sacrificers keep the rite burning on Malmohus's lines to keep Gjalpinulva's sleep light.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            900,
+            900,
+            73.5
+          ],
+          "radius": 60,
+          "goal": "Break the drakulv sacrificers about 410 m south of Volva Asa",
+          "target": "drakulv sacrificer",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 116,
+          "at": [
+            905,
+            905,
+            74.5
+          ],
+          "goal": "Search the rite-fire",
+          "clue": {
+            "name": "a scroll in a scale case, half-burnt",
+            "model": 1347
+          },
+          "text": "The Hierophant's hand: 'The Mother's name is two halves. I have the first. The volva at Galplen has the second - she has fled south with the Oath. When she stands before my temple, I will have it from her.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mh_asa",
+          "goal": "Tell Asa",
+          "say": "She's come south. Groa. She brought the half-name to us - and the Hierophant wants her to stand at his temple. Then we'll give him what he wants: Groa at his temple, and the Oath behind her.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Oath of the Volur.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq116_sacrificer_s_rite_knife_charm",
+              "sq116_oath_keeper_s_mantle",
+              "sq116_rite_breaker_s_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "mh_armguards"
+    },
+    {
+      "id": "mh_protectors",
+      "title": "The Temple Steps",
+      "level": 57,
+      "giver": "mh_ketil",
+      "offer": "The drakulv protectors hold the temple steps, with their executioners. They're the best the dragon has.\n\nWill you [thin the steps]?",
+      "accept": "thin the steps",
+      "topics": {},
+      "summary": "Drakulv protectors and executioners hold the steps of the Wyrm-Temple.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            600,
+            1150,
+            70.0
+          ],
+          "radius": 50,
+          "goal": "Thin the drakulv protectors about 750 m south-west of Huscarl Ketil",
+          "target": "drakulv protector",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mh_ketil",
+          "goal": "Tell Ketil",
+          "say": "Thinner. The disciples in the west of the steps - they're the Hierophant's own. Asa wants them.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq116_protector_s_scale_ring",
+              "sq116_temple_step_belt"
+            ]
+          }
+        }
+      },
+      "requires": "mh_sacrificers"
+    },
+    {
+      "id": "mh_disciples",
+      "title": "The Hierophant's Disciples",
+      "level": 58,
+      "giver": "mh_asa",
+      "offer": "The Hierophant's own disciples and soultrappers. They carry his half of the name between them, a syllable each. Break them, and he has only what he carries himself.\n\nBring friends. Will you [break the disciples]?",
+      "accept": "break the disciples",
+      "topics": {},
+      "summary": "The Hierophant's disciples and soultrappers carry his half of Gjalpinulva's name.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            460,
+            1240,
+            119.3
+          ],
+          "radius": 60,
+          "goal": "Break the drakulv disciples about 920 m south-west of Volva Asa",
+          "target": "drakulv disciple",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 116,
+          "at": [
+            460,
+            1240,
+            119.3
+          ],
+          "radius": 60,
+          "goal": "Break the drakulv soultrappers",
+          "target": "drakulv soultrapper",
+          "count": 2,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mh_asa",
+          "goal": "Tell Asa",
+          "say": "Broken. He has his half, and nothing else now. Go to Groa.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Oath of the Volur.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq116_soultrapper_s_gem_charm",
+              "sq116_disciple_breaker_s_bracer",
+              "sq116_volva_s_ward_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "mh_protectors"
+    },
+    {
+      "id": "mh_oath",
+      "title": "The Dragon-Oath",
+      "level": 59,
+      "giver": "mh_asa",
+      "offer": "Look at the temple from the hill - see what's waiting. Then go to Volva Groa, here in the camp, and swear the Oath.\n\nWill you [look at the temple]?",
+      "accept": "look at the temple",
+      "topics": {},
+      "summary": "The Oath of the Volur means to march on the Wyrm-Temple, where the Hierophant waits for Gjalpinulva's name.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 116,
+          "at": [
+            1000,
+            1250,
+            71.5
+          ],
+          "radius": 25,
+          "goal": "Climb the hill above the Wyrm-Temple",
+          "text": "A temple cut into the hill, smoke pouring out of its mouth. Drakulv on every step. And south-west, in the dark of the lair, something vast breathing slowly.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mh_asa",
+          "goal": "Tell Asa",
+          "say": "Breathing slowly. Not for long.\n\nGo to Volva Groa and swear it - say [by the Oath]. The road, the foist, the lines, the steps, then the temple. It all goes back if we stop.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Oath of the Volur.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq116_dragon_oath_ring",
+              "sq116_lair_road_belt"
+            ]
+          }
+        }
+      },
+      "requires": "mh_disciples"
     }
   ]
 }

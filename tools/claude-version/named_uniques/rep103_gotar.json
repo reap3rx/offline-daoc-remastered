@@ -1,0 +1,96 @@
+{
+ "zone": 103,
+ "region": 100,
+ "realm": 2,
+ "prefix": "rep103",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Stave-Friend's Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 14,
+   "bonuses": {
+    "Int": 5,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "A little rune-stave on a thong."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rune-Reader's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Pie": 5,
+    "Int": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "Carved bone, a rune on every side."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Carved-Stave Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 18,
+   "bonuses": {
+    "Int": 6,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "Rune-staves bound side by side."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Nalliten Seer Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 18,
+   "bonuses": {
+    "Pie": 6,
+    "Int": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "Silver, with a seer's eye."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Stave-Keeper",
+   "base": [
+    41,
+    26
+   ],
+   "level": 22,
+   "bonuses": {
+    "Int": 7,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "Grey-green, rune-bordered. Only the Keepers of the Staves wear it."
+  }
+ ]
+}

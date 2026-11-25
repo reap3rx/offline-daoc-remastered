@@ -1,533 +1,2231 @@
 {
-  "zone": 116,
-  "region": 100,
-  "name": "Malmohus",
-  "lore": "Malmohus, where the drakulv worship the dragon and offer up whoever they catch on the roads.",
-  "chains": [
+ "zone": 116,
+ "region": 100,
+ "name": "Malmohus",
+ "lore": "Malmohus: the dragon's country. Gjalpinulva sleeps in her lair in the south-west, and her drakulv - with the svartalf they bought with her scale - hold every road to the Wyrm-Temple, where the Hierophant keeps the rite and waits for the other half of her true name. The volur and the King's huscarls have sworn the Dragon-Oath to take the south back before he finds it.",
+ "chains": [
+  {
+   "id": "malmohus_drakulv_rite",
+   "title": "The Drakulv Rite",
+   "levels": [
+    45,
+    52
+   ],
+   "hint": "Drums beat at the sacrifice stones...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "malmohus_drakulv_rite",
-      "title": "The Drakulv Rite",
-      "levels": [45, 52],
-      "hint": "Drums beat at the sacrifice stones...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Sacrifice Stones",
-          "objective": "Clear the sacrifice stones",
-          "announce": "The drakulv are preparing a great sacrifice to the dragon. Stop the rite.",
-          "center": [1439, 940, 75.4],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60160117,
-              "name": "drakulv sacrificer",
-              "level": [45, 49]
-            },
-            {
-              "template": 60160112,
-              "name": "drakulv axehand",
-              "level": [48, 52]
-            }
-          ],
-          "success": "You have cleared the sacrifice stones. High Sacrificer Draknir comes out to fight.",
-          "fail": "They hold the sacrifice stones. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "High Sacrificer Draknir",
-          "objective": "Defeat High Sacrificer Draknir",
-          "announce": "High Sacrificer Draknir stands at the sacrifice stones. Bring friends.",
-          "center": [1439, 940, 75.4],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60160117,
-            "name": "High Sacrificer Draknir",
-            "level": 54,
-            "size": 110,
-            "pos": [1439, 940, 75.4],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60160117,
-                "name": "drakulv sacrificer",
-                "level": [45, 49]
-              }
-            ]
-          },
-          "success": "High Sacrificer Draknir falls. The way is safe again.",
-          "fail": "High Sacrificer Draknir slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu116_high_sacrificer_draknir_s_band", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Drakulv Sacrificers Hold the Road",
-          "objective": "Drive the drakulv sacrificers off the road",
-          "announce": "With The Drakulv Rite lost, the drakulv sacrificers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1269, 1095, 73.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60160117,
-              "name": "drakulv sacrificer",
-              "level": [45, 49]
-            },
-            {
-              "template": 60160112,
-              "name": "drakulv axehand",
-              "level": [48, 52]
-            }
-          ],
-          "boss": {
-            "template": 60160117,
-            "name": "Drakulv sacrificer warleader",
-            "level": 53,
-            "pos": [1269, 1095, 73.6],
-            "health_mult": 2
-          },
-          "success": "The drakulv sacrificers are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hild has come out to set the road right. The drakulv sacrificers are coming back for it!",
-          "center": [1269, 1095, 73.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hild",
-            "level": 52,
-            "pos": [1269, 1095, 73.6],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1272, 1010, 93.2],
-              [1332, 1038, 84.7],
-              [1354, 1100, 85.3]
-            ],
-            "mobs": [
-              {
-                "template": 60160117,
-                "name": "drakulv sacrificer",
-                "level": [45, 49]
-              },
-              {
-                "template": 60160112,
-                "name": "drakulv axehand",
-                "level": [48, 52]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The drakulv sacrificers break and scatter. The road is open again.",
-          "fail": "Roadwarden Hild falls, and the drakulv sacrificers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Sacrifice Stones",
+     "objective": "Clear the sacrifice stones",
+     "announce": "The drakulv are preparing a great sacrifice to the dragon. Stop the rite.",
+     "center": [
+      1439,
+      940,
+      75.4
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60160117,
+       "name": "drakulv sacrificer",
+       "level": [
+        45,
+        49
+       ]
+      },
+      {
+       "template": 60160112,
+       "name": "drakulv axehand",
+       "level": [
+        48,
+        52
+       ]
+      }
+     ],
+     "success": "You have cleared the sacrifice stones. High Sacrificer Draknir comes out to fight.",
+     "fail": "They hold the sacrifice stones. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "malmohus_drakulv_patrols",
-      "title": "The Drakulv Patrols",
-      "levels": [39, 46],
-      "hint": "Drakulv patrols are sweeping the west...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Torvald the Cartographer",
-          "objective": "Protect Torvald the Cartographer, who is packing up his maps",
-          "announce": "Torvald has mapped the drakulv strongholds, and their patrols have found him. Keep him alive while he packs up the maps.",
-          "center": [150, 330, 71.3],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Torvald the Cartographer",
-            "template": 60167667,
-            "level": 46,
-            "model": 158,
-            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
-            "health_mult": 10,
-            "pos": [150, 330, 71.3]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [218, 278, 71.9],
-              [149, 300, 70.3],
-              [133, 372, 72.7]
-            ],
-            "mobs": [
-              {
-                "template": 60164855,
-                "name": "patrolling drakulv",
-                "level": [39, 43]
-              },
-              {
-                "template": 60160110,
-                "name": "drakulv armguard",
-                "level": [42, 46]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Torvald the Cartographer. \"They came from over there - let's finish this.\"",
-          "fail": "Torvald the Cartographer falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Cartographer's Camp",
-          "objective": "Clear the cartographer's camp",
-          "announce": "They came from the cartographer's camp. Follow them back and clear it out.",
-          "center": [265, 337, 67.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60164855,
-              "name": "patrolling drakulv",
-              "level": [39, 43]
-            },
-            {
-              "template": 60160110,
-              "name": "drakulv armguard",
-              "level": [42, 46]
-            }
-          ],
-          "success": "You have cleared the cartographer's camp. Warlord Skuld comes out to fight.",
-          "fail": "They hold the cartographer's camp. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Warlord Skuld",
-          "objective": "Defeat Warlord Skuld",
-          "announce": "Warlord Skuld stands at the cartographer's camp. Bring friends.",
-          "center": [265, 337, 67.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60160110,
-            "name": "Warlord Skuld",
-            "level": 48,
-            "size": 110,
-            "pos": [265, 337, 67.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60164855,
-                "name": "patrolling drakulv",
-                "level": [39, 43]
-              }
-            ]
-          },
-          "success": "Warlord Skuld falls. The way is safe again.",
-          "fail": "Warlord Skuld slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu116_warlord_skuld_s_sash", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Patrolling Drakulvs Hold the Road",
-          "objective": "Drive the patrolling drakulvs off the road",
-          "announce": "With The Drakulv Patrols lost, the patrolling drakulvs have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [504, 236, 69.9],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60164855,
-              "name": "patrolling drakulv",
-              "level": [39, 43]
-            },
-            {
-              "template": 60160110,
-              "name": "drakulv armguard",
-              "level": [42, 46]
-            }
-          ],
-          "boss": {
-            "template": 60164855,
-            "name": "Patrolling drakulv warleader",
-            "level": 47,
-            "pos": [504, 236, 69.9],
-            "health_mult": 2
-          },
-          "success": "The patrolling drakulvs are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hild has come out to set the road right. The patrolling drakulvs are coming back for it!",
-          "center": [504, 236, 69.9],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hild",
-            "level": 46,
-            "pos": [504, 236, 69.9],
-            "health_mult": 10,
-            "template": 60167667,
-            "model": 158,
-            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [473, 267, 69.6],
-              [426, 269, 67.3],
-              [426, 203, 70.6]
-            ],
-            "mobs": [
-              {
-                "template": 60164855,
-                "name": "patrolling drakulv",
-                "level": [39, 43]
-              },
-              {
-                "template": 60160110,
-                "name": "drakulv armguard",
-                "level": [42, 46]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The patrolling drakulvs break and scatter. The road is open again.",
-          "fail": "Roadwarden Hild falls, and the patrolling drakulvs take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "High Sacrificer Draknir",
+     "objective": "Defeat High Sacrificer Draknir",
+     "announce": "High Sacrificer Draknir stands at the sacrifice stones. Bring friends.",
+     "center": [
+      1439,
+      940,
+      75.4
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60160117,
+      "name": "High Sacrificer Draknir",
+      "level": 54,
+      "size": 110,
+      "pos": [
+       1439,
+       940,
+       75.4
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60160117,
+        "name": "drakulv sacrificer",
+        "level": [
+         45,
+         49
+        ]
+       }
       ]
+     },
+     "success": "High Sacrificer Draknir falls. The way is safe again.",
+     "fail": "High Sacrificer Draknir slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu116_high_sacrificer_draknir_s_band",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
     },
     {
-      "id": "malmohus_svartalf_foisters",
-      "title": "The Svartalf Foisters",
-      "levels": [45, 52],
-      "hint": "Svartalfar slip between the drakulv camps...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Foisters' Hideout",
-          "objective": "Clear the foisters' hideout",
-          "announce": "Svartalf foisters are selling Midgard's patrol routes to the drakulv. Take their hideout.",
-          "center": [1312, 313, 98.3],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 55003,
-              "name": "svartalf infiltrator",
-              "level": [45, 49]
-            },
-            {
-              "template": 55004,
-              "name": "svartalf foister",
-              "level": [48, 52]
-            }
-          ],
-          "success": "You have cleared the foisters' hideout. Bloodbinder Hrok comes out to fight.",
-          "fail": "They hold the foisters' hideout. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Bloodbinder Hrok",
-          "objective": "Defeat Bloodbinder Hrok",
-          "announce": "Bloodbinder Hrok stands at the foisters' hideout. Bring friends.",
-          "center": [1312, 313, 98.3],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 55002,
-            "name": "Bloodbinder Hrok",
-            "level": 54,
-            "size": 65,
-            "pos": [1312, 313, 98.3],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 55003,
-                "name": "svartalf infiltrator",
-                "level": [45, 49]
-              }
-            ]
-          },
-          "success": "Bloodbinder Hrok falls. The way is safe again.",
-          "fail": "Bloodbinder Hrok slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu116_bloodbinder_hrok_s_stone", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Svartalf Infiltrators Hold the Old Road",
-          "objective": "Drive the svartalf infiltrators off the old road",
-          "announce": "With The Svartalf Foisters lost, the svartalf infiltrators have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1401, 541, 106.5],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 55003,
-              "name": "svartalf infiltrator",
-              "level": [45, 49]
-            },
-            {
-              "template": 55004,
-              "name": "svartalf foister",
-              "level": [48, 52]
-            }
-          ],
-          "boss": {
-            "template": 55003,
-            "name": "Svartalf infiltrator warleader",
-            "level": 53,
-            "pos": [1401, 541, 106.5],
-            "health_mult": 2
-          },
-          "success": "The svartalf infiltrators are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hild has come out to set the old road right. The svartalf infiltrators are coming back for it!",
-          "center": [1401, 541, 106.5],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hild",
-            "level": 52,
-            "pos": [1401, 541, 106.5],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1322, 508, 103.1],
-              [1370, 462, 102.7],
-              [1436, 464, 103.7]
-            ],
-            "mobs": [
-              {
-                "template": 55003,
-                "name": "svartalf infiltrator",
-                "level": [45, 49]
-              },
-              {
-                "template": 55004,
-                "name": "svartalf foister",
-                "level": [48, 52]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The svartalf infiltrators break and scatter. The old road is open again.",
-          "fail": "Roadwarden Hild falls, and the svartalf infiltrators take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Drakulv Sacrificers Hold the Road",
+     "objective": "Drive the drakulv sacrificers off the road",
+     "announce": "With The Drakulv Rite lost, the drakulv sacrificers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1269,
+      1095,
+      73.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60160117,
+       "name": "drakulv sacrificer",
+       "level": [
+        45,
+        49
+       ]
+      },
+      {
+       "template": 60160112,
+       "name": "drakulv axehand",
+       "level": [
+        48,
+        52
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60160117,
+      "name": "Drakulv sacrificer warleader",
+      "level": 53,
+      "pos": [
+       1269,
+       1095,
+       73.6
+      ],
+      "health_mult": 2
+     },
+     "success": "The drakulv sacrificers are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hild has come out to set the road right. The drakulv sacrificers are coming back for it!",
+     "center": [
+      1269,
+      1095,
+      73.6
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hild",
+      "level": 52,
+      "pos": [
+       1269,
+       1095,
+       73.6
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1272,
+        1010,
+        93.2
+       ],
+       [
+        1332,
+        1038,
+        84.7
+       ],
+       [
+        1354,
+        1100,
+        85.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160117,
+        "name": "drakulv sacrificer",
+        "level": [
+         45,
+         49
+        ]
+       },
+       {
+        "template": 60160112,
+        "name": "drakulv axehand",
+        "level": [
+         48,
+         52
+        ]
+       }
       ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The drakulv sacrificers break and scatter. The road is open again.",
+     "fail": "Roadwarden Hild falls, and the drakulv sacrificers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
-  ]
+   ]
+  },
+  {
+   "id": "malmohus_drakulv_patrols",
+   "title": "The Drakulv Patrols",
+   "levels": [
+    39,
+    46
+   ],
+   "hint": "Drakulv patrols are sweeping the west...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Torvald the Cartographer",
+     "objective": "Protect Torvald the Cartographer, who is packing up his maps",
+     "announce": "Torvald has mapped the drakulv strongholds, and their patrols have found him. Keep him alive while he packs up the maps.",
+     "center": [
+      150,
+      330,
+      71.3
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Torvald the Cartographer",
+      "template": 60167667,
+      "level": 46,
+      "model": 158,
+      "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+      "health_mult": 10,
+      "pos": [
+       150,
+       330,
+       71.3
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        218,
+        278,
+        71.9
+       ],
+       [
+        149,
+        300,
+        70.3
+       ],
+       [
+        133,
+        372,
+        72.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60164855,
+        "name": "patrolling drakulv",
+        "level": [
+         39,
+         43
+        ]
+       },
+       {
+        "template": 60160110,
+        "name": "drakulv armguard",
+        "level": [
+         42,
+         46
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Torvald the Cartographer. \"They came from over there - let's finish this.\"",
+     "fail": "Torvald the Cartographer falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Cartographer's Camp",
+     "objective": "Clear the cartographer's camp",
+     "announce": "They came from the cartographer's camp. Follow them back and clear it out.",
+     "center": [
+      265,
+      337,
+      67.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60164855,
+       "name": "patrolling drakulv",
+       "level": [
+        39,
+        43
+       ]
+      },
+      {
+       "template": 60160110,
+       "name": "drakulv armguard",
+       "level": [
+        42,
+        46
+       ]
+      }
+     ],
+     "success": "You have cleared the cartographer's camp. Warlord Skuld comes out to fight.",
+     "fail": "They hold the cartographer's camp. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Warlord Skuld",
+     "objective": "Defeat Warlord Skuld",
+     "announce": "Warlord Skuld stands at the cartographer's camp. Bring friends.",
+     "center": [
+      265,
+      337,
+      67.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60160110,
+      "name": "Warlord Skuld",
+      "level": 48,
+      "size": 110,
+      "pos": [
+       265,
+       337,
+       67.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60164855,
+        "name": "patrolling drakulv",
+        "level": [
+         39,
+         43
+        ]
+       }
+      ]
+     },
+     "success": "Warlord Skuld falls. The way is safe again.",
+     "fail": "Warlord Skuld slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu116_warlord_skuld_s_sash",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Patrolling Drakulvs Hold the Road",
+     "objective": "Drive the patrolling drakulvs off the road",
+     "announce": "With The Drakulv Patrols lost, the patrolling drakulvs have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      504,
+      236,
+      69.9
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60164855,
+       "name": "patrolling drakulv",
+       "level": [
+        39,
+        43
+       ]
+      },
+      {
+       "template": 60160110,
+       "name": "drakulv armguard",
+       "level": [
+        42,
+        46
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60164855,
+      "name": "Patrolling drakulv warleader",
+      "level": 47,
+      "pos": [
+       504,
+       236,
+       69.9
+      ],
+      "health_mult": 2
+     },
+     "success": "The patrolling drakulvs are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hild has come out to set the road right. The patrolling drakulvs are coming back for it!",
+     "center": [
+      504,
+      236,
+      69.9
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hild",
+      "level": 46,
+      "pos": [
+       504,
+       236,
+       69.9
+      ],
+      "health_mult": 10,
+      "template": 60167667,
+      "model": 158,
+      "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        473,
+        267,
+        69.6
+       ],
+       [
+        426,
+        269,
+        67.3
+       ],
+       [
+        426,
+        203,
+        70.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60164855,
+        "name": "patrolling drakulv",
+        "level": [
+         39,
+         43
+        ]
+       },
+       {
+        "template": 60160110,
+        "name": "drakulv armguard",
+        "level": [
+         42,
+         46
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The patrolling drakulvs break and scatter. The road is open again.",
+     "fail": "Roadwarden Hild falls, and the patrolling drakulvs take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "malmohus_svartalf_foisters",
+   "title": "The Svartalf Foisters",
+   "levels": [
+    45,
+    52
+   ],
+   "hint": "Svartalfar slip between the drakulv camps...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Foisters' Hideout",
+     "objective": "Clear the foisters' hideout",
+     "announce": "Svartalf foisters are selling Midgard's patrol routes to the drakulv. Take their hideout.",
+     "center": [
+      1312,
+      313,
+      98.3
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 55003,
+       "name": "svartalf infiltrator",
+       "level": [
+        45,
+        49
+       ]
+      },
+      {
+       "template": 55004,
+       "name": "svartalf foister",
+       "level": [
+        48,
+        52
+       ]
+      }
+     ],
+     "success": "You have cleared the foisters' hideout. Bloodbinder Hrok comes out to fight.",
+     "fail": "They hold the foisters' hideout. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "Bloodbinder Hrok",
+     "objective": "Defeat Bloodbinder Hrok",
+     "announce": "Bloodbinder Hrok stands at the foisters' hideout. Bring friends.",
+     "center": [
+      1312,
+      313,
+      98.3
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 55002,
+      "name": "Bloodbinder Hrok",
+      "level": 54,
+      "size": 65,
+      "pos": [
+       1312,
+       313,
+       98.3
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 55003,
+        "name": "svartalf infiltrator",
+        "level": [
+         45,
+         49
+        ]
+       }
+      ]
+     },
+     "success": "Bloodbinder Hrok falls. The way is safe again.",
+     "fail": "Bloodbinder Hrok slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu116_bloodbinder_hrok_s_stone",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Svartalf Infiltrators Hold the Old Road",
+     "objective": "Drive the svartalf infiltrators off the old road",
+     "announce": "With The Svartalf Foisters lost, the svartalf infiltrators have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1401,
+      541,
+      106.5
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 55003,
+       "name": "svartalf infiltrator",
+       "level": [
+        45,
+        49
+       ]
+      },
+      {
+       "template": 55004,
+       "name": "svartalf foister",
+       "level": [
+        48,
+        52
+       ]
+      }
+     ],
+     "boss": {
+      "template": 55003,
+      "name": "Svartalf infiltrator warleader",
+      "level": 53,
+      "pos": [
+       1401,
+       541,
+       106.5
+      ],
+      "health_mult": 2
+     },
+     "success": "The svartalf infiltrators are gone from the old road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hild has come out to set the old road right. The svartalf infiltrators are coming back for it!",
+     "center": [
+      1401,
+      541,
+      106.5
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hild",
+      "level": 52,
+      "pos": [
+       1401,
+       541,
+       106.5
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1322,
+        508,
+        103.1
+       ],
+       [
+        1370,
+        462,
+        102.7
+       ],
+       [
+        1436,
+        464,
+        103.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 55003,
+        "name": "svartalf infiltrator",
+        "level": [
+         45,
+         49
+        ]
+       },
+       {
+        "template": 55004,
+        "name": "svartalf foister",
+        "level": [
+         48,
+         52
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+     "success": "The svartalf infiltrators break and scatter. The old road is open again.",
+     "fail": "Roadwarden Hild falls, and the svartalf infiltrators take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "mh_cp1_assault",
+   "title": "The Dragon-Oath on the Missionary Road",
+   "levels": [
+    50,
+    53
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 48,
+   "min_people": 6,
+   "hint": "The Oath-Captain is forming the Dragon-Oath up for the Missionary Road.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60157473,
+    "model": 160,
+    "equipment": "SvasudGuard",
+    "guild": "the Oath of the Volur",
+    "name": "Oath-Captain Halla",
+    "level": 55,
+    "pos": [
+     860,
+     420,
+     73.4
+    ],
+    "health_mult": 5,
+    "greet": "The Missionary Road, west of here. Every missionary that ever walked into Midgard came down it, and they keep a post on it still. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Up the road! Break their post - then their sacrificer!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Oath holds the Missionary Road - and the next thirty minutes are ours.",
+    "regret": "Back to the camp! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60157473,
+     "model": 160,
+     "equipment": "SvasudGuard",
+     "guild": "the Oath of the Volur",
+     "name": "oath-sworn huscarl",
+     "level": 53,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Missionary Road",
+     "objective": "Break the drakulv post on the Missionary Road",
+     "announce": "The Dragon-Oath is on the Missionary Road! Break the post!",
+     "center": [
+      600,
+      300,
+      84.6
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 24,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60160115,
+       "name": "drakulv missionary",
+       "level": [
+        50,
+        52
+       ],
+       "guild": "Gjalpinulva's Drakulv"
+      },
+      {
+       "template": 60164855,
+       "name": "patrolling drakulv",
+       "level": [
+        50,
+        52
+       ],
+       "guild": "Gjalpinulva's Drakulv"
+      },
+      {
+       "template": 60160117,
+       "name": "drakulv sacrificer",
+       "level": [
+        52,
+        54
+       ],
+       "guild": "Gjalpinulva's Drakulv"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "boss",
+     "name": "Arch-Missionary Thrand",
+     "objective": "Defeat Arch-Missionary Thrand",
+     "announce": "Arch-Missionary Thrand, who sent the first preachers north: 'I converted half of Svealand. I'll pray for you too.'",
+     "center": [
+      600,
+      300,
+      84.6
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60160115,
+      "name": "Arch-Missionary Thrand",
+      "level": 55,
+      "size": 62,
+      "health_mult": 4,
+      "guild": "of Gjalpinulva's Missionaries"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60160115,
+        "name": "drakulv missionary",
+        "level": [
+         50,
+         52
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       },
+       {
+        "template": 60164855,
+        "name": "patrolling drakulv",
+        "level": [
+         50,
+         52
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       }
+      ]
+     },
+     "success": "Thrand falls in his own road. The north road is the Oath's.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "mh_cp2_assault",
+   "title": "The Dragon-Oath at the Svartalf Foist",
+   "levels": [
+    51,
+    54
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 48,
+   "min_people": 6,
+   "hint": "Huscarl Svein is forming the Dragon-Oath up for the Svartalf Foist.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60157473,
+    "model": 160,
+    "equipment": "SvasudGuard",
+    "guild": "the Oath of the Volur",
+    "name": "Huscarl Svein",
+    "level": 55,
+    "pos": [
+     1180,
+     520,
+     165.6
+    ],
+    "health_mult": 5,
+    "greet": "The Svartalf Foist. The svartalf who sold themselves for her scale hold it, and their bloodbinders have three blood-wards round it. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Into the foist! Hold the three blood-wards, then find their binder!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Oath holds the Svartalf Foist.",
+    "regret": "Back out! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60157473,
+     "model": 160,
+     "equipment": "SvasudGuard",
+     "guild": "the Oath of the Volur",
+     "name": "oath-sworn huscarl",
+     "level": 53,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Foist",
+     "objective": "Break the svartalf in the Foist",
+     "announce": "The Dragon-Oath is in the Svartalf Foist! Break them!",
+     "center": [
+      1350,
+      500,
+      104.7
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 26,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 55004,
+       "name": "svartalf foister",
+       "level": [
+        51,
+        53
+       ],
+       "guild": "the Scale-Traders"
+      },
+      {
+       "template": 55003,
+       "name": "svartalf infiltrator",
+       "level": [
+        50,
+        52
+       ],
+       "guild": "the Scale-Traders"
+      },
+      {
+       "template": 55002,
+       "name": "svartalf bloodbinder",
+       "level": [
+        53,
+        55
+       ],
+       "guild": "the Scale-Traders"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "wards",
+     "name": "The Blood-Wards",
+     "objective": "Hold the three blood-wards at once while the volur break them",
+     "announce": "Three blood-wards hold the foist for the dragon - stand at all three at once while the volur break them!",
+     "wards": [
+      [
+       1320,
+       470,
+       101.1
+      ],
+      [
+       1380,
+       480,
+       104.5
+      ],
+      [
+       1350,
+       540,
+       102.5
+      ]
+     ],
+     "ward_names": [
+      "the north ward",
+      "the east ward",
+      "the south ward"
+     ],
+     "ward_radius": 22,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 55004,
+       "name": "svartalf foister",
+       "level": [
+        51,
+        53
+       ],
+       "guild": "the Scale-Traders"
+      },
+      {
+       "template": 55002,
+       "name": "svartalf bloodbinder",
+       "level": [
+        53,
+        55
+       ],
+       "guild": "the Scale-Traders"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "banner of the Oath",
+     "center": [
+      1350,
+      500,
+      104.7
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the host falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Bloodbinder Rana",
+     "objective": "Defeat Bloodbinder Rana",
+     "announce": "Bloodbinder Rana, her arms scarred with dragon-runes: 'The Mother paid us in scale. What did your king ever pay?'",
+     "center": [
+      1350,
+      500,
+      104.7
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 55002,
+      "name": "Bloodbinder Rana",
+      "level": 55,
+      "size": 60,
+      "health_mult": 4.5,
+      "guild": "of the Scale-Traders"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 55004,
+        "name": "svartalf foister",
+        "level": [
+         51,
+         53
+        ],
+        "guild": "the Scale-Traders"
+       },
+       {
+        "template": 55002,
+        "name": "svartalf bloodbinder",
+        "level": [
+         53,
+         55
+        ],
+        "guild": "the Scale-Traders"
+       }
+      ]
+     },
+     "success": "Rana falls, and the foist's wards go dark.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "mh_cp3_assault",
+   "title": "The Dragon-Oath on the Armguard Lines",
+   "levels": [
+    52,
+    55
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 48,
+   "min_people": 6,
+   "hint": "Shield-Maiden Hild is forming the Dragon-Oath up for the Armguard Lines.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60157473,
+    "model": 160,
+    "equipment": "SvasudGuard",
+    "guild": "the Oath of the Volur",
+    "name": "Shield-Maiden Hild",
+    "level": 56,
+    "pos": [
+     900,
+     700,
+     141.3
+    ],
+    "health_mult": 5,
+    "greet": "The Armguard Lines. The drakulv dig in across the middle of Malmohus, and we take them and we hold them - the volur's banner goes up, and they'll come for it. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Into the lines! Break them, then hold the banner!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Oath holds the Armguard Lines.",
+    "regret": "Fall back! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60157473,
+     "model": 160,
+     "equipment": "SvasudGuard",
+     "guild": "the Oath of the Volur",
+     "name": "oath-sworn huscarl",
+     "level": 53,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Armguard Lines",
+     "objective": "Break the drakulv on the Armguard Lines",
+     "announce": "The Dragon-Oath is on the Armguard Lines! Break them!",
+     "center": [
+      750,
+      850,
+      100.9
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 26,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60160110,
+       "name": "drakulv armguard",
+       "level": [
+        51,
+        53
+       ],
+       "guild": "Gjalpinulva's Drakulv"
+      },
+      {
+       "template": 60160112,
+       "name": "drakulv axehand",
+       "level": [
+        52,
+        54
+       ],
+       "guild": "Gjalpinulva's Drakulv"
+      },
+      {
+       "template": 60165644,
+       "name": "scaled varg snarler",
+       "level": [
+        52,
+        54
+       ],
+       "guild": "the drakulv's hounds"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "defend",
+     "name": "The Volur's Banner",
+     "objective": "Keep Volva Asa alive while the banner goes up",
+     "announce": "Volva Asa is raising the volur's banner on the lines - and the drakulv are coming for it!",
+     "center": [
+      750,
+      850,
+      100.9
+     ],
+     "radius": 80,
+     "duration_s": 240,
+     "protect": {
+      "template": 60157473,
+      "model": 157,
+      "guild": "the Oath of the Volur",
+      "name": "Volva Asa",
+      "level": 54,
+      "health_mult": 8,
+      "pos": [
+       750,
+       850,
+       100.9
+      ]
+     },
+     "waves": {
+      "every_s": 28,
+      "count": 4,
+      "from": [
+       [
+        690,
+        820,
+        158.5
+       ],
+       [
+        810,
+        880,
+        69.3
+       ],
+       [
+        750,
+        790,
+        127.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160110,
+        "name": "drakulv armguard",
+        "level": [
+         51,
+         53
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       },
+       {
+        "template": 60160112,
+        "name": "drakulv axehand",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       },
+       {
+        "template": 60160117,
+        "name": "drakulv sacrificer",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       }
+      ]
+     },
+     "thanks": "\"It's up. Let the Hierophant see it from his temple.\"",
+     "success": "They break - and whoever leads them comes out.",
+     "fail": "The banner falls.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Line-Jarl Steinolf",
+     "objective": "Defeat Line-Jarl Steinolf",
+     "announce": "Line-Jarl Steinolf, in drakulv scale over his old huscarl's mail: 'I swore to Eirik once. The Mother pays better.'",
+     "center": [
+      750,
+      850,
+      100.9
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60160110,
+      "name": "Line-Jarl Steinolf",
+      "level": 56,
+      "size": 66,
+      "health_mult": 4.5,
+      "guild": "Jarl of the Armguard Lines"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60160110,
+        "name": "drakulv armguard",
+        "level": [
+         51,
+         53
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       },
+       {
+        "template": 60160112,
+        "name": "drakulv axehand",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       }
+      ]
+     },
+     "success": "Steinolf falls, and the lines break.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "mh_cp4_assault",
+   "title": "The Dragon-Oath on the Temple Steps",
+   "levels": [
+    53,
+    56
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 48,
+   "min_people": 8,
+   "hint": "Volva Groa's own apprentice is forming the Dragon-Oath up for the Temple Steps.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60157473,
+    "model": 168,
+    "guild": "the Oath of the Volur",
+    "name": "Hallveig the Apprentice",
+    "level": 54,
+    "pos": [
+     780,
+     1050,
+     174.1
+    ],
+    "health_mult": 5,
+    "greet": "The Temple Steps. The protectors and executioners - the last thing between us and the Hierophant. Eight at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Up the steps! Break the rite-fires, then the warden!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Oath holds the Temple Steps - the Wyrm-Temple is in sight.",
+    "regret": "Down the steps! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60157473,
+     "model": 160,
+     "equipment": "SvasudGuard",
+     "guild": "the Oath of the Volur",
+     "name": "oath-sworn huscarl",
+     "level": 53,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Temple Steps",
+     "objective": "Break the drakulv on the Temple Steps",
+     "announce": "The Dragon-Oath is on the Temple Steps! Break them!",
+     "center": [
+      700,
+      1200,
+      71.4
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 28,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60160116,
+       "name": "drakulv protector",
+       "level": [
+        54,
+        56
+       ],
+       "guild": "Gjalpinulva's Drakulv"
+      },
+      {
+       "template": 60160116,
+       "name": "drakulv executioner",
+       "level": [
+        55,
+        57
+       ],
+       "guild": "Gjalpinulva's Drakulv"
+      },
+      {
+       "template": 60160111,
+       "name": "drakulv attendant",
+       "level": [
+        53,
+        55
+       ],
+       "guild": "the Hierophant's Disciples"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "wards",
+     "name": "The Rite-Fires",
+     "objective": "Stand at the three rite-fires at once while the volur put them out",
+     "announce": "Three rite-fires keep the dragon's sleep light - stand at all three at once and the volur will put them out!",
+     "wards": [
+      [
+       670,
+       1170,
+       68.9
+      ],
+      [
+       730,
+       1180,
+       71.3
+      ],
+      [
+       700,
+       1240,
+       70.8
+      ]
+     ],
+     "ward_names": [
+      "the scale fire",
+      "the blood fire",
+      "the name fire"
+     ],
+     "ward_radius": 22,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 60160116,
+       "name": "drakulv protector",
+       "level": [
+        54,
+        56
+       ],
+       "guild": "Gjalpinulva's Drakulv"
+      },
+      {
+       "template": 60160111,
+       "name": "drakulv attendant",
+       "level": [
+        53,
+        55
+       ],
+       "guild": "the Hierophant's Disciples"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "banner of the Oath",
+     "center": [
+      700,
+      1200,
+      71.4
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the host falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Executioner Bjornvarg",
+     "objective": "Defeat Executioner Bjornvarg",
+     "announce": "Executioner Bjornvarg, axe in both hands, the dragon's eye branded on his chest: 'The Hierophant says your names are already in the rite.'",
+     "center": [
+      700,
+      1200,
+      71.4
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60160116,
+      "name": "Executioner Bjornvarg",
+      "level": 57,
+      "size": 70,
+      "health_mult": 5,
+      "guild": "Executioner of the Temple"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60160116,
+        "name": "drakulv protector",
+        "level": [
+         54,
+         56
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       },
+       {
+        "template": 60160116,
+        "name": "drakulv executioner",
+        "level": [
+         55,
+         57
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       }
+      ]
+     },
+     "success": "Bjornvarg falls on the steps. Above: the Wyrm-Temple, and the smoke of the rite.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "mh_cp1_counter",
+   "title": "The Drakulv Strike Back at the Missionary Road",
+   "levels": [
+    50,
+    53
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 48,
+   "wake_m": 200,
+   "hint": "The drakulv is coming back for the Missionary Road!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Missionary Road",
+     "objective": "Keep the host's captain alive at the Missionary Road",
+     "announce": "The drakulv is coming back for the Missionary Road! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      600,
+      300,
+      84.6
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60157473,
+      "model": 160,
+      "equipment": "SvasudGuard",
+      "guild": "the Oath of the Volur",
+      "name": "Oath-Captain of the Volur",
+      "level": 55,
+      "pos": [
+       600,
+       300,
+       84.6
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        540,
+        270,
+        71.9
+       ],
+       [
+        660,
+        330,
+        139.2
+       ],
+       [
+        600,
+        240,
+        70.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160115,
+        "name": "drakulv missionary",
+        "level": [
+         50,
+         52
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       },
+       {
+        "template": 60164855,
+        "name": "patrolling drakulv",
+        "level": [
+         50,
+         52
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       },
+       {
+        "template": 60160117,
+        "name": "drakulv sacrificer",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "The drakulv breaks against the line. The Missionary Road holds - and the clock starts again.",
+     "fail": "The banner falls. The drakulv has the Missionary Road again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "mh_cp2_counter",
+   "title": "The Drakulv Strike Back at the Svartalf Foist",
+   "levels": [
+    51,
+    54
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 48,
+   "wake_m": 200,
+   "hint": "The drakulv is coming back for the Svartalf Foist!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Svartalf Foist",
+     "objective": "Keep the host's captain alive at the Svartalf Foist",
+     "announce": "The drakulv is coming back for the Svartalf Foist! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      1350,
+      500,
+      104.7
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60157473,
+      "model": 160,
+      "equipment": "SvasudGuard",
+      "guild": "the Oath of the Volur",
+      "name": "Oath-Captain of the Volur",
+      "level": 55,
+      "pos": [
+       1350,
+       500,
+       104.7
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        1290,
+        470,
+        100.0
+       ],
+       [
+        1410,
+        530,
+        107.7
+       ],
+       [
+        1350,
+        440,
+        102.1
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 55004,
+        "name": "svartalf foister",
+        "level": [
+         51,
+         53
+        ],
+        "guild": "the Scale-Traders"
+       },
+       {
+        "template": 55003,
+        "name": "svartalf infiltrator",
+        "level": [
+         50,
+         52
+        ],
+        "guild": "the Scale-Traders"
+       },
+       {
+        "template": 55002,
+        "name": "svartalf bloodbinder",
+        "level": [
+         53,
+         55
+        ],
+        "guild": "the Scale-Traders"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "The drakulv breaks against the line. The Svartalf Foist holds - and the clock starts again.",
+     "fail": "The banner falls. The drakulv has the Svartalf Foist again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "mh_cp3_counter",
+   "title": "The Drakulv Strike Back at the Armguard Lines",
+   "levels": [
+    52,
+    55
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 48,
+   "wake_m": 200,
+   "hint": "The drakulv is coming back for the Armguard Lines!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Armguard Lines",
+     "objective": "Keep the host's captain alive at the Armguard Lines",
+     "announce": "The drakulv is coming back for the Armguard Lines! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      750,
+      850,
+      100.9
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60157473,
+      "model": 160,
+      "equipment": "SvasudGuard",
+      "guild": "the Oath of the Volur",
+      "name": "Oath-Captain of the Volur",
+      "level": 55,
+      "pos": [
+       750,
+       850,
+       100.9
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        690,
+        820,
+        158.5
+       ],
+       [
+        810,
+        880,
+        69.3
+       ],
+       [
+        750,
+        790,
+        127.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160110,
+        "name": "drakulv armguard",
+        "level": [
+         51,
+         53
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       },
+       {
+        "template": 60160112,
+        "name": "drakulv axehand",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       },
+       {
+        "template": 60165644,
+        "name": "scaled varg snarler",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "the drakulv's hounds"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "The drakulv breaks against the line. The Armguard Lines holds - and the clock starts again.",
+     "fail": "The banner falls. The drakulv has the Armguard Lines again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "mh_cp4_counter",
+   "title": "The Drakulv Strike Back at the Temple Steps",
+   "levels": [
+    53,
+    56
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 48,
+   "wake_m": 200,
+   "hint": "The drakulv is coming back for the Temple Steps!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Temple Steps",
+     "objective": "Keep the host's captain alive at the Temple Steps",
+     "announce": "The drakulv is coming back for the Temple Steps! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      700,
+      1200,
+      71.4
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60157473,
+      "model": 160,
+      "equipment": "SvasudGuard",
+      "guild": "the Oath of the Volur",
+      "name": "Oath-Captain of the Volur",
+      "level": 55,
+      "pos": [
+       700,
+       1200,
+       71.4
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        640,
+        1170,
+        68.3
+       ],
+       [
+        760,
+        1230,
+        70.0
+       ],
+       [
+        700,
+        1140,
+        80.5
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160116,
+        "name": "drakulv protector",
+        "level": [
+         54,
+         56
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       },
+       {
+        "template": 60160116,
+        "name": "drakulv executioner",
+        "level": [
+         55,
+         57
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       },
+       {
+        "template": 60160111,
+        "name": "drakulv attendant",
+        "level": [
+         53,
+         55
+        ],
+        "guild": "the Hierophant's Disciples"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "The drakulv breaks against the line. The Temple Steps holds - and the clock starts again.",
+     "fail": "The banner falls. The drakulv has the Temple Steps again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "mh_wyrm_temple",
+   "title": "The Wyrm-Temple",
+   "levels": [
+    55,
+    60
+   ],
+   "manual": true,
+   "bots": 16,
+   "bot_min_level": 50,
+   "min_people": 10,
+   "hint": "Volva Groa herself is gathering the Dragon-Oath before the Wyrm-Temple.",
+   "rest_s": 15,
+   "start": "t1",
+   "giver": {
+    "template": 60157473,
+    "model": 157,
+    "guild": "the Oath of the Volur",
+    "name": "Volva Groa",
+    "level": 60,
+    "pos": [
+     820,
+     1300,
+     71.8
+    ],
+    "health_mult": 8,
+    "greet": "The Wyrm-Temple. The Hierophant's in there with his half of her name - and his Wyrm-Guard, and if he speaks it, one of her eldest. Two groups at least - ten, bots and all - and healers, and curers. Then say [by the Oath].",
+    "accept": "by the Oath",
+    "reply": "By the Oath! Healers to the back, curers by them - and whatever climbs out of that pit, hold!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The rite is broken. Her name is safe.",
+    "regret": "Back! Back down the steps! We'll come again.",
+    "size": 50
+   },
+   "guards": [
+    {
+     "template": 60157473,
+     "model": 160,
+     "equipment": "SvasudGuard",
+     "guild": "the Oath of the Volur",
+     "name": "oath-sworn huscarl",
+     "level": 55,
+     "count": 4
+    },
+    {
+     "template": 60157473,
+     "model": 168,
+     "guild": "the Oath of the Volur",
+     "name": "volva of the Oath",
+     "level": 53,
+     "count": 2
+    }
+   ],
+   "stages": [
+    {
+     "id": "t1",
+     "type": "boss",
+     "name": "the Drakulv Hierophant",
+     "objective": "Defeat the Drakulv Hierophant",
+     "announce": "The Hierophant rises from the altar, in robes of red scale, the dragon's eye burning on his brow: 'Groa. You brought me the rest of her name. How kind.'",
+     "center": [
+      900,
+      1380,
+      133.8
+     ],
+     "radius": 90,
+     "time_s": 2700,
+     "boss": {
+      "template": 60160117,
+      "name": "the Drakulv Hierophant",
+      "level": 60,
+      "size": 75,
+      "health_mult": 20,
+      "guild": "High Priest of Gjalpinulva"
+     },
+     "adds": {
+      "every_s": 55,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60160116,
+        "name": "drakulv protector",
+        "level": [
+         54,
+         56
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       },
+       {
+        "template": 60160111,
+        "name": "drakulv attendant",
+        "level": [
+         53,
+         55
+        ],
+        "guild": "the Hierophant's Disciples"
+       },
+       {
+        "template": 60160112,
+        "name": "drakulv axehand",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Gjalpinulva's Drakulv"
+       }
+      ]
+     },
+     "success": "The Hierophant falls across his altar, and the half-name dies on his lips. The rite-smoke thins over Malmohus - and in her lair to the south-west, Gjalpinulva stirs.",
+     "fail": "The Hierophant drives the Dragon-Oath from his temple.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 60,
+      "copper_per_level": 650,
+      "tokens": 60,
+      "items": [
+       {
+        "id": "mh116_hierophant_s_eye_crown",
+        "gold_chance": 60,
+        "silver_chance": 25
+       },
+       {
+        "id": "mh116_wyrm_guard_s_scale",
+        "gold_chance": 60,
+        "silver_chance": 25
+       },
+       {
+        "id": "mh116_brood_elder_s_tooth",
+        "gold_chance": 60,
+        "silver_chance": 25
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
 }

@@ -1,864 +1,2155 @@
 {
-  "zone": 102,
-  "region": 100,
-  "name": "West Svealand",
-  "lore": "West Svealand: Huginfel and the fortress of Vindsaul Faste, where the outlawed Blodfelag swear their blood-oaths in the hills.",
-  "chains": [
+ "zone": 102,
+ "region": 100,
+ "name": "West Svealand",
+ "lore": "West Svealand: Huginfel and Vindsaul Faste on the frontier. In the west the Blodfelag - the blood-fellowship - swear blood-oaths to the Fenris-wolf's children; their windcallers sing snow down in summer, their haxa read Raumarik's frost in bowls of blood, and their Blood-Hall stands full of thralls' chains. A gully in the south-west has frozen and will not thaw.",
+ "chains": [
+  {
+   "id": "west_svealand_blodfelag_camp",
+   "title": "The Blodfelag Camp",
+   "levels": [
+    14,
+    18
+   ],
+   "hint": "Oath-fires burn in the southern hills...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "west_svealand_blodfelag_camp",
-      "title": "The Blodfelag Camp",
-      "levels": [14, 18],
-      "hint": "Oath-fires burn in the southern hills...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Blodfelag Camp",
-          "objective": "Clear the Blodfelag camp",
-          "announce": "Hjalmar has sworn the Blodfelag to march on Huginfel. Break his camp first.",
-          "center": [417, 1182, 114.2],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60158514,
-              "name": "blodfelag dreng",
-              "level": [14, 16]
-            },
-            {
-              "template": 60158526,
-              "name": "blodfelag svard",
-              "level": [16, 17]
-            },
-            {
-              "template": 20015,
-              "name": "blodfelag windcaller",
-              "level": [17, 18]
-            }
-          ],
-          "success": "You have cleared the Blodfelag camp. Hjalmar Blood-Oath comes out to fight.",
-          "fail": "They hold the Blodfelag camp. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Hjalmar Blood-Oath",
-          "objective": "Defeat Hjalmar Blood-Oath",
-          "announce": "Hjalmar Blood-Oath stands at the Blodfelag camp. Bring friends.",
-          "center": [417, 1182, 114.2],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60158532,
-            "name": "Hjalmar Blood-Oath",
-            "level": 20,
-            "size": 74,
-            "pos": [417, 1182, 114.2],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60158514,
-                "name": "blodfelag dreng",
-                "level": [14, 16]
-              }
-            ]
-          },
-          "success": "Hjalmar Blood-Oath falls. The way is safe again.",
-          "fail": "Hjalmar Blood-Oath slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu102_hjalmar_blood_oath_s_bracer", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Blodfelag Drengs Hold the Road to Vindsaul Faste",
-          "objective": "Drive the blodfelag drengs off the road to Vindsaul Faste",
-          "announce": "With The Blodfelag Camp lost, the blodfelag drengs have spread down onto the road to Vindsaul Faste and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [676, 808, 145.5],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60158514,
-              "name": "blodfelag dreng",
-              "level": [14, 16]
-            },
-            {
-              "template": 60158526,
-              "name": "blodfelag svard",
-              "level": [16, 17]
-            },
-            {
-              "template": 20015,
-              "name": "blodfelag windcaller",
-              "level": [17, 18]
-            }
-          ],
-          "boss": {
-            "template": 60158514,
-            "name": "Blodfelag dreng warleader",
-            "level": 19,
-            "pos": [676, 808, 145.5],
-            "health_mult": 2
-          },
-          "success": "The blodfelag drengs are gone from the road to Vindsaul Faste. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Gunnar has come out to set the road to Vindsaul Faste right. The blodfelag drengs are coming back for it!",
-          "center": [676, 808, 145.5],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Gunnar",
-            "level": 18,
-            "pos": [676, 808, 145.5],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [692, 891, 145.2],
-              [627, 878, 146.0],
-              [592, 822, 149.9]
-            ],
-            "mobs": [
-              {
-                "template": 60158514,
-                "name": "blodfelag dreng",
-                "level": [14, 16]
-              },
-              {
-                "template": 60158526,
-                "name": "blodfelag svard",
-                "level": [16, 17]
-              },
-              {
-                "template": 20015,
-                "name": "blodfelag windcaller",
-                "level": [17, 18]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Vindsaul Faste is safe again. Thank you.\"",
-          "success": "The blodfelag drengs break and scatter. The road to Vindsaul Faste is open again.",
-          "fail": "Roadwarden Gunnar falls, and the blodfelag drengs take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "west_svealand_oathbreakers",
-      "title": "The Oathbreakers' Raid",
-      "levels": [10, 15],
-      "hint": "Riders have been seen on the hill roads...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Runner Eydis",
-          "objective": "Protect Runner Eydis, who is binding her horse's leg",
-          "announce": "Runner Eydis carries word to Vindsaul Faste, and the oathbreakers mean to stop her. Her horse is lame - hold them off.",
-          "center": [1117, 1033, 144.7],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Runner Eydis",
-            "template": 60167654,
-            "level": 15,
-            "model": 156,
-            "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
-            "health_mult": 10,
-            "pos": [1117, 1033, 144.7]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1078, 1108, 142.8],
-              [1036, 1057, 139.2],
-              [1043, 991, 144.9]
-            ],
-            "mobs": [
-              {
-                "template": 60158520,
-                "name": "blodfelag oathbreaker",
-                "level": [10, 12]
-              },
-              {
-                "template": 60158516,
-                "name": "blodfelag henchman",
-                "level": [12, 13]
-              },
-              {
-                "template": 60158521,
-                "name": "blodfelag partisan",
-                "level": [13, 15]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Runner Eydis. \"They came from over there - let's finish this.\"",
-          "fail": "Runner Eydis falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Runner's Rest",
-          "objective": "Clear the runner's rest",
-          "announce": "They came from the runner's rest. Follow them back and clear it out.",
-          "center": [893, 1100, 139.7],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60158520,
-              "name": "blodfelag oathbreaker",
-              "level": [10, 12]
-            },
-            {
-              "template": 60158516,
-              "name": "blodfelag henchman",
-              "level": [12, 13]
-            },
-            {
-              "template": 60158521,
-              "name": "blodfelag partisan",
-              "level": [13, 15]
-            }
-          ],
-          "success": "You have cleared the runner's rest. Ulf the Faithless comes out to fight.",
-          "fail": "They hold the runner's rest. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Ulf the Faithless",
-          "objective": "Defeat Ulf the Faithless",
-          "announce": "Ulf the Faithless stands at the runner's rest. Bring friends.",
-          "center": [893, 1100, 139.7],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60158521,
-            "name": "Ulf the Faithless",
-            "level": 17,
-            "size": 70,
-            "pos": [893, 1100, 139.7],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60158520,
-                "name": "blodfelag oathbreaker",
-                "level": [10, 12]
-              }
-            ]
-          },
-          "success": "Ulf the Faithless falls. The way is safe again.",
-          "fail": "Ulf the Faithless slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu102_ulf_the_faithless_stone", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Blodfelag Oathbreakers Hold the Road to Vindsaul Faste",
-          "objective": "Drive the blodfelag oathbreakers off the road to Vindsaul Faste",
-          "announce": "With The Oathbreakers' Raid lost, the blodfelag oathbreakers have spread down onto the road to Vindsaul Faste and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [997, 750, 142.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60158520,
-              "name": "blodfelag oathbreaker",
-              "level": [10, 12]
-            },
-            {
-              "template": 60158516,
-              "name": "blodfelag henchman",
-              "level": [12, 13]
-            },
-            {
-              "template": 60158521,
-              "name": "blodfelag partisan",
-              "level": [13, 15]
-            }
-          ],
-          "boss": {
-            "template": 60158520,
-            "name": "Blodfelag oathbreaker warleader",
-            "level": 16,
-            "pos": [997, 750, 142.6],
-            "health_mult": 2
-          },
-          "success": "The blodfelag oathbreakers are gone from the road to Vindsaul Faste. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hild has come out to set the road to Vindsaul Faste right. The blodfelag oathbreakers are coming back for it!",
-          "center": [997, 750, 142.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hild",
-            "level": 15,
-            "pos": [997, 750, 142.6],
-            "health_mult": 10,
-            "template": 60167654,
-            "model": 156,
-            "equipment": "b8af41f2-b48a-4422-959f-35b359a42914"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1038, 824, 146.1],
-              [972, 832, 142.4],
-              [921, 789, 144.3]
-            ],
-            "mobs": [
-              {
-                "template": 60158520,
-                "name": "blodfelag oathbreaker",
-                "level": [10, 12]
-              },
-              {
-                "template": 60158516,
-                "name": "blodfelag henchman",
-                "level": [12, 13]
-              },
-              {
-                "template": 60158521,
-                "name": "blodfelag partisan",
-                "level": [13, 15]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Vindsaul Faste is safe again. Thank you.\"",
-          "success": "The blodfelag oathbreakers break and scatter. The road to Vindsaul Faste is open again.",
-          "fail": "Roadwarden Hild falls, and the blodfelag oathbreakers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "west_svealand_skogsfru",
-      "title": "Into Skogsfru Wood",
-      "levels": [13, 14],
-      "hint": "Huscarl Bjorn is looking for help in Vindsaul Faste.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Huscarl Bjorn",
-        "template": 60167654,
-        "level": 15,
-        "model": 156,
-        "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
-        "guild": "Vindsaul Faste",
-        "health_mult": 4,
-        "pos": [1184, 49, 142.6],
-        "greet": "Two of my men walked into the skogsfru wood after a pretty voice, and they haven't walked out. I'm going in after them. Will you come? Say when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Blodfelag Camp",
+     "objective": "Clear the Blodfelag camp",
+     "announce": "Hjalmar has sworn the Blodfelag to march on Huginfel. Break his camp first.",
+     "center": [
+      417,
+      1182,
+      114.2
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60158514,
+       "name": "blodfelag dreng",
+       "level": [
+        14,
+        16
+       ]
       },
-      "guards": [
-        {
-          "name": "Viking",
-          "template": 60167654,
-          "level": 14,
-          "model": 156,
-          "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
-          "guild": "Vindsaul Faste",
-          "health_mult": 2,
-          "count": 3
-        }
-      ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Skogsfru Wood",
-          "objective": "Go with Huscarl Bjorn to the skogsfru wood",
-          "announce": "Huscarl Bjorn goes into the skogsfru wood after his lost men.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [1126, 116, 142.6],
-            [1094, 140, 142.6],
-            [1022, 148, 145.2],
-            [934, 164, 148.5],
-            [902, 188, 149.5],
-            [838, 188, 148.7],
-            [806, 204, 147.0],
-            [782, 220, 147.0],
-            [726, 260, 147.8],
-            [702, 276, 148.4],
-            [646, 276, 146.9]
-          ],
-          "ambushes": [
-            {
-              "at": 5,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 60166190,
-                  "name": "skogsfru",
-                  "level": [13, 14]
-                },
-                {
-                  "template": 20007,
-                  "name": "water sprite",
-                  "level": [13, 14]
-                }
-              ]
-            }
-          ],
-          "success": "Huscarl Bjorn reaches the skogsfru wood. \"There they are. Clear them out!\"",
-          "fail": "Huscarl Bjorn falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Skogsfru Wood",
-          "objective": "Clear the skogsfru wood",
-          "announce": "Clear the skogsfru wood!",
-          "center": [642, 275, 146.9],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60166190,
-              "name": "skogsfru",
-              "level": [13, 14]
-            },
-            {
-              "template": 20007,
-              "name": "water sprite",
-              "level": [13, 14]
-            },
-            {
-              "template": 60161682,
-              "name": "grizzled sveawolf",
-              "level": [13, 13]
-            }
-          ],
-          "success": "You have cleared the skogsfru wood. The Elder Skogsfru comes out to fight.",
-          "fail": "They hold the skogsfru wood. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "The Elder Skogsfru",
-          "objective": "Defeat the Elder Skogsfru",
-          "announce": "The Elder Skogsfru stands at the skogsfru wood. Bring friends.",
-          "center": [642, 275, 146.9],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60166190,
-            "name": "The Elder Skogsfru",
-            "level": 16,
-            "size": 70,
-            "pos": [642, 275, 146.9],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60166190,
-                "name": "skogsfru",
-                "level": [13, 14]
-              }
-            ]
-          },
-          "success": "The Elder Skogsfru falls. Vindsaul Faste will hear of this in the taverns tonight.",
-          "fail": "The Elder Skogsfru slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu102_elder_skogsfru_s_stone", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Skogsfrus Hold the Road to Vindsaul Faste",
-          "objective": "Drive the skogsfrus off the road to Vindsaul Faste",
-          "announce": "With Into Skogsfru Wood lost, the skogsfrus have spread down onto the road to Vindsaul Faste and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [868, 181, 147.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60166190,
-              "name": "skogsfru",
-              "level": [13, 14]
-            },
-            {
-              "template": 20007,
-              "name": "water sprite",
-              "level": [13, 14]
-            },
-            {
-              "template": 60161682,
-              "name": "grizzled sveawolf",
-              "level": [13, 13]
-            }
-          ],
-          "boss": {
-            "template": 60166190,
-            "name": "Skogsfru warleader",
-            "level": 15,
-            "pos": [868, 181, 147.6],
-            "health_mult": 2
-          },
-          "success": "The skogsfrus are gone from the road to Vindsaul Faste. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Ylva has come out to set the road to Vindsaul Faste right. The skogsfrus are coming back for it!",
-          "center": [868, 181, 147.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Ylva",
-            "level": 14,
-            "pos": [868, 181, 147.6],
-            "health_mult": 10,
-            "template": 60167654,
-            "model": 156,
-            "equipment": "b8af41f2-b48a-4422-959f-35b359a42914"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [837, 260, 145.6],
-              [790, 213, 147.4],
-              [790, 147, 152.8]
-            ],
-            "mobs": [
-              {
-                "template": 60166190,
-                "name": "skogsfru",
-                "level": [13, 14]
-              },
-              {
-                "template": 20007,
-                "name": "water sprite",
-                "level": [13, 14]
-              },
-              {
-                "template": 60161682,
-                "name": "grizzled sveawolf",
-                "level": [13, 13]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Vindsaul Faste is safe again. Thank you.\"",
-          "success": "The skogsfrus break and scatter. The road to Vindsaul Faste is open again.",
-          "fail": "Roadwarden Ylva falls, and the skogsfrus take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+      {
+       "template": 60158526,
+       "name": "blodfelag svard",
+       "level": [
+        16,
+        17
+       ]
+      },
+      {
+       "template": 20015,
+       "name": "blodfelag windcaller",
+       "level": [
+        17,
+        18
+       ]
+      }
+     ],
+     "success": "You have cleared the Blodfelag camp. Hjalmar Blood-Oath comes out to fight.",
+     "fail": "They hold the Blodfelag camp. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "west_svealand_svartalf_cairn",
-      "title": "The Svartalf Hunt",
-      "levels": [14, 15],
-      "hint": "Dark elves have been seen near the old cairn...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Skald Bersi",
-          "objective": "Protect Skald Bersi, who is singing the old wards over the cairn",
-          "announce": "Skald Bersi is renewing the wards on the old cairn, and the svartalfar want what is buried there. Keep them off him.",
-          "center": [874, 1365, 117.2],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Skald Bersi",
-            "template": 60167654,
-            "level": 15,
-            "model": 156,
-            "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
-            "health_mult": 10,
-            "pos": [874, 1365, 117.2]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [780, 1397, 118.9],
-              [792, 1343, 114.6],
-              [833, 1291, 115.2]
-            ],
-            "mobs": [
-              {
-                "template": 60166662,
-                "name": "svartalf hunter",
-                "level": [14, 15]
-              },
-              {
-                "template": 20008,
-                "name": "svartalf chanter",
-                "level": [14, 15]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Skald Bersi. \"They came from over there - let's finish this.\"",
-          "fail": "Skald Bersi falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Svartalf Camp",
-          "objective": "Clear the svartalf camp",
-          "announce": "They came from the svartalf camp. Follow them back and clear it out.",
-          "center": [632, 1301, 121.4],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60166662,
-              "name": "svartalf hunter",
-              "level": [14, 15]
-            },
-            {
-              "template": 20008,
-              "name": "svartalf chanter",
-              "level": [14, 15]
-            }
-          ],
-          "success": "You have cleared the svartalf camp. Ulfhild the Svartalf comes out to fight.",
-          "fail": "They hold the svartalf camp. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Ulfhild the Svartalf",
-          "objective": "Defeat Ulfhild the Svartalf",
-          "announce": "Ulfhild the Svartalf stands at the svartalf camp. Bring friends.",
-          "center": [632, 1301, 121.4],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 20008,
-            "name": "Ulfhild the Svartalf",
-            "level": 17,
-            "size": 65,
-            "pos": [632, 1301, 121.4],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60166662,
-                "name": "svartalf hunter",
-                "level": [14, 15]
-              }
-            ]
-          },
-          "success": "Ulfhild the Svartalf falls. The way is safe again.",
-          "fail": "Ulfhild the Svartalf slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu102_ulfhild_the_svartalf_s_mantle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Svartalf Hunters Hold the Road to Vindsaul Faste",
-          "objective": "Drive the svartalf hunters off the road to Vindsaul Faste",
-          "announce": "With The Svartalf Hunt lost, the svartalf hunters have spread down onto the road to Vindsaul Faste and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [425, 896, 150.3],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60166662,
-              "name": "svartalf hunter",
-              "level": [14, 15]
-            },
-            {
-              "template": 20008,
-              "name": "svartalf chanter",
-              "level": [14, 15]
-            }
-          ],
-          "boss": {
-            "template": 60166662,
-            "name": "Svartalf hunter warleader",
-            "level": 16,
-            "pos": [425, 896, 150.3],
-            "health_mult": 2
-          },
-          "success": "The svartalf hunters are gone from the road to Vindsaul Faste. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Gunnar has come out to set the road to Vindsaul Faste right. The svartalf hunters are coming back for it!",
-          "center": [425, 896, 150.3],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Gunnar",
-            "level": 15,
-            "pos": [425, 896, 150.3],
-            "health_mult": 10,
-            "template": 60167654,
-            "model": 156,
-            "equipment": "b8af41f2-b48a-4422-959f-35b359a42914"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [506, 921, 150.6],
-              [464, 972, 144.4],
-              [398, 976, 143.3]
-            ],
-            "mobs": [
-              {
-                "template": 60166662,
-                "name": "svartalf hunter",
-                "level": [14, 15]
-              },
-              {
-                "template": 20008,
-                "name": "svartalf chanter",
-                "level": [14, 15]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Vindsaul Faste is safe again. Thank you.\"",
-          "success": "The svartalf hunters break and scatter. The road to Vindsaul Faste is open again.",
-          "fail": "Roadwarden Gunnar falls, and the svartalf hunters take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Hjalmar Blood-Oath",
+     "objective": "Defeat Hjalmar Blood-Oath",
+     "announce": "Hjalmar Blood-Oath stands at the Blodfelag camp. Bring friends.",
+     "center": [
+      417,
+      1182,
+      114.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60158532,
+      "name": "Hjalmar Blood-Oath",
+      "level": 20,
+      "size": 74,
+      "pos": [
+       417,
+       1182,
+       114.2
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60158514,
+        "name": "blodfelag dreng",
+        "level": [
+         14,
+         16
+        ]
+       }
       ]
+     },
+     "success": "Hjalmar Blood-Oath falls. The way is safe again.",
+     "fail": "Hjalmar Blood-Oath slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu102_hjalmar_blood_oath_s_bracer",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Blodfelag Drengs Hold the Road to Vindsaul Faste",
+     "objective": "Drive the blodfelag drengs off the road to Vindsaul Faste",
+     "announce": "With The Blodfelag Camp lost, the blodfelag drengs have spread down onto the road to Vindsaul Faste and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      676,
+      808,
+      145.5
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60158514,
+       "name": "blodfelag dreng",
+       "level": [
+        14,
+        16
+       ]
+      },
+      {
+       "template": 60158526,
+       "name": "blodfelag svard",
+       "level": [
+        16,
+        17
+       ]
+      },
+      {
+       "template": 20015,
+       "name": "blodfelag windcaller",
+       "level": [
+        17,
+        18
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60158514,
+      "name": "Blodfelag dreng warleader",
+      "level": 19,
+      "pos": [
+       676,
+       808,
+       145.5
+      ],
+      "health_mult": 2
+     },
+     "success": "The blodfelag drengs are gone from the road to Vindsaul Faste. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Gunnar has come out to set the road to Vindsaul Faste right. The blodfelag drengs are coming back for it!",
+     "center": [
+      676,
+      808,
+      145.5
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Gunnar",
+      "level": 18,
+      "pos": [
+       676,
+       808,
+       145.5
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        692,
+        891,
+        145.2
+       ],
+       [
+        627,
+        878,
+        146.0
+       ],
+       [
+        592,
+        822,
+        149.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60158514,
+        "name": "blodfelag dreng",
+        "level": [
+         14,
+         16
+        ]
+       },
+       {
+        "template": 60158526,
+        "name": "blodfelag svard",
+        "level": [
+         16,
+         17
+        ]
+       },
+       {
+        "template": 20015,
+        "name": "blodfelag windcaller",
+        "level": [
+         17,
+         18
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Vindsaul Faste is safe again. Thank you.\"",
+     "success": "The blodfelag drengs break and scatter. The road to Vindsaul Faste is open again.",
+     "fail": "Roadwarden Gunnar falls, and the blodfelag drengs take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
+   ]
+  },
+  {
+   "id": "west_svealand_oathbreakers",
+   "title": "The Oathbreakers' Raid",
+   "levels": [
+    10,
+    15
+   ],
+   "hint": "Riders have been seen on the hill roads...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Runner Eydis",
+     "objective": "Protect Runner Eydis, who is binding her horse's leg",
+     "announce": "Runner Eydis carries word to Vindsaul Faste, and the oathbreakers mean to stop her. Her horse is lame - hold them off.",
+     "center": [
+      1117,
+      1033,
+      144.7
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Runner Eydis",
+      "template": 60167654,
+      "level": 15,
+      "model": 156,
+      "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
+      "health_mult": 10,
+      "pos": [
+       1117,
+       1033,
+       144.7
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1078,
+        1108,
+        142.8
+       ],
+       [
+        1036,
+        1057,
+        139.2
+       ],
+       [
+        1043,
+        991,
+        144.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60158520,
+        "name": "blodfelag oathbreaker",
+        "level": [
+         10,
+         12
+        ]
+       },
+       {
+        "template": 60158516,
+        "name": "blodfelag henchman",
+        "level": [
+         12,
+         13
+        ]
+       },
+       {
+        "template": 60158521,
+        "name": "blodfelag partisan",
+        "level": [
+         13,
+         15
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Runner Eydis. \"They came from over there - let's finish this.\"",
+     "fail": "Runner Eydis falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Runner's Rest",
+     "objective": "Clear the runner's rest",
+     "announce": "They came from the runner's rest. Follow them back and clear it out.",
+     "center": [
+      893,
+      1100,
+      139.7
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60158520,
+       "name": "blodfelag oathbreaker",
+       "level": [
+        10,
+        12
+       ]
+      },
+      {
+       "template": 60158516,
+       "name": "blodfelag henchman",
+       "level": [
+        12,
+        13
+       ]
+      },
+      {
+       "template": 60158521,
+       "name": "blodfelag partisan",
+       "level": [
+        13,
+        15
+       ]
+      }
+     ],
+     "success": "You have cleared the runner's rest. Ulf the Faithless comes out to fight.",
+     "fail": "They hold the runner's rest. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Ulf the Faithless",
+     "objective": "Defeat Ulf the Faithless",
+     "announce": "Ulf the Faithless stands at the runner's rest. Bring friends.",
+     "center": [
+      893,
+      1100,
+      139.7
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60158521,
+      "name": "Ulf the Faithless",
+      "level": 17,
+      "size": 70,
+      "pos": [
+       893,
+       1100,
+       139.7
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60158520,
+        "name": "blodfelag oathbreaker",
+        "level": [
+         10,
+         12
+        ]
+       }
+      ]
+     },
+     "success": "Ulf the Faithless falls. The way is safe again.",
+     "fail": "Ulf the Faithless slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu102_ulf_the_faithless_stone",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Blodfelag Oathbreakers Hold the Road to Vindsaul Faste",
+     "objective": "Drive the blodfelag oathbreakers off the road to Vindsaul Faste",
+     "announce": "With The Oathbreakers' Raid lost, the blodfelag oathbreakers have spread down onto the road to Vindsaul Faste and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      997,
+      750,
+      142.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60158520,
+       "name": "blodfelag oathbreaker",
+       "level": [
+        10,
+        12
+       ]
+      },
+      {
+       "template": 60158516,
+       "name": "blodfelag henchman",
+       "level": [
+        12,
+        13
+       ]
+      },
+      {
+       "template": 60158521,
+       "name": "blodfelag partisan",
+       "level": [
+        13,
+        15
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60158520,
+      "name": "Blodfelag oathbreaker warleader",
+      "level": 16,
+      "pos": [
+       997,
+       750,
+       142.6
+      ],
+      "health_mult": 2
+     },
+     "success": "The blodfelag oathbreakers are gone from the road to Vindsaul Faste. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hild has come out to set the road to Vindsaul Faste right. The blodfelag oathbreakers are coming back for it!",
+     "center": [
+      997,
+      750,
+      142.6
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hild",
+      "level": 15,
+      "pos": [
+       997,
+       750,
+       142.6
+      ],
+      "health_mult": 10,
+      "template": 60167654,
+      "model": 156,
+      "equipment": "b8af41f2-b48a-4422-959f-35b359a42914"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1038,
+        824,
+        146.1
+       ],
+       [
+        972,
+        832,
+        142.4
+       ],
+       [
+        921,
+        789,
+        144.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60158520,
+        "name": "blodfelag oathbreaker",
+        "level": [
+         10,
+         12
+        ]
+       },
+       {
+        "template": 60158516,
+        "name": "blodfelag henchman",
+        "level": [
+         12,
+         13
+        ]
+       },
+       {
+        "template": 60158521,
+        "name": "blodfelag partisan",
+        "level": [
+         13,
+         15
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Vindsaul Faste is safe again. Thank you.\"",
+     "success": "The blodfelag oathbreakers break and scatter. The road to Vindsaul Faste is open again.",
+     "fail": "Roadwarden Hild falls, and the blodfelag oathbreakers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "west_svealand_skogsfru",
+   "title": "Into Skogsfru Wood",
+   "levels": [
+    13,
+    14
+   ],
+   "hint": "Huscarl Bjorn is looking for help in Vindsaul Faste.",
+   "rest_s": 45,
+   "giver": {
+    "name": "Huscarl Bjorn",
+    "template": 60167654,
+    "level": 15,
+    "model": 156,
+    "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
+    "guild": "Vindsaul Faste",
+    "health_mult": 4,
+    "pos": [
+     1184,
+     49,
+     142.6
+    ],
+    "greet": "Two of my men walked into the skogsfru wood after a pretty voice, and they haven't walked out. I'm going in after them. Will you come? Say when you're [ready].",
+    "accept": "ready",
+    "reply": "Good. Stay close - they will have watchers out. With me!",
+    "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "name": "Viking",
+     "template": 60167654,
+     "level": 14,
+     "model": 156,
+     "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
+     "guild": "Vindsaul Faste",
+     "health_mult": 2,
+     "count": 3
+    }
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "escort",
+     "name": "The Road to Skogsfru Wood",
+     "objective": "Go with Huscarl Bjorn to the skogsfru wood",
+     "announce": "Huscarl Bjorn goes into the skogsfru wood after his lost men.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       1126,
+       116,
+       142.6
+      ],
+      [
+       1094,
+       140,
+       142.6
+      ],
+      [
+       1022,
+       148,
+       145.2
+      ],
+      [
+       934,
+       164,
+       148.5
+      ],
+      [
+       902,
+       188,
+       149.5
+      ],
+      [
+       838,
+       188,
+       148.7
+      ],
+      [
+       806,
+       204,
+       147.0
+      ],
+      [
+       782,
+       220,
+       147.0
+      ],
+      [
+       726,
+       260,
+       147.8
+      ],
+      [
+       702,
+       276,
+       148.4
+      ],
+      [
+       646,
+       276,
+       146.9
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 5,
+       "count": 3,
+       "say": "Ambush! To me - hold together!",
+       "mobs": [
+        {
+         "template": 60166190,
+         "name": "skogsfru",
+         "level": [
+          13,
+          14
+         ]
+        },
+        {
+         "template": 20007,
+         "name": "water sprite",
+         "level": [
+          13,
+          14
+         ]
+        }
+       ]
+      }
+     ],
+     "success": "Huscarl Bjorn reaches the skogsfru wood. \"There they are. Clear them out!\"",
+     "fail": "Huscarl Bjorn falls on the road. The others carry the body home.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "g2",
+     "type": "cull",
+     "name": "Clear Skogsfru Wood",
+     "objective": "Clear the skogsfru wood",
+     "announce": "Clear the skogsfru wood!",
+     "center": [
+      642,
+      275,
+      146.9
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60166190,
+       "name": "skogsfru",
+       "level": [
+        13,
+        14
+       ]
+      },
+      {
+       "template": 20007,
+       "name": "water sprite",
+       "level": [
+        13,
+        14
+       ]
+      },
+      {
+       "template": 60161682,
+       "name": "grizzled sveawolf",
+       "level": [
+        13,
+        13
+       ]
+      }
+     ],
+     "success": "You have cleared the skogsfru wood. The Elder Skogsfru comes out to fight.",
+     "fail": "They hold the skogsfru wood. They will be bolder next time.",
+     "on_success": "g3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g3",
+     "type": "boss",
+     "name": "The Elder Skogsfru",
+     "objective": "Defeat the Elder Skogsfru",
+     "announce": "The Elder Skogsfru stands at the skogsfru wood. Bring friends.",
+     "center": [
+      642,
+      275,
+      146.9
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60166190,
+      "name": "The Elder Skogsfru",
+      "level": 16,
+      "size": 70,
+      "pos": [
+       642,
+       275,
+       146.9
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60166190,
+        "name": "skogsfru",
+        "level": [
+         13,
+         14
+        ]
+       }
+      ]
+     },
+     "success": "The Elder Skogsfru falls. Vindsaul Faste will hear of this in the taverns tonight.",
+     "fail": "The Elder Skogsfru slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu102_elder_skogsfru_s_stone",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Skogsfrus Hold the Road to Vindsaul Faste",
+     "objective": "Drive the skogsfrus off the road to Vindsaul Faste",
+     "announce": "With Into Skogsfru Wood lost, the skogsfrus have spread down onto the road to Vindsaul Faste and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      868,
+      181,
+      147.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60166190,
+       "name": "skogsfru",
+       "level": [
+        13,
+        14
+       ]
+      },
+      {
+       "template": 20007,
+       "name": "water sprite",
+       "level": [
+        13,
+        14
+       ]
+      },
+      {
+       "template": 60161682,
+       "name": "grizzled sveawolf",
+       "level": [
+        13,
+        13
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60166190,
+      "name": "Skogsfru warleader",
+      "level": 15,
+      "pos": [
+       868,
+       181,
+       147.6
+      ],
+      "health_mult": 2
+     },
+     "success": "The skogsfrus are gone from the road to Vindsaul Faste. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Ylva has come out to set the road to Vindsaul Faste right. The skogsfrus are coming back for it!",
+     "center": [
+      868,
+      181,
+      147.6
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Ylva",
+      "level": 14,
+      "pos": [
+       868,
+       181,
+       147.6
+      ],
+      "health_mult": 10,
+      "template": 60167654,
+      "model": 156,
+      "equipment": "b8af41f2-b48a-4422-959f-35b359a42914"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        837,
+        260,
+        145.6
+       ],
+       [
+        790,
+        213,
+        147.4
+       ],
+       [
+        790,
+        147,
+        152.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60166190,
+        "name": "skogsfru",
+        "level": [
+         13,
+         14
+        ]
+       },
+       {
+        "template": 20007,
+        "name": "water sprite",
+        "level": [
+         13,
+         14
+        ]
+       },
+       {
+        "template": 60161682,
+        "name": "grizzled sveawolf",
+        "level": [
+         13,
+         13
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Vindsaul Faste is safe again. Thank you.\"",
+     "success": "The skogsfrus break and scatter. The road to Vindsaul Faste is open again.",
+     "fail": "Roadwarden Ylva falls, and the skogsfrus take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "west_svealand_svartalf_cairn",
+   "title": "The Svartalf Hunt",
+   "levels": [
+    14,
+    15
+   ],
+   "hint": "Dark elves have been seen near the old cairn...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Skald Bersi",
+     "objective": "Protect Skald Bersi, who is singing the old wards over the cairn",
+     "announce": "Skald Bersi is renewing the wards on the old cairn, and the svartalfar want what is buried there. Keep them off him.",
+     "center": [
+      874,
+      1365,
+      117.2
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Skald Bersi",
+      "template": 60167654,
+      "level": 15,
+      "model": 156,
+      "equipment": "b8af41f2-b48a-4422-959f-35b359a42914",
+      "health_mult": 10,
+      "pos": [
+       874,
+       1365,
+       117.2
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        780,
+        1397,
+        118.9
+       ],
+       [
+        792,
+        1343,
+        114.6
+       ],
+       [
+        833,
+        1291,
+        115.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60166662,
+        "name": "svartalf hunter",
+        "level": [
+         14,
+         15
+        ]
+       },
+       {
+        "template": 20008,
+        "name": "svartalf chanter",
+        "level": [
+         14,
+         15
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Skald Bersi. \"They came from over there - let's finish this.\"",
+     "fail": "Skald Bersi falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Svartalf Camp",
+     "objective": "Clear the svartalf camp",
+     "announce": "They came from the svartalf camp. Follow them back and clear it out.",
+     "center": [
+      632,
+      1301,
+      121.4
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60166662,
+       "name": "svartalf hunter",
+       "level": [
+        14,
+        15
+       ]
+      },
+      {
+       "template": 20008,
+       "name": "svartalf chanter",
+       "level": [
+        14,
+        15
+       ]
+      }
+     ],
+     "success": "You have cleared the svartalf camp. Ulfhild the Svartalf comes out to fight.",
+     "fail": "They hold the svartalf camp. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Ulfhild the Svartalf",
+     "objective": "Defeat Ulfhild the Svartalf",
+     "announce": "Ulfhild the Svartalf stands at the svartalf camp. Bring friends.",
+     "center": [
+      632,
+      1301,
+      121.4
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 20008,
+      "name": "Ulfhild the Svartalf",
+      "level": 17,
+      "size": 65,
+      "pos": [
+       632,
+       1301,
+       121.4
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60166662,
+        "name": "svartalf hunter",
+        "level": [
+         14,
+         15
+        ]
+       }
+      ]
+     },
+     "success": "Ulfhild the Svartalf falls. The way is safe again.",
+     "fail": "Ulfhild the Svartalf slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu102_ulfhild_the_svartalf_s_mantle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Svartalf Hunters Hold the Road to Vindsaul Faste",
+     "objective": "Drive the svartalf hunters off the road to Vindsaul Faste",
+     "announce": "With The Svartalf Hunt lost, the svartalf hunters have spread down onto the road to Vindsaul Faste and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      425,
+      896,
+      150.3
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60166662,
+       "name": "svartalf hunter",
+       "level": [
+        14,
+        15
+       ]
+      },
+      {
+       "template": 20008,
+       "name": "svartalf chanter",
+       "level": [
+        14,
+        15
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60166662,
+      "name": "Svartalf hunter warleader",
+      "level": 16,
+      "pos": [
+       425,
+       896,
+       150.3
+      ],
+      "health_mult": 2
+     },
+     "success": "The svartalf hunters are gone from the road to Vindsaul Faste. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Gunnar has come out to set the road to Vindsaul Faste right. The svartalf hunters are coming back for it!",
+     "center": [
+      425,
+      896,
+      150.3
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Gunnar",
+      "level": 15,
+      "pos": [
+       425,
+       896,
+       150.3
+      ],
+      "health_mult": 10,
+      "template": 60167654,
+      "model": 156,
+      "equipment": "b8af41f2-b48a-4422-959f-35b359a42914"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        506,
+        921,
+        150.6
+       ],
+       [
+        464,
+        972,
+        144.4
+       ],
+       [
+        398,
+        976,
+        143.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60166662,
+        "name": "svartalf hunter",
+        "level": [
+         14,
+         15
+        ]
+       },
+       {
+        "template": 20008,
+        "name": "svartalf chanter",
+        "level": [
+         14,
+         15
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Vindsaul Faste is safe again. Thank you.\"",
+     "success": "The svartalf hunters break and scatter. The road to Vindsaul Faste is open again.",
+     "fail": "Roadwarden Gunnar falls, and the svartalf hunters take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "ws_windcallers_night",
+   "title": "The Windcallers' Night",
+   "levels": [
+    15,
+    18
+   ],
+   "hint": "Snow on the wind out of the west, in summer - the windcallers are singing...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "w1",
+   "stages": [
+    {
+     "id": "w1",
+     "type": "defend",
+     "name": "The Snowbound Farm",
+     "objective": "Keep Farmer Torgny alive at his snowbound farm",
+     "announce": "The Blodfelag's windcallers are singing a blizzard down on the western farms! Farmer Torgny won't leave his beasts - keep him alive!",
+     "center": [
+      560,
+      1060,
+      136.5
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "template": 60157473,
+      "model": 213,
+      "guild": "the Huginfel Shieldwall",
+      "name": "Farmer Torgny",
+      "level": 16,
+      "pos": [
+       560,
+       1060,
+       136.5
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 24,
+      "count": 3,
+      "from": [
+       [
+        500,
+        1010,
+        141.5
+       ],
+       [
+        620,
+        1100,
+        133.6
+       ],
+       [
+        520,
+        1120,
+        137.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60158514,
+        "name": "blodfelag dreng",
+        "level": [
+         15,
+         17
+        ],
+        "guild": "the Blodfelag"
+       },
+       {
+        "template": 60158529,
+        "name": "blodfelag warhound",
+        "level": [
+         15,
+         17
+        ],
+        "guild": "the Blodfelag"
+       },
+       {
+        "template": 60166283,
+        "name": "snow imp",
+        "level": [
+         16,
+         18
+        ],
+        "guild": "out of the endless winter"
+       }
+      ]
+     },
+     "thanks": "\"Snow in summer. My grandfather said this would come. Nobody believed him either.\"",
+     "success": "The raiders break - and out of the blizzard comes the one riding it, a haxa with frost in her hair.",
+     "fail": "Torgny falls, and the snow covers the farm by morning.",
+     "on_success": "w2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 110,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "w2",
+     "type": "boss",
+     "name": "the Storm-Haxa",
+     "objective": "Defeat the Storm-Haxa",
+     "announce": "The Storm-Haxa, her bowl of blood frozen to her hands: 'The Wolf's son hunts the moon, and the winter comes behind him!' A fight for many - bring friends.",
+     "center": [
+      560,
+      1060,
+      136.5
+     ],
+     "radius": 90,
+     "time_s": 1200,
+     "path": [
+      [
+       560,
+       1060,
+       136.5
+      ],
+      [
+       470,
+       980,
+       144.0
+      ],
+      [
+       380,
+       1060,
+       117.3
+      ],
+      [
+       470,
+       1150,
+       115.4
+      ],
+      [
+       560,
+       1060,
+       136.5
+      ]
+     ],
+     "boss": {
+      "template": 20016,
+      "name": "the Storm-Haxa",
+      "level": 19,
+      "size": 65,
+      "pos": [
+       560,
+       1060,
+       136.5
+      ],
+      "health_mult": 3.5,
+      "guild": "of the Blodfelag"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 20015,
+        "name": "blodfelag windcaller",
+        "level": [
+         16,
+         18
+        ],
+        "guild": "the Blodfelag"
+       },
+       {
+        "template": 60166283,
+        "name": "snow imp",
+        "level": [
+         16,
+         18
+        ],
+        "guild": "out of the endless winter"
+       }
+      ]
+     },
+     "success": "The Storm-Haxa falls, and the snow stops - mid-flake, it seems. Her bowl cracks, and the blood in it runs, warm, at last.",
+     "fail": "The Storm-Haxa rides her blizzard back into the west.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 28,
+      "copper_per_level": 220,
+      "tokens": 18,
+      "items": [
+       {
+        "id": "nu102_storm_haxa_s_frozen_bowl",
+        "gold_chance": 35,
+        "silver_chance": 20
+       },
+       {
+        "id": "nu102_blizzard_rider_s_mantle",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ],
+   "time": "night"
+  },
+  {
+   "id": "ws_blood_hall_assault",
+   "title": "Storm the Blood-Hall",
+   "levels": [
+    16,
+    20
+   ],
+   "manual": true,
+   "bots": 8,
+   "min_people": 4,
+   "bot_min_level": 12,
+   "hint": "Shield-Marshal Ase is gathering the Huginfel Shieldwall on the rise east of the Blood-Hall.",
+   "rest_s": 15,
+   "start": "b1",
+   "giver": {
+    "template": 60157473,
+    "model": 160,
+    "equipment": "SvasudGuard",
+    "guild": "the Huginfel Shieldwall",
+    "name": "Shield-Marshal Ase",
+    "level": 20,
+    "pos": [
+     640,
+     760,
+     148.4
+    ],
+    "health_mult": 3,
+    "greet": "The Shieldwall is here, and every man of it has a neighbour in that hall's chains. Four at least, bots and all - say [for Huginfel].",
+    "accept": "for Huginfel",
+    "reply": "Shields up! Clear the yard, break the chains at the pens, and drag their warden out of his hall!",
+    "busy": "Not yet. The Shieldwall is still coming up from Huginfel. Rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Blood-Hall is broken! Every chain in it is ours to cut.",
+    "regret": "Back to the rise! We'll come again."
+   },
+   "guards": [
+    {
+     "template": 60157473,
+     "model": 160,
+     "equipment": "SvasudGuard",
+     "guild": "the Huginfel Shieldwall",
+     "name": "Shieldwall spearman",
+     "level": 17,
+     "count": 2
+    },
+    {
+     "template": 60157473,
+     "model": 160,
+     "equipment": "SvasudGuard",
+     "guild": "the Huginfel Shieldwall",
+     "name": "huscarl of Vindsaul",
+     "level": 18,
+     "count": 2
+    }
+   ],
+   "stages": [
+    {
+     "id": "b1",
+     "type": "cull",
+     "name": "The Yard",
+     "objective": "Clear the Blodfelag and their warhounds from the yard",
+     "announce": "Into the yard! The Blodfelag are loosing their warhounds on us!",
+     "center": [
+      470,
+      870,
+      152.9
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "kill": 20,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60158514,
+       "name": "blodfelag dreng",
+       "level": [
+        15,
+        17
+       ],
+       "guild": "the Blodfelag"
+      },
+      {
+       "template": 60158529,
+       "name": "blodfelag warhound",
+       "level": [
+        15,
+        17
+       ],
+       "guild": "the Blodfelag"
+      },
+      {
+       "template": 60158526,
+       "name": "blodfelag svard",
+       "level": [
+        16,
+        18
+       ],
+       "guild": "the Blodfelag"
+      },
+      {
+       "template": 60161138,
+       "name": "frothing sveawolf",
+       "level": [
+        16,
+        18
+       ],
+       "guild": "running with the Blodfelag"
+      }
+     ],
+     "success": "The yard is ours. The Blodfelag fall back into the hall.",
+     "fail": "The Shieldwall is thrown back to the rise.",
+     "on_success": "b2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 130,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "b2",
+     "type": "wards",
+     "name": "The Thrall-Pens",
+     "objective": "Hold the three thrall-pens at once while the chains are cut",
+     "announce": "The thralls are chained in three pens round the hall! Stand at all three at once and the Shieldwall will cut them loose!",
+     "center": [
+      420,
+      820,
+      152.2
+     ],
+     "radius": 80,
+     "wards": [
+      [
+       390,
+       790,
+       147.1
+      ],
+      [
+       450,
+       800,
+       151.9
+      ],
+      [
+       420,
+       860,
+       152.0
+      ]
+     ],
+     "ward_names": [
+      "the north pen",
+      "the east pen",
+      "the south pen"
+     ],
+     "ward_radius": 20,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 60158526,
+       "name": "blodfelag svard",
+       "level": [
+        16,
+        18
+       ],
+       "guild": "the Blodfelag"
+      },
+      {
+       "template": 20015,
+       "name": "blodfelag windcaller",
+       "level": [
+        16,
+        18
+       ],
+       "guild": "the Blodfelag"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "banner of the Shieldwall",
+     "success": "The chains are cut and the thralls stagger free - and out of the hall comes the man who chained them.",
+     "fail": "The pens hold. The Shieldwall falls back.",
+     "on_success": "b3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 130,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "b3",
+     "type": "boss",
+     "name": "Hrolf Blood-Oath",
+     "objective": "Defeat Hrolf Blood-Oath, Jarl of the Blodfelag",
+     "announce": "Hrolf Blood-Oath, a wolf's pelt over his mail and his arms scarred with oaths: 'I swore to hold the door when the Wolf breaks his chain. I'll hold this one first.'",
+     "center": [
+      420,
+      820,
+      152.2
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60158532,
+      "name": "Hrolf Blood-Oath",
+      "level": 21,
+      "size": 62,
+      "health_mult": 2.5,
+      "guild": "Jarl of the Blodfelag"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60158532,
+        "name": "blodfelag wolfwarrior",
+        "level": [
+         17,
+         19
+        ],
+        "guild": "the Blodfelag"
+       },
+       {
+        "template": 60158529,
+        "name": "blodfelag warhound",
+        "level": [
+         15,
+         17
+        ],
+        "guild": "the Blodfelag"
+       }
+      ]
+     },
+     "success": "Hrolf falls in his own doorway. The Shieldwall's banner goes up over the Blood-Hall, and the chains come down.",
+     "fail": "Hrolf drives the Shieldwall out of the yard.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 260,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "uf102_hrolf_s_oath_scarred_pelt",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ws_blood_hall_return",
+   "title": "The Haxa-Mother",
+   "levels": [
+    17,
+    20
+   ],
+   "manual": true,
+   "bots": 8,
+   "bot_min_level": 12,
+   "hint": "A blizzard out of the west, and the howling of the wolfwarriors: the Haxa-Mother has come for the Blood-Hall.",
+   "wake_m": 200,
+   "auto_fail_s": 900,
+   "start": "x1",
+   "stages": [
+    {
+     "id": "x1",
+     "type": "defend",
+     "name": "The Hall Door",
+     "objective": "Keep Shield-Warden Sola alive at the hall door",
+     "announce": "Every Blodfelag in the west is coming for the Blood-Hall! Hold the door!",
+     "center": [
+      420,
+      820,
+      152.2
+     ],
+     "radius": 70,
+     "duration_s": 200,
+     "protect": {
+      "template": 60157473,
+      "model": 160,
+      "equipment": "SvasudGuard",
+      "guild": "the Huginfel Shieldwall",
+      "name": "Shield-Warden Sola",
+      "level": 19,
+      "pos": [
+       420,
+       820,
+       152.2
+      ],
+      "health_mult": 5
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 4,
+      "from": [
+       [
+        353,
+        792,
+        144.2
+       ],
+       [
+        380,
+        900,
+        150.3
+       ],
+       [
+        330,
+        840,
+        150.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60158514,
+        "name": "blodfelag dreng",
+        "level": [
+         15,
+         17
+        ],
+        "guild": "the Blodfelag"
+       },
+       {
+        "template": 60158526,
+        "name": "blodfelag svard",
+        "level": [
+         16,
+         18
+        ],
+        "guild": "the Blodfelag"
+       },
+       {
+        "template": 60158532,
+        "name": "blodfelag wolfwarrior",
+        "level": [
+         17,
+         19
+        ],
+        "guild": "the Blodfelag"
+       },
+       {
+        "template": 60158529,
+        "name": "blodfelag warhound",
+        "level": [
+         15,
+         17
+        ],
+        "guild": "the Blodfelag"
+       }
+      ]
+     },
+     "success": "The first rush breaks - and the Haxa-Mother walks out of the snow.",
+     "fail": "Shield-Warden Sola falls at the door.",
+     "on_success": "x2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "tokens": 14
+     }
+    },
+    {
+     "id": "x2",
+     "type": "boss",
+     "name": "the Haxa-Mother",
+     "objective": "Defeat the Haxa-Mother",
+     "announce": "The Haxa-Mother - bent and white-haired, frost spreading from her feet, with a bowl of blood that steams in the cold: 'I read your end in it. Come and see.'",
+     "center": [
+      420,
+      820,
+      152.2
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 20016,
+      "name": "the Haxa-Mother",
+      "level": 21,
+      "size": 70,
+      "health_mult": 2.5,
+      "guild": "Mother of the Blodfelag"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 20016,
+        "name": "blodfelag haxa",
+        "level": [
+         17,
+         19
+        ],
+        "guild": "the Blodfelag"
+       },
+       {
+        "template": 60166283,
+        "name": "snow imp",
+        "level": [
+         16,
+         18
+        ],
+        "guild": "out of the endless winter"
+       }
+      ]
+     },
+     "success": "The Haxa-Mother falls. The Blood-Hall holds - for now.",
+     "fail": "The Haxa-Mother takes the Blood-Hall back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 220,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "uf102_haxa_mother_s_steaming_bowl",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "siege": {
+  "id": "blood_hall",
+  "name": "the Blood-Hall",
+  "enemy": "the Blodfelag",
+  "resolve_name": "The Shieldwall's resolve",
+  "enemy_name": "The Blodfelag's hold",
+  "faction": "huginfel_shieldwall",
+  "feeds": {
+   "ws_windcallers_night": 20,
+   "west_svealand_blodfelag_camp": 15,
+   "west_svealand_oathbreakers": 10,
+   "west_svealand_skogsfru": 5,
+   "west_svealand_svartalf_cairn": 5
+  },
+  "feed_default": 5,
+  "quests": {
+   "ws_thralls": 5,
+   "ws_oathbreakers": 10,
+   "ws_henchmen": 10,
+   "ws_warhounds": 10,
+   "ws_windcallers": 15,
+   "ws_wolfwarriors": 15,
+   "ws_haxa": 15,
+   "ws_blood_hall": 25,
+   "oathbreaker": 10,
+   "wolf_cord": 10
+  },
+  "enemy_feeds": {
+   "ws_windcallers_night": 15
+  },
+  "enemy_default": 5,
+  "war_chain": "ws_windcallers_night",
+  "assault": "ws_blood_hall_assault",
+  "raids": [],
+  "last_raid": "ws_blood_hall_return",
+  "hold_h": 2,
+  "raid_gap_h": [
+   2,
+   1.5,
+   1.5
+  ],
+  "criers": [
+   "ws_sigvaldi",
+   "huscarl_grettir"
+  ],
+  "bots_go_after_m": 30,
+  "open_text": "Hear me! The Huginfel Shieldwall means to storm the Blodfelag's Blood-Hall! Shield-Marshal Ase waits on the rise east of the hall. If no one leads within the half-hour, the Shieldwall goes without you.",
+  "taken_text": "The Blood-Hall is broken! The thralls are free, and the Shieldwall keeps the hall - go and see.",
+  "repelled_text": "The Shieldwall has been thrown back from the Blood-Hall. The Blodfelag grow bolder.",
+  "raid_text": "A blizzard out of the west: the Blodfelag are coming back for the Blood-Hall!",
+  "held_text": "The Blodfelag are thrown back from the walls. The Blood-Hall holds.",
+  "fall_text": "The Blood-Hall has fallen to the Haxa-Mother. The Blodfelag have their hall again, and the Shieldwall must rebuild its resolve.",
+  "carry_text": "Shield-Marshal Ase leads you down the rise at a run.",
+  "carried_cry": "The Shieldwall wouldn't wait any longer - they have stormed {0}!",
+  "hostile_tier": "yellow",
+  "sites": [
+   "blood_hall",
+   "blood_hall_yard"
+  ],
+  "staging": [
+   640,
+   760,
+   148.4
+  ],
+  "landing": [
+   470,
+   870,
+   152.9
+  ],
+  "area": [
+   430,
+   830,
+   100
+  ],
+  "camp_npcs": [
+   {
+    "template": 60157473,
+    "model": 160,
+    "equipment": "SvasudGuard",
+    "guild": "the Huginfel Shieldwall",
+    "kind": "marks",
+    "name": "Shieldwall-Quartermaster Arne",
+    "level": 19,
+    "pos": [
+     450,
+     840,
+     152.9
+    ],
+    "greet": "The hall's stores, for those who broke it and those who hold it.",
+    "stock": [
+     {
+      "item": "uf102_blood_hall_breaker_s_cloak",
+      "price": 60
+     },
+     {
+      "item": "uf102_cut_chain_ring",
+      "price": 40
+     },
+     {
+      "item": "uf102_shieldwall_boss_torc",
+      "price": 40
+     },
+     {
+      "item": "uf102_thrall_pen_bracer",
+      "price": 40
+     },
+     {
+      "item": "tw_strong_draught_of_healing",
+      "price": 2
+     },
+     {
+      "item": "tw_strong_draught_of_power",
+      "price": 2
+     }
+    ]
+   },
+   {
+    "template": 60157473,
+    "model": 168,
+    "guild": "the Huginfel Shieldwall",
+    "kind": "coin",
+    "name": "Freed-Thrall Unn",
+    "level": 16,
+    "pos": [
+     400,
+     850,
+     153.4
+    ],
+    "greet": "They made me brew for them. I brew for you now. It's better.",
+    "stock": [
+     {
+      "item": "uf102_hall_ale"
+     },
+     {
+      "item": "uf102_juniper_draught"
+     },
+     {
+      "item": "uf102_freedwoman_s_mead"
+     }
+    ]
+   },
+   {
+    "template": 60157473,
+    "model": 160,
+    "equipment": "SvasudGuard",
+    "guild": "the Huginfel Shieldwall",
+    "kind": "idle",
+    "name": "Shieldwall spearman",
+    "level": 17,
+    "pos": [
+     470,
+     820,
+     152.1
+    ],
+    "count": 3,
+    "idle": "We burned the wolf's skull off the door. The thralls cheered louder than we did."
+   }
+  ],
+  "holdouts": [
+   {
+    "kind": "holdout",
+    "name": "Blodfelag holdout",
+    "template": 60158514,
+    "level": 18,
+    "pos": [
+     366,
+     790,
+     144.9
+    ],
+    "count": 3,
+    "tier": "yellow",
+    "respawn_s": 300
+   }
   ]
+ }
 }

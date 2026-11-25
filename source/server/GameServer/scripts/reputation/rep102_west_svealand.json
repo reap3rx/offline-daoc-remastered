@@ -1,0 +1,165 @@
+{
+ "zone": 102,
+ "name": "West Svealand",
+ "levels": [
+  10,
+  20
+ ],
+ "realm": 2,
+ "factions": [
+  {
+   "key": "huginfel_shieldwall",
+   "name": "the Huginfel Shieldwall",
+   "short": "the Shieldwall",
+   "kin": [
+    "eiriks_huscarls",
+    "steading_league",
+    "galplen_woodwards",
+    "khizil_forge",
+    "wolfsbane_rangers",
+    "vanern_wardens",
+    "kings_host"
+   ],
+   "titles": [
+    "Shield-Friend",
+    "Shieldwall-Sworn",
+    "Breaker of the Blood-Hall"
+   ],
+   "speaker": "ws_sigvaldi",
+   "town": "Huginfel",
+   "kills": [
+    "blodfelag",
+    "thrall",
+    "oathbreaker",
+    "henchman",
+    "windcaller",
+    "haxa",
+    "wolfwarrior",
+    "warhound",
+    "svard",
+    "dreng",
+    "partisan",
+    "sveawolf",
+    "phantom wolf",
+    "she-wolf",
+    "snow imp",
+    "frosty colt",
+    "cold light"
+   ],
+   "quartermaster": {
+    "name": "Shieldwall-Quartermaster Ingolf",
+    "guild": "the Huginfel Shieldwall",
+    "model": 213,
+    "anchor": "ws_sigvaldi",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The Shieldwall's stores, for those who stand in it. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep102_shield_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep102_huginfel_gate_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep102_shieldwall_sworn_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep102_linden_shield_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep102_mantle_of_the_blood_hall_breaker",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "shared": [
+  "eiriks_huscarls"
+ ],
+ "quartermasters": [
+  {
+   "faction": "eiriks_huscarls",
+   "name": "Huscarl-Quartermaster Orm",
+   "guild": "King Eirik's Huscarls",
+   "model": 213,
+   "anchor": "huscarl_grettir",
+   "offset": [
+    4,
+    3
+   ],
+   "greet": "The King's stores at Vindsaul Faste, same stock as Mularn. Show me your standing with the Huscarls.",
+   "stock": [
+    {
+     "item": "rep100_huscarl_friend_s_ring",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep100_jordheim_road_belt",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep100_shield_of_jordheim_torc",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep100_eirik_s_bracer",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep100_mantle_of_eirik_s_champion",
+     "rank": "Legend",
+     "price": 150
+    }
+   ]
+  }
+ ],
+ "kill_default": "huginfel_shieldwall",
+ "event_default": "huginfel_shieldwall",
+ "quest_default": "huginfel_shieldwall",
+ "quests": {
+  "oathbreaker": "huginfel_shieldwall",
+  "wolf_cord": "eiriks_huscarls",
+  "ws_thralls": "huginfel_shieldwall",
+  "ws_oathbreakers": "huginfel_shieldwall",
+  "ws_henchmen": "huginfel_shieldwall",
+  "ws_wind_sprites": "eiriks_huscarls",
+  "ws_she_wolves": "eiriks_huscarls",
+  "ws_skogsfru": "eiriks_huscarls",
+  "ws_frozen_gully": "huginfel_shieldwall",
+  "ws_cold_lights": "huginfel_shieldwall",
+  "ws_snow_imps": "huginfel_shieldwall",
+  "ws_warhounds": "huginfel_shieldwall",
+  "ws_windcallers": "eiriks_huscarls",
+  "ws_wolfwarriors": "eiriks_huscarls",
+  "ws_haxa": "eiriks_huscarls",
+  "ws_blood_hall": "huginfel_shieldwall",
+  "ws_svartalf_hunters": "huginfel_shieldwall",
+  "ws_svartalf_chanters": "huginfel_shieldwall"
+ },
+ "events": {
+  "ws_windcallers_night": "huginfel_shieldwall",
+  "ws_blood_hall_assault": "huginfel_shieldwall",
+  "ws_blood_hall_return": "huginfel_shieldwall",
+  "west_svealand_blodfelag_camp": "huginfel_shieldwall",
+  "west_svealand_oathbreakers": "huginfel_shieldwall",
+  "west_svealand_skogsfru": "eiriks_huscarls",
+  "west_svealand_svartalf_cairn": "eiriks_huscarls"
+ }
+}

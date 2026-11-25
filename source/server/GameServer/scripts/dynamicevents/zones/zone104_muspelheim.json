@@ -1,775 +1,1549 @@
 {
-  "zone": 104,
-  "region": 100,
-  "name": "Muspelheim",
-  "lore": "Muspelheim, the realm of fire, where Surt's giants keep watch over burning plains and the dead of old wars smoulder in their armour.",
-  "chains": [
+ "zone": 104,
+ "region": 100,
+ "name": "Muspelheim",
+ "lore": "Muspelheim: the realm of fire beyond the Vale, with Brika's camp at the way in and the dverge forge of Khizil in the south. Gjalpinulva's drakulv keep a hatchery in the wyrm hills, warming the dragon's fire-wyrm brood for the day she wakes; renegade dverge sell them fire-salt; the fire giants of the east hate the dragon's kin and burn everything near.",
+ "chains": [
+  {
+   "id": "muspelheim_fire_giant_outpost",
+   "title": "The Fire Giant Outpost",
+   "levels": [
+    27,
+    30
+   ],
+   "hint": "Beacon-fires are burning on the heights...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "muspelheim_fire_giant_outpost",
-      "title": "The Fire Giant Outpost",
-      "levels": [27, 30],
-      "hint": "Beacon-fires are burning on the heights...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Giant Outpost",
-          "objective": "Clear the giant outpost",
-          "announce": "Surt's giants have built a new outpost and lit its beacon. Throw it down before the host answers.",
-          "center": [1498, 268, 188.5],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60160878,
-              "name": "fire giant lookout",
-              "level": [27, 27]
-            },
-            {
-              "template": 60160881,
-              "name": "fire giant watchman",
-              "level": [29, 29]
-            },
-            {
-              "template": 60160903,
-              "name": "flaming raukomaz",
-              "level": [30, 30]
-            }
-          ],
-          "success": "You have cleared the giant outpost. Surtling Brann comes out to fight.",
-          "fail": "They hold the giant outpost. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Surtling Brann",
-          "objective": "Defeat Surtling Brann",
-          "announce": "Surtling Brann stands at the giant outpost. Bring friends.",
-          "center": [1498, 268, 188.5],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60160881,
-            "name": "Surtling Brann",
-            "level": 32,
-            "size": 53,
-            "pos": [1498, 268, 188.5],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60160878,
-                "name": "fire giant lookout",
-                "level": [27, 27]
-              }
-            ]
-          },
-          "success": "Surtling Brann falls. The way is safe again.",
-          "fail": "Surtling Brann slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu104_surtling_brann_s_belt", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Fire Giant Lookouts Hold the Road",
-          "objective": "Drive the fire giant lookouts off the road",
-          "announce": "With The Fire Giant Outpost lost, the fire giant lookouts have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1314, 253, 128.4],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60160878,
-              "name": "fire giant lookout",
-              "level": [27, 27]
-            },
-            {
-              "template": 60160881,
-              "name": "fire giant watchman",
-              "level": [29, 29]
-            },
-            {
-              "template": 60160903,
-              "name": "flaming raukomaz",
-              "level": [30, 30]
-            }
-          ],
-          "boss": {
-            "template": 60160878,
-            "name": "Fire giant lookout warleader",
-            "level": 31,
-            "pos": [1314, 253, 128.4],
-            "health_mult": 2
-          },
-          "success": "The fire giant lookouts are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hild has come out to set the road right. The fire giant lookouts are coming back for it!",
-          "center": [1314, 253, 128.4],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hild",
-            "level": 30,
-            "pos": [1314, 253, 128.4],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1378, 197, 174.5],
-              [1398, 260, 186.3],
-              [1368, 318, 148.5]
-            ],
-            "mobs": [
-              {
-                "template": 60160878,
-                "name": "fire giant lookout",
-                "level": [27, 27]
-              },
-              {
-                "template": 60160881,
-                "name": "fire giant watchman",
-                "level": [29, 29]
-              },
-              {
-                "template": 60160903,
-                "name": "flaming raukomaz",
-                "level": [30, 30]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The fire giant lookouts break and scatter. The road is open again.",
-          "fail": "Roadwarden Hild falls, and the fire giant lookouts take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Giant Outpost",
+     "objective": "Clear the giant outpost",
+     "announce": "Surt's giants have built a new outpost and lit its beacon. Throw it down before the host answers.",
+     "center": [
+      1498,
+      268,
+      188.5
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60160878,
+       "name": "fire giant lookout",
+       "level": [
+        27,
+        27
+       ]
+      },
+      {
+       "template": 60160881,
+       "name": "fire giant watchman",
+       "level": [
+        29,
+        29
+       ]
+      },
+      {
+       "template": 60160903,
+       "name": "flaming raukomaz",
+       "level": [
+        30,
+        30
+       ]
+      }
+     ],
+     "success": "You have cleared the giant outpost. Surtling Brann comes out to fight.",
+     "fail": "They hold the giant outpost. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "muspelheim_burnt_sentries",
-      "title": "The Burnt Sentries",
-      "levels": [21, 25],
-      "hint": "The dead march across the ash fields...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Runecaster Hafr",
-          "objective": "Protect Runecaster Hafr, who is carving a ward-rune into the ash",
-          "announce": "Runecaster Hafr is cutting a ward-rune to hold back the burnt dead. Keep them off him until it is finished.",
-          "center": [331, 703, 130.0],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Runecaster Hafr",
-            "template": 60167667,
-            "level": 25,
-            "model": 158,
-            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
-            "health_mult": 10,
-            "pos": [331, 703, 130.0]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [287, 631, 139.9],
-              [352, 621, 120.8],
-              [405, 661, 110.5]
-            ],
-            "mobs": [
-              {
-                "template": 60158804,
-                "name": "burnt skeletal sentry",
-                "level": [21, 21]
-              },
-              {
-                "template": 60159105,
-                "name": "charred skeletal warrior",
-                "level": [23, 25]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Runecaster Hafr. \"They came from over there - let's finish this.\"",
-          "fail": "Runecaster Hafr falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Runecaster's Circle",
-          "objective": "Clear the runecaster's circle",
-          "announce": "They came from the runecaster's circle. Follow them back and clear it out.",
-          "center": [394, 460, 145.9],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60158804,
-              "name": "burnt skeletal sentry",
-              "level": [21, 21]
-            },
-            {
-              "template": 60159105,
-              "name": "charred skeletal warrior",
-              "level": [23, 25]
-            }
-          ],
-          "success": "You have cleared the runecaster's circle. The Ember Marshal comes out to fight.",
-          "fail": "They hold the runecaster's circle. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Ember Marshal",
-          "objective": "Defeat the Ember Marshal",
-          "announce": "The Ember Marshal stands at the runecaster's circle. Bring friends.",
-          "center": [394, 460, 145.9],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60159105,
-            "name": "The Ember Marshal",
-            "level": 27,
-            "size": 68,
-            "pos": [394, 460, 145.9],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60158804,
-                "name": "burnt skeletal sentry",
-                "level": [21, 21]
-              }
-            ]
-          },
-          "success": "The Ember Marshal falls. The way is safe again.",
-          "fail": "The Ember Marshal slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu104_ember_marshal_s_pendant", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Burnt Skeletal Sentrys Hold the Road",
-          "objective": "Drive the burnt skeletal sentrys off the road",
-          "announce": "With The Burnt Sentries lost, the burnt skeletal sentrys have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [519, 771, 63.7],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60158804,
-              "name": "burnt skeletal sentry",
-              "level": [21, 21]
-            },
-            {
-              "template": 60159105,
-              "name": "charred skeletal warrior",
-              "level": [23, 25]
-            }
-          ],
-          "boss": {
-            "template": 60158804,
-            "name": "Burnt skeletal sentry warleader",
-            "level": 26,
-            "pos": [519, 771, 63.7],
-            "health_mult": 2
-          },
-          "success": "The burnt skeletal sentrys are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Gunnar has come out to set the road right. The burnt skeletal sentrys are coming back for it!",
-          "center": [519, 771, 63.7],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Gunnar",
-            "level": 25,
-            "pos": [519, 771, 63.7],
-            "health_mult": 10,
-            "template": 60167667,
-            "model": 158,
-            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [440, 739, 114.8],
-              [487, 692, 78.7],
-              [553, 693, 129.6]
-            ],
-            "mobs": [
-              {
-                "template": 60158804,
-                "name": "burnt skeletal sentry",
-                "level": [21, 21]
-              },
-              {
-                "template": 60159105,
-                "name": "charred skeletal warrior",
-                "level": [23, 25]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The burnt skeletal sentrys break and scatter. The road is open again.",
-          "fail": "Roadwarden Gunnar falls, and the burnt skeletal sentrys take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Surtling Brann",
+     "objective": "Defeat Surtling Brann",
+     "announce": "Surtling Brann stands at the giant outpost. Bring friends.",
+     "center": [
+      1498,
+      268,
+      188.5
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60160881,
+      "name": "Surtling Brann",
+      "level": 32,
+      "size": 53,
+      "pos": [
+       1498,
+       268,
+       188.5
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60160878,
+        "name": "fire giant lookout",
+        "level": [
+         27,
+         27
+        ]
+       }
       ]
+     },
+     "success": "Surtling Brann falls. The way is safe again.",
+     "fail": "Surtling Brann slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu104_surtling_brann_s_belt",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
     },
     {
-      "id": "muspelheim_wyrm_nest",
-      "title": "The Wyrm's Nest",
-      "levels": [25, 28],
-      "hint": "The ground is hot over the nest...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Wyrm's Nest",
-          "objective": "Clear the wyrm's nest",
-          "announce": "A cinder drake is raising a brood of fire wyrms. Break the nest before they fly.",
-          "center": [334, 220, 123.2],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 20022,
-              "name": "young fire wyrm",
-              "level": [25, 27]
-            },
-            {
-              "template": 60159218,
-              "name": "cinder drake",
-              "level": [28, 28]
-            }
-          ],
-          "success": "You have cleared the wyrm's nest. Glodr the Cinder Drake comes out to fight.",
-          "fail": "They hold the wyrm's nest. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Glodr the Cinder Drake",
-          "objective": "Defeat Glodr the Cinder Drake",
-          "announce": "Glodr the Cinder Drake stands at the wyrm's nest. Bring friends.",
-          "center": [334, 220, 123.2],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60159218,
-            "name": "Glodr the Cinder Drake",
-            "level": 30,
-            "size": 110,
-            "pos": [334, 220, 123.2],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 20022,
-                "name": "young fire wyrm",
-                "level": [25, 27]
-              }
-            ]
-          },
-          "success": "Glodr the Cinder Drake falls. The way is safe again.",
-          "fail": "Glodr the Cinder Drake slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu104_glodr_the_cinder_drake_s_ring", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Young Fire Wyrms Hold the Road",
-          "objective": "Drive the young fire wyrms off the road",
-          "announce": "With The Wyrm's Nest lost, the young fire wyrms have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [862, 357, 158.2],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 20022,
-              "name": "young fire wyrm",
-              "level": [25, 27]
-            },
-            {
-              "template": 60159218,
-              "name": "cinder drake",
-              "level": [28, 28]
-            }
-          ],
-          "boss": {
-            "template": 20022,
-            "name": "Young fire wyrm warleader",
-            "level": 29,
-            "pos": [862, 357, 158.2],
-            "health_mult": 2
-          },
-          "success": "The young fire wyrms are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hild has come out to set the road right. The young fire wyrms are coming back for it!",
-          "center": [862, 357, 158.2],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hild",
-            "level": 28,
-            "pos": [862, 357, 158.2],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [789, 401, 163.3],
-              [779, 335, 196.6],
-              [820, 283, 175.8]
-            ],
-            "mobs": [
-              {
-                "template": 20022,
-                "name": "young fire wyrm",
-                "level": [25, 27]
-              },
-              {
-                "template": 60159218,
-                "name": "cinder drake",
-                "level": [28, 28]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The young fire wyrms break and scatter. The road is open again.",
-          "fail": "Roadwarden Hild falls, and the young fire wyrms take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Fire Giant Lookouts Hold the Road",
+     "objective": "Drive the fire giant lookouts off the road",
+     "announce": "With The Fire Giant Outpost lost, the fire giant lookouts have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1314,
+      253,
+      128.4
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60160878,
+       "name": "fire giant lookout",
+       "level": [
+        27,
+        27
+       ]
+      },
+      {
+       "template": 60160881,
+       "name": "fire giant watchman",
+       "level": [
+        29,
+        29
+       ]
+      },
+      {
+       "template": 60160903,
+       "name": "flaming raukomaz",
+       "level": [
+        30,
+        30
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60160878,
+      "name": "Fire giant lookout warleader",
+      "level": 31,
+      "pos": [
+       1314,
+       253,
+       128.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The fire giant lookouts are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
     },
     {
-      "id": "muspelheim_fire_ants",
-      "title": "The Fire Ant Swarm",
-      "levels": [20, 22],
-      "hint": "The ash is crawling with fire ants...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Dverge Brokk",
-          "objective": "Protect Dverge Brokk, who is tapping a vein of fire-iron",
-          "announce": "Brokk the dverge has found a vein of fire-iron, right beside a fire ant mound. Keep the swarm off him until it's out.",
-          "center": [711, 905, 127.7],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Dverge Brokk",
-            "template": 60167667,
-            "level": 22,
-            "model": 158,
-            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
-            "health_mult": 10,
-            "pos": [711, 905, 127.7]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [713, 1002, 172.2],
-              [656, 968, 141.0],
-              [614, 904, 62.2]
-            ],
-            "mobs": [
-              {
-                "template": 20021,
-                "name": "fire ant gatherer",
-                "level": [21, 21]
-              },
-              {
-                "template": 60160874,
-                "name": "fire ant worker",
-                "level": [22, 22]
-              },
-              {
-                "template": 60160873,
-                "name": "fire ant scavenger",
-                "level": [20, 20]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Dverge Brokk. \"They came from over there - let's finish this.\"",
-          "fail": "Dverge Brokk falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Fire Ant Mound",
-          "objective": "Clear the fire ant mound",
-          "announce": "They came from the fire ant mound. Follow them back and clear it out.",
-          "center": [499, 1117, 64.3],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 20021,
-              "name": "fire ant gatherer",
-              "level": [21, 21]
-            },
-            {
-              "template": 60160874,
-              "name": "fire ant worker",
-              "level": [22, 22]
-            },
-            {
-              "template": 60160873,
-              "name": "fire ant scavenger",
-              "level": [20, 20]
-            }
-          ],
-          "success": "You have cleared the fire ant mound. The Ember Queen comes out to fight.",
-          "fail": "They hold the fire ant mound. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Ember Queen",
-          "objective": "Defeat the Ember Queen",
-          "announce": "The Ember Queen stands at the fire ant mound. Bring friends.",
-          "center": [499, 1117, 64.3],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 20021,
-            "name": "The Ember Queen",
-            "level": 24,
-            "size": 65,
-            "pos": [499, 1117, 64.3],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 20021,
-                "name": "fire ant gatherer",
-                "level": [21, 21]
-              }
-            ]
-          },
-          "success": "The Ember Queen falls. The way is safe again.",
-          "fail": "The Ember Queen slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu104_ember_queen_s_jewel", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Fire Ant Gatherers Hold the Old Road",
-          "objective": "Drive the fire ant gatherers off the old road",
-          "announce": "With The Fire Ant Swarm lost, the fire ant gatherers have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [321, 1208, 112.7],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 20021,
-              "name": "fire ant gatherer",
-              "level": [21, 21]
-            },
-            {
-              "template": 60160874,
-              "name": "fire ant worker",
-              "level": [22, 22]
-            },
-            {
-              "template": 60160873,
-              "name": "fire ant scavenger",
-              "level": [20, 20]
-            }
-          ],
-          "boss": {
-            "template": 20021,
-            "name": "Fire ant gatherer warleader",
-            "level": 23,
-            "pos": [321, 1208, 112.7],
-            "health_mult": 2
-          },
-          "success": "The fire ant gatherers are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hild has come out to set the old road right. The fire ant gatherers are coming back for it!",
-          "center": [321, 1208, 112.7],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hild",
-            "level": 22,
-            "pos": [321, 1208, 112.7],
-            "health_mult": 10,
-            "template": 60167667,
-            "model": 158,
-            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [346, 1127, 82.8],
-              [397, 1170, 131.6],
-              [402, 1236, 173.0]
-            ],
-            "mobs": [
-              {
-                "template": 20021,
-                "name": "fire ant gatherer",
-                "level": [21, 21]
-              },
-              {
-                "template": 60160874,
-                "name": "fire ant worker",
-                "level": [22, 22]
-              },
-              {
-                "template": 60160873,
-                "name": "fire ant scavenger",
-                "level": [20, 20]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The fire ant gatherers break and scatter. The old road is open again.",
-          "fail": "Roadwarden Hild falls, and the fire ant gatherers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hild has come out to set the road right. The fire giant lookouts are coming back for it!",
+     "center": [
+      1314,
+      253,
+      128.4
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hild",
+      "level": 30,
+      "pos": [
+       1314,
+       253,
+       128.4
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1378,
+        197,
+        174.5
+       ],
+       [
+        1398,
+        260,
+        186.3
+       ],
+       [
+        1368,
+        318,
+        148.5
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160878,
+        "name": "fire giant lookout",
+        "level": [
+         27,
+         27
+        ]
+       },
+       {
+        "template": 60160881,
+        "name": "fire giant watchman",
+        "level": [
+         29,
+         29
+        ]
+       },
+       {
+        "template": 60160903,
+        "name": "flaming raukomaz",
+        "level": [
+         30,
+         30
+        ]
+       }
       ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The fire giant lookouts break and scatter. The road is open again.",
+     "fail": "Roadwarden Hild falls, and the fire giant lookouts take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
-  ]
+   ]
+  },
+  {
+   "id": "muspelheim_burnt_sentries",
+   "title": "The Burnt Sentries",
+   "levels": [
+    21,
+    25
+   ],
+   "hint": "The dead march across the ash fields...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Runecaster Hafr",
+     "objective": "Protect Runecaster Hafr, who is carving a ward-rune into the ash",
+     "announce": "Runecaster Hafr is cutting a ward-rune to hold back the burnt dead. Keep them off him until it is finished.",
+     "center": [
+      331,
+      703,
+      130.0
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Runecaster Hafr",
+      "template": 60167667,
+      "level": 25,
+      "model": 158,
+      "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+      "health_mult": 10,
+      "pos": [
+       331,
+       703,
+       130.0
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        287,
+        631,
+        139.9
+       ],
+       [
+        352,
+        621,
+        120.8
+       ],
+       [
+        405,
+        661,
+        110.5
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60158804,
+        "name": "burnt skeletal sentry",
+        "level": [
+         21,
+         21
+        ]
+       },
+       {
+        "template": 60159105,
+        "name": "charred skeletal warrior",
+        "level": [
+         23,
+         25
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Runecaster Hafr. \"They came from over there - let's finish this.\"",
+     "fail": "Runecaster Hafr falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Runecaster's Circle",
+     "objective": "Clear the runecaster's circle",
+     "announce": "They came from the runecaster's circle. Follow them back and clear it out.",
+     "center": [
+      394,
+      460,
+      145.9
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60158804,
+       "name": "burnt skeletal sentry",
+       "level": [
+        21,
+        21
+       ]
+      },
+      {
+       "template": 60159105,
+       "name": "charred skeletal warrior",
+       "level": [
+        23,
+        25
+       ]
+      }
+     ],
+     "success": "You have cleared the runecaster's circle. The Ember Marshal comes out to fight.",
+     "fail": "They hold the runecaster's circle. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Ember Marshal",
+     "objective": "Defeat the Ember Marshal",
+     "announce": "The Ember Marshal stands at the runecaster's circle. Bring friends.",
+     "center": [
+      394,
+      460,
+      145.9
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60159105,
+      "name": "The Ember Marshal",
+      "level": 27,
+      "size": 68,
+      "pos": [
+       394,
+       460,
+       145.9
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60158804,
+        "name": "burnt skeletal sentry",
+        "level": [
+         21,
+         21
+        ]
+       }
+      ]
+     },
+     "success": "The Ember Marshal falls. The way is safe again.",
+     "fail": "The Ember Marshal slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu104_ember_marshal_s_pendant",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Burnt Skeletal Sentrys Hold the Road",
+     "objective": "Drive the burnt skeletal sentrys off the road",
+     "announce": "With The Burnt Sentries lost, the burnt skeletal sentrys have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      519,
+      771,
+      63.7
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60158804,
+       "name": "burnt skeletal sentry",
+       "level": [
+        21,
+        21
+       ]
+      },
+      {
+       "template": 60159105,
+       "name": "charred skeletal warrior",
+       "level": [
+        23,
+        25
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60158804,
+      "name": "Burnt skeletal sentry warleader",
+      "level": 26,
+      "pos": [
+       519,
+       771,
+       63.7
+      ],
+      "health_mult": 2
+     },
+     "success": "The burnt skeletal sentrys are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Gunnar has come out to set the road right. The burnt skeletal sentrys are coming back for it!",
+     "center": [
+      519,
+      771,
+      63.7
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Gunnar",
+      "level": 25,
+      "pos": [
+       519,
+       771,
+       63.7
+      ],
+      "health_mult": 10,
+      "template": 60167667,
+      "model": 158,
+      "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        440,
+        739,
+        114.8
+       ],
+       [
+        487,
+        692,
+        78.7
+       ],
+       [
+        553,
+        693,
+        129.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60158804,
+        "name": "burnt skeletal sentry",
+        "level": [
+         21,
+         21
+        ]
+       },
+       {
+        "template": 60159105,
+        "name": "charred skeletal warrior",
+        "level": [
+         23,
+         25
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The burnt skeletal sentrys break and scatter. The road is open again.",
+     "fail": "Roadwarden Gunnar falls, and the burnt skeletal sentrys take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "muspelheim_wyrm_nest",
+   "title": "The Wyrm's Nest",
+   "levels": [
+    25,
+    28
+   ],
+   "hint": "The ground is hot over the nest...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Wyrm's Nest",
+     "objective": "Clear the wyrm's nest",
+     "announce": "A cinder drake is raising a brood of fire wyrms. Break the nest before they fly.",
+     "center": [
+      334,
+      220,
+      123.2
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 20022,
+       "name": "young fire wyrm",
+       "level": [
+        25,
+        27
+       ]
+      },
+      {
+       "template": 60159218,
+       "name": "cinder drake",
+       "level": [
+        28,
+        28
+       ]
+      }
+     ],
+     "success": "You have cleared the wyrm's nest. Glodr the Cinder Drake comes out to fight.",
+     "fail": "They hold the wyrm's nest. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "Glodr the Cinder Drake",
+     "objective": "Defeat Glodr the Cinder Drake",
+     "announce": "Glodr the Cinder Drake stands at the wyrm's nest. Bring friends.",
+     "center": [
+      334,
+      220,
+      123.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60159218,
+      "name": "Glodr the Cinder Drake",
+      "level": 30,
+      "size": 110,
+      "pos": [
+       334,
+       220,
+       123.2
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 20022,
+        "name": "young fire wyrm",
+        "level": [
+         25,
+         27
+        ]
+       }
+      ]
+     },
+     "success": "Glodr the Cinder Drake falls. The way is safe again.",
+     "fail": "Glodr the Cinder Drake slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu104_glodr_the_cinder_drake_s_ring",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Young Fire Wyrms Hold the Road",
+     "objective": "Drive the young fire wyrms off the road",
+     "announce": "With The Wyrm's Nest lost, the young fire wyrms have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      862,
+      357,
+      158.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 20022,
+       "name": "young fire wyrm",
+       "level": [
+        25,
+        27
+       ]
+      },
+      {
+       "template": 60159218,
+       "name": "cinder drake",
+       "level": [
+        28,
+        28
+       ]
+      }
+     ],
+     "boss": {
+      "template": 20022,
+      "name": "Young fire wyrm warleader",
+      "level": 29,
+      "pos": [
+       862,
+       357,
+       158.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The young fire wyrms are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hild has come out to set the road right. The young fire wyrms are coming back for it!",
+     "center": [
+      862,
+      357,
+      158.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hild",
+      "level": 28,
+      "pos": [
+       862,
+       357,
+       158.2
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        789,
+        401,
+        163.3
+       ],
+       [
+        779,
+        335,
+        196.6
+       ],
+       [
+        820,
+        283,
+        175.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 20022,
+        "name": "young fire wyrm",
+        "level": [
+         25,
+         27
+        ]
+       },
+       {
+        "template": 60159218,
+        "name": "cinder drake",
+        "level": [
+         28,
+         28
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The young fire wyrms break and scatter. The road is open again.",
+     "fail": "Roadwarden Hild falls, and the young fire wyrms take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "muspelheim_fire_ants",
+   "title": "The Fire Ant Swarm",
+   "levels": [
+    20,
+    22
+   ],
+   "hint": "The ash is crawling with fire ants...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Dverge Brokk",
+     "objective": "Protect Dverge Brokk, who is tapping a vein of fire-iron",
+     "announce": "Brokk the dverge has found a vein of fire-iron, right beside a fire ant mound. Keep the swarm off him until it's out.",
+     "center": [
+      711,
+      905,
+      127.7
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Dverge Brokk",
+      "template": 60167667,
+      "level": 22,
+      "model": 158,
+      "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+      "health_mult": 10,
+      "pos": [
+       711,
+       905,
+       127.7
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        713,
+        1002,
+        172.2
+       ],
+       [
+        656,
+        968,
+        141.0
+       ],
+       [
+        614,
+        904,
+        62.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 20021,
+        "name": "fire ant gatherer",
+        "level": [
+         21,
+         21
+        ]
+       },
+       {
+        "template": 60160874,
+        "name": "fire ant worker",
+        "level": [
+         22,
+         22
+        ]
+       },
+       {
+        "template": 60160873,
+        "name": "fire ant scavenger",
+        "level": [
+         20,
+         20
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Dverge Brokk. \"They came from over there - let's finish this.\"",
+     "fail": "Dverge Brokk falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Fire Ant Mound",
+     "objective": "Clear the fire ant mound",
+     "announce": "They came from the fire ant mound. Follow them back and clear it out.",
+     "center": [
+      499,
+      1117,
+      64.3
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 20021,
+       "name": "fire ant gatherer",
+       "level": [
+        21,
+        21
+       ]
+      },
+      {
+       "template": 60160874,
+       "name": "fire ant worker",
+       "level": [
+        22,
+        22
+       ]
+      },
+      {
+       "template": 60160873,
+       "name": "fire ant scavenger",
+       "level": [
+        20,
+        20
+       ]
+      }
+     ],
+     "success": "You have cleared the fire ant mound. The Ember Queen comes out to fight.",
+     "fail": "They hold the fire ant mound. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Ember Queen",
+     "objective": "Defeat the Ember Queen",
+     "announce": "The Ember Queen stands at the fire ant mound. Bring friends.",
+     "center": [
+      499,
+      1117,
+      64.3
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 20021,
+      "name": "The Ember Queen",
+      "level": 24,
+      "size": 65,
+      "pos": [
+       499,
+       1117,
+       64.3
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 20021,
+        "name": "fire ant gatherer",
+        "level": [
+         21,
+         21
+        ]
+       }
+      ]
+     },
+     "success": "The Ember Queen falls. The way is safe again.",
+     "fail": "The Ember Queen slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu104_ember_queen_s_jewel",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Fire Ant Gatherers Hold the Old Road",
+     "objective": "Drive the fire ant gatherers off the old road",
+     "announce": "With The Fire Ant Swarm lost, the fire ant gatherers have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      321,
+      1208,
+      112.7
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 20021,
+       "name": "fire ant gatherer",
+       "level": [
+        21,
+        21
+       ]
+      },
+      {
+       "template": 60160874,
+       "name": "fire ant worker",
+       "level": [
+        22,
+        22
+       ]
+      },
+      {
+       "template": 60160873,
+       "name": "fire ant scavenger",
+       "level": [
+        20,
+        20
+       ]
+      }
+     ],
+     "boss": {
+      "template": 20021,
+      "name": "Fire ant gatherer warleader",
+      "level": 23,
+      "pos": [
+       321,
+       1208,
+       112.7
+      ],
+      "health_mult": 2
+     },
+     "success": "The fire ant gatherers are gone from the old road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hild has come out to set the old road right. The fire ant gatherers are coming back for it!",
+     "center": [
+      321,
+      1208,
+      112.7
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hild",
+      "level": 22,
+      "pos": [
+       321,
+       1208,
+       112.7
+      ],
+      "health_mult": 10,
+      "template": 60167667,
+      "model": 158,
+      "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        346,
+        1127,
+        82.8
+       ],
+       [
+        397,
+        1170,
+        131.6
+       ],
+       [
+        402,
+        1236,
+        173.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 20021,
+        "name": "fire ant gatherer",
+        "level": [
+         21,
+         21
+        ]
+       },
+       {
+        "template": 60160874,
+        "name": "fire ant worker",
+        "level": [
+         22,
+         22
+        ]
+       },
+       {
+        "template": 60160873,
+        "name": "fire ant scavenger",
+        "level": [
+         20,
+         20
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+     "success": "The fire ant gatherers break and scatter. The old road is open again.",
+     "fail": "Roadwarden Hild falls, and the fire ant gatherers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "mu_brood_sire",
+   "title": "The Brood-Sire",
+   "levels": [
+    25,
+    28
+   ],
+   "hint": "Smoke boiling up from the wyrm hills, and a roar that shakes the ash off the rocks...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "b1",
+   "stages": [
+    {
+     "id": "b1",
+     "type": "cull",
+     "name": "The Hatchlings",
+     "objective": "Break the swarm of hatchlings boiling out of the wyrm hills",
+     "announce": "The hatchery's brood is loose in the wyrm hills! Break the hatchlings before they reach Brika's camp!",
+     "center": [
+      600,
+      300,
+      87.9
+     ],
+     "radius": 90,
+     "time_s": 900,
+     "kill": 14,
+     "alive": 6,
+     "mobs": [
+      {
+       "template": 20022,
+       "name": "fire-wyrm hatchling",
+       "level": [
+        22,
+        24
+       ],
+       "guild": "of the Brood"
+      },
+      {
+       "template": 20022,
+       "name": "fire-wyrm hatchling",
+       "level": [
+        22,
+        24
+       ],
+       "guild": "of the Brood"
+      },
+      {
+       "template": 20022,
+       "name": "young fire wyrm",
+       "level": [
+        24,
+        26
+       ],
+       "guild": "of the Brood"
+      },
+      {
+       "template": 60160116,
+       "name": "drakulv brood-keeper",
+       "level": [
+        24,
+        26
+       ],
+       "guild": "Gjalpinulva's Hatchery"
+      }
+     ],
+     "success": "The hatchlings break - and over the hills comes their sire, wings open, the air shimmering round it.",
+     "fail": "The hatchlings scatter over the hills, and their sire comes for them.",
+     "on_success": "b2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "b2",
+     "type": "boss",
+     "name": "the Brood-Sire",
+     "objective": "Hunt down the Brood-Sire",
+     "announce": "The Brood-Sire: a fire wyrm the size of a longhouse, the brood's father, lava dripping from its jaws. It ranges the wyrm hills - hunt it down. A fight for many: bring friends.",
+     "center": [
+      600,
+      300,
+      87.9
+     ],
+     "radius": 130,
+     "time_s": 1500,
+     "path": [
+      [
+       600,
+       300,
+       87.9
+      ],
+      [
+       450,
+       250,
+       167.3
+      ],
+      [
+       330,
+       330,
+       176.0
+      ],
+      [
+       500,
+       420,
+       198.0
+      ],
+      [
+       760,
+       380,
+       156.5
+      ],
+      [
+       950,
+       300,
+       101.2
+      ],
+      [
+       800,
+       220,
+       78.7
+      ],
+      [
+       600,
+       300,
+       87.9
+      ]
+     ],
+     "boss": {
+      "template": 60159218,
+      "name": "the Brood-Sire",
+      "level": 29,
+      "size": 95,
+      "pos": [
+       600,
+       300,
+       87.9
+      ],
+      "health_mult": 4,
+      "guild": "Father of the Brood"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 20022,
+        "name": "young fire wyrm",
+        "level": [
+         24,
+         26
+        ],
+        "guild": "of the Brood"
+       },
+       {
+        "template": 20022,
+        "name": "fire-wyrm hatchling",
+        "level": [
+         22,
+         24
+        ],
+        "guild": "of the Brood"
+       }
+      ]
+     },
+     "success": "The Brood-Sire falls in the ash, and its fire goes out. In the hatchery, the eggs go quiet.",
+     "fail": "The Brood-Sire flies back to the hatchery, and the hills burn.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 260,
+      "tokens": 22,
+      "items": [
+       {
+        "id": "nu104_brood_sire_s_ember_heart",
+        "gold_chance": 40,
+        "silver_chance": 20
+       },
+       {
+        "id": "nu104_wyrm_wing_mantle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mu_forge_fire",
+   "title": "The Forge-Fire",
+   "levels": [
+    23,
+    26
+   ],
+   "hint": "Giants' horns from the east, and the dverge banging their gongs at Khizil's hold...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "f1",
+   "stages": [
+    {
+     "id": "f1",
+     "type": "defend",
+     "name": "The Bellows",
+     "objective": "Keep Bellows-Master Durin alive at Khizil's forge",
+     "announce": "The fire giants have come down on Khizil's forge - they blame every dverge for the fire sold to the brood! Bellows-Master Durin won't leave the bellows - keep him alive!",
+     "center": [
+      560,
+      1360,
+      65.4
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "template": 60157473,
+      "model": 185,
+      "guild": "the Forge of Khizil",
+      "name": "Bellows-Master Durin",
+      "level": 25,
+      "pos": [
+       560,
+       1360,
+       65.4
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 24,
+      "count": 3,
+      "from": [
+       [
+        688,
+        1378,
+        106.4
+       ],
+       [
+        642,
+        1225,
+        55.7
+       ],
+       [
+        672,
+        1406,
+        115.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160878,
+        "name": "fire giant lookout",
+        "level": [
+         25,
+         27
+        ],
+        "guild": "of the fire giants"
+       },
+       {
+        "template": 60160879,
+        "name": "fire giant scout",
+        "level": [
+         25,
+         27
+        ],
+        "guild": "of the fire giants"
+       }
+      ]
+     },
+     "thanks": "\"The giants think we're all fire-sellers. We're not. But they don't ask.\"",
+     "success": "The giants fall back - all but one, in a crown of black iron, who strides up to the forge himself.",
+     "fail": "Durin falls, and the giants smash the bellows.",
+     "on_success": "f2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 130,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "f2",
+     "type": "boss",
+     "name": "Jarl Surtling",
+     "objective": "Defeat Jarl Surtling of the fire giants",
+     "announce": "Jarl Surtling, a fire giant in a crown of black iron: 'The dragon's brood is warmed by your fire, little smiths. We'll put it out.'",
+     "center": [
+      560,
+      1360,
+      65.4
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60160877,
+      "name": "Jarl Surtling",
+      "level": 28,
+      "size": 70,
+      "pos": [
+       560,
+       1360,
+       65.4
+      ],
+      "health_mult": 3,
+      "guild": "of the fire giants"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60160878,
+        "name": "fire giant lookout",
+        "level": [
+         25,
+         27
+        ],
+        "guild": "of the fire giants"
+       }
+      ]
+     },
+     "success": "Surtling falls at the forge's door. The dverge put out the fire on his beard, out of courtesy.",
+     "fail": "Surtling smashes the forge and walks back east.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 220,
+      "tokens": 18,
+      "items": [
+       {
+        "id": "nu104_surtling_s_iron_crown",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
 }

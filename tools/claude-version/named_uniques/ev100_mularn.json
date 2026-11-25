@@ -1,0 +1,62 @@
+{
+ "zone": 100,
+ "region": 100,
+ "realm": 2,
+ "prefix": "nu100",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moon-Howler's Frost Fang",
+   "base": [
+    41,
+    24
+   ],
+   "level": 13,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 11
+   },
+   "lore": "A fang rimed with frost that never melts."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moonrise Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 13,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 13,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Grey wolf-fur, pale as moonlight."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Red-Eye Fetish",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Pie": 4,
+    "Int": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "The shaman's fetish, the red eye scrubbed half off."
+  }
+ ]
+}

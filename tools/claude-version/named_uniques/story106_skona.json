@@ -142,6 +142,495 @@
     "Hits": 29
    },
    "lore": "The jarl's spymasters wear these. Thorvald gave you his."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wolfsbane Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 28,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 28,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "A ring of dried wolfsbane under glass."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Skulker-Hide Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 28,
+   "bonuses": {
+    "Dex": 9,
+    "Qui": 9,
+    "Str": 5,
+    "Hits": 24
+   },
+   "lore": "Grey fur, still bristling."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wolverine-Claw Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
+   },
+   "lore": "Three claws, each as long as a finger."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ranger's Grey Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 30,
+   "bonuses": {
+    "Dex": 10,
+    "Qui": 10,
+    "Str": 5,
+    "Hits": 26
+   },
+   "lore": "Soft grey leather, a ranger's."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tree-Frog Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 29,
+   "bonuses": {
+    "Qui": 10,
+    "Con": 5,
+    "Dex": 5,
+    "Hits": 17,
+    "Power": 3
+   },
+   "lore": "A little green frog, carved in jade."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Circle-Walker's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 29,
+   "bonuses": {
+    "Int": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "Embroidered with the moon's phases."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wind-Spirit Veil Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 31,
+   "bonuses": {
+    "Pie": 10,
+    "Int": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 19
+   },
+   "lore": "A veil of nothing. You can feel it move."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moonlit Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 31,
+   "bonuses": {
+    "Int": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 19
+   },
+   "lore": "Silver, cold, faintly shining."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moon-Stone Pendant",
+   "base": [
+    41,
+    29
+   ],
+   "level": 33,
+   "bonuses": {
+    "Pie": 11,
+    "Int": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "A pale stone that darkens a little every night."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seithkona's Circle Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 33,
+   "bonuses": {
+    "Int": 11,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "Cut from the circle's own stone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Werewolf-Guard Fang Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 32,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 5,
+    "Hits": 27
+   },
+   "lore": "A fang set in iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wolfsbane-Stitched Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 32,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 32,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Grey wool, wolfsbane sewn into the hem."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Warder's Rune-Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 34,
+   "bonuses": {
+    "Int": 11,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "Wolf-runes carved by a werewolf warder."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ravine Ranger's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 34,
+   "bonuses": {
+    "Dex": 11,
+    "Qui": 11,
+    "Str": 6,
+    "Hits": 29
+   },
+   "lore": "Many pouches, all smelling of wolfsbane."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Headsman's Axe-Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 36,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 31
+   },
+   "lore": "A tiny axe on a heavy chain."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wolf-Hunter's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 36,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 36,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Rangers' grey, wolf-pelts sewn on."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hunt-Breaker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 36,
+   "bonuses": {
+    "Dex": 12,
+    "Qui": 12,
+    "Str": 6,
+    "Hits": 31
+   },
+   "lore": "Silver. Wolves hate it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ulfhamr Scout's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 37,
+   "bonuses": {
+    "Dex": 12,
+    "Qui": 12,
+    "Str": 6,
+    "Hits": 31
+   },
+   "lore": "Grey iron, very quiet."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rangers' Oath-Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 37,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 37,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "The Rangers' belt, given to those who stand with them."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Orm-Scale Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 33,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 33,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "A green orm's scale, cut round."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shore-Walker's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 33,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 33,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Sea-green, salt-stiff."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sidhe-Silver Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 35,
+   "bonuses": {
+    "Pie": 12,
+    "Int": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 21
+   },
+   "lore": "A leaf of silver, too fine for Midgard's smiths."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Strand-Ward Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 35,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 35,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Silver and wood."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dryad-Blossom Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 34,
+   "bonuses": {
+    "Qui": 11,
+    "Con": 6,
+    "Dex": 6,
+    "Hits": 20,
+    "Power": 4
+   },
+   "lore": "A blossom that never wilts."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Greenthumb's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 34,
+   "bonuses": {
+    "Int": 11,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "Living wood."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Silverscale Drake Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 37,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 31
+   },
+   "lore": "Silver scales on a silver chain."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drake-Trail Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 37,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 37,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Scorched at the hem."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Malmohus-Road Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 37,
+   "bonuses": {
+    "Dex": 12,
+    "Qui": 12,
+    "Str": 6,
+    "Hits": 31
+   },
+   "lore": "A drakulv's belt, the dragon's eye cut off it."
   }
  ]
 }

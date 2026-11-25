@@ -1,0 +1,160 @@
+{
+ "zone": 101,
+ "name": "East Svealand",
+ "levels": [
+  6,
+  16
+ ],
+ "realm": 2,
+ "factions": [
+  {
+   "key": "steading_league",
+   "name": "the Steading-League",
+   "short": "the League",
+   "kin": [
+    "eiriks_huscarls",
+    "huginfel_shieldwall",
+    "galplen_woodwards",
+    "khizil_forge",
+    "wolfsbane_rangers",
+    "vanern_wardens",
+    "kings_host"
+   ],
+   "titles": [
+    "League-Friend",
+    "Fold-Keeper",
+    "Wolf-Breaker of Svealand"
+   ],
+   "speaker": "es_hallgerd",
+   "town": "Audliten",
+   "kills": [
+    "sveawolf",
+    "lupine",
+    "wildling",
+    "grey hame",
+    "hame",
+    "tomte",
+    "army ant",
+    "crab",
+    "lynx",
+    "mauler",
+    "thrall",
+    "serpent"
+   ],
+   "quartermaster": {
+    "name": "League-Quartermaster Sigvor",
+    "guild": "the Steading-League",
+    "model": 168,
+    "anchor": "es_hallgerd",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The League looks after its own. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep101_league_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep101_steading_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep101_league_spearman_s_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep101_fold_keeper_s_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep101_mantle_of_the_wolf_breaker",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "shared": [
+  "eiriks_huscarls"
+ ],
+ "quartermasters": [
+  {
+   "faction": "eiriks_huscarls",
+   "name": "Huscarl-Quartermaster Sten",
+   "guild": "King Eirik's Huscarls",
+   "model": 213,
+   "anchor": "es_brand",
+   "offset": [
+    4,
+    3
+   ],
+   "greet": "Bjorn keeps the stores at Mularn; I keep them here. Same stock, same rules - show me your standing with the Huscarls.",
+   "stock": [
+    {
+     "item": "rep100_huscarl_friend_s_ring",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep100_jordheim_road_belt",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep100_shield_of_jordheim_torc",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep100_eirik_s_bracer",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep100_mantle_of_eirik_s_champion",
+     "rank": "Legend",
+     "price": 150
+    }
+   ]
+  }
+ ],
+ "kill_default": "steading_league",
+ "event_default": "steading_league",
+ "quest_default": "steading_league",
+ "quests": {
+  "thrall_price": "steading_league",
+  "tomte_due": "steading_league",
+  "es_crabs": "steading_league",
+  "es_ants": "steading_league",
+  "es_ant_mound": "steading_league",
+  "es_dirges": "eiriks_huscarls",
+  "es_ghouls": "eiriks_huscarls",
+  "es_dwarf_barrow": "eiriks_huscarls",
+  "es_tomte_raiders": "steading_league",
+  "es_tomte_aggressors": "steading_league",
+  "es_sveawolves": "steading_league",
+  "es_lupines": "steading_league",
+  "es_grey_hames": "steading_league",
+  "es_ulfrstead": "steading_league",
+  "es_drakelings": "eiriks_huscarls",
+  "es_silverscales": "eiriks_huscarls",
+  "es_wyrm_tongue": "eiriks_huscarls"
+ },
+ "events": {
+  "es_ulfrstead_assault": "steading_league",
+  "es_ulfrstead_return": "steading_league",
+  "es_hame_raid": "steading_league",
+  "es_drakeling_swarm": "eiriks_huscarls",
+  "east_svealand_sveawolves": "steading_league",
+  "east_svealand_restless_dead": "eiriks_huscarls",
+  "east_svealand_tomte": "steading_league",
+  "east_svealand_army_ants": "steading_league"
+ }
+}

@@ -1,0 +1,535 @@
+{
+ "zone": 107,
+ "name": "Vanern Swamp",
+ "rating": "deadly",
+ "themes": [
+  "The wardens' camp in the south-east, and the mud flats",
+  "The clay jotun pits (middle) and the broken jotun of the west",
+  "The hagbui lands and Hrafnsholm, the watch-hold they took (north-west) - the fort to retake",
+  "The jotun outcasts' camp and their enslaved orms (north)",
+  "The black orm bog and the spider wood (north-east)"
+ ],
+ "notes": "Midgard's plan 2026-11-25, round 3: Deadly; the west thread's risen barrow-dead hold Hrafnsholm with a chained jotun - the fort to retake. Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "jotun overlord": "red",
+  "jotun despot": "red",
+  "Ulfketill": "purple",
+  "Jango": "purple",
+  "Rottild the Traitor": "red",
+  "Valthjof": "red",
+  "Freyana": "red",
+  "Mista": "orange",
+  "Noma Rindasdottir": "orange",
+  "dark seithkona": "orange",
+  "dark seithkona initiate": "orange",
+  "clay jotun retainer": "orange",
+  "clay jotun runner": "orange",
+  "hagbui herald": "orange",
+  "hagbui squire": "orange",
+  "hagbui swordbearer": "orange",
+  "hagbui forge tender": "orange",
+  "hagbui page": "orange"
+ },
+ "factions": {
+  "spiders": {
+   "id": 9671,
+   "aggro": 85
+  },
+  "orms": {
+   "id": 9672,
+   "aggro": 80
+  },
+  "jotun": {
+   "id": 9673,
+   "aggro": 90,
+   "enemies": [
+    "hagbui"
+   ]
+  },
+  "clay": {
+   "id": 9674,
+   "aggro": 80
+  },
+  "hagbui": {
+   "id": 9675,
+   "aggro": 95,
+   "enemies": [
+    "jotun"
+   ]
+  }
+ },
+ "members": {
+  "mud frog": {
+   "from": "mud frog",
+   "tier": "yellow",
+   "roam": 200
+  },
+  "mud crab": {
+   "from": "mud crab",
+   "tier": "yellow",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 150
+  },
+  "mud crab warrior": {
+   "from": "mud crab warrior",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "forest viper": {
+   "from": "forest viper",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 250
+  },
+  "forest spider": {
+   "from": "forest spider",
+   "tier": "orange",
+   "faction": "spiders",
+   "aggro": [
+    75,
+    500
+   ],
+   "roam": 200
+  },
+  "forest spider queen": {
+   "from": "forest spider queen",
+   "tier": "red",
+   "faction": "spiders",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 60,
+   "guards": {
+    "forest spider": 2
+   }
+  },
+  "black orm": {
+   "from": "black orm",
+   "tier": "orange",
+   "faction": "orms",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "small black orm": {
+   "from": "small black orm",
+   "tier": "orange",
+   "faction": "orms",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "reincarnate orm": {
+   "from": "reincarnate orm",
+   "tier": "orange",
+   "faction": "hagbui",
+   "aggro": [
+    75,
+    500
+   ],
+   "roam": 200
+  },
+  "large enslaved orm runner": {
+   "from": "large enslaved orm runner",
+   "tier": "orange",
+   "faction": "jotun",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "jotun outcast": {
+   "from": "jotun outcast",
+   "tier": "red",
+   "faction": "jotun",
+   "aggro": [
+    85,
+    600
+   ],
+   "roam": 200
+  },
+  "clay jotun": {
+   "from": "clay jotun",
+   "tier": "orange",
+   "faction": "clay",
+   "aggro": [
+    75,
+    500
+   ],
+   "roam": 150
+  },
+  "clay jotun guard": {
+   "from": "clay jotun guard",
+   "tier": "red",
+   "faction": "clay",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 60
+  },
+  "broken jotun": {
+   "from": "broken jotun",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "crippled jotun": {
+   "from": "crippled jotun",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 80
+  },
+  "hagbui berserker": {
+   "from": "hagbui berserker",
+   "tier": "orange",
+   "faction": "hagbui",
+   "guild": "the Hagbui",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 250
+  },
+  "hagbui shaman": {
+   "from": "hagbui shaman",
+   "tier": "orange",
+   "faction": "hagbui",
+   "guild": "the Hagbui",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 150
+  },
+  "hagbui spiritmaster": {
+   "from": "hagbui spiritmaster",
+   "tier": "orange",
+   "faction": "hagbui",
+   "guild": "the Hagbui",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 150
+  },
+  "hagbui runemaster": {
+   "from": "hagbui runemaster",
+   "tier": "red",
+   "faction": "hagbui",
+   "guild": "the Hagbui",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 100
+  },
+  "hagbui guard": {
+   "from": "hagbui guard",
+   "tier": "orange",
+   "faction": "hagbui",
+   "guild": "the Hagbui",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 80
+  },
+  "hagbui thane": {
+   "from": "hagbui thane",
+   "tier": "red",
+   "faction": "hagbui",
+   "guild": "the Hagbui",
+   "aggro": [
+    85,
+    600
+   ],
+   "roam": 150
+  },
+  "Barrow-Thane Hrodgeir": {
+   "from": "hagbui thane",
+   "tier": "red",
+   "name": "Barrow-Thane Hrodgeir",
+   "size": 1.2,
+   "faction": "hagbui",
+   "guild": "Warden of Hrafnsholm",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 40,
+   "guards": {
+    "hagbui guard": 2
+   }
+  }
+ },
+ "sites": [
+  {
+   "id": "vanern_camp",
+   "kind": "clear",
+   "at": [
+    49200,
+    44800
+   ],
+   "r": 3600,
+   "names": [
+    "mud frog",
+    "mud crab",
+    "mud crab warrior",
+    "forest viper",
+    "forest spider",
+    "forest spider queen",
+    "black orm",
+    "small black orm",
+    "reincarnate orm",
+    "large enslaved orm runner",
+    "jotun outcast",
+    "clay jotun",
+    "clay jotun guard",
+    "broken jotun",
+    "crippled jotun",
+    "hagbui berserker",
+    "hagbui shaman",
+    "hagbui spiritmaster",
+    "hagbui runemaster",
+    "hagbui guard",
+    "hagbui thane",
+    "Barrow-Thane Hrodgeir"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "mud_flats",
+   "kind": "wildlife",
+   "area": [
+    36000,
+    32800,
+    63200,
+    62400
+   ],
+   "spawn": {
+    "mud frog": 50,
+    "mud crab": 40,
+    "mud crab warrior": 40,
+    "forest viper": 30
+   },
+   "spacing": 260
+  },
+  {
+   "id": "south_reeds",
+   "kind": "wildlife",
+   "area": [
+    7200,
+    46000,
+    36000,
+    61600
+   ],
+   "spawn": {
+    "forest viper": 40,
+    "mud frog": 30
+   },
+   "spacing": 260
+  },
+  {
+   "id": "clay_pits",
+   "kind": "wildlife",
+   "area": [
+    19600,
+    32800,
+    33600,
+    45600
+   ],
+   "spawn": {
+    "clay jotun": 40
+   },
+   "spacing": 260
+  },
+  {
+   "id": "clay_hall",
+   "kind": "camp",
+   "at": [
+    26880,
+    41480
+   ],
+   "r": 480,
+   "respawn": 900,
+   "spawn": {
+    "clay jotun guard": 2,
+    "clay jotun": 2
+   }
+  },
+  {
+   "id": "jotun_west",
+   "kind": "wildlife",
+   "area": [
+    3600,
+    25600,
+    18000,
+    46800
+   ],
+   "spawn": {
+    "broken jotun": 30,
+    "crippled jotun": 20
+   },
+   "spacing": 260
+  },
+  {
+   "id": "hagbui_lands",
+   "kind": "wildlife",
+   "area": [
+    2400,
+    15200,
+    28000,
+    26000
+   ],
+   "spawn": {
+    "hagbui berserker": 40,
+    "hagbui spiritmaster": 20,
+    "hagbui shaman": 15,
+    "reincarnate orm": 20
+   },
+   "spacing": 260
+  },
+  {
+   "id": "barrow_ridge",
+   "kind": "wildlife",
+   "area": [
+    1600,
+    2000,
+    26000,
+    15200
+   ],
+   "spawn": {
+    "reincarnate orm": 20,
+    "hagbui berserker": 20,
+    "hagbui thane": 10
+   },
+   "spacing": 260
+  },
+  {
+   "id": "hrafnsholm",
+   "kind": "camp",
+   "at": [
+    9600,
+    10000
+   ],
+   "r": 640,
+   "respawn": 900,
+   "spawn": {
+    "Barrow-Thane Hrodgeir": 1,
+    "hagbui runemaster": 2,
+    "hagbui thane": 2
+   }
+  },
+  {
+   "id": "hrafnsholm_yard",
+   "kind": "camp",
+   "at": [
+    12000,
+    12000
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "hagbui guard": 3,
+    "hagbui berserker": 3
+   }
+  },
+  {
+   "id": "jotun_camp",
+   "kind": "wildlife",
+   "area": [
+    22400,
+    3600,
+    32400,
+    12800
+   ],
+   "spawn": {
+    "jotun outcast": 25,
+    "large enslaved orm runner": 30
+   },
+   "spacing": 260
+  },
+  {
+   "id": "black_orm_bog",
+   "kind": "wildlife",
+   "area": [
+    34400,
+    4000,
+    60000,
+    16800
+   ],
+   "spawn": {
+    "black orm": 40,
+    "small black orm": 30
+   },
+   "spacing": 260
+  },
+  {
+   "id": "orm_east",
+   "kind": "wildlife",
+   "area": [
+    42800,
+    16800,
+    62800,
+    40000
+   ],
+   "spawn": {
+    "small black orm": 30,
+    "forest viper": 20
+   },
+   "spacing": 260
+  },
+  {
+   "id": "spider_wood",
+   "kind": "wildlife",
+   "area": [
+    44000,
+    3600,
+    64400,
+    27200
+   ],
+   "spawn": {
+    "forest spider": 50
+   },
+   "spacing": 260
+  },
+  {
+   "id": "spider_queen",
+   "kind": "camp",
+   "at": [
+    59120,
+    6800
+   ],
+   "r": 480,
+   "respawn": 900,
+   "spawn": {
+    "forest spider queen": 1,
+    "forest spider": 2
+   }
+  }
+ ]
+}

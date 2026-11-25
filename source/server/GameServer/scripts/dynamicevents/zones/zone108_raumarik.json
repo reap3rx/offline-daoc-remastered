@@ -1,533 +1,2247 @@
 {
-  "zone": 108,
-  "region": 100,
-  "name": "Raumarik",
-  "lore": "Raumarik, the white waste, where the icestriders stalk the snow and the wights of the cold walk the frozen barrows.",
-  "chains": [
+ "zone": 108,
+ "region": 100,
+ "name": "Raumarik",
+ "lore": "Raumarik: the frozen north, where the winter never ends. Hati, the wolf that hunts the moon - Fenrir's son - waits in his howe in the west for the moon to run close enough to catch; when he catches it, the long winter comes for all of Midgard. His host holds the north - the fenrir soldiers and their mystics, the winterwolves, the wraiths and wights - and King Eirik's Host means to take it back.",
+ "chains": [
+  {
+   "id": "raumarik_icestriders",
+   "title": "The Icestriders",
+   "levels": [
+    43,
+    46
+   ],
+   "hint": "Frost is spreading across the northern waste...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "raumarik_icestriders",
-      "title": "The Icestriders",
-      "levels": [43, 46],
-      "hint": "Frost is spreading across the northern waste...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Icestrider Camp",
-          "objective": "Clear the icestrider camp",
-          "announce": "The icestriders are weaving a frost to bury the passes. Break their camp.",
-          "center": [1304, 374, 116.4],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60162353,
-              "name": "icestrider chiller",
-              "level": [43, 45]
-            },
-            {
-              "template": 60162357,
-              "name": "icestrider frostweaver",
-              "level": [44, 46]
-            }
-          ],
-          "success": "You have cleared the icestrider camp. Icestrider Hrimfaxi comes out to fight.",
-          "fail": "They hold the icestrider camp. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Icestrider Hrimfaxi",
-          "objective": "Defeat Icestrider Hrimfaxi",
-          "announce": "Icestrider Hrimfaxi stands at the icestrider camp. Bring friends.",
-          "center": [1304, 374, 116.4],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60162362,
-            "name": "Icestrider Hrimfaxi",
-            "level": 48,
-            "size": 68,
-            "pos": [1304, 374, 116.4],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60162353,
-                "name": "icestrider chiller",
-                "level": [43, 45]
-              }
-            ]
-          },
-          "success": "Icestrider Hrimfaxi falls. The way is safe again.",
-          "fail": "Icestrider Hrimfaxi slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu108_icestrider_hrimfaxi_s_cloak", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Icestrider Chillers Hold the Road",
-          "objective": "Drive the icestrider chillers off the road",
-          "announce": "With The Icestriders lost, the icestrider chillers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1475, 550, 121.2],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60162353,
-              "name": "icestrider chiller",
-              "level": [43, 45]
-            },
-            {
-              "template": 60162357,
-              "name": "icestrider frostweaver",
-              "level": [44, 46]
-            }
-          ],
-          "boss": {
-            "template": 60162353,
-            "name": "Icestrider chiller warleader",
-            "level": 47,
-            "pos": [1475, 550, 121.2],
-            "health_mult": 2
-          },
-          "success": "The icestrider chillers are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Sten has come out to set the road right. The icestrider chillers are coming back for it!",
-          "center": [1475, 550, 121.2],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Sten",
-            "level": 46,
-            "pos": [1475, 550, 121.2],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1390, 550, 100.1],
-              [1415, 489, 112.6],
-              [1477, 465, 121.8]
-            ],
-            "mobs": [
-              {
-                "template": 60162353,
-                "name": "icestrider chiller",
-                "level": [43, 45]
-              },
-              {
-                "template": 60162357,
-                "name": "icestrider frostweaver",
-                "level": [44, 46]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The icestrider chillers break and scatter. The road is open again.",
-          "fail": "Roadwarden Sten falls, and the icestrider chillers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Icestrider Camp",
+     "objective": "Clear the icestrider camp",
+     "announce": "The icestriders are weaving a frost to bury the passes. Break their camp.",
+     "center": [
+      1304,
+      374,
+      116.4
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60162353,
+       "name": "icestrider chiller",
+       "level": [
+        43,
+        45
+       ]
+      },
+      {
+       "template": 60162357,
+       "name": "icestrider frostweaver",
+       "level": [
+        44,
+        46
+       ]
+      }
+     ],
+     "success": "You have cleared the icestrider camp. Icestrider Hrimfaxi comes out to fight.",
+     "fail": "They hold the icestrider camp. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "raumarik_white_wights",
-      "title": "Wights of the White Waste",
-      "levels": [50, 53],
-      "hint": "The wind carries voices across the waste...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Skald Arnbjorn",
-          "objective": "Protect Skald Arnbjorn, who is singing the death-song over the cairn",
-          "announce": "Skald Arnbjorn is singing the death-song that keeps the wights in their cairns. They have come to silence him.",
-          "center": [164, 384, 177.9],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Skald Arnbjorn",
-            "template": 60167667,
-            "level": 53,
-            "model": 158,
-            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
-            "health_mult": 10,
-            "pos": [164, 384, 177.9]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [142, 302, 194.0],
-              [207, 310, 188.3],
-              [262, 389, 128.8]
-            ],
-            "mobs": [
-              {
-                "template": 60167978,
-                "name": "windswept wraith",
-                "level": [50, 53]
-              },
-              {
-                "template": 60159159,
-                "name": "chillsome wight",
-                "level": [51, 52]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Skald Arnbjorn. \"They came from over there - let's finish this.\"",
-          "fail": "Skald Arnbjorn falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Skald's Cairn",
-          "objective": "Clear the skald's cairn",
-          "announce": "They came from the skald's cairn. Follow them back and clear it out.",
-          "center": [303, 146, 221.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60167978,
-              "name": "windswept wraith",
-              "level": [50, 53]
-            },
-            {
-              "template": 60159159,
-              "name": "chillsome wight",
-              "level": [51, 52]
-            }
-          ],
-          "success": "You have cleared the skald's cairn. Frore Lich Vetrarr comes out to fight.",
-          "fail": "They hold the skald's cairn. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Frore Lich Vetrarr",
-          "objective": "Defeat Frore Lich Vetrarr",
-          "announce": "Frore Lich Vetrarr stands at the skald's cairn. Bring friends.",
-          "center": [303, 146, 221.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60161108,
-            "name": "Frore Lich Vetrarr",
-            "level": 55,
-            "size": 67,
-            "pos": [303, 146, 221.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60167978,
-                "name": "windswept wraith",
-                "level": [50, 53]
-              }
-            ]
-          },
-          "success": "Frore Lich Vetrarr falls. The way is safe again.",
-          "fail": "Frore Lich Vetrarr slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu108_frore_lich_vetrarr_s_stone", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Windswept Wraiths Hold the Road",
-          "objective": "Drive the windswept wraiths off the road",
-          "announce": "With Wights of the White Waste lost, the windswept wraiths have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [515, 236, 109.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60167978,
-              "name": "windswept wraith",
-              "level": [50, 53]
-            },
-            {
-              "template": 60159159,
-              "name": "chillsome wight",
-              "level": [51, 52]
-            }
-          ],
-          "boss": {
-            "template": 60167978,
-            "name": "Windswept wraith warleader",
-            "level": 54,
-            "pos": [515, 236, 109.6],
-            "health_mult": 2
-          },
-          "success": "The windswept wraiths are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hild has come out to set the road right. The windswept wraiths are coming back for it!",
-          "center": [515, 236, 109.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hild",
-            "level": 53,
-            "pos": [515, 236, 109.6],
-            "health_mult": 10,
-            "template": 60167667,
-            "model": 158,
-            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [437, 269, 122.0],
-              [437, 202, 179.0],
-              [484, 156, 141.0]
-            ],
-            "mobs": [
-              {
-                "template": 60167978,
-                "name": "windswept wraith",
-                "level": [50, 53]
-              },
-              {
-                "template": 60159159,
-                "name": "chillsome wight",
-                "level": [51, 52]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The windswept wraiths break and scatter. The road is open again.",
-          "fail": "Roadwarden Hild falls, and the windswept wraiths take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Icestrider Hrimfaxi",
+     "objective": "Defeat Icestrider Hrimfaxi",
+     "announce": "Icestrider Hrimfaxi stands at the icestrider camp. Bring friends.",
+     "center": [
+      1304,
+      374,
+      116.4
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60162362,
+      "name": "Icestrider Hrimfaxi",
+      "level": 48,
+      "size": 68,
+      "pos": [
+       1304,
+       374,
+       116.4
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60162353,
+        "name": "icestrider chiller",
+        "level": [
+         43,
+         45
+        ]
+       }
       ]
+     },
+     "success": "Icestrider Hrimfaxi falls. The way is safe again.",
+     "fail": "Icestrider Hrimfaxi slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu108_icestrider_hrimfaxi_s_cloak",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
     },
     {
-      "id": "raumarik_frost_bears",
-      "title": "The Frost-Bound Bears",
-      "levels": [47, 55],
-      "hint": "Bears and winterwolves hunt together on the ice...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Frozen Den",
-          "objective": "Clear the frozen den",
-          "announce": "Ironpelt and the frost-bound bears hunt with the winterwolves now, and nothing on the ice is safe. Break their den.",
-          "center": [1240, 1360, 118.6],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60161111,
-              "name": "frost bound bear",
-              "level": [47, 50]
-            },
-            {
-              "template": 60165623,
-              "name": "savage winterwolf",
-              "level": [51, 55]
-            }
-          ],
-          "success": "You have cleared the frozen den. Ironpelt comes out to fight.",
-          "fail": "They hold the frozen den. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Ironpelt",
-          "objective": "Defeat Ironpelt",
-          "announce": "Ironpelt stands at the frozen den. Bring friends.",
-          "center": [1240, 1360, 118.6],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60161111,
-            "name": "Ironpelt",
-            "level": 57,
-            "size": 109,
-            "pos": [1240, 1360, 118.6],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60161111,
-                "name": "frost bound bear",
-                "level": [47, 50]
-              }
-            ]
-          },
-          "success": "Ironpelt falls. The way is safe again.",
-          "fail": "Ironpelt slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu108_ironpelt_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Frost Bound Bears Hold the Old Road",
-          "objective": "Drive the frost bound bears off the old road",
-          "announce": "With The Frost-Bound Bears lost, the frost bound bears have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1452, 1270, 117.9],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60161111,
-              "name": "frost bound bear",
-              "level": [47, 50]
-            },
-            {
-              "template": 60165623,
-              "name": "savage winterwolf",
-              "level": [51, 55]
-            }
-          ],
-          "boss": {
-            "template": 60161111,
-            "name": "Frost bound bear warleader",
-            "level": 56,
-            "pos": [1452, 1270, 117.9],
-            "health_mult": 2
-          },
-          "success": "The frost bound bears are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Sten has come out to set the old road right. The frost bound bears are coming back for it!",
-          "center": [1452, 1270, 117.9],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Sten",
-            "level": 55,
-            "pos": [1452, 1270, 117.9],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1421, 1350, 116.4],
-              [1374, 1304, 118.1],
-              [1374, 1237, 102.7]
-            ],
-            "mobs": [
-              {
-                "template": 60161111,
-                "name": "frost bound bear",
-                "level": [47, 50]
-              },
-              {
-                "template": 60165623,
-                "name": "savage winterwolf",
-                "level": [51, 55]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The frost bound bears break and scatter. The old road is open again.",
-          "fail": "Roadwarden Sten falls, and the frost bound bears take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Icestrider Chillers Hold the Road",
+     "objective": "Drive the icestrider chillers off the road",
+     "announce": "With The Icestriders lost, the icestrider chillers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1475,
+      550,
+      121.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60162353,
+       "name": "icestrider chiller",
+       "level": [
+        43,
+        45
+       ]
+      },
+      {
+       "template": 60162357,
+       "name": "icestrider frostweaver",
+       "level": [
+        44,
+        46
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60162353,
+      "name": "Icestrider chiller warleader",
+      "level": 47,
+      "pos": [
+       1475,
+       550,
+       121.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The icestrider chillers are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Sten has come out to set the road right. The icestrider chillers are coming back for it!",
+     "center": [
+      1475,
+      550,
+      121.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Sten",
+      "level": 46,
+      "pos": [
+       1475,
+       550,
+       121.2
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1390,
+        550,
+        100.1
+       ],
+       [
+        1415,
+        489,
+        112.6
+       ],
+       [
+        1477,
+        465,
+        121.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60162353,
+        "name": "icestrider chiller",
+        "level": [
+         43,
+         45
+        ]
+       },
+       {
+        "template": 60162357,
+        "name": "icestrider frostweaver",
+        "level": [
+         44,
+         46
+        ]
+       }
       ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The icestrider chillers break and scatter. The road is open again.",
+     "fail": "Roadwarden Sten falls, and the icestrider chillers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
-  ]
+   ]
+  },
+  {
+   "id": "raumarik_white_wights",
+   "title": "Wights of the White Waste",
+   "levels": [
+    50,
+    53
+   ],
+   "hint": "The wind carries voices across the waste...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Skald Arnbjorn",
+     "objective": "Protect Skald Arnbjorn, who is singing the death-song over the cairn",
+     "announce": "Skald Arnbjorn is singing the death-song that keeps the wights in their cairns. They have come to silence him.",
+     "center": [
+      164,
+      384,
+      177.9
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Skald Arnbjorn",
+      "template": 60167667,
+      "level": 53,
+      "model": 158,
+      "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+      "health_mult": 10,
+      "pos": [
+       164,
+       384,
+       177.9
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        142,
+        302,
+        194.0
+       ],
+       [
+        207,
+        310,
+        188.3
+       ],
+       [
+        262,
+        389,
+        128.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60167978,
+        "name": "windswept wraith",
+        "level": [
+         50,
+         53
+        ]
+       },
+       {
+        "template": 60159159,
+        "name": "chillsome wight",
+        "level": [
+         51,
+         52
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Skald Arnbjorn. \"They came from over there - let's finish this.\"",
+     "fail": "Skald Arnbjorn falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Skald's Cairn",
+     "objective": "Clear the skald's cairn",
+     "announce": "They came from the skald's cairn. Follow them back and clear it out.",
+     "center": [
+      303,
+      146,
+      221.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60167978,
+       "name": "windswept wraith",
+       "level": [
+        50,
+        53
+       ]
+      },
+      {
+       "template": 60159159,
+       "name": "chillsome wight",
+       "level": [
+        51,
+        52
+       ]
+      }
+     ],
+     "success": "You have cleared the skald's cairn. Frore Lich Vetrarr comes out to fight.",
+     "fail": "They hold the skald's cairn. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Frore Lich Vetrarr",
+     "objective": "Defeat Frore Lich Vetrarr",
+     "announce": "Frore Lich Vetrarr stands at the skald's cairn. Bring friends.",
+     "center": [
+      303,
+      146,
+      221.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161108,
+      "name": "Frore Lich Vetrarr",
+      "level": 55,
+      "size": 67,
+      "pos": [
+       303,
+       146,
+       221.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60167978,
+        "name": "windswept wraith",
+        "level": [
+         50,
+         53
+        ]
+       }
+      ]
+     },
+     "success": "Frore Lich Vetrarr falls. The way is safe again.",
+     "fail": "Frore Lich Vetrarr slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu108_frore_lich_vetrarr_s_stone",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Windswept Wraiths Hold the Road",
+     "objective": "Drive the windswept wraiths off the road",
+     "announce": "With Wights of the White Waste lost, the windswept wraiths have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      515,
+      236,
+      109.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60167978,
+       "name": "windswept wraith",
+       "level": [
+        50,
+        53
+       ]
+      },
+      {
+       "template": 60159159,
+       "name": "chillsome wight",
+       "level": [
+        51,
+        52
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60167978,
+      "name": "Windswept wraith warleader",
+      "level": 54,
+      "pos": [
+       515,
+       236,
+       109.6
+      ],
+      "health_mult": 2
+     },
+     "success": "The windswept wraiths are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hild has come out to set the road right. The windswept wraiths are coming back for it!",
+     "center": [
+      515,
+      236,
+      109.6
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hild",
+      "level": 53,
+      "pos": [
+       515,
+       236,
+       109.6
+      ],
+      "health_mult": 10,
+      "template": 60167667,
+      "model": 158,
+      "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        437,
+        269,
+        122.0
+       ],
+       [
+        437,
+        202,
+        179.0
+       ],
+       [
+        484,
+        156,
+        141.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60167978,
+        "name": "windswept wraith",
+        "level": [
+         50,
+         53
+        ]
+       },
+       {
+        "template": 60159159,
+        "name": "chillsome wight",
+        "level": [
+         51,
+         52
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The windswept wraiths break and scatter. The road is open again.",
+     "fail": "Roadwarden Hild falls, and the windswept wraiths take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "raumarik_frost_bears",
+   "title": "The Frost-Bound Bears",
+   "levels": [
+    47,
+    55
+   ],
+   "hint": "Bears and winterwolves hunt together on the ice...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Frozen Den",
+     "objective": "Clear the frozen den",
+     "announce": "Ironpelt and the frost-bound bears hunt with the winterwolves now, and nothing on the ice is safe. Break their den.",
+     "center": [
+      1240,
+      1360,
+      118.6
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60161111,
+       "name": "frost bound bear",
+       "level": [
+        47,
+        50
+       ]
+      },
+      {
+       "template": 60165623,
+       "name": "savage winterwolf",
+       "level": [
+        51,
+        55
+       ]
+      }
+     ],
+     "success": "You have cleared the frozen den. Ironpelt comes out to fight.",
+     "fail": "They hold the frozen den. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "Ironpelt",
+     "objective": "Defeat Ironpelt",
+     "announce": "Ironpelt stands at the frozen den. Bring friends.",
+     "center": [
+      1240,
+      1360,
+      118.6
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161111,
+      "name": "Ironpelt",
+      "level": 57,
+      "size": 109,
+      "pos": [
+       1240,
+       1360,
+       118.6
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60161111,
+        "name": "frost bound bear",
+        "level": [
+         47,
+         50
+        ]
+       }
+      ]
+     },
+     "success": "Ironpelt falls. The way is safe again.",
+     "fail": "Ironpelt slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu108_ironpelt_s_wristguard",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Frost Bound Bears Hold the Old Road",
+     "objective": "Drive the frost bound bears off the old road",
+     "announce": "With The Frost-Bound Bears lost, the frost bound bears have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1452,
+      1270,
+      117.9
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60161111,
+       "name": "frost bound bear",
+       "level": [
+        47,
+        50
+       ]
+      },
+      {
+       "template": 60165623,
+       "name": "savage winterwolf",
+       "level": [
+        51,
+        55
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60161111,
+      "name": "Frost bound bear warleader",
+      "level": 56,
+      "pos": [
+       1452,
+       1270,
+       117.9
+      ],
+      "health_mult": 2
+     },
+     "success": "The frost bound bears are gone from the old road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Sten has come out to set the old road right. The frost bound bears are coming back for it!",
+     "center": [
+      1452,
+      1270,
+      117.9
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Sten",
+      "level": 55,
+      "pos": [
+       1452,
+       1270,
+       117.9
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1421,
+        1350,
+        116.4
+       ],
+       [
+        1374,
+        1304,
+        118.1
+       ],
+       [
+        1374,
+        1237,
+        102.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161111,
+        "name": "frost bound bear",
+        "level": [
+         47,
+         50
+        ]
+       },
+       {
+        "template": 60165623,
+        "name": "savage winterwolf",
+        "level": [
+         51,
+         55
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+     "success": "The frost bound bears break and scatter. The old road is open again.",
+     "fail": "Roadwarden Sten falls, and the frost bound bears take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "rk_cp1_assault",
+   "title": "The King's March on the Icestrider Fells",
+   "levels": [
+    45,
+    48
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 6,
+   "hint": "The Banner-Huscarl is forming the King's Host up for the Icestrider Fells.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60157473,
+    "model": 160,
+    "equipment": "SvasudGuard",
+    "guild": "King Eirik's Host",
+    "name": "Banner-Huscarl Thorvid",
+    "level": 50,
+    "pos": [
+     1180,
+     800,
+     112.0
+    ],
+    "health_mult": 5,
+    "greet": "The Icestrider Fells, north-east. Hati's soldiers hold a post up there with the icestriders round them. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Up the fells! Break their post - then their mystic!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The King's Host holds the Icestrider Fells - and the next thirty minutes are ours.",
+    "regret": "Back to the camp! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60157473,
+     "model": 160,
+     "equipment": "SvasudGuard",
+     "guild": "King Eirik's Host",
+     "name": "huscarl of the King",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Fells",
+     "objective": "Break Hati's post on the Icestrider Fells",
+     "announce": "The King's Host is on the Icestrider Fells! Break the post!",
+     "center": [
+      1300,
+      471,
+      111.7
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 24,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60160797,
+       "name": "fenrir soldier",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "Hati's Host"
+      },
+      {
+       "template": 60167987,
+       "name": "winter wolf",
+       "level": [
+        45,
+        47
+       ],
+       "guild": "Hati's Host"
+      },
+      {
+       "template": 60162353,
+       "name": "icestrider chiller",
+       "level": [
+        45,
+        47
+       ],
+       "guild": "of the fells"
+      },
+      {
+       "template": 60162357,
+       "name": "icestrider frostweaver",
+       "level": [
+        46,
+        48
+       ],
+       "guild": "of the fells"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "boss",
+     "name": "Frost-Mystic Hrimgerd",
+     "objective": "Defeat Frost-Mystic Hrimgerd",
+     "announce": "Frost-Mystic Hrimgerd, ice in her braids, a wolf's skull on her staff: 'The fells are the first thing he'll see when he catches her. He'll want them clean.'",
+     "center": [
+      1300,
+      471,
+      111.7
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60160797,
+      "name": "Frost-Mystic Hrimgerd",
+      "level": 50,
+      "model": 462,
+      "size": 62,
+      "health_mult": 4,
+      "guild": "of Hati's Host"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60160797,
+        "name": "fenrir soldier",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "Hati's Host"
+       },
+       {
+        "template": 60167987,
+        "name": "winter wolf",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "Hati's Host"
+       }
+      ]
+     },
+     "success": "Hrimgerd falls in the snow. The fells are the King's.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "rk_cp2_assault",
+   "title": "The King's March on the Wraith Moor",
+   "levels": [
+    46,
+    49
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 6,
+   "hint": "Huscarl Thorvid is forming the King's Host up for the Wraith Moor.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60157473,
+    "model": 160,
+    "equipment": "SvasudGuard",
+    "guild": "King Eirik's Host",
+    "name": "Huscarl Thorvid",
+    "level": 51,
+    "pos": [
+     1050,
+     600,
+     196.7
+    ],
+    "health_mult": 5,
+    "greet": "The Wraith Moor. The dead of the endless winter walk there, and Hati's soldiers have three frost-stones up to keep them walking. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Onto the moor! Hold the three frost-stones, then find the lich!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The King's Host holds the Wraith Moor.",
+    "regret": "Back off the moor! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60157473,
+     "model": 160,
+     "equipment": "SvasudGuard",
+     "guild": "King Eirik's Host",
+     "name": "huscarl of the King",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Wraith Moor",
+     "objective": "Break Hati's post on the Wraith Moor",
+     "announce": "The King's Host is on the Wraith Moor! Break the post!",
+     "center": [
+      850,
+      650,
+      133.2
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 26,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60167978,
+       "name": "windswept wraith",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "of the endless winter"
+      },
+      {
+       "template": 60159159,
+       "name": "chillsome wight",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "of the endless winter"
+      },
+      {
+       "template": 60160797,
+       "name": "fenrir soldier",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "Hati's Host"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "wards",
+     "name": "The Frost-Stones",
+     "objective": "Hold the three frost-stones at once while the seithkona break them",
+     "announce": "Three frost-stones keep the winter's dead walking - stand at all three at once while the seithkona break them!",
+     "wards": [
+      [
+       820,
+       620,
+       133.2
+      ],
+      [
+       880,
+       630,
+       117.3
+      ],
+      [
+       850,
+       690,
+       120.4
+      ]
+     ],
+     "ward_names": [
+      "the north stone",
+      "the east stone",
+      "the south stone"
+     ],
+     "ward_radius": 22,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 60159159,
+       "name": "chillsome wight",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "of the endless winter"
+      },
+      {
+       "template": 60167978,
+       "name": "windswept wraith",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "of the endless winter"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "banner of the King",
+     "center": [
+      850,
+      650,
+      133.2
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the host falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "the Frore Lich",
+     "objective": "Defeat the Frore Lich",
+     "announce": "The Frore Lich, a dead jarl in a crown of ice: 'I froze at the first winter. I'll see the last.'",
+     "center": [
+      850,
+      650,
+      133.2
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161108,
+      "name": "the Frore Lich",
+      "level": 51,
+      "size": 66,
+      "health_mult": 4.5,
+      "guild": "of the endless winter"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60167978,
+        "name": "windswept wraith",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "of the endless winter"
+       },
+       {
+        "template": 60159159,
+        "name": "chillsome wight",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "of the endless winter"
+       }
+      ]
+     },
+     "success": "The lich cracks like river-ice, and the moor's dead lie down.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "rk_cp3_assault",
+   "title": "The King's March on the Winterwolf Run",
+   "levels": [
+    47,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 6,
+   "hint": "Shield-Maiden Sigrun is forming the King's Host up for the Winterwolf Run.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60157473,
+    "model": 160,
+    "equipment": "SvasudGuard",
+    "guild": "King Eirik's Host",
+    "name": "Shield-Maiden Sigrun",
+    "level": 51,
+    "pos": [
+     820,
+     950,
+     119.4
+    ],
+    "health_mult": 5,
+    "greet": "The Winterwolf Run. The packs run there for Hati, and we take it and we hold it - the King's banner goes up, and they'll come for it. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Into the run! Break them, then hold the banner!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The King's Host holds the Winterwolf Run.",
+    "regret": "Fall back! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60157473,
+     "model": 160,
+     "equipment": "SvasudGuard",
+     "guild": "King Eirik's Host",
+     "name": "huscarl of the King",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Winterwolf Run",
+     "objective": "Break the packs on the Winterwolf Run",
+     "announce": "The King's Host is in the Winterwolf Run! Break the packs!",
+     "center": [
+      650,
+      1100,
+      127.6
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 26,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60165623,
+       "name": "savage winterwolf",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "Hati's Host"
+      },
+      {
+       "template": 60165623,
+       "name": "savage winterwolf",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "Hati's Host"
+      },
+      {
+       "template": 60160797,
+       "name": "fenrir soldier",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "Hati's Host"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "defend",
+     "name": "The King's Banner",
+     "objective": "Keep Seithkona Alfrun alive while the banner goes up",
+     "announce": "Seithkona Alfrun is raising the King's banner on the run - and the packs are coming for it!",
+     "center": [
+      650,
+      1100,
+      127.6
+     ],
+     "radius": 80,
+     "duration_s": 240,
+     "protect": {
+      "template": 60157473,
+      "model": 168,
+      "guild": "the Seithkona Circle",
+      "name": "Seithkona Alfrun",
+      "level": 49,
+      "health_mult": 8,
+      "pos": [
+       650,
+       1100,
+       127.6
+      ]
+     },
+     "waves": {
+      "every_s": 28,
+      "count": 4,
+      "from": [
+       [
+        590,
+        1070,
+        109.9
+       ],
+       [
+        710,
+        1130,
+        139.4
+       ],
+       [
+        650,
+        1040,
+        117.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60165623,
+        "name": "savage winterwolf",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "Hati's Host"
+       },
+       {
+        "template": 60167987,
+        "name": "winter wolf",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "Hati's Host"
+       },
+       {
+        "template": 60160797,
+        "name": "fenrir soldier",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "Hati's Host"
+       }
+      ]
+     },
+     "thanks": "\"It's up. Let him see it from his howe.\"",
+     "success": "They break - and whoever leads them comes out.",
+     "fail": "The banner falls.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "the Pack-Mother of the Run",
+     "objective": "Defeat the Pack-Mother of the Run",
+     "announce": "The Pack-Mother, a winterwolf as big as a horse, her muzzle grey with frost: 'My cubs run for Hati. So will yours.'",
+     "center": [
+      650,
+      1100,
+      127.6
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60165623,
+      "name": "the Pack-Mother of the Run",
+      "level": 52,
+      "size": 85,
+      "health_mult": 4.5,
+      "guild": "of Hati's Host"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60165623,
+        "name": "savage winterwolf",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "Hati's Host"
+       },
+       {
+        "template": 60167987,
+        "name": "winter wolf",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "Hati's Host"
+       }
+      ]
+     },
+     "success": "The Pack-Mother falls, and every wolf on the run howls once and scatters.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "rk_cp4_assault",
+   "title": "The King's March on the Fenrir Camp",
+   "levels": [
+    48,
+    51
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 8,
+   "hint": "Huscarl-Marshal Hallvard's own sword-bearer is forming the King's Host up for the Fenrir Camp.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60157473,
+    "model": 160,
+    "equipment": "SvasudGuard",
+    "guild": "King Eirik's Host",
+    "name": "Sword-Bearer Grim",
+    "level": 50,
+    "pos": [
+     620,
+     760,
+     116.9
+    ],
+    "health_mult": 5,
+    "greet": "The Fenrir Camp. Hati's own soldiers - the greater fenrir - and the last thing between us and the howe. Eight at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Into the camp! Break the totems, then their jarl!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The King's Host holds the Fenrir Camp - the howe is in sight.",
+    "regret": "Out of the camp! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60157473,
+     "model": 160,
+     "equipment": "SvasudGuard",
+     "guild": "King Eirik's Host",
+     "name": "huscarl of the King",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Fenrir Camp",
+     "objective": "Break Hati's soldiers in the Fenrir Camp",
+     "announce": "The King's Host is in the Fenrir Camp! Break the soldiers!",
+     "center": [
+      450,
+      800,
+      119.2
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 28,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60160797,
+       "name": "fenrir soldier",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "Hati's Host"
+      },
+      {
+       "template": 60160797,
+       "name": "fenrir mystic",
+       "level": [
+        48,
+        50
+       ],
+       "model": 462,
+       "guild": "Hati's Host"
+      },
+      {
+       "template": 60165623,
+       "name": "savage winterwolf",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "Hati's Host"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "wards",
+     "name": "The Wolf-Totems",
+     "objective": "Stand at the three wolf-totems at once while the huscarls bring them down",
+     "announce": "Three wolf-totems call the camp's courage from Hati himself - stand at all three at once and the huscarls will fell them!",
+     "wards": [
+      [
+       420,
+       770,
+       105.6
+      ],
+      [
+       480,
+       780,
+       119.8
+      ],
+      [
+       450,
+       840,
+       117.6
+      ]
+     ],
+     "ward_names": [
+      "the bone totem",
+      "the moon totem",
+      "the blood totem"
+     ],
+     "ward_radius": 22,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 60160797,
+       "name": "fenrir soldier",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "Hati's Host"
+      },
+      {
+       "template": 60160797,
+       "name": "fenrir mystic",
+       "level": [
+        48,
+        50
+       ],
+       "model": 462,
+       "guild": "Hati's Host"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "banner of the King",
+     "center": [
+      450,
+      800,
+      119.2
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the host falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Fenrir-Jarl Vargeisl",
+     "objective": "Defeat Fenrir-Jarl Vargeisl",
+     "announce": "Fenrir-Jarl Vargeisl, more wolf than man, in mail of frozen iron: 'Hati is my lord's lord's son. You'll not reach him over me.'",
+     "center": [
+      450,
+      800,
+      119.2
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60160797,
+      "name": "Fenrir-Jarl Vargeisl",
+      "level": 53,
+      "size": 70,
+      "health_mult": 5,
+      "guild": "Jarl of the Fenrir Camp"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60160797,
+        "name": "fenrir soldier",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "Hati's Host"
+       },
+       {
+        "template": 60160797,
+        "name": "fenrir mystic",
+        "level": [
+         48,
+         50
+        ],
+        "model": 462,
+        "guild": "Hati's Host"
+       }
+      ]
+     },
+     "success": "Vargeisl falls, and the camp breaks. Through the snow to the west: Hati's Howe.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "rk_cp1_counter",
+   "title": "Hati's Host Strikes Back at the Icestrider Fells",
+   "levels": [
+    45,
+    48
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "Hati's host is coming back for the Icestrider Fells!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Icestrider Fells",
+     "objective": "Keep the host's captain alive at the Icestrider Fells",
+     "announce": "Hati's host is coming back for the Icestrider Fells! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      1300,
+      471,
+      111.7
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60157473,
+      "model": 160,
+      "equipment": "SvasudGuard",
+      "guild": "King Eirik's Host",
+      "name": "Banner-Huscarl of the King",
+      "level": 50,
+      "pos": [
+       1300,
+       471,
+       111.7
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        1234,
+        447,
+        114.3
+       ],
+       [
+        1351,
+        510,
+        111.8
+       ],
+       [
+        1300,
+        411,
+        112.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160797,
+        "name": "fenrir soldier",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "Hati's Host"
+       },
+       {
+        "template": 60167987,
+        "name": "winter wolf",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "Hati's Host"
+       },
+       {
+        "template": 60162353,
+        "name": "icestrider chiller",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "of the fells"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "Hati's host breaks against the line. The Icestrider Fells holds - and the clock starts again.",
+     "fail": "The banner falls. Hati's host has the Icestrider Fells again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "rk_cp2_counter",
+   "title": "Hati's Host Strikes Back at the Wraith Moor",
+   "levels": [
+    46,
+    49
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "Hati's host is coming back for the Wraith Moor!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Wraith Moor",
+     "objective": "Keep the host's captain alive at the Wraith Moor",
+     "announce": "Hati's host is coming back for the Wraith Moor! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      850,
+      650,
+      133.2
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60157473,
+      "model": 160,
+      "equipment": "SvasudGuard",
+      "guild": "King Eirik's Host",
+      "name": "Banner-Huscarl of the King",
+      "level": 50,
+      "pos": [
+       850,
+       650,
+       133.2
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        790,
+        620,
+        129.4
+       ],
+       [
+        895,
+        671,
+        112.0
+       ],
+       [
+        850,
+        590,
+        126.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60167978,
+        "name": "windswept wraith",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "of the endless winter"
+       },
+       {
+        "template": 60159159,
+        "name": "chillsome wight",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "of the endless winter"
+       },
+       {
+        "template": 60160797,
+        "name": "fenrir soldier",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "Hati's Host"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "Hati's host breaks against the line. The Wraith Moor holds - and the clock starts again.",
+     "fail": "The banner falls. Hati's host has the Wraith Moor again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "rk_cp3_counter",
+   "title": "Hati's Host Strikes Back at the Winterwolf Run",
+   "levels": [
+    47,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "Hati's host is coming back for the Winterwolf Run!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Winterwolf Run",
+     "objective": "Keep the host's captain alive at the Winterwolf Run",
+     "announce": "Hati's host is coming back for the Winterwolf Run! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      650,
+      1100,
+      127.6
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60157473,
+      "model": 160,
+      "equipment": "SvasudGuard",
+      "guild": "King Eirik's Host",
+      "name": "Banner-Huscarl of the King",
+      "level": 50,
+      "pos": [
+       650,
+       1100,
+       127.6
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        590,
+        1070,
+        109.9
+       ],
+       [
+        710,
+        1130,
+        139.4
+       ],
+       [
+        650,
+        1040,
+        117.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60165623,
+        "name": "savage winterwolf",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "Hati's Host"
+       },
+       {
+        "template": 60167987,
+        "name": "winter wolf",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "Hati's Host"
+       },
+       {
+        "template": 60160797,
+        "name": "fenrir soldier",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "Hati's Host"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "Hati's host breaks against the line. The Winterwolf Run holds - and the clock starts again.",
+     "fail": "The banner falls. Hati's host has the Winterwolf Run again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "rk_cp4_counter",
+   "title": "Hati's Host Strikes Back at the Fenrir Camp",
+   "levels": [
+    48,
+    51
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "Hati's host is coming back for the Fenrir Camp!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Fenrir Camp",
+     "objective": "Keep the host's captain alive at the Fenrir Camp",
+     "announce": "Hati's host is coming back for the Fenrir Camp! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      450,
+      800,
+      119.2
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60157473,
+      "model": 160,
+      "equipment": "SvasudGuard",
+      "guild": "King Eirik's Host",
+      "name": "Banner-Huscarl of the King",
+      "level": 50,
+      "pos": [
+       450,
+       800,
+       119.2
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        390,
+        770,
+        107.9
+       ],
+       [
+        495,
+        818,
+        111.7
+       ],
+       [
+        450,
+        740,
+        129.5
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160797,
+        "name": "fenrir soldier",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "Hati's Host"
+       },
+       {
+        "template": 60160797,
+        "name": "fenrir mystic",
+        "level": [
+         48,
+         50
+        ],
+        "model": 462,
+        "guild": "Hati's Host"
+       },
+       {
+        "template": 60165623,
+        "name": "savage winterwolf",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "Hati's Host"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "Hati's host breaks against the line. The Fenrir Camp holds - and the clock starts again.",
+     "fail": "The banner falls. Hati's host has the Fenrir Camp again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "rk_hatis_howe",
+   "title": "Hati's Howe",
+   "levels": [
+    50,
+    54
+   ],
+   "manual": true,
+   "bots": 16,
+   "bot_min_level": 47,
+   "min_people": 10,
+   "hint": "Huscarl-Marshal Hallvard himself is gathering the King's Host before Hati's Howe.",
+   "rest_s": 15,
+   "start": "h1",
+   "giver": {
+    "template": 60157473,
+    "model": 160,
+    "equipment": "SvasudGuard",
+    "guild": "King Eirik's Host",
+    "name": "Huscarl-Marshal Hallvard",
+    "level": 60,
+    "pos": [
+     430,
+     640,
+     170.8
+    ],
+    "health_mult": 8,
+    "greet": "Hati's Howe. He's in there, watching the moon - and his brother Skoll will come when he calls, and the winter with him. Two groups at least - ten, bots and all - and healers, and curers. Then say [for the King].",
+    "accept": "for the King",
+    "reply": "For the King! Healers to the back - and whatever comes out of the north, hold!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "Hati is broken. The moon runs free tonight.",
+    "regret": "Back! Back to the camp! We'll come again.",
+    "size": 58
+   },
+   "guards": [
+    {
+     "template": 60157473,
+     "model": 160,
+     "equipment": "SvasudGuard",
+     "guild": "King Eirik's Host",
+     "name": "huscarl of the King",
+     "level": 50,
+     "count": 4
+    },
+    {
+     "template": 60157473,
+     "model": 168,
+     "guild": "the Seithkona Circle",
+     "name": "seithkona of the Circle",
+     "level": 48,
+     "count": 2
+    }
+   ],
+   "stages": [
+    {
+     "id": "h1",
+     "type": "boss",
+     "name": "Hati, Who Hunts the Moon",
+     "objective": "Defeat Hati, Who Hunts the Moon",
+     "announce": "Hati comes out of his howe - a wolf the size of a longship, frost pouring off him, his eyes on the moon and then on you: 'She runs closer every night. You can't stop that. You can only be in my way.'",
+     "center": [
+      320,
+      600,
+      124.6
+     ],
+     "radius": 90,
+     "time_s": 2700,
+     "boss": {
+      "template": 60165623,
+      "name": "Hati, Who Hunts the Moon",
+      "level": 60,
+      "size": 120,
+      "health_mult": 20,
+      "guild": "Son of Fenrir"
+     },
+     "adds": {
+      "every_s": 55,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60160797,
+        "name": "fenrir soldier",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "Hati's Host"
+       },
+       {
+        "template": 60165623,
+        "name": "savage winterwolf",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "Hati's Host"
+       },
+       {
+        "template": 60167978,
+        "name": "windswept wraith",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "of the endless winter"
+       }
+      ]
+     },
+     "success": "Hati falls in the snow before his howe with a howl that shakes the mountains - and is gone, into the north, his hide torn and his brother with him. Overhead, the moon runs on. Across Raumarik the winter mist begins to lift.",
+     "fail": "Hati drives the King's Host from his howe.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 60,
+      "copper_per_level": 600,
+      "tokens": 60,
+      "items": [
+       {
+        "id": "rk108_hati_s_moon_fang",
+        "gold_chance": 60,
+        "silver_chance": 25
+       },
+       {
+        "id": "rk108_skoll_s_sunset_pelt",
+        "gold_chance": 60,
+        "silver_chance": 25
+       },
+       {
+        "id": "rk108_fimbulwinter_shard",
+        "gold_chance": 60,
+        "silver_chance": 25
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
 }

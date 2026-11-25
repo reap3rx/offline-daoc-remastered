@@ -1,0 +1,166 @@
+{
+ "zone": 105,
+ "region": 100,
+ "realm": 2,
+ "prefix": "rep105",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Woodward-Friend's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 24,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "Iron, with the black tree."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Galplen Axe Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 24,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 24,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "A woodward's belt, with an axe-loop."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Axe of Galplen Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 28,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 5,
+    "Hits": 24
+   },
+   "lore": "Iron, with a little silver axe."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Black-Tree Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 28,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 28,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Black leather, the Woodwards' tree in silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Myrkwood Warden",
+   "base": [
+    41,
+    26
+   ],
+   "level": 32,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 32,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Woodward green and black. Only the Wardens of the Myrkwood wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seidr-Friend's Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 24,
+   "bonuses": {
+    "Int": 8,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "A bead of amber with a moth in it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dream-Walker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 24,
+   "bonuses": {
+    "Pie": 8,
+    "Int": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "Moonstone in black iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seidr-Thread Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 28,
+   "bonuses": {
+    "Int": 9,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "Woven of seidr-thread, cold as moonlight."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Volva's Keeper",
+   "base": [
+    41,
+    26
+   ],
+   "level": 32,
+   "bonuses": {
+    "Int": 11,
+    "Con": 5,
+    "Power": 5,
+    "Hits": 19
+   },
+   "lore": "Grey wool with Groa's nine knots. Only the Volva's Keepers wear it."
+  }
+ ]
+}

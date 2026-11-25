@@ -161,6 +161,357 @@
     "Hits": 32
    },
    "lore": "The bracer of a jarl's horse-master."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Icestrider-Shell Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 45,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 45,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Pale shell, cold as the fells."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fell-Walker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 45,
+   "bonuses": {
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 8,
+    "Hits": 38
+   },
+   "lore": "Frost-blue iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Frostweaver's Silk Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 47,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 47,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Woven ice that never melts."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Winter-Wolf Fang Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 47,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 40
+   },
+   "lore": "A winter wolf's fang on a frozen chain."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wraith-Shroud Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 47,
+   "bonuses": {
+    "Pie": 16,
+    "Int": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "A scrap of something that was never cloth."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moor-Ward Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 47,
+   "bonuses": {
+    "Int": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "Silver runes on black iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Frost-Stone Shard Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 49,
+   "bonuses": {
+    "Pie": 16,
+    "Int": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "A chip of a frost-stone, faintly humming."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wight-Bane Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 49,
+   "bonuses": {
+    "Int": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "Rowan and silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moon-Watcher's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 49,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 49,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Grey wool, a moon stitched in silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Winterwolf-Hide Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 49,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 49,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "White hide, very warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pack-Breaker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 49,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 42
+   },
+   "lore": "Iron, with a wolf's head struck through."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Frost-Bear Claw Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 17,
+    "Con": 17,
+    "Dex": 8,
+    "Hits": 42
+   },
+   "lore": "Three claws, rimed with frost."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Trapper's Fur Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 50,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Einar's own work, bear fur and wolf fur."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fenrir-Soldier's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 17,
+    "Con": 17,
+    "Dex": 8,
+    "Hits": 43
+   },
+   "lore": "Black iron, a wolf's head."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Camp-Breaker's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 51,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Heavy, scarred leather."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mystic's Moon-Bowl Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 18,
+    "Int": 9,
+    "Dex": 9,
+    "Power": 8,
+    "Hits": 32
+   },
+   "lore": "A bowl of black stone. A moon floats in it, even in daylight."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Howe-Watcher's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 18,
+    "Con": 9,
+    "Power": 8,
+    "Hits": 32
+   },
+   "lore": "Silver and bone, carved with the moon."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "King's Scout Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 18,
+    "Hits": 53,
+    "Body": 7,
+    "Crush": 7,
+    "Slash": 7
+   },
+   "lore": "The King's blue under white fur."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Marshal's Oath-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 18,
+    "Hits": 54,
+    "Body": 7,
+    "Crush": 7,
+    "Slash": 7
+   },
+   "lore": "The King's March's oath, in silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Howe-Road Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 18,
+    "Con": 18,
+    "Dex": 9,
+    "Hits": 46
+   },
+   "lore": "Huscarl's leather, the King's hammer on the buckle."
   }
  ]
 }

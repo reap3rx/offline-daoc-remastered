@@ -1,0 +1,45 @@
+{
+ "zone": 102,
+ "region": 100,
+ "realm": 2,
+ "prefix": "nu102",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Storm-Haxa's Frozen Bowl",
+   "base": [
+    41,
+    24
+   ],
+   "level": 19,
+   "bonuses": {
+    "Pie": 6,
+    "Int": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "A bowl of blood frozen solid. It never thaws."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blizzard-Rider's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 19,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 19,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "White fur, rimed with frost."
+  }
+ ]
+}

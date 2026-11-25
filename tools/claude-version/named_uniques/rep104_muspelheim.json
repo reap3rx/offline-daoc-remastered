@@ -1,0 +1,97 @@
+{
+ "zone": 104,
+ "region": 100,
+ "realm": 2,
+ "prefix": "rep104",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Forge-Friend's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 3,
+    "Hits": 17
+   },
+   "lore": "Dverge iron, Khizil's hammer stamped in it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Khizil Smith Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 20,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Forge-leather, scorched and supple."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hammer of Khizil Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 24,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "A tiny hammer on a heavy chain."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Anvil-Iron Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 24,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 24,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Iron from the forge's oldest anvil."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Forge-Fire",
+   "base": [
+    41,
+    26
+   ],
+   "level": 28,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 28,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Forge-black, embroidered in red. Only the Keepers of the Forge-Fire wear it."
+  }
+ ]
+}

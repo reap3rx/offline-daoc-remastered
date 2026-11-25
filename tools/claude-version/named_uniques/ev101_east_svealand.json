@@ -1,0 +1,44 @@
+{
+ "zone": 101,
+ "region": 100,
+ "realm": 2,
+ "prefix": "nu101",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Vargeir's Wolf-Hame",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 12
+   },
+   "lore": "A wolf's whole skin, the jaws for a hood. Taken off a farmer's son."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Brood-Mother's Scale",
+   "base": [
+    41,
+    24
+   ],
+   "level": 15,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 15,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "A silver scale as big as a hand."
+  }
+ ]
+}

@@ -1,806 +1,1593 @@
 {
-  "zone": 103,
-  "region": 100,
-  "name": "Gotar",
-  "lore": "Gotar: Fort Atla and Nalliten on the fjords, where a drowned ship lies on the shore and its crew have not stopped rowing.",
-  "chains": [
+ "zone": 103,
+ "region": 100,
+ "name": "Gotar",
+ "lore": "Gotar: Fort Atla on the north lakes and Nalliten on the east, wild country between. Gjalpinulva's drakulv buy the svartalf outcasts with scale and gold, and their scale-traders camp on the trade road by the old svartalf post with a dragon-preacher. A wreck off the east shore was carrying scale north; envy drakelings creep up from the south, and half the seithkona at the circle sing for the dragon now.",
+ "chains": [
+  {
+   "id": "gotar_drowned_ship",
+   "title": "The Drowned Ship",
+   "levels": [
+    3,
+    5
+   ],
+   "hint": "Oars creak on the shore where no ship floats...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "gotar_drowned_ship",
-      "title": "The Drowned Ship",
-      "levels": [3, 5],
-      "hint": "Oars creak on the shore where no ship floats...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Wreck",
-          "objective": "Clear the wreck",
-          "announce": "Captain Hrafn's crew have climbed out of the wreck to find a new ship. Send them back to the sea.",
-          "center": [1057, 584, 118.9],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60166181,
-              "name": "skeletal seafarer",
-              "level": [4, 4]
-            },
-            {
-              "template": 60166175,
-              "name": "skeletal oarsman",
-              "level": [5, 5]
-            },
-            {
-              "template": 60160165,
-              "name": "drowned soul",
-              "level": [3, 3]
-            }
-          ],
-          "success": "You have cleared the wreck. Captain Hrafn of the Drowned comes out to fight.",
-          "fail": "They hold the wreck. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Captain Hrafn of the Drowned",
-          "objective": "Defeat Captain Hrafn of the Drowned",
-          "announce": "Captain Hrafn of the Drowned stands at the wreck. Bring friends.",
-          "center": [1057, 584, 118.9],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60166181,
-            "name": "Captain Hrafn of the Drowned",
-            "level": 7,
-            "size": 67,
-            "pos": [1057, 584, 118.9],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60166181,
-                "name": "skeletal seafarer",
-                "level": [4, 4]
-              }
-            ]
-          },
-          "success": "Captain Hrafn of the Drowned falls. The way is safe again.",
-          "fail": "Captain Hrafn of the Drowned slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu103_captain_hrafn_of_the_drowned_s_stone", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Skeletal Seafarers Hold the Road to Fort Atla",
-          "objective": "Drive the skeletal seafarers off the road to Fort Atla",
-          "announce": "With The Drowned Ship lost, the skeletal seafarers have spread down onto the road to Fort Atla and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [813, 674, 112.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60166181,
-              "name": "skeletal seafarer",
-              "level": [4, 4]
-            },
-            {
-              "template": 60166175,
-              "name": "skeletal oarsman",
-              "level": [5, 5]
-            },
-            {
-              "template": 60160165,
-              "name": "drowned soul",
-              "level": [3, 3]
-            }
-          ],
-          "boss": {
-            "template": 60166181,
-            "name": "Skeletal seafarer warleader",
-            "level": 6,
-            "pos": [813, 674, 112.6],
-            "health_mult": 2
-          },
-          "success": "The skeletal seafarers are gone from the road to Fort Atla. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hild has come out to set the road to Fort Atla right. The skeletal seafarers are coming back for it!",
-          "center": [813, 674, 112.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hild",
-            "level": 5,
-            "pos": [813, 674, 112.6],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [848, 597, 111.2],
-              [893, 645, 98.7],
-              [890, 711, 109.6]
-            ],
-            "mobs": [
-              {
-                "template": 60166181,
-                "name": "skeletal seafarer",
-                "level": [4, 4]
-              },
-              {
-                "template": 60166175,
-                "name": "skeletal oarsman",
-                "level": [5, 5]
-              },
-              {
-                "template": 60160165,
-                "name": "drowned soul",
-                "level": [3, 3]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Fort Atla is safe again. Thank you.\"",
-          "success": "The skeletal seafarers break and scatter. The road to Fort Atla is open again.",
-          "fail": "Roadwarden Hild falls, and the skeletal seafarers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "gotar_hobgoblins",
-      "title": "The Hobgoblin Raid",
-      "levels": [3, 8],
-      "hint": "Hobgoblins are giggling in the hills...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Asa the Net-Mender",
-          "objective": "Protect Asa the Net-Mender, who is saving the village nets",
-          "announce": "The hobgoblins are coming to cut the village nets again. Asa won't leave them - keep the hobgoblins off her.",
-          "center": [617, 1245, 118.0],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Asa the Net-Mender",
-            "level": 8,
-            "model": 138,
-            "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b",
-            "health_mult": 10,
-            "pos": [617, 1245, 118.0]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [651, 1167, 116.6],
-              [697, 1215, 115.9],
-              [695, 1281, 119.3]
-            ],
-            "mobs": [
-              {
-                "template": 60162172,
-                "name": "hobgoblin prowler",
-                "level": [8, 8]
-              },
-              {
-                "template": 60162168,
-                "name": "hobgoblin pincher",
-                "level": [4, 4]
-              },
-              {
-                "template": 60162170,
-                "name": "hobgoblin prankster",
-                "level": [3, 3]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Asa the Net-Mender. \"They came from over there - let's finish this.\"",
-          "fail": "Asa the Net-Mender falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Net-drying Racks",
-          "objective": "Clear the net-drying racks",
-          "announce": "They came from the net-drying racks. Follow them back and clear it out.",
-          "center": [842, 1159, 114.6],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60162172,
-              "name": "hobgoblin prowler",
-              "level": [8, 8]
-            },
-            {
-              "template": 60162168,
-              "name": "hobgoblin pincher",
-              "level": [4, 4]
-            },
-            {
-              "template": 60162170,
-              "name": "hobgoblin prankster",
-              "level": [3, 3]
-            }
-          ],
-          "success": "You have cleared the net-drying racks. Snaggletooth comes out to fight.",
-          "fail": "They hold the net-drying racks. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Snaggletooth",
-          "objective": "Defeat Snaggletooth",
-          "announce": "Snaggletooth stands at the net-drying racks. Bring friends.",
-          "center": [842, 1159, 114.6],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60162172,
-            "name": "Snaggletooth",
-            "level": 10,
-            "size": 70,
-            "pos": [842, 1159, 114.6],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60162172,
-                "name": "hobgoblin prowler",
-                "level": [8, 8]
-              }
-            ]
-          },
-          "success": "Snaggletooth falls. The way is safe again.",
-          "fail": "Snaggletooth slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu103_snaggletooth_s_mantle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Hobgoblin Prowlers Hold the Road to Nalliten",
-          "objective": "Drive the hobgoblin prowlers off the road to Nalliten",
-          "announce": "With The Hobgoblin Raid lost, the hobgoblin prowlers have spread down onto the road to Nalliten and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1351, 1013, 115.4],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60162172,
-              "name": "hobgoblin prowler",
-              "level": [8, 8]
-            },
-            {
-              "template": 60162168,
-              "name": "hobgoblin pincher",
-              "level": [4, 4]
-            },
-            {
-              "template": 60162170,
-              "name": "hobgoblin prankster",
-              "level": [3, 3]
-            }
-          ],
-          "boss": {
-            "template": 60162172,
-            "name": "Hobgoblin prowler warleader",
-            "level": 9,
-            "pos": [1351, 1013, 115.4],
-            "health_mult": 2
-          },
-          "success": "The hobgoblin prowlers are gone from the road to Nalliten. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Sten has come out to set the road to Nalliten right. The hobgoblin prowlers are coming back for it!",
-          "center": [1351, 1013, 115.4],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Sten",
-            "level": 8,
-            "pos": [1351, 1013, 115.4],
-            "health_mult": 10,
-            "model": 138,
-            "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1311, 1088, 109.0],
-              [1270, 1036, 112.0],
-              [1278, 970, 117.3]
-            ],
-            "mobs": [
-              {
-                "template": 60162172,
-                "name": "hobgoblin prowler",
-                "level": [8, 8]
-              },
-              {
-                "template": 60162168,
-                "name": "hobgoblin pincher",
-                "level": [4, 4]
-              },
-              {
-                "template": 60162170,
-                "name": "hobgoblin prankster",
-                "level": [3, 3]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Nalliten is safe again. Thank you.\"",
-          "success": "The hobgoblin prowlers break and scatter. The road to Nalliten is open again.",
-          "fail": "Roadwarden Sten falls, and the hobgoblin prowlers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "gotar_wildlings",
-      "title": "The Wildlings",
-      "levels": [12, 15],
-      "hint": "Flayer Kegnar is looking for help in Fort Atla.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Flayer Kegnar",
-        "level": 16,
-        "model": 138,
-        "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b",
-        "guild": "Fort Atla",
-        "health_mult": 4,
-        "pos": [703, 405, 110.7],
-        "greet": "The wildlings have been setting their wolves on our hunters. I'm going to have a word with their chieftain - with my axe. Coming? Tell me when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Wreck",
+     "objective": "Clear the wreck",
+     "announce": "Captain Hrafn's crew have climbed out of the wreck to find a new ship. Send them back to the sea.",
+     "center": [
+      1057,
+      584,
+      118.9
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60166181,
+       "name": "skeletal seafarer",
+       "level": [
+        4,
+        4
+       ]
       },
-      "guards": [
-        {
-          "name": "Flayer",
-          "level": 15,
-          "model": 138,
-          "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b",
-          "guild": "Fort Atla",
-          "health_mult": 2,
-          "count": 3
-        }
-      ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Wildling Camp",
-          "objective": "Go with Flayer Kegnar to the wildling camp",
-          "announce": "Flayer Kegnar marches out of Fort Atla to the wildling camp.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [628, 481, 112.5],
-            [596, 489, 112.9],
-            [524, 561, 117.9],
-            [500, 585, 119.3],
-            [396, 585, 118.8],
-            [356, 585, 118.7]
-          ],
-          "ambushes": [
-            {
-              "at": 3,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 60167946,
-                  "name": "wildling",
-                  "level": [13, 14]
-                },
-                {
-                  "template": 60168000,
-                  "name": "wolf nipper",
-                  "level": [12, 13]
-                }
-              ]
-            }
-          ],
-          "success": "Flayer Kegnar reaches the wildling camp. \"There they are. Clear them out!\"",
-          "fail": "Flayer Kegnar falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Wildling Camp",
-          "objective": "Clear the wildling camp",
-          "announce": "Clear the wildling camp!",
-          "center": [360, 581, 118.9],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60167946,
-              "name": "wildling",
-              "level": [13, 14]
-            },
-            {
-              "template": 60168000,
-              "name": "wolf nipper",
-              "level": [12, 13]
-            },
-            {
-              "template": 12238,
-              "name": "water snake",
-              "level": [14, 15]
-            }
-          ],
-          "success": "You have cleared the wildling camp. Wildling Chieftain Skarn comes out to fight.",
-          "fail": "They hold the wildling camp. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "Wildling Chieftain Skarn",
-          "objective": "Defeat Wildling Chieftain Skarn",
-          "announce": "Wildling Chieftain Skarn stands at the wildling camp. Bring friends.",
-          "center": [360, 581, 118.9],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60167946,
-            "name": "Wildling Chieftain Skarn",
-            "level": 17,
-            "size": 83,
-            "pos": [360, 581, 118.9],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60167946,
-                "name": "wildling",
-                "level": [13, 14]
-              }
-            ]
-          },
-          "success": "Wildling Chieftain Skarn falls. Fort Atla will hear of this in the taverns tonight.",
-          "fail": "Wildling Chieftain Skarn slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu103_wildling_chieftain_skarn_s_shroud", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Wildlings Hold the Road to Fort Atla",
-          "objective": "Drive the wildlings off the road to Fort Atla",
-          "announce": "With The Wildlings lost, the wildlings have spread down onto the road to Fort Atla and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [533, 429, 119.0],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60167946,
-              "name": "wildling",
-              "level": [13, 14]
-            },
-            {
-              "template": 60168000,
-              "name": "wolf nipper",
-              "level": [12, 13]
-            },
-            {
-              "template": 12238,
-              "name": "water snake",
-              "level": [14, 15]
-            }
-          ],
-          "boss": {
-            "template": 60167946,
-            "name": "Wildling warleader",
-            "level": 16,
-            "pos": [533, 429, 119.0],
-            "health_mult": 2
-          },
-          "success": "The wildlings are gone from the road to Fort Atla. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Sten has come out to set the road to Fort Atla right. The wildlings are coming back for it!",
-          "center": [533, 429, 119.0],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Sten",
-            "level": 15,
-            "pos": [533, 429, 119.0],
-            "health_mult": 10,
-            "model": 138,
-            "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [528, 514, 117.9],
-              [469, 485, 118.4],
-              [448, 422, 118.6]
-            ],
-            "mobs": [
-              {
-                "template": 60167946,
-                "name": "wildling",
-                "level": [13, 14]
-              },
-              {
-                "template": 60168000,
-                "name": "wolf nipper",
-                "level": [12, 13]
-              },
-              {
-                "template": 12238,
-                "name": "water snake",
-                "level": [14, 15]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Fort Atla is safe again. Thank you.\"",
-          "success": "The wildlings break and scatter. The road to Fort Atla is open again.",
-          "fail": "Roadwarden Sten falls, and the wildlings take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+      {
+       "template": 60166175,
+       "name": "skeletal oarsman",
+       "level": [
+        5,
+        5
+       ]
+      },
+      {
+       "template": 60160165,
+       "name": "drowned soul",
+       "level": [
+        3,
+        3
+       ]
+      }
+     ],
+     "success": "You have cleared the wreck. Captain Hrafn of the Drowned comes out to fight.",
+     "fail": "They hold the wreck. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "gotar_pine_imps",
-      "title": "The Imp Revel",
-      "levels": [5, 6],
-      "hint": "Shrill laughter and smoke come from the pines...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Imps' Revel",
-          "objective": "Clear the imps' revel",
-          "announce": "The imps are holding a revel in the pines and setting fire to anything that will burn. Break it up.",
-          "center": [731, 953, 119.5],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60168012,
-              "name": "wood imp",
-              "level": [5, 5]
-            },
-            {
-              "template": 60164933,
-              "name": "pine imp",
-              "level": [6, 6]
-            }
-          ],
-          "success": "You have cleared the imps' revel. Kvist the Imp-King comes out to fight.",
-          "fail": "They hold the imps' revel. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Kvist the Imp-King",
-          "objective": "Defeat Kvist the Imp-King",
-          "announce": "Kvist the Imp-King stands at the imps' revel. Bring friends.",
-          "center": [731, 953, 119.5],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60164933,
-            "name": "Kvist the Imp-King",
-            "level": 8,
-            "size": 44,
-            "pos": [731, 953, 119.5],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60168012,
-                "name": "wood imp",
-                "level": [5, 5]
-              }
-            ]
-          },
-          "success": "Kvist the Imp-King falls. The way is safe again.",
-          "fail": "Kvist the Imp-King slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu103_kvist_the_imp_king_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Wood Imps Hold the Road to Nalliten",
-          "objective": "Drive the wood imps off the road to Nalliten",
-          "announce": "With The Imp Revel lost, the wood imps have spread down onto the road to Nalliten and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [974, 987, 115.5],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60168012,
-              "name": "wood imp",
-              "level": [5, 5]
-            },
-            {
-              "template": 60164933,
-              "name": "pine imp",
-              "level": [6, 6]
-            }
-          ],
-          "boss": {
-            "template": 60168012,
-            "name": "Wood imp warleader",
-            "level": 7,
-            "pos": [974, 987, 115.5],
-            "health_mult": 2
-          },
-          "success": "The wood imps are gone from the road to Nalliten. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Sten has come out to set the road to Nalliten right. The wood imps are coming back for it!",
-          "center": [974, 987, 115.5],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Sten",
-            "level": 6,
-            "pos": [974, 987, 115.5],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [907, 1039, 112.6],
-              [889, 975, 116.7],
-              [923, 918, 92.7]
-            ],
-            "mobs": [
-              {
-                "template": 60168012,
-                "name": "wood imp",
-                "level": [5, 5]
-              },
-              {
-                "template": 60164933,
-                "name": "pine imp",
-                "level": [6, 6]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Nalliten is safe again. Thank you.\"",
-          "success": "The wood imps break and scatter. The road to Nalliten is open again.",
-          "fail": "Roadwarden Sten falls, and the wood imps take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Captain Hrafn of the Drowned",
+     "objective": "Defeat Captain Hrafn of the Drowned",
+     "announce": "Captain Hrafn of the Drowned stands at the wreck. Bring friends.",
+     "center": [
+      1057,
+      584,
+      118.9
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60166181,
+      "name": "Captain Hrafn of the Drowned",
+      "level": 7,
+      "size": 67,
+      "pos": [
+       1057,
+       584,
+       118.9
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60166181,
+        "name": "skeletal seafarer",
+        "level": [
+         4,
+         4
+        ]
+       }
       ]
+     },
+     "success": "Captain Hrafn of the Drowned falls. The way is safe again.",
+     "fail": "Captain Hrafn of the Drowned slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu103_captain_hrafn_of_the_drowned_s_stone",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Skeletal Seafarers Hold the Road to Fort Atla",
+     "objective": "Drive the skeletal seafarers off the road to Fort Atla",
+     "announce": "With The Drowned Ship lost, the skeletal seafarers have spread down onto the road to Fort Atla and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      813,
+      674,
+      112.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60166181,
+       "name": "skeletal seafarer",
+       "level": [
+        4,
+        4
+       ]
+      },
+      {
+       "template": 60166175,
+       "name": "skeletal oarsman",
+       "level": [
+        5,
+        5
+       ]
+      },
+      {
+       "template": 60160165,
+       "name": "drowned soul",
+       "level": [
+        3,
+        3
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60166181,
+      "name": "Skeletal seafarer warleader",
+      "level": 6,
+      "pos": [
+       813,
+       674,
+       112.6
+      ],
+      "health_mult": 2
+     },
+     "success": "The skeletal seafarers are gone from the road to Fort Atla. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hild has come out to set the road to Fort Atla right. The skeletal seafarers are coming back for it!",
+     "center": [
+      813,
+      674,
+      112.6
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hild",
+      "level": 5,
+      "pos": [
+       813,
+       674,
+       112.6
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        848,
+        597,
+        111.2
+       ],
+       [
+        893,
+        645,
+        98.7
+       ],
+       [
+        890,
+        711,
+        109.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60166181,
+        "name": "skeletal seafarer",
+        "level": [
+         4,
+         4
+        ]
+       },
+       {
+        "template": 60166175,
+        "name": "skeletal oarsman",
+        "level": [
+         5,
+         5
+        ]
+       },
+       {
+        "template": 60160165,
+        "name": "drowned soul",
+        "level": [
+         3,
+         3
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Fort Atla is safe again. Thank you.\"",
+     "success": "The skeletal seafarers break and scatter. The road to Fort Atla is open again.",
+     "fail": "Roadwarden Hild falls, and the skeletal seafarers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
-  ]
+   ]
+  },
+  {
+   "id": "gotar_hobgoblins",
+   "title": "The Hobgoblin Raid",
+   "levels": [
+    3,
+    8
+   ],
+   "hint": "Hobgoblins are giggling in the hills...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Asa the Net-Mender",
+     "objective": "Protect Asa the Net-Mender, who is saving the village nets",
+     "announce": "The hobgoblins are coming to cut the village nets again. Asa won't leave them - keep the hobgoblins off her.",
+     "center": [
+      617,
+      1245,
+      118.0
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Asa the Net-Mender",
+      "level": 8,
+      "model": 138,
+      "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b",
+      "health_mult": 10,
+      "pos": [
+       617,
+       1245,
+       118.0
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        651,
+        1167,
+        116.6
+       ],
+       [
+        697,
+        1215,
+        115.9
+       ],
+       [
+        695,
+        1281,
+        119.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60162172,
+        "name": "hobgoblin prowler",
+        "level": [
+         8,
+         8
+        ]
+       },
+       {
+        "template": 60162168,
+        "name": "hobgoblin pincher",
+        "level": [
+         4,
+         4
+        ]
+       },
+       {
+        "template": 60162170,
+        "name": "hobgoblin prankster",
+        "level": [
+         3,
+         3
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Asa the Net-Mender. \"They came from over there - let's finish this.\"",
+     "fail": "Asa the Net-Mender falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Net-drying Racks",
+     "objective": "Clear the net-drying racks",
+     "announce": "They came from the net-drying racks. Follow them back and clear it out.",
+     "center": [
+      842,
+      1159,
+      114.6
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60162172,
+       "name": "hobgoblin prowler",
+       "level": [
+        8,
+        8
+       ]
+      },
+      {
+       "template": 60162168,
+       "name": "hobgoblin pincher",
+       "level": [
+        4,
+        4
+       ]
+      },
+      {
+       "template": 60162170,
+       "name": "hobgoblin prankster",
+       "level": [
+        3,
+        3
+       ]
+      }
+     ],
+     "success": "You have cleared the net-drying racks. Snaggletooth comes out to fight.",
+     "fail": "They hold the net-drying racks. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Snaggletooth",
+     "objective": "Defeat Snaggletooth",
+     "announce": "Snaggletooth stands at the net-drying racks. Bring friends.",
+     "center": [
+      842,
+      1159,
+      114.6
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60162172,
+      "name": "Snaggletooth",
+      "level": 10,
+      "size": 70,
+      "pos": [
+       842,
+       1159,
+       114.6
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60162172,
+        "name": "hobgoblin prowler",
+        "level": [
+         8,
+         8
+        ]
+       }
+      ]
+     },
+     "success": "Snaggletooth falls. The way is safe again.",
+     "fail": "Snaggletooth slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu103_snaggletooth_s_mantle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Hobgoblin Prowlers Hold the Road to Nalliten",
+     "objective": "Drive the hobgoblin prowlers off the road to Nalliten",
+     "announce": "With The Hobgoblin Raid lost, the hobgoblin prowlers have spread down onto the road to Nalliten and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1351,
+      1013,
+      115.4
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60162172,
+       "name": "hobgoblin prowler",
+       "level": [
+        8,
+        8
+       ]
+      },
+      {
+       "template": 60162168,
+       "name": "hobgoblin pincher",
+       "level": [
+        4,
+        4
+       ]
+      },
+      {
+       "template": 60162170,
+       "name": "hobgoblin prankster",
+       "level": [
+        3,
+        3
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60162172,
+      "name": "Hobgoblin prowler warleader",
+      "level": 9,
+      "pos": [
+       1351,
+       1013,
+       115.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The hobgoblin prowlers are gone from the road to Nalliten. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Sten has come out to set the road to Nalliten right. The hobgoblin prowlers are coming back for it!",
+     "center": [
+      1351,
+      1013,
+      115.4
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Sten",
+      "level": 8,
+      "pos": [
+       1351,
+       1013,
+       115.4
+      ],
+      "health_mult": 10,
+      "model": 138,
+      "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1311,
+        1088,
+        109.0
+       ],
+       [
+        1270,
+        1036,
+        112.0
+       ],
+       [
+        1278,
+        970,
+        117.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60162172,
+        "name": "hobgoblin prowler",
+        "level": [
+         8,
+         8
+        ]
+       },
+       {
+        "template": 60162168,
+        "name": "hobgoblin pincher",
+        "level": [
+         4,
+         4
+        ]
+       },
+       {
+        "template": 60162170,
+        "name": "hobgoblin prankster",
+        "level": [
+         3,
+         3
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Nalliten is safe again. Thank you.\"",
+     "success": "The hobgoblin prowlers break and scatter. The road to Nalliten is open again.",
+     "fail": "Roadwarden Sten falls, and the hobgoblin prowlers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "gotar_wildlings",
+   "title": "The Wildlings",
+   "levels": [
+    12,
+    15
+   ],
+   "hint": "Flayer Kegnar is looking for help in Fort Atla.",
+   "rest_s": 45,
+   "giver": {
+    "name": "Flayer Kegnar",
+    "level": 16,
+    "model": 138,
+    "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b",
+    "guild": "Fort Atla",
+    "health_mult": 4,
+    "pos": [
+     703,
+     405,
+     110.7
+    ],
+    "greet": "The wildlings have been setting their wolves on our hunters. I'm going to have a word with their chieftain - with my axe. Coming? Tell me when you're [ready].",
+    "accept": "ready",
+    "reply": "Good. Stay close - they will have watchers out. With me!",
+    "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "name": "Flayer",
+     "level": 15,
+     "model": 138,
+     "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b",
+     "guild": "Fort Atla",
+     "health_mult": 2,
+     "count": 3
+    }
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "escort",
+     "name": "The Road to Wildling Camp",
+     "objective": "Go with Flayer Kegnar to the wildling camp",
+     "announce": "Flayer Kegnar marches out of Fort Atla to the wildling camp.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       628,
+       481,
+       112.5
+      ],
+      [
+       596,
+       489,
+       112.9
+      ],
+      [
+       524,
+       561,
+       117.9
+      ],
+      [
+       500,
+       585,
+       119.3
+      ],
+      [
+       396,
+       585,
+       118.8
+      ],
+      [
+       356,
+       585,
+       118.7
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 3,
+       "count": 3,
+       "say": "Ambush! To me - hold together!",
+       "mobs": [
+        {
+         "template": 60167946,
+         "name": "wildling",
+         "level": [
+          13,
+          14
+         ]
+        },
+        {
+         "template": 60168000,
+         "name": "wolf nipper",
+         "level": [
+          12,
+          13
+         ]
+        }
+       ]
+      }
+     ],
+     "success": "Flayer Kegnar reaches the wildling camp. \"There they are. Clear them out!\"",
+     "fail": "Flayer Kegnar falls on the road. The others carry the body home.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "g2",
+     "type": "cull",
+     "name": "Clear Wildling Camp",
+     "objective": "Clear the wildling camp",
+     "announce": "Clear the wildling camp!",
+     "center": [
+      360,
+      581,
+      118.9
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60167946,
+       "name": "wildling",
+       "level": [
+        13,
+        14
+       ]
+      },
+      {
+       "template": 60168000,
+       "name": "wolf nipper",
+       "level": [
+        12,
+        13
+       ]
+      },
+      {
+       "template": 12238,
+       "name": "water snake",
+       "level": [
+        14,
+        15
+       ]
+      }
+     ],
+     "success": "You have cleared the wildling camp. Wildling Chieftain Skarn comes out to fight.",
+     "fail": "They hold the wildling camp. They will be bolder next time.",
+     "on_success": "g3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g3",
+     "type": "boss",
+     "name": "Wildling Chieftain Skarn",
+     "objective": "Defeat Wildling Chieftain Skarn",
+     "announce": "Wildling Chieftain Skarn stands at the wildling camp. Bring friends.",
+     "center": [
+      360,
+      581,
+      118.9
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60167946,
+      "name": "Wildling Chieftain Skarn",
+      "level": 17,
+      "size": 83,
+      "pos": [
+       360,
+       581,
+       118.9
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60167946,
+        "name": "wildling",
+        "level": [
+         13,
+         14
+        ]
+       }
+      ]
+     },
+     "success": "Wildling Chieftain Skarn falls. Fort Atla will hear of this in the taverns tonight.",
+     "fail": "Wildling Chieftain Skarn slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu103_wildling_chieftain_skarn_s_shroud",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Wildlings Hold the Road to Fort Atla",
+     "objective": "Drive the wildlings off the road to Fort Atla",
+     "announce": "With The Wildlings lost, the wildlings have spread down onto the road to Fort Atla and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      533,
+      429,
+      119.0
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60167946,
+       "name": "wildling",
+       "level": [
+        13,
+        14
+       ]
+      },
+      {
+       "template": 60168000,
+       "name": "wolf nipper",
+       "level": [
+        12,
+        13
+       ]
+      },
+      {
+       "template": 12238,
+       "name": "water snake",
+       "level": [
+        14,
+        15
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60167946,
+      "name": "Wildling warleader",
+      "level": 16,
+      "pos": [
+       533,
+       429,
+       119.0
+      ],
+      "health_mult": 2
+     },
+     "success": "The wildlings are gone from the road to Fort Atla. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Sten has come out to set the road to Fort Atla right. The wildlings are coming back for it!",
+     "center": [
+      533,
+      429,
+      119.0
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Sten",
+      "level": 15,
+      "pos": [
+       533,
+       429,
+       119.0
+      ],
+      "health_mult": 10,
+      "model": 138,
+      "equipment": "c91fade1-6775-4be8-8493-4dc9fb882b2b"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        528,
+        514,
+        117.9
+       ],
+       [
+        469,
+        485,
+        118.4
+       ],
+       [
+        448,
+        422,
+        118.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60167946,
+        "name": "wildling",
+        "level": [
+         13,
+         14
+        ]
+       },
+       {
+        "template": 60168000,
+        "name": "wolf nipper",
+        "level": [
+         12,
+         13
+        ]
+       },
+       {
+        "template": 12238,
+        "name": "water snake",
+        "level": [
+         14,
+         15
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Fort Atla is safe again. Thank you.\"",
+     "success": "The wildlings break and scatter. The road to Fort Atla is open again.",
+     "fail": "Roadwarden Sten falls, and the wildlings take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "gotar_pine_imps",
+   "title": "The Imp Revel",
+   "levels": [
+    5,
+    6
+   ],
+   "hint": "Shrill laughter and smoke come from the pines...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Imps' Revel",
+     "objective": "Clear the imps' revel",
+     "announce": "The imps are holding a revel in the pines and setting fire to anything that will burn. Break it up.",
+     "center": [
+      731,
+      953,
+      119.5
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60168012,
+       "name": "wood imp",
+       "level": [
+        5,
+        5
+       ]
+      },
+      {
+       "template": 60164933,
+       "name": "pine imp",
+       "level": [
+        6,
+        6
+       ]
+      }
+     ],
+     "success": "You have cleared the imps' revel. Kvist the Imp-King comes out to fight.",
+     "fail": "They hold the imps' revel. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "Kvist the Imp-King",
+     "objective": "Defeat Kvist the Imp-King",
+     "announce": "Kvist the Imp-King stands at the imps' revel. Bring friends.",
+     "center": [
+      731,
+      953,
+      119.5
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60164933,
+      "name": "Kvist the Imp-King",
+      "level": 8,
+      "size": 44,
+      "pos": [
+       731,
+       953,
+       119.5
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60168012,
+        "name": "wood imp",
+        "level": [
+         5,
+         5
+        ]
+       }
+      ]
+     },
+     "success": "Kvist the Imp-King falls. The way is safe again.",
+     "fail": "Kvist the Imp-King slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu103_kvist_the_imp_king_s_wristguard",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Wood Imps Hold the Road to Nalliten",
+     "objective": "Drive the wood imps off the road to Nalliten",
+     "announce": "With The Imp Revel lost, the wood imps have spread down onto the road to Nalliten and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      974,
+      987,
+      115.5
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60168012,
+       "name": "wood imp",
+       "level": [
+        5,
+        5
+       ]
+      },
+      {
+       "template": 60164933,
+       "name": "pine imp",
+       "level": [
+        6,
+        6
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60168012,
+      "name": "Wood imp warleader",
+      "level": 7,
+      "pos": [
+       974,
+       987,
+       115.5
+      ],
+      "health_mult": 2
+     },
+     "success": "The wood imps are gone from the road to Nalliten. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Sten has come out to set the road to Nalliten right. The wood imps are coming back for it!",
+     "center": [
+      974,
+      987,
+      115.5
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Sten",
+      "level": 6,
+      "pos": [
+       974,
+       987,
+       115.5
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        907,
+        1039,
+        112.6
+       ],
+       [
+        889,
+        975,
+        116.7
+       ],
+       [
+        923,
+        918,
+        92.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60168012,
+        "name": "wood imp",
+        "level": [
+         5,
+         5
+        ]
+       },
+       {
+        "template": 60164933,
+        "name": "pine imp",
+        "level": [
+         6,
+         6
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Nalliten is safe again. Thank you.\"",
+     "success": "The wood imps break and scatter. The road to Nalliten is open again.",
+     "fail": "Roadwarden Sten falls, and the wood imps take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "gt_scale_caravan",
+   "title": "The Scale-Caravan",
+   "levels": [
+    17,
+    21
+   ],
+   "hint": "Wagon-bells on the trade road - a scale-caravan is coming up from the south...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "cull",
+     "name": "The Outriders",
+     "objective": "Break the caravan's svartalf outriders on the trade road",
+     "announce": "A drakulv scale-caravan is coming up Gotar's trade road from the south! Huscarl Hallbjorn wants it stopped - break its outriders!",
+     "center": [
+      820,
+      1180,
+      113.3
+     ],
+     "radius": 90,
+     "time_s": 900,
+     "kill": 14,
+     "alive": 6,
+     "mobs": [
+      {
+       "template": 60166664,
+       "name": "svartalf outcast",
+       "level": [
+        15,
+        17
+       ],
+       "guild": "the Scale-Traders"
+      },
+      {
+       "template": 60166664,
+       "name": "svartalf outcast",
+       "level": [
+        15,
+        17
+       ],
+       "guild": "the Scale-Traders"
+      },
+      {
+       "template": 60166659,
+       "name": "svartalf guard",
+       "level": [
+        16,
+        18
+       ],
+       "guild": "the Scale-Traders"
+      }
+     ],
+     "success": "The outriders break - and the caravan whips its beasts on, north toward the svartalf post, with its master walking beside it.",
+     "fail": "The outriders drive you off the road, and the caravan rolls on north.",
+     "on_success": "c2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 120,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "c2",
+     "type": "boss",
+     "name": "Scale-Master Naudr",
+     "objective": "Hunt down Scale-Master Naudr on the trade road",
+     "announce": "Scale-Master Naudr, a svartalf in mail of red dragon-scale, walking beside his wagons up the road: 'The Mother pays in gold. What do you pay in?' He walks the road between his wagons and the svartalf post - hunt him down. Bring friends.",
+     "center": [
+      820,
+      1180,
+      113.3
+     ],
+     "radius": 110,
+     "time_s": 1500,
+     "path": [
+      [
+       735,
+       1080,
+       116.9
+      ],
+      [
+       650,
+       980,
+       118.3
+      ],
+      [
+       600,
+       893,
+       121.3
+      ],
+      [
+       550,
+       807,
+       112.6
+      ],
+      [
+       500,
+       720,
+       119.7
+      ],
+      [
+       564,
+       812,
+       116.3
+      ],
+      [
+       628,
+       904,
+       121.2
+      ],
+      [
+       692,
+       996,
+       115.8
+      ],
+      [
+       756,
+       1088,
+       116.0
+      ],
+      [
+       820,
+       1180,
+       113.3
+      ]
+     ],
+     "boss": {
+      "template": 60166659,
+      "name": "Scale-Master Naudr",
+      "level": 22,
+      "size": 70,
+      "pos": [
+       820,
+       1180,
+       113.3
+      ],
+      "health_mult": 4,
+      "guild": "of the Scale-Traders"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60166659,
+        "name": "svartalf guard",
+        "level": [
+         16,
+         18
+        ],
+        "guild": "the Scale-Traders"
+       },
+       {
+        "template": 60160533,
+        "name": "envy drakeling",
+        "level": [
+         16,
+         18
+        ],
+        "guild": "drawn to the scale"
+       }
+      ]
+     },
+     "success": "Naudr falls in the road, and his wagons stop. They're full of dragon-scale - warm, every one - and a letter bound for Malmohus.",
+     "fail": "Naudr gets his wagons to the svartalf post, and the scale goes north.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 240,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "nu103_naudr_s_scale_mail_bracer",
+        "gold_chance": 40,
+        "silver_chance": 20
+       },
+       {
+        "id": "nu103_caravan_master_s_ledger",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "gt_drowned_bell",
+   "title": "The Drowned Bell",
+   "levels": [
+    15,
+    18
+   ],
+   "hint": "A bell ringing out at sea, where no ship floats - the wreck is calling its crew...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "b1",
+   "stages": [
+    {
+     "id": "b1",
+     "type": "defend",
+     "name": "The Skald's Verse",
+     "objective": "Keep Skald Ingvild alive while she sings the drowned to rest",
+     "announce": "The wreck's bell is ringing and the drowned are coming ashore! Skald Ingvild of Fort Atla is on the beach singing them to rest - keep her alive!",
+     "center": [
+      1040,
+      440,
+      111.4
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "template": 60157473,
+      "model": 168,
+      "guild": "King Eirik's Huscarls",
+      "name": "Skald Ingvild",
+      "level": 17,
+      "pos": [
+       1040,
+       440,
+       111.4
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 24,
+      "count": 3,
+      "from": [
+       [
+        1080,
+        470,
+        111.8
+       ],
+       [
+        1000,
+        420,
+        114.8
+       ],
+       [
+        1060,
+        400,
+        111.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160165,
+        "name": "drowned soul",
+        "level": [
+         14,
+         16
+        ],
+        "guild": "of the wreck"
+       },
+       {
+        "template": 60166175,
+        "name": "skeletal oarsman",
+        "level": [
+         15,
+         17
+        ],
+        "guild": "of the wreck"
+       }
+      ]
+     },
+     "thanks": "\"Every drowned man deserves a verse. Even the ones who row for dragons.\"",
+     "success": "The drowned lie down in the surf one by one - all but the last, who walks up out of the sea with the ship's wheel still in his hands.",
+     "fail": "Ingvild falls, and the drowned walk inland.",
+     "on_success": "b2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 110,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "b2",
+     "type": "boss",
+     "name": "the Drowned Steersman",
+     "objective": "Defeat the Drowned Steersman",
+     "announce": "The Drowned Steersman, weed in his ribs, a red scale nailed to his wheel: 'We carried her scale. We were promised the shore.'",
+     "center": [
+      1040,
+      440,
+      111.4
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60166181,
+      "name": "the Drowned Steersman",
+      "level": 19,
+      "size": 65,
+      "pos": [
+       1040,
+       440,
+       111.4
+      ],
+      "health_mult": 3,
+      "guild": "of the wreck"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60160165,
+        "name": "drowned soul",
+        "level": [
+         14,
+         16
+        ],
+        "guild": "of the wreck"
+       }
+      ]
+     },
+     "success": "The Steersman falls, and the bell out at sea stops ringing.",
+     "fail": "The Steersman walks back into the sea, and the bell rings on.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 200,
+      "tokens": 16,
+      "items": [
+       {
+        "id": "nu103_steersman_s_bell",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ],
+   "time": "night"
+  }
+ ]
 }

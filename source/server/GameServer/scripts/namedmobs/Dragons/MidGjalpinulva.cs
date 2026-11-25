@@ -50,6 +50,13 @@ namespace DOL.GS
 
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
+			// sealed in her sleep under Malmohus until the Dragon-Oath holds the south (MidgardCampaigns.cs, round 4 of Midgard's plan)
+			if (DOL.GS.DynamicEvents.AlbionCampaign.GjalpinulvaSealed)
+			{
+				if ((source as GamePlayer ?? (source as GameSummonedPet)?.Owner as GamePlayer) is GamePlayer sealedFor)
+					sealedFor.Out.SendMessage("Your blow slides off scales hard as the mountain. Gjalpinulva sleeps deep under Malmohus while her Hierophant keeps the rite.", eChatType.CT_System, eChatLoc.CL_ChatWindow);
+				return;
+			}
 			if (DragonLairPlacement.CanReceiveDamageFrom(source))
 			{
 				if (!IsWithinRadius(spawnPoint, LairRadius))//dragon take 0 dmg is it's out of his lair
@@ -203,7 +210,7 @@ namespace DOL.GS
         }
         public override void StartAttack(GameObject target)
         {
-			if (MidGjalpinulvaBrain.IsRestless)
+			if (MidGjalpinulvaBrain.IsRestless || DOL.GS.DynamicEvents.AlbionCampaign.GjalpinulvaSealed)
 				return;
 			else
 				base.StartAttack(target);
@@ -329,6 +336,13 @@ namespace DOL.AI.Brain
 		}
 		public override void Think()
 		{
+			if (DOL.GS.DynamicEvents.AlbionCampaign.GjalpinulvaSealed)
+			{
+				// sealed: she sleeps, whole, and nothing she does reaches out of it
+				ClearAggroList();
+				Body.Health = Body.MaxHealth;
+				return;
+			}
             bool encounterAggro = CheckProximityAggro();
             EncounterAdds.Tick(Body, AggroList.Select(static entry => entry.Key), encounterAggro, IsRestless);
             if (encounterAggro) DragonDiagnostics.Fighting(Body, AggroList.Count);

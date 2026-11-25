@@ -14,9 +14,9 @@ M, F, OLD = 9, 38, 32
 
 
 class Story:
-    def __init__(self, zone, name, file, spec, old_ids, old_npcs, old_items):
+    def __init__(self, zone, name, file, spec, old_ids, old_npcs, old_items, realm=1):
         self.Z = zone
-        self.z = Zone(zone, name, 1, file)
+        self.z = Zone(zone, name, realm, file)   # (realm 2: Midgard's rebuilt zones use this too)
         self.AT, self.NAMES = {}, {}
         q = json.loads((HERE.parents[1] / ('source/server/GameServer/scripts/storyquests/quests/%s.json' % file)).read_text(encoding='utf-8'))
         sp = json.loads((HERE / ('named_uniques/%s.json' % spec)).read_text(encoding='utf-8'))

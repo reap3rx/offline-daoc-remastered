@@ -1,0 +1,156 @@
+{
+ "zone": 104,
+ "name": "Muspelheim",
+ "levels": [
+  18,
+  28
+ ],
+ "realm": 2,
+ "factions": [
+  {
+   "key": "khizil_forge",
+   "name": "the Forge of Khizil",
+   "short": "the Forge",
+   "kin": [
+    "eiriks_huscarls",
+    "steading_league",
+    "huginfel_shieldwall",
+    "galplen_woodwards",
+    "wolfsbane_rangers",
+    "vanern_wardens",
+    "kings_host"
+   ],
+   "titles": [
+    "Forge-Friend",
+    "Hammer of Khizil",
+    "Keeper of the Forge-Fire"
+   ],
+   "speaker": "mu_thrain",
+   "town": "Khizil's forge",
+   "kills": [
+    "dverge",
+    "ashmonger",
+    "soot",
+    "flame thrower",
+    "ashen",
+    "fire ant",
+    "sulphur",
+    "fire flower",
+    "lava lizard",
+    "fire toad",
+    "fire giant",
+    "raukomaz",
+    "tasm"
+   ],
+   "quartermaster": {
+    "name": "Forge-Quartermaster Dvalinn",
+    "guild": "the Forge of Khizil",
+    "model": 185,
+    "anchor": "mu_thrain",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The forge's work, for those the forge can trust. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep104_forge_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep104_khizil_smith_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep104_hammer_of_khizil_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep104_anvil_iron_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep104_mantle_of_the_forge_fire",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "shared": [
+  "eiriks_huscarls"
+ ],
+ "quartermasters": [
+  {
+   "faction": "eiriks_huscarls",
+   "name": "Huscarl-Quartermaster Hrolleif",
+   "guild": "King Eirik's Huscarls",
+   "model": 213,
+   "anchor": "mu_hallkel",
+   "offset": [
+    4,
+    3
+   ],
+   "greet": "The King's stores at Brika's camp, same stock as Mularn. Show me your standing with the Huscarls.",
+   "stock": [
+    {
+     "item": "rep100_huscarl_friend_s_ring",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep100_jordheim_road_belt",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep100_shield_of_jordheim_torc",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep100_eirik_s_bracer",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep100_mantle_of_eirik_s_champion",
+     "rank": "Legend",
+     "price": 150
+    }
+   ]
+  }
+ ],
+ "kill_default": "eiriks_huscarls",
+ "event_default": "eiriks_huscarls",
+ "quest_default": "khizil_forge",
+ "quests": {
+  "dagnar": "eiriks_huscarls",
+  "ragnvald": "eiriks_huscarls",
+  "mu_hounds": "eiriks_huscarls",
+  "mu_vents": "eiriks_huscarls",
+  "mu_ashmongers": "khizil_forge",
+  "mu_soot": "khizil_forge",
+  "mu_ants": "khizil_forge",
+  "mu_sparkers": "khizil_forge",
+  "mu_igniters": "khizil_forge",
+  "mu_sentries": "eiriks_huscarls",
+  "mu_old_war": "eiriks_huscarls",
+  "mu_wyrms": "eiriks_huscarls",
+  "mu_cinder_drakes": "eiriks_huscarls",
+  "mu_hatchery": "eiriks_huscarls"
+ },
+ "events": {
+  "mu_brood_sire": "eiriks_huscarls",
+  "mu_forge_fire": "khizil_forge",
+  "muspelheim_fire_giant_outpost": "eiriks_huscarls",
+  "muspelheim_burnt_sentries": "eiriks_huscarls",
+  "muspelheim_wyrm_nest": "eiriks_huscarls",
+  "muspelheim_fire_ants": "khizil_forge"
+ }
+}

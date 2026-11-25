@@ -649,7 +649,8 @@ namespace DOL.GS
             boss.IsAlive && !boss.IsRespawning && boss.ObjectState == GameObject.eObjectState.Active &&
             (id != "epic-albion" || !ApocInitializator.PickedTarget) &&
             (id != "dragon-hibernia" || !DOL.GS.DynamicEvents.MusterCampaign.CuuldurachSealed) &&   // (the Muster's campaign opens his ring)
-            (id != "dragon-albion" || !DOL.GS.DynamicEvents.AlbionCampaign.GolestandtSealed);    // (the Dragon-Watch's opens his lair)
+            (id != "dragon-albion" || !DOL.GS.DynamicEvents.AlbionCampaign.GolestandtSealed) &&  // (the Dragon-Watch's opens his lair)
+            (id != "dragon-midgard" || !DOL.GS.DynamicEvents.AlbionCampaign.GjalpinulvaSealed);   // (the Dragon-Oath's opens hers)
 
         private static bool TryStaging(Raid raid, int slot, out Vector3 staging)
         {

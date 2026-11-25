@@ -143,6 +143,619 @@
     "Hits": 12
    },
    "lore": "Carved with the runes for 'man' and 'return'."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thrall-Chain Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 10,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 10,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "A broken shackle, padded and worn on the arm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Huginfel Gate Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 10,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Iron, stamped with Huginfel's gate."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Oath-Cut Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 11,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 9
+   },
+   "lore": "A belt cut from an oathbreaker's own. He won't need it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shieldwall Shoulder-Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 11,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 11,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Huginfel red, with the shieldwall's boss."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blood-Oath Scroll Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 13,
+   "bonuses": {
+    "Pie": 4,
+    "Int": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "A strip of the oath-scroll, the blood gone brown."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Henchman-Breaker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 13,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 11
+   },
+   "lore": "Heavy iron. Sigvaldi's gift."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wind-Sprite Feather",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 10
+   },
+   "lore": "It drifts upward if you let it go."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gothi's Ward-Cord",
+   "base": [
+    41,
+    32
+   ],
+   "level": 12,
+   "bonuses": {
+    "Int": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "Nine knots, nine runes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "She-Wolf Fang Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "A she-wolf's fangs on a twist of iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Woodland Stalker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 14,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 12
+   },
+   "lore": "Soft leather, for silent walking."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wood-Wife's Leaf Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 15,
+   "bonuses": {
+    "Qui": 5,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 9,
+    "Power": 2
+   },
+   "lore": "A ring of living leaf. It stays green."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Skogsfru Bark Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 15,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 15,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Birch-bark, soft as cloth."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Never-Thaw Ice Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 15,
+   "bonuses": {
+    "Pie": 5,
+    "Int": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 9
+   },
+   "lore": "A chip of the gully's ice in a silver cage. It hasn't melted."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wolf-Widow's Shawl",
+   "base": [
+    41,
+    26
+   ],
+   "level": 15,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 15,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Ragnfrid's own, grey and heavy."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cold-Light Lantern Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 17,
+   "bonuses": {
+    "Pie": 6,
+    "Int": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "A tiny lantern. It glows blue and gives no heat."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Frost-Ward Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 17,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 17,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Fur-lined iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Frost-Colt Mane Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 18,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 15
+   },
+   "lore": "Braided white hair that crackles like frost."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Snow-Imp's Cap Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 18,
+   "bonuses": {
+    "Qui": 6,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 11,
+    "Power": 2
+   },
+   "lore": "A little white cap. It's always cold inside."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gully-Walker's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 18,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 18,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Fur and wool, for walking on ice that isn't ice."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Warhound-Collar Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "Spiked, and too heavy for anything but a Blodfelag hound."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wolf-Widow's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Int": 5,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "Ragnfrid's husband's ring. She wants you to have it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Windcaller's Bone Whistle",
+   "base": [
+    41,
+    24
+   ],
+   "level": 17,
+   "bonuses": {
+    "Pie": 6,
+    "Int": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "Blow it and the air goes cold. Don't."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Snow-Ward Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 17,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 17,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Thick wool, rune-stitched against the cold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wolfwarrior's Pelt-Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 19,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 16
+   },
+   "lore": "A whole wolf-pelt, jaws for a hood."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Berserk-Breaker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 19,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 19,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Grettir's gift: plain iron, very heavy."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blood-Hall Spear Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 19,
+   "bonuses": {
+    "Dex": 6,
+    "Qui": 6,
+    "Str": 3,
+    "Hits": 16
+   },
+   "lore": "Iron, with a broken spear-head hung from it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Frozen Blood-Bowl Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 20,
+   "bonuses": {
+    "Pie": 7,
+    "Int": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "A shard of the haxa's bowl, the blood in it still frozen."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Haxa-Bane Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 20,
+   "bonuses": {
+    "Int": 7,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "Rowan wood and iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Vindsaul Huscarl Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 20,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 20,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "The King's blue, from the frontier keep."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shieldwall Oath-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 3,
+    "Hits": 17
+   },
+   "lore": "The Shieldwall's oath ring: an oath you keep."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blood-Hall Scout's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 3,
+    "Hits": 17
+   },
+   "lore": "Dark leather, for creeping close."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Svartalf Hunter's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 12
+   },
+   "lore": "Dark iron, dwarf-work gone wrong."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Southern Road Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Dust-brown, for long roads."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Chanter's Scale-Pin",
+   "base": [
+    41,
+    24
+   ],
+   "level": 16,
+   "bonuses": {
+    "Pie": 5,
+    "Int": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "A red scale pinned like a brooch."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drakulv-Pass Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 16,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 3,
+    "Hits": 14
+   },
+   "lore": "The pass's leather case, made into a belt."
   }
  ]
 }

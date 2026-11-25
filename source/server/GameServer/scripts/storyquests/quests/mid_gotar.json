@@ -90,6 +90,36 @@
       "during": [
         "rune_stave/s6"
       ]
+    },
+    {
+      "id": "gt_hallbjorn",
+      "zone": 103,
+      "realm": 2,
+      "name": "Huscarl Hallbjorn",
+      "model": 213,
+      "level": 32,
+      "pos": [
+        700,
+        335,
+        110.2
+      ],
+      "guild": "King Eirik's Huscarls",
+      "idle": "Fort Atla's the King's. Everything south of it is anybody's."
+    },
+    {
+      "id": "gt_runa",
+      "zone": 103,
+      "realm": 2,
+      "name": "Runecaster Runa",
+      "model": 168,
+      "level": 30,
+      "pos": [
+        1232,
+        878,
+        115.6
+      ],
+      "guild": "the Nalliten Runecasters",
+      "idle": "The staves say the same thing every night. Fire under the ground, in the south."
     }
   ],
   "quests": [
@@ -474,6 +504,793 @@
           }
         }
       }
+    },
+    {
+      "id": "gt_nippers",
+      "title": "Wolf Nippers",
+      "level": 12,
+      "giver": "gt_hallbjorn",
+      "offer": "The wolf nippers on the north lakes have grown bold - whole packs coming down to the fort's walls at dusk. Something's pushing them out of the west.\n\nWill you [thin the packs]?",
+      "accept": "thin the packs",
+      "topics": {},
+      "summary": "Wolf nippers have grown bold on Gotar's north lakes, pushed out of the west.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            650,
+            400,
+            111.3
+          ],
+          "radius": 50,
+          "goal": "Thin the wolf nipper packs about 80 m south-west of Huscarl Hallbjorn",
+          "target": "wolf nipper",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "gt_hallbjorn",
+          "goal": "Tell Huscarl Hallbjorn",
+          "say": "Fewer. They're running from the west - from Svealand, where the snow came in summer.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq103_nipper_tooth_ring",
+              "sq103_lakeshore_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "gt_hobgoblins",
+      "title": "The Fish-Catchers",
+      "level": 13,
+      "giver": "gt_hallbjorn",
+      "offer": "The hobgoblins on the lakes cut the fort's nets and steal the catch. Not the worst thing in Gotar, but the men are hungry.\n\nWill you [drive them off]?",
+      "accept": "drive them off",
+      "topics": {},
+      "summary": "Hobgoblin fish-catchers cut Fort Atla's nets on Gotar's north lakes.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            700,
+            500,
+            115.7
+          ],
+          "radius": 50,
+          "goal": "Drive off the hobgoblin fish-catchers about 160 m south of Huscarl Hallbjorn",
+          "target": "hobgoblin fish-catcher",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "gt_hallbjorn",
+          "goal": "Tell Hallbjorn",
+          "say": "Fish for supper. You're popular in the barracks.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq103_fish_catcher_s_net_charm",
+              "sq103_fort_atla_gate_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "gt_nippers"
+    },
+    {
+      "id": "gt_wildlings",
+      "title": "The Wildlings",
+      "level": 14,
+      "giver": "gt_hallbjorn",
+      "offer": "Wildlings have made camp by the lakes. They've never come this far east. Break the camp - and if one will talk, ask why.\n\nWill you [break the camp]?",
+      "accept": "break the camp",
+      "topics": {},
+      "summary": "Wildlings have camped on Gotar's north lakes, further east than they have ever come.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            640,
+            560,
+            120.3
+          ],
+          "radius": 50,
+          "goal": "Break the wildling camp about 230 m south of Huscarl Hallbjorn",
+          "target": "wildling",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 103,
+          "at": [
+            645,
+            565,
+            119.9
+          ],
+          "goal": "Search the wildling camp",
+          "clue": {
+            "name": "a hide drawn with charcoal",
+            "model": 1882
+          },
+          "text": "A crude drawing: a great wolf with its jaws open over a moon, and the wildlings running away from it, east.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "gt_hallbjorn",
+          "goal": "Tell Hallbjorn",
+          "say": "A wolf eating the moon. That's the Blodfelag's story, out of West Svealand. If even the wildlings are running from it...",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq103_wildling_s_bone_torc",
+              "sq103_lake_hunter_s_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "gt_hobgoblins"
+    },
+    {
+      "id": "gt_drowned_souls",
+      "title": "The Drowned",
+      "level": 14,
+      "giver": "skald_hrafn",
+      "offer": "A ship went down off the east shore last winter. Now its drowned walk the beach every night, looking for land they can't reach.\n\nWill you [give them rest]?",
+      "accept": "give them rest",
+      "topics": {},
+      "summary": "The drowned of a wrecked ship walk Gotar's east shore every night.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            1060,
+            440,
+            111.4
+          ],
+          "radius": 50,
+          "goal": "Give the drowned souls rest about 370 m east of Old Skald Hrafn",
+          "target": "drowned soul",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "skald_hrafn",
+          "goal": "Tell Old Skald Hrafn",
+          "say": "Rest, then. I'll make them a verse. Every drowned man deserves a verse.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq103_drowned_bell_charm",
+              "sq103_salt_stiff_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "gt_drowned_ship",
+      "title": "What the Ship Carried",
+      "level": 16,
+      "giver": "skald_hrafn",
+      "offer": "The ship's oarsmen still row, out there on the wreck, though the ship goes nowhere. I want to know where she was going - and what she carried, that the sea wouldn't let her keep.\n\nBring friends. Will you [board the wreck]?",
+      "accept": "board the wreck",
+      "topics": {},
+      "summary": "The skeletal crew of a wreck off Gotar's east shore still row; nobody knows what the ship was carrying.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            1057,
+            474,
+            111.8
+          ],
+          "radius": 40,
+          "goal": "Fight through the skeletal crew about 380 m south-east of Old Skald Hrafn",
+          "target": "skeletal oarsman",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            1057,
+            474,
+            111.8
+          ],
+          "radius": 40,
+          "goal": "Bring down the skeletal seafarers",
+          "target": "skeletal seafarer",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 103,
+          "at": [
+            1062,
+            470,
+            111.7
+          ],
+          "goal": "Search the wreck's hold",
+          "clue": {
+            "name": "a chest in the flooded hold",
+            "model": 1347
+          },
+          "text": "The chest is full of dragon-scales - red, and warm, every one. A tally-stick in svartalf runes: 'For the Mother's priests in the north. Paid in gold at the Gotar post.'",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "skald_hrafn",
+          "goal": "Tell Old Skald Hrafn",
+          "say": "Dragon-scale. Shipped north, to 'the Mother's priests'. There's only one dragon in Midgard old enough to be anyone's mother - Gjalpinulva, under Malmohus.\n\nRunecaster Runa at Nalliten will want to know. The staves have been saying 'fire in the south' for a month.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq103_oarsman_s_grip_bracer",
+              "sq103_ship_wreck_ring",
+              "sq103_scale_cargo_pendant"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "gt_drowned_souls"
+    },
+    {
+      "id": "gt_outcasts",
+      "title": "The Trade Road",
+      "level": 15,
+      "giver": "gt_runa",
+      "offer": "The svartalf outcasts on the trade road used to sell iron. Now they sell scale - and they've started taking travellers, for 'the Mother'.\n\nWill you [clear the road]?",
+      "accept": "clear the road",
+      "topics": {},
+      "summary": "Svartalf outcasts on Gotar's trade road sell dragon-scale and take travellers for 'the Mother'.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            600,
+            950,
+            118.2
+          ],
+          "radius": 50,
+          "goal": "Clear the svartalf outcasts from the trade road about 640 m west of Runecaster Runa",
+          "target": "svartalf outcast",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "gt_runa",
+          "goal": "Tell Runecaster Runa",
+          "say": "'The Mother.' The staves called her that too. The dragon's waking, and she's buying friends.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Nalliten Runecasters.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq103_svartalf_outcast_s_ring",
+              "sq103_trade_road_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "gt_drowned_ship"
+    },
+    {
+      "id": "gt_scale_guards",
+      "title": "The Scale-Traders",
+      "level": 17,
+      "giver": "gt_runa",
+      "offer": "The scale-traders camp beside the old svartalf post, under guard. Their ledger will tell us who's buying and who's selling.\n\nWill you [take the ledger]?",
+      "accept": "take the ledger",
+      "topics": {},
+      "summary": "Svartalf scale-traders camp under guard beside the old svartalf post on Gotar's trade road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            520,
+            760,
+            116.2
+          ],
+          "radius": 40,
+          "goal": "Break the scale-traders' guards about 720 m west of Runecaster Runa",
+          "target": "svartalf guard",
+          "count": 2,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 103,
+          "at": [
+            515,
+            755,
+            117.2
+          ],
+          "goal": "Search the scale-traders' camp",
+          "clue": {
+            "name": "a ledger in a scale-bound cover",
+            "model": 1347
+          },
+          "text": "Every page: scale sold north, gold paid south. The buyers: 'the drakulv of Malmohus, by the Hierophant's word'. And at the end, in a different hand: 'Myrkwood. The old volva at Galplen knows the Mother's name. See to her.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "gt_runa",
+          "goal": "Tell Runecaster Runa",
+          "say": "The Hierophant. The drakulv have a high priest now. And they're after a volva in Myrkwood - an old seer who knows the dragon's true name.\n\nThat's a name you don't let a cult take. Kill their preacher, then get word to Galplen.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Nalliten Runecasters.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq103_scale_trader_s_ledger_charm",
+              "sq103_runecaster_s_stave_belt"
+            ]
+          }
+        }
+      },
+      "requires": "gt_outcasts"
+    },
+    {
+      "id": "gt_preacher",
+      "title": "The Dragon-Preacher",
+      "level": 20,
+      "giver": "gt_runa",
+      "offer": "The dragon-preacher at the scale-traders' camp - he's the one who turned the outcasts. Without him, they're just traders again.\n\nBring friends. Will you [silence the preacher]?",
+      "accept": "silence the preacher",
+      "topics": {},
+      "summary": "A dragon-preacher turned the svartalf outcasts of Gotar's trade road to the drakulv cult.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            520,
+            760,
+            116.2
+          ],
+          "radius": 40,
+          "goal": "Silence the dragon-preacher about 720 m west of Runecaster Runa",
+          "target": "dragon-preacher",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "gt_runa",
+          "goal": "Tell Runa",
+          "say": "Silenced. The camp will scatter. But the scale-caravans still run up the road - you'll see one, sooner or later. The Huscarls will want a hand when you do.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Nalliten Runecasters.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq103_preacher_s_scale_torc",
+              "sq103_nalliten_rune_ward_bracer",
+              "sq103_unburnt_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "gt_scale_guards"
+    },
+    {
+      "id": "gt_hosts",
+      "title": "The Restless Hosts",
+      "level": 16,
+      "giver": "eilif",
+      "offer": "The hosts of the hills - wind and earth - have always been here. But they're restless. They're attacking anything that walks the hills.\n\nWill you [quiet them]?",
+      "accept": "quiet them",
+      "topics": {},
+      "summary": "The hosts of wind and earth in Gotar's southern hills have grown restless.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            500,
+            1250,
+            119.1
+          ],
+          "radius": 50,
+          "goal": "Quiet the hosts of the wind about 110 m east of Eilif",
+          "target": "host of the wind",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            600,
+            1350,
+            121.4
+          ],
+          "radius": 50,
+          "goal": "Quiet the hosts of the earth",
+          "target": "host of the earth",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "eilif",
+          "goal": "Tell Eilif",
+          "say": "Quieter. They're restless because the ground is warm. The ground's never warm, here.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Nalliten Runecasters.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq103_wind_host_feather_charm",
+              "sq103_earth_host_stone_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "gt_pooks",
+      "title": "Pooks on the Coast",
+      "level": 17,
+      "giver": "flayer_kolr",
+      "offer": "The perfidious pooks on the east coast have been luring travellers off the cliffs. Used to be pranks. Now they want blood.\n\nWill you [hunt them]?",
+      "accept": "hunt them",
+      "topics": {},
+      "summary": "The perfidious pooks of Gotar's east coast lure travellers off the cliffs.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            1459,
+            844,
+            114.9
+          ],
+          "radius": 50,
+          "goal": "Hunt the perfidious pooks about 190 m east of Flayer Kolr",
+          "target": "perfidious pook",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "flayer_kolr",
+          "goal": "Tell Flayer Kolr",
+          "say": "Good. Pooks I can skin. Dragons I can't.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Nalliten Runecasters.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq103_pook_trick_ring",
+              "sq103_coast_walker_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "gt_carrion",
+      "title": "The Warm Vale",
+      "level": 18,
+      "giver": "eilif",
+      "offer": "Carrion eaters gather in the south-east vale. They're feeding on something that died there - big things, all burnt.\n\nWill you [go and look]?",
+      "accept": "go and look",
+      "topics": {},
+      "summary": "Carrion eaters gather over something burnt in Gotar's south-east vale.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            1200,
+            1400,
+            118.4
+          ],
+          "radius": 50,
+          "goal": "Clear the carrion eaters about 820 m east of Eilif",
+          "target": "carrion eater",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 103,
+          "at": [
+            1180,
+            1420,
+            115.6
+          ],
+          "goal": "Search the burnt ground",
+          "clue": {
+            "name": "a scorched elk carcass",
+            "model": 1347
+          },
+          "text": "Elk and bear, all burnt from the inside, and the earth under them glassy. Small clawed tracks lead south, toward Myrkwood and Malmohus.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "eilif",
+          "goal": "Tell Eilif",
+          "say": "Burnt from inside. Drakelings. They're coming up from the south. Hild at the seith circle will know more.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Nalliten Runecasters.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq103_carrion_bane_bracer",
+              "sq103_warm_earth_pendant"
+            ]
+          }
+        }
+      },
+      "requires": "gt_hosts"
+    },
+    {
+      "id": "gt_drakelings",
+      "title": "Envy Drakelings",
+      "level": 19,
+      "giver": "hild",
+      "offer": "Envy drakelings on the southern edge. They covet everything - gold, fire, the light itself - and they eat what they can't take.\n\nWill you [drive them back]?",
+      "accept": "drive them back",
+      "topics": {},
+      "summary": "Envy drakelings creep up Gotar's southern edge from Myrkwood and Malmohus.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            900,
+            1580,
+            122.3
+          ],
+          "radius": 50,
+          "goal": "Drive back the envy drakelings about 200 m south-west of Hild",
+          "target": "envy drakeling",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "hild",
+          "goal": "Tell Hild",
+          "say": "Back. For now. The dragon's spawn don't come north on their own. Something called them.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Nalliten Runecasters.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq103_envy_scale_ring",
+              "sq103_drake_hunter_s_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "gt_carrion"
+    },
+    {
+      "id": "gt_gotawitches",
+      "title": "The Turned Circle",
+      "level": 21,
+      "giver": "hild",
+      "offer": "Half the seithkona at the circle have turned - they sing to the dragon now, with the gotawitches. They called the drakelings.\n\nBring friends. Will you [break the turned circle]?",
+      "accept": "break the turned circle",
+      "topics": {},
+      "summary": "Half the seithkona at Gotar's seith circle have turned to singing for the dragon, with the gotawitches.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            990,
+            1420,
+            118.3
+          ],
+          "radius": 40,
+          "goal": "Break the gotawitches about 20 m south of Hild",
+          "target": "gotawitch",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 103,
+          "at": [
+            990,
+            1420,
+            118.3
+          ],
+          "radius": 40,
+          "goal": "Break the turned seithkona",
+          "target": "seithkona",
+          "count": 2,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 103,
+          "at": [
+            995,
+            1425,
+            117.9
+          ],
+          "goal": "Search the circle's stone",
+          "clue": {
+            "name": "a seith-staff laid on the stone",
+            "model": 1876
+          },
+          "text": "The staff is carved with the dragon's long coils, and at the head, a name half-scraped away: GJALP- ... and then, 'the volva at Galplen keeps the rest'.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "hild",
+          "goal": "Tell Hild",
+          "say": "They were trying to finish the name. To call her by it - a dragon called by her true name wakes all the way.\n\nThe volva in Myrkwood. Everyone wants her. Go to Galplen - and go carefully. Myrkwood isn't Gotar.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Nalliten Runecasters.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq103_gotawitch_s_bone_charm",
+              "sq103_seith_breaker_s_bracer",
+              "sq103_circle_stone_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "gt_drakelings"
     }
   ]
 }

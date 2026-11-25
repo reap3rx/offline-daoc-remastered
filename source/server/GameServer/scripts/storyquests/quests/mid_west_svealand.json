@@ -90,6 +90,36 @@
         "wolf_cord/s6",
         "wolf_cord/s7"
       ]
+    },
+    {
+      "id": "ws_sigvaldi",
+      "zone": 102,
+      "realm": 2,
+      "name": "Shield-Captain Sigvaldi",
+      "model": 213,
+      "level": 34,
+      "pos": [
+        1392,
+        1150,
+        116.8
+      ],
+      "guild": "the Huginfel Shieldwall",
+      "idle": "The Shieldwall holds Huginfel. Lately it holds it facing west."
+    },
+    {
+      "id": "ws_ragnfrid",
+      "zone": 102,
+      "realm": 2,
+      "name": "Ragnfrid Wolf-Widow",
+      "model": 168,
+      "level": 30,
+      "pos": [
+        150,
+        700,
+        113.9
+      ],
+      "guild": "the Huginfel Shieldwall",
+      "idle": "The last farm before the Blodfelag's country. My husband said we'd never leave it. He was right, in his way."
     }
   ],
   "quests": [
@@ -515,6 +545,917 @@
           }
         }
       }
+    },
+    {
+      "id": "ws_thralls",
+      "title": "Mindless",
+      "level": 10,
+      "giver": "ws_sigvaldi",
+      "offer": "The Blodfelag take thralls from the farms - and something takes their minds. They wander the road east of here, empty, and attack anything that moves.\n\nThey were our neighbours. Will you [give them rest]?",
+      "accept": "give them rest",
+      "topics": {},
+      "summary": "The Blodfelag's mindless thralls wander West Svealand's eastern road, attacking anything that moves.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            1300,
+            700,
+            92.5
+          ],
+          "radius": 50,
+          "goal": "Give the mindless thralls rest about 460 m north of Shield-Captain Sigvaldi",
+          "target": "mindless thrall",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ws_sigvaldi",
+          "goal": "Tell Shield-Captain Sigvaldi",
+          "say": "Rest. That's what we can give them now. I hate it.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Huginfel Shieldwall.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq102_thrall_chain_bracer",
+              "sq102_huginfel_gate_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ws_oathbreakers",
+      "title": "The Oathbreakers",
+      "level": 11,
+      "giver": "ws_sigvaldi",
+      "offer": "The Blodfelag oathbreakers - men who broke their oaths to their jarls and swore new ones in blood - camp west of town and raid the thrall road.\n\nWill you [break their camp]?",
+      "accept": "break their camp",
+      "topics": {},
+      "summary": "Blodfelag oathbreakers camp west of Huginfel and raid the thrall road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            1250,
+            941,
+            114.8
+          ],
+          "radius": 50,
+          "goal": "Break the oathbreakers' camp about 250 m north-west of Shield-Captain Sigvaldi",
+          "target": "blodfelag oathbreaker",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ws_sigvaldi",
+          "goal": "Tell Sigvaldi",
+          "say": "Broken. They'll go west, to their own country. Everything goes west now.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Huginfel Shieldwall.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq102_oath_cut_belt",
+              "sq102_shieldwall_shoulder_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "ws_thralls"
+    },
+    {
+      "id": "ws_henchmen",
+      "title": "The Blood-Oath",
+      "level": 13,
+      "giver": "ws_sigvaldi",
+      "offer": "The henchmen carry the Blodfelag's oaths written out - who swore, and to what. Bring me one. I want to know what my neighbours were sold to.\n\nWill you [take an oath-scroll]?",
+      "accept": "take an oath-scroll",
+      "topics": {},
+      "summary": "Blodfelag henchmen carry written blood-oaths along West Svealand's thrall road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            1350,
+            896,
+            115.6
+          ],
+          "radius": 50,
+          "goal": "Kill the blodfelag henchmen about 230 m north of Shield-Captain Sigvaldi",
+          "target": "blodfelag henchman",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 102,
+          "at": [
+            1235,
+            960,
+            114.5
+          ],
+          "goal": "Search the oathbreakers' camp for an oath-scroll",
+          "clue": {
+            "name": "a scroll in a wolf-skin case",
+            "model": 1882
+          },
+          "text": "The oath, in blood: 'I give my blood to the Wolf's children. When the long winter comes, I will run with them. When the Wolf breaks his chain, I will hold the door open.'",
+          "give": {
+            "name": "a blood-oath scroll"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "ws_sigvaldi",
+          "goal": "Bring the scroll to Sigvaldi",
+          "say": "'When the Wolf breaks his chain.' Fenrir. They're swearing to Fenrir's children - to the end of the world.\n\nHuscarl Grettir at Vindsaul Faste needs to see this. And the gothi.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Huginfel Shieldwall.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq102_blood_oath_scroll_charm",
+              "sq102_henchman_breaker_s_ring"
+            ]
+          }
+        }
+      },
+      "requires": "ws_oathbreakers"
+    },
+    {
+      "id": "ws_wind_sprites",
+      "title": "An Ill Wind",
+      "level": 12,
+      "giver": "gothi_valbrand",
+      "offer": "The wind sprites of the middle wood have always been playful - a hat blown off, a fire blown out. Now they blow cold. Ice on the barley in summer.\n\nWill you [calm them]?",
+      "accept": "calm them",
+      "topics": {},
+      "summary": "The wind sprites of West Svealand's middle wood have begun blowing cold in summer.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            900,
+            700,
+            144.9
+          ],
+          "radius": 50,
+          "goal": "Calm the wind sprites about 710 m south-west of Gothi Valbrand",
+          "target": "wind sprite",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "gothi_valbrand",
+          "goal": "Tell Gothi Valbrand",
+          "say": "Calmer. But they're not making the cold, only carrying it. It comes from the west.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq102_wind_sprite_feather",
+              "sq102_gothi_s_ward_cord"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ws_she_wolves",
+      "title": "The She-Wolves",
+      "level": 14,
+      "giver": "huscarl_grettir",
+      "offer": "Bloodthirsty she-wolves in the middle wood, killing for the pleasure of it. Wolves don't do that. Not ordinary wolves.\n\nWill you [hunt them]?",
+      "accept": "hunt them",
+      "topics": {},
+      "summary": "Bloodthirsty she-wolves kill for pleasure in West Svealand's middle wood.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            950,
+            600,
+            149.8
+          ],
+          "radius": 50,
+          "goal": "Hunt the bloodthirsty she-wolves about 600 m south-west of Huscarl Grettir",
+          "target": "bloodthirsty she-wolf",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "huscarl_grettir",
+          "goal": "Tell Huscarl Grettir",
+          "say": "Not ordinary wolves. The Blodfelag feed them. On what, I don't want to know.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq102_she_wolf_fang_torc",
+              "sq102_woodland_stalker_s_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ws_skogsfru",
+      "title": "The Wood-Wives",
+      "level": 15,
+      "giver": "gothi_valbrand",
+      "offer": "The skogsfru - the wood-wives, lovely from the front and hollow as a dead tree behind - have left their groves and come out onto the roads. They lure travellers in and nobody comes out.\n\nThey're fleeing something too. Will you [drive them back]?",
+      "accept": "drive them back",
+      "topics": {},
+      "summary": "The skogsfru, the hollow-backed wood-wives, have come out of their groves onto West Svealand's roads.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            650,
+            300,
+            144.8
+          ],
+          "radius": 50,
+          "goal": "Drive the skogsfru back into their grove about 620 m south-west of Gothi Valbrand",
+          "target": "skogsfru",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "gothi_valbrand",
+          "goal": "Tell Gothi Valbrand",
+          "say": "One of them spoke as she died. 'The winter comes through the trees.' Even the wood-wives are afraid.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq102_wood_wife_s_leaf_ring",
+              "sq102_skogsfru_bark_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "ws_wind_sprites"
+    },
+    {
+      "id": "ws_frozen_gully",
+      "title": "The Frozen Gully",
+      "level": 15,
+      "giver": "ws_ragnfrid",
+      "offer": "There's a gully in the south-west where my husband watered the sheep. It froze over in midsummer, and it hasn't thawed. He went to look. He didn't come back.\n\nWill you [go and look]? Carefully.",
+      "accept": "go and look",
+      "topics": {},
+      "summary": "A gully in West Svealand's south-west froze over in midsummer and hasn't thawed.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 102,
+          "at": [
+            380,
+            1460,
+            159.0
+          ],
+          "radius": 25,
+          "goal": "Go to the frozen gully in the south-west",
+          "text": "Snow on the ground in summer. Your breath smokes. The light down in the gully moves like something alive.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 102,
+          "at": [
+            360,
+            1480,
+            176.7
+          ],
+          "goal": "Search the gully's edge",
+          "clue": {
+            "name": "a shepherd's crook, frozen into the ice",
+            "model": 1347
+          },
+          "text": "Ragnfrid's husband's crook, and under the clear ice, his face - peaceful, as if asleep. The ice isn't water. It's colder than water can be.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "ws_ragnfrid",
+          "goal": "Tell Ragnfrid",
+          "say": "So that's where he is. Thank you. I'd rather know.\n\nIt's spreading. Every week it's a little further up the hill. Something in there is making winter.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Huginfel Shieldwall.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq102_never_thaw_ice_charm",
+              "sq102_wolf_widow_s_shawl"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ws_cold_lights",
+      "title": "Cold Lights",
+      "level": 17,
+      "giver": "ws_ragnfrid",
+      "offer": "The lights in the gully - cold lights, the old folk called them - lead men down onto the ice. Like they led him.\n\nWill you [put them out]?",
+      "accept": "put them out",
+      "topics": {},
+      "summary": "Cold lights lead men down onto the never-thawing ice of the frozen gully.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            330,
+            1500,
+            193.3
+          ],
+          "radius": 50,
+          "goal": "Put out the cold lights about 820 m south of Ragnfrid Wolf-Widow",
+          "target": "cold light",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ws_ragnfrid",
+          "goal": "Tell Ragnfrid",
+          "say": "Out. For now. There are other things down there - small white things, and a colt made of frost.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Huginfel Shieldwall.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq102_cold_light_lantern_charm",
+              "sq102_frost_ward_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "ws_frozen_gully"
+    },
+    {
+      "id": "ws_snow_imps",
+      "title": "The Things in the Snow",
+      "level": 18,
+      "giver": "ws_ragnfrid",
+      "offer": "Snow imps and frost colts. Things out of the far north - out of Raumarik, where my grandmother said the winter never ends. They're here. In summer.\n\nIt's a job for a few. Will you [clear the gully]?",
+      "accept": "clear the gully",
+      "topics": {},
+      "summary": "Snow imps and frost colts out of the far north have made the frozen gully their den.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            340,
+            1490,
+            188.5
+          ],
+          "radius": 50,
+          "goal": "Clear the snow imps from the gully about 810 m south of Ragnfrid Wolf-Widow",
+          "target": "snow imp",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            320,
+            1520,
+            204.2
+          ],
+          "radius": 50,
+          "goal": "Bring down the frosty colts about 840 m south of Ragnfrid Wolf-Widow",
+          "target": "frosty colt",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "ws_ragnfrid",
+          "goal": "Tell Ragnfrid",
+          "say": "Raumarik things, in my husband's gully. The Blodfelag's windcallers pray to the north every night. I think it listens.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Huginfel Shieldwall.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq102_frost_colt_mane_torc",
+              "sq102_snow_imp_s_cap_charm",
+              "sq102_gully_walker_s_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "ws_cold_lights"
+    },
+    {
+      "id": "ws_warhounds",
+      "title": "The Warhounds",
+      "level": 14,
+      "giver": "ws_ragnfrid",
+      "offer": "The Blodfelag's warhounds come round my farm every night now, testing the fence. One night the fence won't hold.\n\nWill you [kill the hounds]?",
+      "accept": "kill the hounds",
+      "topics": {},
+      "summary": "The Blodfelag's warhounds test the fences of the last farm before their country.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            500,
+            950,
+            147.5
+          ],
+          "radius": 50,
+          "goal": "Kill the blodfelag warhounds about 430 m south-east of Ragnfrid Wolf-Widow",
+          "target": "blodfelag warhound",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ws_ragnfrid",
+          "goal": "Tell Ragnfrid",
+          "say": "Quiet nights, for a while. Thank you.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Huginfel Shieldwall.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq102_warhound_collar_torc",
+              "sq102_wolf_widow_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ws_windcallers",
+      "title": "The Windcallers",
+      "level": 17,
+      "giver": "huscarl_grettir",
+      "offer": "The Blodfelag's windcallers stand on the hills by their hall and sing to the north wind. And it comes. Snow in the barley, ice on the wells.\n\nWill you [silence them]?",
+      "accept": "silence them",
+      "topics": {},
+      "summary": "The Blodfelag's windcallers sing the north wind down onto West Svealand's summer fields.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            440,
+            780,
+            150.7
+          ],
+          "radius": 50,
+          "goal": "Silence the blodfelag windcallers about 1.1 km south-west of Huscarl Grettir",
+          "target": "blodfelag windcaller",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "huscarl_grettir",
+          "goal": "Tell Huscarl Grettir",
+          "say": "Silenced. And the wind dropped as they fell - Valbrand felt it from here.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq102_windcaller_s_bone_whistle",
+              "sq102_snow_ward_belt"
+            ]
+          }
+        }
+      },
+      "requires": "ws_warhounds"
+    },
+    {
+      "id": "ws_wolfwarriors",
+      "title": "Wolf-Warriors",
+      "level": 19,
+      "giver": "huscarl_grettir",
+      "offer": "The wolfwarriors - Blodfelag berserkers who wear the wolf - camp in the north-west, by the haxa's circle. They're the ones who'll lead when the Blodfelag march.\n\nBring friends. Will you [break the wolfwarriors]?",
+      "accept": "break the wolfwarriors",
+      "topics": {},
+      "summary": "Blodfelag wolfwarriors, berserkers who wear the wolf, camp in West Svealand's north-west.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            400,
+            380,
+            149.8
+          ],
+          "radius": 50,
+          "goal": "Break the blodfelag wolfwarriors about 860 m west of Huscarl Grettir",
+          "target": "blodfelag wolfwarrior",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "huscarl_grettir",
+          "goal": "Tell Grettir",
+          "say": "Good. Now the haxa - the blood-witches who read for them. That's where their orders come from.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq102_wolfwarrior_s_pelt_mantle",
+              "sq102_berserk_breaker_s_ring",
+              "sq102_blood_hall_spear_torc"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "ws_windcallers"
+    },
+    {
+      "id": "ws_haxa",
+      "title": "The Haxa",
+      "level": 20,
+      "giver": "gothi_valbrand",
+      "offer": "The haxa - the Blodfelag's blood-witches - keep a circle in the north-west. They read the future in bowls of blood, and the Blodfelag do what they say.\n\nBring friends. Will you [break the circle]? And bring me what they read.",
+      "accept": "break the circle",
+      "topics": {},
+      "summary": "The Blodfelag's haxa read the future in bowls of blood in a circle in West Svealand's north-west.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            320,
+            330,
+            137.6
+          ],
+          "radius": 40,
+          "goal": "Break the blodfelag haxa about 940 m west of Gothi Valbrand",
+          "target": "blodfelag haxa",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 102,
+          "at": [
+            325,
+            340,
+            138.1
+          ],
+          "goal": "Search the haxa's circle",
+          "clue": {
+            "name": "a bowl of blood, frozen solid",
+            "model": 1347
+          },
+          "text": "The blood in the bowl froze in a pattern - a wolf's head, jaws open over a moon. Scratched into the bowl's rim: 'RAUMARIK. THE HOST GATHERS. HATI HUNTS THE MOON.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "gothi_valbrand",
+          "goal": "Tell Gothi Valbrand",
+          "say": "Hati. The wolf that hunts the moon - Fenrir's own son. When he catches it, the long winter begins.\n\nAnd his host gathers in Raumarik. The Blodfelag are only the first of them. Go and see Sigvaldi; the Shieldwall means to take the Blood-Hall.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq102_frozen_blood_bowl_charm",
+              "sq102_haxa_bane_bracer",
+              "sq102_vindsaul_huscarl_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "ws_wolfwarriors"
+    },
+    {
+      "id": "ws_blood_hall",
+      "title": "The Blood-Hall",
+      "level": 20,
+      "giver": "ws_sigvaldi",
+      "offer": "The Blodfelag's Blood-Hall, in the west. Every thrall they've taken went through its doors. The Shieldwall means to take it.\n\nGo and [scout the hall]. Count them. Then come back and tell me we can win.",
+      "accept": "scout the hall",
+      "topics": {},
+      "summary": "The Huginfel Shieldwall means to take the Blodfelag's Blood-Hall in West Svealand's west.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 102,
+          "at": [
+            520,
+            760,
+            154.1
+          ],
+          "radius": 25,
+          "goal": "Climb the ridge above the Blood-Hall",
+          "text": "A long hall roofed with turf, a wolf's skull over the door, and snow on the roof in summer. The windcallers' song comes up from inside.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 102,
+          "at": [
+            500,
+            780,
+            155.6
+          ],
+          "goal": "Look over the Blood-Hall's yard",
+          "clue": {
+            "name": "a post hung with chains",
+            "model": 1347
+          },
+          "text": "Thralls' chains, dozens of them, and fresh blood frozen on the post. Warhounds in the yard, and a warden in black mail at the door.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "ws_sigvaldi",
+          "goal": "Tell Sigvaldi",
+          "say": "Dozens. Then we take it back for every one of them.\n\nThe Shieldwall will march when the farms are behind us - every Blodfelag broken, every thrall freed, tells the men they can win. Be there.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Huginfel Shieldwall.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq102_shieldwall_oath_ring",
+              "sq102_blood_hall_scout_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "ws_henchmen"
+    },
+    {
+      "id": "ws_svartalf_hunters",
+      "title": "The Southern Road",
+      "level": 14,
+      "giver": "eyvind",
+      "offer": "Svartalf hunters on the southern road. They used to trade - furs for iron, honest enough. Now they hunt travellers and say the dragon will pay them in gold.\n\nWill you [clear the road]?",
+      "accept": "clear the road",
+      "topics": {},
+      "summary": "Svartalf hunters on West Svealand's southern road hunt travellers for the dragon's gold.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            900,
+            1450,
+            133.7
+          ],
+          "radius": 50,
+          "goal": "Clear the svartalf hunters about 290 m west of Eyvind Asvorsson",
+          "target": "svartalf hunter",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "eyvind",
+          "goal": "Tell Eyvind",
+          "say": "'The dragon will pay.' Which dragon? Midgard's only got one that wants paying.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Huginfel Shieldwall.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq102_svartalf_hunter_s_ring",
+              "sq102_southern_road_cloak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ws_svartalf_chanters",
+      "title": "The Chanters",
+      "level": 16,
+      "giver": "eyvind",
+      "offer": "The svartalf chanters camp on the southern road and sing the hunters on. Break them, and see what they're carrying.\n\nWill you [break the camp]?",
+      "accept": "break the camp",
+      "topics": {},
+      "summary": "Svartalf chanters camp on West Svealand's southern road and sing their hunters on.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 102,
+          "at": [
+            1015,
+            1390,
+            109.9
+          ],
+          "radius": 50,
+          "goal": "Break the svartalf chanters about 160 m west of Eyvind Asvorsson",
+          "target": "svartalf chanter",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 102,
+          "at": [
+            1020,
+            1395,
+            110.0
+          ],
+          "goal": "Search the chanters' camp",
+          "clue": {
+            "name": "a leather case under a bedroll",
+            "model": 1882
+          },
+          "text": "A drakulv pass, stamped with a dragon's eye, good for 'the svartalf traders of Gotar and all who carry the Mother's word'.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "eyvind",
+          "goal": "Tell Eyvind",
+          "say": "Gotar. The svartalf trading post in Gotar - that's where the dragon's road runs north from.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Huginfel Shieldwall.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq102_chanter_s_scale_pin",
+              "sq102_drakulv_pass_belt"
+            ]
+          }
+        }
+      },
+      "requires": "ws_svartalf_hunters"
     }
   ]
 }

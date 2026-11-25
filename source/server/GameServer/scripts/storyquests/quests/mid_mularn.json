@@ -75,6 +75,66 @@
       "during": [
         "gormr/s5"
       ]
+    },
+    {
+      "id": "md_ragnhild",
+      "zone": 100,
+      "realm": 2,
+      "name": "Huscarl-Captain Ragnhild",
+      "model": 168,
+      "level": 30,
+      "pos": [
+        1236,
+        1308,
+        117.4
+      ],
+      "guild": "King Eirik's Huscarls",
+      "idle": "Mularn sleeps sound because somebody doesn't. Tonight that's me."
+    },
+    {
+      "id": "md_ingrith",
+      "zone": 100,
+      "realm": 2,
+      "name": "Seeress Ingrith",
+      "model": 168,
+      "level": 40,
+      "pos": [
+        1290,
+        742,
+        124.0
+      ],
+      "guild": "the Volur of Haggerfel",
+      "idle": "The well at Haggerfel shows me things. Lately it shows me snow, and a red eye in the dark."
+    },
+    {
+      "id": "md_thorvald",
+      "zone": 100,
+      "realm": 2,
+      "name": "Warden Thorvald",
+      "model": 213,
+      "level": 32,
+      "pos": [
+        1148,
+        186,
+        132.6
+      ],
+      "guild": "King Eirik's Huscarls",
+      "idle": "Fort Veldon watches the north road. Lately the north road watches back."
+    },
+    {
+      "id": "md_eydis",
+      "zone": 100,
+      "realm": 2,
+      "name": "Eydis the Go-Between",
+      "model": 168,
+      "level": 22,
+      "pos": [
+        438,
+        1196,
+        129.8
+      ],
+      "guild": "the Volur of Haggerfel",
+      "idle": "My grandmother married one of the hidden folk. Don't laugh. It's why they talk to me."
     }
   ],
   "quests": [
@@ -458,6 +518,986 @@
           }
         }
       }
+    },
+    {
+      "id": "md_pranksters",
+      "title": "The Pranksters",
+      "level": 1,
+      "giver": "md_ragnhild",
+      "offer": "Hobgoblins. Little grey things with bells on. They've cut the ropes off the well, painted the shrine, and put a goat on the jarl's roof. Twice.\n\nIt's not war. It's worse - it's embarrassing. Will you [chase them off]?",
+      "accept": "chase them off",
+      "topics": {},
+      "summary": "Hobgoblin pranksters are making fools of Mularn.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            1100,
+            1150,
+            117.9
+          ],
+          "radius": 50,
+          "goal": "Chase off the hobgoblin pranksters about 210 m north-west of Huscarl-Captain Ragnhild",
+          "target": "hobgoblin prankster",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "md_ragnhild",
+          "goal": "Tell Huscarl-Captain Ragnhild",
+          "say": "Good. The goat's still on the roof. One thing at a time.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq100_prankster_s_bell_charm",
+              "sq100_mularn_watch_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "md_water_goblins",
+      "title": "The Jarl's Ale",
+      "level": 2,
+      "giver": "md_ragnhild",
+      "offer": "The little water goblins in the meadow ponds have stolen a keg of the jarl's ale. They can't even drink it - it makes them sick. They do it for spite.\n\nWill you [get the keg back]?",
+      "accept": "get the keg back",
+      "topics": {},
+      "summary": "Little water goblins stole a keg of the jarl's ale.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            1010,
+            1100,
+            118.7
+          ],
+          "radius": 50,
+          "goal": "Drive off the little water goblins about 310 m north-west of Huscarl-Captain Ragnhild",
+          "target": "little water goblin",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 100,
+          "at": [
+            985,
+            1120,
+            117.4
+          ],
+          "goal": "Search the water goblins' stash",
+          "clue": {
+            "name": "a muddy keg in the reeds",
+            "model": 1347
+          },
+          "text": "The keg - half empty, and three water goblins asleep in the reeds beside it, looking very sorry for themselves.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "md_ragnhild",
+          "goal": "Bring the keg to Ragnhild",
+          "say": "Half empty. The jarl will notice. I'll tell him you drank it - he'll like you better.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq100_ale_keg_hoop_bracer",
+              "sq100_goblin_net_sash"
+            ]
+          }
+        }
+      },
+      "requires": "md_pranksters"
+    },
+    {
+      "id": "md_spiderlings",
+      "title": "In the Cellars",
+      "level": 3,
+      "giver": "md_ragnhild",
+      "offer": "Vein spiderlings in the meadows south of town, hatching by the hundred. Give it a month and they're in the cellars.\n\nWill you [thin them out]?",
+      "accept": "thin them out",
+      "topics": {},
+      "summary": "Vein spiderlings are hatching in the meadows south of Mularn.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            1150,
+            1050,
+            118.9
+          ],
+          "radius": 50,
+          "goal": "Thin out the vein spiderlings about 270 m north of Huscarl-Captain Ragnhild",
+          "target": "vein spiderling",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "md_ragnhild",
+          "goal": "Tell Ragnhild",
+          "say": "Fewer. That's all you can ask with spiders - fewer.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq100_vein_silk_cuff",
+              "sq100_cellar_lantern_charm"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "md_snake_finders",
+      "title": "The Snake-Finders",
+      "level": 4,
+      "giver": "md_ragnhild",
+      "offer": "The hobgoblin snake-finders bag up mud snakes and let them loose on the Haggerfel road. Carters have stopped coming.\n\nWill you [clear the road]?",
+      "accept": "clear the road",
+      "topics": {},
+      "summary": "Hobgoblin snake-finders loose snakes on the road between Mularn and Haggerfel.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            1160,
+            850,
+            131.9
+          ],
+          "radius": 50,
+          "goal": "Stop the hobgoblin snake-finders about 460 m north of Huscarl-Captain Ragnhild",
+          "target": "hobgoblin snake-finder",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "md_ragnhild",
+          "goal": "Tell Ragnhild",
+          "say": "The carters will be glad. Seeress Ingrith in Haggerfel wants to meet you, by the way - she says she saw you in her well.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq100_snake_finder_s_ring",
+              "sq100_haggerfel_road_cloak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "md_wood_eaters",
+      "title": "The Wood-Eaters",
+      "level": 4,
+      "giver": "md_ragnhild",
+      "offer": "The wood-eaters in the south have eaten the bridge at Jordheim road. The whole bridge. They're eating the fence-posts now.\n\nWill you [push them back]?",
+      "accept": "push them back",
+      "topics": {},
+      "summary": "Wood-eaters from the hive in the south are eating Mularn's fences and bridges.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            920,
+            1250,
+            118.5
+          ],
+          "radius": 50,
+          "goal": "Push back the wood-eaters about 320 m west of Huscarl-Captain Ragnhild",
+          "target": "wood-eater",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "md_ragnhild",
+          "goal": "Tell Ragnhild",
+          "say": "Back to their hive. Which is growing. Which is a problem for later, and later is getting close.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq100_wood_eater_mandible_pin",
+              "sq100_sawdust_satchel_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "md_hive_hunters",
+      "title": "Hive Hunters",
+      "level": 6,
+      "giver": "md_ragnhild",
+      "offer": "The hive sends hunters now, out as far as the meadows. One took a calf yesterday. Wood-eaters don't eat calves. Something's changed down there.\n\nWill you [hunt the hunters]?",
+      "accept": "hunt the hunters",
+      "topics": {},
+      "summary": "Wood-eater hunters range out of the hive and take Mularn's calves.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            900,
+            1160,
+            116.8
+          ],
+          "radius": 50,
+          "goal": "Hunt the wood-eater hunters about 370 m north-west of Huscarl-Captain Ragnhild",
+          "target": "wood-eater hunter",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "md_ragnhild",
+          "goal": "Tell Ragnhild",
+          "say": "A new king in the hive, then. A hungry one. Bring friends when you go for him.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq100_hive_hunter_s_chitin_charm",
+              "sq100_alate_wing_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "md_wood_eaters"
+    },
+    {
+      "id": "md_hive_king",
+      "title": "The Hive King",
+      "level": 8,
+      "giver": "md_ragnhild",
+      "offer": "The new wood-eater king sits in the hive's heart with his royal guard round him. Kill him and the hive goes back to eating trees, not calves.\n\nIt's a job for a few of you. Will you [go into the hive]?",
+      "accept": "go into the hive",
+      "topics": {},
+      "summary": "A hungry new king rules the wood-eater hive south of Mularn.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            780,
+            1220,
+            116.9
+          ],
+          "radius": 60,
+          "goal": "Bring down the wood-eater king about 460 m west of Huscarl-Captain Ragnhild",
+          "target": "wood-eater king",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "md_ragnhild",
+          "goal": "Tell Ragnhild",
+          "say": "The jarl wants to give you something. I talked him down from the goat.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq100_hive_king_s_crown_plate",
+              "sq100_royal_guard_bracer",
+              "sq100_mularn_hearth_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "md_hive_hunters"
+    },
+    {
+      "id": "md_lurkers",
+      "title": "Milk in the Night",
+      "level": 3,
+      "giver": "md_eydis",
+      "offer": "The huldu lurkers have been stealing milk from the farms. That isn't new - you leave out a bowl, and they leave you alone. But they're taking the pails now, and the cows.\n\nSomething is frightening them. Will you [drive them back]? Gently, if you can.",
+      "accept": "drive them back",
+      "topics": {},
+      "summary": "Huldu lurkers have begun stealing pails and cows from the farms by the western woods.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            420,
+            1120,
+            118.1
+          ],
+          "radius": 50,
+          "goal": "Drive back the huldu lurkers about 80 m north of Eydis the Go-Between",
+          "target": "huldu lurker",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "md_eydis",
+          "goal": "Tell Eydis",
+          "say": "They're frightened. The hidden folk don't frighten easily. Something in the west is moving.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Volur of Haggerfel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq100_milk_pail_charm",
+              "sq100_birch_shadow_sash"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "md_outcasts",
+      "title": "The Outcasts",
+      "level": 4,
+      "giver": "md_eydis",
+      "offer": "The huldu outcasts - the ones their own folk turned out - camp near the farms now. They say they're hiding. From what, they won't say.\n\nThe farmers want them gone. Will you [move them on]? They'll go further west, at least.",
+      "accept": "move them on",
+      "topics": {},
+      "summary": "Huldu outcasts, turned out by their own folk, camp near the western farms.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            360,
+            1250,
+            117.2
+          ],
+          "radius": 50,
+          "goal": "Move on the huldu outcasts about 90 m south-west of Eydis the Go-Between",
+          "target": "huldu outcast",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "md_eydis",
+          "goal": "Tell Eydis",
+          "say": "One of them said a word as she went. 'Fimbul.' I hope I heard wrong.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Volur of Haggerfel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq100_outcast_s_tail_ribbon",
+              "sq100_hidden_path_ring"
+            ]
+          }
+        }
+      },
+      "requires": "md_lurkers"
+    },
+    {
+      "id": "md_huldu_ring",
+      "title": "The Ring of White Stones",
+      "level": 7,
+      "giver": "md_ingrith",
+      "offer": "The hidden folk keep a ring of white stones in the western woods. When they want to speak to us, they leave a letter there - birch-bark. My well says there's one waiting.\n\nThe huldu stalkers guard the ring. Will you [fetch the letter]?",
+      "accept": "fetch the letter",
+      "topics": {},
+      "summary": "The hidden folk have left a birch-bark letter at their ring of white stones in the western woods.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 100,
+          "at": [
+            320,
+            940,
+            121.0
+          ],
+          "radius": 20,
+          "goal": "Go to the huldu ring in the western woods",
+          "text": "White stones in a circle, and in the middle a fresh birch with its bark half peeled. The stalkers watch you from the trees.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 100,
+          "at": [
+            270,
+            930,
+            117.0
+          ],
+          "goal": "Search the ring of white stones",
+          "clue": {
+            "name": "birch-bark, rolled and tied with hair",
+            "model": 1347
+          },
+          "text": "The letter is in old runes. Even you can read the last line: 'THE WINTER WALKS. EVEN WE WILL HIDE.'",
+          "give": {
+            "name": "the hidden folk's letter"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "md_ingrith",
+          "goal": "Bring the letter to Seeress Ingrith",
+          "say": "'The winter walks.' Fimbulwinter - the winter that comes before the end. The hidden folk have never written to us about anything bigger than cows.\n\nI need to look in the well. Come back - Warden Thorvald at Fort Veldon has hounds that won't stop howling. Go and see him.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Volur of Haggerfel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq100_white_stone_ring",
+              "sq100_birch_bark_letter_charm",
+              "sq100_seeress_s_shawl"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "md_phantom_hounds",
+      "title": "Darkness Falls",
+      "level": 6,
+      "giver": "md_thorvald",
+      "offer": "Phantom hounds at Darkness Falls, in the west. They always ran there - ghosts of hounds, harmless mostly. Now they hunt. They've killed two shepherds.\n\nWill you [lay them]?",
+      "accept": "lay them",
+      "topics": {},
+      "summary": "The phantom hounds of Darkness Falls have begun to hunt.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            240,
+            650,
+            221.0
+          ],
+          "radius": 50,
+          "goal": "Lay the phantom hounds about 1.0 km south-west of Warden Thorvald",
+          "target": "phantom hound",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "md_thorvald",
+          "goal": "Tell Warden Thorvald",
+          "say": "They were running from something, not hunting. My own hounds do the same at night now - howl at the north-west and won't stop.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq100_phantom_hound_collar",
+              "sq100_falls_mist_cloak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "md_wolfhounds",
+      "title": "Gone Wild",
+      "level": 8,
+      "giver": "md_thorvald",
+      "offer": "Somebody's wolfhounds - big ones, good hunting dogs - have gone wild on the ridge west of Haggerfel. Rabid. They had masters once.\n\nI hate this job. Will you [do it for me]?",
+      "accept": "do it for me",
+      "topics": {},
+      "summary": "Rabid wolfhounds that once had masters run wild on the ridge west of Haggerfel.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            740,
+            600,
+            151.5
+          ],
+          "radius": 50,
+          "goal": "Put down the rabid wolfhounds about 580 m south-west of Warden Thorvald",
+          "target": "rabid wolfhound",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "md_thorvald",
+          "goal": "Tell Thorvald",
+          "say": "Thank you. One of them wore a collar from a farm in West Svealand. They came a long way to go mad here.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq100_wolfhound_tooth_ring",
+              "sq100_kennel_master_s_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "md_phantom_hounds"
+    },
+    {
+      "id": "md_frost_tracks",
+      "title": "The Frost in the Tracks",
+      "level": 10,
+      "giver": "md_thorvald",
+      "offer": "The shepherds by Darkness Falls swear they've seen a wolf as big as a horse, walking at moonrise. I'd laugh, but my hounds aren't laughing.\n\nGo up past the falls and [find its tracks]. Look. Don't fight it alone.",
+      "accept": "find its tracks",
+      "topics": {},
+      "summary": "Shepherds by Darkness Falls swear they've seen a wolf as big as a horse.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 100,
+          "at": [
+            200,
+            560,
+            135.1
+          ],
+          "radius": 20,
+          "goal": "Climb past Darkness Falls",
+          "text": "Wind off the falls, and the smell of snow, in summer.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 100,
+          "at": [
+            185,
+            520,
+            120.2
+          ],
+          "goal": "Look for the great wolf's tracks",
+          "clue": {
+            "name": "a paw-print the size of a shield",
+            "model": 1347
+          },
+          "text": "Each print is rimed with frost. In the sun. They come down out of the north-west, out of the mountains - from where the winter doesn't end.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "md_thorvald",
+          "goal": "Tell Thorvald",
+          "say": "Frost that won't melt. That's Raumarik frost. Gods.\n\nThe Moon-Howler, the shepherds call it. If it comes down to the falls again, the whole vale will need to go out against it.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq100_frost_track_charm",
+              "sq100_veldon_watch_mantle",
+              "sq100_howl_ward_torc"
+            ]
+          }
+        }
+      },
+      "requires": "md_wolfhounds"
+    },
+    {
+      "id": "md_bone_collectors",
+      "title": "The Bone-Collectors",
+      "level": 8,
+      "giver": "md_ingrith",
+      "offer": "The vendo - the wild men of the north caves - have started digging up the old barrows and carrying the bones home. They never did that before.\n\nWill you [stop the digging]?",
+      "accept": "stop the digging",
+      "topics": {},
+      "summary": "The vendo of the northern caves are digging up the old barrows.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            600,
+            420,
+            162.3
+          ],
+          "radius": 50,
+          "goal": "Stop the vendo bone-collectors about 760 m north-west of Seeress Ingrith",
+          "target": "vendo bone-collector",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "md_ingrith",
+          "goal": "Tell Seeress Ingrith",
+          "say": "They were carrying the bones TO someone. The well shows me a man in a red-scaled cloak, at the cave mouth, preaching.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Volur of Haggerfel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq100_bone_collector_s_ring",
+              "sq100_barrow_ward_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "md_vendo_shamans",
+      "title": "The Red Eye",
+      "level": 9,
+      "giver": "md_ingrith",
+      "offer": "The vendo shamans have painted red eyes on their fetishes - a dragon's eye. Their old spirits are being pushed aside.\n\nWill you [break the shamans]? Bring me a fetish if you can.",
+      "accept": "break the shamans",
+      "topics": {},
+      "summary": "The vendo shamans have painted a dragon's red eye on their fetishes.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 100,
+          "at": [
+            700,
+            350,
+            119.6
+          ],
+          "radius": 50,
+          "goal": "Break the vendo shamans about 710 m north-west of Seeress Ingrith",
+          "target": "vendo shaman",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "md_ingrith",
+          "goal": "Tell Ingrith",
+          "say": "A red eye. Somebody is teaching the vendo to worship a dragon. There is only one dragon in Midgard who wants worshippers.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Volur of Haggerfel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq100_vendo_fetish_charm",
+              "sq100_cave_fur_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "md_bone_collectors"
+    },
+    {
+      "id": "md_preacher",
+      "title": "The Dragon-Preacher",
+      "level": 11,
+      "giver": "md_thorvald",
+      "offer": "Ingrith's well was right. There's a preacher at the Vendo Caverns - red-scaled cloak, voice like honey - telling the vendo that the gods are finished and a mother-dragon will make them kings.\n\nHe has vendo round him. Bring friends, and [silence him].",
+      "accept": "silence him",
+      "topics": {},
+      "summary": "A drakulv dragon-preacher at the mouth of the Vendo Caverns tells the vendo the gods are finished.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 100,
+          "at": [
+            690,
+            205,
+            163.2
+          ],
+          "goal": "Search the cave mouth for the preacher's tracts",
+          "clue": {
+            "name": "red vellum nailed to a post",
+            "model": 1347
+          },
+          "text": "'THE AESIR ARE OLD. THE WINTER COMES FOR THEM. ONLY THE MOTHER'S FIRE WILL KEEP YOU WARM.' Below it, a dragon's eye.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 100,
+          "at": [
+            700,
+            175,
+            168.9
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Hrafnkel Dragon-Tongue",
+          "text": "The preacher falls, still smiling. 'She will come for the Vale. She comes for everything.'",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Hrafnkel Dragon-Tongue",
+              "center": [
+                700,
+                175,
+                168.9
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Hrafnkel Dragon-Tongue",
+              "announce": "A man in a cloak of red scales steps out of the cave: 'Come to hear the good news? Midgard is dying. Gjalpinulva will hatch the next one.'",
+              "boss": {
+                "template": 60160115,
+                "name": "Hrafnkel Dragon-Tongue",
+                "level": 13,
+                "health_mult": 2.4
+              },
+              "success": "Hrafnkel Dragon-Tongue falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60167594,
+                    "name": "vendo warrior",
+                    "level": [
+                      9,
+                      10
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "md_thorvald",
+          "goal": "Tell Warden Thorvald",
+          "say": "Gjalpinulva. The dragon of Malmohus. So the south has started talking, while the north starts howling.\n\nHe had a letter on him. Take it to Ingrith.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq100_dragon_tongue_s_tract",
+              "sq100_preacher_breaker_s_ring",
+              "sq100_cavemouth_bracer"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "md_vendo_shamans"
+    },
+    {
+      "id": "md_two_signs",
+      "title": "Two Signs",
+      "level": 11,
+      "giver": "md_ingrith",
+      "offer": "Thorvald sent you with the preacher's letter? Let me read it. ... It names Malmohus, and the svartalf traders of Gotar who carry the dragon's word north. And it laughs at us: 'the wolf-winter will finish the Aesir, and the mother will warm what's left.'\n\nTwo signs, one letter. Will you [read it with me]? Then we'll decide where it goes.",
+      "accept": "read it with me",
+      "topics": {},
+      "summary": "A drakulv preacher's letter names Malmohus, Gotar's svartalf traders and the wolf-winter.",
+      "steps": [
+        {
+          "type": "choice",
+          "npc": "md_ingrith",
+          "goal": "Decide what to do with the letter",
+          "say": "To [Jordheim], and the King's huscarls march sooner. Or to [the well], and the volur learn what the dragon knows of the winter.",
+          "options": [
+            {
+              "keyword": "Jordheim",
+              "say": "Then ride. The King should know what's coming from both ends.",
+              "ending": "king"
+            },
+            {
+              "keyword": "the well",
+              "say": "Then sit with me while I read. It'll be a long night.",
+              "ending": "well"
+            }
+          ],
+          "id": "s1"
+        }
+      ],
+      "endings": {
+        "king": {
+          "text": "From the Volur of Haggerfel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 60,
+            "copper_per_level": 53,
+            "marks": 5,
+            "items": [
+              "sq100_jordheim_courier_s_belt"
+            ],
+            "choice": [
+              "sq100_well_water_charm"
+            ]
+          }
+        },
+        "well": {
+          "text": "From the Volur of Haggerfel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 60,
+            "copper_per_level": 53,
+            "marks": 5,
+            "items": [
+              "sq100_well_water_charm"
+            ],
+            "choice": [
+              "sq100_jordheim_courier_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "md_preacher"
     }
   ]
 }

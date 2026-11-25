@@ -1,0 +1,637 @@
+{
+ "zone": 101,
+ "name": "East Svealand",
+ "rating": "peaceful",
+ "themes": [
+  "Audliten, Vasudheim and Dvalin (quiet)",
+  "The dirges' road and the dwarf barrow (north)",
+  "The wolf moor and Ulfrstead, taken by the Grey Hames (the fort to retake)",
+  "The shallows and the ant fields",
+  "The tomte hills (south)",
+  "Nisse's Lair and the drakeling nest (south: the dragon's first brood)"
+ ],
+ "notes": "Midgard's plan 2026-11-24, round 1: Peaceful; the west thread's wolves grow bold (Ulfrstead, the fort to retake), the south thread's drakelings at Nisse's Lair. Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Envy Drake Dorga": "yellow",
+  "Queen Major": "yellow",
+  "Flayer Fali": "yellow"
+ },
+ "factions": {
+  "ants": {
+   "id": 9611,
+   "aggro": 50
+  },
+  "dead": {
+   "id": 9612,
+   "aggro": 60
+  },
+  "wolves": {
+   "id": 9613,
+   "aggro": 75
+  },
+  "thralls": {
+   "id": 9614,
+   "aggro": 50
+  },
+  "tomte": {
+   "id": 9615,
+   "aggro": 60
+  },
+  "brood": {
+   "id": 9616,
+   "aggro": 80
+  }
+ },
+ "members": {
+  "rock crab": {
+   "from": "rock crab",
+   "tier": "green",
+   "roam": 200
+  },
+  "spindly rock crab": {
+   "from": "spindly rock crab",
+   "tier": "blue",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 200
+  },
+  "soft-shelled crab": {
+   "from": "soft-shelled crab",
+   "tier": "green",
+   "roam": 150
+  },
+  "army ant worker": {
+   "from": "army ant worker",
+   "tier": "green",
+   "faction": "ants",
+   "roam": 200
+  },
+  "army ant soldier": {
+   "from": "army ant soldier",
+   "tier": "blue",
+   "faction": "ants",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 150
+  },
+  "nordic dirge": {
+   "from": "nordic dirge",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "roaming dirge": {
+   "from": "roaming dirge",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 400
+  },
+  "fragile skeleton": {
+   "from": "fragile skeleton",
+   "tier": "green",
+   "faction": "dead",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 150
+  },
+  "wayward ghoul": {
+   "from": "wayward ghoul",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 200
+  },
+  "dwarf bone skeleton": {
+   "from": "dwarf bone skeleton",
+   "tier": "yellow",
+   "faction": "dead",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 80
+  },
+  "rugged dwarven pony": {
+   "from": "rugged dwarven pony",
+   "tier": "green",
+   "roam": 400
+  },
+  "sveawolf mother": {
+   "from": "sveawolf mother",
+   "tier": "blue",
+   "faction": "wolves",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 350
+  },
+  "young sveawolf": {
+   "from": "young sveawolf",
+   "tier": "green",
+   "faction": "wolves",
+   "roam": 300
+  },
+  "lupine snarler": {
+   "from": "lupine snarler",
+   "tier": "blue",
+   "faction": "wolves",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 350
+  },
+  "lupine gnawer": {
+   "from": "lupine gnawer",
+   "tier": "blue",
+   "faction": "wolves",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 300
+  },
+  "wildling": {
+   "from": "wildling",
+   "tier": "yellow",
+   "faction": "wolves",
+   "guild": "the Grey Hames",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "wildling scout": {
+   "from": "wildling scout",
+   "tier": "blue",
+   "faction": "wolves",
+   "guild": "the Grey Hames",
+   "aggro": [
+    60,
+    500
+   ],
+   "roam": 350
+  },
+  "Grey-Hame Warden": {
+   "from": "wildling",
+   "tier": "red",
+   "name": "the Grey-Hame Warden",
+   "size": 1.25,
+   "faction": "wolves",
+   "guild": "Chief of the Grey Hames",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 40,
+   "guards": {
+    "wildling": 2
+   }
+  },
+  "black mauler juvenile": {
+   "from": "black mauler juvenile",
+   "tier": "blue",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "smiera-gatto": {
+   "from": "smiera-gatto",
+   "tier": "green",
+   "roam": 300
+  },
+  "green serpent": {
+   "from": "green serpent",
+   "tier": "green",
+   "roam": 200
+  },
+  "mud snake": {
+   "from": "mud snake",
+   "tier": "green",
+   "roam": 200
+  },
+  "young lynx": {
+   "from": "young lynx",
+   "tier": "blue",
+   "roam": 300
+  },
+  "tawny lynx cub": {
+   "from": "tawny lynx cub",
+   "tier": "green",
+   "roam": 250
+  },
+  "vein spiderling": {
+   "from": "vein spiderling",
+   "tier": "green",
+   "roam": 200
+  },
+  "roaming thrall": {
+   "from": "roaming thrall",
+   "tier": "blue",
+   "faction": "thralls",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 300
+  },
+  "escaped thrall": {
+   "from": "escaped thrall",
+   "tier": "blue",
+   "faction": "thralls",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 300
+  },
+  "tomte pillager": {
+   "from": "tomte pillager",
+   "tier": "blue",
+   "faction": "tomte",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "tomte thug": {
+   "from": "tomte thug",
+   "tier": "blue",
+   "faction": "tomte",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "tomte skirmisher": {
+   "from": "tomte skirmisher",
+   "tier": "green",
+   "faction": "tomte",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 300
+  },
+  "tomte aggressor": {
+   "from": "tomte aggressor",
+   "tier": "yellow",
+   "faction": "tomte",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "envy drakeling": {
+   "from": "envy drakeling",
+   "tier": "blue",
+   "faction": "brood",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 150
+  },
+  "silverscale drakeling": {
+   "from": "silverscale drakeling",
+   "tier": "yellow",
+   "faction": "brood",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 120
+  },
+  "dragon-preacher": {
+   "from": "drakulv missionary",
+   "tier": "yellow",
+   "name": "dragon-preacher",
+   "faction": "brood",
+   "guild": "Gjalpinulva's Missionaries",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 60
+  }
+ },
+ "sites": [
+  {
+   "id": "audliten",
+   "kind": "clear",
+   "at": [
+    5480,
+    22880
+   ],
+   "r": 4800,
+   "names": [
+    "rock crab",
+    "smiera-gatto",
+    "young sveawolf",
+    "wildling",
+    "wildling scout",
+    "lupine snarler",
+    "lupine gnawer",
+    "army ant worker",
+    "green serpent",
+    "mud snake"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "vasudheim",
+   "kind": "clear",
+   "at": [
+    54000,
+    19080
+   ],
+   "r": 5200,
+   "names": [
+    "rock crab",
+    "smiera-gatto",
+    "young sveawolf",
+    "wildling",
+    "wildling scout",
+    "lupine snarler",
+    "lupine gnawer",
+    "army ant worker",
+    "green serpent",
+    "mud snake"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "dvalin",
+   "kind": "clear",
+   "at": [
+    4320,
+    52640
+   ],
+   "r": 4400,
+   "names": [
+    "rock crab",
+    "smiera-gatto",
+    "young sveawolf",
+    "wildling",
+    "wildling scout",
+    "lupine snarler",
+    "lupine gnawer",
+    "army ant worker",
+    "green serpent",
+    "mud snake"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "averrson_farm",
+   "kind": "clear",
+   "at": [
+    12400,
+    48800
+   ],
+   "r": 2400,
+   "names": [
+    "rock crab",
+    "smiera-gatto",
+    "young sveawolf",
+    "wildling",
+    "wildling scout",
+    "lupine snarler",
+    "lupine gnawer",
+    "army ant worker",
+    "green serpent",
+    "mud snake"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "the_shallows",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    28000,
+    50000,
+    54000
+   ],
+   "spawn": {
+    "rock crab": 60,
+    "spindly rock crab": 30,
+    "soft-shelled crab": 20
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ant_fields",
+   "kind": "wildlife",
+   "area": [
+    10000,
+    43200,
+    30000,
+    58000
+   ],
+   "spawn": {
+    "army ant worker": 50
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ant_mound",
+   "kind": "camp",
+   "at": [
+    19200,
+    51600
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "army ant soldier": 4,
+    "army ant worker": 4
+   }
+  },
+  {
+   "id": "dirge_road",
+   "kind": "wildlife",
+   "area": [
+    10000,
+    6000,
+    40000,
+    24000
+   ],
+   "spawn": {
+    "nordic dirge": 50,
+    "roaming dirge": 30,
+    "fragile skeleton": 30,
+    "wayward ghoul": 15,
+    "rugged dwarven pony": 20
+   },
+   "spacing": 260
+  },
+  {
+   "id": "dwarf_barrow",
+   "kind": "camp",
+   "at": [
+    28360,
+    8520
+   ],
+   "r": 360,
+   "respawn": 420,
+   "spawn": {
+    "dwarf bone skeleton": 4
+   }
+  },
+  {
+   "id": "wolf_moor",
+   "kind": "wildlife",
+   "area": [
+    18000,
+    24000,
+    44000,
+    40000
+   ],
+   "spawn": {
+    "sveawolf mother": 40,
+    "young sveawolf": 30,
+    "lupine snarler": 25,
+    "black mauler juvenile": 30,
+    "smiera-gatto": 30
+   },
+   "spacing": 260
+  },
+  {
+   "id": "east_hills",
+   "kind": "wildlife",
+   "area": [
+    38000,
+    6000,
+    62400,
+    38000
+   ],
+   "spawn": {
+    "young lynx": 30,
+    "tawny lynx cub": 30,
+    "green serpent": 40,
+    "mud snake": 20,
+    "vein spiderling": 20,
+    "lupine gnawer": 20,
+    "wildling scout": 15
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ulfrstead",
+   "kind": "camp",
+   "at": [
+    33200,
+    25600
+   ],
+   "r": 640,
+   "respawn": 600,
+   "spawn": {
+    "Grey-Hame Warden": 1,
+    "wildling": 4,
+    "lupine snarler": 4
+   }
+  },
+  {
+   "id": "ulfrstead_yard",
+   "kind": "camp",
+   "at": [
+    34800,
+    28000
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "wildling": 3,
+    "lupine gnawer": 3
+   }
+  },
+  {
+   "id": "thrall_road",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    34000,
+    36000,
+    43200
+   ],
+   "spawn": {
+    "roaming thrall": 30,
+    "escaped thrall": 20
+   },
+   "spacing": 260
+  },
+  {
+   "id": "tomte_hills",
+   "kind": "wildlife",
+   "area": [
+    22000,
+    39200,
+    48000,
+    56000
+   ],
+   "spawn": {
+    "tomte pillager": 50,
+    "tomte thug": 40,
+    "tomte skirmisher": 30,
+    "tomte aggressor": 15
+   },
+   "spacing": 260
+  },
+  {
+   "id": "drakeling_nest",
+   "kind": "camp",
+   "at": [
+    39600,
+    46400
+   ],
+   "r": 400,
+   "respawn": 600,
+   "spawn": {
+    "silverscale drakeling": 3,
+    "envy drakeling": 4,
+    "dragon-preacher": 1
+   }
+  },
+  {
+   "id": "lair_road",
+   "kind": "wildlife",
+   "area": [
+    28000,
+    52000,
+    46000,
+    60000
+   ],
+   "spawn": {
+    "envy drakeling": 20,
+    "spindly rock crab": 20
+   },
+   "spacing": 260
+  }
+ ]
+}

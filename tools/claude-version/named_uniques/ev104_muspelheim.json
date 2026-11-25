@@ -1,0 +1,61 @@
+{
+ "zone": 104,
+ "region": 100,
+ "realm": 2,
+ "prefix": "nu104",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Brood-Sire's Ember Heart",
+   "base": [
+    41,
+    24
+   ],
+   "level": 29,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 25
+   },
+   "lore": "A coal from the wyrm's heart. It never goes out."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wyrm-Wing Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 29,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 29,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Wyrm-hide, thin as cloth, hot to the touch."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Surtling's Iron Crown",
+   "base": [
+    41,
+    29
+   ],
+   "level": 28,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 5,
+    "Hits": 24
+   },
+   "lore": "A fire giant's crown, small enough now to wear at the throat."
+  }
+ ]
+}

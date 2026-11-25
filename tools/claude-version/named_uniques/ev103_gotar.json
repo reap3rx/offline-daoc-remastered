@@ -1,0 +1,62 @@
+{
+ "zone": 103,
+ "region": 100,
+ "realm": 2,
+ "prefix": "nu103",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Naudr's Scale-Mail Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 22,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 22,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Red dragon-scale on svartalf iron. Warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Caravan-Master's Ledger",
+   "base": [
+    41,
+    24
+   ],
+   "level": 22,
+   "bonuses": {
+    "Pie": 7,
+    "Int": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "Every page in gold. The last one names Malmohus."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Steersman's Bell",
+   "base": [
+    41,
+    24
+   ],
+   "level": 19,
+   "bonuses": {
+    "Int": 6,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "The wreck's bell, small enough to hold. It's quiet now."
+  }
+ ]
+}

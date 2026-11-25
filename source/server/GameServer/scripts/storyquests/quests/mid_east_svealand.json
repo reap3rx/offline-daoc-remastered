@@ -76,6 +76,51 @@
         "tomte_due/s6"
       ],
       "size": 25
+    },
+    {
+      "id": "es_hallgerd",
+      "zone": 101,
+      "realm": 2,
+      "name": "Steading-Reeve Hallgerd",
+      "model": 168,
+      "level": 34,
+      "pos": [
+        150,
+        560,
+        113.2
+      ],
+      "guild": "the Steading-League",
+      "idle": "Every farm from here to the Gotar road pays into the League. The League keeps the wolves off. Lately the League is failing."
+    },
+    {
+      "id": "es_brand",
+      "zone": 101,
+      "realm": 2,
+      "name": "Huscarl Brand",
+      "model": 213,
+      "level": 36,
+      "pos": [
+        1338,
+        468,
+        115.0
+      ],
+      "guild": "King Eirik's Huscarls",
+      "idle": "Vasudheim is the King's town. I'd like it to stay that way."
+    },
+    {
+      "id": "es_ketilbjorn",
+      "zone": 101,
+      "realm": 2,
+      "name": "Old Ketilbjorn",
+      "model": 157,
+      "level": 20,
+      "pos": [
+        560,
+        640,
+        114.1
+      ],
+      "guild": "the Steading-League",
+      "idle": "Forty years a shepherd on this moor. Never seen wolves walk with men. Never wanted to."
     }
   ],
   "quests": [
@@ -450,6 +495,854 @@
           }
         }
       }
+    },
+    {
+      "id": "es_crabs",
+      "title": "The Shallows",
+      "level": 6,
+      "giver": "es_hallgerd",
+      "offer": "Rock crabs in the shallows, big as shields. They've taken over the fishing beaches and they pinch the nets to rags.\n\nWill you [clear the shallows]?",
+      "accept": "clear the shallows",
+      "topics": {},
+      "summary": "Rock crabs have taken over Audliten's fishing shallows.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            420,
+            800,
+            113.6
+          ],
+          "radius": 50,
+          "goal": "Clear the rock crabs from the shallows about 360 m south-east of Steading-Reeve Hallgerd",
+          "target": "rock crab",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "es_hallgerd",
+          "goal": "Tell Steading-Reeve Hallgerd",
+          "say": "The fishers thank you. The League thanks you. The crabs, I expect, do not.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Steading-League.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq101_crab_shell_bracer",
+              "sq101_audliten_net_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "es_ants",
+      "title": "The Army Ants",
+      "level": 7,
+      "giver": "es_hallgerd",
+      "offer": "Army ants march out of the south fields by Dvalin and eat a farm bare in a night. The farmers flood the fields to stop them. It doesn't stop them.\n\nWill you [break the march]?",
+      "accept": "break the march",
+      "topics": {},
+      "summary": "Army ants march out of the fields by Dvalin and strip the farms.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            426,
+            1224,
+            114.9
+          ],
+          "radius": 50,
+          "goal": "Break the army ants' march about 710 m south-east of Steading-Reeve Hallgerd",
+          "target": "army ant worker",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "es_hallgerd",
+          "goal": "Tell Hallgerd",
+          "say": "Broken - but there's a mound in the south with soldiers guarding it. Break that and they're done for a year.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Steading-League.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq101_ant_hill_charm",
+              "sq101_furrow_walker_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "es_ant_mound",
+      "title": "The Mound",
+      "level": 9,
+      "giver": "es_hallgerd",
+      "offer": "The ant mound south of Dvalin - a hill of it, crawling. The soldiers guard it. Kill the soldiers and the workers scatter.\n\nWill you [take the mound]?",
+      "accept": "take the mound",
+      "topics": {},
+      "summary": "An army ant mound south of Dvalin is guarded by soldier ants.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            480,
+            1290,
+            117.5
+          ],
+          "radius": 50,
+          "goal": "Kill the army ant soldiers at the mound about 800 m south-east of Steading-Reeve Hallgerd",
+          "target": "army ant soldier",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "es_hallgerd",
+          "goal": "Tell Hallgerd",
+          "say": "Done. The League owes you. And there's harder work coming - talk to Old Ketilbjorn on the moor. He's seen something.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Steading-League.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq101_ant_soldier_mandible_ring",
+              "sq101_dvalin_farmer_s_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "es_ants"
+    },
+    {
+      "id": "es_dirges",
+      "title": "The Dirges",
+      "level": 8,
+      "giver": "es_brand",
+      "offer": "The dirges walk the old roads in the north - ghosts that sing, and anyone who listens too long lies down and doesn't get up. More of them every week.\n\nWill you [quiet them]?",
+      "accept": "quiet them",
+      "topics": {},
+      "summary": "The nordic dirges, singing ghosts, walk East Svealand's old northern roads in growing numbers.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            518,
+            507,
+            113.3
+          ],
+          "radius": 50,
+          "goal": "Quiet the nordic dirges about 840 m west of Huscarl Brand",
+          "target": "nordic dirge",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "es_brand",
+          "goal": "Tell Huscarl Brand",
+          "say": "Quiet. What were they singing? The farmers say it's always the same song now - a winter song.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq101_dirge_bell_charm",
+              "sq101_old_road_walker_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "es_ghouls",
+      "title": "Wayward",
+      "level": 10,
+      "giver": "es_brand",
+      "offer": "Wayward ghouls on the far northern road, digging. Into the old dwarf barrow. Ghouls don't dig - they eat what's left out.\n\nWill you [stop them]?",
+      "accept": "stop them",
+      "topics": {},
+      "summary": "Wayward ghouls are digging at the old dwarf barrow on East Svealand's northern road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            570,
+            180,
+            147.0
+          ],
+          "radius": 50,
+          "goal": "Stop the wayward ghouls about 820 m west of Huscarl Brand",
+          "target": "wayward ghoul",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "es_brand",
+          "goal": "Tell Brand",
+          "say": "They were digging toward the barrow. Something in there is calling them. Or something out here wants in.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq101_ghoul_ward_torc",
+              "sq101_barrow_road_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "es_dirges"
+    },
+    {
+      "id": "es_dwarf_barrow",
+      "title": "The Sealed Barrow",
+      "level": 12,
+      "giver": "es_brand",
+      "offer": "The dwarf barrow on the northern road is open, and the dwarves inside are up and walking. Bone and old iron.\n\nIt's a job for a few. Will you [go into the barrow]? Find out why they sealed it.",
+      "accept": "go into the barrow",
+      "topics": {},
+      "summary": "The old dwarf barrow on East Svealand's northern road is open, and its dead are walking.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            709,
+            213,
+            115.7
+          ],
+          "radius": 40,
+          "goal": "Put down the dwarf bone skeletons about 680 m west of Huscarl Brand",
+          "target": "dwarf bone skeleton",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 101,
+          "at": [
+            715,
+            205,
+            118.4
+          ],
+          "goal": "Search the barrow's runestone",
+          "clue": {
+            "name": "a runestone, cracked across",
+            "model": 1347
+          },
+          "text": "Dwarf runes: 'THE COLD CAME OUT OF THE WEST IN THE YEAR OF THE GREY WOLF. WE SEALED OURSELVES IN. DO NOT OPEN UNTIL SPRING.' Somebody opened it. It is not spring in the west.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "es_brand",
+          "goal": "Tell Brand",
+          "say": "'The year of the grey wolf.' They sealed themselves in against a winter. Last time it came. Gods help us.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq101_dwarf_rune_stone",
+              "sq101_barrow_king_s_ring",
+              "sq101_sealed_door_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "es_ghouls"
+    },
+    {
+      "id": "es_tomte_raiders",
+      "title": "The Tomte Raiders",
+      "level": 9,
+      "giver": "ragna",
+      "offer": "The tomte used to keep a farm - sweep the barn, mind the beasts, for a bowl of porridge. These ones don't. These ones raid. They come down from the south hills in gangs.\n\nWill you [drive them off]?",
+      "accept": "drive them off",
+      "topics": {},
+      "summary": "Gangs of tomte pillagers raid East Svealand's farms from the southern hills.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            800,
+            1150,
+            118.9
+          ],
+          "radius": 50,
+          "goal": "Drive off the tomte pillagers about 800 m south-east of Ragna Farmwife",
+          "target": "tomte pillager",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ragna",
+          "goal": "Tell Ragna Farmwife",
+          "say": "Off - for now. They were frightened, my husband says. Running from something and robbing as they ran.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Steading-League.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq101_pillager_s_sack_belt",
+              "sq101_farmhouse_hearth_charm"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "es_tomte_aggressors",
+      "title": "The Aggressors",
+      "level": 12,
+      "giver": "ragna",
+      "offer": "The worst of the tomte - aggressors, the farmers call them - have made a camp in the eastern hills. They're the ones who lead the raids.\n\nWill you [break them]?",
+      "accept": "break them",
+      "topics": {},
+      "summary": "Tomte aggressors lead the raids on East Svealand's farms from a camp in the eastern hills.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            1050,
+            1000,
+            117.4
+          ],
+          "radius": 50,
+          "goal": "Break the tomte aggressors about 910 m south-east of Ragna Farmwife",
+          "target": "tomte aggressor",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ragna",
+          "goal": "Tell Ragna",
+          "say": "One of them was carrying a silver scale. Not a fish's. Something bigger, from the south, by Nisse's Lair.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Steading-League.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq101_aggressor_s_iron_cap",
+              "sq101_barn_watch_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "es_tomte_raiders"
+    },
+    {
+      "id": "es_sveawolves",
+      "title": "Bold Wolves",
+      "level": 9,
+      "giver": "es_ketilbjorn",
+      "offer": "The sveawolf mothers bring their packs right up to the folds now. In daylight. A wolf doesn't come near men in daylight unless it isn't afraid of them any more.\n\nWill you [teach them fear]?",
+      "accept": "teach them fear",
+      "topics": {},
+      "summary": "Sveawolf packs come up to East Svealand's sheepfolds in daylight.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            600,
+            800,
+            113.9
+          ],
+          "radius": 50,
+          "goal": "Teach the sveawolf mothers fear about 160 m south of Old Ketilbjorn",
+          "target": "sveawolf mother",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "es_ketilbjorn",
+          "goal": "Tell Old Ketilbjorn",
+          "say": "They'll learn. Or they won't. Either way, I've stopped sleeping.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Steading-League.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq101_sveawolf_fur_collar",
+              "sq101_shepherd_s_crook_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "es_lupines",
+      "title": "The Lupines",
+      "level": 11,
+      "giver": "es_ketilbjorn",
+      "offer": "Lupines - the big ones, half wolf, half something worse - came over the eastern hills a month ago. They walk on two legs when they think no one's watching.\n\nWill you [hunt them]?",
+      "accept": "hunt them",
+      "topics": {},
+      "summary": "Lupines, half wolf and half something worse, came over East Svealand's eastern hills.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            979,
+            630,
+            111.5
+          ],
+          "radius": 50,
+          "goal": "Hunt the lupine snarlers about 440 m east of Old Ketilbjorn",
+          "target": "lupine snarler",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "es_ketilbjorn",
+          "goal": "Tell Ketilbjorn",
+          "say": "Two legs. I told you. And there are men out there with them - men in wolf-skins, with the heads still on.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Steading-League.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq101_lupine_fang_torc",
+              "sq101_moor_runner_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "es_sveawolves"
+    },
+    {
+      "id": "es_grey_hames",
+      "title": "Men in Wolf-Skins",
+      "level": 12,
+      "giver": "es_hallgerd",
+      "offer": "Ketilbjorn's men in wolf-skins - the Grey Hames, they call themselves. Wildlings. They swear blood-oaths to the Fenris-wolf's children and run with the packs. Their scouts watch every road.\n\nWill you [blind their scouts]?",
+      "accept": "blind their scouts",
+      "topics": {},
+      "summary": "The Grey Hames, wildlings in wolf-hames sworn to Fenrir's children, watch East Svealand's roads.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            1150,
+            500,
+            87.5
+          ],
+          "radius": 50,
+          "goal": "Kill the Grey Hame scouts about 1.0 km east of Steading-Reeve Hallgerd",
+          "target": "wildling scout",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "es_hallgerd",
+          "goal": "Tell Hallgerd",
+          "say": "Blind - for now. And they've taken a steading. Ulfrstead, by the tomte hills. The family got out. Most of them.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Steading-League.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq101_grey_hame_scrap_charm",
+              "sq101_scout_hunter_s_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "es_lupines"
+    },
+    {
+      "id": "es_ulfrstead",
+      "title": "Ulfrstead",
+      "level": 14,
+      "giver": "es_hallgerd",
+      "offer": "Go to Ulfrstead. Not to fight - to look. Count them. See what they've done to the place. The League won't send its men in blind.\n\nWill you [scout Ulfrstead]?",
+      "accept": "scout Ulfrstead",
+      "topics": {},
+      "summary": "The Grey Hames and their wolves have taken Ulfrstead, a steading by the tomte hills.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 101,
+          "at": [
+            760,
+            580,
+            115.8
+          ],
+          "radius": 25,
+          "goal": "Climb the ridge above Ulfrstead",
+          "text": "Smoke from the hall, wolves in the yard, and men in wolf-hames on the walls. Too many to count.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 101,
+          "at": [
+            790,
+            610,
+            116.7
+          ],
+          "goal": "Search below Ulfrstead's walls",
+          "clue": {
+            "name": "a wolf-hame nailed over the gate",
+            "model": 1347
+          },
+          "text": "A wolf's whole skin nailed up like a banner, and burnt into the gate-post: 'FENRIR'S CHILDREN WALK. THE WINTER WALKS WITH THEM.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "es_hallgerd",
+          "goal": "Tell Hallgerd",
+          "say": "'The winter walks with them.' Then the League takes Ulfrstead back before winter does.\n\nWe need the farms behind us. Every wolf killed, every raid stopped - it all tells the League's men they can win. When they're ready, they'll march. Be there.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Steading-League.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq101_ulfrstead_door_nail_ring",
+              "sq101_hame_breaker_s_mantle",
+              "sq101_league_oath_torc"
+            ]
+          }
+        }
+      },
+      "requires": "es_grey_hames"
+    },
+    {
+      "id": "es_drakelings",
+      "title": "Drakelings",
+      "level": 12,
+      "giver": "es_brand",
+      "offer": "Drakelings at the mouth of Nisse's Lair, in the south. There were always a few. Now there are dozens, and they're not wild - they come when somebody whistles.\n\nWill you [thin them]?",
+      "accept": "thin them",
+      "topics": {},
+      "summary": "Drakelings swarm at the mouth of Nisse's Lair in East Svealand's south - and come when someone whistles.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            760,
+            1080,
+            119.9
+          ],
+          "radius": 50,
+          "goal": "Thin out the envy drakelings about 840 m south-west of Huscarl Brand",
+          "target": "envy drakeling",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "es_brand",
+          "goal": "Tell Huscarl Brand",
+          "say": "Somebody whistles for them. Somebody is feeding them. Find out who.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq101_envy_drake_scale_charm",
+              "sq101_lair_road_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "es_silverscales",
+      "title": "The Silverscales",
+      "level": 14,
+      "giver": "es_brand",
+      "offer": "The silverscale drakelings - the big ones - guard a nest by Nisse's Lair. The tomte had a scale from it. So the nest is real.\n\nWill you [find the nest]?",
+      "accept": "find the nest",
+      "topics": {},
+      "summary": "Silverscale drakelings guard a nest by Nisse's Lair.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 101,
+          "at": [
+            990,
+            1160,
+            116.8
+          ],
+          "radius": 50,
+          "goal": "Kill the silverscale drakelings about 770 m south-west of Huscarl Brand",
+          "target": "silverscale drakeling",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 101,
+          "at": [
+            1000,
+            1170,
+            116.8
+          ],
+          "goal": "Search the drakeling nest",
+          "clue": {
+            "name": "a nest of warm stones and a feeding-trough",
+            "model": 1347
+          },
+          "text": "A trough - a man-made trough - full of meat, and a cloak-pin shaped like a dragon's eye. Somebody keeps this nest.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "es_brand",
+          "goal": "Tell Brand",
+          "say": "A dragon's eye. Thorvald up at Fort Veldon sent word of a preacher with the same mark, in the Vendo Caverns. They're spreading.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq101_silverscale_bracer",
+              "sq101_brood_watcher_s_ring"
+            ]
+          }
+        }
+      },
+      "requires": "es_drakelings"
+    },
+    {
+      "id": "es_wyrm_tongue",
+      "title": "The Brood-Keeper",
+      "level": 16,
+      "giver": "es_brand",
+      "offer": "The nest's keeper comes at dusk to feed them - a drakulv missionary, the farmers say, in a red-scaled cloak, on his way north from Gotar. He'll have his brood round him.\n\nBring friends. Will you [wait for him at dusk]?",
+      "accept": "wait for him at dusk",
+      "topics": {},
+      "summary": "A drakulv missionary keeps the drakeling nest by Nisse's Lair on his way north from Gotar.",
+      "steps": [
+        {
+          "type": "encounter",
+          "zone": 101,
+          "at": [
+            990,
+            1160,
+            116.8
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Ottar Wyrm-Tongue at the nest",
+          "text": "The missionary falls into his own trough. His whistle rolls out of his hand.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Ottar Wyrm-Tongue",
+              "center": [
+                990,
+                1160,
+                116.8
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Ottar Wyrm-Tongue",
+              "announce": "A man in a red-scaled cloak whistles, and the drakelings come running: 'Little ones. Supper's here.'",
+              "boss": {
+                "template": 60160115,
+                "name": "Ottar Wyrm-Tongue",
+                "level": 17,
+                "health_mult": 2.4
+              },
+              "success": "Ottar Wyrm-Tongue falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 60160533,
+                    "name": "envy drakeling",
+                    "level": [
+                      13,
+                      14
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "es_brand",
+          "goal": "Tell Huscarl Brand",
+          "say": "He had a pass on him - svartalf work, from the trading-post in Gotar. The svartalf carry them north and the drakulv ride along.\n\nGotar, then. That's where this road starts.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq101_wyrm_tongue_s_whistle",
+              "sq101_vasudheim_huscarl_mantle",
+              "sq101_brood_breaker_s_torc"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "es_silverscales"
     }
   ]
 }

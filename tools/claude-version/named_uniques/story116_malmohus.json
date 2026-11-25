@@ -160,6 +160,407 @@
     "Hits": 30
    },
    "lore": "A svartalf bloodbinder's torc. Something written inside it keeps trying to be read."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Road-Breaker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 17,
+    "Con": 17,
+    "Dex": 8,
+    "Hits": 42
+   },
+   "lore": "Iron, the volur's knot on it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Missionary-Robe Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 17,
+    "Int": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "Red cloth, the dragon's eye cut out of it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Patrol-Breaker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 52,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Scale-plated, taken off a drakulv."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Convert's Return Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 17,
+    "Con": 9,
+    "Power": 7,
+    "Hits": 31
+   },
+   "lore": "A little wooden hammer. Bjorn carved it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Infiltrator's Shadow Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Dex": 17,
+    "Qui": 17,
+    "Str": 9,
+    "Hits": 44
+   },
+   "lore": "Black glass. You can't see your hand through it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Foist-Watcher's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 52,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Grey, for lying still."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bloodbinder's Rune-Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 18,
+    "Int": 9,
+    "Dex": 9,
+    "Power": 8,
+    "Hits": 33
+   },
+   "lore": "Dragon-runes on dark iron - broken."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blood-Ward Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 18,
+    "Con": 9,
+    "Power": 8,
+    "Hits": 33
+   },
+   "lore": "The volur's knot over the svartalf's runes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Scale-Price Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 18,
+    "Con": 18,
+    "Dex": 9,
+    "Hits": 47
+   },
+   "lore": "Paid for in scale. Yours now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Varg-Scale Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 18,
+    "Hits": 54,
+    "Body": 7,
+    "Crush": 7,
+    "Slash": 7
+   },
+   "lore": "Scaled varg hide, very tough."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Snarler-Fang Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 18,
+    "Con": 18,
+    "Dex": 9,
+    "Hits": 46
+   },
+   "lore": "A varg's fang, set in bronze."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Armguard's Scale Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 18,
+    "Hits": 55,
+    "Body": 7,
+    "Crush": 7,
+    "Slash": 7
+   },
+   "lore": "A drakulv armguard's bracer, the scale still warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Line-Breaker's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 18,
+    "Con": 18,
+    "Dex": 9,
+    "Hits": 47
+   },
+   "lore": "Iron, hammered flat with an axe-head."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sacrificer's Rite-Knife Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 19,
+    "Int": 9,
+    "Dex": 9,
+    "Power": 8,
+    "Hits": 34
+   },
+   "lore": "A knife of red scale, the edge dulled now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Oath-Keeper's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 19,
+    "Con": 9,
+    "Power": 8,
+    "Hits": 34
+   },
+   "lore": "Volur grey, the Oath's knot on the back."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rite-Breaker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 19,
+    "Con": 19,
+    "Dex": 9,
+    "Hits": 48
+   },
+   "lore": "Silver, cut with the volur's runes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Protector's Scale Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 19,
+    "Hits": 57,
+    "Body": 7,
+    "Crush": 7,
+    "Slash": 7
+   },
+   "lore": "Red scale in black iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Temple-Step Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 19,
+    "Con": 19,
+    "Dex": 10,
+    "Hits": 48
+   },
+   "lore": "Scorched leather, scale-studded."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Soultrapper's Gem Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 19,
+    "Int": 10,
+    "Dex": 10,
+    "Power": 8,
+    "Hits": 35
+   },
+   "lore": "A gem with something moving in it. Don't look too long."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Disciple-Breaker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 19,
+    "Con": 10,
+    "Power": 8,
+    "Hits": 35
+   },
+   "lore": "Volur silver over drakulv scale."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Volva's Ward-Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 19,
+    "Hits": 58,
+    "Body": 7,
+    "Crush": 7,
+    "Slash": 7
+   },
+   "lore": "Grey wool, nine knots on the hem."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dragon-Oath Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 20,
+    "Con": 10,
+    "Power": 8,
+    "Hits": 35
+   },
+   "lore": "The Oath, in silver. You swore it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lair-Road Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 20,
+    "Con": 20,
+    "Dex": 10,
+    "Hits": 50
+   },
+   "lore": "Huscarl leather, scorched."
   }
  ]
 }

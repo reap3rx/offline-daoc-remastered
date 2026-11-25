@@ -78,6 +78,36 @@
       "during": [
         "ragnvald/s6"
       ]
+    },
+    {
+      "id": "mu_hallkel",
+      "zone": 104,
+      "realm": 2,
+      "name": "Huscarl Hallkel",
+      "model": 213,
+      "level": 36,
+      "pos": [
+        1275,
+        145,
+        147.6
+      ],
+      "guild": "King Eirik's Huscarls",
+      "idle": "Muspelheim. The King sends us here when he's cross with us. Lately he sends us here because of the smoke."
+    },
+    {
+      "id": "mu_thrain",
+      "zone": 104,
+      "realm": 2,
+      "name": "Forge-Master Thrain",
+      "model": 157,
+      "level": 40,
+      "pos": [
+        578,
+        1322,
+        65.4
+      ],
+      "guild": "the Forge of Khizil",
+      "idle": "Every fire in Muspelheim is a dverge's business. Lately someone's selling ours."
     }
   ],
   "quests": [
@@ -523,6 +553,737 @@
         }
       },
       "group": true
+    },
+    {
+      "id": "mu_hounds",
+      "title": "The Noxious Hounds",
+      "level": 19,
+      "giver": "mu_hallkel",
+      "offer": "The noxious hounds come up to the camp every night - sulphur on their breath, and they don't mind fire. Not at all.\n\nWill you [drive them off]?",
+      "accept": "drive them off",
+      "topics": {},
+      "summary": "Noxious hounds come up to Brika's camp every night in Muspelheim.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            1150,
+            450,
+            169.6
+          ],
+          "radius": 50,
+          "goal": "Drive off the noxious hounds about 330 m south of Huscarl Hallkel",
+          "target": "noxious hound",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mu_hallkel",
+          "goal": "Tell Huscarl Hallkel",
+          "say": "Quieter. Thank you. Now you've seen the place, you'll want to know why we're here.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq104_ember_ward_ring",
+              "sq104_hound_hide_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "mu_vents",
+      "title": "Smoke Over the Vale",
+      "level": 21,
+      "giver": "mu_hallkel",
+      "offer": "The smoke over Muspelheim has turned black, and it drifts down over the Vale. The vapor wraiths at the vents east of here are stirring the fires - and the firecats run before them.\n\nWill you [clear the vents]?",
+      "accept": "clear the vents",
+      "topics": {},
+      "summary": "Vapor wraiths stir Muspelheim's fires at the vents; black smoke drifts down over the Vale.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            1380,
+            450,
+            115.1
+          ],
+          "radius": 50,
+          "goal": "Clear the vapor wraiths at the vents about 320 m south of Huscarl Hallkel",
+          "target": "vapor wraith",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            1350,
+            480,
+            76.6
+          ],
+          "radius": 50,
+          "goal": "Kill the firecats",
+          "target": "firecat",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mu_hallkel",
+          "goal": "Tell Hallkel",
+          "say": "The vents settle. But the black smoke isn't from them - it's from the hills to the west. Something's burning there that never burned before.\n\nForge-Master Thrain at the dverge hold in the south will know. Dverge know every fire.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq104_vent_steam_charm",
+              "sq104_firecat_fang_torc"
+            ]
+          }
+        }
+      },
+      "requires": "mu_hounds"
+    },
+    {
+      "id": "mu_ashmongers",
+      "title": "The Ash Road",
+      "level": 20,
+      "giver": "mu_thrain",
+      "offer": "The ash road from our hold runs north through the ashmongers' country. They never troubled the caravans before. Now they attack everything.\n\nWill you [clear the road]?",
+      "accept": "clear the road",
+      "topics": {},
+      "summary": "Ashmongers attack every caravan on Muspelheim's ash road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            620,
+            1060,
+            143.8
+          ],
+          "radius": 50,
+          "goal": "Clear the ashmongers from the ash road about 270 m north of Forge-Master Thrain",
+          "target": "ashmonger",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mu_thrain",
+          "goal": "Tell Forge-Master Thrain",
+          "say": "Good. The ash-folk are restless because the fires moved. Fires don't move. Someone moved them.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Forge of Khizil.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq104_ash_road_cloak",
+              "sq104_ashmonger_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "mu_soot",
+      "title": "The Soot-Folk",
+      "level": 21,
+      "giver": "mu_thrain",
+      "offer": "The soot harvesters and flame throwers in the western ash fields used to trade soot to us for iron. Now they throw fire at our carts.\n\nWill you [quiet the ash fields]?",
+      "accept": "quiet the ash fields",
+      "topics": {},
+      "summary": "The soot harvesters and flame throwers of Muspelheim's ash fields throw fire at the dverge carts.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            260,
+            1000,
+            126.2
+          ],
+          "radius": 50,
+          "goal": "Quiet the soot harvesters about 450 m north-west of Forge-Master Thrain",
+          "target": "soot harvester",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            250,
+            1100,
+            182.4
+          ],
+          "radius": 50,
+          "goal": "Quiet the flame throwers",
+          "target": "flame thrower",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mu_thrain",
+          "goal": "Tell Thrain",
+          "say": "Quiet. One of them had a pouch of fire-salt on it - our fire-salt, from our forge. Somebody's selling it.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Forge of Khizil.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq104_soot_black_bracer",
+              "sq104_flame_thrower_s_charm"
+            ]
+          }
+        }
+      },
+      "requires": "mu_ashmongers"
+    },
+    {
+      "id": "mu_ants",
+      "title": "The Sulphur Pits",
+      "level": 22,
+      "giver": "mu_thrain",
+      "offer": "We take sulphur from the pits in the west. The fire ants have dug into them, and they bite through iron boots.\n\nWill you [clear the pits]?",
+      "accept": "clear the pits",
+      "topics": {},
+      "summary": "Fire ants have dug into the dverge sulphur pits in Muspelheim's west.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            320,
+            680,
+            131.6
+          ],
+          "radius": 50,
+          "goal": "Clear the fire ant workers about 690 m north of Forge-Master Thrain",
+          "target": "fire ant worker",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            320,
+            660,
+            136.7
+          ],
+          "radius": 50,
+          "goal": "Kill the fire ant gatherers",
+          "target": "fire ant gatherer",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mu_thrain",
+          "goal": "Tell Thrain",
+          "say": "The pits are ours again. Good. We'll need the sulphur - there's trouble coming.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Forge of Khizil.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq104_sulphur_crust_ring",
+              "sq104_ant_queen_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "mu_sparkers",
+      "title": "The Fire-Sellers",
+      "level": 23,
+      "giver": "mu_thrain",
+      "offer": "Some of our own - dverge who left the forge - camp south of the hold and call themselves the fire-sellers. They sell our fire-salt. To whom, I want to know.\n\nWill you [break their camp]?",
+      "accept": "break their camp",
+      "topics": {},
+      "summary": "Renegade dverge, the fire-sellers, camp south of Khizil's hold and sell the forge's fire-salt.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            560,
+            1500,
+            104.9
+          ],
+          "radius": 50,
+          "goal": "Break the dverge sparkers about 180 m south of Forge-Master Thrain",
+          "target": "dverge sparker",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 104,
+          "at": [
+            570,
+            1510,
+            146.5
+          ],
+          "goal": "Search the fire-sellers' camp",
+          "clue": {
+            "name": "a strongbox under a tarp",
+            "model": 1347
+          },
+          "text": "Gold, a great deal of it, and a tally: 'Fire-salt, forty sacks, to the brood-priests in the wyrm hills. To keep the Mother's eggs warm.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mu_thrain",
+          "goal": "Bring the tally to Thrain",
+          "say": "'The Mother's eggs.' Gjalpinulva. The dragon under Malmohus. They're selling our fire to keep a dragon's brood warm.\n\nI need the ones who sold it.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Forge of Khizil.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq104_fire_salt_pouch_charm",
+              "sq104_turncoat_s_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "mu_ants"
+    },
+    {
+      "id": "mu_igniters",
+      "title": "The Ringleaders",
+      "level": 25,
+      "giver": "mu_thrain",
+      "offer": "The igniters and cracklers - they're the ringleaders. Bring friends; they throw fire like rain.\n\nWill you [bring them to account]?",
+      "accept": "bring them to account",
+      "topics": {},
+      "summary": "Renegade dverge igniters and cracklers lead the fire-sellers south of Khizil's hold.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            570,
+            1540,
+            185.5
+          ],
+          "radius": 60,
+          "goal": "Bring down the dverge igniters about 220 m south of Forge-Master Thrain",
+          "target": "dverge igniter",
+          "count": 2,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            570,
+            1540,
+            185.5
+          ],
+          "radius": 60,
+          "goal": "Bring down the dverge cracklers",
+          "target": "dverge crackler",
+          "count": 2,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mu_thrain",
+          "goal": "Tell Thrain",
+          "say": "Done. The forge won't sell another grain. But they've sold forty sacks already - the hatchery in the wyrm hills is warm enough. Hallkel's huscarls need to see it.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Forge of Khizil.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq104_igniter_s_torch_ring",
+              "sq104_khizil_forge_mantle",
+              "sq104_crackler_s_blast_belt"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "mu_sparkers"
+    },
+    {
+      "id": "mu_sentries",
+      "title": "The Burnt Sentries",
+      "level": 22,
+      "giver": "ragnvald",
+      "offer": "The middle of Muspelheim was a battlefield once - the dead still stand their watch there, burnt black. They've begun marching.\n\nWill you [put them down]?",
+      "accept": "put them down",
+      "topics": {},
+      "summary": "The burnt dead of Muspelheim's old battlefield have begun marching.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            700,
+            700,
+            74.5
+          ],
+          "radius": 50,
+          "goal": "Put down the burnt skeletal sentries about 710 m north-west of Ragnvald the Skald",
+          "target": "burnt skeletal sentry",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ragnvald",
+          "goal": "Tell Ragnvald the Skald",
+          "say": "Marching. The dead of an old war don't march without a reason.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq104_bone_ash_ring",
+              "sq104_burnt_sentry_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "mu_old_war",
+      "title": "The Old War",
+      "level": 25,
+      "giver": "ragnvald",
+      "offer": "I'm a skald. I want the song of the old war - who these dead were, and who burned them. The charred warriors hold the middle of the field.\n\nWill you [find out]?",
+      "accept": "find out",
+      "topics": {},
+      "summary": "Charred warriors hold the middle of Muspelheim's old battlefield; nobody remembers the war.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            800,
+            650,
+            125.4
+          ],
+          "radius": 50,
+          "goal": "Fight through the charred skeletal warriors about 680 m north-west of Ragnvald the Skald",
+          "target": "charred skeletal warrior",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 104,
+          "at": [
+            810,
+            660,
+            128.4
+          ],
+          "goal": "Search the old battlefield",
+          "clue": {
+            "name": "a cairn of burnt shields",
+            "model": 1347
+          },
+          "text": "The shields all bear the same mark: a dragon, struck through with a spear. A rune-stone in the cairn: 'Here the hosts of Midgard held the Wyrm-Mother's brood. Here they burned. Here she slept.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "ragnvald",
+          "goal": "Tell Ragnvald",
+          "say": "The Wyrm-Mother. Gjalpinulva. They fought her brood here, long ago, and she went to sleep under Malmohus after. The dead march because the brood is back.\n\nThat's the song. I'd rather it ended differently this time.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq104_old_war_banner_charm",
+              "sq104_charred_warrior_s_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "mu_sentries"
+    },
+    {
+      "id": "mu_wyrms",
+      "title": "The Wyrm Hills",
+      "level": 25,
+      "giver": "mu_hallkel",
+      "offer": "The young fire wyrms in the northern hills have never been so many. They're being bred. We need to get close to the hatchery - and the wyrms are in the way.\n\nWill you [thin them out]?",
+      "accept": "thin them out",
+      "topics": {},
+      "summary": "Young fire wyrms swarm Muspelheim's northern hills, bred at a hatchery.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            550,
+            280,
+            114.0
+          ],
+          "radius": 50,
+          "goal": "Thin out the young fire wyrms about 740 m west of Huscarl Hallkel",
+          "target": "young fire wyrm",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mu_hallkel",
+          "goal": "Tell Hallkel",
+          "say": "Thinner. And they're all young - a single brood. Somebody's keeping a dragon's nursery up there.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq104_wyrm_scale_bracer",
+              "sq104_hill_fire_ring"
+            ]
+          }
+        }
+      },
+      "requires": "mu_vents"
+    },
+    {
+      "id": "mu_cinder_drakes",
+      "title": "The Cinder Drakes",
+      "level": 27,
+      "giver": "mu_hallkel",
+      "offer": "The cinder drakes guard the hatchery's eastern flank - grown wyrms, the brood's elders. Bring friends.\n\nWill you [break the nest]?",
+      "accept": "break the nest",
+      "topics": {},
+      "summary": "Cinder drakes guard the eastern flank of the dragon's hatchery in Muspelheim's wyrm hills.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            948,
+            336,
+            130.5
+          ],
+          "radius": 50,
+          "goal": "Break the cinder drakes' nest about 380 m south-west of Huscarl Hallkel",
+          "target": "cinder drake",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mu_hallkel",
+          "goal": "Tell Hallkel",
+          "say": "The flank's open. Now the hatchery itself.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq104_cinder_drake_fang_torc",
+              "sq104_brood_breaker_s_belt"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "mu_wyrms"
+    },
+    {
+      "id": "mu_hatchery",
+      "title": "The Hatchery",
+      "level": 28,
+      "giver": "mu_hallkel",
+      "offer": "The hatchery. The brood-priests keep it, with their brood-keepers. Kill the keepers, get into the warming-pits, and see what they're hatching.\n\nBring friends. Will you [raid the hatchery]?",
+      "accept": "raid the hatchery",
+      "topics": {},
+      "summary": "Gjalpinulva's drakulv keep a hatchery in Muspelheim's wyrm hills, warming the dragon's brood.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            760,
+            300,
+            226.7
+          ],
+          "radius": 50,
+          "goal": "Kill the drakulv brood-keepers about 540 m west of Huscarl Hallkel",
+          "target": "drakulv brood-keeper",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 104,
+          "at": [
+            760,
+            300,
+            226.7
+          ],
+          "radius": 50,
+          "goal": "Kill the drakulv brood-priests",
+          "target": "drakulv brood-priest",
+          "count": 2,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 104,
+          "at": [
+            765,
+            305,
+            229.2
+          ],
+          "goal": "Search the warming-pits",
+          "clue": {
+            "name": "eggs as big as shields, in the lava",
+            "model": 1347
+          },
+          "text": "A dozen eggs in the lava, and the brood-priests' rite on a slab: 'When the Hierophant speaks the Mother's whole name in Malmohus, the brood wakes with her. Keep them warm till then.'",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "mu_hallkel",
+          "goal": "Tell Hallkel",
+          "say": "The whole name. Galplen's volva has the other half - so the priests in Myrkwood said. If the Hierophant gets it, the Mother wakes, and this brood with her.\n\nThe Hatch-Mother still keeps the pits. And the Brood-Sire ranges the hills - you'll see it when it comes. Midgard will need everyone, when it comes.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq104_brood_egg_shard_charm",
+              "sq104_hatchery_breaker_s_mantle",
+              "sq104_brood_priest_s_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "mu_cinder_drakes"
     }
   ]
 }

@@ -1,0 +1,139 @@
+{
+ "zone": 107,
+ "region": 100,
+ "realm": 2,
+ "prefix": "uf107",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hrafnsholm Raven Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 45,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 45,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "The Wardens' raven, the right way up. Given to those who took Hrafnsholm back."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rune-Chain Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 45,
+   "bonuses": {
+    "Pie": 15,
+    "Int": 8,
+    "Dex": 8,
+    "Power": 6,
+    "Hits": 27
+   },
+   "lore": "A link of the jotun's chain, the runes ground off."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Watch-Hold Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 45,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 38
+   },
+   "lore": "Bog-iron, the hold's tower on it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Breaker Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 45,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 45,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Rowan and iron, against the dead."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hrafnkel's Barrow-Gold",
+   "base": [
+    41,
+    24
+   ],
+   "level": 47,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 40
+   },
+   "lore": "Three-hundred-year-old gold, cold to the touch."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bergelmir's Broken Chain",
+   "base": [
+    41,
+    32
+   ],
+   "level": 47,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 47,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "The jotun's chain, broken. He'd want you to have it."
+  }
+ ],
+ "camp": {
+  "cloak": "uf107_hrafnsholm_raven_cloak",
+  "emblem": 32896,
+  "draughts": [
+   [
+    "Strong_Draught_of_Healing",
+    "uf107_bog_ale",
+    "Bog Ale",
+    "Hallveig's own. Brown, and better than it looks."
+   ],
+   [
+    "Strong_Draught_of_Power",
+    "uf107_rowan_water",
+    "Rowan Water",
+    "Clean and bitter. The dead hate it."
+   ],
+   [
+    "CombinedRegens_Draught",
+    "uf107_warden_s_mead",
+    "Warden's Mead",
+    "The Wardens' mead. Everything comes back a little faster after a cup."
+   ]
+  ]
+ }
+}

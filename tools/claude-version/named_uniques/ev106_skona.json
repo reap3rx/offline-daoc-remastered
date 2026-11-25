@@ -1,0 +1,27 @@
+{
+ "zone": 106,
+ "region": 100,
+ "realm": 2,
+ "prefix": "nu106",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moon-Caller's Hide",
+   "base": [
+    41,
+    26
+   ],
+   "level": 36,
+   "bonuses": {
+    "Pie": 12,
+    "Int": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 22
+   },
+   "lore": "Werewolf hide cut with the moon's phases."
+  }
+ ]
+}

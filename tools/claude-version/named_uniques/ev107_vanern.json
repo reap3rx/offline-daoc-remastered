@@ -1,0 +1,27 @@
+{
+ "zone": 107,
+ "region": 100,
+ "realm": 2,
+ "prefix": "nu107",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hrimgrim's Ice Horn",
+   "base": [
+    41,
+    24
+   ],
+   "level": 46,
+   "bonuses": {
+    "Pie": 15,
+    "Int": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "A horn of ice that never melts. Don't blow it."
+  }
+ ]
+}

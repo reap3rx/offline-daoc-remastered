@@ -1,0 +1,47 @@
+"""Midgard round 4's other item specs (claude 2026-11-25): reputation stock (rep108: King Eirik's Host; rep116: the Oath of the
+Volur) and the two campaigns' camps and raid drops (rk108: the King's March quartermaster and Hati's raid; mh116: the Dragon-Oath's
+quartermaster and the Hierophant's raid)."""
+import sys
+sys.path.insert(0, '/home/claude/lg/tools/claude-version')
+sys.path.insert(0, '/home/claude/lg/tools/claude-version/midgard')
+from specs_m1_lib import Spec
+
+out = []
+r = Spec(108, 'Raumarik', 'rep108')
+r.item("Host-Friend's Ring", 'ring', 46, 'might', "Iron, the King's hammer on it, frost in the grain.")
+r.item("King's Host Belt", 'belt', 46, 'ward', "Royal blue leather, fur-lined.")
+r.item("Moon-Warden Torc", 'neck', 50, 'mind', "Silver, a full moon in moonstone.")
+r.item("Frost-Iron Bracer", 'bracer', 50, 'ward', "Iron forged in the north's cold. It never warms.")
+r.item("Mantle of Hati's Breaker", 'cloak', 54, 'ward', "Royal blue under white wolf-fur. Only the Breakers of Hati wear it.")
+out += r.write_spec('rep108_raumarik.json')
+r = Spec(116, 'Malmohus', 'rep116')
+r.item("Oath-Friend's Charm", 'gem', 52, 'faith', "A tiny silver well-bucket, the volur's sign, on scale-leather.")
+r.item("Oath-Sworn Ring", 'ring', 52, 'mind', "Silver, the Oath's nine knots.")
+r.item("Nine-Knot Scale Bracer", 'bracer', 56, 'faith', "Drakulv scale bound with the volur's nine knots.")
+r.item("True-Name Keeper's Torc", 'neck', 56, 'mind', "Silver, a closed mouth carved in it.")
+r.item("Mantle of the Dragon-Oath Sworn", 'cloak', 60, 'faith', "Volur grey, the Oath's knot in red. Only the Keepers of the True Name wear it.")
+out += r.write_spec('rep116_malmohus.json')
+
+g = Spec(108, 'Raumarik', 'rk108')
+g.item("Mantle of the King's March", 'cloak', 52, 'ward', "Royal blue and white fur. Given to those who marched to Hati's Howe.")
+g.item("Moon-Warden's Torc", 'neck', 52, 'mind', "Silver, the moon running free.")
+g.item("Girdle of the Long Winter", 'belt', 52, 'ward', "White fur over frost-iron.")
+g.item("Ring of the Free Moon", 'ring', 52, 'faith', "Moonstone, full and bright.")
+g.item("Winterwolf-Hide Bracer of the March", 'bracer', 52, 'might', "White hide, the King's hammer stamped in it.")
+g.item("Hati's Fang Jewel", 'gem', 52, 'might', "A sliver of Hati's fang, set in silver.")
+g.item("Hati's Moon-Fang", 'neck', 55, 'might', "A fang as long as a forearm. It shone once, with the moon's light.")
+g.item("Skoll's Sunset Pelt", 'cloak', 55, 'ward', "Fur the colour of a setting sun. It's warm, even here.")
+g.item("Fimbulwinter Shard", 'gem', 55, 'mind', "A shard of the endless winter. It doesn't melt, and it doesn't hurt to hold.")
+out += g.write_spec('rk108_raumarik.json')
+g = Spec(116, 'Malmohus', 'mh116')
+g.item("Mantle of the Dragon-Oath", 'cloak', 57, 'ward', "Volur grey and King's blue. Given to those who broke the Wyrm-Temple.")
+g.item("True-Name Torc", 'neck', 57, 'mind', "Silver, the half-name burned out of it.")
+g.item("Girdle of the Wyrm-Temple", 'belt', 57, 'ward', "Red scale, from the temple's own door.")
+g.item("Ring of the Broken Rite", 'ring', 57, 'faith', "A rite-knife, bent into a ring.")
+g.item("Scale-Breaker Bracer", 'bracer', 57, 'might', "Iron, with a drakulv scale cracked through.")
+g.item("Volva's Eye Jewel", 'gem', 57, 'mind', "A pale stone. Groa says it sees.")
+g.item("Hierophant's Eye-Crown", 'neck', 60, 'mind', "The dragon's eye from his brow, on a chain. It's closed now.")
+g.item("Wyrm-Guard's Scale", 'bracer', 60, 'ward', "A plate of the Wyrm-Guard's dragon-scale, bound as a bracer.")
+g.item("Brood-Elder's Tooth", 'gem', 60, 'might', "A tooth as long as a hand, still hot.")
+out += g.write_spec('mh116_malmohus.json')
+print(' '.join(out))

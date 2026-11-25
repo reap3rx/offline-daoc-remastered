@@ -1,0 +1,594 @@
+{
+ "zone": 116,
+ "name": "Malmohus",
+ "rating": "elite",
+ "themes": [
+  "Halla's camp (the Dragon-Oath musters there)",
+  "The Missionary Road (north)",
+  "The Svartalf Foist (east) and Scale-Lord Kariig",
+  "The Armguard Lines (middle)",
+  "The Temple Steps (south)",
+  "The Wyrm-Temple (south - the raid) and Gjalpinulva's lair (south-west)",
+  "The varg yearlings, the mara, the backwoods (pockets)"
+ ],
+ "notes": "Midgard's plan 2026-11-25, round 4: Elite - Gjalpinulva's seat; nothing below orange while the drakulv hold the south; the Dragon-Oath (AlbionCampaign.cs) and the Hierophant's raid at the Wyrm-Temple (HierophantRaid.cs); the dragon sealed until it is won. Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Yar": "purple",
+  "Kleng": "red",
+  "Burr": "red",
+  "Arnulv": "red",
+  "Gunnolf": "red",
+  "Kariig": "red",
+  "Bjornvarg": "red",
+  "Steinolf": "red",
+  "Hrolleif": "red",
+  "Ulf": "red",
+  "Eiorharn": "red",
+  "Geirolf": "red",
+  "Eildird": "red",
+  "Ingardild": "red",
+  "Ljornrn": "red",
+  "Desukva": "red",
+  "Rana": "red",
+  "Wyulv": "red",
+  "Esulv": "red",
+  "hunter's pet": "orange",
+  "svartalf dark forester": "orange",
+  "swarm of flies": "orange"
+ },
+ "factions": {
+  "varg": {
+   "id": 9691,
+   "aggro": 80
+  },
+  "drakulv": {
+   "id": 9692,
+   "aggro": 95
+  }
+ },
+ "members": {
+  "scaled varg yearling": {
+   "from": "scaled varg yearling",
+   "tier": "orange",
+   "faction": "varg",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 250
+  },
+  "scaled varg snarler": {
+   "from": "scaled varg snarler",
+   "tier": "orange",
+   "faction": "varg",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 300
+  },
+  "enraged mara": {
+   "from": "enraged mara",
+   "tier": "red",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 250
+  },
+  "venomous tree crawler": {
+   "from": "venomous tree crawler",
+   "tier": "red",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 150
+  },
+  "backwoods marodor": {
+   "from": "backwoods marodor",
+   "tier": "orange",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 250
+  },
+  "drakulv missionary": {
+   "from": "drakulv missionary",
+   "tier": "orange",
+   "faction": "drakulv",
+   "guild": "Gjalpinulva's Drakulv",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 200
+  },
+  "patrolling drakulv": {
+   "from": "patrolling drakulv",
+   "tier": "orange",
+   "faction": "drakulv",
+   "guild": "Gjalpinulva's Drakulv",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 400
+  },
+  "drakulv armguard": {
+   "from": "drakulv armguard",
+   "tier": "orange",
+   "faction": "drakulv",
+   "guild": "Gjalpinulva's Drakulv",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 200
+  },
+  "drakulv axehand": {
+   "from": "drakulv axehand",
+   "tier": "orange",
+   "faction": "drakulv",
+   "guild": "Gjalpinulva's Drakulv",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 200
+  },
+  "drakulv sacrificer": {
+   "from": "drakulv sacrificer",
+   "tier": "red",
+   "faction": "drakulv",
+   "guild": "Gjalpinulva's Drakulv",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 120
+  },
+  "drakulv attendant": {
+   "from": "drakulv attendant",
+   "tier": "orange",
+   "faction": "drakulv",
+   "guild": "Gjalpinulva's Drakulv",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 150
+  },
+  "drakulv protector": {
+   "from": "drakulv protector",
+   "tier": "red",
+   "faction": "drakulv",
+   "guild": "Gjalpinulva's Drakulv",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 120
+  },
+  "drakulv executioner": {
+   "from": "drakulv executioner",
+   "tier": "red",
+   "faction": "drakulv",
+   "guild": "Gjalpinulva's Drakulv",
+   "aggro": [
+    95,
+    700
+   ],
+   "roam": 100
+  },
+  "drakulv disciple": {
+   "from": "drakulv disciple",
+   "tier": "red",
+   "faction": "drakulv",
+   "guild": "the Hierophant's Disciples",
+   "aggro": [
+    95,
+    700
+   ],
+   "roam": 80
+  },
+  "drakulv soultrapper": {
+   "from": "drakulv soultrapper",
+   "tier": "red",
+   "faction": "drakulv",
+   "guild": "the Hierophant's Disciples",
+   "aggro": [
+    95,
+    700
+   ],
+   "roam": 80
+  },
+  "svartalf infiltrator": {
+   "from": "svartalf infiltrator",
+   "tier": "orange",
+   "faction": "drakulv",
+   "guild": "the Scale-Traders",
+   "aggro": [
+    85,
+    600
+   ],
+   "roam": 250
+  },
+  "svartalf foister": {
+   "from": "svartalf foister",
+   "tier": "orange",
+   "faction": "drakulv",
+   "guild": "the Scale-Traders",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 200
+  },
+  "svartalf bloodbinder": {
+   "from": "svartalf bloodbinder",
+   "tier": "red",
+   "faction": "drakulv",
+   "guild": "the Scale-Traders",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 120
+  },
+  "Scale-Lord Kariig": {
+   "from": "svartalf bloodbinder",
+   "tier": "purple",
+   "name": "Scale-Lord Kariig",
+   "size": 1.2,
+   "faction": "drakulv",
+   "guild": "Lord of the Svartalf Foist",
+   "aggro": [
+    95,
+    700
+   ],
+   "roam": 40,
+   "guards": {
+    "svartalf foister": 2
+   }
+  },
+  "Temple-Warden Brandr": {
+   "from": "drakulv executioner",
+   "tier": "purple",
+   "name": "Temple-Warden Brandr",
+   "size": 1.25,
+   "faction": "drakulv",
+   "guild": "Warden of the Wyrm-Temple",
+   "aggro": [
+    95,
+    700
+   ],
+   "roam": 40,
+   "guards": {
+    "drakulv protector": 2
+   }
+  }
+ },
+ "sites": [
+  {
+   "id": "pocket_yearlings",
+   "kind": "camp",
+   "at": [
+    34200,
+    10200
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "scaled varg yearling": 8
+   }
+  },
+  {
+   "id": "pocket_mara",
+   "kind": "wildlife",
+   "area": [
+    38800,
+    42000,
+    54400,
+    60000
+   ],
+   "spawn": {
+    "enraged mara": 16,
+    "scaled varg snarler": 24
+   },
+   "spacing": 260
+  },
+  {
+   "id": "pocket_crawlers",
+   "kind": "camp",
+   "at": [
+    7200,
+    53600
+   ],
+   "r": 400,
+   "respawn": 600,
+   "spawn": {
+    "venomous tree crawler": 3
+   }
+  },
+  {
+   "id": "pocket_backwoods",
+   "kind": "wildlife",
+   "area": [
+    6400,
+    22400,
+    20000,
+    30400
+   ],
+   "spawn": {
+    "backwoods marodor": 24,
+    "scaled varg snarler": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "cp1_garrison",
+   "kind": "camp",
+   "at": [
+    24000,
+    12000
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "drakulv sacrificer": 1,
+    "drakulv missionary": 4,
+    "patrolling drakulv": 3
+   }
+  },
+  {
+   "id": "cp1_road",
+   "kind": "wildlife",
+   "area": [
+    8600,
+    4000,
+    35600,
+    22000
+   ],
+   "spawn": {
+    "drakulv missionary": 40,
+    "patrolling drakulv": 40,
+    "backwoods marodor": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "cp2_garrison",
+   "kind": "camp",
+   "at": [
+    54000,
+    20000
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "svartalf bloodbinder": 1,
+    "svartalf foister": 4,
+    "svartalf infiltrator": 3
+   }
+  },
+  {
+   "id": "cp2_foist",
+   "kind": "wildlife",
+   "area": [
+    42000,
+    4000,
+    60400,
+    37600
+   ],
+   "spawn": {
+    "svartalf foister": 40,
+    "svartalf infiltrator": 32,
+    "svartalf bloodbinder": 16,
+    "patrolling drakulv": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "foist_hall",
+   "kind": "camp",
+   "at": [
+    58400,
+    32800
+   ],
+   "r": 480,
+   "respawn": 1200,
+   "spawn": {
+    "Scale-Lord Kariig": 1
+   }
+  },
+  {
+   "id": "cp3_garrison",
+   "kind": "camp",
+   "at": [
+    30000,
+    34000
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "drakulv sacrificer": 1,
+    "drakulv armguard": 4,
+    "drakulv axehand": 2
+   }
+  },
+  {
+   "id": "cp3_lines",
+   "kind": "wildlife",
+   "area": [
+    4400,
+    24000,
+    52000,
+    42000
+   ],
+   "spawn": {
+    "drakulv armguard": 56,
+    "drakulv axehand": 32,
+    "drakulv sacrificer": 16,
+    "scaled varg snarler": 24
+   },
+   "spacing": 260
+  },
+  {
+   "id": "cp4_garrison",
+   "kind": "camp",
+   "at": [
+    28000,
+    48000
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "drakulv executioner": 1,
+    "drakulv protector": 3,
+    "drakulv attendant": 3
+   }
+  },
+  {
+   "id": "cp4_steps",
+   "kind": "wildlife",
+   "area": [
+    6000,
+    42400,
+    38400,
+    60000
+   ],
+   "spawn": {
+    "drakulv protector": 32,
+    "drakulv executioner": 16,
+    "drakulv attendant": 32,
+    "drakulv axehand": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "disciples",
+   "kind": "camp",
+   "at": [
+    18400,
+    49600
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "drakulv disciple": 3,
+    "drakulv soultrapper": 2
+   }
+  },
+  {
+   "id": "temple_guard",
+   "kind": "camp",
+   "at": [
+    39200,
+    52800
+   ],
+   "r": 480,
+   "respawn": 1200,
+   "spawn": {
+    "Temple-Warden Brandr": 1,
+    "drakulv attendant": 2
+   }
+  },
+  {
+   "id": "wyrm_temple",
+   "kind": "clear",
+   "at": [
+    36000,
+    55200
+   ],
+   "r": 2400,
+   "names": [
+    "scaled varg yearling",
+    "scaled varg snarler",
+    "enraged mara",
+    "venomous tree crawler",
+    "backwoods marodor",
+    "drakulv missionary",
+    "patrolling drakulv",
+    "drakulv armguard",
+    "drakulv axehand",
+    "drakulv sacrificer",
+    "drakulv attendant",
+    "drakulv protector",
+    "drakulv executioner",
+    "drakulv disciple",
+    "drakulv soultrapper",
+    "svartalf infiltrator",
+    "svartalf foister",
+    "svartalf bloodbinder",
+    "Scale-Lord Kariig",
+    "Temple-Warden Brandr"
+   ]
+  },
+  {
+   "id": "gjalpinulva_lair",
+   "kind": "clear",
+   "at": [
+    20680,
+    54800
+   ],
+   "r": 2800,
+   "names": [
+    "scaled varg yearling",
+    "scaled varg snarler",
+    "enraged mara",
+    "venomous tree crawler",
+    "backwoods marodor",
+    "drakulv missionary",
+    "patrolling drakulv",
+    "drakulv armguard",
+    "drakulv axehand",
+    "drakulv sacrificer",
+    "drakulv attendant",
+    "drakulv protector",
+    "drakulv executioner",
+    "drakulv disciple",
+    "drakulv soultrapper",
+    "svartalf infiltrator",
+    "svartalf foister",
+    "svartalf bloodbinder",
+    "Scale-Lord Kariig",
+    "Temple-Warden Brandr"
+   ]
+  },
+  {
+   "id": "hallas_camp",
+   "kind": "clear",
+   "at": [
+    40000,
+    20000
+   ],
+   "r": 3600,
+   "names": [
+    "scaled varg yearling",
+    "scaled varg snarler",
+    "enraged mara",
+    "venomous tree crawler",
+    "backwoods marodor",
+    "drakulv missionary",
+    "patrolling drakulv",
+    "drakulv armguard",
+    "drakulv axehand",
+    "drakulv sacrificer",
+    "drakulv attendant",
+    "drakulv protector",
+    "drakulv executioner",
+    "drakulv disciple",
+    "drakulv soultrapper",
+    "svartalf infiltrator",
+    "svartalf foister",
+    "svartalf bloodbinder",
+    "Scale-Lord Kariig",
+    "Temple-Warden Brandr"
+   ],
+   "block": "all"
+  }
+ ]
+}

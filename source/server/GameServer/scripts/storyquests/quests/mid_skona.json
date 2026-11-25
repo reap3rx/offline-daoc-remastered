@@ -76,6 +76,36 @@
         "sidhe_maps/s5",
         "sidhe_maps/s7"
       ]
+    },
+    {
+      "id": "sk_jodur",
+      "zone": 106,
+      "realm": 2,
+      "name": "Ranger-Captain Jodur",
+      "model": 213,
+      "level": 42,
+      "pos": [
+        618,
+        568,
+        125.8
+      ],
+      "guild": "the Wolfsbane Rangers",
+      "idle": "The Rangers have watched the ravine since before the werewolves came. We'll watch it after they're gone."
+    },
+    {
+      "id": "sk_saga",
+      "zone": 106,
+      "realm": 2,
+      "name": "Seithkona Saga",
+      "model": 168,
+      "level": 40,
+      "pos": [
+        1352,
+        268,
+        146.4
+      ],
+      "guild": "the Seithkona Circle",
+      "idle": "The moon's afraid. You can see it, if you know how to look."
     }
   ],
   "quests": [
@@ -539,6 +569,716 @@
           }
         }
       }
+    },
+    {
+      "id": "sk_skulkers",
+      "title": "Skulkers in the Woods",
+      "level": 28,
+      "giver": "sk_jodur",
+      "offer": "Werewolf skulkers in the north woods - the hold's scouts. They watch our camp, and they report.\n\nWill you [hunt the skulkers]?",
+      "accept": "hunt the skulkers",
+      "topics": {},
+      "summary": "Werewolf skulkers, the werewolf hold's scouts, watch the Rangers' camp from Skona's north woods.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            800,
+            300,
+            125.8
+          ],
+          "radius": 50,
+          "goal": "Hunt the werewolf skulkers about 320 m north-east of Ranger-Captain Jodur",
+          "target": "werewolf skulker",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sk_jodur",
+          "goal": "Tell Ranger-Captain Jodur",
+          "say": "Blind for a while. Good. The hold's busier than it's ever been. Something's gathering.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wolfsbane Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq106_wolfsbane_ring",
+              "sq106_skulker_hide_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sk_wolverines",
+      "title": "Wolverines",
+      "level": 30,
+      "giver": "eyvor",
+      "offer": "Young wolverines in the north woods - driven out of the middle of the ravine. The werewolves don't share.\n\nWill you [clear them off the trail]?",
+      "accept": "clear them off the trail",
+      "topics": {},
+      "summary": "Young wolverines driven out of Skona's middle by the werewolves block the north woods trail.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            700,
+            450,
+            141.0
+          ],
+          "radius": 50,
+          "goal": "Clear the young wolverines about 170 m north-east of Ranger Eyvor",
+          "target": "young wolverine",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            800,
+            400,
+            136.9
+          ],
+          "radius": 50,
+          "goal": "Kill the brush cats",
+          "target": "brush cat",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "eyvor",
+          "goal": "Tell Ranger Eyvor",
+          "say": "The trail's open. Everything in the ravine is running from the middle. Everything except the wolves.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wolfsbane Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq106_wolverine_claw_torc",
+              "sq106_ranger_s_grey_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "sk_skulkers"
+    },
+    {
+      "id": "sk_tinglers",
+      "title": "Bad Dreams",
+      "level": 29,
+      "giver": "sk_saga",
+      "offer": "The great tinglers in the meadows feed on dreams, and the circle's dreams have been very bad. They've grown fat. They come to the stones at night.\n\nWill you [drive them off]?",
+      "accept": "drive them off",
+      "topics": {},
+      "summary": "Great tinglers fat on bad dreams come to the Seithkona Circle's stones at night.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            1150,
+            350,
+            125.8
+          ],
+          "radius": 50,
+          "goal": "Drive off the great tinglers about 220 m west of Seithkona Saga",
+          "target": "great tingler",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sk_saga",
+          "goal": "Tell Seithkona Saga",
+          "say": "Better. We'll sleep, a little. The dreams won't stop, though. We all dream the same thing: a wolf running after the moon.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seithkona Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq106_tree_frog_charm",
+              "sq106_circle_walker_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sk_wind_spirits",
+      "title": "The Howling Wind",
+      "level": 31,
+      "giver": "sk_saga",
+      "offer": "The wind spirits on the eastern heights carry the werewolves' howls to the moon. Every night, louder. The moon hears them.\n\nWill you [silence the wind]?",
+      "accept": "silence the wind",
+      "topics": {},
+      "summary": "Wind spirits on Skona's eastern heights carry the werewolves' howls to the moon.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            1320,
+            800,
+            125.8
+          ],
+          "radius": 50,
+          "goal": "Silence the wind spirits about 530 m south of Seithkona Saga",
+          "target": "wind spirit",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sk_saga",
+          "goal": "Tell Saga",
+          "say": "Quieter. Now I can hear what they were drowning out.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seithkona Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq106_wind_spirit_veil_charm",
+              "sq106_moonlit_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "sk_tinglers"
+    },
+    {
+      "id": "sk_moon_stone",
+      "title": "The Moon-Stone",
+      "level": 33,
+      "giver": "sk_saga",
+      "offer": "The circle's moon-stone shows the moon's road. Read it with me - stand at the stone at the circle's heart and look.\n\nWill you [read the stone]?",
+      "accept": "read the stone",
+      "topics": {},
+      "summary": "The Seithkona Circle's moon-stone shows the moon's road across the sky.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 106,
+          "at": [
+            1365,
+            250,
+            146.4
+          ],
+          "goal": "Read the moon-stone at the circle's heart",
+          "clue": {
+            "name": "a pale stone, waist-high",
+            "model": 1876
+          },
+          "text": "In the stone the moon runs across the sky, and behind it runs a wolf, gaining. Under the wolf, a hall of ice in the north-west: Raumarik. And in the middle of the ravine, wolves gathering at a hold, to go north.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sk_saga",
+          "goal": "Tell Saga what you saw",
+          "say": "Hati. Fenrir's son, who hunts the moon. When he catches it, the long winter comes. And the hold in our ravine - Ulfhamr - is where his host gathers before it goes north.\n\nGo to Ranger-Captain Jodur. The Rangers mean to break that hold.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seithkona Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq106_moon_stone_pendant",
+              "sq106_seithkona_s_circle_ring"
+            ]
+          }
+        }
+      },
+      "requires": "sk_wind_spirits"
+    },
+    {
+      "id": "sk_guards",
+      "title": "The Hold's Guards",
+      "level": 32,
+      "giver": "sk_jodur",
+      "offer": "The werewolf guards patrol the ground round Ulfhamr. Every one we kill is one less on the walls when the Rangers march.\n\nWill you [thin the guards]?",
+      "accept": "thin the guards",
+      "topics": {},
+      "summary": "Werewolf guards patrol the ground round Ulfhamr, the werewolf hold in Skona's middle.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            720,
+            760,
+            62.3
+          ],
+          "radius": 50,
+          "goal": "Thin the werewolf guards about 220 m south-east of Ranger-Captain Jodur",
+          "target": "werewolf guard",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sk_jodur",
+          "goal": "Tell Jodur",
+          "say": "Good. The Rangers will hear of it. Every one tells them we can win.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wolfsbane Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq106_werewolf_guard_fang_ring",
+              "sq106_wolfsbane_stitched_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "sk_wolverines"
+    },
+    {
+      "id": "sk_warders",
+      "title": "The Warders",
+      "level": 34,
+      "giver": "ulfrun",
+      "offer": "The werewolf warders keep the hold's magic - wards of blood and moonlight. While they stand, the hold can't be broken.\n\nWill you [break the warders]?",
+      "accept": "break the warders",
+      "topics": {},
+      "summary": "Werewolf warders keep Ulfhamr's wards of blood and moonlight.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            1000,
+            850,
+            125.8
+          ],
+          "radius": 50,
+          "goal": "Break the werewolf warders about 190 m west of Seithkona Ulfrun",
+          "target": "werewolf warder",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ulfrun",
+          "goal": "Tell Seithkona Ulfrun",
+          "say": "The wards are weaker. I felt them give. The hold can be taken now.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seithkona Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq106_warder_s_rune_bracer",
+              "sq106_ravine_ranger_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "sk_guards"
+    },
+    {
+      "id": "sk_headsmen",
+      "title": "The Wolfaur Headsmen",
+      "level": 36,
+      "giver": "sk_jodur",
+      "offer": "The wolfaur headsmen hunt the south of the ravine for the hold - and they hunt men. They'll lead Hati's host north when it marches.\n\nBring friends. Will you [hunt the headsmen]?",
+      "accept": "hunt the headsmen",
+      "topics": {},
+      "summary": "Wolfaur headsmen hunt men in Skona's south for the werewolf hold.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            950,
+            1200,
+            88.1
+          ],
+          "radius": 50,
+          "goal": "Hunt the wolfaur headsmen about 710 m south-east of Ranger-Captain Jodur",
+          "target": "wolfaur headsman",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sk_jodur",
+          "goal": "Tell Jodur",
+          "say": "The hunters hunted. Good. Now - the hold itself.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wolfsbane Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq106_headsman_s_axe_torc",
+              "sq106_wolf_hunter_s_mantle",
+              "sq106_hunt_breaker_s_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sk_warders"
+    },
+    {
+      "id": "sk_ulfhamr",
+      "title": "Ulfhamr",
+      "level": 37,
+      "giver": "sk_jodur",
+      "offer": "Ulfhamr. Go and look at it - count the wolves on the walls, find the gate. Then come back and tell me we can win.\n\nWill you [scout the hold]?",
+      "accept": "scout the hold",
+      "topics": {},
+      "summary": "The Wolfsbane Rangers mean to break Ulfhamr, the werewolf hold in Skona's middle.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 106,
+          "at": [
+            800,
+            640,
+            134.8
+          ],
+          "radius": 25,
+          "goal": "Creep up to the ridge above Ulfhamr",
+          "text": "A hold of black logs and bones, wolf-skulls on every post. Howling from inside, and the warden on the gate - a werewolf in a captain's mail.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 106,
+          "at": [
+            820,
+            660,
+            127.5
+          ],
+          "goal": "Look over the hold's gate",
+          "clue": {
+            "name": "a post hung with fresh pelts",
+            "model": 1347
+          },
+          "text": "Wolf-pelts - and men's cloaks, rangers' grey among them. Scratched in the post: 'WHEN THE MOON RUNS RED, NORTH TO HATI.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sk_jodur",
+          "goal": "Tell Jodur",
+          "say": "Rangers' cloaks. Then we take it for every one of them.\n\nThe Rangers will march when the ravine is behind us - every skulker, every warder, every headsman broken tells the men they can win. Be there.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wolfsbane Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq106_ulfhamr_scout_s_ring",
+              "sq106_rangers_oath_belt"
+            ]
+          }
+        }
+      },
+      "requires": "sk_headsmen"
+    },
+    {
+      "id": "sk_orms",
+      "title": "The Green Orms",
+      "level": 33,
+      "giver": "thorvald",
+      "offer": "The green orms on the western shore have come up out of the water and onto the paths. They've never done that.\n\nWill you [drive them back]?",
+      "accept": "drive them back",
+      "topics": {},
+      "summary": "Green orms have come up out of the water onto the paths of Skona's western shore.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            160,
+            700,
+            42.4
+          ],
+          "radius": 50,
+          "goal": "Drive back the green orms about 400 m north of Thorvald",
+          "target": "green orm",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "thorvald",
+          "goal": "Tell Thorvald",
+          "say": "Back in the water. Something in the ravine frightened them. Everything's frightened, this year.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wolfsbane Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq106_orm_scale_ring",
+              "sq106_shore_walker_s_cloak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sk_sidhe",
+      "title": "The Strangers on the Strand",
+      "level": 35,
+      "giver": "thorvald",
+      "offer": "The sidhe on the strand - strangers, from somewhere far off. They've always been odd. Now they shoot at anyone who comes near.\n\nWill you [push them back]?",
+      "accept": "push them back",
+      "topics": {},
+      "summary": "The sidhe strangers on Skona's western strand shoot at anyone who comes near.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            170,
+            1000,
+            43.0
+          ],
+          "radius": 50,
+          "goal": "Push back the sidhe gaoite about 100 m north of Thorvald",
+          "target": "sidhe gaoite",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "thorvald",
+          "goal": "Tell Thorvald",
+          "say": "They said something, as they fell back. 'The winter wolf comes, and your moon dies.' Even the strangers know.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wolfsbane Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq106_sidhe_silver_charm",
+              "sq106_strand_ward_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "sk_orms"
+    },
+    {
+      "id": "sk_dryads",
+      "title": "The Angry Wood",
+      "level": 34,
+      "giver": "bard",
+      "offer": "The dryads of the south-east wood have turned on everyone. Something's burning their trees - from the south.\n\nWill you [calm the wood]?",
+      "accept": "calm the wood",
+      "topics": {},
+      "summary": "The dryads of Skona's south-east wood have turned on everyone; something from the south burns their trees.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            1450,
+            1250,
+            136.0
+          ],
+          "radius": 50,
+          "goal": "Calm the dryad blossoms about 820 m east of Bard",
+          "target": "dryad blossom",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bard",
+          "goal": "Tell Bard",
+          "say": "Calmer. They showed me the burnt trees. Burnt from inside - claws, and fire.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wolfsbane Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq106_dryad_blossom_charm",
+              "sq106_greenthumb_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sk_drakes",
+      "title": "The Drake Trail",
+      "level": 37,
+      "giver": "bard",
+      "offer": "Young silverscale drakes on the trail up from Malmohus. The dragon's brood, coming north. They'll find the werewolves sooner or later - and I don't know who I'd rather won.\n\nBring friends. Will you [break the drakes]?",
+      "accept": "break the drakes",
+      "topics": {},
+      "summary": "Young silverscale drakes come north up Skona's drake trail from Malmohus.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 106,
+          "at": [
+            1430,
+            1270,
+            137.4
+          ],
+          "radius": 50,
+          "goal": "Break the young silverscale drakes about 800 m east of Bard",
+          "target": "young silverscale drake",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 106,
+          "at": [
+            1440,
+            1280,
+            138.8
+          ],
+          "goal": "Search the drakes' trail",
+          "clue": {
+            "name": "a drakulv banner, trampled",
+            "model": 1347
+          },
+          "text": "A drakulv banner: the dragon's eye over a wolf's skull. Stitched under it: 'The Mother's brood goes before her. Let the wolves and men kill each other, and the brood takes what's left.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bard",
+          "goal": "Tell Bard",
+          "say": "Let the wolves and men kill each other. That's their plan. Both threads, one trap. Midgard has to win both.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wolfsbane Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq106_silverscale_drake_torc",
+              "sq106_drake_trail_mantle",
+              "sq106_malmohus_road_belt"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sk_dryads"
     }
   ]
 }

@@ -45,6 +45,36 @@
         54.3
       ],
       "idle": "My brother went into the hagbui barrows for a sword. The hagbui keep what goes in."
+    },
+    {
+      "id": "vn_steinunn",
+      "zone": 107,
+      "realm": 2,
+      "name": "Warden-Captain Steinunn",
+      "model": 168,
+      "level": 48,
+      "pos": [
+        1240,
+        1110,
+        49.1
+      ],
+      "guild": "the Wardens of Vanern",
+      "idle": "The Wardens held Hrafnsholm for three hundred years. We lost it in a night. To the dead."
+    },
+    {
+      "id": "vn_gisli",
+      "zone": 107,
+      "realm": 2,
+      "name": "Huscarl Gisli",
+      "model": 213,
+      "level": 46,
+      "pos": [
+        1222,
+        1098,
+        50.5
+      ],
+      "guild": "King Eirik's Huscarls",
+      "idle": "The King sent twelve of us. Vanern's had eleven so far."
     }
   ],
   "quests": [
@@ -418,6 +448,695 @@
         }
       },
       "group": true
+    },
+    {
+      "id": "vn_crabs",
+      "title": "The Mud Flats",
+      "level": 36,
+      "giver": "vn_steinunn",
+      "offer": "Welcome to Vanern. The mud crab warriors come up the flats to the camp every night. They're the least of our troubles - start there.\n\nWill you [clear the flats]?",
+      "accept": "clear the flats",
+      "topics": {},
+      "summary": "Mud crab warriors come up Vanern's mud flats to the Wardens' camp every night.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            1350,
+            1250,
+            43.9
+          ],
+          "radius": 50,
+          "goal": "Clear the mud crab warriors about 180 m south-east of Warden-Captain Steinunn",
+          "target": "mud crab warrior",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "vn_steinunn",
+          "goal": "Tell Warden-Captain Steinunn",
+          "say": "Good. You'll live long enough to be useful, maybe.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wardens of Vanern.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq107_mud_crab_shell_bracer",
+              "sq107_swamp_warden_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "vn_vipers",
+      "title": "The Reed Road",
+      "level": 38,
+      "giver": "vn_steinunn",
+      "offer": "The forest vipers on the reed road west of camp - every runner we send to the King gets bitten. Clear the road.\n\nWill you [clear the reed road]?",
+      "accept": "clear the reed road",
+      "topics": {},
+      "summary": "Forest vipers bite every runner on Vanern's reed road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            950,
+            1300,
+            36.8
+          ],
+          "radius": 50,
+          "goal": "Clear the forest vipers about 350 m south-west of Warden-Captain Steinunn",
+          "target": "forest viper",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "vn_steinunn",
+          "goal": "Tell Steinunn",
+          "say": "The road's open. The runner can go to Jordheim. Not that the King has anyone left to send.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wardens of Vanern.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq107_viper_fang_torc",
+              "sq107_reed_walker_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "vn_crabs"
+    },
+    {
+      "id": "vn_clay_pits",
+      "title": "The Clay Pits",
+      "level": 39,
+      "giver": "gunnvor",
+      "offer": "The clay jotun in the middle of the swamp were always quiet - the swamp's own, made of its mud. Now they're angry, and someone's been digging in their pits.\n\nWill you [look into it]?",
+      "accept": "look into it",
+      "topics": {},
+      "summary": "The clay jotun in the middle of Vanern Swamp have turned angry; someone has been digging in their pits.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            650,
+            950,
+            47.6
+          ],
+          "radius": 50,
+          "goal": "Fight through the clay jotun about 590 m west of Runemistress Gunnvor",
+          "target": "clay jotun",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 107,
+          "at": [
+            640,
+            960,
+            47.0
+          ],
+          "goal": "Search the dug-up pit",
+          "clue": {
+            "name": "a broken chain half-buried in the clay",
+            "model": 1347
+          },
+          "text": "Black iron chains, carved with barrow-runes - the hagbui's. They've been digging clay jotun out of the pits, and dragging them north-west in chains.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "gunnvor",
+          "goal": "Tell Runemistress Gunnvor",
+          "say": "Barrow-runes. The hagbui. They're taking slaves - jotun, to work their forge in Hrafnsholm. The dead don't need forges unless they mean war.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wardens of Vanern.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq107_clay_jotun_knuckle_ring",
+              "sq107_pit_digger_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "vn_broken_jotun",
+      "title": "The Broken Ones",
+      "level": 40,
+      "giver": "vn_gisli",
+      "offer": "The broken jotun in the west - they were the hagbui's slaves before. Worked till they broke, then thrown out. They're mad with it, and they kill anything that moves.\n\nWill you [put them out of their misery]?",
+      "accept": "put them out of their misery",
+      "topics": {},
+      "summary": "The broken jotun of Vanern's west, the hagbui's worn-out slaves, kill anything that moves.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            250,
+            850,
+            45.2
+          ],
+          "radius": 50,
+          "goal": "Put down the broken jotun about 1.0 km west of Huscarl Gisli",
+          "target": "broken jotun",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "vn_gisli",
+          "goal": "Tell Huscarl Gisli",
+          "say": "Mercy, of a sort. If that's what the hagbui do to their slaves, I'd rather not think about the one in the yard at Hrafnsholm.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq107_broken_chain_bracer",
+              "sq107_jotun_tear_charm"
+            ]
+          }
+        }
+      },
+      "requires": "vn_clay_pits"
+    },
+    {
+      "id": "vn_crippled",
+      "title": "The Crippled Jotun",
+      "level": 42,
+      "giver": "gunnvor",
+      "offer": "The crippled jotun in the west still wear their chains - and the chains still hold the hagbui's runes. While they wear them, the hagbui can call them back. Break them free, the only way left.\n\nWill you [free them]?",
+      "accept": "free them",
+      "topics": {},
+      "summary": "Vanern's crippled jotun still wear the hagbui's runed chains.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            200,
+            950,
+            42.4
+          ],
+          "radius": 50,
+          "goal": "Free the crippled jotun about 1.0 km west of Runemistress Gunnvor",
+          "target": "crippled jotun",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "gunnvor",
+          "goal": "Tell Gunnvor",
+          "say": "Free. The runes broke with them - I felt it from here. Now we know how the hagbui hold their slaves. That's how we'll free the one in their yard.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wardens of Vanern.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq107_crippled_giant_s_ring",
+              "sq107_rune_lifted_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "vn_broken_jotun"
+    },
+    {
+      "id": "vn_orm_runners",
+      "title": "The Enslaved Orms",
+      "level": 42,
+      "giver": "vn_gisli",
+      "offer": "The jotun outcasts in the north drive enslaved orms - harnessed, whipped, run till they drop. They're hauling something north-west.\n\nWill you [free the orms]?",
+      "accept": "free the orms",
+      "topics": {},
+      "summary": "Jotun outcasts drive enslaved orms north-west across Vanern's north.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            650,
+            200,
+            42.0
+          ],
+          "radius": 50,
+          "goal": "Free the large enslaved orm runners about 1.1 km north-west of Huscarl Gisli",
+          "target": "large enslaved orm runner",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "vn_gisli",
+          "goal": "Tell Gisli",
+          "say": "They were hauling ice. Ice, in summer, out of the north-west - from Raumarik. The outcasts are building something.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq107_orm_runner_s_whip_belt",
+              "sq107_enslaved_orm_scale_charm"
+            ]
+          }
+        }
+      },
+      "requires": "vn_broken_jotun"
+    },
+    {
+      "id": "vn_outcasts",
+      "title": "The Outcasts",
+      "level": 44,
+      "giver": "vn_gisli",
+      "offer": "The jotun outcasts themselves. They're building a road of ice to Raumarik. I want to know why. Bring friends - they're jotun.\n\nWill you [break the outcasts]?",
+      "accept": "break the outcasts",
+      "topics": {},
+      "summary": "Jotun outcasts in Vanern's north are building a road of ice toward Raumarik.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            662,
+            209,
+            42.2
+          ],
+          "radius": 60,
+          "goal": "Break the jotun outcasts about 1.0 km north-west of Huscarl Gisli",
+          "target": "jotun outcast",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 107,
+          "at": [
+            663,
+            210,
+            42.1
+          ],
+          "goal": "Search the outcasts' camp",
+          "clue": {
+            "name": "an ice-block carved with runes",
+            "model": 1347
+          },
+          "text": "Carved deep in the ice: 'When Hati catches the moon, the long winter comes, and the jotun walk south on the ice behind him. The barrow-dead will open the door.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "vn_gisli",
+          "goal": "Tell Gisli",
+          "say": "The barrow-dead will open the door. The hagbui and the jotun - they're both waiting for Hati and the winter. Hrafnsholm is the door.\n\nSteinunn needs to hear this.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Huscarls.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq107_outcast_s_frost_torc",
+              "sq107_ice_hauler_s_bracer",
+              "sq107_king_s_huscarl_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "vn_orm_runners"
+    },
+    {
+      "id": "vn_spiders",
+      "title": "Silk for the Runes",
+      "level": 43,
+      "giver": "gunnvor",
+      "offer": "To break the hagbui's runes I need rune-thread - forest spider silk, the strongest in Midgard. The spiders won't give it gladly.\n\nWill you [gather silk]?",
+      "accept": "gather silk",
+      "topics": {},
+      "summary": "Gunnvor needs forest spider silk from Vanern's north-east to break the hagbui's runes.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            1386,
+            391,
+            42.7
+          ],
+          "radius": 50,
+          "goal": "Gather silk from the forest spiders about 750 m north of Runemistress Gunnvor",
+          "target": "forest spider",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "gunnvor",
+          "goal": "Bring the silk to Gunnvor",
+          "say": "Good silk. I'll spin rune-thread from it - enough to bind the dead back into their barrows, if it comes to it.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wardens of Vanern.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq107_spider_silk_mantle",
+              "sq107_rune_thread_ring"
+            ]
+          }
+        }
+      },
+      "requires": "vn_crippled"
+    },
+    {
+      "id": "vn_berserkers",
+      "title": "The Hagbui Berserkers",
+      "level": 41,
+      "giver": "vn_steinunn",
+      "offer": "The hagbui berserkers roam the ground below Hrafnsholm - dead men who fight like they want to die again. Every one we break is one less on the walls.\n\nWill you [break the berserkers]?",
+      "accept": "break the berserkers",
+      "topics": {},
+      "summary": "Hagbui berserkers roam the ground below Hrafnsholm, the Wardens' lost watch-hold.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            350,
+            500,
+            30.4
+          ],
+          "radius": 50,
+          "goal": "Break the hagbui berserkers about 1.1 km north-west of Warden-Captain Steinunn",
+          "target": "hagbui berserker",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "vn_steinunn",
+          "goal": "Tell Steinunn",
+          "say": "Good. Every one tells the Wardens we can take the hold back.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wardens of Vanern.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq107_barrow_breaker_s_ring",
+              "sq107_berserker_bane_belt"
+            ]
+          }
+        }
+      },
+      "requires": "vn_vipers"
+    },
+    {
+      "id": "vn_spiritmasters",
+      "title": "The Spiritmasters",
+      "level": 43,
+      "giver": "gunnvor",
+      "offer": "The hagbui spiritmasters raise the dead of the barrows. While they stand, every hagbui we break gets up again.\n\nWill you [break the spiritmasters]?",
+      "accept": "break the spiritmasters",
+      "topics": {},
+      "summary": "Hagbui spiritmasters raise the dead of Vanern's barrows.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            238,
+            477,
+            44.0
+          ],
+          "radius": 50,
+          "goal": "Break the hagbui spiritmasters about 1.2 km north-west of Runemistress Gunnvor",
+          "target": "hagbui spiritmaster",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            258,
+            435,
+            43.8
+          ],
+          "radius": 50,
+          "goal": "Break the hagbui shamans",
+          "target": "hagbui shaman",
+          "count": 2,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "gunnvor",
+          "goal": "Tell Gunnvor",
+          "say": "The dead will stay down now. Mostly.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wardens of Vanern.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq107_spiritmaster_s_bone_charm",
+              "sq107_barrow_ward_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "vn_berserkers"
+    },
+    {
+      "id": "vn_runemasters",
+      "title": "The Runemasters",
+      "level": 46,
+      "giver": "vn_steinunn",
+      "offer": "The hagbui runemasters keep the jotun's chains in Hrafnsholm's yard, and the thanes guard them. Break them, and the dead lose their slave.\n\nBring friends. Will you [break the runemasters]?",
+      "accept": "break the runemasters",
+      "topics": {},
+      "summary": "Hagbui runemasters and thanes keep the chained jotun in Hrafnsholm's yard.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            240,
+            250,
+            80.3
+          ],
+          "radius": 50,
+          "goal": "Break the hagbui runemasters about 1.3 km north-west of Warden-Captain Steinunn",
+          "target": "hagbui runemaster",
+          "count": 2,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 107,
+          "at": [
+            240,
+            250,
+            80.3
+          ],
+          "radius": 50,
+          "goal": "Break the hagbui thanes",
+          "target": "hagbui thane",
+          "count": 2,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "vn_steinunn",
+          "goal": "Tell Steinunn",
+          "say": "Broken. The chains will be weaker. When we take the hold, Gunnvor can free the jotun - or the hagbui will turn him on us.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wardens of Vanern.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq107_runemaster_s_black_torc",
+              "sq107_hrafnsholm_warden_s_mantle",
+              "sq107_thane_breaker_s_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "vn_spiritmasters"
+    },
+    {
+      "id": "vn_hrafnsholm",
+      "title": "Hrafnsholm",
+      "level": 45,
+      "giver": "vn_steinunn",
+      "offer": "Hrafnsholm. Our hold, three hundred years. Go and look at it - count the dead on the walls, find the gate. Then come back and tell me we can take it back.\n\nWill you [scout the hold]?",
+      "accept": "scout the hold",
+      "topics": {},
+      "summary": "The Wardens of Vanern mean to take back Hrafnsholm, their watch-hold, from the hagbui.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 107,
+          "at": [
+            420,
+            160,
+            75.9
+          ],
+          "radius": 25,
+          "goal": "Climb to the ridge above Hrafnsholm",
+          "text": "The old watch-hold, its timbers black with frost in summer. Dead men on the walls, unmoving. In the yard, a jotun in chains, hammering at a forge - and the forge-fire is blue and cold.",
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 107,
+          "at": [
+            400,
+            180,
+            77.6
+          ],
+          "goal": "Look over the hold's gate",
+          "clue": {
+            "name": "the Wardens' old banner, torn",
+            "model": 1347
+          },
+          "text": "The Wardens' raven banner, torn and nailed upside down. Under it, carved in ice: 'WE OPEN THE DOOR FOR THE WINTER. HATI COMES.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "vn_steinunn",
+          "goal": "Tell Steinunn",
+          "say": "They nailed our banner upside down. Then we take it back for every Warden who held it.\n\nThe Wardens will march when the swamp is behind us - every berserker, every spiritmaster, every runemaster broken tells them they can win. Be there.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wardens of Vanern.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq107_watch_hold_scout_s_ring",
+              "sq107_wardens_oath_belt"
+            ]
+          }
+        }
+      },
+      "requires": "vn_berserkers"
     }
   ]
 }

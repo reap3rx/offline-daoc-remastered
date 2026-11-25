@@ -1,0 +1,619 @@
+{
+ "zone": 108,
+ "name": "Raumarik",
+ "rating": "elite",
+ "themes": [
+  "The trappers' camp (the King's March musters there)",
+  "The Icestrider Fells (north-east)",
+  "The Wraith Moor (middle)",
+  "The Winterwolf Run (south-west) and Hati's Huntsman",
+  "The Fenrir Camp (west)",
+  "Hati's Howe (west - the raid)",
+  "The frost wood, the Sleipnir plain, the Red Daggers, the cyclops (pockets)"
+ ],
+ "notes": "Midgard's plan 2026-11-25, round 4: Elite - Hati's seat; nothing below orange while his host holds the north; the King's March (AlbionCampaign.cs) and Hati's raid at his howe (HatiRaid.cs). Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Wretch of Winter": "purple",
+  "Raumarik Revenant": "purple",
+  "Hugi": "purple",
+  "Loken": "purple",
+  "Oona": "purple",
+  "Hagall the Red Dagger": "red",
+  "Runil": "red",
+  "Red Hagen": "red",
+  "Red Dagger": "red",
+  "fylgja": "red",
+  "enhorning": "red",
+  "Servant of Kelic": "red",
+  "wolf of loki": "red",
+  "white wolf": "orange",
+  "savage wyvern": "red",
+  "Runemistress Shayla": "red",
+  "Undead Patrol": "orange"
+ },
+ "factions": {
+  "ice": {
+   "id": 9681,
+   "aggro": 80
+  },
+  "host": {
+   "id": 9682,
+   "aggro": 95
+  },
+  "winter": {
+   "id": 9683,
+   "aggro": 90
+  },
+  "daggers": {
+   "id": 9684,
+   "aggro": 85
+  }
+ },
+ "members": {
+  "frost bound bear": {
+   "from": "frost bound bear",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 300
+  },
+  "frigid broadleaf": {
+   "from": "frigid broadleaf",
+   "tier": "red",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 20
+  },
+  "sleipneirsson": {
+   "from": "sleipneirsson",
+   "tier": "orange",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 400
+  },
+  "frost stallion": {
+   "from": "frost stallion",
+   "tier": "orange",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 400
+  },
+  "mature wyvern": {
+   "from": "mature wyvern",
+   "tier": "red",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 300
+  },
+  "dire wolverine": {
+   "from": "dire wolverine",
+   "tier": "red",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 250
+  },
+  "bounty hunter": {
+   "from": "bounty hunter",
+   "tier": "orange",
+   "faction": "daggers",
+   "guild": "the Red Daggers",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 150
+  },
+  "bounty hunter leader": {
+   "from": "bounty hunter leader",
+   "tier": "red",
+   "faction": "daggers",
+   "guild": "the Red Daggers",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 80
+  },
+  "undead soldier": {
+   "from": "undead soldier",
+   "tier": "orange",
+   "faction": "winter",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 100
+  },
+  "frost cyclops": {
+   "from": "frost cyclops",
+   "tier": "red",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 150
+  },
+  "icestrider chiller": {
+   "from": "icestrider chiller",
+   "tier": "orange",
+   "faction": "ice",
+   "aggro": [
+    75,
+    500
+   ],
+   "roam": 250
+  },
+  "icestrider frostweaver": {
+   "from": "icestrider frostweaver",
+   "tier": "orange",
+   "faction": "ice",
+   "aggro": [
+    75,
+    500
+   ],
+   "roam": 200
+  },
+  "icestrider interceptor": {
+   "from": "icestrider interceptor",
+   "tier": "red",
+   "faction": "ice",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 250
+  },
+  "fenrir soldier": {
+   "from": "fenrir soldier",
+   "tier": "orange",
+   "faction": "host",
+   "guild": "Hati's Host",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 200
+  },
+  "fenrir mystic": {
+   "from": "fenrir mystic",
+   "tier": "red",
+   "faction": "host",
+   "guild": "Hati's Host",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 100
+  },
+  "greater fenrir": {
+   "from": "greater fenrir",
+   "tier": "red",
+   "faction": "host",
+   "guild": "Hati's Host",
+   "aggro": [
+    95,
+    700
+   ],
+   "roam": 150
+  },
+  "savage winterwolf": {
+   "from": "savage winterwolf",
+   "tier": "orange",
+   "faction": "host",
+   "guild": "Hati's Host",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 400
+  },
+  "winter wolf": {
+   "from": "winter wolf",
+   "tier": "orange",
+   "faction": "host",
+   "guild": "Hati's Host",
+   "aggro": [
+    85,
+    600
+   ],
+   "roam": 350
+  },
+  "windswept wraith": {
+   "from": "windswept wraith",
+   "tier": "orange",
+   "faction": "winter",
+   "guild": "of the endless winter",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 250
+  },
+  "chillsome wight": {
+   "from": "chillsome wight",
+   "tier": "orange",
+   "faction": "winter",
+   "guild": "of the endless winter",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 200
+  },
+  "frore lich": {
+   "from": "frore lich",
+   "tier": "red",
+   "faction": "winter",
+   "guild": "of the endless winter",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 100
+  },
+  "Fang-Captain of Hati": {
+   "from": "greater fenrir",
+   "tier": "purple",
+   "name": "Fang-Captain of Hati",
+   "size": 1.2,
+   "faction": "host",
+   "guild": "Captain of Hati's Host",
+   "aggro": [
+    95,
+    700
+   ],
+   "roam": 40,
+   "guards": {
+    "fenrir soldier": 2
+   }
+  },
+  "Hati's Huntsman": {
+   "from": "savage winterwolf",
+   "tier": "purple",
+   "name": "Hati's Huntsman",
+   "size": 1.4,
+   "faction": "host",
+   "guild": "Master of the Moon-Hunt",
+   "aggro": [
+    95,
+    700
+   ],
+   "roam": 350,
+   "guards": {
+    "savage winterwolf": 3
+   }
+  }
+ },
+ "sites": [
+  {
+   "id": "pocket_frost_wood",
+   "kind": "wildlife",
+   "area": [
+    35600,
+    38000,
+    47600,
+    57200
+   ],
+   "spawn": {
+    "frost bound bear": 59
+   },
+   "spacing": 260
+  },
+  {
+   "id": "pocket_broadleaf",
+   "kind": "camp",
+   "at": [
+    51520,
+    40040
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "frigid broadleaf": 4
+   }
+  },
+  {
+   "id": "pocket_sleipnir_plain",
+   "kind": "wildlife",
+   "area": [
+    7600,
+    6000,
+    35200,
+    16800
+   ],
+   "spawn": {
+    "sleipneirsson": 25,
+    "frost stallion": 17,
+    "mature wyvern": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "pocket_red_dagger",
+   "kind": "camp",
+   "at": [
+    36400,
+    44800
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "bounty hunter leader": 1,
+    "bounty hunter": 5
+   }
+  },
+  {
+   "id": "pocket_cyclops",
+   "kind": "camp",
+   "at": [
+    9280,
+    54880
+   ],
+   "r": 480,
+   "respawn": 900,
+   "spawn": {
+    "frost cyclops": 3
+   }
+  },
+  {
+   "id": "pocket_undead",
+   "kind": "camp",
+   "at": [
+    17400,
+    49800
+   ],
+   "r": 360,
+   "respawn": 420,
+   "spawn": {
+    "undead soldier": 6
+   }
+  },
+  {
+   "id": "pocket_wolverines",
+   "kind": "wildlife",
+   "area": [
+    8000,
+    40000,
+    20000,
+    56000
+   ],
+   "spawn": {
+    "dire wolverine": 17
+   },
+   "spacing": 260
+  },
+  {
+   "id": "cp1_garrison",
+   "kind": "camp",
+   "at": [
+    52000,
+    18840
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "fenrir mystic": 1,
+    "fenrir soldier": 4,
+    "winter wolf": 3
+   }
+  },
+  {
+   "id": "cp1_fells",
+   "kind": "wildlife",
+   "area": [
+    45200,
+    6800,
+    64000,
+    28000
+   ],
+   "spawn": {
+    "icestrider chiller": 42,
+    "icestrider frostweaver": 34,
+    "icestrider interceptor": 13,
+    "winter wolf": 21
+   },
+   "spacing": 260
+  },
+  {
+   "id": "cp2_garrison",
+   "kind": "camp",
+   "at": [
+    34000,
+    26000
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "frore lich": 1,
+    "fenrir soldier": 3,
+    "chillsome wight": 3
+   }
+  },
+  {
+   "id": "cp2_moor",
+   "kind": "wildlife",
+   "area": [
+    24800,
+    17200,
+    44000,
+    36000
+   ],
+   "spawn": {
+    "windswept wraith": 42,
+    "chillsome wight": 34,
+    "frore lich": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "cp3_garrison",
+   "kind": "camp",
+   "at": [
+    26000,
+    44000
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "greater fenrir": 1,
+    "savage winterwolf": 4,
+    "fenrir soldier": 2
+   }
+  },
+  {
+   "id": "cp3_run",
+   "kind": "wildlife",
+   "area": [
+    20800,
+    36000,
+    32400,
+    58000
+   ],
+   "spawn": {
+    "savage winterwolf": 50,
+    "windswept wraith": 17
+   },
+   "spacing": 260
+  },
+  {
+   "id": "moon_hunt",
+   "kind": "camp",
+   "at": [
+    28000,
+    52000
+   ],
+   "r": 480,
+   "respawn": 1200,
+   "spawn": {
+    "Hati's Huntsman": 1
+   }
+  },
+  {
+   "id": "cp4_garrison",
+   "kind": "camp",
+   "at": [
+    18000,
+    32000
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "greater fenrir": 1,
+    "fenrir mystic": 2,
+    "fenrir soldier": 4
+   }
+  },
+  {
+   "id": "cp4_camp",
+   "kind": "wildlife",
+   "area": [
+    8000,
+    18000,
+    24800,
+    40000
+   ],
+   "spawn": {
+    "fenrir soldier": 50,
+    "fenrir mystic": 17,
+    "savage winterwolf": 25
+   },
+   "spacing": 260
+  },
+  {
+   "id": "howe_guard",
+   "kind": "camp",
+   "at": [
+    15200,
+    22400
+   ],
+   "r": 480,
+   "respawn": 1200,
+   "spawn": {
+    "Fang-Captain of Hati": 1,
+    "fenrir mystic": 2
+   }
+  },
+  {
+   "id": "hatis_howe",
+   "kind": "clear",
+   "at": [
+    12800,
+    24000
+   ],
+   "r": 2400,
+   "names": [
+    "frost bound bear",
+    "frigid broadleaf",
+    "sleipneirsson",
+    "frost stallion",
+    "mature wyvern",
+    "dire wolverine",
+    "bounty hunter",
+    "bounty hunter leader",
+    "undead soldier",
+    "frost cyclops",
+    "icestrider chiller",
+    "icestrider frostweaver",
+    "icestrider interceptor",
+    "fenrir soldier",
+    "fenrir mystic",
+    "greater fenrir",
+    "savage winterwolf",
+    "winter wolf",
+    "windswept wraith",
+    "chillsome wight",
+    "frore lich",
+    "Fang-Captain of Hati",
+    "Hati's Huntsman"
+   ]
+  },
+  {
+   "id": "trappers_camp",
+   "kind": "clear",
+   "at": [
+    44000,
+    36000
+   ],
+   "r": 3600,
+   "names": [
+    "frost bound bear",
+    "frigid broadleaf",
+    "sleipneirsson",
+    "frost stallion",
+    "mature wyvern",
+    "dire wolverine",
+    "bounty hunter",
+    "bounty hunter leader",
+    "undead soldier",
+    "frost cyclops",
+    "icestrider chiller",
+    "icestrider frostweaver",
+    "icestrider interceptor",
+    "fenrir soldier",
+    "fenrir mystic",
+    "greater fenrir",
+    "savage winterwolf",
+    "winter wolf",
+    "windswept wraith",
+    "chillsome wight",
+    "frore lich",
+    "Fang-Captain of Hati",
+    "Hati's Huntsman"
+   ],
+   "block": "all"
+  }
+ ]
+}

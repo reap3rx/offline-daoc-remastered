@@ -1,0 +1,137 @@
+{
+ "zone": 101,
+ "region": 100,
+ "realm": 2,
+ "prefix": "uf101",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ulfrstead Steading Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "League grey, with the steading's door. Given to those who took Ulfrstead back."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hall-Door Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "The hall door's old latch, hammered into a ring."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "League Spear Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "Bronze, from the League's armoury."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Byre-Beam Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Oak from the byre the wolves broke into."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ulfar's Grey Hame",
+   "base": [
+    41,
+    26
+   ],
+   "level": 16,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 3,
+    "Hits": 14
+   },
+   "lore": "The Hame-Jarl's grey wolf-skin. The League cut the head off it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hame-Mother's Bell Necklace",
+   "base": [
+    41,
+    29
+   ],
+   "level": 16,
+   "bonuses": {
+    "Int": 5,
+    "Con": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "Farm-bells on a cord, from every farm she raided."
+  }
+ ],
+ "camp": {
+  "cloak": "uf101_ulfrstead_steading_cloak",
+  "emblem": 31360,
+  "draughts": [
+   [
+    "Strong_Draught_of_Healing",
+    "uf101_moor_ale",
+    "Moor Ale",
+    "Thordis's own. Heals more than it should."
+   ],
+   [
+    "Strong_Draught_of_Power",
+    "uf101_lingonberry_tonic",
+    "Lingonberry Tonic",
+    "Tart and sharp. It clears the head."
+   ],
+   [
+    "CombinedRegens_Draught",
+    "uf101_steading_mead",
+    "Steading Mead",
+    "The steading's mead. Everything comes back a little faster after a cup."
+   ]
+  ]
+ }
+}

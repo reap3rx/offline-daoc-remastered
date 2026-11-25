@@ -1,0 +1,151 @@
+{
+ "zone": 103,
+ "name": "Gotar",
+ "levels": [
+  12,
+  22
+ ],
+ "realm": 2,
+ "factions": [
+  {
+   "key": "nalliten_runecasters",
+   "name": "the Nalliten Runecasters",
+   "short": "the Runecasters",
+   "kin": [
+    "haggerfel_volur",
+    "seidr_folk",
+    "seithkona_circle",
+    "volur_oath"
+   ],
+   "titles": [
+    "Stave-Friend",
+    "Rune-Reader",
+    "Keeper of the Staves"
+   ],
+   "speaker": "gt_runa",
+   "town": "Nalliten",
+   "kills": [
+    "svartalf",
+    "dragon-preacher",
+    "drakeling",
+    "seithkona",
+    "gotawitch",
+    "seithr",
+    "host of the",
+    "wisp",
+    "pook",
+    "carrion"
+   ],
+   "quartermaster": {
+    "name": "Stave-Keeper Asta",
+    "guild": "the Nalliten Runecasters",
+    "model": 157,
+    "anchor": "gt_runa",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The staves' gifts, for those who read them true. Show me your standing with the Runecasters.",
+    "stock": [
+     {
+      "item": "rep103_stave_friend_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep103_rune_reader_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep103_carved_stave_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep103_nalliten_seer_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep103_mantle_of_the_stave_keeper",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "shared": [
+  "eiriks_huscarls"
+ ],
+ "quartermasters": [
+  {
+   "faction": "eiriks_huscarls",
+   "name": "Huscarl-Quartermaster Hrapp",
+   "guild": "King Eirik's Huscarls",
+   "model": 213,
+   "anchor": "gt_hallbjorn",
+   "offset": [
+    4,
+    3
+   ],
+   "greet": "The King's stores at Fort Atla, same stock as Mularn. Show me your standing with the Huscarls.",
+   "stock": [
+    {
+     "item": "rep100_huscarl_friend_s_ring",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep100_jordheim_road_belt",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep100_shield_of_jordheim_torc",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep100_eirik_s_bracer",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep100_mantle_of_eirik_s_champion",
+     "rank": "Legend",
+     "price": 150
+    }
+   ]
+  }
+ ],
+ "kill_default": "eiriks_huscarls",
+ "event_default": "eiriks_huscarls",
+ "quest_default": "nalliten_runecasters",
+ "quests": {
+  "nacken": "eiriks_huscarls",
+  "rune_stave": "nalliten_runecasters",
+  "gt_nippers": "eiriks_huscarls",
+  "gt_hobgoblins": "eiriks_huscarls",
+  "gt_wildlings": "eiriks_huscarls",
+  "gt_drowned_souls": "eiriks_huscarls",
+  "gt_drowned_ship": "eiriks_huscarls",
+  "gt_outcasts": "nalliten_runecasters",
+  "gt_scale_guards": "nalliten_runecasters",
+  "gt_preacher": "nalliten_runecasters",
+  "gt_hosts": "nalliten_runecasters",
+  "gt_pooks": "nalliten_runecasters",
+  "gt_carrion": "nalliten_runecasters",
+  "gt_drakelings": "nalliten_runecasters",
+  "gt_gotawitches": "nalliten_runecasters"
+ },
+ "events": {
+  "gt_scale_caravan": "eiriks_huscarls",
+  "gt_drowned_bell": "eiriks_huscarls",
+  "gotar_drowned_ship": "eiriks_huscarls",
+  "gotar_hobgoblins": "nalliten_runecasters",
+  "gotar_wildlings": "eiriks_huscarls",
+  "gotar_pine_imps": "nalliten_runecasters"
+ }
+}

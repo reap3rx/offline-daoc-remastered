@@ -145,6 +145,674 @@
     "Slash": 2
    },
    "lore": "Silver from the bottom of a cleansed spring. It is always cold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Prankster's Bell Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "A hobgoblin's bell. It still jingles at the worst moments."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mularn Watch Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 5,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 4
+   },
+   "lore": "Plain iron, stamped with the hall's mark."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ale-Keg Hoop Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 4
+   },
+   "lore": "A barrel hoop, bent round. It held good ale once."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Goblin-Net Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 5,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 4
+   },
+   "lore": "Knotted from a water goblin's net. Damp, always."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Vein-Silk Cuff",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 5,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Spider silk, wound tight. It turns a knife, nearly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cellar-Lantern Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Pie": 2,
+    "Int": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 3
+   },
+   "lore": "A tiny lantern on a cord. Spiders hate it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Snake-Finder's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 5,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 4
+   },
+   "lore": "A ring of snake-bone. The hobgoblins use them to find more snakes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Haggerfel Road Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 5,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 5,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Brown wool, for the road between the two towns."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wood-Eater Mandible Pin",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 4
+   },
+   "lore": "A wood-eater's jaw, made into a pin. It still clicks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sawdust Satchel-Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 5,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 5,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "A woodcutter's belt. Smells of fresh pine and something worse."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hive-Hunter's Chitin Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 6,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 5
+   },
+   "lore": "A plate of wood-eater shell, polished."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Alate-Wing Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 6,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 6,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Stiff, translucent, and somehow warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hive-King's Crown-Plate",
+   "base": [
+    41,
+    24
+   ],
+   "level": 8,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 1,
+    "Hits": 7
+   },
+   "lore": "A plate of the hive king's crest. It hums."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Royal-Guard Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 8,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 8,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Thick chitin, the royal guard's own."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mularn Hearth Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 8,
+   "bonuses": {
+    "Qui": 3,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 5,
+    "Power": 1
+   },
+   "lore": "Given by the jarl's household, with thanks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Milk-Pail Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "A tiny tin pail. The hidden folk leave these where they've been fed."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Birch-Shadow Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 5,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 4
+   },
+   "lore": "Grey-green and hard to see in a wood."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Outcast's Tail-Ribbon",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "A ribbon tied round a huldu's tail. She gave it freely."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hidden-Path Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 5,
+   "bonuses": {
+    "Pie": 2,
+    "Int": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 3
+   },
+   "lore": "Birch-bark, set in silver. You keep seeing paths that weren't there."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "White-Stone Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 7,
+   "bonuses": {
+    "Pie": 2,
+    "Int": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 4
+   },
+   "lore": "A pebble from the huldu ring, set in silver. Cold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Birch-Bark Letter-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 7,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 4,
+    "Power": 1
+   },
+   "lore": "The hidden folk's letter, folded small. It doesn't open again."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seeress's Shawl",
+   "base": [
+    41,
+    26
+   ],
+   "level": 7,
+   "bonuses": {
+    "Int": 2,
+    "Con": 1,
+    "Power": 1,
+    "Hits": 4
+   },
+   "lore": "Grey, with the nine-knot border of Haggerfel's volur."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Phantom-Hound Collar",
+   "base": [
+    41,
+    29
+   ],
+   "level": 6,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 5
+   },
+   "lore": "A collar with no hound in it. It's still warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Falls-Mist Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 6,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 6,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Always slightly damp from Darkness Falls."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wolfhound-Tooth Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 8,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 1,
+    "Hits": 7
+   },
+   "lore": "A fang in a band of iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Kennel-Master's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 8,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 8,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Scarred leather, bitten many times."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Frost-Track Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 10,
+   "bonuses": {
+    "Pie": 3,
+    "Int": 2,
+    "Dex": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "A shard of ice from the great wolf's track. It hasn't melted."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Veldon Watch Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 10,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 10,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Fort Veldon's grey, with the watch-tower in white."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Howl-Ward Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 10,
+   "bonuses": {
+    "Int": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "Iron and rowan, against the howling."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bone-Collector's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 8,
+   "bonuses": {
+    "Pie": 3,
+    "Int": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "Finger bones on a wire. Not yours, thankfully."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Ward Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 8,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 8,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Stitched with the barrow-runes the vendo tried to dig past."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Vendo Fetish-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 9,
+   "bonuses": {
+    "Int": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "A shaman's fetish. Someone has painted a red eye on it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cave-Fur Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 9,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 9,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Thick and smoky. The vendo know how to keep warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dragon-Tongue's Tract",
+   "base": [
+    41,
+    24
+   ],
+   "level": 11,
+   "bonuses": {
+    "Pie": 4,
+    "Int": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A scrap of red vellum. The words on it squirm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Preacher-Breaker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 11,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 9
+   },
+   "lore": "Iron, plain, and heavy. Thorvald's gift."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cavemouth Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 11,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 11,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Rough leather, scorched at the edge."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Well-Water Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 11,
+   "bonuses": {
+    "Int": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A drop of Haggerfel's well in glass. It shows you nothing. Yet."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Jordheim Courier's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 11,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 9
+   },
+   "lore": "Royal blue, with Eirik's mark."
   }
  ]
 }

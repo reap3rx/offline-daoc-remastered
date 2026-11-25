@@ -1,0 +1,182 @@
+{
+ "zone": 105,
+ "name": "Myrkwood Forest",
+ "levels": [
+  22,
+  32
+ ],
+ "realm": 2,
+ "factions": [
+  {
+   "key": "galplen_woodwards",
+   "name": "the Galplen Woodwards",
+   "short": "the Woodwards",
+   "kin": [
+    "eiriks_huscarls",
+    "steading_league",
+    "huginfel_shieldwall",
+    "khizil_forge",
+    "wolfsbane_rangers",
+    "vanern_wardens",
+    "kings_host"
+   ],
+   "titles": [
+    "Woodward-Friend",
+    "Axe of Galplen",
+    "Warden of the Myrkwood"
+   ],
+   "speaker": "mw_thora",
+   "town": "Galplen",
+   "kills": [
+    "worg",
+    "werewolf",
+    "svartalf",
+    "missionary",
+    "dragon-preacher",
+    "decaying",
+    "myrk shadow",
+    "corpse eater",
+    "skeleton",
+    "undead",
+    "myrkcat",
+    "frog",
+    "carrion",
+    "slither",
+    "venomspitter"
+   ],
+   "quartermaster": {
+    "name": "Woodward-Quartermaster Leif",
+    "guild": "the Galplen Woodwards",
+    "model": 213,
+    "anchor": "mw_thora",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The Woodwards' stores, for those who keep the roads open. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep105_woodward_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep105_galplen_axe_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep105_axe_of_galplen_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep105_black_tree_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep105_mantle_of_the_myrkwood_warden",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "seidr_folk",
+   "name": "the Seidr-Folk",
+   "short": "the Seidr-Folk",
+   "kin": [
+    "haggerfel_volur",
+    "nalliten_runecasters",
+    "seithkona_circle",
+    "volur_oath"
+   ],
+   "titles": [
+    "Seidr-Friend",
+    "Dream-Walker",
+    "Keeper of the Volva"
+   ],
+   "speaker": "mw_groa",
+   "town": "the volva's hut",
+   "kills": [
+    "willow",
+    "haunt",
+    "tingler",
+    "arachite",
+    "spider",
+    "mora",
+    "dark hound",
+    "soul sinker"
+   ],
+   "quartermaster": {
+    "name": "Seidr-Woman Ylva",
+    "guild": "the Seidr-Folk",
+    "model": 168,
+    "anchor": "mw_groa",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "Groa's gifts, for those who keep her safe. Show me your standing with the Seidr-Folk.",
+    "stock": [
+     {
+      "item": "rep105_seidr_friend_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep105_dream_walker_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep105_seidr_thread_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep105_axe_of_galplen_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep105_mantle_of_the_volva_s_keeper",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "galplen_woodwards",
+ "event_default": "galplen_woodwards",
+ "quest_default": "galplen_woodwards",
+ "quests": {
+  "willow_voice": "galplen_woodwards",
+  "mora": "seidr_folk",
+  "mw_frogs": "galplen_woodwards",
+  "mw_myrkcats": "galplen_woodwards",
+  "mw_carrion": "galplen_woodwards",
+  "mw_haunts": "galplen_woodwards",
+  "mw_willows": "seidr_folk",
+  "mw_tinglers": "seidr_folk",
+  "mw_norsemen": "galplen_woodwards",
+  "mw_shadows": "galplen_woodwards",
+  "mw_worgs": "galplen_woodwards",
+  "mw_werewolves": "seidr_folk",
+  "mw_mora_dancers": "seidr_folk",
+  "mw_watchers": "galplen_woodwards",
+  "mw_missionaries": "galplen_woodwards"
+ },
+ "events": {
+  "mw_blood_moon": "galplen_woodwards",
+  "mw_seer_hunt": "seidr_folk",
+  "myrkwood_forest_werewolf_den": "galplen_woodwards",
+  "myrkwood_forest_arachite_brood": "seidr_folk",
+  "myrkwood_forest_decaying_trolls": "galplen_woodwards",
+  "tower_sentry_tower": "galplen_woodwards",
+  "myrkwood_forest_mora_riders": "seidr_folk"
+ }
+}

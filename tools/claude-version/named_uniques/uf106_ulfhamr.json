@@ -1,0 +1,138 @@
+{
+ "zone": 106,
+ "region": 100,
+ "realm": 2,
+ "prefix": "uf106",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ulfhamr Breaker's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 36,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 36,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Rangers' grey, a broken wolf-skull on the back. Given to those who broke Ulfhamr."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moon-Stone Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 36,
+   "bonuses": {
+    "Pie": 12,
+    "Int": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 22
+   },
+   "lore": "A chip of the hold's cracked moon-stone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wolfsbane Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 36,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 31
+   },
+   "lore": "Silver twisted with dried wolfsbane."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hold-Gate Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 36,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 36,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Black logs from the hold's gate, banded in iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ulfgrim's Skull Helm",
+   "base": [
+    41,
+    29
+   ],
+   "level": 38,
+   "bonuses": {
+    "Str": 13,
+    "Con": 13,
+    "Dex": 6,
+    "Hits": 32
+   },
+   "lore": "The jarl's wolf-skull helm, cut down to a pendant."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moon-Mother's White Pelt",
+   "base": [
+    41,
+    26
+   ],
+   "level": 38,
+   "bonuses": {
+    "Dex": 13,
+    "Qui": 13,
+    "Str": 6,
+    "Hits": 32
+   },
+   "lore": "White as the moon she hunted."
+  }
+ ],
+ "camp": {
+  "cloak": "uf106_ulfhamr_breaker_s_cloak",
+  "emblem": 32640,
+  "draughts": [
+   [
+    "Strong_Draught_of_Healing",
+    "uf106_ranger_s_ale",
+    "Ranger's Ale",
+    "Gro's own. Better than it smells."
+   ],
+   [
+    "Strong_Draught_of_Power",
+    "uf106_wolfsbane_tonic",
+    "Wolfsbane Tonic",
+    "Bitter. Harmless to men. Mostly."
+   ],
+   [
+    "CombinedRegens_Draught",
+    "uf106_moonlit_mead",
+    "Moonlit Mead",
+    "Brewed under the moon. Everything comes back a little faster after a cup."
+   ]
+  ]
+ }
+}

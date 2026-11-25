@@ -1,538 +1,1587 @@
 {
-  "zone": 106,
-  "region": 100,
-  "name": "Skona Ravine",
-  "lore": "Skona Ravine, where the seithkona keep their circle and the wolfaur guard the passes for their werewolf masters.",
-  "chains": [
+ "zone": 106,
+ "region": 100,
+ "name": "Skona Ravine",
+ "lore": "Skona Ravine: the Stor Gothi's camp and the Seithkona Circle on the edges of a deep, wooded ravine. In its middle stands Ulfhamr, the werewolf hold, where the wolfaur headsmen and the warders gather Fenrir's kin for Hati's host in Raumarik. The seithkona read the moon's road, and the moon is afraid. From the south the first silverscale drakes creep up out of Malmohus.",
+ "chains": [
+  {
+   "id": "skona_ravine_werewolf_warders",
+   "title": "The Werewolf Warders",
+   "levels": [
+    27,
+    33
+   ],
+   "hint": "The warders are gathering in the pass...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "skona_ravine_werewolf_warders",
-      "title": "The Werewolf Warders",
-      "levels": [27, 33],
-      "hint": "The warders are gathering in the pass...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Warders' Pass",
-          "objective": "Clear the warders' pass",
-          "announce": "Grimgar has closed the pass with his warders. Open it.",
-          "center": [1211, 1014, 138.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60167872,
-              "name": "werewolf warder",
-              "level": [27, 30]
-            },
-            {
-              "template": 60167861,
-              "name": "werewolf guard",
-              "level": [31, 33]
-            }
-          ],
-          "success": "You have cleared the warders' pass. Grimgar Fenris-born comes out to fight.",
-          "fail": "They hold the warders' pass. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Grimgar Fenris-born",
-          "objective": "Defeat Grimgar Fenris-born",
-          "announce": "Grimgar Fenris-born stands at the warders' pass. Bring friends.",
-          "center": [1211, 1014, 138.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60168002,
-            "name": "Grimgar Fenris-born",
-            "level": 35,
-            "size": 110,
-            "pos": [1211, 1014, 138.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60167872,
-                "name": "werewolf warder",
-                "level": [27, 30]
-              }
-            ]
-          },
-          "success": "Grimgar Fenris-born falls. The way is safe again.",
-          "fail": "Grimgar Fenris-born slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu106_grimgar_fenris_born_s_mantle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Werewolf Warders Hold the Road",
-          "objective": "Drive the werewolf warders off the road",
-          "announce": "With The Werewolf Warders lost, the werewolf warders have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1348, 793, 125.8],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60167872,
-              "name": "werewolf warder",
-              "level": [27, 30]
-            },
-            {
-              "template": 60167861,
-              "name": "werewolf guard",
-              "level": [31, 33]
-            }
-          ],
-          "boss": {
-            "template": 60167872,
-            "name": "Werewolf warder warleader",
-            "level": 34,
-            "pos": [1348, 793, 125.8],
-            "health_mult": 2
-          },
-          "success": "The werewolf warders are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Gunnar has come out to set the road right. The werewolf warders are coming back for it!",
-          "center": [1348, 793, 125.8],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Gunnar",
-            "level": 33,
-            "pos": [1348, 793, 125.8],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1368, 875, 133.7],
-              [1303, 865, 116.1],
-              [1265, 811, 125.8]
-            ],
-            "mobs": [
-              {
-                "template": 60167872,
-                "name": "werewolf warder",
-                "level": [27, 30]
-              },
-              {
-                "template": 60167861,
-                "name": "werewolf guard",
-                "level": [31, 33]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The werewolf warders break and scatter. The road is open again.",
-          "fail": "Roadwarden Gunnar falls, and the werewolf warders take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Warders' Pass",
+     "objective": "Clear the warders' pass",
+     "announce": "Grimgar has closed the pass with his warders. Open it.",
+     "center": [
+      1211,
+      1014,
+      138.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60167872,
+       "name": "werewolf warder",
+       "level": [
+        27,
+        30
+       ]
+      },
+      {
+       "template": 60167861,
+       "name": "werewolf guard",
+       "level": [
+        31,
+        33
+       ]
+      }
+     ],
+     "success": "You have cleared the warders' pass. Grimgar Fenris-born comes out to fight.",
+     "fail": "They hold the warders' pass. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "skona_ravine_dryad_grove",
-      "title": "The Dryad Grove",
-      "levels": [20, 22],
-      "hint": "The trees are moving in the southern ravine...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Runa the Herbalist",
-          "objective": "Protect Runa the Herbalist, who is cutting rare herbs",
-          "announce": "Runa the herbalist is cutting the ravine's rarest herbs, and the dryads want her rooted to the spot - forever.",
-          "center": [1238, 1405, 130.6],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Runa the Herbalist",
-            "template": 60167667,
-            "level": 22,
-            "model": 158,
-            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
-            "health_mult": 10,
-            "pos": [1238, 1405, 130.6]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1267, 1325, 133.9],
-              [1316, 1369, 135.7],
-              [1318, 1436, 138.6]
-            ],
-            "mobs": [
-              {
-                "template": 60160196,
-                "name": "dryad blossom",
-                "level": [20, 20]
-              },
-              {
-                "template": 60160197,
-                "name": "dryad greenthumb",
-                "level": [21, 21]
-              },
-              {
-                "template": 60167248,
-                "name": "treekeep",
-                "level": [22, 22]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Runa the Herbalist. \"They came from over there - let's finish this.\"",
-          "fail": "Runa the Herbalist falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Herb Garden",
-          "objective": "Clear the herb garden",
-          "announce": "They came from the herb garden. Follow them back and clear it out.",
-          "center": [1451, 1307, 142.7],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60160196,
-              "name": "dryad blossom",
-              "level": [20, 20]
-            },
-            {
-              "template": 60160197,
-              "name": "dryad greenthumb",
-              "level": [21, 21]
-            },
-            {
-              "template": 60167248,
-              "name": "treekeep",
-              "level": [22, 22]
-            }
-          ],
-          "success": "You have cleared the herb garden. Mother Oak comes out to fight.",
-          "fail": "They hold the herb garden. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Mother Oak",
-          "objective": "Defeat Mother Oak",
-          "announce": "Mother Oak stands at the herb garden. Bring friends.",
-          "center": [1451, 1307, 142.7],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60167248,
-            "name": "Mother Oak",
-            "level": 24,
-            "size": 66,
-            "pos": [1451, 1307, 142.7],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60160196,
-                "name": "dryad blossom",
-                "level": [20, 20]
-              }
-            ]
-          },
-          "success": "Mother Oak falls. The way is safe again.",
-          "fail": "Mother Oak slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu106_mother_oak_s_belt", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Dryad Blossoms Hold the Road",
-          "objective": "Drive the dryad blossoms off the road",
-          "announce": "With The Dryad Grove lost, the dryad blossoms have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1461, 1062, 126.4],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60160196,
-              "name": "dryad blossom",
-              "level": [20, 20]
-            },
-            {
-              "template": 60160197,
-              "name": "dryad greenthumb",
-              "level": [21, 21]
-            },
-            {
-              "template": 60167248,
-              "name": "treekeep",
-              "level": [22, 22]
-            }
-          ],
-          "boss": {
-            "template": 60160196,
-            "name": "Dryad blossom warleader",
-            "level": 23,
-            "pos": [1461, 1062, 126.4],
-            "health_mult": 2
-          },
-          "success": "The dryad blossoms are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Ylva has come out to set the road right. The dryad blossoms are coming back for it!",
-          "center": [1461, 1062, 126.4],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Ylva",
-            "level": 22,
-            "pos": [1461, 1062, 126.4],
-            "health_mult": 10,
-            "template": 60167667,
-            "model": 158,
-            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1520, 1124, 122.6],
-              [1458, 1147, 124.5],
-              [1398, 1119, 127.4]
-            ],
-            "mobs": [
-              {
-                "template": 60160196,
-                "name": "dryad blossom",
-                "level": [20, 20]
-              },
-              {
-                "template": 60160197,
-                "name": "dryad greenthumb",
-                "level": [21, 21]
-              },
-              {
-                "template": 60167248,
-                "name": "treekeep",
-                "level": [22, 22]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The dryad blossoms break and scatter. The road is open again.",
-          "fail": "Roadwarden Ylva falls, and the dryad blossoms take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Grimgar Fenris-born",
+     "objective": "Defeat Grimgar Fenris-born",
+     "announce": "Grimgar Fenris-born stands at the warders' pass. Bring friends.",
+     "center": [
+      1211,
+      1014,
+      138.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60168002,
+      "name": "Grimgar Fenris-born",
+      "level": 35,
+      "size": 110,
+      "pos": [
+       1211,
+       1014,
+       138.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60167872,
+        "name": "werewolf warder",
+        "level": [
+         27,
+         30
+        ]
+       }
       ]
+     },
+     "success": "Grimgar Fenris-born falls. The way is safe again.",
+     "fail": "Grimgar Fenris-born slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu106_grimgar_fenris_born_s_mantle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
     },
     {
-      "id": "skona_ravine_wolfaur_headsmen",
-      "title": "The Wolfaur Headsmen",
-      "levels": [33, 36],
-      "hint": "Severed heads mark a path into the ravine...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Headsmen's Block",
-          "objective": "Clear the headsmen's block",
-          "announce": "The wolfaur headsmen have set up their block in the ravine and taken a hunting party's heads. End them.",
-          "center": [836, 576, 125.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60168002,
-              "name": "wolfaur headsman",
-              "level": [33, 36]
-            }
-          ],
-          "success": "You have cleared the headsmen's block. Grimjaw the Headsman comes out to fight.",
-          "fail": "They hold the headsmen's block. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Grimjaw the Headsman",
-          "objective": "Defeat Grimjaw the Headsman",
-          "announce": "Grimjaw the Headsman stands at the headsmen's block. Bring friends.",
-          "center": [836, 576, 125.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60168002,
-            "name": "Grimjaw the Headsman",
-            "level": 38,
-            "size": 110,
-            "pos": [836, 576, 125.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60168002,
-                "name": "wolfaur headsman",
-                "level": [33, 36]
-              }
-            ]
-          },
-          "success": "Grimjaw the Headsman falls. The way is safe again.",
-          "fail": "Grimjaw the Headsman slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu106_grimjaw_the_headsman_s_band", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Wolfaur Headsmen Hold the Old Road",
-          "objective": "Drive the wolfaur headsmen off the old road",
-          "announce": "With The Wolfaur Headsmen lost, the wolfaur headsmen have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [705, 818, 40.3],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60168002,
-              "name": "wolfaur headsman",
-              "level": [33, 36]
-            }
-          ],
-          "boss": {
-            "template": 60168002,
-            "name": "Wolfaur headsman warleader",
-            "level": 37,
-            "pos": [705, 818, 40.3],
-            "health_mult": 2
-          },
-          "success": "The wolfaur headsmen are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Ylva has come out to set the old road right. The wolfaur headsmen are coming back for it!",
-          "center": [705, 818, 40.3],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Ylva",
-            "level": 36,
-            "pos": [705, 818, 40.3],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [680, 737, 88.6],
-              [746, 743, 86.4],
-              [787, 795, 41.7]
-            ],
-            "mobs": [
-              {
-                "template": 60168002,
-                "name": "wolfaur headsman",
-                "level": [33, 36]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The wolfaur headsmen break and scatter. The old road is open again.",
-          "fail": "Roadwarden Ylva falls, and the wolfaur headsmen take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Werewolf Warders Hold the Road",
+     "objective": "Drive the werewolf warders off the road",
+     "announce": "With The Werewolf Warders lost, the werewolf warders have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1348,
+      793,
+      125.8
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60167872,
+       "name": "werewolf warder",
+       "level": [
+        27,
+        30
+       ]
+      },
+      {
+       "template": 60167861,
+       "name": "werewolf guard",
+       "level": [
+        31,
+        33
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60167872,
+      "name": "Werewolf warder warleader",
+      "level": 34,
+      "pos": [
+       1348,
+       793,
+       125.8
+      ],
+      "health_mult": 2
+     },
+     "success": "The werewolf warders are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Gunnar, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Gunnar has come out to set the road right. The werewolf warders are coming back for it!",
+     "center": [
+      1348,
+      793,
+      125.8
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Gunnar",
+      "level": 33,
+      "pos": [
+       1348,
+       793,
+       125.8
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1368,
+        875,
+        133.7
+       ],
+       [
+        1303,
+        865,
+        116.1
+       ],
+       [
+        1265,
+        811,
+        125.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60167872,
+        "name": "werewolf warder",
+        "level": [
+         27,
+         30
+        ]
+       },
+       {
+        "template": 60167861,
+        "name": "werewolf guard",
+        "level": [
+         31,
+         33
+        ]
+       }
       ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The werewolf warders break and scatter. The road is open again.",
+     "fail": "Roadwarden Gunnar falls, and the werewolf warders take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
+   ]
+  },
+  {
+   "id": "skona_ravine_dryad_grove",
+   "title": "The Dryad Grove",
+   "levels": [
+    20,
+    22
+   ],
+   "hint": "The trees are moving in the southern ravine...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Runa the Herbalist",
+     "objective": "Protect Runa the Herbalist, who is cutting rare herbs",
+     "announce": "Runa the herbalist is cutting the ravine's rarest herbs, and the dryads want her rooted to the spot - forever.",
+     "center": [
+      1238,
+      1405,
+      130.6
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Runa the Herbalist",
+      "template": 60167667,
+      "level": 22,
+      "model": 158,
+      "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+      "health_mult": 10,
+      "pos": [
+       1238,
+       1405,
+       130.6
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1267,
+        1325,
+        133.9
+       ],
+       [
+        1316,
+        1369,
+        135.7
+       ],
+       [
+        1318,
+        1436,
+        138.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160196,
+        "name": "dryad blossom",
+        "level": [
+         20,
+         20
+        ]
+       },
+       {
+        "template": 60160197,
+        "name": "dryad greenthumb",
+        "level": [
+         21,
+         21
+        ]
+       },
+       {
+        "template": 60167248,
+        "name": "treekeep",
+        "level": [
+         22,
+         22
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Runa the Herbalist. \"They came from over there - let's finish this.\"",
+     "fail": "Runa the Herbalist falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Herb Garden",
+     "objective": "Clear the herb garden",
+     "announce": "They came from the herb garden. Follow them back and clear it out.",
+     "center": [
+      1451,
+      1307,
+      142.7
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60160196,
+       "name": "dryad blossom",
+       "level": [
+        20,
+        20
+       ]
+      },
+      {
+       "template": 60160197,
+       "name": "dryad greenthumb",
+       "level": [
+        21,
+        21
+       ]
+      },
+      {
+       "template": 60167248,
+       "name": "treekeep",
+       "level": [
+        22,
+        22
+       ]
+      }
+     ],
+     "success": "You have cleared the herb garden. Mother Oak comes out to fight.",
+     "fail": "They hold the herb garden. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Mother Oak",
+     "objective": "Defeat Mother Oak",
+     "announce": "Mother Oak stands at the herb garden. Bring friends.",
+     "center": [
+      1451,
+      1307,
+      142.7
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60167248,
+      "name": "Mother Oak",
+      "level": 24,
+      "size": 66,
+      "pos": [
+       1451,
+       1307,
+       142.7
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60160196,
+        "name": "dryad blossom",
+        "level": [
+         20,
+         20
+        ]
+       }
+      ]
+     },
+     "success": "Mother Oak falls. The way is safe again.",
+     "fail": "Mother Oak slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu106_mother_oak_s_belt",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Dryad Blossoms Hold the Road",
+     "objective": "Drive the dryad blossoms off the road",
+     "announce": "With The Dryad Grove lost, the dryad blossoms have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1461,
+      1062,
+      126.4
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60160196,
+       "name": "dryad blossom",
+       "level": [
+        20,
+        20
+       ]
+      },
+      {
+       "template": 60160197,
+       "name": "dryad greenthumb",
+       "level": [
+        21,
+        21
+       ]
+      },
+      {
+       "template": 60167248,
+       "name": "treekeep",
+       "level": [
+        22,
+        22
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60160196,
+      "name": "Dryad blossom warleader",
+      "level": 23,
+      "pos": [
+       1461,
+       1062,
+       126.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The dryad blossoms are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Ylva has come out to set the road right. The dryad blossoms are coming back for it!",
+     "center": [
+      1461,
+      1062,
+      126.4
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Ylva",
+      "level": 22,
+      "pos": [
+       1461,
+       1062,
+       126.4
+      ],
+      "health_mult": 10,
+      "template": 60167667,
+      "model": 158,
+      "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1520,
+        1124,
+        122.6
+       ],
+       [
+        1458,
+        1147,
+        124.5
+       ],
+       [
+        1398,
+        1119,
+        127.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60160196,
+        "name": "dryad blossom",
+        "level": [
+         20,
+         20
+        ]
+       },
+       {
+        "template": 60160197,
+        "name": "dryad greenthumb",
+        "level": [
+         21,
+         21
+        ]
+       },
+       {
+        "template": 60167248,
+        "name": "treekeep",
+        "level": [
+         22,
+         22
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The dryad blossoms break and scatter. The road is open again.",
+     "fail": "Roadwarden Ylva falls, and the dryad blossoms take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "skona_ravine_wolfaur_headsmen",
+   "title": "The Wolfaur Headsmen",
+   "levels": [
+    33,
+    36
+   ],
+   "hint": "Severed heads mark a path into the ravine...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Headsmen's Block",
+     "objective": "Clear the headsmen's block",
+     "announce": "The wolfaur headsmen have set up their block in the ravine and taken a hunting party's heads. End them.",
+     "center": [
+      836,
+      576,
+      125.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60168002,
+       "name": "wolfaur headsman",
+       "level": [
+        33,
+        36
+       ]
+      }
+     ],
+     "success": "You have cleared the headsmen's block. Grimjaw the Headsman comes out to fight.",
+     "fail": "They hold the headsmen's block. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "Grimjaw the Headsman",
+     "objective": "Defeat Grimjaw the Headsman",
+     "announce": "Grimjaw the Headsman stands at the headsmen's block. Bring friends.",
+     "center": [
+      836,
+      576,
+      125.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60168002,
+      "name": "Grimjaw the Headsman",
+      "level": 38,
+      "size": 110,
+      "pos": [
+       836,
+       576,
+       125.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60168002,
+        "name": "wolfaur headsman",
+        "level": [
+         33,
+         36
+        ]
+       }
+      ]
+     },
+     "success": "Grimjaw the Headsman falls. The way is safe again.",
+     "fail": "Grimjaw the Headsman slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu106_grimjaw_the_headsman_s_band",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Wolfaur Headsmen Hold the Old Road",
+     "objective": "Drive the wolfaur headsmen off the old road",
+     "announce": "With The Wolfaur Headsmen lost, the wolfaur headsmen have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      705,
+      818,
+      40.3
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60168002,
+       "name": "wolfaur headsman",
+       "level": [
+        33,
+        36
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60168002,
+      "name": "Wolfaur headsman warleader",
+      "level": 37,
+      "pos": [
+       705,
+       818,
+       40.3
+      ],
+      "health_mult": 2
+     },
+     "success": "The wolfaur headsmen are gone from the old road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Ylva has come out to set the old road right. The wolfaur headsmen are coming back for it!",
+     "center": [
+      705,
+      818,
+      40.3
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Ylva",
+      "level": 36,
+      "pos": [
+       705,
+       818,
+       40.3
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        680,
+        737,
+        88.6
+       ],
+       [
+        746,
+        743,
+        86.4
+       ],
+       [
+        787,
+        795,
+        41.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60168002,
+        "name": "wolfaur headsman",
+        "level": [
+         33,
+         36
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+     "success": "The wolfaur headsmen break and scatter. The old road is open again.",
+     "fail": "Roadwarden Ylva falls, and the wolfaur headsmen take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "sk_red_moon",
+   "title": "The Red Moon",
+   "levels": [
+    31,
+    35
+   ],
+   "hint": "The moon rises red over the ravine, and the howling comes closer to the Seithkona Circle...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "r1",
+   "stages": [
+    {
+     "id": "r1",
+     "type": "defend",
+     "name": "The Moon-Reading",
+     "objective": "Keep Seithkona Rannveig alive while she reads the moon",
+     "announce": "A red moon over Skona, and the werewolves are coming for the Seithkona Circle to stop the seers reading the moon's road! Seithkona Rannveig won't leave the stone - keep her alive!",
+     "center": [
+      1350,
+      280,
+      146.4
+     ],
+     "radius": 70,
+     "duration_s": 200,
+     "protect": {
+      "template": 60157473,
+      "model": 168,
+      "guild": "the Seithkona Circle",
+      "name": "Seithkona Rannveig",
+      "level": 33,
+      "pos": [
+       1350,
+       280,
+       146.4
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 24,
+      "count": 3,
+      "from": [
+       [
+        1290,
+        330,
+        126.0
+       ],
+       [
+        1410,
+        340,
+        126.2
+       ],
+       [
+        1300,
+        220,
+        141.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60167871,
+        "name": "werewolf skulker",
+        "level": [
+         30,
+         32
+        ],
+        "guild": "Fenrir's Kin"
+       },
+       {
+        "template": 60167861,
+        "name": "werewolf guard",
+        "level": [
+         31,
+         33
+        ],
+        "guild": "Fenrir's Kin"
+       },
+       {
+        "template": 60167872,
+        "name": "werewolf warder",
+        "level": [
+         32,
+         34
+        ],
+        "guild": "Fenrir's Kin"
+       }
+      ]
+     },
+     "thanks": "\"The moon's road runs north-west, to the ice. Hati's waiting there. Tell Jodur.\"",
+     "success": "The packs fall back - and a werewolf in a cloak of moon-pale fur walks out of the trees, howling at the red moon.",
+     "fail": "Rannveig falls at the stone, and the moon goes dark.",
+     "on_success": "r2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 160,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "r2",
+     "type": "boss",
+     "name": "the Moon-Caller",
+     "objective": "Defeat the Moon-Caller",
+     "announce": "The Moon-Caller, a werewolf priest with the moon's phases cut into his hide: 'Hati hunts. The moon runs. Your seers will not warn her.'",
+     "center": [
+      1350,
+      280,
+      146.4
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60167872,
+      "name": "the Moon-Caller",
+      "level": 36,
+      "size": 70,
+      "pos": [
+       1350,
+       280,
+       146.4
+      ],
+      "health_mult": 3,
+      "guild": "of Fenrir's Kin"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60167871,
+        "name": "werewolf skulker",
+        "level": [
+         30,
+         32
+        ],
+        "guild": "Fenrir's Kin"
+       }
+      ]
+     },
+     "success": "The Moon-Caller falls among the stones, and the moon goes white.",
+     "fail": "The Moon-Caller drives you from the circle.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 28,
+      "copper_per_level": 260,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "nu106_moon_caller_s_hide",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ],
+   "time": "night"
+  },
+  {
+   "id": "sk_ulfhamr_assault",
+   "title": "Break Ulfhamr",
+   "levels": [
+    33,
+    37
+   ],
+   "manual": true,
+   "bots": 8,
+   "min_people": 4,
+   "bot_min_level": 25,
+   "hint": "Ranger-Marshal Hjordis is gathering the Wolfsbane Rangers on the slope north-west of Ulfhamr.",
+   "rest_s": 15,
+   "start": "u1",
+   "giver": {
+    "template": 60157473,
+    "model": 213,
+    "guild": "the Wolfsbane Rangers",
+    "name": "Ranger-Marshal Hjordis",
+    "level": 37,
+    "pos": [
+     720,
+     560,
+     129.2
+    ],
+    "health_mult": 3,
+    "greet": "The Rangers are here, and every one of them has lost someone to that hold. Four at least, bots and all - say [for the Rangers].",
+    "accept": "for the Rangers",
+    "reply": "Wolfsbane on your blades! Clear the yard, break their moon-stones, and drag their warden out!",
+    "busy": "Not yet. The Rangers are still coming in from the woods. Rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "Ulfhamr is broken! Hati's host will have to gather somewhere else.",
+    "regret": "Back to the slope! We'll come again."
+   },
+   "guards": [
+    {
+     "template": 60157473,
+     "model": 213,
+     "guild": "the Wolfsbane Rangers",
+     "name": "Wolfsbane ranger",
+     "level": 34,
+     "count": 2
+    },
+    {
+     "template": 60157473,
+     "model": 168,
+     "guild": "the Seithkona Circle",
+     "name": "seithkona of the Circle",
+     "level": 34,
+     "count": 2
+    }
+   ],
+   "stages": [
+    {
+     "id": "u1",
+     "type": "cull",
+     "name": "The Yard",
+     "objective": "Clear the werewolves from the hold's yard",
+     "announce": "Into the yard! The guards and the headsmen are coming out to meet us!",
+     "center": [
+      860,
+      800,
+      49.0
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "kill": 20,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60167861,
+       "name": "werewolf guard",
+       "level": [
+        31,
+        33
+       ],
+       "guild": "Fenrir's Kin"
+      },
+      {
+       "template": 60168002,
+       "name": "wolfaur headsman",
+       "level": [
+        33,
+        35
+       ],
+       "guild": "Fenrir's Kin"
+      },
+      {
+       "template": 60167871,
+       "name": "werewolf skulker",
+       "level": [
+        30,
+        32
+       ],
+       "guild": "Fenrir's Kin"
+      },
+      {
+       "template": 60167872,
+       "name": "werewolf warder",
+       "level": [
+        32,
+        34
+       ],
+       "guild": "Fenrir's Kin"
+      }
+     ],
+     "success": "The yard is ours. The werewolves fall back into the hold.",
+     "fail": "The Rangers are thrown back up the slope.",
+     "on_success": "u2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 160,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "u2",
+     "type": "wards",
+     "name": "The Moon-Stones",
+     "objective": "Hold the three moon-stones at once while the seithkona break them",
+     "announce": "Three moon-stones feed the hold's wards! Stand at all three at once and the seithkona will break them!",
+     "center": [
+      920,
+      720,
+      54.4
+     ],
+     "radius": 80,
+     "wards": [
+      [
+       890,
+       690,
+       88.6
+      ],
+      [
+       950,
+       700,
+       80.1
+      ],
+      [
+       920,
+       760,
+       41.9
+      ]
+     ],
+     "ward_names": [
+      "the north stone",
+      "the east stone",
+      "the south stone"
+     ],
+     "ward_radius": 20,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 60167872,
+       "name": "werewolf warder",
+       "level": [
+        32,
+        34
+       ],
+       "guild": "Fenrir's Kin"
+      },
+      {
+       "template": 60167861,
+       "name": "werewolf guard",
+       "level": [
+        31,
+        33
+       ],
+       "guild": "Fenrir's Kin"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "banner of the Rangers",
+     "success": "The moon-stones crack - and out of the hold comes its warden, howling.",
+     "fail": "The stones hold. The Rangers fall back.",
+     "on_success": "u3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 160,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "u3",
+     "type": "boss",
+     "name": "Hold-Jarl Ulfgrim",
+     "objective": "Defeat Hold-Jarl Ulfgrim",
+     "announce": "Hold-Jarl Ulfgrim, a werewolf in a jarl's mail with a wolf-skull helm: 'When the moon runs red we go north to Hati. You'll be the meat we bring.'",
+     "center": [
+      920,
+      720,
+      54.4
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60167853,
+      "name": "Hold-Jarl Ulfgrim",
+      "level": 38,
+      "size": 65,
+      "health_mult": 2.5,
+      "guild": "Jarl of Ulfhamr"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60167861,
+        "name": "werewolf guard",
+        "level": [
+         31,
+         33
+        ],
+        "guild": "Fenrir's Kin"
+       },
+       {
+        "template": 60168002,
+        "name": "wolfaur headsman",
+        "level": [
+         33,
+         35
+        ],
+        "guild": "Fenrir's Kin"
+       }
+      ]
+     },
+     "success": "Ulfgrim falls on his own threshold. The Rangers' banner goes up over Ulfhamr.",
+     "fail": "Ulfgrim drives the Rangers out of the yard.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 300,
+      "tokens": 22,
+      "items": [
+       {
+        "id": "uf106_ulfgrim_s_skull_helm",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sk_ulfhamr_return",
+   "title": "The Moon-Mother",
+   "levels": [
+    34,
+    37
+   ],
+   "manual": true,
+   "bots": 8,
+   "bot_min_level": 25,
+   "hint": "Howling from every side of the ravine: the Moon-Mother has come for Ulfhamr.",
+   "wake_m": 200,
+   "auto_fail_s": 900,
+   "start": "x1",
+   "stages": [
+    {
+     "id": "x1",
+     "type": "defend",
+     "name": "The Hold Gate",
+     "objective": "Keep Ranger Ketilridr alive at the hold gate",
+     "announce": "Every pack in the ravine is coming for Ulfhamr! Hold the gate!",
+     "center": [
+      920,
+      720,
+      54.4
+     ],
+     "radius": 70,
+     "duration_s": 200,
+     "protect": {
+      "template": 60157473,
+      "model": 168,
+      "guild": "the Wolfsbane Rangers",
+      "name": "Ranger Ketilridr",
+      "level": 35,
+      "pos": [
+       920,
+       720,
+       54.4
+      ],
+      "health_mult": 5
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 4,
+      "from": [
+       [
+        980,
+        660,
+        88.6
+       ],
+       [
+        990,
+        800,
+        88.6
+       ],
+       [
+        850,
+        680,
+        95.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60167861,
+        "name": "werewolf guard",
+        "level": [
+         31,
+         33
+        ],
+        "guild": "Fenrir's Kin"
+       },
+       {
+        "template": 60168002,
+        "name": "wolfaur headsman",
+        "level": [
+         33,
+         35
+        ],
+        "guild": "Fenrir's Kin"
+       },
+       {
+        "template": 60167871,
+        "name": "werewolf skulker",
+        "level": [
+         30,
+         32
+        ],
+        "guild": "Fenrir's Kin"
+       },
+       {
+        "template": 60167872,
+        "name": "werewolf warder",
+        "level": [
+         32,
+         34
+        ],
+        "guild": "Fenrir's Kin"
+       }
+      ]
+     },
+     "success": "The first rush breaks - and the Moon-Mother comes over the wall.",
+     "fail": "Ranger Ketilridr falls at the gate.",
+     "on_success": "x2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    },
+    {
+     "id": "x2",
+     "type": "boss",
+     "name": "the Moon-Mother",
+     "objective": "Defeat the Moon-Mother",
+     "announce": "The Moon-Mother - a she-wolf taller than the gate, her fur white as the moon she hunts: 'My cubs were promised this hold, and the north after it.'",
+     "center": [
+      920,
+      720,
+      54.4
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60167849,
+      "name": "the Moon-Mother",
+      "level": 38,
+      "size": 80,
+      "health_mult": 2.5,
+      "guild": "Mother of Fenrir's Kin"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60167861,
+        "name": "werewolf guard",
+        "level": [
+         31,
+         33
+        ],
+        "guild": "Fenrir's Kin"
+       },
+       {
+        "template": 60167871,
+        "name": "werewolf skulker",
+        "level": [
+         30,
+         32
+        ],
+        "guild": "Fenrir's Kin"
+       }
+      ]
+     },
+     "success": "The Moon-Mother falls. Ulfhamr holds - for now.",
+     "fail": "The Moon-Mother takes Ulfhamr back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 260,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "uf106_moon_mother_s_white_pelt",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "siege": {
+  "id": "ulfhamr",
+  "name": "Ulfhamr",
+  "enemy": "Fenrir's Kin",
+  "resolve_name": "The Rangers' resolve",
+  "enemy_name": "The werewolves' hold",
+  "faction": "wolfsbane_rangers",
+  "feeds": {
+   "sk_red_moon": 20,
+   "skona_ravine_werewolf_warders": 15,
+   "skona_ravine_wolfaur_headsmen": 15,
+   "skona_ravine_dryad_grove": 5
+  },
+  "feed_default": 5,
+  "quests": {
+   "sk_skulkers": 5,
+   "sk_wolverines": 5,
+   "sk_moon_stone": 10,
+   "sk_guards": 10,
+   "sk_warders": 15,
+   "sk_headsmen": 15,
+   "sk_ulfhamr": 25,
+   "moonbound": 10
+  },
+  "enemy_feeds": {
+   "sk_red_moon": 15
+  },
+  "enemy_default": 5,
+  "war_chain": "sk_red_moon",
+  "assault": "sk_ulfhamr_assault",
+  "raids": [],
+  "last_raid": "sk_ulfhamr_return",
+  "hold_h": 2,
+  "raid_gap_h": [
+   2,
+   1.5,
+   1.5
+  ],
+  "criers": [
+   "sk_jodur",
+   "sk_saga"
+  ],
+  "bots_go_after_m": 30,
+  "open_text": "Hear me! The Wolfsbane Rangers mean to break Ulfhamr, the werewolf hold! Ranger-Marshal Hjordis waits on the slope north-west of the hold. If no one leads within the half-hour, the Rangers go without you.",
+  "taken_text": "Ulfhamr is broken! The Rangers keep the hold - go and see.",
+  "repelled_text": "The Rangers have been thrown back from Ulfhamr. The werewolves grow bolder.",
+  "raid_text": "Howling on every side of the ravine: the werewolves are coming back for Ulfhamr!",
+  "held_text": "The werewolves are thrown back from the walls. Ulfhamr holds.",
+  "fall_text": "Ulfhamr has fallen to the Moon-Mother. The werewolves have their hold again, and the Rangers must rebuild their resolve.",
+  "carry_text": "Ranger-Marshal Hjordis leads you down the slope at a run.",
+  "carried_cry": "The Rangers wouldn't wait any longer - they have stormed {0}!",
+  "hostile_tier": "yellow",
+  "sites": [
+   "ulfhamr",
+   "ulfhamr_yard"
+  ],
+  "staging": [
+   720,
+   560,
+   129.2
+  ],
+  "landing": [
+   860,
+   800,
+   49.0
+  ],
+  "area": [
+   910,
+   740,
+   110
+  ],
+  "camp_npcs": [
+   {
+    "template": 60157473,
+    "model": 213,
+    "guild": "the Wolfsbane Rangers",
+    "kind": "marks",
+    "name": "Ranger-Quartermaster Bodvar",
+    "level": 35,
+    "pos": [
+     900,
+     760,
+     50.2
+    ],
+    "greet": "The hold's stores, for those who broke it and those who hold it.",
+    "stock": [
+     {
+      "item": "uf106_ulfhamr_breaker_s_cloak",
+      "price": 60
+     },
+     {
+      "item": "uf106_moon_stone_ring",
+      "price": 40
+     },
+     {
+      "item": "uf106_wolfsbane_torc",
+      "price": 40
+     },
+     {
+      "item": "uf106_hold_gate_bracer",
+      "price": 40
+     },
+     {
+      "item": "tw_strong_draught_of_healing",
+      "price": 2
+     },
+     {
+      "item": "tw_strong_draught_of_power",
+      "price": 2
+     }
+    ]
+   },
+   {
+    "template": 60157473,
+    "model": 168,
+    "guild": "the Seithkona Circle",
+    "kind": "coin",
+    "name": "Herb-Wife Gro",
+    "level": 33,
+    "pos": [
+     940,
+     720,
+     52.9
+    ],
+    "greet": "Wolfsbane tea, and better things. The tea's for the wolves.",
+    "stock": [
+     {
+      "item": "uf106_ranger_s_ale"
+     },
+     {
+      "item": "uf106_wolfsbane_tonic"
+     },
+     {
+      "item": "uf106_moonlit_mead"
+     }
+    ]
+   },
+   {
+    "template": 60157473,
+    "model": 213,
+    "guild": "the Wolfsbane Rangers",
+    "kind": "idle",
+    "name": "Wolfsbane ranger",
+    "level": 34,
+    "pos": [
+     880,
+     780,
+     50.8
+    ],
+    "count": 3,
+    "idle": "We pulled the rangers' cloaks off the gate-post. We'll bury them properly."
+   }
+  ],
+  "holdouts": [
+   {
+    "kind": "holdout",
+    "name": "werewolf holdout",
+    "template": 60167861,
+    "level": 34,
+    "pos": [
+     980,
+     690,
+     56.4
+    ],
+    "count": 3,
+    "tier": "yellow",
+    "respawn_s": 300
+   }
   ]
+ }
 }

@@ -57,6 +57,66 @@
         118.6
       ],
       "idle": "Hoofbeats. Every night. On my chest."
+    },
+    {
+      "id": "mw_brand",
+      "zone": 105,
+      "realm": 2,
+      "name": "Woodward Brand",
+      "model": 213,
+      "level": 30,
+      "pos": [
+        1105,
+        600,
+        118.6
+      ],
+      "guild": "the Galplen Woodwards",
+      "idle": "New to Myrkwood? Stay near the town till you can hold an axe. Then stay near the town anyway."
+    },
+    {
+      "id": "mw_thora",
+      "zone": 105,
+      "realm": 2,
+      "name": "Woodward-Captain Thora",
+      "model": 168,
+      "level": 44,
+      "pos": [
+        1080,
+        615,
+        118.6
+      ],
+      "guild": "the Galplen Woodwards",
+      "idle": "The Woodwards keep the roads open. Lately, the roads keep closing."
+    },
+    {
+      "id": "mw_groa",
+      "zone": 105,
+      "realm": 2,
+      "name": "Volva Groa",
+      "model": 168,
+      "level": 50,
+      "pos": [
+        620,
+        520,
+        118.6
+      ],
+      "guild": "the Seidr-Folk",
+      "idle": "Sit, if you like. Everyone comes to the volva in the end. Wolves and priests too."
+    },
+    {
+      "id": "mw_kalf",
+      "zone": 105,
+      "realm": 2,
+      "name": "Woodward Kalf",
+      "model": 213,
+      "level": 34,
+      "pos": [
+        850,
+        920,
+        118.6
+      ],
+      "guild": "the Galplen Woodwards",
+      "idle": "Gna Faste was a watch-tower once. Now it's where we watch the south."
     }
   ],
   "quests": [
@@ -410,6 +470,762 @@
           }
         }
       }
+    },
+    {
+      "id": "mw_frogs",
+      "title": "Frogs in the Well",
+      "level": 2,
+      "giver": "mw_brand",
+      "offer": "Welcome to the darkest corner of Midgard. You'll want to start small. The giant bull frogs from the marsh get into the town's well-stream and foul it.\n\nWill you [chase off the frogs]? Stay close to town - nowhere else in Myrkwood is safe for you yet.",
+      "accept": "chase off the frogs",
+      "topics": {},
+      "summary": "Giant bull frogs foul Galplen's well-stream. A first task for a new arrival.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            1180,
+            530,
+            118.6
+          ],
+          "radius": 50,
+          "goal": "Chase off the giant bull frogs near Galplen about 100 m north-east of Woodward Brand",
+          "target": "giant bull frog",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mw_brand",
+          "goal": "Tell Woodward Brand",
+          "say": "Good. You're still alive. That's the first lesson of Myrkwood.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Galplen Woodwards.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq105_woodward_s_token_ring",
+              "sq105_frog_skin_sash"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "mw_myrkcats",
+      "title": "Eyes in the Dark",
+      "level": 4,
+      "giver": "mw_brand",
+      "offer": "Myrkcats stalk the town's edge at night - you see their eyes in the dark, then you don't see your goats. Small ones, near the town. The big ones live deeper in. Don't go there.\n\nWill you [hunt the myrkcats]?",
+      "accept": "hunt the myrkcats",
+      "topics": {},
+      "summary": "Myrkcats stalk Galplen's edge at night and take the goats.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            1000,
+            500,
+            118.6
+          ],
+          "radius": 50,
+          "goal": "Hunt the myrkcats near Galplen about 140 m north-west of Woodward Brand",
+          "target": "myrkcat",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mw_brand",
+          "goal": "Tell Woodward Brand",
+          "say": "Goats are safe. You're learning. The Captain has something for you.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Galplen Woodwards.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq105_myrkcat_whisker_charm",
+              "sq105_lantern_bearer_s_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "mw_frogs"
+    },
+    {
+      "id": "mw_carrion",
+      "title": "Carrion on the Road",
+      "level": 7,
+      "giver": "mw_thora",
+      "offer": "Carrion eaters gather on the east road, where travellers die. They've learned to wait for the next one. Teach them otherwise and you've earned a place at our fire.\n\nWill you [clear the road]? Then come back - I'll tell you what Myrkwood's really about.",
+      "accept": "clear the road",
+      "topics": {},
+      "summary": "Carrion eaters wait on Galplen's east road for the next traveller to die.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            1250,
+            691,
+            118.6
+          ],
+          "radius": 50,
+          "goal": "Drive off the carrion eaters about 190 m south-east of Woodward-Captain Thora",
+          "target": "carrion eater",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mw_thora",
+          "goal": "Tell Woodward-Captain Thora",
+          "say": "That'll do. Welcome to Myrkwood.\n\nHere's what it's about: there's an old volva in the willow-wood west of town, Groa. Wolves and priests both want her. When you're strong enough, she's who we protect.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Galplen Woodwards.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq105_carrion_feather_torc"
+            ],
+            "choice": [
+              "sq105_thora_s_spare_axe_belt",
+              "sq105_galplen_watch_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "mw_myrkcats"
+    },
+    {
+      "id": "mw_haunts",
+      "title": "The Willow Road",
+      "level": 23,
+      "giver": "mw_thora",
+      "offer": "The road to the volva's hut runs through the willow-wood, and the haunts walk it. Groa sends for supplies and nobody will carry them.\n\nWill you [clear the road]?",
+      "accept": "clear the road",
+      "topics": {},
+      "summary": "Haunts walk the willow-wood road between Galplen and the volva's hut.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            800,
+            560,
+            91.8
+          ],
+          "radius": 50,
+          "goal": "Clear the haunts from the willow road about 290 m west of Woodward-Captain Thora",
+          "target": "haunt",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "reach",
+          "zone": 105,
+          "at": [
+            640,
+            530,
+            119.0
+          ],
+          "radius": 30,
+          "goal": "Carry the supplies to the volva's hut",
+          "text": "A hut of turf and willow, smoke curling from the roof. An old woman watches you from the door as if she knew you were coming.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mw_groa",
+          "goal": "Speak with Volva Groa",
+          "say": "There you are. You took longer than I saw. Sit down.\n\nYou'll want to know why everyone's hunting an old woman. Bring me something first, and I'll tell you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Galplen Woodwards.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq105_willow_bark_bracer",
+              "sq105_haunt_ward_charm"
+            ]
+          }
+        }
+      },
+      "requires": "mw_carrion"
+    },
+    {
+      "id": "mw_willows",
+      "title": "Willow-Heart",
+      "level": 24,
+      "giver": "mw_groa",
+      "offer": "The weeping willows grow toward my hut a little every year. They want what I know, like everyone. Cut me a willow-heart - the wood at the centre - and I'll burn it, and they'll remember their place.\n\nWill you [cut a willow-heart]?",
+      "accept": "cut a willow-heart",
+      "topics": {},
+      "summary": "The weeping willows of Myrkwood grow toward the volva's hut.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            700,
+            650,
+            118.7
+          ],
+          "radius": 50,
+          "goal": "Fell the weeping willows about 150 m south-east of Volva Groa",
+          "target": "weeping willow",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mw_groa",
+          "goal": "Bring the willow-heart to Volva Groa",
+          "say": "Good. Now listen.\n\nI see how things end. The wolves want me because I see how Hati ends - the wolf that hunts the moon, Fenrir's son, in Raumarik. The priests want me because I know the rest of the dragon's name. Gjalpinulva. Her true name, the one that wakes her. They have half.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seidr-Folk.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq105_weeping_heart_ring",
+              "sq105_volva_s_herb_belt"
+            ]
+          }
+        }
+      },
+      "requires": "mw_haunts"
+    },
+    {
+      "id": "mw_tinglers",
+      "title": "Tinglers in the Hollows",
+      "level": 26,
+      "giver": "mw_groa",
+      "offer": "The tinglers in the western hollows feed on fear. There's a lot of fear in Myrkwood now, and they've grown fat on it. They come to my door at night.\n\nWill you [hunt them]?",
+      "accept": "hunt them",
+      "topics": {},
+      "summary": "Tinglers in Myrkwood's western hollows have grown fat on the forest's fear.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            350,
+            650,
+            126.5
+          ],
+          "radius": 50,
+          "goal": "Hunt the tinglers about 300 m south-west of Volva Groa",
+          "target": "tingler",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mw_groa",
+          "goal": "Tell Volva Groa",
+          "say": "Fewer. Fear's the coin of the times, I'm afraid. Wolves and dragons both deal in it.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seidr-Folk.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq105_tingler_silk_mantle",
+              "sq105_seidr_thread_ring"
+            ]
+          }
+        }
+      },
+      "requires": "mw_willows"
+    },
+    {
+      "id": "mw_norsemen",
+      "title": "The Barrow-Dead",
+      "level": 25,
+      "giver": "mw_kalf",
+      "offer": "The decaying norsemen have come out of the barrows south of Gna Faste. The dead don't walk in Myrkwood without a reason. Something's waking them.\n\nWill you [put them down]?",
+      "accept": "put them down",
+      "topics": {},
+      "summary": "Decaying norsemen have come out of the barrows south of Gna Faste.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            973,
+            1050,
+            118.8
+          ],
+          "radius": 50,
+          "goal": "Put down the decaying norsemen about 200 m south-east of Woodward Kalf",
+          "target": "decaying norseman",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mw_kalf",
+          "goal": "Tell Woodward Kalf",
+          "say": "Down. But they keep coming. The barrows are warm, Kalf says - me, I mean. I'm Kalf. They're warm.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Galplen Woodwards.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq105_barrow_iron_ring",
+              "sq105_grave_ward_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "mw_shadows",
+      "title": "Warm Barrows",
+      "level": 27,
+      "giver": "mw_kalf",
+      "offer": "The myrk shadows guard the barrows - and the barrows are warm. Get past them and look inside one. I want to know why the ground's warm.\n\nWill you [look inside]?",
+      "accept": "look inside",
+      "topics": {},
+      "summary": "Myrk shadows guard Myrkwood's barrows, and the barrows are warm.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            1186,
+            1064,
+            118.6
+          ],
+          "radius": 50,
+          "goal": "Get past the myrk shadows about 350 m south-east of Woodward Kalf",
+          "target": "myrk shadow",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 105,
+          "at": [
+            1190,
+            1068,
+            118.6
+          ],
+          "goal": "Search inside a barrow",
+          "clue": {
+            "name": "a burial chamber, its stones scorched",
+            "model": 1347
+          },
+          "text": "The dead man's hoard is gone, and the walls are scorched in long claw-marks. Drakelings, digging for gold. The svartalf in the south pay the drakulv in grave-gold.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mw_kalf",
+          "goal": "Tell Kalf",
+          "say": "Grave-robbing drakelings, digging gold for the cult. And the dead wake angry. The missionaries camp in the south-east - Captain Thora will want to hear.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Galplen Woodwards.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq105_myrk_shadow_veil_charm",
+              "sq105_barrow_warm_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "mw_norsemen"
+    },
+    {
+      "id": "mw_worgs",
+      "title": "The Worg Run",
+      "level": 27,
+      "giver": "mw_thora",
+      "offer": "The worgs in the middle wood run with the werewolves now. They scout for them - every pack we see, there's a werewolf a mile behind.\n\nWill you [break the packs]?",
+      "accept": "break the packs",
+      "topics": {},
+      "summary": "Gray worgs in Myrkwood's middle wood scout for the werewolves of the west wood.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            750,
+            1000,
+            120.4
+          ],
+          "radius": 50,
+          "goal": "Break the gray worg packs about 510 m south-west of Woodward-Captain Thora",
+          "target": "gray worg",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mw_thora",
+          "goal": "Tell Captain Thora",
+          "say": "Broken. Now they're blind. Groa says they're coming for her soon - before the next full moon.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Galplen Woodwards.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq105_worg_hide_mantle",
+              "sq105_worg_tooth_ring"
+            ]
+          }
+        }
+      },
+      "requires": "mw_willows"
+    },
+    {
+      "id": "mw_werewolves",
+      "title": "Fenrir's Kin",
+      "level": 29,
+      "giver": "mw_groa",
+      "offer": "The werewolves of the west wood call themselves Fenrir's kin. They answer to Hati, in Raumarik, and Hati wants to know how he ends - so he can change it.\n\nBring friends. Will you [hunt the werewolves]?",
+      "accept": "hunt the werewolves",
+      "topics": {},
+      "summary": "The werewolves of Myrkwood's west wood, Fenrir's kin, hunt the volva for Hati in Raumarik.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            380,
+            1050,
+            142.6
+          ],
+          "radius": 50,
+          "goal": "Hunt the werewolves of the west wood about 580 m south-west of Volva Groa",
+          "target": "werewolf",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            380,
+            1050,
+            142.6
+          ],
+          "radius": 50,
+          "goal": "Bring down the werewolf nobles",
+          "target": "minor werewolf noble",
+          "count": 2,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 105,
+          "at": [
+            400,
+            1060,
+            142.6
+          ],
+          "goal": "Search the werewolf den",
+          "clue": {
+            "name": "a moon-carved bone",
+            "model": 1347
+          },
+          "text": "A wolf's shoulder-blade carved with the moon in every phase, and the last one gnawed away. Scratched under it: 'THE SEER SAYS HOW HATI ENDS. TAKE HER TO RAUMARIK BEFORE THE WINTER.'",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "mw_groa",
+          "goal": "Tell Volva Groa",
+          "say": "Raumarik, before the winter. And Hati asks me how he ends. Well. I'll tell you instead, when the time comes - you'll be the one there.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seidr-Folk.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq105_fenris_kin_fang_torc",
+              "sq105_moon_ward_bracer",
+              "sq105_wolf_breaker_s_belt"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "mw_worgs"
+    },
+    {
+      "id": "mw_mora_dancers",
+      "title": "The Night-Riders",
+      "level": 30,
+      "giver": "asgerd",
+      "offer": "The mora dance in the south now - not just riding men's dreams but dancing in the open, with dark hounds round them. They're stirred up.\n\nWill you [break the dance]?",
+      "accept": "break the dance",
+      "topics": {},
+      "summary": "The mora dance openly in Myrkwood's south, with dark hounds round them.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            950,
+            1350,
+            121.2
+          ],
+          "radius": 50,
+          "goal": "Break the mora dancers about 760 m south of Asgerd",
+          "target": "mora dancer",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            950,
+            1400,
+            124.3
+          ],
+          "radius": 50,
+          "goal": "Kill the dark hounds",
+          "target": "dark hound",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "asgerd",
+          "goal": "Tell Asgerd",
+          "say": "Quiet. I slept last night - first time in a month. Thank you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seidr-Folk.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq105_mora_dream_ring",
+              "sq105_dark_hound_collar_torc"
+            ]
+          }
+        }
+      },
+      "requires": "mora"
+    },
+    {
+      "id": "mw_watchers",
+      "title": "The Watchers",
+      "level": 28,
+      "giver": "mw_kalf",
+      "offer": "Svartalf watchers in the south, between Gna Faste and the missionaries' camp. They watch the volva's road, and they report to the camp.\n\nWill you [blind the watchers]?",
+      "accept": "blind the watchers",
+      "topics": {},
+      "summary": "Svartalf watchers in Myrkwood's south watch the volva's road for the drakulv missionaries.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            1200,
+            1330,
+            113.0
+          ],
+          "radius": 50,
+          "goal": "Blind the svartalf watchers about 540 m south-east of Woodward Kalf",
+          "target": "svartalf watcher",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mw_kalf",
+          "goal": "Tell Woodward Kalf",
+          "say": "Blind. Now they'll have to come in person. Good - I'd rather see them coming.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Galplen Woodwards.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq105_watcher_s_dark_iron_ring",
+              "sq105_south_road_woodward_cloak"
+            ]
+          }
+        }
+      },
+      "requires": "mw_shadows"
+    },
+    {
+      "id": "mw_missionaries",
+      "title": "The Missionaries' Orders",
+      "level": 31,
+      "giver": "mw_thora",
+      "offer": "The missionaries' camp in the south-east. A Wyrm-Deacon leads them, with svartalf predators for his hunters. Break the predators and get me their orders.\n\nBring friends. Will you [take the orders]?",
+      "accept": "take the orders",
+      "topics": {},
+      "summary": "Gjalpinulva's missionaries camp in Myrkwood's south-east, with svartalf predators for hunters.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 105,
+          "at": [
+            1250,
+            1350,
+            116.6
+          ],
+          "radius": 50,
+          "goal": "Break the svartalf predators about 750 m south of Woodward-Captain Thora",
+          "target": "svartalf predator",
+          "count": 2,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 105,
+          "at": [
+            1110,
+            1330,
+            120.2
+          ],
+          "goal": "Search the edge of the missionaries' camp",
+          "clue": {
+            "name": "a scroll-case marked with a dragon's eye",
+            "model": 1882
+          },
+          "text": "Orders, in the Hierophant's hand: 'Bring the volva to Malmohus alive. With her half of the name and ours, the Mother wakes. Let the wolves have the north; we shall have everything.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "mw_thora",
+          "goal": "Tell Woodward-Captain Thora",
+          "say": "The Hierophant, in Malmohus. They mean to wake Gjalpinulva with Groa's half of the name - and the wolves mean to drag her to Hati.\n\nWe hold Galplen, and we keep Groa. Everything past Myrkwood - Raumarik, Malmohus - is a war for the King's huscarls. But it starts here.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Galplen Woodwards.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq105_predator_s_hook_bracer",
+              "sq105_missionary_scale_pendant",
+              "sq105_woodward_captain_s_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "mw_watchers"
     }
   ]
 }

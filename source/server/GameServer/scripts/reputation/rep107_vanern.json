@@ -1,0 +1,150 @@
+{
+ "zone": 107,
+ "name": "Vanern Swamp",
+ "levels": [
+  36,
+  46
+ ],
+ "realm": 2,
+ "factions": [
+  {
+   "key": "vanern_wardens",
+   "name": "the Wardens of Vanern",
+   "short": "the Wardens",
+   "kin": [
+    "eiriks_huscarls",
+    "steading_league",
+    "huginfel_shieldwall",
+    "galplen_woodwards",
+    "khizil_forge",
+    "wolfsbane_rangers",
+    "kings_host"
+   ],
+   "titles": [
+    "Warden-Friend",
+    "Raven of Vanern",
+    "Holder of Hrafnsholm"
+   ],
+   "speaker": "vn_steinunn",
+   "town": "the Wardens' camp",
+   "kills": [
+    "hagbui",
+    "jotun",
+    "orm",
+    "mud crab",
+    "mud frog",
+    "viper",
+    "spider"
+   ],
+   "quartermaster": {
+    "name": "Warden-Quartermaster Orlyg",
+    "guild": "the Wardens of Vanern",
+    "model": 213,
+    "anchor": "vn_steinunn",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The Wardens' stores, for those who stand the watch with us. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep107_warden_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep107_bog_iron_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep107_raven_of_vanern_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep107_rowan_ward_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep107_mantle_of_hrafnsholm",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "shared": [
+  "eiriks_huscarls"
+ ],
+ "quartermasters": [
+  {
+   "faction": "eiriks_huscarls",
+   "name": "Huscarl-Quartermaster Ulf",
+   "guild": "King Eirik's Huscarls",
+   "model": 213,
+   "anchor": "vn_gisli",
+   "offset": [
+    4,
+    3
+   ],
+   "greet": "The King's stores in Vanern, what's left of them. Same stock as Mularn. Show me your standing with the Huscarls.",
+   "stock": [
+    {
+     "item": "rep100_huscarl_friend_s_ring",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep100_jordheim_road_belt",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep100_shield_of_jordheim_torc",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep100_eirik_s_bracer",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep100_mantle_of_eirik_s_champion",
+     "rank": "Legend",
+     "price": 150
+    }
+   ]
+  }
+ ],
+ "kill_default": "vanern_wardens",
+ "event_default": "vanern_wardens",
+ "quest_default": "vanern_wardens",
+ "quests": {
+  "clay_child": "vanern_wardens",
+  "barrow_brother": "vanern_wardens",
+  "vn_crabs": "vanern_wardens",
+  "vn_vipers": "vanern_wardens",
+  "vn_clay_pits": "vanern_wardens",
+  "vn_broken_jotun": "eiriks_huscarls",
+  "vn_crippled": "vanern_wardens",
+  "vn_orm_runners": "eiriks_huscarls",
+  "vn_outcasts": "eiriks_huscarls",
+  "vn_spiders": "vanern_wardens",
+  "vn_berserkers": "vanern_wardens",
+  "vn_spiritmasters": "vanern_wardens",
+  "vn_runemasters": "vanern_wardens",
+  "vn_hrafnsholm": "vanern_wardens"
+ },
+ "events": {
+  "vn_ice_road": "eiriks_huscarls",
+  "vn_hrafnsholm_assault": "vanern_wardens",
+  "vn_hrafnsholm_return": "vanern_wardens",
+  "vanern_swamp_hagbui_barrow": "vanern_wardens",
+  "vanern_swamp_clay_jotun": "vanern_wardens",
+  "vanern_swamp_black_orms": "eiriks_huscarls"
+ }
+}

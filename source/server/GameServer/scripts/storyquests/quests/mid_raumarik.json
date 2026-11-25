@@ -61,6 +61,36 @@
       "during": [
         "grani/s5"
       ]
+    },
+    {
+      "id": "rk_steinar",
+      "zone": 108,
+      "realm": 2,
+      "name": "Huscarl Steinar",
+      "model": 213,
+      "level": 52,
+      "pos": [
+        1120,
+        890,
+        112.0
+      ],
+      "guild": "King Eirik's Host",
+      "idle": "The King's Host is coming north. Every one of us who got here first is a scout now."
+    },
+    {
+      "id": "rk_ylva",
+      "zone": 108,
+      "realm": 2,
+      "name": "Seithkona Ylva",
+      "model": 168,
+      "level": 50,
+      "pos": [
+        1090,
+        915,
+        112.0
+      ],
+      "guild": "the Seithkona Circle",
+      "idle": "Saga sent me north from the Circle to watch the moon from closer. It's closer than I'd like."
     }
   ],
   "quests": [
@@ -464,6 +494,526 @@
         }
       },
       "group": true
+    },
+    {
+      "id": "rk_chillers",
+      "title": "The Icestrider Fells",
+      "level": 45,
+      "giver": "rk_steinar",
+      "offer": "The icestriders on the north-east fells never troubled anyone. Now they hunt in packs, and Hati's soldiers walk behind them like herdsmen.\n\nWill you [thin them]?",
+      "accept": "thin them",
+      "topics": {},
+      "summary": "Icestrider chillers hunt in packs on Raumarik's north-east fells, herded by Hati's soldiers.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 108,
+          "at": [
+            1350,
+            400,
+            112.1
+          ],
+          "radius": 50,
+          "goal": "Thin the icestrider chillers about 540 m north-east of Huscarl Steinar",
+          "target": "icestrider chiller",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "rk_steinar",
+          "goal": "Tell Huscarl Steinar",
+          "say": "Thinner. The fells are the first post the March will take. Anything you kill now is one less on the day.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Host.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq108_icestrider_shell_bracer",
+              "sq108_fell_walker_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "rk_frostweavers",
+      "title": "The Frostweavers",
+      "level": 47,
+      "giver": "rk_steinar",
+      "offer": "The frostweavers spin ice over the fell paths, and the winter wolves run on it. Break them, and the March will have a road.\n\nWill you [break the frostweavers]?",
+      "accept": "break the frostweavers",
+      "topics": {},
+      "summary": "Icestrider frostweavers spin ice over Raumarik's fell paths for the winter wolves.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 108,
+          "at": [
+            1300,
+            520,
+            143.5
+          ],
+          "radius": 50,
+          "goal": "Break the icestrider frostweavers about 410 m north-east of Huscarl Steinar",
+          "target": "icestrider frostweaver",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 108,
+          "at": [
+            1250,
+            590,
+            165.7
+          ],
+          "radius": 50,
+          "goal": "Kill the winter wolves",
+          "target": "winter wolf",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "rk_steinar",
+          "goal": "Tell Steinar",
+          "say": "A road. Good. Now - the moor, where the dead walk. Ylva will tell you about the moor.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Host.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq108_frostweaver_s_silk_mantle",
+              "sq108_winter_wolf_fang_torc"
+            ]
+          }
+        }
+      },
+      "requires": "rk_chillers"
+    },
+    {
+      "id": "rk_wraiths",
+      "title": "The Wraith Moor",
+      "level": 47,
+      "giver": "rk_ylva",
+      "offer": "The windswept wraiths on the moor were men once - men who froze in the first winter. They walk again because Hati calls the winter back.\n\nWill you [lay them down]?",
+      "accept": "lay them down",
+      "topics": {},
+      "summary": "The windswept wraiths of Raumarik's moor walk again as Hati calls the winter back.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 108,
+          "at": [
+            850,
+            600,
+            124.7
+          ],
+          "radius": 50,
+          "goal": "Lay down the windswept wraiths about 400 m north-west of Seithkona Ylva",
+          "target": "windswept wraith",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "rk_ylva",
+          "goal": "Tell Seithkona Ylva",
+          "say": "Down. For a while. Something on the moor keeps them walking.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seithkona Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq108_wraith_shroud_charm",
+              "sq108_moor_ward_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "rk_chillers"
+    },
+    {
+      "id": "rk_wights",
+      "title": "The Frost-Stones",
+      "level": 49,
+      "giver": "rk_ylva",
+      "offer": "The chillsome wights guard stones on the moor - frost-stones, Hati's own. They keep the dead walking, and the frore lich keeps the stones.\n\nBring friends. Will you [find the stones]?",
+      "accept": "find the stones",
+      "topics": {},
+      "summary": "Chillsome wights and a frore lich guard Hati's frost-stones on Raumarik's moor.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 108,
+          "at": [
+            876,
+            708,
+            112.1
+          ],
+          "radius": 50,
+          "goal": "Break the chillsome wights about 270 m north-west of Seithkona Ylva",
+          "target": "chillsome wight",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 108,
+          "at": [
+            850,
+            650,
+            133.2
+          ],
+          "radius": 60,
+          "goal": "Break the frore lich",
+          "target": "frore lich",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 108,
+          "at": [
+            855,
+            660,
+            128.8
+          ],
+          "goal": "Search the frost-stone",
+          "clue": {
+            "name": "a waist-high stone, rimed white",
+            "model": 1876
+          },
+          "text": "Carved in the stone: the moon, in every phase, and behind it a wolf, closer each time. The last carving is fresh: the wolf's jaws closing on a full moon. Under it: 'SOON.'",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "rk_ylva",
+          "goal": "Tell Ylva",
+          "say": "Soon. The moon's running closer to him every night. When the King's Host comes, it can't come a night too late.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seithkona Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq108_frost_stone_shard_ring",
+              "sq108_wight_bane_belt",
+              "sq108_moon_watcher_s_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "rk_wraiths"
+    },
+    {
+      "id": "rk_winterwolves",
+      "title": "The Winterwolf Run",
+      "level": 49,
+      "giver": "einar_trapper",
+      "offer": "The savage winterwolves run south-west of here, in packs of twenty. I've trapped wolves forty years. These don't take bait. They take trappers.\n\nWill you [thin the packs]?",
+      "accept": "thin the packs",
+      "topics": {},
+      "summary": "Savage winterwolves run in great packs on Raumarik's Winterwolf Run.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 108,
+          "at": [
+            650,
+            1000,
+            109.7
+          ],
+          "radius": 50,
+          "goal": "Thin the savage winterwolves about 460 m west of Einar the Trapper",
+          "target": "savage winterwolf",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "einar_trapper",
+          "goal": "Tell Einar the Trapper",
+          "say": "Fewer. They run for Hati. There's a Huntsman with them - a winterwolf as big as a horse, that runs the packs for him. Don't go near it without the King's Host.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Host.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq108_winterwolf_hide_bracer",
+              "sq108_pack_breaker_s_ring"
+            ]
+          }
+        }
+      },
+      "requires": "rk_frostweavers"
+    },
+    {
+      "id": "rk_bears",
+      "title": "Frost-Bound",
+      "level": 50,
+      "giver": "sigrid",
+      "offer": "The frost bound bears in the wood south of camp - the cold's in their blood now, and they don't sleep. They come at the camp at night.\n\nWill you [drive them off]?",
+      "accept": "drive them off",
+      "topics": {},
+      "summary": "Frost bound bears from the wood south of the trappers' camp come at it in the night.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 108,
+          "at": [
+            1050,
+            1100,
+            112.0
+          ],
+          "radius": 50,
+          "goal": "Drive off the frost bound bears about 200 m south of Sigrid",
+          "target": "frost bound bear",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sigrid",
+          "goal": "Tell Sigrid",
+          "say": "Quiet nights, for a while. Thank you.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Host.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq108_frost_bear_claw_torc",
+              "sq108_trapper_s_fur_mantle"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "rk_soldiers",
+      "title": "Hati's Soldiers",
+      "level": 51,
+      "giver": "rk_steinar",
+      "offer": "The Fenrir Camp in the west - Hati's soldiers, the fenrir, half wolf and half man. They're the last thing between the March and the howe.\n\nWill you [thin the soldiers]?",
+      "accept": "thin the soldiers",
+      "topics": {},
+      "summary": "Fenrir soldiers hold the Fenrir Camp in Raumarik's west, the last thing before Hati's Howe.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 108,
+          "at": [
+            400,
+            700,
+            152.2
+          ],
+          "radius": 50,
+          "goal": "Thin the fenrir soldiers about 740 m west of Huscarl Steinar",
+          "target": "fenrir soldier",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "rk_steinar",
+          "goal": "Tell Steinar",
+          "say": "Thinner. The mystics in the camp are what holds it together. They speak for Hati.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Host.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq108_fenrir_soldier_s_ring",
+              "sq108_camp_breaker_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "rk_winterwolves"
+    },
+    {
+      "id": "rk_mystics",
+      "title": "The Mystics",
+      "level": 53,
+      "giver": "rk_ylva",
+      "offer": "The fenrir mystics read the moon for Hati - when she'll run closest, when he can catch her. Break them, and bring me what they read.\n\nBring friends. Will you [break the mystics]?",
+      "accept": "break the mystics",
+      "topics": {},
+      "summary": "Fenrir mystics read the moon's road for Hati in the Fenrir Camp.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 108,
+          "at": [
+            450,
+            800,
+            119.2
+          ],
+          "radius": 60,
+          "goal": "Break the fenrir mystics about 650 m west of Seithkona Ylva",
+          "target": "fenrir mystic",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 108,
+          "at": [
+            455,
+            805,
+            119.5
+          ],
+          "goal": "Search the mystics' fire",
+          "clue": {
+            "name": "a bowl of black stone",
+            "model": 1876
+          },
+          "text": "In the bowl, the moon - and Hati's jaws, a hand's breadth from her. Scratched on the rim: 'THREE NIGHTS.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "rk_ylva",
+          "goal": "Tell Ylva",
+          "say": "Three nights. The King's Host can't wait for the King. Go to Steinar - now.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Seithkona Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq108_mystic_s_moon_bowl_charm",
+              "sq108_howe_watcher_s_bracer",
+              "sq108_king_s_scout_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "rk_soldiers"
+    },
+    {
+      "id": "rk_kings_march",
+      "title": "The King's March",
+      "level": 54,
+      "giver": "rk_steinar",
+      "offer": "Three nights. Then we march now. Look at the howe from the ridge - see what's waiting - then go to Huscarl-Marshal Hallvard at the camp and give him the word.\n\nWill you [look at the howe]?",
+      "accept": "look at the howe",
+      "topics": {},
+      "summary": "King Eirik's Host must march on Hati's Howe within three nights.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 108,
+          "at": [
+            400,
+            560,
+            176.7
+          ],
+          "radius": 25,
+          "goal": "Climb to the ridge above Hati's Howe",
+          "text": "A barrow the size of a hill, snow streaming off it. Wolves sleep in rings round it. And in the mouth of the howe, two eyes, watching the moon.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "rk_steinar",
+          "goal": "Tell Steinar",
+          "say": "Two eyes, watching the moon. Then it's time.\n\nGo to Huscarl-Marshal Hallvard and say the word - [for the King]. The fells, the moor, the run, the camp, then the howe. It all goes back if we stop.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From King Eirik's Host.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq108_marshal_s_oath_ring",
+              "sq108_howe_road_belt"
+            ]
+          }
+        }
+      },
+      "requires": "rk_mystics"
     }
   ]
 }

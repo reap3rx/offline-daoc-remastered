@@ -1,0 +1,685 @@
+{
+ "zone": 102,
+ "name": "West Svealand",
+ "rating": "wild",
+ "themes": [
+  "Huginfel, Vindsaul Faste and the eastern meadows (Wild)",
+  "The thrall road and the oathbreakers' camp",
+  "The skogsfru wood (the middle)",
+  "The Blodfelag's country and the Blood-Hall (west: Dangerous - the siege)",
+  "The frozen gully (south-west: summer frost that won't thaw)",
+  "The svartalf road (south)"
+ ],
+ "notes": "Midgard's plan 2026-11-24, round 2: Wild, Dangerous round the Blodfelag camp; the west thread's blood-oath cult and the Blood-Hall siege. Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Giant Lemer": "orange",
+  "Growling Ghost": "orange",
+  "Pawper": "orange",
+  "Fridgeir Gestsson": "orange",
+  "Golga": "yellow",
+  "Old Smoke": "yellow",
+  "Modervarg": "yellow"
+ },
+ "factions": {
+  "wolves": {
+   "id": 9621,
+   "aggro": 70
+  },
+  "sprites": {
+   "id": 9622,
+   "aggro": 50
+  },
+  "dead": {
+   "id": 9623,
+   "aggro": 70
+  },
+  "blodfelag": {
+   "id": 9624,
+   "aggro": 85
+  },
+  "svartalf": {
+   "id": 9625,
+   "aggro": 70
+  },
+  "frost": {
+   "id": 9626,
+   "aggro": 85
+  }
+ },
+ "members": {
+  "grass cat": {
+   "from": "grass cat",
+   "tier": "green",
+   "roam": 300
+  },
+  "grass viper": {
+   "from": "grass viper",
+   "tier": "blue",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 200
+  },
+  "ribbon toad": {
+   "from": "ribbon toad",
+   "tier": "blue",
+   "roam": 200
+  },
+  "black mauler": {
+   "from": "black mauler",
+   "tier": "blue",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 300
+  },
+  "large sveawolf": {
+   "from": "large sveawolf",
+   "tier": "blue",
+   "faction": "wolves",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 350
+  },
+  "grizzled sveawolf": {
+   "from": "grizzled sveawolf",
+   "tier": "blue",
+   "faction": "wolves",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 350
+  },
+  "bloodthirsty she-wolf": {
+   "from": "bloodthirsty she-wolf",
+   "tier": "yellow",
+   "faction": "wolves",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 350
+  },
+  "lake serpent": {
+   "from": "lake serpent",
+   "tier": "blue",
+   "roam": 200
+  },
+  "water sprite": {
+   "from": "water sprite",
+   "tier": "blue",
+   "faction": "sprites",
+   "roam": 250
+  },
+  "wind sprite": {
+   "from": "wind sprite",
+   "tier": "blue",
+   "faction": "sprites",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 300
+  },
+  "skogsfru": {
+   "from": "skogsfru",
+   "tier": "yellow",
+   "faction": "sprites",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "savage lynx": {
+   "from": "savage lynx",
+   "tier": "yellow",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 300
+  },
+  "minor fideal": {
+   "from": "minor fideal",
+   "tier": "yellow",
+   "faction": "sprites",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "shadow": {
+   "from": "shadow",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "sanguinite ghoul": {
+   "from": "sanguinite ghoul",
+   "tier": "yellow",
+   "faction": "dead",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "mindless thrall": {
+   "from": "mindless thrall",
+   "tier": "blue",
+   "faction": "blodfelag",
+   "guild": "the Blodfelag",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "blodfelag oathbreaker": {
+   "from": "blodfelag oathbreaker",
+   "tier": "blue",
+   "faction": "blodfelag",
+   "guild": "the Blodfelag",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "blodfelag henchman": {
+   "from": "blodfelag henchman",
+   "tier": "blue",
+   "faction": "blodfelag",
+   "guild": "the Blodfelag",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "blodfelag warhound": {
+   "from": "blodfelag warhound",
+   "tier": "yellow",
+   "faction": "blodfelag",
+   "guild": "the Blodfelag",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 300
+  },
+  "blodfelag dreng": {
+   "from": "blodfelag dreng",
+   "tier": "yellow",
+   "faction": "blodfelag",
+   "guild": "the Blodfelag",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "blodfelag partisan": {
+   "from": "blodfelag partisan",
+   "tier": "yellow",
+   "faction": "blodfelag",
+   "guild": "the Blodfelag",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 250
+  },
+  "blodfelag windcaller": {
+   "from": "blodfelag windcaller",
+   "tier": "orange",
+   "faction": "blodfelag",
+   "guild": "the Blodfelag",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 150
+  },
+  "blodfelag svard": {
+   "from": "blodfelag svard",
+   "tier": "orange",
+   "faction": "blodfelag",
+   "guild": "the Blodfelag",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 150
+  },
+  "blodfelag wolfwarrior": {
+   "from": "blodfelag wolfwarrior",
+   "tier": "orange",
+   "faction": "blodfelag",
+   "guild": "the Blodfelag",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 200
+  },
+  "blodfelag haxa": {
+   "from": "blodfelag haxa",
+   "tier": "orange",
+   "faction": "blodfelag",
+   "guild": "the Blodfelag",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 100
+  },
+  "frothing sveawolf": {
+   "from": "frothing sveawolf",
+   "tier": "orange",
+   "faction": "wolves",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 350
+  },
+  "rabid sveawolf": {
+   "from": "rabid sveawolf",
+   "tier": "yellow",
+   "faction": "wolves",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 350
+  },
+  "phantom wolf": {
+   "from": "phantom wolf",
+   "tier": "orange",
+   "faction": "wolves",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 300
+  },
+  "Blood-Warden Ketil": {
+   "from": "blodfelag svard",
+   "tier": "red",
+   "name": "Blood-Warden Ketil",
+   "size": 1.2,
+   "faction": "blodfelag",
+   "guild": "Warden of the Blood-Hall",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 40,
+   "guards": {
+    "blodfelag svard": 2
+   }
+  },
+  "svartalf hunter": {
+   "from": "svartalf hunter",
+   "tier": "yellow",
+   "faction": "svartalf",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 250
+  },
+  "svartalf chanter": {
+   "from": "svartalf chanter",
+   "tier": "yellow",
+   "faction": "svartalf",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 120
+  },
+  "frosty colt": {
+   "from": "frosty colt",
+   "tier": "orange",
+   "faction": "frost",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "cold light": {
+   "from": "cold light",
+   "tier": "orange",
+   "faction": "frost",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 150
+  },
+  "snow imp": {
+   "from": "snow imp",
+   "tier": "orange",
+   "faction": "frost",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 200
+  }
+ },
+ "sites": [
+  {
+   "id": "huginfel",
+   "kind": "clear",
+   "at": [
+    56160,
+    46640
+   ],
+   "r": 4800,
+   "names": [
+    "grass cat",
+    "grass viper",
+    "ribbon toad",
+    "blodfelag oathbreaker",
+    "blodfelag henchman",
+    "mindless thrall",
+    "large sveawolf",
+    "black mauler",
+    "lake serpent"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "vindsaul_faste",
+   "kind": "clear",
+   "at": [
+    48680,
+    1600
+   ],
+   "r": 4400,
+   "names": [
+    "grass cat",
+    "grass viper",
+    "ribbon toad",
+    "blodfelag oathbreaker",
+    "blodfelag henchman",
+    "mindless thrall",
+    "large sveawolf",
+    "black mauler",
+    "lake serpent"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "larsson_stable",
+   "kind": "clear",
+   "at": [
+    5200,
+    27680
+   ],
+   "r": 1600,
+   "names": [
+    "grass cat",
+    "grass viper",
+    "ribbon toad",
+    "blodfelag oathbreaker",
+    "blodfelag henchman",
+    "mindless thrall",
+    "large sveawolf",
+    "black mauler",
+    "lake serpent"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "east_meadows",
+   "kind": "wildlife",
+   "area": [
+    44000,
+    10000,
+    64800,
+    56800
+   ],
+   "spawn": {
+    "grass cat": 32,
+    "grass viper": 26,
+    "ribbon toad": 26,
+    "black mauler": 26,
+    "large sveawolf": 19,
+    "water sprite": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "eastern_shore",
+   "kind": "wildlife",
+   "area": [
+    60000,
+    8000,
+    65200,
+    36000
+   ],
+   "spawn": {
+    "lake serpent": 26
+   },
+   "spacing": 260
+  },
+  {
+   "id": "oathbreaker_camp",
+   "kind": "camp",
+   "at": [
+    50000,
+    37640
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "blodfelag oathbreaker": 5,
+    "blodfelag henchman": 3,
+    "mindless thrall": 4
+   }
+  },
+  {
+   "id": "thrall_road",
+   "kind": "wildlife",
+   "area": [
+    46000,
+    20000,
+    58000,
+    40000
+   ],
+   "spawn": {
+    "mindless thrall": 19,
+    "blodfelag oathbreaker": 19,
+    "blodfelag henchman": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "skogsfru_wood",
+   "kind": "wildlife",
+   "area": [
+    28000,
+    12000,
+    46000,
+    50000
+   ],
+   "spawn": {
+    "skogsfru": 32,
+    "wind sprite": 38,
+    "savage lynx": 26,
+    "bloodthirsty she-wolf": 19,
+    "grizzled sveawolf": 19,
+    "minor fideal": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "skogsfru_grove",
+   "kind": "camp",
+   "at": [
+    26000,
+    11200
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "skogsfru": 4,
+    "wind sprite": 3
+   }
+  },
+  {
+   "id": "ghoul_hollow",
+   "kind": "wildlife",
+   "area": [
+    51600,
+    46000,
+    64000,
+    56400
+   ],
+   "spawn": {
+    "shadow": 32,
+    "sanguinite ghoul": 10
+   },
+   "spacing": 260
+  },
+  {
+   "id": "blodfelag_lands",
+   "kind": "wildlife",
+   "area": [
+    6000,
+    8800,
+    28000,
+    50000
+   ],
+   "spawn": {
+    "blodfelag dreng": 32,
+    "blodfelag warhound": 32,
+    "blodfelag partisan": 19,
+    "rabid sveawolf": 26,
+    "frothing sveawolf": 19,
+    "phantom wolf": 16,
+    "blodfelag windcaller": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "blood_hall",
+   "kind": "camp",
+   "at": [
+    16800,
+    32800
+   ],
+   "r": 640,
+   "respawn": 600,
+   "spawn": {
+    "Blood-Warden Ketil": 1,
+    "blodfelag svard": 3,
+    "blodfelag windcaller": 3,
+    "blodfelag dreng": 3
+   }
+  },
+  {
+   "id": "blood_hall_yard",
+   "kind": "camp",
+   "at": [
+    18800,
+    34800
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "blodfelag dreng": 3,
+    "blodfelag warhound": 4
+   }
+  },
+  {
+   "id": "wolfwarrior_camp",
+   "kind": "camp",
+   "at": [
+    16000,
+    15200
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "blodfelag wolfwarrior": 5,
+    "frothing sveawolf": 3
+   }
+  },
+  {
+   "id": "haxa_circle",
+   "kind": "camp",
+   "at": [
+    12800,
+    13200
+   ],
+   "r": 360,
+   "respawn": 600,
+   "spawn": {
+    "blodfelag haxa": 3
+   }
+  },
+  {
+   "id": "svartalf_road",
+   "kind": "wildlife",
+   "area": [
+    12800,
+    52000,
+    58400,
+    61600
+   ],
+   "spawn": {
+    "svartalf hunter": 26,
+    "savage lynx": 13,
+    "minor fideal": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "svartalf_camp",
+   "kind": "camp",
+   "at": [
+    40600,
+    55600
+   ],
+   "r": 400,
+   "respawn": 420,
+   "spawn": {
+    "svartalf chanter": 3,
+    "svartalf hunter": 3
+   }
+  },
+  {
+   "id": "frozen_gully",
+   "kind": "camp",
+   "at": [
+    13200,
+    60000
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "frosty colt": 3,
+    "cold light": 3,
+    "snow imp": 3
+   }
+  }
+ ]
+}

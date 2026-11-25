@@ -1,0 +1,771 @@
+{
+ "zone": 104,
+ "name": "Muspelheim",
+ "rating": "dangerous",
+ "themes": [
+  "Brika's camp in the north-east (the way in from the Vale)",
+  "The ant hills, sulphur flats and ash fields (west)",
+  "The old battlefield of the burnt dead (middle)",
+  "The wyrm hills and Gjalpinulva's hatchery (north) - the Brood-Sire's hunt",
+  "The fire giants' marches and the burning east",
+  "The dverge hold of Khizil and the fire-sellers (south)"
+ ],
+ "notes": "Midgard's plan 2026-11-25, round 3: Dangerous; the south thread's hatchery, where the dragon's fire-wyrm brood is warmed; the set-piece is the Brood-Sire's hunt. Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Young Wyrm Lord": "purple",
+  "Konung Botolf Redhands": "red",
+  "Lord Fire": "red",
+  "Charred Skeletal Commander": "red",
+  "Spirit of Flames": "red",
+  "Sinyr": "red",
+  "maghemoth": "red",
+  "Coal": "orange",
+  "Eld": "orange",
+  "Brimstone": "orange",
+  "Sulphine": "orange",
+  "Bright Flame": "orange",
+  "Gokstorm": "orange",
+  "Grogak": "orange",
+  "Bjame": "orange",
+  "Armard": "orange",
+  "Olash": "orange",
+  "Sentry Incin": "orange",
+  "Shade of Gunnar": "orange",
+  "Seer of Ancient Dawning": "red"
+ },
+ "factions": {
+  "ants": {
+   "id": 9641,
+   "aggro": 40
+  },
+  "ash": {
+   "id": 9642,
+   "aggro": 70
+  },
+  "dead": {
+   "id": 9643,
+   "aggro": 80
+  },
+  "brood": {
+   "id": 9644,
+   "aggro": 90,
+   "enemies": [
+    "giants"
+   ]
+  },
+  "dverge": {
+   "id": 9645,
+   "aggro": 75
+  },
+  "giants": {
+   "id": 9646,
+   "aggro": 90,
+   "enemies": [
+    "brood"
+   ]
+  },
+  "flame": {
+   "id": 9647,
+   "aggro": 80
+  }
+ },
+ "members": {
+  "fire ant scavenger": {
+   "from": "fire ant scavenger",
+   "tier": "blue",
+   "faction": "ants",
+   "roam": 200
+  },
+  "fire ant worker": {
+   "from": "fire ant worker",
+   "tier": "blue",
+   "faction": "ants",
+   "aggro": [
+    40,
+    300
+   ],
+   "roam": 150
+  },
+  "fire ant gatherer": {
+   "from": "fire ant gatherer",
+   "tier": "yellow",
+   "faction": "ants",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 150
+  },
+  "sulphur crab": {
+   "from": "sulphur crab",
+   "tier": "blue",
+   "roam": 150
+  },
+  "soot harvester": {
+   "from": "soot harvester",
+   "tier": "yellow",
+   "faction": "ash",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "flame thrower": {
+   "from": "flame thrower",
+   "tier": "yellow",
+   "faction": "ash",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 150
+  },
+  "ashen spirit": {
+   "from": "ashen spirit",
+   "tier": "yellow",
+   "faction": "ash",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 200
+  },
+  "fire flower": {
+   "from": "fire flower",
+   "tier": "blue",
+   "aggro": [
+    30,
+    250
+   ],
+   "roam": 0
+  },
+  "ashmonger": {
+   "from": "ashmonger",
+   "tier": "yellow",
+   "faction": "ash",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "lava lizard": {
+   "from": "lava lizard",
+   "tier": "blue",
+   "roam": 250
+  },
+  "fire toad": {
+   "from": "fire toad",
+   "tier": "yellow",
+   "roam": 200
+  },
+  "firecat": {
+   "from": "firecat",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 350
+  },
+  "noxious hound": {
+   "from": "noxious hound",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 350
+  },
+  "burnt skeletal sentry": {
+   "from": "burnt skeletal sentry",
+   "tier": "yellow",
+   "faction": "dead",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 100
+  },
+  "charred skeletal warrior": {
+   "from": "charred skeletal warrior",
+   "tier": "orange",
+   "faction": "dead",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "seared skeleton": {
+   "from": "seared skeleton",
+   "tier": "orange",
+   "faction": "dead",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "mephitic ghoul": {
+   "from": "mephitic ghoul",
+   "tier": "orange",
+   "faction": "dead",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "fire phantom": {
+   "from": "fire phantom",
+   "tier": "orange",
+   "faction": "dead",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "young fire wyrm": {
+   "from": "young fire wyrm",
+   "tier": "orange",
+   "faction": "brood",
+   "guild": "of the Brood",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 250
+  },
+  "cinder drake": {
+   "from": "cinder drake",
+   "tier": "red",
+   "faction": "brood",
+   "guild": "of the Brood",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 150
+  },
+  "brood-keeper": {
+   "from": "drakulv protector",
+   "tier": "orange",
+   "name": "drakulv brood-keeper",
+   "faction": "brood",
+   "guild": "Gjalpinulva's Hatchery",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 100
+  },
+  "brood-priest": {
+   "from": "drakulv sacrificer",
+   "tier": "red",
+   "name": "drakulv brood-priest",
+   "faction": "brood",
+   "guild": "Gjalpinulva's Hatchery",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 60
+  },
+  "Hatch-Mother Ingrid": {
+   "from": "drakulv sacrificer",
+   "tier": "red",
+   "name": "Hatch-Mother Ingrid",
+   "size": 1.2,
+   "faction": "brood",
+   "guild": "Keeper of the Hatchery",
+   "aggro": [
+    85,
+    600
+   ],
+   "roam": 40,
+   "guards": {
+    "brood-keeper": 2
+   }
+  },
+  "vapor wraith": {
+   "from": "vapor wraith",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "dverge sparker": {
+   "from": "dverge sparker",
+   "tier": "yellow",
+   "faction": "dverge",
+   "guild": "the Fire-Sellers",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 150
+  },
+  "dverge igniter": {
+   "from": "dverge igniter",
+   "tier": "orange",
+   "faction": "dverge",
+   "guild": "the Fire-Sellers",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 100
+  },
+  "dverge crackler": {
+   "from": "dverge crackler",
+   "tier": "orange",
+   "faction": "dverge",
+   "guild": "the Fire-Sellers",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 100
+  },
+  "fire giant lookout": {
+   "from": "fire giant lookout",
+   "tier": "orange",
+   "faction": "giants",
+   "aggro": [
+    80,
+    600
+   ],
+   "roam": 250
+  },
+  "fire giant scout": {
+   "from": "fire giant scout",
+   "tier": "orange",
+   "faction": "giants",
+   "aggro": [
+    80,
+    600
+   ],
+   "roam": 350
+  },
+  "fire giant watchman": {
+   "from": "fire giant watchman",
+   "tier": "red",
+   "faction": "giants",
+   "aggro": [
+    85,
+    600
+   ],
+   "roam": 150
+  },
+  "fire giant guard": {
+   "from": "fire giant guard",
+   "tier": "red",
+   "faction": "giants",
+   "aggro": [
+    85,
+    600
+   ],
+   "roam": 60
+  },
+  "flaming raukomaz": {
+   "from": "flaming raukomaz",
+   "tier": "orange",
+   "faction": "flame",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "magmatasm": {
+   "from": "magmatasm",
+   "tier": "orange",
+   "faction": "flame",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 150
+  },
+  "pyrotasm": {
+   "from": "pyrotasm",
+   "tier": "red",
+   "faction": "flame",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 100
+  }
+ },
+ "sites": [
+  {
+   "id": "brika_camp",
+   "kind": "clear",
+   "at": [
+    51600,
+    5000
+   ],
+   "r": 3200,
+   "names": [
+    "fire ant scavenger",
+    "fire ant worker",
+    "fire ant gatherer",
+    "sulphur crab",
+    "soot harvester",
+    "flame thrower",
+    "ashen spirit",
+    "fire flower",
+    "ashmonger",
+    "lava lizard",
+    "fire toad",
+    "firecat",
+    "noxious hound",
+    "burnt skeletal sentry",
+    "charred skeletal warrior",
+    "seared skeleton",
+    "mephitic ghoul",
+    "fire phantom",
+    "young fire wyrm",
+    "cinder drake",
+    "brood-keeper",
+    "brood-priest",
+    "Hatch-Mother Ingrid",
+    "vapor wraith",
+    "dverge sparker",
+    "dverge igniter",
+    "dverge crackler",
+    "fire giant lookout",
+    "fire giant scout",
+    "fire giant watchman",
+    "fire giant guard",
+    "flaming raukomaz",
+    "magmatasm",
+    "pyrotasm"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "dverge_hold",
+   "kind": "clear",
+   "at": [
+    22800,
+    52600
+   ],
+   "r": 3600,
+   "names": [
+    "fire ant scavenger",
+    "fire ant worker",
+    "fire ant gatherer",
+    "sulphur crab",
+    "soot harvester",
+    "flame thrower",
+    "ashen spirit",
+    "fire flower",
+    "ashmonger",
+    "lava lizard",
+    "fire toad",
+    "firecat",
+    "noxious hound",
+    "burnt skeletal sentry",
+    "charred skeletal warrior",
+    "seared skeleton",
+    "mephitic ghoul",
+    "fire phantom",
+    "young fire wyrm",
+    "cinder drake",
+    "brood-keeper",
+    "brood-priest",
+    "Hatch-Mother Ingrid",
+    "vapor wraith",
+    "dverge sparker",
+    "dverge igniter",
+    "dverge crackler",
+    "fire giant lookout",
+    "fire giant scout",
+    "fire giant watchman",
+    "fire giant guard",
+    "flaming raukomaz",
+    "magmatasm",
+    "pyrotasm"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "ragnvald_cairn",
+   "kind": "clear",
+   "at": [
+    50240,
+    45920
+   ],
+   "r": 1600,
+   "names": [
+    "fire ant scavenger",
+    "fire ant worker",
+    "fire ant gatherer",
+    "sulphur crab",
+    "soot harvester",
+    "flame thrower",
+    "ashen spirit",
+    "fire flower",
+    "ashmonger",
+    "lava lizard",
+    "fire toad",
+    "firecat",
+    "noxious hound",
+    "burnt skeletal sentry",
+    "charred skeletal warrior",
+    "seared skeleton",
+    "mephitic ghoul",
+    "fire phantom",
+    "young fire wyrm",
+    "cinder drake",
+    "brood-keeper",
+    "brood-priest",
+    "Hatch-Mother Ingrid",
+    "vapor wraith",
+    "dverge sparker",
+    "dverge igniter",
+    "dverge crackler",
+    "fire giant lookout",
+    "fire giant scout",
+    "fire giant watchman",
+    "fire giant guard",
+    "flaming raukomaz",
+    "magmatasm",
+    "pyrotasm"
+   ],
+   "block": "all"
+  },
+  {
+   "id": "ant_hills",
+   "kind": "wildlife",
+   "area": [
+    6400,
+    21600,
+    18800,
+    34400
+   ],
+   "spawn": {
+    "fire ant scavenger": 24,
+    "fire ant worker": 24,
+    "fire ant gatherer": 20,
+    "sulphur crab": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "sulphur_flats",
+   "kind": "wildlife",
+   "area": [
+    6400,
+    12000,
+    18800,
+    21600
+   ],
+   "spawn": {
+    "sulphur crab": 24,
+    "fire flower": 16,
+    "lava lizard": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ash_fields",
+   "kind": "wildlife",
+   "area": [
+    6000,
+    34400,
+    16000,
+    58000
+   ],
+   "spawn": {
+    "soot harvester": 32,
+    "flame thrower": 24,
+    "ashen spirit": 20,
+    "fire flower": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ash_road",
+   "kind": "wildlife",
+   "area": [
+    15200,
+    36000,
+    35200,
+    50000
+   ],
+   "spawn": {
+    "ashmonger": 40,
+    "noxious hound": 24,
+    "fire toad": 16,
+    "lava lizard": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "old_battlefield",
+   "kind": "wildlife",
+   "area": [
+    16800,
+    18000,
+    40000,
+    36000
+   ],
+   "spawn": {
+    "burnt skeletal sentry": 32,
+    "charred skeletal warrior": 32,
+    "seared skeleton": 24,
+    "mephitic ghoul": 20,
+    "fire phantom": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "wyrm_hills",
+   "kind": "wildlife",
+   "area": [
+    10400,
+    6800,
+    49600,
+    19200
+   ],
+   "spawn": {
+    "young fire wyrm": 40,
+    "firecat": 16,
+    "noxious hound": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "hatchery",
+   "kind": "camp",
+   "at": [
+    30400,
+    12000
+   ],
+   "r": 640,
+   "respawn": 900,
+   "spawn": {
+    "Hatch-Mother Ingrid": 1,
+    "brood-priest": 2,
+    "brood-keeper": 3,
+    "young fire wyrm": 3
+   }
+  },
+  {
+   "id": "cinder_nest",
+   "kind": "camp",
+   "at": [
+    37920,
+    13440
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "cinder drake": 3,
+    "young fire wyrm": 2
+   }
+  },
+  {
+   "id": "vapor_vents",
+   "kind": "wildlife",
+   "area": [
+    51600,
+    15200,
+    59200,
+    20800
+   ],
+   "spawn": {
+    "vapor wraith": 16,
+    "firecat": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "giant_marches",
+   "kind": "wildlife",
+   "area": [
+    42000,
+    12000,
+    60000,
+    24000
+   ],
+   "spawn": {
+    "fire giant lookout": 24,
+    "fire giant scout": 12,
+    "noxious hound": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "giant_watch",
+   "kind": "camp",
+   "at": [
+    56800,
+    38400
+   ],
+   "r": 560,
+   "respawn": 900,
+   "spawn": {
+    "fire giant watchman": 2,
+    "fire giant guard": 2,
+    "fire giant lookout": 2
+   }
+  },
+  {
+   "id": "burning_east",
+   "kind": "wildlife",
+   "area": [
+    40800,
+    24800,
+    59200,
+    55200
+   ],
+   "spawn": {
+    "flaming raukomaz": 40,
+    "magmatasm": 12,
+    "noxious hound": 16,
+    "firecat": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "pyre",
+   "kind": "camp",
+   "at": [
+    45040,
+    39960
+   ],
+   "r": 480,
+   "respawn": 900,
+   "spawn": {
+    "pyrotasm": 3,
+    "magmatasm": 2
+   }
+  },
+  {
+   "id": "fire_sellers",
+   "kind": "wildlife",
+   "area": [
+    20000,
+    56800,
+    25600,
+    63200
+   ],
+   "spawn": {
+    "dverge sparker": 20,
+    "dverge igniter": 8,
+    "dverge crackler": 8
+   },
+   "spacing": 260
+  }
+ ]
+}

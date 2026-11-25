@@ -144,6 +144,584 @@
     "Hits": 9
    },
    "lore": "Oak from a barn that burned. It is still warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Crab-Shell Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 6,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 6,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Rock-crab shell, lashed on with gut."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Audliten Net-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 6,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 5
+   },
+   "lore": "A fisher's ring, knotted from net-cord and wire."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ant-Hill Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 7,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 6
+   },
+   "lore": "A worker ant in amber."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Furrow-Walker's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 7,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 7,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "A farmer's belt, patched many times."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ant-Soldier Mandible Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 9,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Big enough to be a ring. Sharp enough to be a weapon."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dvalin Farmer's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 9,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 9,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Brown, waxed, and smelling of rain."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dirge-Bell Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 8,
+   "bonuses": {
+    "Int": 3,
+    "Con": 1,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "A little bronze bell. It rings once, then never again."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Old-Road Walker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 8,
+   "bonuses": {
+    "Pie": 3,
+    "Int": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "Found on the road. Whose, nobody knows."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ghoul-Ward Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 10,
+   "bonuses": {
+    "Int": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "Rowan wood bound in iron."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Road Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 10,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 10,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Dark leather, scored with warding runes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dwarf-Rune Stone",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Pie": 4,
+    "Int": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A chip of the barrow's runestone. The runes say 'cold'."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-King's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 12,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 10
+   },
+   "lore": "A dwarf lord's ring, too big for any finger you have."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sealed-Door Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 12,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 12,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Stone-grey, from the barrow's door-hangings."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pillager's Sack-Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 9,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 2,
+    "Hits": 8
+   },
+   "lore": "A tomte's swag-sack, cut down into a belt."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Farmhouse Hearth Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 9,
+   "bonuses": {
+    "Qui": 3,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 5,
+    "Power": 1
+   },
+   "lore": "A coal from a hearth the tomte didn't get to."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Aggressor's Iron Cap",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 10
+   },
+   "lore": "A tomte's iron cap, small enough to be a charm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barn-Watch Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 12,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 12,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Leather, with a barn-owl stamped on it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sveawolf-Fur Collar",
+   "base": [
+    41,
+    29
+   ],
+   "level": 9,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 9,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Grey fur, thick enough for any winter. Nearly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shepherd's Crook-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 9,
+   "bonuses": {
+    "Int": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "Iron, bent like a crook."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lupine-Fang Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 11,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 9
+   },
+   "lore": "Fangs on a leather thong, every one longer than a finger."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moor-Runner's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 11,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 9
+   },
+   "lore": "Light, quick, and made to run in."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Grey-Hame Scrap Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Pie": 4,
+    "Int": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A scrap of wolf-hame. It smells of blood and frost."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Scout-Hunter's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 12,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 10
+   },
+   "lore": "Light leather, for long stalking."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ulfrstead Door-Nail Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "An iron nail from Ulfrstead's door, bent into a ring."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hame-Breaker's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "League grey, with the wolf struck through."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "League Oath-Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 14,
+   "bonuses": {
+    "Int": 5,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "The Steading-League's oath, twisted in silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Envy-Drake Scale Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Pie": 4,
+    "Int": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "Green and gold. It's warm, like something alive."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lair-Road Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 12,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 12,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Scorched at the edges."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Silverscale Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Small silver scales, sewn on overlapping."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Brood-Watcher's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 12
+   },
+   "lore": "Silver, set with a drakeling's eye-stone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wyrm-Tongue's Whistle",
+   "base": [
+    41,
+    24
+   ],
+   "level": 16,
+   "bonuses": {
+    "Qui": 5,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 10,
+    "Power": 2
+   },
+   "lore": "A bone whistle. The drakelings would come if you blew it. Don't."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Vasudheim Huscarl Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 16,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 16,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Royal blue, the King's own huscarls."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Brood-Breaker's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 16,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "Iron, with a silver scale hammered flat into it."
   }
  ]
 }

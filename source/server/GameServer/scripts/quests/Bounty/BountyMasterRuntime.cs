@@ -64,6 +64,19 @@ namespace DOL.GS
             (eRealm.Albion, "Slayer-Hunter Kyne", 1, 357056, 709320, 4964, 1024, 38, eGender.Female),
             // Mularn's zone
             (eRealm.Midgard, "Yrsa Wolfmark", 100, 804150, 724550, 4680, 2393, 218, eGender.Female),
+            // East Svealand: Audliten (Midgard's plan, round 1)
+            (eRealm.Midgard, "Trapper Gautr", 100, 727296, 760880, 4566, 1024, 213, eGender.Male),
+            // West Svealand: Huginfel; Gotar: Fort Atla; Myrkwood: Galplen (Midgard's plan, round 2)
+            (eRealm.Midgard, "Wolf-Tracker Solveig", 100, 711840, 784080, 4672, 1024, 168, eGender.Female),
+            (eRealm.Midgard, "Hunter Ulfkell", 100, 749576, 815776, 4408, 2048, 213, eGender.Male),
+            (eRealm.Midgard, "Beast-Slayer Thrand", 100, 797624, 893592, 4744, 2048, 213, eGender.Male),
+            // Muspelheim: Brika's camp; Skona Ravine: the Stor Gothi's camp; Vanern Swamp: the Wardens' camp (Midgard's plan, round 3)
+            (eRealm.Midgard, "Wyrm-Hunter Sigrid", 100, 869800, 645176, 5597, 2048, 168, eGender.Female),
+            (eRealm.Midgard, "Wolf-Hunter Ozur", 100, 712728, 924800, 5039, 1024, 213, eGender.Male),
+            (eRealm.Midgard, "Bog-Hunter Thorkatla", 100, 672112, 913472, 2110, 2048, 168, eGender.Female),
+            // Raumarik: the trappers' camp; Malmohus: Halla's camp (Midgard's plan, round 4)
+            (eRealm.Midgard, "Wolf-Slayer Ingrid", 100, 634624, 773480, 4480, 3072, 168, eGender.Female),
+            (eRealm.Midgard, "Drake-Hunter Orm", 100, 728928, 987456, 2827, 2048, 213, eGender.Male),
         };
 
         /// <summary>Any master of a realm (the first placed), for older saved contracts.</summary>

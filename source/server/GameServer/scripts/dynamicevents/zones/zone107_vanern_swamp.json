@@ -1,563 +1,1622 @@
 {
-  "zone": 107,
-  "region": 100,
-  "name": "Vanern Swamp",
-  "lore": "Vanern Swamp, where the hagbui lie in their barrows and the clay jotun walk out of the mud.",
-  "chains": [
+ "zone": 107,
+ "region": 100,
+ "name": "Vanern Swamp",
+ "lore": "Vanern Swamp: a deadly marsh with the Wardens' camp in the south-east. As the long winter comes, the hagbui - the barrow-dead of Vanern's old thanes - have risen and taken Hrafnsholm, the Wardens' watch-hold on the north-west ridge, and chained a jotun in its yard to work their cold forge. The jotun outcasts of the north haul Raumarik's ice south, waiting for Hati and the winter.",
+ "chains": [
+  {
+   "id": "vanern_swamp_hagbui_barrow",
+   "title": "The Hagbui Barrow",
+   "levels": [
+    40,
+    43
+   ],
+   "hint": "Runes glow on the barrow stones...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "vanern_swamp_hagbui_barrow",
-      "title": "The Hagbui Barrow",
-      "levels": [40, 43],
-      "hint": "Runes glow on the barrow stones...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Hagbui Barrow",
-          "objective": "Clear the hagbui barrow",
-          "announce": "Thane Ormr has woken in his barrow and called his housecarls to him. Put them back in the earth.",
-          "center": [153, 272, 80.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60161916,
-              "name": "hagbui guard",
-              "level": [40, 42]
-            },
-            {
-              "template": 60161918,
-              "name": "hagbui shaman",
-              "level": [40, 40]
-            },
-            {
-              "template": 60161917,
-              "name": "hagbui runemaster",
-              "level": [42, 42]
-            },
-            {
-              "template": 60161919,
-              "name": "hagbui spiritmaster",
-              "level": [43, 43]
-            }
-          ],
-          "success": "You have cleared the hagbui barrow. Hagbui Thane Ormr comes out to fight.",
-          "fail": "They hold the hagbui barrow. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Hagbui Thane Ormr",
-          "objective": "Defeat Hagbui Thane Ormr",
-          "announce": "Hagbui Thane Ormr stands at the hagbui barrow. Bring friends.",
-          "center": [153, 272, 80.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60161921,
-            "name": "Hagbui Thane Ormr",
-            "level": 45,
-            "size": 66,
-            "pos": [153, 272, 80.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60161916,
-                "name": "hagbui guard",
-                "level": [40, 42]
-              }
-            ]
-          },
-          "success": "Hagbui Thane Ormr falls. The way is safe again.",
-          "fail": "Hagbui Thane Ormr slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu107_hagbui_thane_ormr_s_bracer", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Hagbui Guards Hold the Road",
-          "objective": "Drive the hagbui guards off the road",
-          "announce": "With The Hagbui Barrow lost, the hagbui guards have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [585, 353, 42.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60161916,
-              "name": "hagbui guard",
-              "level": [40, 42]
-            },
-            {
-              "template": 60161918,
-              "name": "hagbui shaman",
-              "level": [40, 40]
-            },
-            {
-              "template": 60161917,
-              "name": "hagbui runemaster",
-              "level": [42, 42]
-            },
-            {
-              "template": 60161919,
-              "name": "hagbui spiritmaster",
-              "level": [43, 43]
-            }
-          ],
-          "boss": {
-            "template": 60161916,
-            "name": "Hagbui guard warleader",
-            "level": 44,
-            "pos": [585, 353, 42.6],
-            "health_mult": 2
-          },
-          "success": "The hagbui guards are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Sten has come out to set the road right. The hagbui guards are coming back for it!",
-          "center": [585, 353, 42.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Sten",
-            "level": 43,
-            "pos": [585, 353, 42.6],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [516, 402, 38.7],
-              [502, 338, 40.0],
-              [538, 283, 42.4]
-            ],
-            "mobs": [
-              {
-                "template": 60161916,
-                "name": "hagbui guard",
-                "level": [40, 42]
-              },
-              {
-                "template": 60161918,
-                "name": "hagbui shaman",
-                "level": [40, 40]
-              },
-              {
-                "template": 60161917,
-                "name": "hagbui runemaster",
-                "level": [42, 42]
-              },
-              {
-                "template": 60161919,
-                "name": "hagbui spiritmaster",
-                "level": [43, 43]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The hagbui guards break and scatter. The road is open again.",
-          "fail": "Roadwarden Sten falls, and the hagbui guards take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Hagbui Barrow",
+     "objective": "Clear the hagbui barrow",
+     "announce": "Thane Ormr has woken in his barrow and called his housecarls to him. Put them back in the earth.",
+     "center": [
+      153,
+      272,
+      80.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60161916,
+       "name": "hagbui guard",
+       "level": [
+        40,
+        42
+       ]
+      },
+      {
+       "template": 60161918,
+       "name": "hagbui shaman",
+       "level": [
+        40,
+        40
+       ]
+      },
+      {
+       "template": 60161917,
+       "name": "hagbui runemaster",
+       "level": [
+        42,
+        42
+       ]
+      },
+      {
+       "template": 60161919,
+       "name": "hagbui spiritmaster",
+       "level": [
+        43,
+        43
+       ]
+      }
+     ],
+     "success": "You have cleared the hagbui barrow. Hagbui Thane Ormr comes out to fight.",
+     "fail": "They hold the hagbui barrow. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "vanern_swamp_clay_jotun",
-      "title": "The Jotun March",
-      "levels": [36, 42],
-      "hint": "The mud heaves in the swamp...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Kjell the Bog-Warden",
-          "objective": "Protect Kjell the Bog-Warden, who is raising the warning flag",
-          "announce": "The clay jotun are walking out of the swamp. Kjell the bog-warden must raise the warning flag - hold them off.",
-          "center": [758, 1018, 50.5],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Kjell the Bog-Warden",
-            "template": 60167667,
-            "level": 42,
-            "model": 158,
-            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
-            "health_mult": 10,
-            "pos": [758, 1018, 50.5]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [674, 1009, 48.2],
-              [682, 951, 50.0],
-              [770, 933, 52.9]
-            ],
-            "mobs": [
-              {
-                "template": 60159228,
-                "name": "clay jotun",
-                "level": [40, 42]
-              },
-              {
-                "template": 60164268,
-                "name": "mud crab warrior",
-                "level": [36, 36]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Kjell the Bog-Warden. \"They came from over there - let's finish this.\"",
-          "fail": "Kjell the Bog-Warden falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Bog-warden's Hut",
-          "objective": "Clear the bog-warden's hut",
-          "announce": "They came from the bog-warden's hut. Follow them back and clear it out.",
-          "center": [587, 800, 47.6],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60159228,
-              "name": "clay jotun",
-              "level": [40, 42]
-            },
-            {
-              "template": 60164268,
-              "name": "mud crab warrior",
-              "level": [36, 36]
-            }
-          ],
-          "success": "You have cleared the bog-warden's hut. Leirjotun comes out to fight.",
-          "fail": "They hold the bog-warden's hut. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Leirjotun",
-          "objective": "Defeat Leirjotun",
-          "announce": "Leirjotun stands at the bog-warden's hut. Bring friends.",
-          "center": [587, 800, 47.6],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60159228,
-            "name": "Leirjotun",
-            "level": 44,
-            "size": 70,
-            "pos": [587, 800, 47.6],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60159228,
-                "name": "clay jotun",
-                "level": [40, 42]
-              }
-            ]
-          },
-          "success": "Leirjotun falls. The way is safe again.",
-          "fail": "Leirjotun slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu107_leirjotun_s_stone", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Clay Jotuns Hold the Road",
-          "objective": "Drive the clay jotuns off the road",
-          "announce": "With The Jotun March lost, the clay jotuns have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [847, 802, 57.5],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60159228,
-              "name": "clay jotun",
-              "level": [40, 42]
-            },
-            {
-              "template": 60164268,
-              "name": "mud crab warrior",
-              "level": [36, 36]
-            }
-          ],
-          "boss": {
-            "template": 60159228,
-            "name": "Clay jotun warleader",
-            "level": 43,
-            "pos": [847, 802, 57.5],
-            "health_mult": 2
-          },
-          "success": "The clay jotuns are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Ylva has come out to set the road right. The clay jotuns are coming back for it!",
-          "center": [847, 802, 57.5],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Ylva",
-            "level": 42,
-            "pos": [847, 802, 57.5],
-            "health_mult": 10,
-            "template": 60167667,
-            "model": 158,
-            "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [787, 863, 59.4],
-              [762, 801, 58.2],
-              [788, 741, 58.8]
-            ],
-            "mobs": [
-              {
-                "template": 60159228,
-                "name": "clay jotun",
-                "level": [40, 42]
-              },
-              {
-                "template": 60164268,
-                "name": "mud crab warrior",
-                "level": [36, 36]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The clay jotuns break and scatter. The road is open again.",
-          "fail": "Roadwarden Ylva falls, and the clay jotuns take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Hagbui Thane Ormr",
+     "objective": "Defeat Hagbui Thane Ormr",
+     "announce": "Hagbui Thane Ormr stands at the hagbui barrow. Bring friends.",
+     "center": [
+      153,
+      272,
+      80.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161921,
+      "name": "Hagbui Thane Ormr",
+      "level": 45,
+      "size": 66,
+      "pos": [
+       153,
+       272,
+       80.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60161916,
+        "name": "hagbui guard",
+        "level": [
+         40,
+         42
+        ]
+       }
       ]
+     },
+     "success": "Hagbui Thane Ormr falls. The way is safe again.",
+     "fail": "Hagbui Thane Ormr slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu107_hagbui_thane_ormr_s_bracer",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
     },
     {
-      "id": "vanern_swamp_black_orms",
-      "title": "The Black Orm Wallow",
-      "levels": [35, 38],
-      "hint": "The swamp heaves where the black orms wallow...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Orm Wallow",
-          "objective": "Clear the orm wallow",
-          "announce": "The black orms have made a wallow on the causeway, and the causeway is sinking. Drive them out.",
-          "center": [1187, 490, 44.6],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 60166239,
-              "name": "small black orm",
-              "level": [35, 35]
-            },
-            {
-              "template": 60158453,
-              "name": "black orm",
-              "level": [36, 38]
-            }
-          ],
-          "success": "You have cleared the orm wallow. The Great Black Orm comes out to fight.",
-          "fail": "They hold the orm wallow. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Great Black Orm",
-          "objective": "Defeat the Great Black Orm",
-          "announce": "The Great Black Orm stands at the orm wallow. Bring friends.",
-          "center": [1187, 490, 44.6],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 60158453,
-            "name": "The Great Black Orm",
-            "level": 40,
-            "size": 96,
-            "pos": [1187, 490, 44.6],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 60166239,
-                "name": "small black orm",
-                "level": [35, 35]
-              }
-            ]
-          },
-          "success": "The Great Black Orm falls. The way is safe again.",
-          "fail": "The Great Black Orm slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu107_great_black_orm_s_ring", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Small Black Orms Hold the Old Road",
-          "objective": "Drive the small black orms off the old road",
-          "announce": "With The Black Orm Wallow lost, the small black orms have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1127, 237, 42.8],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 60166239,
-              "name": "small black orm",
-              "level": [35, 35]
-            },
-            {
-              "template": 60158453,
-              "name": "black orm",
-              "level": [36, 38]
-            }
-          ],
-          "boss": {
-            "template": 60166239,
-            "name": "Small black orm warleader",
-            "level": 39,
-            "pos": [1127, 237, 42.8],
-            "health_mult": 2
-          },
-          "success": "The small black orms are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hild has come out to set the old road right. The small black orms are coming back for it!",
-          "center": [1127, 237, 42.8],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hild",
-            "level": 38,
-            "pos": [1127, 237, 42.8],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1200, 281, 42.4],
-              [1147, 320, 43.0],
-              [1081, 309, 41.3]
-            ],
-            "mobs": [
-              {
-                "template": 60166239,
-                "name": "small black orm",
-                "level": [35, 35]
-              },
-              {
-                "template": 60158453,
-                "name": "black orm",
-                "level": [36, 38]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The small black orms break and scatter. The old road is open again.",
-          "fail": "Roadwarden Hild falls, and the small black orms take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Hagbui Guards Hold the Road",
+     "objective": "Drive the hagbui guards off the road",
+     "announce": "With The Hagbui Barrow lost, the hagbui guards have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      585,
+      353,
+      42.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60161916,
+       "name": "hagbui guard",
+       "level": [
+        40,
+        42
+       ]
+      },
+      {
+       "template": 60161918,
+       "name": "hagbui shaman",
+       "level": [
+        40,
+        40
+       ]
+      },
+      {
+       "template": 60161917,
+       "name": "hagbui runemaster",
+       "level": [
+        42,
+        42
+       ]
+      },
+      {
+       "template": 60161919,
+       "name": "hagbui spiritmaster",
+       "level": [
+        43,
+        43
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60161916,
+      "name": "Hagbui guard warleader",
+      "level": 44,
+      "pos": [
+       585,
+       353,
+       42.6
+      ],
+      "health_mult": 2
+     },
+     "success": "The hagbui guards are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Sten, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Sten has come out to set the road right. The hagbui guards are coming back for it!",
+     "center": [
+      585,
+      353,
+      42.6
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Sten",
+      "level": 43,
+      "pos": [
+       585,
+       353,
+       42.6
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        516,
+        402,
+        38.7
+       ],
+       [
+        502,
+        338,
+        40.0
+       ],
+       [
+        538,
+        283,
+        42.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161916,
+        "name": "hagbui guard",
+        "level": [
+         40,
+         42
+        ]
+       },
+       {
+        "template": 60161918,
+        "name": "hagbui shaman",
+        "level": [
+         40,
+         40
+        ]
+       },
+       {
+        "template": 60161917,
+        "name": "hagbui runemaster",
+        "level": [
+         42,
+         42
+        ]
+       },
+       {
+        "template": 60161919,
+        "name": "hagbui spiritmaster",
+        "level": [
+         43,
+         43
+        ]
+       }
       ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The hagbui guards break and scatter. The road is open again.",
+     "fail": "Roadwarden Sten falls, and the hagbui guards take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
+   ]
+  },
+  {
+   "id": "vanern_swamp_clay_jotun",
+   "title": "The Jotun March",
+   "levels": [
+    36,
+    42
+   ],
+   "hint": "The mud heaves in the swamp...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Kjell the Bog-Warden",
+     "objective": "Protect Kjell the Bog-Warden, who is raising the warning flag",
+     "announce": "The clay jotun are walking out of the swamp. Kjell the bog-warden must raise the warning flag - hold them off.",
+     "center": [
+      758,
+      1018,
+      50.5
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Kjell the Bog-Warden",
+      "template": 60167667,
+      "level": 42,
+      "model": 158,
+      "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55",
+      "health_mult": 10,
+      "pos": [
+       758,
+       1018,
+       50.5
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        674,
+        1009,
+        48.2
+       ],
+       [
+        682,
+        951,
+        50.0
+       ],
+       [
+        770,
+        933,
+        52.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60159228,
+        "name": "clay jotun",
+        "level": [
+         40,
+         42
+        ]
+       },
+       {
+        "template": 60164268,
+        "name": "mud crab warrior",
+        "level": [
+         36,
+         36
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Kjell the Bog-Warden. \"They came from over there - let's finish this.\"",
+     "fail": "Kjell the Bog-Warden falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Bog-warden's Hut",
+     "objective": "Clear the bog-warden's hut",
+     "announce": "They came from the bog-warden's hut. Follow them back and clear it out.",
+     "center": [
+      587,
+      800,
+      47.6
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60159228,
+       "name": "clay jotun",
+       "level": [
+        40,
+        42
+       ]
+      },
+      {
+       "template": 60164268,
+       "name": "mud crab warrior",
+       "level": [
+        36,
+        36
+       ]
+      }
+     ],
+     "success": "You have cleared the bog-warden's hut. Leirjotun comes out to fight.",
+     "fail": "They hold the bog-warden's hut. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Leirjotun",
+     "objective": "Defeat Leirjotun",
+     "announce": "Leirjotun stands at the bog-warden's hut. Bring friends.",
+     "center": [
+      587,
+      800,
+      47.6
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60159228,
+      "name": "Leirjotun",
+      "level": 44,
+      "size": 70,
+      "pos": [
+       587,
+       800,
+       47.6
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60159228,
+        "name": "clay jotun",
+        "level": [
+         40,
+         42
+        ]
+       }
+      ]
+     },
+     "success": "Leirjotun falls. The way is safe again.",
+     "fail": "Leirjotun slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu107_leirjotun_s_stone",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Clay Jotuns Hold the Road",
+     "objective": "Drive the clay jotuns off the road",
+     "announce": "With The Jotun March lost, the clay jotuns have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      847,
+      802,
+      57.5
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60159228,
+       "name": "clay jotun",
+       "level": [
+        40,
+        42
+       ]
+      },
+      {
+       "template": 60164268,
+       "name": "mud crab warrior",
+       "level": [
+        36,
+        36
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60159228,
+      "name": "Clay jotun warleader",
+      "level": 43,
+      "pos": [
+       847,
+       802,
+       57.5
+      ],
+      "health_mult": 2
+     },
+     "success": "The clay jotuns are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Ylva, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Ylva has come out to set the road right. The clay jotuns are coming back for it!",
+     "center": [
+      847,
+      802,
+      57.5
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Ylva",
+      "level": 42,
+      "pos": [
+       847,
+       802,
+       57.5
+      ],
+      "health_mult": 10,
+      "template": 60167667,
+      "model": 158,
+      "equipment": "625ff360-c1cf-4560-854a-c3679ec98d55"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        787,
+        863,
+        59.4
+       ],
+       [
+        762,
+        801,
+        58.2
+       ],
+       [
+        788,
+        741,
+        58.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60159228,
+        "name": "clay jotun",
+        "level": [
+         40,
+         42
+        ]
+       },
+       {
+        "template": 60164268,
+        "name": "mud crab warrior",
+        "level": [
+         36,
+         36
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The clay jotuns break and scatter. The road is open again.",
+     "fail": "Roadwarden Ylva falls, and the clay jotuns take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "vanern_swamp_black_orms",
+   "title": "The Black Orm Wallow",
+   "levels": [
+    35,
+    38
+   ],
+   "hint": "The swamp heaves where the black orms wallow...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Orm Wallow",
+     "objective": "Clear the orm wallow",
+     "announce": "The black orms have made a wallow on the causeway, and the causeway is sinking. Drive them out.",
+     "center": [
+      1187,
+      490,
+      44.6
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 60166239,
+       "name": "small black orm",
+       "level": [
+        35,
+        35
+       ]
+      },
+      {
+       "template": 60158453,
+       "name": "black orm",
+       "level": [
+        36,
+        38
+       ]
+      }
+     ],
+     "success": "You have cleared the orm wallow. The Great Black Orm comes out to fight.",
+     "fail": "They hold the orm wallow. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "The Great Black Orm",
+     "objective": "Defeat the Great Black Orm",
+     "announce": "The Great Black Orm stands at the orm wallow. Bring friends.",
+     "center": [
+      1187,
+      490,
+      44.6
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 60158453,
+      "name": "The Great Black Orm",
+      "level": 40,
+      "size": 96,
+      "pos": [
+       1187,
+       490,
+       44.6
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60166239,
+        "name": "small black orm",
+        "level": [
+         35,
+         35
+        ]
+       }
+      ]
+     },
+     "success": "The Great Black Orm falls. The way is safe again.",
+     "fail": "The Great Black Orm slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu107_great_black_orm_s_ring",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Small Black Orms Hold the Old Road",
+     "objective": "Drive the small black orms off the old road",
+     "announce": "With The Black Orm Wallow lost, the small black orms have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1127,
+      237,
+      42.8
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 60166239,
+       "name": "small black orm",
+       "level": [
+        35,
+        35
+       ]
+      },
+      {
+       "template": 60158453,
+       "name": "black orm",
+       "level": [
+        36,
+        38
+       ]
+      }
+     ],
+     "boss": {
+      "template": 60166239,
+      "name": "Small black orm warleader",
+      "level": 39,
+      "pos": [
+       1127,
+       237,
+       42.8
+      ],
+      "health_mult": 2
+     },
+     "success": "The small black orms are gone from the old road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hild, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hild has come out to set the old road right. The small black orms are coming back for it!",
+     "center": [
+      1127,
+      237,
+      42.8
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hild",
+      "level": 38,
+      "pos": [
+       1127,
+       237,
+       42.8
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1200,
+        281,
+        42.4
+       ],
+       [
+        1147,
+        320,
+        43.0
+       ],
+       [
+        1081,
+        309,
+        41.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60166239,
+        "name": "small black orm",
+        "level": [
+         35,
+         35
+        ]
+       },
+       {
+        "template": 60158453,
+        "name": "black orm",
+        "level": [
+         36,
+         38
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+     "success": "The small black orms break and scatter. The old road is open again.",
+     "fail": "Roadwarden Hild falls, and the small black orms take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "vn_ice_road",
+   "title": "The Ice Road",
+   "levels": [
+    41,
+    45
+   ],
+   "hint": "Frost on the bog in summer, and the crack of jotun whips in the north...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "i1",
+   "stages": [
+    {
+     "id": "i1",
+     "type": "cull",
+     "name": "The Ice-Haulers",
+     "objective": "Break the jotun outcasts hauling ice down the north road",
+     "announce": "The jotun outcasts are hauling Raumarik's ice south across Vanern! Break the haulers before the road reaches Hrafnsholm!",
+     "center": [
+      673,
+      232,
+      42.4
+     ],
+     "radius": 90,
+     "time_s": 900,
+     "kill": 12,
+     "alive": 6,
+     "mobs": [
+      {
+       "template": 60163137,
+       "name": "large enslaved orm runner",
+       "level": [
+        41,
+        43
+       ],
+       "guild": "hauling for the jotun"
+      },
+      {
+       "template": 60163137,
+       "name": "large enslaved orm runner",
+       "level": [
+        41,
+        43
+       ],
+       "guild": "hauling for the jotun"
+      },
+      {
+       "template": 60162686,
+       "name": "jotun outcast",
+       "level": [
+        43,
+        45
+       ],
+       "guild": "of the ice road"
+      }
+     ],
+     "success": "The haulers break - and the one driving them comes down the road, frost smoking off him.",
+     "fail": "The ice reaches the hagbui's ridge.",
+     "on_success": "i2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 180,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "i2",
+     "type": "boss",
+     "name": "Frost-Herald Hrimgrim",
+     "objective": "Defeat Frost-Herald Hrimgrim",
+     "announce": "Frost-Herald Hrimgrim, a jotun with icicles for a beard and a horn of ice: 'When Hati catches the moon, we walk south on this road. Stand in it, little men.'",
+     "center": [
+      673,
+      232,
+      42.4
+     ],
+     "radius": 90,
+     "time_s": 1200,
+     "path": [
+      [
+       673,
+       232,
+       42.4
+      ],
+      [
+       560,
+       160,
+       58.3
+      ],
+      [
+       632,
+       315,
+       42.8
+      ],
+      [
+       760,
+       268,
+       42.9
+      ],
+      [
+       673,
+       232,
+       42.4
+      ]
+     ],
+     "boss": {
+      "template": 60162687,
+      "name": "Frost-Herald Hrimgrim",
+      "level": 46,
+      "size": 70,
+      "pos": [
+       673,
+       232,
+       42.4
+      ],
+      "health_mult": 3.5,
+      "guild": "Herald of the Winter"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 60162686,
+        "name": "jotun outcast",
+        "level": [
+         43,
+         45
+        ],
+        "guild": "of the ice road"
+       }
+      ]
+     },
+     "success": "Hrimgrim falls, and his horn shatters. The ice on the road begins, at last, to melt.",
+     "fail": "Hrimgrim blows his horn, and the ice road runs on toward Hrafnsholm.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 300,
+      "tokens": 22,
+      "items": [
+       {
+        "id": "nu107_hrimgrim_s_ice_horn",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "vn_hrafnsholm_assault",
+   "title": "Retake Hrafnsholm",
+   "levels": [
+    42,
+    46
+   ],
+   "manual": true,
+   "bots": 8,
+   "min_people": 4,
+   "bot_min_level": 32,
+   "hint": "Warden-Marshal Thorstein is gathering the Wardens of Vanern on the ridge east of Hrafnsholm.",
+   "rest_s": 15,
+   "start": "h1",
+   "giver": {
+    "template": 60157473,
+    "model": 160,
+    "equipment": "SvasudGuard",
+    "guild": "the Wardens of Vanern",
+    "name": "Warden-Marshal Thorstein",
+    "level": 46,
+    "pos": [
+     440,
+     150,
+     76.2
+    ],
+    "health_mult": 3,
+    "greet": "Three hundred years the Wardens held that hold. The dead took it in a night. We take it back today. Four at least, bots and all - say [for Hrafnsholm].",
+    "accept": "for Hrafnsholm",
+    "reply": "Rowan and iron! Clear the yard, break the rune-chains, and put their thane back in his barrow!",
+    "busy": "Not yet. The Wardens are still coming up through the bog. Rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "Hrafnsholm is the Wardens' again!",
+    "regret": "Back to the ridge! We'll come again."
+   },
+   "guards": [
+    {
+     "template": 60157473,
+     "model": 160,
+     "equipment": "SvasudGuard",
+     "guild": "the Wardens of Vanern",
+     "name": "Warden of Vanern",
+     "level": 43,
+     "count": 2
+    },
+    {
+     "template": 60157473,
+     "model": 168,
+     "guild": "the Wardens of Vanern",
+     "name": "rune-woman of Vanern",
+     "level": 43,
+     "count": 2
+    }
+   ],
+   "stages": [
+    {
+     "id": "h1",
+     "type": "cull",
+     "name": "The Yard",
+     "objective": "Clear the hagbui from the yard",
+     "announce": "Into the yard! The dead are coming out to meet us!",
+     "center": [
+      300,
+      300,
+      55.5
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "kill": 20,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 60161914,
+       "name": "hagbui berserker",
+       "level": [
+        41,
+        43
+       ],
+       "guild": "the Hagbui"
+      },
+      {
+       "template": 60161916,
+       "name": "hagbui guard",
+       "level": [
+        40,
+        42
+       ],
+       "guild": "the Hagbui"
+      },
+      {
+       "template": 60161919,
+       "name": "hagbui spiritmaster",
+       "level": [
+        41,
+        43
+       ],
+       "guild": "the Hagbui"
+      },
+      {
+       "template": 60161914,
+       "name": "hagbui berserker",
+       "level": [
+        41,
+        43
+       ],
+       "guild": "the Hagbui"
+      }
+     ],
+     "success": "The yard is ours. The hagbui fall back to the hall.",
+     "fail": "The Wardens are thrown back to the ridge.",
+     "on_success": "h2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 200,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "h2",
+     "type": "wards",
+     "name": "The Rune-Chains",
+     "objective": "Hold the three rune-posts at once while the rune-women break the jotun's chains",
+     "announce": "The chained jotun is bound by three rune-posts! Stand at all three at once and the rune-women will break the chains - or the dead will turn him on us!",
+     "center": [
+      240,
+      250,
+      80.4
+     ],
+     "radius": 80,
+     "wards": [
+      [
+       210,
+       220,
+       79.8
+      ],
+      [
+       270,
+       230,
+       85.3
+      ],
+      [
+       240,
+       290,
+       84.5
+      ]
+     ],
+     "ward_names": [
+      "the north post",
+      "the east post",
+      "the south post"
+     ],
+     "ward_radius": 20,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 60161917,
+       "name": "hagbui runemaster",
+       "level": [
+        42,
+        44
+       ],
+       "guild": "the Hagbui"
+      },
+      {
+       "template": 60161916,
+       "name": "hagbui guard",
+       "level": [
+        40,
+        42
+       ],
+       "guild": "the Hagbui"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "raven banner of the Wardens",
+     "success": "The chains fall, and the jotun walks off into the swamp without a word - and out of the hall comes the thane who chained him.",
+     "fail": "The rune-posts hold. The Wardens fall back.",
+     "on_success": "h3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 200,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "h3",
+     "type": "boss",
+     "name": "Barrow-Jarl Hrafnkel",
+     "objective": "Defeat Barrow-Jarl Hrafnkel",
+     "announce": "Barrow-Jarl Hrafnkel, dead three hundred years, frost in his beard and his barrow-gold on his arms: 'I held this hold before your grandfathers' grandfathers. I hold it for the winter now.'",
+     "center": [
+      240,
+      250,
+      80.4
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 60161921,
+      "name": "Barrow-Jarl Hrafnkel",
+      "level": 47,
+      "size": 65,
+      "health_mult": 2.5,
+      "guild": "Jarl of the Hagbui"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60161914,
+        "name": "hagbui berserker",
+        "level": [
+         41,
+         43
+        ],
+        "guild": "the Hagbui"
+       },
+       {
+        "template": 60161921,
+        "name": "hagbui thane",
+        "level": [
+         43,
+         45
+        ],
+        "guild": "the Hagbui"
+       }
+      ]
+     },
+     "success": "Hrafnkel falls on his own hearth and is dust. The Wardens' raven goes up over Hrafnsholm, the right way up.",
+     "fail": "Hrafnkel drives the Wardens out of the yard.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 340,
+      "tokens": 24,
+      "items": [
+       {
+        "id": "uf107_hrafnkel_s_barrow_gold",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "vn_hrafnsholm_return",
+   "title": "The Unchained",
+   "levels": [
+    43,
+    46
+   ],
+   "manual": true,
+   "bots": 8,
+   "bot_min_level": 32,
+   "hint": "The ground shakes in the west: the hagbui have chained a new jotun, and sent him for Hrafnsholm.",
+   "wake_m": 200,
+   "auto_fail_s": 900,
+   "start": "x1",
+   "stages": [
+    {
+     "id": "x1",
+     "type": "defend",
+     "name": "The Hall Door",
+     "objective": "Keep Rune-Woman Asdis alive at the hall door",
+     "announce": "Every barrow in Vanern has opened, and the dead are coming for Hrafnsholm! Hold the door!",
+     "center": [
+      240,
+      250,
+      80.4
+     ],
+     "radius": 70,
+     "duration_s": 200,
+     "protect": {
+      "template": 60157473,
+      "model": 168,
+      "guild": "the Wardens of Vanern",
+      "name": "Rune-Woman Asdis",
+      "level": 44,
+      "pos": [
+       240,
+       250,
+       80.4
+      ],
+      "health_mult": 5
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 4,
+      "from": [
+       [
+        180,
+        200,
+        78.2
+       ],
+       [
+        200,
+        320,
+        85.2
+       ],
+       [
+        300,
+        200,
+        79.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 60161914,
+        "name": "hagbui berserker",
+        "level": [
+         41,
+         43
+        ],
+        "guild": "the Hagbui"
+       },
+       {
+        "template": 60161916,
+        "name": "hagbui guard",
+        "level": [
+         40,
+         42
+        ],
+        "guild": "the Hagbui"
+       },
+       {
+        "template": 60161919,
+        "name": "hagbui spiritmaster",
+        "level": [
+         41,
+         43
+        ],
+        "guild": "the Hagbui"
+       },
+       {
+        "template": 60161921,
+        "name": "hagbui thane",
+        "level": [
+         43,
+         45
+        ],
+        "guild": "the Hagbui"
+       }
+      ]
+     },
+     "success": "The first rush breaks - and the ground shakes. A jotun in black rune-chains walks out of the bog.",
+     "fail": "Rune-Woman Asdis falls at the door.",
+     "on_success": "x2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 220,
+      "tokens": 16
+     }
+    },
+    {
+     "id": "x2",
+     "type": "boss",
+     "name": "Bergelmir the Chained",
+     "objective": "Defeat Bergelmir the Chained",
+     "announce": "Bergelmir the Chained - a jotun bound in the hagbui's black chains, their runes burning cold on his skin. He doesn't want to fight you. He has no choice.",
+     "center": [
+      240,
+      250,
+      80.4
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 60158735,
+      "name": "Bergelmir the Chained",
+      "level": 47,
+      "size": 90,
+      "health_mult": 3,
+      "guild": "Slave of the Hagbui"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 60161917,
+        "name": "hagbui runemaster",
+        "level": [
+         42,
+         44
+        ],
+        "guild": "the Hagbui"
+       },
+       {
+        "template": 60161914,
+        "name": "hagbui berserker",
+        "level": [
+         41,
+         43
+        ],
+        "guild": "the Hagbui"
+       }
+      ]
+     },
+     "success": "Bergelmir falls, and his chains break with him. 'Thank you,' he says. Hrafnsholm holds - for now.",
+     "fail": "Bergelmir breaks the hall door, and the dead pour in.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 300,
+      "tokens": 22,
+      "items": [
+       {
+        "id": "uf107_bergelmir_s_broken_chain",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "siege": {
+  "id": "hrafnsholm",
+  "name": "Hrafnsholm",
+  "enemy": "the Hagbui",
+  "resolve_name": "The Wardens' resolve",
+  "enemy_name": "The hagbui's hold",
+  "faction": "vanern_wardens",
+  "feeds": {
+   "vn_ice_road": 15,
+   "vanern_swamp_hagbui_barrow": 20,
+   "vanern_swamp_clay_jotun": 5,
+   "vanern_swamp_black_orms": 5
+  },
+  "feed_default": 5,
+  "quests": {
+   "vn_berserkers": 10,
+   "vn_spiritmasters": 15,
+   "vn_runemasters": 15,
+   "vn_hrafnsholm": 25,
+   "vn_crippled": 10,
+   "vn_outcasts": 10,
+   "barrow_brother": 10
+  },
+  "enemy_feeds": {
+   "vn_ice_road": 15
+  },
+  "enemy_default": 5,
+  "war_chain": "vn_ice_road",
+  "assault": "vn_hrafnsholm_assault",
+  "raids": [],
+  "last_raid": "vn_hrafnsholm_return",
+  "hold_h": 2,
+  "raid_gap_h": [
+   2,
+   1.5,
+   1.5
+  ],
+  "criers": [
+   "vn_steinunn",
+   "vn_gisli"
+  ],
+  "bots_go_after_m": 30,
+  "open_text": "Hear me! The Wardens of Vanern mean to take back Hrafnsholm from the hagbui! Warden-Marshal Thorstein waits on the ridge east of the hold. If no one leads within the half-hour, the Wardens go without you.",
+  "taken_text": "Hrafnsholm is the Wardens' again! The jotun is free, and the Wardens keep the hold - go and see.",
+  "repelled_text": "The Wardens have been thrown back from Hrafnsholm. The dead grow bolder.",
+  "raid_text": "The ground shakes in the west: the hagbui are coming back for Hrafnsholm!",
+  "held_text": "The dead are thrown back from the walls. Hrafnsholm holds.",
+  "fall_text": "Hrafnsholm has fallen to the hagbui and their chained jotun. The dead hold it again, and the Wardens must rebuild their resolve.",
+  "carry_text": "Warden-Marshal Thorstein leads you down off the ridge at a run.",
+  "carried_cry": "The Wardens wouldn't wait any longer - they have stormed {0}!",
+  "hostile_tier": "yellow",
+  "sites": [
+   "hrafnsholm",
+   "hrafnsholm_yard"
+  ],
+  "staging": [
+   440,
+   150,
+   76.2
+  ],
+  "landing": [
+   300,
+   300,
+   55.5
+  ],
+  "area": [
+   260,
+   270,
+   110
+  ],
+  "camp_npcs": [
+   {
+    "template": 60157473,
+    "model": 168,
+    "guild": "the Wardens of Vanern",
+    "kind": "marks",
+    "name": "Warden-Quartermaster Kolfinna",
+    "level": 44,
+    "pos": [
+     280,
+     290,
+     65.3
+    ],
+    "greet": "The hold's stores, for those who took it back and those who keep it.",
+    "stock": [
+     {
+      "item": "uf107_hrafnsholm_raven_cloak",
+      "price": 60
+     },
+     {
+      "item": "uf107_rune_chain_ring",
+      "price": 40
+     },
+     {
+      "item": "uf107_watch_hold_torc",
+      "price": 40
+     },
+     {
+      "item": "uf107_barrow_breaker_bracer",
+      "price": 40
+     },
+     {
+      "item": "tw_strong_draught_of_healing",
+      "price": 2
+     },
+     {
+      "item": "tw_strong_draught_of_power",
+      "price": 2
+     }
+    ]
+   },
+   {
+    "template": 60157473,
+    "model": 157,
+    "guild": "the Wardens of Vanern",
+    "kind": "coin",
+    "name": "Bog-Brewer Hallveig",
+    "level": 42,
+    "pos": [
+     230,
+     280,
+     84.3
+    ],
+    "greet": "Bog-ale and rowan-water. The rowan's for the dead.",
+    "stock": [
+     {
+      "item": "uf107_bog_ale"
+     },
+     {
+      "item": "uf107_rowan_water"
+     },
+     {
+      "item": "uf107_warden_s_mead"
+     }
+    ]
+   },
+   {
+    "template": 60157473,
+    "model": 160,
+    "equipment": "SvasudGuard",
+    "guild": "the Wardens of Vanern",
+    "kind": "idle",
+    "name": "Warden of Vanern",
+    "level": 43,
+    "pos": [
+     270,
+     240,
+     81.4
+    ],
+    "count": 3,
+    "idle": "We turned the banner the right way up. Three hundred years. It still fits the pole."
+   }
+  ],
+  "holdouts": [
+   {
+    "kind": "holdout",
+    "name": "hagbui holdout",
+    "template": 60161914,
+    "level": 43,
+    "pos": [
+     180,
+     320,
+     79.2
+    ],
+    "count": 3,
+    "tier": "yellow",
+    "respawn_s": 300
+   }
   ]
+ }
 }

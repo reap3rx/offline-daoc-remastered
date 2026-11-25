@@ -1,0 +1,150 @@
+{
+ "zone": 116,
+ "name": "Malmohus",
+ "levels": [
+  50,
+  60
+ ],
+ "realm": 2,
+ "factions": [
+  {
+   "key": "volur_oath",
+   "name": "the Oath of the Volur",
+   "short": "the Oath",
+   "kin": [
+    "haggerfel_volur",
+    "nalliten_runecasters",
+    "seidr_folk",
+    "seithkona_circle"
+   ],
+   "titles": [
+    "Oath-Friend",
+    "Oath-Sworn",
+    "Keeper of the True Name"
+   ],
+   "speaker": "mh_asa",
+   "town": "Halla's camp",
+   "kills": [
+    "drakulv",
+    "svartalf",
+    "varg",
+    "mara",
+    "marodor",
+    "crawler"
+   ],
+   "quartermaster": {
+    "name": "Oath-Quartermaster Thorgerd",
+    "guild": "the Oath of the Volur",
+    "model": 157,
+    "anchor": "mh_asa",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The Oath's stores, for those who swore it. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep116_oath_friend_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep116_oath_sworn_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep116_nine_knot_scale_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep116_true_name_keeper_s_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep116_mantle_of_the_dragon_oath_sworn",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "shared": [
+  "eiriks_huscarls"
+ ],
+ "quartermasters": [
+  {
+   "faction": "eiriks_huscarls",
+   "name": "Huscarl-Quartermaster Bersi",
+   "guild": "King Eirik's Huscarls",
+   "model": 213,
+   "anchor": "mh_ketil",
+   "offset": [
+    4,
+    3
+   ],
+   "greet": "The King's stores, as far south as they go. Same stock as Mularn. Show me your standing with the Huscarls.",
+   "stock": [
+    {
+     "item": "rep100_huscarl_friend_s_ring",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep100_jordheim_road_belt",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep100_shield_of_jordheim_torc",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep100_eirik_s_bracer",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep100_mantle_of_eirik_s_champion",
+     "rank": "Legend",
+     "price": 150
+    }
+   ]
+  }
+ ],
+ "kill_default": "volur_oath",
+ "event_default": "volur_oath",
+ "quest_default": "volur_oath",
+ "quests": {
+  "missionary": "eiriks_huscarls",
+  "svartalf_steel": "eiriks_huscarls",
+  "mh_missionaries": "eiriks_huscarls",
+  "mh_patrols": "eiriks_huscarls",
+  "mh_infiltrators": "eiriks_huscarls",
+  "mh_bloodbinders": "volur_oath",
+  "mh_vargs": "eiriks_huscarls",
+  "mh_armguards": "eiriks_huscarls",
+  "mh_sacrificers": "volur_oath",
+  "mh_protectors": "eiriks_huscarls",
+  "mh_disciples": "volur_oath",
+  "mh_oath": "volur_oath"
+ },
+ "events": {
+  "mh_cp1_assault": "volur_oath",
+  "mh_cp1_counter": "volur_oath",
+  "mh_cp2_assault": "volur_oath",
+  "mh_cp2_counter": "volur_oath",
+  "mh_cp3_assault": "volur_oath",
+  "mh_cp3_counter": "volur_oath",
+  "mh_cp4_assault": "volur_oath",
+  "mh_cp4_counter": "volur_oath",
+  "mh_wyrm_temple": "volur_oath",
+  "malmohus_drakulv_rite": "volur_oath",
+  "malmohus_drakulv_patrols": "eiriks_huscarls",
+  "malmohus_svartalf_foisters": "eiriks_huscarls"
+ }
+}

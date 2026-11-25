@@ -1840,5 +1840,455 @@
    ],
    "lift": "dartmoor"
   }
+ ],
+ "100": [
+  {
+   "name": "Vale of Mularn: spray and mist round Darkness Falls (Midgard round 1) - thickest at night, when the Moon-Howler walks",
+   "points": [
+    [
+     5600,
+     21200
+    ],
+    [
+     12400,
+     21200
+    ],
+    [
+     13600,
+     25600
+    ],
+    [
+     12400,
+     30000
+    ],
+    [
+     5600,
+     30000
+    ],
+    [
+     4400,
+     25600
+    ]
+   ],
+   "edge_m": 60,
+   "density": 0.04,
+   "day": 0.35,
+   "end_m": 140,
+   "height_m": 40,
+   "floor": 8600,
+   "color": [
+    0.8,
+    0.84,
+    0.9
+   ]
+  }
+ ],
+ "102": [
+  {
+   "name": "West Svealand: the frozen gully's ice-mist, that never lifts (Midgard round 2)",
+   "points": [
+    [
+     16000,
+     60000
+    ],
+    [
+     15180,
+     61697
+    ],
+    [
+     13200,
+     62400
+    ],
+    [
+     11220,
+     61697
+    ],
+    [
+     10400,
+     60000
+    ],
+    [
+     11220,
+     58303
+    ],
+    [
+     13200,
+     57600
+    ],
+    [
+     15180,
+     58303
+    ]
+   ],
+   "edge_m": 50,
+   "density": 0.06,
+   "day": 0.6,
+   "height_m": 60,
+   "color": [
+    0.88,
+    0.92,
+    0.98
+   ],
+   "floor": 6740
+  }
+ ],
+ "103": [
+  {
+   "name": "Gotar: sea-mist on the drowned shore, at night when the wreck's bell rings (Midgard round 2)",
+   "points": [
+    [
+     48400,
+     18000
+    ],
+    [
+     46643,
+     20263
+    ],
+    [
+     42400,
+     21200
+    ],
+    [
+     38157,
+     20263
+    ],
+    [
+     36400,
+     18000
+    ],
+    [
+     38157,
+     15737
+    ],
+    [
+     42400,
+     14800
+    ],
+    [
+     46643,
+     15737
+    ]
+   ],
+   "edge_m": 60,
+   "density": 0.04,
+   "day": 0.25,
+   "height_m": 43,
+   "color": [
+    0.78,
+    0.82,
+    0.86
+   ],
+   "floor": 3423
+  }
+ ],
+ "105": [
+  {
+   "name": "Myrkwood: the murk of the willow-wood round the volva's hut (Midgard round 2)",
+   "points": [
+    [
+     36000,
+     25200
+    ],
+    [
+     32954,
+     32837
+    ],
+    [
+     25600,
+     36000
+    ],
+    [
+     18246,
+     32837
+    ],
+    [
+     15200,
+     25200
+    ],
+    [
+     18246,
+     17563
+    ],
+    [
+     25600,
+     14400
+    ],
+    [
+     32954,
+     17563
+    ]
+   ],
+   "edge_m": 80,
+   "density": 0.035,
+   "day": 0.5,
+   "height_m": 49,
+   "color": [
+    0.62,
+    0.68,
+    0.62
+   ],
+   "floor": 3672
+  },
+  {
+   "name": "Myrkwood: the west wood under the blood-moon, where the werewolves run (Midgard round 2)",
+   "points": [
+    [
+     23600,
+     43200
+    ],
+    [
+     21374,
+     47160
+    ],
+    [
+     16000,
+     48800
+    ],
+    [
+     10626,
+     47160
+    ],
+    [
+     8400,
+     43200
+    ],
+    [
+     10626,
+     39240
+    ],
+    [
+     16000,
+     37600
+    ],
+    [
+     21374,
+     39240
+    ]
+   ],
+   "edge_m": 70,
+   "density": 0.04,
+   "day": 0.3,
+   "height_m": 60,
+   "color": [
+    0.66,
+    0.6,
+    0.6
+   ],
+   "floor": 3886
+  }
+ ],
+ "104": [
+  {
+   "name": "Muspelheim: the hatchery's smoke over the wyrm hills (Midgard round 3)",
+   "points": [
+    [
+     40000,
+     12400
+    ],
+    [
+     36485,
+     16360
+    ],
+    [
+     28000,
+     18000
+    ],
+    [
+     19515,
+     16360
+    ],
+    [
+     16000,
+     12400
+    ],
+    [
+     19515,
+     8440
+    ],
+    [
+     28000,
+     6800
+    ],
+    [
+     36485,
+     8440
+    ]
+   ],
+   "edge_m": 80,
+   "density": 0.035,
+   "day": 0.7,
+   "color": [
+    0.55,
+    0.45,
+    0.42
+   ],
+   "height_m": 60,
+   "floor": 3345
+  }
+ ],
+ "107": [
+  {
+   "name": "Vanern Swamp: frost-mist round Hrafnsholm, where the dead keep the winter (Midgard round 3)",
+   "points": [
+    [
+     17600,
+     10800
+    ],
+    [
+     15491,
+     15043
+    ],
+    [
+     10400,
+     16800
+    ],
+    [
+     5309,
+     15043
+    ],
+    [
+     3200,
+     10800
+    ],
+    [
+     5309,
+     6557
+    ],
+    [
+     10400,
+     4800
+    ],
+    [
+     15491,
+     6557
+    ]
+   ],
+   "edge_m": 70,
+   "density": 0.045,
+   "day": 0.5,
+   "color": [
+    0.82,
+    0.86,
+    0.92
+   ],
+   "height_m": 57,
+   "floor": 1575
+  }
+ ],
+ "108": [
+  {
+   "name": "Raumarik: the endless winter's snow-mist over the north, while Hati's host holds it (Midgard round 4) - lifts when the King's March wins",
+   "points": [
+    [
+     60000,
+     32000
+    ],
+    [
+     54652,
+     47282
+    ],
+    [
+     40652,
+     56727
+    ],
+    [
+     23348,
+     56727
+    ],
+    [
+     9348,
+     47282
+    ],
+    [
+     4000,
+     32000
+    ],
+    [
+     9348,
+     16718
+    ],
+    [
+     23348,
+     7273
+    ],
+    [
+     40652,
+     7273
+    ],
+    [
+     54652,
+     16718
+    ]
+   ],
+   "edge_m": 120,
+   "density": 0.03,
+   "day": 0.6,
+   "color": [
+    0.86,
+    0.9,
+    0.96
+   ],
+   "lift": "raumarik",
+   "height_m": 60,
+   "floor": 4251
+  }
+ ],
+ "116": [
+  {
+   "name": "Malmohus: the rite-smoke of the Wyrm-Temple over the south, while the drakulv hold it (Midgard round 4) - lifts when the Dragon-Oath wins",
+   "points": [
+    [
+     56000,
+     40000
+    ],
+    [
+     51034,
+     51756
+    ],
+    [
+     38034,
+     59021
+    ],
+    [
+     21966,
+     59021
+    ],
+    [
+     8966,
+     51756
+    ],
+    [
+     4000,
+     40000
+    ],
+    [
+     8966,
+     28244
+    ],
+    [
+     21966,
+     20979
+    ],
+    [
+     38034,
+     20979
+    ],
+    [
+     51034,
+     28244
+    ]
+   ],
+   "edge_m": 120,
+   "density": 0.028,
+   "day": 0.6,
+   "color": [
+    0.5,
+    0.42,
+    0.4
+   ],
+   "lift": "malmohus",
+   "height_m": 60,
+   "floor": 2772
+  }
  ]
 }
