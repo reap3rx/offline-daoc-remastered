@@ -24,6 +24,10 @@ The project's AI-developed additions do not remove upstream attribution.
 - The new client's converted zones, models, textures, sounds and interface art are derived from the
   original DAoC client's files, like the original client itself; they are not authored by this
   project.
+- The HD heads in the new client's character creator are built from MakeHuman's base mesh, shape
+  targets and system assets (skin, eyes, eyelashes, teeth, tongue), all released CC0 by the MakeHuman
+  project (makehumancommunity.org). The build scripts and those assets are in
+  source/new-client/pipeline/hd_head.
 - Additional launcher/portal snapshots and bundled SDK/native/Python packages:
   retain their own licenses and notices; inclusion is not a blanket relicense.
 

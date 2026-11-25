@@ -540,6 +540,29 @@ func _creator_chrome() -> void:
 		_body_view = not _body_view
 		_zoom = 1.0
 		_show("customize"), 13)
+	# what's worn, off while you work (owner 2026-11-25: an existing character comes in wearing its armour and helm,
+	# "making it hard to edit things like hair") - only the view; nothing is unequipped
+	if _has_gear(draft, ARMOR_SLOTS) or _has_gear(draft, [HELM_SLOT]):
+		var wear := _cpanel(20, 132, 270, 36, "L", 0.6)
+		_cbutton("ARMOR: " + ("SHOWN" if _show_armor else "HIDDEN"), wear, 6, 5, 126, 26, func():
+			_show_armor = not _show_armor
+			_keep_scroll(true)
+			_show("customize"), 12, not _show_armor)
+		_cbutton("HELM: " + ("SHOWN" if _show_helm else "HIDDEN"), wear, 138, 5, 124, 26, func():
+			_show_helm = not _show_helm
+			_keep_scroll(true)
+			_show("customize"), 12, not _show_helm)
+	# the head: the new HD one or the classic (owner 2026-11-25: "an option during character creation for toggling the
+	# new HD heads or using the classic ones") - where the race has an HD head
+	if _figure != null and _figure.has_hd():
+		var hd_on := int(draft.look.get("hd", 1)) != 0
+		var hp := _cpanel(20, 174, 270, 36, "L", 0.6)
+		_cbutton("HEAD: " + ("HD" if hd_on else "CLASSIC"), hp, 6, 5, 256, 26, func():
+			draft.look["hd"] = 0 if hd_on else 1
+			_figure.apply({"hd": draft.look["hd"]})
+			_tune = ""
+			_keep_scroll(true)
+			_show("customize"), 12, not hd_on)
 	# the name, top centre (set on the race screen; shown here, a new one from the die)
 	var nm := _cpanel(512 - 130, 18, 260, 40, "C", 0.85)
 	_ctext(String(draft.get("name", "")).to_upper(), nm, 0, 4, 260, 32, 20, CREAM, HORIZONTAL_ALIGNMENT_CENTER)
@@ -1074,13 +1097,11 @@ func _c_face(p: Control, y: float) -> float:
 		y = _c_key(p, "Face", "face", f.meta.get("faces", []).map(func(x): return String(x.label)), y)
 	if f.option_count("tattoo") > 0:
 		y = _c_key(p, "Tattoo", "tattoo", f.meta.get("tattoos", []).map(func(x): return String(x.label)), y)
-	var shapes: Array = f.meta.get("face_shapes", [])
-	if not shapes.is_empty():
+	var feats := f.face_features()                 # (the HD head's features, or the classic face shapes')
+	if not feats.is_empty():
 		y = _c_header(p, "FEATURES", y + 4)
-		var have := {}
-		for fs in shapes:
-			have[String(fs[0])] = String(fs[1])
-		for feat in Fig3Figure.FACE_FEATURES:
+		var have := f.face_slider_labels()
+		for feat in feats:
 			var keys: Array = (feat[2] as Array).filter(func(k): return have.has(k))
 			if keys.is_empty():
 				continue
@@ -1110,7 +1131,7 @@ func _c_face(p: Control, y: float) -> float:
 				y += 4
 		_ctext("CLICK A FEATURE'S NAME TO FINE TUNE IT", p, 0, y, CW, 16, 10, DIM, HORIZONTAL_ALIGNMENT_CENTER)
 		y += 20
-	var sliders: Array = f.meta.get("sliders", [])
+	var sliders: Array = f.meta.get("sliders", []) if not f.is_hd() else []    # (they shape the classic head only)
 	if not sliders.is_empty():
 		y = _c_header(p, "CLASSIC SHAPES", y + 4)
 		for i in sliders.size():
@@ -1190,7 +1211,7 @@ func _c_body(p: Control, y: float) -> float:
 	var body: Dictionary = draft.look.get("body", {})
 	var group := ""
 	var female := _figure.race.ends_with("_f")
-	for bs in Fig3Figure.BODY_SLIDERS:
+	for bs in _figure.body_sliders():               # the bone sliders and the race's shape sliders (bx_)
 		var key := String(bs[0])
 		if String(bs[2]) != group:
 			group = String(bs[2])
@@ -1217,12 +1238,18 @@ func _c_body(p: Control, y: float) -> float:
 	return y + 34
 
 
-## A body of the race's own kind, a little either way.
+## A body of the race's own kind, a little either way: the bone sliders, then a few of the shape sliders (gentler,
+## so twenty of them at once don't pile up into something odd) - weight and muscle most often.
 func _random_body() -> Dictionary:
 	var b := {}
 	for bs in Fig3Figure.BODY_SLIDERS:
 		if randf() < 0.6:
 			b[String(bs[0])] = snappedf(clampf(randfn(0.0, 0.35), -0.8, 0.8), 0.05)
+	for bs in _figure.meta.get("body_shapes", []):
+		var key := String(bs[0])
+		var broad := key == "weight" or key == "muscle"
+		if randf() < (0.7 if broad else 0.3):
+			b[key] = snappedf(clampf(randfn(0.0, 0.4 if broad else 0.25), -0.7, 0.7), 0.05)
 	return b
 
 
@@ -1270,7 +1297,7 @@ func _random_skin(all := false) -> Dictionary:
 ## page's own RANDOM, else the locked features stay).
 func _random_shape(all := false) -> Dictionary:
 	var sh: Dictionary = (_figure.look.get("shape", {}) as Dictionary).duplicate()
-	for feat in Fig3Figure.FACE_FEATURES:
+	for feat in _figure.face_features():
 		if not all and locks.get("shape_" + String(feat[0]), false):
 			continue
 		var i := 0 if randf() < 0.5 else randi_range(1, (feat[3] as Array).size() - 1)
@@ -1727,6 +1754,7 @@ func _show_figure(c: Dictionary) -> void:
 		_figure = Fig3Figure.new()
 		add_child(_figure)
 		_figure.load_figure(prefix)
+		_figure.set_hd(true)                           # (the player's own figure: the HD head where the race has one)
 		_figure_key = prefix
 		for mi in _figure.find_children("*", "MeshInstance3D", true, false):
 			(mi as MeshInstance3D).layers = 3              # scene light + the character light
@@ -1741,8 +1769,22 @@ func _show_figure(c: Dictionary) -> void:
 
 
 ## The character's worn armour and weapons on the select screen, as in game (owner 2026-10-10: the staff and armour
-## didn't show) - Player.dress with the saved inventory (slot -> {id}).
+## didn't show) - Player.dress with the saved inventory (slot -> {id}). In the creator the armour (and cloak) and the
+## helm can each be hidden (the toggles under the camera).
 var _figure_gear: Array = []
+var _show_armor := true
+var _show_helm := true
+const ARMOR_SLOTS := [22, 23, 25, 26, 27, 28]
+const HELM_SLOT := 21
+
+
+func _has_gear(c: Dictionary, slots: Array) -> bool:
+	var inv: Dictionary = c.get("inventory", {}) if c.get("inventory") is Dictionary else {}
+	for sl in slots:
+		var e = inv.get(str(sl))
+		if e is Dictionary and e.has("id"):
+			return true
+	return false
 
 
 func _dress_figure(c: Dictionary) -> void:
@@ -1754,7 +1796,13 @@ func _dress_figure(c: Dictionary) -> void:
 	var item_at := func(slot: int) -> Dictionary:
 		var e = inv.get(str(slot))
 		return ItemDb.item(String(e.id)) if e is Dictionary and e.has("id") else {}
-	_figure_gear = Player.dress(_figure, item_at, String(c.get("active_weapon", "standard")), false)
+	var worn := item_at
+	if screen == "customize" and (not _show_armor or not _show_helm):
+		worn = func(slot: int) -> Dictionary:
+			if (not _show_armor and slot in ARMOR_SLOTS) or (not _show_helm and slot == HELM_SLOT):
+				return {}
+			return item_at.call(slot)
+	_figure_gear = Player.dress(_figure, worn, String(c.get("active_weapon", "standard")), false)
 	for g in _figure_gear:
 		for mi in (g as Node).find_children("*", "MeshInstance3D", true, false):
 			(mi as MeshInstance3D).layers = 3              # scene light + the character light, like the figure

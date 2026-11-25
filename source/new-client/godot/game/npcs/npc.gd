@@ -136,6 +136,11 @@ func _build_model() -> void:
 		add_child(f)
 		f.first_look = func() -> Dictionary: return _look(f)
 		if f.load_figure(String(info.race)):
+			# your companion wears the HD head as you do (the character creator plan): only it - every other figure
+			# keeps the classic head, which costs less to draw
+			var comp := String(PlayerData.get_meta("companion", "")) if PlayerData.has_meta("companion") else ""
+			if comp != "" and String(spawn.get("name", "")) == comp:
+				f.set_hd(true)
 			tb = _pb("figure", tb)
 			_dress(f)
 			tb = _pb("dress", tb)

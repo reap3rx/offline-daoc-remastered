@@ -486,6 +486,7 @@ class DollView extends Control:
 			var f := Fig3Figure.new()
 			_pivot.add_child(f)
 			if f.load_figure(prefix):
+				f.set_hd(true)                           # (the paper doll is you: the HD head)
 				f.apply(c.get("look", {}) if c.get("look") is Dictionary else {})
 				_figure = f
 				_dress()

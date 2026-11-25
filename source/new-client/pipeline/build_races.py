@@ -374,6 +374,12 @@ def build_figure(t, realm, race, gender, fig, upscale_list):
         split_headwear.run(out)
         import body_marks                             # and where the body sliders' bust and glutes swell
         body_marks.run(out)
+    if '--no-body-shapes' not in sys.argv:              # the body's shape sliders (the character creator plan,
+        import body_morphs                              # phase 1): bx_ targets on every clothes, armour and
+        body_morphs.run(str(out / 'figure.gltf'), str(out / 'figure.gltf'))     # cloak mesh
+    if '--no-face-shapes' not in sys.argv:              # the classic heads' extra face sliders (owner
+        import face_extra                               # 2026-11-25): head shape, muzzle, brow angle ...
+        face_extra.run(out)
     upscale_list.update(textures)
     print(f'{prefix}: {race} {gender} fig {fig}, {len(faces)} faces, {len(eyes)} eyes, {len(tones)} tones, '
           f'{len(styles)} hair styles ({sum(1 for s in styles if s["node"])} meshes), {len(tattoos)} tattoos, '

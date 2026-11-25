@@ -197,6 +197,8 @@ static func loops(clip: String) -> bool:
 func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 	race = prefix
 	var dir := "%s/races/%s" % [ROOT, prefix]
+	_shape_keys = {}
+	_hd_cache = []
 	meta = NpcManager._metas[prefix] if NpcManager._metas.has(prefix) and not (NpcManager._metas[prefix] as Dictionary).is_empty() 			else JSON.parse_string(FileAccess.get_file_as_string(dir + "/figure.json"))   # (read only: shared)
 	_texture_dir = texture_dir(texture_set)
 	# one parsed glTF per race: NPCs of the same race share it (a town has dozens)
@@ -262,6 +264,7 @@ func load_figure(prefix: String, texture_set := "x4plus") -> bool:
 	tl = Perf.note("figure: look", tl)
 	_apply_cloak()
 	Perf.note("figure: cloak", tl)
+	_show_hd(_head_shown)                                     # (the HD head hidden until set_hd: most figures wear the classic)
 	return true
 
 
@@ -451,6 +454,8 @@ func apply(changes: Dictionary) -> void:
 	for k in changes:                                  # (null: back to the default - a custom colour dropped)
 		if changes[k] == null:
 			look.erase(k)
+	if changes.has("hd") and not _meshes.is_empty():
+		_show_hd(_head_shown)                           # (the creator's HEAD choice: the other head shows)
 	var skin := _skin()
 	var tint_parts: Dictionary = meta.get("skin_tint_parts", {})
 	# head: face texture x skin tone, eye colour multiplied, tattoo
@@ -458,7 +463,7 @@ func apply(changes: Dictionary) -> void:
 	var head := _part("head")
 	if head and faces.size() > 0:
 		var m := _material(false, false, skin_shading)
-		var base: Texture2D = _base_face() if is_layered() else null
+		var base: Texture2D = _base_face() if (is_layered() or (is_hd() and meta.has("skin_layers"))) else null   # (the HD head: no painted brows)
 		m.set_shader_parameter("albedo_tex", base if base else _tex(faces[clampi(int(look.get("face", 0)), 0, faces.size() - 1)].tex))
 		m.set_shader_parameter("tint", skin)
 		m.set_shader_parameter("tint_mode", 1)
@@ -477,8 +482,10 @@ func apply(changes: Dictionary) -> void:
 		if decal != "":
 			m.set_shader_parameter("decal_tex", _tex(decal))
 		_layers(m)
+		_hd_textures(m)
 		for mi in _parts("head"):
-			mi.material_override = m
+			var pm := _hd_piece_material(String(mi.name)) if is_hd() else null   # (its eyes, mouth, lashes: their own)
+			mi.material_override = pm if pm != null else m
 	# starter clothes: skin tone only through alpha-masked ('a') textures on the parts the race tints
 	for part in ["body", "lbody", "legs", "boots", "arms", "gloves"]:
 		var c: Dictionary = meta.get("clothes", {}).get(part, {})
@@ -585,6 +592,7 @@ func apply(changes: Dictionary) -> void:
 	# face shapes (owner 2026-11-06, the creator's sliders): look.shape {name: -1..1} on the fx_<name> targets of the
 	# head and of every hair style (pipeline/face_morphs.py gave the beards the same moves, so they stay on the face)
 	_apply_shape()
+	_apply_body_shapes()                                   # the body's shape sliders (bx_ targets, look.body)
 	# size: the race's Catacombs scale x Short 0.95 / Average 1.0 / Tall 1.05
 	var sizes := [0.95, 1.0, 1.05]
 	scale = Vector3.ONE * float(meta.get("scale", 1.0)) * float(sizes[clampi(int(look.get("size", 1)), 0, 2)]) \
@@ -1020,8 +1028,10 @@ func _layers(m: ShaderMaterial) -> void:
 		var d: Dictionary = defs.get(key, {})
 		var ch: Array = d.get("chan", [])
 		return int(ch[opt - 1]) if opt >= 1 and opt <= ch.size() else -1
-	var layered := is_layered()
-	var c: int = pick.call("brows", int(look.get("brows", 0))) if layered else -1   # (the old faces paint their own)
+	var layered := is_layered() or is_hd()
+	# (the HD head's face has no painted brows: a look that never chose any wears its face's own, as a layer)
+	var brows_opt := int(look.get("brows", int(layered_changes().get("brows", 0)) if is_hd() and not look.has("brows") else 0))
+	var c: int = pick.call("brows", brows_opt) if layered else -1   # (the old faces paint their own)
 	if c >= 0:
 		slots.append([c, brow, clampf(float(look.get("brow_amt", 1.0)), 0.0, 1.5) * 0.9, 3])
 	c = pick.call("freckles", int(look.get("freckles", 0)))
@@ -1136,22 +1146,31 @@ func _paint(m: ShaderMaterial, sl: Dictionary) -> void:
 ## of named shapes over its own sliders (look.shape, -1 .. 1; Natural = the race's own). The creator offers these and
 ## keeps the sliders under each for fine tuning.
 const FACE_FEATURES := [
+	# (owner 2026-11-25: more sliders on the classic heads too - pipeline/face_extra.py; a figure shows a feature's
+	# sliders only where it has them)
+	["head", "Head Shape", ["head_width", "head_length", "crown", "temples", "forehead"], [
+		["Natural", {}], ["Broad", {"head_width": 0.7, "temples": 0.4}], ["Narrow", {"head_width": -0.6, "temples": -0.3}],
+		["Long", {"head_length": 0.7, "crown": -0.2}], ["Round", {"head_length": -0.5, "head_width": 0.4}],
+		["High Crown", {"crown": 0.8}], ["Sloped Brow", {"forehead": -0.7}], ["Bold Brow", {"forehead": 0.7}]]],
+	["muzzle", "Muzzle", ["muzzle", "muzzle_width"], [
+		["Natural", {}], ["Long", {"muzzle": 0.8}], ["Flat", {"muzzle": -0.7}], ["Broad", {"muzzle_width": 0.8}],
+		["Narrow", {"muzzle_width": -0.6}], ["Snout", {"muzzle": 1.0, "muzzle_width": -0.3}]]],
 	["eyes", "Eyes", ["eye_spacing", "eye_height", "eye_size", "eye_depth", "eye_tilt", "eye_squint"], [
 		["Natural", {}], ["Large", {"eye_size": 0.7}], ["Small", {"eye_size": -0.6}], ["Deep-set", {"eye_depth": 0.8, "eye_size": -0.2}],
 		["Prominent", {"eye_depth": -0.7, "eye_size": 0.3}], ["Wide-set", {"eye_spacing": 0.7}], ["Close-set", {"eye_spacing": -0.7}],
 		["High", {"eye_height": 0.7}], ["Low", {"eye_height": -0.6}], ["Upswept", {"eye_tilt": 0.7}],
 		["Downturned", {"eye_tilt": -0.6}], ["Feline", {"eye_tilt": 0.8, "eye_size": -0.3}], ["Narrowed", {"eye_squint": 0.7}],
 		["Hooded", {"eye_squint": 0.5, "eye_depth": 0.5}], ["Wide-open", {"eye_squint": -0.6, "eye_size": 0.3}]]],
-	["brow", "Brow", ["brow_height", "brow_depth"], [
+	["brow", "Brow", ["brow_height", "brow_depth", "brow_angle"], [
 		["Natural", {}], ["Heavy", {"brow_depth": 0.8, "brow_height": -0.3}], ["Smooth", {"brow_depth": -0.7}],
 		["High", {"brow_height": 0.7}], ["Low", {"brow_height": -0.6}]]],
-	["nose", "Nose", ["nose_width", "nose_length", "nose_height", "nose_bridge", "nose_tip", "nose_tip_size"], [
+	["nose", "Nose", ["nose_width", "nose_length", "nose_height", "nose_bridge", "nose_tip", "nose_tip_size", "nostrils"], [
 		["Natural", {}], ["Button", {"nose_length": -0.7, "nose_width": -0.2, "nose_tip": 0.5}], ["Upturned", {"nose_tip": 0.8}],
 		["Hawk", {"nose_bridge": 0.8, "nose_length": 0.5, "nose_tip": -0.6, "nose_width": -0.3}], ["Roman", {"nose_bridge": 0.7, "nose_length": 0.3}],
 		["Broad", {"nose_width": 0.8, "nose_height": -0.2}], ["Narrow", {"nose_width": -0.7}], ["Long", {"nose_length": 0.8, "nose_height": -0.4}],
 		["Flat", {"nose_length": -0.6, "nose_bridge": -0.6, "nose_width": 0.4}], ["Bulbous", {"nose_tip_size": 0.9, "nose_width": 0.2}],
 		["Pinched", {"nose_tip_size": -0.7, "nose_width": -0.4}]]],
-	["cheeks", "Cheeks", ["cheekbones", "cheek_puff"], [
+	["cheeks", "Cheeks", ["cheekbones", "cheek_puff", "cheek_hollow"], [
 		["Natural", {}], ["High", {"cheekbones": 0.8}], ["Soft", {"cheekbones": -0.5, "cheek_puff": 0.3}],
 		["Hollow", {"cheekbones": 0.4, "cheek_puff": -0.9}], ["Gaunt", {"cheekbones": 0.7, "cheek_puff": -0.7}],
 		["Round", {"cheek_puff": 0.8}], ["Chubby", {"cheek_puff": 1.0, "cheekbones": -0.4}]]],
@@ -1160,7 +1179,7 @@ const FACE_FEATURES := [
 		["Bow", {"upper_lip": 0.8, "mouth_width": -0.3}], ["Heavy Lower", {"lower_lip": 1.0, "upper_lip": -0.3}],
 		["Wide", {"mouth_width": 0.7}], ["Small", {"mouth_width": -0.6, "lips": 0.2}], ["Smiling", {"smile": 0.6}],
 		["Stern", {"smile": -0.6, "lips": -0.3}], ["High", {"mouth_height": 0.6}], ["Low", {"mouth_height": -0.6}]]],
-	["jaw", "Jaw", ["jaw_width", "jaw_height", "jaw_sharp"], [
+	["jaw", "Jaw", ["jaw_width", "jaw_height", "jaw_sharp", "jowls"], [
 		["Natural", {}], ["Square", {"jaw_width": 0.6, "jaw_sharp": 0.5}], ["Strong", {"jaw_width": 0.9, "jaw_sharp": 0.8}],
 		["Chiseled", {"jaw_sharp": 1.0, "jaw_height": 0.3}], ["Soft", {"jaw_sharp": -0.8}], ["Narrow", {"jaw_width": -0.6}],
 		["Delicate", {"jaw_width": -0.9, "jaw_sharp": -0.4}], ["High", {"jaw_height": 0.8}], ["Low", {"jaw_height": -0.7}]]],
@@ -1204,6 +1223,63 @@ func set_body(body: Dictionary) -> void:
 	var sizes := [0.95, 1.0, 1.05]
 	scale = Vector3.ONE * float(meta.get("scale", 1.0)) * float(sizes[clampi(int(look.get("size", 1)), 0, 2)]) \
 			* (1.0 + 0.07 * clampf(float(body.get("height", 0.0)), -1.0, 1.0))
+	_apply_body_shapes()
+
+## The body's shape sliders (the character creator plan, phase 1: pipeline/body_morphs.py): figure.json body_shapes
+## [name, label, group, shrink], each a bx_<name> morph on every clothes, armour and cloak mesh, so worn armour takes the
+## shape with the body. -1..1 in look.body as the bone sliders; the thin side is scaled by shrink (a belly can only go
+## so far in).
+const SHAPE_PARTS := ["body", "legs", "boots", "arms", "gloves", "cloak"]
+var _shaped := false                           # some bx_ target set (cleared once when the sliders go back to 0)
+
+func _apply_body_shapes() -> void:
+	var shapes: Array = meta.get("body_shapes", [])
+	if shapes.is_empty():
+		return
+	var body: Dictionary = look.get("body", {})
+	var any := false
+	for bs in shapes:
+		if absf(float(body.get(String(bs[0]), 0.0))) > 0.001:
+			any = true
+			break
+	if not any and not _shaped:
+		return                                     # (the plain body: nothing to set, nothing to clear - most NPCs)
+	_shaped = any
+	var meshes := []
+	for part in _meshes:
+		if String(part).get_slice("_v", 0).get_slice("_", 0) in SHAPE_PARTS:
+			meshes.append_array(_meshes[part])
+	for bs in shapes:
+		var w := clampf(float(body.get(String(bs[0]), 0.0)), -1.0, 1.0)
+		if w < 0.0:
+			w *= float(bs[3])
+		for mi in meshes:
+			_blend(mi, "bx_" + String(bs[0]), w)
+
+## The creator's BODY page: the bone sliders and this figure's shape sliders, by group ([key, label, group] each). A
+## shape on a bone slider's own key (bust, hips, glutes: owner 2026-11-25, reworked as shapes) is that slider, once.
+func body_sliders() -> Array:
+	var out := []
+	var shapes: Array = meta.get("body_shapes", [])
+	var bone_keys := BODY_SLIDERS.map(func(x): return String(x[0]))
+	for g in ["OVERALL", "UPPER BODY", "ARMS", "LOWER BODY"]:
+		for bs in BODY_SLIDERS:
+			if String(bs[2]) == g:
+				out.append(bs)
+		for bs in shapes:
+			if String(bs[2]) == g and not String(bs[0]) in bone_keys:
+				out.append([String(bs[0]), String(bs[1]), g])
+	return out
+
+var _shape_keys := {}
+
+## This figure has a body shape (a bx_ target) for this slider key.
+func has_shape(k: String) -> bool:
+	if _shape_keys.is_empty():
+		_shape_keys["_"] = true
+		for bs in meta.get("body_shapes", []):
+			_shape_keys[String(bs[0])] = true
+	return _shape_keys.has(k)
 
 ## The face shapes alone (the creator's sliders call this as they move: no materials rebuilt).
 func set_shape(shape: Dictionary) -> void:
@@ -1211,9 +1287,205 @@ func set_shape(shape: Dictionary) -> void:
 	_apply_shape()
 
 
+# --- the HD head (the character creator plan, phases 2-4: pipeline/hd_head) -------------------------------------
+## MakeHuman's (CC0) head wrapped onto the race's own: the same skin texture and eyes, real eyelids, lips, nostrils and
+## ears, and its face sliders - figure.json "hd_head" {node, features: [{key, label, sliders [[key, label]], presets}]};
+## each slider two morphs on the head and on the hair, beards and helms it reaches, "hx_<key>-" and "hx_<key>+".
+## The player's own figure and their companion's wear it (set_hd); everyone else the classic head (it costs more).
+var hd := false
+var _hd_cache := []                          # [[MeshInstance3D, {target name: index}]] for every mesh with hx_ shapes
+
+
+var _head_shown := true                    # (false under a full helm)
+
+
+func set_hd(on: bool) -> void:
+	var was := is_hd()
+	hd = on
+	_show_hd(_head_shown)
+	if is_hd() != was:
+		apply({})                                     # (its own textures, or the classic face's)
+	else:
+		_apply_shape()
+
+
+static var _hd_tex := {}
+static var _iris := {}
+
+
+static func _hd_load(path: String, mips: bool) -> Texture2D:
+	if not _hd_tex.has(path):
+		var img := Image.load_from_file(path)
+		if img and mips:
+			img.generate_mipmaps()
+		_hd_tex[path] = ImageTexture.create_from_image(img) if img else null
+	return _hd_tex[path]
+
+
+## The HD head's skin textures on the head's material (figure.json hd_head: albedo, remap, detail - beside the figure).
+func _hd_textures(m: ShaderMaterial) -> void:
+	var hh: Dictionary = meta.get("hd_head", {})
+	var on := is_hd() and hh.has("remap") and hh.has("albedo")
+	m.set_shader_parameter("hd_on", on)
+	if not on:
+		return
+	for k in [["albedo", "hd_albedo", true], ["remap", "hd_remap", false], ["detail", "hd_detail", true]]:
+		var nm := String(hh.get(k[0], ""))
+		if nm != "":
+			m.set_shader_parameter(k[1], _hd_load("%s/races/%s/%s.png" % [ROOT, race, nm], k[2]))
+	m.set_shader_parameter("hd_uv_k", float(hh.get("uv_k", 0.67)))
+	m.set_shader_parameter("has_eye", false)        # (the HD head's eyes are their own mesh)
+
+
+## The look's iris colour (linear): the creator's own, or the chosen eye texture's (white but for the iris) - its
+## coloured part's average.
+func _iris_colour() -> Color:
+	var er = custom_colour("eyes")
+	if er != null:
+		return Color(pow(er.r, 2.2), pow(er.g, 2.2), pow(er.b, 2.2), 1.0)
+	var eyes: Array = meta.get("eyes", [])
+	if eyes.is_empty():
+		return Color(0.12, 0.2, 0.35, 1.0)
+	var nm := String(eyes[clampi(int(look.get("eyes", 0)), 0, eyes.size() - 1)])
+	if not _iris.has(nm):
+		var out := Color(0.12, 0.2, 0.35, 1.0)
+		var etex := _tex(nm)
+		var img := etex.get_image() if etex else null
+		if img:
+			if img.is_compressed():
+				img.decompress()
+			var step := maxi(1, img.get_width() / 128)
+			var sum := Vector3.ZERO
+			var wsum := 0.0
+			for y in range(0, img.get_height(), step):
+				for x in range(0, img.get_width(), step):
+					var c := img.get_pixel(x, y)
+					var mx := maxf(c.r, maxf(c.g, c.b))
+					var mn := minf(c.r, minf(c.g, c.b))
+					if mn < 0.85 and mx > 0.2:             # (not the white round it, not the pupil)
+						var w := 0.15 + (mx - mn)           # (the coloured part counts most)
+						sum += Vector3(c.r, c.g, c.b) * w
+						wsum += w
+			if wsum > 0.0:
+				sum /= wsum
+				var top := maxf(sum.x, maxf(sum.y, sum.z))
+				if top > 0.01:
+					sum *= clampf(0.75 / top, 1.0, 2.5)      # (the eye texture's grey carries the light and dark)
+				out = Color(pow(sum.x, 2.2), pow(sum.y, 2.2), pow(sum.z, 2.2), 1.0)
+		_iris[nm] = out
+	return _iris[nm]
+
+
+## The HD head's other pieces (pipeline/hd_head/head2.py): "head__hd_eyes" (MakeHuman's eyeballs: the texture's alpha
+## is the iris, coloured here), "head__hd_mouth" (teeth and tongue), "head__hd_lash". null: the skin (the head's own).
+func _hd_piece_material(node_name: String) -> ShaderMaterial:
+	var dir := ROOT + "/hd_head/"
+	if node_name.begins_with("head__hd_eyes"):
+		var m := _material(false)
+		m.set_shader_parameter("albedo_tex", _hd_load(dir + "hd_eye.png", true))
+		m.set_shader_parameter("hd_iris", _iris_colour())
+		m.set_shader_parameter("gloss", 1.0)
+		return m
+	if node_name.begins_with("head__hd_mouth"):
+		var m := _material(false)
+		m.set_shader_parameter("albedo_tex", _hd_load(dir + "hd_mouth.png", true))
+		m.set_shader_parameter("tint", Color(0.62, 0.6, 0.6))
+		m.set_shader_parameter("tint_mode", 1)
+		m.set_shader_parameter("gloss", 0.35)
+		return m
+	if node_name.begins_with("head__hd_lash"):
+		var m := _material(true)
+		m.set_shader_parameter("albedo_tex", _hd_load(dir + "hd_lash.png", true))
+		return m
+	return null
+
+
+func is_hd() -> bool:
+	# (look "hd": 0 - the creator's HEAD: CLASSIC choice, owner 2026-11-25: "an option during character creation for
+	# toggling the new HD heads or using the classic ones")
+	return hd and int(look.get("hd", 1)) != 0 and has_hd()
+
+
+## This race has an HD head at all (the creator offers the choice).
+func has_hd() -> bool:
+	# (v 2: the heads rebuilt 2026-11-25 - a race still carrying the first build's wears its classic head until its
+	# own is rebuilt; owner: "the fixes we're applying are not quite working")
+	return meta.has("hd_head") and int((meta.hd_head as Dictionary).get("v", 1)) >= 2 and _meshes.has("head") \
+			and _parts("head").any(func(mi): return String(mi.name).begins_with("head__hd"))
+
+
+func _show_hd(head_shown := true) -> void:
+	var on := is_hd()
+	_head_shown = head_shown
+	for mi in _parts("head"):
+		mi.visible = head_shown and String(mi.name).begins_with("head__hd") == on
+
+
+## The face's features for the creator: [key, label, [slider keys], [[preset label, {slider: value}]]] - the HD head's
+## when it's worn, else the classic face shapes' (FACE_FEATURES, the sliders this figure has).
+func face_features() -> Array:
+	if is_hd():
+		var out := []
+		for f in meta.hd_head.features:
+			var keys: Array = (f.sliders as Array).map(func(x): return String(x[0]))
+			var presets: Array = [["Natural", {}]]
+			for pr in f.presets:
+				presets.append([String(pr[0]), pr[1]])
+			out.append([String(f.key), String(f.label), keys, presets])
+		return out
+	var have := face_slider_labels()
+	var out2 := []
+	for feat in FACE_FEATURES:
+		if (feat[2] as Array).any(func(k): return have.has(k)):
+			out2.append(feat)
+	return out2
+
+
+func face_slider_labels() -> Dictionary:
+	var have := {}
+	if is_hd():
+		for f in meta.hd_head.features:
+			for sl in f.sliders:
+				have[String(sl[0])] = String(sl[1])
+	else:
+		for fs in meta.get("face_shapes", []):
+			have[String(fs[0])] = String(fs[1])
+	return have
+
+
+func _apply_hd_shape(on: bool) -> void:
+	if _hd_cache.is_empty():
+		for part in _meshes:
+			for mi in _meshes[part]:
+				var mesh := (mi as MeshInstance3D).mesh as ArrayMesh
+				if mesh == null:
+					continue
+				var idx := {}
+				for i in mesh.get_blend_shape_count():
+					var n := String(mesh.get_blend_shape_name(i))
+					if n.begins_with("hx_"):
+						idx[n] = i
+				if not idx.is_empty():
+					_hd_cache.append([mi, idx])
+		if _hd_cache.is_empty():
+			_hd_cache.append(null)                # (none: don't look again)
+	var shape: Dictionary = look.get("shape", {}) if on else {}
+	for e in _hd_cache:
+		if e == null:
+			continue
+		var mi: MeshInstance3D = e[0]
+		for n in e[1]:
+			var key := String(n).substr(3, String(n).length() - 4)
+			var w := clampf(float(shape.get(key, 0.0)), -1.0, 1.0)
+			mi.set_blend_shape_value(int(e[1][n]), maxf(-w, 0.0) if String(n).ends_with("-") else maxf(w, 0.0))
+
+
 func _apply_shape() -> void:
 	var styles: Array = meta.get("hair_styles", [])
 	var shapes: Array = meta.get("face_shapes", [])
+	var hd_on := is_hd()
+	if hd_on or not _hd_cache.is_empty():
+		_apply_hd_shape(hd_on)                   # (off: the hx_ shapes back to 0 on the hair)
 	if not shapes.is_empty():
 		var shape: Dictionary = look.get("shape", {})
 		var meshes: Array = _parts("head").duplicate()
@@ -1227,8 +1499,12 @@ func _apply_shape() -> void:
 		for b in styles + meta.get("beards", []) + meta.get("moustaches", []) + meta.get("sideburns", []):
 			if b.has("jewels") and _meshes.has(String(b.jewels.node)):    # (a beard's rings, with it)
 				meshes.append_array(_parts(String(b.jewels.node)))
+		for part in _meshes:                       # (the helms: pipeline/face_extra.py gave them the head's shape)
+			var pn := String(part)
+			if pn.begins_with("fullhelm") or pn.begins_with("helm") or pn.begins_with("adr"):
+				meshes.append_array(_parts(pn))
 		for fs in shapes:
-			var w := clampf(float(shape.get(String(fs[0]), 0.0)), -1.0, 1.0)
+			var w := 0.0 if hd_on else clampf(float(shape.get(String(fs[0]), 0.0)), -1.0, 1.0)
 			for mi in meshes:
 				_blend(mi, "fx_" + String(fs[0]), w)
 
@@ -1330,8 +1606,7 @@ func _apply_full_helm() -> void:
 		m.set_shader_parameter("tint_mode", 0)
 		for mi in _parts("fullhelm_%d" % n):
 			mi.material_override = m
-	for mi in _parts("head"):
-		mi.visible = n == 0
+	_show_hd(n == 0)                                     # (the HD head or the classic one, never both: owner 2026-11-25)
 
 
 func _refresh_hair() -> void:
@@ -2147,6 +2422,20 @@ uniform float paint_amt = 0.0;
 uniform vec4 paint_xf = vec4(0.0, 1.0, 0.0, 0.0);
 // the creator's own iris colour (a = on): the eye texture's iris recoloured, its detail kept
 uniform vec4 eye_tint = vec4(0.0);
+// the HD head's skin (pipeline/hd_head/tex2.py; owner 2026-11-25 "HD textures ... detailed"), in a layout of its own:
+// its skin, its relief (r: height, a: the creases' shade), and the remap - each texel's place on the classic face
+// texture (16 bits a coordinate), through which the classic-layout pictures are read (the brows and other skin
+// layers, tattoos, war paint). hd_uv_k: the classic layout's scale to this one (for the mip the remapped reads take).
+uniform bool hd_on = false;
+uniform sampler2D hd_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D hd_remap : filter_nearest, repeat_disable;
+uniform sampler2D hd_detail : filter_linear_mipmap, repeat_disable;
+uniform float hd_bump = 0.0003;
+uniform float hd_uv_k = 0.67;
+// the HD head's eyeballs: the texture's alpha is the iris (grey there) - coloured by the look's eye colour; gloss:
+// a wet shine (the eyes, a little on the teeth)
+uniform vec4 hd_iris = vec4(0.0);
+uniform float gloss = 0.0;
 varying vec2 logo_uv;
 // the body sliders' bust / pecs and glutes (Fig3Figure.BodyShape._bulge): two points each (world xyz, radius) and the
 // way they swell (world, times the slider)
@@ -2221,8 +2510,22 @@ void fragment() {
 		float ign = fract(52.9829189 * fract(dot(px, vec2(0.06711056, 0.00583715))));
 		if (ign >= fade) discard;
 	}
-	vec4 c = texture(albedo_tex, UV);
+	bool hd_skin = hd_on;
+	vec2 cuv = UV;
+	vec2 gx = dFdx(UV), gy = dFdy(UV);
+	if (hd_skin) {
+		vec4 rm = texture(hd_remap, UV);
+		cuv = vec2(rm.r * 65280.0 + rm.g * 255.0, rm.b * 65280.0 + rm.a * 255.0) / 65535.0;
+		gx *= hd_uv_k; gy *= hd_uv_k;                 // (this layout's own rate, scaled: the remap's jumps don't pick a mip)
+	}
+	vec4 c = hd_skin ? texture(hd_albedo, UV) : texture(albedo_tex, UV);
 	vec3 col = c.rgb;
+	if (hd_iris.a > 0.5) {
+		col = mix(col, col * hd_iris.rgb * 1.25, c.a);
+		// the upper lid's shade on the eyeball (its top, as the head stands), so the eye sits in its socket
+		vec3 wn = (INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz;
+		col *= mix(0.5, 1.0, smoothstep(0.7, 0.1, wn.y));
+	}
 	if (has_emblem) {
 		vec3 g = pow(col, vec3(1.0 / 2.2)) * texture(pattern_tex, UV2).rgb * 2.0;
 		if (has_logo) g *= texture(logo_tex, logo_uv).r;
@@ -2230,8 +2533,8 @@ void fragment() {
 	}
 	else if (tint_mode == 1) {
 		col *= tint;
-		if (eye_box.z > 0.0) {                         // the eyeball keeps its own colours, not the skin tone
-			float ed = length((UV - eye_box.xy) / eye_box.zw);
+		if (eye_box.z > 0.0 && !hd_skin) {             // the eyeball keeps its own colours, not the skin tone
+			float ed = length((cuv - eye_box.xy) / eye_box.zw);
 			col = mix(col, c.rgb, 1.0 - smoothstep(0.75, 1.0, ed));
 		}
 	}
@@ -2239,9 +2542,9 @@ void fragment() {
 	float ref = max(dot(tint, vec3(0.3, 0.59, 0.11)) * 0.45, 0.05);
 	if (layer_count > 0) {
 		float ch[28];
-		vec4 t0 = texture(layer_tex0, UV), t1 = texture(layer_tex1, UV), t2 = texture(layer_tex2, UV);
-		vec4 t3 = texture(layer_tex3, UV), t4 = texture(layer_tex4, UV), t5 = texture(layer_tex5, UV);
-		vec4 t6 = texture(layer_tex6, UV);
+		vec4 t0 = textureGrad(layer_tex0, cuv, gx, gy), t1 = textureGrad(layer_tex1, cuv, gx, gy), t2 = textureGrad(layer_tex2, cuv, gx, gy);
+		vec4 t3 = textureGrad(layer_tex3, cuv, gx, gy), t4 = textureGrad(layer_tex4, cuv, gx, gy), t5 = textureGrad(layer_tex5, cuv, gx, gy);
+		vec4 t6 = textureGrad(layer_tex6, cuv, gx, gy);
 		for (int i = 0; i < 4; i++) {
 			ch[i] = t0[i]; ch[4 + i] = t1[i]; ch[8 + i] = t2[i]; ch[12 + i] = t3[i]; ch[16 + i] = t4[i];
 			ch[20 + i] = t5[i]; ch[24 + i] = t6[i];
@@ -2258,7 +2561,7 @@ void fragment() {
 		}
 	}
 	if (paint_idx >= 0) {
-		vec4 fm = texture(paint_map, UV);
+		vec4 fm = textureGrad(paint_map, cuv, gx, gy);
 		if (fm.z > 0.01) {
 			float sgn = fm.x < 0.0 ? -1.0 : 1.0;          // (mirrored: each side turns its own way)
 			vec2 c0 = vec2(0.0, paint_xf.w);
@@ -2277,8 +2580,8 @@ void fragment() {
 			}
 		}
 	}
-	if (has_eye) {
-		vec3 e = texture(eye_tex, UV).rgb;
+	if (has_eye && !hd_skin) {                        // (the HD head's eyes are their own mesh)
+		vec3 e = textureGrad(eye_tex, cuv, gx, gy).rgb;
 		if (eye_tint.a > 0.5) {
 			float mn = min(e.r, min(e.g, e.b));
 			float iris = clamp((0.9 - mn) * 6.0, 0.0, 1.0);
@@ -2288,19 +2591,37 @@ void fragment() {
 		col *= e;
 	}
 	if (has_decal) {
-		vec4 d = texture(decal_tex, UV);
+		vec4 d = textureGrad(decal_tex, cuv, gx, gy);
 		// the client doubles the decal in gamma space (grey 128 = no change); the texture reads linear here, where
 		// grey is 0.21 - doubled, 0.43: the whole face darkened (owner 2026-11-23, Bugs & Fixes: "Selecting a tattoo for
 		// Celts darkens their face considerably"). Back to gamma, doubled, and back to linear.
 		vec3 dg = pow(max(d.rgb, vec3(0.0)), vec3(1.0 / 2.2));
 		col *= mix(vec3(1.0), pow(dg * 2.0, vec3(2.2)), d.a);
 	}
+	if (hd_skin) col *= mix(1.0, texture(hd_detail, UV).a, 0.6);      // (the creases' shade)
 	ALBEDO = col;
-	ROUGHNESS = 0.85;
-	SPECULAR = 0.3;
+	ROUGHNESS = mix(0.85, 0.14, gloss);
+	SPECULAR = mix(0.3, 0.6, gloss);
+	if (hd_skin) {
+		// the HD head's fine relief (pores, lid creases, lip lines): the surface gradient bump, as the relief below
+		float lod = max(textureQueryLod(hd_detail, UV).x, 0.0);
+		vec2 stp = exp2(lod) / vec2(textureSize(hd_detail, 0));
+		float h0 = textureLod(hd_detail, UV, lod).r;
+		vec2 dh = vec2(textureLod(hd_detail, UV + vec2(stp.x, 0.0), lod).r - h0,
+				textureLod(hd_detail, UV + vec2(0.0, stp.y), lod).r - h0) / stp;
+		float dhdx = dot(dh, dFdx(UV));
+		float dhdy = dot(dh, dFdy(UV));
+		vec3 dpdx = dFdx(VERTEX);
+		vec3 dpdy = dFdy(VERTEX);
+		vec3 r1 = cross(dpdy, NORMAL);
+		vec3 r2 = cross(NORMAL, dpdx);
+		float det = dot(dpdx, r1);
+		vec3 grad = sign(det) * (dhdx * r1 + dhdy * r2);
+		NORMAL = normalize(abs(det) * NORMAL - grad * hd_bump);
+	}
 	if (remaster_fx > 0.5) {
 		float lum = dot(col, vec3(0.3, 0.59, 0.11));
-		if (relief > 0.0) {
+		if (relief > 0.0 && !hd_skin) {
 			// the texture's light parts raised, its dark seams sunk: the surface gradient bump (no tangents needed)
 			float lod = max(textureQueryLod(albedo_tex, UV).x, 0.0) + relief_bias;
 			vec2 stp = exp2(lod) / vec2(textureSize(albedo_tex, 0));
@@ -2364,7 +2685,8 @@ const SWAY_RANGE_M := 35.0
 ## The creator's BODY sliders (owner 2026-11-06: chest in three, waist, hips, glutes, thighs, calves; lengths that only
 ## lengthen): [key, label, group]. -1..1 each in look.body; "chest_size" reads Bust or Pecs by the figure's sex.
 const BODY_SLIDERS := [["height", "Height", "OVERALL"], ["head", "Head Size", "OVERALL"],
-	["shoulders", "Shoulders", "UPPER BODY"], ["chest_width", "Chest Width", "UPPER BODY"],
+	["shoulders", "Shoulders", "UPPER BODY"], ["shoulder_slope", "Shoulder Slope", "UPPER BODY"],
+	["chest_width", "Chest Width", "UPPER BODY"],
 	["chest_depth", "Chest Depth", "UPPER BODY"], ["chest_size", "Chest Size", "UPPER BODY"],
 	["waist", "Waist", "UPPER BODY"], ["torso", "Torso Length", "UPPER BODY"],
 	["arms", "Arm Length", "ARMS"], ["arm_size", "Arm Thickness", "ARMS"], ["hands", "Hands", "ARMS"],
@@ -2421,6 +2743,7 @@ class BodyShape extends SkeletonModifier3D:
 	var _leg := 0.0                              # the leg's rest length (pelvis to ankle), for the lift
 	var _up := Vector3.UP
 	var _bulged := false                         # bust / glute shapes set on the parts (cleared once when they go)
+	var _slope := {}                             # side -> [the clavicle's turning axis (its own frame), the sign that lifts]
 
 	func _find(sk: Skeleton3D) -> void:
 		for n in ["Head", "Pelvis", "Spine", "Spine1", "Spine2", "Neck", "L Clavicle", "R Clavicle", "L UpperArm",
@@ -2437,6 +2760,22 @@ class BodyShape extends SkeletonModifier3D:
 			var c := sk.get_bone_global_rest(ft).origin
 			_leg = a.distance_to(c)
 			_up = (a - c).normalized()
+		# the shoulder slope's turn: about the body's front, in each clavicle's own frame, the way that lifts the arm
+		var toe := sk.find_bone("Bip01 L Toe0")
+		if toe >= 0 and ft >= 0:
+			var fwd := sk.get_bone_global_rest(toe).origin - sk.get_bone_global_rest(ft).origin
+			fwd = (fwd - _up * fwd.dot(_up)).normalized()
+			for side in ["L", "R"]:
+				var cb: int = _b.get(side + " Clavicle", -1)
+				var ub: int = _b.get(side + " UpperArm", -1)
+				if cb < 0 or ub < 0 or fwd.is_zero_approx():
+					continue
+				var basis := sk.get_bone_global_rest(cb).basis.orthonormalized()
+				var ax := (basis.inverse() * fwd).normalized()
+				var o := basis.inverse() * (sk.get_bone_global_rest(ub).origin - sk.get_bone_global_rest(cb).origin)
+				var lifted := (basis * (Quaternion(ax, 0.1) * o)).dot(_up) > (basis * o).dot(_up)
+				var ua := (sk.get_bone_global_rest(ub).basis.orthonormalized().inverse() * fwd).normalized()
+				_slope[side] = [ax, 1.0 if lifted else -1.0, ua]
 
 	## A def bone's shape in the bone's own frame (Biped: x along the bone; on the spine y front-back, z across).
 	func _def(sk: Skeleton3D, n: String, s: Vector3) -> void:
@@ -2470,13 +2809,15 @@ class BodyShape extends SkeletonModifier3D:
 		var hd: float = 1.0 + 0.09 * v.call("head")
 		var sh: float = 1.0 + 0.2 * v.call("shoulders")
 		var cw: float = 1.0 + 0.16 * v.call("chest_width")
-		var cd: float = 1.0 + 0.2 * v.call("chest_depth")
+		var cd: float = 1.0 + (0.16 if v.call("chest_depth") > 0.0 else 0.2) * v.call("chest_depth")   # (owner: the deep end -20%)
 		var wa: float = 1.0 + 0.2 * v.call("waist")
 		var tor: float = 1.0 + 0.12 * v.call("torso")
 		var ar: float = 1.0 + 0.08 * v.call("arms")
 		var at: float = 1.0 + 0.24 * v.call("arm_size")
 		var hn: float = 1.0 + 0.1 * v.call("hands")
-		var hp: float = 1.0 + 0.17 * v.call("hips")
+		# hips: a shape now where the figure has one (bx_hips: wide at the hip joints, the waist and the legs' spacing
+		# kept - owner 2026-11-25, "allow for more of an hourglass figure"); the old bones otherwise
+		var hp: float = 1.0 if fig.has_shape("hips") else 1.0 + 0.17 * v.call("hips")
 		var lg: float = 1.0 + 0.07 * v.call("legs")
 		var tt: float = 1.0 + 0.24 * v.call("thighs")
 		var ct: float = 1.0 + 0.24 * v.call("calves")
@@ -2517,7 +2858,25 @@ class BodyShape extends SkeletonModifier3D:
 			var parent := sk.get_bone_parent(pv)
 			var pb := sk.get_bone_global_pose(parent).basis if parent >= 0 else Basis()
 			sk.set_bone_pose_position(pv, sk.get_bone_pose_position(pv) + pb.inverse() * (_up * _leg * (lg - 1.0)))
-		_bulge(sk, v.call("chest_size"), v.call("glutes"))
+		# shoulder slope (owner 2026-11-25: the shape "pushes and pulls up and down at a weird point"): the clavicles
+		# turned, so the shoulder girdle tilts from the neck, the arm turned back so it hangs as before - square up to
+		# 10 degrees, sloped down to 7
+		var sl: float = v.call("shoulder_slope")
+		if absf(sl) > 0.001:
+			var ang := deg_to_rad(10.0 if sl > 0.0 else 7.0) * sl
+			for side in ["L", "R"]:
+				var cb: int = _b.get(side + " Clavicle", -1)
+				if cb >= 0 and _slope.has(side):
+					var ax: Vector3 = _slope[side][0]
+					var th := ang * float(_slope[side][1])
+					sk.set_bone_pose_rotation(cb, sk.get_bone_pose_rotation(cb) * Quaternion(ax, th))
+					# the arm turned back the same: the shoulder joint rises or drops, the arm still hangs as it did
+					var ub: int = _b.get(side + " UpperArm", -1)
+					if ub >= 0:
+						sk.set_bone_pose_rotation(ub, sk.get_bone_pose_rotation(ub) * Quaternion(_slope[side][2], -th))
+		# bust and glutes: shapes now where the figure has them (bx_chest_size on women, bx_glutes); the shader's
+		# swell otherwise (men's pecs)
+		_bulge(sk, 0.0 if fig.has_shape("chest_size") else v.call("chest_size"), 0.0 if fig.has_shape("glutes") else v.call("glutes"))
 
 	## Bust (pecs) and glutes: the parts' vertex shader swells the flesh round two points on the chest and two on the
 	## seat (figure.json "body_marks", pipeline/body_marks.py) - no bone carries them alone. Material uniforms, each

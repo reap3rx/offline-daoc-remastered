@@ -273,6 +273,7 @@ func set_figure(c: Dictionary) -> void:
 	if not fig.load_figure(String(c.get("prefix", "cel_m"))):
 		fig.queue_free()
 		return
+	fig.set_hd(true)                                     # (your own figure: the HD head, where the race has one)
 	fig.apply(c.get("look", {}))
 	_model = fig
 	_anim = fig.anim
