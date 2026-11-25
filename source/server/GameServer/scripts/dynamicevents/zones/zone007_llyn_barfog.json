@@ -1,677 +1,2663 @@
 {
-  "zone": 7,
-  "region": 1,
-  "name": "Llyn Barfog",
-  "lore": "Llyn Barfog, the bearded lake, where the fairy cattle came up out of the water and Arthur's horse left its hoof-print in the stone.",
-  "chains": [
+ "zone": 7,
+ "region": 1,
+ "name": "Llyn Barfog",
+ "lore": "Llyn Barfog, the bearded lake, where the Lady's white cattle came up out of the water, Arthur's horse left its hoof-print in the stone, and Arthur dragged the Afanc out of the lake. Morgana le Fay sits at the Gate of Annwn on the south shore now, and her hounds, her cythraul and her Crimson hold the shores. Sir Percival's Lake Host means to take them back.",
+ "chains": [
+  {
+   "id": "llyn_barfog_renegades",
+   "title": "The Renegade Guards",
+   "levels": [
+    45,
+    50
+   ],
+   "hint": "Deserters have been seen by the lake...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "llyn_barfog_renegades",
-      "title": "The Renegade Guards",
-      "levels": [15, 20],
-      "hint": "Deserters have been seen by the lake...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Renegades' Camp",
-          "objective": "Clear the renegades' camp",
-          "announce": "Captain Madog has turned his company renegade and sold them to the gwr-drwgiaid. Bring him to justice.",
-          "center": [1365, 457, 158.5],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 13028,
-              "name": "renegade guard",
-              "level": [19, 20]
-            },
-            {
-              "template": 13014,
-              "name": "gwr-drwgiaid",
-              "level": [15, 17]
-            }
-          ],
-          "success": "You have cleared the renegades' camp. Captain Madog the Turncoat comes out to fight.",
-          "fail": "They hold the renegades' camp. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Captain Madog the Turncoat",
-          "objective": "Defeat Captain Madog the Turncoat",
-          "announce": "Captain Madog the Turncoat stands at the renegades' camp. Bring friends.",
-          "center": [1365, 457, 158.5],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 13028,
-            "name": "Captain Madog the Turncoat",
-            "level": 22,
-            "size": 71,
-            "pos": [1365, 457, 158.5],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 13028,
-                "name": "renegade guard",
-                "level": [19, 20]
-              }
-            ]
-          },
-          "success": "Captain Madog the Turncoat falls. The way is safe again.",
-          "fail": "Captain Madog the Turncoat slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu7_captain_madog_the_turncoat_s_torc", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Renegade Guards Hold the Road",
-          "objective": "Drive the renegade guards off the road",
-          "announce": "With The Renegade Guards lost, the renegade guards have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1186, 411, 141.4],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 13028,
-              "name": "renegade guard",
-              "level": [19, 20]
-            },
-            {
-              "template": 13014,
-              "name": "gwr-drwgiaid",
-              "level": [15, 17]
-            }
-          ],
-          "boss": {
-            "template": 13028,
-            "name": "Renegade guard warleader",
-            "level": 21,
-            "pos": [1186, 411, 141.4],
-            "health_mult": 2
-          },
-          "success": "The renegade guards are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cuthbert has come out to set the road right. The renegade guards are coming back for it!",
-          "center": [1186, 411, 141.4],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cuthbert",
-            "level": 20,
-            "pos": [1186, 411, 141.4],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1258, 367, 154.6],
-              [1268, 432, 147.6],
-              [1228, 485, 128.2]
-            ],
-            "mobs": [
-              {
-                "template": 13028,
-                "name": "renegade guard",
-                "level": [19, 20]
-              },
-              {
-                "template": 13014,
-                "name": "gwr-drwgiaid",
-                "level": [15, 17]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The renegade guards break and scatter. The road is open again.",
-          "fail": "Roadwarden Cuthbert falls, and the renegade guards take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Renegades' Camp",
+     "objective": "Clear the renegades' camp",
+     "announce": "Captain Madog has turned his company renegade and sold them to the gwr-drwgiaid. Bring him to justice.",
+     "center": [
+      1365,
+      457,
+      158.5
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 13028,
+       "name": "renegade guard",
+       "level": [
+        49,
+        50
+       ]
+      },
+      {
+       "template": 13014,
+       "name": "gwr-drwgiaid",
+       "level": [
+        45,
+        47
+       ]
+      }
+     ],
+     "success": "You have cleared the renegades' camp. Captain Madog the Turncoat comes out to fight.",
+     "fail": "They hold the renegades' camp. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "llyn_barfog_hounds_of_annwn",
-      "title": "The Hounds of Annwn",
-      "levels": [20, 22],
-      "hint": "Hounds bay where no hounds should be...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Elen of the Lake",
-          "objective": "Protect Elen of the Lake, who is calling the fairy cattle home",
-          "announce": "Elen of the Lake is calling the fairy cattle home, and the Hunt of Annwn has smelled them.",
-          "center": [732, 1384, 164.3],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Elen of the Lake",
-            "template": 60167630,
-            "level": 22,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
-            "health_mult": 10,
-            "pos": [732, 1384, 164.3]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [663, 1435, 170.3],
-              [648, 1370, 150.7],
-              [683, 1314, 143.8]
-            ],
-            "mobs": [
-              {
-                "template": 12999,
-                "name": "cwn annwn",
-                "level": [20, 22]
-              },
-              {
-                "template": 13001,
-                "name": "cythraul",
-                "level": [20, 21]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Elen of the Lake. \"They came from over there - let's finish this.\"",
-          "fail": "Elen of the Lake falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Lakeshore",
-          "objective": "Clear the lakeshore",
-          "announce": "They came from the lakeshore. Follow them back and clear it out.",
-          "center": [385, 1327, 158.7],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12999,
-              "name": "cwn annwn",
-              "level": [20, 22]
-            },
-            {
-              "template": 13001,
-              "name": "cythraul",
-              "level": [20, 21]
-            }
-          ],
-          "success": "You have cleared the lakeshore. The Huntsman of Annwn comes out to fight.",
-          "fail": "They hold the lakeshore. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Huntsman of Annwn",
-          "objective": "Defeat the Huntsman of Annwn",
-          "announce": "The Huntsman of Annwn stands at the lakeshore. Bring friends.",
-          "center": [385, 1327, 158.7],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 13001,
-            "name": "The Huntsman of Annwn",
-            "level": 24,
-            "size": 71,
-            "pos": [385, 1327, 158.7],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12999,
-                "name": "cwn annwn",
-                "level": [20, 22]
-              }
-            ]
-          },
-          "success": "The Huntsman of Annwn falls. The way is safe again.",
-          "fail": "The Huntsman of Annwn slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu7_huntsman_of_annwn_s_cloak", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Cwn Annwns Hold the Road",
-          "objective": "Drive the cwn annwns off the road",
-          "announce": "With The Hounds of Annwn lost, the cwn annwns have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [577, 1271, 107.3],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12999,
-              "name": "cwn annwn",
-              "level": [20, 22]
-            },
-            {
-              "template": 13001,
-              "name": "cythraul",
-              "level": [20, 21]
-            }
-          ],
-          "boss": {
-            "template": 12999,
-            "name": "Cwn annwn warleader",
-            "level": 23,
-            "pos": [577, 1271, 107.3],
-            "health_mult": 2
-          },
-          "success": "The cwn annwns are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cuthbert has come out to set the road right. The cwn annwns are coming back for it!",
-          "center": [577, 1271, 107.3],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cuthbert",
-            "level": 22,
-            "pos": [577, 1271, 107.3],
-            "health_mult": 10,
-            "template": 60167630,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [537, 1346, 119.8],
-              [495, 1295, 129.9],
-              [503, 1229, 134.1]
-            ],
-            "mobs": [
-              {
-                "template": 12999,
-                "name": "cwn annwn",
-                "level": [20, 22]
-              },
-              {
-                "template": 13001,
-                "name": "cythraul",
-                "level": [20, 21]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The cwn annwns break and scatter. The road is open again.",
-          "fail": "Roadwarden Cuthbert falls, and the cwn annwns take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Captain Madog the Turncoat",
+     "objective": "Defeat Captain Madog the Turncoat",
+     "announce": "Captain Madog the Turncoat stands at the renegades' camp. Bring friends.",
+     "center": [
+      1365,
+      457,
+      158.5
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 13028,
+      "name": "Captain Madog the Turncoat",
+      "level": 52,
+      "size": 71,
+      "pos": [
+       1365,
+       457,
+       158.5
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 13028,
+        "name": "renegade guard",
+        "level": [
+         49,
+         50
+        ]
+       }
       ]
+     },
+     "success": "Captain Madog the Turncoat falls. The way is safe again.",
+     "fail": "Captain Madog the Turncoat slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu7_captain_madog_the_turncoat_s_torc",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
     },
     {
-      "id": "llyn_barfog_unshriven",
-      "title": "The Unshriven",
-      "levels": [28, 30],
-      "hint": "Bells toll from the ruined chapel...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Ruined Chapel",
-          "objective": "Clear the ruined chapel",
-          "announce": "The monks of the ruined chapel died unshriven, and their abbot has called them to vespers again.",
-          "center": [1146, 225, 139.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 13034,
-              "name": "undead monk",
-              "level": [29, 30]
-            },
-            {
-              "template": 12998,
-              "name": "bwgwl",
-              "level": [28, 29]
-            }
-          ],
-          "success": "You have cleared the ruined chapel. Abbot Idwal the Unshriven comes out to fight.",
-          "fail": "They hold the ruined chapel. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Abbot Idwal the Unshriven",
-          "objective": "Defeat Abbot Idwal the Unshriven",
-          "announce": "Abbot Idwal the Unshriven stands at the ruined chapel. Bring friends.",
-          "center": [1146, 225, 139.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 13034,
-            "name": "Abbot Idwal the Unshriven",
-            "level": 32,
-            "size": 97,
-            "pos": [1146, 225, 139.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 13034,
-                "name": "undead monk",
-                "level": [29, 30]
-              }
-            ]
-          },
-          "success": "Abbot Idwal the Unshriven falls. The way is safe again.",
-          "fail": "Abbot Idwal the Unshriven slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu7_abbot_idwal_the_unshriven_s_mantle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Undead Monks Hold the Road",
-          "objective": "Drive the undead monks off the road",
-          "announce": "With The Unshriven lost, the undead monks have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1328, 707, 168.3],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 13034,
-              "name": "undead monk",
-              "level": [29, 30]
-            },
-            {
-              "template": 12998,
-              "name": "bwgwl",
-              "level": [28, 29]
-            }
-          ],
-          "boss": {
-            "template": 13034,
-            "name": "Undead monk warleader",
-            "level": 31,
-            "pos": [1328, 707, 168.3],
-            "health_mult": 2
-          },
-          "success": "The undead monks are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cuthbert has come out to set the road right. The undead monks are coming back for it!",
-          "center": [1328, 707, 168.3],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cuthbert",
-            "level": 30,
-            "pos": [1328, 707, 168.3],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1250, 673, 149.5],
-              [1298, 627, 160.2],
-              [1364, 630, 142.3]
-            ],
-            "mobs": [
-              {
-                "template": 13034,
-                "name": "undead monk",
-                "level": [29, 30]
-              },
-              {
-                "template": 12998,
-                "name": "bwgwl",
-                "level": [28, 29]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The undead monks break and scatter. The road is open again.",
-          "fail": "Roadwarden Cuthbert falls, and the undead monks take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Renegade Guards Hold the Road",
+     "objective": "Drive the renegade guards off the road",
+     "announce": "With The Renegade Guards lost, the renegade guards have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1186,
+      411,
+      141.4
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 13028,
+       "name": "renegade guard",
+       "level": [
+        49,
+        50
+       ]
+      },
+      {
+       "template": 13014,
+       "name": "gwr-drwgiaid",
+       "level": [
+        45,
+        47
+       ]
+      }
+     ],
+     "boss": {
+      "template": 13028,
+      "name": "Renegade guard warleader",
+      "level": 51,
+      "pos": [
+       1186,
+       411,
+       141.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The renegade guards are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
     },
     {
-      "id": "llyn_barfog_adder_shallows",
-      "title": "The Adder Shallows",
-      "levels": [10, 10],
-      "hint": "The shallows of the lake are boiling with snakes...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Adder Shallows",
-          "objective": "Clear the adder shallows",
-          "announce": "The lake adders have swarmed in the shallows, and no one can draw water or cross the ford. Clear them out.",
-          "center": [956, 1271, 107.2],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 13018,
-              "name": "lake adder",
-              "level": [10, 10]
-            }
-          ],
-          "success": "You have cleared the adder shallows. The Lake Wyrm comes out to fight.",
-          "fail": "They hold the adder shallows. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Lake Wyrm",
-          "objective": "Defeat the Lake Wyrm",
-          "announce": "The Lake Wyrm stands at the adder shallows. Bring friends.",
-          "center": [956, 1271, 107.2],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 13018,
-            "name": "The Lake Wyrm",
-            "level": 12,
-            "size": 78,
-            "pos": [956, 1271, 107.2],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 13018,
-                "name": "lake adder",
-                "level": [10, 10]
-              }
-            ]
-          },
-          "success": "The Lake Wyrm falls. The way is safe again.",
-          "fail": "The Lake Wyrm slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu7_lake_wyrm_s_mantle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Lake Adders Hold the Old Road",
-          "objective": "Drive the lake adders off the old road",
-          "announce": "With The Adder Shallows lost, the lake adders have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1228, 1133, 131.2],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 13018,
-              "name": "lake adder",
-              "level": [10, 10]
-            }
-          ],
-          "boss": {
-            "template": 13018,
-            "name": "Lake adder warleader",
-            "level": 11,
-            "pos": [1228, 1133, 131.2],
-            "health_mult": 2
-          },
-          "success": "The lake adders are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cuthbert has come out to set the old road right. The lake adders are coming back for it!",
-          "center": [1228, 1133, 131.2],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cuthbert",
-            "level": 10,
-            "pos": [1228, 1133, 131.2],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1203, 1214, 116.6],
-              [1152, 1172, 100.3],
-              [1148, 1106, 97.3]
-            ],
-            "mobs": [
-              {
-                "template": 13018,
-                "name": "lake adder",
-                "level": [10, 10]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The lake adders break and scatter. The old road is open again.",
-          "fail": "Roadwarden Cuthbert falls, and the lake adders take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cuthbert has come out to set the road right. The renegade guards are coming back for it!",
+     "center": [
+      1186,
+      411,
+      141.4
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cuthbert",
+      "level": 50,
+      "pos": [
+       1186,
+       411,
+       141.4
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1258,
+        367,
+        154.6
+       ],
+       [
+        1268,
+        432,
+        147.6
+       ],
+       [
+        1228,
+        485,
+        128.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 13028,
+        "name": "renegade guard",
+        "level": [
+         49,
+         50
+        ]
+       },
+       {
+        "template": 13014,
+        "name": "gwr-drwgiaid",
+        "level": [
+         45,
+         47
+        ]
+       }
       ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The renegade guards break and scatter. The road is open again.",
+     "fail": "Roadwarden Cuthbert falls, and the renegade guards take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
-  ]
+   ]
+  },
+  {
+   "id": "llyn_barfog_hounds_of_annwn",
+   "title": "The Hounds of Annwn",
+   "levels": [
+    45,
+    47
+   ],
+   "hint": "Hounds bay where no hounds should be...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Elen of the Lake",
+     "objective": "Protect Elen of the Lake, who is calling the fairy cattle home",
+     "announce": "Elen of the Lake is calling the fairy cattle home, and the Hunt of Annwn has smelled them.",
+     "center": [
+      732,
+      1384,
+      164.3
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Elen of the Lake",
+      "template": 60167630,
+      "level": 47,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "health_mult": 10,
+      "pos": [
+       732,
+       1384,
+       164.3
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        663,
+        1435,
+        170.3
+       ],
+       [
+        648,
+        1370,
+        150.7
+       ],
+       [
+        683,
+        1314,
+        143.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12999,
+        "name": "cwn annwn",
+        "level": [
+         45,
+         47
+        ]
+       },
+       {
+        "template": 13001,
+        "name": "cythraul",
+        "level": [
+         45,
+         46
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Elen of the Lake. \"They came from over there - let's finish this.\"",
+     "fail": "Elen of the Lake falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Lakeshore",
+     "objective": "Clear the lakeshore",
+     "announce": "They came from the lakeshore. Follow them back and clear it out.",
+     "center": [
+      385,
+      1327,
+      158.7
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12999,
+       "name": "cwn annwn",
+       "level": [
+        45,
+        47
+       ]
+      },
+      {
+       "template": 13001,
+       "name": "cythraul",
+       "level": [
+        45,
+        46
+       ]
+      }
+     ],
+     "success": "You have cleared the lakeshore. The Huntsman of Annwn comes out to fight.",
+     "fail": "They hold the lakeshore. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Huntsman of Annwn",
+     "objective": "Defeat the Huntsman of Annwn",
+     "announce": "The Huntsman of Annwn stands at the lakeshore. Bring friends.",
+     "center": [
+      385,
+      1327,
+      158.7
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 13001,
+      "name": "The Huntsman of Annwn",
+      "level": 49,
+      "size": 71,
+      "pos": [
+       385,
+       1327,
+       158.7
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12999,
+        "name": "cwn annwn",
+        "level": [
+         45,
+         47
+        ]
+       }
+      ]
+     },
+     "success": "The Huntsman of Annwn falls. The way is safe again.",
+     "fail": "The Huntsman of Annwn slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu7_huntsman_of_annwn_s_cloak",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Cwn Annwns Hold the Road",
+     "objective": "Drive the cwn annwns off the road",
+     "announce": "With The Hounds of Annwn lost, the cwn annwns have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      577,
+      1271,
+      107.3
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12999,
+       "name": "cwn annwn",
+       "level": [
+        45,
+        47
+       ]
+      },
+      {
+       "template": 13001,
+       "name": "cythraul",
+       "level": [
+        45,
+        46
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12999,
+      "name": "Cwn annwn warleader",
+      "level": 48,
+      "pos": [
+       577,
+       1271,
+       107.3
+      ],
+      "health_mult": 2
+     },
+     "success": "The cwn annwns are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cuthbert has come out to set the road right. The cwn annwns are coming back for it!",
+     "center": [
+      577,
+      1271,
+      107.3
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cuthbert",
+      "level": 47,
+      "pos": [
+       577,
+       1271,
+       107.3
+      ],
+      "health_mult": 10,
+      "template": 60167630,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        537,
+        1346,
+        119.8
+       ],
+       [
+        495,
+        1295,
+        129.9
+       ],
+       [
+        503,
+        1229,
+        134.1
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12999,
+        "name": "cwn annwn",
+        "level": [
+         45,
+         47
+        ]
+       },
+       {
+        "template": 13001,
+        "name": "cythraul",
+        "level": [
+         45,
+         46
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The cwn annwns break and scatter. The road is open again.",
+     "fail": "Roadwarden Cuthbert falls, and the cwn annwns take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "llyn_barfog_unshriven",
+   "title": "The Unshriven",
+   "levels": [
+    46,
+    48
+   ],
+   "hint": "Bells toll from the ruined chapel...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Ruined Chapel",
+     "objective": "Clear the ruined chapel",
+     "announce": "The monks of the ruined chapel died unshriven, and their abbot has called them to vespers again.",
+     "center": [
+      1146,
+      225,
+      139.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 13034,
+       "name": "undead monk",
+       "level": [
+        47,
+        48
+       ]
+      },
+      {
+       "template": 12998,
+       "name": "bwgwl",
+       "level": [
+        46,
+        47
+       ]
+      }
+     ],
+     "success": "You have cleared the ruined chapel. Abbot Idwal the Unshriven comes out to fight.",
+     "fail": "They hold the ruined chapel. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "Abbot Idwal the Unshriven",
+     "objective": "Defeat Abbot Idwal the Unshriven",
+     "announce": "Abbot Idwal the Unshriven stands at the ruined chapel. Bring friends.",
+     "center": [
+      1146,
+      225,
+      139.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 13034,
+      "name": "Abbot Idwal the Unshriven",
+      "level": 50,
+      "size": 97,
+      "pos": [
+       1146,
+       225,
+       139.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 13034,
+        "name": "undead monk",
+        "level": [
+         47,
+         48
+        ]
+       }
+      ]
+     },
+     "success": "Abbot Idwal the Unshriven falls. The way is safe again.",
+     "fail": "Abbot Idwal the Unshriven slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu7_abbot_idwal_the_unshriven_s_mantle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Undead Monks Hold the Road",
+     "objective": "Drive the undead monks off the road",
+     "announce": "With The Unshriven lost, the undead monks have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1328,
+      707,
+      168.3
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 13034,
+       "name": "undead monk",
+       "level": [
+        47,
+        48
+       ]
+      },
+      {
+       "template": 12998,
+       "name": "bwgwl",
+       "level": [
+        46,
+        47
+       ]
+      }
+     ],
+     "boss": {
+      "template": 13034,
+      "name": "Undead monk warleader",
+      "level": 49,
+      "pos": [
+       1328,
+       707,
+       168.3
+      ],
+      "health_mult": 2
+     },
+     "success": "The undead monks are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cuthbert has come out to set the road right. The undead monks are coming back for it!",
+     "center": [
+      1328,
+      707,
+      168.3
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cuthbert",
+      "level": 48,
+      "pos": [
+       1328,
+       707,
+       168.3
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1250,
+        673,
+        149.5
+       ],
+       [
+        1298,
+        627,
+        160.2
+       ],
+       [
+        1364,
+        630,
+        142.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 13034,
+        "name": "undead monk",
+        "level": [
+         47,
+         48
+        ]
+       },
+       {
+        "template": 12998,
+        "name": "bwgwl",
+        "level": [
+         46,
+         47
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The undead monks break and scatter. The road is open again.",
+     "fail": "Roadwarden Cuthbert falls, and the undead monks take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "llyn_barfog_adder_shallows",
+   "title": "The Adder Shallows",
+   "levels": [
+    46,
+    46
+   ],
+   "hint": "The shallows of the lake are boiling with snakes...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Adder Shallows",
+     "objective": "Clear the adder shallows",
+     "announce": "The lake adders have swarmed in the shallows, and no one can draw water or cross the ford. Clear them out.",
+     "center": [
+      956,
+      1271,
+      107.2
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 13018,
+       "name": "lake adder",
+       "level": [
+        46,
+        46
+       ]
+      }
+     ],
+     "success": "You have cleared the adder shallows. The Lake Wyrm comes out to fight.",
+     "fail": "They hold the adder shallows. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "The Lake Wyrm",
+     "objective": "Defeat the Lake Wyrm",
+     "announce": "The Lake Wyrm stands at the adder shallows. Bring friends.",
+     "center": [
+      956,
+      1271,
+      107.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 13018,
+      "name": "The Lake Wyrm",
+      "level": 48,
+      "size": 78,
+      "pos": [
+       956,
+       1271,
+       107.2
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 13018,
+        "name": "lake adder",
+        "level": [
+         46,
+         46
+        ]
+       }
+      ]
+     },
+     "success": "The Lake Wyrm falls. The way is safe again.",
+     "fail": "The Lake Wyrm slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu7_lake_wyrm_s_mantle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Lake Adders Hold the Old Road",
+     "objective": "Drive the lake adders off the old road",
+     "announce": "With The Adder Shallows lost, the lake adders have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1228,
+      1133,
+      131.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 13018,
+       "name": "lake adder",
+       "level": [
+        46,
+        46
+       ]
+      }
+     ],
+     "boss": {
+      "template": 13018,
+      "name": "Lake adder warleader",
+      "level": 47,
+      "pos": [
+       1228,
+       1133,
+       131.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The lake adders are gone from the old road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cuthbert has come out to set the old road right. The lake adders are coming back for it!",
+     "center": [
+      1228,
+      1133,
+      131.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cuthbert",
+      "level": 46,
+      "pos": [
+       1228,
+       1133,
+       131.2
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1203,
+        1214,
+        116.6
+       ],
+       [
+        1152,
+        1172,
+        100.3
+       ],
+       [
+        1148,
+        1106,
+        97.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 13018,
+        "name": "lake adder",
+        "level": [
+         46,
+         46
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+     "success": "The lake adders break and scatter. The old road is open again.",
+     "fail": "Roadwarden Cuthbert falls, and the lake adders take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "lb_still_night",
+   "title": "The Still Night",
+   "levels": [
+    46,
+    49
+   ],
+   "hint": "The lake has gone still as glass - and on the south shore, the Gate of Annwn is stirring...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "n1",
+   "stages": [
+    {
+     "id": "n1",
+     "type": "defend",
+     "name": "The Moving Water",
+     "objective": "Keep Maiden Celemon alive while she sings the lake moving",
+     "announce": "Llyn Barfog has gone still - and while the lake is still, Morgana's Gate can open! Maiden Celemon of the Lake is singing the water awake. Keep her alive!",
+     "center": [
+      700,
+      1150,
+      51.4
+     ],
+     "radius": 70,
+     "duration_s": 200,
+     "protect": {
+      "template": 60167630,
+      "model": 38,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "guild": "the Maidens of the Lake",
+      "name": "Maiden Celemon",
+      "level": 48,
+      "pos": [
+       700,
+       1150,
+       51.4
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 24,
+      "count": 3,
+      "from": [
+       [
+        658,
+        1162,
+        52.2
+       ],
+       [
+        760,
+        1180,
+        77.5
+       ],
+       [
+        700,
+        1150,
+        51.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12999,
+        "name": "hound of Annwn",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "the Hunt of Annwn"
+       },
+       {
+        "template": 13001,
+        "name": "cythraul",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "out of Annwn"
+       },
+       {
+        "template": 12016,
+        "name": "shade of Camlann",
+        "level": [
+         47,
+         49
+        ],
+        "model": 485,
+        "guild": "Mordred's host"
+       }
+      ]
+     },
+     "thanks": "\"Listen - the water's moving. The Gate can't open on moving water.\"",
+     "success": "The lake ripples, then rolls - and something that came halfway through the Gate is caught on the shore.",
+     "fail": "Celemon falls, and the lake stays still till dawn.",
+     "on_success": "n2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 160,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "n2",
+     "type": "boss",
+     "name": "the Shade of Camlann",
+     "objective": "Defeat the Shade of Camlann",
+     "announce": "A knight in black mail, half-there, still bleeding from the last battle: 'I fell at Camlann. I don't stay fallen.' Bring friends.",
+     "center": [
+      700,
+      1150,
+      51.4
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12016,
+      "name": "the Shade of Camlann",
+      "level": 51,
+      "model": 485,
+      "size": 70,
+      "pos": [
+       700,
+       1150,
+       51.4
+      ],
+      "health_mult": 4,
+      "guild": "Mordred's host"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12016,
+        "name": "shade of Camlann",
+        "level": [
+         47,
+         49
+        ],
+        "model": 485,
+        "guild": "Mordred's host"
+       },
+       {
+        "template": 12999,
+        "name": "hound of Annwn",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "the Hunt of Annwn"
+       }
+      ]
+     },
+     "success": "The shade comes apart like mist on moving water.",
+     "fail": "The shade walks back into the Gate, and something else comes out.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 28,
+      "copper_per_level": 260,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "nu007_camlann_shade_s_gorget",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ],
+   "time": "night"
+  },
+  {
+   "id": "lb_cp1_assault",
+   "title": "The Lake Host at the Afanc's Shore",
+   "levels": [
+    44,
+    47
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 6,
+   "hint": "The Banner-Knight is forming the Lake Host up for the Afanc's Shore.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60167630,
+    "model": 28,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Knights of the Lake",
+    "name": "Banner-Knight Lamorak",
+    "level": 50,
+    "pos": [
+     930,
+     640,
+     50.5
+    ],
+    "health_mult": 5,
+    "greet": "The Afanc's Shore - the north shore, where Arthur dragged the beast out. The Crimson hold it now. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "To the shore! Break their post - then their warden!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Lake Host holds the Afanc's Shore - and the next thirty minutes are ours.",
+    "regret": "Fall back to the merchants! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60167630,
+     "model": 28,
+     "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+     "guild": "the Knights of the Lake",
+     "name": "knight of the Lake",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Afanc's Shore",
+     "objective": "Break Morgana's post on the Afanc's Shore",
+     "announce": "The Lake Host is at the Afanc's Shore! Break the post!",
+     "center": [
+      1000,
+      520,
+      70.8
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 24,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 12075,
+       "name": "crimson acolyte",
+       "level": [
+        45,
+        47
+       ],
+       "size": 50,
+       "guild": "the Crimson"
+      },
+      {
+       "template": 12999,
+       "name": "hound of Annwn",
+       "level": [
+        45,
+        47
+       ],
+       "guild": "the Hunt of Annwn"
+      },
+      {
+       "template": 12075,
+       "name": "crimson gatekeeper",
+       "level": [
+        46,
+        48
+       ],
+       "guild": "the Crimson"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "boss",
+     "name": "Red-Key Warden Iddawc",
+     "objective": "Defeat Red-Key Warden Iddawc",
+     "announce": "Red-Key Warden Iddawc, who carried the false word at Camlann: 'Every war needs a liar. I was Arthur's. Now I'm hers.'",
+     "center": [
+      1000,
+      520,
+      70.8
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 12075,
+      "name": "Red-Key Warden Iddawc",
+      "level": 50,
+      "size": 62,
+      "health_mult": 4,
+      "guild": "of the Crimson"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 12075,
+        "name": "crimson acolyte",
+        "level": [
+         45,
+         47
+        ],
+        "size": 50,
+        "guild": "the Crimson"
+       },
+       {
+        "template": 12999,
+        "name": "hound of Annwn",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "the Hunt of Annwn"
+       }
+      ]
+     },
+     "success": "Iddawc falls among his red keys. The north shore is the Lake's.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "lb_cp2_assault",
+   "title": "The Lake Host at the Bwgan Hills",
+   "levels": [
+    45,
+    48
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 6,
+   "hint": "Sir Lamorak is forming the Lake Host up for the Bwgan Hills.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60167630,
+    "model": 28,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Knights of the Lake",
+    "name": "Sir Lamorak",
+    "level": 51,
+    "pos": [
+     900,
+     470,
+     68.3
+    ],
+    "health_mult": 5,
+    "greet": "The Bwgan Hills. The Crimson have ward-stones up there, and a necromancer raising the hills' dead to stand in front of them. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Up the hills! Hold the three ward-stones, then find the necromancer!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Lake Host holds the Bwgan Hills.",
+    "regret": "Back down the hills! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60167630,
+     "model": 28,
+     "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+     "guild": "the Knights of the Lake",
+     "name": "knight of the Lake",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Bwgan Hills",
+     "objective": "Break the Crimson's post in the Bwgan Hills",
+     "announce": "The Lake Host is in the Bwgan Hills! Break the post!",
+     "center": [
+      560,
+      430,
+      109.3
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 26,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 12075,
+       "name": "crimson acolyte",
+       "level": [
+        45,
+        47
+       ],
+       "size": 50,
+       "guild": "the Crimson"
+      },
+      {
+       "template": 13001,
+       "name": "cythraul",
+       "level": [
+        45,
+        47
+       ],
+       "guild": "out of Annwn"
+      },
+      {
+       "template": 12117,
+       "name": "necromancer",
+       "level": [
+        46,
+        48
+       ],
+       "guild": "the Crimson"
+      },
+      {
+       "template": 12075,
+       "name": "crimson gatekeeper",
+       "level": [
+        46,
+        48
+       ],
+       "guild": "the Crimson"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "wards",
+     "name": "The Ward-Stones",
+     "objective": "Hold the three ward-stones at once while the Maidens unbind them",
+     "announce": "Three red-keyed ward-stones hold the hills for Morgana - stand at all three at once while the Maidens sing them open!",
+     "wards": [
+      [
+       520,
+       400,
+       127.8
+      ],
+      [
+       600,
+       410,
+       119.6
+      ],
+      [
+       560,
+       470,
+       94.3
+      ]
+     ],
+     "ward_names": [
+      "the north stone",
+      "the east stone",
+      "the south stone"
+     ],
+     "ward_radius": 22,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 12075,
+       "name": "crimson acolyte",
+       "level": [
+        45,
+        47
+       ],
+       "size": 50,
+       "guild": "the Crimson"
+      },
+      {
+       "template": 12117,
+       "name": "necromancer",
+       "level": [
+        46,
+        48
+       ],
+       "guild": "the Crimson"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "pennant of the Lake",
+     "center": [
+      560,
+      430,
+      109.3
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the host falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Necromancer Gwyddno",
+     "objective": "Defeat Necromancer Gwyddno",
+     "announce": "Necromancer Gwyddno: 'The hills are full of the dead. They all owe her something.'",
+     "center": [
+      560,
+      430,
+      109.3
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 12117,
+      "name": "Necromancer Gwyddno",
+      "level": 51,
+      "size": 60,
+      "health_mult": 4.5,
+      "guild": "of the Crimson"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 13001,
+        "name": "cythraul",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "out of Annwn"
+       },
+       {
+        "template": 12117,
+        "name": "necromancer",
+        "level": [
+         46,
+         48
+        ],
+        "guild": "the Crimson"
+       }
+      ]
+     },
+     "success": "Gwyddno falls, and the dead in the hills lie down again.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "lb_cp3_assault",
+   "title": "The Lake Host at the Western Shore",
+   "levels": [
+    46,
+    49
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 6,
+   "hint": "Dame Lionors is forming the Lake Host up for the Western Shore.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60167630,
+    "model": 28,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Knights of the Lake",
+    "name": "Dame Lionors",
+    "level": 51,
+    "pos": [
+     500,
+     560,
+     60.0
+    ],
+    "health_mult": 5,
+    "greet": "The Western Shore. Morgana's guard hold it, and the hounds run there. We take it and we hold it - the Maidens' banner goes up, and they'll come at it. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "To the shore! Break them, then hold the banner!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Lake Host holds the Western Shore.",
+    "regret": "Fall back! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60167630,
+     "model": 28,
+     "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+     "guild": "the Knights of the Lake",
+     "name": "knight of the Lake",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Western Shore",
+     "objective": "Break Morgana's guard on the Western Shore",
+     "announce": "The Lake Host is on the Western Shore! Break the guard!",
+     "center": [
+      260,
+      820,
+      130.4
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 26,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 12075,
+       "name": "guardian of Morgana",
+       "level": [
+        47,
+        49
+       ],
+       "model": 1900,
+       "guild": "Morgana's Guard"
+      },
+      {
+       "template": 12999,
+       "name": "hound of Annwn",
+       "level": [
+        45,
+        47
+       ],
+       "guild": "the Hunt of Annwn"
+      },
+      {
+       "template": 12129,
+       "name": "wicked cythraul",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "out of Annwn"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "defend",
+     "name": "The Maidens' Banner",
+     "objective": "Keep Maiden Laudine alive while the banner goes up",
+     "announce": "Maiden Laudine is raising the Lake's banner on the Western Shore - and the hunt is coming for it!",
+     "center": [
+      260,
+      820,
+      130.4
+     ],
+     "radius": 80,
+     "duration_s": 240,
+     "protect": {
+      "template": 60167630,
+      "model": 38,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "guild": "the Maidens of the Lake",
+      "name": "Maiden Laudine",
+      "level": 49,
+      "health_mult": 8,
+      "pos": [
+       260,
+       820,
+       130.4
+      ]
+     },
+     "waves": {
+      "every_s": 28,
+      "count": 4,
+      "from": [
+       [
+        200,
+        790,
+        160.8
+       ],
+       [
+        320,
+        850,
+        78.6
+       ],
+       [
+        260,
+        760,
+        135.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12999,
+        "name": "hound of Annwn",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "the Hunt of Annwn"
+       },
+       {
+        "template": 13014,
+        "name": "gwr-drwgiaid",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "out of Annwn"
+       },
+       {
+        "template": 12129,
+        "name": "wicked cythraul",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "out of Annwn"
+       }
+      ]
+     },
+     "thanks": "\"It's up. Let her see it from her Gate.\"",
+     "success": "They break - and whoever leads them comes out.",
+     "fail": "The banner falls.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Gwrgi Garwlwyd",
+     "objective": "Defeat Gwrgi Garwlwyd",
+     "announce": "Gwrgi Garwlwyd, the dog-man of Annwn, comes up the shore on all fours: 'The Huntsman's dead. I'm hungrier than he was.'",
+     "center": [
+      260,
+      820,
+      130.4
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 12999,
+      "name": "Gwrgi Garwlwyd",
+      "level": 52,
+      "model": 24,
+      "size": 75,
+      "health_mult": 4.5,
+      "guild": "of the Hunt of Annwn"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 12999,
+        "name": "hound of Annwn",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "the Hunt of Annwn"
+       },
+       {
+        "template": 13014,
+        "name": "gwr-drwgiaid",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "out of Annwn"
+       }
+      ]
+     },
+     "success": "Gwrgi falls, and every hound on the shore howls once and runs.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "lb_cp4_assault",
+   "title": "The Lake Host at the Fay Wood",
+   "levels": [
+    47,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "min_people": 8,
+   "hint": "Sir Percival's own squire is forming the Lake Host up for the Fay Wood.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60167630,
+    "model": 28,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Knights of the Lake",
+    "name": "Squire Dindrane",
+    "level": 50,
+    "pos": [
+     320,
+     1040,
+     106.8
+    ],
+    "health_mult": 5,
+    "greet": "The Fay Wood. Morgana's kin - green steel and glamour - and the last thing between us and the Gate. Eight at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Into the wood! Break the fay rings, then the fay lord!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Lake Host holds the Fay Wood - the Gate is in sight.",
+    "regret": "Out of the wood! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60167630,
+     "model": 28,
+     "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+     "guild": "the Knights of the Lake",
+     "name": "knight of the Lake",
+     "level": 48,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Fay Wood",
+     "objective": "Break Morgana's knights in the Fay Wood",
+     "announce": "The Lake Host is in the Fay Wood! Break the knights!",
+     "center": [
+      500,
+      1300,
+      127.4
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 28,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 12075,
+       "name": "fay knight",
+       "level": [
+        48,
+        50
+       ],
+       "model": 1900,
+       "guild": "Morgana's Guard"
+      },
+      {
+       "template": 12075,
+       "name": "guardian of Morgana",
+       "level": [
+        47,
+        49
+       ],
+       "model": 1900,
+       "guild": "Morgana's Guard"
+      },
+      {
+       "template": 12129,
+       "name": "wicked cythraul",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "out of Annwn"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "wards",
+     "name": "The Fay Rings",
+     "objective": "Stand in the three fay rings at once while the Maidens break the glamour",
+     "announce": "Three fay rings hold the wood's glamour - stand in all three at once and the Maidens will break it!",
+     "wards": [
+      [
+       460,
+       1270,
+       152.1
+      ],
+      [
+       540,
+       1280,
+       117.7
+      ],
+      [
+       500,
+       1340,
+       126.5
+      ]
+     ],
+     "ward_names": [
+      "the oak ring",
+      "the thorn ring",
+      "the toadstool ring"
+     ],
+     "ward_radius": 22,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 12075,
+       "name": "fay knight",
+       "level": [
+        48,
+        50
+       ],
+       "model": 1900,
+       "guild": "Morgana's Guard"
+      },
+      {
+       "template": 12129,
+       "name": "wicked cythraul",
+       "level": [
+        47,
+        49
+       ],
+       "guild": "out of Annwn"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "pennant of the Lake",
+     "center": [
+      500,
+      1300,
+      127.4
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the host falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Guiomar the Fay Lord",
+     "objective": "Defeat Guiomar the Fay Lord",
+     "announce": "Guiomar, Morgana's first love and still her knight, in green steel: 'She was a girl in Camelot once. Arthur's court made her this. Remember that, when you reach her.'",
+     "center": [
+      500,
+      1300,
+      127.4
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 12075,
+      "name": "Guiomar the Fay Lord",
+      "level": 53,
+      "model": 1900,
+      "size": 66,
+      "health_mult": 5,
+      "guild": "Lord of the Fay Wood"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 12075,
+        "name": "fay knight",
+        "level": [
+         48,
+         50
+        ],
+        "model": 1900,
+        "guild": "Morgana's Guard"
+       },
+       {
+        "template": 12075,
+        "name": "guardian of Morgana",
+        "level": [
+         47,
+         49
+        ],
+        "model": 1900,
+        "guild": "Morgana's Guard"
+       }
+      ]
+     },
+     "success": "Guiomar falls, and the glamour goes out of the wood like a held breath. Through the trees: the Gate of Annwn.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "lb_cp1_counter",
+   "title": "Morgana's Host Strikes Back at The Afanc's Shore",
+   "levels": [
+    44,
+    47
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "Morgana's host is coming back for the Afanc's Shore!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Afanc's Shore",
+     "objective": "Keep the host's captain alive at the Afanc's Shore",
+     "announce": "Morgana's host is coming back for the Afanc's Shore! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      1000,
+      520,
+      70.8
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60167630,
+      "model": 28,
+      "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+      "guild": "the Knights of the Lake",
+      "name": "Banner-Knight of the Lake",
+      "level": 50,
+      "pos": [
+       1000,
+       520,
+       70.8
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        940,
+        490,
+        60.9
+       ],
+       [
+        1060,
+        550,
+        90.7
+       ],
+       [
+        1000,
+        460,
+        83.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12075,
+        "name": "crimson acolyte",
+        "level": [
+         45,
+         47
+        ],
+        "size": 50,
+        "guild": "the Crimson"
+       },
+       {
+        "template": 12999,
+        "name": "hound of Annwn",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "the Hunt of Annwn"
+       },
+       {
+        "template": 12075,
+        "name": "crimson gatekeeper",
+        "level": [
+         46,
+         48
+        ],
+        "guild": "the Crimson"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "Morgana's host breaks against the line. The Afanc's Shore holds - and the clock starts again.",
+     "fail": "The banner falls. Morgana's host has the Afanc's Shore again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "lb_cp2_counter",
+   "title": "Morgana's Host Strikes Back at The Bwgan Hills",
+   "levels": [
+    45,
+    48
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "Morgana's host is coming back for the Bwgan Hills!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Bwgan Hills",
+     "objective": "Keep the host's captain alive at the Bwgan Hills",
+     "announce": "Morgana's host is coming back for the Bwgan Hills! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      560,
+      430,
+      109.3
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60167630,
+      "model": 28,
+      "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+      "guild": "the Knights of the Lake",
+      "name": "Banner-Knight of the Lake",
+      "level": 50,
+      "pos": [
+       560,
+       430,
+       109.3
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        500,
+        400,
+        127.8
+       ],
+       [
+        620,
+        460,
+        98.1
+       ],
+       [
+        560,
+        370,
+        143.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 13001,
+        "name": "cythraul",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "out of Annwn"
+       },
+       {
+        "template": 12117,
+        "name": "necromancer",
+        "level": [
+         46,
+         48
+        ],
+        "guild": "the Crimson"
+       },
+       {
+        "template": 12075,
+        "name": "crimson acolyte",
+        "level": [
+         45,
+         47
+        ],
+        "size": 50,
+        "guild": "the Crimson"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "Morgana's host breaks against the line. The Bwgan Hills holds - and the clock starts again.",
+     "fail": "The banner falls. Morgana's host has the Bwgan Hills again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "lb_cp3_counter",
+   "title": "Morgana's Host Strikes Back at The Western Shore",
+   "levels": [
+    46,
+    49
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "Morgana's host is coming back for the Western Shore!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Western Shore",
+     "objective": "Keep the host's captain alive at the Western Shore",
+     "announce": "Morgana's host is coming back for the Western Shore! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      260,
+      820,
+      130.4
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60167630,
+      "model": 28,
+      "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+      "guild": "the Knights of the Lake",
+      "name": "Banner-Knight of the Lake",
+      "level": 50,
+      "pos": [
+       260,
+       820,
+       130.4
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        200,
+        790,
+        160.8
+       ],
+       [
+        320,
+        850,
+        78.6
+       ],
+       [
+        260,
+        760,
+        135.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12999,
+        "name": "hound of Annwn",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "the Hunt of Annwn"
+       },
+       {
+        "template": 13014,
+        "name": "gwr-drwgiaid",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "out of Annwn"
+       },
+       {
+        "template": 12075,
+        "name": "guardian of Morgana",
+        "level": [
+         47,
+         49
+        ],
+        "model": 1900,
+        "guild": "Morgana's Guard"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "Morgana's host breaks against the line. The Western Shore holds - and the clock starts again.",
+     "fail": "The banner falls. Morgana's host has the Western Shore again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "lb_cp4_counter",
+   "title": "Morgana's Host Strikes Back at The Fay Wood",
+   "levels": [
+    47,
+    50
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 45,
+   "wake_m": 200,
+   "hint": "Morgana's host is coming back for the Fay Wood!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Fay Wood",
+     "objective": "Keep the host's captain alive at the Fay Wood",
+     "announce": "Morgana's host is coming back for the Fay Wood! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      500,
+      1300,
+      127.4
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60167630,
+      "model": 28,
+      "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+      "guild": "the Knights of the Lake",
+      "name": "Banner-Knight of the Lake",
+      "level": 50,
+      "pos": [
+       500,
+       1300,
+       127.4
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        440,
+        1270,
+        158.8
+       ],
+       [
+        560,
+        1330,
+        120.7
+       ],
+       [
+        500,
+        1240,
+        138.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12075,
+        "name": "fay knight",
+        "level": [
+         48,
+         50
+        ],
+        "model": 1900,
+        "guild": "Morgana's Guard"
+       },
+       {
+        "template": 12129,
+        "name": "wicked cythraul",
+        "level": [
+         47,
+         49
+        ],
+        "guild": "out of Annwn"
+       },
+       {
+        "template": 12075,
+        "name": "guardian of Morgana",
+        "level": [
+         47,
+         49
+        ],
+        "model": 1900,
+        "guild": "Morgana's Guard"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "Morgana's host breaks against the line. The Fay Wood holds - and the clock starts again.",
+     "fail": "The banner falls. Morgana's host has the Fay Wood again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "lb_gate_of_annwn",
+   "title": "The Gate of Annwn",
+   "levels": [
+    48,
+    52
+   ],
+   "manual": true,
+   "bots": 16,
+   "bot_min_level": 47,
+   "min_people": 10,
+   "hint": "Sir Percival himself is gathering the Lake Host before the Gate of Annwn.",
+   "rest_s": 15,
+   "start": "g1",
+   "giver": {
+    "template": 60167630,
+    "model": 28,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Knights of the Lake",
+    "name": "Sir Percival",
+    "level": 60,
+    "pos": [
+     600,
+     1250,
+     101.8
+    ],
+    "health_mult": 8,
+    "greet": "The Gate of Annwn. Morgana is in it - and behind her, her nephew's ghost, and the beast Arthur killed. Two groups at least - ten, bots and all - and healers, and curers. Then say [for the Lady].",
+    "accept": "for the Lady",
+    "reply": "For the Lady! Healers to the back, curers by them - and whatever comes out of that Gate, hold!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Gate is shut. Llyn Barfog is the Lady's again.",
+    "regret": "Back! Back to the wood! We'll come again.",
+    "size": 58
+   },
+   "guards": [
+    {
+     "template": 60167630,
+     "model": 28,
+     "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+     "guild": "the Knights of the Lake",
+     "name": "knight of the Lake",
+     "level": 50,
+     "count": 4
+    },
+    {
+     "template": 60167630,
+     "model": 38,
+     "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+     "guild": "the Maidens of the Lake",
+     "name": "maiden of the Lake",
+     "level": 48,
+     "count": 2
+    }
+   ],
+   "stages": [
+    {
+     "id": "g1",
+     "type": "boss",
+     "name": "Morgana le Fay",
+     "objective": "Defeat Morgana le Fay",
+     "announce": "Morgana le Fay steps out of the Gate of Annwn, in a black crown, smiling: 'My brother's knights. How sweet. Do you know what's behind me? You will.'",
+     "center": [
+      760,
+      1230,
+      117.7
+     ],
+     "radius": 90,
+     "time_s": 2700,
+     "boss": {
+      "template": 700000001,
+      "name": "Morgana le Fay",
+      "level": 60,
+      "size": 60,
+      "health_mult": 20,
+      "guild": "Queen of Annwn's Gate"
+     },
+     "adds": {
+      "every_s": 55,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 12075,
+        "name": "guardian of Morgana",
+        "level": [
+         47,
+         49
+        ],
+        "model": 1900,
+        "guild": "Morgana's Guard"
+       },
+       {
+        "template": 12075,
+        "name": "fay knight",
+        "level": [
+         48,
+         50
+        ],
+        "model": 1900,
+        "guild": "Morgana's Guard"
+       },
+       {
+        "template": 12999,
+        "name": "hound of Annwn",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "the Hunt of Annwn"
+       }
+      ]
+     },
+     "success": "Morgana screams - not in pain; in rage - and is gone, into the Gate, and the Gate closes behind her like a door in a wind. Across the lake the mist begins to lift.",
+     "fail": "Morgana drives the Lake Host from the Gate.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 60,
+      "copper_per_level": 600,
+      "tokens": 60,
+      "items": [
+       {
+        "id": "lb007_morgana_s_black_crown",
+        "gold_chance": 60,
+        "silver_chance": 25
+       },
+       {
+        "id": "lb007_mordred_s_wrath",
+        "gold_chance": 60,
+        "silver_chance": 25
+       },
+       {
+        "id": "lb007_afanc_tooth_charm",
+        "gold_chance": 60,
+        "silver_chance": 25
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
 }

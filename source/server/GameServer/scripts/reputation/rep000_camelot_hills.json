@@ -1,0 +1,217 @@
+{
+ "zone": 0,
+ "name": "Camelot Hills",
+ "levels": [
+  1,
+  14
+ ],
+ "realm": 1,
+ "factions": [
+  {
+   "key": "wardens_of_cotswold",
+   "name": "the Wardens of Cotswold",
+   "short": "the Wardens",
+   "kin": [
+    "pendragons_watch",
+    "ulfwych_rangers",
+    "marsh_wardens",
+    "snowdonia_garrison",
+    "men_of_tintagel",
+    "lyonesse_remnant",
+    "knights_of_the_lake",
+    "dragon_watch"
+   ],
+   "titles": [
+    "Friend of Cotswold",
+    "Warden's Right Hand",
+    "Hearthward of Cotswold"
+   ],
+   "speaker": "ch_warden_hollis",
+   "town": "Cotswold",
+   "kills": [
+    "wolf",
+    "sprite",
+    "spriggarn",
+    "dragon ant",
+    "cutpurse",
+    "poacher",
+    "bandit",
+    "drake",
+    "frog",
+    "snake",
+    "sow",
+    "boar",
+    "bear",
+    "spider",
+    "thwori",
+    "cronker",
+    "faerie"
+   ],
+   "quartermaster": {
+    "name": "Warden-Quartermaster Edith",
+    "guild": "the Wardens of Cotswold",
+    "model": 38,
+    "anchor": "ch_warden_hollis",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "Cotswold looks after its own. Show me your standing with the Wardens.",
+    "stock": [
+     {
+      "item": "rep000_friend_of_cotswold_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep000_hedge_warden_s_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep000_right_hand_s_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep000_cotswold_fold_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep000_mantle_of_the_hearthward",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "pendragons_watch",
+   "name": "the Pendragon's Watch",
+   "short": "the Watch",
+   "kin": [
+    "wardens_of_cotswold",
+    "ulfwych_rangers",
+    "marsh_wardens",
+    "snowdonia_garrison",
+    "men_of_tintagel",
+    "lyonesse_remnant",
+    "knights_of_the_lake",
+    "dragon_watch"
+   ],
+   "titles": [
+    "Watch-Friend",
+    "Sworn to the Watch",
+    "Shield of Camelot"
+   ],
+   "speaker": "ch_captain_bonswell",
+   "town": "Prydwen Keep",
+   "kills": [
+    "crimson",
+    "acolyte",
+    "initiate",
+    "hierophant",
+    "undead filidh",
+    "zombie",
+    "skeleton",
+    "spirit",
+    "demon",
+    "manes",
+    "grumoz",
+    "gorgoth",
+    "fielath",
+    "difwych",
+    "grugyn",
+    "bandit",
+    "thaumaturge",
+    "gamwell",
+    "highwayman",
+    "robber",
+    "goblin",
+    "red dwarf",
+    "dwarf raider",
+    "dwarf pillager",
+    "frund",
+    "agisthil",
+    "grilk",
+    "gobzini",
+    "salizern",
+    "spectral",
+    "drowned",
+    "giant spider"
+   ],
+   "quartermaster": {
+    "name": "Watch-Quartermaster Rhun",
+    "guild": "the Pendragon's Watch",
+    "model": 9,
+    "anchor": "ch_captain_bonswell",
+    "offset": [
+     -4,
+     3
+    ],
+    "greet": "The Round Table's own stores, for those the Watch can count on. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep000_watch_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep000_watch_road_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep000_sworn_torc_of_the_watch",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep000_round_table_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep000_mantle_of_the_shield_of_camelot",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "pendragons_watch",
+ "event_default": "pendragons_watch",
+ "quest_default": "pendragons_watch",
+ "quests": {
+  "tomb_keeps": "pendragons_watch",
+  "pilgrims": "pendragons_watch",
+  "bell_price": "wardens_of_cotswold",
+  "ch_wolves_at_the_fold": "wardens_of_cotswold",
+  "ch_still_wheel": "wardens_of_cotswold",
+  "ch_little_green_legs": "wardens_of_cotswold",
+  "ch_ants_in_the_furrow": "wardens_of_cotswold",
+  "ch_kings_deer": "wardens_of_cotswold",
+  "ch_kings_road": "wardens_of_cotswold",
+  "ch_red_seal": "pendragons_watch",
+  "ch_old_fort": "pendragons_watch",
+  "ch_arthurs_huntsmen": "pendragons_watch",
+  "ch_hunt_never_ended": "pendragons_watch",
+  "ch_red_robes": "pendragons_watch",
+  "ch_dead_wont_lie": "pendragons_watch",
+  "ch_tomb_warden": "pendragons_watch",
+  "ch_cracked_door": "pendragons_watch",
+  "ch_grove_below": "pendragons_watch",
+  "ch_cronker": "wardens_of_cotswold"
+ },
+ "events": {
+  "camelot_hills_bandit_hollow": "wardens_of_cotswold",
+  "camelot_hills_ant_nest": "wardens_of_cotswold",
+  "camelot_hills_orchard_spriggarn": "wardens_of_cotswold",
+  "camelot_hills_barrow_wakes": "pendragons_watch",
+  "ch_crimson_rite": "pendragons_watch",
+  "ch_hunt_rides": "pendragons_watch",
+  "ch_df_door": "pendragons_watch"
+ }
+}

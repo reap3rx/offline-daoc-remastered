@@ -10,12 +10,25 @@
  "dungeon_exclude": [249, 10, 101, 201, 20, 50, 61],
  "dungeon_exclude_comment": "Darkness Falls (its own ladder, for every level), the capitals, Stonehenge Barrows (its levels are its own 30-45 story; Salisbury hardly moved), Avalon City and Krondon (SI end dungeons).",
  "starts": {
-  "1": {"name": "Cotswold", "region": 1, "x": 559646, "y": 511301, "z": 2456, "heading": 2064},
+  "1": {"name": "Cotswold", "region": 1, "x": 559646, "y": 511301, "z": 2456, "heading": 2064, "zone": "Camelot Hills", "rating": "peaceful", "blurb": "Albion's first town, in the green hills below Camelot. Gentle country, and the roads lead everywhere."},
   "2": {"name": "Mularn", "region": 100, "x": 805891, "y": 724274, "z": 4680, "heading": 2587},
   "3": {"name": "Mag Mell", "region": 200, "x": 346031, "y": 490867, "z": 5200, "heading": 2978, "zone": "Lough Derg", "rating": "peaceful", "blurb": "The realm's first town, on the shore of Lough Derg. Gentle country, and the roads lead everywhere."}
  },
  "start_choices_comment": "start_choices (owner 2026-11-22): more starting towns a new character may pick on the create screen, after the hub (choice 0); new bots are spread over all of them at random. Each is a level anchor too (the levels grow outward from every starting town). The client shows the same list from content/rules/start_zones.json (a unit test keeps them the same). A wild start is harder (monsters nearer the town, and higher) but pays more (ZoneRates: wild 1.0x against peaceful 0.8x). The hard start (owner 2026-11-24, \"one deadly zone being a starting location for the crazies\"): one per realm in a Deadly zone - Hibernia's Culraid in Lough Gur - \"hard\": true, labelled on the create screen, favoured by the tryhard bots, given a trainer and a bind point (HardStarts.cs).",
  "start_choices": {
+  "1": [
+   {"name": "Humberton", "region": 1, "x": 508728, "y": 477760, "z": 2284, "heading": 2048, "zone": "Black Mountains South", "rating": "peaceful",
+    "blurb": "A keep town in the southern Black Mountains, held by the Pendragon's Watch. The monks of Vetusta Abbey wait here for their abbey back."},
+   {"name": "West Downs", "region": 1, "x": 577984, "y": 557264, "z": 2172, "heading": 1024, "zone": "Salisbury Plains", "rating": "wild",
+    "blurb": "A downs town north of the Giants' Dance, held by the Pendragon's Watch. Giants walk the plain to the south."},
+   {"name": "Caer Ulfwych", "region": 1, "x": 521648, "y": 617352, "z": 1850, "heading": 0, "zone": "Campacorentin Forest", "rating": "wild",
+    "blurb": "A rangers' fort in the middle of the old forest. Merlin sleeps somewhere in the deep wood to the south-east."},
+   {"name": "Adribard's Retreat", "region": 1, "x": 473392, "y": 628200, "z": 1863, "heading": 2048, "zone": "Avalon Marsh", "rating": "wild",
+    "blurb": "A dry town on the marsh's north-east edge, across the water from the Isle where Arthur sleeps. The marsh turns deadly toward Cornwall."},
+   {"name": "Cornwall Station", "region": 1, "x": 408376, "y": 652384, "z": 4944, "heading": 1024, "zone": "Cornwall", "rating": "deadly", "hard": true,
+    "blurb": "HARD START. A garrison station on the Cornish moor, in a Deadly zone of giants and drowned legions far from Camelot. Only the moor round it is gentle.",
+    "trainer": [408056, 652704, 4944, 1024], "bind": [408376, 652384, 4944]}
+  ],
   "3": [
    {
     "name": "Ardee",
@@ -87,15 +100,15 @@
   {"name": "Domnann", "region": 181, "x": 423943, "y": 446276}
  ],
  "zones": {
-  "0":   {"name": "Camelot Hills", "min": 0, "max": 10},
-  "1":   {"name": "Salisbury Plains", "min": 8, "max": 16},
-  "2":   {"name": "Black Mtns. South", "min": 8, "max": 16},
-  "8":   {"name": "Campacorentin Forest", "min": 14, "max": 22},
-  "3":   {"name": "Black Mtns. North", "min": 18, "max": 28},
-  "9":   {"name": "Avalon Marsh", "min": 22, "max": 32},
-  "7":   {"name": "Llyn Barfog", "min": 28, "max": 38},
-  "6":   {"name": "Cornwall", "min": 34, "max": 44},
-  "10":  {"name": "Lyonesse", "min": 42, "max": 52},
+  "0":   {"name": "Camelot Hills", "min": 0, "max": 14},
+  "1":   {"name": "Salisbury Plains", "min": 2, "max": 26},
+  "2":   {"name": "Black Mtns. South", "min": 0, "max": 17},
+  "8":   {"name": "Campacorentin Forest", "min": 2, "max": 24},
+  "3":   {"name": "Black Mtns. North", "min": 16, "max": 30},
+  "9":   {"name": "Avalon Marsh", "min": 2, "max": 26},
+  "7": {"name": "Llyn Barfog", "min": 44, "max": 55},
+  "6":   {"name": "Cornwall", "min": 30, "max": 44},
+  "10":  {"name": "Lyonesse", "min": 40, "max": 52},
   "4":   {"name": "Dartmoor", "min": 50, "max": 60, "gradient": false},
 
   "51":  {"name": "Isle of Glass", "min": 1, "max": 20},

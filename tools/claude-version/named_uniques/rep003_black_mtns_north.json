@@ -1,0 +1,149 @@
+{
+ "zone": 3,
+ "region": 1,
+ "realm": 1,
+ "prefix": "rep003",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Garrison Friend's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 16,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "Iron, with Swanton's tower."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "North March Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 16,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 16,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "A shieldman's belt, worn on the north road."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Snowdonia Shieldman's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 23,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "Bronze and grey stone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the North March",
+   "base": [
+    41,
+    26
+   ],
+   "level": 30,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 30,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Mountain grey. Only the Wardens of the North March wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Emrys Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 16,
+   "bonuses": {
+    "Int": 5,
+    "Pie": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "A tiny harp and a dragon, in silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dragon-Reader's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 23,
+   "bonuses": {
+    "Int": 8,
+    "Pie": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "Engraved with Merlin's prophecy of the two dragons."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Prophet's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 23,
+   "bonuses": {
+    "Pie": 8,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "Plain gold, with a star."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Dragon-Readers",
+   "base": [
+    41,
+    26
+   ],
+   "level": 30,
+   "bonuses": {
+    "Pie": 10,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 18
+   },
+   "lore": "Red and white. Only the Keepers of Emrys's Fort wear it."
+  }
+ ]
+}

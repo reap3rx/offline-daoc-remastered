@@ -89,6 +89,36 @@
         "drowned_ninth/s7",
         "drowned_ninth/s8"
       ]
+    },
+    {
+      "id": "cw_gerens",
+      "zone": 6,
+      "realm": 1,
+      "name": "Oath-Keeper Gerens",
+      "model": 9,
+      "level": 46,
+      "pos": [
+        1392,
+        524,
+        123.6
+      ],
+      "guild": "the Oath of Corineus",
+      "idle": "Corineus wrestled the last giant off these cliffs. We swore we'd do it again if we had to. We have to."
+    },
+    {
+      "id": "cw_jory",
+      "zone": 6,
+      "realm": 1,
+      "name": "Sergeant Jory",
+      "model": 28,
+      "level": 32,
+      "pos": [
+        1418,
+        520,
+        123.6
+      ],
+      "guild": "the Men of Tintagel",
+      "idle": "New to Cornwall? Stay on the moor till you can hold a sword. Then stay on the moor anyway."
     }
   ],
   "quests": [
@@ -461,6 +491,1042 @@
           }
         }
       }
+    },
+    {
+      "id": "cw_moor_bears",
+      "title": "Bears on the Moor",
+      "level": 2,
+      "giver": "cw_jory",
+      "offer": "Welcome to the hardest corner of Albion. You'll want to start small. The young brown bears raid the Station's bins at night.\n\nWill you [chase off the bears]? Stay on the moor near the Station - nowhere else is safe for you yet.",
+      "accept": "chase off the bears",
+      "topics": {},
+      "summary": "Young brown bears raid Cornwall Station's stores. A first task for a new arrival.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            1420,
+            450,
+            132.8
+          ],
+          "radius": 50,
+          "goal": "Chase off the young brown bears near the Station about 70 m north of Sergeant Jory",
+          "target": "young brown bear",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cw_jory",
+          "goal": "Tell Sergeant Jory",
+          "say": "Good. You're still alive. That's the first lesson of Cornwall.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Men of Tintagel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq6_moor_walker_s_ring",
+              "sq6_heather_sash"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cw_spiderlings",
+      "title": "Spiderlings on the Cliffs",
+      "level": 4,
+      "giver": "cw_jory",
+      "offer": "Cliff spiderlings come up from the sea-cliffs north of the Station and spin over the paths. Small ones, for now. Their mothers live further west - don't go there.\n\nWill you [clear the paths]?",
+      "accept": "clear the paths",
+      "topics": {},
+      "summary": "Cliff spiderlings spin webs over the paths north of Cornwall Station.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            1300,
+            330,
+            132.6
+          ],
+          "radius": 50,
+          "goal": "Clear the cliff spiderlings about 220 m north-west of Sergeant Jory",
+          "target": "cliff spiderling",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cw_jory",
+          "goal": "Tell Sergeant Jory",
+          "say": "Paths are clear. You're learning. Lieutenant Penhale has something for you.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Men of Tintagel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq6_spider_silk_wristwrap",
+              "sq6_cliff_edge_charm"
+            ]
+          }
+        }
+      },
+      "requires": "cw_moor_bears"
+    },
+    {
+      "id": "cw_moor_wolves",
+      "title": "The Watch on the Moor",
+      "level": 7,
+      "giver": "lt_penhale",
+      "offer": "Moor wolves hunt in packs round the Station at dusk. They've learned we're soft-hearted. Teach them otherwise and you've earned your place at our fire.\n\nWill you [stand the watch]? Then see Oath-Keeper Gerens - he'll tell you what Cornwall's really about.",
+      "accept": "stand the watch",
+      "topics": {},
+      "summary": "Moor wolves hunt round Cornwall Station at dusk.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            1350,
+            500,
+            126.4
+          ],
+          "radius": 50,
+          "goal": "Drive off the moor wolves about 80 m north-west of Lieutenant Penhale",
+          "target": "moor wolf",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "lt_penhale",
+          "goal": "Tell Lieutenant Penhale",
+          "say": "That'll do. Welcome to Cornwall. Gerens is by the well - go and hear about giants.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Men of Tintagel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq6_moor_wolf_fang"
+            ],
+            "choice": [
+              "sq6_penhale_s_spare_bracer",
+              "sq6_station_watchman_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "cw_spiderlings"
+    },
+    {
+      "id": "cw_cliff_spiders",
+      "title": "The Spider Mothers",
+      "level": 12,
+      "giver": "cw_jory",
+      "offer": "The spiderlings' mothers nest on the cliff tops west of here. Big as ponies. They're coming closer to the Station every season.\n\nWill you [break the nests]?",
+      "accept": "break the nests",
+      "topics": {},
+      "summary": "Cliff spiders nest on the cliff tops west of Cornwall Station.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            950,
+            420,
+            135.6
+          ],
+          "radius": 50,
+          "goal": "Kill the cliff spiders about 480 m west of Sergeant Jory",
+          "target": "cliff spider",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cw_jory",
+          "goal": "Tell Sergeant Jory",
+          "say": "The nests are broken? You're not new any more.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Men of Tintagel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq6_cliff_spider_fang_ring",
+              "sq6_web_cloak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cw_gorlois_men",
+      "title": "Gorlois's Men",
+      "level": 16,
+      "giver": "lt_penhale",
+      "offer": "The church on the cliff tops is haunted - every child in Cornwall knows that. They're Duke Gorlois's knights. The night Uther came to Tintagel wearing Gorlois's face - Merlin's doing - they died defending a duke who wasn't there.\n\nThey've started coming out. Will you [go to the church]? Tell them the truth, if they'll hear it.",
+      "accept": "go to the church",
+      "topics": {},
+      "summary": "The ghosts of Duke Gorlois's knights have started coming out of the Ghostly Church.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            1196,
+            372,
+            137.5
+          ],
+          "radius": 50,
+          "goal": "Get past the ghostly clerics about 280 m north-west of Lieutenant Penhale",
+          "target": "ghostly cleric",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            1191,
+            376,
+            137.2
+          ],
+          "radius": 50,
+          "goal": "Face Brother Jarrel, the church's dead priest",
+          "target": "Brother Jarrel",
+          "count": 1,
+          "text": "Brother Jarrel lowers his hands. 'The duke came home that night. We saw him. We let him in.' He looks at you. 'It wasn't him, was it?'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lt_penhale",
+          "goal": "Tell Lieutenant Penhale",
+          "say": "He knows now. That's all any of them ever wanted - to know.\n\nThey say Merlin was sorry for that night. Not sorry enough.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Men of Tintagel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq6_gorlois_s_boar_ring",
+              "sq6_ghostly_church_bell_clapper_charm",
+              "sq6_duke_s_man_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "cw_cliff_spiders"
+    },
+    {
+      "id": "cw_muryans",
+      "title": "The Shrinking Folk",
+      "level": 20,
+      "giver": "cw_gerens",
+      "offer": "The muryans are the old fae of Cornwall - every year a little smaller, till they're ants. This year they've turned spiteful. Their trickster says the giants promised to make them big again.\n\nWill you [break the mound]? And catch the trickster.",
+      "accept": "break the mound",
+      "topics": {},
+      "summary": "The muryans, Cornwall's shrinking fae, have sided with the giants.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            985,
+            844,
+            145.1
+          ],
+          "radius": 50,
+          "goal": "Break the muryans at their mound about 520 m south-west of Oath-Keeper Gerens",
+          "target": "muryan",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            1330,
+            924,
+            125.4
+          ],
+          "radius": 50,
+          "goal": "Catch the muryan trickster",
+          "target": "muryan trickster",
+          "count": 1,
+          "text": "The trickster squeaks: 'The giants were here first! Before Corineus! They'll make us big again!'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cw_gerens",
+          "goal": "Tell Oath-Keeper Gerens",
+          "say": "Giants promising things. Corineus heard the same promises, and threw the one who made them off a cliff.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Oath of Corineus.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq6_muryan_s_thimble_ring",
+              "sq6_tricker_s_patchwork_sash"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cw_buccas",
+      "title": "The Bucca Storm",
+      "level": 23,
+      "giver": "cw_gerens",
+      "offer": "The buccas - the sea-spirits of the fishermen - have come inland and they're angry. A storm's driving them out of the sea, they say, a white storm out of Lyonesse that isn't natural.\n\nWill you [calm the buccas]? The only way they'll listen is after a beating.",
+      "accept": "calm the buccas",
+      "topics": {},
+      "summary": "The buccas, the fishermen's sea-spirits, have been driven inland by an unnatural storm from Lyonesse.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            1136,
+            929,
+            128.7
+          ],
+          "radius": 50,
+          "goal": "Beat the buccas into listening about 480 m south-west of Oath-Keeper Gerens",
+          "target": "bucca",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cw_gerens",
+          "goal": "Tell Oath-Keeper Gerens",
+          "say": "A white storm out of Lyonesse. The white dragon's weather, the old women would say. I used to laugh at them.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Oath of Corineus.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq6_bucca_s_fish_bone_charm",
+              "sq6_storm_bucca_s_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cw_wolf_dens",
+      "title": "The Wolf Dens",
+      "level": 26,
+      "giver": "kerra_aldar",
+      "offer": "The white she-wolf's gone, but her pack has den mothers in the middle moor, and they breed faster than we can kill.\n\nWill you [clear the dens]?",
+      "accept": "clear the dens",
+      "topics": {},
+      "summary": "The moor wolves' den mothers breed in the middle moor.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            910,
+            896,
+            149.6
+          ],
+          "radius": 50,
+          "goal": "Kill the moor den mothers about 600 m south-west of Kerra Aldar",
+          "target": "moor den mother",
+          "count": 2,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            913,
+            783,
+            136.8
+          ],
+          "radius": 50,
+          "goal": "Kill the moor pack leaders",
+          "target": "moor pack leader",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "kerra_aldar",
+          "goal": "Tell Kerra Aldar",
+          "say": "My flocks will see the spring. Thank you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Kerra Aldar.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq6_den_mother_s_pelt",
+              "sq6_pack_leader_tooth_torc"
+            ]
+          }
+        }
+      },
+      "requires": "white_wolf"
+    },
+    {
+      "id": "cw_old_beeches",
+      "title": "The Old Beeches",
+      "level": 28,
+      "giver": "cw_gerens",
+      "offer": "The beeches of the east wood are older than Corineus. The giants have been singing to them - and now the oldest have woken, and they walk west to join the giants.\n\nWill you [fell the old beeches]? It grieves me to ask.",
+      "accept": "fell the old beeches",
+      "topics": {},
+      "summary": "The oldest beeches of Cornwall have woken to the giants' singing.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            1490,
+            975,
+            190.3
+          ],
+          "radius": 50,
+          "goal": "Fell the aged beeches about 460 m south of Oath-Keeper Gerens",
+          "target": "aged beech",
+          "count": 2,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            1100,
+            800,
+            138.4
+          ],
+          "radius": 50,
+          "goal": "Fell the elder beeches walking west",
+          "target": "elder beech",
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cw_gerens",
+          "goal": "Tell Oath-Keeper Gerens",
+          "say": "Felled. We'll plant again where they stood. Corineus planted the first of them, they say.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Oath of Corineus.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq6_beech_heart_ring",
+              "sq6_old_beech_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "cw_muryans"
+    },
+    {
+      "id": "cw_rooters",
+      "title": "The Rooters Dig",
+      "level": 31,
+      "giver": "cw_gerens",
+      "offer": "Giant rooters - great boars - turning up the southern downs. They're not hunting, they're digging, in lines. The giants have them clearing ground.\n\nWill you [stop the dig]?",
+      "accept": "stop the dig",
+      "topics": {},
+      "summary": "Giant rooters dig the southern downs in lines, clearing ground for the giants.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            711,
+            1203,
+            156.1
+          ],
+          "radius": 50,
+          "goal": "Kill the giant rooters about 1.0 km south-west of Oath-Keeper Gerens",
+          "target": "giant rooter",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cw_gerens",
+          "goal": "Tell Oath-Keeper Gerens",
+          "say": "Clearing ground for a road. The giants' road from Dartmoor. I knew it.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Oath of Corineus.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq6_rooter_tusk_bracer",
+              "sq6_downs_digger_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cw_ninth_road",
+      "title": "The Ninth's Road",
+      "level": 33,
+      "giver": "hywel",
+      "offer": "Kit came home - thanks to you. But the Ninth still march. Every night, out of Cardova and along the road to the old fort, and back.\n\nWhy do they march? Will you [find out]?",
+      "accept": "find out",
+      "topics": {},
+      "summary": "The Drowned Ninth march every night from the Catacombs of Cardova to the old Roman fort and back.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            950,
+            1240,
+            153.1
+          ],
+          "radius": 50,
+          "goal": "Fight the legionnaires on the marching road about 830 m south-west of Old Hywel",
+          "target": "skeletal legionnaire",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 6,
+          "at": [
+            950,
+            1245,
+            152.0
+          ],
+          "goal": "Search a fallen legionnaire",
+          "clue": {
+            "name": "a legionnaire's armour, empty",
+            "model": 1347
+          },
+          "text": "Under the breastplate, scratched into the bone: a giant's rune. 'DIG.' Someone has bound the Ninth to work.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "hywel",
+          "goal": "Tell Old Hywel",
+          "say": "Bound to dig? By giants? My grandfather said the Ninth marched into the mist two hundred years ago looking for a quarry they'd been promised.\n\nThey found it.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Old Hywel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq6_legionary_s_bronze_phalera",
+              "sq6_marching_road_bracer",
+              "sq6_giant_rune_shard"
+            ]
+          }
+        }
+      },
+      "requires": "drowned_ninth"
+    },
+    {
+      "id": "cw_favius",
+      "title": "Centurion Favius",
+      "level": 36,
+      "giver": "hywel",
+      "offer": "The Ninth's centurion, Favius, holds the old fort in the south-east and drives them out every night. He's the one the giants bound first.\n\nWill you [break Favius]? Bring friends.",
+      "accept": "break Favius",
+      "topics": {},
+      "summary": "Centurion Favius drives the Drowned Ninth out of the old Roman fort every night.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            1350,
+            1262,
+            126.2
+          ],
+          "radius": 50,
+          "goal": "Fight into the old Roman fort about 720 m south of Old Hywel",
+          "target": "skeletal legionnaire",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            1350,
+            1258,
+            126.2
+          ],
+          "radius": 50,
+          "goal": "Defeat Centurion Favius",
+          "target": "Centurion Favius",
+          "count": 1,
+          "text": "Favius falls. 'The eagle,' he rasps. 'They took the eagle into Cardova. While they have it, we march.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "hywel",
+          "goal": "Tell Old Hywel",
+          "say": "The eagle. The legion's standard. As long as the giants hold it, the Ninth are theirs.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Old Hywel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq6_favius_s_vine_staff_ring",
+              "sq6_old_fort_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "cw_ninth_road"
+    },
+    {
+      "id": "cw_eagle",
+      "title": "The Eagle of the Ninth",
+      "level": 38,
+      "giver": "cw_gerens",
+      "offer": "Favius told you: the giants hold the Ninth's eagle in the mouth of Cardova, and the legate guards it for them. Bring back the eagle and the Ninth can lie down.\n\nWill you [take back the eagle]? Bring everyone.",
+      "accept": "take back the eagle",
+      "topics": {},
+      "summary": "The giants hold the Drowned Ninth's eagle at the mouth of the Catacombs of Cardova.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 6,
+          "at": [
+            800,
+            1250,
+            170.2
+          ],
+          "radius": 30,
+          "goal": "Go to the mouth of Cardova about 940 m south-west of Oath-Keeper Gerens",
+          "text": "The catacombs breathe cold. Torches, and the glint of gold on a pole.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 6,
+          "at": [
+            795,
+            1262,
+            170.1
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the Legate of the Ninth",
+          "text": "The legate falls, and the eagle with him. Along the marching road, every legionnaire stops, and turns, and sits down.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "the Legate of the Ninth",
+              "center": [
+                795,
+                1262,
+                170.1
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the Legate of the Ninth",
+              "announce": "The legate of the Ninth raises the eagle on its pole: 'Legio IX Hispana! To me!' Behind him, the dead stand to.",
+              "boss": {
+                "template": 12720,
+                "name": "the Legate of the Ninth",
+                "level": 40,
+                "health_mult": 2.2
+              },
+              "success": "the Legate of the Ninth falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 12728,
+                    "name": "skeletal legionnaire",
+                    "level": [
+                      36,
+                      37
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cw_gerens",
+          "goal": "Bring the eagle to Oath-Keeper Gerens",
+          "say": "The eagle of the Ninth. Two hundred years.\n\nWe'll bury it with honour at the Station. They were soldiers. They deserve that much.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Oath of Corineus.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq6_aquila_feather",
+              "sq6_legate_s_signet",
+              "sq6_ninth_s_rest_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "cw_favius"
+    },
+    {
+      "id": "cw_giant_graves",
+      "title": "The Giant Graves",
+      "level": 34,
+      "giver": "cw_gerens",
+      "offer": "In the west, the giants' own graves - the ones Corineus filled. Their skeletons are standing up, and they keep souls in cages round them.\n\nWill you [free the captured souls]? Their keeper, Aricoer, is no friend to anyone.",
+      "accept": "free the captured souls",
+      "topics": {},
+      "summary": "Giant skeletons in the western graves keep captured souls in cages.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            548,
+            1106,
+            141.7
+          ],
+          "radius": 50,
+          "goal": "Break the giant skeletons about 1.0 km south-west of Oath-Keeper Gerens",
+          "target": "giant skeleton",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            485,
+            1024,
+            150.2
+          ],
+          "radius": 50,
+          "goal": "Defeat Aricoer, keeper of the souls",
+          "target": "Aricoer",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cw_gerens",
+          "goal": "Tell Oath-Keeper Gerens",
+          "say": "Freed. Corineus would be glad. He hated cages.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Oath of Corineus.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq6_giant_grave_torc",
+              "sq6_captured_soul_lantern_charm"
+            ]
+          }
+        }
+      },
+      "group": true
+    },
+    {
+      "id": "cw_quarry_road",
+      "title": "The Quarry Road",
+      "level": 40,
+      "giver": "cw_gerens",
+      "offer": "The giants have cut a road in the far south-west, down to Dartmoor - the quarry road. Every stone that went to Salisbury went up it. Every giant that comes north walks it.\n\nWill you [break the road]? Bring the strongest friends you have.",
+      "accept": "break the road",
+      "topics": {},
+      "summary": "Golestandt's quarry-giants hold the road from Dartmoor in the far south-west.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            200,
+            1400,
+            168.4
+          ],
+          "radius": 50,
+          "goal": "Fight the quarry-giants on the road about 1.5 km south-west of Oath-Keeper Gerens",
+          "target": "Cornish quarry-giant",
+          "count": 2,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            210,
+            1390,
+            166.2
+          ],
+          "radius": 50,
+          "goal": "Defeat the granite giant stoneshapers",
+          "target": "granite giant stoneshaper",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 6,
+          "at": [
+            195,
+            1410,
+            168.4
+          ],
+          "goal": "Search the giants' road-camp",
+          "clue": {
+            "name": "a giants' cairn of marked stones",
+            "model": 1347
+          },
+          "text": "Marked stones, a giant's tally: so many for the Dance, so many for the causeway in the marsh, so many for 'the Sleeper's door'. At the bottom, a claw-mark, and one word in Albion: 'Dartmoor.'",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cw_gerens",
+          "goal": "Tell Oath-Keeper Gerens",
+          "say": "Dartmoor. That's where it all comes from. The dragon in his lair, and his giants quarrying the moor to build his roads.\n\nCorineus would have gone south. So should we, one day.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Oath of Corineus.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq6_quarry_giant_s_chisel_ring",
+              "sq6_stoneshaper_s_belt",
+              "sq6_corinean_oath_torc"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "cw_giant_graves"
+    },
+    {
+      "id": "cw_cirfans",
+      "title": "Cirfans",
+      "level": 44,
+      "giver": "cw_gerens",
+      "offer": "Cirfans, the great drake of the west, sits over the quarry road where it turns south. The giants feed him. He's the white dragon's own blood, they say - a grandchild.\n\nIf he falls, the road is ours. Will you [face Cirfans]? Everyone you can find.",
+      "accept": "face Cirfans",
+      "topics": {},
+      "summary": "Cirfans, the great drake of the west and Golestandt's grandchild, guards the quarry road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 6,
+          "at": [
+            112,
+            1253,
+            182.6
+          ],
+          "radius": 50,
+          "goal": "Defeat Cirfans, the great drake of the west about 1.5 km south-west of Oath-Keeper Gerens",
+          "target": "Cirfans",
+          "count": 1,
+          "text": "Cirfans falls across the road, and the earth shakes - and far to the south, something enormous roars.",
+          "id": "s1"
+        },
+        {
+          "type": "choice",
+          "npc": "cw_gerens",
+          "goal": "Speak with Oath-Keeper Gerens",
+          "say": "You heard that? That was Golestandt. He felt his grandchild die.\n\nWe can [carve the oath] on Cirfans' bones, so every giant who walks this road reads it. Or [send the head to Tintagel], so the whole of Cornwall knows the oath still holds.",
+          "options": [
+            {
+              "keyword": "carve the oath",
+              "say": "Then carve it deep. 'Corineus threw the last one off the cliff. We are still here.'",
+              "ending": "oath"
+            },
+            {
+              "keyword": "send the head to Tintagel",
+              "say": "Then it goes to Tintagel on a cart, and every village will turn out to see it pass.",
+              "ending": "tintagel"
+            }
+          ],
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "oath": {
+          "text": "From the Oath of Corineus.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq6_heir_of_corineus_mantle"
+            ],
+            "choice": [
+              "sq6_cirfans_scale",
+              "sq6_drake_fire_ring",
+              "sq6_great_drake_s_tooth"
+            ]
+          }
+        },
+        "tintagel": {
+          "text": "From the Men of Tintagel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq6_cirfans_scale"
+            ],
+            "choice": [
+              "sq6_heir_of_corineus_mantle",
+              "sq6_drake_fire_ring",
+              "sq6_great_drake_s_tooth"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "cw_quarry_road"
     }
   ]
 }

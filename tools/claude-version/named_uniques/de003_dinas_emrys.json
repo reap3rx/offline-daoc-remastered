@@ -1,0 +1,156 @@
+{
+ "zone": 3,
+ "region": 1,
+ "realm": 1,
+ "prefix": "de003",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cloak of Emrys's Fort",
+   "base": [
+    41,
+    26
+   ],
+   "level": 28,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 28,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Grey and red, with the two dragons. Given to those who took Dinas Emrys."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pit-Stone Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 28,
+   "bonuses": {
+    "Int": 9,
+    "Pie": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "A chip of a silenced pit-stone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hill-Fort Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 28,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 5,
+    "Hits": 24
+   },
+   "lore": "Bronze, from the fort's armoury."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Garrison Wall Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 28,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 28,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Iron bands from the rebuilt gate."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dragon-Priestess's Scale",
+   "base": [
+    41,
+    24
+   ],
+   "level": 31,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
+   },
+   "lore": "A red scale from her arm. It's warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tribal War-Horn",
+   "base": [
+    41,
+    29
+   ],
+   "level": 30,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
+   },
+   "lore": "A red-corded tribe's horn, its cord cut."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hierarch's Seal",
+   "base": [
+    41,
+    24
+   ],
+   "level": 32,
+   "bonuses": {
+    "Int": 11,
+    "Pie": 5,
+    "Dex": 5,
+    "Power": 5,
+    "Hits": 19
+   },
+   "lore": "Morgana's right hand's seal. Broken."
+  }
+ ],
+ "camp": {
+  "cloak": "de003_cloak_of_emrys_s_fort",
+  "emblem": 35968,
+  "draughts": [
+   [
+    "Strong_Draught_of_Healing",
+    "de003_mountain_draught",
+    "Mountain Draught",
+    "Brewed from crag-herbs. Bitter as the wind."
+   ],
+   [
+    "Strong_Draught_of_Power",
+    "de003_bard_s_honey_tonic",
+    "Bard's Honey Tonic",
+    "Honey and sage. Elffin swears it clears the voice and the head."
+   ],
+   [
+    "CombinedRegens_Draught",
+    "de003_emrys_mead",
+    "Emrys Mead",
+    "The fort's mead. Everything comes back faster after a cup."
+   ]
+  ]
+ }
+}

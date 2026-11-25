@@ -1,0 +1,43 @@
+{
+ "zone": 1,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu001",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Foreman's Maul-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 24,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "A ring of granite, cut from Trebiggan's maul-head."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Feast-Master's Seax-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 21,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 4,
+    "Hits": 18
+   },
+   "lore": "From the hilt of a Saxon knife. It's cold."
+  }
+ ]
+}

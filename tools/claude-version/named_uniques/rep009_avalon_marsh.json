@@ -1,0 +1,148 @@
+{
+ "zone": 9,
+ "region": 1,
+ "realm": 1,
+ "prefix": "rep009",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Marsh-Friend's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "A reed-ring, dipped in tar. It'll outlast you."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wader's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 14,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 12
+   },
+   "lore": "The Marsh Wardens' belt, with a gaff-hook."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned March Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 20,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 3,
+    "Hits": 17
+   },
+   "lore": "Bog-iron, twisted cold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Drowned March",
+   "base": [
+    41,
+    26
+   ],
+   "level": 26,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 26,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Marsh-brown. Only the Wardens of the Drowned March wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shore-Keeper's Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 14,
+   "bonuses": {
+    "Pie": 5,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "A white pebble from the Isle's shore."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Isle-Mist Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 20,
+   "bonuses": {
+    "Int": 7,
+    "Pie": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "Pale silver. It's always slightly damp."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Sleeper's Guard",
+   "base": [
+    41,
+    26
+   ],
+   "level": 26,
+   "bonuses": {
+    "Pie": 9,
+    "Con": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "White and grey, with the Isle's tower. Only the Guardians of the Sleeper wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Apple-Isle Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Pie": 7,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "An apple-blossom in white gold."
+  }
+ ]
+}

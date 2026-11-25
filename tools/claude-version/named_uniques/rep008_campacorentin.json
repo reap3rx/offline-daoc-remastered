@@ -1,0 +1,146 @@
+{
+ "zone": 8,
+ "region": 1,
+ "realm": 1,
+ "prefix": "rep008",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ranger's Leaf-Pin",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 10
+   },
+   "lore": "A bronze oak-leaf. Every friend of the Rangers wears one."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Greenway Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 12,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 10
+   },
+   "lore": "A ranger's belt, with loops for arrows and snares."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ulfwych Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 18,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 15
+   },
+   "lore": "Bronze, with the Caer's wolf."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thorn-Keeper's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 18,
+   "bonuses": {
+    "Pie": 6,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "Briar-wood, worked with white thorn-flowers."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sleep-Keeper's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 18,
+   "bonuses": {
+    "Int": 6,
+    "Pie": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "A ring of thorn, smooth as glass."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Greenway Warden",
+   "base": [
+    41,
+    26
+   ],
+   "level": 24,
+   "bonuses": {
+    "Dex": 8,
+    "Qui": 8,
+    "Str": 4,
+    "Hits": 20
+   },
+   "lore": "Forest green. Only the Wardens of the Greenway wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Thornwarden",
+   "base": [
+    41,
+    26
+   ],
+   "level": 24,
+   "bonuses": {
+    "Pie": 8,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "Briar-green and white. Only the Thornwardens of Campacorentin wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thornwarden's Briar Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Pie": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A briar-knot, given to the Thornwardens' friends."
+  }
+ ]
+}

@@ -144,6 +144,706 @@
     "Hits": 15
    },
    "lore": "Soft, white, and strangely cold. The plain has felt emptier since."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Herd-Mare's Halter Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 10,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 2,
+    "Hits": 8
+   },
+   "lore": "Braided horsehair round a copper band."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Downs Rider's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 10,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Taken off a horse-thief. Bryn says it suits you better."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Basilisk-Lid Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Int": 4,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A basilisk's eyelid, dried and set in silver. It's shut. Keep it that way."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Herbwife's Rue Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 12,
+   "bonuses": {
+    "Qui": 4,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 7,
+    "Power": 1
+   },
+   "lore": "Hung with rue against the evil eye. Elin swears by it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Carrion-Drake Fang",
+   "base": [
+    41,
+    29
+   ],
+   "level": 11,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 9
+   },
+   "lore": "A curved fang on a thong. Slythcur had a lot of them; this was the biggest."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Heath-Walker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 11,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 11,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Scuffed leather. The heath is hard on everything."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Nymph's Willow Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 13,
+   "bonuses": {
+    "Qui": 4,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 8,
+    "Power": 1
+   },
+   "lore": "A willow twig grown into a ring. It's still alive."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Veviel's Dew-Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 13,
+   "bonuses": {
+    "Int": 4,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "Always damp, always cool."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Grove-Pact Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 13,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 13,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Carved with a nymph's mark. They won't touch whoever wears it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Digger's Spade-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "Bent from a spade-edge. It's dug its last grave."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Map Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 14,
+   "bonuses": {
+    "Int": 5,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "Stitched from the diggers' own map. The barrows are marked in red."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ghast-Ward Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 15,
+   "bonuses": {
+    "Pie": 5,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 9
+   },
+   "lore": "Blessed by the Abbess, against the restless dead."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ghostwalker's Lantern-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 15,
+   "bonuses": {
+    "Int": 5,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 9
+   },
+   "lore": "Cynewulf's own ring. It glows in the presence of ghosts."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Long Knives Mourning Band",
+   "base": [
+    41,
+    33
+   ],
+   "level": 15,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 15,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Black linen, embroidered with 460 white stitches."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cornish Tin Ingot-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 17,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "Hammered from one of the giants' pay-ingots."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Raider-Captain's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 17,
+   "bonuses": {
+    "Dex": 6,
+    "Qui": 6,
+    "Str": 3,
+    "Hits": 14
+   },
+   "lore": "Grey and brown, made for lying flat in long grass."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Paymaster's Ledger-Clasp",
+   "base": [
+    41,
+    24
+   ],
+   "level": 17,
+   "bonuses": {
+    "Int": 6,
+    "Pie": 3,
+    "Dex": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "The clasp off the raiders' pay-ledger."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ambrosius's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 19,
+   "bonuses": {
+    "Pie": 6,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "A plain gold ring with a red dragon. Ambrosius Aurelianus, Arthur's uncle, raised the stones for the murdered lords."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Feast-Hall Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 19,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 16
+   },
+   "lore": "Bronze, very old. Its owner was wearing it the night of the feast."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Amesbury Shroud-Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 19,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 19,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Grey linen, sewn by the Sisters. It's warmer than it looks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mephit-Glass Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 16,
+   "bonuses": {
+    "Qui": 5,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 10,
+    "Power": 2
+   },
+   "lore": "A bead of glass the wind mephits leave behind. It hums in a breeze."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Windbreak Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 16,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 16,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Heavy felt. The plain's wind can't find a way in."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dartmoor Granite Chip",
+   "base": [
+    41,
+    24
+   ],
+   "level": 16,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "Grey granite flecked with pink. It doesn't come from anywhere near here."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Giant-Track Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 16,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 16,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Cadoc's own. He says he won't need it where he's going: anywhere else."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Boar-Herd's Tusk",
+   "base": [
+    41,
+    29
+   ],
+   "level": 18,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 15
+   },
+   "lore": "From the biggest of the giants' swine."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Huntington Hunting Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 18,
+   "bonuses": {
+    "Dex": 6,
+    "Qui": 6,
+    "Str": 3,
+    "Hits": 15
+   },
+   "lore": "Coel's family has hunted the south downs for six generations."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Broken-Manacle Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 21,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 4,
+    "Hits": 18
+   },
+   "lore": "Giant-sized iron, cut down. The man who wore it was free for three weeks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Runaway's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 21,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 4,
+    "Hits": 18
+   },
+   "lore": "Patched from sacking. It kept a man alive in the open all winter."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cottrel's Key-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 21,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 4,
+    "Hits": 18
+   },
+   "lore": "Every lock in his pens. All open now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Freedman's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 21,
+   "bonuses": {
+    "Pie": 7,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "Plaited from cut rope by the people you freed."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Slaver-Bane Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 21,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 21,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Osfrid had it made for whoever closed Cottrel's pens."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Heel-Stone Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 22,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 22,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Set with a chip of the heel stone. It's cold at midsummer."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Merlin's Mark Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 22,
+   "bonuses": {
+    "Int": 7,
+    "Pie": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "Merlin's sign, copied from the stones: a star in a ring."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Great Barrow Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 24,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "Gold, giant-sized, cut down to fit a man's neck. It still weighs like a millstone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Liglim's Mattock-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 24,
+   "bonuses": {
+    "Dex": 8,
+    "Qui": 8,
+    "Str": 4,
+    "Hits": 20
+   },
+   "lore": "The raiders' master carried a gold mattock. This was its ring."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Dark Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 24,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 24,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Black wool that drinks the light. Made for barrows."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Stone-Caller's Chant-Stone",
+   "base": [
+    41,
+    24
+   ],
+   "level": 26,
+   "bonuses": {
+    "Int": 9,
+    "Pie": 4,
+    "Dex": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "A smooth grey pebble the oracle sang to. It still hums."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Abbess's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 26,
+   "bonuses": {
+    "Pie": 9,
+    "Con": 4,
+    "Power": 4,
+    "Hits": 16
+   },
+   "lore": "A queen's ring, plainly made. The Abbess wore it under her glove for forty years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dance-Warden's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 26,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 26,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Grey and red, Merlin's star at the shoulder. Given to those who held the Dance."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Granite-Breaker Gauntlet-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 26,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 22
+   },
+   "lore": "Cut from a granite giant's knuckle-guard."
   }
  ]
 }

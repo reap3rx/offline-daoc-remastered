@@ -1,0 +1,1090 @@
+{
+ "zone": 1,
+ "name": "Salisbury Plains",
+ "rating": "wild",
+ "themes": [
+  "The downs round West Downs (horses, boars, brownies)",
+  "The filidh and druids of the west",
+  "The Downs Riders and Cottrel's slavers",
+  "The tomb-raiders and the graves of the Long Knives",
+  "The middle plain (nymphs, basilisks, adders)",
+  "The giants' march from Cornwall",
+  "The Giants' Dance (Stonehenge) - Deadly",
+  "The great barrow and Gogmagog's bones - Deadly"
+ ],
+ "notes": "Albion's plan 2026-11-24, round 2: Wild, Deadly round the Giants' Dance and the great barrow (owner: 'more dangerous/deadly near Stonehenge Barrows'); the south thread - Golestandt's giants take back the stones. Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Abagu": "yellow",
+  "Growler": "blue",
+  "Slythcur": "yellow",
+  "Water Spider Gleek": "red",
+  "White Horse": "orange",
+  "Kedalinde Teanidd": "blue",
+  "Berik Liglim": "red",
+  "Celain Elrich": "red",
+  "Cynewulf the Ghostwalker": "orange",
+  "Halena Edulan": "yellow",
+  "Kearcs": "yellow",
+  "Lonry Aetheoc": "yellow",
+  "Slave Master Cottrel": "orange",
+  "Tuka": "orange",
+  "Veviel": "yellow",
+  "Zelsania Nodith": "yellow",
+  "Archdruid Glasan": "red"
+ },
+ "factions": {
+  "brownies": {
+   "id": 9431,
+   "aggro": 35
+  },
+  "nymphs": {
+   "id": 9432,
+   "aggro": 40
+  },
+  "long_knives": {
+   "id": 9433,
+   "aggro": 80
+  },
+  "filidh": {
+   "id": 9434,
+   "aggro": 55
+  },
+  "bandits": {
+   "id": 9435,
+   "aggro": 80
+  },
+  "slavers": {
+   "id": 9436,
+   "aggro": 85
+  },
+  "raiders": {
+   "id": 9437,
+   "aggro": 80
+  },
+  "giants": {
+   "id": 9438,
+   "aggro": 90
+  },
+  "giants_dead": {
+   "id": 9439,
+   "aggro": 95
+  },
+  "spriggarns": {
+   "id": 9440,
+   "aggro": 85
+  },
+  "escaped": {
+   "id": 9430,
+   "aggro": 85
+  }
+ },
+ "members": {
+  "grass snake": {
+   "from": "grass snake",
+   "tier": "green",
+   "roam": 300
+  },
+  "young boar": {
+   "from": "young boar",
+   "tier": "green",
+   "roam": 350
+  },
+  "spirit": {
+   "from": "spirit",
+   "tier": "green",
+   "roam": 250
+  },
+  "brownie grassrunner": {
+   "from": "brownie grassrunner",
+   "tier": "green",
+   "roam": 300
+  },
+  "wild mare": {
+   "from": "wild mare",
+   "tier": "blue",
+   "roam": 500
+  },
+  "wild stallion": {
+   "from": "wild stallion",
+   "tier": "blue",
+   "roam": 500
+  },
+  "wild boar": {
+   "from": "wild boar",
+   "tier": "blue",
+   "roam": 400
+  },
+  "bear": {
+   "from": "bear",
+   "tier": "blue",
+   "roam": 350
+  },
+  "carrion drake": {
+   "from": "carrion drake",
+   "tier": "blue",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 350
+  },
+  "brownie nomad": {
+   "from": "brownie nomad",
+   "tier": "blue",
+   "faction": "brownies",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 350
+  },
+  "fading spirit": {
+   "from": "fading spirit",
+   "tier": "blue",
+   "roam": 250
+  },
+  "river racer": {
+   "from": "river racer",
+   "tier": "blue",
+   "roam": 250
+  },
+  "red adder": {
+   "from": "red adder",
+   "tier": "blue",
+   "roam": 300
+  },
+  "grove nymph": {
+   "from": "grove nymph",
+   "tier": "blue",
+   "faction": "nymphs",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "brownie rover": {
+   "from": "brownie rover",
+   "tier": "yellow",
+   "faction": "brownies",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 350
+  },
+  "young bear": {
+   "from": "young bear",
+   "tier": "blue",
+   "roam": 350
+  },
+  "pseudo basilisk": {
+   "from": "pseudo basilisk",
+   "tier": "yellow",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 300
+  },
+  "basilisk": {
+   "from": "basilisk",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 300
+  },
+  "wandering spirit": {
+   "from": "wandering spirit",
+   "tier": "yellow",
+   "faction": "long_knives",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 250
+  },
+  "disturbed presence": {
+   "from": "disturbed presence",
+   "tier": "yellow",
+   "faction": "long_knives",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200,
+   "model": 485
+  },
+  "black dog": {
+   "from": "black dog",
+   "tier": "yellow",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 400
+  },
+  "wind mephit": {
+   "from": "wind mephit",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 350
+  },
+  "young brown bear": {
+   "from": "young brown bear",
+   "tier": "yellow",
+   "roam": 350
+  },
+  "filidh": {
+   "from": "filidh",
+   "tier": "blue",
+   "faction": "filidh",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "devout filidh": {
+   "from": "devout filidh",
+   "tier": "blue",
+   "faction": "filidh",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 150
+  },
+  "filidh sacrificer": {
+   "from": "filidh sacrificer",
+   "tier": "yellow",
+   "faction": "filidh",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 120
+  },
+  "undead druid": {
+   "from": "undead druid",
+   "tier": "yellow",
+   "faction": "long_knives",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 150
+  },
+  "druid seer": {
+   "from": "druid seer",
+   "tier": "blue",
+   "faction": "filidh",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "bandit": {
+   "from": "bandit",
+   "tier": "blue",
+   "faction": "bandits",
+   "guild": "the Downs Riders",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "bandit henchman": {
+   "from": "bandit henchman",
+   "tier": "yellow",
+   "faction": "bandits",
+   "guild": "the Downs Riders",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 200
+  },
+  "bandit thaumaturge": {
+   "from": "bandit thaumaturge",
+   "tier": "yellow",
+   "faction": "bandits",
+   "guild": "the Downs Riders",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 150
+  },
+  "bandit lieutenant": {
+   "from": "bandit lieutenant",
+   "tier": "yellow",
+   "faction": "bandits",
+   "guild": "the Downs Riders",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 150
+  },
+  "bandit leader": {
+   "from": "bandit leader",
+   "tier": "orange",
+   "faction": "bandits",
+   "guild": "the Downs Riders",
+   "aggro": [
+    85,
+    500
+   ],
+   "size": 1.15,
+   "roam": 60,
+   "guards": {
+    "bandit lieutenant": 1,
+    "bandit thaumaturge": 1
+   }
+  },
+  "slaver": {
+   "from": "slaver",
+   "tier": "yellow",
+   "faction": "slavers",
+   "guild": "Cottrel's Company",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 150
+  },
+  "tomb raider digger": {
+   "from": "tomb raider digger",
+   "tier": "blue",
+   "faction": "raiders",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "tomb raider scout": {
+   "from": "tomb raider scout",
+   "tier": "yellow",
+   "faction": "raiders",
+   "aggro": [
+    75,
+    500
+   ],
+   "roam": 300
+  },
+  "tomb raider": {
+   "from": "tomb raider",
+   "tier": "yellow",
+   "faction": "raiders",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "mercenary tomb raider": {
+   "from": "mercenary tomb raider",
+   "tier": "orange",
+   "faction": "raiders",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 150
+  },
+  "green ghast": {
+   "from": "green ghast",
+   "tier": "yellow",
+   "faction": "long_knives",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 200
+  },
+  "huge boar": {
+   "from": "huge boar",
+   "tier": "yellow",
+   "faction": "giants",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 400
+  },
+  "aged basilisk": {
+   "from": "aged basilisk",
+   "tier": "orange",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 300
+  },
+  "Salisbury giant": {
+   "from": "Salisbury giant",
+   "tier": "orange",
+   "faction": "giants",
+   "guild": "the March of Golestandt",
+   "aggro": [
+    80,
+    600
+   ],
+   "roam": 300
+  },
+  "Cornish stone-bearer": {
+   "from": "Cornish giant",
+   "tier": "red",
+   "name": "Cornish stone-bearer",
+   "faction": "giants",
+   "guild": "the March of Golestandt",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 200
+  },
+  "granite giant": {
+   "from": "granite giant",
+   "tier": "red",
+   "faction": "giants",
+   "guild": "the March of Golestandt",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 150
+  },
+  "granite giant oracle": {
+   "from": "granite giant oracle",
+   "tier": "red",
+   "faction": "giants",
+   "guild": "the March of Golestandt",
+   "aggro": [
+    95,
+    650
+   ],
+   "size": 1.15,
+   "roam": 60,
+   "guards": {
+    "granite giant": 2
+   }
+  },
+  "giant skeleton": {
+   "from": "giant skeleton",
+   "tier": "red",
+   "faction": "giants_dead",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 200
+  },
+  "skeletal legionnaire": {
+   "from": "small skeletal legionnaire",
+   "tier": "orange",
+   "faction": "giants_dead",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 150
+  },
+  "bones of Gogmagog": {
+   "from": "giant skeleton",
+   "tier": "purple",
+   "name": "the bones of Gogmagog",
+   "faction": "giants_dead",
+   "guild": "the Last Giant of Albion",
+   "aggro": [
+    95,
+    700
+   ],
+   "size": 1.7,
+   "roam": 40,
+   "guards": {
+    "giant skeleton": 3
+   }
+  },
+  "spriggarn waylayer": {
+   "from": "spriggarn waylayer",
+   "tier": "orange",
+   "faction": "spriggarns",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "spriggarn ambusher": {
+   "from": "spriggarn ambusher",
+   "tier": "orange",
+   "faction": "spriggarns",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "spriggarn howler": {
+   "from": "spriggarn howler",
+   "tier": "red",
+   "faction": "spriggarns",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 100
+  },
+  "escaped bandit": {
+   "from": "escaped bandit",
+   "tier": "orange",
+   "faction": "escaped",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 250
+  },
+  "escaped bandit leader": {
+   "from": "escaped bandit leader",
+   "tier": "red",
+   "faction": "escaped",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 60,
+   "guards": {
+    "escaped bandit": 2
+   }
+  }
+ },
+ "sites": [
+  {
+   "id": "town_downs",
+   "kind": "wildlife",
+   "area": [
+    20800,
+    3200,
+    38000,
+    15200
+   ],
+   "spawn": {
+    "grass snake": 16,
+    "young boar": 13,
+    "spirit": 11,
+    "brownie grassrunner": 13,
+    "wild mare": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "horse_downs",
+   "kind": "wildlife",
+   "area": [
+    8000,
+    4800,
+    42000,
+    24000
+   ],
+   "spawn": {
+    "wild mare": 25,
+    "wild stallion": 29,
+    "wild boar": 25,
+    "brownie nomad": 16,
+    "fading spirit": 11,
+    "bear": 9,
+    "grass snake": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "carrion_heath",
+   "kind": "wildlife",
+   "area": [
+    3200,
+    2400,
+    14400,
+    13200
+   ],
+   "spawn": {
+    "carrion drake": 18,
+    "bear": 9,
+    "young boar": 7
+   },
+   "spacing": 260
+  },
+  {
+   "id": "river_north",
+   "kind": "wildlife",
+   "area": [
+    40000,
+    400,
+    50800,
+    14400
+   ],
+   "spawn": {
+    "river racer": 18,
+    "wild boar": 9,
+    "grass snake": 7
+   },
+   "spacing": 260
+  },
+  {
+   "id": "downs_riders",
+   "kind": "camp",
+   "at": [
+    36200,
+    4400
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "bandit": 7,
+    "bandit henchman": 4,
+    "bandit thaumaturge": 2,
+    "bandit leader": 1
+   }
+  },
+  {
+   "id": "downs_riders_walk",
+   "kind": "patrol",
+   "route": [
+    [
+     36200,
+     4400
+    ],
+    [
+     32800,
+     8000
+    ],
+    [
+     28000,
+     11200
+    ],
+    [
+     32800,
+     8000
+    ]
+   ],
+   "spawn": {
+    "bandit": 2,
+    "bandit henchman": 1
+   }
+  },
+  {
+   "id": "cottrels_pens",
+   "kind": "camp",
+   "at": [
+    57280,
+    15560
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "slaver": 6
+   }
+  },
+  {
+   "id": "filidh_west",
+   "kind": "wildlife",
+   "area": [
+    4000,
+    9600,
+    28000,
+    16800
+   ],
+   "spawn": {
+    "filidh": 16,
+    "devout filidh": 9,
+    "druid seer": 7
+   },
+   "spacing": 260
+  },
+  {
+   "id": "sacrificers_stones",
+   "kind": "camp",
+   "at": [
+    10360,
+    14600
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "filidh sacrificer": 5,
+    "undead druid": 2
+   }
+  },
+  {
+   "id": "diggers_fields",
+   "kind": "wildlife",
+   "area": [
+    9800,
+    28800,
+    24800,
+    47600
+   ],
+   "spawn": {
+    "tomb raider digger": 27,
+    "green ghast": 13,
+    "wandering spirit": 7
+   },
+   "spacing": 260
+  },
+  {
+   "id": "diggers_camp",
+   "kind": "camp",
+   "at": [
+    14520,
+    44120
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "tomb raider digger": 6,
+    "tomb raider scout": 2
+   }
+  },
+  {
+   "id": "middle_plain",
+   "kind": "wildlife",
+   "area": [
+    15200,
+    15200,
+    55200,
+    40000
+   ],
+   "spawn": {
+    "grove nymph": 40,
+    "red adder": 29,
+    "pseudo basilisk": 29,
+    "wild boar": 22,
+    "brownie rover": 25,
+    "young bear": 13,
+    "wandering spirit": 11,
+    "disturbed presence": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "nymph_grove",
+   "kind": "camp",
+   "at": [
+    36280,
+    24840
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "grove nymph": 6
+   }
+  },
+  {
+   "id": "basilisk_nest",
+   "kind": "camp",
+   "at": [
+    50360,
+    10720
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "basilisk": 4,
+    "pseudo basilisk": 3
+   }
+  },
+  {
+   "id": "east_ridge",
+   "kind": "wildlife",
+   "area": [
+    44000,
+    12000,
+    56000,
+    38000
+   ],
+   "spawn": {
+    "tomb raider scout": 13,
+    "tomb raider": 16,
+    "black dog": 7,
+    "basilisk": 11
+   },
+   "spacing": 260
+  },
+  {
+   "id": "raiders_east",
+   "kind": "camp",
+   "at": [
+    50880,
+    31840
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "tomb raider": 5,
+    "tomb raider scout": 3
+   }
+  },
+  {
+   "id": "mephit_downs",
+   "kind": "wildlife",
+   "area": [
+    1600,
+    24000,
+    24000,
+    57200
+   ],
+   "spawn": {
+    "wind mephit": 29,
+    "young brown bear": 11,
+    "red adder": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "long_knives_field",
+   "kind": "wildlife",
+   "area": [
+    18000,
+    28000,
+    36000,
+    40000
+   ],
+   "spawn": {
+    "disturbed presence": 16,
+    "wandering spirit": 11
+   },
+   "spacing": 260
+  },
+  {
+   "id": "giants_march",
+   "kind": "wildlife",
+   "area": [
+    16800,
+    42000,
+    54000,
+    57600
+   ],
+   "spawn": {
+    "Salisbury giant": 25,
+    "huge boar": 25,
+    "aged basilisk": 16,
+    "young brown bear": 9,
+    "wind mephit": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "giant_camp_0",
+   "kind": "camp",
+   "at": [
+    21800,
+    54400
+   ],
+   "r": 400,
+   "respawn": 420,
+   "spawn": {
+    "Salisbury giant": 3,
+    "huge boar": 2
+   }
+  },
+  {
+   "id": "giant_camp_1",
+   "kind": "camp",
+   "at": [
+    30640,
+    55520
+   ],
+   "r": 400,
+   "respawn": 420,
+   "spawn": {
+    "Salisbury giant": 3,
+    "huge boar": 2
+   }
+  },
+  {
+   "id": "giant_camp_2",
+   "kind": "camp",
+   "at": [
+    37720,
+    56800
+   ],
+   "r": 400,
+   "respawn": 420,
+   "spawn": {
+    "Salisbury giant": 3,
+    "huge boar": 2
+   }
+  },
+  {
+   "id": "giant_camp_3",
+   "kind": "camp",
+   "at": [
+    41400,
+    52880
+   ],
+   "r": 400,
+   "respawn": 420,
+   "spawn": {
+    "Salisbury giant": 3,
+    "huge boar": 2
+   }
+  },
+  {
+   "id": "dance_approach",
+   "kind": "wildlife",
+   "area": [
+    30400,
+    31200,
+    44800,
+    43200
+   ],
+   "spawn": {
+    "Salisbury giant": 11,
+    "basilisk": 9,
+    "disturbed presence": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "the_dance",
+   "kind": "camp",
+   "at": [
+    36840,
+    37200
+   ],
+   "r": 640,
+   "respawn": 480,
+   "spawn": {
+    "granite giant": 4,
+    "Cornish stone-bearer": 3,
+    "Salisbury giant": 4
+   }
+  },
+  {
+   "id": "dance_oracle",
+   "kind": "camp",
+   "at": [
+    38400,
+    39400
+   ],
+   "r": 240,
+   "respawn": 900,
+   "spawn": {
+    "granite giant oracle": 1
+   }
+  },
+  {
+   "id": "dance_ring",
+   "kind": "patrol",
+   "route": [
+    [
+     35200,
+     35200
+    ],
+    [
+     38800,
+     35200
+    ],
+    [
+     39600,
+     38400
+    ],
+    [
+     36800,
+     40000
+    ],
+    [
+     34400,
+     38400
+    ]
+   ],
+   "spawn": {
+    "Salisbury giant": 2,
+    "Cornish stone-bearer": 1
+   }
+  },
+  {
+   "id": "barrow_downs",
+   "kind": "wildlife",
+   "area": [
+    46000,
+    42800,
+    58000,
+    57800
+   ],
+   "spawn": {
+    "giant skeleton": 18,
+    "mercenary tomb raider": 16,
+    "skeletal legionnaire": 11
+   },
+   "spacing": 260
+  },
+  {
+   "id": "great_barrow",
+   "kind": "camp",
+   "at": [
+    51600,
+    54880
+   ],
+   "r": 400,
+   "respawn": 1800,
+   "spawn": {
+    "bones of Gogmagog": 1
+   }
+  },
+  {
+   "id": "barrow_dig",
+   "kind": "camp",
+   "at": [
+    51320,
+    50360
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "mercenary tomb raider": 6,
+    "tomb raider": 3
+   }
+  },
+  {
+   "id": "spriggarn_hollow",
+   "kind": "camp",
+   "at": [
+    3320,
+    59600
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "spriggarn waylayer": 4,
+    "spriggarn ambusher": 4,
+    "spriggarn howler": 2
+   }
+  },
+  {
+   "id": "escaped_bandits",
+   "kind": "camp",
+   "at": [
+    25200,
+    58800
+   ],
+   "r": 400,
+   "respawn": 600,
+   "spawn": {
+    "escaped bandit leader": 1,
+    "escaped bandit": 3
+   }
+  }
+ ]
+}

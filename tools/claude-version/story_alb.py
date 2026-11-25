@@ -5,8 +5,8 @@ BEDROLL, LANTERN, CRATE = 1882, 1876, 1347
 ZONES = []
 
 # ====================================================================================================== Salisbury Plains
+# (claude 2026-11-24: Salisbury Plains is story_salisbury_plains.py now, with the zone's rebuild - these two are kept there by id)
 z = Zone(1, 'Salisbury Plains', 1, 'alb_salisbury_plains')
-ZONES.append(z)
 z.npc('wenna_ashby', 'Wenna Ashby', [724, 213], 'f', 10, idle="If you're going south, mind the barrows. Nothing good's come out of them yet.")
 z.npc('dunstan_carter', 'Dunstan the Carter', [745, 213], 'm', 14, idle="Wheels, axles, horses. Ask me about any of 'em. Don't ask me about the road south.")
 z.npc('aled_ashby', 'Aled Ashby', [912, 900], 'm', 12, during=['under_stones/torc'])
@@ -90,8 +90,8 @@ z.quest('white_horse', 'The White Horse', 18, 'ysolde_huntington',
         topics={'tracks': "Coel's by the fire. He taught Rhodri to track. He's not happy about how that turned out."})
 
 # ===================================================================================================== Black Mtns. South
+# (claude 2026-11-24: Black Mountains South is story_black_mtns_south.py now, with the zone's rebuild - these two are kept there by id)
 z = Zone(2, 'Black Mountains South', 1, 'alb_black_mtns_south')
-ZONES.append(z)
 z.npc('wren_piper', 'Wren Piper', [1199, 1103], 'f', 4, model=38, size=40, idle="Pip's always off somewhere. Usually he comes back.")
 z.npc('corwen_fisher', 'Old Corwen', [1172, 1088], 'm', 10, idle="The river gives, the river takes. Mostly it takes, this year.")
 z.npc('pip_piper', 'Pip Piper', [579, 566], 'm', 2, size=38, during=['singing_bridge/pip'])
@@ -161,8 +161,8 @@ z.quest('willing_heart', 'One Willing Heart', 9, 'sister_aldith',
          'stayed': {'text': "Take this. He'd want you to have something of his.", 'tragic': True, 'items': [it_menhir], 'choice': [it_scrip, it_sickle]}})
 
 # ===================================================================================================== Black Mtns. North
+# (claude 2026-11-24: Black Mountains North is story_black_mtns_north.py now, with the zone's rebuild - these two are kept there by id)
 z = Zone(3, 'Black Mountains North', 1, 'alb_black_mtns_north')
-ZONES.append(z)
 z.npc('tomas_fell', 'Tomas Fell', [692, 343], 'm', 8, idle="I'm an apprentice. Apprentices do as they're told. Mostly.")
 z.npc('mabli', 'Mabli Trewin', [664, 603], 'f', 9, during=['last_shift/mabli', 'last_shift/foreman', 'last_shift/egg'])
 z.npc('hrodda', 'Hrodda Alreksdottir', [985, 1030], 'f', 14, idle="Your people think mine are animals. Mine think yours are. Both are mostly right, this season.")
@@ -229,8 +229,8 @@ z.quest('crimson_bargain', 'The Crimson Bargain', 15, 'hrodda',
         topics={'captain': "Mardoc. The only one of your soldiers who looked at me when I spoke."})
 
 # ============================================================================================================== Dartmoor
+# (claude 2026-11-24: Dartmoor is story_dartmoor.py now, with the zone's rebuild - these two are kept there by id)
 z = Zone(4, 'Dartmoor', 1, 'alb_dartmoor')
-ZONES.append(z)
 z.npc('mirela', 'Mirela Stonewright', [143, 323], 'f', 40, idle="Grimspound stands because we keep our oaths. Even the ones we made to giants.")
 z.npc('jory', 'Jory Stonewright', [986, 498], 'm', 38, during=['quarry_oath/jory'])
 z.npc('mirela_circle', 'Mirela Stonewright', [1286, 830], 'f', 40, during=['quarry_oath/judge'])
@@ -301,8 +301,8 @@ z.quest('dragons_tithe', "The Dragon's Tithe", 48, 'bryn_asquith',
         topics={'Alun': "Brother Alun. Over there, by the wall. Be gentle."}, group=True)
 
 # ============================================================================================================== Cornwall
+# (claude 2026-11-24: Cornwall is story_cornwall.py now, with the zone's rebuild - these two are kept there by id)
 z = Zone(6, 'Cornwall', 1, 'alb_cornwall')
-ZONES.append(z)
 z.npc('kerra_aldar', 'Kerra Aldar', [1399, 545], 'f', 15, idle="Thirty sheep last spring. Nine now.")
 z.npc('tregarth', 'Tregarth the Hunter', [1252, 762], 'm', 24, idle="The moor is wrong this year. Even the wolves know it.")
 z.npc('tregarth_den', 'Tregarth the Hunter', [902, 890], 'm', 24, during=['white_wolf/den'])
@@ -372,8 +372,9 @@ z.quest('drowned_ninth', 'The Drowned Ninth', 24, 'hywel',
         topics={'lieutenant': "Penhale. Young. Reads too much. He might listen."})
 
 # =========================================================================================================== Llyn Barfog
+# (claude 2026-11-24: Llyn Barfog is story_llyn_barfog.py now, with the zone's rebuild - these two moved there, brought up to the
+# zone's Elite levels, and are no longer made from here)
 z = Zone(7, 'Llyn Barfog', 1, 'alb_llyn_barfog')
-ZONES.append(z)
 z.npc('nest', 'Nest ferch Rhys', [886, 798], 'f', 18, idle="Have you heard them? At night? Don't listen if you do.")
 z.npc('gwion', 'Gwion the Harper', [878, 776], 'm', 22, idle="Every song in this valley ends in the lake. I've tried to write one that doesn't.")
 z.npc('iolo', 'Iolo ap Rhys', [838, 1312], 'm', 20, during=['hounds/iolo', 'hounds/horn'])
@@ -441,8 +442,8 @@ z.quest('psalter', 'The Last Psalm', 28, 'teilo',
          'watch': {'text': "Take this, from the abbey.", 'tragic': True, 'items': [it_psalter], 'choice': [it_vigil, it_evoc]}})
 
 # ================================================================================================= Campacorentin Forest
+# (claude 2026-11-24: Campacorentin Forest is story_campacorentin.py now, with the zone's rebuild - these two are kept there by id)
 z = Zone(8, 'Campacorentin Forest', 1, 'alb_campacorentin')
-ZONES.append(z)
 z.npc('elowen', 'Dame Elowen Marsh', [970, 878], 'f', 25, idle="I'm old. Old women are allowed to sit and look at the road.")
 z.npc('robin', 'Robin the Page', [1162, 706], 'm', 6, during=['page/road', 'page/robin', 'page/sword', 'page/knight', 'page/letter'])
 z.npc('ivo_penrose', 'Scholar Ivo Penrose', [340, 160], 'm', 18, idle="The Lethantis Association does excellent work. Write that down. They read everything.")
@@ -504,8 +505,8 @@ z.quest('heretic', 'The Heretic of the Wood', 15, 'ivo_penrose',
          'burned': {'text': "For your discretion.", 'tragic': True, 'items': [it_brand], 'choice': [it_ogre, it_seeker]}})
 
 # ========================================================================================================= Avalon Marsh
+# (claude 2026-11-24: Avalon Marsh is story_avalon_marsh.py now, with the zone's rebuild - these two are kept there by id)
 z = Zone(9, 'Avalon Marsh', 1, 'alb_avalon_marsh')
-ZONES.append(z)
 z.npc('tilda_hael', 'Tilda Hael', [471, 921], 'f', 8, idle="If you see a fisherman with a mole shaped like a crown, kindly drag him home by the ear.")
 z.npc('warden_brec', 'Marsh-Warden Brec', [492, 932], 'm', 15, idle="Bogmen don't hurt you if you don't hurt them. Mostly.")
 z.npc('dai_morrow', 'Dai Morrow', [806, 1116], 'm', 8, during=['bog_king/dai', 'bog_king/crown'])
@@ -575,8 +576,8 @@ z.quest('vigil', 'Until Relieved', 18, 'squire_hamon',
         topics={'Baldwin': "Sir Baldwin the Elder, in the abbey town east. He's ancient. He was a squire of the Vigil, if you can believe it."})
 
 # ============================================================================================================== Lyonesse
+# (claude 2026-11-24: Lyonesse is story_lyonesse.py now, with the zone's rebuild - these two are kept there by id)
 z = Zone(10, 'Lyonesse', 1, 'alb_lyonesse')
-ZONES.append(z)
 z.npc('wenna_trevose', 'Wenna Trevose', [1340, 1132], 'f', 38, guild="Castaways' Camp", idle="The sea took Lyonesse in a night. It didn't take everyone. It didn't let anyone go, either.")
 z.npc('morvah', 'Morvah Trevose', [403, 258], 'f', 30, during=['last_evening/morvah', 'last_evening/evening'])
 z.npc('sir_kendric', 'Sir Kendric', [1347, 1138], 'm', 48, guild="Castaways' Camp", idle="I watch for the Arawnites. One of us has to.")

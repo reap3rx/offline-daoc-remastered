@@ -1,0 +1,584 @@
+{
+ "zone": 6,
+ "name": "Cornwall",
+ "rating": "deadly",
+ "themes": [
+  "The moor round Cornwall Station (the hard start's gentle edge)",
+  "The cliff tops and the ghostly church",
+  "The beech woods and the Cornish fae (muryans, buccas)",
+  "The rooter downs and the boogeys",
+  "The Drowned Ninth, marching out of the Catacombs of Cardova",
+  "The west: Golestandt's giants and the great drakes"
+ ],
+ "notes": "Albion's plan 2026-11-24, round 3: Deadly and the HARD START (Cornwall Station); the south thread's homeland, the Drowned Ninth out of Cardova. Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Cornwall Drake": "red",
+  "Cornish frog": "yellow",
+  "Cornwall hunter": "orange",
+  "Kalnraw": "red",
+  "Addard Yarley": "red",
+  "Cornish hen": "orange",
+  "Tusker": "red",
+  "Cirfans": "purple",
+  "Brother Jarrel": "orange",
+  "Aricoer": "red",
+  "Centurion Favius": "red",
+  "Yog": "red",
+  "Cornish giant": "red"
+ },
+ "factions": {
+  "moor": {
+   "id": 9471,
+   "aggro": 75
+  },
+  "church": {
+   "id": 9472,
+   "aggro": 85
+  },
+  "fae": {
+   "id": 9473,
+   "aggro": 65
+  },
+  "ninth": {
+   "id": 9474,
+   "aggro": 95
+  },
+  "giants": {
+   "id": 9475,
+   "aggro": 90
+  }
+ },
+ "members": {
+  "young brown bear": {
+   "from": "young brown bear",
+   "tier": "blue",
+   "roam": 350
+  },
+  "cliff spiderling": {
+   "from": "cliff spiderling",
+   "tier": "blue",
+   "aggro": [
+    40,
+    300
+   ],
+   "roam": 250
+  },
+  "moor wolf": {
+   "from": "moor wolf",
+   "tier": "yellow",
+   "faction": "moor",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 450
+  },
+  "brown bear": {
+   "from": "brown bear",
+   "tier": "yellow",
+   "roam": 350
+  },
+  "cliff spider": {
+   "from": "cliff spider",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 250
+  },
+  "ghostly cleric": {
+   "from": "ghostly cleric",
+   "tier": "orange",
+   "faction": "church",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 120
+  },
+  "ghostly paladin": {
+   "from": "ghostly paladin",
+   "tier": "red",
+   "faction": "church",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 120
+  },
+  "elder beech": {
+   "from": "elder beech",
+   "tier": "orange",
+   "faction": "fae",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 60
+  },
+  "aged beech": {
+   "from": "aged beech",
+   "tier": "red",
+   "faction": "fae",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 40
+  },
+  "muryan": {
+   "from": "muryan",
+   "tier": "orange",
+   "faction": "fae",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 250
+  },
+  "bucca": {
+   "from": "bucca",
+   "tier": "orange",
+   "faction": "fae",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 250
+  },
+  "muryan trickster": {
+   "from": "muryan trickster",
+   "tier": "orange",
+   "faction": "fae",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 60
+  },
+  "black bear": {
+   "from": "black bear",
+   "tier": "orange",
+   "roam": 350
+  },
+  "forest cat": {
+   "from": "forest cat",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 400
+  },
+  "death stalker": {
+   "from": "death stalker",
+   "tier": "orange",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 350
+  },
+  "moor pack leader": {
+   "from": "moor pack leader",
+   "tier": "orange",
+   "faction": "moor",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 350
+  },
+  "moor den mother": {
+   "from": "moor den mother",
+   "tier": "red",
+   "faction": "moor",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 200
+  },
+  "giant rooter": {
+   "from": "giant rooter",
+   "tier": "orange",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 350
+  },
+  "moor boogey": {
+   "from": "moor boogey",
+   "tier": "red",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 250
+  },
+  "greater boogey": {
+   "from": "greater boogey",
+   "tier": "red",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 250
+  },
+  "skeletal legionnaire": {
+   "from": "skeletal legionnaire",
+   "tier": "orange",
+   "faction": "ninth",
+   "guild": "the Drowned Ninth",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 150
+  },
+  "skeletal centurion": {
+   "from": "skeletal centurion",
+   "tier": "red",
+   "faction": "ninth",
+   "guild": "the Drowned Ninth",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 100,
+   "guards": {
+    "skeletal legionnaire": 2
+   }
+  },
+  "giant skeleton": {
+   "from": "giant skeleton",
+   "tier": "red",
+   "faction": "ninth",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 200
+  },
+  "captured soul": {
+   "from": "captured soul",
+   "tier": "orange",
+   "faction": "ninth",
+   "aggro": [
+    70,
+    400
+   ],
+   "roam": 100
+  },
+  "Cornish quarry-giant": {
+   "from": "Cornish giant",
+   "tier": "red",
+   "name": "Cornish quarry-giant",
+   "faction": "giants",
+   "guild": "the March of Golestandt",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 200
+  },
+  "granite giant stoneshaper": {
+   "from": "granite giant stoneshaper",
+   "tier": "red",
+   "faction": "giants",
+   "guild": "the March of Golestandt",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 120
+  }
+ },
+ "sites": [
+  {
+   "id": "station_moor",
+   "kind": "wildlife",
+   "area": [
+    49200,
+    6000,
+    64800,
+    31200
+   ],
+   "spawn": {
+    "young brown bear": 35,
+    "moor wolf": 32,
+    "brown bear": 26,
+    "cliff spiderling": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "cliff_tops",
+   "kind": "wildlife",
+   "area": [
+    32000,
+    10000,
+    49200,
+    22400
+   ],
+   "spawn": {
+    "cliff spiderling": 19,
+    "cliff spider": 19,
+    "moor wolf": 13,
+    "brown bear": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ghostly_church",
+   "kind": "camp",
+   "at": [
+    47840,
+    14880
+   ],
+   "r": 400,
+   "respawn": 420,
+   "spawn": {
+    "ghostly cleric": 4,
+    "ghostly paladin": 3
+   }
+  },
+  {
+   "id": "beech_wood",
+   "kind": "wildlife",
+   "area": [
+    20800,
+    22400,
+    61600,
+    40000
+   ],
+   "spawn": {
+    "elder beech": 42,
+    "muryan": 35,
+    "black bear": 29,
+    "forest cat": 19,
+    "death stalker": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "muryan_mound",
+   "kind": "camp",
+   "at": [
+    39400,
+    33760
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "muryan": 6
+   }
+  },
+  {
+   "id": "trickster_knoll",
+   "kind": "camp",
+   "at": [
+    53200,
+    36960
+   ],
+   "r": 200,
+   "respawn": 600,
+   "spawn": {
+    "muryan trickster": 1
+   }
+  },
+  {
+   "id": "bucca_hollow",
+   "kind": "camp",
+   "at": [
+    45440,
+    37160
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "bucca": 6
+   }
+  },
+  {
+   "id": "bucca_dells",
+   "kind": "wildlife",
+   "area": [
+    38000,
+    28800,
+    57200,
+    45600
+   ],
+   "spawn": {
+    "bucca": 19,
+    "moor pack leader": 13,
+    "black bear": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "wolf_dens",
+   "kind": "camp",
+   "at": [
+    36400,
+    35840
+   ],
+   "r": 400,
+   "respawn": 420,
+   "spawn": {
+    "moor den mother": 2,
+    "moor pack leader": 4
+   }
+  },
+  {
+   "id": "old_beeches",
+   "kind": "camp",
+   "at": [
+    59600,
+    39000
+   ],
+   "r": 360,
+   "respawn": 600,
+   "spawn": {
+    "aged beech": 4
+   }
+  },
+  {
+   "id": "rooter_downs",
+   "kind": "wildlife",
+   "area": [
+    12400,
+    40000,
+    61600,
+    60000
+   ],
+   "spawn": {
+    "giant rooter": 54,
+    "moor boogey": 13,
+    "black bear": 10
+   },
+   "spacing": 260
+  },
+  {
+   "id": "boogey_edge",
+   "kind": "camp",
+   "at": [
+    28000,
+    57200
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "greater boogey": 4,
+    "moor boogey": 2
+   }
+  },
+  {
+   "id": "cardova_road",
+   "kind": "camp",
+   "at": [
+    32000,
+    49200
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "skeletal legionnaire": 6,
+    "skeletal centurion": 1
+   }
+  },
+  {
+   "id": "roman_fort",
+   "kind": "camp",
+   "at": [
+    54000,
+    50480
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "skeletal legionnaire": 6,
+    "skeletal centurion": 1
+   }
+  },
+  {
+   "id": "the_ninth_marches",
+   "kind": "patrol",
+   "route": [
+    [
+     54000,
+     50480
+    ],
+    [
+     46000,
+     50000
+    ],
+    [
+     38000,
+     49600
+    ],
+    [
+     32000,
+     49200
+    ],
+    [
+     38000,
+     49600
+    ],
+    [
+     46000,
+     50000
+    ]
+   ],
+   "spawn": {
+    "skeletal legionnaire": 3,
+    "skeletal centurion": 1
+   }
+  },
+  {
+   "id": "giant_graves",
+   "kind": "wildlife",
+   "area": [
+    17200,
+    37200,
+    28000,
+    53200
+   ],
+   "spawn": {
+    "giant skeleton": 16,
+    "captured soul": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "giants_quarry_road",
+   "kind": "camp",
+   "at": [
+    8000,
+    56000
+   ],
+   "r": 560,
+   "respawn": 600,
+   "spawn": {
+    "Cornish quarry-giant": 3,
+    "granite giant stoneshaper": 2
+   }
+  },
+  {
+   "id": "giants_edge",
+   "kind": "camp",
+   "at": [
+    4400,
+    40000
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "Cornish quarry-giant": 2
+   }
+  }
+ ]
+}

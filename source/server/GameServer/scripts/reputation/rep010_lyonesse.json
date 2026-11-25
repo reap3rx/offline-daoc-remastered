@@ -1,0 +1,185 @@
+{
+ "zone": 10,
+ "name": "Lyonesse",
+ "levels": [
+  40,
+  52
+ ],
+ "realm": 1,
+ "factions": [
+  {
+   "key": "lyonesse_remnant",
+   "name": "the Lyonesse Remnant",
+   "short": "the Remnant",
+   "kin": [
+    "pendragons_watch",
+    "wardens_of_cotswold",
+    "ulfwych_rangers",
+    "marsh_wardens",
+    "snowdonia_garrison",
+    "men_of_tintagel",
+    "knights_of_the_lake",
+    "dragon_watch"
+   ],
+   "titles": [
+    "Friend of the Remnant",
+    "Remnant Knight",
+    "Sword of Lyonesse"
+   ],
+   "speaker": "ly_meliot",
+   "town": "the Remnant's camp",
+   "kills": [
+    "peallaidh",
+    "storm",
+    "bone snapper",
+    "moorlich",
+    "knight",
+    "footman",
+    "pikeman",
+    "meliodas",
+    "lizard",
+    "freybug",
+    "goblin",
+    "dunter"
+   ],
+   "quartermaster": {
+    "name": "Remnant-Quartermaster Cador",
+    "guild": "the Lyonesse Remnant",
+    "model": 9,
+    "anchor": "ly_meliot",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "What the Remnant saved from the sea. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep010_remnant_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep010_remnant_knight_s_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep010_sword_of_lyonesse_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep010_harper_s_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep010_mantle_of_the_sword_of_lyonesse",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "harpers_of_tristan",
+   "name": "the Harpers of Tristan",
+   "short": "the Harpers",
+   "kin": [
+    "abbey_faithful",
+    "sisters_of_amesbury",
+    "thornwardens",
+    "keepers_of_the_isle",
+    "emrys_circle",
+    "oath_of_corineus",
+    "maidens_of_the_lake",
+    "quarry_oath"
+   ],
+   "titles": [
+    "Friend of the Harp",
+    "Harper of Lyonesse",
+    "Keeper of Tristan's Lay"
+   ],
+   "speaker": "ly_gwennol",
+   "town": "the Remnant's camp",
+   "kills": [
+    "hamadryad",
+    "witherwoode",
+    "cailleach",
+    "hound",
+    "sailor",
+    "captain",
+    "priest of arawn",
+    "arawnite",
+    "shepherd",
+    "farmer",
+    "townsman",
+    "bwca"
+   ],
+   "quartermaster": {
+    "name": "Harper Elowen",
+    "guild": "the Harpers of Tristan",
+    "model": 38,
+    "anchor": "ly_gwennol",
+    "offset": [
+     -4,
+     3
+    ],
+    "greet": "The Harpers' gifts, for those who keep the songs. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep010_harp_friend_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep010_lay_keeper_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep010_harper_s_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep010_sword_of_lyonesse_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep010_mantle_of_tristan_s_lay",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "lyonesse_remnant",
+ "event_default": "lyonesse_remnant",
+ "quest_default": "lyonesse_remnant",
+ "quests": {
+  "last_evening": "harpers_of_tristan",
+  "arawn_sacrament": "lyonesse_remnant",
+  "ly_peallaidh": "lyonesse_remnant",
+  "ly_bone_snappers": "lyonesse_remnant",
+  "ly_moorlich": "lyonesse_remnant",
+  "ly_tristans_harp": "harpers_of_tristan",
+  "ly_black_sail": "harpers_of_tristan",
+  "ly_hamadryads": "harpers_of_tristan",
+  "ly_gabriel_hounds": "harpers_of_tristan",
+  "ly_witherwoode": "harpers_of_tristan",
+  "ly_last_day": "harpers_of_tristan",
+  "ly_storm_callers": "lyonesse_remnant",
+  "ly_storm_controller": "lyonesse_remnant",
+  "ly_pike_line": "lyonesse_remnant",
+  "ly_drowned_knights": "lyonesse_remnant",
+  "ly_meliodas": "lyonesse_remnant",
+  "ly_cailleach": "harpers_of_tristan"
+ },
+ "events": {
+  "ly_white_storm": "lyonesse_remnant",
+  "ly_black_sail_night": "harpers_of_tristan"
+ }
+}

@@ -1,0 +1,907 @@
+{
+ "zone": 9,
+ "name": "Avalon Marsh",
+ "rating": "wild",
+ "themes": [
+  "The shallows round Adribard's Retreat",
+  "The bogmen",
+  "The middle marsh and the Isle's crossing (mist sprites)",
+  "The shore chapel's dead knights",
+  "The Drowned Vigil's keep (the fort to retake) - Deadly",
+  "The west marsh toward Cornwall (wolves, mist monsters, shamblers) - Deadly",
+  "The giants' causeway of Cornish granite"
+ ],
+ "notes": "Albion's plan 2026-11-24, round 2: Wild, Deadly toward Cornwall; the south thread's giants build a road to the Isle where Arthur sleeps, and the north thread's Crimson cross to it by night. Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Dooben": "yellow",
+  "Marsh Lord": "purple",
+  "Undead Knight Fiedel": "red",
+  "Borwyr the Cursed": "yellow",
+  "Vagdush": "orange",
+  "Dread Lord Aryon": "red",
+  "Scraek": "yellow"
+ },
+ "factions": {
+  "bogmen": {
+   "id": 9451,
+   "aggro": 50
+  },
+  "isle": {
+   "id": 9452,
+   "aggro": 45
+  },
+  "dead": {
+   "id": 9453,
+   "aggro": 80
+  },
+  "scrags": {
+   "id": 9454,
+   "aggro": 75
+  },
+  "shore_knights": {
+   "id": 9455,
+   "aggro": 85
+  },
+  "causeway": {
+   "id": 9456,
+   "aggro": 80
+  },
+  "ogres": {
+   "id": 9457,
+   "aggro": 85
+  },
+  "vigil": {
+   "id": 9458,
+   "aggro": 95
+  },
+  "giants": {
+   "id": 9459,
+   "aggro": 90
+  }
+ },
+ "members": {
+  "swamp rat": {
+   "from": "swamp rat",
+   "tier": "green",
+   "roam": 250
+  },
+  "creeping crud": {
+   "from": "creeping crud",
+   "tier": "green",
+   "roam": 250
+  },
+  "scrawny bogman": {
+   "from": "scrawny bogman",
+   "tier": "green",
+   "roam": 250
+  },
+  "slough serpent": {
+   "from": "slough serpent",
+   "tier": "grey",
+   "roam": 250
+  },
+  "slime lizard": {
+   "from": "slime lizard",
+   "tier": "green",
+   "roam": 250
+  },
+  "carrion crab": {
+   "from": "carrion crab",
+   "tier": "green",
+   "roam": 250
+  },
+  "scum toad": {
+   "from": "scum toad",
+   "tier": "grey",
+   "roam": 250
+  },
+  "muck snake": {
+   "from": "muck snake",
+   "tier": "green",
+   "roam": 250
+  },
+  "mud worm": {
+   "from": "mud worm",
+   "tier": "grey",
+   "roam": 250
+  },
+  "impling": {
+   "from": "impling",
+   "tier": "grey",
+   "roam": 250
+  },
+  "puny skeleton": {
+   "from": "puny skeleton",
+   "tier": "green",
+   "roam": 250
+  },
+  "outcast rogue": {
+   "from": "outcast rogue",
+   "tier": "green",
+   "roam": 250
+  },
+  "river spriteling": {
+   "from": "river spriteling",
+   "tier": "green",
+   "roam": 250
+  },
+  "river drake hatchling": {
+   "from": "river drake hatchling",
+   "tier": "green",
+   "roam": 250
+  },
+  "swamp slime": {
+   "from": "swamp slime",
+   "tier": "green",
+   "roam": 150
+  },
+  "giant frog": {
+   "from": "giant frog",
+   "tier": "blue",
+   "roam": 250
+  },
+  "spiny eel": {
+   "from": "spiny eel",
+   "tier": "blue",
+   "roam": 200
+  },
+  "bogman": {
+   "from": "bogman",
+   "tier": "blue",
+   "faction": "bogmen",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 250
+  },
+  "bogman grappler": {
+   "from": "bogman grappler",
+   "tier": "blue",
+   "faction": "bogmen",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "bogman gatherer": {
+   "from": "bogman gatherer",
+   "tier": "blue",
+   "faction": "bogmen",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 300
+  },
+  "bogman fisher": {
+   "from": "bogman fisher",
+   "tier": "yellow",
+   "faction": "bogmen",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "bogman trapper": {
+   "from": "bogman trapper",
+   "tier": "yellow",
+   "faction": "bogmen",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "bogman hunter": {
+   "from": "bogman hunter",
+   "tier": "yellow",
+   "faction": "bogmen",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 250
+  },
+  "mist sprite": {
+   "from": "mist sprite",
+   "tier": "blue",
+   "faction": "isle",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "river racer": {
+   "from": "river racer",
+   "tier": "blue",
+   "roam": 250
+  },
+  "rot worm": {
+   "from": "rot worm",
+   "tier": "blue",
+   "roam": 200
+  },
+  "death grip vines": {
+   "from": "death grip vines",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    300
+   ],
+   "roam": 0
+  },
+  "bloody-bones": {
+   "from": "bloody-bones",
+   "tier": "yellow",
+   "faction": "dead",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 250
+  },
+  "decayed zombie": {
+   "from": "decayed zombie",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 150
+  },
+  "putrid zombie": {
+   "from": "putrid zombie",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 150
+  },
+  "water leaper": {
+   "from": "water leaper",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 250
+  },
+  "scrag": {
+   "from": "scrag",
+   "tier": "yellow",
+   "faction": "scrags",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 250
+  },
+  "scragling": {
+   "from": "scragling",
+   "tier": "blue",
+   "faction": "scrags",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "marsh scrag": {
+   "from": "marsh scrag",
+   "tier": "yellow",
+   "faction": "scrags",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 250
+  },
+  "will o' wisp": {
+   "from": "will o' wisp",
+   "tier": "yellow",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 300
+  },
+  "marsh worm": {
+   "from": "marsh worm",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 200
+  },
+  "pixie": {
+   "from": "pixie",
+   "tier": "blue",
+   "faction": "isle",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 250
+  },
+  "phantom page": {
+   "from": "phantom page",
+   "tier": "blue",
+   "faction": "shore_knights",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 200
+  },
+  "phantom squire": {
+   "from": "phantom squire",
+   "tier": "yellow",
+   "faction": "shore_knights",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "ghostly knight": {
+   "from": "ghostly knight",
+   "tier": "orange",
+   "faction": "shore_knights",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 150
+  },
+  "shambler": {
+   "from": "shambler",
+   "tier": "yellow",
+   "faction": "causeway",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "mud golem": {
+   "from": "mud golem",
+   "tier": "orange",
+   "faction": "causeway",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 100
+  },
+  "giant water leaper": {
+   "from": "giant water leaper",
+   "tier": "orange",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 250
+  },
+  "giant wolf": {
+   "from": "giant wolf",
+   "tier": "orange",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 450
+  },
+  "black bear": {
+   "from": "black bear",
+   "tier": "orange",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 350
+  },
+  "mist monster": {
+   "from": "mist monster",
+   "tier": "red",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 250
+  },
+  "quicksand": {
+   "from": "quicksand",
+   "tier": "orange",
+   "aggro": [
+    90,
+    200
+   ],
+   "roam": 0
+  },
+  "wood ogre scourge": {
+   "from": "wood ogre scourge",
+   "tier": "orange",
+   "faction": "ogres",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "wood ogre seer": {
+   "from": "wood ogre seer",
+   "tier": "orange",
+   "faction": "ogres",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 120
+  },
+  "wood ogre berserker": {
+   "from": "wood ogre berserker",
+   "tier": "red",
+   "faction": "ogres",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 200
+  },
+  "ghoul footman": {
+   "from": "ghoul footman",
+   "tier": "orange",
+   "faction": "vigil",
+   "guild": "the Drowned Vigil",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 150
+  },
+  "ghoul knight": {
+   "from": "ghoul knight",
+   "tier": "orange",
+   "faction": "vigil",
+   "guild": "the Drowned Vigil",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 200
+  },
+  "ghoul lord": {
+   "from": "ghoul lord",
+   "tier": "red",
+   "faction": "vigil",
+   "guild": "the Drowned Vigil",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 100,
+   "guards": {
+    "ghoul knight": 1
+   }
+  },
+  "Cornish giant": {
+   "from": "Cornish giant",
+   "tier": "red",
+   "faction": "giants",
+   "guild": "the March of Golestandt",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 200
+  },
+  "granite giant herdsman": {
+   "from": "granite giant herdsman",
+   "tier": "red",
+   "faction": "giants",
+   "guild": "the March of Golestandt",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 150
+  }
+ },
+ "sites": [
+  {
+   "id": "retreat_shallows",
+   "kind": "wildlife",
+   "area": [
+    35200,
+    5200,
+    64000,
+    24800
+   ],
+   "spawn": {
+    "swamp rat": 27,
+    "creeping crud": 27,
+    "scrawny bogman": 22,
+    "slough serpent": 16,
+    "slime lizard": 14,
+    "carrion crab": 14,
+    "scum toad": 14,
+    "muck snake": 11,
+    "mud worm": 8,
+    "impling": 8,
+    "puny skeleton": 8,
+    "outcast rogue": 8,
+    "river spriteling": 14,
+    "river drake hatchling": 11,
+    "swamp slime": 19
+   },
+   "spacing": 260
+  },
+  {
+   "id": "retreat_bog",
+   "kind": "wildlife",
+   "area": [
+    33600,
+    5600,
+    64000,
+    35200
+   ],
+   "spawn": {
+    "bogman": 35,
+    "bogman grappler": 22,
+    "spiny eel": 19,
+    "giant frog": 11
+   },
+   "spacing": 260
+  },
+  {
+   "id": "isle_mists",
+   "kind": "wildlife",
+   "area": [
+    22000,
+    9600,
+    56000,
+    36000
+   ],
+   "spawn": {
+    "mist sprite": 40,
+    "rot worm": 27,
+    "river racer": 19,
+    "bloody-bones": 14,
+    "death grip vines": 14,
+    "bogman gatherer": 22
+   },
+   "spacing": 260
+  },
+  {
+   "id": "isle_shore",
+   "kind": "camp",
+   "at": [
+    44160,
+    18800
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "mist sprite": 6,
+    "pixie": 2
+   }
+  },
+  {
+   "id": "bog_village",
+   "kind": "camp",
+   "at": [
+    35800,
+    41000
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "bogman gatherer": 5,
+    "bogman trapper": 3,
+    "bogman hunter": 2
+   }
+  },
+  {
+   "id": "east_dead",
+   "kind": "wildlife",
+   "area": [
+    36000,
+    21600,
+    52000,
+    36000
+   ],
+   "spawn": {
+    "decayed zombie": 14,
+    "putrid zombie": 14
+   },
+   "spacing": 260
+  },
+  {
+   "id": "south_marsh",
+   "kind": "wildlife",
+   "area": [
+    25600,
+    36000,
+    56000,
+    61600
+   ],
+   "spawn": {
+    "bogman fisher": 22,
+    "water leaper": 22,
+    "scragling": 11,
+    "death grip vines": 14,
+    "will o' wisp": 14,
+    "marsh worm": 11,
+    "pixie": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "leapers_pool",
+   "kind": "camp",
+   "at": [
+    39160,
+    52000
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "water leaper": 6
+   }
+  },
+  {
+   "id": "scrag_hollow",
+   "kind": "camp",
+   "at": [
+    44680,
+    56760
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "scrag": 6,
+    "scragling": 3
+   }
+  },
+  {
+   "id": "shore_chapel",
+   "kind": "camp",
+   "at": [
+    41280,
+    48600
+   ],
+   "r": 400,
+   "respawn": 420,
+   "spawn": {
+    "ghostly knight": 4,
+    "phantom squire": 3
+   }
+  },
+  {
+   "id": "chapel_yard",
+   "kind": "wildlife",
+   "area": [
+    36800,
+    32800,
+    58800,
+    50000
+   ],
+   "spawn": {
+    "phantom page": 16,
+    "phantom squire": 5
+   },
+   "spacing": 260
+  },
+  {
+   "id": "witrin_fields",
+   "kind": "wildlife",
+   "area": [
+    15200,
+    32800,
+    24000,
+    40800
+   ],
+   "spawn": {
+    "marsh scrag": 14,
+    "scragling": 8,
+    "bloody-bones": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "wolf_marsh",
+   "kind": "wildlife",
+   "area": [
+    7200,
+    17200,
+    24800,
+    33600
+   ],
+   "spawn": {
+    "giant wolf": 30,
+    "black bear": 11
+   },
+   "spacing": 260
+  },
+  {
+   "id": "mist_monsters",
+   "kind": "camp",
+   "at": [
+    7640,
+    22760
+   ],
+   "r": 400,
+   "respawn": 420,
+   "spawn": {
+    "mist monster": 6
+   }
+  },
+  {
+   "id": "quicksand_bank",
+   "kind": "camp",
+   "at": [
+    22240,
+    21800
+   ],
+   "r": 360,
+   "respawn": 600,
+   "spawn": {
+    "quicksand": 6
+   }
+  },
+  {
+   "id": "leaper_deeps",
+   "kind": "camp",
+   "at": [
+    27560,
+    24960
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "giant water leaper": 6
+   }
+  },
+  {
+   "id": "shambler_road",
+   "kind": "wildlife",
+   "area": [
+    6800,
+    40000,
+    32000,
+    58400
+   ],
+   "spawn": {
+    "shambler": 46,
+    "marsh scrag": 14,
+    "death grip vines": 11
+   },
+   "spacing": 260
+  },
+  {
+   "id": "mud_golems",
+   "kind": "camp",
+   "at": [
+    25640,
+    39440
+   ],
+   "r": 360,
+   "respawn": 360,
+   "spawn": {
+    "mud golem": 5
+   }
+  },
+  {
+   "id": "ogre_edge",
+   "kind": "camp",
+   "at": [
+    3000,
+    39600
+   ],
+   "r": 480,
+   "respawn": 420,
+   "spawn": {
+    "wood ogre scourge": 4,
+    "wood ogre seer": 2,
+    "wood ogre berserker": 2
+   }
+  },
+  {
+   "id": "giants_causeway_0",
+   "kind": "camp",
+   "at": [
+    5200,
+    46400
+   ],
+   "r": 400,
+   "respawn": 480,
+   "spawn": {
+    "Cornish giant": 2,
+    "granite giant herdsman": 1,
+    "shambler": 2
+   }
+  },
+  {
+   "id": "giants_causeway_1",
+   "kind": "camp",
+   "at": [
+    10400,
+    43200
+   ],
+   "r": 400,
+   "respawn": 480,
+   "spawn": {
+    "Cornish giant": 2,
+    "granite giant herdsman": 1,
+    "shambler": 2
+   }
+  },
+  {
+   "id": "giants_causeway_2",
+   "kind": "camp",
+   "at": [
+    16000,
+    49200
+   ],
+   "r": 400,
+   "respawn": 480,
+   "spawn": {
+    "Cornish giant": 2,
+    "granite giant herdsman": 1,
+    "shambler": 2
+   }
+  },
+  {
+   "id": "vigil_marsh",
+   "kind": "wildlife",
+   "area": [
+    7200,
+    3000,
+    22400,
+    17600
+   ],
+   "spawn": {
+    "ghoul footman": 22,
+    "ghoul knight": 19
+   },
+   "spacing": 260
+  },
+  {
+   "id": "vigil_keep",
+   "kind": "camp",
+   "at": [
+    14400,
+    9600
+   ],
+   "r": 560,
+   "respawn": 420,
+   "spawn": {
+    "ghoul lord": 3,
+    "ghoul knight": 6,
+    "ghoul footman": 4
+   }
+  },
+  {
+   "id": "vigil_walls",
+   "kind": "camp",
+   "at": [
+    16400,
+    13200
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "ghoul footman": 6
+   }
+  }
+ ]
+}

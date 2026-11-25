@@ -1,740 +1,1502 @@
 {
-  "zone": 6,
-  "region": 1,
-  "name": "Cornwall",
-  "lore": "Cornwall: moor, sea-cliff and tin mine, where the muryan dwindle in their mounds and the bucca demand their share of every catch.",
-  "chains": [
+ "zone": 6,
+ "region": 1,
+ "name": "Cornwall",
+ "lore": "Cornwall: giants' country since Corineus wrestled Gogmagog off its cliffs. The Ghostly Church keeps Gorlois's knights, the beech woods keep the old fae, and out of the Catacombs of Cardova march the Drowned Ninth, a lost legion the giants have bound to dig their quarry. Cornwall Station is Albion's hard start: only the moor round it is gentle.",
+ "chains": [
+  {
+   "id": "cornwall_muryan_mounds",
+   "title": "The Muryan Mounds",
+   "levels": [
+    18,
+    24
+   ],
+   "hint": "Small lights dance over the mounds...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "cornwall_muryan_mounds",
-      "title": "The Muryan Mounds",
-      "levels": [18, 24],
-      "hint": "Small lights dance over the mounds...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Muryan Mounds",
-          "objective": "Clear the muryan mounds",
-          "announce": "The bucca have stirred the muryan against the tinners. Old Tregeagle, who should be bailing his pool for eternity, is behind it.",
-          "center": [674, 971, 139.2],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12862,
-              "name": "muryan",
-              "level": [18, 20]
-            },
-            {
-              "template": 12874,
-              "name": "bucca",
-              "level": [23, 24]
-            }
-          ],
-          "success": "You have cleared the muryan mounds. Old Tregeagle comes out to fight.",
-          "fail": "They hold the muryan mounds. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Old Tregeagle",
-          "objective": "Defeat Old Tregeagle",
-          "announce": "Old Tregeagle stands at the muryan mounds. Bring friends.",
-          "center": [674, 971, 139.2],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12874,
-            "name": "Old Tregeagle",
-            "level": 26,
-            "size": 32,
-            "pos": [674, 971, 139.2],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12862,
-                "name": "muryan",
-                "level": [18, 20]
-              }
-            ]
-          },
-          "success": "Old Tregeagle falls. The way is safe again.",
-          "fail": "Old Tregeagle slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu6_old_tregeagle_s_signet", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Muryans Hold the Road",
-          "objective": "Drive the muryans off the road",
-          "announce": "With The Muryan Mounds lost, the muryans have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [426, 1048, 151.5],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12862,
-              "name": "muryan",
-              "level": [18, 20]
-            },
-            {
-              "template": 12874,
-              "name": "bucca",
-              "level": [23, 24]
-            }
-          ],
-          "boss": {
-            "template": 12862,
-            "name": "Muryan warleader",
-            "level": 25,
-            "pos": [426, 1048, 151.5],
-            "health_mult": 2
-          },
-          "success": "The muryans are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Edith has come out to set the road right. The muryans are coming back for it!",
-          "center": [426, 1048, 151.5],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Edith",
-            "level": 24,
-            "pos": [426, 1048, 151.5],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [464, 972, 161.3],
-              [507, 1023, 147.8],
-              [500, 1089, 142.6]
-            ],
-            "mobs": [
-              {
-                "template": 12862,
-                "name": "muryan",
-                "level": [18, 20]
-              },
-              {
-                "template": 12874,
-                "name": "bucca",
-                "level": [23, 24]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The muryans break and scatter. The road is open again.",
-          "fail": "Roadwarden Edith falls, and the muryans take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Muryan Mounds",
+     "objective": "Clear the muryan mounds",
+     "announce": "The bucca have stirred the muryan against the tinners. Old Tregeagle, who should be bailing his pool for eternity, is behind it.",
+     "center": [
+      674,
+      971,
+      139.2
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12862,
+       "name": "muryan",
+       "level": [
+        18,
+        20
+       ]
+      },
+      {
+       "template": 12874,
+       "name": "bucca",
+       "level": [
+        23,
+        24
+       ]
+      }
+     ],
+     "success": "You have cleared the muryan mounds. Old Tregeagle comes out to fight.",
+     "fail": "They hold the muryan mounds. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "cornwall_moor_wolves",
-      "title": "The Moor Wolves",
-      "levels": [14, 17],
-      "hint": "Wolves howl across the moor...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Jenefer the Tinner",
-          "objective": "Protect Jenefer the Tinner, who is loading tin onto her mule",
-          "announce": "The moor wolves have Jenefer the tinner and her mule cornered. Keep them off her while she gets the load on.",
-          "center": [1164, 678, 128.6],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Jenefer the Tinner",
-            "template": 60167630,
-            "level": 17,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
-            "health_mult": 10,
-            "pos": [1164, 678, 128.6]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1236, 722, 135.4],
-              [1183, 761, 132.6],
-              [1117, 750, 135.4]
-            ],
-            "mobs": [
-              {
-                "template": 12831,
-                "name": "moor wolf",
-                "level": [14, 14]
-              },
-              {
-                "template": 12830,
-                "name": "moor pack leader",
-                "level": [15, 15]
-              },
-              {
-                "template": 12829,
-                "name": "moor den mother",
-                "level": [17, 17]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Jenefer the Tinner. \"They came from over there - let's finish this.\"",
-          "fail": "Jenefer the Tinner falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Tinners' Track",
-          "objective": "Clear the tinners' track",
-          "announce": "They came from the tinners' track. Follow them back and clear it out.",
-          "center": [1221, 927, 126.3],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12831,
-              "name": "moor wolf",
-              "level": [14, 14]
-            },
-            {
-              "template": 12830,
-              "name": "moor pack leader",
-              "level": [15, 15]
-            },
-            {
-              "template": 12829,
-              "name": "moor den mother",
-              "level": [17, 17]
-            }
-          ],
-          "success": "You have cleared the tinners' track. Greyjaw of the Moor comes out to fight.",
-          "fail": "They hold the tinners' track. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Greyjaw of the Moor",
-          "objective": "Defeat Greyjaw of the Moor",
-          "announce": "Greyjaw of the Moor stands at the tinners' track. Bring friends.",
-          "center": [1221, 927, 126.3],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12830,
-            "name": "Greyjaw of the Moor",
-            "level": 19,
-            "size": 91,
-            "pos": [1221, 927, 126.3],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12831,
-                "name": "moor wolf",
-                "level": [14, 14]
-              }
-            ]
-          },
-          "success": "Greyjaw of the Moor falls. The way is safe again.",
-          "fail": "Greyjaw of the Moor slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu6_greyjaw_of_the_moor_s_mantle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Moor Wolfs Hold the Road",
-          "objective": "Drive the moor wolfs off the road",
-          "announce": "With The Moor Wolves lost, the moor wolfs have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [945, 765, 137.3],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12831,
-              "name": "moor wolf",
-              "level": [14, 14]
-            },
-            {
-              "template": 12830,
-              "name": "moor pack leader",
-              "level": [15, 15]
-            },
-            {
-              "template": 12829,
-              "name": "moor den mother",
-              "level": [17, 17]
-            }
-          ],
-          "boss": {
-            "template": 12831,
-            "name": "Moor wolf warleader",
-            "level": 18,
-            "pos": [945, 765, 137.3],
-            "health_mult": 2
-          },
-          "success": "The moor wolfs are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hal has come out to set the road right. The moor wolfs are coming back for it!",
-          "center": [945, 765, 137.3],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hal",
-            "level": 17,
-            "pos": [945, 765, 137.3],
-            "health_mult": 10,
-            "template": 60167630,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1027, 743, 136.2],
-              [1018, 808, 142.8],
-              [965, 848, 144.4]
-            ],
-            "mobs": [
-              {
-                "template": 12831,
-                "name": "moor wolf",
-                "level": [14, 14]
-              },
-              {
-                "template": 12830,
-                "name": "moor pack leader",
-                "level": [15, 15]
-              },
-              {
-                "template": 12829,
-                "name": "moor den mother",
-                "level": [17, 17]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The moor wolfs break and scatter. The road is open again.",
-          "fail": "Roadwarden Hal falls, and the moor wolfs take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Old Tregeagle",
+     "objective": "Defeat Old Tregeagle",
+     "announce": "Old Tregeagle stands at the muryan mounds. Bring friends.",
+     "center": [
+      674,
+      971,
+      139.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12874,
+      "name": "Old Tregeagle",
+      "level": 26,
+      "size": 32,
+      "pos": [
+       674,
+       971,
+       139.2
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12862,
+        "name": "muryan",
+        "level": [
+         18,
+         20
+        ]
+       }
       ]
+     },
+     "success": "Old Tregeagle falls. The way is safe again.",
+     "fail": "Old Tregeagle slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu6_old_tregeagle_s_signet",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
     },
     {
-      "id": "cornwall_rooters_dig",
-      "title": "The Rooters' Dig",
-      "levels": [27, 34],
-      "hint": "The ground heaves over the old battlefield...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Old Battlefield",
-          "objective": "Clear the old battlefield",
-          "announce": "The giant rooters are tearing up the old battlefield, and the dead they uncover are getting up.",
-          "center": [776, 1311, 168.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12825,
-              "name": "giant rooter",
-              "level": [30, 34]
-            },
-            {
-              "template": 12688,
-              "name": "giant skeleton",
-              "level": [27, 28]
-            }
-          ],
-          "success": "You have cleared the old battlefield. The Boneheap Rooter comes out to fight.",
-          "fail": "They hold the old battlefield. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Boneheap Rooter",
-          "objective": "Defeat the Boneheap Rooter",
-          "announce": "The Boneheap Rooter stands at the old battlefield. Bring friends.",
-          "center": [776, 1311, 168.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12825,
-            "name": "The Boneheap Rooter",
-            "level": 36,
-            "size": 84,
-            "pos": [776, 1311, 168.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12825,
-                "name": "giant rooter",
-                "level": [30, 34]
-              }
-            ]
-          },
-          "success": "The Boneheap Rooter falls. The way is safe again.",
-          "fail": "The Boneheap Rooter slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu6_boneheap_rooter_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Giant Rooters Hold the Road",
-          "objective": "Drive the giant rooters off the road",
-          "announce": "With The Rooters' Dig lost, the giant rooters have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [500, 1400, 145.3],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12825,
-              "name": "giant rooter",
-              "level": [30, 34]
-            },
-            {
-              "template": 12688,
-              "name": "giant skeleton",
-              "level": [27, 28]
-            }
-          ],
-          "boss": {
-            "template": 12825,
-            "name": "Giant rooter warleader",
-            "level": 35,
-            "pos": [500, 1400, 145.3],
-            "health_mult": 2
-          },
-          "success": "The giant rooters are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hal has come out to set the road right. The giant rooters are coming back for it!",
-          "center": [500, 1400, 145.3],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hal",
-            "level": 34,
-            "pos": [500, 1400, 145.3],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [538, 1324, 140.0],
-              [581, 1374, 147.5],
-              [575, 1440, 158.8]
-            ],
-            "mobs": [
-              {
-                "template": 12825,
-                "name": "giant rooter",
-                "level": [30, 34]
-              },
-              {
-                "template": 12688,
-                "name": "giant skeleton",
-                "level": [27, 28]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The giant rooters break and scatter. The road is open again.",
-          "fail": "Roadwarden Hal falls, and the giant rooters take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Muryans Hold the Road",
+     "objective": "Drive the muryans off the road",
+     "announce": "With The Muryan Mounds lost, the muryans have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      426,
+      1048,
+      151.5
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12862,
+       "name": "muryan",
+       "level": [
+        18,
+        20
+       ]
+      },
+      {
+       "template": 12874,
+       "name": "bucca",
+       "level": [
+        23,
+        24
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12862,
+      "name": "Muryan warleader",
+      "level": 25,
+      "pos": [
+       426,
+       1048,
+       151.5
+      ],
+      "health_mult": 2
+     },
+     "success": "The muryans are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
     },
     {
-      "id": "cornwall_beech_wood",
-      "title": "The Beech Wood Wakes",
-      "levels": [23, 27],
-      "hint": "The beech wood creaks though there is no wind...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Woodcutter Jory",
-          "objective": "Protect Woodcutter Jory, who is marking the old trees for the mill",
-          "announce": "Woodcutter Jory has come to mark the old beeches for felling, and the beeches have noticed. Keep them off him.",
-          "center": [956, 437, 135.7],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Woodcutter Jory",
-            "template": 60167630,
-            "level": 27,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
-            "health_mult": 10,
-            "pos": [956, 437, 135.7]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [916, 512, 146.4],
-              [874, 460, 140.0],
-              [882, 394, 136.4]
-            ],
-            "mobs": [
-              {
-                "template": 12875,
-                "name": "elder beech",
-                "level": [23, 27]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Woodcutter Jory. \"They came from over there - let's finish this.\"",
-          "fail": "Woodcutter Jory falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Heart of the Beech Wood",
-          "objective": "Clear the heart of the beech wood",
-          "announce": "They came from the heart of the beech wood. Follow them back and clear it out.",
-          "center": [718, 504, 143.4],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12875,
-              "name": "elder beech",
-              "level": [23, 27]
-            }
-          ],
-          "success": "You have cleared the heart of the beech wood. The Old Beech comes out to fight.",
-          "fail": "They hold the heart of the beech wood. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Old Beech",
-          "objective": "Defeat the Old Beech",
-          "announce": "The Old Beech stands at the heart of the beech wood. Bring friends.",
-          "center": [718, 504, 143.4],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12877,
-            "name": "The Old Beech",
-            "level": 29,
-            "size": 52,
-            "pos": [718, 504, 143.4],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12875,
-                "name": "elder beech",
-                "level": [23, 27]
-              }
-            ]
-          },
-          "success": "The Old Beech falls. The way is safe again.",
-          "fail": "The Old Beech slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu6_old_beech_s_wristguard", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Elder Beeches Hold the Old Road",
-          "objective": "Drive the elder beeches off the old road",
-          "announce": "With The Beech Wood Wakes lost, the elder beeches have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1200, 450, 139.9],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12875,
-              "name": "elder beech",
-              "level": [23, 27]
-            }
-          ],
-          "boss": {
-            "template": 12875,
-            "name": "Elder beech warleader",
-            "level": 28,
-            "pos": [1200, 450, 139.9],
-            "health_mult": 2
-          },
-          "success": "The elder beeches are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cuthbert has come out to set the old road right. The elder beeches are coming back for it!",
-          "center": [1200, 450, 139.9],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cuthbert",
-            "level": 27,
-            "pos": [1200, 450, 139.9],
-            "health_mult": 10,
-            "template": 60167630,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1148, 518, 140.1],
-              [1116, 460, 140.0],
-              [1134, 396, 137.4]
-            ],
-            "mobs": [
-              {
-                "template": 12875,
-                "name": "elder beech",
-                "level": [23, 27]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The elder beeches break and scatter. The old road is open again.",
-          "fail": "Roadwarden Cuthbert falls, and the elder beeches take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Edith has come out to set the road right. The muryans are coming back for it!",
+     "center": [
+      426,
+      1048,
+      151.5
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Edith",
+      "level": 24,
+      "pos": [
+       426,
+       1048,
+       151.5
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        464,
+        972,
+        161.3
+       ],
+       [
+        507,
+        1023,
+        147.8
+       ],
+       [
+        500,
+        1089,
+        142.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12862,
+        "name": "muryan",
+        "level": [
+         18,
+         20
+        ]
+       },
+       {
+        "template": 12874,
+        "name": "bucca",
+        "level": [
+         23,
+         24
+        ]
+       }
       ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The muryans break and scatter. The road is open again.",
+     "fail": "Roadwarden Edith falls, and the muryans take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
-  ]
+   ]
+  },
+  {
+   "id": "cornwall_moor_wolves",
+   "title": "The Moor Wolves",
+   "levels": [
+    14,
+    17
+   ],
+   "hint": "Wolves howl across the moor...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Jenefer the Tinner",
+     "objective": "Protect Jenefer the Tinner, who is loading tin onto her mule",
+     "announce": "The moor wolves have Jenefer the tinner and her mule cornered. Keep them off her while she gets the load on.",
+     "center": [
+      1164,
+      678,
+      128.6
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Jenefer the Tinner",
+      "template": 60167630,
+      "level": 17,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "health_mult": 10,
+      "pos": [
+       1164,
+       678,
+       128.6
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1236,
+        722,
+        135.4
+       ],
+       [
+        1183,
+        761,
+        132.6
+       ],
+       [
+        1117,
+        750,
+        135.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12831,
+        "name": "moor wolf",
+        "level": [
+         14,
+         14
+        ]
+       },
+       {
+        "template": 12830,
+        "name": "moor pack leader",
+        "level": [
+         15,
+         15
+        ]
+       },
+       {
+        "template": 12829,
+        "name": "moor den mother",
+        "level": [
+         17,
+         17
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Jenefer the Tinner. \"They came from over there - let's finish this.\"",
+     "fail": "Jenefer the Tinner falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Tinners' Track",
+     "objective": "Clear the tinners' track",
+     "announce": "They came from the tinners' track. Follow them back and clear it out.",
+     "center": [
+      1221,
+      927,
+      126.3
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12831,
+       "name": "moor wolf",
+       "level": [
+        14,
+        14
+       ]
+      },
+      {
+       "template": 12830,
+       "name": "moor pack leader",
+       "level": [
+        15,
+        15
+       ]
+      },
+      {
+       "template": 12829,
+       "name": "moor den mother",
+       "level": [
+        17,
+        17
+       ]
+      }
+     ],
+     "success": "You have cleared the tinners' track. Greyjaw of the Moor comes out to fight.",
+     "fail": "They hold the tinners' track. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Greyjaw of the Moor",
+     "objective": "Defeat Greyjaw of the Moor",
+     "announce": "Greyjaw of the Moor stands at the tinners' track. Bring friends.",
+     "center": [
+      1221,
+      927,
+      126.3
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12830,
+      "name": "Greyjaw of the Moor",
+      "level": 19,
+      "size": 91,
+      "pos": [
+       1221,
+       927,
+       126.3
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12831,
+        "name": "moor wolf",
+        "level": [
+         14,
+         14
+        ]
+       }
+      ]
+     },
+     "success": "Greyjaw of the Moor falls. The way is safe again.",
+     "fail": "Greyjaw of the Moor slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu6_greyjaw_of_the_moor_s_mantle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Moor Wolfs Hold the Road",
+     "objective": "Drive the moor wolfs off the road",
+     "announce": "With The Moor Wolves lost, the moor wolfs have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      945,
+      765,
+      137.3
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12831,
+       "name": "moor wolf",
+       "level": [
+        14,
+        14
+       ]
+      },
+      {
+       "template": 12830,
+       "name": "moor pack leader",
+       "level": [
+        15,
+        15
+       ]
+      },
+      {
+       "template": 12829,
+       "name": "moor den mother",
+       "level": [
+        17,
+        17
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12831,
+      "name": "Moor wolf warleader",
+      "level": 18,
+      "pos": [
+       945,
+       765,
+       137.3
+      ],
+      "health_mult": 2
+     },
+     "success": "The moor wolfs are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hal has come out to set the road right. The moor wolfs are coming back for it!",
+     "center": [
+      945,
+      765,
+      137.3
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hal",
+      "level": 17,
+      "pos": [
+       945,
+       765,
+       137.3
+      ],
+      "health_mult": 10,
+      "template": 60167630,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1027,
+        743,
+        136.2
+       ],
+       [
+        1018,
+        808,
+        142.8
+       ],
+       [
+        965,
+        848,
+        144.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12831,
+        "name": "moor wolf",
+        "level": [
+         14,
+         14
+        ]
+       },
+       {
+        "template": 12830,
+        "name": "moor pack leader",
+        "level": [
+         15,
+         15
+        ]
+       },
+       {
+        "template": 12829,
+        "name": "moor den mother",
+        "level": [
+         17,
+         17
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The moor wolfs break and scatter. The road is open again.",
+     "fail": "Roadwarden Hal falls, and the moor wolfs take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "cornwall_rooters_dig",
+   "title": "The Rooters' Dig",
+   "levels": [
+    27,
+    34
+   ],
+   "hint": "The ground heaves over the old battlefield...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Old Battlefield",
+     "objective": "Clear the old battlefield",
+     "announce": "The giant rooters are tearing up the old battlefield, and the dead they uncover are getting up.",
+     "center": [
+      776,
+      1311,
+      168.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12825,
+       "name": "giant rooter",
+       "level": [
+        30,
+        34
+       ]
+      },
+      {
+       "template": 12688,
+       "name": "giant skeleton",
+       "level": [
+        27,
+        28
+       ]
+      }
+     ],
+     "success": "You have cleared the old battlefield. The Boneheap Rooter comes out to fight.",
+     "fail": "They hold the old battlefield. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "The Boneheap Rooter",
+     "objective": "Defeat the Boneheap Rooter",
+     "announce": "The Boneheap Rooter stands at the old battlefield. Bring friends.",
+     "center": [
+      776,
+      1311,
+      168.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12825,
+      "name": "The Boneheap Rooter",
+      "level": 36,
+      "size": 84,
+      "pos": [
+       776,
+       1311,
+       168.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12825,
+        "name": "giant rooter",
+        "level": [
+         30,
+         34
+        ]
+       }
+      ]
+     },
+     "success": "The Boneheap Rooter falls. The way is safe again.",
+     "fail": "The Boneheap Rooter slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu6_boneheap_rooter_s_wristguard",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Giant Rooters Hold the Road",
+     "objective": "Drive the giant rooters off the road",
+     "announce": "With The Rooters' Dig lost, the giant rooters have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      500,
+      1400,
+      145.3
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12825,
+       "name": "giant rooter",
+       "level": [
+        30,
+        34
+       ]
+      },
+      {
+       "template": 12688,
+       "name": "giant skeleton",
+       "level": [
+        27,
+        28
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12825,
+      "name": "Giant rooter warleader",
+      "level": 35,
+      "pos": [
+       500,
+       1400,
+       145.3
+      ],
+      "health_mult": 2
+     },
+     "success": "The giant rooters are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hal has come out to set the road right. The giant rooters are coming back for it!",
+     "center": [
+      500,
+      1400,
+      145.3
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hal",
+      "level": 34,
+      "pos": [
+       500,
+       1400,
+       145.3
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        538,
+        1324,
+        140.0
+       ],
+       [
+        581,
+        1374,
+        147.5
+       ],
+       [
+        575,
+        1440,
+        158.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12825,
+        "name": "giant rooter",
+        "level": [
+         30,
+         34
+        ]
+       },
+       {
+        "template": 12688,
+        "name": "giant skeleton",
+        "level": [
+         27,
+         28
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The giant rooters break and scatter. The road is open again.",
+     "fail": "Roadwarden Hal falls, and the giant rooters take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "cornwall_beech_wood",
+   "title": "The Beech Wood Wakes",
+   "levels": [
+    23,
+    27
+   ],
+   "hint": "The beech wood creaks though there is no wind...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Woodcutter Jory",
+     "objective": "Protect Woodcutter Jory, who is marking the old trees for the mill",
+     "announce": "Woodcutter Jory has come to mark the old beeches for felling, and the beeches have noticed. Keep them off him.",
+     "center": [
+      956,
+      437,
+      135.7
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Woodcutter Jory",
+      "template": 60167630,
+      "level": 27,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "health_mult": 10,
+      "pos": [
+       956,
+       437,
+       135.7
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        916,
+        512,
+        146.4
+       ],
+       [
+        874,
+        460,
+        140.0
+       ],
+       [
+        882,
+        394,
+        136.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12875,
+        "name": "elder beech",
+        "level": [
+         23,
+         27
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Woodcutter Jory. \"They came from over there - let's finish this.\"",
+     "fail": "Woodcutter Jory falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Heart of the Beech Wood",
+     "objective": "Clear the heart of the beech wood",
+     "announce": "They came from the heart of the beech wood. Follow them back and clear it out.",
+     "center": [
+      718,
+      504,
+      143.4
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12875,
+       "name": "elder beech",
+       "level": [
+        23,
+        27
+       ]
+      }
+     ],
+     "success": "You have cleared the heart of the beech wood. The Old Beech comes out to fight.",
+     "fail": "They hold the heart of the beech wood. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Old Beech",
+     "objective": "Defeat the Old Beech",
+     "announce": "The Old Beech stands at the heart of the beech wood. Bring friends.",
+     "center": [
+      718,
+      504,
+      143.4
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12877,
+      "name": "The Old Beech",
+      "level": 29,
+      "size": 52,
+      "pos": [
+       718,
+       504,
+       143.4
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12875,
+        "name": "elder beech",
+        "level": [
+         23,
+         27
+        ]
+       }
+      ]
+     },
+     "success": "The Old Beech falls. The way is safe again.",
+     "fail": "The Old Beech slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu6_old_beech_s_wristguard",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Elder Beeches Hold the Old Road",
+     "objective": "Drive the elder beeches off the old road",
+     "announce": "With The Beech Wood Wakes lost, the elder beeches have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1200,
+      450,
+      139.9
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12875,
+       "name": "elder beech",
+       "level": [
+        23,
+        27
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12875,
+      "name": "Elder beech warleader",
+      "level": 28,
+      "pos": [
+       1200,
+       450,
+       139.9
+      ],
+      "health_mult": 2
+     },
+     "success": "The elder beeches are gone from the old road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cuthbert has come out to set the old road right. The elder beeches are coming back for it!",
+     "center": [
+      1200,
+      450,
+      139.9
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cuthbert",
+      "level": 27,
+      "pos": [
+       1200,
+       450,
+       139.9
+      ],
+      "health_mult": 10,
+      "template": 60167630,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1148,
+        518,
+        140.1
+       ],
+       [
+        1116,
+        460,
+        140.0
+       ],
+       [
+        1134,
+        396,
+        137.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12875,
+        "name": "elder beech",
+        "level": [
+         23,
+         27
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+     "success": "The elder beeches break and scatter. The old road is open again.",
+     "fail": "Roadwarden Cuthbert falls, and the elder beeches take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "cw_eagle_marches",
+   "title": "The Eagle Marches",
+   "levels": [
+    36,
+    42
+   ],
+   "hint": "Trumpets under the earth - the Drowned Ninth are marching out of Cardova behind their eagle...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "e1",
+   "stages": [
+    {
+     "id": "e1",
+     "type": "cull",
+     "name": "The Column",
+     "objective": "Break the Ninth's marching column",
+     "announce": "The Drowned Ninth are marching out of Cardova in full column, eagle at the front, to dig for the giants! Break the column!",
+     "center": [
+      1000,
+      1240,
+      142.7
+     ],
+     "radius": 90,
+     "time_s": 1200,
+     "kill": 16,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12884,
+       "name": "drowned legionnaire",
+       "level": [
+        36,
+        38
+       ],
+       "guild": "the Drowned Ninth"
+      },
+      {
+       "template": 12884,
+       "name": "drowned legionnaire",
+       "level": [
+        36,
+        38
+       ],
+       "guild": "the Drowned Ninth"
+      },
+      {
+       "template": 12720,
+       "name": "drowned centurion",
+       "level": [
+        38,
+        40
+       ],
+       "guild": "the Drowned Ninth"
+      }
+     ],
+     "success": "The column breaks - and the eagle-bearer turns to face you, the legate beside him.",
+     "fail": "The Ninth march on to the giants' quarry.",
+     "on_success": "e2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 160,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "e2",
+     "type": "boss",
+     "name": "the Aquilifer",
+     "objective": "Defeat the Aquilifer of the Ninth",
+     "announce": "The Aquilifer, the eagle-bearer, lifts the gilt eagle high: 'The eagle does not fall while I stand!' A fight for a group.",
+     "center": [
+      1000,
+      1240,
+      142.7
+     ],
+     "radius": 90,
+     "time_s": 1500,
+     "boss": {
+      "template": 12720,
+      "name": "the Aquilifer of the Ninth",
+      "level": 42,
+      "size": 64,
+      "pos": [
+       1000,
+       1240,
+       142.7
+      ],
+      "health_mult": 4,
+      "guild": "the Drowned Ninth"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12884,
+        "name": "drowned legionnaire",
+        "level": [
+         36,
+         38
+        ],
+        "guild": "the Drowned Ninth"
+       },
+       {
+        "template": 12720,
+        "name": "drowned centurion",
+        "level": [
+         38,
+         40
+        ],
+        "guild": "the Drowned Ninth"
+       }
+      ]
+     },
+     "success": "The Aquilifer falls, and the eagle with him. For one night the Ninth lie down along the road.",
+     "fail": "The Aquilifer leads the column on.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 280,
+      "tokens": 24,
+      "items": [
+       {
+        "id": "nu006_aquilifer_s_lion_skin",
+        "gold_chance": 40,
+        "silver_chance": 20
+       },
+       {
+        "id": "nu006_gilt_eagle_feather",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Ninth Hold the Downs Road",
+     "objective": "Drive the Ninth off the downs road",
+     "announce": "The Drowned Ninth have dug in across the downs road, as a legion does.",
+     "center": [
+      1150,
+      1180,
+      129.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12884,
+       "name": "drowned legionnaire",
+       "level": [
+        36,
+        38
+       ],
+       "guild": "the Drowned Ninth"
+      },
+      {
+       "template": 12720,
+       "name": "drowned centurion",
+       "level": [
+        38,
+        40
+       ],
+       "guild": "the Drowned Ninth"
+      }
+     ],
+     "boss": {
+      "template": 12720,
+      "name": "drowned optio",
+      "level": 40,
+      "health_mult": 2,
+      "pos": [
+       1150,
+       1180,
+       129.2
+      ]
+     },
+     "success": "The road is clear again.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    }
+   ]
+  },
+  {
+   "id": "cw_bucca_storm",
+   "title": "The Bucca Storm",
+   "levels": [
+    22,
+    28
+   ],
+   "hint": "A white squall out of a clear sky over the north cliffs - and the buccas are coming up out of the sea with it...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "b1",
+   "stages": [
+    {
+     "id": "b1",
+     "type": "defend",
+     "name": "The Cliff-Foot",
+     "objective": "Keep Oath-Keeper Tamsin alive while she lights the storm-beacon",
+     "announce": "A white storm is driving the buccas up the north cliffs! Oath-Keeper Tamsin is lighting the old storm-beacon to turn them back.",
+     "center": [
+      1250,
+      300,
+      140.2
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "template": 60167630,
+      "model": 38,
+      "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+      "guild": "the Oath of Corineus",
+      "name": "Oath-Keeper Tamsin",
+      "level": 26,
+      "pos": [
+       1250,
+       300,
+       140.2
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 24,
+      "count": 3,
+      "from": [
+       [
+        1220,
+        260,
+        152.0
+       ],
+       [
+        1290,
+        270,
+        147.1
+       ],
+       [
+        1240,
+        340,
+        137.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12874,
+        "name": "storm-bucca",
+        "level": [
+         24,
+         26
+        ]
+       },
+       {
+        "template": 12874,
+        "name": "storm-bucca",
+        "level": [
+         24,
+         26
+        ]
+       },
+       {
+        "template": 12862,
+        "name": "muryan",
+        "level": [
+         22,
+         24
+        ]
+       }
+      ]
+     },
+     "thanks": "\"Lit! Let the sea see it, and remember.\"",
+     "success": "The beacon flares and the squall breaks - and out of the spray comes the bucca who called it.",
+     "fail": "Tamsin falls, and the storm takes the cliff.",
+     "on_success": "b2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 120,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "b2",
+     "type": "boss",
+     "name": "Bucca Gwidden",
+     "objective": "Defeat Bucca Gwidden",
+     "announce": "Bucca Gwidden, the white bucca of the storm: 'The white one in the clouds pays better than your fish-bones.' Bring friends.",
+     "center": [
+      1250,
+      300,
+      140.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12874,
+      "name": "Bucca Gwidden",
+      "level": 28,
+      "size": 62,
+      "pos": [
+       1250,
+       300,
+       140.2
+      ],
+      "health_mult": 3
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12874,
+        "name": "storm-bucca",
+        "level": [
+         24,
+         26
+        ]
+       }
+      ]
+     },
+     "success": "Bucca Gwidden dissolves into spray, and the sea goes calm.",
+     "fail": "Gwidden drives the storm inland.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 200,
+      "tokens": 16,
+      "items": [
+       {
+        "id": "nu006_white_bucca_s_shell",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
 }

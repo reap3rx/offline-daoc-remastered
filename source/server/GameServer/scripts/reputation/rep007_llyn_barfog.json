@@ -1,0 +1,198 @@
+{
+ "zone": 7,
+ "name": "Llyn Barfog",
+ "levels": [
+  44,
+  55
+ ],
+ "realm": 1,
+ "factions": [
+  {
+   "key": "knights_of_the_lake",
+   "name": "the Knights of the Lake",
+   "short": "the Lake's knights",
+   "kin": [
+    "pendragons_watch",
+    "wardens_of_cotswold",
+    "ulfwych_rangers",
+    "marsh_wardens",
+    "snowdonia_garrison",
+    "men_of_tintagel",
+    "lyonesse_remnant",
+    "dragon_watch"
+   ],
+   "titles": [
+    "Friend of the Lake",
+    "Knight of the Lake",
+    "the Lady's Champion"
+   ],
+   "speaker": "lb_bors",
+   "town": "the Barfog merchants",
+   "kills": [
+    "toad",
+    "afanc",
+    "crimson",
+    "gatekeeper",
+    "guardian",
+    "fay knight",
+    "branwen",
+    "iddawc",
+    "guiomar",
+    "morgana",
+    "renegade",
+    "bear",
+    "boar",
+    "gorger",
+    "adder"
+   ],
+   "quartermaster": {
+    "name": "Lake-Quartermaster Ector",
+    "guild": "the Knights of the Lake",
+    "model": 28,
+    "anchor": "lb_bors",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The Lake's armoury, for the Lake's friends. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep007_lake_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep007_shore_knight_s_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep007_knight_of_the_lake_s_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep007_white_cattle_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep007_mantle_of_the_lady_s_champion",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "maidens_of_the_lake",
+   "name": "the Maidens of the Lake",
+   "short": "the Maidens",
+   "kin": [
+    "abbey_faithful",
+    "sisters_of_amesbury",
+    "thornwardens",
+    "keepers_of_the_isle",
+    "emrys_circle",
+    "oath_of_corineus",
+    "harpers_of_tristan",
+    "quarry_oath"
+   ],
+   "titles": [
+    "Maiden-Friend",
+    "Friend of the Lady",
+    "Daughter of the Lake"
+   ],
+   "speaker": "lb_lunete",
+   "town": "the Barfog merchants",
+   "kills": [
+    "hound",
+    "cwn annwn",
+    "huntsman",
+    "cythraul",
+    "gwr-drwgiaid",
+    "gwrgi",
+    "necromancer",
+    "bwgan",
+    "bwgwl",
+    "monk",
+    "legion",
+    "shade",
+    "king of the barfog",
+    "cyclops"
+   ],
+   "quartermaster": {
+    "name": "Maiden Elaine",
+    "guild": "the Maidens of the Lake",
+    "model": 38,
+    "anchor": "lb_lunete",
+    "offset": [
+     -4,
+     3
+    ],
+    "greet": "The Lady's gifts, for those who keep her lake. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep007_maiden_friend_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep007_lady_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep007_white_cattle_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep007_knight_of_the_lake_s_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep007_mantle_of_the_lake_s_daughter",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "knights_of_the_lake",
+ "event_default": "knights_of_the_lake",
+ "quest_default": "knights_of_the_lake",
+ "quests": {
+  "lb_toads": "knights_of_the_lake",
+  "lb_hatchlings": "knights_of_the_lake",
+  "lb_gatekeeper": "knights_of_the_lake",
+  "hounds": "maidens_of_the_lake",
+  "lb_huntsman": "maidens_of_the_lake",
+  "lb_cattle": "maidens_of_the_lake",
+  "lb_cythraul": "maidens_of_the_lake",
+  "lb_hill_king": "maidens_of_the_lake",
+  "psalter": "maidens_of_the_lake",
+  "lb_legion": "maidens_of_the_lake",
+  "lb_letters": "maidens_of_the_lake",
+  "lb_fay_knights": "knights_of_the_lake",
+  "lb_branwen": "knights_of_the_lake",
+  "lb_lady": "maidens_of_the_lake"
+ },
+ "events": {
+  "lb_cp1_assault": "knights_of_the_lake",
+  "lb_cp2_assault": "knights_of_the_lake",
+  "lb_cp3_assault": "knights_of_the_lake",
+  "lb_cp4_assault": "knights_of_the_lake",
+  "lb_cp1_counter": "knights_of_the_lake",
+  "lb_cp2_counter": "knights_of_the_lake",
+  "lb_cp3_counter": "knights_of_the_lake",
+  "lb_cp4_counter": "knights_of_the_lake",
+  "lb_gate_of_annwn": "knights_of_the_lake",
+  "llyn_barfog_renegades": "knights_of_the_lake",
+  "lb_still_night": "maidens_of_the_lake",
+  "llyn_barfog_hounds_of_annwn": "maidens_of_the_lake",
+  "llyn_barfog_unshriven": "maidens_of_the_lake"
+ }
+}

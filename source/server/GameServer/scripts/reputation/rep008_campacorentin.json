@@ -1,0 +1,192 @@
+{
+ "zone": 8,
+ "name": "Campacorentin Forest",
+ "levels": [
+  6,
+  24
+ ],
+ "realm": 1,
+ "factions": [
+  {
+   "key": "ulfwych_rangers",
+   "name": "the Ulfwych Rangers",
+   "short": "the Rangers",
+   "kin": [
+    "pendragons_watch",
+    "wardens_of_cotswold",
+    "marsh_wardens",
+    "snowdonia_garrison",
+    "men_of_tintagel",
+    "lyonesse_remnant",
+    "knights_of_the_lake",
+    "dragon_watch"
+   ],
+   "titles": [
+    "Friend of the Rangers",
+    "Ranger of Ulfwych",
+    "Warden of the Greenway"
+   ],
+   "speaker": "cf_gwion",
+   "town": "Caer Ulfwych",
+   "kills": [
+    "goblin",
+    "poacher",
+    "ogre",
+    "gorrak",
+    "spider",
+    "ciraron",
+    "bandit",
+    "wolf",
+    "lion",
+    "green man",
+    "green knight",
+    "wisp",
+    "longlegs",
+    "grizzletooth",
+    "thornpaw",
+    "urfgrat"
+   ],
+   "quartermaster": {
+    "name": "Ranger-Quartermaster Cadfan",
+    "guild": "the Ulfwych Rangers",
+    "model": 9,
+    "anchor": "cf_gwion",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "Rangers' kit, for the Rangers' friends. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep008_ranger_s_leaf_pin",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep008_greenway_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep008_ulfwych_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep008_thorn_keeper_s_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep008_mantle_of_the_greenway_warden",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "thornwardens",
+   "name": "the Thornwardens",
+   "short": "the Thornwardens",
+   "kin": [
+    "abbey_faithful",
+    "sisters_of_amesbury",
+    "keepers_of_the_isle",
+    "emrys_circle",
+    "oath_of_corineus",
+    "harpers_of_tristan",
+    "maidens_of_the_lake",
+    "quarry_oath"
+   ],
+   "titles": [
+    "Friend of the Thorn",
+    "Keeper of the Sleep",
+    "Thornwarden of Campacorentin"
+   ],
+   "speaker": "cf_elaine",
+   "town": "Caer Ulfwych",
+   "kills": [
+    "sacrificer",
+    "crimson",
+    "minion",
+    "druid",
+    "undead druid",
+    "filidh",
+    "pixie",
+    "witch",
+    "elithralia",
+    "accolon",
+    "root-bleeder",
+    "presence",
+    "fellwood",
+    "oak man"
+   ],
+   "quartermaster": {
+    "name": "Thornwarden Olwen",
+    "guild": "the Thornwardens",
+    "model": 38,
+    "anchor": "cf_elaine",
+    "offset": [
+     -4,
+     3
+    ],
+    "greet": "The thorn's gifts, for those who keep the old man's sleep. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep008_thornwarden_s_briar_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep008_sleep_keeper_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep008_thorn_keeper_s_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep008_ulfwych_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep008_mantle_of_the_thornwarden",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "ulfwych_rangers",
+ "event_default": "ulfwych_rangers",
+ "quest_default": "ulfwych_rangers",
+ "quests": {
+  "page": "ulfwych_rangers",
+  "heretic": "thornwardens",
+  "cf_poachers": "ulfwych_rangers",
+  "cf_whelps": "ulfwych_rangers",
+  "cf_scroll": "thornwardens",
+  "cf_wisps": "ulfwych_rangers",
+  "cf_ogre_road": "ulfwych_rangers",
+  "cf_ogre_seers": "ulfwych_rangers",
+  "cf_bred_king": "ulfwych_rangers",
+  "cf_spiders": "ulfwych_rangers",
+  "cf_druid_barrow": "thornwardens",
+  "cf_waking_wood": "thornwardens",
+  "cf_pixie_queen": "thornwardens",
+  "cf_green_witch": "ulfwych_rangers",
+  "cf_blood_roots": "thornwardens",
+  "cf_druids_way": "thornwardens",
+  "cf_merlins_thorn": "thornwardens"
+ },
+ "events": {
+  "cf_thorn_night": "thornwardens",
+  "cf_green_knight": "ulfwych_rangers",
+  "campacorentin_forest_restless_knights": "thornwardens"
+ }
+}

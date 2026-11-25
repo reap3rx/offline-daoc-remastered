@@ -1,879 +1,2046 @@
 {
-  "zone": 0,
-  "region": 1,
-  "name": "Camelot Hills",
-  "lore": "The green hills below Camelot: Cotswold's farms, Prydwen Keep on the river, and the old barrows where the filidh were buried long before Arthur.",
-  "chains": [
+ "zone": 0,
+ "region": 1,
+ "name": "Camelot Hills",
+ "lore": "The green hills below Camelot. Arthur is gone to Avalon and the Round Table's survivors keep the realm - but the roads are full of bandits paid in red-sealed silver, the dead are walking in the barrow fields, and in Mithra's old tomb the Crimson, Morgana le Fay's mortal cult, has begun its first rite under Camelot's nose.",
+ "chains": [
+  {
+   "id": "camelot_hills_bandit_hollow",
+   "title": "The Road Gang's Toll",
+   "levels": [
+    6,
+    9
+   ],
+   "hint": "Smoke from the Road Gang's camp in the hills east of the crossroads...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "camelot_hills_bandit_hollow",
-      "title": "The Bandit Hollow",
-      "levels": [5, 9],
-      "hint": "Smoke rises from a hollow in the southern hills...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Bandit Hollow",
-          "objective": "Clear the bandit hollow",
-          "announce": "Ranulf Blackhand's band has made camp in the hollow and robs every cart bound for Prydwen. Break the camp.",
-          "center": [1243, 844, 63.3],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12447,
-              "name": "bandit",
-              "level": [5, 8]
-            },
-            {
-              "template": 12308,
-              "name": "bandit henchman",
-              "level": [9, 9]
-            },
-            {
-              "template": 12311,
-              "name": "bandit lieutenant",
-              "level": [9, 9]
-            }
-          ],
-          "success": "You have cleared the bandit hollow. Ranulf Blackhand comes out to fight.",
-          "fail": "They hold the bandit hollow. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Ranulf Blackhand",
-          "objective": "Defeat Ranulf Blackhand",
-          "announce": "Ranulf Blackhand stands at the bandit hollow. Bring friends.",
-          "center": [1243, 844, 63.3],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12310,
-            "name": "Ranulf Blackhand",
-            "level": 11,
-            "size": 70,
-            "pos": [1243, 844, 63.3],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12447,
-                "name": "bandit",
-                "level": [5, 8]
-              }
-            ]
-          },
-          "success": "Ranulf Blackhand falls. The way is safe again.",
-          "fail": "Ranulf Blackhand slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu0_ranulf_blackhand_s_pendant", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "Ranulf's Men Hold the Cotswold Road",
-          "objective": "Drive the bandits off the Cotswold road",
-          "announce": "Ranulf Blackhand's bandits have come down out of the hollow and set a toll on the Cotswold road. Nobody passes without paying - in coin or in blood.",
-          "center": [1066, 990, 51.1],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12447,
-              "name": "bandit",
-              "level": [5, 8]
-            },
-            {
-              "template": 12308,
-              "name": "bandit henchman",
-              "level": [9, 9]
-            },
-            {
-              "template": 12311,
-              "name": "bandit lieutenant",
-              "level": [9, 9]
-            }
-          ],
-          "boss": {
-            "template": 12447,
-            "name": "Toll-Keeper Wat",
-            "level": 10,
-            "pos": [1066, 990, 51.1],
-            "health_mult": 2
-          },
-          "success": "The bandits are gone from the road. The watch will want their toll gate down.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Wainwright Godric, who is pulling down the bandits' toll gate",
-          "announce": "Wainwright Godric is pulling down the toll gate. The bandits are coming back for it!",
-          "center": [1066, 990, 51.1],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Wainwright Godric",
-            "level": 9,
-            "pos": [1066, 990, 51.1],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1072, 906, 51.8],
-              [1131, 936, 53.7],
-              [1150, 1000, 55.0]
-            ],
-            "mobs": [
-              {
-                "template": 12447,
-                "name": "bandit",
-                "level": [5, 8]
-              },
-              {
-                "template": 12308,
-                "name": "bandit henchman",
-                "level": [9, 9]
-              },
-              {
-                "template": 12311,
-                "name": "bandit lieutenant",
-                "level": [9, 9]
-              }
-            ]
-          },
-          "thanks": "\"Down it comes! Cotswold's road is free again.\"",
-          "success": "The bandits break and scatter. The road to Prydwen Keep is open again.",
-          "fail": "Wainwright Godric falls, and the bandits take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "camelot_hills_barrow_wakes",
-      "title": "The Barrow Wakes",
-      "levels": [5, 7],
-      "hint": "The dead are restless in the old barrows...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Brother Aelred",
-          "objective": "Protect Brother Aelred, who is sealing the barrow door with holy water",
-          "announce": "Brother Aelred has come to seal the old barrow before the dead walk again. They are already walking.",
-          "center": [1180, 1380, 53.9],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Brother Aelred",
-            "template": 60167630,
-            "level": 7,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
-            "health_mult": 10,
-            "pos": [1180, 1380, 53.9]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1150, 1340, 54.0],
-              [1210, 1420, 57.7],
-              [1140, 1420, 47.5]
-            ],
-            "mobs": [
-              {
-                "template": 12368,
-                "name": "large skeleton",
-                "level": [5, 5]
-              },
-              {
-                "template": 12128,
-                "name": "undead filidh",
-                "level": [5, 7]
-              },
-              {
-                "template": 12388,
-                "name": "rotting zombie",
-                "level": [5, 6]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Brother Aelred. \"They came from over there - let's finish this.\"",
-          "fail": "Brother Aelred falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Old Barrows",
-          "objective": "Clear the old barrows",
-          "announce": "They came from the old barrows. Follow them back and clear it out.",
-          "center": [1165, 1310, 52.6],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12368,
-              "name": "large skeleton",
-              "level": [5, 5]
-            },
-            {
-              "template": 12128,
-              "name": "undead filidh",
-              "level": [5, 7]
-            },
-            {
-              "template": 12388,
-              "name": "rotting zombie",
-              "level": [5, 6]
-            }
-          ],
-          "success": "You have cleared the old barrows. The Barrow-Wight comes out to fight.",
-          "fail": "They hold the old barrows. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Barrow-Wight",
-          "objective": "Defeat the Barrow-Wight",
-          "announce": "The Barrow-Wight stands at the old barrows. Bring friends.",
-          "center": [1165, 1310, 52.6],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12128,
-            "name": "The Barrow-Wight",
-            "level": 9,
-            "size": 71,
-            "pos": [1165, 1310, 52.6],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12368,
-                "name": "large skeleton",
-                "level": [5, 5]
-              }
-            ]
-          },
-          "success": "The Barrow-Wight falls. The way is safe again.",
-          "fail": "The Barrow-Wight slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu0_barrow_wight_s_signet", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Large Skeletons Hold the Road to Prydwen Keep",
-          "objective": "Drive the large skeletons off the road to Prydwen Keep",
-          "announce": "With The Barrow Wakes lost, the large skeletons have spread down onto the road to Prydwen Keep and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1258, 1167, 80.5],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12368,
-              "name": "large skeleton",
-              "level": [5, 5]
-            },
-            {
-              "template": 12128,
-              "name": "undead filidh",
-              "level": [5, 7]
-            },
-            {
-              "template": 12388,
-              "name": "rotting zombie",
-              "level": [5, 6]
-            }
-          ],
-          "boss": {
-            "template": 12368,
-            "name": "Large skeleton warleader",
-            "level": 8,
-            "pos": [1258, 1167, 80.5],
-            "health_mult": 2
-          },
-          "success": "The large skeletons are gone from the road to Prydwen Keep. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Mabyn has come out to set the road to Prydwen Keep right. The large skeletons are coming back for it!",
-          "center": [1258, 1167, 80.5],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Mabyn",
-            "level": 7,
-            "pos": [1258, 1167, 80.5],
-            "health_mult": 10,
-            "template": 60167630,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1338, 1139, 62.1],
-              [1334, 1205, 76.3],
-              [1283, 1248, 61.9]
-            ],
-            "mobs": [
-              {
-                "template": 12368,
-                "name": "large skeleton",
-                "level": [5, 5]
-              },
-              {
-                "template": 12128,
-                "name": "undead filidh",
-                "level": [5, 7]
-              },
-              {
-                "template": 12388,
-                "name": "rotting zombie",
-                "level": [5, 6]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Prydwen Keep is safe again. Thank you.\"",
-          "success": "The large skeletons break and scatter. The road to Prydwen Keep is open again.",
-          "fail": "Roadwarden Mabyn falls, and the large skeletons take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "camelot_hills_ant_nest",
-      "title": "The Dragon Ant Nest",
-      "levels": [5, 8],
-      "hint": "Sergeant Wystan is looking for help in Cotswold.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Sergeant Wystan",
-        "template": 60167630,
-        "level": 9,
-        "model": 28,
-        "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
-        "guild": "Cotswold Watch",
-        "health_mult": 4,
-        "pos": [396, 702, 58.7],
-        "greet": "The dragon ants have dug into the farmers' fields again - they took a whole flock last night. I'm taking the watch out to burn the nest. Will you come? Tell me when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear the Road Gang's Camp",
+     "objective": "Clear the Road Gang's camp in the hills",
+     "announce": "Ranulf Blackhand's band has made camp in the hollow and robs every cart bound for Prydwen. Break the camp.",
+     "center": [
+      850,
+      1010,
+      62.0
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12447,
+       "name": "bandit",
+       "level": [
+        5,
+        8
+       ]
       },
-      "guards": [
-        {
-          "name": "Veteran Guardsman",
-          "template": 60167630,
-          "level": 8,
-          "model": 28,
-          "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
-          "guild": "Cotswold Watch",
-          "health_mult": 2,
-          "count": 3
-        }
-      ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Dragon Ant Nest",
-          "objective": "Go with Sergeant Wystan to the dragon ant nest",
-          "announce": "Sergeant Wystan leads the Cotswold watch out towards the dragon ant nest.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [504, 706, 51.8],
-            [608, 706, 55.8],
-            [712, 706, 54.8],
-            [816, 706, 58.3],
-            [856, 666, 58.5],
-            [880, 650, 57.5],
-            [912, 642, 55.4],
-            [960, 626, 53.6]
-          ],
-          "ambushes": [
-            {
-              "at": 4,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 12082,
-                  "name": "dragon ant worker",
-                  "level": [5, 5]
-                },
-                {
-                  "template": 12081,
-                  "name": "dragon ant soldier",
-                  "level": [7, 7]
-                }
-              ]
-            }
-          ],
-          "success": "Sergeant Wystan reaches the dragon ant nest. \"There they are. Clear them out!\"",
-          "fail": "Sergeant Wystan falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Dragon Ant Nest",
-          "objective": "Clear the dragon ant nest",
-          "announce": "Clear the dragon ant nest!",
-          "center": [958, 622, 53.0],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12082,
-              "name": "dragon ant worker",
-              "level": [5, 5]
-            },
-            {
-              "template": 12081,
-              "name": "dragon ant soldier",
-              "level": [7, 7]
-            },
-            {
-              "template": 12337,
-              "name": "dragon ant drone",
-              "level": [8, 8]
-            }
-          ],
-          "success": "You have cleared the dragon ant nest. The Hive Champion comes out to fight.",
-          "fail": "They hold the dragon ant nest. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "The Hive Champion",
-          "objective": "Defeat the Hive Champion",
-          "announce": "The Hive Champion stands at the dragon ant nest. Bring friends.",
-          "center": [958, 622, 53.0],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12337,
-            "name": "The Hive Champion",
-            "level": 10,
-            "size": 45,
-            "pos": [958, 622, 53.0],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12082,
-                "name": "dragon ant worker",
-                "level": [5, 5]
-              }
-            ]
-          },
-          "success": "The Hive Champion falls. Cotswold will hear of this in the taverns tonight.",
-          "fail": "The Hive Champion slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu0_hive_champion_s_band", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Dragon Ant Workers Hold the Road to Cotswold Village",
-          "objective": "Drive the dragon ant workers off the road to Cotswold Village",
-          "announce": "With The Dragon Ant Nest lost, the dragon ant workers have spread down onto the road to Cotswold Village and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [766, 496, 57.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12082,
-              "name": "dragon ant worker",
-              "level": [5, 5]
-            },
-            {
-              "template": 12081,
-              "name": "dragon ant soldier",
-              "level": [7, 7]
-            },
-            {
-              "template": 12337,
-              "name": "dragon ant drone",
-              "level": [8, 8]
-            }
-          ],
-          "boss": {
-            "template": 12082,
-            "name": "Dragon ant worker warleader",
-            "level": 9,
-            "pos": [766, 496, 57.6],
-            "health_mult": 2
-          },
-          "success": "The dragon ant workers are gone from the road to Cotswold Village. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Edith has come out to set the road to Cotswold Village right. The dragon ant workers are coming back for it!",
-          "center": [766, 496, 57.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Edith",
-            "level": 8,
-            "pos": [766, 496, 57.6],
-            "health_mult": 10,
-            "template": 60167630,
-            "model": 28,
-            "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [848, 477, 58.0],
-              [837, 543, 70.9],
-              [782, 579, 64.5]
-            ],
-            "mobs": [
-              {
-                "template": 12082,
-                "name": "dragon ant worker",
-                "level": [5, 5]
-              },
-              {
-                "template": 12081,
-                "name": "dragon ant soldier",
-                "level": [7, 7]
-              },
-              {
-                "template": 12337,
-                "name": "dragon ant drone",
-                "level": [8, 8]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Cotswold Village is safe again. Thank you.\"",
-          "success": "The dragon ant workers break and scatter. The road to Cotswold Village is open again.",
-          "fail": "Roadwarden Edith falls, and the dragon ant workers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+      {
+       "template": 12308,
+       "name": "bandit henchman",
+       "level": [
+        9,
+        9
+       ]
+      },
+      {
+       "template": 12311,
+       "name": "bandit lieutenant",
+       "level": [
+        9,
+        9
+       ]
+      }
+     ],
+     "success": "You have cleared the bandit hollow. Ranulf Blackhand comes out to fight.",
+     "fail": "They hold the bandit hollow. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "camelot_hills_orchard_spriggarn",
-      "title": "The Orchard Raiders",
-      "levels": [2, 3],
-      "hint": "Guardsman Pell is looking for help in Cotswold.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Guardsman Pell",
-        "template": 60167630,
-        "level": 4,
-        "model": 28,
-        "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
-        "guild": "Cotswold Watch",
-        "health_mult": 4,
-        "pos": [396, 705, 58.3],
-        "greet": "Spriggarn have been stripping the Cotswold orchards bare, and the farmers' children are afraid to go out. I could use a few new swords. Will you come? Tell me when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
-      },
-      "guards": [
-        {
-          "name": "Veteran Guardsman",
-          "template": 60167630,
-          "level": 3,
-          "model": 28,
-          "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
-          "guild": "Cotswold Watch",
-          "health_mult": 2,
-          "count": 3
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Ranulf Blackhand",
+     "objective": "Defeat Ranulf Blackhand",
+     "announce": "Ranulf Blackhand, the Road Gang's paymaster, comes out with a purse of red-sealed silver on his belt. 'Paid to keep the Watch busy, friend. Nothing personal.'",
+     "center": [
+      850,
+      1010,
+      62.0
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12310,
+      "name": "Ranulf Blackhand",
+      "level": 11,
+      "size": 70,
+      "pos": [
+       850,
+       1010,
+       62.0
       ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Spriggarn Thicket",
-          "objective": "Go with Guardsman Pell to the spriggarn thicket",
-          "announce": "Guardsman Pell leads a few of Cotswold's newest adventurers out against the spriggarn.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [504, 705, 51.8],
-            [608, 705, 55.7],
-            [648, 705, 54.9]
-          ],
-          "ambushes": [
-            {
-              "at": 1,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 12401,
-                  "name": "spriggarn",
-                  "level": [2, 2]
-                },
-                {
-                  "template": 12226,
-                  "name": "spriggarn elder",
-                  "level": [3, 3]
-                }
-              ]
-            }
-          ],
-          "success": "Guardsman Pell reaches the spriggarn thicket. \"There they are. Clear them out!\"",
-          "fail": "Guardsman Pell falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Spriggarn Thicket",
-          "objective": "Clear the spriggarn thicket",
-          "announce": "Clear the spriggarn thicket!",
-          "center": [648, 701, 55.0],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12401,
-              "name": "spriggarn",
-              "level": [2, 2]
-            },
-            {
-              "template": 12226,
-              "name": "spriggarn elder",
-              "level": [3, 3]
-            }
-          ],
-          "success": "You have cleared the spriggarn thicket. Old Knotbark comes out to fight.",
-          "fail": "They hold the spriggarn thicket. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "Old Knotbark",
-          "objective": "Defeat Old Knotbark",
-          "announce": "Old Knotbark stands at the spriggarn thicket. Bring friends.",
-          "center": [648, 701, 55.0],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12226,
-            "name": "Old Knotbark",
-            "level": 5,
-            "size": 67,
-            "pos": [648, 701, 55.0],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12401,
-                "name": "spriggarn",
-                "level": [2, 2]
-              }
-            ]
-          },
-          "success": "Old Knotbark falls. Cotswold will hear of this in the taverns tonight.",
-          "fail": "Old Knotbark slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu0_old_knotbark_s_girdle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Spriggarns Hold the Road to Cotswold Village",
-          "objective": "Drive the spriggarns off the road to Cotswold Village",
-          "announce": "With The Orchard Raiders lost, the spriggarns have spread down onto the road to Cotswold Village and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [480, 919, 61.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12401,
-              "name": "spriggarn",
-              "level": [2, 2]
-            },
-            {
-              "template": 12226,
-              "name": "spriggarn elder",
-              "level": [3, 3]
-            }
-          ],
-          "boss": {
-            "template": 12401,
-            "name": "Spriggarn warleader",
-            "level": 4,
-            "pos": [480, 919, 61.6],
-            "health_mult": 2
-          },
-          "success": "The spriggarns are gone from the road to Cotswold Village. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Edith has come out to set the road to Cotswold Village right. The spriggarns are coming back for it!",
-          "center": [480, 919, 61.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Edith",
-            "level": 3,
-            "pos": [480, 919, 61.6],
-            "health_mult": 10,
-            "template": 60167630,
-            "model": 28,
-            "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [468, 835, 59.5],
-              [532, 852, 55.9],
-              [565, 909, 54.7]
-            ],
-            "mobs": [
-              {
-                "template": 12401,
-                "name": "spriggarn",
-                "level": [2, 2]
-              },
-              {
-                "template": 12226,
-                "name": "spriggarn elder",
-                "level": [3, 3]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Cotswold Village is safe again. Thank you.\"",
-          "success": "The spriggarns break and scatter. The road to Cotswold Village is open again.",
-          "fail": "Roadwarden Edith falls, and the spriggarns take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12447,
+        "name": "bandit",
+        "level": [
+         5,
+         8
+        ]
+       }
       ]
+     },
+     "success": "Ranulf Blackhand falls. The way is safe again.",
+     "fail": "Ranulf Blackhand slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu0_ranulf_blackhand_s_pendant",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "Ranulf's Men Hold the Camelot Road",
+     "objective": "Drive the bandits off the Camelot road",
+     "announce": "Ranulf Blackhand's bandits have come down to the Camelot road and set a toll. Nobody passes without paying - in coin or in blood.",
+     "center": [
+      560,
+      830,
+      53.1
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12447,
+       "name": "bandit",
+       "level": [
+        5,
+        8
+       ]
+      },
+      {
+       "template": 12308,
+       "name": "bandit henchman",
+       "level": [
+        9,
+        9
+       ]
+      },
+      {
+       "template": 12311,
+       "name": "bandit lieutenant",
+       "level": [
+        9,
+        9
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12447,
+      "name": "Toll-Keeper Wat",
+      "level": 10,
+      "pos": [
+       560,
+       830,
+       53.1
+      ],
+      "health_mult": 2
+     },
+     "success": "The bandits are gone from the road. The watch will want their toll gate down.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Wainwright Godric, who is pulling down the bandits' toll gate",
+     "announce": "Wainwright Godric is pulling down the toll gate. The bandits are coming back for it!",
+     "center": [
+      560,
+      830,
+      53.1
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Wainwright Godric",
+      "level": 9,
+      "pos": [
+       560,
+       830,
+       53.1
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        530,
+        800,
+        58.5
+       ],
+       [
+        590,
+        860,
+        54.6
+       ],
+       [
+        530,
+        865,
+        55.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12447,
+        "name": "bandit",
+        "level": [
+         5,
+         8
+        ]
+       },
+       {
+        "template": 12308,
+        "name": "bandit henchman",
+        "level": [
+         9,
+         9
+        ]
+       },
+       {
+        "template": 12311,
+        "name": "bandit lieutenant",
+        "level": [
+         9,
+         9
+        ]
+       }
+      ]
+     },
+     "thanks": "\"Down it comes! Cotswold's road is free again.\"",
+     "success": "The bandits break and scatter. The road to Prydwen Keep is open again.",
+     "fail": "Wainwright Godric falls, and the bandits take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
-  ]
+   ]
+  },
+  {
+   "id": "camelot_hills_barrow_wakes",
+   "title": "The Barrow Wakes",
+   "levels": [
+    9,
+    11
+   ],
+   "hint": "Red lights in the barrow fields, and the dead are walking...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Brother Aelred",
+     "objective": "Protect Brother Aelred, who is unsaying the Crimson's call over the barrow",
+     "announce": "Brother Aelred, Brother Idris's curate, has come to unsay the red-robes' call over the barrow. The dead have heard him.",
+     "center": [
+      1060,
+      1120,
+      51.2
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Brother Aelred",
+      "template": 60167630,
+      "level": 11,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "health_mult": 10,
+      "pos": [
+       1060,
+       1120,
+       51.2
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1030,
+        1090,
+        52.5
+       ],
+       [
+        1090,
+        1150,
+        56.1
+       ],
+       [
+        1030,
+        1155,
+        53.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12368,
+        "name": "large skeleton",
+        "level": [
+         9,
+         9
+        ]
+       },
+       {
+        "template": 12128,
+        "name": "undead filidh",
+        "level": [
+         9,
+         11
+        ]
+       },
+       {
+        "template": 12388,
+        "name": "rotting zombie",
+        "level": [
+         9,
+         10
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Brother Aelred. \"They came from over there - let's finish this.\"",
+     "fail": "Brother Aelred falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Old Barrows",
+     "objective": "Clear the old barrows",
+     "announce": "They came from the old barrows. Follow them back and clear it out.",
+     "center": [
+      1100,
+      1150,
+      57.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12368,
+       "name": "large skeleton",
+       "level": [
+        9,
+        9
+       ]
+      },
+      {
+       "template": 12128,
+       "name": "undead filidh",
+       "level": [
+        9,
+        11
+       ]
+      },
+      {
+       "template": 12388,
+       "name": "rotting zombie",
+       "level": [
+        9,
+        10
+       ]
+      }
+     ],
+     "success": "You have cleared the old barrows. The Barrow-Wight comes out to fight.",
+     "fail": "They hold the old barrows. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Barrow-Wight",
+     "objective": "Defeat the Barrow-Wight",
+     "announce": "The Barrow-Wight stands at the old barrows. Bring friends.",
+     "center": [
+      1100,
+      1150,
+      57.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12128,
+      "name": "The Barrow-Wight",
+      "level": 13,
+      "size": 71,
+      "pos": [
+       1100,
+       1150,
+       57.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12368,
+        "name": "large skeleton",
+        "level": [
+         9,
+         9
+        ]
+       }
+      ]
+     },
+     "success": "The Barrow-Wight falls. The way is safe again.",
+     "fail": "The Barrow-Wight slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu0_barrow_wight_s_signet",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Dead Hold the Road to Prydwen Keep",
+     "objective": "Drive the dead off the road to Prydwen Keep",
+     "announce": "With The Barrow Wakes lost, the large skeletons have spread down onto the road to Prydwen Keep and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      850,
+      1150,
+      57.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12368,
+       "name": "large skeleton",
+       "level": [
+        9,
+        9
+       ]
+      },
+      {
+       "template": 12128,
+       "name": "undead filidh",
+       "level": [
+        9,
+        11
+       ]
+      },
+      {
+       "template": 12388,
+       "name": "rotting zombie",
+       "level": [
+        9,
+        10
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12368,
+      "name": "Large skeleton warleader",
+      "level": 12,
+      "pos": [
+       850,
+       1150,
+       57.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The large skeletons are gone from the road to Prydwen Keep. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Mabyn has come out to set the road to Prydwen Keep right. The large skeletons are coming back for it!",
+     "center": [
+      850,
+      1150,
+      57.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Mabyn",
+      "level": 11,
+      "pos": [
+       850,
+       1150,
+       57.2
+      ],
+      "health_mult": 10,
+      "template": 60167630,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        820,
+        1120,
+        59.0
+       ],
+       [
+        880,
+        1180,
+        55.2
+       ],
+       [
+        820,
+        1185,
+        60.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12368,
+        "name": "large skeleton",
+        "level": [
+         9,
+         9
+        ]
+       },
+       {
+        "template": 12128,
+        "name": "undead filidh",
+        "level": [
+         9,
+         11
+        ]
+       },
+       {
+        "template": 12388,
+        "name": "rotting zombie",
+        "level": [
+         9,
+         10
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Prydwen Keep is safe again. Thank you.\"",
+     "success": "The large skeletons break and scatter. The road to Prydwen Keep is open again.",
+     "fail": "Roadwarden Mabyn falls, and the large skeletons take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "camelot_hills_ant_nest",
+   "title": "The Dragon Ant Nest",
+   "levels": [
+    5,
+    8
+   ],
+   "hint": "Sergeant Wystan is gathering the Wardens in Cotswold to burn the ant queen's mound.",
+   "rest_s": 45,
+   "giver": {
+    "name": "Sergeant Wystan",
+    "template": 60167630,
+    "level": 9,
+    "model": 28,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Wardens of Cotswold",
+    "health_mult": 4,
+    "pos": [
+     396,
+     702,
+     58.7
+    ],
+    "greet": "The dragon ants have dug into the farmers' fields again - they took a whole flock last night. I'm taking the watch out to burn the nest. Will you come? Tell me when you're [ready].",
+    "accept": "ready",
+    "reply": "Good. Stay close - they will have watchers out. With me!",
+    "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "name": "Veteran Guardsman",
+     "template": 60167630,
+     "level": 8,
+     "model": 28,
+     "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+     "guild": "the Wardens of Cotswold",
+     "health_mult": 2,
+     "count": 3
+    }
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "escort",
+     "name": "The Road to Dragon Ant Nest",
+     "objective": "Go with Sergeant Wystan to the dragon ant nest",
+     "announce": "Sergeant Wystan leads the Cotswold watch out towards the dragon ant nest.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       504,
+       706,
+       51.8
+      ],
+      [
+       608,
+       706,
+       55.8
+      ],
+      [
+       712,
+       706,
+       54.8
+      ],
+      [
+       816,
+       706,
+       58.3
+      ],
+      [
+       856,
+       666,
+       58.5
+      ],
+      [
+       880,
+       650,
+       57.5
+      ],
+      [
+       912,
+       642,
+       55.4
+      ],
+      [
+       960,
+       626,
+       53.6
+      ],
+      [
+       1035,
+       593,
+       61.3
+      ],
+      [
+       1110,
+       560,
+       60.9
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 4,
+       "count": 3,
+       "say": "Ambush! To me - hold together!",
+       "mobs": [
+        {
+         "template": 12082,
+         "name": "dragon ant worker",
+         "level": [
+          5,
+          5
+         ]
+        },
+        {
+         "template": 12081,
+         "name": "dragon ant soldier",
+         "level": [
+          7,
+          7
+         ]
+        }
+       ]
+      }
+     ],
+     "success": "Sergeant Wystan reaches the dragon ant nest. \"There they are. Clear them out!\"",
+     "fail": "Sergeant Wystan falls on the road. The others carry the body home.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "g2",
+     "type": "cull",
+     "name": "Clear Dragon Ant Nest",
+     "objective": "Clear the dragon ant nest",
+     "announce": "Clear the dragon ant nest!",
+     "center": [
+      1110,
+      560,
+      60.9
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12082,
+       "name": "dragon ant worker",
+       "level": [
+        5,
+        5
+       ]
+      },
+      {
+       "template": 12081,
+       "name": "dragon ant soldier",
+       "level": [
+        7,
+        7
+       ]
+      },
+      {
+       "template": 12337,
+       "name": "dragon ant drone",
+       "level": [
+        8,
+        8
+       ]
+      }
+     ],
+     "success": "You have cleared the dragon ant nest. The Hive Champion comes out to fight.",
+     "fail": "They hold the dragon ant nest. They will be bolder next time.",
+     "on_success": "g3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g3",
+     "type": "boss",
+     "name": "The Hive Champion",
+     "objective": "Defeat the Hive Champion",
+     "announce": "The Hive Champion stands at the dragon ant nest. Bring friends.",
+     "center": [
+      1110,
+      560,
+      60.9
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12337,
+      "name": "The Hive Champion",
+      "level": 10,
+      "size": 45,
+      "pos": [
+       1110,
+       560,
+       60.9
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12082,
+        "name": "dragon ant worker",
+        "level": [
+         5,
+         5
+        ]
+       }
+      ]
+     },
+     "success": "The Hive Champion falls. Cotswold will hear of this in the taverns tonight.",
+     "fail": "The Hive Champion slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu0_hive_champion_s_band",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Dragon Ant Workers Hold the Road to Cotswold Village",
+     "objective": "Drive the dragon ant workers off the road to Cotswold Village",
+     "announce": "With The Dragon Ant Nest lost, the dragon ant workers have spread down onto the road to Cotswold Village and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      766,
+      496,
+      57.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12082,
+       "name": "dragon ant worker",
+       "level": [
+        5,
+        5
+       ]
+      },
+      {
+       "template": 12081,
+       "name": "dragon ant soldier",
+       "level": [
+        7,
+        7
+       ]
+      },
+      {
+       "template": 12337,
+       "name": "dragon ant drone",
+       "level": [
+        8,
+        8
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12082,
+      "name": "Dragon ant worker warleader",
+      "level": 9,
+      "pos": [
+       766,
+       496,
+       57.6
+      ],
+      "health_mult": 2
+     },
+     "success": "The dragon ant workers are gone from the road to Cotswold Village. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Edith has come out to set the road to Cotswold Village right. The dragon ant workers are coming back for it!",
+     "center": [
+      766,
+      496,
+      57.6
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Edith",
+      "level": 8,
+      "pos": [
+       766,
+       496,
+       57.6
+      ],
+      "health_mult": 10,
+      "template": 60167630,
+      "model": 28,
+      "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        848,
+        477,
+        58.0
+       ],
+       [
+        837,
+        543,
+        70.9
+       ],
+       [
+        782,
+        579,
+        64.5
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12082,
+        "name": "dragon ant worker",
+        "level": [
+         5,
+         5
+        ]
+       },
+       {
+        "template": 12081,
+        "name": "dragon ant soldier",
+        "level": [
+         7,
+         7
+        ]
+       },
+       {
+        "template": 12337,
+        "name": "dragon ant drone",
+        "level": [
+         8,
+         8
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Cotswold Village is safe again. Thank you.\"",
+     "success": "The dragon ant workers break and scatter. The road to Cotswold Village is open again.",
+     "fail": "Roadwarden Edith falls, and the dragon ant workers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "camelot_hills_orchard_spriggarn",
+   "title": "The Orchard Raiders",
+   "levels": [
+    2,
+    3
+   ],
+   "hint": "Guardsman Pell is looking for help in Cotswold.",
+   "rest_s": 45,
+   "giver": {
+    "name": "Guardsman Pell",
+    "template": 60167630,
+    "level": 4,
+    "model": 28,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Wardens of Cotswold",
+    "health_mult": 4,
+    "pos": [
+     396,
+     705,
+     58.3
+    ],
+    "greet": "The spriggarn are stripping the Cotswold orchards bare - and dancing on what's left. The Reeve wants them taught manners. Will you come? Tell me when you're [ready].",
+    "accept": "ready",
+    "reply": "Good. Stay close - they will have watchers out. With me!",
+    "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "name": "Veteran Guardsman",
+     "template": 60167630,
+     "level": 3,
+     "model": 28,
+     "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+     "guild": "the Wardens of Cotswold",
+     "health_mult": 2,
+     "count": 3
+    }
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "escort",
+     "name": "The Road to Spriggarn Thicket",
+     "objective": "Go with Guardsman Pell to the spriggarn thicket",
+     "announce": "Guardsman Pell leads a few of Cotswold's newest adventurers out against the spriggarn.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       504,
+       705,
+       51.8
+      ],
+      [
+       608,
+       705,
+       55.7
+      ],
+      [
+       648,
+       705,
+       54.9
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 1,
+       "count": 3,
+       "say": "Ambush! To me - hold together!",
+       "mobs": [
+        {
+         "template": 12401,
+         "name": "spriggarn",
+         "level": [
+          2,
+          2
+         ]
+        },
+        {
+         "template": 12226,
+         "name": "spriggarn elder",
+         "level": [
+          3,
+          3
+         ]
+        }
+       ]
+      }
+     ],
+     "success": "Guardsman Pell reaches the spriggarn thicket. \"There they are. Clear them out!\"",
+     "fail": "Guardsman Pell falls on the road. The others carry the body home.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "g2",
+     "type": "cull",
+     "name": "Clear Spriggarn Thicket",
+     "objective": "Clear the spriggarn thicket",
+     "announce": "Clear the spriggarn thicket!",
+     "center": [
+      648,
+      701,
+      55.0
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12401,
+       "name": "spriggarn",
+       "level": [
+        2,
+        2
+       ]
+      },
+      {
+       "template": 12226,
+       "name": "spriggarn elder",
+       "level": [
+        3,
+        3
+       ]
+      }
+     ],
+     "success": "You have cleared the spriggarn thicket. Old Knotbark comes out to fight.",
+     "fail": "They hold the spriggarn thicket. They will be bolder next time.",
+     "on_success": "g3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g3",
+     "type": "boss",
+     "name": "Old Knotbark",
+     "objective": "Defeat Old Knotbark",
+     "announce": "Old Knotbark stands at the spriggarn thicket. Bring friends.",
+     "center": [
+      648,
+      701,
+      55.0
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12226,
+      "name": "Old Knotbark",
+      "level": 5,
+      "size": 67,
+      "pos": [
+       648,
+       701,
+       55.0
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12401,
+        "name": "spriggarn",
+        "level": [
+         2,
+         2
+        ]
+       }
+      ]
+     },
+     "success": "Old Knotbark falls. Cotswold will hear of this in the taverns tonight.",
+     "fail": "Old Knotbark slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu0_old_knotbark_s_girdle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Spriggarns Hold the Road to Cotswold Village",
+     "objective": "Drive the spriggarns off the road to Cotswold Village",
+     "announce": "With The Orchard Raiders lost, the spriggarns have spread down onto the road to Cotswold Village and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      480,
+      919,
+      61.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12401,
+       "name": "spriggarn",
+       "level": [
+        2,
+        2
+       ]
+      },
+      {
+       "template": 12226,
+       "name": "spriggarn elder",
+       "level": [
+        3,
+        3
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12401,
+      "name": "Spriggarn warleader",
+      "level": 4,
+      "pos": [
+       480,
+       919,
+       61.6
+      ],
+      "health_mult": 2
+     },
+     "success": "The spriggarns are gone from the road to Cotswold Village. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Edith has come out to set the road to Cotswold Village right. The spriggarns are coming back for it!",
+     "center": [
+      480,
+      919,
+      61.6
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Edith",
+      "level": 3,
+      "pos": [
+       480,
+       919,
+       61.6
+      ],
+      "health_mult": 10,
+      "template": 60167630,
+      "model": 28,
+      "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        468,
+        835,
+        59.5
+       ],
+       [
+        532,
+        852,
+        55.9
+       ],
+       [
+        565,
+        909,
+        54.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12401,
+        "name": "spriggarn",
+        "level": [
+         2,
+         2
+        ]
+       },
+       {
+        "template": 12226,
+        "name": "spriggarn elder",
+        "level": [
+         3,
+         3
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Cotswold Village is safe again. Thank you.\"",
+     "success": "The spriggarns break and scatter. The road to Cotswold Village is open again.",
+     "fail": "Roadwarden Edith falls, and the spriggarns take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "ch_crimson_rite",
+   "title": "The Crimson Rite",
+   "levels": [
+    11,
+    14
+   ],
+   "hint": "Chanting under the eastern hill, and red light in the mouth of Mithra's Tomb...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "r1",
+   "stages": [
+    {
+     "id": "r1",
+     "type": "defend",
+     "name": "The Rite Stone",
+     "objective": "Keep Brother Cynan alive while he breaks the rite stone",
+     "announce": "The Crimson are holding their rite tonight! Brother Cynan of the eastern hamlet has gone to break the rite stone in the barrow fields - and the dead are rising to stop him.",
+     "center": [
+      1255,
+      1060,
+      60.1
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Brother Cynan",
+      "template": 60167630,
+      "model": 32,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "level": 12,
+      "pos": [
+       1255,
+       1060,
+       60.1
+      ],
+      "health_mult": 8,
+      "guild": "the Church of Albion"
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        1290,
+        1020,
+        65.6
+       ],
+       [
+        1220,
+        1100,
+        62.0
+       ],
+       [
+        1300,
+        1100,
+        64.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12620,
+        "name": "undead filidh",
+        "level": [
+         11,
+         12
+        ]
+       },
+       {
+        "template": 12585,
+        "name": "rotting zombie",
+        "level": [
+         11,
+         12
+        ]
+       },
+       {
+        "template": 12284,
+        "name": "crimson acolyte",
+        "level": [
+         11,
+         13
+        ],
+        "guild": "the Crimson"
+       }
+      ]
+     },
+     "thanks": "\"It's broken! Now - the tomb. Whoever leads the rite is still chanting.\"",
+     "success": "The rite stone cracks. In the tomb mouth the chanting falters, then starts again, louder.",
+     "fail": "Brother Cynan falls, and the rite goes on into the night.",
+     "on_success": "r2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "r2",
+     "type": "cull",
+     "name": "The Tomb Mouth",
+     "objective": "Break the Crimson at the mouth of Mithra's Tomb",
+     "announce": "To the tomb! Cut down the red-robes before they finish the rite!",
+     "center": [
+      1330,
+      995,
+      76.1
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 14,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12284,
+       "name": "crimson acolyte",
+       "level": [
+        11,
+        13
+       ],
+       "guild": "the Crimson"
+      },
+      {
+       "template": 12284,
+       "name": "crimson acolyte",
+       "level": [
+        11,
+        13
+       ],
+       "guild": "the Crimson"
+      },
+      {
+       "template": 12075,
+       "name": "crimson initiate",
+       "level": [
+        12,
+        14
+       ],
+       "guild": "the Crimson"
+      }
+     ],
+     "success": "The red-robes break - and the Hierophant comes up out of the dark.",
+     "fail": "The Crimson hold the tomb.",
+     "on_success": "r3",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 90,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "r3",
+     "type": "boss",
+     "name": "Hierophant Cadan",
+     "objective": "Defeat Hierophant Cadan of the Crimson",
+     "announce": "Hierophant Cadan, in red over a Roman breastplate: 'The Lady sleeps in no one's shadow. Not even her brother's.' This is a fight for a group.",
+     "center": [
+      1330,
+      995,
+      76.1
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12075,
+      "name": "Hierophant Cadan",
+      "level": 15,
+      "size": 60,
+      "pos": [
+       1330,
+       995,
+       76.1
+      ],
+      "health_mult": 3,
+      "guild": "Hierophant of the Crimson"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12284,
+        "name": "crimson acolyte",
+        "level": [
+         11,
+         13
+        ],
+        "guild": "the Crimson"
+       },
+       {
+        "template": 12620,
+        "name": "undead filidh",
+        "level": [
+         11,
+         12
+        ]
+       }
+      ]
+     },
+     "success": "Hierophant Cadan falls on the tomb's threshold, and every dead thing in the barrow fields lies down. The Watch will hear of this in Camelot.",
+     "fail": "Cadan finishes the rite. Something under the hill has heard.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 200,
+      "tokens": 16,
+      "items": [
+       {
+        "id": "nu000_hierophant_s_red_cord",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Crimson Hold the Barrow Road",
+     "objective": "Drive the Crimson and their dead off the barrow road",
+     "announce": "The rite went on. The Crimson and their risen dead have come out onto the barrow road and turn back anyone who passes.",
+     "center": [
+      1180,
+      900,
+      64.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12284,
+       "name": "crimson acolyte",
+       "level": [
+        11,
+        13
+       ],
+       "guild": "the Crimson"
+      },
+      {
+       "template": 12620,
+       "name": "undead filidh",
+       "level": [
+        11,
+        12
+       ]
+      },
+      {
+       "template": 12585,
+       "name": "rotting zombie",
+       "level": [
+        11,
+        12
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12075,
+      "name": "Crimson rite-keeper",
+      "level": 14,
+      "health_mult": 2,
+      "pos": [
+       1180,
+       900,
+       64.6
+      ]
+     },
+     "success": "The road is clear again.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    }
+   ],
+   "time": "night"
+  },
+  {
+   "id": "ch_hunt_rides",
+   "title": "The Hunt Rides",
+   "levels": [
+    9,
+    12
+   ],
+   "hint": "Horns in the eastern hills, and hounds baying at something that isn't there...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "h1",
+   "stages": [
+    {
+     "id": "h1",
+     "type": "cull",
+     "name": "The Hunt in Full Cry",
+     "objective": "Turn the Difwych hunt in the eastern hills",
+     "announce": "The Difwych hunt is out in full cry across the eastern hills, chasing a boar twenty years gone - and running down anyone in the way.",
+     "center": [
+      1360,
+      520,
+      53.8
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "kill": 14,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12137,
+       "name": "hound of the Difwych",
+       "level": [
+        9,
+        11
+       ],
+       "size": 58
+      },
+      {
+       "template": 12137,
+       "name": "hound of the Difwych",
+       "level": [
+        9,
+        11
+       ],
+       "size": 58
+      },
+      {
+       "template": 12308,
+       "name": "Difwych huntsman",
+       "level": [
+        10,
+        11
+       ],
+       "guild": "the Difwych Hunt"
+      }
+     ],
+     "success": "The hounds scatter - and something answers their horns. A boar, silver-bristled, as big as a cart.",
+     "fail": "The hunt rides on.",
+     "on_success": "h2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 90,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "h2",
+     "type": "boss",
+     "name": "Grugyn Silver-Bristle",
+     "objective": "Bring down Grugyn Silver-Bristle",
+     "announce": "Grugyn Silver-Bristle, son of the Twrch Trwyth, out of the old tales and into the hills: the brothers' horns have called up the boar they never caught. Bring friends.",
+     "center": [
+      1360,
+      520,
+      53.8
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 12746,
+      "name": "Grugyn Silver-Bristle",
+      "level": 13,
+      "size": 75,
+      "pos": [
+       1360,
+       520,
+       53.8
+      ],
+      "health_mult": 3
+     },
+     "adds": {
+      "every_s": 45,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12246,
+        "name": "young boar",
+        "level": [
+         9,
+         10
+        ]
+       },
+       {
+        "template": 12137,
+        "name": "hound of the Difwych",
+        "level": [
+         9,
+         11
+        ],
+        "size": 58
+       }
+      ]
+     },
+     "success": "Grugyn falls, and the horns go quiet in the hills. For one night, at least, the Difwych hunt is over.",
+     "fail": "Grugyn crashes away into the hills, the hunt behind him.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 180,
+      "tokens": 14,
+      "items": [
+       {
+        "id": "nu000_silver_bristle_charm",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Hunt Holds the Ridge Road",
+     "objective": "Drive the Difwych hounds off the ridge road",
+     "announce": "The Difwych hounds have spread down onto the ridge road and run down anyone they find.",
+     "center": [
+      1150,
+      720,
+      63.5
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12137,
+       "name": "hound of the Difwych",
+       "level": [
+        9,
+        11
+       ],
+       "size": 58
+      },
+      {
+       "template": 12308,
+       "name": "Difwych huntsman",
+       "level": [
+        10,
+        11
+       ],
+       "guild": "the Difwych Hunt"
+      }
+     ],
+     "boss": {
+      "template": 12308,
+      "name": "Difwych whipper-in",
+      "level": 12,
+      "health_mult": 2,
+      "pos": [
+       1150,
+       720,
+       63.5
+      ]
+     },
+     "success": "The road is clear again.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    }
+   ]
+  },
+  {
+   "id": "ch_df_door",
+   "title": "The Door at Darkness Falls",
+   "levels": [
+    11,
+    14
+   ],
+   "hint": "Brimstone on the wind below Darkness Falls - the door is cracking again...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "f1",
+   "stages": [
+    {
+     "id": "f1",
+     "type": "defend",
+     "name": "Hold the Door",
+     "objective": "Keep Sergeant Ffion alive while the Watch shores up the door",
+     "announce": "The door to Darkness Falls is cracking! Sir Barwick's sergeant, Ffion, is holding it with the Watch while the masons work - and the demons are coming through.",
+     "center": [
+      1240,
+      1300,
+      70.0
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "template": 60167630,
+      "model": 28,
+      "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+      "guild": "the Pendragon's Watch",
+      "name": "Sergeant Ffion",
+      "level": 14,
+      "pos": [
+       1240,
+       1300,
+       70.0
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 3,
+      "from": [
+       [
+        1270,
+        1340,
+        71.7
+       ],
+       [
+        1290,
+        1310,
+        70.4
+       ],
+       [
+        1250,
+        1350,
+        66.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12370,
+        "name": "manes demon",
+        "level": [
+         11,
+         13
+        ]
+       },
+       {
+        "template": 12370,
+        "name": "manes demon",
+        "level": [
+         11,
+         13
+        ]
+       },
+       {
+        "template": 12359,
+        "name": "grumoz demon",
+        "level": [
+         12,
+         13
+        ]
+       }
+      ]
+     },
+     "thanks": "\"Sir Barwick will want to hear of this. Barwick, mind. Not Berwick.\"",
+     "success": "The masons are done - and the thing that was pushing hardest comes through before the door closes.",
+     "fail": "Sergeant Ffion falls and the door swings open.",
+     "on_success": "f2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 90,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "f2",
+     "type": "boss",
+     "name": "Gorgoth the Door-Breaker",
+     "objective": "Defeat Gorgoth the Door-Breaker",
+     "announce": "Gorgoth the Door-Breaker, a grumoz the size of a haywain: 'BERWICK.' Bring friends.",
+     "center": [
+      1240,
+      1300,
+      70.0
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12359,
+      "name": "Gorgoth the Door-Breaker",
+      "level": 15,
+      "size": 65,
+      "pos": [
+       1240,
+       1300,
+       70.0
+      ],
+      "health_mult": 3
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12370,
+        "name": "manes demon",
+        "level": [
+         11,
+         13
+        ]
+       }
+      ]
+     },
+     "success": "Gorgoth bursts like a coal in a fire. The door holds another month.",
+     "fail": "Gorgoth breaks through.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 180,
+      "tokens": 14,
+      "items": [
+       {
+        "id": "nu000_door_breaker_s_horn",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "Demons Hold the Barrow Road",
+     "objective": "Drive the demons off the road below Darkness Falls",
+     "announce": "Demons are loose below Darkness Falls and have taken the road.",
+     "center": [
+      1120,
+      1250,
+      67.0
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12370,
+       "name": "manes demon",
+       "level": [
+        11,
+        13
+       ]
+      },
+      {
+       "template": 12359,
+       "name": "grumoz demon",
+       "level": [
+        12,
+        13
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12359,
+      "name": "grumoz warleader",
+      "level": 14,
+      "health_mult": 2,
+      "pos": [
+       1120,
+       1250,
+       67.0
+      ]
+     },
+     "success": "The road is clear again.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    }
+   ]
+  }
+ ]
 }

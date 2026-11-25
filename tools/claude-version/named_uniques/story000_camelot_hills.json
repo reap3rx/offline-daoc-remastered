@@ -176,6 +176,726 @@
     "Hits": 5
    },
    "lore": "A faerie promise in silver. Faeries keep their promises better than most people."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shepherd's Crook-Pin",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "A brass pin shaped like a crook. Ada's late husband wore it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fleece-Lined Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 5,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Soft inside, tough outside. Cotswold makes them for its own."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mill-Wheel Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 5,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 4
+   },
+   "lore": "Forged from a broken pin of Bran's wheel."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "River-Reed Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "Woven by the sprites. It smells faintly of the river."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sickle-Hook Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 5,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 4
+   },
+   "lore": "A harvester's belt with a hook for the sickle. Tobias insists."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Brownie's Button",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "A wooden button with a face carved on it. It winks sometimes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Reeve's Tally Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 5,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 5,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Notched for every sheaf. Tobias counts everything."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Anthill Amber Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Int": 2,
+    "Pie": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 3
+   },
+   "lore": "A bead of amber from the dragon ants' mound. There's a tiny ant inside."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ploughman's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 5,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 5,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Heavy brown wool. Gronyr's family has worn it for generations."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Snare-Wire Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 4
+   },
+   "lore": "Twisted from the poachers' own wire."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Forester's Acorn",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "A brass acorn. Odo hands them out to anyone who helps."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Purse-Snatcher's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 6,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 5
+   },
+   "lore": "Taken back from a cutpurse. It's had several owners, none of them honest."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tithe-Bearer's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 6,
+   "bonuses": {
+    "Pie": 2,
+    "Con": 1,
+    "Power": 1,
+    "Hits": 4
+   },
+   "lore": "The tithe purse hung from it all the way to Camelot. Now it's yours."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Red-Seal Signet",
+   "base": [
+    41,
+    35
+   ],
+   "level": 8,
+   "bonuses": {
+    "Int": 3,
+    "Pie": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "The red seal, filed flat. It doesn't stain your finger any more. Much."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thaumaturge's Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 8,
+   "bonuses": {
+    "Int": 3,
+    "Pie": 1,
+    "Dex": 1,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "A hedge-wizard's charm. It smells of burnt feathers."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Watchman's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 8,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 1,
+    "Hits": 7
+   },
+   "lore": "Issued at Prydwen Keep. It's never been polished, which is how you know it's been used."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Old Fort Keystone",
+   "base": [
+    41,
+    24
+   ],
+   "level": 10,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 10,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "A chip of the old fort's keystone. Elidyr kept the rest for the new gate."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Red-Handed Gauntlet-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 10,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Gamwell's ring. He earned the name honestly, at least."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Prydwen Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 10,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 10,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Watch blue, with Arthur's ship Prydwen stitched in silver at the shoulder."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Huntsman's Horn-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 9,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 2,
+    "Hits": 8
+   },
+   "lore": "A little horn of yellowed bone. Blow it and dogs prick up their ears a mile off."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hound-Leash Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 9,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Plaited leather, chewed at one end."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Twrch Trwyth Tusk",
+   "base": [
+    41,
+    29
+   ],
+   "level": 12,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 10
+   },
+   "lore": "A sliver of the great boar's tusk, kept by the Difwych for twenty years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Round Table Ribbon",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Pie": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A strip of blue from Sir Bedwyr's surcoat. He tore it off himself."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Last Hunt Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 12,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 12,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Boar-hide, trimmed with the brothers' colours."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Acolyte's Red Cord",
+   "base": [
+    41,
+    32
+   ],
+   "level": 11,
+   "bonuses": {
+    "Int": 4,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A red silk cord, knotted thirteen times. Idris burned the knots out."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Blessed Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 11,
+   "bonuses": {
+    "Pie": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "Brother Idris blessed it on the barrow fields. It's warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rite-Stone Shard",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Int": 4,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A shard of one of the rite stones. It's quiet now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gravedigger's Girdle",
+   "base": [
+    41,
+    32
+   ],
+   "level": 12,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 12,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Brother Idris's spare. He's been digging a lot of graves again."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barrow-Field Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 12,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 10
+   },
+   "lore": "Bronze, very old, found in a broken barrow."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tomb-Warden's Key",
+   "base": [
+    41,
+    29
+   ],
+   "level": 14,
+   "bonuses": {
+    "Int": 5,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "An iron key on a chain. It opens nothing any more."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lady Enid's Favour",
+   "base": [
+    41,
+    24
+   ],
+   "level": 14,
+   "bonuses": {
+    "Pie": 5,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "A blue ribbon, given to those who serve the realm well."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Crimson-Bane Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "Cut from the warden's own signet. The red key's been scratched out."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mithras-Stone Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Dark red, Roman-cut, taken from the tomb. Idris blessed it twice to be sure."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Brimstone Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 13,
+   "bonuses": {
+    "Qui": 4,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 8,
+    "Power": 1
+   },
+   "lore": "A lump of yellow stone from Darkness Falls' mouth. It never quite cools."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barwick's Spare Gauntlet-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 13,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 11
+   },
+   "lore": "Sir Barwick had it made from his old gauntlet. 'Not Berwick,' it says inside."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Doorward's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 13,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 13,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Worn by those who've held Darkness Falls' door."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Filidh Song-Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 10,
+   "bonuses": {
+    "Int": 3,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "A thin gold torc. It hums the same three notes, over and over."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Oak-Leaf Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 10,
+   "bonuses": {
+    "Pie": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "Green wool, stitched with oak leaves. The filidh's colour."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Merlin's Riddle-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 10,
+   "bonuses": {
+    "Int": 3,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "Engraved inside: 'Where the thorn grows, the threads meet.'"
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cronker's Knuckle",
+   "base": [
+    41,
+    24
+   ],
+   "level": 13,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 11
+   },
+   "lore": "Big as your fist. Hollis wanted it as proof."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bridge-Toll Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 13,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 13,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Hung with the coins Cronker took from travellers. Hollis returned the rest."
   }
  ]
 }

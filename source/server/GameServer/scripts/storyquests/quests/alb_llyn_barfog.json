@@ -2,12 +2,42 @@
   "name": "Llyn Barfog",
   "npcs": [
     {
+      "id": "lb_bors",
+      "zone": 7,
+      "realm": 1,
+      "name": "Sir Bors de Ganis",
+      "model": 28,
+      "level": 55,
+      "pos": [
+        874,
+        797,
+        52.2
+      ],
+      "guild": "the Knights of the Lake",
+      "idle": "Percival will march when someone gives him the word. Until then, the Lake's knights hold the merchants, and I hold Percival."
+    },
+    {
+      "id": "lb_lunete",
+      "zone": 7,
+      "realm": 1,
+      "name": "Lunete of the Lake",
+      "model": 38,
+      "level": 54,
+      "pos": [
+        867,
+        772,
+        50.9
+      ],
+      "guild": "the Maidens of the Lake",
+      "idle": "My Lady sleeps under the water. She does not sleep well, with Morgana on her shore."
+    },
+    {
       "id": "nest",
       "zone": 7,
       "realm": 1,
       "name": "Nest ferch Rhys",
       "model": 38,
-      "level": 18,
+      "level": 40,
       "pos": [
         886,
         798,
@@ -21,7 +51,7 @@
       "realm": 1,
       "name": "Gwion the Harper",
       "model": 9,
-      "level": 22,
+      "level": 42,
       "pos": [
         878,
         776,
@@ -30,12 +60,26 @@
       "idle": "Every song in this valley ends in the lake. I've tried to write one that doesn't."
     },
     {
+      "id": "teilo",
+      "zone": 7,
+      "realm": 1,
+      "name": "Brother Teilo",
+      "model": 9,
+      "level": 44,
+      "pos": [
+        890,
+        796,
+        52.2
+      ],
+      "idle": "Every brother in my house is dead and still walking. I am the only one who stayed dead-tired instead."
+    },
+    {
       "id": "iolo",
       "zone": 7,
       "realm": 1,
       "name": "Iolo ap Rhys",
       "model": 9,
-      "level": 20,
+      "level": 42,
       "pos": [
         838,
         1312,
@@ -47,26 +91,12 @@
       ]
     },
     {
-      "id": "teilo",
-      "zone": 7,
-      "realm": 1,
-      "name": "Brother Teilo",
-      "model": 9,
-      "level": 24,
-      "pos": [
-        890,
-        796,
-        52.2
-      ],
-      "idle": "Every brother in my house is dead and still walking. I am the only one who stayed dead-tired instead."
-    },
-    {
       "id": "elfodd",
       "zone": 7,
       "realm": 1,
       "name": "Abbot Elfodd",
       "model": 9,
-      "level": 30,
+      "level": 46,
       "pos": [
         1324,
         154,
@@ -80,9 +110,216 @@
   ],
   "quests": [
     {
+      "id": "lb_toads",
+      "title": "The Diamondbacks",
+      "level": 44,
+      "giver": "lb_bors",
+      "offer": "Diamondback toads on the north shore - big as ponies, and they spit. They never came out of the shallows before Morgana came. Now they sit on the road.\n\nWill you [clear the shore]?",
+      "accept": "clear the shore",
+      "topics": {},
+      "summary": "Diamondback toads have come up out of the shallows onto Llyn Barfog's north shore.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 7,
+          "at": [
+            990,
+            470,
+            78.6
+          ],
+          "radius": 50,
+          "goal": "Kill the diamondback toads about 350 m north of Sir Bors de Ganis",
+          "target": "diamondback toad",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "lb_bors",
+          "goal": "Tell Sir Bors",
+          "say": "Good. The road's open - and now you've seen the north shore, you've seen why we can't hold it yet.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Knights of the Lake.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq7_toad_hide_bracer",
+              "sq7_lake_knight_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "lb_hatchlings",
+      "title": "The Afanc's Brood",
+      "level": 45,
+      "giver": "lb_bors",
+      "offer": "Arthur dragged the Afanc out of this lake with chains and oxen, and that was the end of it - so the story goes. Then why are there afanc hatchlings on the north shore?\n\nSomething is breeding them. Will you [find out what]?",
+      "accept": "find out what",
+      "topics": {},
+      "summary": "Afanc hatchlings are breeding on Llyn Barfog's north shore - and the Afanc was killed long ago.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 7,
+          "at": [
+            960,
+            520,
+            57.0
+          ],
+          "radius": 50,
+          "goal": "Kill the afanc hatchlings about 290 m north of Sir Bors de Ganis",
+          "target": "afanc hatchling",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 7,
+          "at": [
+            1060,
+            340,
+            120.0
+          ],
+          "goal": "Search Carn March Arthur, the hoof-stone in the northern hills",
+          "clue": {
+            "name": "a stone with a hoof-print, under a red chain",
+            "model": 1347
+          },
+          "text": "Arthur's horse left its hoof-print here when he dragged the Afanc out. Someone has chained a Crimson ward-stone over the print, and written on it: 'What the King took out, the Queen puts back.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lb_bors",
+          "goal": "Tell Sir Bors",
+          "say": "'What the King took out, the Queen puts back.' She's raising the Afanc. Gods. Percival needs to hear this.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Knights of the Lake.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq7_hatchling_tooth_charm",
+              "sq7_carn_march_belt",
+              "sq7_shore_watch_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "lb_toads"
+    },
+    {
+      "id": "lb_gatekeeper",
+      "title": "The Ward on the Shore",
+      "level": 46,
+      "giver": "lb_bors",
+      "offer": "The Crimson keep a post on the Afanc's shore, and a gatekeeper who chains wards over every stone Arthur ever touched. Break him and the shore is ours to march on.\n\nIt's not a one-sword job. Will you [break the post]?",
+      "accept": "break the post",
+      "topics": {},
+      "summary": "A Crimson gatekeeper keeps Morgana's post on the Afanc's shore.",
+      "steps": [
+        {
+          "type": "encounter",
+          "zone": 7,
+          "at": [
+            1000,
+            520,
+            70.8
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the Crimson gatekeeper on the Afanc's shore",
+          "text": "The gatekeeper falls across his own ward-stones, and the red chains go slack.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Gatekeeper Hywel Redkey",
+              "center": [
+                1000,
+                520,
+                70.8
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Gatekeeper Hywel Redkey",
+              "announce": "A man in crimson with a ring of red keys steps out of the post: 'Every door has a keeper. This one's mine.'",
+              "boss": {
+                "template": 12075,
+                "name": "Gatekeeper Hywel Redkey",
+                "level": 50,
+                "health_mult": 3
+              },
+              "success": "Gatekeeper Hywel Redkey falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 12075,
+                    "name": "crimson acolyte",
+                    "level": [
+                      46,
+                      47
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "lb_bors",
+          "goal": "Tell Sir Bors",
+          "say": "The ward's broken. Now when the Host marches, it has a shore to stand on. Percival thanks you - I thank you louder.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Knights of the Lake.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq7_gatekeeper_s_red_key",
+              "sq7_ward_breaker_s_bracer"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "lb_hatchlings"
+    },
+    {
       "id": "hounds",
       "title": "The Hounds of Annwn",
-      "level": 21,
+      "level": 45,
       "giver": "nest",
       "offer": "My husband Iolo heard the hounds of Annwn three nights ago. The white hounds with red ears. Whoever hears them dies within the year - everybody knows that.\n\nIolo isn't one to wait for it. He took his spear and went to hunt them, to break the doom. Gwion the [harper] knows the old stories. Will you [go after Iolo]?",
       "accept": "go after Iolo",
@@ -112,7 +349,7 @@
           "mob": {
             "template": 12999,
             "name": "cwn annwn",
-            "level": 20
+            "level": 45
           },
           "count": 5,
           "text": "They don't bleed. They fade, like breath on cold glass. Further south, a horn calls.",
@@ -162,7 +399,7 @@
               "boss": {
                 "template": 13001,
                 "name": "Gwyn's Huntsman",
-                "level": 24,
+                "level": 48,
                 "health_mult": 2.4
               },
               "success": "Gwyn's Huntsman falls.",
@@ -175,8 +412,8 @@
                     "template": 12999,
                     "name": "cwn annwn",
                     "level": [
-                      19,
-                      20
+                      44,
+                      45
                     ]
                   }
                 ]
@@ -265,9 +502,259 @@
       }
     },
     {
+      "id": "lb_huntsman",
+      "title": "Master of the Hunt",
+      "level": 48,
+      "giver": "gwion",
+      "offer": "Gwyn's huntsman was one rider of the hunt. The hunt's MASTER rides the western shore now - the Huntsman of Annwn, Morgana's own, with his pack. While he rides, every night in this valley is a doom for someone.\n\nThis needs a group, and courage. Will you [end the hunt]?",
+      "accept": "end the hunt",
+      "topics": {},
+      "summary": "The Huntsman of Annwn, master of Morgana's hounds, rides Llyn Barfog's western shore.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 7,
+          "at": [
+            300,
+            1000,
+            102.0
+          ],
+          "radius": 70,
+          "goal": "Bring down the Huntsman of Annwn about 620 m west of Gwion the Harper",
+          "target": "the Huntsman of Annwn",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "gwion",
+          "goal": "Tell Gwion the Harper",
+          "say": "No horn tonight. No horn for a long while.\n\nI'll write it. A song about the valley that doesn't end in the lake. You've given me the ending.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Gwion the Harper.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq7_huntsman_s_grey_mantle",
+              "sq7_annwn_bone_ring",
+              "sq7_red_ear_torc"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "hounds"
+    },
+    {
+      "id": "lb_cattle",
+      "title": "The Lady's Cattle",
+      "level": 46,
+      "giver": "lb_lunete",
+      "offer": "Do you know why this is the bearded lake? A maiden came up out of it with white cattle, and gave them to the farmers of the valley - and when a greedy man would have slaughtered one, she called them home under the water.\n\nThe bwgan have driven off the last of her herd, to feed Morgana's hounds. Will you [find the herd]?",
+      "accept": "find the herd",
+      "topics": {},
+      "summary": "The bwgan of the north-west hills have driven off the Lady of the Lake's white cattle to feed Morgana's hounds.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 7,
+          "at": [
+            470,
+            400,
+            124.8
+          ],
+          "radius": 50,
+          "goal": "Drive off the bwgan hunters about 540 m north-west of Lunete of the Lake",
+          "target": "bwgan hunter",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 7,
+          "at": [
+            500,
+            380,
+            137.3
+          ],
+          "goal": "Search the bwgan pens",
+          "clue": {
+            "name": "a broken pen, white hairs caught on the rails",
+            "model": 1347
+          },
+          "text": "Empty. White hairs on every rail, and tracks going north into the hills - big tracks, bigger than any bwgan's, walking beside the cattle.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lb_lunete",
+          "goal": "Tell Lunete of the Lake",
+          "say": "North, into the hills. With something big walking beside them. I know who that is. Everyone in this valley knows who that is.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Maidens of the Lake.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq7_white_hide_bracer",
+              "sq7_herd_bell_charm"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "lb_cythraul",
+      "title": "Up Through the Gate",
+      "level": 47,
+      "giver": "lb_lunete",
+      "offer": "The cythraul are Annwn's - demons of the deep places. They come up through Morgana's gate a few at a time, and walk the bwgan hills looking for anything alive.\n\nWill you [send them back]?",
+      "accept": "send them back",
+      "topics": {},
+      "summary": "Cythraul, demons of Annwn, come up through Morgana's gate and walk Llyn Barfog's north-west hills.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 7,
+          "at": [
+            560,
+            430,
+            109.4
+          ],
+          "radius": 50,
+          "goal": "Send the cythraul back about 460 m north-west of Lunete of the Lake",
+          "target": "cythraul",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "lb_lunete",
+          "goal": "Tell Lunete of the Lake",
+          "say": "Back where they came from. My Lady felt every one go. She says thank you, which she does not say often.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Maidens of the Lake.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq7_cythraul_horn_charm",
+              "sq7_lake_maiden_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "lb_hill_king",
+      "title": "The King of the Barfog Hills",
+      "level": 49,
+      "giver": "lb_lunete",
+      "offer": "The King of the Barfog Hills. He's no king - a great beast of the northern hills that calls itself one - but Morgana has bought him with the Lady's own cattle, and he keeps the last white cow in his den.\n\nIt's a fight for a group. Will you [bring her home]?",
+      "accept": "bring her home",
+      "topics": {},
+      "summary": "The King of the Barfog Hills keeps the Lady of the Lake's last white cow in his den in the northern hills.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 7,
+          "at": [
+            682,
+            247,
+            172.4
+          ],
+          "radius": 70,
+          "goal": "Bring down the King of the Barfog Hills about 560 m north of Lunete of the Lake",
+          "target": "King of the Barfog Hills",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "choice",
+          "npc": "lb_lunete",
+          "goal": "Tell Lunete of the Lake",
+          "say": "She's alive? The last of them. I can [call her home], under the water, where Morgana can't reach her - and the valley will never see the white cattle again. Or she can go to [the farmers], to Gwartheg Yllyn at the east gate, and the herd can begin again on the land, the way my Lady meant it.",
+          "options": [
+            {
+              "keyword": "call her home",
+              "say": "Then she goes home. Listen - you'll hear her bell under the water on still nights.",
+              "ending": "home"
+            },
+            {
+              "keyword": "the farmers",
+              "say": "Then the valley has its cattle again. My Lady will be glad - she always liked farmers better than kings.",
+              "ending": "farm"
+            }
+          ],
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "From the Maidens of the Lake.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq7_white_cow_s_bell_collar"
+            ],
+            "choice": [
+              "sq7_hill_king_s_crown_shard",
+              "sq7_lake_herder_s_mantle"
+            ]
+          }
+        },
+        "farm": {
+          "text": "From the Maidens of the Lake.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq7_lake_herder_s_mantle"
+            ],
+            "choice": [
+              "sq7_hill_king_s_crown_shard",
+              "sq7_white_cow_s_bell_collar"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "lb_cattle"
+    },
+    {
       "id": "psalter",
       "title": "The Last Psalm",
-      "level": 28,
+      "level": 47,
       "giver": "teilo",
       "offer": "I'm the last brother of the abbey in the north - the last living one. Thirty years ago our abbot made a pact with the ghosts of an old legion: they would guard our house from raiders. They did. They guarded it from everything.\n\nThis winter my brothers died one by one, and rose again, and went back to their prayers. I ran. I am not proud of it. Will you [go to the abbey]? The abbot's psalter holds the pact. Perhaps it holds a way out.",
       "accept": "go to the abbey",
@@ -300,7 +787,7 @@
           "mob": {
             "template": 13034,
             "name": "undead monk",
-            "level": 27
+            "level": 46
           },
           "count": 6,
           "text": "Each one says 'thank you' as it falls.",
@@ -361,7 +848,7 @@
               "boss": {
                 "template": 13010,
                 "name": "Evocatus Decimus",
-                "level": 30,
+                "level": 49,
                 "health_mult": 2.5
               },
               "success": "Evocatus Decimus falls.",
@@ -374,8 +861,8 @@
                     "template": 13034,
                     "name": "undead monk",
                     "level": [
-                      26,
-                      27
+                      45,
+                      46
                     ]
                   }
                 ]
@@ -454,6 +941,311 @@
           }
         }
       }
+    },
+    {
+      "id": "lb_legion",
+      "title": "The Legion of the Pact",
+      "level": 48,
+      "giver": "teilo",
+      "offer": "The abbot's pact is broken, one way or the other - but the legion's dead didn't all go with Decimus. Some still march round the abbey walls, and they've begun stopping travellers on the north road.\n\nWill you [relieve the watch]? Soldiers like to be relieved.",
+      "accept": "relieve the watch",
+      "topics": {},
+      "summary": "The dead legionaries of the abbey's broken pact still march round its walls and stop travellers on the north road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 7,
+          "at": [
+            1290,
+            200,
+            135.0
+          ],
+          "radius": 50,
+          "goal": "Relieve the legionaries of the pact about 720 m north-east of Brother Teilo",
+          "target": "legionary of the pact",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "teilo",
+          "goal": "Tell Brother Teilo",
+          "say": "Relieved. That's the word Decimus used, isn't it? I hope it's the word they all use.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Brother Teilo.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq7_legion_pact_signet",
+              "sq7_cloister_stone_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "psalter"
+    },
+    {
+      "id": "lb_letters",
+      "title": "The Still Night",
+      "level": 49,
+      "giver": "lb_lunete",
+      "offer": "The Crimson in the bwgan hills carry letters to and from the Gate. If we knew what Morgana waits for, we'd know how long we have.\n\nWill you [take a letter]?",
+      "accept": "take a letter",
+      "topics": {},
+      "summary": "Crimson acolytes carry Morgana's letters between the bwgan hills and the Gate of Annwn.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 7,
+          "at": [
+            560,
+            430,
+            109.4
+          ],
+          "radius": 50,
+          "goal": "Kill the crimson acolytes carrying letters about 460 m north-west of Lunete of the Lake",
+          "target": "crimson acolyte",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 7,
+          "at": [
+            580,
+            440,
+            106.8
+          ],
+          "goal": "Search the Crimson post for letters",
+          "clue": {
+            "name": "a red satchel under a bedroll",
+            "model": 1882
+          },
+          "text": "One letter, in Morgana's own hand: 'The Gate opens on the night the lake is still. The Afanc wakes first. Mordred walks second. Then I walk Annwn's dead into Camelot.'",
+          "give": {
+            "name": "Morgana's letter"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "lb_lunete",
+          "goal": "Bring the letter to Lunete of the Lake",
+          "say": "The night the lake is still. It's never still - my Lady keeps it moving, every night, to keep that gate shut. She's tiring.\n\nSo we haven't long. Percival has to march.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Maidens of the Lake.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq7_crimson_letter_case",
+              "sq7_acolyte_s_red_cord"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "lb_fay_knights",
+      "title": "The Fay Wood",
+      "level": 51,
+      "giver": "lb_bors",
+      "offer": "Morgana is a fay - half of her is - and the Ellyll of the south-west wood are her kin. Her fay knights ride out of that wood in green steel, and cut down anything that comes near the Gate from the west.\n\nA group's work. Will you [ride into the wood]?",
+      "accept": "ride into the wood",
+      "topics": {},
+      "summary": "Morgana's fay knights ride out of the Ellyll wood in Llyn Barfog's south-west and guard the Gate from the west.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 7,
+          "at": [
+            500,
+            1300,
+            127.4
+          ],
+          "radius": 50,
+          "goal": "Cut down Morgana's fay knights about 630 m south-west of Sir Bors de Ganis",
+          "target": "fay knight",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "lb_bors",
+          "goal": "Tell Sir Bors",
+          "say": "Green steel and glamour. Strip the glamour and they bleed like anyone. Good.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Knights of the Lake.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq7_fay_knight_s_gorget",
+              "sq7_ellyll_thorn_bracer",
+              "sq7_glamour_broken_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "lb_letters"
+    },
+    {
+      "id": "lb_branwen",
+      "title": "The Gate-Captain",
+      "level": 53,
+      "giver": "lb_bors",
+      "offer": "Gate-Captain Branwen holds the south shore for Morgana. She chose this - she was a knight of the Lake once, before Morgana made her promises. Whatever the Host does, it does nothing while Branwen holds the shore.\n\nBring a group. Will you [face Branwen]?",
+      "accept": "face Branwen",
+      "topics": {},
+      "summary": "Gate-Captain Branwen, a knight of the Lake turned to Morgana, holds the south shore before the Gate of Annwn.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 7,
+          "at": [
+            870,
+            1300,
+            117.5
+          ],
+          "radius": 70,
+          "goal": "Defeat Gate-Captain Branwen about 500 m south of Sir Bors de Ganis",
+          "target": "Gate-Captain Branwen",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "lb_bors",
+          "goal": "Tell Sir Bors",
+          "say": "She was a good knight. Better than me, once.\n\nThe shore is open. Go and see Lunete - she's been looking at the lake all day, and she won't say why.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Knights of the Lake.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq7_branwen_s_gate_seal",
+              "sq7_gate_captain_s_belt",
+              "sq7_knight_of_the_lake_s_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "lb_fay_knights"
+    },
+    {
+      "id": "lb_lady",
+      "title": "The Lady of the Lake",
+      "level": 54,
+      "giver": "lb_lunete",
+      "offer": "Come to the shore with me. Near the Gate - not too near. The lake went still at noon, and it hasn't moved since.\n\nMy Lady is waiting for you. Will you [come to the shore]?",
+      "accept": "come to the shore",
+      "topics": {},
+      "summary": "Llyn Barfog has gone still, and the Lady of the Lake waits on the south shore.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 7,
+          "at": [
+            700,
+            1170,
+            65.2
+          ],
+          "radius": 25,
+          "goal": "Go to the south shore, near the Gate of Annwn",
+          "text": "The water is flat as glass. A woman stands on it - not in it, ON it - in white, with water running from her hair. Behind her, on the far shore, the Gate is a black arch, and there is something moving in it.",
+          "id": "s1"
+        },
+        {
+          "type": "choice",
+          "npc": "lb_lunete",
+          "goal": "Hear the Lady of the Lake",
+          "say": "(Lunete speaks for her; the Lady's lips do not move.)\n\n'I gave Arthur his sword. I took it back. I held this gate shut for him, and after him, and I am tired. Morgana is my sister in craft, and she will win if no one stands with me.\n\n'Swear to the [sword], and stand with my knights when Percival marches. Or keep [the old ways], and stand with my maidens. Either way - stand.'",
+          "options": [
+            {
+              "keyword": "sword",
+              "say": "'Then you are a knight of the Lake, whatever your arms. Go to Percival.'",
+              "ending": "sword"
+            },
+            {
+              "keyword": "the old ways",
+              "say": "'Then you are my maidens' friend, whatever your name. Go to Percival - he needs the old ways too.'",
+              "ending": "ways"
+            }
+          ],
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "sword": {
+          "text": "From the Lady of the Lake. Sir Percival waits at the merchants: give him the word when you're ready to march.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq7_sword_oath_ring"
+            ],
+            "choice": [
+              "sq7_lady_s_promise",
+              "sq7_old_ways_torc"
+            ]
+          }
+        },
+        "ways": {
+          "text": "From the Lady of the Lake. Sir Percival waits at the merchants: give him the word when you're ready to march.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq7_old_ways_torc"
+            ],
+            "choice": [
+              "sq7_lady_s_promise",
+              "sq7_sword_oath_ring"
+            ]
+          }
+        }
+      },
+      "requires": "lb_branwen"
     }
   ]
 }

@@ -143,6 +143,673 @@
     "Hits": 13
    },
    "lore": "Light, quiet, and made for following people."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Snare-Cutter's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 6,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 5
+   },
+   "lore": "Iron, from a poacher's wire-cutters."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ranger's Acorn Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 6,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 4,
+    "Power": 1
+   },
+   "lore": "A bronze acorn. Every Ulfwych ranger has one."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Goblin-Tooth Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 7,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 6
+   },
+   "lore": "Studded with sylvan goblin teeth. They had plenty."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Whelp-Catcher's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 7,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 6
+   },
+   "lore": "Hung with little nets. Ifan's idea of a joke."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Prophecy-Page Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 9,
+   "bonuses": {
+    "Int": 3,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "Stitched with a copy of the page. Tewdwr insisted."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Red-and-White Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 9,
+   "bonuses": {
+    "Int": 3,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "Two dragons, one red, one white, coiled round each other."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lethantis Reading-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 9,
+   "bonuses": {
+    "Int": 3,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 1,
+    "Hits": 5
+   },
+   "lore": "It makes small writing larger. Mostly."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wisp-Lantern Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 10,
+   "bonuses": {
+    "Qui": 3,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 6,
+    "Power": 1
+   },
+   "lore": "A lantern-glass the wisps tried to steal. It glows faintly blue."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Swamp-Walker's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 10,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 10,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Waxed against the wet."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ogre-Tusk Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 12,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 10
+   },
+   "lore": "Wood ogre tusk, bound in brass."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Westwood Road Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 12,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 12,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Rangers' issue. Every one has a dent."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Brand-Scar Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 14,
+   "bonuses": {
+    "Int": 5,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "The Lethantis brand, cut from an ogre's harness."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Seer-Bone Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 14,
+   "bonuses": {
+    "Int": 5,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "An ogre seer's bone fetish. It rattles when it's nervous."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Truth-Teller's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Pie": 5,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "Gwion's gift, for those who don't flinch from the truth."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bred-King's Crown-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 16,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "The ogre-lord's iron crown, cut into a ring. Stamped with a number."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Berserker-Hide Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 16,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "Ogre-hide, tough as bark."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ulfwych Ranger's Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 16,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 3,
+    "Hits": 14
+   },
+   "lore": "Forest green. The Rangers' own."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Webweaver's Silk Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 15,
+   "bonuses": {
+    "Dex": 5,
+    "Qui": 5,
+    "Str": 2,
+    "Hits": 13
+   },
+   "lore": "Spider-silk, finer than anything a loom makes."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bloated-Spider Fang Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 15,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 13
+   },
+   "lore": "Hollow, and still faintly poisonous. Handle with care."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thornwarden's Briar Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 12,
+   "bonuses": {
+    "Pie": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A ring of living briar. It never pricks the one who wears it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Druid-Barrow Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 12,
+   "bonuses": {
+    "Int": 4,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "From the old druids' barrow. They'd want it used."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fellwood Heart-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 18,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 18,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "A ring of heartwood, warm as skin."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Oak-Man's Bark Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 18,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 18,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Bark that grew back after the blow that cut it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Forester's Axe-Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 18,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 15
+   },
+   "lore": "A tiny bronze axe. Alun swears it keeps the trees polite."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Queen's Thistle Crown",
+   "base": [
+    41,
+    24
+   ],
+   "level": 20,
+   "bonuses": {
+    "Qui": 7,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 12,
+    "Power": 2
+   },
+   "lore": "A circlet of thistledown, small enough for a pixie. It fits on a finger."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pixie-Dust Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 3,
+    "Hits": 17
+   },
+   "lore": "It sparkles. It won't stop sparkling."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fae-Ward Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 20,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 20,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Iron thread through the weave. The fae hate it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Witch's Green Glass Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Int": 7,
+    "Pie": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "Green glass that never quite reflects your face."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hedge-Witch's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Qui": 7,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 12,
+    "Power": 2
+   },
+   "lore": "Pouches of herbs, mostly harmless."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Blood-Root Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 21,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 4,
+    "Hits": 18
+   },
+   "lore": "Root-bark, stained dark. Elaine washed it three times."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sacrificer's Knife-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 21,
+   "bonuses": {
+    "Int": 7,
+    "Pie": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "Cut from a sacrificer's blade. It won't cut anything now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fogou-Stone Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 22,
+   "bonuses": {
+    "Pie": 7,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "A smooth stone from the Fogou's mouth. Warm, always."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Elithralia's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 22,
+   "bonuses": {
+    "Int": 7,
+    "Pie": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "She was a Thornwarden once. Elaine wants you to have it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Druids' Way Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 22,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 22,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Earth-brown, for walking under roots."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Merlin's Thorn Twig",
+   "base": [
+    41,
+    24
+   ],
+   "level": 24,
+   "bonuses": {
+    "Int": 8,
+    "Pie": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "A twig from the thorn. Its flowers never close."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Accolon's Broken Scabbard-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 24,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "From the scabbard of a sword that wasn't his."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Thornwarden's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 24,
+   "bonuses": {
+    "Pie": 8,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "Briar-green and white. Only the Thornwardens' friends wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Prophet's Star Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 24,
+   "bonuses": {
+    "Int": 8,
+    "Pie": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "Merlin's star, worked in silver. It turned up on the thorn when the fight was over."
   }
  ]
 }

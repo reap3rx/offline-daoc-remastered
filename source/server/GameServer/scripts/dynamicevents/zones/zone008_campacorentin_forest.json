@@ -1,1110 +1,2086 @@
 {
-  "zone": 8,
-  "region": 1,
-  "name": "Campacorentin Forest",
-  "lore": "Campacorentin: the deep old forest between Camelot and the Lethantis scholars, full of goblins, ogres and the restless knights of a forgotten order.",
-  "chains": [
+ "zone": 8,
+ "region": 1,
+ "name": "Campacorentin Forest",
+ "lore": "Campacorentin: the deep old forest between Camelot and the Lethantis scholars. Merlin sleeps in a thorn in the deep wood, where Nimue sealed him, and the wood itself guards his sleep. Morgana wants what he knows of gates; the white dragon in the south wants him dead. Lethantis's bred ogres hold the south-west, and the Ulfwych Rangers and the Thornwardens hold everything else they can.",
+ "chains": [
+  {
+   "id": "campacorentin_forest_restless_knights",
+   "title": "The Knights Who Do Not Rest",
+   "levels": [
+    8,
+    10
+   ],
+   "hint": "Spectral horns sound deep in the forest...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "campacorentin_forest_restless_knights",
-      "title": "The Knights Who Do Not Rest",
-      "levels": [8, 10],
-      "hint": "Spectral horns sound deep in the forest...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Haunted Lists",
-          "objective": "Clear the haunted lists",
-          "announce": "Sir Brennus broke his oath, and his knights ride still. Lay them to rest.",
-          "center": [1151, 440, 53.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12485,
-              "name": "ghostly knight",
-              "level": [8, 10]
-            },
-            {
-              "template": 12619,
-              "name": "undead druid",
-              "level": [8, 10]
-            }
-          ],
-          "success": "You have cleared the haunted lists. Sir Brennus the Forsworn comes out to fight.",
-          "fail": "They hold the haunted lists. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Sir Brennus the Forsworn",
-          "objective": "Defeat Sir Brennus the Forsworn",
-          "announce": "Sir Brennus the Forsworn stands at the haunted lists. Bring friends.",
-          "center": [1151, 440, 53.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12485,
-            "name": "Sir Brennus the Forsworn",
-            "level": 12,
-            "size": 68,
-            "pos": [1151, 440, 53.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12485,
-                "name": "ghostly knight",
-                "level": [8, 10]
-              }
-            ]
-          },
-          "success": "Sir Brennus the Forsworn falls. The way is safe again.",
-          "fail": "Sir Brennus the Forsworn slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu8_sir_brennus_the_forsworn_s_signet", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Ghostly Knights Hold the Road",
-          "objective": "Drive the ghostly knights off the road",
-          "announce": "With The Knights Who Do Not Rest lost, the ghostly knights have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1017, 645, 41.2],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12485,
-              "name": "ghostly knight",
-              "level": [8, 10]
-            },
-            {
-              "template": 12619,
-              "name": "undead druid",
-              "level": [8, 10]
-            }
-          ],
-          "boss": {
-            "template": 12485,
-            "name": "Ghostly knight warleader",
-            "level": 11,
-            "pos": [1017, 645, 41.2],
-            "health_mult": 2
-          },
-          "success": "The ghostly knights are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Mabyn has come out to set the road right. The ghostly knights are coming back for it!",
-          "center": [1017, 645, 41.2],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Mabyn",
-            "level": 10,
-            "pos": [1017, 645, 41.2],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [998, 562, 49.2],
-              [1064, 574, 46.8],
-              [1100, 629, 50.1]
-            ],
-            "mobs": [
-              {
-                "template": 12485,
-                "name": "ghostly knight",
-                "level": [8, 10]
-              },
-              {
-                "template": 12619,
-                "name": "undead druid",
-                "level": [8, 10]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The ghostly knights break and scatter. The road is open again.",
-          "fail": "Roadwarden Mabyn falls, and the ghostly knights take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "campacorentin_forest_wood_ogres",
-      "title": "The Wood Ogre Raid",
-      "levels": [12, 15],
-      "hint": "Trees crash in the southern woods...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Forester Hale",
-          "objective": "Protect Forester Hale, who is barring the lodge shutters",
-          "announce": "The wood ogres have come for Forester Hale's lodge. Hold them off while he bars it.",
-          "center": [471, 698, 44.5],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Forester Hale",
-            "template": 60163241,
-            "level": 15,
-            "model": 9,
-            "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19",
-            "health_mult": 10,
-            "pos": [471, 698, 44.5]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [520, 771, 57.0],
-              [449, 780, 58.0],
-              [397, 739, 44.6]
-            ],
-            "mobs": [
-              {
-                "template": 12630,
-                "name": "wood ogre scourge",
-                "level": [12, 13]
-              },
-              {
-                "template": 12066,
-                "name": "wood ogre berserker",
-                "level": [14, 15]
-              },
-              {
-                "template": 12631,
-                "name": "wood ogre seer",
-                "level": [14, 14]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Forester Hale. \"They came from over there - let's finish this.\"",
-          "fail": "Forester Hale falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Forester's Lodge",
-          "objective": "Clear the forester's lodge",
-          "announce": "They came from the forester's lodge. Follow them back and clear it out.",
-          "center": [401, 957, 45.4],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12630,
-              "name": "wood ogre scourge",
-              "level": [12, 13]
-            },
-            {
-              "template": 12066,
-              "name": "wood ogre berserker",
-              "level": [14, 15]
-            },
-            {
-              "template": 12631,
-              "name": "wood ogre seer",
-              "level": [14, 14]
-            }
-          ],
-          "success": "You have cleared the forester's lodge. Mog the Ogre-Mystic comes out to fight.",
-          "fail": "They hold the forester's lodge. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Mog the Ogre-Mystic",
-          "objective": "Defeat Mog the Ogre-Mystic",
-          "announce": "Mog the Ogre-Mystic stands at the forester's lodge. Bring friends.",
-          "center": [401, 957, 45.4],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12628,
-            "name": "Mog the Ogre-Mystic",
-            "level": 17,
-            "size": 71,
-            "pos": [401, 957, 45.4],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12630,
-                "name": "wood ogre scourge",
-                "level": [12, 13]
-              }
-            ]
-          },
-          "success": "Mog the Ogre-Mystic falls. The way is safe again.",
-          "fail": "Mog the Ogre-Mystic slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu8_mog_the_ogre_mystic_s_band", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Wood Ogre Scourges Hold the Road",
-          "objective": "Drive the wood ogre scourges off the road",
-          "announce": "With The Wood Ogre Raid lost, the wood ogre scourges have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [718, 809, 41.2],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12630,
-              "name": "wood ogre scourge",
-              "level": [12, 13]
-            },
-            {
-              "template": 12066,
-              "name": "wood ogre berserker",
-              "level": [14, 15]
-            },
-            {
-              "template": 12631,
-              "name": "wood ogre seer",
-              "level": [14, 14]
-            }
-          ],
-          "boss": {
-            "template": 12630,
-            "name": "Wood ogre scourge warleader",
-            "level": 16,
-            "pos": [718, 809, 41.2],
-            "health_mult": 2
-          },
-          "success": "The wood ogre scourges are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Edith has come out to set the road right. The wood ogre scourges are coming back for it!",
-          "center": [718, 809, 41.2],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Edith",
-            "level": 15,
-            "pos": [718, 809, 41.2],
-            "health_mult": 10,
-            "template": 60163241,
-            "model": 9,
-            "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [690, 889, 46.9],
-              [641, 845, 80.4],
-              [639, 779, 49.6]
-            ],
-            "mobs": [
-              {
-                "template": 12630,
-                "name": "wood ogre scourge",
-                "level": [12, 13]
-              },
-              {
-                "template": 12066,
-                "name": "wood ogre berserker",
-                "level": [14, 15]
-              },
-              {
-                "template": 12631,
-                "name": "wood ogre seer",
-                "level": [14, 14]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The wood ogre scourges break and scatter. The road is open again.",
-          "fail": "Roadwarden Edith falls, and the wood ogre scourges take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "campacorentin_forest_goblin_warband",
-      "title": "The Goblin Warband",
-      "levels": [6, 12],
-      "hint": "Magister Ithel is looking for help in Lethantis.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Magister Ithel",
-        "template": 60163241,
-        "level": 13,
-        "model": 9,
-        "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19",
-        "guild": "Lethantis Association",
-        "health_mult": 4,
-        "pos": [354, 189, 46.0],
-        "greet": "The sylvan goblins stole our star-charts - years of work! - and my guards have tracked them to a warcamp in the woods. Will you help us take them back? Say when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Haunted Lists",
+     "objective": "Clear the haunted lists",
+     "announce": "Sir Brennus broke his oath, and his knights ride still. Lay them to rest.",
+     "center": [
+      1151,
+      440,
+      53.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12485,
+       "name": "ghostly knight",
+       "level": [
+        8,
+        10
+       ]
       },
-      "guards": [
-        {
-          "name": "Lethantis Guard",
-          "template": 60163241,
-          "level": 12,
-          "model": 9,
-          "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19",
-          "guild": "Lethantis Association",
-          "health_mult": 2,
-          "count": 3
-        }
+      {
+       "template": 12619,
+       "name": "undead druid",
+       "level": [
+        8,
+        10
+       ]
+      }
+     ],
+     "success": "You have cleared the haunted lists. Sir Brennus the Forsworn comes out to fight.",
+     "fail": "They hold the haunted lists. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "Sir Brennus the Forsworn",
+     "objective": "Defeat Sir Brennus the Forsworn",
+     "announce": "Sir Brennus the Forsworn stands at the haunted lists. Bring friends.",
+     "center": [
+      1151,
+      440,
+      53.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12485,
+      "name": "Sir Brennus the Forsworn",
+      "level": 12,
+      "size": 68,
+      "pos": [
+       1151,
+       440,
+       53.8
       ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Goblin Warcamp",
-          "objective": "Go with Magister Ithel to the goblin warcamp",
-          "announce": "Magister Ithel and the Lethantis guards set out for the goblin warcamp.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [372, 220, 46.0],
-            [420, 276, 51.1],
-            [468, 332, 45.7],
-            [476, 388, 46.2],
-            [492, 412, 46.1],
-            [516, 436, 46.8],
-            [620, 436, 46.7],
-            [724, 436, 47.3],
-            [820, 436, 45.0],
-            [892, 428, 44.3]
-          ],
-          "ambushes": [
-            {
-              "at": 5,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 12604,
-                  "name": "sylvan goblin hunter",
-                  "level": [6, 8]
-                },
-                {
-                  "template": 12606,
-                  "name": "sylvan goblin warrior",
-                  "level": [9, 12]
-                }
-              ]
-            }
-          ],
-          "success": "Magister Ithel reaches the goblin warcamp. \"There they are. Clear them out!\"",
-          "fail": "Magister Ithel falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Goblin Warcamp",
-          "objective": "Clear the goblin warcamp",
-          "announce": "Clear the goblin warcamp!",
-          "center": [896, 432, 44.2],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12604,
-              "name": "sylvan goblin hunter",
-              "level": [6, 8]
-            },
-            {
-              "template": 12606,
-              "name": "sylvan goblin warrior",
-              "level": [9, 12]
-            }
-          ],
-          "success": "You have cleared the goblin warcamp. Chief Grubnose comes out to fight.",
-          "fail": "They hold the goblin warcamp. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "Chief Grubnose",
-          "objective": "Defeat Chief Grubnose",
-          "announce": "Chief Grubnose stands at the goblin warcamp. Bring friends.",
-          "center": [896, 432, 44.2],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12606,
-            "name": "Chief Grubnose",
-            "level": 14,
-            "size": 68,
-            "pos": [896, 432, 44.2],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12604,
-                "name": "sylvan goblin hunter",
-                "level": [6, 8]
-              }
-            ]
-          },
-          "success": "Chief Grubnose falls. Lethantis will hear of this in the taverns tonight.",
-          "fail": "Chief Grubnose slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu8_chief_grubnose_s_girdle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Sylvan Goblin Hunters Hold the Road",
-          "objective": "Drive the sylvan goblin hunters off the road",
-          "announce": "With The Goblin Warband lost, the sylvan goblin hunters have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [471, 436, 48.2],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12604,
-              "name": "sylvan goblin hunter",
-              "level": [6, 8]
-            },
-            {
-              "template": 12606,
-              "name": "sylvan goblin warrior",
-              "level": [9, 12]
-            }
-          ],
-          "boss": {
-            "template": 12604,
-            "name": "Sylvan goblin hunter warleader",
-            "level": 13,
-            "pos": [471, 436, 48.2],
-            "health_mult": 2
-          },
-          "success": "The sylvan goblin hunters are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Edith has come out to set the road right. The sylvan goblin hunters are coming back for it!",
-          "center": [471, 436, 48.2],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Edith",
-            "level": 12,
-            "pos": [471, 436, 48.2],
-            "health_mult": 10,
-            "template": 60163241,
-            "model": 9,
-            "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [530, 374, 71.8],
-              [556, 435, 47.0],
-              [531, 496, 44.4]
-            ],
-            "mobs": [
-              {
-                "template": 12604,
-                "name": "sylvan goblin hunter",
-                "level": [6, 8]
-              },
-              {
-                "template": 12606,
-                "name": "sylvan goblin warrior",
-                "level": [9, 12]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The sylvan goblin hunters break and scatter. The road is open again.",
-          "fail": "Roadwarden Edith falls, and the sylvan goblin hunters take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12485,
+        "name": "ghostly knight",
+        "level": [
+         8,
+         10
+        ]
+       }
       ]
+     },
+     "success": "Sir Brennus the Forsworn falls. The way is safe again.",
+     "fail": "Sir Brennus the Forsworn slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu8_sir_brennus_the_forsworn_s_signet",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
     },
     {
-      "id": "tower_westwood",
-      "title": "The Siege of Westwood Tower",
-      "levels": [8, 12],
-      "tower": "Westwood Tower",
-      "hint": "Goblin war-drums beat around Westwood Tower...",
-      "rest_s": 45,
-      "first_delay_s": [1800, 3600],
-      "interval_s": [5400, 9000],
-      "wake_m": 180,
-      "auto_fail_s": 600,
-      "start": "t1",
-      "merchant": {
-        "model": 74,
-        "equipment": "00679a79-3ba2-4abd-b484-a25eff3f4ac7",
-        "template": 60161836,
-        "name": "Quartermaster Bede",
-        "level": 17,
-        "pos": [662, 577, 84.2],
-        "stock": "tower_westwood",
-        "guild": "Marks of Valor",
-        "greet": "While Westwood Tower stands, I can sell you what coin won't buy. Marks of Valor only."
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Ghostly Knights Hold the Road",
+     "objective": "Drive the ghostly knights off the road",
+     "announce": "With The Knights Who Do Not Rest lost, the ghostly knights have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1017,
+      645,
+      41.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12485,
+       "name": "ghostly knight",
+       "level": [
+        8,
+        10
+       ]
       },
-      "stages": [
-        {
-          "id": "t1",
-          "type": "defend",
-          "name": "Hold Westwood Tower",
-          "objective": "Keep Sergeant Aldric alive while the sylvan goblins attack the tower",
-          "announce": "The sylvan goblins are attacking Westwood Tower! Sergeant Aldric calls for every sword nearby.",
-          "center": [653, 582, 84.4],
-          "radius": 60,
-          "duration_s": 240,
-          "protect": {
-            "model": 74,
-            "equipment": "00679a79-3ba2-4abd-b484-a25eff3f4ac7",
-            "template": 60161836,
-            "name": "Sergeant Aldric",
-            "level": 14,
-            "pos": [658, 591, 84.5],
-            "health_mult": 15
-          },
-          "waves": {
-            "every_s": 25,
-            "count": 3,
-            "from": [
-              [736, 617, 68.1],
-              [581, 636, 57.8],
-              [643, 493, 70.8]
-            ],
-            "mobs": [
-              {
-                "template": 12604,
-                "name": "sylvan goblin hunter",
-                "level": [8, 12]
-              },
-              {
-                "template": 12606,
-                "name": "sylvan goblin warrior",
-                "level": [8, 12]
-              }
-            ]
-          },
-          "thanks": "\"The tower holds! Drinks are on me when the quartermaster isn't looking.\"",
-          "success": "The sylvan goblins break off the attack. Westwood Tower holds.",
-          "fail": "Westwood Tower has fallen to the sylvan goblins.",
-          "on_success": "end",
-          "on_fail": "c1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 8 }
-        },
-        {
-          "id": "c1",
-          "type": "occupy",
-          "name": "Retake Westwood Tower",
-          "objective": "Drive the sylvan goblins out of Westwood Tower",
-          "announce": "The sylvan goblins hold Westwood Tower. Its guards are gone, its quartermaster fled. It will take a war-band to win it back.",
-          "center": [653, 582, 84.4],
-          "radius": 50,
-          "count": 14,
-          "reinforce_s": 45,
-          "displace_m": 45,
-          "health_mult": 2.5,
-          "mobs": [
-            {
-              "template": 12604,
-              "name": "sylvan goblin hunter",
-              "level": [13, 15]
-            },
-            {
-              "template": 12606,
-              "name": "sylvan goblin warrior",
-              "level": [13, 15]
-            }
-          ],
-          "boss": {
-            "template": 12604,
-            "name": "Warchief Grubskull",
-            "level": 16,
-            "pos": [653, 582, 84.4],
-            "health_mult": 6
-          },
-          "success": "Warchief Grubskull is dead and the tower is ours - for now. They will be back.",
-          "fail": "",
-          "on_success": "c2",
-          "on_fail": "c1",
-          "reward": { "xp_pct": 30, "copper_per_level": 250, "tokens": 25 }
-        },
-        {
-          "id": "c2",
-          "type": "defend",
-          "name": "Hold the Gate",
-          "objective": "Keep Sergeant Aldric alive until the garrison is back",
-          "announce": "Sergeant Aldric is raising the realm's colours again - and the sylvan goblins are coming back for the tower!",
-          "center": [653, 582, 84.4],
-          "radius": 60,
-          "duration_s": 150,
-          "protect": {
-            "model": 74,
-            "equipment": "00679a79-3ba2-4abd-b484-a25eff3f4ac7",
-            "template": 60161836,
-            "name": "Sergeant Aldric",
-            "level": 14,
-            "pos": [658, 591, 84.5],
-            "health_mult": 15
-          },
-          "waves": {
-            "every_s": 25,
-            "count": 3,
-            "from": [
-              [736, 617, 68.1],
-              [581, 636, 57.8],
-              [643, 493, 70.8]
-            ],
-            "mobs": [
-              {
-                "template": 12604,
-                "name": "sylvan goblin hunter",
-                "level": [8, 12]
-              },
-              {
-                "template": 12606,
-                "name": "sylvan goblin warrior",
-                "level": [8, 12]
-              }
-            ]
-          },
-          "thanks": "\"Westwood Tower is ours again. The quartermaster will be glad to see you.\"",
-          "success": "Westwood Tower is held by the realm again. Its garrison and quartermaster are back.",
-          "fail": "Sergeant Aldric falls, and the sylvan goblins take the tower back.",
-          "on_success": "end",
-          "on_fail": "c1",
-          "reward": { "xp_pct": 15, "copper_per_level": 120, "tokens": 10 }
-        }
-      ]
+      {
+       "template": 12619,
+       "name": "undead druid",
+       "level": [
+        8,
+        10
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12485,
+      "name": "Ghostly knight warleader",
+      "level": 11,
+      "pos": [
+       1017,
+       645,
+       41.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The ghostly knights are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
     },
     {
-      "id": "tower_ogres_watch",
-      "title": "The Siege of Ogre's Watch",
-      "levels": [12, 15],
-      "tower": "Ogre's Watch",
-      "hint": "Trees are falling around the Ogre's Watch tower...",
-      "rest_s": 45,
-      "first_delay_s": [1800, 3600],
-      "interval_s": [5400, 9000],
-      "wake_m": 180,
-      "auto_fail_s": 600,
-      "start": "t1",
-      "merchant": {
-        "model": 74,
-        "equipment": "99165a61-8682-4084-ad89-ec5efcde5dcb",
-        "template": 60161836,
-        "name": "Quartermaster Osbert",
-        "level": 20,
-        "pos": [527, 1333, 55.2],
-        "stock": "tower_ogres_watch",
-        "guild": "Marks of Valor",
-        "greet": "While Ogre's Watch stands, I can sell you what coin won't buy. Marks of Valor only."
-      },
-      "stages": [
-        {
-          "id": "t1",
-          "type": "defend",
-          "name": "Hold Ogre's Watch",
-          "objective": "Keep Sergeant Wenna alive while the wood ogres attack the tower",
-          "announce": "The wood ogres are attacking Ogre's Watch! Sergeant Wenna calls for every sword nearby.",
-          "center": [518, 1338, 55.2],
-          "radius": 60,
-          "duration_s": 240,
-          "protect": {
-            "model": 74,
-            "equipment": "99165a61-8682-4084-ad89-ec5efcde5dcb",
-            "template": 60161836,
-            "name": "Sergeant Wenna",
-            "level": 17,
-            "pos": [523, 1347, 54.9],
-            "health_mult": 15
-          },
-          "waves": {
-            "every_s": 25,
-            "count": 3,
-            "from": [
-              [601, 1373, 42.4],
-              [446, 1392, 45.4],
-              [508, 1249, 58.8]
-            ],
-            "mobs": [
-              {
-                "template": 12067,
-                "name": "wood ogre scourge",
-                "level": [12, 15]
-              },
-              {
-                "template": 12626,
-                "name": "wood ogre berserker",
-                "level": [12, 15]
-              },
-              {
-                "template": 12631,
-                "name": "wood ogre seer",
-                "level": [12, 15]
-              }
-            ]
-          },
-          "thanks": "\"The tower holds! Drinks are on me when the quartermaster isn't looking.\"",
-          "success": "The wood ogres break off the attack. Ogre's Watch holds.",
-          "fail": "Ogre's Watch has fallen to the wood ogres.",
-          "on_success": "end",
-          "on_fail": "c1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 8 }
-        },
-        {
-          "id": "c1",
-          "type": "occupy",
-          "name": "Retake Ogre's Watch",
-          "objective": "Drive the wood ogres out of Ogre's Watch",
-          "announce": "The wood ogres hold Ogre's Watch. Its guards are gone, its quartermaster fled. It will take a war-band to win it back.",
-          "center": [518, 1338, 55.2],
-          "radius": 50,
-          "count": 14,
-          "reinforce_s": 45,
-          "displace_m": 45,
-          "health_mult": 2.5,
-          "mobs": [
-            {
-              "template": 12067,
-              "name": "wood ogre scourge",
-              "level": [16, 18]
-            },
-            {
-              "template": 12626,
-              "name": "wood ogre berserker",
-              "level": [16, 18]
-            },
-            {
-              "template": 12631,
-              "name": "wood ogre seer",
-              "level": [16, 18]
-            }
-          ],
-          "boss": {
-            "template": 12067,
-            "name": "Grashk the Wall-Breaker",
-            "level": 19,
-            "pos": [518, 1338, 55.2],
-            "health_mult": 6
-          },
-          "success": "Grashk the Wall-Breaker is dead and the tower is ours - for now. They will be back.",
-          "fail": "",
-          "on_success": "c2",
-          "on_fail": "c1",
-          "reward": { "xp_pct": 30, "copper_per_level": 250, "tokens": 25 }
-        },
-        {
-          "id": "c2",
-          "type": "defend",
-          "name": "Hold the Gate",
-          "objective": "Keep Sergeant Wenna alive until the garrison is back",
-          "announce": "Sergeant Wenna is raising the realm's colours again - and the wood ogres are coming back for the tower!",
-          "center": [518, 1338, 55.2],
-          "radius": 60,
-          "duration_s": 150,
-          "protect": {
-            "model": 74,
-            "equipment": "99165a61-8682-4084-ad89-ec5efcde5dcb",
-            "template": 60161836,
-            "name": "Sergeant Wenna",
-            "level": 17,
-            "pos": [523, 1347, 54.9],
-            "health_mult": 15
-          },
-          "waves": {
-            "every_s": 25,
-            "count": 3,
-            "from": [
-              [601, 1373, 42.4],
-              [446, 1392, 45.4],
-              [508, 1249, 58.8]
-            ],
-            "mobs": [
-              {
-                "template": 12067,
-                "name": "wood ogre scourge",
-                "level": [12, 15]
-              },
-              {
-                "template": 12626,
-                "name": "wood ogre berserker",
-                "level": [12, 15]
-              },
-              {
-                "template": 12631,
-                "name": "wood ogre seer",
-                "level": [12, 15]
-              }
-            ]
-          },
-          "thanks": "\"Ogre's Watch is ours again. The quartermaster will be glad to see you.\"",
-          "success": "Ogre's Watch is held by the realm again. Its garrison and quartermaster are back.",
-          "fail": "Sergeant Wenna falls, and the wood ogres take the tower back.",
-          "on_success": "end",
-          "on_fail": "c1",
-          "reward": { "xp_pct": 15, "copper_per_level": 120, "tokens": 10 }
-        }
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Mabyn has come out to set the road right. The ghostly knights are coming back for it!",
+     "center": [
+      1017,
+      645,
+      41.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Mabyn",
+      "level": 10,
+      "pos": [
+       1017,
+       645,
+       41.2
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        998,
+        562,
+        49.2
+       ],
+       [
+        1064,
+        574,
+        46.8
+       ],
+       [
+        1100,
+        629,
+        50.1
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12485,
+        "name": "ghostly knight",
+        "level": [
+         8,
+         10
+        ]
+       },
+       {
+        "template": 12619,
+        "name": "undead druid",
+        "level": [
+         8,
+         10
+        ]
+       }
       ]
-    },
-    {
-      "id": "campacorentin_forest_bloated_spiders",
-      "title": "The Bloated Nest",
-      "levels": [10, 14],
-      "hint": "Webs as thick as sailcloth hang between the oaks...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Bloated Nest",
-          "objective": "Clear the bloated nest",
-          "announce": "A nest of bloated spiders has grown in the forest, fat on the deer - and lately on travellers. Burn it out.",
-          "center": [1361, 789, 47.7],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12450,
-              "name": "bloated spider",
-              "level": [10, 11]
-            },
-            {
-              "template": 12492,
-              "name": "large bloated spider",
-              "level": [13, 14]
-            }
-          ],
-          "success": "You have cleared the bloated nest. The Bloated Queen comes out to fight.",
-          "fail": "They hold the bloated nest. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Bloated Queen",
-          "objective": "Defeat the Bloated Queen",
-          "announce": "The Bloated Queen stands at the bloated nest. Bring friends.",
-          "center": [1361, 789, 47.7],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12492,
-            "name": "The Bloated Queen",
-            "level": 16,
-            "size": 96,
-            "pos": [1361, 789, 47.7],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12450,
-                "name": "bloated spider",
-                "level": [10, 11]
-              }
-            ]
-          },
-          "success": "The Bloated Queen falls. The way is safe again.",
-          "fail": "The Bloated Queen slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu8_bloated_queen_s_belt", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Bloated Spiders Hold the Old Road",
-          "objective": "Drive the bloated spiders off the old road",
-          "announce": "With The Bloated Nest lost, the bloated spiders have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1148, 938, 42.4],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12450,
-              "name": "bloated spider",
-              "level": [10, 11]
-            },
-            {
-              "template": 12492,
-              "name": "large bloated spider",
-              "level": [13, 14]
-            }
-          ],
-          "boss": {
-            "template": 12450,
-            "name": "Bloated spider warleader",
-            "level": 15,
-            "pos": [1148, 938, 42.4],
-            "health_mult": 2
-          },
-          "success": "The bloated spiders are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Mabyn has come out to set the old road right. The bloated spiders are coming back for it!",
-          "center": [1148, 938, 42.4],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Mabyn",
-            "level": 14,
-            "pos": [1148, 938, 42.4],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1161, 854, 48.4],
-              [1217, 889, 49.5],
-              [1231, 954, 46.0]
-            ],
-            "mobs": [
-              {
-                "template": 12450,
-                "name": "bloated spider",
-                "level": [10, 11]
-              },
-              {
-                "template": 12492,
-                "name": "large bloated spider",
-                "level": [13, 14]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The bloated spiders break and scatter. The old road is open again.",
-          "fail": "Roadwarden Mabyn falls, and the bloated spiders take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The ghostly knights break and scatter. The road is open again.",
+     "fail": "Roadwarden Mabyn falls, and the ghostly knights take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
-  ]
+   ]
+  },
+  {
+   "id": "campacorentin_forest_wood_ogres",
+   "title": "The Wood Ogre Raid",
+   "levels": [
+    12,
+    15
+   ],
+   "hint": "Trees crash in the southern woods...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Forester Hale",
+     "objective": "Protect Forester Hale, who is barring the lodge shutters",
+     "announce": "The wood ogres have come for Forester Hale's lodge. Hold them off while he bars it.",
+     "center": [
+      471,
+      698,
+      44.5
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Forester Hale",
+      "template": 60163241,
+      "level": 15,
+      "model": 9,
+      "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19",
+      "health_mult": 10,
+      "pos": [
+       471,
+       698,
+       44.5
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        520,
+        771,
+        57.0
+       ],
+       [
+        449,
+        780,
+        58.0
+       ],
+       [
+        397,
+        739,
+        44.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12630,
+        "name": "wood ogre scourge",
+        "level": [
+         12,
+         13
+        ]
+       },
+       {
+        "template": 12066,
+        "name": "wood ogre berserker",
+        "level": [
+         14,
+         15
+        ]
+       },
+       {
+        "template": 12631,
+        "name": "wood ogre seer",
+        "level": [
+         14,
+         14
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Forester Hale. \"They came from over there - let's finish this.\"",
+     "fail": "Forester Hale falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Forester's Lodge",
+     "objective": "Clear the forester's lodge",
+     "announce": "They came from the forester's lodge. Follow them back and clear it out.",
+     "center": [
+      401,
+      957,
+      45.4
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12630,
+       "name": "wood ogre scourge",
+       "level": [
+        12,
+        13
+       ]
+      },
+      {
+       "template": 12066,
+       "name": "wood ogre berserker",
+       "level": [
+        14,
+        15
+       ]
+      },
+      {
+       "template": 12631,
+       "name": "wood ogre seer",
+       "level": [
+        14,
+        14
+       ]
+      }
+     ],
+     "success": "You have cleared the forester's lodge. Mog the Ogre-Mystic comes out to fight.",
+     "fail": "They hold the forester's lodge. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Mog the Ogre-Mystic",
+     "objective": "Defeat Mog the Ogre-Mystic",
+     "announce": "Mog the Ogre-Mystic stands at the forester's lodge. Bring friends.",
+     "center": [
+      401,
+      957,
+      45.4
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12628,
+      "name": "Mog the Ogre-Mystic",
+      "level": 17,
+      "size": 71,
+      "pos": [
+       401,
+       957,
+       45.4
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12630,
+        "name": "wood ogre scourge",
+        "level": [
+         12,
+         13
+        ]
+       }
+      ]
+     },
+     "success": "Mog the Ogre-Mystic falls. The way is safe again.",
+     "fail": "Mog the Ogre-Mystic slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu8_mog_the_ogre_mystic_s_band",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Wood Ogre Scourges Hold the Road",
+     "objective": "Drive the wood ogre scourges off the road",
+     "announce": "With The Wood Ogre Raid lost, the wood ogre scourges have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      718,
+      809,
+      41.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12630,
+       "name": "wood ogre scourge",
+       "level": [
+        12,
+        13
+       ]
+      },
+      {
+       "template": 12066,
+       "name": "wood ogre berserker",
+       "level": [
+        14,
+        15
+       ]
+      },
+      {
+       "template": 12631,
+       "name": "wood ogre seer",
+       "level": [
+        14,
+        14
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12630,
+      "name": "Wood ogre scourge warleader",
+      "level": 16,
+      "pos": [
+       718,
+       809,
+       41.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The wood ogre scourges are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Edith has come out to set the road right. The wood ogre scourges are coming back for it!",
+     "center": [
+      718,
+      809,
+      41.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Edith",
+      "level": 15,
+      "pos": [
+       718,
+       809,
+       41.2
+      ],
+      "health_mult": 10,
+      "template": 60163241,
+      "model": 9,
+      "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        690,
+        889,
+        46.9
+       ],
+       [
+        641,
+        845,
+        80.4
+       ],
+       [
+        639,
+        779,
+        49.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12630,
+        "name": "wood ogre scourge",
+        "level": [
+         12,
+         13
+        ]
+       },
+       {
+        "template": 12066,
+        "name": "wood ogre berserker",
+        "level": [
+         14,
+         15
+        ]
+       },
+       {
+        "template": 12631,
+        "name": "wood ogre seer",
+        "level": [
+         14,
+         14
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The wood ogre scourges break and scatter. The road is open again.",
+     "fail": "Roadwarden Edith falls, and the wood ogre scourges take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "campacorentin_forest_goblin_warband",
+   "title": "The Goblin Warband",
+   "levels": [
+    6,
+    12
+   ],
+   "hint": "Magister Ithel is looking for help in Lethantis.",
+   "rest_s": 45,
+   "giver": {
+    "name": "Magister Ithel",
+    "template": 60163241,
+    "level": 13,
+    "model": 9,
+    "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19",
+    "guild": "Lethantis Association",
+    "health_mult": 4,
+    "pos": [
+     354,
+     189,
+     46.0
+    ],
+    "greet": "The sylvan goblins stole our star-charts - years of work! - and my guards have tracked them to a warcamp in the woods. Will you help us take them back? Say when you're [ready].",
+    "accept": "ready",
+    "reply": "Good. Stay close - they will have watchers out. With me!",
+    "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "name": "Lethantis Guard",
+     "template": 60163241,
+     "level": 12,
+     "model": 9,
+     "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19",
+     "guild": "Lethantis Association",
+     "health_mult": 2,
+     "count": 3
+    }
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "escort",
+     "name": "The Road to Goblin Warcamp",
+     "objective": "Go with Magister Ithel to the goblin warcamp",
+     "announce": "Magister Ithel and the Lethantis guards set out for the goblin warcamp.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       372,
+       220,
+       46.0
+      ],
+      [
+       420,
+       276,
+       51.1
+      ],
+      [
+       468,
+       332,
+       45.7
+      ],
+      [
+       476,
+       388,
+       46.2
+      ],
+      [
+       492,
+       412,
+       46.1
+      ],
+      [
+       516,
+       436,
+       46.8
+      ],
+      [
+       620,
+       436,
+       46.7
+      ],
+      [
+       724,
+       436,
+       47.3
+      ],
+      [
+       820,
+       436,
+       45.0
+      ],
+      [
+       892,
+       428,
+       44.3
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 5,
+       "count": 3,
+       "say": "Ambush! To me - hold together!",
+       "mobs": [
+        {
+         "template": 12604,
+         "name": "sylvan goblin hunter",
+         "level": [
+          6,
+          8
+         ]
+        },
+        {
+         "template": 12606,
+         "name": "sylvan goblin warrior",
+         "level": [
+          9,
+          12
+         ]
+        }
+       ]
+      }
+     ],
+     "success": "Magister Ithel reaches the goblin warcamp. \"There they are. Clear them out!\"",
+     "fail": "Magister Ithel falls on the road. The others carry the body home.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "g2",
+     "type": "cull",
+     "name": "Clear Goblin Warcamp",
+     "objective": "Clear the goblin warcamp",
+     "announce": "Clear the goblin warcamp!",
+     "center": [
+      896,
+      432,
+      44.2
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12604,
+       "name": "sylvan goblin hunter",
+       "level": [
+        6,
+        8
+       ]
+      },
+      {
+       "template": 12606,
+       "name": "sylvan goblin warrior",
+       "level": [
+        9,
+        12
+       ]
+      }
+     ],
+     "success": "You have cleared the goblin warcamp. Chief Grubnose comes out to fight.",
+     "fail": "They hold the goblin warcamp. They will be bolder next time.",
+     "on_success": "g3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g3",
+     "type": "boss",
+     "name": "Chief Grubnose",
+     "objective": "Defeat Chief Grubnose",
+     "announce": "Chief Grubnose stands at the goblin warcamp. Bring friends.",
+     "center": [
+      896,
+      432,
+      44.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12606,
+      "name": "Chief Grubnose",
+      "level": 14,
+      "size": 68,
+      "pos": [
+       896,
+       432,
+       44.2
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12604,
+        "name": "sylvan goblin hunter",
+        "level": [
+         6,
+         8
+        ]
+       }
+      ]
+     },
+     "success": "Chief Grubnose falls. Lethantis will hear of this in the taverns tonight.",
+     "fail": "Chief Grubnose slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu8_chief_grubnose_s_girdle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Sylvan Goblin Hunters Hold the Road",
+     "objective": "Drive the sylvan goblin hunters off the road",
+     "announce": "With The Goblin Warband lost, the sylvan goblin hunters have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      471,
+      436,
+      48.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12604,
+       "name": "sylvan goblin hunter",
+       "level": [
+        6,
+        8
+       ]
+      },
+      {
+       "template": 12606,
+       "name": "sylvan goblin warrior",
+       "level": [
+        9,
+        12
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12604,
+      "name": "Sylvan goblin hunter warleader",
+      "level": 13,
+      "pos": [
+       471,
+       436,
+       48.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The sylvan goblin hunters are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Edith has come out to set the road right. The sylvan goblin hunters are coming back for it!",
+     "center": [
+      471,
+      436,
+      48.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Edith",
+      "level": 12,
+      "pos": [
+       471,
+       436,
+       48.2
+      ],
+      "health_mult": 10,
+      "template": 60163241,
+      "model": 9,
+      "equipment": "0dd13beb-6da4-41f3-a292-86f203151b19"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        530,
+        374,
+        71.8
+       ],
+       [
+        556,
+        435,
+        47.0
+       ],
+       [
+        531,
+        496,
+        44.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12604,
+        "name": "sylvan goblin hunter",
+        "level": [
+         6,
+         8
+        ]
+       },
+       {
+        "template": 12606,
+        "name": "sylvan goblin warrior",
+        "level": [
+         9,
+         12
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The sylvan goblin hunters break and scatter. The road is open again.",
+     "fail": "Roadwarden Edith falls, and the sylvan goblin hunters take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "tower_westwood",
+   "title": "The Siege of Westwood Tower",
+   "levels": [
+    8,
+    12
+   ],
+   "tower": "Westwood Tower",
+   "hint": "Goblin war-drums beat around Westwood Tower...",
+   "rest_s": 45,
+   "first_delay_s": [
+    1800,
+    3600
+   ],
+   "interval_s": [
+    5400,
+    9000
+   ],
+   "wake_m": 180,
+   "auto_fail_s": 600,
+   "start": "t1",
+   "merchant": {
+    "model": 74,
+    "equipment": "00679a79-3ba2-4abd-b484-a25eff3f4ac7",
+    "template": 60161836,
+    "name": "Quartermaster Bede",
+    "level": 17,
+    "pos": [
+     662,
+     577,
+     84.2
+    ],
+    "stock": "tower_westwood",
+    "guild": "Marks of Valor",
+    "greet": "While Westwood Tower stands, I can sell you what coin won't buy. Marks of Valor only."
+   },
+   "stages": [
+    {
+     "id": "t1",
+     "type": "defend",
+     "name": "Hold Westwood Tower",
+     "objective": "Keep Sergeant Aldric alive while the sylvan goblins attack the tower",
+     "announce": "The sylvan goblins are attacking Westwood Tower! Sergeant Aldric calls for every sword nearby.",
+     "center": [
+      653,
+      582,
+      84.4
+     ],
+     "radius": 60,
+     "duration_s": 240,
+     "protect": {
+      "model": 74,
+      "equipment": "00679a79-3ba2-4abd-b484-a25eff3f4ac7",
+      "template": 60161836,
+      "name": "Sergeant Aldric",
+      "level": 14,
+      "pos": [
+       658,
+       591,
+       84.5
+      ],
+      "health_mult": 15
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        736,
+        617,
+        68.1
+       ],
+       [
+        581,
+        636,
+        57.8
+       ],
+       [
+        643,
+        493,
+        70.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12604,
+        "name": "sylvan goblin hunter",
+        "level": [
+         8,
+         12
+        ]
+       },
+       {
+        "template": 12606,
+        "name": "sylvan goblin warrior",
+        "level": [
+         8,
+         12
+        ]
+       }
+      ]
+     },
+     "thanks": "\"The tower holds! Drinks are on me when the quartermaster isn't looking.\"",
+     "success": "The sylvan goblins break off the attack. Westwood Tower holds.",
+     "fail": "Westwood Tower has fallen to the sylvan goblins.",
+     "on_success": "end",
+     "on_fail": "c1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "c1",
+     "type": "occupy",
+     "name": "Retake Westwood Tower",
+     "objective": "Drive the sylvan goblins out of Westwood Tower",
+     "announce": "The sylvan goblins hold Westwood Tower. Its guards are gone, its quartermaster fled. It will take a war-band to win it back.",
+     "center": [
+      653,
+      582,
+      84.4
+     ],
+     "radius": 50,
+     "count": 14,
+     "reinforce_s": 45,
+     "displace_m": 45,
+     "health_mult": 2.5,
+     "mobs": [
+      {
+       "template": 12604,
+       "name": "sylvan goblin hunter",
+       "level": [
+        13,
+        15
+       ]
+      },
+      {
+       "template": 12606,
+       "name": "sylvan goblin warrior",
+       "level": [
+        13,
+        15
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12604,
+      "name": "Warchief Grubskull",
+      "level": 16,
+      "pos": [
+       653,
+       582,
+       84.4
+      ],
+      "health_mult": 6
+     },
+     "success": "Warchief Grubskull is dead and the tower is ours - for now. They will be back.",
+     "fail": "",
+     "on_success": "c2",
+     "on_fail": "c1",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 250,
+      "tokens": 25
+     }
+    },
+    {
+     "id": "c2",
+     "type": "defend",
+     "name": "Hold the Gate",
+     "objective": "Keep Sergeant Aldric alive until the garrison is back",
+     "announce": "Sergeant Aldric is raising the realm's colours again - and the sylvan goblins are coming back for the tower!",
+     "center": [
+      653,
+      582,
+      84.4
+     ],
+     "radius": 60,
+     "duration_s": 150,
+     "protect": {
+      "model": 74,
+      "equipment": "00679a79-3ba2-4abd-b484-a25eff3f4ac7",
+      "template": 60161836,
+      "name": "Sergeant Aldric",
+      "level": 14,
+      "pos": [
+       658,
+       591,
+       84.5
+      ],
+      "health_mult": 15
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        736,
+        617,
+        68.1
+       ],
+       [
+        581,
+        636,
+        57.8
+       ],
+       [
+        643,
+        493,
+        70.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12604,
+        "name": "sylvan goblin hunter",
+        "level": [
+         8,
+         12
+        ]
+       },
+       {
+        "template": 12606,
+        "name": "sylvan goblin warrior",
+        "level": [
+         8,
+         12
+        ]
+       }
+      ]
+     },
+     "thanks": "\"Westwood Tower is ours again. The quartermaster will be glad to see you.\"",
+     "success": "Westwood Tower is held by the realm again. Its garrison and quartermaster are back.",
+     "fail": "Sergeant Aldric falls, and the sylvan goblins take the tower back.",
+     "on_success": "end",
+     "on_fail": "c1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 120,
+      "tokens": 10
+     }
+    }
+   ]
+  },
+  {
+   "id": "tower_ogres_watch",
+   "title": "The Siege of Ogre's Watch",
+   "levels": [
+    12,
+    15
+   ],
+   "tower": "Ogre's Watch",
+   "hint": "Trees are falling around the Ogre's Watch tower...",
+   "rest_s": 45,
+   "first_delay_s": [
+    1800,
+    3600
+   ],
+   "interval_s": [
+    5400,
+    9000
+   ],
+   "wake_m": 180,
+   "auto_fail_s": 600,
+   "start": "t1",
+   "merchant": {
+    "model": 74,
+    "equipment": "99165a61-8682-4084-ad89-ec5efcde5dcb",
+    "template": 60161836,
+    "name": "Quartermaster Osbert",
+    "level": 20,
+    "pos": [
+     527,
+     1333,
+     55.2
+    ],
+    "stock": "tower_ogres_watch",
+    "guild": "Marks of Valor",
+    "greet": "While Ogre's Watch stands, I can sell you what coin won't buy. Marks of Valor only."
+   },
+   "stages": [
+    {
+     "id": "t1",
+     "type": "defend",
+     "name": "Hold Ogre's Watch",
+     "objective": "Keep Sergeant Wenna alive while the wood ogres attack the tower",
+     "announce": "The wood ogres are attacking Ogre's Watch! Sergeant Wenna calls for every sword nearby.",
+     "center": [
+      518,
+      1338,
+      55.2
+     ],
+     "radius": 60,
+     "duration_s": 240,
+     "protect": {
+      "model": 74,
+      "equipment": "99165a61-8682-4084-ad89-ec5efcde5dcb",
+      "template": 60161836,
+      "name": "Sergeant Wenna",
+      "level": 17,
+      "pos": [
+       523,
+       1347,
+       54.9
+      ],
+      "health_mult": 15
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        601,
+        1373,
+        42.4
+       ],
+       [
+        446,
+        1392,
+        45.4
+       ],
+       [
+        508,
+        1249,
+        58.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12067,
+        "name": "wood ogre scourge",
+        "level": [
+         12,
+         15
+        ]
+       },
+       {
+        "template": 12626,
+        "name": "wood ogre berserker",
+        "level": [
+         12,
+         15
+        ]
+       },
+       {
+        "template": 12631,
+        "name": "wood ogre seer",
+        "level": [
+         12,
+         15
+        ]
+       }
+      ]
+     },
+     "thanks": "\"The tower holds! Drinks are on me when the quartermaster isn't looking.\"",
+     "success": "The wood ogres break off the attack. Ogre's Watch holds.",
+     "fail": "Ogre's Watch has fallen to the wood ogres.",
+     "on_success": "end",
+     "on_fail": "c1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "c1",
+     "type": "occupy",
+     "name": "Retake Ogre's Watch",
+     "objective": "Drive the wood ogres out of Ogre's Watch",
+     "announce": "The wood ogres hold Ogre's Watch. Its guards are gone, its quartermaster fled. It will take a war-band to win it back.",
+     "center": [
+      518,
+      1338,
+      55.2
+     ],
+     "radius": 50,
+     "count": 14,
+     "reinforce_s": 45,
+     "displace_m": 45,
+     "health_mult": 2.5,
+     "mobs": [
+      {
+       "template": 12067,
+       "name": "wood ogre scourge",
+       "level": [
+        16,
+        18
+       ]
+      },
+      {
+       "template": 12626,
+       "name": "wood ogre berserker",
+       "level": [
+        16,
+        18
+       ]
+      },
+      {
+       "template": 12631,
+       "name": "wood ogre seer",
+       "level": [
+        16,
+        18
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12067,
+      "name": "Grashk the Wall-Breaker",
+      "level": 19,
+      "pos": [
+       518,
+       1338,
+       55.2
+      ],
+      "health_mult": 6
+     },
+     "success": "Grashk the Wall-Breaker is dead and the tower is ours - for now. They will be back.",
+     "fail": "",
+     "on_success": "c2",
+     "on_fail": "c1",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 250,
+      "tokens": 25
+     }
+    },
+    {
+     "id": "c2",
+     "type": "defend",
+     "name": "Hold the Gate",
+     "objective": "Keep Sergeant Wenna alive until the garrison is back",
+     "announce": "Sergeant Wenna is raising the realm's colours again - and the wood ogres are coming back for the tower!",
+     "center": [
+      518,
+      1338,
+      55.2
+     ],
+     "radius": 60,
+     "duration_s": 150,
+     "protect": {
+      "model": 74,
+      "equipment": "99165a61-8682-4084-ad89-ec5efcde5dcb",
+      "template": 60161836,
+      "name": "Sergeant Wenna",
+      "level": 17,
+      "pos": [
+       523,
+       1347,
+       54.9
+      ],
+      "health_mult": 15
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        601,
+        1373,
+        42.4
+       ],
+       [
+        446,
+        1392,
+        45.4
+       ],
+       [
+        508,
+        1249,
+        58.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12067,
+        "name": "wood ogre scourge",
+        "level": [
+         12,
+         15
+        ]
+       },
+       {
+        "template": 12626,
+        "name": "wood ogre berserker",
+        "level": [
+         12,
+         15
+        ]
+       },
+       {
+        "template": 12631,
+        "name": "wood ogre seer",
+        "level": [
+         12,
+         15
+        ]
+       }
+      ]
+     },
+     "thanks": "\"Ogre's Watch is ours again. The quartermaster will be glad to see you.\"",
+     "success": "Ogre's Watch is held by the realm again. Its garrison and quartermaster are back.",
+     "fail": "Sergeant Wenna falls, and the wood ogres take the tower back.",
+     "on_success": "end",
+     "on_fail": "c1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 120,
+      "tokens": 10
+     }
+    }
+   ]
+  },
+  {
+   "id": "campacorentin_forest_bloated_spiders",
+   "title": "The Bloated Nest",
+   "levels": [
+    10,
+    14
+   ],
+   "hint": "Webs as thick as sailcloth hang between the oaks...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Bloated Nest",
+     "objective": "Clear the bloated nest",
+     "announce": "A nest of bloated spiders has grown in the forest, fat on the deer - and lately on travellers. Burn it out.",
+     "center": [
+      1290,
+      800,
+      47.2
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12450,
+       "name": "bloated spider",
+       "level": [
+        10,
+        11
+       ]
+      },
+      {
+       "template": 12492,
+       "name": "large bloated spider",
+       "level": [
+        13,
+        14
+       ]
+      }
+     ],
+     "success": "You have cleared the bloated nest. The Bloated Queen comes out to fight.",
+     "fail": "They hold the bloated nest. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "The Bloated Queen",
+     "objective": "Defeat the Bloated Queen",
+     "announce": "The Bloated Queen stands at the bloated nest. Bring friends.",
+     "center": [
+      1290,
+      800,
+      47.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12492,
+      "name": "The Bloated Queen",
+      "level": 16,
+      "size": 96,
+      "pos": [
+       1290,
+       800,
+       47.2
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12450,
+        "name": "bloated spider",
+        "level": [
+         10,
+         11
+        ]
+       }
+      ]
+     },
+     "success": "The Bloated Queen falls. The way is safe again.",
+     "fail": "The Bloated Queen slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu8_bloated_queen_s_belt",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Bloated Spiders Hold the Old Road",
+     "objective": "Drive the bloated spiders off the old road",
+     "announce": "With The Bloated Nest lost, the bloated spiders have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1148,
+      938,
+      42.4
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12450,
+       "name": "bloated spider",
+       "level": [
+        10,
+        11
+       ]
+      },
+      {
+       "template": 12492,
+       "name": "large bloated spider",
+       "level": [
+        13,
+        14
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12450,
+      "name": "Bloated spider warleader",
+      "level": 15,
+      "pos": [
+       1148,
+       938,
+       42.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The bloated spiders are gone from the old road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Mabyn has come out to set the old road right. The bloated spiders are coming back for it!",
+     "center": [
+      1148,
+      938,
+      42.4
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Mabyn",
+      "level": 14,
+      "pos": [
+       1148,
+       938,
+       42.4
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1161,
+        854,
+        48.4
+       ],
+       [
+        1217,
+        889,
+        49.5
+       ],
+       [
+        1231,
+        954,
+        46.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12450,
+        "name": "bloated spider",
+        "level": [
+         10,
+         11
+        ]
+       },
+       {
+        "template": 12492,
+        "name": "large bloated spider",
+        "level": [
+         13,
+         14
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+     "success": "The bloated spiders break and scatter. The old road is open again.",
+     "fail": "Roadwarden Mabyn falls, and the bloated spiders take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "cf_green_knight",
+   "title": "The Green Knight's Game",
+   "levels": [
+    20,
+    24
+   ],
+   "hint": "A knight all in green, on a green horse, has ridden out of the wood by Caer Ulfwych with an axe on his shoulder...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "cull",
+     "name": "The Green Men",
+     "objective": "Cut down the Green Knight's green men",
+     "announce": "A knight all in green sits his horse at the edge of the wood by Caer Ulfwych. 'Who will trade me a blow for a blow?' Round him, the wood itself stands up - green men, with leaves for faces.",
+     "center": [
+      1010,
+      960,
+      68.8
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "kill": 14,
+     "alive": 6,
+     "mobs": [
+      {
+       "template": 12495,
+       "name": "green man",
+       "level": [
+        18,
+        20
+       ],
+       "size": 55
+      },
+      {
+       "template": 12495,
+       "name": "green man",
+       "level": [
+        18,
+        20
+       ],
+       "size": 55
+      },
+      {
+       "template": 12496,
+       "name": "oaken fellwood",
+       "level": [
+        20,
+        22
+       ]
+      }
+     ],
+     "success": "The green men fall back into the trees. The Green Knight laughs and climbs down from his horse.",
+     "fail": "The green men drive the rangers back into the Caer.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 120,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "g2",
+     "type": "boss",
+     "name": "the Green Knight",
+     "objective": "Answer the Green Knight's game",
+     "announce": "The Green Knight sets down his axe and bares his neck: 'Strike, then - and in a year and a day, I strike you.' It's a trick. It's always a trick. Bring everyone.",
+     "center": [
+      1010,
+      960,
+      68.8
+     ],
+     "radius": 80,
+     "time_s": 1500,
+     "boss": {
+      "template": 60161621,
+      "name": "the Green Knight",
+      "level": 26,
+      "size": 66,
+      "pos": [
+       1010,
+       960,
+       68.8
+      ],
+      "health_mult": 4,
+      "guild": "of the Green Chapel"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12495,
+        "name": "green man",
+        "level": [
+         18,
+         20
+        ],
+        "size": 55
+       }
+      ]
+     },
+     "success": "The Green Knight falls - and picks up his own head, and laughs, and rides into the wood. 'Well struck. My lady will be disappointed.' A green girdle lies where he stood.",
+     "fail": "The Green Knight rides back into the trees, laughing.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 260,
+      "tokens": 22,
+      "items": [
+       {
+        "id": "nu008_green_girdle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       },
+       {
+        "id": "nu008_green_chapel_ring",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Green Men Hold the Caer Road",
+     "objective": "Drive the green men off the road to Caer Ulfwych",
+     "announce": "The Green Knight's green men have rooted themselves across the road to Caer Ulfwych.",
+     "center": [
+      1000,
+      1000,
+      86.8
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12495,
+       "name": "green man",
+       "level": [
+        18,
+        20
+       ],
+       "size": 55
+      },
+      {
+       "template": 12496,
+       "name": "oaken fellwood",
+       "level": [
+        20,
+        22
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12496,
+      "name": "green man elder",
+      "level": 22,
+      "health_mult": 2,
+      "pos": [
+       1000,
+       1000,
+       86.8
+      ]
+     },
+     "success": "The road is clear again.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    }
+   ]
+  },
+  {
+   "id": "cf_thorn_night",
+   "title": "The Thorn-Night",
+   "levels": [
+    20,
+    24
+   ],
+   "hint": "Red torches in the deep wood, and chanting at the roots of the thorn...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "t1",
+   "stages": [
+    {
+     "id": "t1",
+     "type": "defend",
+     "name": "The Roots",
+     "objective": "Keep Thornwarden Cerys alive while she seals the roots",
+     "announce": "The Crimson are bleeding the thorn's roots tonight! Thornwarden Cerys has gone to seal them - the sacrificers are coming for her!",
+     "center": [
+      1240,
+      1150,
+      53.9
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "template": 60167630,
+      "model": 38,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "guild": "the Thornwardens",
+      "name": "Thornwarden Cerys",
+      "level": 22,
+      "pos": [
+       1240,
+       1150,
+       53.9
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 24,
+      "count": 3,
+      "from": [
+       [
+        1280,
+        1200,
+        45.2
+       ],
+       [
+        1200,
+        1120,
+        45.8
+       ],
+       [
+        1290,
+        1110,
+        47.1
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12468,
+        "name": "druid sacrificer",
+        "level": [
+         20,
+         22
+        ],
+        "guild": "the Crimson"
+       },
+       {
+        "template": 12161,
+        "name": "filidh sacrificer",
+        "level": [
+         19,
+         21
+        ],
+        "guild": "the Crimson"
+       },
+       {
+        "template": 12494,
+        "name": "mindless minion",
+        "level": [
+         18,
+         20
+        ]
+       }
+      ]
+     },
+     "thanks": "\"Sealed. Sleep, old man. Sleep.\"",
+     "success": "The roots are sealed - and the one who led the bleeding steps out of the trees, knife red to the wrist.",
+     "fail": "Cerys falls, and the roots drink all night.",
+     "on_success": "t2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 100,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "t2",
+     "type": "boss",
+     "name": "the Root-Bleeder",
+     "objective": "Defeat the Root-Bleeder",
+     "announce": "The Root-Bleeder, a druid in a red robe: 'He'll wake for my Lady. They all do in the end.'",
+     "center": [
+      1240,
+      1150,
+      53.9
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12468,
+      "name": "the Root-Bleeder",
+      "level": 23,
+      "size": 58,
+      "pos": [
+       1240,
+       1150,
+       53.9
+      ],
+      "health_mult": 3,
+      "guild": "of the Crimson"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12494,
+        "name": "mindless minion",
+        "level": [
+         18,
+         20
+        ]
+       }
+      ]
+     },
+     "success": "The Root-Bleeder falls across the roots, and the thorn's flowers close for the night.",
+     "fail": "The Root-Bleeder melts into the dark.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 180,
+      "tokens": 14,
+      "items": [
+       {
+        "id": "nu008_root_bleeder_s_knife_ring",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ],
+   "time": "night"
+  }
+ ]
 }

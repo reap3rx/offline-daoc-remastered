@@ -1,0 +1,166 @@
+{
+ "zone": 7,
+ "region": 1,
+ "realm": 1,
+ "prefix": "lb007",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Lake Host",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 52,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Lake-blue with a white border. Given to those who marched with the Lake Host."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gate-Warden's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 17,
+    "Con": 17,
+    "Dex": 9,
+    "Hits": 44
+   },
+   "lore": "Silver, with a shut gate."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Girdle of the Bearded Lake",
+   "base": [
+    41,
+    32
+   ],
+   "level": 50,
+   "bonuses": {
+    "Dex": 17,
+    "Qui": 17,
+    "Str": 9,
+    "Hits": 44
+   },
+   "lore": "Woven of lake-reed and silver wire."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ring of the Shut Gate",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 17,
+    "Pie": 9,
+    "Dex": 9,
+    "Power": 7,
+    "Hits": 31
+   },
+   "lore": "A black ring, closed by a silver bar."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Afanc-Hide Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 52,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Thick grey hide from the beast Arthur killed - twice, now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tear of the Lady",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 17,
+    "Con": 9,
+    "Power": 7,
+    "Hits": 31
+   },
+   "lore": "A drop of the lake that never dries."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Morgana's Black Crown",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 18,
+    "Pie": 9,
+    "Dex": 9,
+    "Power": 8,
+    "Hits": 33
+   },
+   "lore": "A circlet of black iron. It whispers about doors."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mordred's Wrath",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 18,
+    "Con": 18,
+    "Dex": 9,
+    "Hits": 47
+   },
+   "lore": "Black mail from Camlann, still cold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Afanc-Tooth Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Dex": 18,
+    "Qui": 18,
+    "Str": 9,
+    "Hits": 47
+   },
+   "lore": "A tooth as long as a dagger."
+  }
+ ]
+}

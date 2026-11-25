@@ -1,0 +1,26 @@
+{
+ "zone": 2,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu002",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned Captain's Plume",
+   "base": [
+    41,
+    29
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "A rotted red-dragon plume, from a captain of Mount Badon. It's dry now."
+  }
+ ]
+}

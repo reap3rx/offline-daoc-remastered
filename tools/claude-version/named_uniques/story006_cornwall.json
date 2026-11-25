@@ -144,6 +144,689 @@
     "Hits": 14
    },
    "lore": "A wolfskin cape, of the kind a legion's standard-bearer wore over his helm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moor-Walker's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 5,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 5,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Plain bronze. Every new face at the Station gets one."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Heather Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "Woven heather, dyed purple."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Spider-Silk Wristwrap",
+   "base": [
+    41,
+    33
+   ],
+   "level": 5,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 4
+   },
+   "lore": "Cliff-spider silk. Sticky, then not."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cliff-Edge Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 5,
+   "bonuses": {
+    "Qui": 2,
+    "Con": 1,
+    "Dex": 1,
+    "Hits": 3,
+    "Power": 1
+   },
+   "lore": "A sea-polished pebble from the cliff foot."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Penhale's Spare Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 7,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 6
+   },
+   "lore": "Dented, polished, reliable."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Station Watchman's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 7,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 7,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "The Men of Tintagel's own belt."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moor-Wolf Fang",
+   "base": [
+    41,
+    29
+   ],
+   "level": 7,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 6
+   },
+   "lore": "Your first proper trophy in Cornwall."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cliff-Spider Fang Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 12,
+   "bonuses": {
+    "Dex": 4,
+    "Qui": 4,
+    "Str": 2,
+    "Hits": 10
+   },
+   "lore": "Hollow, venom long dried."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Web-Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 12,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 12,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Grey silk over wool. It sheds rain."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gorlois's Boar Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 16,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "The boar of Cornwall, Gorlois's sign."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ghostly Church Bell-Clapper Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 16,
+   "bonuses": {
+    "Pie": 5,
+    "Con": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "It rings, very faintly, at midnight."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Duke's Man Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 16,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 16,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Cornish black and gold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Muryan's Thimble Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Qui": 7,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 12,
+    "Power": 2
+   },
+   "lore": "A thimble, very small. The muryan who wore it was smaller."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tricker's Patchwork Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Dex": 7,
+    "Qui": 7,
+    "Str": 3,
+    "Hits": 17
+   },
+   "lore": "A hundred stolen scraps."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bucca's Fish-Bone Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 23,
+   "bonuses": {
+    "Int": 8,
+    "Pie": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "The buccas leave fish-bones for luck. This one didn't work for them."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Storm-Bucca's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 23,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 23,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Wet, always, as though from the sea."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Den Mother's Pelt",
+   "base": [
+    41,
+    26
+   ],
+   "level": 26,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 26,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Grey, huge, thick enough to sleep in the snow."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pack-Leader Tooth Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 26,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 22
+   },
+   "lore": "Three yellow teeth on a torc."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Beech-Heart Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 28,
+   "bonuses": {
+    "Pie": 9,
+    "Con": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "Smooth beech-heart, warm to the touch."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Old Beech Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 28,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 28,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Bark-brown, lined with beech-leaf green."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Rooter-Tusk Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 31,
+   "bonuses": {
+    "Str": 10,
+    "Con": 10,
+    "Dex": 5,
+    "Hits": 26
+   },
+   "lore": "Ivory, cracked, bound in bronze."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Downs-Digger's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 31,
+   "bonuses": {
+    "Con": 10,
+    "Hits": 31,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Thick leather. It smells of turned earth."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Legionary's Bronze Phalera",
+   "base": [
+    41,
+    24
+   ],
+   "level": 33,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 6,
+    "Hits": 28
+   },
+   "lore": "A bronze medal, green with age. For valour."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Marching-Road Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 33,
+   "bonuses": {
+    "Con": 11,
+    "Hits": 33,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Iron and leather, Roman-made."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Giant-Rune Shard",
+   "base": [
+    41,
+    24
+   ],
+   "level": 33,
+   "bonuses": {
+    "Int": 11,
+    "Pie": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "A shard of rune-stone, cracked across the middle."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Favius's Vine-Staff Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 36,
+   "bonuses": {
+    "Str": 12,
+    "Con": 12,
+    "Dex": 6,
+    "Hits": 31
+   },
+   "lore": "From a centurion's vine-staff. He used it on his men, not his enemies."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Old Fort Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 36,
+   "bonuses": {
+    "Con": 12,
+    "Hits": 36,
+    "Body": 4,
+    "Crush": 4,
+    "Slash": 4
+   },
+   "lore": "Roman red, faded nearly pink."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Aquila Feather",
+   "base": [
+    41,
+    24
+   ],
+   "level": 38,
+   "bonuses": {
+    "Pie": 13,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 23
+   },
+   "lore": "A gilt feather from the eagle of the Ninth. It's warm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Legate's Signet",
+   "base": [
+    41,
+    35
+   ],
+   "level": 38,
+   "bonuses": {
+    "Int": 13,
+    "Pie": 6,
+    "Dex": 6,
+    "Power": 5,
+    "Hits": 23
+   },
+   "lore": "Gold and carnelian, the legion's number cut in it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ninth's Rest Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 38,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 38,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Roman red, with a white eagle. Given to whoever brought the Ninth home."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Giant-Grave Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 34,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 6,
+    "Hits": 29
+   },
+   "lore": "Huge, cut down, still too heavy."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Captured-Soul Lantern Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 34,
+   "bonuses": {
+    "Pie": 11,
+    "Con": 6,
+    "Power": 5,
+    "Hits": 20
+   },
+   "lore": "A lantern-glass. Something grateful lived in it once."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Quarry-Giant's Chisel Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 40,
+   "bonuses": {
+    "Str": 13,
+    "Con": 13,
+    "Dex": 7,
+    "Hits": 34
+   },
+   "lore": "A chisel-tip, bent round. It cut granite once."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Stoneshaper's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 40,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 40,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Granite plates on leather."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Corinean Oath-Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 40,
+   "bonuses": {
+    "Pie": 13,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 24
+   },
+   "lore": "Iron and gold, the oath-keepers' sign."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cirfans' Scale",
+   "base": [
+    41,
+    24
+   ],
+   "level": 44,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 7,
+    "Hits": 37
+   },
+   "lore": "A drake-scale the size of a buckler, cut down to a charm."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Heir of Corineus Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 44,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 44,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Cornish black, with Corineus's wrestling-belt in gold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drake-Fire Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 44,
+   "bonuses": {
+    "Int": 15,
+    "Pie": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 26
+   },
+   "lore": "Red-gold. It never cools."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Great Drake's Tooth",
+   "base": [
+    41,
+    29
+   ],
+   "level": 44,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 7,
+    "Hits": 37
+   },
+   "lore": "As long as your forearm."
   }
  ]
 }

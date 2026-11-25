@@ -1,0 +1,197 @@
+{
+ "zone": 4,
+ "name": "Dartmoor",
+ "levels": [
+  50,
+  60
+ ],
+ "realm": 1,
+ "factions": [
+  {
+   "key": "dragon_watch",
+   "name": "the Dragon-Watch",
+   "short": "the Watch",
+   "kin": [
+    "pendragons_watch",
+    "wardens_of_cotswold",
+    "ulfwych_rangers",
+    "marsh_wardens",
+    "snowdonia_garrison",
+    "men_of_tintagel",
+    "lyonesse_remnant",
+    "knights_of_the_lake"
+   ],
+   "titles": [
+    "Watch-Friend",
+    "Dragonslayer of the Watch",
+    "the Dragon's Bane"
+   ],
+   "speaker": "bryn_asquith",
+   "town": "Grimspound",
+   "kills": [
+    "stonecrush",
+    "excavator",
+    "rockgrinder",
+    "demolisher",
+    "kez",
+    "outlooker",
+    "pounder",
+    "stonelord",
+    "gorm",
+    "cormoran",
+    "trehan",
+    "krag",
+    "golestandt",
+    "brigand"
+   ],
+   "quartermaster": {
+    "name": "Watch-Quartermaster Hob",
+    "guild": "the Dragon-Watch",
+    "model": 28,
+    "anchor": "bryn_asquith",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "The Watch's armoury, for the Watch's friends. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep004_watch_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep004_slayer_s_road_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep004_dragon_watch_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep004_quarry_cut_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep004_mantle_of_the_dragon_s_bane",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "quarry_oath",
+   "name": "the Quarry-Oath of Grimspound",
+   "short": "the Oath",
+   "kin": [
+    "abbey_faithful",
+    "sisters_of_amesbury",
+    "thornwardens",
+    "keepers_of_the_isle",
+    "emrys_circle",
+    "oath_of_corineus",
+    "harpers_of_tristan",
+    "maidens_of_the_lake"
+   ],
+   "titles": [
+    "Oath-Friend of Grimspound",
+    "Stonewright",
+    "Keeper of the Quarry-Oath"
+   ],
+   "speaker": "dm_hedda",
+   "town": "Grimspound",
+   "kills": [
+    "herdsman",
+    "gatherer",
+    "stonecaller",
+    "stoneshaper",
+    "herald",
+    "tegbuk",
+    "knocker",
+    "giant",
+    "elder",
+    "oracle",
+    "stonemender",
+    "reinforcer",
+    "bodrugan",
+    "ysgawen"
+   ],
+   "quartermaster": {
+    "name": "Oath-Keeper Morwenna",
+    "guild": "the Quarry-Oath of Grimspound",
+    "model": 38,
+    "anchor": "dm_hedda",
+    "offset": [
+     -4,
+     3
+    ],
+    "greet": "Grimspound's best, for the oath's friends. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep004_oath_friend_s_stone",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep004_stonewright_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep004_quarry_cut_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep004_dragon_watch_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep004_mantle_of_the_oath_keeper",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "dragon_watch",
+ "event_default": "dragon_watch",
+ "quest_default": "dragon_watch",
+ "quests": {
+  "quarry_oath": "quarry_oath",
+  "dragons_tithe": "dragon_watch",
+  "dm_stonecrush": "dragon_watch",
+  "dm_road": "dragon_watch",
+  "dm_kez": "dragon_watch",
+  "dm_ponies": "quarry_oath",
+  "dm_tegbuk": "quarry_oath",
+  "dm_stonecallers": "quarry_oath",
+  "dm_speaking_stone": "quarry_oath",
+  "dm_herald": "quarry_oath",
+  "dm_outlookers": "dragon_watch",
+  "dm_knockers": "quarry_oath",
+  "dm_gorm": "dragon_watch",
+  "dm_throne": "dragon_watch"
+ },
+ "events": {
+  "dm_cp1_assault": "dragon_watch",
+  "dm_cp2_assault": "dragon_watch",
+  "dm_cp3_assault": "dragon_watch",
+  "dm_cp4_assault": "dragon_watch",
+  "dm_cp1_counter": "dragon_watch",
+  "dm_cp2_counter": "dragon_watch",
+  "dm_cp3_counter": "dragon_watch",
+  "dm_cp4_counter": "dragon_watch",
+  "dm_giants_throne": "dragon_watch",
+  "dartmoor_pounders": "dragon_watch",
+  "dm_dragons_breath": "quarry_oath",
+  "dartmoor_herdsmen_cairn": "quarry_oath",
+  "dartmoor_stonecallers": "quarry_oath"
+ }
+}

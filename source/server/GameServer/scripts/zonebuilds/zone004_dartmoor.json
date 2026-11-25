@@ -1,0 +1,611 @@
+{
+ "zone": 4,
+ "name": "Dartmoor",
+ "rating": "elite",
+ "themes": [
+  "Grimspound (the Dragon-Watch's muster)",
+  "The Stonecrush Diggings (west)",
+  "The Pony Moor (north)",
+  "The Stonecallers' Ring (the middle valleys)",
+  "The Pounders' Road and the knockers' hollow (south)",
+  "The Giants' Throne (south-east - the raid)",
+  "Golestandt's lair (south: sealed until the Watch holds the moor)"
+ ],
+ "notes": "Albion's plan 2026-11-24, round 4: Elite - Golestandt's lair; nothing below orange while the giants hold the moor; the Dragon-Watch's campaign (AlbionCampaign.cs) and the Giants' Throne raid; Golestandt sealed until it's won. Coordinates are zone units (metres x 40).",
+ "keep": [
+  "Golestandt"
+ ],
+ "tiers": {
+  "Tegbuk": "red",
+  "Trahern": "red",
+  "Borimo": "red",
+  "Agidad": "red",
+  "Brannoc": "red",
+  "Kez": "red",
+  "Moran the Mighty": "purple",
+  "Dartmoor pony": "orange"
+ },
+ "factions": {
+  "giants": {
+   "id": 9501,
+   "aggro": 95
+  },
+  "stonecrush": {
+   "id": 9502,
+   "aggro": 85
+  },
+  "knockers": {
+   "id": 9503,
+   "aggro": 80
+  },
+  "brigands": {
+   "id": 9504,
+   "aggro": 85,
+   "enemies": [
+    "giants"
+   ]
+  }
+ },
+ "members": {
+  "dartmoor pony": {
+   "from": "dartmoor pony",
+   "tier": "orange",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 450
+  },
+  "ruthless brigand": {
+   "from": "ruthless brigand",
+   "tier": "orange",
+   "faction": "brigands",
+   "guild": "Vane's Brigands",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 200
+  },
+  "granite knocker": {
+   "from": "granite knocker",
+   "tier": "orange",
+   "faction": "knockers",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "Stonecrush excavator": {
+   "from": "Stonecrush excavator",
+   "tier": "orange",
+   "faction": "stonecrush",
+   "guild": "the Stonecrush",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "Stonecrush rockgrinder": {
+   "from": "Stonecrush rockgrinder",
+   "tier": "orange",
+   "faction": "stonecrush",
+   "guild": "the Stonecrush",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 200
+  },
+  "Stonecrush demolisher": {
+   "from": "Stonecrush demolisher",
+   "tier": "red",
+   "faction": "stonecrush",
+   "guild": "the Stonecrush",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 150
+  },
+  "granite giant": {
+   "from": "granite giant",
+   "tier": "orange",
+   "faction": "giants",
+   "guild": "Golestandt's giants",
+   "aggro": [
+    75,
+    550
+   ],
+   "roam": 300
+  },
+  "granite giant herdsman": {
+   "from": "granite giant herdsman",
+   "tier": "orange",
+   "faction": "giants",
+   "guild": "Golestandt's giants",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 350
+  },
+  "granite giant gatherer": {
+   "from": "granite giant gatherer",
+   "tier": "orange",
+   "faction": "giants",
+   "guild": "Golestandt's giants",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 300
+  },
+  "granite giant stoneshaper": {
+   "from": "granite giant stoneshaper",
+   "tier": "orange",
+   "faction": "giants",
+   "guild": "Golestandt's giants",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 250
+  },
+  "granite giant stonecaller": {
+   "from": "granite giant stonecaller",
+   "tier": "red",
+   "faction": "giants",
+   "guild": "Golestandt's giants",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 150
+  },
+  "granite giant outlooker": {
+   "from": "granite giant outlooker",
+   "tier": "orange",
+   "faction": "giants",
+   "guild": "Golestandt's giants",
+   "aggro": [
+    90,
+    700
+   ],
+   "roam": 200
+  },
+  "granite giant pounder": {
+   "from": "granite giant pounder",
+   "tier": "red",
+   "faction": "giants",
+   "guild": "Golestandt's giants",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 250
+  },
+  "granite giant stonelord": {
+   "from": "granite giant stonelord",
+   "tier": "red",
+   "faction": "giants",
+   "guild": "Golestandt's giants",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 150
+  },
+  "granite giant stonemender": {
+   "from": "granite giant stonemender",
+   "tier": "red",
+   "faction": "giants",
+   "guild": "Golestandt's giants",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 80
+  },
+  "granite giant reinforcer": {
+   "from": "granite giant reinforcer",
+   "tier": "red",
+   "faction": "giants",
+   "guild": "Golestandt's giants",
+   "aggro": [
+    95,
+    600
+   ],
+   "roam": 80
+  },
+  "granite giant elder": {
+   "from": "granite giant elder",
+   "tier": "red",
+   "faction": "giants",
+   "guild": "the Throne's Elders",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 60
+  },
+  "granite giant oracle": {
+   "from": "granite giant oracle",
+   "tier": "red",
+   "faction": "giants",
+   "guild": "the Throne's Elders",
+   "aggro": [
+    95,
+    650
+   ],
+   "roam": 60
+  },
+  "the Stone-Herald": {
+   "from": "granite giant stonecaller",
+   "tier": "purple",
+   "name": "the Stone-Herald",
+   "size": 1.35,
+   "faction": "giants",
+   "guild": "Voice of Golestandt",
+   "aggro": [
+    95,
+    700
+   ],
+   "roam": 40,
+   "guards": {
+    "granite giant stonecaller": 2
+   }
+  },
+  "Gorm Throne-Warden": {
+   "from": "granite giant stonelord",
+   "tier": "purple",
+   "name": "Gorm Throne-Warden",
+   "size": 1.4,
+   "faction": "giants",
+   "guild": "Keeper of Gogmagog's Throne",
+   "aggro": [
+    95,
+    700
+   ],
+   "roam": 40,
+   "guards": {
+    "granite giant stonelord": 2
+   }
+  }
+ },
+ "sites": [
+  {
+   "id": "pocket_north_lake",
+   "kind": "wildlife",
+   "area": [
+    44000,
+    5200,
+    58000,
+    13200
+   ],
+   "spawn": {
+    "dartmoor pony": 13,
+    "granite giant herdsman": 5,
+    "granite giant": 5
+   },
+   "spacing": 260
+  },
+  {
+   "id": "pocket_stonemenders",
+   "kind": "camp",
+   "at": [
+    55320,
+    31160
+   ],
+   "r": 360,
+   "respawn": 600,
+   "spawn": {
+    "granite giant stonemender": 3
+   }
+  },
+  {
+   "id": "cp1_garrison",
+   "kind": "camp",
+   "at": [
+    9200,
+    28800
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "Stonecrush rockgrinder": 3,
+    "Stonecrush excavator": 3,
+    "granite giant stonecaller": 1
+   }
+  },
+  {
+   "id": "cp1_diggings",
+   "kind": "wildlife",
+   "area": [
+    3600,
+    18000,
+    12400,
+    48000
+   ],
+   "spawn": {
+    "Stonecrush excavator": 19,
+    "Stonecrush rockgrinder": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "west_south_digs",
+   "kind": "wildlife",
+   "area": [
+    3600,
+    48000,
+    13600,
+    56000
+   ],
+   "spawn": {
+    "Stonecrush demolisher": 10,
+    "Stonecrush rockgrinder": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "reinforcers",
+   "kind": "camp",
+   "at": [
+    7960,
+    40280
+   ],
+   "r": 360,
+   "respawn": 600,
+   "spawn": {
+    "granite giant reinforcer": 3
+   }
+  },
+  {
+   "id": "grimspound_road",
+   "kind": "wildlife",
+   "area": [
+    3600,
+    6000,
+    12000,
+    18000
+   ],
+   "spawn": {
+    "Stonecrush excavator": 10,
+    "dartmoor pony": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "cp2_garrison",
+   "kind": "camp",
+   "at": [
+    38400,
+    15200
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "granite giant herdsman": 2,
+    "granite giant": 3,
+    "granite giant stonecaller": 1
+   }
+  },
+  {
+   "id": "cp2_moor",
+   "kind": "wildlife",
+   "area": [
+    26000,
+    6000,
+    50000,
+    20800
+   ],
+   "spawn": {
+    "granite giant": 16,
+    "granite giant herdsman": 6,
+    "dartmoor pony": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "brigand_camp",
+   "kind": "camp",
+   "at": [
+    40160,
+    20960
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "ruthless brigand": 6
+   }
+  },
+  {
+   "id": "cp3_garrison",
+   "kind": "camp",
+   "at": [
+    30400,
+    32000
+   ],
+   "r": 640,
+   "respawn": 900,
+   "spawn": {
+    "the Stone-Herald": 1,
+    "granite giant gatherer": 3
+   }
+  },
+  {
+   "id": "cp3_ring",
+   "kind": "wildlife",
+   "area": [
+    16000,
+    20000,
+    44000,
+    38000
+   ],
+   "spawn": {
+    "granite giant gatherer": 22,
+    "granite giant stonecaller": 13,
+    "granite giant stoneshaper": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "middle_giants",
+   "kind": "patrol",
+   "route": [
+    [
+     20000,
+     36000
+    ],
+    [
+     30000,
+     40000
+    ],
+    [
+     40000,
+     38000
+    ],
+    [
+     50000,
+     35200
+    ]
+   ],
+   "spawn": {
+    "granite giant stoneshaper": 2,
+    "granite giant outlooker": 1
+   }
+  },
+  {
+   "id": "east_valley",
+   "kind": "wildlife",
+   "area": [
+    51200,
+    18000,
+    60000,
+    44000
+   ],
+   "spawn": {
+    "granite giant stoneshaper": 10,
+    "granite giant gatherer": 10
+   },
+   "spacing": 260
+  },
+  {
+   "id": "cp4_garrison",
+   "kind": "camp",
+   "at": [
+    42400,
+    47200
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "granite giant outlooker": 3,
+    "granite giant pounder": 3
+   }
+  },
+  {
+   "id": "cp4_road",
+   "kind": "wildlife",
+   "area": [
+    24000,
+    40000,
+    50000,
+    54000
+   ],
+   "spawn": {
+    "granite giant outlooker": 16,
+    "granite giant pounder": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "knockers_hollow",
+   "kind": "wildlife",
+   "area": [
+    40640,
+    41600,
+    57000,
+    52000
+   ],
+   "spawn": {
+    "granite knocker": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "throne_court",
+   "kind": "wildlife",
+   "area": [
+    44800,
+    53200,
+    58400,
+    62400
+   ],
+   "spawn": {
+    "granite giant stonelord": 13,
+    "granite giant pounder": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "throne_guard",
+   "kind": "camp",
+   "at": [
+    52400,
+    58800
+   ],
+   "r": 400,
+   "respawn": 1200,
+   "spawn": {
+    "Gorm Throne-Warden": 1
+   }
+  },
+  {
+   "id": "elders",
+   "kind": "camp",
+   "at": [
+    56200,
+    59600
+   ],
+   "r": 360,
+   "respawn": 900,
+   "spawn": {
+    "granite giant elder": 2,
+    "granite giant oracle": 2
+   }
+  },
+  {
+   "id": "the_throne",
+   "kind": "clear",
+   "at": [
+    49600,
+    56800
+   ],
+   "r": 2400,
+   "names": [
+    "granite giant stonelord",
+    "granite giant pounder"
+   ]
+  },
+  {
+   "id": "grimspound",
+   "kind": "clear",
+   "at": [
+    5400,
+    12600
+   ],
+   "r": 3600,
+   "names": [
+    "Stonecrush excavator",
+    "Stonecrush rockgrinder",
+    "dartmoor pony",
+    "Dartmoor pony"
+   ],
+   "block": "all"
+  }
+ ]
+}

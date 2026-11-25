@@ -89,6 +89,36 @@
       "during": [
         "vigil/s6"
       ]
+    },
+    {
+      "id": "am_maelor",
+      "zone": 9,
+      "realm": 1,
+      "name": "Warden-Captain Maelor",
+      "model": 28,
+      "level": 36,
+      "pos": [
+        1376,
+        356,
+        45.1
+      ],
+      "guild": "the Marsh Wardens",
+      "idle": "Adribard's Retreat is dry, mostly. That's the best I can say for it."
+    },
+    {
+      "id": "am_argante",
+      "zone": 9,
+      "realm": 1,
+      "name": "Lady Argante",
+      "model": 38,
+      "level": 44,
+      "pos": [
+        955,
+        494,
+        41.0
+      ],
+      "guild": "the Keepers of the Isle",
+      "idle": "Three queens carried the King across that water. I was there. I keep the shore."
     }
   ],
   "quests": [
@@ -500,6 +530,1104 @@
           }
         }
       }
+    },
+    {
+      "id": "am_bog_nets",
+      "title": "The Bogmen's Nets",
+      "level": 6,
+      "giver": "am_maelor",
+      "offer": "Bogmen. Usually they keep to themselves and their fish. This month they've been stringing nets across the channels south of the Retreat and taking whoever paddles into them.\n\nWill you [cut the nets]? Thin the bogmen while you're at it.",
+      "accept": "cut the nets",
+      "topics": {},
+      "summary": "Bogmen are stringing nets across the channels south of Adribard's Retreat.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            1300,
+            500,
+            45.9
+          ],
+          "radius": 50,
+          "goal": "Drive off the bogmen in the channels about 160 m south-west of Warden-Captain Maelor",
+          "target": "bogman",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 9,
+          "at": [
+            1250,
+            560,
+            44.7
+          ],
+          "goal": "Cut the bogmen's nets",
+          "clue": {
+            "name": "a net strung across the channel",
+            "model": 1347
+          },
+          "text": "You cut the nets. Tangled in one: a little crown of reeds, the kind the bogmen weave for someone they bow to.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "am_maelor",
+          "goal": "Tell Warden-Captain Maelor",
+          "say": "A reed crown. They've got a king again, have they? Tilda Hael in Caer Witrin had trouble with that.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Marsh Wardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq9_bog_net_bracer",
+              "sq9_retreat_warden_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "am_drowned_church",
+      "title": "The Drowned Church",
+      "level": 10,
+      "giver": "am_maelor",
+      "offer": "There was a church in the middle marsh once - the marsh ate it a hundred years ago. Its dead have started walking: bloody-bones, the locals call the worst of them.\n\nWill you [put them down]?",
+      "accept": "put them down",
+      "topics": {},
+      "summary": "The dead of a drowned church walk the middle marsh.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            827,
+            662,
+            42.3
+          ],
+          "radius": 50,
+          "goal": "Put down the bloody-bones about 630 m south-west of Warden-Captain Maelor",
+          "target": "bloody-bones",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            1151,
+            577,
+            51.2
+          ],
+          "radius": 50,
+          "goal": "Lay the decayed dead to rest",
+          "target": "decayed zombie",
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "am_maelor",
+          "goal": "Tell Warden-Captain Maelor",
+          "say": "The marsh is restless. The Lady on the shore says it's because of who's been crossing to the Isle.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Marsh Wardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq9_bloody_bones_knuckle_charm",
+              "sq9_drowned_bell_rope_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "am_wisps",
+      "title": "Lights over the Water",
+      "level": 9,
+      "giver": "warden_brec",
+      "offer": "Will o' wisps over the south pools. They lead fishermen out onto soft ground and leave them there.\n\nWill you [put out the lights]? Kill enough and the rest go dim.",
+      "accept": "put out the lights",
+      "topics": {},
+      "summary": "Will o' wisps lead fishermen to their deaths in the south pools.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            673,
+            1491,
+            53.8
+          ],
+          "radius": 50,
+          "goal": "Put out the will o' wisps about 590 m south of Marsh-Warden Brec",
+          "target": "will o' wisp",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "warden_brec",
+          "goal": "Tell Warden Brec",
+          "say": "Quieter nights for the fishermen. Thank you.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Marsh Wardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq9_wisp_glass_ring",
+              "sq9_reed_cutter_s_sash"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "am_scrags",
+      "title": "Scrags in the Reeds",
+      "level": 12,
+      "giver": "warden_brec",
+      "offer": "Scrags in the southern reeds, and a big one called Scraek in the middle marsh who leads them. They've started raiding the fishing huts.\n\nWill you [deal with the scrags]?",
+      "accept": "deal with the scrags",
+      "topics": {},
+      "summary": "Scrags led by Scraek are raiding the fishing huts in the south.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            1117,
+            1419,
+            57.7
+          ],
+          "radius": 50,
+          "goal": "Clear the scrags in the southern reeds about 790 m south-east of Marsh-Warden Brec",
+          "target": "scrag",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            1120,
+            1038,
+            50.3
+          ],
+          "radius": 50,
+          "goal": "Kill Scraek",
+          "target": "Scraek",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "warden_brec",
+          "goal": "Tell Warden Brec",
+          "say": "Scraek, dead? The fishermen will name a boat after you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Marsh Wardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq9_scrag_hide_bracer",
+              "sq9_scraek_s_tooth_charm"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "am_mists",
+      "title": "The Thickening Mist",
+      "level": 11,
+      "giver": "am_argante",
+      "offer": "The mist round the Isle has thickened, and the sprites in it have turned sharp. The mist is the Isle's guard - it only thickens when someone tries to cross who shouldn't.\n\nWill you [walk the shore]? Thin the sprites, and look at the landing.",
+      "accept": "walk the shore",
+      "topics": {
+        "queens": "Three queens took Arthur to Avalon in the black barge: the Queen of Northgales, the Queen of the Waste Lands - and Morgan le Fay. Yes. She was one of them. That is what frightens me."
+      },
+      "summary": "The mist round the Isle of Avalon has thickened, which means someone is trying to cross.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            852,
+            581,
+            42.9
+          ],
+          "radius": 50,
+          "goal": "Thin the mist sprites about 160 m west of Lady Argante",
+          "target": "mist sprite",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 9,
+          "at": [
+            1095,
+            478,
+            44.6
+          ],
+          "goal": "Search the landing on the Isle's shore",
+          "clue": {
+            "name": "a stone landing-stage",
+            "model": 1347
+          },
+          "text": "Keel-marks in the mud, fresh. A long, narrow boat has been drawn up here - and the rope-post is tied with a red cord.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "am_argante",
+          "goal": "Tell Lady Argante",
+          "say": "A long, narrow boat. There is only one boat that crosses to the Isle, and it is black, and it carried the King.\n\nSomeone is using the barge.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Keepers of the Isle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq9_mist_sprite_veil",
+              "sq9_isle_shore_pebble_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "am_black_barge",
+      "title": "The Black Barge",
+      "level": 14,
+      "giver": "am_argante",
+      "offer": "The barge is rowed by the dead of the shore chapel - the knights and pages who kept vigil for the King and drowned at their posts. They row for the Keepers. But they're rowing for someone else now.\n\nWill you [go to the chapel]? Find out who they row for.",
+      "accept": "go to the chapel",
+      "topics": {},
+      "summary": "The black barge that carried Arthur to Avalon is being rowed for someone else by the dead of the shore chapel.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            1257,
+            1023,
+            47.5
+          ],
+          "radius": 50,
+          "goal": "Get past the phantom pages about 610 m south-east of Lady Argante",
+          "target": "phantom page",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 9,
+          "at": [
+            1040,
+            1205,
+            42.8
+          ],
+          "goal": "Read the shore chapel's register",
+          "clue": {
+            "name": "a register in the chapel's ruin",
+            "model": 1347
+          },
+          "text": "The last pages, in a new hand: 'The barge goes out at the new moon for whoever bears the key and the crown, by order of the Lady of the Lake's sister.' And a list of crossings - eleven of them.",
+          "give": {
+            "name": "the chapel register"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "am_argante",
+          "goal": "Bring the register to Lady Argante",
+          "say": "'The Lady of the Lake's sister.' Morgana has bound the barge's dead to her seal. Eleven crossings. Eleven of her people have stood on the Isle where the King sleeps.\n\nGod help us if one of them reaches him.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Keepers of the Isle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq9_barge_oar_bracer",
+              "sq9_chapel_register_clasp",
+              "sq9_page_s_black_ribbon"
+            ]
+          }
+        }
+      },
+      "requires": "am_mists"
+    },
+    {
+      "id": "am_fallen_paladins",
+      "title": "The Fallen Paladins",
+      "level": 24,
+      "giver": "am_argante",
+      "offer": "The barge's dead won't stop rowing while their captains hold them to Morgana's seal: Sir Fiedel and the Dread Lord Aryon, who were paladins of the King once. They fell when the vigil drowned and got up again under her hand.\n\nWill you [free the chapel]? Bring your strongest. They were the best of us.",
+      "accept": "free the chapel",
+      "topics": {},
+      "summary": "Two fallen paladins hold the dead of the shore chapel to Morgana's seal.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            1032,
+            1215,
+            43.9
+          ],
+          "radius": 50,
+          "goal": "Cut through the ghostly knights at the shore chapel about 730 m south of Lady Argante",
+          "target": "ghostly knight",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            1028,
+            1181,
+            42.1
+          ],
+          "radius": 50,
+          "goal": "Defeat Undead Knight Fiedel",
+          "target": "Undead Knight Fiedel",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            1025,
+            1225,
+            44.0
+          ],
+          "radius": 50,
+          "goal": "Defeat Dread Lord Aryon",
+          "target": "Dread Lord Aryon",
+          "count": 1,
+          "text": "Aryon kneels in the water. 'Tell the King,' he says, 'we kept the vigil as long as we could.'",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "am_argante",
+          "goal": "Tell Lady Argante",
+          "say": "They're free. The barge will row for the Keepers again, and only for us.\n\nI'll tell the King myself, when he wakes. He'll want to know.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Keepers of the Isle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq9_fiedel_s_tarnished_spur",
+              "sq9_aryon_s_broken_oath_ring",
+              "sq9_shore_vigil_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "am_black_barge"
+    },
+    {
+      "id": "am_shamblers",
+      "title": "The Shambling Road",
+      "level": 14,
+      "giver": "warden_brec",
+      "offer": "Shamblers in the south-west - walking heaps of marsh. They've always been there. But now they walk in lines, and they carry things.\n\nWill you [follow the shamblers]?",
+      "accept": "follow the shamblers",
+      "topics": {},
+      "summary": "The shamblers of the south-west marsh walk in lines, carrying things.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            353,
+            1110,
+            56.0
+          ],
+          "radius": 50,
+          "goal": "Break up the shambler lines about 230 m south-west of Marsh-Warden Brec",
+          "target": "shambler",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 9,
+          "at": [
+            340,
+            1120,
+            56.2
+          ],
+          "goal": "Look at what the shamblers carried",
+          "clue": {
+            "name": "a heap of dropped stones",
+            "model": 1347
+          },
+          "text": "Blocks of grey granite flecked with pink, dressed square. The shamblers were carrying them east, toward the Isle.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "warden_brec",
+          "goal": "Tell Warden Brec",
+          "say": "Granite? We've no granite in the marsh. That's Cornwall's - or further.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Marsh Wardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq9_shambler_moss_bracer",
+              "sq9_granite_dust_charm"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "am_giant_wolves",
+      "title": "Wolves of the West Marsh",
+      "level": 16,
+      "giver": "warden_brec",
+      "offer": "Giant wolves on the west marsh - out of Cornwall, I'd guess, driven ahead of something bigger. They've taken two of my wardens.\n\nWill you [hunt the wolves]?",
+      "accept": "hunt the wolves",
+      "topics": {},
+      "summary": "Giant wolves, driven out of Cornwall, are hunting the west marsh.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            369,
+            644,
+            85.2
+          ],
+          "radius": 50,
+          "goal": "Hunt the giant wolves about 310 m north-west of Marsh-Warden Brec",
+          "target": "giant wolf",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "warden_brec",
+          "goal": "Tell Warden Brec",
+          "say": "Driven ahead of something bigger. I keep coming back to that.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Marsh Wardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq9_giant_wolf_pelt_mantle",
+              "sq9_wolf_fang_torc"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "am_mist_monsters",
+      "title": "What Walks in the Fog",
+      "level": 18,
+      "giver": "am_maelor",
+      "offer": "On the far west marsh the fog never lifts, and something walks in it. Mist monsters, the old fishermen say. Nobody who goes in to look comes back to say more.\n\nWill you [go into the fog]? Bring friends who can find you.",
+      "accept": "go into the fog",
+      "topics": {},
+      "summary": "Mist monsters walk the fog of the far west marsh.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            191,
+            569,
+            79.4
+          ],
+          "radius": 50,
+          "goal": "Kill the mist monsters about 1.2 km west of Warden-Captain Maelor",
+          "target": "mist monster",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "am_maelor",
+          "goal": "Tell Warden-Captain Maelor",
+          "say": "You came back. That's more than most. What did you see?\n\n...Giants' footprints, going east. In the fog. Of course.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Marsh Wardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq9_mist_monster_eye",
+              "sq9_fog_walker_s_belt"
+            ]
+          }
+        }
+      },
+      "group": true
+    },
+    {
+      "id": "am_causeway",
+      "title": "The Giants' Causeway",
+      "level": 20,
+      "giver": "warden_brec",
+      "offer": "My wardens found it in the south-west: a road, of dressed granite, laid across the marsh. Built by giants - Cornish giants, out of the west. And it points at the Isle.\n\nWill you [break the causeway]? Kill the builders. Tip the stones into the mire.",
+      "accept": "break the causeway",
+      "topics": {},
+      "summary": "Cornish giants are laying a granite causeway across the south-west marsh toward the Isle.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            260,
+            1080,
+            80.8
+          ],
+          "radius": 50,
+          "goal": "Kill the giants building the causeway about 280 m south-west of Marsh-Warden Brec",
+          "target": "Cornish giant",
+          "count": 2,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 9,
+          "at": [
+            200,
+            1110,
+            94.9
+          ],
+          "goal": "Tip the causeway's kerb-stones into the mire",
+          "clue": {
+            "name": "a granite kerb-stone, half-laid",
+            "model": 1347
+          },
+          "text": "The stone goes over with a heave and a sucking splash. Carved on its underside: a dragon's claw, and 'For the Sleeper.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "warden_brec",
+          "goal": "Tell Warden Brec",
+          "say": "'For the Sleeper.' A road to the King, so the giants can walk to him dry-shod.\n\nThe Lady on the shore must hear this.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Marsh Wardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq9_causeway_kerb_stone_ring",
+              "sq9_marsh_warden_s_wading_mantle",
+              "sq9_brec_s_lucky_charm"
+            ]
+          }
+        }
+      },
+      "requires": "am_shamblers"
+    },
+    {
+      "id": "am_marsh_lord",
+      "title": "The Marsh Lord",
+      "level": 23,
+      "giver": "warden_brec",
+      "offer": "The giants couldn't lay a road through the mire without the mire's leave. The Marsh Lord gave it - the old thing that rules the deep bog in the far south-west. The bogmen whisper he was paid in Cornish tin.\n\nWill you [end the Marsh Lord]? He's old and he's strong. Take everyone.",
+      "accept": "end the Marsh Lord",
+      "topics": {},
+      "summary": "The Marsh Lord sold the giants the way across the mire for Cornish tin.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            641,
+            986,
+            41.1
+          ],
+          "radius": 50,
+          "goal": "Break the mud golems that guard the mire road about 160 m east of Marsh-Warden Brec",
+          "target": "mud golem",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            298,
+            1358,
+            45.3
+          ],
+          "radius": 50,
+          "goal": "Defeat the Marsh Lord",
+          "target": "Marsh Lord",
+          "count": 1,
+          "text": "The Marsh Lord sinks into his bog with a long, wet sigh. Tin ingots tumble out of the mud where he lay.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "warden_brec",
+          "goal": "Tell Warden Brec",
+          "say": "Tin. He sold the King's marsh for tin.\n\nWithout him, the mire won't hold their road. You've bought the Isle time.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Marsh Wardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq9_marsh_lord_s_sceptre_ring",
+              "sq9_mire_crown_torc",
+              "sq9_peat_black_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "am_causeway"
+    },
+    {
+      "id": "am_ghoul_court",
+      "title": "The Ghoul Court",
+      "level": 19,
+      "giver": "squire_hamon",
+      "offer": "The Vigil's dead hold court in the north-west marsh - ghoul footmen drilling on the old parade ground as if nothing's changed in three hundred years.\n\nI want to know what they're guarding. Will you [scout the court]?",
+      "accept": "scout the court",
+      "topics": {},
+      "summary": "The Drowned Vigil's ghoul footmen drill on their old parade ground in the north-west.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            371,
+            382,
+            77.0
+          ],
+          "radius": 50,
+          "goal": "Fight through the ghoul footmen about 580 m west of Squire Hamon",
+          "target": "ghoul footman",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 9,
+          "at": [
+            410,
+            330,
+            71.9
+          ],
+          "goal": "Search the Vigil's walls",
+          "clue": {
+            "name": "a wall of drowned stone",
+            "model": 1347
+          },
+          "text": "Behind the walls, the Vigil's keep - and on its tower, still flying after three hundred years, a banner. Grey, with a white tower. The Vigil's colours.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "squire_hamon",
+          "goal": "Tell Squire Hamon",
+          "say": "Their banner still flies. Sir Corentin would have given anything to see it.\n\nIf we could take it down - take the keep back - the Vigil could rest.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Squire Hamon.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq9_ghoul_court_seal",
+              "sq9_footman_s_rusted_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "am_vigil_banner",
+      "title": "The Vigil's Banner",
+      "level": 21,
+      "giver": "squire_hamon",
+      "offer": "The Vigil drowned at its posts because nobody came to relieve them. Somebody should. Bring down their banner from the keep, and they'll know they've been relieved.\n\nWill you [bring down the banner]? The keep is full of them. You'll need a group.",
+      "accept": "bring down the banner",
+      "topics": {},
+      "summary": "Squire Hamon wants the Drowned Vigil's banner brought down from their keep, so they know they've been relieved.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            400,
+            300,
+            72.8
+          ],
+          "radius": 50,
+          "goal": "Cut through the ghoul knights in the keep about 580 m west of Squire Hamon",
+          "target": "ghoul knight",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 9,
+          "at": [
+            360,
+            240,
+            67.0
+          ],
+          "radius": 50,
+          "goal": "Defeat a ghoul lord of the Vigil",
+          "target": "ghoul lord",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 9,
+          "at": [
+            358,
+            232,
+            68.1
+          ],
+          "goal": "Bring down the banner from the tower",
+          "clue": {
+            "name": "the Vigil's banner, still flying",
+            "model": 1347
+          },
+          "text": "The banner comes down in your hands, damp and heavy. Across the keep, for a moment, every ghoul stands still and looks up.",
+          "give": {
+            "name": "the Vigil's banner"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "squire_hamon",
+          "goal": "Bring the banner to Squire Hamon",
+          "say": "Relieved. After three hundred years.\n\nThey won't all rest yet - they're too used to standing. But the Marsh Wardens could take that keep now, with enough hands.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Squire Hamon.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq9_vigil_tower_ring",
+              "sq9_drowned_keep_torc",
+              "sq9_relief_watch_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "am_ghoul_court"
+    },
+    {
+      "id": "am_way_to_isle",
+      "title": "The Way to the Isle",
+      "level": 24,
+      "giver": "am_argante",
+      "offer": "The barge is free and the causeway's broken - and that has made her angry. Morgause of Orkney is coming to the shore herself: Morgana's sister, Mordred's mother. She'll try to cross by force.\n\nWill you [stand on the shore] with me? Bring everyone. This is the King's last door.",
+      "accept": "stand on the shore",
+      "topics": {},
+      "summary": "Morgause of Orkney, Morgana's sister, comes to force a crossing to the Isle where Arthur sleeps.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 9,
+          "at": [
+            1095,
+            470,
+            43.6
+          ],
+          "radius": 30,
+          "goal": "Go to the Isle's landing about 140 m east of Lady Argante",
+          "text": "The mist parts. Red torches on the water, coming closer.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 9,
+          "at": [
+            1100,
+            465,
+            42.7
+          ],
+          "wake_m": 30,
+          "goal": "Keep Lady Argante alive on the landing",
+          "text": "The Crimson break on the shore - and a tall woman in a black crown steps out of the mist.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Lady Argante alive",
+              "center": [
+                1100,
+                465,
+                42.7
+              ],
+              "radius": 30,
+              "duration_s": 120,
+              "objective": "Keep Lady Argante alive",
+              "announce": "Argante raises her hands and the mist thickens round the landing. 'Hold them! They must not set foot on the Isle!'",
+              "protect": {
+                "template": 60167630,
+                "name": "Lady Argante",
+                "level": 24,
+                "model": 38
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    1112,
+                    471,
+                    44.0
+                  ],
+                  [
+                    1090,
+                    455,
+                    39.5
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 12075,
+                    "name": "crimson initiate",
+                    "level": [
+                      22,
+                      23
+                    ]
+                  },
+                  {
+                    "template": 12018,
+                    "name": "drowned oarsman",
+                    "level": [
+                      22,
+                      23
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "Lady Argante falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Morgause of Orkney",
+              "center": [
+                1100,
+                465,
+                42.7
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Morgause of Orkney",
+              "announce": "Morgause of Orkney, in a black crown: 'My son is dead because of that man. Let me see him sleep. Only for a moment.'",
+              "boss": {
+                "template": 12075,
+                "name": "Morgause of Orkney",
+                "level": 25,
+                "health_mult": 2.2
+              },
+              "success": "Morgause of Orkney falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "am_argante",
+          "goal": "Speak with Lady Argante on the shore",
+          "say": "She's gone - back into the mist. Not dead. Her kind never quite are.\n\nThe King sleeps safe tonight. But his enemies know the way now: Morgana at the lake of Llyn Barfog, and the white dragon in Dartmoor. Shall I [ring the shore-bell], so every Keeper and Warden knows the Isle held? Or do we [keep it quiet], and let them wonder?",
+          "options": [
+            {
+              "keyword": "ring the shore-bell",
+              "say": "Then ring it. Let them hear it in Camelot.",
+              "ending": "rung"
+            },
+            {
+              "keyword": "keep it quiet",
+              "say": "Then the Isle keeps its own counsel, as it always has.",
+              "ending": "quiet"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "rung": {
+          "text": "From the Keepers of the Isle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq9_keeper_of_the_isle_s_mantle"
+            ],
+            "choice": [
+              "sq9_argante_s_pearl",
+              "sq9_orkney_queen_s_circlet_ring",
+              "sq9_sleeper_s_guard_torc"
+            ]
+          }
+        },
+        "quiet": {
+          "text": "From the Keepers of the Isle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq9_argante_s_pearl"
+            ],
+            "choice": [
+              "sq9_orkney_queen_s_circlet_ring",
+              "sq9_keeper_of_the_isle_s_mantle",
+              "sq9_sleeper_s_guard_torc"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "am_fallen_paladins"
     }
   ]
 }

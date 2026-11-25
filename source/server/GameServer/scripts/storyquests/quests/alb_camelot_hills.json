@@ -123,6 +123,181 @@
         "bell_price/s3",
         "bell_price/s4"
       ]
+    },
+    {
+      "id": "ch_warden_hollis",
+      "zone": 0,
+      "realm": 1,
+      "name": "Warden Hollis",
+      "model": 9,
+      "level": 30,
+      "pos": [
+        318,
+        690,
+        57.2
+      ],
+      "guild": "the Wardens of Cotswold",
+      "idle": "Camelot's walls are an hour's walk. You'd think that would keep the trouble off. It doesn't."
+    },
+    {
+      "id": "ch_goodwife_ada",
+      "zone": 0,
+      "realm": 1,
+      "name": "Goodwife Ada",
+      "model": 38,
+      "level": 18,
+      "pos": [
+        292,
+        676,
+        61.4
+      ],
+      "idle": "Three lambs this week. Three. The wolves never came this close when the King was alive."
+    },
+    {
+      "id": "ch_miller_bran",
+      "zone": 0,
+      "realm": 1,
+      "name": "Bran the Miller",
+      "model": 9,
+      "level": 22,
+      "pos": [
+        262,
+        760,
+        63.5
+      ],
+      "idle": "The wheel's stopped. You hear that? Nothing. That's my living, not turning."
+    },
+    {
+      "id": "ch_reeve_tobias",
+      "zone": 0,
+      "realm": 1,
+      "name": "Reeve Tobias",
+      "model": 9,
+      "level": 26,
+      "pos": [
+        336,
+        716,
+        61.2
+      ],
+      "guild": "the Wardens of Cotswold",
+      "idle": "Half the harvest's in, the other half's walking off into the hills on little green legs."
+    },
+    {
+      "id": "ch_forester_odo",
+      "zone": 0,
+      "realm": 1,
+      "name": "Forester Odo",
+      "model": 9,
+      "level": 30,
+      "pos": [
+        560,
+        420,
+        57.5
+      ],
+      "idle": "These were the King's woods. They still are, as far as I'm concerned."
+    },
+    {
+      "id": "ch_gronyr",
+      "zone": 0,
+      "realm": 1,
+      "name": "Gronyr the Farmer",
+      "model": 9,
+      "level": 28,
+      "pos": [
+        640,
+        610,
+        56.5
+      ],
+      "idle": "My grandfather's grandfather ploughed this field. The ants say otherwise."
+    },
+    {
+      "id": "ch_captain_bonswell",
+      "zone": 0,
+      "realm": 1,
+      "name": "Watch-Captain Elidyr",
+      "model": 9,
+      "level": 45,
+      "pos": [
+        642,
+        1150,
+        72.6
+      ],
+      "guild": "the Pendragon's Watch",
+      "idle": "Every road to Camelot is my road. I'd like them back."
+    },
+    {
+      "id": "ch_sir_jerem",
+      "zone": 0,
+      "realm": 1,
+      "name": "Sir Bedwyr",
+      "model": 254,
+      "level": 41,
+      "pos": [
+        628,
+        1168,
+        72.4
+      ],
+      "guild": "Knight of the Round Table",
+      "idle": "I sat three places down from Sir Kay. He never let me forget it. Now there's no one to forget it to."
+    },
+    {
+      "id": "ch_brother_willem",
+      "zone": 0,
+      "realm": 1,
+      "name": "Brother Idris",
+      "model": 9,
+      "level": 24,
+      "pos": [
+        990,
+        808,
+        72.2
+      ],
+      "guild": "the Church of Albion",
+      "idle": "I bless the dead in the barrow fields every Sunday. This year they've started answering."
+    },
+    {
+      "id": "ch_sage_nelson",
+      "zone": 0,
+      "realm": 1,
+      "name": "Sage Tegid",
+      "model": 9,
+      "level": 35,
+      "pos": [
+        1004,
+        798,
+        72.2
+      ],
+      "idle": "Old Rome built that tomb for Mithras. Old Rome didn't build it to be used by these people."
+    },
+    {
+      "id": "ch_lady_aelawen",
+      "zone": 0,
+      "realm": 1,
+      "name": "Lady Enid",
+      "model": 38,
+      "level": 44,
+      "pos": [
+        915,
+        1235,
+        51.8
+      ],
+      "guild": "the Pendragon's Watch",
+      "idle": "The door to Darkness Falls is held. Mostly. Things get round it."
+    },
+    {
+      "id": "ch_sir_barcroft",
+      "zone": 0,
+      "realm": 1,
+      "name": "Sir Barwick",
+      "model": 28,
+      "level": 38,
+      "pos": [
+        888,
+        1248,
+        53.4
+      ],
+      "guild": "the Pendragon's Watch",
+      "idle": "Barwick. Not Berwick. I've corrected three demons on it."
     }
   ],
   "quests": [
@@ -497,7 +672,8 @@
               "sq0_weaver_s_hopeful_mantle",
               "sq0_three_note_band",
               "sq0_waystone_bracer"
-            ]
+            ],
+            "items": []
           }
         }
       }
@@ -606,7 +782,8 @@
             "choice": [
               "sq0_shepherd_s_lucky_charm",
               "sq0_sheep_song_sash"
-            ]
+            ],
+            "items": []
           }
         },
         "bargained": {
@@ -624,6 +801,1445 @@
           }
         }
       }
+    },
+    {
+      "id": "ch_wolves_at_the_fold",
+      "title": "Wolves at the Fold",
+      "level": 2,
+      "giver": "ch_goodwife_ada",
+      "offer": "Three lambs this week. The grey wolves come down off the downs at dusk and take them right out of the fold, bold as you like.\n\nWarden Hollis says he can't spare a man. Will you [watch the fold] tonight? Thin the pups out on the fields and follow them home.",
+      "accept": "watch the fold",
+      "topics": {},
+      "summary": "Grey wolves are taking Goodwife Ada's lambs from the fold outside Cotswold.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            440,
+            720,
+            57.1
+          ],
+          "radius": 50,
+          "goal": "Thin out the wolf pups on the fields about 150 m east of Goodwife Ada",
+          "target": "gray wolf pup",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 0,
+          "at": [
+            330,
+            400,
+            70.2
+          ],
+          "goal": "Follow the tracks north to the wolves' den",
+          "clue": {
+            "name": "a den under a fallen oak",
+            "model": 1882
+          },
+          "text": "Bones. Lots of them, and fresh. And a tuft of grey fur on the root - the old she-wolf's, by the size of it.",
+          "id": "s2"
+        },
+        {
+          "type": "encounter",
+          "zone": 0,
+          "at": [
+            330,
+            395,
+            70.1
+          ],
+          "wake_m": 30,
+          "goal": "Drive off the old she-wolf",
+          "text": "The she-wolf drops at the mouth of her den. The downs go quiet.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Old Greymuzzle",
+              "center": [
+                330,
+                395,
+                70.1
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Drive off the old she-wolf",
+              "announce": "A grey wolf as big as a pony comes out of the dark under the oak, and she isn't afraid of you.",
+              "boss": {
+                "template": 12488,
+                "name": "Old Greymuzzle",
+                "level": 4,
+                "health_mult": 2.2
+              },
+              "success": "Old Greymuzzle falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_goodwife_ada",
+          "goal": "Tell Goodwife Ada",
+          "say": "Old Greymuzzle? She's been the terror of the downs since I was a girl. And you just walked up and... well.\n\nMy husband's pin. He'd want someone brave to have it.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Goodwife Ada.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq0_shepherd_s_crook_pin",
+              "sq0_fleece_lined_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ch_still_wheel",
+      "title": "The Still Wheel",
+      "level": 3,
+      "giver": "ch_miller_bran",
+      "offer": "My wheel's stopped. Not broken - stopped. Something's jammed the race, and every time I clear it, it's jammed again by morning.\n\nIt's the sprites. Little blue things from the river, all giggling. Will you [clear the race]? And if you find the pin they stole off the wheel, I'll owe you a sack of flour.",
+      "accept": "clear the race",
+      "topics": {},
+      "summary": "River sprites keep jamming Bran the Miller's wheel outside Cotswold.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            420,
+            1080,
+            53.8
+          ],
+          "radius": 50,
+          "goal": "Chase the spritelings out of the reeds about 360 m south-east of Bran the Miller",
+          "target": "river spriteling",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 0,
+          "at": [
+            470,
+            1210,
+            60.0
+          ],
+          "goal": "Search the sprites' pool down the river",
+          "clue": {
+            "name": "a pool full of shiny things",
+            "model": 1347
+          },
+          "text": "Buttons, a spoon, three thimbles - and Bran's iron wheel-pin, polished up like a jewel. Tiny wet footprints lead back upstream.",
+          "give": {
+            "name": "Bran's wheel-pin"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            289,
+            902,
+            52.3
+          ],
+          "radius": 50,
+          "goal": "Deal with Thwori, the sprite who leads them, upstream on the west bank",
+          "target": "Thwori",
+          "count": 1,
+          "text": "Thwori squeals and splashes away, and the other sprites follow. The race runs clear.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_miller_bran",
+          "goal": "Bring the pin back to Bran",
+          "say": "There she goes - hear that? That's the sound of bread.\n\nPolished my pin, did they? Cheeky little beggars.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Bran.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq0_mill_wheel_ring",
+              "sq0_river_reed_sash"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ch_little_green_legs",
+      "title": "Little Green Legs",
+      "level": 4,
+      "giver": "ch_reeve_tobias",
+      "offer": "Half the harvest's in and the other half's walking off into the hills. Spriggarns. They come down at night, steal the sheaves and the sickles both, and dance on the stubble.\n\nWill you [find the harvest]? Their rings are in the hills east of here. Bring back what you can - and make them think twice.",
+      "accept": "find the harvest",
+      "topics": {},
+      "summary": "Spriggarns are stealing Cotswold's harvest and carrying it off to their rings in the hills.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            700,
+            800,
+            54.2
+          ],
+          "radius": 50,
+          "goal": "Teach the spriggarns in the hills a lesson about 370 m east of Reeve Tobias",
+          "target": "spriggarn",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 0,
+          "at": [
+            860,
+            760,
+            54.2
+          ],
+          "goal": "Search the spriggarn ring for the stolen sickles",
+          "clue": {
+            "name": "a ring of trampled sheaves",
+            "model": 1347
+          },
+          "text": "Sickles, a dozen, hung in a circle on a hawthorn like bells - and the sheaves trampled into a dancing floor.",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "ch_reeve_tobias",
+          "goal": "Tell Reeve Tobias what you found",
+          "say": "Dancing on it? Our bread? ...Brownies used to leave a sheaf out for the little folk at every harvest. My grandmother did. We stopped when the King died - there didn't seem much to thank anyone for.\n\nDo we [leave a sheaf] out for them again, or [drive them off] for good?",
+          "options": [
+            {
+              "keyword": "leave a sheaf",
+              "say": "A sheaf it is. One, at the edge of the field. And if they take a second, they'll hear from me.",
+              "ending": "gift"
+            },
+            {
+              "keyword": "drive them off",
+              "say": "Then we'll burn the hawthorn. They'll find somewhere else to dance.",
+              "ending": "drive"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "gift": {
+          "text": "The little folk leave something on the doorstep the next morning.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq0_brownie_s_button"
+            ],
+            "choice": [
+              "sq0_sickle_hook_belt",
+              "sq0_reeve_s_tally_ring"
+            ]
+          }
+        },
+        "drive": {
+          "text": "From the Wardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq0_sickle_hook_belt",
+              "sq0_reeve_s_tally_ring"
+            ]
+          }
+        }
+      },
+      "requires": "ch_still_wheel"
+    },
+    {
+      "id": "ch_ants_in_the_furrow",
+      "title": "Ants in the Furrow",
+      "level": 5,
+      "giver": "ch_gronyr",
+      "offer": "Dragon ants. You've seen them? Big as dogs, and they've come over the ridge into my east field. They take the seed straight out of the furrow.\n\nThe workers I can live with. But somewhere up on the ridge there's a queen, and while she's laying there'll be no end of them. Will you [find the queen]?",
+      "accept": "find the queen",
+      "topics": {},
+      "summary": "Dragon ants from the eastern ridge are raiding Gronyr's farm.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            1050,
+            560,
+            64.3
+          ],
+          "radius": 50,
+          "goal": "Kill the dragon ant workers on the ridge about 410 m east of Gronyr the Farmer",
+          "target": "dragon ant worker",
+          "count": 8,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            1180,
+            520,
+            62.4
+          ],
+          "radius": 50,
+          "goal": "Kill the dragon ant queen in her mound",
+          "target": "dragon ant queen",
+          "count": 1,
+          "text": "The queen goes down in a heap of legs. Her soldiers mill about, lost.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_gronyr",
+          "goal": "Tell Gronyr",
+          "say": "Gone? The queen? ...My grandfather's grandfather would've bought you a drink. I'll buy you two.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Gronyr.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq0_anthill_amber_charm",
+              "sq0_ploughman_s_mantle"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ch_kings_deer",
+      "title": "The King's Deer",
+      "level": 3,
+      "giver": "ch_forester_odo",
+      "offer": "The north woods were the King's own hunting. Nobody's said otherwise since he went - so the poachers decided nobody minds.\n\nThey've strung snares from the road to the heath. Will you [cut the snares]? And send the poachers home with a flea in their ear.",
+      "accept": "cut the snares",
+      "topics": {},
+      "summary": "Poachers are snaring in the King's woods north of Cotswold.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 0,
+          "at": [
+            600,
+            360,
+            65.8
+          ],
+          "goal": "Cut the poachers' snares by the north road about 70 m north-east of Forester Odo",
+          "clue": {
+            "name": "a wire snare in the bracken",
+            "model": 1347
+          },
+          "text": "A snare, and another, and another - a dozen in a line. You cut them all.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            650,
+            330,
+            69.0
+          ],
+          "radius": 50,
+          "goal": "Drive off the young poachers at their camp",
+          "target": "young poacher",
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_forester_odo",
+          "goal": "Tell Forester Odo",
+          "say": "Cut, all of them? Good. Arthur's not here to mind his deer. So I mind them.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Forester Odo.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq0_snare_wire_bracer",
+              "sq0_forester_s_acorn"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ch_kings_road",
+      "title": "Cutpurses on the King's Road",
+      "level": 6,
+      "giver": "ch_warden_hollis",
+      "offer": "The road from here to Camelot used to be the safest in Albion. Now a gang of cutpurses works it - children, half of them, and the other half ought to know better.\n\nLast night they took the parish tithe from Brother Idris's boy. Will you [clear the road]? The gang camps in the hills east of the crossroads.",
+      "accept": "clear the road",
+      "topics": {},
+      "summary": "A gang of cutpurses robs travellers on the road to Camelot. They took the parish tithe.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            560,
+            820,
+            53.0
+          ],
+          "radius": 50,
+          "goal": "Clear the cutpurses on the Camelot road about 270 m south-east of Warden Hollis",
+          "target": "cutpurse",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            840,
+            990,
+            61.4
+          ],
+          "radius": 50,
+          "goal": "Break up the gang's camp in the hills",
+          "target": "young cutpurse",
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "encounter",
+          "zone": 0,
+          "at": [
+            845,
+            1000,
+            62.0
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the gang's lieutenant",
+          "text": "The lieutenant falls. In his coat: the tithe purse - and a second purse, full of new silver.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Hob Crowley",
+              "center": [
+                845,
+                1000,
+                62.0
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the gang's lieutenant",
+              "announce": "A broad man with a short sword steps out of the trees. 'That's my road, friend. My road, my tax.'",
+              "boss": {
+                "template": 12311,
+                "name": "Hob Crowley",
+                "level": 8,
+                "health_mult": 2.2
+              },
+              "success": "Hob Crowley falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_warden_hollis",
+          "goal": "Return the tithe to Warden Hollis",
+          "say": "The tithe, thank God. And this other purse... new silver, every coin. Stamped with a red seal I don't know.\n\nCutpurses don't carry new silver. Somebody's paying them.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wardens of Cotswold.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq0_purse_snatcher_s_ring",
+              "sq0_tithe_bearer_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ch_red_seal",
+      "title": "The Red Seal",
+      "level": 8,
+      "giver": "ch_captain_bonswell",
+      "offer": "Hollis sent you with this purse? Good. Look at the seal - a red key under a crown. I've seen it twice: on a dead smuggler, and on a letter I wasn't meant to read.\n\nThe bandits on the eastern ridge have a hedge-wizard with them - a thaumaturge. If anyone keeps their accounts, it's him. Will you [find his accounts]?",
+      "accept": "find his accounts",
+      "topics": {},
+      "summary": "Watch-Captain Elidyr of Prydwen Keep thinks the bandits are being paid - in silver stamped with a red seal.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            985,
+            535,
+            58.1
+          ],
+          "radius": 50,
+          "goal": "Fight through the bandits on the eastern ridge about 700 m north-east of Watch-Captain Elidyr",
+          "target": "bandit",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 0,
+          "at": [
+            990,
+            540,
+            59.3
+          ],
+          "wake_m": 30,
+          "goal": "Defeat the gang's thaumaturge",
+          "text": "The thaumaturge's satchel spills open: a ledger, in a neat hand.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Hollin the Hexer",
+              "center": [
+                990,
+                540,
+                59.3
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat the gang's thaumaturge",
+              "announce": "A thin man in a feathered cloak shrieks a curse and the air goes sour. 'Nobody reads my books!'",
+              "boss": {
+                "template": 10108,
+                "name": "Hollin the Hexer",
+                "level": 9,
+                "health_mult": 2.2
+              },
+              "success": "Hollin the Hexer falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 0,
+          "at": [
+            995,
+            530,
+            60.7
+          ],
+          "goal": "Read the thaumaturge's ledger",
+          "clue": {
+            "name": "a ledger in a neat hand",
+            "model": 1347
+          },
+          "text": "'Paid: to keep the Watch busy on the roads, forty marks. Paid: to keep away from the tomb on the eastern hill, twenty marks. Received of the Crimson, by the hand of the Warden of the Tomb.'",
+          "give": {
+            "name": "the thaumaturge's ledger"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_captain_bonswell",
+          "goal": "Bring the ledger to Watch-Captain Elidyr",
+          "say": "'Keep the Watch busy on the roads.' So all this - the cutpurses, the robberies - it's a curtain. And behind it, the old Roman tomb on the eastern hill.\n\nThe Crimson. I don't know the name. I don't like it.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq0_red_seal_signet",
+              "sq0_thaumaturge_s_charm",
+              "sq0_watchman_s_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "ch_kings_road"
+    },
+    {
+      "id": "ch_old_fort",
+      "title": "The Old Fort",
+      "level": 10,
+      "giver": "ch_captain_bonswell",
+      "offer": "The gang's master has a name now: Gamwell the Red-Handed, and he holds the old fort south of the river. Kill him and the curtain comes down.\n\nHe's no cutpurse - he fought at Camlann, they say, on the wrong side. Will you [take the fort]? Bring friends if you have them. I'll have men on the bridge.",
+      "accept": "take the fort",
+      "topics": {},
+      "summary": "Gamwell the Red-Handed, master of the Camelot Road Gang, holds the old fort south of the river.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 0,
+          "at": [
+            760,
+            1310,
+            54.1
+          ],
+          "radius": 25,
+          "goal": "Cross the river south of Prydwen Keep",
+          "text": "The bridge is held by Elidyr's men. Beyond it, on the hill, the old fort's walls - and smoke.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            948,
+            1420,
+            55.0
+          ],
+          "radius": 50,
+          "goal": "Fight into the old fort about 410 m south-east of Watch-Captain Elidyr",
+          "target": "bandit henchman",
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "encounter",
+          "zone": 0,
+          "at": [
+            950,
+            1425,
+            55.6
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Gamwell the Red-Handed",
+          "text": "Gamwell goes down on one knee. 'Camlann,' he says, 'was the last honest fight I saw.' Then nothing.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Gamwell the Red-Handed",
+              "center": [
+                950,
+                1425,
+                55.6
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Gamwell the Red-Handed",
+              "announce": "A grey-bearded man in old mail draws a sword with a broken crown on the pommel. 'Mordred paid better than Arthur, and so does she.'",
+              "boss": {
+                "template": 12310,
+                "name": "Gamwell the Red-Handed",
+                "level": 11,
+                "health_mult": 2.2
+              },
+              "success": "Gamwell the Red-Handed falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 12447,
+                    "name": "bandit",
+                    "level": [
+                      9,
+                      10
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_captain_bonswell",
+          "goal": "Report to Watch-Captain Elidyr",
+          "say": "'So does she.' Not he. She.\n\nThe roads are ours again. And the curtain's down - so now we can see what's behind it on the eastern hill.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [
+              "sq0_prydwen_cloak"
+            ],
+            "choice": [
+              "sq0_old_fort_keystone",
+              "sq0_red_handed_gauntlet_ring"
+            ]
+          }
+        }
+      },
+      "requires": "ch_red_seal"
+    },
+    {
+      "id": "ch_arthurs_huntsmen",
+      "title": "Arthur's Huntsmen",
+      "level": 9,
+      "giver": "ch_sir_jerem",
+      "offer": "You've heard of the hunt for the Twrch Trwyth? The great boar - a king turned into a beast - that Arthur chased from Ireland across all Wales. Three of the huntsmen were brothers: Cilydd, Cyfer and Cyfwlch Difwych. Best hound-men in Albion.\n\nAfter Camlann they didn't come home. They're in the eastern hills, with their hounds, and they kill anyone who comes near. Will you [find the brothers]? I want to know what they've become.",
+      "accept": "find the brothers",
+      "topics": {},
+      "summary": "Sir Bedwyr of Prydwen Keep asks you to find the Difwych brothers, Arthur's huntsmen, who went wild after Camlann.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            1300,
+            520,
+            57.5
+          ],
+          "radius": 50,
+          "goal": "Kill the Difwych hounds in the eastern hills about 930 m north-east of Sir Bedwyr",
+          "target": "hound of the Difwych",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 0,
+          "at": [
+            1270,
+            330,
+            50.4
+          ],
+          "goal": "Search the brothers' hunting camp",
+          "clue": {
+            "name": "a camp of skins and old spears",
+            "model": 1882
+          },
+          "text": "Boar spears, all of them notched with the same mark - a boar's head. A map of Wales scratched on a hide, with a trail across it, and the trail goes round and round.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            1283,
+            749,
+            52.2
+          ],
+          "radius": 50,
+          "goal": "Face Cilydd Difwych",
+          "target": "Cilydd Difwych",
+          "count": 1,
+          "text": "Cilydd falls. 'The boar,' he says. 'We'll have him at the river. Tell Arthur.'",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_sir_jerem",
+          "goal": "Tell Sir Bedwyr",
+          "say": "Still hunting the boar. The Twrch Trwyth went into the sea off Cornwall years ago - Arthur let him go.\n\nThey never heard the hunt was over. No one ever came to tell them.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Sir Bedwyr.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq0_huntsman_s_horn_charm",
+              "sq0_hound_leash_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ch_hunt_never_ended",
+      "title": "The Hunt That Never Ended",
+      "level": 12,
+      "giver": "ch_sir_jerem",
+      "offer": "Cyfwlch was the eldest. He had Arthur's horn - the horn that called the hunt in and sent it out. If anyone can still reach them, it's that horn.\n\nTake my word to him: the hunt is over, the King is gone, and the Round Table would have them back. Will you [take the word]? And if he won't hear it... do what you must.",
+      "accept": "take the word",
+      "topics": {},
+      "summary": "Sir Bedwyr sends you to Cyfwlch Difwych, eldest of the brothers, with word that the hunt is over.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            1325,
+            550,
+            55.4
+          ],
+          "radius": 50,
+          "goal": "Get past Cyfer Difwych",
+          "target": "Cyfer Difwych",
+          "count": 1,
+          "text": "Cyfer drops his spear. 'Brother,' he calls. 'Brother, someone's come from Camelot.'",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            1251,
+            314,
+            49.4
+          ],
+          "radius": 50,
+          "goal": "Face Cyfwlch Difwych, eldest of the brothers",
+          "target": "Cyfwlch Difwych",
+          "count": 1,
+          "text": "Cyfwlch sinks down against a stone, the old horn still on its cord round his neck.",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "ch_sir_jerem",
+          "goal": "Tell Sir Bedwyr how it ended",
+          "say": "He wouldn't hear it. No. They never could hear anything but the hunt.\n\nYou have the horn? Then you have a choice. We can [blow the horn] - the old call that brings the hunt home - and let the hills hear it. Or [keep the horn] at Prydwen, and remember them the way they were.",
+          "options": [
+            {
+              "keyword": "blow the horn",
+              "say": "Then blow it. Long and low, the way Cyfwlch did.\n\n...Hear the hounds? They've stopped. All over the hills. They've stopped.",
+              "ending": "home"
+            },
+            {
+              "keyword": "keep the horn",
+              "say": "Then it goes on the wall above the gate, and every knight who rides out will touch it for luck.",
+              "ending": "wall"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "The hunt is home.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq0_twrch_trwyth_tusk"
+            ],
+            "choice": [
+              "sq0_round_table_ribbon",
+              "sq0_last_hunt_mantle"
+            ]
+          }
+        },
+        "wall": {
+          "text": "From Sir Bedwyr.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq0_round_table_ribbon"
+            ],
+            "choice": [
+              "sq0_twrch_trwyth_tusk",
+              "sq0_last_hunt_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "ch_arthurs_huntsmen"
+    },
+    {
+      "id": "ch_red_robes",
+      "title": "Red Robes on the Hill",
+      "level": 11,
+      "giver": "ch_brother_willem",
+      "offer": "I bless the dead in the barrow fields every Sunday. This spring, men in red robes started coming out of the old Roman tomb at night, and the dead started getting up.\n\nI'm a priest, not a soldier. Will you [go to the tomb]? See who they are. Sage Tegid might know their sign.",
+      "accept": "go to the tomb",
+      "topics": {
+        "morgana": "Arthur's half-sister. A healer once, they say - she was one of the queens who carried him to Avalon. And then something changed."
+      },
+      "summary": "Men in red robes come out of Mithra's Tomb at night, and the dead of the barrow fields are walking.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            1300,
+            990,
+            70.1
+          ],
+          "radius": 50,
+          "goal": "Kill the red-robed acolytes at the tomb mouth about 360 m south-east of Brother Idris",
+          "target": "crimson acolyte",
+          "count": 5,
+          "text": "One acolyte carries a knife of black stone with a red-key hilt.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_sage_nelson",
+          "goal": "Show the knife to Sage Tegid",
+          "say": "A red key under a crown. The Crimson. They're old - older than Arthur. They worshipped what lives under the hill, and they called it by a woman's name.\n\nIn my grandmother's day that name was [Morgana].",
+          "keyword": "Morgana",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_brother_willem",
+          "goal": "Tell Brother Idris",
+          "say": "Morgana le Fay. The King's own sister. Under Camelot's nose, in a Roman tomb.\n\nGod help us. Well. He has so far.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Brother Idris.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq0_acolyte_s_red_cord",
+              "sq0_barrow_blessed_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ch_dead_wont_lie",
+      "title": "The Dead Won't Lie Still",
+      "level": 12,
+      "giver": "ch_brother_willem",
+      "offer": "The rite raises them, Tegid says - the dead in the barrows answer the call from the tomb. There are three stones, marked with the red key, set in the barrow fields to carry the call.\n\nWill you [break the stones]? And lay to rest whatever's guarding them.",
+      "accept": "break the stones",
+      "topics": {},
+      "summary": "Three rite stones in the barrow fields carry the Crimson's call to the dead. Brother Idris wants them broken.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 0,
+          "at": [
+            1000,
+            1000,
+            55.0
+          ],
+          "goal": "Break the first rite stone about 190 m south of Brother Idris",
+          "clue": {
+            "name": "a stone marked with a red key",
+            "model": 1347
+          },
+          "text": "The stone cracks down the middle, and the red key fades like a bruise.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            1100,
+            1150,
+            57.8
+          ],
+          "radius": 50,
+          "goal": "Destroy the undead filidh guarding the barrow ring",
+          "target": "undead filidh",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 0,
+          "at": [
+            1110,
+            1160,
+            62.5
+          ],
+          "goal": "Break the second rite stone",
+          "clue": {
+            "name": "a stone marked with a red key",
+            "model": 1347
+          },
+          "text": "The second stone breaks. Somewhere under the hill, someone screams in anger.",
+          "id": "s3"
+        },
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            1255,
+            1060,
+            60.1
+          ],
+          "radius": 50,
+          "goal": "Lay the rotting dead at the rite to rest",
+          "target": "rotting zombie",
+          "count": 2,
+          "id": "s4"
+        },
+        {
+          "type": "search",
+          "zone": 0,
+          "at": [
+            1260,
+            1065,
+            59.7
+          ],
+          "goal": "Break the third rite stone",
+          "clue": {
+            "name": "a stone marked with a red key",
+            "model": 1347
+          },
+          "text": "The third stone splits, and every dead thing in the barrow fields falls down where it stands.",
+          "id": "s5"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_brother_willem",
+          "goal": "Tell Brother Idris",
+          "say": "They've lain down. All of them. I'll bury them again on Sunday - properly.\n\nThe rite's broken. Whoever leads it will know.",
+          "ending": "default",
+          "id": "s6"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Brother Idris.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 85,
+            "copper_per_level": 68,
+            "marks": 10,
+            "items": [],
+            "choice": [
+              "sq0_rite_stone_shard",
+              "sq0_gravedigger_s_girdle",
+              "sq0_barrow_field_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "ch_red_robes"
+    },
+    {
+      "id": "ch_tomb_warden",
+      "title": "The Tomb-Warden",
+      "level": 14,
+      "giver": "ch_brother_willem",
+      "offer": "The ledger named him - 'the Warden of the Tomb'. Brother Malgwyn, he calls himself. He was one of ours once, a brother of the Church.\n\nHe'll be at the tomb mouth with his best. You'll want friends. Will you [face the Warden]? Bring me whatever he carries.",
+      "accept": "face the Warden",
+      "topics": {},
+      "summary": "Brother Malgwyn, Warden of the Tomb, leads the Crimson's rite at Mithra's Tomb.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            1330,
+            995,
+            76.1
+          ],
+          "radius": 50,
+          "goal": "Fight through the crimson initiates at the tomb mouth about 390 m south-east of Brother Idris",
+          "target": "crimson initiate",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 0,
+          "at": [
+            1335,
+            990,
+            75.4
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Brother Malgwyn, Warden of the Tomb",
+          "text": "Malgwyn falls across the tomb's threshold. A letter, sealed with the red key, slides out of his sleeve.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Brother Malgwyn",
+              "center": [
+                1335,
+                990,
+                75.4
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Brother Malgwyn, Warden of the Tomb",
+              "announce": "A man in red robes over a monk's habit stands in the tomb mouth. 'The Lady keeps her promises. Do you know what she promised me? I'll show you.'",
+              "boss": {
+                "template": 12075,
+                "name": "Brother Malgwyn",
+                "level": 15,
+                "health_mult": 2.2
+              },
+              "success": "Brother Malgwyn falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 12284,
+                    "name": "crimson acolyte",
+                    "level": [
+                      12,
+                      13
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 0,
+          "at": [
+            1338,
+            985,
+            74.6
+          ],
+          "goal": "Read the letter in Malgwyn's sleeve",
+          "clue": {
+            "name": "a letter sealed with a red key",
+            "model": 1347
+          },
+          "text": "'Malgwyn - the Tomb is done with. Go north to the Bishop. The Mountains are ready, and the gate in the lake will open at midsummer. M.' The hand is fine, and the M is drawn like a crown.",
+          "give": {
+            "name": "Morgana's letter"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_lady_aelawen",
+          "goal": "Take the letter to Lady Enid at the camp below Darkness Falls",
+          "say": "'Go north to the Bishop.' North of Camelot there is one bishop: Burhoff, of Vetusta Abbey, in the Black Mountains. A holy man, we're told.\n\nAnd 'the gate in the lake'... The Round Table must see this. You've done Albion a service today, whatever comes of it.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Lady Enid, in the Round Table's name.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [
+              "sq0_lady_enid_s_favour"
+            ],
+            "choice": [
+              "sq0_tomb_warden_s_key",
+              "sq0_crimson_bane_ring",
+              "sq0_mithras_stone_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "ch_dead_wont_lie"
+    },
+    {
+      "id": "ch_cracked_door",
+      "title": "The Cracked Door",
+      "level": 13,
+      "giver": "ch_sir_barcroft",
+      "offer": "The door to Darkness Falls is held. The Watch holds it. But it's cracked - demons come out round the edges, little ones at first, and every month bigger ones.\n\nThere's one at the mouth called Fielath. He's learned our names. Will you [hold the door] with us? Kill the manes that come out, and see Fielath off.",
+      "accept": "hold the door",
+      "topics": {},
+      "summary": "Demons are getting round the Watch at the mouth of Darkness Falls.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            1265,
+            1340,
+            72.0
+          ],
+          "radius": 50,
+          "goal": "Kill the manes demons at Darkness Falls' mouth about 390 m east of Sir Barwick",
+          "target": "manes demon",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            1257,
+            1315,
+            74.0
+          ],
+          "radius": 50,
+          "goal": "See Fielath off",
+          "target": "Fielath",
+          "count": 1,
+          "text": "Fielath bursts like a coal in a fire. 'BARCROFT,' it howls as it goes. 'BERWICK!'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_sir_barcroft",
+          "goal": "Tell Sir Barwick",
+          "say": "He called me Berwick? Even dying. Demons.\n\nThe door holds another month. Thank you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq0_brimstone_charm",
+              "sq0_barwick_s_spare_gauntlet_ring",
+              "sq0_doorward_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ch_grove_below",
+      "title": "The Grove Below the River",
+      "level": 10,
+      "giver": "ch_lady_aelawen",
+      "offer": "There's a grove of filidh on the south bank - the old singers, who kept the songs before the Church came. They kept Merlin's songs too, they say. They've always kept to themselves.\n\nThis spring they've started turning travellers away with spears. Their leader is a woman called Aithne Con. Will you [go to the grove]? I'd rather know why than fight them.",
+      "accept": "go to the grove",
+      "topics": {},
+      "summary": "The filidh of the south bank have turned hostile. Lady Enid wants to know why.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            850,
+            1500,
+            61.2
+          ],
+          "radius": 50,
+          "goal": "Get past the filidh on the paths about 270 m south of Lady Enid",
+          "target": "filidh",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            733,
+            1514,
+            68.8
+          ],
+          "radius": 50,
+          "goal": "Face Aithne Con, who leads the grove",
+          "target": "Aithne Con",
+          "count": 1,
+          "text": "Aithne Con lowers her staff. 'We sing what Merlin sang: when the King sleeps, the Lady wakes. She has woken. We will not let her singers through our grove.'",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "ch_lady_aelawen",
+          "goal": "Tell Lady Enid what Aithne said",
+          "say": "'When the King sleeps, the Lady wakes.' Morgana again. So the filidh aren't our enemies - they're guarding their grove against the Crimson.\n\nShall I [send them word] that the Watch stands with them? Or do we [leave them be]? They have no love for Camelot.",
+          "options": [
+            {
+              "keyword": "send them word",
+              "say": "Then I'll send a knight with bread and no spears. Merlin's riddle came back with her answer: 'Where the thorn grows, the threads meet.' Campacorentin has a thorn.",
+              "ending": "allies"
+            },
+            {
+              "keyword": "leave them be",
+              "say": "Then they hold their grove and we hold our roads, and neither of us lets the Crimson pass.",
+              "ending": "apart"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "allies": {
+          "text": "The filidh send a gift.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq0_merlin_s_riddle_ring"
+            ],
+            "choice": [
+              "sq0_filidh_song_torc",
+              "sq0_oak_leaf_mantle"
+            ]
+          }
+        },
+        "apart": {
+          "text": "From Lady Enid.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq0_filidh_song_torc",
+              "sq0_oak_leaf_mantle",
+              "sq0_merlin_s_riddle_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ch_cronker",
+      "title": "Cronker of the West Bank",
+      "level": 13,
+      "giver": "ch_warden_hollis",
+      "offer": "There's something on the west bank the cutpurses won't go near - a great brute the farmers call Cronker. It's been there longer than the Wardens have, and it's always kept to the river.\n\nNow it's coming up into the fields at night. Will you [hunt Cronker]? Take friends. It doesn't go down easy.",
+      "accept": "hunt Cronker",
+      "topics": {},
+      "summary": "The brute called Cronker has started coming up from the west bank into Cotswold's fields.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 0,
+          "at": [
+            312,
+            1060,
+            51.6
+          ],
+          "radius": 30,
+          "goal": "Find Cronker's trail on the west bank about 370 m south of Warden Hollis",
+          "text": "Prints the size of millstones, going south along the bank.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 0,
+          "at": [
+            308,
+            1097,
+            50.8
+          ],
+          "radius": 50,
+          "goal": "Kill Cronker",
+          "target": "Cronker",
+          "count": 1,
+          "text": "Cronker crashes down in the shallows, and the river runs brown for an hour.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "ch_warden_hollis",
+          "goal": "Tell Warden Hollis",
+          "say": "Cronker. Dead. My father wouldn't believe it.\n\nThe Wardens owe you, friend. More than once now.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Wardens of Cotswold.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq0_cronker_s_knuckle",
+              "sq0_bridge_toll_belt"
+            ]
+          }
+        }
+      },
+      "group": true
     }
   ]
 }

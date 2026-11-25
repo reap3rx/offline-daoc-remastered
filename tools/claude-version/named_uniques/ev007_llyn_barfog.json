@@ -1,0 +1,27 @@
+{
+ "zone": 7,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu007",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Camlann Shade's Gorget",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 51,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Black mail, cold, still dented where a sword went through."
+  }
+ ]
+}

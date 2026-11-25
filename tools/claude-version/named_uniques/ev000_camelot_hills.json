@@ -1,0 +1,62 @@
+{
+ "zone": 0,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu000",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hierophant's Red Cord",
+   "base": [
+    41,
+    32
+   ],
+   "level": 15,
+   "bonuses": {
+    "Int": 5,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 9
+   },
+   "lore": "Won from Hierophant Cadan when the Crimson Rite was broken. Thirteen knots, all burned through."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Silver-Bristle Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 13,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 11
+   },
+   "lore": "A silver bristle from Grugyn, the Twrch Trwyth's son, bound in red thread."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Door-Breaker's Horn",
+   "base": [
+    41,
+    24
+   ],
+   "level": 15,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 15,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Won from Gorgoth the Door-Breaker. It still smells of brimstone."
+  }
+ ]
+}

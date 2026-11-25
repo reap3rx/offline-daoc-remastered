@@ -1,0 +1,1113 @@
+{
+ "zone": 8,
+ "name": "Campacorentin Forest",
+ "rating": "wild",
+ "themes": [
+  "The north-west glades round Campacorentin Station and Lethantis",
+  "The sylvan goblins of the north road",
+  "The waking wood (oak men, fellwoods, spriggarns)",
+  "The middle wood round Caer Ulfwych (bears, spiders, the restless dead)",
+  "The Lethantis-bred wood ogres (south-west)",
+  "The deep wood - Dangerous: the druids' way, the Crimson's sacrificers, Merlin's thorn"
+ ],
+ "notes": "Albion's plan 2026-11-24, round 2: Wild with a Dangerous deep wood (owner: 'a blend of Wild and Dangerous'); both threads cross at Merlin's thorn. Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Aonghas Prirerd": "orange",
+  "Elithralia Nodith": "red",
+  "Oaken Knight": "orange",
+  "Elder Fellwood": "orange",
+  "Grizzletooth": "orange",
+  "Heretical Hermit": "yellow",
+  "Thornpaw": "orange",
+  "Pixie Queen": "red",
+  "Green Witch": "orange",
+  "Ciraron Webweaver": "orange",
+  "Granddaddy Longlegs": "orange",
+  "Ormgarth": "yellow",
+  "Sirelian": "orange",
+  "Urfgrat the Green": "orange"
+ },
+ "factions": {
+  "goblins": {
+   "id": 9441,
+   "aggro": 70
+  },
+  "fae": {
+   "id": 9442,
+   "aggro": 50
+  },
+  "wood": {
+   "id": 9443,
+   "aggro": 60
+  },
+  "pixies": {
+   "id": 9444,
+   "aggro": 55
+  },
+  "dead": {
+   "id": 9445,
+   "aggro": 80
+  },
+  "filidh": {
+   "id": 9446,
+   "aggro": 60
+  },
+  "bandits": {
+   "id": 9447,
+   "aggro": 75
+  },
+  "ogres": {
+   "id": 9448,
+   "aggro": 85
+  },
+  "crimson": {
+   "id": 9449,
+   "aggro": 95
+  },
+  "druids": {
+   "id": 9450,
+   "aggro": 85
+  }
+ },
+ "members": {
+  "dappled lynx cub": {
+   "from": "dappled lynx cub",
+   "tier": "grey",
+   "roam": 250
+  },
+  "dryad twig": {
+   "from": "dryad twig",
+   "tier": "green",
+   "roam": 200
+  },
+  "gray wolf pup": {
+   "from": "gray wolf pup",
+   "tier": "green",
+   "roam": 300
+  },
+  "small gray wolf": {
+   "from": "small gray wolf",
+   "tier": "green",
+   "roam": 350
+  },
+  "dappled lynx": {
+   "from": "dappled lynx",
+   "tier": "green",
+   "roam": 350
+  },
+  "giant spider": {
+   "from": "giant spider",
+   "tier": "green",
+   "roam": 250
+  },
+  "forest snake": {
+   "from": "forest snake",
+   "tier": "green",
+   "roam": 250
+  },
+  "tree spider": {
+   "from": "tree spider",
+   "tier": "green",
+   "roam": 250
+  },
+  "scrawny red lion": {
+   "from": "scrawny red lion",
+   "tier": "green",
+   "roam": 350
+  },
+  "gray wolf": {
+   "from": "gray wolf",
+   "tier": "blue",
+   "roam": 400
+  },
+  "young boar": {
+   "from": "young boar",
+   "tier": "blue",
+   "roam": 350
+  },
+  "small bear": {
+   "from": "small bear",
+   "tier": "blue",
+   "roam": 350
+  },
+  "poacher": {
+   "from": "poacher",
+   "tier": "blue",
+   "faction": "bandits",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 250
+  },
+  "sylvan goblin whelp": {
+   "from": "sylvan goblin whelp",
+   "tier": "green",
+   "faction": "goblins",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 250
+  },
+  "sylvan goblin": {
+   "from": "sylvan goblin",
+   "tier": "blue",
+   "faction": "goblins",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "sylvan goblin hunter": {
+   "from": "sylvan goblin hunter",
+   "tier": "blue",
+   "faction": "goblins",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 350
+  },
+  "sylvan goblin warrior": {
+   "from": "sylvan goblin warrior",
+   "tier": "yellow",
+   "faction": "goblins",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 200
+  },
+  "spriggarn": {
+   "from": "spriggarn",
+   "tier": "blue",
+   "faction": "fae",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 250
+  },
+  "spriggarn elder": {
+   "from": "spriggarn elder",
+   "tier": "blue",
+   "faction": "fae",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 200
+  },
+  "spriggarn waylayer": {
+   "from": "spriggarn waylayer",
+   "tier": "yellow",
+   "faction": "fae",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "spriggarn howler": {
+   "from": "spriggarn howler",
+   "tier": "orange",
+   "faction": "fae",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 100
+  },
+  "tree spirit": {
+   "from": "tree spirit",
+   "tier": "blue",
+   "faction": "wood",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 200
+  },
+  "oak man": {
+   "from": "oak man",
+   "tier": "yellow",
+   "faction": "wood",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 150
+  },
+  "oaken fellwood": {
+   "from": "oaken fellwood",
+   "tier": "orange",
+   "faction": "wood",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 80
+  },
+  "dryad": {
+   "from": "dryad",
+   "tier": "blue",
+   "faction": "wood",
+   "aggro": [
+    40,
+    350
+   ],
+   "roam": 200
+  },
+  "dryad invert": {
+   "from": "dryad invert",
+   "tier": "yellow",
+   "faction": "wood",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 200
+  },
+  "brownie": {
+   "from": "brownie",
+   "tier": "grey",
+   "roam": 300
+  },
+  "brownie nomad": {
+   "from": "brownie nomad",
+   "tier": "blue",
+   "faction": "fae",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 300
+  },
+  "pixie scout": {
+   "from": "pixie scout",
+   "tier": "yellow",
+   "faction": "pixies",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "pixie": {
+   "from": "pixie",
+   "tier": "blue",
+   "faction": "pixies",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 250
+  },
+  "forest bear": {
+   "from": "forest bear",
+   "tier": "blue",
+   "roam": 350
+  },
+  "bloated spider": {
+   "from": "bloated spider",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "wandering spirit": {
+   "from": "wandering spirit",
+   "tier": "yellow",
+   "faction": "dead",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 250
+  },
+  "fading spirit": {
+   "from": "fading spirit",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "spirit": {
+   "from": "spirit",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 250
+  },
+  "weak skeleton": {
+   "from": "weak skeleton",
+   "tier": "green",
+   "faction": "dead",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 150
+  },
+  "rotting zombie": {
+   "from": "rotting zombie",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    70,
+    400
+   ],
+   "roam": 150
+  },
+  "undead filidh": {
+   "from": "undead filidh",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    70,
+    400
+   ],
+   "roam": 150
+  },
+  "undead druid": {
+   "from": "undead druid",
+   "tier": "yellow",
+   "faction": "dead",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 150
+  },
+  "devout filidh": {
+   "from": "devout filidh",
+   "tier": "yellow",
+   "faction": "filidh",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 150
+  },
+  "bandit": {
+   "from": "bandit",
+   "tier": "blue",
+   "faction": "bandits",
+   "guild": "the Greenway Robbers",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "will o' wisp": {
+   "from": "will o' wisp",
+   "tier": "yellow",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 300
+  },
+  "swamp rat": {
+   "from": "swamp rat",
+   "tier": "green",
+   "roam": 250
+  },
+  "swamp slime": {
+   "from": "swamp slime",
+   "tier": "green",
+   "roam": 150
+  },
+  "creeping crud": {
+   "from": "creeping crud",
+   "tier": "green",
+   "roam": 150
+  },
+  "snake": {
+   "from": "snake",
+   "tier": "green",
+   "roam": 250
+  },
+  "forest lion": {
+   "from": "forest lion",
+   "tier": "blue",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 400
+  },
+  "wood ogre mystic": {
+   "from": "wood ogre mystic",
+   "tier": "yellow",
+   "faction": "ogres",
+   "aggro": [
+    75,
+    500
+   ],
+   "roam": 150
+  },
+  "wood ogre scourge": {
+   "from": "wood ogre scourge",
+   "tier": "yellow",
+   "faction": "ogres",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "wood ogre seer": {
+   "from": "wood ogre seer",
+   "tier": "orange",
+   "faction": "ogres",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 120
+  },
+  "wood ogre berserker": {
+   "from": "wood ogre berserker",
+   "tier": "orange",
+   "faction": "ogres",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 200
+  },
+  "forest bear cub": {
+   "from": "forest bear cub",
+   "tier": "blue",
+   "roam": 300
+  },
+  "forest cat": {
+   "from": "forest cat",
+   "tier": "yellow",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 400
+  },
+  "faerie bell-wether": {
+   "from": "faerie bell-wether",
+   "tier": "blue",
+   "faction": "pixies",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 200
+  },
+  "faerie wolf-crier": {
+   "from": "faerie wolf-crier",
+   "tier": "yellow",
+   "faction": "pixies",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "filidh sacrificer": {
+   "from": "filidh sacrificer",
+   "tier": "orange",
+   "faction": "crimson",
+   "guild": "the Crimson",
+   "aggro": [
+    85,
+    500
+   ],
+   "roam": 150
+  },
+  "druid sacrificer": {
+   "from": "druid sacrificer",
+   "tier": "orange",
+   "faction": "crimson",
+   "guild": "the Crimson",
+   "aggro": [
+    85,
+    500
+   ],
+   "roam": 150
+  },
+  "mindless minion": {
+   "from": "mindless minion",
+   "tier": "yellow",
+   "faction": "crimson",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 200
+  },
+  "druid": {
+   "from": "druid",
+   "tier": "orange",
+   "faction": "druids",
+   "guild": "the Druids of the Fogou",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 150
+  },
+  "druid seer": {
+   "from": "druid seer",
+   "tier": "yellow",
+   "faction": "druids",
+   "guild": "the Druids of the Fogou",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 200
+  },
+  "disturbed presence": {
+   "from": "disturbed presence",
+   "tier": "orange",
+   "faction": "dead",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 200,
+   "model": 485
+  },
+  "thorn-warden fellwood": {
+   "from": "gnarled fellwood",
+   "tier": "red",
+   "name": "thorn-warden fellwood",
+   "faction": "wood",
+   "guild": "the Thornwood",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 60
+  },
+  "Thornwood Ancient": {
+   "from": "knotted fellwood",
+   "tier": "purple",
+   "name": "the Thornwood Ancient",
+   "faction": "wood",
+   "guild": "Keeper of Merlin's Sleep",
+   "aggro": [
+    95,
+    650
+   ],
+   "size": 1.5,
+   "roam": 30,
+   "guards": {
+    "thorn-warden fellwood": 2
+   }
+  }
+ },
+ "sites": [
+  {
+   "id": "station_glades",
+   "kind": "wildlife",
+   "area": [
+    6000,
+    2000,
+    22400,
+    16800
+   ],
+   "spawn": {
+    "dappled lynx cub": 17,
+    "dryad twig": 15,
+    "gray wolf pup": 17,
+    "giant spider": 12,
+    "small gray wolf": 12,
+    "forest snake": 7
+   },
+   "spacing": 260
+  },
+  {
+   "id": "west_wood",
+   "kind": "wildlife",
+   "area": [
+    400,
+    16800,
+    20800,
+    52000
+   ],
+   "spawn": {
+    "dappled lynx": 27,
+    "scrawny red lion": 20,
+    "tree spider": 17,
+    "forest snake": 12,
+    "sylvan goblin whelp": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "west_swamps",
+   "kind": "wildlife",
+   "area": [
+    4000,
+    36000,
+    13200,
+    57200
+   ],
+   "spawn": {
+    "swamp rat": 12,
+    "swamp slime": 12,
+    "creeping crud": 15,
+    "snake": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "wisp_hollow",
+   "kind": "camp",
+   "at": [
+    18160,
+    38840
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "will o' wisp": 8
+   }
+  },
+  {
+   "id": "north_road",
+   "kind": "wildlife",
+   "area": [
+    19200,
+    2400,
+    40000,
+    24800
+   ],
+   "spawn": {
+    "gray wolf": 24,
+    "sylvan goblin": 32,
+    "small gray wolf": 10,
+    "poacher": 15,
+    "sylvan goblin hunter": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "tree_spirits",
+   "kind": "camp",
+   "at": [
+    35480,
+    11200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "tree spirit": 6,
+    "spriggarn elder": 2
+   }
+  },
+  {
+   "id": "spriggarn_knoll",
+   "kind": "camp",
+   "at": [
+    38480,
+    14120
+   ],
+   "r": 360,
+   "respawn": 300,
+   "spawn": {
+    "spriggarn elder": 5,
+    "spriggarn": 3
+   }
+  },
+  {
+   "id": "waylayers",
+   "kind": "camp",
+   "at": [
+    37800,
+    7160
+   ],
+   "r": 360,
+   "respawn": 300,
+   "spawn": {
+    "spriggarn waylayer": 5
+   }
+  },
+  {
+   "id": "goblin_war_camp",
+   "kind": "camp",
+   "at": [
+    35840,
+    17280
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "sylvan goblin warrior": 6,
+    "sylvan goblin hunter": 3,
+    "sylvan goblin": 3
+   }
+  },
+  {
+   "id": "oakwood",
+   "kind": "wildlife",
+   "area": [
+    46800,
+    3200,
+    62800,
+    22800
+   ],
+   "spawn": {
+    "oak man": 34,
+    "small bear": 12,
+    "young boar": 15,
+    "spriggarn": 15,
+    "dryad": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "howlers",
+   "kind": "camp",
+   "at": [
+    49280,
+    5560
+   ],
+   "r": 320,
+   "respawn": 360,
+   "spawn": {
+    "spriggarn howler": 4
+   }
+  },
+  {
+   "id": "fellwood_grove",
+   "kind": "camp",
+   "at": [
+    60040,
+    9840
+   ],
+   "r": 360,
+   "respawn": 420,
+   "spawn": {
+    "oaken fellwood": 5
+   }
+  },
+  {
+   "id": "dryad_ring",
+   "kind": "camp",
+   "at": [
+    42800,
+    21640
+   ],
+   "r": 360,
+   "respawn": 300,
+   "spawn": {
+    "dryad invert": 6
+   }
+  },
+  {
+   "id": "middle_wood",
+   "kind": "wildlife",
+   "area": [
+    24000,
+    18000,
+    52000,
+    42000
+   ],
+   "spawn": {
+    "forest bear": 37,
+    "sylvan goblin": 20,
+    "sylvan goblin warrior": 24,
+    "bloated spider": 17,
+    "brownie": 12,
+    "brownie nomad": 12,
+    "wandering spirit": 12,
+    "fading spirit": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "pixie_glade",
+   "kind": "camp",
+   "at": [
+    37120,
+    30040
+   ],
+   "r": 360,
+   "respawn": 300,
+   "spawn": {
+    "pixie scout": 5,
+    "pixie": 3
+   }
+  },
+  {
+   "id": "filidh_barrows",
+   "kind": "camp",
+   "at": [
+    32760,
+    23920
+   ],
+   "r": 360,
+   "respawn": 300,
+   "spawn": {
+    "undead filidh": 6,
+    "spirit": 3
+   }
+  },
+  {
+   "id": "druid_barrow",
+   "kind": "camp",
+   "at": [
+    42080,
+    32640
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "undead druid": 5,
+    "undead filidh": 2
+   }
+  },
+  {
+   "id": "old_graves",
+   "kind": "camp",
+   "at": [
+    30640,
+    37120
+   ],
+   "r": 360,
+   "respawn": 300,
+   "spawn": {
+    "weak skeleton": 6
+   }
+  },
+  {
+   "id": "greenway_robbers",
+   "kind": "camp",
+   "at": [
+    45040,
+    31360
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "bandit": 6
+   }
+  },
+  {
+   "id": "restless_dead",
+   "kind": "camp",
+   "at": [
+    43520,
+    42720
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "rotting zombie": 5
+   }
+  },
+  {
+   "id": "filidh_ring",
+   "kind": "camp",
+   "at": [
+    49680,
+    38120
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "devout filidh": 6
+   }
+  },
+  {
+   "id": "bloated_nest",
+   "kind": "camp",
+   "at": [
+    51600,
+    32000
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "bloated spider": 6
+   }
+  },
+  {
+   "id": "ogre_wood",
+   "kind": "wildlife",
+   "area": [
+    20400,
+    36000,
+    30000,
+    48400
+   ],
+   "spawn": {
+    "wood ogre scourge": 20,
+    "wood ogre mystic": 15
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ogre_seers",
+   "kind": "camp",
+   "at": [
+    27160,
+    44320
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "wood ogre seer": 5,
+    "wood ogre mystic": 2
+   }
+  },
+  {
+   "id": "ogre_berserkers",
+   "kind": "camp",
+   "at": [
+    22400,
+    40800
+   ],
+   "r": 360,
+   "respawn": 360,
+   "spawn": {
+    "wood ogre berserker": 4
+   }
+  },
+  {
+   "id": "south_glades",
+   "kind": "wildlife",
+   "area": [
+    24000,
+    55200,
+    50000,
+    62800
+   ],
+   "spawn": {
+    "forest cat": 20,
+    "forest bear cub": 17,
+    "forest lion": 12,
+    "faerie bell-wether": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "lion_south",
+   "kind": "wildlife",
+   "area": [
+    5600,
+    56000,
+    24000,
+    61200
+   ],
+   "spawn": {
+    "forest lion": 17,
+    "snake": 7
+   },
+   "spacing": 260
+  },
+  {
+   "id": "deep_wood",
+   "kind": "wildlife",
+   "area": [
+    46000,
+    34000,
+    62400,
+    57600
+   ],
+   "spawn": {
+    "faerie wolf-crier": 17,
+    "mindless minion": 17,
+    "druid seer": 15,
+    "disturbed presence": 17,
+    "bloated spider": 10
+   },
+   "spacing": 260
+  },
+  {
+   "id": "sacrificers_glade",
+   "kind": "camp",
+   "at": [
+    54720,
+    51960
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "druid sacrificer": 5,
+    "filidh sacrificer": 3,
+    "mindless minion": 2
+   }
+  },
+  {
+   "id": "fogou_druids",
+   "kind": "camp",
+   "at": [
+    57600,
+    53600
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "druid": 6,
+    "druid seer": 2
+   }
+  },
+  {
+   "id": "filidh_east",
+   "kind": "camp",
+   "at": [
+    58800,
+    37680
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "filidh sacrificer": 5
+   }
+  },
+  {
+   "id": "merlins_thorn",
+   "kind": "camp",
+   "at": [
+    52000,
+    47200
+   ],
+   "r": 320,
+   "respawn": 1800,
+   "spawn": {
+    "Thornwood Ancient": 1
+   }
+  },
+  {
+   "id": "thorn_ring",
+   "kind": "camp",
+   "at": [
+    52000,
+    47200
+   ],
+   "r": 720,
+   "respawn": 600,
+   "spawn": {
+    "thorn-warden fellwood": 3,
+    "disturbed presence": 4
+   },
+   "ring": [
+    200,
+    700
+   ]
+  }
+ ]
+}

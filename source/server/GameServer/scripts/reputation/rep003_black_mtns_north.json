@@ -1,0 +1,188 @@
+{
+ "zone": 3,
+ "name": "Black Mountains North",
+ "levels": [
+  16,
+  30
+ ],
+ "realm": 1,
+ "factions": [
+  {
+   "key": "snowdonia_garrison",
+   "name": "the Snowdonia Garrison",
+   "short": "the Garrison",
+   "kin": [
+    "pendragons_watch",
+    "wardens_of_cotswold",
+    "ulfwych_rangers",
+    "marsh_wardens",
+    "men_of_tintagel",
+    "lyonesse_remnant",
+    "knights_of_the_lake",
+    "dragon_watch"
+   ],
+   "titles": [
+    "Friend of the Garrison",
+    "Snowdonia Shieldman",
+    "Warden of the North March"
+   ],
+   "speaker": "bn_rhydderch",
+   "town": "Swanton Keep",
+   "kills": [
+    "warg",
+    "smuggler",
+    "tracker",
+    "forest chief",
+    "cockatrice",
+    "beak",
+    "hill",
+    "alrek",
+    "goblin",
+    "maiden",
+    "lion",
+    "spider",
+    "smugluk"
+   ],
+   "quartermaster": {
+    "name": "Garrison-Quartermaster Iolo",
+    "guild": "the Snowdonia Garrison",
+    "model": 9,
+    "anchor": "bn_rhydderch",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "Garrison kit, for the Garrison's friends. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep003_garrison_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep003_north_march_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep003_snowdonia_shieldman_s_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep003_dragon_reader_s_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep003_mantle_of_the_north_march",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "emrys_circle",
+   "name": "the Emrys Circle",
+   "short": "the Circle",
+   "kin": [
+    "abbey_faithful",
+    "sisters_of_amesbury",
+    "thornwardens",
+    "keepers_of_the_isle",
+    "oath_of_corineus",
+    "harpers_of_tristan",
+    "maidens_of_the_lake",
+    "quarry_oath"
+   ],
+   "titles": [
+    "Friend of Emrys",
+    "Dragon-Reader",
+    "Keeper of Emrys's Fort"
+   ],
+   "speaker": "bn_taliesin",
+   "town": "Snowdonia Station",
+   "kills": [
+    "crimson",
+    "acolyte",
+    "priest",
+    "priestess",
+    "hierarch",
+    "pit-warden",
+    "necromancer",
+    "sacrificer",
+    "filidh",
+    "undead druid",
+    "cauld lad",
+    "arawnite"
+   ],
+   "quartermaster": {
+    "name": "Circle-Keeper Morfudd",
+    "guild": "the Emrys Circle",
+    "model": 38,
+    "anchor": "bn_taliesin",
+    "offset": [
+     -4,
+     3
+    ],
+    "greet": "The Circle's gifts, for those who keep the prophecies. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep003_emrys_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep003_prophet_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep003_dragon_reader_s_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep003_snowdonia_shieldman_s_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep003_mantle_of_the_dragon_readers",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "snowdonia_garrison",
+ "event_default": "snowdonia_garrison",
+ "quest_default": "snowdonia_garrison",
+ "quests": {
+  "last_shift": "snowdonia_garrison",
+  "crimson_bargain": "emrys_circle",
+  "bn_wargs": "snowdonia_garrison",
+  "bn_beaked_brood": "snowdonia_garrison",
+  "bn_three_beaks": "snowdonia_garrison",
+  "bn_red_road": "snowdonia_garrison",
+  "bn_trackers": "snowdonia_garrison",
+  "bn_forest_chief": "snowdonia_garrison",
+  "bn_prophets_graves": "emrys_circle",
+  "bn_red_cords_south": "emrys_circle",
+  "bn_cauld_lad": "emrys_circle",
+  "bn_necromancers": "emrys_circle",
+  "bn_howling_maidens": "snowdonia_garrison",
+  "bn_red_tribes": "snowdonia_garrison",
+  "bn_hill_chief": "snowdonia_garrison",
+  "bn_dinas_emrys": "snowdonia_garrison",
+  "bn_dragons_pit": "emrys_circle"
+ },
+ "events": {
+  "bn_pit_fires": "emrys_circle",
+  "bn_dinas_assault": "snowdonia_garrison",
+  "bn_dinas_raid": "snowdonia_garrison",
+  "bn_dinas_return": "snowdonia_garrison"
+ }
+}

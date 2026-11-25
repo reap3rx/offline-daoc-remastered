@@ -76,6 +76,36 @@
       "during": [
         "crimson_bargain/s6"
       ]
+    },
+    {
+      "id": "bn_rhydderch",
+      "zone": 3,
+      "realm": 1,
+      "name": "Castellan Rhydderch",
+      "model": 28,
+      "level": 44,
+      "pos": [
+        700,
+        332,
+        199.8
+      ],
+      "guild": "the Snowdonia Garrison",
+      "idle": "Swanton holds the north road. Dinas Emrys holds the west. One of those is ours."
+    },
+    {
+      "id": "bn_taliesin",
+      "zone": 3,
+      "realm": 1,
+      "name": "Taliesin the Bard",
+      "model": 9,
+      "level": 50,
+      "pos": [
+        998,
+        1018,
+        104.6
+      ],
+      "guild": "the Emrys Circle",
+      "idle": "I sang at Arthur's court. I'll sing at his waking, if I live. That's what bards are for."
     }
   ],
   "quests": [
@@ -443,6 +473,1025 @@
           }
         }
       }
+    },
+    {
+      "id": "bn_wargs",
+      "title": "Wargs on the West Road",
+      "level": 16,
+      "giver": "bn_rhydderch",
+      "offer": "Grey wargs on the west road - more of them every week, and bolder. They run down my pickets in pairs.\n\nWill you [thin the wargs]?",
+      "accept": "thin the wargs",
+      "topics": {},
+      "summary": "Grey wargs are running down the garrison's pickets on the west road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            400,
+            850,
+            104.0
+          ],
+          "radius": 50,
+          "goal": "Thin the gray wargs on the west road about 600 m south-west of Castellan Rhydderch",
+          "target": "gray warg",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bn_rhydderch",
+          "goal": "Tell Castellan Rhydderch",
+          "say": "Good. The wargs used to keep to the high crags. Something's driven them down. Something in the west.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Snowdonia Garrison.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq3_warg_pelt_bracer",
+              "sq3_garrison_picket_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bn_beaked_brood",
+      "title": "The Beaked Brood",
+      "level": 17,
+      "giver": "tomas_fell",
+      "offer": "Enraged cockatrices all over the mine hills, and a big cock-bird called Trimbeak who leads them. They turn a man's blood to stone with a look.\n\nWill you [break the brood]?",
+      "accept": "break the brood",
+      "topics": {},
+      "summary": "Enraged cockatrices led by Trimbeak hold the old mine hills.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            550,
+            550,
+            292.7
+          ],
+          "radius": 50,
+          "goal": "Kill the enraged cockatrices about 250 m south-west of Tomas Fell",
+          "target": "enraged cockatrice",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            649,
+            628,
+            186.9
+          ],
+          "radius": 50,
+          "goal": "Kill Trimbeak",
+          "target": "Trimbeak",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "tomas_fell",
+          "goal": "Tell Tomas Fell",
+          "say": "Trimbeak, dead. His three brothers will want words with you. Glim, Slim and Grim, the miners call them.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Tomas Fell.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq3_cockatrice_quill_charm",
+              "sq3_mine_hill_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bn_three_beaks",
+      "title": "Glimbeak, Slimbeak and Grimbeak",
+      "level": 19,
+      "giver": "tomas_fell",
+      "offer": "Trimbeak's three brothers roost on the beak rocks north of the mine. While they live, the brood comes back.\n\nWill you [finish the brothers]? Bring friends who don't mind being stared at.",
+      "accept": "finish the brothers",
+      "topics": {},
+      "summary": "Trimbeak's three brothers roost on the beak rocks north of the old mine.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            859,
+            455,
+            184.4
+          ],
+          "radius": 50,
+          "goal": "Kill Glimbeak about 200 m south-east of Tomas Fell",
+          "target": "Glimbeak",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            861,
+            365,
+            196.8
+          ],
+          "radius": 50,
+          "goal": "Kill Slimbeak",
+          "target": "Slimbeak",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            860,
+            452,
+            184.9
+          ],
+          "radius": 50,
+          "goal": "Kill Grimbeak",
+          "target": "Grimbeak",
+          "count": 1,
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "tomas_fell",
+          "goal": "Tell Tomas Fell",
+          "say": "All three. The hills are yours, friend. The miners will go back in the spring.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Tomas Fell.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq3_three_beak_torc",
+              "sq3_stone_gaze_bracer",
+              "sq3_brood_breaker_s_cloak"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bn_beaked_brood"
+    },
+    {
+      "id": "bn_red_road",
+      "title": "The Red Road",
+      "level": 18,
+      "giver": "captain_mardoc",
+      "offer": "The forest road from Snowdonia Station to the west - the smugglers call it the Red Road, for the cords. They run carts up it at night, west to the hill fort.\n\nWill you [stop a cart]? I want to know what's in them.",
+      "accept": "stop a cart",
+      "topics": {},
+      "summary": "Smugglers run carts west along the forest road at night.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            900,
+            700,
+            161.6
+          ],
+          "radius": 50,
+          "goal": "Fight through the forest smugglers about 330 m north of Captain Mardoc",
+          "target": "forest smuggler",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 3,
+          "at": [
+            880,
+            690,
+            165.3
+          ],
+          "goal": "Search a smugglers' cart",
+          "clue": {
+            "name": "a cart under a tarpaulin",
+            "model": 1347
+          },
+          "text": "Sacks of bones - big, old, wrapped in rotted mail - and a tally: 'Badon, by the Bishop's leave. To Dinas Emrys, for the pit.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "captain_mardoc",
+          "goal": "Tell Captain Mardoc",
+          "say": "Badon's bones. The Abbey in the south was sending them north - and they're still coming, Bishop or no Bishop.\n\nTo Dinas Emrys. What does a pit want with Arthur's dead?",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Snowdonia Garrison.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq3_smuggler_s_hidden_pocket_belt",
+              "sq3_red_road_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bn_trackers",
+      "title": "Trackers in the Trees",
+      "level": 20,
+      "giver": "captain_mardoc",
+      "offer": "The smugglers have trackers - woodsmen who know every path - and they've been picking off my patrols from the trees.\n\nWill you [hunt the hunters]?",
+      "accept": "hunt the hunters",
+      "topics": {},
+      "summary": "The smugglers' trackers are picking off the garrison's patrols from the trees.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            1020,
+            757,
+            155.1
+          ],
+          "radius": 50,
+          "goal": "Hunt the forest trackers about 250 m north of Captain Mardoc",
+          "target": "forest tracker",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "captain_mardoc",
+          "goal": "Tell Captain Mardoc",
+          "say": "My patrols can walk the road again. Now for the one who sends them.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Snowdonia Garrison.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq3_tracker_s_leaf_cloak",
+              "sq3_snare_wire_ring"
+            ]
+          }
+        }
+      },
+      "requires": "bn_red_road"
+    },
+    {
+      "id": "bn_forest_chief",
+      "title": "The Forest Chief",
+      "level": 22,
+      "giver": "captain_mardoc",
+      "offer": "The smugglers' master calls himself the Forest Chief. His den's in the north woods. Kill him and the Red Road closes.\n\nWill you [close the road]? Bring friends.",
+      "accept": "close the road",
+      "topics": {},
+      "summary": "The Forest Chief runs the smugglers of the Red Road from his den in the north woods.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            904,
+            570,
+            141.1
+          ],
+          "radius": 50,
+          "goal": "Defeat the Forest Chief about 460 m north of Captain Mardoc",
+          "target": "forest chief",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 3,
+          "at": [
+            906,
+            575,
+            139.7
+          ],
+          "goal": "Search the Forest Chief's den",
+          "clue": {
+            "name": "a ledger in a locked box",
+            "model": 1347
+          },
+          "text": "'Delivered to the Pit-Warden at Dinas Emrys: bones of Badon, forty sacks; hill-tribe tithe, paid in red cord. The Lady wants the pit open by the turning of the year.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "captain_mardoc",
+          "goal": "Bring the ledger to Captain Mardoc",
+          "say": "The Pit-Warden. The Lady. By the turning of the year.\n\nThe Castellan has to see this. And the bard.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Snowdonia Garrison.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq3_forest_chief_s_antler_torc",
+              "sq3_ledger_lock_charm",
+              "sq3_red_road_breaker_s_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bn_trackers"
+    },
+    {
+      "id": "bn_prophets_graves",
+      "title": "The Prophet's Graves",
+      "level": 18,
+      "giver": "bn_taliesin",
+      "offer": "The druids in the old graves south of the hill country were Merlin's own students. They were buried with stones carved with his prophecies. Now they walk, and the stones are being taken.\n\nWill you [visit the graves]?",
+      "accept": "visit the graves",
+      "topics": {},
+      "summary": "Merlin's students walk from their graves, and their prophecy-stones are being taken.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            495,
+            1017,
+            111.1
+          ],
+          "radius": 50,
+          "goal": "Lay the undead druids to rest about 500 m west of Taliesin the Bard",
+          "target": "undead druid",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 3,
+          "at": [
+            498,
+            1020,
+            111.5
+          ],
+          "goal": "Search the graves for prophecy-stones",
+          "clue": {
+            "name": "a grave with its stone pulled up",
+            "model": 1347
+          },
+          "text": "One stone left, missed by whoever took the others. Ogham: 'Under Emrys's fort the red and the white; under them, the door they came by.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bn_taliesin",
+          "goal": "Bring the stone to Taliesin",
+          "say": "'The door they came by.' The dragons came up out of Annwn, child. Everyone forgot that part of the story. Morgana didn't.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Emrys Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq3_prophecy_stone_ring",
+              "sq3_bard_s_satchel_strap"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bn_red_cords_south",
+      "title": "Red Cords in the South Woods",
+      "level": 21,
+      "giver": "bn_taliesin",
+      "offer": "Filidh in the south woods have taken the red cord - sacrificers, feeding the pit from a distance with what they bleed. Every song I know says that's how you wake a door.\n\nWill you [stop the bleeding]?",
+      "accept": "stop the bleeding",
+      "topics": {},
+      "summary": "Red-corded filidh sacrificers in the south woods feed the pit at Dinas Emrys.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            968,
+            1393,
+            92.9
+          ],
+          "radius": 50,
+          "goal": "Kill the filidh sacrificers about 380 m south of Taliesin the Bard",
+          "target": "filidh sacrificer",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bn_taliesin",
+          "goal": "Tell Taliesin",
+          "say": "Good. Every drop they don't spill is a day the door stays shut.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Emrys Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq3_unknotted_cord",
+              "sq3_south_woods_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bn_cauld_lad",
+      "title": "The Cauld Lad",
+      "level": 25,
+      "giver": "bn_taliesin",
+      "offer": "There's a ghost in the woods by the Station - the Cauld Lad, they call him, a brownie-lad who died of cold a hundred years ago. He's always been harmless. This year he's frozen two travellers solid.\n\nThe old songs say you lay a brownie with a gift of clothes. Will you [lay the Cauld Lad]? You may have to make him hold still first.",
+      "accept": "lay the Cauld Lad",
+      "topics": {},
+      "summary": "The Cauld Lad, a brownie ghost near Snowdonia Station, has started freezing travellers.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 3,
+          "at": [
+            1010,
+            1000,
+            104.6
+          ],
+          "goal": "Take a green cloak from the Station's stores about 20 m north-east of Taliesin the Bard",
+          "clue": {
+            "name": "a chest of spare clothes",
+            "model": 1347
+          },
+          "text": "A good green cloak, lined with wool. Warm.",
+          "give": {
+            "name": "a warm green cloak"
+          },
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            1125,
+            948,
+            160.4
+          ],
+          "radius": 50,
+          "goal": "Make the Cauld Lad hold still",
+          "target": "Cauld Lad",
+          "count": 1,
+          "text": "The Cauld Lad stops. You put the cloak round him. 'Wee lad, wee lad,' he whispers, 'and no more work for me' - and he's gone.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bn_taliesin",
+          "goal": "Tell Taliesin",
+          "say": "Gone, and warm. That's a better end than most get.\n\nSomething in the west woke the cold in him. Everything comes back to that fort.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Emrys Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq3_warm_green_cloak",
+              "sq3_brownie_s_hob_nail_ring",
+              "sq3_lullaby_charm"
+            ]
+          }
+        }
+      },
+      "group": true
+    },
+    {
+      "id": "bn_necromancers",
+      "title": "The Necromancers' Cairn",
+      "level": 26,
+      "giver": "bn_taliesin",
+      "offer": "Two necromancers keep a cairn in the far south-west - not Arawn's men, Morgana's. They write to the Pit-Warden. If anyone knows what's under the fort, they do.\n\nWill you [break the cairn]? Bring friends.",
+      "accept": "break the cairn",
+      "topics": {},
+      "summary": "Two of Morgana's necromancers keep a cairn in the far south-west.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            290,
+            1234,
+            233.5
+          ],
+          "radius": 50,
+          "goal": "Kill the necromancers at the cairn about 740 m west of Taliesin the Bard",
+          "target": "necromancer",
+          "count": 2,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 3,
+          "at": [
+            292,
+            1230,
+            232.8
+          ],
+          "goal": "Search the necromancers' cairn",
+          "clue": {
+            "name": "a letter weighted with a stone",
+            "model": 1347
+          },
+          "text": "'Pit-Warden - the pit under Emrys's fort is only the near end. The far end is the gate in the lake at Llyn Barfog, where Arthur slew the Afanc. Open the near end and the far end follows. M.'",
+          "give": {
+            "name": "the necromancers' letter"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bn_taliesin",
+          "goal": "Bring the letter to Taliesin",
+          "say": "Llyn Barfog. Her own lake, where she sits. The near end and the far end.\n\nThe fort has to be taken back. Tell the Castellan.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Emrys Circle.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq3_necromancer_s_bone_clasp",
+              "sq3_cairn_stone_bracer",
+              "sq3_letter_seal_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bn_red_cords_south"
+    },
+    {
+      "id": "bn_howling_maidens",
+      "title": "The Howling Maidens",
+      "level": 24,
+      "giver": "bn_rhydderch",
+      "offer": "On the crags above Swanton, the howling maidens keen every night. They used to keen for the dead. Now they keen for whoever walks the crags - and they come down to make sure.\n\nWill you [quiet the crags]? Bring friends.",
+      "accept": "quiet the crags",
+      "topics": {},
+      "summary": "The howling maidens on the crags above Swanton Keep have started coming down for the living.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            827,
+            294,
+            208.7
+          ],
+          "radius": 50,
+          "goal": "Quiet the howling maidens about 130 m east of Castellan Rhydderch",
+          "target": "howling maiden",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bn_rhydderch",
+          "goal": "Tell Castellan Rhydderch",
+          "say": "Quiet. First quiet night on the crags this year. Thank you.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Snowdonia Garrison.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq3_howling_maiden_s_veil",
+              "sq3_crag_walker_s_torc"
+            ]
+          }
+        }
+      },
+      "group": true
+    },
+    {
+      "id": "bn_red_tribes",
+      "title": "The Red-Corded Tribes",
+      "level": 23,
+      "giver": "hrodda",
+      "offer": "The tribes march under red cords now - all of them, my father's warriors too. The shamans tie the cords and say the words.\n\nKill the shamans and the cords loosen. Will you [cut the cords]?",
+      "accept": "cut the cords",
+      "topics": {},
+      "summary": "The hill-tribes march under red cords tied by their shamans.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            200,
+            700,
+            224.3
+          ],
+          "radius": 50,
+          "goal": "Fight through the red-corded hill warriors about 850 m north-west of Hrodda Alreksdottir",
+          "target": "hill warrior",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            134,
+            605,
+            191.6
+          ],
+          "radius": 50,
+          "goal": "Kill the hill shamans who tie the cords",
+          "target": "hill shaman",
+          "count": 2,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "hrodda",
+          "goal": "Tell Hrodda",
+          "say": "Some of them have taken the cords off already. I saw my cousin weep. Now - my father.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Hrodda.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq3_cut_red_cord",
+              "sq3_hill_shaman_s_rattle_charm"
+            ]
+          }
+        }
+      },
+      "requires": "crimson_bargain"
+    },
+    {
+      "id": "bn_hill_chief",
+      "title": "Hill Chief Alrek",
+      "level": 25,
+      "giver": "hrodda",
+      "offer": "My father stands on the hill by the fort with the red cord round his throat. The Crimson tied it themselves. He doesn't know me.\n\nBeat him down - don't kill him if you can help it - and I'll come up behind you and cut it. Will you [face my father]? Bring friends. He was the best fighter in the hills.",
+      "accept": "face my father",
+      "topics": {},
+      "summary": "Hill Chief Alrek stands by Dinas Emrys bound by a red cord the Crimson tied themselves.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            143,
+            361,
+            150.6
+          ],
+          "radius": 50,
+          "goal": "Beat Hill Chief Alrek down about 1.1 km north-west of Hrodda Alreksdottir",
+          "target": "Hill Chief Alrek",
+          "count": 1,
+          "text": "Alrek falls to his knees. Hrodda runs in with her knife and cuts the cord at his throat.",
+          "id": "s1"
+        },
+        {
+          "type": "choice",
+          "npc": "hrodda",
+          "goal": "Speak with Hrodda at Snowdonia Station",
+          "say": "He's breathing. He knows me. He's - crying, I think.\n\nI can [take him home], to the high hills, and the tribes will follow him away from this place. Or he can [stand with the garrison] when they come for the fort - he knows every stone of it.",
+          "options": [
+            {
+              "keyword": "take him home",
+              "say": "Home, then. The tribes go with us. That's a hundred spears the Crimson won't have.",
+              "ending": "home"
+            },
+            {
+              "keyword": "stand with the garrison",
+              "say": "Then the Alrek of the hills fights for Albion again. The Castellan will want to hear it.",
+              "ending": "fight"
+            }
+          ],
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "home": {
+          "text": "From Hrodda and her father.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq3_hill_daughter_s_mantle"
+            ],
+            "choice": [
+              "sq3_alrek_s_chief_ring",
+              "sq3_freed_chief_s_torc"
+            ]
+          }
+        },
+        "fight": {
+          "text": "From Hill Chief Alrek.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq3_alrek_s_chief_ring"
+            ],
+            "choice": [
+              "sq3_hill_daughter_s_mantle",
+              "sq3_freed_chief_s_torc"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bn_red_tribes"
+    },
+    {
+      "id": "bn_dinas_emrys",
+      "title": "Dinas Emrys",
+      "level": 27,
+      "giver": "bn_rhydderch",
+      "offer": "The bard's told me what's under that fort, and the smugglers' ledger tells me when. We can't take it alone - but we can bleed it, and when the garrison's ready, every red cord you've cut will count.\n\nWill you [break the gate]? Bring the strongest friends you have.",
+      "accept": "break the gate",
+      "topics": {},
+      "summary": "The Crimson hold Dinas Emrys, the hill fort over the dragons' pit.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            230,
+            420,
+            229.0
+          ],
+          "radius": 50,
+          "goal": "Break the hill guards at the fort's gate about 480 m west of Castellan Rhydderch",
+          "target": "hill guard",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            160,
+            360,
+            150.6
+          ],
+          "radius": 50,
+          "goal": "Cut down the crimson acolytes inside the walls",
+          "target": "crimson acolyte",
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 3,
+          "at": [
+            150,
+            350,
+            150.6
+          ],
+          "goal": "Look down into the pit",
+          "clue": {
+            "name": "the edge of a great pit",
+            "model": 1347
+          },
+          "text": "The pit goes down further than the light. Red stone on one wall, white on the other - scales, as big as shields, fused into the rock. At the bottom, very far down, something glows.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "bn_rhydderch",
+          "goal": "Tell Castellan Rhydderch",
+          "say": "Scales. Red and white. So the tale's true.\n\nThe garrison will take that fort, and soon. When we do, you'll be there.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Snowdonia Garrison.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq3_emrys_gate_stone_ring",
+              "sq3_hill_fort_bracer",
+              "sq3_dragon_priest_s_stole"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bn_forest_chief"
+    },
+    {
+      "id": "bn_dragons_pit",
+      "title": "The Dragons' Pit",
+      "level": 30,
+      "giver": "bn_taliesin",
+      "offer": "The Pit-Warden stands at the edge of the pit, singing it open. When the door opens here, the far end opens at Llyn Barfog, and Annwn walks into Albion.\n\nI'll come with you. Bards don't fight, but they can sing a door shut. Will you [close the pit]? Bring everyone.",
+      "accept": "close the pit",
+      "topics": {
+        "taliesin": "He smiles. 'I was Gwion once, and a grain of wheat, and a salmon, and a wren. Now I'm an old man with a harp. It's been a long life.'"
+      },
+      "summary": "The Pit-Warden sings the dragons' pit under Dinas Emrys open, a door to Annwn.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 3,
+          "at": [
+            150,
+            345,
+            150.6
+          ],
+          "radius": 25,
+          "goal": "Go to the edge of the dragons' pit about 1.1 km north-west of Taliesin the Bard",
+          "text": "The singing comes up out of the pit like heat. The Pit-Warden turns.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 3,
+          "at": [
+            130,
+            330,
+            150.6
+          ],
+          "radius": 50,
+          "goal": "Defeat the Pit-Warden of Dinas Emrys",
+          "target": "the Pit-Warden of Dinas Emrys",
+          "count": 1,
+          "text": "The Pit-Warden falls. Taliesin's voice rises over the pit - and slowly, the glow at the bottom goes out.",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "bn_taliesin",
+          "goal": "Speak with Taliesin at the pit's edge",
+          "say": "It's shut. This end. The far end is in Morgana's own lake, and she'll have felt it close.\n\nTwo scales broke loose from the walls when the song took hold: one red, one white. Take [the red] - Albion's dragon - or [the white], to know your enemy. I'll keep the other.",
+          "options": [
+            {
+              "keyword": "the red",
+              "say": "The red. Uther's dragon, and Arthur's. Wear it well.",
+              "ending": "red"
+            },
+            {
+              "keyword": "the white",
+              "say": "The white. Cold, isn't it? That's Golestandt. Remember the cold when you meet him.",
+              "ending": "white"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "red": {
+          "text": "From the dragons' pit.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq3_red_dragon_scale"
+            ],
+            "choice": [
+              "sq3_taliesin_s_harp_string_ring",
+              "sq3_mantle_of_emrys_s_fort"
+            ]
+          }
+        },
+        "white": {
+          "text": "From the dragons' pit.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq3_white_dragon_scale"
+            ],
+            "choice": [
+              "sq3_taliesin_s_harp_string_ring",
+              "sq3_mantle_of_emrys_s_fort"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bn_dinas_emrys"
     }
   ]
 }

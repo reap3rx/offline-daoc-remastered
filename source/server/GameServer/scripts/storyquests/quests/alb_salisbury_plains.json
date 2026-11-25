@@ -90,6 +90,94 @@
         "white_horse/s5",
         "white_horse/s6"
       ]
+    },
+    {
+      "id": "sp_osfrid",
+      "zone": 1,
+      "realm": 1,
+      "name": "Watch-Commander Osfrid",
+      "model": 28,
+      "level": 40,
+      "pos": [
+        705,
+        195,
+        55.0
+      ],
+      "guild": "the Pendragon's Watch",
+      "idle": "Every giant on this plain is walking north. I've counted. I stopped counting."
+    },
+    {
+      "id": "sp_abbess",
+      "zone": 1,
+      "realm": 1,
+      "name": "the Abbess of Amesbury",
+      "model": 38,
+      "level": 45,
+      "pos": [
+        738,
+        188,
+        55.6
+      ],
+      "guild": "the Sisters of Amesbury",
+      "idle": "We tended the graves of the Long Knives for forty years. Now the giants tend them, with spades."
+    },
+    {
+      "id": "sp_ostler_bryn",
+      "zone": 1,
+      "realm": 1,
+      "name": "Bryn the Ostler",
+      "model": 9,
+      "level": 20,
+      "pos": [
+        690,
+        218,
+        50.8
+      ],
+      "idle": "The wild herd's the pride of the Downs. Was."
+    },
+    {
+      "id": "sp_herbwife_elin",
+      "zone": 1,
+      "realm": 1,
+      "name": "Elin the Herbwife",
+      "model": 38,
+      "level": 24,
+      "pos": [
+        748,
+        222,
+        50.3
+      ],
+      "idle": "Stone sheep. Stone hares. Stone shepherd, near enough."
+    },
+    {
+      "id": "sp_sister_morwen",
+      "zone": 1,
+      "realm": 1,
+      "name": "Sister Morwen",
+      "model": 38,
+      "level": 30,
+      "pos": [
+        742,
+        705,
+        55.8
+      ],
+      "guild": "the Sisters of Amesbury",
+      "idle": "The dead on this plain were murdered at a feast. They have reason to be restless."
+    },
+    {
+      "id": "sp_outrider_cadoc",
+      "zone": 1,
+      "realm": 1,
+      "name": "Outrider Cadoc",
+      "model": 9,
+      "level": 32,
+      "pos": [
+        760,
+        712,
+        54.5
+      ],
+      "guild": "the Pendragon's Watch",
+      "idle": "The Watch's picket. Furthest south anyone sane will stand."
     }
   ],
   "quests": [
@@ -552,6 +640,1316 @@
           }
         }
       }
+    },
+    {
+      "id": "sp_wild_herd",
+      "title": "The Wild Herd",
+      "level": 10,
+      "giver": "sp_ostler_bryn",
+      "offer": "The wild herd's run on these downs since before Camelot. Now the Downs Riders are cutting out the best and driving them north to sell.\n\nTheir camp's up by the river in the north. Will you [stop the riders]?",
+      "accept": "stop the riders",
+      "topics": {},
+      "summary": "Bandits are driving off the Downs' wild herd from their camp in the north.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            820,
+            200,
+            67.1
+          ],
+          "radius": 50,
+          "goal": "Fight off the Downs Riders on the horse-road about 130 m east of Bryn the Ostler",
+          "target": "bandit",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            905,
+            110,
+            70.6
+          ],
+          "radius": 50,
+          "goal": "Defeat the Riders' leader at their camp",
+          "target": "bandit leader",
+          "count": 1,
+          "text": "The bandit leader falls. Behind the camp, a pen of frightened horses - and a bill of sale, to 'the man with the Cornish tin'.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sp_ostler_bryn",
+          "goal": "Tell Bryn",
+          "say": "Cornish tin? For horses? Who in Cornwall needs that many horses...\n\nNever mind. The herd's free. Thank you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Bryn.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq1_herd_mare_s_halter_ring",
+              "sq1_downs_rider_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sp_stone_eyed",
+      "title": "Stone-Eyed",
+      "level": 12,
+      "giver": "sp_herbwife_elin",
+      "offer": "Stone sheep. I'm not jesting - grey stone, all the way through, standing in the grass with their mouths still chewing. The basilisks have come up from the south.\n\nWill you [hunt the basilisks]? And bring me back an eye. Shut, mind.",
+      "accept": "hunt the basilisks",
+      "topics": {},
+      "summary": "Basilisks from the south are turning the Downs' flocks to stone.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            700,
+            600,
+            55.0
+          ],
+          "radius": 50,
+          "goal": "Hunt the pseudo basilisks on the middle plain about 380 m south of Elin the Herbwife",
+          "target": "pseudo basilisk",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 1,
+          "at": [
+            1255,
+            275,
+            54.2
+          ],
+          "goal": "Search the basilisk nest in the north-east",
+          "clue": {
+            "name": "a nest of grey stones",
+            "model": 1347
+          },
+          "text": "The nest is ringed with stone things - a fox, a hare, a crow mid-flight. And eggs, warm. The basilisks didn't come up the plain. Something drove them.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sp_herbwife_elin",
+          "goal": "Tell Elin",
+          "say": "Drove them? Basilisks don't flee from much.\n\nUnless what's coming is bigger than they are.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Elin.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq1_basilisk_lid_charm",
+              "sq1_herbwife_s_rue_sash"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sp_carrion",
+      "title": "Carrion on the Wind",
+      "level": 11,
+      "giver": "sp_osfrid",
+      "offer": "Carrion drakes on the north-west heath - more every week, and one big brute they call Slythcur. They follow the giants, my outriders say. Where giants walk, things die, and the drakes eat well.\n\nThin them, will you? [Clear the heath].",
+      "accept": "clear the heath",
+      "topics": {},
+      "summary": "Carrion drakes gather on the north-west heath, following the giants' march.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            230,
+            188,
+            57.0
+          ],
+          "radius": 50,
+          "goal": "Thin the carrion drakes on the heath about 480 m west of Watch-Commander Osfrid",
+          "target": "carrion drake",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            304,
+            311,
+            58.8
+          ],
+          "radius": 50,
+          "goal": "Kill Slythcur",
+          "target": "Slythcur",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sp_osfrid",
+          "goal": "Report to Watch-Commander Osfrid",
+          "say": "Good. Now they'll have to follow the giants a bit hungrier.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq1_carrion_drake_fang",
+              "sq1_heath_walker_s_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sp_nymphs",
+      "title": "The Grove Nymphs' Bargain",
+      "level": 13,
+      "giver": "sp_abbess",
+      "offer": "The grove nymphs of the middle plain never bothered anyone. This year they're striking at travellers. A woman called Veviel leads them.\n\nThe nymphs remember the plain before the stones. Will you [speak with Veviel]? By whatever means she'll allow.",
+      "accept": "speak with Veviel",
+      "topics": {},
+      "summary": "The grove nymphs of the middle plain have turned hostile. The Abbess wants to know why.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            700,
+            650,
+            57.7
+          ],
+          "radius": 50,
+          "goal": "Get past the grove nymphs about 460 m south of the Abbess of Amesbury",
+          "target": "grove nymph",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            460,
+            647,
+            57.7
+          ],
+          "radius": 50,
+          "goal": "Face Veviel",
+          "target": "Veviel",
+          "count": 1,
+          "text": "Veviel sinks into the grass. 'The ground shakes,' she whispers. 'The old ones are coming home to their stones. We only wanted them to pass us by.'",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "sp_abbess",
+          "goal": "Tell the Abbess what Veviel said",
+          "say": "'The old ones are coming home to their stones.' The giants. The nymphs are frightened, as we all are.\n\nShall I [send them word] that Amesbury will shelter their grove? Or [let them be]? Fear makes poor neighbours either way.",
+          "options": [
+            {
+              "keyword": "send them word",
+              "say": "Then Sister Morwen will take them bread and willow-water. Frightened things can be friends.",
+              "ending": "friends"
+            },
+            {
+              "keyword": "let them be",
+              "say": "Then we'll go round their grove, and they'll go round us.",
+              "ending": "apart"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "friends": {
+          "text": "The nymphs send a gift.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq1_grove_pact_bracer"
+            ],
+            "choice": [
+              "sq1_nymph_s_willow_ring",
+              "sq1_veviel_s_dew_sash"
+            ]
+          }
+        },
+        "apart": {
+          "text": "From the Sisters of Amesbury.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq1_nymph_s_willow_ring",
+              "sq1_veviel_s_dew_sash",
+              "sq1_grove_pact_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sp_diggers",
+      "title": "Spades on the Plain",
+      "level": 14,
+      "giver": "sp_osfrid",
+      "offer": "Tomb-raiders in the western fields - dozens, with spades and carts. They're opening the barrows one by one. Those are the graves of the Long Knives, and the Abbess is beside herself.\n\nWill you [break the diggers]? And find out who's paying them.",
+      "accept": "break the diggers",
+      "topics": {},
+      "summary": "Tomb-raiders are opening the barrows in the western fields.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            420,
+            950,
+            55.2
+          ],
+          "radius": 50,
+          "goal": "Drive off the diggers in the western fields about 810 m south of Watch-Commander Osfrid",
+          "target": "tomb raider digger",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 1,
+          "at": [
+            365,
+            1108,
+            58.2
+          ],
+          "goal": "Search the diggers' camp",
+          "clue": {
+            "name": "a cart of grave-goods",
+            "model": 1347
+          },
+          "text": "Gold torcs, a broken crown, finger-bones still wearing rings. And a pay-chit: 'Forty ingots of Cornish tin, for every barrow opened to the bottom. Bring the bones to the stones.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sp_osfrid",
+          "goal": "Show Osfrid the pay-chit",
+          "say": "Cornish tin, paid by the barrow. 'Bring the bones to the stones.'\n\nThat's not grave-robbing. Robbers keep the gold. Somebody wants the dead moved.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq1_digger_s_spade_ring",
+              "sq1_barrow_map_sash"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sp_what_spade_woke",
+      "title": "What the Spade Woke",
+      "level": 15,
+      "giver": "sp_abbess",
+      "offer": "Under these barrows lie four hundred and sixty lords of Britain. Hengist the Saxon invited them to a peace-feast here, on the plain, and at a word his men drew knives and murdered them all. Merlin raised the Giants' Dance over their graves.\n\nThe diggers have woken them. Green ghasts walk the western fields, and a man called Cynewulf - a Saxon, a 'ghostwalker' - walks with them. Will you [lay them down]?",
+      "accept": "lay them down",
+      "topics": {},
+      "summary": "The diggers have woken the murdered lords of the Long Knives. A Saxon ghostwalker leads the ghasts.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            462,
+            1098,
+            52.9
+          ],
+          "radius": 50,
+          "goal": "Lay the green ghasts in the western fields to rest about 1.0 km south of the Abbess of Amesbury",
+          "target": "green ghast",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            637,
+            1060,
+            61.2
+          ],
+          "radius": 50,
+          "goal": "Stop Cynewulf the Ghostwalker",
+          "target": "Cynewulf the Ghostwalker",
+          "count": 1,
+          "text": "Cynewulf falls. 'My grandfather's grandfather held a knife at that feast,' he says. 'I came to say sorry. They didn't want to hear it.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sp_abbess",
+          "goal": "Tell the Abbess",
+          "say": "He came to apologise. Four hundred years too late, and to the wrong people.\n\nThe ghasts are down. But the graves are open, and the dead won't stay down while they are.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sisters of Amesbury.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq1_ghast_ward_charm",
+              "sq1_ghostwalker_s_lantern_ring",
+              "sq1_long_knives_mourning_band"
+            ]
+          }
+        }
+      },
+      "requires": "sp_diggers"
+    },
+    {
+      "id": "sp_paymaster",
+      "title": "The Raiders' Paymaster",
+      "level": 17,
+      "giver": "sp_osfrid",
+      "offer": "The diggers in the west are only labour. The raiders on the eastern ridge are the ones who carry the tin. Their scouts watch every road.\n\nWill you [follow the tin]? Fight through the scouts, break the eastern camp, and bring me their ledger.",
+      "accept": "follow the tin",
+      "topics": {},
+      "summary": "The tomb-raiders' camp on the eastern ridge carries the Cornish tin that pays the diggers.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            882,
+            658,
+            52.3
+          ],
+          "radius": 50,
+          "goal": "Fight through the tomb-raider scouts about 500 m south of Watch-Commander Osfrid",
+          "target": "tomb raider scout",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            1272,
+            796,
+            52.9
+          ],
+          "radius": 50,
+          "goal": "Break the raiders' camp on the eastern ridge",
+          "target": "tomb raider",
+          "count": 4,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 1,
+          "at": [
+            1275,
+            800,
+            52.8
+          ],
+          "goal": "Search the raiders' camp for the ledger",
+          "clue": {
+            "name": "an iron-bound chest",
+            "model": 1347
+          },
+          "text": "The ledger, in a careful hand: 'Received of Bolster, herald of the Wrath of Golestandt: tin, 900 ingots. Delivered to the stones: the bones of 212 lords. Remaining: 248. The dragon is patient. The giants are not.'",
+          "give": {
+            "name": "the raiders' ledger"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "sp_osfrid",
+          "goal": "Bring the ledger to Osfrid",
+          "say": "Golestandt. The dragon of Dartmoor - awake? I'd hoped that was a nursery tale.\n\nHe wants the dead out from under the stones. Two hundred and forty-eight left. We'd better be quick.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq1_cornish_tin_ingot_ring",
+              "sq1_raider_captain_s_cloak",
+              "sq1_paymaster_s_ledger_clasp"
+            ]
+          }
+        }
+      },
+      "requires": "sp_diggers"
+    },
+    {
+      "id": "sp_long_knives",
+      "title": "The Night of the Long Knives",
+      "level": 19,
+      "giver": "sp_sister_morwen",
+      "offer": "The dead of the feast are walking the fields by night - not the ghasts the diggers woke. The old ones. Lords, still in their feast-clothes, looking for the men who killed them.\n\nThe Abbess says they must be told it's over. That Hengist is long dead and his sons with him. Will you [tell the dead]? They may not listen.",
+      "accept": "tell the dead",
+      "topics": {},
+      "summary": "The murdered lords of the Long Knives walk the plain at night. Sister Morwen wants them told the war is over.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            600,
+            820,
+            52.2
+          ],
+          "radius": 50,
+          "goal": "Calm the disturbed dead on the field of the feast about 180 m south-west of Sister Morwen",
+          "target": "disturbed presence",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 1,
+          "at": [
+            560,
+            860,
+            56.6
+          ],
+          "goal": "Search the old feasting-ground",
+          "clue": {
+            "name": "a ring of sunken stones",
+            "model": 1347
+          },
+          "text": "Under the turf, the stones of a long table. At its head, a cup - and in the cup, a ring with a red dragon on it.",
+          "id": "s2"
+        },
+        {
+          "type": "encounter",
+          "zone": 1,
+          "at": [
+            565,
+            855,
+            56.4
+          ],
+          "wake_m": 30,
+          "goal": "Face the shade that rises at the table's head",
+          "text": "The Saxon shade breaks apart, and the field goes still. For the first time in four hundred years, nobody is waiting for the feast to end.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "the Shade of Hengist",
+              "center": [
+                565,
+                855,
+                56.4
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Face the shade that rises at the table's head",
+              "announce": "A tall shade in Saxon mail stands up at the head of the table. 'Nimed eure saxes!' it roars - draw your knives - and the dead rise round you.",
+              "boss": {
+                "template": 12016,
+                "name": "the Shade of Hengist",
+                "level": 20,
+                "health_mult": 2.2
+              },
+              "success": "the Shade of Hengist falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 25,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 12399,
+                    "name": "restless lord",
+                    "level": [
+                      17,
+                      18
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s3"
+        },
+        {
+          "type": "choice",
+          "npc": "sp_sister_morwen",
+          "goal": "Tell Sister Morwen",
+          "say": "Hengist's shade. Still giving the word, after all this time.\n\nThe ring - Ambrosius's, the Abbess will say. Do we [bury the ring] with the lords, so they know they were avenged? Or do you [carry it] for them, to the stones?",
+          "options": [
+            {
+              "keyword": "bury the ring",
+              "say": "Then it goes back in the ground, and the lords rest. Bless you.",
+              "ending": "buried"
+            },
+            {
+              "keyword": "carry it",
+              "say": "Then carry it well. The stones will know it.",
+              "ending": "carried"
+            }
+          ],
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "buried": {
+          "text": "From the Sisters of Amesbury.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [
+              "sq1_amesbury_shroud_mantle"
+            ],
+            "choice": [
+              "sq1_feast_hall_torc"
+            ]
+          }
+        },
+        "carried": {
+          "text": "Ambrosius's ring goes with you.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [
+              "sq1_ambrosius_s_ring"
+            ],
+            "choice": [
+              "sq1_feast_hall_torc",
+              "sq1_amesbury_shroud_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "sp_what_spade_woke"
+    },
+    {
+      "id": "sp_mephits",
+      "title": "Wind Over the Barrows",
+      "level": 16,
+      "giver": "sp_outrider_cadoc",
+      "offer": "Wind mephits - little storm-devils - pour over the south-west downs and scour the barrows bare. The giants called them, the Abbess thinks: to blow the turf off the graves.\n\nWill you [still the wind]? Kill enough and the rest lose heart.",
+      "accept": "still the wind",
+      "topics": {},
+      "summary": "Wind mephits are scouring the turf off the south-west barrows.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            400,
+            1000,
+            54.6
+          ],
+          "radius": 50,
+          "goal": "Kill the wind mephits on the south-west downs about 460 m south-west of Outrider Cadoc",
+          "target": "wind mephit",
+          "count": 7,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sp_outrider_cadoc",
+          "goal": "Tell Outrider Cadoc",
+          "say": "Quieter already. I can hear myself think. Mostly I'm thinking about giants.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq1_mephit_glass_charm",
+              "sq1_windbreak_mantle"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sp_footprints",
+      "title": "Footprints Like Ponds",
+      "level": 16,
+      "giver": "sp_outrider_cadoc",
+      "offer": "Giants. Salisbury's own we've always had - big, slow, keep to the south. These are different. They walk in lines, north, and they carry stones.\n\nWill you [scout their camps]? Kill a few if you must. I want to know where they came from.",
+      "accept": "scout their camps",
+      "topics": {},
+      "summary": "Lines of giants are marching north across the plain, carrying stones.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            800,
+            1150,
+            55.4
+          ],
+          "radius": 50,
+          "goal": "Thin the giants on the southern plain about 440 m south of Outrider Cadoc",
+          "target": "Salisbury giant",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 1,
+          "at": [
+            770,
+            1390,
+            58.9
+          ],
+          "goal": "Search a giants' camp",
+          "clue": {
+            "name": "a giant's cooking-pit",
+            "model": 1347
+          },
+          "text": "Bones of whole oxen. And stacked by the fire, blocks of grey granite flecked with pink - Dartmoor granite, from three hundred miles south, carried here on their backs.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sp_outrider_cadoc",
+          "goal": "Tell Outrider Cadoc",
+          "say": "Dartmoor. They walked here from Dartmoor, carrying stones. To build what?\n\n...To mend the Dance. Or to take it home.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq1_dartmoor_granite_chip",
+              "sq1_giant_track_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sp_giants_swine",
+      "title": "The Giants' Swine",
+      "level": 18,
+      "giver": "coel_huntsman",
+      "offer": "The giants drove herds of huge boars up with them - their larder on the hoof. The swine are rooting up every field from here to the river.\n\nCut down the herd and the giants go hungry. Hungry giants are slower. Will you [hunt the herd]?",
+      "accept": "hunt the herd",
+      "topics": {},
+      "summary": "The giants' herds of huge boars are rooting up the south downs.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            838,
+            1248,
+            60.2
+          ],
+          "radius": 50,
+          "goal": "Hunt the giants' huge boars about 610 m east of Coel the Huntsman",
+          "target": "huge boar",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "coel_huntsman",
+          "goal": "Tell Coel",
+          "say": "That's a winter's bacon for the whole village. And a few hungry giants. I'll take that trade.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Coel.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq1_boar_herd_s_tusk",
+              "sq1_huntington_hunting_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sp_runaways",
+      "title": "The Men Who Ran South",
+      "level": 21,
+      "giver": "sp_outrider_cadoc",
+      "offer": "Bandits in the far south - desperate ones, who fight like cornered dogs. Escaped, the locals say. From what, nobody knows.\n\nWill you [find out]? Don't expect them to talk.",
+      "accept": "find out",
+      "topics": {},
+      "summary": "Escaped bandits in the far south fight like cornered dogs. Nobody knows what they escaped from.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            630,
+            1470,
+            59.5
+          ],
+          "radius": 50,
+          "goal": "Fight through the escaped bandits about 770 m south of Outrider Cadoc",
+          "target": "escaped bandit",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            617,
+            1477,
+            63.5
+          ],
+          "radius": 50,
+          "goal": "Defeat the escaped bandits' leader",
+          "target": "escaped bandit leader",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 1,
+          "at": [
+            625,
+            1470,
+            59.5
+          ],
+          "goal": "Search their camp",
+          "clue": {
+            "name": "a heap of chains",
+            "model": 1347
+          },
+          "text": "Manacles - giant-sized, cut down with a file. A scratched note: 'Cottrel sold us to the stone-men. We dug round the stones' feet till our hands bled. Never again.'",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "sp_outrider_cadoc",
+          "goal": "Tell Outrider Cadoc",
+          "say": "Cottrel. The slave master in the north-east. He's selling men to the giants as diggers.\n\nThe Commander will want to hear this.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq1_broken_manacle_bracer",
+              "sq1_runaway_s_cloak"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sp_cottrel",
+      "title": "Slave Master Cottrel",
+      "level": 21,
+      "giver": "sp_osfrid",
+      "offer": "Cottrel keeps pens in the far north-east, and he's been selling men to the giants to dig round the Dance. Every one of them was somebody's son.\n\nWill you [close the pens]? Bring friends. Cottrel's company are no farm-boys.",
+      "accept": "close the pens",
+      "topics": {},
+      "summary": "Slave Master Cottrel sells captives to the giants as diggers from his pens in the far north-east.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            1432,
+            389,
+            54.4
+          ],
+          "radius": 50,
+          "goal": "Break Cottrel's company about 750 m east of Watch-Commander Osfrid",
+          "target": "slaver",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            1439,
+            380,
+            53.8
+          ],
+          "radius": 50,
+          "goal": "Defeat Slave Master Cottrel",
+          "target": "Slave Master Cottrel",
+          "count": 1,
+          "text": "Cottrel goes down among his own chains. 'The tin was good,' he says. 'Better than Camelot's silver.'",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "sp_osfrid",
+          "goal": "Tell Watch-Commander Osfrid",
+          "say": "The pens are open? Good. There are eleven men in them, the outriders say.\n\nWe can [send them to Amesbury] - the Sisters will mend them. Or [send them to Camelot], to tell the Round Table what's on this plain. Witnesses are worth an army.",
+          "options": [
+            {
+              "keyword": "send them to Amesbury",
+              "say": "Then the Abbess will have them. She's good with broken things.",
+              "ending": "amesbury"
+            },
+            {
+              "keyword": "send them to Camelot",
+              "say": "Then Camelot will hear it from men with giant-sized scars. They'll listen.",
+              "ending": "camelot"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "amesbury": {
+          "text": "The freed men send something.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq1_freedman_s_torc"
+            ],
+            "choice": [
+              "sq1_cottrel_s_key_ring",
+              "sq1_slaver_bane_mantle"
+            ]
+          }
+        },
+        "camelot": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq1_slaver_bane_mantle"
+            ],
+            "choice": [
+              "sq1_cottrel_s_key_ring",
+              "sq1_freedman_s_torc"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sp_runaways"
+    },
+    {
+      "id": "sp_the_dance",
+      "title": "The Giants' Dance",
+      "level": 22,
+      "giver": "sp_osfrid",
+      "offer": "The giants hold the Dance itself now - granite giants out of Dartmoor, bigger than anything Salisbury ever grew. The Abbess says Merlin bound the stones with a mark on the heel stone.\n\nWill you [go to the Dance]? See the mark. Don't stay to fight what you can't.",
+      "accept": "go to the Dance",
+      "topics": {},
+      "summary": "Granite giants from Dartmoor hold the Giants' Dance. Merlin's binding mark is on the heel stone.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 1,
+          "at": [
+            905,
+            860,
+            52.5
+          ],
+          "radius": 30,
+          "goal": "Reach the Giants' Dance about 690 m south of Watch-Commander Osfrid",
+          "text": "The stones rise over you, and giants walk between them like men among chairs.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            900,
+            960,
+            52.4
+          ],
+          "radius": 50,
+          "goal": "Cut down the giants at the outer ring",
+          "target": "Salisbury giant",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 1,
+          "at": [
+            940,
+            870,
+            52.4
+          ],
+          "goal": "Find Merlin's mark on the heel stone",
+          "clue": {
+            "name": "a stone with a mark worn almost smooth",
+            "model": 1347
+          },
+          "text": "A star in a ring, worn nearly smooth - and scored across it, fresh, two marks: a claw like a dragon's, and a key under a crown, in red. Both of them want the stones.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "sp_osfrid",
+          "goal": "Tell Osfrid",
+          "say": "A key under a crown. The Crimson - Morgana's - here too? The dragon wants his giants' stones back, and Morgana wants Merlin's ring for something of her own.\n\nAnd we're in the middle.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq1_heel_stone_bracer",
+              "sq1_merlin_s_mark_charm"
+            ]
+          }
+        }
+      },
+      "requires": "sp_paymaster"
+    },
+    {
+      "id": "sp_giants_dead",
+      "title": "The Giants' Dead",
+      "level": 24,
+      "giver": "sp_abbess",
+      "offer": "The great barrow in the south-east isn't a lord's grave. It's older than the feast - older than Merlin. The giants who first raised the stones are buried there, and the raiders have opened it to the bottom.\n\nWhat comes out of a giant's grave? Will you [go and see]? Take friends. Take many.",
+      "accept": "go and see",
+      "topics": {},
+      "summary": "Tomb-raiders have opened the great barrow in the south-east - the grave of the giants who first raised the stones.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            1283,
+            1259,
+            52.8
+          ],
+          "radius": 50,
+          "goal": "Fight through the mercenary tomb-raiders at the dig about 1.2 km south-east of the Abbess of Amesbury",
+          "target": "mercenary tomb raider",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            1300,
+            1200,
+            53.5
+          ],
+          "radius": 50,
+          "goal": "Put down the giant skeletons risen from the barrow",
+          "target": "giant skeleton",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 1,
+          "at": [
+            1290,
+            1372,
+            49.7
+          ],
+          "radius": 50,
+          "goal": "Defeat Berik Liglim, master of the dig",
+          "target": "Berik Liglim",
+          "count": 1,
+          "text": "Berik Liglim falls by the barrow mouth. Below, in the dark, something enormous turns over in its sleep.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "sp_abbess",
+          "goal": "Tell the Abbess",
+          "say": "Something enormous. Yes. The Sisters have a name for what sleeps under the great barrow: Gogmagog, the last giant of Albion, that Corineus threw into the sea at Cornwall. They brought his bones home.\n\nGod keep him sleeping.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Sisters of Amesbury.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq1_great_barrow_torc",
+              "sq1_liglim_s_mattock_ring",
+              "sq1_barrow_dark_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sp_the_dance"
+    },
+    {
+      "id": "sp_stonecaller",
+      "title": "The Stone-Caller",
+      "level": 26,
+      "giver": "sp_abbess",
+      "offer": "The giants' oracle - the stone-caller - stands at the heart of the Dance and sings to the stones. Every night they lean a little further toward the south. When they fall, the giants will carry them home, and Merlin's binding with them.\n\nYou've done everything we asked. This is the last of it. Will you [silence the stone-caller]?",
+      "accept": "silence the stone-caller",
+      "topics": {
+        "queen": "She smiles. 'A long time ago. It's not a thing I talk about. Ask Sir Bedwyr at Prydwen, if you must - he knew me then.'"
+      },
+      "summary": "The giants' stone-caller sings the Giants' Dance loose from Merlin's binding, to carry it south.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 1,
+          "at": [
+            915,
+            900,
+            52.4
+          ],
+          "radius": 25,
+          "goal": "Go into the heart of the Dance about 730 m south of the Abbess of Amesbury",
+          "text": "The singing fills the ring. The stones are leaning.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 1,
+          "at": [
+            925,
+            935,
+            52.4
+          ],
+          "wake_m": 30,
+          "goal": "Silence Clochfaen the Stone-Caller",
+          "text": "Clochfaen falls among the stones, and the singing stops. Very slowly, the leaning stones settle back.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Clochfaen the Stone-Caller",
+              "center": [
+                925,
+                935,
+                52.4
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Silence Clochfaen the Stone-Caller",
+              "announce": "A giant robed in lichen turns from the stones, still singing. 'Little bones. The Dragon remembers when these stones were ours. So do we.'",
+              "boss": {
+                "template": 770006,
+                "name": "Clochfaen the Stone-Caller",
+                "level": 27,
+                "health_mult": 2.2
+              },
+              "success": "Clochfaen the Stone-Caller falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 1,
+                "mobs": [
+                  {
+                    "template": 12719,
+                    "name": "Salisbury giant",
+                    "level": [
+                      24,
+                      25
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 1,
+          "at": [
+            930,
+            940,
+            52.4
+          ],
+          "goal": "Search the stone-caller's place",
+          "clue": {
+            "name": "a granite tablet, freshly carved",
+            "model": 1347
+          },
+          "text": "Giant-runes, and under them in plain Albion, as if for you: 'The White Dragon wakes in Dartmoor. Merlin's tower fell, and the red fought the white, and the white was beaten. Now the white remembers. The stones are his. Then the Sleeper.'",
+          "give": {
+            "name": "the stone-caller's tablet"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "choice",
+          "npc": "sp_abbess",
+          "goal": "Bring the tablet to the Abbess",
+          "say": "'Then the Sleeper.' He means Arthur, on Avalon. First the stones, then the king.\n\nI was a queen once. I know what a dragon's patience costs. Shall I [send to Camelot] with this, so the Round Table makes ready? Or will you [keep the tablet] and carry the warning yourself, south?",
+          "options": [
+            {
+              "keyword": "send to Camelot",
+              "say": "Then Camelot will have it by the new moon. Thank you - for the dead, and for the living.",
+              "ending": "camelot"
+            },
+            {
+              "keyword": "keep the tablet",
+              "say": "Then carry it into the marsh, toward Avalon. Someone there will need to read it.",
+              "ending": "south"
+            }
+          ],
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "camelot": {
+          "text": "From the Abbess of Amesbury.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [
+              "sq1_abbess_s_ring"
+            ],
+            "choice": [
+              "sq1_stone_caller_s_chant_stone",
+              "sq1_dance_warden_s_mantle",
+              "sq1_granite_breaker_gauntlet_ring"
+            ]
+          }
+        },
+        "south": {
+          "text": "From the Abbess of Amesbury.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [
+              "sq1_dance_warden_s_mantle"
+            ],
+            "choice": [
+              "sq1_stone_caller_s_chant_stone",
+              "sq1_abbess_s_ring",
+              "sq1_granite_breaker_gauntlet_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "sp_the_dance"
     }
   ]
 }

@@ -90,6 +90,95 @@
       "during": [
         "willing_heart/s5"
       ]
+    },
+    {
+      "id": "bs_reeve_gwenda",
+      "zone": 2,
+      "realm": 1,
+      "name": "Reeve Gwenda",
+      "model": 38,
+      "level": 30,
+      "pos": [
+        1190,
+        1125,
+        55.0
+      ],
+      "guild": "the Pendragon's Watch",
+      "idle": "Ludlow sent forty men to Camlann. Eleven came home. The other twenty-nine are in the graveyard, and they won't stay there."
+    },
+    {
+      "id": "bs_ferryman_huw",
+      "zone": 2,
+      "realm": 1,
+      "name": "Huw the Ferryman",
+      "model": 9,
+      "level": 24,
+      "pos": [
+        720,
+        800,
+        57.5
+      ],
+      "idle": "I've ferried the living across this river thirty years. Lately the dead want a ride."
+    },
+    {
+      "id": "bs_sergeant_mabyn",
+      "zone": 2,
+      "realm": 1,
+      "name": "Sergeant Mabyn",
+      "model": 9,
+      "level": 36,
+      "pos": [
+        522,
+        1000,
+        69.7
+      ],
+      "guild": "the Pendragon's Watch",
+      "idle": "Humberton keep. Four walls, one gate and nowhere near enough men."
+    },
+    {
+      "id": "bs_prior_anselm",
+      "zone": 2,
+      "realm": 1,
+      "name": "Prior Anselm",
+      "model": 32,
+      "level": 40,
+      "pos": [
+        648,
+        1096,
+        57.1
+      ],
+      "guild": "the Abbey Faithful",
+      "idle": "Vetusta's bell has rung the hours for three hundred years. It hasn't rung since the Bishop's new brothers came."
+    },
+    {
+      "id": "bs_brother_teilo",
+      "zone": 2,
+      "realm": 1,
+      "name": "Brother Teilo",
+      "model": 9,
+      "level": 22,
+      "pos": [
+        660,
+        1088,
+        57.1
+      ],
+      "guild": "the Abbey Faithful",
+      "idle": "They threw us out with nothing but our habits. I kept my psalter. I'll have the abbey back too."
+    },
+    {
+      "id": "bs_scout_elowen",
+      "zone": 2,
+      "realm": 1,
+      "name": "Scout Morfudd",
+      "model": 38,
+      "level": 32,
+      "pos": [
+        520,
+        44,
+        61.3
+      ],
+      "guild": "the Pendragon's Watch",
+      "idle": "Goblins I can count. What the goblins are carrying out of that mine, I don't like."
     }
   ],
   "quests": [
@@ -476,6 +565,1268 @@
           }
         }
       }
+    },
+    {
+      "id": "bs_ants_in_ludlow",
+      "title": "Ants in the Cabbages",
+      "level": 2,
+      "giver": "bs_reeve_gwenda",
+      "offer": "Ants. The size of cats, in my cabbages. They come up from a hill south of the road and strip a field in a night.\n\nI can't spare the Watch for ants. Will you [stop the ants]? Break up their hill and they'll go somewhere else.",
+      "accept": "stop the ants",
+      "topics": {},
+      "summary": "Giant ants from a hill south of Ludlow are stripping the fields.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            1150,
+            1000,
+            55.0
+          ],
+          "radius": 50,
+          "goal": "Kill the ants in Ludlow's fields about 130 m north of Reeve Gwenda",
+          "target": "large ant",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            892,
+            1332,
+            72.5
+          ],
+          "radius": 50,
+          "goal": "Break up the anthill south of the road",
+          "target": "ant drone",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_reeve_gwenda",
+          "goal": "Tell Reeve Gwenda",
+          "say": "Cabbages. Saved. You'd laugh, but that's half of Ludlow's winter.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Reeve Gwenda.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq2_anthill_pebble_ring",
+              "sq2_ludlow_gardener_s_sash"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bs_camlann_dead",
+      "title": "The Men Who Came Home",
+      "level": 4,
+      "giver": "bs_reeve_gwenda",
+      "offer": "Ludlow sent forty men to Camlann with the King. Twenty-nine came home in carts, and we buried them in the graveyard north of the road.\n\nThis month they've started getting up. Bones walking among the stones, and hounds that aren't there howling in the fields. Will you [go to the graveyard]? Find out who's waking them.",
+      "accept": "go to the graveyard",
+      "topics": {},
+      "summary": "The Camlann dead of Ludlow are rising from their graves.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            1056,
+            930,
+            55.9
+          ],
+          "radius": 50,
+          "goal": "Lay the risen dead in Ludlow graveyard to rest about 240 m north-west of Reeve Gwenda",
+          "target": "weak skeleton",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            1100,
+            1000,
+            55.9
+          ],
+          "radius": 50,
+          "goal": "Kill the spectral hounds in the fields",
+          "target": "spectral hound",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 2,
+          "at": [
+            1060,
+            925,
+            55.9
+          ],
+          "goal": "Search the graves that were opened",
+          "clue": {
+            "name": "an opened grave with a red cord on the stone",
+            "model": 1347
+          },
+          "text": "Every opened grave has a red cord knotted round its headstone, thirteen knots each. Someone came at night, and tied them, and went away.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_reeve_gwenda",
+          "goal": "Show the red cord to Reeve Gwenda",
+          "say": "Thirteen knots. The new brothers up at Vetusta wear cords like this round their waists. Red ones.\n\nPrior Anselm is in Humberton - they threw him out of his own abbey. He'll know what it means.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Reeve Gwenda, for Ludlow's dead.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq2_camlann_mourning_band",
+              "sq2_sexton_s_spade_pin",
+              "sq2_grave_dust_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bs_drowned_reach",
+      "title": "The Drowned Reach",
+      "level": 7,
+      "giver": "bs_ferryman_huw",
+      "offer": "The goblins fish this river. Fished, I should say - the drowned ones are getting up out of it now, still holding their nets. Grey and wet and walking.\n\nThe river doesn't do that by itself. Will you [search the reach]? Upstream, where the water's slow and deep.",
+      "accept": "search the reach",
+      "topics": {},
+      "summary": "Drowned goblin fishermen are rising from the river. Huw the Ferryman wants to know why.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            706,
+            665,
+            42.4
+          ],
+          "radius": 50,
+          "goal": "Put down the drowned fishermen in the reach about 150 m north of Huw the Ferryman",
+          "target": "undead goblin fisherman",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 2,
+          "at": [
+            693,
+            667,
+            42.8
+          ],
+          "goal": "Search the riverbed in the slow water",
+          "clue": {
+            "name": "a black stone on the riverbed",
+            "model": 1347
+          },
+          "text": "A black stone sunk in the mud, a red key on it, and round it a ring of bones - not goblin bones. Old, big, and wrapped in rotted mail.",
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            600,
+            565,
+            52.1
+          ],
+          "radius": 50,
+          "goal": "Kill the drowned warriors at the singing pool",
+          "target": "undead goblin warrior",
+          "count": 2,
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_ferryman_huw",
+          "goal": "Tell Huw what you found",
+          "say": "Men's bones in mail, at the bottom of my river? There's no battlefield on this river.\n\n...Unless someone carried them here. From somewhere else.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Huw.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq2_ferryman_s_coin",
+              "sq2_drowned_man_s_ring",
+              "sq2_river_weed_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "bs_camlann_dead"
+    },
+    {
+      "id": "bs_mother_of_marsh",
+      "title": "The Mother of the Marsh",
+      "level": 6,
+      "giver": "bs_reeve_gwenda",
+      "offer": "There's a marsh south of Ludlow, and something in it laying eggs. The slith broodlings come up into the road at dusk now.\n\nThe mother's called Slith - the old women named her. Will you [go to the marsh]?",
+      "accept": "go to the marsh",
+      "topics": {},
+      "summary": "Slith broodlings from the marsh south of Ludlow are coming up into the road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            1080,
+            1420,
+            78.5
+          ],
+          "radius": 50,
+          "goal": "Kill the slith broodlings in the marsh about 310 m south of Reeve Gwenda",
+          "target": "slith broodling",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            1064,
+            1397,
+            71.9
+          ],
+          "radius": 50,
+          "goal": "Kill Slith, the mother of the marsh",
+          "target": "Slith",
+          "count": 1,
+          "text": "Slith thrashes once in the reeds, and lies still.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_reeve_gwenda",
+          "goal": "Tell Reeve Gwenda",
+          "say": "The old women'll be disappointed. They liked having a monster.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Ludlow.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq2_marsh_scale_belt",
+              "sq2_reed_mother_s_eye"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bs_robbers_landing",
+      "title": "Robbers' Landing",
+      "level": 6,
+      "giver": "bs_ferryman_huw",
+      "offer": "Robbers have taken the old landing west of my ferry. They wait for the boats and take everything - and the strange thing is, they let some folk by.\n\nWill you [clear the landing]? And find out who they let pass.",
+      "accept": "clear the landing",
+      "topics": {},
+      "summary": "Robbers have taken the old landing on the river west of the ferry.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            537,
+            760,
+            59.6
+          ],
+          "radius": 50,
+          "goal": "Clear the robbers from the landing about 190 m west of Huw the Ferryman",
+          "target": "robber",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 2,
+          "at": [
+            540,
+            755,
+            59.5
+          ],
+          "goal": "Search the robbers' lean-to",
+          "clue": {
+            "name": "a lean-to of oars and sailcloth",
+            "model": 1347
+          },
+          "text": "A note, scrawled: 'Them as wears the red cord, let by. The Bishop pays.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_ferryman_huw",
+          "goal": "Tell Huw",
+          "say": "'The Bishop pays.' Robbers, paid by a bishop. I've lived too long.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Huw.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq2_landing_stage_ring",
+              "sq2_ferry_rope_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bs_highway",
+      "title": "The Ludlow Highway",
+      "level": 8,
+      "giver": "bs_sergeant_mabyn",
+      "offer": "My couriers to Ludlow aren't arriving. The road north-east of the town goes through a cut, and there's a gang of highwaymen in it.\n\nThe last courier was carrying my report on the abbey. Will you [find my courier]? Or what's left of him.",
+      "accept": "find my courier",
+      "topics": {},
+      "summary": "Watch couriers on the Ludlow road are being ambushed by highwaymen.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            1100,
+            820,
+            77.7
+          ],
+          "radius": 50,
+          "goal": "Clear the bandits on the highway about 610 m east of Sergeant Mabyn",
+          "target": "bandit",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            1211,
+            774,
+            158.4
+          ],
+          "radius": 50,
+          "goal": "Kill the highwaymen in the cut",
+          "target": "highwayman",
+          "count": 2,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 2,
+          "at": [
+            1215,
+            780,
+            158.4
+          ],
+          "goal": "Search the ambush for the courier's satchel",
+          "clue": {
+            "name": "a Watch satchel, slit open",
+            "model": 1347
+          },
+          "text": "The courier's report is gone. In its place, a red cord with thirteen knots - left on purpose.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_sergeant_mabyn",
+          "goal": "Tell Sergeant Mabyn",
+          "say": "They took my report on the abbey and left me a calling card. The Bishop wants me to know he knows.\n\nWell. Now I know too.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq2_highwayman_s_mask_pin",
+              "sq2_watch_courier_s_bracer",
+              "sq2_ludlow_road_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "bs_robbers_landing"
+    },
+    {
+      "id": "bs_webs",
+      "title": "Webs over the North Road",
+      "level": 5,
+      "giver": "bs_sergeant_mabyn",
+      "offer": "A messenger from the northern outpost left four days ago and never arrived. The forest north of the river is full of giant spiders.\n\nWill you [search the forest]? Spiders keep what they catch. He might still be alive.",
+      "accept": "search the forest",
+      "topics": {},
+      "summary": "A Watch messenger went missing in the spider-ridden forest north of the river.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            700,
+            300,
+            57.9
+          ],
+          "radius": 50,
+          "goal": "Kill the giant spiders in the north forest about 720 m north of Sergeant Mabyn",
+          "target": "giant spider",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 2,
+          "at": [
+            760,
+            260,
+            67.8
+          ],
+          "goal": "Search the webs for the messenger",
+          "clue": {
+            "name": "a man-sized cocoon",
+            "model": 1347
+          },
+          "text": "You cut the cocoon open. Inside, the messenger - grey, half-starved and very much alive. 'Water,' he croaks. 'And tell the sergeant... goblins. Carrying bones south.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_sergeant_mabyn",
+          "goal": "Tell Sergeant Mabyn",
+          "say": "Alive! God be thanked. Bones south... from the mine? Scout Morfudd's at the northern outpost. She'll want to hear it.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq2_spider_silk_wrap",
+              "sq2_messenger_s_thanks"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bs_nain_raids",
+      "title": "The Nain Raids",
+      "level": 10,
+      "giver": "bs_sergeant_mabyn",
+      "offer": "Dwarves. Nain, they call themselves - not like the pilgrims in Camelot Hills; these came down out of the west hills this spring and they've been raiding Humberton's farms ever since.\n\nTheir war-leader is called Frund. Will you [stop the raids]?",
+      "accept": "stop the raids",
+      "topics": {},
+      "summary": "Nain dwarves from the west hills are raiding Humberton's farms.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            300,
+            1250,
+            59.2
+          ],
+          "radius": 50,
+          "goal": "Fight off the nain raiders on the west road about 330 m south-west of Sergeant Mabyn",
+          "target": "dwarf raider",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            215,
+            1264,
+            25.7
+          ],
+          "radius": 50,
+          "goal": "Defeat Frund, the nain war-leader",
+          "target": "Frund",
+          "count": 1,
+          "text": "Frund falls. 'Red-hand men burned our halls,' he gasps. 'We only took back what we lost.'",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "bs_sergeant_mabyn",
+          "goal": "Tell Sergeant Mabyn what Frund said",
+          "say": "Red-hand men burned their halls? The Crimson, again - driving the nain onto us, to keep my men busy. The same trick they played in Camelot Hills.\n\nWe could [make peace] with the nain - send them grain and an apology. Or [hold the line]; raiders are raiders.",
+          "options": [
+            {
+              "keyword": "make peace",
+              "say": "Grain and an apology. And maybe one day an axe on our side when the Crimson come.",
+              "ending": "peace"
+            },
+            {
+              "keyword": "hold the line",
+              "say": "Then the west road stays guarded. Thank you for Frund, at least.",
+              "ending": "line"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "peace": {
+          "text": "The nain send a gift down from the hills.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq2_nain_iron_ring"
+            ],
+            "choice": [
+              "sq2_frund_s_beard_clasp",
+              "sq2_hearth_stone_belt"
+            ]
+          }
+        },
+        "line": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq2_nain_iron_ring",
+              "sq2_frund_s_beard_clasp",
+              "sq2_hearth_stone_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bs_red_dwarves",
+      "title": "Red Dwarves of the East Wood",
+      "level": 12,
+      "giver": "bs_reeve_gwenda",
+      "offer": "Red dwarves in the east woods - thieves, every one. They take tools, pots, anything metal. Now they've taken the church bell's clapper, and Ludlow can't ring for its dead.\n\nTheir camp's in the far north-east, and their chief is Agisthil. Will you [get the clapper back]?",
+      "accept": "get the clapper back",
+      "topics": {},
+      "summary": "Red dwarf thieves from the east woods stole Ludlow church's bell clapper.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            1265,
+            555,
+            42.5
+          ],
+          "radius": 50,
+          "goal": "Fight through the red dwarf thieves in the east woods about 530 m north of Reeve Gwenda",
+          "target": "red dwarf thief",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            1347,
+            432,
+            74.7
+          ],
+          "radius": 50,
+          "goal": "Defeat Agisthil at the red dwarf camp",
+          "target": "Agisthil",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 2,
+          "at": [
+            1350,
+            445,
+            73.6
+          ],
+          "goal": "Search the camp for the clapper",
+          "clue": {
+            "name": "a heap of stolen metal",
+            "model": 1347
+          },
+          "text": "Pots, nails, horseshoes - and the iron clapper of Ludlow's bell, wrapped in a red cord. Somebody paid them to take it.",
+          "give": {
+            "name": "Ludlow's bell clapper"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_reeve_gwenda",
+          "goal": "Return the clapper to Reeve Gwenda",
+          "say": "Our bell! Now Ludlow can ring for its dead again - and lay them down properly.\n\nSomebody doesn't want bells rung in these mountains. I wonder why.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Ludlow.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq2_red_dwarf_earring",
+              "sq2_thief_catcher_s_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bs_goblins_north",
+      "title": "Bones Going South",
+      "level": 11,
+      "giver": "bs_scout_elowen",
+      "offer": "The goblins of Tepok's Mine have been coming out at night with sacks. Heavy sacks. They carry them south to the river and come back with silver.\n\nWill you [stop a sack]? Kill their scouts on the raid path and see what they're carrying.",
+      "accept": "stop a sack",
+      "topics": {
+        "mount badon": "Arthur's great victory, twelve battles in. The Saxons broke and there was peace for a generation."
+      },
+      "summary": "The goblins of Tepok's Mine carry heavy sacks south to the river by night.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            300,
+            280,
+            126.3
+          ],
+          "radius": 50,
+          "goal": "Kill the goblin scouts on the raid path about 320 m south-west of Scout Morfudd",
+          "target": "goblin scout",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 2,
+          "at": [
+            305,
+            285,
+            126.3
+          ],
+          "goal": "Open a goblin's sack",
+          "clue": {
+            "name": "a heavy sack, dropped in the bracken",
+            "model": 1347
+          },
+          "text": "Bones. A man's - big, old, and with a rusted torc round the neck. A brooch in the sack: a red dragon on a field of gold.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_scout_elowen",
+          "goal": "Show the brooch to Scout Morfudd",
+          "say": "The red dragon. That's Arthur's. That's the badge his men wore at Mount Badon, before any of us were born.\n\nThe goblins have dug into a cairn of Arthur's dead.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq2_goblin_pick_head_charm",
+              "sq2_lookout_s_spyglass_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bs_badon_cairn",
+      "title": "What the Goblins Dug",
+      "level": 13,
+      "giver": "bs_scout_elowen",
+      "offer": "The goblins broke into the cairn and found it full - Arthur's men from Badon, buried with their arms. Somebody's buying the bones. And the drowned in the river, Huw says, wear old mail.\n\nGrilk leads the diggers. Will you [close the cairn]? Kill Grilk and see what's left in the mine mouth.",
+      "accept": "close the cairn",
+      "topics": {},
+      "summary": "The goblins of Tepok's Mine have broken into a cairn of Arthur's dead from Mount Badon and sell the bones.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            209,
+            140,
+            130.8
+          ],
+          "radius": 50,
+          "goal": "Fight into the goblin camp about 330 m west of Scout Morfudd",
+          "target": "goblin",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            106,
+            140,
+            132.8
+          ],
+          "radius": 50,
+          "goal": "Defeat Grilk, who leads the diggers",
+          "target": "Grilk",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 2,
+          "at": [
+            135,
+            85,
+            123.4
+          ],
+          "goal": "Search the mine mouth",
+          "clue": {
+            "name": "a cart of bones, and a ledger",
+            "model": 1347
+          },
+          "text": "A cart of bones, sorted and labelled, and a goblin ledger in a very human hand: 'Bones of Badon, by the cart, to the river. For the Bishop: these remember how to fight.'",
+          "id": "s3"
+        },
+        {
+          "type": "choice",
+          "npc": "bs_scout_elowen",
+          "goal": "Tell Scout Morfudd what you found",
+          "say": "'These remember how to fight.' He's raising an army from Arthur's own dead. God.\n\nWe can [rebury them] in the cairn, and seal it. Or [carry them to Ludlow] and lay them in holy ground beside the Camlann men.",
+          "options": [
+            {
+              "keyword": "rebury them",
+              "say": "Back to the cairn, and stones over the door. They'll rest where they fell.",
+              "ending": "cairn"
+            },
+            {
+              "keyword": "carry them to Ludlow",
+              "say": "Ludlow's bell will ring for them. Gwenda will see to it.",
+              "ending": "ludlow"
+            }
+          ],
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "cairn": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [
+              "sq2_badon_torc"
+            ],
+            "choice": [
+              "sq2_red_dragon_brooch",
+              "sq2_grilk_s_toll_ring"
+            ]
+          }
+        },
+        "ludlow": {
+          "text": "Ludlow rings its bell for Badon's dead.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [
+              "sq2_red_dragon_brooch"
+            ],
+            "choice": [
+              "sq2_badon_torc",
+              "sq2_grilk_s_toll_ring"
+            ]
+          }
+        }
+      },
+      "requires": "bs_goblins_north"
+    },
+    {
+      "id": "bs_gobzini",
+      "title": "The Great Gobzini",
+      "level": 14,
+      "giver": "bs_scout_elowen",
+      "offer": "One goblin knows the price of bones better than the rest: the Great Gobzini, a conjurer, who sits in the far north corner of the hills and does the Bishop's bargaining. The Goblin Lord does what he says.\n\nWill you [end the trade]? You'll want friends - he's no fool.",
+      "accept": "end the trade",
+      "topics": {},
+      "summary": "The Great Gobzini, a goblin conjurer, bargains the bones of Badon to the Bishop.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            108,
+            160,
+            132.8
+          ],
+          "radius": 50,
+          "goal": "Defeat the Goblin Lord about 430 m west of Scout Morfudd",
+          "target": "Goblin Lord",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            74,
+            18,
+            162.7
+          ],
+          "radius": 50,
+          "goal": "Defeat the Great Gobzini",
+          "target": "The Great Gobzini",
+          "count": 1,
+          "text": "Gobzini goes up in a puff of green smoke and doesn't come down.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_scout_elowen",
+          "goal": "Tell Scout Morfudd",
+          "say": "No Gobzini, no bargain. The trade's done. Now it's only the Bishop.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq2_gobzini_s_conjuring_ring",
+              "sq2_goblin_lord_s_belt",
+              "sq2_watch_captain_s_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bs_badon_cairn"
+    },
+    {
+      "id": "bs_summoner",
+      "title": "The Summoner in the West Field",
+      "level": 10,
+      "giver": "bs_sergeant_mabyn",
+      "offer": "There's a man in the field west of Humberton who calls things up out of the ground. Salizern, he calls himself. He came the week the new brothers came to Vetusta.\n\nWill you [deal with him]? Bring me whatever he carries.",
+      "accept": "deal with him",
+      "topics": {},
+      "summary": "A summoner called Salizern calls things up in the field west of Humberton.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            316,
+            1041,
+            115.5
+          ],
+          "radius": 50,
+          "goal": "Defeat Summoner Salizern about 210 m west of Sergeant Mabyn",
+          "target": "Summoner Salizern",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_sergeant_mabyn",
+          "goal": "Tell Sergeant Mabyn",
+          "say": "He carried a red cord too? Of course he did. Every rat in these mountains wears one.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Pendragon's Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq2_salizern_s_focus",
+              "sq2_humberton_guard_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bs_bishops_letters",
+      "title": "The Bishop's Letters",
+      "level": 12,
+      "giver": "bs_prior_anselm",
+      "offer": "Bishop Burhoff came to us two years ago, a good man, we thought. Then this spring he brought in new brothers who wore red cords. In a month they had the abbey, and we had the road.\n\nIf the Bishop is in league with someone, it'll be in his letters - he keeps a writing-desk in the cloister. Will you [find the letters]?",
+      "accept": "find the letters",
+      "topics": {},
+      "summary": "Prior Anselm, driven out of Vetusta Abbey, thinks Bishop Burhoff's letters will show who he serves.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            520,
+            1420,
+            60.8
+          ],
+          "radius": 50,
+          "goal": "Fight through the dark brothers in the cloister about 350 m south of Prior Anselm",
+          "target": "dark brother",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 2,
+          "at": [
+            600,
+            1450,
+            64.1
+          ],
+          "goal": "Search the Bishop's writing-desk",
+          "clue": {
+            "name": "a writing-desk in the cloister",
+            "model": 1347
+          },
+          "text": "Letters, in the fine crowned hand you know from Mithra's Tomb: 'Burhoff - Malgwyn is lost. Gather what Badon gives you. When the stones of Salisbury wake, march. M.'",
+          "give": {
+            "name": "the Bishop's letters"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_prior_anselm",
+          "goal": "Bring the letters to Prior Anselm",
+          "say": "M. Morgana. In our abbey. Under our bell.\n\n'When the stones of Salisbury wake'... I don't know what that means, and I don't want to. We must take Vetusta back before it does.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Abbey Faithful.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq2_prior_s_psalter_clasp",
+              "sq2_cloister_cord",
+              "sq2_abbey_gatekeeper_s_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "bs_bells_of_vetusta",
+      "title": "The Bells of Vetusta",
+      "level": 14,
+      "giver": "bs_brother_teilo",
+      "offer": "The Prior says the bell won't ring because they've bound it. If the bell rings, every true brother hiding in these hills will know the abbey's ours again - and the Bishop's men will know too.\n\nI'll ring it. Will you [guard the tower] while I do? It'll take a while to cut the cords.",
+      "accept": "guard the tower",
+      "topics": {},
+      "summary": "Brother Teilo means to ring Vetusta's bound bell and call the true brothers home.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            549,
+            1500,
+            60.8
+          ],
+          "radius": 50,
+          "goal": "Clear the dark brothers-in-arms from the abbey yard about 430 m south of Brother Teilo",
+          "target": "dark brother-in-arms",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 2,
+          "at": [
+            555,
+            1495,
+            60.8
+          ],
+          "wake_m": 30,
+          "goal": "Keep Brother Teilo alive while he cuts the bell free",
+          "text": "The bell swings, and rings - once, twice, and then a long peal across the mountains.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Brother Teilo alive",
+              "center": [
+                555,
+                1495,
+                60.8
+              ],
+              "radius": 30,
+              "duration_s": 90,
+              "objective": "Keep Brother Teilo alive",
+              "announce": "Teilo throws off his cloak and starts sawing at the red cords. 'Hold the stair! They're coming!'",
+              "protect": {
+                "template": 12964,
+                "name": "Brother Teilo",
+                "level": 14,
+                "model": 9
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    567,
+                    1501,
+                    60.8
+                  ],
+                  [
+                    545,
+                    1485,
+                    60.8
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 12284,
+                    "name": "dark brother",
+                    "level": [
+                      12,
+                      13
+                    ]
+                  },
+                  {
+                    "template": 12075,
+                    "name": "crimson initiate",
+                    "level": [
+                      13,
+                      14
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "Brother Teilo falls.",
+              "on_fail": "end"
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_prior_anselm",
+          "goal": "Tell Prior Anselm",
+          "say": "I heard it. All of Humberton heard it. Brothers are coming down out of the hills already.\n\nThe Bishop heard it too.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Abbey Faithful.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq2_bell_rope_bracer",
+              "sq2_tower_stair_mantle",
+              "sq2_vetusta_bell_charm"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bs_bishops_letters"
+    },
+    {
+      "id": "bs_dark_bishop",
+      "title": "The Dark Bishop",
+      "level": 17,
+      "giver": "bs_prior_anselm",
+      "offer": "The bell's rung and the brothers are home - but Burhoff still holds the crypt below the abbey's south wall, with his best.\n\nThis ends it. Will you [face the Bishop]? Bring as many friends as will come.",
+      "accept": "face the Bishop",
+      "topics": {},
+      "summary": "Dark Bishop Burhoff still holds the crypt below Vetusta Abbey.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 2,
+          "at": [
+            545,
+            1560,
+            60.8
+          ],
+          "radius": 25,
+          "goal": "Go down to the crypt below the abbey's south wall about 480 m south of Prior Anselm",
+          "text": "The crypt stairs are wet, and you can hear chanting below.",
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 2,
+          "at": [
+            541,
+            1598,
+            61.6
+          ],
+          "radius": 50,
+          "goal": "Defeat Dark Bishop Burhoff",
+          "target": "Dark Bishop Burhoff",
+          "count": 1,
+          "text": "Burhoff falls against the altar. 'She'll come,' he says. 'Through the gate in the lake. And the giants will dance for her on Salisbury Plain.'",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 2,
+          "at": [
+            538,
+            1600,
+            61.7
+          ],
+          "goal": "Search the Bishop's altar",
+          "clue": {
+            "name": "an altar with a red key",
+            "model": 1347
+          },
+          "text": "A map of Salisbury Plain, with a ring of stones drawn on it in red. And written beside it: 'The Giants' Dance. Merlin built it. Merlin's stones will open for me.'",
+          "give": {
+            "name": "the Bishop's map"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "bs_prior_anselm",
+          "goal": "Bring the map to Prior Anselm",
+          "say": "The Giants' Dance - the stones at Salisbury, that Merlin raised over the dead of Britain. She means to use them.\n\nVetusta is ours again, and you gave it back to us. Carry this map to the Watch on Salisbury Plain. And come home when you can; the bell will ring for you.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Abbey Faithful, with the bell's blessing.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [
+              "sq2_bell_ringer_of_vetusta_s_mantle"
+            ],
+            "choice": [
+              "sq2_burhoff_s_crozier_ring",
+              "sq2_morgana_s_seal_broken",
+              "sq2_abbey_smith_s_gauntlet_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "bs_bells_of_vetusta"
     }
   ]
 }

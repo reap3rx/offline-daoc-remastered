@@ -1,0 +1,147 @@
+{
+ "zone": 6,
+ "region": 1,
+ "realm": 1,
+ "prefix": "rep006",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tintagel Friend's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 3,
+    "Hits": 17
+   },
+   "lore": "Black and gold, Tintagel's colours."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Duke's Road Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 20,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 20,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Cornish leather, tooled with a boar."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tintagel Shieldman's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 32,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 5,
+    "Hits": 27
+   },
+   "lore": "Bronze, with the cliffs of Tintagel."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Duke's Champion",
+   "base": [
+    41,
+    26
+   ],
+   "level": 44,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 44,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Black and gold. Only the Duke's Champions wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Oath-Friend's Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 20,
+   "bonuses": {
+    "Pie": 7,
+    "Con": 3,
+    "Power": 3,
+    "Hits": 12
+   },
+   "lore": "A wrestler's belt-buckle, in miniature."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Giant-Wrestler's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 32,
+   "bonuses": {
+    "Str": 11,
+    "Con": 11,
+    "Dex": 5,
+    "Hits": 27
+   },
+   "lore": "Thick leather and iron, for gripping giants."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Corinean Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 32,
+   "bonuses": {
+    "Pie": 11,
+    "Con": 5,
+    "Power": 5,
+    "Hits": 19
+   },
+   "lore": "Iron, engraved with Corineus's oath."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Heir of Corineus",
+   "base": [
+    41,
+    26
+   ],
+   "level": 44,
+   "bonuses": {
+    "Pie": 15,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 26
+   },
+   "lore": "Cornish black, with Corineus's belt in gold."
+  }
+ ]
+}

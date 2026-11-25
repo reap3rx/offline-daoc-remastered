@@ -1,0 +1,26 @@
+{
+ "zone": 4,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu004",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ember-Keeper's Coal",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 19,
+    "Con": 19,
+    "Dex": 10,
+    "Hits": 48
+   },
+   "lore": "A coal from Gurt's back. It never quite goes out."
+  }
+ ]
+}

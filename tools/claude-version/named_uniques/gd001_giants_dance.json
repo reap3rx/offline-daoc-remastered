@@ -1,0 +1,137 @@
+{
+ "zone": 1,
+ "region": 1,
+ "realm": 1,
+ "prefix": "gd001",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cloak of the Dance",
+   "base": [
+    41,
+    26
+   ],
+   "level": 24,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 24,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Grey, with the ring of stones in white. Given to those who took back the Dance."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Trilithon Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 24,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "Three stones, two standing and one across."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Heel-Stone Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 24,
+   "bonuses": {
+    "Pie": 8,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "With a chip of the heel stone set in the clasp."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Amesbury Grave Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 24,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 24,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "The Sisters' work, linen over leather."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bolster's Arm-Ring",
+   "base": [
+    41,
+    33
+   ],
+   "level": 26,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 22
+   },
+   "lore": "Won from Bolster, Herald of Golestandt. A man could wear it as a belt."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cormoran's Tooth",
+   "base": [
+    41,
+    24
+   ],
+   "level": 26,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 22
+   },
+   "lore": "Won from Cormoran when the Dance held. As long as your hand."
+  }
+ ],
+ "camp": {
+  "cloak": "gd001_cloak_of_the_dance",
+  "emblem": 20608,
+  "draughts": [
+   [
+    "Strong_Draught_of_Healing",
+    "gd001_amesbury_draught",
+    "Amesbury Draught",
+    "The Sisters' own. It tastes of lavender."
+   ],
+   [
+    "Strong_Draught_of_Power",
+    "gd001_downs_herb_tonic",
+    "Downs Herb Tonic",
+    "Chalk-downs thyme, steeped in spring water."
+   ],
+   [
+    "CombinedRegens_Draught",
+    "gd001_dance_mead",
+    "Dance Mead",
+    "Brewed for midsummer at the stones. Everything comes back faster after a cup."
+   ]
+  ]
+ }
+}

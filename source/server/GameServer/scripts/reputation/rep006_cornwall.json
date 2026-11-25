@@ -1,0 +1,187 @@
+{
+ "zone": 6,
+ "name": "Cornwall",
+ "levels": [
+  2,
+  44
+ ],
+ "realm": 1,
+ "factions": [
+  {
+   "key": "men_of_tintagel",
+   "name": "the Men of Tintagel",
+   "short": "Tintagel",
+   "kin": [
+    "pendragons_watch",
+    "wardens_of_cotswold",
+    "ulfwych_rangers",
+    "marsh_wardens",
+    "snowdonia_garrison",
+    "lyonesse_remnant",
+    "knights_of_the_lake",
+    "dragon_watch"
+   ],
+   "titles": [
+    "Friend of Tintagel",
+    "Tintagel Shieldman",
+    "Duke's Champion"
+   ],
+   "speaker": "lt_penhale",
+   "town": "Cornwall Station",
+   "kills": [
+    "wolf",
+    "bear",
+    "spider",
+    "ghostly",
+    "jarrel",
+    "den mother",
+    "pack leader",
+    "stalker",
+    "cat",
+    "boogey",
+    "rooter"
+   ],
+   "quartermaster": {
+    "name": "Sergeant-Quartermaster Hedra",
+    "guild": "the Men of Tintagel",
+    "model": 38,
+    "anchor": "cw_jory",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "Tintagel's stores, for Tintagel's friends. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep006_tintagel_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep006_duke_s_road_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep006_tintagel_shieldman_s_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep006_giant_wrestler_s_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep006_mantle_of_the_duke_s_champion",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "oath_of_corineus",
+   "name": "the Oath of Corineus",
+   "short": "the Oath",
+   "kin": [
+    "abbey_faithful",
+    "sisters_of_amesbury",
+    "thornwardens",
+    "keepers_of_the_isle",
+    "emrys_circle",
+    "harpers_of_tristan",
+    "maidens_of_the_lake",
+    "quarry_oath"
+   ],
+   "titles": [
+    "Oath-Friend",
+    "Giant-Wrestler",
+    "Heir of Corineus"
+   ],
+   "speaker": "cw_gerens",
+   "town": "Cornwall Station",
+   "kills": [
+    "giant",
+    "legionnaire",
+    "centurion",
+    "legate",
+    "aquilifer",
+    "ninth",
+    "cirfans",
+    "drake",
+    "muryan",
+    "bucca",
+    "beech",
+    "aricoer",
+    "favius",
+    "tusker"
+   ],
+   "quartermaster": {
+    "name": "Oath-Keeper Wenna",
+    "guild": "the Oath of Corineus",
+    "model": 38,
+    "anchor": "cw_gerens",
+    "offset": [
+     -4,
+     3
+    ],
+    "greet": "The Oath's gifts, for those who stand against giants. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep006_oath_friend_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep006_corinean_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep006_giant_wrestler_s_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep006_tintagel_shieldman_s_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep006_mantle_of_the_heir_of_corineus",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "men_of_tintagel",
+ "event_default": "men_of_tintagel",
+ "quest_default": "men_of_tintagel",
+ "quests": {
+  "white_wolf": "men_of_tintagel",
+  "drowned_ninth": "oath_of_corineus",
+  "cw_moor_bears": "men_of_tintagel",
+  "cw_spiderlings": "men_of_tintagel",
+  "cw_moor_wolves": "men_of_tintagel",
+  "cw_cliff_spiders": "men_of_tintagel",
+  "cw_gorlois_men": "men_of_tintagel",
+  "cw_muryans": "oath_of_corineus",
+  "cw_buccas": "oath_of_corineus",
+  "cw_wolf_dens": "men_of_tintagel",
+  "cw_old_beeches": "oath_of_corineus",
+  "cw_rooters": "oath_of_corineus",
+  "cw_ninth_road": "oath_of_corineus",
+  "cw_favius": "oath_of_corineus",
+  "cw_eagle": "oath_of_corineus",
+  "cw_giant_graves": "oath_of_corineus",
+  "cw_quarry_road": "oath_of_corineus",
+  "cw_cirfans": "oath_of_corineus"
+ },
+ "events": {
+  "cw_eagle_marches": "oath_of_corineus",
+  "cw_bucca_storm": "oath_of_corineus"
+ }
+}

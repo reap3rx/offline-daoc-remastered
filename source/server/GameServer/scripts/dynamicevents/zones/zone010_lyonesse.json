@@ -1,755 +1,1516 @@
 {
-  "zone": 10,
-  "region": 1,
-  "name": "Lyonesse",
-  "lore": "Lyonesse, the drowned land, where the knights of a sunken kingdom still keep their watch and the moor-liches rise from the bog.",
-  "chains": [
+ "zone": 10,
+ "region": 1,
+ "name": "Lyonesse",
+ "lore": "Lyonesse, Tristan's country, drowned by the sea - and the sea is rising again under a white storm out of the south, the white dragon's weather. The drowned folk live their last day over and over, the priests of Arawn bargain at the ruined cathedral, and the cailleach keeps her ring in the mire. Only the Remnant's camp on the south-east rise is quiet.",
+ "chains": [
+  {
+   "id": "lyonesse_drowned_knights",
+   "title": "The Drowned Knights",
+   "levels": [
+    45,
+    49
+   ],
+   "hint": "Armour glints in the drowned keep...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "lyonesse_drowned_knights",
-      "title": "The Drowned Knights",
-      "levels": [45, 49],
-      "hint": "Armour glints in the drowned keep...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Sunken Keep",
-          "objective": "Clear the sunken keep",
-          "announce": "The Black Knight has mustered the drowned garrison. Break it before it marches inland.",
-          "center": [1124, 1183, 74.6],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12957,
-              "name": "footman",
-              "level": [45, 45]
-            },
-            {
-              "template": 12932,
-              "name": "archer",
-              "level": [45, 45]
-            },
-            {
-              "template": 50015,
-              "name": "knight",
-              "level": [49, 49]
-            }
-          ],
-          "success": "You have cleared the sunken keep. The Black Knight of Lyonesse comes out to fight.",
-          "fail": "They hold the sunken keep. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Black Knight of Lyonesse",
-          "objective": "Defeat the Black Knight of Lyonesse",
-          "announce": "The Black Knight of Lyonesse stands at the sunken keep. Bring friends.",
-          "center": [1124, 1183, 74.6],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 50015,
-            "name": "The Black Knight of Lyonesse",
-            "level": 51,
-            "size": 78,
-            "pos": [1124, 1183, 74.6],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12957,
-                "name": "footman",
-                "level": [45, 45]
-              }
-            ]
-          },
-          "success": "The Black Knight of Lyonesse falls. The way is safe again.",
-          "fail": "The Black Knight of Lyonesse slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu10_black_knight_of_lyonesse_s_cloak", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Footmans Hold the Road",
-          "objective": "Drive the footmans off the road",
-          "announce": "With The Drowned Knights lost, the footmans have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [822, 1076, 69.3],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12957,
-              "name": "footman",
-              "level": [45, 45]
-            },
-            {
-              "template": 12932,
-              "name": "archer",
-              "level": [45, 45]
-            },
-            {
-              "template": 50015,
-              "name": "knight",
-              "level": [49, 49]
-            }
-          ],
-          "boss": {
-            "template": 12957,
-            "name": "Footman warleader",
-            "level": 50,
-            "pos": [822, 1076, 69.3],
-            "health_mult": 2
-          },
-          "success": "The footmans are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hal has come out to set the road right. The footmans are coming back for it!",
-          "center": [822, 1076, 69.3],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hal",
-            "level": 49,
-            "pos": [822, 1076, 69.3],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [899, 1038, 68.9],
-              [903, 1104, 65.6],
-              [858, 1153, 64.8]
-            ],
-            "mobs": [
-              {
-                "template": 12957,
-                "name": "footman",
-                "level": [45, 45]
-              },
-              {
-                "template": 12932,
-                "name": "archer",
-                "level": [45, 45]
-              },
-              {
-                "template": 50015,
-                "name": "knight",
-                "level": [49, 49]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The footmans break and scatter. The road is open again.",
-          "fail": "Roadwarden Hal falls, and the footmans take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Sunken Keep",
+     "objective": "Clear the sunken keep",
+     "announce": "The Black Knight has mustered the drowned garrison. Break it before it marches inland.",
+     "center": [
+      1124,
+      1183,
+      74.6
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12957,
+       "name": "footman",
+       "level": [
+        45,
+        45
+       ]
+      },
+      {
+       "template": 12932,
+       "name": "archer",
+       "level": [
+        45,
+        45
+       ]
+      },
+      {
+       "template": 50015,
+       "name": "knight",
+       "level": [
+        49,
+        49
+       ]
+      }
+     ],
+     "success": "You have cleared the sunken keep. The Black Knight of Lyonesse comes out to fight.",
+     "fail": "They hold the sunken keep. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "lyonesse_peallaidh_flood",
-      "title": "The Peallaidh Flood",
-      "levels": [30, 39],
-      "hint": "The water is rising in the north...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Old Tamsin",
-          "objective": "Protect Old Tamsin, who is driving her flock to higher ground",
-          "announce": "The peallaidh are raising the water. Old Tamsin is driving her flock to higher ground - keep them off her.",
-          "center": [1178, 378, 74.1],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Old Tamsin",
-            "template": 60167630,
-            "level": 39,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
-            "health_mult": 10,
-            "pos": [1178, 378, 74.1]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1257, 410, 76.1],
-              [1211, 457, 77.7],
-              [1145, 456, 76.5]
-            ],
-            "mobs": [
-              {
-                "template": 12974,
-                "name": "peallaidh",
-                "level": [35, 39]
-              },
-              {
-                "template": 12965,
-                "name": "hamadryad",
-                "level": [30, 34]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Old Tamsin. \"They came from over there - let's finish this.\"",
-          "fail": "Old Tamsin falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Shepherd's Fold",
-          "objective": "Clear the shepherd's fold",
-          "announce": "They came from the shepherd's fold. Follow them back and clear it out.",
-          "center": [1269, 600, 81.1],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12974,
-              "name": "peallaidh",
-              "level": [35, 39]
-            },
-            {
-              "template": 12965,
-              "name": "hamadryad",
-              "level": [30, 34]
-            }
-          ],
-          "success": "You have cleared the shepherd's fold. The Drowned Peallaidh comes out to fight.",
-          "fail": "They hold the shepherd's fold. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Drowned Peallaidh",
-          "objective": "Defeat the Drowned Peallaidh",
-          "announce": "The Drowned Peallaidh stands at the shepherd's fold. Bring friends.",
-          "center": [1269, 600, 81.1],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12974,
-            "name": "The Drowned Peallaidh",
-            "level": 41,
-            "size": 71,
-            "pos": [1269, 600, 81.1],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12974,
-                "name": "peallaidh",
-                "level": [35, 39]
-              }
-            ]
-          },
-          "success": "The Drowned Peallaidh falls. The way is safe again.",
-          "fail": "The Drowned Peallaidh slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu10_drowned_peallaidh_s_eye", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Peallaidhs Hold the Road",
-          "objective": "Drive the peallaidhs off the road",
-          "announce": "With The Peallaidh Flood lost, the peallaidhs have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [953, 712, 72.2],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12974,
-              "name": "peallaidh",
-              "level": [35, 39]
-            },
-            {
-              "template": 12965,
-              "name": "hamadryad",
-              "level": [30, 34]
-            }
-          ],
-          "boss": {
-            "template": 12974,
-            "name": "Peallaidh warleader",
-            "level": 40,
-            "pos": [953, 712, 72.2],
-            "health_mult": 2
-          },
-          "success": "The peallaidhs are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Edith has come out to set the road right. The peallaidhs are coming back for it!",
-          "center": [953, 712, 72.2],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Edith",
-            "level": 39,
-            "pos": [953, 712, 72.2],
-            "health_mult": 10,
-            "template": 60167630,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [989, 635, 67.7],
-              [1033, 684, 67.3],
-              [1030, 750, 70.0]
-            ],
-            "mobs": [
-              {
-                "template": 12974,
-                "name": "peallaidh",
-                "level": [35, 39]
-              },
-              {
-                "template": 12965,
-                "name": "hamadryad",
-                "level": [30, 34]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The peallaidhs break and scatter. The road is open again.",
-          "fail": "Roadwarden Edith falls, and the peallaidhs take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "The Black Knight of Lyonesse",
+     "objective": "Defeat the Black Knight of Lyonesse",
+     "announce": "The Black Knight of Lyonesse stands at the sunken keep. Bring friends.",
+     "center": [
+      1124,
+      1183,
+      74.6
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 50015,
+      "name": "The Black Knight of Lyonesse",
+      "level": 51,
+      "size": 78,
+      "pos": [
+       1124,
+       1183,
+       74.6
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12957,
+        "name": "footman",
+        "level": [
+         45,
+         45
+        ]
+       }
       ]
+     },
+     "success": "The Black Knight of Lyonesse falls. The way is safe again.",
+     "fail": "The Black Knight of Lyonesse slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu10_black_knight_of_lyonesse_s_cloak",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
     },
     {
-      "id": "lyonesse_moorlich",
-      "title": "The Moorlich Mire",
-      "levels": [45, 48],
-      "hint": "A green light burns over the mire...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Moorlich Mire",
-          "objective": "Clear the moorlich mire",
-          "announce": "The moorliches have gathered in the mire around their master. Put him down.",
-          "center": [1037, 933, 68.9],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 10142,
-              "name": "moorlich",
-              "level": [48, 48]
-            },
-            {
-              "template": 12979,
-              "name": "pygmy goblin tangler",
-              "level": [45, 45]
-            }
-          ],
-          "success": "You have cleared the moorlich mire. The Lich of the Sunken Moor comes out to fight.",
-          "fail": "They hold the moorlich mire. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Lich of the Sunken Moor",
-          "objective": "Defeat the Lich of the Sunken Moor",
-          "announce": "The Lich of the Sunken Moor stands at the moorlich mire. Bring friends.",
-          "center": [1037, 933, 68.9],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 10142,
-            "name": "The Lich of the Sunken Moor",
-            "level": 50,
-            "size": 110,
-            "pos": [1037, 933, 68.9],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 10142,
-                "name": "moorlich",
-                "level": [48, 48]
-              }
-            ]
-          },
-          "success": "The Lich of the Sunken Moor falls. The way is safe again.",
-          "fail": "The Lich of the Sunken Moor slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu10_lich_of_the_sunken_moor_s_amulet", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Moorliches Hold the Road",
-          "objective": "Drive the moorliches off the road",
-          "announce": "With The Moorlich Mire lost, the moorliches have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [643, 910, 74.4],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 10142,
-              "name": "moorlich",
-              "level": [48, 48]
-            },
-            {
-              "template": 12979,
-              "name": "pygmy goblin tangler",
-              "level": [45, 45]
-            }
-          ],
-          "boss": {
-            "template": 10142,
-            "name": "Moorlich warleader",
-            "level": 49,
-            "pos": [643, 910, 74.4],
-            "health_mult": 2
-          },
-          "success": "The moorliches are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cuthbert has come out to set the road right. The moorliches are coming back for it!",
-          "center": [643, 910, 74.4],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cuthbert",
-            "level": 48,
-            "pos": [643, 910, 74.4],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [705, 853, 67.5],
-              [728, 915, 72.4],
-              [698, 974, 72.8]
-            ],
-            "mobs": [
-              {
-                "template": 10142,
-                "name": "moorlich",
-                "level": [48, 48]
-              },
-              {
-                "template": 12979,
-                "name": "pygmy goblin tangler",
-                "level": [45, 45]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The moorliches break and scatter. The road is open again.",
-          "fail": "Roadwarden Cuthbert falls, and the moorliches take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Footmans Hold the Road",
+     "objective": "Drive the footmans off the road",
+     "announce": "With The Drowned Knights lost, the footmans have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      822,
+      1076,
+      69.3
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12957,
+       "name": "footman",
+       "level": [
+        45,
+        45
+       ]
+      },
+      {
+       "template": 12932,
+       "name": "archer",
+       "level": [
+        45,
+        45
+       ]
+      },
+      {
+       "template": 50015,
+       "name": "knight",
+       "level": [
+        49,
+        49
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12957,
+      "name": "Footman warleader",
+      "level": 50,
+      "pos": [
+       822,
+       1076,
+       69.3
+      ],
+      "health_mult": 2
+     },
+     "success": "The footmans are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
     },
     {
-      "id": "lyonesse_black_hound",
-      "title": "The Black Hound of Lyonesse",
-      "levels": [40, 44],
-      "hint": "Hounds bay across the drowned land at dusk...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Shepherd Elowen",
-          "objective": "Protect Shepherd Elowen, who is driving her flock to the fold",
-          "announce": "The Gabriel hounds are hunting on the moor tonight, and Elowen is still out with her flock. Keep them off her.",
-          "center": [561, 647, 69.4],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Shepherd Elowen",
-            "template": 60167630,
-            "level": 44,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
-            "health_mult": 10,
-            "pos": [561, 647, 69.4]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [604, 720, 69.6],
-              [528, 735, 68.5],
-              [505, 688, 68.9]
-            ],
-            "mobs": [
-              {
-                "template": 12959,
-                "name": "gabriel hound",
-                "level": [40, 44]
-              },
-              {
-                "template": 12978,
-                "name": "pygmy goblin",
-                "level": [43, 43]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Shepherd Elowen. \"They came from over there - let's finish this.\"",
-          "fail": "Shepherd Elowen falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Hounds' Den",
-          "objective": "Clear the hounds' den",
-          "announce": "They came from the hounds' den. Follow them back and clear it out.",
-          "center": [452, 1053, 72.2],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12959,
-              "name": "gabriel hound",
-              "level": [40, 44]
-            },
-            {
-              "template": 12978,
-              "name": "pygmy goblin",
-              "level": [43, 43]
-            }
-          ],
-          "success": "You have cleared the hounds' den. The Black Hound comes out to fight.",
-          "fail": "They hold the hounds' den. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Black Hound",
-          "objective": "Defeat the Black Hound",
-          "announce": "The Black Hound stands at the hounds' den. Bring friends.",
-          "center": [452, 1053, 72.2],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12959,
-            "name": "The Black Hound",
-            "level": 46,
-            "size": 71,
-            "pos": [452, 1053, 72.2],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12959,
-                "name": "gabriel hound",
-                "level": [40, 44]
-              }
-            ]
-          },
-          "success": "The Black Hound falls. The way is safe again.",
-          "fail": "The Black Hound slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu10_black_hound_s_signet", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Gabriel Hounds Hold the Old Road",
-          "objective": "Drive the gabriel hounds off the old road",
-          "announce": "With The Black Hound of Lyonesse lost, the gabriel hounds have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [282, 1208, 72.4],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12959,
-              "name": "gabriel hound",
-              "level": [40, 44]
-            },
-            {
-              "template": 12978,
-              "name": "pygmy goblin",
-              "level": [43, 43]
-            }
-          ],
-          "boss": {
-            "template": 12959,
-            "name": "Gabriel hound warleader",
-            "level": 45,
-            "pos": [282, 1208, 72.4],
-            "health_mult": 2
-          },
-          "success": "The gabriel hounds are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Mabyn has come out to set the old road right. The gabriel hounds are coming back for it!",
-          "center": [282, 1208, 72.4],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Mabyn",
-            "level": 44,
-            "pos": [282, 1208, 72.4],
-            "health_mult": 10,
-            "template": 60167630,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [285, 1123, 74.3],
-              [345, 1151, 71.2],
-              [367, 1213, 71.9]
-            ],
-            "mobs": [
-              {
-                "template": 12959,
-                "name": "gabriel hound",
-                "level": [40, 44]
-              },
-              {
-                "template": 12978,
-                "name": "pygmy goblin",
-                "level": [43, 43]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The gabriel hounds break and scatter. The old road is open again.",
-          "fail": "Roadwarden Mabyn falls, and the gabriel hounds take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hal has come out to set the road right. The footmans are coming back for it!",
+     "center": [
+      822,
+      1076,
+      69.3
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hal",
+      "level": 49,
+      "pos": [
+       822,
+       1076,
+       69.3
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        899,
+        1038,
+        68.9
+       ],
+       [
+        903,
+        1104,
+        65.6
+       ],
+       [
+        858,
+        1153,
+        64.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12957,
+        "name": "footman",
+        "level": [
+         45,
+         45
+        ]
+       },
+       {
+        "template": 12932,
+        "name": "archer",
+        "level": [
+         45,
+         45
+        ]
+       },
+       {
+        "template": 50015,
+        "name": "knight",
+        "level": [
+         49,
+         49
+        ]
+       }
       ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The footmans break and scatter. The road is open again.",
+     "fail": "Roadwarden Hal falls, and the footmans take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
-  ]
+   ]
+  },
+  {
+   "id": "lyonesse_peallaidh_flood",
+   "title": "The Peallaidh Flood",
+   "levels": [
+    30,
+    39
+   ],
+   "hint": "The water is rising in the north...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Old Tamsin",
+     "objective": "Protect Old Tamsin, who is driving her flock to higher ground",
+     "announce": "The peallaidh are raising the water. Old Tamsin is driving her flock to higher ground - keep them off her.",
+     "center": [
+      1178,
+      378,
+      74.1
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Old Tamsin",
+      "template": 60167630,
+      "level": 39,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "health_mult": 10,
+      "pos": [
+       1178,
+       378,
+       74.1
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1257,
+        410,
+        76.1
+       ],
+       [
+        1211,
+        457,
+        77.7
+       ],
+       [
+        1145,
+        456,
+        76.5
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12974,
+        "name": "peallaidh",
+        "level": [
+         35,
+         39
+        ]
+       },
+       {
+        "template": 12965,
+        "name": "hamadryad",
+        "level": [
+         30,
+         34
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Old Tamsin. \"They came from over there - let's finish this.\"",
+     "fail": "Old Tamsin falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Shepherd's Fold",
+     "objective": "Clear the shepherd's fold",
+     "announce": "They came from the shepherd's fold. Follow them back and clear it out.",
+     "center": [
+      1269,
+      600,
+      81.1
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12974,
+       "name": "peallaidh",
+       "level": [
+        35,
+        39
+       ]
+      },
+      {
+       "template": 12965,
+       "name": "hamadryad",
+       "level": [
+        30,
+        34
+       ]
+      }
+     ],
+     "success": "You have cleared the shepherd's fold. The Drowned Peallaidh comes out to fight.",
+     "fail": "They hold the shepherd's fold. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Drowned Peallaidh",
+     "objective": "Defeat the Drowned Peallaidh",
+     "announce": "The Drowned Peallaidh stands at the shepherd's fold. Bring friends.",
+     "center": [
+      1269,
+      600,
+      81.1
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12974,
+      "name": "The Drowned Peallaidh",
+      "level": 41,
+      "size": 71,
+      "pos": [
+       1269,
+       600,
+       81.1
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12974,
+        "name": "peallaidh",
+        "level": [
+         35,
+         39
+        ]
+       }
+      ]
+     },
+     "success": "The Drowned Peallaidh falls. The way is safe again.",
+     "fail": "The Drowned Peallaidh slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu10_drowned_peallaidh_s_eye",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Peallaidhs Hold the Road",
+     "objective": "Drive the peallaidhs off the road",
+     "announce": "With The Peallaidh Flood lost, the peallaidhs have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      953,
+      712,
+      72.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12974,
+       "name": "peallaidh",
+       "level": [
+        35,
+        39
+       ]
+      },
+      {
+       "template": 12965,
+       "name": "hamadryad",
+       "level": [
+        30,
+        34
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12974,
+      "name": "Peallaidh warleader",
+      "level": 40,
+      "pos": [
+       953,
+       712,
+       72.2
+      ],
+      "health_mult": 2
+     },
+     "success": "The peallaidhs are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Edith has come out to set the road right. The peallaidhs are coming back for it!",
+     "center": [
+      953,
+      712,
+      72.2
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Edith",
+      "level": 39,
+      "pos": [
+       953,
+       712,
+       72.2
+      ],
+      "health_mult": 10,
+      "template": 60167630,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        989,
+        635,
+        67.7
+       ],
+       [
+        1033,
+        684,
+        67.3
+       ],
+       [
+        1030,
+        750,
+        70.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12974,
+        "name": "peallaidh",
+        "level": [
+         35,
+         39
+        ]
+       },
+       {
+        "template": 12965,
+        "name": "hamadryad",
+        "level": [
+         30,
+         34
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The peallaidhs break and scatter. The road is open again.",
+     "fail": "Roadwarden Edith falls, and the peallaidhs take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "lyonesse_moorlich",
+   "title": "The Moorlich Mire",
+   "levels": [
+    45,
+    48
+   ],
+   "hint": "A green light burns over the mire...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Moorlich Mire",
+     "objective": "Clear the moorlich mire",
+     "announce": "The moorliches have gathered in the mire around their master. Put him down.",
+     "center": [
+      1037,
+      933,
+      68.9
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 10142,
+       "name": "moorlich",
+       "level": [
+        48,
+        48
+       ]
+      },
+      {
+       "template": 12979,
+       "name": "pygmy goblin tangler",
+       "level": [
+        45,
+        45
+       ]
+      }
+     ],
+     "success": "You have cleared the moorlich mire. The Lich of the Sunken Moor comes out to fight.",
+     "fail": "They hold the moorlich mire. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "The Lich of the Sunken Moor",
+     "objective": "Defeat the Lich of the Sunken Moor",
+     "announce": "The Lich of the Sunken Moor stands at the moorlich mire. Bring friends.",
+     "center": [
+      1037,
+      933,
+      68.9
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 10142,
+      "name": "The Lich of the Sunken Moor",
+      "level": 50,
+      "size": 110,
+      "pos": [
+       1037,
+       933,
+       68.9
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 10142,
+        "name": "moorlich",
+        "level": [
+         48,
+         48
+        ]
+       }
+      ]
+     },
+     "success": "The Lich of the Sunken Moor falls. The way is safe again.",
+     "fail": "The Lich of the Sunken Moor slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu10_lich_of_the_sunken_moor_s_amulet",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Moorliches Hold the Road",
+     "objective": "Drive the moorliches off the road",
+     "announce": "With The Moorlich Mire lost, the moorliches have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      643,
+      910,
+      74.4
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 10142,
+       "name": "moorlich",
+       "level": [
+        48,
+        48
+       ]
+      },
+      {
+       "template": 12979,
+       "name": "pygmy goblin tangler",
+       "level": [
+        45,
+        45
+       ]
+      }
+     ],
+     "boss": {
+      "template": 10142,
+      "name": "Moorlich warleader",
+      "level": 49,
+      "pos": [
+       643,
+       910,
+       74.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The moorliches are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cuthbert has come out to set the road right. The moorliches are coming back for it!",
+     "center": [
+      643,
+      910,
+      74.4
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cuthbert",
+      "level": 48,
+      "pos": [
+       643,
+       910,
+       74.4
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        705,
+        853,
+        67.5
+       ],
+       [
+        728,
+        915,
+        72.4
+       ],
+       [
+        698,
+        974,
+        72.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 10142,
+        "name": "moorlich",
+        "level": [
+         48,
+         48
+        ]
+       },
+       {
+        "template": 12979,
+        "name": "pygmy goblin tangler",
+        "level": [
+         45,
+         45
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The moorliches break and scatter. The road is open again.",
+     "fail": "Roadwarden Cuthbert falls, and the moorliches take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "lyonesse_black_hound",
+   "title": "The Black Hound of Lyonesse",
+   "levels": [
+    40,
+    44
+   ],
+   "hint": "Hounds bay across the drowned land at dusk...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Shepherd Elowen",
+     "objective": "Protect Shepherd Elowen, who is driving her flock to the fold",
+     "announce": "The Gabriel hounds are hunting on the moor tonight, and Elowen is still out with her flock. Keep them off her.",
+     "center": [
+      561,
+      647,
+      69.4
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Shepherd Elowen",
+      "template": 60167630,
+      "level": 44,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "health_mult": 10,
+      "pos": [
+       561,
+       647,
+       69.4
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        604,
+        720,
+        69.6
+       ],
+       [
+        528,
+        735,
+        68.5
+       ],
+       [
+        505,
+        688,
+        68.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12959,
+        "name": "gabriel hound",
+        "level": [
+         40,
+         44
+        ]
+       },
+       {
+        "template": 12978,
+        "name": "pygmy goblin",
+        "level": [
+         43,
+         43
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Shepherd Elowen. \"They came from over there - let's finish this.\"",
+     "fail": "Shepherd Elowen falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Hounds' Den",
+     "objective": "Clear the hounds' den",
+     "announce": "They came from the hounds' den. Follow them back and clear it out.",
+     "center": [
+      452,
+      1053,
+      72.2
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12959,
+       "name": "gabriel hound",
+       "level": [
+        40,
+        44
+       ]
+      },
+      {
+       "template": 12978,
+       "name": "pygmy goblin",
+       "level": [
+        43,
+        43
+       ]
+      }
+     ],
+     "success": "You have cleared the hounds' den. The Black Hound comes out to fight.",
+     "fail": "They hold the hounds' den. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Black Hound",
+     "objective": "Defeat the Black Hound",
+     "announce": "The Black Hound stands at the hounds' den. Bring friends.",
+     "center": [
+      452,
+      1053,
+      72.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12959,
+      "name": "The Black Hound",
+      "level": 46,
+      "size": 71,
+      "pos": [
+       452,
+       1053,
+       72.2
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12959,
+        "name": "gabriel hound",
+        "level": [
+         40,
+         44
+        ]
+       }
+      ]
+     },
+     "success": "The Black Hound falls. The way is safe again.",
+     "fail": "The Black Hound slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu10_black_hound_s_signet",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Gabriel Hounds Hold the Old Road",
+     "objective": "Drive the gabriel hounds off the old road",
+     "announce": "With The Black Hound of Lyonesse lost, the gabriel hounds have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      282,
+      1208,
+      72.4
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12959,
+       "name": "gabriel hound",
+       "level": [
+        40,
+        44
+       ]
+      },
+      {
+       "template": 12978,
+       "name": "pygmy goblin",
+       "level": [
+        43,
+        43
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12959,
+      "name": "Gabriel hound warleader",
+      "level": 45,
+      "pos": [
+       282,
+       1208,
+       72.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The gabriel hounds are gone from the old road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Mabyn has come out to set the old road right. The gabriel hounds are coming back for it!",
+     "center": [
+      282,
+      1208,
+      72.4
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Mabyn",
+      "level": 44,
+      "pos": [
+       282,
+       1208,
+       72.4
+      ],
+      "health_mult": 10,
+      "template": 60167630,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        285,
+        1123,
+        74.3
+       ],
+       [
+        345,
+        1151,
+        71.2
+       ],
+       [
+        367,
+        1213,
+        71.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12959,
+        "name": "gabriel hound",
+        "level": [
+         40,
+         44
+        ]
+       },
+       {
+        "template": 12978,
+        "name": "pygmy goblin",
+        "level": [
+         43,
+         43
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+     "success": "The gabriel hounds break and scatter. The old road is open again.",
+     "fail": "Roadwarden Mabyn falls, and the gabriel hounds take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "ly_white_storm",
+   "title": "The White Storm",
+   "levels": [
+    46,
+    50
+   ],
+   "hint": "A white storm out of a clear sky over the north rock - and something is moving inside it...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "w1",
+   "stages": [
+    {
+     "id": "w1",
+     "type": "cull",
+     "name": "The Storm-Line",
+     "objective": "Break the storm-callers and the sea-things on the north rock",
+     "announce": "The white storm has come ashore on the north rock, and the storm-callers are singing it bigger! Break them!",
+     "center": [
+      1190,
+      520,
+      81.8
+     ],
+     "radius": 90,
+     "time_s": 1200,
+     "kill": 14,
+     "alive": 6,
+     "mobs": [
+      {
+       "template": 12974,
+       "name": "storm-peallaidh",
+       "level": [
+        44,
+        46
+       ]
+      },
+      {
+       "template": 12974,
+       "name": "storm-peallaidh",
+       "level": [
+        44,
+        46
+       ]
+      },
+      {
+       "template": 12075,
+       "name": "storm-caller",
+       "level": [
+        45,
+        47
+       ],
+       "guild": "the White Wind"
+      }
+     ],
+     "success": "The singing stops - and the storm draws itself together into a shape, white as bone, with wings.",
+     "fail": "The storm rolls inland over Lyonesse.",
+     "on_success": "w2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    },
+    {
+     "id": "w2",
+     "type": "boss",
+     "name": "the Storm-Wyrm",
+     "objective": "Bring down the Storm-Wyrm",
+     "announce": "The Storm-Wyrm - the white dragon's weather given a body - coils over the rock. It's a fight for a group, and more.",
+     "center": [
+      1190,
+      520,
+      81.8
+     ],
+     "radius": 90,
+     "time_s": 1500,
+     "boss": {
+      "template": 12959,
+      "name": "the Storm-Wyrm",
+      "level": 52,
+      "size": 75,
+      "pos": [
+       1190,
+       520,
+       81.8
+      ],
+      "health_mult": 4,
+      "model": 105,
+      "guild": "the White Dragon's Weather"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12974,
+        "name": "storm-peallaidh",
+        "level": [
+         44,
+         46
+        ]
+       },
+       {
+        "template": 12075,
+        "name": "storm-caller",
+        "level": [
+         45,
+         47
+        ],
+        "guild": "the White Wind"
+       }
+      ]
+     },
+     "success": "The Storm-Wyrm tears apart into rain, and the rain is only rain. Far to the south, a dragon screams.",
+     "fail": "The Storm-Wyrm rolls inland, and the sea rises behind it.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 320,
+      "tokens": 26,
+      "items": [
+       {
+        "id": "nu010_storm_wyrm_s_eye",
+        "gold_chance": 40,
+        "silver_chance": 20
+       },
+       {
+        "id": "nu010_white_squall_mantle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Storm Holds the North Shore",
+     "objective": "Drive the storm's creatures off the north shore",
+     "announce": "The white storm's creatures have come ashore and hold the north shore.",
+     "center": [
+      1250,
+      620,
+      82.5
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12974,
+       "name": "storm-peallaidh",
+       "level": [
+        44,
+        46
+       ]
+      },
+      {
+       "template": 12075,
+       "name": "storm-caller",
+       "level": [
+        45,
+        47
+       ],
+       "guild": "the White Wind"
+      }
+     ],
+     "boss": {
+      "template": 12974,
+      "name": "storm-tossed peallaidh",
+      "level": 48,
+      "health_mult": 2,
+      "pos": [
+       1250,
+       620,
+       82.5
+      ]
+     },
+     "success": "The road is clear again.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    }
+   ]
+  },
+  {
+   "id": "ly_black_sail_night",
+   "title": "The Black Sail",
+   "levels": [
+    44,
+    48
+   ],
+   "hint": "A ship with a sail half black, half white, is coming in to the old harbour - and it's crewed by the drowned...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "b1",
+   "stages": [
+    {
+     "id": "b1",
+     "type": "defend",
+     "name": "The Harbour",
+     "objective": "Keep Harper Morwenna alive while she sings the ship in",
+     "announce": "Isolde's ghost-ship is coming in to the old harbour, as it does once a year! Harper Morwenna of the Harpers has gone to sing it in - and its drowned crew will take her for an enemy.",
+     "center": [
+      403,
+      250,
+      68.0
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "template": 60167630,
+      "model": 38,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "guild": "the Harpers of Tristan",
+      "name": "Harper Morwenna",
+      "level": 46,
+      "pos": [
+       403,
+       250,
+       68.0
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 24,
+      "count": 3,
+      "from": [
+       [
+        397,
+        247,
+        68.2
+       ],
+       [
+        403,
+        255,
+        68.1
+       ],
+       [
+        400,
+        256,
+        68.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12952,
+        "name": "drowned sailor",
+        "level": [
+         44,
+         46
+        ]
+       },
+       {
+        "template": 12952,
+        "name": "drowned sailor",
+        "level": [
+         44,
+         46
+        ]
+       }
+      ]
+     },
+     "thanks": "\"She's in. She's always in, in the song. Now she's in, in the world.\"",
+     "success": "The ship grinds onto the sand - and its drowned captain steps down, still waiting for Tristan.",
+     "fail": "Morwenna falls, and the ship sails out again.",
+     "on_success": "b2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 160,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "b2",
+     "type": "boss",
+     "name": "the Black Sail's Captain",
+     "objective": "Lay the Black Sail's captain to rest",
+     "announce": "The ship's captain, drowned three hundred years: 'Is he alive? She bade me hurry. Is he alive?' He won't hear the answer. Bring friends.",
+     "center": [
+      403,
+      250,
+      68.0
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12952,
+      "name": "the Black Sail's Captain",
+      "level": 48,
+      "size": 60,
+      "pos": [
+       403,
+       250,
+       68.0
+      ],
+      "health_mult": 3
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12952,
+        "name": "drowned sailor",
+        "level": [
+         44,
+         46
+        ]
+       }
+      ]
+     },
+     "success": "The captain sinks to his knees on the sand. 'Tell her I hurried,' he says. The ship is gone at dawn.",
+     "fail": "The ship sails out on the tide.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 240,
+      "tokens": 18,
+      "items": [
+       {
+        "id": "nu010_white_sail_ribbon",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ],
+   "time": "night"
+  }
+ ]
 }

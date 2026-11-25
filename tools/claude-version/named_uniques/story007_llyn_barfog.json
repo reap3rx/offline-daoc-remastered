@@ -8,17 +8,139 @@
   {
    "story_reward": true,
    "scaled": true,
+   "name": "Toad-Hide Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 44,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 44,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Diamond-backed, and still faintly poisonous."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lake-Knight's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 44,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 7,
+    "Hits": 37
+   },
+   "lore": "Plain silver, with a wave cut in it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hatchling-Tooth Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 45,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 38
+   },
+   "lore": "A tooth the length of a finger. From a hatchling."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Carn March Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 45,
+   "bonuses": {
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 8,
+    "Hits": 38
+   },
+   "lore": "Stamped with a hoof-print."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shore-Watch Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 45,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 45,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Lake-blue, with a knight's white border."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gatekeeper's Red Key",
+   "base": [
+    41,
+    24
+   ],
+   "level": 46,
+   "bonuses": {
+    "Int": 15,
+    "Pie": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "A red key under a little crown. It opens nothing you can find."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ward-Breaker's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 46,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 39
+   },
+   "lore": "Iron, dented from breaking stones."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
    "name": "Horn of the Hunt",
    "base": [
     41,
     24
    ],
-   "level": 21,
+   "level": 45,
    "bonuses": {
-    "Dex": 7,
-    "Qui": 7,
-    "Str": 4,
-    "Hits": 18
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 8,
+    "Hits": 38
    },
    "lore": "A small, curling horn of black bone. The hounds know whoever carries it."
   },
@@ -30,12 +152,12 @@
     41,
     29
    ],
-   "level": 21,
+   "level": 45,
    "bonuses": {
-    "Str": 7,
-    "Con": 7,
-    "Dex": 4,
-    "Hits": 18
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 38
    },
    "lore": "A red leather collar with a silver bell. The bell does not ring."
   },
@@ -47,13 +169,13 @@
     41,
     32
    ],
-   "level": 21,
+   "level": 45,
    "bonuses": {
-    "Int": 7,
-    "Pie": 4,
-    "Dex": 4,
-    "Power": 3,
-    "Hits": 13
+    "Int": 15,
+    "Pie": 8,
+    "Dex": 8,
+    "Power": 6,
+    "Hits": 27
    },
    "lore": "Strung with old harp strings, each one tuned."
   },
@@ -65,15 +187,189 @@
     41,
     26
    ],
-   "level": 21,
+   "level": 45,
    "bonuses": {
-    "Con": 7,
-    "Hits": 21,
-    "Body": 3,
-    "Crush": 3,
-    "Slash": 3
+    "Con": 15,
+    "Hits": 45,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
    },
    "lore": "Thick Welsh wool, red and black. She made it for Iolo's wedding gift."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Huntsman's Grey Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 48,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 48,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Grey as mist, and as hard to hold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Annwn-Bone Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 48,
+   "bonuses": {
+    "Dex": 16,
+    "Qui": 16,
+    "Str": 8,
+    "Hits": 41
+   },
+   "lore": "White bone that is cold to the touch, always."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Red-Ear Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 48,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 41
+   },
+   "lore": "Twisted from a hound's red-dyed leash."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "White-Hide Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 46,
+   "bonuses": {
+    "Pie": 15,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "White as milk, soft as moss. Lake-cattle hide, freely given."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Herd-Bell Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 46,
+   "bonuses": {
+    "Qui": 15,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 28,
+    "Power": 5
+   },
+   "lore": "A small bronze bell. It rings only near water."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cythraul-Horn Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 47,
+   "bonuses": {
+    "Int": 16,
+    "Pie": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "A black horn tip. It smells of burnt stone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lake-Maiden's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 47,
+   "bonuses": {
+    "Pie": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "Silver, cold, and always a little wet."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hill-King's Crown-Shard",
+   "base": [
+    41,
+    24
+   ],
+   "level": 49,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 42
+   },
+   "lore": "A shard of rough gold. The King of the Barfog Hills wore it as a crown."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "White Cow's Bell-Collar",
+   "base": [
+    41,
+    29
+   ],
+   "level": 49,
+   "bonuses": {
+    "Pie": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "A bronze bell on a white leather collar."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lake-Herder's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 49,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 49,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Green wool, smelling faintly of rain and cattle."
   },
   {
    "story_reward": true,
@@ -83,12 +379,12 @@
     41,
     24
    ],
-   "level": 28,
+   "level": 47,
    "bonuses": {
-    "Pie": 9,
-    "Con": 5,
-    "Power": 4,
-    "Hits": 17
+    "Pie": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 28
    },
    "lore": "A single vellum page in a silver case. The psalm on it is for the dead."
   },
@@ -100,13 +396,13 @@
     41,
     26
    ],
-   "level": 28,
+   "level": 47,
    "bonuses": {
-    "Con": 9,
-    "Hits": 28,
-    "Body": 4,
-    "Crush": 4,
-    "Slash": 4
+    "Con": 16,
+    "Hits": 47,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
    },
    "lore": "A monk's heavy brown cloak. Ghosts of soldiers once stood watch over it."
   },
@@ -118,12 +414,12 @@
     41,
     35
    ],
-   "level": 28,
+   "level": 47,
    "bonuses": {
-    "Str": 9,
-    "Con": 9,
-    "Dex": 5,
-    "Hits": 24
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 40
    },
    "lore": "A veteran soldier's ring, bearing the mark of a legion long gone."
   },
@@ -135,15 +431,242 @@
     41,
     33
    ],
-   "level": 28,
+   "level": 47,
    "bonuses": {
-    "Int": 9,
-    "Pie": 5,
-    "Dex": 5,
-    "Power": 4,
-    "Hits": 17
+    "Int": 16,
+    "Pie": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
    },
    "lore": "Ink-stained leather. The abbey's copyists wore them for three hundred years."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Legion-Pact Signet",
+   "base": [
+    41,
+    35
+   ],
+   "level": 48,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 41
+   },
+   "lore": "Bronze, with an eagle and a cross scratched over it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cloister-Stone Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 48,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 48,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Grey, cold, and heavier than it looks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Crimson Letter-Case",
+   "base": [
+    41,
+    24
+   ],
+   "level": 49,
+   "bonuses": {
+    "Int": 16,
+    "Pie": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 29
+   },
+   "lore": "Red leather, sealed with a red key under a crown."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Acolyte's Red Cord",
+   "base": [
+    41,
+    32
+   ],
+   "level": 49,
+   "bonuses": {
+    "Dex": 16,
+    "Qui": 16,
+    "Str": 8,
+    "Hits": 42
+   },
+   "lore": "A red cord, cut. It doesn't bind anyone now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fay-Knight's Gorget",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 51,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Green steel, worked like leaves. It hums."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ellyll-Thorn Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Dex": 17,
+    "Qui": 17,
+    "Str": 8,
+    "Hits": 43
+   },
+   "lore": "Bark and thorn, grown, not made."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Glamour-Broken Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 17,
+    "Pie": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 31
+   },
+   "lore": "It looked like gold. It's tin. That's the point."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Branwen's Gate-Seal",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 18,
+    "Con": 18,
+    "Dex": 9,
+    "Hits": 45
+   },
+   "lore": "A seal of black glass. The Gate's mark is on it - an open hand."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gate-Captain's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 18,
+    "Hits": 53,
+    "Body": 7,
+    "Crush": 7,
+    "Slash": 7
+   },
+   "lore": "Black leather with a red key for a buckle."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Knight of the Lake's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 18,
+    "Con": 9,
+    "Power": 8,
+    "Hits": 32
+   },
+   "lore": "White and blue, the Lake's own. Sir Bors's gift."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lady's Promise",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 18,
+    "Con": 9,
+    "Power": 8,
+    "Hits": 32
+   },
+   "lore": "A drop of lake-water in crystal. It never dries."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sword-Oath Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 18,
+    "Con": 18,
+    "Dex": 9,
+    "Hits": 46
+   },
+   "lore": "Silver, with a sword rising out of water."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Old-Ways Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Qui": 18,
+    "Con": 9,
+    "Dex": 9,
+    "Hits": 32,
+    "Power": 6
+   },
+   "lore": "A torc of twisted reed and silver."
   }
  ]
 }

@@ -1,0 +1,190 @@
+{
+ "zone": 9,
+ "name": "Avalon Marsh",
+ "levels": [
+  5,
+  26
+ ],
+ "realm": 1,
+ "factions": [
+  {
+   "key": "marsh_wardens",
+   "name": "the Marsh Wardens",
+   "short": "the Wardens",
+   "kin": [
+    "pendragons_watch",
+    "wardens_of_cotswold",
+    "ulfwych_rangers",
+    "snowdonia_garrison",
+    "men_of_tintagel",
+    "lyonesse_remnant",
+    "knights_of_the_lake",
+    "dragon_watch"
+   ],
+   "titles": [
+    "Friend of the Wardens",
+    "Marsh-Warden",
+    "Warden of the Drowned March"
+   ],
+   "speaker": "warden_brec",
+   "town": "Caer Witrin",
+   "kills": [
+    "bogman",
+    "scrag",
+    "scraek",
+    "shambler",
+    "golem",
+    "giant",
+    "wolf",
+    "mist monster",
+    "marsh lord",
+    "ghoul",
+    "vrask",
+    "lord-commander",
+    "wisp",
+    "leaper",
+    "ogre",
+    "bloody-bones",
+    "zombie"
+   ],
+   "quartermaster": {
+    "name": "Warden-Quartermaster Hefin",
+    "guild": "the Marsh Wardens",
+    "model": 74,
+    "anchor": "warden_brec",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "Wardens' kit - waxed, tarred and nearly dry. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep009_marsh_friend_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep009_wader_s_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep009_drowned_march_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep009_isle_mist_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep009_mantle_of_the_drowned_march",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  },
+  {
+   "key": "keepers_of_the_isle",
+   "name": "the Keepers of the Isle",
+   "short": "the Keepers",
+   "kin": [
+    "abbey_faithful",
+    "sisters_of_amesbury",
+    "thornwardens",
+    "emrys_circle",
+    "oath_of_corineus",
+    "harpers_of_tristan",
+    "maidens_of_the_lake",
+    "quarry_oath"
+   ],
+   "titles": [
+    "Friend of the Isle",
+    "Keeper of the Shore",
+    "Guardian of the Sleeper"
+   ],
+   "speaker": "am_argante",
+   "town": "the Isle's shore",
+   "kills": [
+    "mist sprite",
+    "phantom",
+    "ghostly knight",
+    "fiedel",
+    "aryon",
+    "oarsman",
+    "oarsmaster",
+    "crimson",
+    "initiate",
+    "morgause",
+    "pixie"
+   ],
+   "quartermaster": {
+    "name": "Keeper Nimuel",
+    "guild": "the Keepers of the Isle",
+    "model": 38,
+    "anchor": "am_argante",
+    "offset": [
+     -4,
+     3
+    ],
+    "greet": "The Isle's gifts, for those who keep the King's sleep. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep009_shore_keeper_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep009_apple_isle_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep009_isle_mist_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep009_drowned_march_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep009_mantle_of_the_sleeper_s_guard",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "kill_default": "marsh_wardens",
+ "event_default": "marsh_wardens",
+ "quest_default": "marsh_wardens",
+ "quests": {
+  "bog_king": "marsh_wardens",
+  "vigil": "marsh_wardens",
+  "am_bog_nets": "marsh_wardens",
+  "am_drowned_church": "marsh_wardens",
+  "am_wisps": "marsh_wardens",
+  "am_scrags": "marsh_wardens",
+  "am_mists": "keepers_of_the_isle",
+  "am_black_barge": "keepers_of_the_isle",
+  "am_fallen_paladins": "keepers_of_the_isle",
+  "am_shamblers": "marsh_wardens",
+  "am_giant_wolves": "marsh_wardens",
+  "am_mist_monsters": "marsh_wardens",
+  "am_causeway": "marsh_wardens",
+  "am_marsh_lord": "marsh_wardens",
+  "am_ghoul_court": "marsh_wardens",
+  "am_vigil_banner": "marsh_wardens",
+  "am_way_to_isle": "keepers_of_the_isle"
+ },
+ "events": {
+  "am_black_barge_night": "keepers_of_the_isle",
+  "am_vigil_assault": "marsh_wardens",
+  "am_vigil_return": "marsh_wardens"
+ }
+}

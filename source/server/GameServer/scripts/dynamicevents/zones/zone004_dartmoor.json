@@ -1,533 +1,2393 @@
 {
-  "zone": 4,
-  "region": 1,
-  "name": "Dartmoor",
-  "lore": "Dartmoor: bleak granite moorland where the giants raise their cairns and call the stones to walk.",
-  "chains": [
+ "zone": 4,
+ "region": 1,
+ "name": "Dartmoor",
+ "lore": "Dartmoor, Golestandt's moor. The white dragon that fled Vortigern's tower is awake in his lair in the south, and every giant of the moor marches to his tune: the Stonecrush dig his road north, the stonecallers sing in their ring, and the stonelords are cutting a crown for Cormoran of the Mount, to sit him on Gogmagog's empty throne. Sir Constantine's Dragon-Watch means to stop them.",
+ "chains": [
+  {
+   "id": "dartmoor_herdsmen_cairn",
+   "title": "The Herdsmen's Cairn",
+   "levels": [
+    50,
+    57
+   ],
+   "hint": "Stones are being piled high on the moor...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "dartmoor_herdsmen_cairn",
-      "title": "The Herdsmen's Cairn",
-      "levels": [39, 46],
-      "hint": "Stones are being piled high on the moor...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Herdsmen's Cairn",
-          "objective": "Clear the herdsmen's cairn",
-          "announce": "The granite giants are raising a great cairn on the moor, and every stone of it was torn from an Albion wall.",
-          "center": [1154, 425, 5.0],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 770003,
-              "name": "granite giant herdsman",
-              "level": [39, 43]
-            },
-            {
-              "template": 770005,
-              "name": "granite giant gatherer",
-              "level": [42, 46]
-            }
-          ],
-          "success": "You have cleared the herdsmen's cairn. Gorm the Cairn-Builder comes out to fight.",
-          "fail": "They hold the herdsmen's cairn. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Gorm the Cairn-Builder",
-          "objective": "Defeat Gorm the Cairn-Builder",
-          "announce": "Gorm the Cairn-Builder stands at the herdsmen's cairn. Bring friends.",
-          "center": [1154, 425, 5.0],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 770005,
-            "name": "Gorm the Cairn-Builder",
-            "level": 48,
-            "size": 110,
-            "pos": [1154, 425, 5.0],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 770003,
-                "name": "granite giant herdsman",
-                "level": [39, 43]
-              }
-            ]
-          },
-          "success": "Gorm the Cairn-Builder falls. The way is safe again.",
-          "fail": "Gorm the Cairn-Builder slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu4_gorm_the_cairn_builder_s_armband", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Granite Giant Herdsmans Hold the Road",
-          "objective": "Drive the granite giant herdsmans off the road",
-          "announce": "With The Herdsmen's Cairn lost, the granite giant herdsmans have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [884, 284, 39.5],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 770003,
-              "name": "granite giant herdsman",
-              "level": [39, 43]
-            },
-            {
-              "template": 770005,
-              "name": "granite giant gatherer",
-              "level": [42, 46]
-            }
-          ],
-          "boss": {
-            "template": 770003,
-            "name": "Granite giant herdsman warleader",
-            "level": 47,
-            "pos": [884, 284, 39.5],
-            "health_mult": 2
-          },
-          "success": "The granite giant herdsmans are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cuthbert has come out to set the road right. The granite giant herdsmans are coming back for it!",
-          "center": [884, 284, 39.5],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cuthbert",
-            "level": 46,
-            "pos": [884, 284, 39.5],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [964, 257, 58.8],
-              [959, 323, 40.6],
-              [908, 365, 35.2]
-            ],
-            "mobs": [
-              {
-                "template": 770003,
-                "name": "granite giant herdsman",
-                "level": [39, 43]
-              },
-              {
-                "template": 770005,
-                "name": "granite giant gatherer",
-                "level": [42, 46]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The granite giant herdsmans break and scatter. The road is open again.",
-          "fail": "Roadwarden Cuthbert falls, and the granite giant herdsmans take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Herdsmen's Cairn",
+     "objective": "Clear the herdsmen's cairn",
+     "announce": "The granite giants are raising a great cairn on the moor, and every stone of it was torn from an Albion wall.",
+     "center": [
+      1154,
+      425,
+      5.0
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 770003,
+       "name": "granite giant herdsman",
+       "level": [
+        50,
+        54
+       ]
+      },
+      {
+       "template": 770005,
+       "name": "granite giant gatherer",
+       "level": [
+        53,
+        57
+       ]
+      }
+     ],
+     "success": "You have cleared the herdsmen's cairn. Gorm the Cairn-Builder comes out to fight.",
+     "fail": "They hold the herdsmen's cairn. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "dartmoor_stonecallers",
-      "title": "The Stonecallers' Rite",
-      "levels": [45, 52],
-      "hint": "The tors hum with a low, grinding song...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Warden Ysolde",
-          "objective": "Protect Warden Ysolde, who is breaking the ward-stones before the rite",
-          "announce": "The stonecallers are waking the tors. Warden Ysolde knows how to break their ward-stones - if she lives long enough.",
-          "center": [776, 573, 5.0],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Warden Ysolde",
-            "template": 60167630,
-            "level": 52,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
-            "health_mult": 10,
-            "pos": [776, 573, 5.0]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [804, 648, 6.5],
-              [738, 655, 96.1],
-              [695, 586, 8.9]
-            ],
-            "mobs": [
-              {
-                "template": 770006,
-                "name": "granite giant stonecaller",
-                "level": [45, 49]
-              },
-              {
-                "template": 770014,
-                "name": "granite giant stoneshaper",
-                "level": [48, 52]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Warden Ysolde. \"They came from over there - let's finish this.\"",
-          "fail": "Warden Ysolde falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Standing Stones",
-          "objective": "Clear the standing stones",
-          "announce": "They came from the standing stones. Follow them back and clear it out.",
-          "center": [654, 812, 6.3],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 770006,
-              "name": "granite giant stonecaller",
-              "level": [45, 49]
-            },
-            {
-              "template": 770014,
-              "name": "granite giant stoneshaper",
-              "level": [48, 52]
-            }
-          ],
-          "success": "You have cleared the standing stones. Stonelord Vaurn comes out to fight.",
-          "fail": "They hold the standing stones. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Stonelord Vaurn",
-          "objective": "Defeat Stonelord Vaurn",
-          "announce": "Stonelord Vaurn stands at the standing stones. Bring friends.",
-          "center": [654, 812, 6.3],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 770001,
-            "name": "Stonelord Vaurn",
-            "level": 54,
-            "size": 110,
-            "pos": [654, 812, 6.3],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 770006,
-                "name": "granite giant stonecaller",
-                "level": [45, 49]
-              }
-            ]
-          },
-          "success": "Stonelord Vaurn falls. The way is safe again.",
-          "fail": "Stonelord Vaurn slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu4_stonelord_vaurn_s_ring", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Granite Giant Stonecallers Hold the Road",
-          "objective": "Drive the granite giant stonecallers off the road",
-          "announce": "With The Stonecallers' Rite lost, the granite giant stonecallers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [380, 790, 7.0],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 770006,
-              "name": "granite giant stonecaller",
-              "level": [45, 49]
-            },
-            {
-              "template": 770014,
-              "name": "granite giant stoneshaper",
-              "level": [48, 52]
-            }
-          ],
-          "boss": {
-            "template": 770006,
-            "name": "Granite giant stonecaller warleader",
-            "level": 53,
-            "pos": [380, 790, 7.0],
-            "health_mult": 2
-          },
-          "success": "The granite giant stonecallers are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Edith has come out to set the road right. The granite giant stonecallers are coming back for it!",
-          "center": [380, 790, 7.0],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Edith",
-            "level": 52,
-            "pos": [380, 790, 7.0],
-            "health_mult": 10,
-            "template": 60167630,
-            "model": 28,
-            "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [444, 734, 77.3],
-              [465, 797, 62.5],
-              [434, 855, 52.3]
-            ],
-            "mobs": [
-              {
-                "template": 770006,
-                "name": "granite giant stonecaller",
-                "level": [45, 49]
-              },
-              {
-                "template": 770014,
-                "name": "granite giant stoneshaper",
-                "level": [48, 52]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The granite giant stonecallers break and scatter. The road is open again.",
-          "fail": "Roadwarden Edith falls, and the granite giant stonecallers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Gorm the Cairn-Builder",
+     "objective": "Defeat Gorm the Cairn-Builder",
+     "announce": "Gorm the Cairn-Builder stands at the herdsmen's cairn. Bring friends.",
+     "center": [
+      1154,
+      425,
+      5.0
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 770005,
+      "name": "Gorm the Cairn-Builder",
+      "level": 59,
+      "size": 110,
+      "pos": [
+       1154,
+       425,
+       5.0
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 770003,
+        "name": "granite giant herdsman",
+        "level": [
+         50,
+         54
+        ]
+       }
       ]
+     },
+     "success": "Gorm the Cairn-Builder falls. The way is safe again.",
+     "fail": "Gorm the Cairn-Builder slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu4_gorm_the_cairn_builder_s_armband",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
     },
     {
-      "id": "dartmoor_pounders",
-      "title": "The Pounders of the Moor",
-      "levels": [51, 58],
-      "hint": "The ground shakes with blows across the moor...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Giants' Quarry",
-          "objective": "Clear the giants' quarry",
-          "announce": "The granite giants have opened a quarry on the moor, and their pounding has brought down the old tor. Stop them before they take the rest.",
-          "center": [724, 1100, 6.5],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 770011,
-              "name": "granite giant outlooker",
-              "level": [51, 55]
-            },
-            {
-              "template": 770002,
-              "name": "granite giant pounder",
-              "level": [54, 58]
-            }
-          ],
-          "success": "You have cleared the giants' quarry. Thunderfist comes out to fight.",
-          "fail": "They hold the giants' quarry. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Thunderfist",
-          "objective": "Defeat Thunderfist",
-          "announce": "Thunderfist stands at the giants' quarry. Bring friends.",
-          "center": [724, 1100, 6.5],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 770001,
-            "name": "Thunderfist",
-            "level": 60,
-            "size": 110,
-            "pos": [724, 1100, 6.5],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 770011,
-                "name": "granite giant outlooker",
-                "level": [51, 55]
-              }
-            ]
-          },
-          "success": "Thunderfist falls. The way is safe again.",
-          "fail": "Thunderfist slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu4_thunderfist_s_pendant", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Granite Giant Outlookers Hold the Old Road",
-          "objective": "Drive the granite giant outlookers off the old road",
-          "announce": "With The Pounders of the Moor lost, the granite giant outlookers have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [433, 1191, 6.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 770011,
-              "name": "granite giant outlooker",
-              "level": [51, 55]
-            },
-            {
-              "template": 770002,
-              "name": "granite giant pounder",
-              "level": [54, 58]
-            }
-          ],
-          "boss": {
-            "template": 770011,
-            "name": "Granite giant outlooker warleader",
-            "level": 59,
-            "pos": [433, 1191, 6.6],
-            "health_mult": 2
-          },
-          "success": "The granite giant outlookers are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hal has come out to set the old road right. The granite giant outlookers are coming back for it!",
-          "center": [433, 1191, 6.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hal",
-            "level": 58,
-            "pos": [433, 1191, 6.6],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [471, 1115, 5.7],
-              [514, 1166, 10.6],
-              [508, 1232, 8.5]
-            ],
-            "mobs": [
-              {
-                "template": 770011,
-                "name": "granite giant outlooker",
-                "level": [51, 55]
-              },
-              {
-                "template": 770002,
-                "name": "granite giant pounder",
-                "level": [54, 58]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The granite giant outlookers break and scatter. The old road is open again.",
-          "fail": "Roadwarden Hal falls, and the granite giant outlookers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Granite Giant Herdsmans Hold the Road",
+     "objective": "Drive the granite giant herdsmans off the road",
+     "announce": "With The Herdsmen's Cairn lost, the granite giant herdsmans have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      884,
+      284,
+      39.5
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 770003,
+       "name": "granite giant herdsman",
+       "level": [
+        50,
+        54
+       ]
+      },
+      {
+       "template": 770005,
+       "name": "granite giant gatherer",
+       "level": [
+        53,
+        57
+       ]
+      }
+     ],
+     "boss": {
+      "template": 770003,
+      "name": "Granite giant herdsman warleader",
+      "level": 58,
+      "pos": [
+       884,
+       284,
+       39.5
+      ],
+      "health_mult": 2
+     },
+     "success": "The granite giant herdsmans are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cuthbert has come out to set the road right. The granite giant herdsmans are coming back for it!",
+     "center": [
+      884,
+      284,
+      39.5
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cuthbert",
+      "level": 57,
+      "pos": [
+       884,
+       284,
+       39.5
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        964,
+        257,
+        58.8
+       ],
+       [
+        959,
+        323,
+        40.6
+       ],
+       [
+        908,
+        365,
+        35.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 770003,
+        "name": "granite giant herdsman",
+        "level": [
+         50,
+         54
+        ]
+       },
+       {
+        "template": 770005,
+        "name": "granite giant gatherer",
+        "level": [
+         53,
+         57
+        ]
+       }
       ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The granite giant herdsmans break and scatter. The road is open again.",
+     "fail": "Roadwarden Cuthbert falls, and the granite giant herdsmans take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
-  ]
+   ]
+  },
+  {
+   "id": "dartmoor_stonecallers",
+   "title": "The Stonecallers' Rite",
+   "levels": [
+    50,
+    57
+   ],
+   "hint": "The tors hum with a low, grinding song...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Warden Ysolde",
+     "objective": "Protect Warden Ysolde, who is breaking the ward-stones before the rite",
+     "announce": "The stonecallers are waking the tors. Warden Ysolde knows how to break their ward-stones - if she lives long enough.",
+     "center": [
+      776,
+      573,
+      5.0
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Warden Ysolde",
+      "template": 60167630,
+      "level": 57,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "health_mult": 10,
+      "pos": [
+       776,
+       573,
+       5.0
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        804,
+        648,
+        6.5
+       ],
+       [
+        738,
+        655,
+        96.1
+       ],
+       [
+        695,
+        586,
+        8.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 770006,
+        "name": "granite giant stonecaller",
+        "level": [
+         50,
+         54
+        ]
+       },
+       {
+        "template": 770014,
+        "name": "granite giant stoneshaper",
+        "level": [
+         53,
+         57
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Warden Ysolde. \"They came from over there - let's finish this.\"",
+     "fail": "Warden Ysolde falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Standing Stones",
+     "objective": "Clear the standing stones",
+     "announce": "They came from the standing stones. Follow them back and clear it out.",
+     "center": [
+      654,
+      812,
+      6.3
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 770006,
+       "name": "granite giant stonecaller",
+       "level": [
+        50,
+        54
+       ]
+      },
+      {
+       "template": 770014,
+       "name": "granite giant stoneshaper",
+       "level": [
+        53,
+        57
+       ]
+      }
+     ],
+     "success": "You have cleared the standing stones. Stonelord Vaurn comes out to fight.",
+     "fail": "They hold the standing stones. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Stonelord Vaurn",
+     "objective": "Defeat Stonelord Vaurn",
+     "announce": "Stonelord Vaurn stands at the standing stones. Bring friends.",
+     "center": [
+      654,
+      812,
+      6.3
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 770001,
+      "name": "Stonelord Vaurn",
+      "level": 59,
+      "size": 110,
+      "pos": [
+       654,
+       812,
+       6.3
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 770006,
+        "name": "granite giant stonecaller",
+        "level": [
+         50,
+         54
+        ]
+       }
+      ]
+     },
+     "success": "Stonelord Vaurn falls. The way is safe again.",
+     "fail": "Stonelord Vaurn slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu4_stonelord_vaurn_s_ring",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Granite Giant Stonecallers Hold the Road",
+     "objective": "Drive the granite giant stonecallers off the road",
+     "announce": "With The Stonecallers' Rite lost, the granite giant stonecallers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      380,
+      790,
+      7.0
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 770006,
+       "name": "granite giant stonecaller",
+       "level": [
+        50,
+        54
+       ]
+      },
+      {
+       "template": 770014,
+       "name": "granite giant stoneshaper",
+       "level": [
+        53,
+        57
+       ]
+      }
+     ],
+     "boss": {
+      "template": 770006,
+      "name": "Granite giant stonecaller warleader",
+      "level": 58,
+      "pos": [
+       380,
+       790,
+       7.0
+      ],
+      "health_mult": 2
+     },
+     "success": "The granite giant stonecallers are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Edith has come out to set the road right. The granite giant stonecallers are coming back for it!",
+     "center": [
+      380,
+      790,
+      7.0
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Edith",
+      "level": 57,
+      "pos": [
+       380,
+       790,
+       7.0
+      ],
+      "health_mult": 10,
+      "template": 60167630,
+      "model": 28,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        444,
+        734,
+        77.3
+       ],
+       [
+        465,
+        797,
+        62.5
+       ],
+       [
+        434,
+        855,
+        52.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 770006,
+        "name": "granite giant stonecaller",
+        "level": [
+         50,
+         54
+        ]
+       },
+       {
+        "template": 770014,
+        "name": "granite giant stoneshaper",
+        "level": [
+         53,
+         57
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The granite giant stonecallers break and scatter. The road is open again.",
+     "fail": "Roadwarden Edith falls, and the granite giant stonecallers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "dartmoor_pounders",
+   "title": "The Pounders of the Moor",
+   "levels": [
+    51,
+    58
+   ],
+   "hint": "The ground shakes with blows across the moor...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Giants' Quarry",
+     "objective": "Clear the giants' quarry",
+     "announce": "The granite giants have opened a quarry on the moor, and their pounding has brought down the old tor. Stop them before they take the rest.",
+     "center": [
+      724,
+      1100,
+      6.5
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 770011,
+       "name": "granite giant outlooker",
+       "level": [
+        51,
+        55
+       ]
+      },
+      {
+       "template": 770002,
+       "name": "granite giant pounder",
+       "level": [
+        54,
+        58
+       ]
+      }
+     ],
+     "success": "You have cleared the giants' quarry. Thunderfist comes out to fight.",
+     "fail": "They hold the giants' quarry. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "Thunderfist",
+     "objective": "Defeat Thunderfist",
+     "announce": "Thunderfist stands at the giants' quarry. Bring friends.",
+     "center": [
+      724,
+      1100,
+      6.5
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 770001,
+      "name": "Thunderfist",
+      "level": 60,
+      "size": 110,
+      "pos": [
+       724,
+       1100,
+       6.5
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 770011,
+        "name": "granite giant outlooker",
+        "level": [
+         51,
+         55
+        ]
+       }
+      ]
+     },
+     "success": "Thunderfist falls. The way is safe again.",
+     "fail": "Thunderfist slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu4_thunderfist_s_pendant",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Granite Giant Outlookers Hold the Old Road",
+     "objective": "Drive the granite giant outlookers off the old road",
+     "announce": "With The Pounders of the Moor lost, the granite giant outlookers have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      433,
+      1191,
+      6.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 770011,
+       "name": "granite giant outlooker",
+       "level": [
+        51,
+        55
+       ]
+      },
+      {
+       "template": 770002,
+       "name": "granite giant pounder",
+       "level": [
+        54,
+        58
+       ]
+      }
+     ],
+     "boss": {
+      "template": 770011,
+      "name": "Granite giant outlooker warleader",
+      "level": 59,
+      "pos": [
+       433,
+       1191,
+       6.6
+      ],
+      "health_mult": 2
+     },
+     "success": "The granite giant outlookers are gone from the old road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hal has come out to set the old road right. The granite giant outlookers are coming back for it!",
+     "center": [
+      433,
+      1191,
+      6.6
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hal",
+      "level": 58,
+      "pos": [
+       433,
+       1191,
+       6.6
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        471,
+        1115,
+        5.7
+       ],
+       [
+        514,
+        1166,
+        10.6
+       ],
+       [
+        508,
+        1232,
+        8.5
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 770011,
+        "name": "granite giant outlooker",
+        "level": [
+         51,
+         55
+        ]
+       },
+       {
+        "template": 770002,
+        "name": "granite giant pounder",
+        "level": [
+         54,
+         58
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+     "success": "The granite giant outlookers break and scatter. The old road is open again.",
+     "fail": "Roadwarden Hal falls, and the granite giant outlookers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "dm_dragons_breath",
+   "title": "The Dragon's Breath",
+   "levels": [
+    52,
+    56
+   ],
+   "hint": "Smoke out of the ground along the south road - Golestandt is breathing out in his sleep, and the moor is burning...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "b1",
+   "stages": [
+    {
+     "id": "b1",
+     "type": "defend",
+     "name": "The Burning Road",
+     "objective": "Keep Quarry-Warden Tamsin alive while she stops the vents",
+     "announce": "Golestandt breathed out under the south road, and the moor is on fire! Quarry-Warden Tamsin is stopping the vents with Grimspound stone - and the giants are coming to keep them open!",
+     "center": [
+      880,
+      1180,
+      11.4
+     ],
+     "radius": 70,
+     "duration_s": 200,
+     "protect": {
+      "template": 60167630,
+      "model": 32,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "guild": "the Quarry-Oath of Grimspound",
+      "name": "Quarry-Warden Tamsin",
+      "level": 54,
+      "pos": [
+       880,
+       1180,
+       11.4
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 24,
+      "count": 3,
+      "from": [
+       [
+        820,
+        1150,
+        5.5
+       ],
+       [
+        940,
+        1210,
+        21.6
+       ],
+       [
+        880,
+        1120,
+        10.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 770011,
+        "name": "granite giant outlooker",
+        "level": [
+         53,
+         55
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770002,
+        "name": "granite giant pounder",
+        "level": [
+         54,
+         56
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 13072,
+        "name": "granite knocker",
+        "level": [
+         52,
+         54
+        ]
+       }
+      ]
+     },
+     "thanks": "\"Stopped. Every one. He'll have to breathe somewhere else.\"",
+     "success": "The last vent is stopped - and the giant who was feeding them comes down off the ridge.",
+     "fail": "Tamsin falls, and the road burns till dawn.",
+     "on_success": "b2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 180,
+      "tokens": 12
+     }
+    },
+    {
+     "id": "b2",
+     "type": "boss",
+     "name": "Ember-Keeper Gurt",
+     "objective": "Defeat Ember-Keeper Gurt",
+     "announce": "A giant with a back full of smouldering coals: 'The dragon's breath is holy. You put it OUT?' Bring friends.",
+     "center": [
+      880,
+      1180,
+      11.4
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 770002,
+      "name": "Ember-Keeper Gurt",
+      "level": 57,
+      "size": 70,
+      "pos": [
+       880,
+       1180,
+       11.4
+      ],
+      "health_mult": 4,
+      "guild": "Keeper of the Dragon's Breath"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 770002,
+        "name": "granite giant pounder",
+        "level": [
+         54,
+         56
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770011,
+        "name": "granite giant outlooker",
+        "level": [
+         53,
+         55
+        ],
+        "guild": "Golestandt's giants"
+       }
+      ]
+     },
+     "success": "Gurt goes down, and the coals on his back go out one by one.",
+     "fail": "Gurt relights the vents.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 28,
+      "copper_per_level": 300,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "nu004_ember_keeper_s_coal",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "dm_cp1_assault",
+   "title": "The Dragon-Watch at the Stonecrush Diggings",
+   "levels": [
+    50,
+    53
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 50,
+   "min_people": 6,
+   "hint": "The Banner-Warden is forming the Dragon-Watch up for the Stonecrush Diggings.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60167630,
+    "model": 28,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Dragon-Watch",
+    "name": "Banner-Warden Eluned",
+    "level": 55,
+    "pos": [
+     180,
+     480,
+     5.6
+    ],
+    "health_mult": 5,
+    "greet": "The Stonecrush Diggings - the dragon's road, in the west valley. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Down to the diggings! Break the Stonecrush - then their boss!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Dragon-Watch holds the diggings - and the next thirty minutes are ours.",
+    "regret": "Back to Grimspound! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60167630,
+     "model": 28,
+     "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+     "guild": "the Dragon-Watch",
+     "name": "dragonslayer of the Watch",
+     "level": 53,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Diggings",
+     "objective": "Break the Stonecrush at the diggings",
+     "announce": "The Dragon-Watch is at the diggings! Break the Stonecrush!",
+     "center": [
+      230,
+      720,
+      91.0
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 24,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 770008,
+       "name": "Stonecrush excavator",
+       "level": [
+        50,
+        52
+       ],
+       "guild": "the Stonecrush"
+      },
+      {
+       "template": 770016,
+       "name": "Stonecrush rockgrinder",
+       "level": [
+        51,
+        53
+       ],
+       "guild": "the Stonecrush"
+      },
+      {
+       "template": 770006,
+       "name": "granite giant stonecaller",
+       "level": [
+        52,
+        54
+       ],
+       "guild": "Golestandt's giants"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "boss",
+     "name": "Dig-Boss Krag",
+     "objective": "Defeat Dig-Boss Krag",
+     "announce": "Dig-Boss Krag, a Stonecrush the size of a cottage: 'The road goes north. Through you, if it has to.'",
+     "center": [
+      230,
+      720,
+      91.0
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 770015,
+      "name": "Dig-Boss Krag",
+      "level": 56,
+      "size": 70,
+      "health_mult": 4,
+      "guild": "of the Stonecrush"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 770008,
+        "name": "Stonecrush excavator",
+        "level": [
+         50,
+         52
+        ],
+        "guild": "the Stonecrush"
+       },
+       {
+        "template": 770016,
+        "name": "Stonecrush rockgrinder",
+        "level": [
+         51,
+         53
+        ],
+        "guild": "the Stonecrush"
+       }
+      ]
+     },
+     "success": "Krag falls into his own trench. The dragon's road stops here.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "dm_cp2_assault",
+   "title": "The Dragon-Watch on the Pony Moor",
+   "levels": [
+    51,
+    54
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 50,
+   "min_people": 6,
+   "hint": "Sir Garrod is forming the Dragon-Watch up for the Pony Moor.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60167630,
+    "model": 28,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Dragon-Watch",
+    "name": "Sir Garrod",
+    "level": 56,
+    "pos": [
+     700,
+     330,
+     97.1
+    ],
+    "health_mult": 5,
+    "greet": "The Pony Moor. The herdsmen hold it, and they've built cairns to the dragon on every rise. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Up onto the moor! Stand on the three cairns while we pull them down - then the herd-master!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Dragon-Watch holds the Pony Moor.",
+    "regret": "Back down! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60167630,
+     "model": 28,
+     "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+     "guild": "the Dragon-Watch",
+     "name": "dragonslayer of the Watch",
+     "level": 53,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Pony Moor",
+     "objective": "Break the giants on the Pony Moor",
+     "announce": "The Dragon-Watch is on the Pony Moor! Break the herdsmen!",
+     "center": [
+      960,
+      380,
+      26.5
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 26,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 770007,
+       "name": "granite giant",
+       "level": [
+        50,
+        52
+       ],
+       "guild": "Golestandt's giants"
+      },
+      {
+       "template": 770003,
+       "name": "granite giant herdsman",
+       "level": [
+        51,
+        53
+       ],
+       "guild": "Golestandt's giants"
+      },
+      {
+       "template": 770006,
+       "name": "granite giant stonecaller",
+       "level": [
+        52,
+        54
+       ],
+       "guild": "Golestandt's giants"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "wards",
+     "name": "The Dragon-Cairns",
+     "objective": "Hold the three dragon-cairns at once while the Watch pulls them down",
+     "announce": "Three dragon-cairns on the moor's rises sing to Golestandt - stand on all three at once while the Watch pulls them down!",
+     "wards": [
+      [
+       920,
+       350,
+       37.8
+      ],
+      [
+       1000,
+       360,
+       29.6
+      ],
+      [
+       960,
+       420,
+       35.6
+      ]
+     ],
+     "ward_names": [
+      "the north cairn",
+      "the east cairn",
+      "the south cairn"
+     ],
+     "ward_radius": 22,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 770007,
+       "name": "granite giant",
+       "level": [
+        50,
+        52
+       ],
+       "guild": "Golestandt's giants"
+      },
+      {
+       "template": 770003,
+       "name": "granite giant herdsman",
+       "level": [
+        51,
+        53
+       ],
+       "guild": "Golestandt's giants"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "pennant of the Watch",
+     "center": [
+      960,
+      380,
+      26.5
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the host falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Herd-Master Bodrugan",
+     "objective": "Defeat Herd-Master Bodrugan",
+     "announce": "Herd-Master Bodrugan, with a pony under each arm: 'The moor is the dragon's. So is everything on it.'",
+     "center": [
+      960,
+      380,
+      26.5
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 770003,
+      "name": "Herd-Master Bodrugan",
+      "level": 57,
+      "size": 72,
+      "health_mult": 4.5,
+      "guild": "of Golestandt's giants"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 770003,
+        "name": "granite giant herdsman",
+        "level": [
+         51,
+         53
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770007,
+        "name": "granite giant",
+        "level": [
+         50,
+         52
+        ],
+        "guild": "Golestandt's giants"
+       }
+      ]
+     },
+     "success": "Bodrugan falls, and the ponies scatter, free.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "dm_cp3_assault",
+   "title": "The Dragon-Watch at the Stonecallers' Ring",
+   "levels": [
+    52,
+    55
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 50,
+   "min_people": 6,
+   "hint": "Dame Ysolt is forming the Dragon-Watch up for the Stonecallers' Ring.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60167630,
+    "model": 28,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Dragon-Watch",
+    "name": "Dame Ysolt",
+    "level": 56,
+    "pos": [
+     600,
+     640,
+     97.7
+    ],
+    "health_mult": 5,
+    "greet": "The Stonecallers' Ring. We take it, and Quarry-Mother Hedda's people put the quarry-oath back on the speaking-stone - and the giants will come for her. Six at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Into the ring! Break the callers - then keep Hedda's people alive!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Dragon-Watch holds the ring.",
+    "regret": "Out of the ring! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60167630,
+     "model": 28,
+     "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+     "guild": "the Dragon-Watch",
+     "name": "dragonslayer of the Watch",
+     "level": 53,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Ring",
+     "objective": "Break the stonecallers' ring",
+     "announce": "The Dragon-Watch is at the ring! Break the stonecallers!",
+     "center": [
+      760,
+      800,
+      14.2
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 26,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 770006,
+       "name": "granite giant stonecaller",
+       "level": [
+        52,
+        54
+       ],
+       "guild": "Golestandt's giants"
+      },
+      {
+       "template": 770005,
+       "name": "granite giant gatherer",
+       "level": [
+        51,
+        53
+       ],
+       "guild": "Golestandt's giants"
+      },
+      {
+       "template": 770014,
+       "name": "granite giant stoneshaper",
+       "level": [
+        52,
+        54
+       ],
+       "guild": "Golestandt's giants"
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "defend",
+     "name": "The Oath-Stone",
+     "objective": "Keep Oath-Cutter Peran alive while he cuts the oath back into the speaking-stone",
+     "announce": "Oath-Cutter Peran is cutting the quarry-oath back into the speaking-stone - and the giants are coming to stop him!",
+     "center": [
+      760,
+      800,
+      14.2
+     ],
+     "radius": 80,
+     "duration_s": 240,
+     "protect": {
+      "template": 60167630,
+      "model": 32,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "guild": "the Quarry-Oath of Grimspound",
+      "name": "Oath-Cutter Peran",
+      "level": 54,
+      "health_mult": 8,
+      "pos": [
+       760,
+       800,
+       14.2
+      ]
+     },
+     "waves": {
+      "every_s": 28,
+      "count": 4,
+      "from": [
+       [
+        700,
+        770,
+        14.2
+       ],
+       [
+        820,
+        830,
+        13.8
+       ],
+       [
+        760,
+        740,
+        81.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 770005,
+        "name": "granite giant gatherer",
+        "level": [
+         51,
+         53
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770014,
+        "name": "granite giant stoneshaper",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770006,
+        "name": "granite giant stonecaller",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Golestandt's giants"
+       }
+      ]
+     },
+     "thanks": "\"It's cut. The stone remembers. Whether the giants do...\"",
+     "success": "They break - and whoever leads them comes out.",
+     "fail": "The banner falls.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Song-Mother Ysgawen",
+     "objective": "Defeat Song-Mother Ysgawen",
+     "announce": "Song-Mother Ysgawen, the oldest stonecaller, singing so the stones shake: 'The stone remembers? Then I'll make it forget.'",
+     "center": [
+      760,
+      800,
+      14.2
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 770006,
+      "name": "Song-Mother Ysgawen",
+      "level": 58,
+      "size": 72,
+      "health_mult": 4.5,
+      "guild": "of Golestandt's giants"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 770006,
+        "name": "granite giant stonecaller",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770014,
+        "name": "granite giant stoneshaper",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Golestandt's giants"
+       }
+      ]
+     },
+     "success": "Ysgawen's song breaks in the middle of a word. The ring is silent.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "dm_cp4_assault",
+   "title": "The Dragon-Watch on the Pounders' Road",
+   "levels": [
+    53,
+    56
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 50,
+   "min_people": 8,
+   "hint": "Sir Constantine's own squire is forming the Dragon-Watch up for the Pounders' Road.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60167630,
+    "model": 28,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Dragon-Watch",
+    "name": "Squire Kenwyn",
+    "level": 55,
+    "pos": [
+     880,
+     1000,
+     104.2
+    ],
+    "health_mult": 5,
+    "greet": "The Pounders' Road - the south road, to the throne and the lair. The knockers have dug traps under it. Eight at least, and say [forward].",
+    "accept": "forward",
+    "reply": "Down the road! Stand on the knockers' shafts while we cave them in - then the pound-master!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Dragon-Watch holds the Pounders' Road - the throne is in sight.",
+    "regret": "Back up the road! We'll go again."
+   },
+   "guards": [
+    {
+     "template": 60167630,
+     "model": 28,
+     "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+     "guild": "the Dragon-Watch",
+     "name": "dragonslayer of the Watch",
+     "level": 53,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "Break the Pounders' Road",
+     "objective": "Break the giants on the south road",
+     "announce": "The Dragon-Watch is on the Pounders' Road! Break the pounders!",
+     "center": [
+      1060,
+      1180,
+      11.1
+     ],
+     "radius": 75,
+     "time_s": 1200,
+     "kill": 28,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 770011,
+       "name": "granite giant outlooker",
+       "level": [
+        53,
+        55
+       ],
+       "guild": "Golestandt's giants"
+      },
+      {
+       "template": 770002,
+       "name": "granite giant pounder",
+       "level": [
+        54,
+        56
+       ],
+       "guild": "Golestandt's giants"
+      },
+      {
+       "template": 13072,
+       "name": "granite knocker",
+       "level": [
+        52,
+        54
+       ]
+      }
+     ],
+     "success": "The post breaks.",
+     "fail": "The host is thrown back.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "wards",
+     "name": "The Knockers' Shafts",
+     "objective": "Stand on the three knockers' shafts at once while the Watch caves them in",
+     "announce": "Three knocker-shafts under the road - stand on all three at once while the Watch caves them in!",
+     "wards": [
+      [
+       1020,
+       1150,
+       13.6
+      ],
+      [
+       1100,
+       1160,
+       6.6
+      ],
+      [
+       1060,
+       1220,
+       12.4
+      ]
+     ],
+     "ward_names": [
+      "the west shaft",
+      "the east shaft",
+      "the deep shaft"
+     ],
+     "ward_radius": 22,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 13072,
+       "name": "granite knocker",
+       "level": [
+        52,
+        54
+       ]
+      },
+      {
+       "template": 770002,
+       "name": "granite giant pounder",
+       "level": [
+        54,
+        56
+       ],
+       "guild": "Golestandt's giants"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "pennant of the Watch",
+     "center": [
+      1060,
+      1180,
+      11.1
+     ],
+     "radius": 75,
+     "success": "Done - on to whoever holds the place!",
+     "fail": "It's lost - the host falls back.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Pound-Master Trehan",
+     "objective": "Defeat Pound-Master Trehan",
+     "announce": "Pound-Master Trehan, his fists wrapped in chain: 'Cormoran's crowned at moonrise. You'll be under the throne's feet.'",
+     "center": [
+      1060,
+      1180,
+      11.1
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 770002,
+      "name": "Pound-Master Trehan",
+      "level": 59,
+      "size": 75,
+      "health_mult": 5,
+      "guild": "of Golestandt's giants"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 770002,
+        "name": "granite giant pounder",
+        "level": [
+         54,
+         56
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770011,
+        "name": "granite giant outlooker",
+        "level": [
+         53,
+         55
+        ],
+        "guild": "Golestandt's giants"
+       }
+      ]
+     },
+     "success": "Trehan falls across the road. South-east, on the throne-hill, a horn blows - the giants know.",
+     "fail": "The host is driven back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 200,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "dm_cp1_counter",
+   "title": "The Giants Strike Back at The Stonecrush Diggings",
+   "levels": [
+    50,
+    53
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 50,
+   "wake_m": 200,
+   "hint": "The giants are coming back for the Stonecrush Diggings!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Stonecrush Diggings",
+     "objective": "Keep the host's captain alive at the Stonecrush Diggings",
+     "announce": "The giants are coming back for the Stonecrush Diggings! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      230,
+      720,
+      91.0
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60167630,
+      "model": 28,
+      "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+      "guild": "the Dragon-Watch",
+      "name": "Banner-Warden of the Watch",
+      "level": 55,
+      "pos": [
+       230,
+       720,
+       91.0
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        170,
+        690,
+        107.6
+       ],
+       [
+        290,
+        750,
+        54.0
+       ],
+       [
+        230,
+        660,
+        8.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 770008,
+        "name": "Stonecrush excavator",
+        "level": [
+         50,
+         52
+        ],
+        "guild": "the Stonecrush"
+       },
+       {
+        "template": 770016,
+        "name": "Stonecrush rockgrinder",
+        "level": [
+         51,
+         53
+        ],
+        "guild": "the Stonecrush"
+       },
+       {
+        "template": 770015,
+        "name": "Stonecrush demolisher",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "the Stonecrush"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "The giants break against the line. The Stonecrush Diggings holds - and the clock starts again.",
+     "fail": "The banner falls. The giants have the Stonecrush Diggings again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "dm_cp2_counter",
+   "title": "The Giants Strike Back at The Pony Moor",
+   "levels": [
+    51,
+    54
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 50,
+   "wake_m": 200,
+   "hint": "The giants are coming back for the Pony Moor!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Pony Moor",
+     "objective": "Keep the host's captain alive at the Pony Moor",
+     "announce": "The giants are coming back for the Pony Moor! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      960,
+      380,
+      26.5
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60167630,
+      "model": 28,
+      "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+      "guild": "the Dragon-Watch",
+      "name": "Banner-Warden of the Watch",
+      "level": 55,
+      "pos": [
+       960,
+       380,
+       26.5
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        900,
+        350,
+        39.0
+       ],
+       [
+        1020,
+        410,
+        17.8
+       ],
+       [
+        960,
+        320,
+        41.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 770007,
+        "name": "granite giant",
+        "level": [
+         50,
+         52
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770003,
+        "name": "granite giant herdsman",
+        "level": [
+         51,
+         53
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770006,
+        "name": "granite giant stonecaller",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Golestandt's giants"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "The giants break against the line. The Pony Moor holds - and the clock starts again.",
+     "fail": "The banner falls. The giants have the Pony Moor again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "dm_cp3_counter",
+   "title": "The Giants Strike Back at The Stonecallers' Ring",
+   "levels": [
+    52,
+    55
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 50,
+   "wake_m": 200,
+   "hint": "The giants are coming back for the Stonecallers' Ring!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Stonecallers' Ring",
+     "objective": "Keep the host's captain alive at the Stonecallers' Ring",
+     "announce": "The giants are coming back for the Stonecallers' Ring! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      760,
+      800,
+      14.2
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60167630,
+      "model": 28,
+      "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+      "guild": "the Dragon-Watch",
+      "name": "Banner-Warden of the Watch",
+      "level": 55,
+      "pos": [
+       760,
+       800,
+       14.2
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        700,
+        770,
+        14.2
+       ],
+       [
+        820,
+        830,
+        13.8
+       ],
+       [
+        760,
+        740,
+        81.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 770006,
+        "name": "granite giant stonecaller",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770005,
+        "name": "granite giant gatherer",
+        "level": [
+         51,
+         53
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770014,
+        "name": "granite giant stoneshaper",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Golestandt's giants"
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "The giants break against the line. The Stonecallers' Ring holds - and the clock starts again.",
+     "fail": "The banner falls. The giants have the Stonecallers' Ring again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "dm_cp4_counter",
+   "title": "The Giants Strike Back at The Pounders' Road",
+   "levels": [
+    53,
+    56
+   ],
+   "manual": true,
+   "bots": 12,
+   "bot_min_level": 50,
+   "wake_m": 200,
+   "hint": "The giants are coming back for the Pounders' Road!",
+   "start": "c1",
+   "stages": [
+    {
+     "id": "c1",
+     "type": "defend",
+     "name": "Hold the Pounders' Road",
+     "objective": "Keep the host's captain alive at the Pounders' Road",
+     "announce": "The giants are coming back for the Pounders' Road! The host will hold as long as it can - help them, or it falls!",
+     "center": [
+      1060,
+      1180,
+      11.1
+     ],
+     "radius": 80,
+     "duration_s": 600,
+     "protect": {
+      "template": 60167630,
+      "model": 28,
+      "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+      "guild": "the Dragon-Watch",
+      "name": "Banner-Warden of the Watch",
+      "level": 55,
+      "pos": [
+       1060,
+       1180,
+       11.1
+      ],
+      "health_mult": 14
+     },
+     "waves": {
+      "every_s": 32,
+      "count": 4,
+      "from": [
+       [
+        1000,
+        1150,
+        10.8
+       ],
+       [
+        1120,
+        1210,
+        13.0
+       ],
+       [
+        1060,
+        1120,
+        10.1
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 770011,
+        "name": "granite giant outlooker",
+        "level": [
+         53,
+         55
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770002,
+        "name": "granite giant pounder",
+        "level": [
+         54,
+         56
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 13072,
+        "name": "granite knocker",
+        "level": [
+         52,
+         54
+        ]
+       }
+      ]
+     },
+     "thanks": "They broke on us. The line holds.",
+     "success": "The giants break against the line. The Pounders' Road holds - and the clock starts again.",
+     "fail": "The banner falls. The giants have the Pounders' Road again.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 180,
+      "tokens": 14
+     }
+    }
+   ]
+  },
+  {
+   "id": "dm_giants_throne",
+   "title": "The Giants' Throne",
+   "levels": [
+    54,
+    58
+   ],
+   "manual": true,
+   "bots": 14,
+   "bot_min_level": 52,
+   "min_people": 8,
+   "hint": "Sir Constantine himself is gathering the Dragon-Watch below the Giants' Throne.",
+   "rest_s": 15,
+   "start": "t1",
+   "giver": {
+    "template": 60167630,
+    "model": 28,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Dragon-Watch",
+    "name": "Sir Constantine",
+    "level": 62,
+    "pos": [
+     1100,
+     1330,
+     98.9
+    ],
+    "health_mult": 8,
+    "greet": "The Giants' Throne. Cormoran sits it at moonrise, crowned, and the dragon calls every giant in Albion to him. Two groups at least - eight, bots and all - three if you can. Then say [for Albion].",
+    "accept": "for Albion",
+    "reply": "For Albion! Stay off his feet - and when the stonelords come, kill them first!",
+    "busy": "Not yet. The host is still forming up - rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "Cormoran is down. There's no king on the throne - and Golestandt's lair stands open.",
+    "regret": "Back! Back down the road! We'll come again.",
+    "size": 58
+   },
+   "guards": [
+    {
+     "template": 60167630,
+     "model": 28,
+     "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+     "guild": "the Dragon-Watch",
+     "name": "dragonslayer of the Watch",
+     "level": 55,
+     "count": 4
+    }
+   ],
+   "stages": [
+    {
+     "id": "t1",
+     "type": "boss",
+     "name": "Cormoran of the Mount",
+     "objective": "Defeat Cormoran of the Mount",
+     "announce": "Cormoran of the Mount stands up from Gogmagog's throne, a crown of raw granite on his head, and the moor shakes: 'KING. I AM KING. THE DRAGON SAYS SO.'",
+     "center": [
+      1240,
+      1420,
+      5.6
+     ],
+     "radius": 90,
+     "time_s": 2400,
+     "boss": {
+      "template": 770001,
+      "name": "Cormoran of the Mount",
+      "level": 62,
+      "size": 120,
+      "health_mult": 14,
+      "guild": "King of the Giants"
+     },
+     "adds": {
+      "every_s": 50,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 770001,
+        "name": "granite giant stonelord",
+        "level": [
+         55,
+         57
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770002,
+        "name": "granite giant pounder",
+        "level": [
+         54,
+         56
+        ],
+        "guild": "Golestandt's giants"
+       },
+       {
+        "template": 770006,
+        "name": "granite giant stonecaller",
+        "level": [
+         52,
+         54
+        ],
+        "guild": "Golestandt's giants"
+       }
+      ]
+     },
+     "success": "Cormoran falls like a hillside, and the granite crown breaks in two on the throne-step. The stonelords look at it - and walk away. Far to the west, under the south road, Golestandt roars, and the whole moor hears it.",
+     "fail": "Cormoran drives the Dragon-Watch from the throne.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 55,
+      "copper_per_level": 550,
+      "tokens": 55,
+      "items": [
+       {
+        "id": "dm004_cormoran_s_crown_shard",
+        "gold_chance": 60,
+        "silver_chance": 25
+       },
+       {
+        "id": "dm004_throne_step_mantle",
+        "gold_chance": 60,
+        "silver_chance": 25
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
 }

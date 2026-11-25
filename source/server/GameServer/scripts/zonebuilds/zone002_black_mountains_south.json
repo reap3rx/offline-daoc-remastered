@@ -1,0 +1,1105 @@
+{
+ "zone": 2,
+ "name": "Black Mountains South",
+ "rating": "peaceful",
+ "themes": [
+  "Humberton and Ludlow's fields (sows, wolf pups, ants)",
+  "The river (goblin fishers, eels, the drowned)",
+  "Tepok's Mine (the goblins)",
+  "Vetusta Abbey (Burhoff's dark brethren)",
+  "The northern stone (filidh sacrificers)",
+  "The red dwarves (north-east woods)",
+  "The Nain raiders (south-west)",
+  "Roads (robbers, highwaymen, cutpurses)",
+  "The north forest (spiders, bears, lions)"
+ ],
+ "notes": "Albion's plan 2026-11-24 (Zone Reviews, 'Albion - the plan'): Peaceful; Burhoff's Vetusta Abbey the set-piece; about 900 monsters. Coordinates are zone-local units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Dark Bishop Burhoff": "red",
+  "Sacrificer Harish": "orange",
+  "Goblin Lord": "yellow",
+  "Grilk": "orange",
+  "The Great Gobzini": "red",
+  "Grilk's bonescraper": "blue",
+  "Grilk's ratmaker": "blue",
+  "Grilk's footscratcher": "blue",
+  "Nain Dwarf": "blue",
+  "Frund": "yellow",
+  "Jari": "yellow",
+  "Throatripper": "yellow",
+  "Fusnup": "blue",
+  "Grilo": "blue",
+  "Goblin Storm Shaman": "yellow",
+  "Slith": "blue",
+  "Summoner Salizern": "yellow",
+  "Shaman Aslis": "orange",
+  "Agisthil": "yellow",
+  "Brodic": "yellow",
+  "Gundron McCory": "blue",
+  "Aldous Wynedd": "blue",
+  "Bouditha Wynedd": "blue",
+  "Welsh hobgoblin": "blue",
+  "Lurking Stranger": "yellow",
+  "Vetusta Abbey Bell": "blue"
+ },
+ "factions": {
+  "goblins": {
+   "id": 9421,
+   "aggro": 70
+  },
+  "dead": {
+   "id": 9422,
+   "aggro": 90
+  },
+  "reddwarves": {
+   "id": 9423,
+   "aggro": 75,
+   "enemies": [
+    "nain"
+   ]
+  },
+  "nain": {
+   "id": 9424,
+   "aggro": 75,
+   "enemies": [
+    "reddwarves"
+   ]
+  },
+  "bandits": {
+   "id": 9425,
+   "aggro": 75
+  },
+  "crimson": {
+   "id": 9426,
+   "aggro": 95
+  }
+ },
+ "members": {
+  "green snake": {
+   "from": "green snake",
+   "tier": "grey",
+   "roam": 250
+  },
+  "water snake": {
+   "from": "water snake",
+   "tier": "grey",
+   "roam": 250
+  },
+  "worker ant": {
+   "from": "worker ant",
+   "tier": "grey",
+   "roam": 250
+  },
+  "boar piglet": {
+   "from": "boar piglet",
+   "tier": "grey",
+   "roam": 250
+  },
+  "black wolf pup": {
+   "from": "black wolf pup",
+   "tier": "green",
+   "roam": 350
+  },
+  "bear cub": {
+   "from": "bear cub",
+   "tier": "green",
+   "roam": 300
+  },
+  "wild sow": {
+   "from": "wild sow",
+   "tier": "green",
+   "roam": 350
+  },
+  "forest snake": {
+   "from": "forest snake",
+   "tier": "green",
+   "roam": 300
+  },
+  "snake": {
+   "from": "snake",
+   "tier": "green",
+   "roam": 300
+  },
+  "eel": {
+   "from": "eel",
+   "tier": "green",
+   "roam": 200
+  },
+  "large ant": {
+   "from": "large ant",
+   "tier": "green",
+   "roam": 250
+  },
+  "ant drone": {
+   "from": "ant drone",
+   "tier": "blue",
+   "roam": 300
+  },
+  "small bear": {
+   "from": "small bear",
+   "tier": "green",
+   "roam": 350
+  },
+  "bear": {
+   "from": "bear",
+   "tier": "blue",
+   "roam": 350
+  },
+  "red lion": {
+   "from": "red lion",
+   "tier": "blue",
+   "roam": 400
+  },
+  "forest lion": {
+   "from": "forest lion",
+   "tier": "yellow",
+   "roam": 400
+  },
+  "black wolf": {
+   "from": "black wolf",
+   "tier": "blue",
+   "roam": 450
+  },
+  "small gray wolf": {
+   "from": "small gray wolf",
+   "tier": "green",
+   "roam": 400
+  },
+  "giant spider": {
+   "from": "giant spider",
+   "tier": "blue",
+   "roam": 250
+  },
+  "spectral hound": {
+   "from": "spectral hound",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 350
+  },
+  "rock imp": {
+   "from": "rock imp",
+   "tier": "blue",
+   "roam": 150
+  },
+  "slith broodling": {
+   "from": "slith broodling",
+   "tier": "green",
+   "roam": 200
+  },
+  "goblin fisherman": {
+   "from": "goblin fisherman",
+   "tier": "green",
+   "faction": "goblins",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 200
+  },
+  "goblin": {
+   "from": "goblin",
+   "tier": "blue",
+   "faction": "goblins",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "goblin scout": {
+   "from": "goblin scout",
+   "tier": "blue",
+   "faction": "goblins",
+   "aggro": [
+    70,
+    500
+   ],
+   "roam": 300
+  },
+  "goblin lookout": {
+   "from": "goblin lookout",
+   "tier": "blue",
+   "faction": "goblins",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 60
+  },
+  "goblin shaman": {
+   "from": "goblin shaman",
+   "tier": "yellow",
+   "faction": "goblins",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 120
+  },
+  "goblin war-boss": {
+   "from": "goblin",
+   "tier": "yellow",
+   "name": "goblin war-boss",
+   "faction": "goblins",
+   "aggro": [
+    80,
+    500
+   ],
+   "size": 1.25,
+   "roam": 80,
+   "guards": {
+    "goblin": 2
+   }
+  },
+  "undead goblin fisherman": {
+   "from": "undead goblin fisherman",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    85,
+    450
+   ],
+   "roam": 150
+  },
+  "undead goblin warrior": {
+   "from": "undead goblin warrior",
+   "tier": "yellow",
+   "faction": "dead",
+   "aggro": [
+    90,
+    450
+   ],
+   "roam": 150
+  },
+  "weak skeleton": {
+   "from": "weak skeleton",
+   "tier": "green",
+   "faction": "dead",
+   "aggro": [
+    80,
+    400
+   ],
+   "roam": 150
+  },
+  "moldy skeleton": {
+   "from": "moldy skeleton",
+   "tier": "green",
+   "faction": "dead",
+   "aggro": [
+    80,
+    400
+   ],
+   "roam": 150
+  },
+  "skeleton": {
+   "from": "skeleton",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    85,
+    450
+   ],
+   "roam": 150
+  },
+  "puny skeleton": {
+   "from": "puny skeleton",
+   "tier": "green",
+   "faction": "dead",
+   "aggro": [
+    80,
+    400
+   ],
+   "roam": 150
+  },
+  "red dwarf youth": {
+   "from": "red dwarf youth",
+   "tier": "green",
+   "faction": "reddwarves",
+   "aggro": [
+    70,
+    400
+   ],
+   "roam": 200
+  },
+  "red dwarf thief": {
+   "from": "red dwarf thief",
+   "tier": "blue",
+   "faction": "reddwarves",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 250
+  },
+  "red dwarf bandit": {
+   "from": "red dwarf bandit",
+   "tier": "blue",
+   "faction": "reddwarves",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 200
+  },
+  "red dwarf matron": {
+   "from": "red dwarf matron",
+   "tier": "yellow",
+   "faction": "reddwarves",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 60
+  },
+  "red dwarf chief": {
+   "from": "red dwarf chief",
+   "tier": "orange",
+   "faction": "reddwarves",
+   "aggro": [
+    85,
+    500
+   ],
+   "size": 1.15,
+   "roam": 50,
+   "guards": {
+    "red dwarf bandit": 2
+   }
+  },
+  "dwarf brawler": {
+   "from": "dwarf brawler",
+   "tier": "green",
+   "faction": "nain",
+   "aggro": [
+    70,
+    400
+   ],
+   "roam": 200
+  },
+  "dwarf pillager": {
+   "from": "dwarf pillager",
+   "tier": "blue",
+   "faction": "nain",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 200
+  },
+  "dwarf raider": {
+   "from": "dwarf raider",
+   "tier": "blue",
+   "faction": "nain",
+   "aggro": [
+    80,
+    450
+   ],
+   "roam": 250
+  },
+  "young cutpurse": {
+   "from": "young cutpurse",
+   "tier": "green",
+   "faction": "bandits",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 200
+  },
+  "cutpurse": {
+   "from": "cutpurse",
+   "tier": "green",
+   "faction": "bandits",
+   "aggro": [
+    65,
+    400
+   ],
+   "roam": 200
+  },
+  "robber": {
+   "from": "robber",
+   "tier": "blue",
+   "faction": "bandits",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 200
+  },
+  "highwayman": {
+   "from": "highwayman",
+   "tier": "yellow",
+   "faction": "bandits",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 150
+  },
+  "bandit": {
+   "from": "bandit",
+   "tier": "blue",
+   "faction": "bandits",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 200
+  },
+  "young poacher": {
+   "from": "young poacher",
+   "tier": "green",
+   "faction": "bandits",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 250
+  },
+  "poacher": {
+   "from": "poacher",
+   "tier": "blue",
+   "faction": "bandits",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "devout filidh": {
+   "from": "devout filidh",
+   "tier": "blue",
+   "faction": "crimson",
+   "aggro": [
+    85,
+    500
+   ],
+   "roam": 150
+  },
+  "filidh sacrificer": {
+   "from": "filidh sacrificer",
+   "tier": "yellow",
+   "faction": "crimson",
+   "aggro": [
+    90,
+    500
+   ],
+   "roam": 120
+  },
+  "dark brother": {
+   "from": "Crimson Initiate",
+   "tier": "blue",
+   "size": 0.9,
+   "name": "dark brother",
+   "faction": "crimson",
+   "guild": "the Brethren of Vetusta",
+   "aggro": [
+    90,
+    500
+   ],
+   "roam": 120
+  },
+  "dark brother-in-arms": {
+   "from": "convert guard",
+   "tier": "yellow",
+   "name": "dark brother-in-arms",
+   "faction": "crimson",
+   "guild": "the Brethren of Vetusta",
+   "aggro": [
+    90,
+    500
+   ],
+   "roam": 100
+  }
+ },
+ "sites": [
+  {
+   "id": "humberton_fields",
+   "kind": "wildlife",
+   "area": [
+    16800,
+    34400,
+    32000,
+    50000
+   ],
+   "spawn": {
+    "boar piglet": 16,
+    "green snake": 16,
+    "wild sow": 20,
+    "black wolf pup": 20,
+    "bear cub": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ludlow_fields",
+   "kind": "wildlife",
+   "area": [
+    40000,
+    34000,
+    58000,
+    50000
+   ],
+   "spawn": {
+    "worker ant": 20,
+    "green snake": 16,
+    "wild sow": 16,
+    "black wolf pup": 16,
+    "large ant": 16,
+    "snake": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ludlow_anthill",
+   "kind": "camp",
+   "at": [
+    35680,
+    53280
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "large ant": 6,
+    "ant drone": 4
+   }
+  },
+  {
+   "id": "south_road",
+   "kind": "wildlife",
+   "area": [
+    26000,
+    50000,
+    44000,
+    60000
+   ],
+   "spawn": {
+    "worker ant": 16,
+    "large ant": 12,
+    "small gray wolf": 12,
+    "green snake": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "abbey_meadows",
+   "kind": "wildlife",
+   "area": [
+    14000,
+    55200,
+    26000,
+    62400
+   ],
+   "spawn": {
+    "wild sow": 12,
+    "bear cub": 8,
+    "green snake": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "vetusta_abbey",
+   "kind": "camp",
+   "at": [
+    21960,
+    60000
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "dark brother": 8,
+    "dark brother-in-arms": 3
+   }
+  },
+  {
+   "id": "abbey_cloister",
+   "kind": "patrol",
+   "route": [
+    [
+     21960,
+     60000
+    ],
+    [
+     24000,
+     58000
+    ],
+    [
+     20800,
+     56800
+    ],
+    [
+     19200,
+     58800
+    ]
+   ],
+   "spawn": {
+    "dark brother": 2
+   }
+  },
+  {
+   "id": "ludlow_graveyard",
+   "kind": "camp",
+   "at": [
+    42240,
+    37200
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "weak skeleton": 6,
+    "puny skeleton": 4,
+    "skeleton": 3
+   }
+  },
+  {
+   "id": "ghost_fields",
+   "kind": "wildlife",
+   "area": [
+    36000,
+    35200,
+    54000,
+    46000
+   ],
+   "spawn": {
+    "spectral hound": 16,
+    "moldy skeleton": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ludlow_road_cutpurses",
+   "kind": "camp",
+   "at": [
+    54800,
+    43200
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "young cutpurse": 5,
+    "cutpurse": 3
+   }
+  },
+  {
+   "id": "highway_ambush",
+   "kind": "camp",
+   "at": [
+    48440,
+    30960
+   ],
+   "r": 360,
+   "respawn": 360,
+   "spawn": {
+    "highwayman": 2,
+    "bandit": 3
+   }
+  },
+  {
+   "id": "highway_walk",
+   "kind": "patrol",
+   "route": [
+    [
+     48440,
+     30960
+    ],
+    [
+     44000,
+     32800
+    ],
+    [
+     39200,
+     34400
+    ],
+    [
+     44000,
+     32800
+    ]
+   ],
+   "spawn": {
+    "bandit": 2
+   }
+  },
+  {
+   "id": "slith_marsh",
+   "kind": "wildlife",
+   "area": [
+    40000,
+    54400,
+    46000,
+    59200
+   ],
+   "spawn": {
+    "slith broodling": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "lion_downs",
+   "kind": "wildlife",
+   "area": [
+    4000,
+    38400,
+    18000,
+    60000
+   ],
+   "spawn": {
+    "red lion": 24,
+    "small gray wolf": 12,
+    "black wolf": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "nain_camp",
+   "kind": "camp",
+   "at": [
+    7400,
+    52000
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "dwarf brawler": 6,
+    "dwarf raider": 4,
+    "dwarf pillager": 3
+   }
+  },
+  {
+   "id": "nain_raid",
+   "kind": "patrol",
+   "route": [
+    [
+     7400,
+     52000
+    ],
+    [
+     12000,
+     50000
+    ],
+    [
+     16800,
+     47200
+    ],
+    [
+     12000,
+     50000
+    ]
+   ],
+   "spawn": {
+    "dwarf raider": 2,
+    "dwarf brawler": 1
+   }
+  },
+  {
+   "id": "west_hills",
+   "kind": "wildlife",
+   "area": [
+    2400,
+    42400,
+    12000,
+    56000
+   ],
+   "spawn": {
+    "dwarf brawler": 8,
+    "black wolf": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "river_south_bank",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    28800,
+    52000,
+    32800
+   ],
+   "spawn": {
+    "water snake": 20,
+    "eel": 20,
+    "goblin fisherman": 20
+   },
+   "spacing": 260
+  },
+  {
+   "id": "singing_pool",
+   "kind": "camp",
+   "at": [
+    24000,
+    22600
+   ],
+   "r": 400,
+   "respawn": 360,
+   "spawn": {
+    "undead goblin fisherman": 6,
+    "undead goblin warrior": 2
+   }
+  },
+  {
+   "id": "drowned_reach",
+   "kind": "camp",
+   "at": [
+    28240,
+    26600
+   ],
+   "r": 360,
+   "respawn": 300,
+   "spawn": {
+    "undead goblin fisherman": 4,
+    "goblin fisherman": 4
+   }
+  },
+  {
+   "id": "goblin_fishers_west",
+   "kind": "camp",
+   "at": [
+    18480,
+    28000
+   ],
+   "r": 360,
+   "respawn": 300,
+   "spawn": {
+    "goblin fisherman": 6
+   }
+  },
+  {
+   "id": "robbers_landing",
+   "kind": "camp",
+   "at": [
+    21480,
+    30400
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "robber": 5,
+    "cutpurse": 3
+   }
+  },
+  {
+   "id": "river_reeds",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    20800,
+    52000,
+    28000
+   ],
+   "spawn": {
+    "eel": 20,
+    "water snake": 16
+   },
+   "spacing": 260
+  },
+  {
+   "id": "north_forest",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    4800,
+    52000,
+    20800
+   ],
+   "spawn": {
+    "giant spider": 36,
+    "small bear": 20,
+    "bear": 12,
+    "forest snake": 24,
+    "forest lion": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "spider_nest_0",
+   "kind": "camp",
+   "at": [
+    36800,
+    12000
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "giant spider": 4
+   }
+  },
+  {
+   "id": "spider_nest_1",
+   "kind": "camp",
+   "at": [
+    31200,
+    8800
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "giant spider": 4
+   }
+  },
+  {
+   "id": "spider_nest_2",
+   "kind": "camp",
+   "at": [
+    41600,
+    14400
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "giant spider": 4
+   }
+  },
+  {
+   "id": "red_dwarf_camp",
+   "kind": "camp",
+   "at": [
+    53960,
+    17600
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "red dwarf youth": 4,
+    "red dwarf thief": 4,
+    "red dwarf bandit": 3,
+    "red dwarf matron": 1,
+    "red dwarf chief": 1
+   }
+  },
+  {
+   "id": "red_dwarf_woods",
+   "kind": "wildlife",
+   "area": [
+    44000,
+    10000,
+    58000,
+    32000
+   ],
+   "spawn": {
+    "red dwarf thief": 16,
+    "red dwarf youth": 8,
+    "rock imp": 12,
+    "poacher": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "rock_imps",
+   "kind": "camp",
+   "at": [
+    39600,
+    41600
+   ],
+   "r": 280,
+   "respawn": 300,
+   "spawn": {
+    "rock imp": 5
+   }
+  },
+  {
+   "id": "goblin_camp",
+   "kind": "camp",
+   "at": [
+    8360,
+    5600
+   ],
+   "r": 640,
+   "respawn": 360,
+   "spawn": {
+    "goblin": 8,
+    "goblin scout": 3,
+    "goblin lookout": 3,
+    "goblin shaman": 2,
+    "goblin war-boss": 1
+   }
+  },
+  {
+   "id": "tepoks_mouth",
+   "kind": "camp",
+   "at": [
+    5400,
+    3400
+   ],
+   "r": 360,
+   "respawn": 300,
+   "spawn": {
+    "goblin": 4,
+    "goblin lookout": 1
+   }
+  },
+  {
+   "id": "goblin_raid",
+   "kind": "patrol",
+   "route": [
+    [
+     8360,
+     5600
+    ],
+    [
+     12000,
+     11200
+    ],
+    [
+     16800,
+     16800
+    ],
+    [
+     12000,
+     11200
+    ]
+   ],
+   "spawn": {
+    "goblin scout": 2,
+    "goblin": 1
+   }
+  },
+  {
+   "id": "mine_hills",
+   "kind": "wildlife",
+   "area": [
+    4000,
+    6000,
+    16000,
+    18000
+   ],
+   "spawn": {
+    "young poacher": 12,
+    "black wolf": 12,
+    "small bear": 8
+   },
+   "spacing": 260
+  },
+  {
+   "id": "northern_stone",
+   "kind": "camp",
+   "at": [
+    44400,
+    1600
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "devout filidh": 6,
+    "filidh sacrificer": 4
+   }
+  },
+  {
+   "id": "stone_path",
+   "kind": "wildlife",
+   "area": [
+    38000,
+    1600,
+    50000,
+    8000
+   ],
+   "spawn": {
+    "devout filidh": 8,
+    "small bear": 8
+   },
+   "spacing": 260
+  }
+ ]
+}

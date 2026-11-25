@@ -1,0 +1,61 @@
+{
+ "zone": 6,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu006",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Aquilifer's Lion-Skin",
+   "base": [
+    41,
+    26
+   ],
+   "level": 42,
+   "bonuses": {
+    "Str": 14,
+    "Con": 14,
+    "Dex": 7,
+    "Hits": 36
+   },
+   "lore": "The eagle-bearer's lion-skin, sea-stained and old."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gilt Eagle Feather",
+   "base": [
+    41,
+    24
+   ],
+   "level": 42,
+   "bonuses": {
+    "Pie": 14,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 25
+   },
+   "lore": "From the eagle of the Ninth."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "White Bucca's Shell",
+   "base": [
+    41,
+    24
+   ],
+   "level": 28,
+   "bonuses": {
+    "Int": 9,
+    "Pie": 5,
+    "Dex": 5,
+    "Power": 4,
+    "Hits": 17
+   },
+   "lore": "A white shell. Hold it to your ear and hear a storm."
+  }
+ ]
+}

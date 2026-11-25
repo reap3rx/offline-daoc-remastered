@@ -4,9 +4,39 @@
   "1": [
    {
     "name": "Cotswold",
-    "zone": "",
-    "rating": "",
-    "blurb": ""
+    "zone": "Camelot Hills",
+    "rating": "peaceful",
+    "blurb": "Albion's first town, in the green hills below Camelot. Gentle country, and the roads lead everywhere."
+   },
+   {
+    "name": "Humberton",
+    "zone": "Black Mountains South",
+    "rating": "peaceful",
+    "blurb": "A keep town in the southern Black Mountains, held by the Pendragon's Watch. The monks of Vetusta Abbey wait here for their abbey back."
+   },
+   {
+    "name": "West Downs",
+    "zone": "Salisbury Plains",
+    "rating": "wild",
+    "blurb": "A downs town north of the Giants' Dance, held by the Pendragon's Watch. Giants walk the plain to the south."
+   },
+   {
+    "name": "Caer Ulfwych",
+    "zone": "Campacorentin Forest",
+    "rating": "wild",
+    "blurb": "A rangers' fort in the middle of the old forest. Merlin sleeps somewhere in the deep wood to the south-east."
+   },
+   {
+    "name": "Adribard's Retreat",
+    "zone": "Avalon Marsh",
+    "rating": "wild",
+    "blurb": "A dry town on the marsh's north-east edge, across the water from the Isle where Arthur sleeps. The marsh turns deadly toward Cornwall."
+   },
+   {
+    "name": "Cornwall Station",
+    "zone": "Cornwall",
+    "rating": "deadly",
+    "blurb": "HARD START. A garrison station on the Cornish moor, in a Deadly zone of giants and drowned legions far from Camelot. Only the moor round it is gentle."
    }
   ],
   "2": [

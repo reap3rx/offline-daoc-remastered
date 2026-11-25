@@ -1,807 +1,2180 @@
 {
-  "zone": 1,
-  "region": 1,
-  "name": "Salisbury Plains",
-  "lore": "The wide downs of Salisbury, where the old kings lie under their mounds and the stones stand in their rings, and where tomb raiders dig by night.",
-  "chains": [
+ "zone": 1,
+ "region": 1,
+ "name": "Salisbury Plains",
+ "lore": "The wide downs of Salisbury, and the Giants' Dance. Golestandt's giants have marched north out of Cornwall to take back the stones their kind first raised - the ring Merlin set over the graves of the lords Hengist murdered at the feast of the Long Knives. Their tomb-raiders dig out the dead that bind the stones, and the dead do not like it.",
+ "chains": [
+  {
+   "id": "salisbury_plains_tomb_robbers",
+   "title": "The Tomb Robbers",
+   "levels": [
+    10,
+    17
+   ],
+   "hint": "Spades ringing in the western fields - the diggers have opened another barrow...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "salisbury_plains_tomb_robbers",
-      "title": "The Tomb Robbers",
-      "levels": [10, 17],
-      "hint": "Lanterns move among the mounds by night...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Robbers' Diggings",
-          "objective": "Clear the robbers' diggings",
-          "announce": "Corwin's tomb raiders have broken into a king's mound and are hauling the grave goods away. Stop them.",
-          "center": [273, 979, 55.6],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12737,
-              "name": "tomb raider digger",
-              "level": [10, 13]
-            },
-            {
-              "template": 12738,
-              "name": "tomb raider scout",
-              "level": [13, 15]
-            },
-            {
-              "template": 12734,
-              "name": "tomb raider",
-              "level": [16, 17]
-            }
-          ],
-          "success": "You have cleared the robbers' diggings. Corwin the Graverobber comes out to fight.",
-          "fail": "They hold the robbers' diggings. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Corwin the Graverobber",
-          "objective": "Defeat Corwin the Graverobber",
-          "announce": "Corwin the Graverobber stands at the robbers' diggings. Bring friends.",
-          "center": [273, 979, 55.6],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12734,
-            "name": "Corwin the Graverobber",
-            "level": 19,
-            "size": 67,
-            "pos": [273, 979, 55.6],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12737,
-                "name": "tomb raider digger",
-                "level": [10, 13]
-              }
-            ]
-          },
-          "success": "Corwin the Graverobber falls. The way is safe again.",
-          "fail": "Corwin the Graverobber slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu1_corwin_the_graverobber_s_sash", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Tomb Raider Diggers Hold the Road",
-          "objective": "Drive the tomb raider diggers off the road",
-          "announce": "With The Tomb Robbers lost, the tomb raider diggers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [129, 1158, 56.8],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12737,
-              "name": "tomb raider digger",
-              "level": [10, 13]
-            },
-            {
-              "template": 12738,
-              "name": "tomb raider scout",
-              "level": [13, 15]
-            },
-            {
-              "template": 12734,
-              "name": "tomb raider",
-              "level": [16, 17]
-            }
-          ],
-          "boss": {
-            "template": 12737,
-            "name": "Tomb raider digger warleader",
-            "level": 18,
-            "pos": [129, 1158, 56.8],
-            "health_mult": 2
-          },
-          "success": "The tomb raider diggers are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Mabyn has come out to set the road right. The tomb raider diggers are coming back for it!",
-          "center": [129, 1158, 56.8],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Mabyn",
-            "level": 17,
-            "pos": [129, 1158, 56.8],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [118, 1074, 56.3],
-              [182, 1092, 59.3],
-              [213, 1150, 52.9]
-            ],
-            "mobs": [
-              {
-                "template": 12737,
-                "name": "tomb raider digger",
-                "level": [10, 13]
-              },
-              {
-                "template": 12738,
-                "name": "tomb raider scout",
-                "level": [13, 15]
-              },
-              {
-                "template": 12734,
-                "name": "tomb raider",
-                "level": [16, 17]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The tomb raider diggers break and scatter. The road is open again.",
-          "fail": "Roadwarden Mabyn falls, and the tomb raider diggers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "salisbury_plains_restless_plain",
-      "title": "The Restless Plain",
-      "levels": [9, 14],
-      "hint": "A cold wind blows across the plain...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Druid Morwen",
-          "objective": "Protect Druid Morwen, who is singing the dead back to sleep",
-          "announce": "The robbed mound has woken its dead. Druid Morwen is singing them back to sleep - keep them off her until she is done.",
-          "center": [518, 610, 58.6],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Druid Morwen",
-            "template": 60161738,
-            "level": 14,
-            "model": 28,
-            "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f",
-            "health_mult": 10,
-            "pos": [518, 610, 58.6]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [572, 676, 57.6],
-              [509, 695, 52.5],
-              [451, 663, 55.9]
-            ],
-            "mobs": [
-              {
-                "template": 12735,
-                "name": "disturbed presence",
-                "level": [12, 14]
-              },
-              {
-                "template": 12744,
-                "name": "wandering spirit",
-                "level": [9, 11]
-              },
-              {
-                "template": 12690,
-                "name": "green ghast",
-                "level": [12, 14]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Druid Morwen. \"They came from over there - let's finish this.\"",
-          "fail": "Druid Morwen falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Robbed Mound",
-          "objective": "Clear the robbed mound",
-          "announce": "They came from the robbed mound. Follow them back and clear it out.",
-          "center": [492, 865, 55.2],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12735,
-              "name": "disturbed presence",
-              "level": [12, 14]
-            },
-            {
-              "template": 12744,
-              "name": "wandering spirit",
-              "level": [9, 11]
-            },
-            {
-              "template": 12690,
-              "name": "green ghast",
-              "level": [12, 14]
-            }
-          ],
-          "success": "You have cleared the robbed mound. The Hollow King comes out to fight.",
-          "fail": "They hold the robbed mound. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "The Hollow King",
-          "objective": "Defeat the Hollow King",
-          "announce": "The Hollow King stands at the robbed mound. Bring friends.",
-          "center": [492, 865, 55.2],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12690,
-            "name": "The Hollow King",
-            "level": 16,
-            "size": 65,
-            "pos": [492, 865, 55.2],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12735,
-                "name": "disturbed presence",
-                "level": [12, 14]
-              }
-            ]
-          },
-          "success": "The Hollow King falls. The way is safe again.",
-          "fail": "The Hollow King slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu1_hollow_king_s_cloak", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Disturbed Presences Hold the Road",
-          "objective": "Drive the disturbed presences off the road",
-          "announce": "With The Restless Plain lost, the disturbed presences have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [673, 1007, 54.0],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12735,
-              "name": "disturbed presence",
-              "level": [12, 14]
-            },
-            {
-              "template": 12744,
-              "name": "wandering spirit",
-              "level": [9, 11]
-            },
-            {
-              "template": 12690,
-              "name": "green ghast",
-              "level": [12, 14]
-            }
-          ],
-          "boss": {
-            "template": 12735,
-            "name": "Disturbed presence warleader",
-            "level": 15,
-            "pos": [673, 1007, 54.0],
-            "health_mult": 2
-          },
-          "success": "The disturbed presences are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cuthbert has come out to set the road right. The disturbed presences are coming back for it!",
-          "center": [673, 1007, 54.0],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cuthbert",
-            "level": 14,
-            "pos": [673, 1007, 54.0],
-            "health_mult": 10,
-            "template": 60161738,
-            "model": 28,
-            "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [588, 1019, 53.5],
-              [606, 955, 56.9],
-              [664, 923, 59.0]
-            ],
-            "mobs": [
-              {
-                "template": 12735,
-                "name": "disturbed presence",
-                "level": [12, 14]
-              },
-              {
-                "template": 12744,
-                "name": "wandering spirit",
-                "level": [9, 11]
-              },
-              {
-                "template": 12690,
-                "name": "green ghast",
-                "level": [12, 14]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The disturbed presences break and scatter. The road is open again.",
-          "fail": "Roadwarden Cuthbert falls, and the disturbed presences take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "salisbury_plains_spriggarn_ambush",
-      "title": "The Spriggarn Ambush",
-      "levels": [14, 16],
-      "hint": "Guard Eiddef is looking for help in the watch post.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Guard Eiddef",
-        "template": 60161738,
-        "level": 17,
-        "model": 28,
-        "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f",
-        "guild": "Salisbury Watch",
-        "health_mult": 4,
-        "pos": [245, 1328, 53.2],
-        "greet": "Spriggarn have been waylaying travellers on the south road, and the last patrol never came back. I'm going to find them. Come with me? Say when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Robbers' Diggings",
+     "objective": "Clear the robbers' diggings",
+     "announce": "Corwin's tomb raiders have broken into a king's mound and are hauling the grave goods away. Stop them.",
+     "center": [
+      380,
+      1080,
+      51.9
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12737,
+       "name": "tomb raider digger",
+       "level": [
+        10,
+        13
+       ]
       },
-      "guards": [
-        {
-          "name": "Guard",
-          "template": 60161738,
-          "level": 16,
-          "model": 28,
-          "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f",
-          "guild": "Salisbury Watch",
-          "health_mult": 2,
-          "count": 3
-        }
-      ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Spriggarn Thicket",
-          "objective": "Go with Guard Eiddef to the spriggarn thicket",
-          "announce": "Guard Eiddef sets out to find the lost patrol and the spriggarn that took it.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [324, 1404, 50.2],
-            [348, 1428, 55.7]
-          ],
-          "ambushes": [
-            {
-              "at": 1,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 12731,
-                  "name": "spriggarn waylayer",
-                  "level": [14, 14]
-                },
-                {
-                  "template": 12729,
-                  "name": "spriggarn ambusher",
-                  "level": [15, 15]
-                }
-              ]
-            }
-          ],
-          "success": "Guard Eiddef reaches the spriggarn thicket. \"There they are. Clear them out!\"",
-          "fail": "Guard Eiddef falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Spriggarn Thicket",
-          "objective": "Clear the spriggarn thicket",
-          "announce": "Clear the spriggarn thicket!",
-          "center": [349, 1425, 54.5],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12731,
-              "name": "spriggarn waylayer",
-              "level": [14, 14]
-            },
-            {
-              "template": 12729,
-              "name": "spriggarn ambusher",
-              "level": [15, 15]
-            },
-            {
-              "template": 12730,
-              "name": "spriggarn howler",
-              "level": [16, 16]
-            }
-          ],
-          "success": "You have cleared the spriggarn thicket. Gnarlroot the Howler comes out to fight.",
-          "fail": "They hold the spriggarn thicket. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "Gnarlroot the Howler",
-          "objective": "Defeat Gnarlroot the Howler",
-          "announce": "Gnarlroot the Howler stands at the spriggarn thicket. Bring friends.",
-          "center": [349, 1425, 54.5],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12730,
-            "name": "Gnarlroot the Howler",
-            "level": 18,
-            "size": 65,
-            "pos": [349, 1425, 54.5],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12731,
-                "name": "spriggarn waylayer",
-                "level": [14, 14]
-              }
-            ]
-          },
-          "success": "Gnarlroot the Howler falls. The watch post will hear of this in the taverns tonight.",
-          "fail": "Gnarlroot the Howler slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu1_gnarlroot_the_howler_s_torc", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Spriggarn Waylayers Hold the Road",
-          "objective": "Drive the spriggarn waylayers off the road",
-          "announce": "With The Spriggarn Ambush lost, the spriggarn waylayers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [122, 1459, 72.4],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12731,
-              "name": "spriggarn waylayer",
-              "level": [14, 14]
-            },
-            {
-              "template": 12729,
-              "name": "spriggarn ambusher",
-              "level": [15, 15]
-            },
-            {
-              "template": 12730,
-              "name": "spriggarn howler",
-              "level": [16, 16]
-            }
-          ],
-          "boss": {
-            "template": 12731,
-            "name": "Spriggarn waylayer warleader",
-            "level": 17,
-            "pos": [122, 1459, 72.4],
-            "health_mult": 2
-          },
-          "success": "The spriggarn waylayers are gone from the road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cuthbert has come out to set the road right. The spriggarn waylayers are coming back for it!",
-          "center": [122, 1459, 72.4],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cuthbert",
-            "level": 16,
-            "pos": [122, 1459, 72.4],
-            "health_mult": 10,
-            "template": 60161738,
-            "model": 28,
-            "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [171, 1390, 60.2],
-              [206, 1446, 52.5],
-              [189, 1511, 82.3]
-            ],
-            "mobs": [
-              {
-                "template": 12731,
-                "name": "spriggarn waylayer",
-                "level": [14, 14]
-              },
-              {
-                "template": 12729,
-                "name": "spriggarn ambusher",
-                "level": [15, 15]
-              },
-              {
-                "template": 12730,
-                "name": "spriggarn howler",
-                "level": [16, 16]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road is safe again. Thank you.\"",
-          "success": "The spriggarn waylayers break and scatter. The road is open again.",
-          "fail": "Roadwarden Cuthbert falls, and the spriggarn waylayers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+      {
+       "template": 12738,
+       "name": "tomb raider scout",
+       "level": [
+        13,
+        15
+       ]
+      },
+      {
+       "template": 12734,
+       "name": "tomb raider",
+       "level": [
+        16,
+        17
+       ]
+      }
+     ],
+     "success": "You have cleared the robbers' diggings. Corwin the Graverobber comes out to fight.",
+     "fail": "They hold the robbers' diggings. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "salisbury_plains_basilisk_nest",
-      "title": "The Basilisk Nest",
-      "levels": [12, 15],
-      "hint": "Grazing flocks have been found turned to stone...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Basilisk Nest",
-          "objective": "Clear the basilisk nest",
-          "announce": "Basilisks are nesting on the downs, and the shepherds keep finding their flocks frozen in stone. Break the nest.",
-          "center": [1259, 268, 54.4],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12712,
-              "name": "pseudo basilisk",
-              "level": [12, 12]
-            },
-            {
-              "template": 12662,
-              "name": "basilisk",
-              "level": [15, 15]
-            }
-          ],
-          "success": "You have cleared the basilisk nest. The Stone-Eyed Mother comes out to fight.",
-          "fail": "They hold the basilisk nest. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Stone-Eyed Mother",
-          "objective": "Defeat the Stone-Eyed Mother",
-          "announce": "The Stone-Eyed Mother stands at the basilisk nest. Bring friends.",
-          "center": [1259, 268, 54.4],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12659,
-            "name": "The Stone-Eyed Mother",
-            "level": 17,
-            "size": 110,
-            "pos": [1259, 268, 54.4],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12712,
-                "name": "pseudo basilisk",
-                "level": [12, 12]
-              }
-            ]
-          },
-          "success": "The Stone-Eyed Mother falls. The way is safe again.",
-          "fail": "The Stone-Eyed Mother slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu1_stone_eyed_mother_s_torc", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Pseudo Basilisks Hold the Old Road",
-          "objective": "Drive the pseudo basilisks off the old road",
-          "announce": "With The Basilisk Nest lost, the pseudo basilisks have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [874, 538, 63.9],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12712,
-              "name": "pseudo basilisk",
-              "level": [12, 12]
-            },
-            {
-              "template": 12662,
-              "name": "basilisk",
-              "level": [15, 15]
-            }
-          ],
-          "boss": {
-            "template": 12712,
-            "name": "Pseudo basilisk warleader",
-            "level": 16,
-            "pos": [874, 538, 63.9],
-            "health_mult": 2
-          },
-          "success": "The pseudo basilisks are gone from the old road. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hal has come out to set the old road right. The pseudo basilisks are coming back for it!",
-          "center": [874, 538, 63.9],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hal",
-            "level": 15,
-            "pos": [874, 538, 63.9],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [888, 454, 58.3],
-              [944, 489, 58.4],
-              [957, 554, 64.2]
-            ],
-            "mobs": [
-              {
-                "template": 12712,
-                "name": "pseudo basilisk",
-                "level": [12, 12]
-              },
-              {
-                "template": 12662,
-                "name": "basilisk",
-                "level": [15, 15]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the old road is safe again. Thank you.\"",
-          "success": "The pseudo basilisks break and scatter. The old road is open again.",
-          "fail": "Roadwarden Hal falls, and the pseudo basilisks take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Corwin the Graverobber",
+     "objective": "Defeat Corwin the Graverobber",
+     "announce": "Corwin the Graverobber stands at the robbers' diggings. Bring friends.",
+     "center": [
+      380,
+      1080,
+      51.9
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12734,
+      "name": "Corwin the Graverobber",
+      "level": 19,
+      "size": 67,
+      "pos": [
+       380,
+       1080,
+       51.9
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12737,
+        "name": "tomb raider digger",
+        "level": [
+         10,
+         13
+        ]
+       }
       ]
+     },
+     "success": "Corwin the Graverobber falls. The way is safe again.",
+     "fail": "Corwin the Graverobber slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu1_corwin_the_graverobber_s_sash",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Tomb Raider Diggers Hold the Road",
+     "objective": "Drive the tomb raider diggers off the road",
+     "announce": "With The Tomb Robbers lost, the tomb raider diggers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      200,
+      1160,
+      57.3
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12737,
+       "name": "tomb raider digger",
+       "level": [
+        10,
+        13
+       ]
+      },
+      {
+       "template": 12738,
+       "name": "tomb raider scout",
+       "level": [
+        13,
+        15
+       ]
+      },
+      {
+       "template": 12734,
+       "name": "tomb raider",
+       "level": [
+        16,
+        17
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12737,
+      "name": "Tomb raider digger warleader",
+      "level": 18,
+      "pos": [
+       200,
+       1160,
+       57.3
+      ],
+      "health_mult": 2
+     },
+     "success": "The tomb raider diggers are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Mabyn has come out to set the road right. The tomb raider diggers are coming back for it!",
+     "center": [
+      200,
+      1160,
+      57.3
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Mabyn",
+      "level": 17,
+      "pos": [
+       200,
+       1160,
+       57.3
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        170,
+        1130,
+        60.4
+       ],
+       [
+        230,
+        1190,
+        51.7
+       ],
+       [
+        170,
+        1195,
+        60.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12737,
+        "name": "tomb raider digger",
+        "level": [
+         10,
+         13
+        ]
+       },
+       {
+        "template": 12738,
+        "name": "tomb raider scout",
+        "level": [
+         13,
+         15
+        ]
+       },
+       {
+        "template": 12734,
+        "name": "tomb raider",
+        "level": [
+         16,
+         17
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The tomb raider diggers break and scatter. The road is open again.",
+     "fail": "Roadwarden Mabyn falls, and the tomb raider diggers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
+   ]
+  },
+  {
+   "id": "salisbury_plains_restless_plain",
+   "title": "The Restless Plain",
+   "levels": [
+    9,
+    14
+   ],
+   "hint": "A cold wind blows across the plain...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Druid Morwen",
+     "objective": "Protect Druid Morwen, who is singing the dead back to sleep",
+     "announce": "The robbed mound has woken its dead. Druid Morwen is singing them back to sleep - keep them off her until she is done.",
+     "center": [
+      518,
+      610,
+      58.6
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Druid Morwen",
+      "template": 60161738,
+      "level": 14,
+      "model": 28,
+      "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f",
+      "health_mult": 10,
+      "pos": [
+       518,
+       610,
+       58.6
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        572,
+        676,
+        57.6
+       ],
+       [
+        509,
+        695,
+        52.5
+       ],
+       [
+        451,
+        663,
+        55.9
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12735,
+        "name": "disturbed presence",
+        "level": [
+         12,
+         14
+        ]
+       },
+       {
+        "template": 12744,
+        "name": "wandering spirit",
+        "level": [
+         9,
+         11
+        ]
+       },
+       {
+        "template": 12690,
+        "name": "green ghast",
+        "level": [
+         12,
+         14
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Druid Morwen. \"They came from over there - let's finish this.\"",
+     "fail": "Druid Morwen falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Robbed Mound",
+     "objective": "Clear the robbed mound",
+     "announce": "They came from the robbed mound. Follow them back and clear it out.",
+     "center": [
+      492,
+      865,
+      55.2
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12735,
+       "name": "disturbed presence",
+       "level": [
+        12,
+        14
+       ]
+      },
+      {
+       "template": 12744,
+       "name": "wandering spirit",
+       "level": [
+        9,
+        11
+       ]
+      },
+      {
+       "template": 12690,
+       "name": "green ghast",
+       "level": [
+        12,
+        14
+       ]
+      }
+     ],
+     "success": "You have cleared the robbed mound. The Hollow King comes out to fight.",
+     "fail": "They hold the robbed mound. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "The Hollow King",
+     "objective": "Defeat the Hollow King",
+     "announce": "The Hollow King stands at the robbed mound. Bring friends.",
+     "center": [
+      492,
+      865,
+      55.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12690,
+      "name": "The Hollow King",
+      "level": 16,
+      "size": 65,
+      "pos": [
+       492,
+       865,
+       55.2
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12735,
+        "name": "disturbed presence",
+        "level": [
+         12,
+         14
+        ]
+       }
+      ]
+     },
+     "success": "The Hollow King falls. The way is safe again.",
+     "fail": "The Hollow King slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu1_hollow_king_s_cloak",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Disturbed Presences Hold the Road",
+     "objective": "Drive the disturbed presences off the road",
+     "announce": "With The Restless Plain lost, the disturbed presences have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      673,
+      1007,
+      54.0
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12735,
+       "name": "disturbed presence",
+       "level": [
+        12,
+        14
+       ]
+      },
+      {
+       "template": 12744,
+       "name": "wandering spirit",
+       "level": [
+        9,
+        11
+       ]
+      },
+      {
+       "template": 12690,
+       "name": "green ghast",
+       "level": [
+        12,
+        14
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12735,
+      "name": "Disturbed presence warleader",
+      "level": 15,
+      "pos": [
+       673,
+       1007,
+       54.0
+      ],
+      "health_mult": 2
+     },
+     "success": "The disturbed presences are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cuthbert has come out to set the road right. The disturbed presences are coming back for it!",
+     "center": [
+      673,
+      1007,
+      54.0
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cuthbert",
+      "level": 14,
+      "pos": [
+       673,
+       1007,
+       54.0
+      ],
+      "health_mult": 10,
+      "template": 60161738,
+      "model": 28,
+      "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        588,
+        1019,
+        53.5
+       ],
+       [
+        606,
+        955,
+        56.9
+       ],
+       [
+        664,
+        923,
+        59.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12735,
+        "name": "disturbed presence",
+        "level": [
+         12,
+         14
+        ]
+       },
+       {
+        "template": 12744,
+        "name": "wandering spirit",
+        "level": [
+         9,
+         11
+        ]
+       },
+       {
+        "template": 12690,
+        "name": "green ghast",
+        "level": [
+         12,
+         14
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The disturbed presences break and scatter. The road is open again.",
+     "fail": "Roadwarden Cuthbert falls, and the disturbed presences take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "salisbury_plains_spriggarn_ambush",
+   "title": "The Spriggarn Ambush",
+   "levels": [
+    14,
+    16
+   ],
+   "hint": "Guard Eiddef is looking for help in the watch post.",
+   "rest_s": 45,
+   "giver": {
+    "name": "Guard Eiddef",
+    "template": 60161738,
+    "level": 17,
+    "model": 28,
+    "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f",
+    "guild": "Salisbury Watch",
+    "health_mult": 4,
+    "pos": [
+     245,
+     1328,
+     53.2
+    ],
+    "greet": "Spriggarn have been waylaying travellers on the south road, and the last patrol never came back. I'm going to find them. Come with me? Say when you're [ready].",
+    "accept": "ready",
+    "reply": "Good. Stay close - they will have watchers out. With me!",
+    "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "name": "Guard",
+     "template": 60161738,
+     "level": 16,
+     "model": 28,
+     "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f",
+     "guild": "Salisbury Watch",
+     "health_mult": 2,
+     "count": 3
+    }
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "escort",
+     "name": "The Road to Spriggarn Thicket",
+     "objective": "Go with Guard Eiddef to the spriggarn thicket",
+     "announce": "Guard Eiddef sets out to find the lost patrol and the spriggarn that took it.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       324,
+       1404,
+       50.2
+      ],
+      [
+       348,
+       1428,
+       55.7
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 1,
+       "count": 3,
+       "say": "Ambush! To me - hold together!",
+       "mobs": [
+        {
+         "template": 12731,
+         "name": "spriggarn waylayer",
+         "level": [
+          14,
+          14
+         ]
+        },
+        {
+         "template": 12729,
+         "name": "spriggarn ambusher",
+         "level": [
+          15,
+          15
+         ]
+        }
+       ]
+      }
+     ],
+     "success": "Guard Eiddef reaches the spriggarn thicket. \"There they are. Clear them out!\"",
+     "fail": "Guard Eiddef falls on the road. The others carry the body home.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "g2",
+     "type": "cull",
+     "name": "Clear Spriggarn Thicket",
+     "objective": "Clear the spriggarn thicket",
+     "announce": "Clear the spriggarn thicket!",
+     "center": [
+      349,
+      1425,
+      54.5
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12731,
+       "name": "spriggarn waylayer",
+       "level": [
+        14,
+        14
+       ]
+      },
+      {
+       "template": 12729,
+       "name": "spriggarn ambusher",
+       "level": [
+        15,
+        15
+       ]
+      },
+      {
+       "template": 12730,
+       "name": "spriggarn howler",
+       "level": [
+        16,
+        16
+       ]
+      }
+     ],
+     "success": "You have cleared the spriggarn thicket. Gnarlroot the Howler comes out to fight.",
+     "fail": "They hold the spriggarn thicket. They will be bolder next time.",
+     "on_success": "g3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g3",
+     "type": "boss",
+     "name": "Gnarlroot the Howler",
+     "objective": "Defeat Gnarlroot the Howler",
+     "announce": "Gnarlroot the Howler stands at the spriggarn thicket. Bring friends.",
+     "center": [
+      349,
+      1425,
+      54.5
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12730,
+      "name": "Gnarlroot the Howler",
+      "level": 18,
+      "size": 65,
+      "pos": [
+       349,
+       1425,
+       54.5
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12731,
+        "name": "spriggarn waylayer",
+        "level": [
+         14,
+         14
+        ]
+       }
+      ]
+     },
+     "success": "Gnarlroot the Howler falls. The watch post will hear of this in the taverns tonight.",
+     "fail": "Gnarlroot the Howler slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu1_gnarlroot_the_howler_s_torc",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Spriggarn Waylayers Hold the Road",
+     "objective": "Drive the spriggarn waylayers off the road",
+     "announce": "With The Spriggarn Ambush lost, the spriggarn waylayers have spread down onto the road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      122,
+      1459,
+      72.4
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12731,
+       "name": "spriggarn waylayer",
+       "level": [
+        14,
+        14
+       ]
+      },
+      {
+       "template": 12729,
+       "name": "spriggarn ambusher",
+       "level": [
+        15,
+        15
+       ]
+      },
+      {
+       "template": 12730,
+       "name": "spriggarn howler",
+       "level": [
+        16,
+        16
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12731,
+      "name": "Spriggarn waylayer warleader",
+      "level": 17,
+      "pos": [
+       122,
+       1459,
+       72.4
+      ],
+      "health_mult": 2
+     },
+     "success": "The spriggarn waylayers are gone from the road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cuthbert has come out to set the road right. The spriggarn waylayers are coming back for it!",
+     "center": [
+      122,
+      1459,
+      72.4
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cuthbert",
+      "level": 16,
+      "pos": [
+       122,
+       1459,
+       72.4
+      ],
+      "health_mult": 10,
+      "template": 60161738,
+      "model": 28,
+      "equipment": "763bd24f-bc6b-4ef0-bc0e-add5e794218f"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        171,
+        1390,
+        60.2
+       ],
+       [
+        206,
+        1446,
+        52.5
+       ],
+       [
+        189,
+        1511,
+        82.3
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12731,
+        "name": "spriggarn waylayer",
+        "level": [
+         14,
+         14
+        ]
+       },
+       {
+        "template": 12729,
+        "name": "spriggarn ambusher",
+        "level": [
+         15,
+         15
+        ]
+       },
+       {
+        "template": 12730,
+        "name": "spriggarn howler",
+        "level": [
+         16,
+         16
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road is safe again. Thank you.\"",
+     "success": "The spriggarn waylayers break and scatter. The road is open again.",
+     "fail": "Roadwarden Cuthbert falls, and the spriggarn waylayers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "salisbury_plains_basilisk_nest",
+   "title": "The Basilisk Nest",
+   "levels": [
+    12,
+    15
+   ],
+   "hint": "Grazing flocks have been found turned to stone...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Basilisk Nest",
+     "objective": "Clear the basilisk nest",
+     "announce": "Basilisks are nesting on the downs, and the shepherds keep finding their flocks frozen in stone. Break the nest.",
+     "center": [
+      1259,
+      268,
+      54.4
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12712,
+       "name": "pseudo basilisk",
+       "level": [
+        12,
+        12
+       ]
+      },
+      {
+       "template": 12662,
+       "name": "basilisk",
+       "level": [
+        15,
+        15
+       ]
+      }
+     ],
+     "success": "You have cleared the basilisk nest. The Stone-Eyed Mother comes out to fight.",
+     "fail": "They hold the basilisk nest. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "The Stone-Eyed Mother",
+     "objective": "Defeat the Stone-Eyed Mother",
+     "announce": "The Stone-Eyed Mother stands at the basilisk nest. Bring friends.",
+     "center": [
+      1259,
+      268,
+      54.4
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12659,
+      "name": "The Stone-Eyed Mother",
+      "level": 17,
+      "size": 110,
+      "pos": [
+       1259,
+       268,
+       54.4
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12712,
+        "name": "pseudo basilisk",
+        "level": [
+         12,
+         12
+        ]
+       }
+      ]
+     },
+     "success": "The Stone-Eyed Mother falls. The way is safe again.",
+     "fail": "The Stone-Eyed Mother slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu1_stone_eyed_mother_s_torc",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Pseudo Basilisks Hold the Old Road",
+     "objective": "Drive the pseudo basilisks off the old road",
+     "announce": "With The Basilisk Nest lost, the pseudo basilisks have spread down onto the old road and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      874,
+      538,
+      63.9
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12712,
+       "name": "pseudo basilisk",
+       "level": [
+        12,
+        12
+       ]
+      },
+      {
+       "template": 12662,
+       "name": "basilisk",
+       "level": [
+        15,
+        15
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12712,
+      "name": "Pseudo basilisk warleader",
+      "level": 16,
+      "pos": [
+       874,
+       538,
+       63.9
+      ],
+      "health_mult": 2
+     },
+     "success": "The pseudo basilisks are gone from the old road. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hal has come out to set the old road right. The pseudo basilisks are coming back for it!",
+     "center": [
+      874,
+      538,
+      63.9
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hal",
+      "level": 15,
+      "pos": [
+       874,
+       538,
+       63.9
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        888,
+        454,
+        58.3
+       ],
+       [
+        944,
+        489,
+        58.4
+       ],
+       [
+        957,
+        554,
+        64.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12712,
+        "name": "pseudo basilisk",
+        "level": [
+         12,
+         12
+        ]
+       },
+       {
+        "template": 12662,
+        "name": "basilisk",
+        "level": [
+         15,
+         15
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the old road is safe again. Thank you.\"",
+     "success": "The pseudo basilisks break and scatter. The old road is open again.",
+     "fail": "Roadwarden Hal falls, and the pseudo basilisks take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "sp_giants_muster",
+   "title": "The Giants' Muster",
+   "levels": [
+    18,
+    22
+   ],
+   "hint": "The ground shakes on the southern plain - a line of giants is walking north, carrying stones...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "m1",
+   "stages": [
+    {
+     "id": "m1",
+     "type": "cull",
+     "name": "The Stone-Line",
+     "objective": "Break the line of giants walking north with their stones",
+     "announce": "A line of giants is walking north across the plain toward the Dance, each with a block of Dartmoor granite on its back. Break the line!",
+     "center": [
+      760,
+      1150,
+      54.4
+     ],
+     "radius": 90,
+     "time_s": 1200,
+     "kill": 10,
+     "alive": 5,
+     "mobs": [
+      {
+       "template": 12719,
+       "name": "Salisbury giant",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the March of Golestandt"
+      },
+      {
+       "template": 12719,
+       "name": "Salisbury giant",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the March of Golestandt"
+      },
+      {
+       "template": 12699,
+       "name": "huge boar",
+       "level": [
+        18,
+        20
+       ]
+      }
+     ],
+     "success": "The line breaks and the stones fall in the grass - and the giants' foreman turns back to see why.",
+     "fail": "The giants walk on, and the stones reach the Dance.",
+     "on_success": "m2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 100,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "m2",
+     "type": "boss",
+     "name": "Foreman Trebiggan",
+     "objective": "Defeat Foreman Trebiggan",
+     "announce": "Foreman Trebiggan, a granite giant with a mason's maul: 'Little bones. Out of the road.' Bring friends.",
+     "center": [
+      760,
+      1150,
+      54.4
+     ],
+     "radius": 90,
+     "time_s": 1200,
+     "boss": {
+      "template": 770007,
+      "name": "Foreman Trebiggan",
+      "level": 24,
+      "size": 68,
+      "pos": [
+       760,
+       1150,
+       54.4
+      ],
+      "health_mult": 3,
+      "guild": "the March of Golestandt"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12719,
+        "name": "Salisbury giant",
+        "level": [
+         20,
+         22
+        ],
+        "guild": "the March of Golestandt"
+       }
+      ]
+     },
+     "success": "Trebiggan falls, and his stones stay where they dropped. The Dance will have to wait for them.",
+     "fail": "Trebiggan drives the line on.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 180,
+      "tokens": 14,
+      "items": [
+       {
+        "id": "nu001_foreman_s_maul_ring",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Giants Hold the South Road",
+     "objective": "Drive the giants off the south road",
+     "announce": "The giants' line has camped across the south road with its stones and turns back anyone who comes near.",
+     "center": [
+      700,
+      1050,
+      55.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12719,
+       "name": "Salisbury giant",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the March of Golestandt"
+      },
+      {
+       "template": 12699,
+       "name": "huge boar",
+       "level": [
+        18,
+        20
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12719,
+      "name": "giant road-warden",
+      "level": 22,
+      "health_mult": 2,
+      "pos": [
+       700,
+       1050,
+       55.2
+      ]
+     },
+     "success": "The road is clear again.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    }
+   ]
+  },
+  {
+   "id": "sp_feast_night",
+   "title": "The Feast-Night",
+   "levels": [
+    16,
+    20
+   ],
+   "hint": "Lights on the old feasting-ground, and laughter, and then screaming - the Long Knives' night is replaying...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "f1",
+   "stages": [
+    {
+     "id": "f1",
+     "type": "defend",
+     "name": "The Feasting-Ground",
+     "objective": "Keep Sister Gwenllian alive while she sings the dead to rest",
+     "announce": "On the old feasting-ground the murdered lords are rising, and the Saxon dead with them, to fight the feast again. Sister Gwenllian of Amesbury has gone to sing them down!",
+     "center": [
+      570,
+      860,
+      57.1
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "template": 60167630,
+      "model": 38,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "guild": "the Sisters of Amesbury",
+      "name": "Sister Gwenllian",
+      "level": 18,
+      "pos": [
+       570,
+       860,
+       57.1
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 24,
+      "count": 3,
+      "from": [
+       [
+        540,
+        830,
+        54.2
+       ],
+       [
+        600,
+        900,
+        52.2
+       ],
+       [
+        600,
+        830,
+        52.2
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12466,
+        "name": "disturbed presence",
+        "level": [
+         17,
+         19
+        ],
+        "model": 485
+       },
+       {
+        "template": 12622,
+        "name": "restless lord",
+        "level": [
+         17,
+         19
+        ]
+       },
+       {
+        "template": 12466,
+        "name": "disturbed presence",
+        "level": [
+         17,
+         19
+        ],
+        "model": 485
+       }
+      ]
+     },
+     "thanks": "\"Rest now. The feast is over. It has been over for a long time.\"",
+     "success": "The lords lie down - and at the head of the old table, a Saxon shade stands up with a knife in its hand.",
+     "fail": "Sister Gwenllian falls, and the feast goes on all night.",
+     "on_success": "f2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 90,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "f2",
+     "type": "boss",
+     "name": "the Feast-Master",
+     "objective": "Defeat the Feast-Master",
+     "announce": "The Feast-Master, Hengist's steward, raises his cup and his knife: 'Nimed eure saxes!' Bring friends.",
+     "center": [
+      570,
+      860,
+      57.1
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12016,
+      "name": "the Feast-Master",
+      "level": 21,
+      "size": 60,
+      "pos": [
+       570,
+       860,
+       57.1
+      ],
+      "health_mult": 3
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12466,
+        "name": "disturbed presence",
+        "level": [
+         17,
+         19
+        ],
+        "model": 485
+       }
+      ]
+     },
+     "success": "The Feast-Master's knife falls into the grass. The feasting-ground is quiet until the next new moon.",
+     "fail": "The Feast-Master's shade sits back down at the table, waiting.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 180,
+      "tokens": 14,
+      "items": [
+       {
+        "id": "nu001_feast_master_s_seax_ring",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ],
+   "time": "night"
+  },
+  {
+   "id": "sp_dance_assault",
+   "title": "The Siege of the Stones",
+   "levels": [
+    22,
+    26
+   ],
+   "manual": true,
+   "bots": 8,
+   "min_people": 4,
+   "bot_min_level": 18,
+   "hint": "Dame Lynet of the Watch is gathering a war band on the downs north of the Giants' Dance.",
+   "rest_s": 15,
+   "start": "s1",
+   "giver": {
+    "template": 60167630,
+    "model": 38,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Pendragon's Watch",
+    "name": "Dame Lynet",
+    "level": 26,
+    "pos": [
+     900,
+     775,
+     53.7
+    ],
+    "health_mult": 3,
+    "greet": "The giants hold the Dance. The Abbess says the dead under it can't rest while they do, and neither can I. Four at least, bots and all - say [for the stones].",
+    "accept": "for the stones",
+    "reply": "Down to the ring! Clear the outer stones, hold the three great arches, and bring down their herald!",
+    "busy": "Not yet. Rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Dance is ours again!",
+    "regret": "Back to the downs! We'll come again."
+   },
+   "guards": [
+    {
+     "template": 60167630,
+     "model": 28,
+     "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+     "guild": "the Pendragon's Watch",
+     "name": "watchman of Salisbury",
+     "level": 22,
+     "count": 2
+    },
+    {
+     "template": 60167630,
+     "model": 38,
+     "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+     "guild": "the Sisters of Amesbury",
+     "name": "sister of Amesbury",
+     "level": 20,
+     "count": 1
+    }
+   ],
+   "stages": [
+    {
+     "id": "s1",
+     "type": "cull",
+     "name": "The Outer Stones",
+     "objective": "Clear the giants from the outer stones",
+     "announce": "Into the ring! The giants are turning from the stones to meet us!",
+     "center": [
+      921,
+      930,
+      52.4
+     ],
+     "radius": 90,
+     "time_s": 900,
+     "kill": 18,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12719,
+       "name": "Salisbury giant",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the March of Golestandt"
+      },
+      {
+       "template": 12719,
+       "name": "Salisbury giant",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the March of Golestandt"
+      },
+      {
+       "template": 770007,
+       "name": "granite giant",
+       "level": [
+        23,
+        25
+       ],
+       "guild": "the March of Golestandt"
+      }
+     ],
+     "success": "The outer ring is clear. The giants fall back to the great arches.",
+     "fail": "The war band is thrown back onto the downs.",
+     "on_success": "s2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s2",
+     "type": "wards",
+     "name": "The Great Arches",
+     "objective": "Hold the three great arches at once",
+     "announce": "The giants are singing at the three great arches to pull them down! Stand under all three at once and the Sisters will sing them still!",
+     "center": [
+      921,
+      930,
+      52.4
+     ],
+     "radius": 90,
+     "wards": [
+      [
+       905,
+       915,
+       52.4
+      ],
+      [
+       940,
+       920,
+       52.4
+      ],
+      [
+       925,
+       950,
+       52.4
+      ]
+     ],
+     "ward_names": [
+      "the west arch",
+      "the east arch",
+      "the south arch"
+     ],
+     "ward_radius": 18,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 12719,
+       "name": "Salisbury giant",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the March of Golestandt"
+      },
+      {
+       "template": 770007,
+       "name": "granite giant",
+       "level": [
+        23,
+        25
+       ],
+       "guild": "the March of Golestandt"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "banner of the Watch",
+     "success": "The arches stand still - and Bolster steps into the ring.",
+     "fail": "The giants drive the war band off the arches.",
+     "on_success": "s3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "s3",
+     "type": "boss",
+     "name": "Bolster",
+     "objective": "Defeat Bolster, Herald of Golestandt",
+     "announce": "Bolster, Herald of Golestandt, steps between the arches: 'My master remembers raising these stones. Do you remember anything?'",
+     "center": [
+      921,
+      930,
+      52.4
+     ],
+     "radius": 90,
+     "time_s": 1200,
+     "boss": {
+      "template": 770001,
+      "name": "Bolster, Herald of Golestandt",
+      "level": 27,
+      "size": 72,
+      "health_mult": 2.5,
+      "guild": "Herald of the White Dragon"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12719,
+        "name": "Salisbury giant",
+        "level": [
+         20,
+         22
+        ],
+        "guild": "the March of Golestandt"
+       },
+       {
+        "template": 770007,
+        "name": "granite giant",
+        "level": [
+         23,
+         25
+        ],
+        "guild": "the March of Golestandt"
+       }
+      ]
+     },
+     "success": "Bolster falls across the altar stone. The Watch raises its banner in the Giants' Dance, and the Sisters begin to sing.",
+     "fail": "Bolster drives the war band out of the ring.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 260,
+      "tokens": 22,
+      "items": [
+       {
+        "id": "gd001_bolster_s_arm_ring",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sp_dance_return",
+   "title": "Cormoran Comes",
+   "levels": [
+    23,
+    26
+   ],
+   "manual": true,
+   "bots": 8,
+   "bot_min_level": 18,
+   "hint": "The ground shakes in the south: Cormoran is coming for the Dance.",
+   "wake_m": 200,
+   "auto_fail_s": 900,
+   "start": "x1",
+   "stages": [
+    {
+     "id": "x1",
+     "type": "defend",
+     "name": "The Altar Stone",
+     "objective": "Keep Sister Hild alive at the altar stone",
+     "announce": "Giants on every side of the Dance! Every giant Golestandt could send. Hold the altar stone!",
+     "center": [
+      921,
+      930,
+      52.4
+     ],
+     "radius": 80,
+     "duration_s": 200,
+     "protect": {
+      "template": 60167630,
+      "model": 38,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "guild": "the Sisters of Amesbury",
+      "name": "Sister Hild",
+      "level": 24,
+      "pos": [
+       921,
+       930,
+       52.4
+      ],
+      "health_mult": 5
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 4,
+      "from": [
+       [
+        860,
+        1000,
+        49.7
+       ],
+       [
+        990,
+        990,
+        49.1
+       ],
+       [
+        930,
+        1040,
+        55.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12719,
+        "name": "Salisbury giant",
+        "level": [
+         20,
+         22
+        ],
+        "guild": "the March of Golestandt"
+       },
+       {
+        "template": 770007,
+        "name": "granite giant",
+        "level": [
+         23,
+         25
+        ],
+        "guild": "the March of Golestandt"
+       },
+       {
+        "template": 12699,
+        "name": "huge boar",
+        "level": [
+         18,
+         20
+        ]
+       }
+      ]
+     },
+     "success": "The first rush breaks - and Cormoran walks into the ring.",
+     "fail": "Sister Hild falls at the altar stone.",
+     "on_success": "x2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 160,
+      "tokens": 14
+     }
+    },
+    {
+     "id": "x2",
+     "type": "boss",
+     "name": "Cormoran",
+     "objective": "Defeat Cormoran",
+     "announce": "Cormoran, the giant of the Mount, ducks under an arch: 'Jack killed my father with a pit and a horn. I've brought no pit.'",
+     "center": [
+      921,
+      930,
+      52.4
+     ],
+     "radius": 80,
+     "time_s": 900,
+     "boss": {
+      "template": 770002,
+      "name": "Cormoran",
+      "level": 27,
+      "size": 75,
+      "health_mult": 2.5,
+      "guild": "of the Mount"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 770007,
+        "name": "granite giant",
+        "level": [
+         23,
+         25
+        ],
+        "guild": "the March of Golestandt"
+       }
+      ]
+     },
+     "success": "Cormoran falls. The Dance holds - for now.",
+     "fail": "Cormoran takes the Dance back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 220,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "gd001_cormoran_s_tooth",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "siege": {
+  "id": "giants_dance",
+  "name": "the Giants' Dance",
+  "enemy": "the March of Golestandt",
+  "resolve_name": "The Sisters' resolve",
+  "enemy_name": "The giants' hold",
+  "faction": "sisters_of_amesbury",
+  "feeds": {
+   "sp_giants_muster": 20,
+   "sp_feast_night": 10,
+   "salisbury_plains_tomb_robbers": 10,
+   "salisbury_plains_restless_plain": 10,
+   "salisbury_plains_basilisk_nest": 5,
+   "salisbury_plains_spriggarn_ambush": 5
+  },
+  "feed_default": 5,
+  "quests": {
+   "sp_diggers": 10,
+   "sp_what_spade_woke": 10,
+   "sp_paymaster": 15,
+   "sp_long_knives": 15,
+   "sp_footprints": 10,
+   "sp_cottrel": 15,
+   "sp_the_dance": 20,
+   "sp_giants_dead": 20
+  },
+  "enemy_feeds": {
+   "sp_giants_muster": 20
+  },
+  "enemy_default": 5,
+  "war_chain": "sp_giants_muster",
+  "assault": "sp_dance_assault",
+  "raids": [],
+  "last_raid": "sp_dance_return",
+  "hold_h": 2,
+  "raid_gap_h": [
+   2,
+   1.5,
+   1.5
+  ],
+  "criers": [
+   "sp_abbess",
+   "sp_osfrid"
+  ],
+  "bots_go_after_m": 30,
+  "open_text": "Hear me! The Watch and the Sisters of Amesbury mean to take back the Giants' Dance! Dame Lynet waits on the downs north of the ring. If no one leads within the half-hour, the Watch goes without you.",
+  "taken_text": "The Giants' Dance is ours! The Watch's banner flies over the stones and the Sisters sing for the dead - go and see.",
+  "repelled_text": "The attack on the Dance has been thrown back. The giants grow bolder.",
+  "raid_text": "The ground shakes in the south: the giants are coming back for the Dance!",
+  "held_text": "The giants are thrown back from the stones. The Dance holds.",
+  "fall_text": "The Giants' Dance has fallen to Cormoran. The Sisters must rebuild their resolve.",
+  "carry_text": "Dame Lynet leads you down off the downs at a run.",
+  "carried_cry": "The Watch wouldn't wait any longer - they have stormed {0}!",
+  "hostile_tier": "orange",
+  "sites": [
+   "the_dance",
+   "dance_oracle",
+   "dance_ring",
+   "dance_approach"
+  ],
+  "staging": [
+   900,
+   775,
+   53.7
+  ],
+  "landing": [
+   905,
+   865,
+   52.4
+  ],
+  "area": [
+   921,
+   930,
+   110
+  ],
+  "camp_npcs": [
+   {
+    "template": 60167630,
+    "model": 38,
+    "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+    "guild": "the Sisters of Amesbury",
+    "kind": "marks",
+    "name": "Sister Cellarer Hild",
+    "level": 22,
+    "pos": [
+     900,
+     920,
+     52.4
+    ],
+    "greet": "The Sisters' stores, for those who took back the stones and those who keep them.",
+    "stock": [
+     {
+      "item": "gd001_cloak_of_the_dance",
+      "price": 60
+     },
+     {
+      "item": "gd001_trilithon_ring",
+      "price": 40
+     },
+     {
+      "item": "gd001_heel_stone_torc",
+      "price": 40
+     },
+     {
+      "item": "gd001_amesbury_grave_bracer",
+      "price": 40
+     },
+     {
+      "item": "tw_strong_draught_of_healing",
+      "price": 2
+     },
+     {
+      "item": "tw_strong_draught_of_power",
+      "price": 2
+     }
+    ]
+   },
+   {
+    "template": 60167630,
+    "model": 38,
+    "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+    "guild": "the Sisters of Amesbury",
+    "kind": "coin",
+    "name": "Sister Infirmarian Nest",
+    "level": 20,
+    "pos": [
+     940,
+     940,
+     52.4
+    ],
+    "greet": "Amesbury's brews, carried out to the stones. Coin, mind - the priory needs a roof.",
+    "stock": [
+     {
+      "item": "gd001_amesbury_draught"
+     },
+     {
+      "item": "gd001_downs_herb_tonic"
+     },
+     {
+      "item": "gd001_dance_mead"
+     }
+    ]
+   },
+   {
+    "template": 60167630,
+    "model": 28,
+    "equipment": "38762ab0-5f99-47cd-85b0-0bfaa37d71f9",
+    "guild": "the Pendragon's Watch",
+    "kind": "idle",
+    "name": "watchman of the Dance",
+    "level": 22,
+    "pos": [
+     915,
+     950,
+     52.4
+    ],
+    "count": 3,
+    "idle": "I never thought I'd stand inside the Giants' Dance. It's colder than you'd think."
+   },
+   {
+    "template": 60167630,
+    "model": 38,
+    "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+    "guild": "the Sisters of Amesbury",
+    "kind": "idle",
+    "name": "Sister Gwenllian",
+    "level": 20,
+    "pos": [
+     930,
+     910,
+     52.4
+    ],
+    "idle": "Listen. The dead under the stones are quiet tonight."
+   }
+  ],
+  "holdouts": [
+   {
+    "kind": "holdout",
+    "name": "granite giant straggler",
+    "template": 770007,
+    "level": 24,
+    "pos": [
+     980,
+     990,
+     50.0
+    ],
+    "count": 2,
+    "tier": "orange",
+    "respawn_s": 600
+   },
+   {
+    "kind": "holdout",
+    "name": "Salisbury giant straggler",
+    "template": 12719,
+    "level": 22,
+    "pos": [
+     860,
+     1000,
+     49.7
+    ],
+    "count": 2,
+    "tier": "yellow",
+    "respawn_s": 300
+   }
   ]
+ }
 }

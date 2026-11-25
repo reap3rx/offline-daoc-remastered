@@ -1,0 +1,137 @@
+{
+ "zone": 2,
+ "region": 1,
+ "realm": 1,
+ "prefix": "va002",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Vetusta Bell Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 15,
+   "bonuses": {
+    "Pie": 5,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 9
+   },
+   "lore": "Abbey white, with the bell. Given to those who took Vetusta back."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cloister Key Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 15,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 15,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "The cloister key, hammered into a ring. The doors have new locks now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "White Cord Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 15,
+   "bonuses": {
+    "Int": 5,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 9
+   },
+   "lore": "A true brother's cord, given in thanks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Abbey Wall Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 15,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 13
+   },
+   "lore": "Banded iron from the abbey gate, rebuilt."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hrodric's Red Cord",
+   "base": [
+    41,
+    32
+   ],
+   "level": 17,
+   "bonuses": {
+    "Str": 6,
+    "Con": 6,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "Won from Brother-Captain Hrodric, the Bishop's Sword. The Faithful cut it in two."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Red Abbot's Cope-Clasp",
+   "base": [
+    41,
+    24
+   ],
+   "level": 17,
+   "bonuses": {
+    "Pie": 6,
+    "Con": 3,
+    "Power": 2,
+    "Hits": 10
+   },
+   "lore": "Won from the Red Abbot when Vetusta held. Burhoff's own clasp."
+  }
+ ],
+ "camp": {
+  "cloak": "va002_vetusta_bell_cloak",
+  "emblem": 30848,
+  "draughts": [
+   [
+    "Strong_Draught_of_Healing",
+    "va002_infirmary_draught",
+    "Infirmary Draught",
+    "Gwladys's own. Bitter, and it works."
+   ],
+   [
+    "Strong_Draught_of_Power",
+    "va002_abbey_garden_tonic",
+    "Abbey Garden Tonic",
+    "Sage and rosemary from the abbey garden, steeped all night."
+   ],
+   [
+    "CombinedRegens_Draught",
+    "va002_vetusta_mead",
+    "Vetusta Mead",
+    "The brothers' mead. Everything comes back a little faster after a cup."
+   ]
+  ]
+ }
+}

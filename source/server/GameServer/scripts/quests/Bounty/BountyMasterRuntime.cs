@@ -49,6 +49,19 @@ namespace DOL.GS
             (eRealm.Hibernia, "Roisin Bogtracker", 200, 403300, 764700, 4960, 0, 365, eGender.Female),
             // Camelot Hills: Cotswold
             (eRealm.Albion, "Dame Elowen Vale", 1, 560800, 511550, 2280, 761, 38, eGender.Female),
+            // Black Mountains South: Humberton, on the west edge of the village green (Albion's plan, round 1, 2026-11-24)
+            (eRealm.Albion, "Huntsman Garwyn Hale", 1, 507808, 476656, 2284, 3072, 9, eGender.Male),
+            // Salisbury Plains: West Downs; Campacorentin Forest: Caer Ulfwych; Avalon Marsh: Adribard's Retreat (Albion's plan, round 2)
+            (eRealm.Albion, "Outrider Gwenhael", 1, 578704, 556864, 2184, 1024, 38, eGender.Female),
+            (eRealm.Albion, "Ranger Teyrnon", 1, 521808, 616512, 1800, 0, 9, eGender.Male),
+            (eRealm.Albion, "Fowler Ednyfed", 1, 473632, 627520, 1744, 2048, 9, eGender.Male),
+            // Black Mountains North: Swanton Keep; Cornwall: Cornwall Station; Lyonesse: the Remnant's camp (Albion's plan, round 3)
+            (eRealm.Albion, "Huntress Gwenllian", 1, 511528, 382440, 7992, 1024, 38, eGender.Female),
+            (eRealm.Albion, "Giant-Hunter Bran", 1, 408736, 652984, 4944, 1024, 9, eGender.Male),
+            (eRealm.Albion, "Wrack-Hunter Tegen", 1, 340520, 676784, 2920, 3072, 38, eGender.Female),
+            // Llyn Barfog: the Barfog merchants; Dartmoor: Grimspound (Albion's plan, round 4)
+            (eRealm.Albion, "Huntsman Peredur", 1, 453592, 400240, 2088, 2048, 9, eGender.Male),
+            (eRealm.Albion, "Slayer-Hunter Kyne", 1, 357056, 709320, 4964, 1024, 38, eGender.Female),
             // Mularn's zone
             (eRealm.Midgard, "Yrsa Wolfmark", 100, 804150, 724550, 4680, 2393, 218, eGender.Female),
         };

@@ -1,0 +1,164 @@
+{
+ "zone": 2,
+ "name": "Black Mountains South",
+ "levels": [
+  1,
+  17
+ ],
+ "realm": 1,
+ "factions": [
+  {
+   "key": "abbey_faithful",
+   "name": "the Abbey Faithful",
+   "short": "the Faithful",
+   "kin": [
+    "sisters_of_amesbury",
+    "thornwardens",
+    "keepers_of_the_isle",
+    "emrys_circle",
+    "oath_of_corineus",
+    "harpers_of_tristan",
+    "maidens_of_the_lake",
+    "quarry_oath"
+   ],
+   "titles": [
+    "Friend of the Abbey",
+    "Keeper of the Hours",
+    "Bell-Ringer of Vetusta"
+   ],
+   "speaker": "bs_prior_anselm",
+   "town": "Humberton",
+   "kills": [
+    "dark brother",
+    "crimson",
+    "sacrificer",
+    "devout filidh",
+    "filidh",
+    "skeleton",
+    "spectral",
+    "drowned",
+    "undead goblin",
+    "abbot",
+    "hrodric",
+    "burhoff",
+    "harish",
+    "salizern",
+    "initiate"
+   ],
+   "quartermaster": {
+    "name": "Brother Almoner Cuthbert",
+    "guild": "the Abbey Faithful",
+    "model": 32,
+    "anchor": "bs_prior_anselm",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "What the abbey could carry out with it, for the abbey's friends. Show me your standing with the Faithful.",
+    "stock": [
+     {
+      "item": "rep002_lay_brother_s_charm",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep002_white_cord_of_vetusta",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep002_psalter_chain_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep002_cloister_stone_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep002_mantle_of_the_bell_ringer",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "shared": [
+  "pendragons_watch"
+ ],
+ "quartermasters": [
+  {
+   "faction": "pendragons_watch",
+   "name": "Watch-Quartermaster Ifor",
+   "guild": "the Pendragon's Watch",
+   "model": 9,
+   "anchor": "bs_sergeant_mabyn",
+   "offset": [
+    4,
+    3
+   ],
+   "greet": "Rhun keeps the stores at Prydwen; I keep them here. Same stock, same rules - show me your standing with the Watch.",
+   "stock": [
+    {
+     "item": "rep000_watch_friend_s_ring",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep000_watch_road_belt",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep000_sworn_torc_of_the_watch",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep000_round_table_bracer",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep000_mantle_of_the_shield_of_camelot",
+     "rank": "Legend",
+     "price": 150
+    }
+   ]
+  }
+ ],
+ "kill_default": "pendragons_watch",
+ "event_default": "pendragons_watch",
+ "quest_default": "pendragons_watch",
+ "quests": {
+  "singing_bridge": "pendragons_watch",
+  "willing_heart": "abbey_faithful",
+  "bs_ants_in_ludlow": "pendragons_watch",
+  "bs_camlann_dead": "abbey_faithful",
+  "bs_drowned_reach": "abbey_faithful",
+  "bs_mother_of_marsh": "pendragons_watch",
+  "bs_robbers_landing": "pendragons_watch",
+  "bs_highway": "pendragons_watch",
+  "bs_webs": "pendragons_watch",
+  "bs_nain_raids": "pendragons_watch",
+  "bs_red_dwarves": "pendragons_watch",
+  "bs_goblins_north": "pendragons_watch",
+  "bs_badon_cairn": "abbey_faithful",
+  "bs_gobzini": "pendragons_watch",
+  "bs_summoner": "pendragons_watch",
+  "bs_bishops_letters": "abbey_faithful",
+  "bs_bells_of_vetusta": "abbey_faithful",
+  "bs_dark_bishop": "abbey_faithful"
+ },
+ "events": {
+  "bs_vetusta_assault": "abbey_faithful",
+  "bs_vetusta_return": "abbey_faithful",
+  "bs_badon_dead": "abbey_faithful",
+  "black_mountains_south_goblin_fishers": "pendragons_watch",
+  "black_mountains_south_red_dwarf_raid": "pendragons_watch",
+  "black_mountains_south_highway_robbery": "pendragons_watch",
+  "black_mountains_south_spider_hollow": "pendragons_watch"
+ }
+}

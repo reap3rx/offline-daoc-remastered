@@ -143,6 +143,653 @@
     "Hits": 11
    },
    "lore": "A tiny bronze bell, the kind that rang the changing of the watch."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bog-Net Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 6,
+   "bonuses": {
+    "Str": 2,
+    "Con": 2,
+    "Dex": 1,
+    "Hits": 5
+   },
+   "lore": "Cut from a bogman's net. It still smells of fish."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Retreat Warden's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 6,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 6,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Marsh Warden issue, waxed against the damp."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bloody-Bones Knuckle Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 10,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Don't ask whose knuckle."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned Bell-Rope Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 10,
+   "bonuses": {
+    "Pie": 3,
+    "Con": 2,
+    "Power": 1,
+    "Hits": 6
+   },
+   "lore": "From the bell of a church the marsh swallowed."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wisp-Glass Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 9,
+   "bonuses": {
+    "Qui": 3,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 5,
+    "Power": 1
+   },
+   "lore": "A trapped wisp-light, very faint, inside a glass bead."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Reed-Cutter's Sash",
+   "base": [
+    41,
+    32
+   ],
+   "level": 9,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 2,
+    "Hits": 8
+   },
+   "lore": "Woven from marsh reeds by Warden Brec's wife."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Scrag-Hide Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 12,
+   "bonuses": {
+    "Con": 4,
+    "Hits": 12,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Tough, warty and surprisingly comfortable."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Scraek's Tooth Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 12,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 10
+   },
+   "lore": "Scraek had a lot of teeth. Now he has one fewer."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mist-Sprite Veil",
+   "base": [
+    41,
+    26
+   ],
+   "level": 11,
+   "bonuses": {
+    "Qui": 4,
+    "Con": 2,
+    "Dex": 2,
+    "Hits": 7,
+    "Power": 1
+   },
+   "lore": "So fine you can see through it. The mist sticks to it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Isle-Shore Pebble Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 11,
+   "bonuses": {
+    "Pie": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "A white pebble from the Isle's shore, set in silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Barge-Oar Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "Black wood, salt-white at the grip."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Chapel-Register Clasp",
+   "base": [
+    41,
+    24
+   ],
+   "level": 14,
+   "bonuses": {
+    "Int": 5,
+    "Pie": 2,
+    "Dex": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "From the chapel's register of the dead. Argante kept the book."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Page's Black Ribbon",
+   "base": [
+    41,
+    32
+   ],
+   "level": 14,
+   "bonuses": {
+    "Pie": 5,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 8
+   },
+   "lore": "The pages of the shore chapel wore black for the King."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fiedel's Tarnished Spur",
+   "base": [
+    41,
+    24
+   ],
+   "level": 24,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "Silver gone black. He was a good knight, once."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Aryon's Broken Oath-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 24,
+   "bonuses": {
+    "Pie": 8,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "Snapped clean in two, and mended with gold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shore-Vigil Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 24,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 24,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Black, with the Isle's white tower. The Keepers' own."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Shambler-Moss Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Thick green moss on leather. It never dries out."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Granite-Dust Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 14,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 2,
+    "Hits": 12
+   },
+   "lore": "Pink-grey dust in a glass vial. Dartmoor granite."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Giant-Wolf Pelt Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 16,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 16,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Grey and huge. It drags on the ground even after Brec's wife cut it down."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wolf-Fang Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 16,
+   "bonuses": {
+    "Str": 5,
+    "Con": 5,
+    "Dex": 3,
+    "Hits": 14
+   },
+   "lore": "Three fangs, each as long as a finger."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mist-Monster Eye",
+   "base": [
+    41,
+    24
+   ],
+   "level": 18,
+   "bonuses": {
+    "Int": 6,
+    "Pie": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "A pale, clouded orb. It looks back."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Fog-Walker's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 18,
+   "bonuses": {
+    "Dex": 6,
+    "Qui": 6,
+    "Str": 3,
+    "Hits": 15
+   },
+   "lore": "Hung with bells so your friends can find you in the fog."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Causeway Kerb-Stone Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 20,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 3,
+    "Hits": 17
+   },
+   "lore": "Cut from the giants' kerb-stone. Heavy."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Marsh-Warden's Wading Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 20,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 20,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Oiled wool to the knee. The wardens swear by it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Brec's Lucky Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 20,
+   "bonuses": {
+    "Qui": 7,
+    "Con": 3,
+    "Dex": 3,
+    "Hits": 12,
+    "Power": 2
+   },
+   "lore": "Brec's own, a pierced shell. He says he won't need luck now."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Marsh Lord's Sceptre-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 23,
+   "bonuses": {
+    "Int": 8,
+    "Pie": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "A ring of black bog-oak, from his reed sceptre."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mire-Crown Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 23,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "Twisted bog-iron. He wore it as a crown."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Peat-Black Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 23,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 23,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Smells of peat smoke, always."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ghoul-Court Seal",
+   "base": [
+    41,
+    24
+   ],
+   "level": 19,
+   "bonuses": {
+    "Int": 6,
+    "Pie": 3,
+    "Dex": 3,
+    "Power": 3,
+    "Hits": 11
+   },
+   "lore": "The seal of the Vigil's court, gone green."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Footman's Rusted Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 19,
+   "bonuses": {
+    "Con": 6,
+    "Hits": 19,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Rusted through in places. Still turns a blade."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Vigil-Tower Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 21,
+   "bonuses": {
+    "Pie": 7,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "The Vigil's white tower, cut in grey stone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned Keep Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 21,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 4,
+    "Hits": 18
+   },
+   "lore": "Green bronze, from the keep's chapel."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Relief-Watch Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 21,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 21,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Grey wool. Worn by those who came to relieve the Vigil."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Argante's Pearl",
+   "base": [
+    41,
+    24
+   ],
+   "level": 24,
+   "bonuses": {
+    "Pie": 8,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "A pearl from the Isle's shore. It glows at dusk."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Orkney Queen's Circlet-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 24,
+   "bonuses": {
+    "Int": 8,
+    "Pie": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "Cut from Morgause's circlet. It's colder than metal should be."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Keeper of the Isle's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 24,
+   "bonuses": {
+    "Con": 8,
+    "Hits": 24,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "White and grey, with the Isle's tower. Argante's gift."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sleeper's Guard Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 24,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 20
+   },
+   "lore": "Given to those who stood between the King and his enemies."
   }
  ]
 }

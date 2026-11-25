@@ -1,0 +1,1272 @@
+{
+ "zone": 0,
+ "name": "Camelot Hills",
+ "rating": "peaceful",
+ "themes": [
+  "Cotswold's fields (wolves, sows, brownies)",
+  "The river (sprites, drakes, frogs)",
+  "The fae (spriggarns, the faerie ring)",
+  "The Camelot Road Gang (cutpurses, bandits, the old fort)",
+  "The eastern ridge (ants, the Difwych hunt)",
+  "Mithra's Tomb (the Crimson cult, the restless dead)",
+  "Darkness Falls' mouth (demons)",
+  "The south bank (filidh, bears)",
+  "The north road (the dwarven pilgrims)"
+ ],
+ "notes": "Albion's plan 2026-11-24 (Zone Reviews, 'Albion - the plan'): Peaceful; the Crimson cult's first rite at Mithra's Tomb; about 950 monsters. Coordinates are zone-local units (metres x 40).",
+ "keep": [
+  "Dwarven Priest"
+ ],
+ "tiers": {
+  "Cronker": "yellow",
+  "Thwori": "blue",
+  "Lady Leana": "blue",
+  "Ygwrch Gyrg": "blue",
+  "Mulgrut Maggot": "blue",
+  "Hugrath Wormly": "yellow",
+  "Aithne Con": "yellow",
+  "Fielath": "orange",
+  "Weakened demon": "yellow",
+  "Cilydd Difwych": "yellow",
+  "Cyfer Difwych": "yellow",
+  "Cyfwlch Difwych": "orange",
+  "Dwarven Priest": "blue"
+ },
+ "factions": {
+  "spriggarns": {
+   "id": 9401,
+   "aggro": 40
+  },
+  "faeries": {
+   "id": 9402,
+   "aggro": 45
+  },
+  "ants": {
+   "id": 9403,
+   "aggro": 40
+  },
+  "bandits": {
+   "id": 9404,
+   "aggro": 80
+  },
+  "difwych": {
+   "id": 9405,
+   "aggro": 85
+  },
+  "dead": {
+   "id": 9406,
+   "aggro": 90
+  },
+  "crimson": {
+   "id": 9407,
+   "aggro": 95
+  },
+  "converts": {
+   "id": 9408,
+   "aggro": 60
+  },
+  "demons": {
+   "id": 9409,
+   "aggro": 100
+  },
+  "filidh": {
+   "id": 9410,
+   "aggro": 55
+  }
+ },
+ "members": {
+  "brownie": {
+   "from": "brownie",
+   "tier": "grey",
+   "roam": 300
+  },
+  "small snake": {
+   "from": "small snake",
+   "tier": "grey",
+   "roam": 250
+  },
+  "boar piglet": {
+   "from": "boar piglet",
+   "tier": "grey",
+   "roam": 250
+  },
+  "gray wolf pup": {
+   "from": "gray wolf pup",
+   "tier": "green",
+   "roam": 350
+  },
+  "wild sow": {
+   "from": "wild sow",
+   "tier": "green",
+   "roam": 350
+  },
+  "young boar": {
+   "from": "young boar",
+   "tier": "green",
+   "roam": 350
+  },
+  "snake": {
+   "from": "snake",
+   "tier": "green",
+   "roam": 300
+  },
+  "grass snake": {
+   "from": "grass snake",
+   "tier": "green",
+   "roam": 300
+  },
+  "giant frog": {
+   "from": "giant frog",
+   "tier": "green",
+   "roam": 300
+  },
+  "small bear": {
+   "from": "small bear",
+   "tier": "green",
+   "roam": 350
+  },
+  "bear": {
+   "from": "bear",
+   "tier": "blue",
+   "roam": 350
+  },
+  "gray wolf": {
+   "from": "gray wolf",
+   "tier": "blue",
+   "roam": 450
+  },
+  "black wolf": {
+   "from": "black wolf",
+   "tier": "blue",
+   "roam": 450
+  },
+  "emerald snake": {
+   "from": "emerald snake",
+   "tier": "blue",
+   "roam": 300
+  },
+  "adder": {
+   "from": "adder",
+   "tier": "blue",
+   "roam": 300
+  },
+  "plague spider": {
+   "from": "plague spider",
+   "tier": "blue",
+   "roam": 250
+  },
+  "river spriteling": {
+   "from": "river spriteling",
+   "tier": "green",
+   "roam": 250
+  },
+  "river sprite": {
+   "from": "river sprite",
+   "tier": "blue",
+   "roam": 250
+  },
+  "river drake hatchling": {
+   "from": "river drake hatchling",
+   "tier": "green",
+   "roam": 250
+  },
+  "river drakeling": {
+   "from": "river drakeling",
+   "tier": "blue",
+   "roam": 250
+  },
+  "boulderling": {
+   "from": "boulderling",
+   "tier": "blue",
+   "roam": 150
+  },
+  "spriggarn": {
+   "from": "spriggarn",
+   "tier": "green",
+   "faction": "spriggarns",
+   "aggro": [
+    40,
+    300
+   ],
+   "roam": 300
+  },
+  "spriggarn elder": {
+   "from": "spriggarn elder",
+   "tier": "blue",
+   "faction": "spriggarns",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 200
+  },
+  "brownie nomad": {
+   "from": "brownie nomad",
+   "tier": "green",
+   "faction": "spriggarns",
+   "aggro": [
+    30,
+    250
+   ],
+   "roam": 350
+  },
+  "faerie mischief-maker": {
+   "from": "faerie mischief-maker",
+   "tier": "green",
+   "faction": "faeries",
+   "aggro": [
+    40,
+    300
+   ],
+   "roam": 200
+  },
+  "faerie wolf-crier": {
+   "from": "faerie wolf-crier",
+   "tier": "blue",
+   "faction": "faeries",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 200
+  },
+  "faerie bell-wether": {
+   "from": "faerie bell-wether",
+   "tier": "blue",
+   "faction": "faeries",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 150
+  },
+  "dragon ant worker": {
+   "from": "dragon ant worker",
+   "tier": "green",
+   "faction": "ants",
+   "aggro": [
+    30,
+    300
+   ],
+   "roam": 250
+  },
+  "dragon ant soldier": {
+   "from": "dragon ant soldier",
+   "tier": "blue",
+   "faction": "ants",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 250
+  },
+  "dragon ant drone": {
+   "from": "dragon ant drone",
+   "tier": "blue",
+   "faction": "ants",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 300
+  },
+  "dragon ant queen": {
+   "from": "dragon ant queen",
+   "tier": "yellow",
+   "faction": "ants",
+   "aggro": [
+    80,
+    400
+   ],
+   "size": 1.3,
+   "roam": 30,
+   "guards": {
+    "dragon ant soldier": 2
+   }
+  },
+  "young cutpurse": {
+   "from": "young cutpurse",
+   "tier": "green",
+   "faction": "bandits",
+   "guild": "the Camelot Road Gang",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 200
+  },
+  "cutpurse": {
+   "from": "cutpurse",
+   "tier": "green",
+   "faction": "bandits",
+   "guild": "the Camelot Road Gang",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 200
+  },
+  "bandit": {
+   "from": "bandit",
+   "tier": "green",
+   "faction": "bandits",
+   "guild": "the Camelot Road Gang",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "bandit henchman": {
+   "from": "bandit henchman",
+   "tier": "blue",
+   "faction": "bandits",
+   "guild": "the Camelot Road Gang",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 200
+  },
+  "bandit thaumaturge": {
+   "from": "bandit thaumaturge",
+   "tier": "blue",
+   "faction": "bandits",
+   "guild": "the Camelot Road Gang",
+   "aggro": [
+    75,
+    450
+   ],
+   "roam": 150
+  },
+  "bandit lieutenant": {
+   "from": "bandit lieutenant",
+   "tier": "yellow",
+   "faction": "bandits",
+   "guild": "the Camelot Road Gang",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 150,
+   "guards": {
+    "bandit henchman": 1
+   }
+  },
+  "bandit leader": {
+   "from": "bandit leader",
+   "tier": "orange",
+   "faction": "bandits",
+   "guild": "the Camelot Road Gang",
+   "aggro": [
+    85,
+    500
+   ],
+   "size": 1.15,
+   "roam": 60,
+   "guards": {
+    "bandit lieutenant": 1,
+    "bandit thaumaturge": 1
+   }
+  },
+  "young poacher": {
+   "from": "young poacher",
+   "tier": "green",
+   "faction": "bandits",
+   "aggro": [
+    50,
+    350
+   ],
+   "roam": 250
+  },
+  "hound of the Difwych": {
+   "from": "black wolf",
+   "tier": "blue",
+   "name": "hound of the Difwych",
+   "faction": "difwych",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 350
+  },
+  "Difwych huntsman": {
+   "from": "bandit henchman",
+   "tier": "blue",
+   "name": "Difwych huntsman",
+   "faction": "difwych",
+   "guild": "the Difwych Hunt",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "puny skeleton": {
+   "from": "puny skeleton",
+   "tier": "green",
+   "faction": "dead",
+   "aggro": [
+    80,
+    400
+   ],
+   "roam": 150
+  },
+  "skeleton": {
+   "from": "skeleton",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    85,
+    450
+   ],
+   "roam": 150
+  },
+  "large skeleton": {
+   "from": "large skeleton",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    85,
+    450
+   ],
+   "roam": 150
+  },
+  "decayed zombie": {
+   "from": "decayed zombie",
+   "tier": "green",
+   "faction": "dead",
+   "aggro": [
+    80,
+    400
+   ],
+   "roam": 150
+  },
+  "putrid zombie": {
+   "from": "putrid zombie",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    85,
+    450
+   ],
+   "roam": 150
+  },
+  "rotting zombie": {
+   "from": "rotting zombie",
+   "tier": "yellow",
+   "faction": "dead",
+   "aggro": [
+    90,
+    450
+   ],
+   "roam": 120
+  },
+  "spirit": {
+   "from": "spirit",
+   "tier": "blue",
+   "faction": "dead",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 300
+  },
+  "undead filidh": {
+   "from": "undead filidh",
+   "tier": "yellow",
+   "faction": "dead",
+   "aggro": [
+    90,
+    500
+   ],
+   "roam": 150
+  },
+  "crimson acolyte": {
+   "from": "Crimson Initiate",
+   "tier": "blue",
+   "size": 0.9,
+   "name": "crimson acolyte",
+   "faction": "crimson",
+   "guild": "the Crimson",
+   "aggro": [
+    90,
+    500
+   ],
+   "roam": 120
+  },
+  "crimson initiate": {
+   "from": "Crimson Initiate",
+   "tier": "yellow",
+   "name": "crimson initiate",
+   "faction": "crimson",
+   "guild": "the Crimson",
+   "aggro": [
+    90,
+    550
+   ],
+   "roam": 100
+  },
+  "crimson tomb-warden": {
+   "from": "Crimson Initiate",
+   "tier": "orange",
+   "name": "crimson tomb-warden",
+   "faction": "crimson",
+   "guild": "the Crimson",
+   "aggro": [
+    95,
+    550
+   ],
+   "size": 1.15,
+   "roam": 60,
+   "guards": {
+    "crimson acolyte": 2
+   }
+  },
+  "convert guard": {
+   "from": "convert guard",
+   "tier": "blue",
+   "faction": "converts",
+   "aggro": [
+    60,
+    400
+   ],
+   "roam": 80
+  },
+  "manes demon": {
+   "from": "manes demon",
+   "tier": "yellow",
+   "faction": "demons",
+   "aggro": [
+    100,
+    500
+   ],
+   "roam": 150
+  },
+  "grumoz demon": {
+   "from": "grumoz demon",
+   "tier": "orange",
+   "faction": "demons",
+   "aggro": [
+    100,
+    550
+   ],
+   "roam": 120
+  },
+  "filidh": {
+   "from": "filidh",
+   "tier": "blue",
+   "faction": "filidh",
+   "aggro": [
+    50,
+    400
+   ],
+   "roam": 200
+  },
+  "devout filidh": {
+   "from": "devout filidh",
+   "tier": "yellow",
+   "faction": "filidh",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 150
+  }
+ },
+ "sites": [
+  {
+   "id": "cotswold_fields",
+   "kind": "wildlife",
+   "area": [
+    13200,
+    22400,
+    22400,
+    34400
+   ],
+   "spawn": {
+    "brownie": 12,
+    "small snake": 9,
+    "gray wolf pup": 14,
+    "wild sow": 14,
+    "boar piglet": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "gate_meadows",
+   "kind": "wildlife",
+   "area": [
+    4800,
+    22400,
+    12000,
+    25600
+   ],
+   "spawn": {
+    "brownie": 6,
+    "small snake": 6,
+    "boar piglet": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "west_bank",
+   "kind": "wildlife",
+   "area": [
+    9200,
+    34400,
+    16800,
+    46000
+   ],
+   "spawn": {
+    "wild sow": 9,
+    "gray wolf pup": 9,
+    "giant frog": 12,
+    "snake": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "river_reeds",
+   "kind": "wildlife",
+   "area": [
+    10000,
+    38000,
+    22400,
+    50400
+   ],
+   "spawn": {
+    "river spriteling": 20,
+    "river drake hatchling": 14,
+    "giant frog": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "sprite_pool",
+   "kind": "camp",
+   "at": [
+    18800,
+    48800
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "river sprite": 4,
+    "river drakeling": 3
+   }
+  },
+  {
+   "id": "drake_bank",
+   "kind": "camp",
+   "at": [
+    20800,
+    43200
+   ],
+   "r": 360,
+   "respawn": 300,
+   "spawn": {
+    "river drakeling": 3,
+    "river drake hatchling": 3
+   }
+  },
+  {
+   "id": "north_west_downs",
+   "kind": "wildlife",
+   "area": [
+    3200,
+    6000,
+    18000,
+    20800
+   ],
+   "spawn": {
+    "gray wolf pup": 14,
+    "wild sow": 12,
+    "small bear": 9,
+    "small snake": 9,
+    "brownie": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "north_road",
+   "kind": "wildlife",
+   "area": [
+    18000,
+    10000,
+    32000,
+    22400
+   ],
+   "spawn": {
+    "wild sow": 12,
+    "young boar": 12,
+    "snake": 12,
+    "small bear": 9,
+    "gray wolf": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "faerie_ring",
+   "kind": "camp",
+   "at": [
+    26200,
+    17600
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "faerie mischief-maker": 6,
+    "faerie wolf-crier": 2,
+    "faerie bell-wether": 2
+   }
+  },
+  {
+   "id": "faerie_meadow",
+   "kind": "wildlife",
+   "area": [
+    22400,
+    16800,
+    33600,
+    24800
+   ],
+   "spawn": {
+    "faerie mischief-maker": 9,
+    "faerie wolf-crier": 6,
+    "brownie": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "pilgrims_camp",
+   "kind": "camp",
+   "at": [
+    29000,
+    9600
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "convert guard": 4
+   }
+  },
+  {
+   "id": "north_heath",
+   "kind": "wildlife",
+   "area": [
+    32000,
+    3200,
+    46000,
+    12000
+   ],
+   "spawn": {
+    "gray wolf": 9,
+    "black wolf": 6,
+    "small bear": 9,
+    "young boar": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "woodcutters_poachers",
+   "kind": "camp",
+   "at": [
+    26000,
+    13200
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "young poacher": 4
+   }
+  },
+  {
+   "id": "spriggarn_hills",
+   "kind": "wildlife",
+   "area": [
+    22400,
+    26000,
+    38400,
+    42000
+   ],
+   "spawn": {
+    "spriggarn": 38,
+    "spriggarn elder": 14,
+    "brownie nomad": 12,
+    "snake": 9,
+    "plague spider": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "spriggarn_ring_0",
+   "kind": "camp",
+   "at": [
+    28000,
+    32000
+   ],
+   "r": 280,
+   "respawn": 300,
+   "spawn": {
+    "spriggarn": 4,
+    "spriggarn elder": 2
+   }
+  },
+  {
+   "id": "spriggarn_ring_1",
+   "kind": "camp",
+   "at": [
+    34400,
+    30400
+   ],
+   "r": 280,
+   "respawn": 300,
+   "spawn": {
+    "spriggarn": 4,
+    "spriggarn elder": 2
+   }
+  },
+  {
+   "id": "spriggarn_ring_2",
+   "kind": "camp",
+   "at": [
+    32000,
+    37600
+   ],
+   "r": 280,
+   "respawn": 300,
+   "spawn": {
+    "spriggarn": 4,
+    "spriggarn elder": 2
+   }
+  },
+  {
+   "id": "meadows_east",
+   "kind": "wildlife",
+   "area": [
+    36000,
+    26000,
+    46000,
+    36000
+   ],
+   "spawn": {
+    "young boar": 9,
+    "small bear": 9,
+    "emerald snake": 12,
+    "giant frog": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "road_gang",
+   "kind": "camp",
+   "at": [
+    33600,
+    39600
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "young cutpurse": 6,
+    "cutpurse": 4,
+    "bandit": 2,
+    "bandit lieutenant": 1
+   }
+  },
+  {
+   "id": "road_gang_walk",
+   "kind": "patrol",
+   "route": [
+    [
+     33600,
+     39600
+    ],
+    [
+     28000,
+     36000
+    ],
+    [
+     22400,
+     32800
+    ],
+    [
+     16800,
+     30400
+    ],
+    [
+     22400,
+     32800
+    ],
+    [
+     28000,
+     36000
+    ]
+   ],
+   "spawn": {
+    "cutpurse": 2,
+    "young cutpurse": 1
+   }
+  },
+  {
+   "id": "ant_hills",
+   "kind": "wildlife",
+   "area": [
+    38400,
+    11200,
+    55200,
+    34400
+   ],
+   "spawn": {
+    "dragon ant worker": 29,
+    "dragon ant soldier": 14,
+    "dragon ant drone": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "ant_queen_mound",
+   "kind": "camp",
+   "at": [
+    47200,
+    20800
+   ],
+   "r": 400,
+   "respawn": 600,
+   "spawn": {
+    "dragon ant queen": 1,
+    "dragon ant worker": 4
+   }
+  },
+  {
+   "id": "ridge_bandits",
+   "kind": "camp",
+   "at": [
+    39400,
+    21400
+   ],
+   "r": 480,
+   "respawn": 300,
+   "spawn": {
+    "bandit": 6,
+    "bandit henchman": 3,
+    "bandit thaumaturge": 2,
+    "bandit lieutenant": 1
+   }
+  },
+  {
+   "id": "difwych_hills",
+   "kind": "wildlife",
+   "area": [
+    48800,
+    10400,
+    64000,
+    31200
+   ],
+   "spawn": {
+    "hound of the Difwych": 14,
+    "black wolf": 9,
+    "gray wolf": 9,
+    "adder": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "difwych_hunt_0",
+   "kind": "camp",
+   "at": [
+    52120,
+    30560
+   ],
+   "r": 280,
+   "respawn": 360,
+   "spawn": {
+    "Difwych huntsman": 2,
+    "hound of the Difwych": 2
+   }
+  },
+  {
+   "id": "difwych_hunt_1",
+   "kind": "camp",
+   "at": [
+    53800,
+    22600
+   ],
+   "r": 280,
+   "respawn": 360,
+   "spawn": {
+    "Difwych huntsman": 2,
+    "hound of the Difwych": 2
+   }
+  },
+  {
+   "id": "difwych_hunt_2",
+   "kind": "camp",
+   "at": [
+    50840,
+    13160
+   ],
+   "r": 280,
+   "respawn": 360,
+   "spawn": {
+    "Difwych huntsman": 2,
+    "hound of the Difwych": 2
+   }
+  },
+  {
+   "id": "barrow_fields",
+   "kind": "wildlife",
+   "area": [
+    36000,
+    38000,
+    52000,
+    50000
+   ],
+   "spawn": {
+    "puny skeleton": 14,
+    "decayed zombie": 14,
+    "skeleton": 12,
+    "large skeleton": 9,
+    "spirit": 12,
+    "putrid zombie": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "tomb_mouth",
+   "kind": "camp",
+   "at": [
+    53200,
+    39800
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "crimson acolyte": 6,
+    "crimson initiate": 3,
+    "crimson tomb-warden": 1
+   }
+  },
+  {
+   "id": "tomb_rite",
+   "kind": "camp",
+   "at": [
+    50200,
+    42400
+   ],
+   "r": 360,
+   "respawn": 360,
+   "spawn": {
+    "crimson acolyte": 3,
+    "undead filidh": 2,
+    "rotting zombie": 2
+   }
+  },
+  {
+   "id": "tomb_watch",
+   "kind": "patrol",
+   "route": [
+    [
+     53200,
+     39800
+    ],
+    [
+     50400,
+     36000
+    ],
+    [
+     47200,
+     34400
+    ],
+    [
+     50400,
+     36000
+    ]
+   ],
+   "spawn": {
+    "crimson acolyte": 2
+   }
+  },
+  {
+   "id": "tomb_hills",
+   "kind": "wildlife",
+   "area": [
+    52000,
+    34400,
+    64800,
+    50000
+   ],
+   "spawn": {
+    "undead filidh": 9,
+    "spirit": 9,
+    "rotting zombie": 6,
+    "emerald snake": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "barrow_ring",
+   "kind": "camp",
+   "at": [
+    44000,
+    46000
+   ],
+   "r": 320,
+   "respawn": 300,
+   "spawn": {
+    "large skeleton": 3,
+    "putrid zombie": 2,
+    "undead filidh": 1
+   }
+  },
+  {
+   "id": "df_mouth",
+   "kind": "camp",
+   "at": [
+    50600,
+    53600
+   ],
+   "r": 400,
+   "respawn": 300,
+   "spawn": {
+    "manes demon": 6,
+    "grumoz demon": 1
+   }
+  },
+  {
+   "id": "df_spill",
+   "kind": "wildlife",
+   "area": [
+    46000,
+    50000,
+    56000,
+    56800
+   ],
+   "spawn": {
+    "manes demon": 6,
+    "boulderling": 9
+   },
+   "spacing": 260
+  },
+  {
+   "id": "boulder_downs",
+   "kind": "wildlife",
+   "area": [
+    36800,
+    43200,
+    54000,
+    51200
+   ],
+   "spawn": {
+    "boulderling": 14,
+    "young boar": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "prydwen_fields",
+   "kind": "wildlife",
+   "area": [
+    22400,
+    43200,
+    36000,
+    51200
+   ],
+   "spawn": {
+    "wild sow": 9,
+    "young boar": 9,
+    "snake": 9,
+    "gray wolf pup": 6,
+    "small bear": 6
+   },
+   "spacing": 260
+  },
+  {
+   "id": "south_bank",
+   "kind": "wildlife",
+   "area": [
+    12000,
+    55200,
+    44000,
+    65200
+   ],
+   "spawn": {
+    "bear": 14,
+    "small bear": 12,
+    "grass snake": 14,
+    "adder": 9,
+    "brownie nomad": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "filidh_grove",
+   "kind": "camp",
+   "at": [
+    29440,
+    60840
+   ],
+   "r": 480,
+   "respawn": 360,
+   "spawn": {
+    "filidh": 6,
+    "devout filidh": 3
+   }
+  },
+  {
+   "id": "filidh_paths",
+   "kind": "wildlife",
+   "area": [
+    24000,
+    57200,
+    44000,
+    64000
+   ],
+   "spawn": {
+    "filidh": 12
+   },
+   "spacing": 260
+  },
+  {
+   "id": "old_fort",
+   "kind": "camp",
+   "at": [
+    37920,
+    56800
+   ],
+   "r": 560,
+   "respawn": 360,
+   "spawn": {
+    "bandit": 6,
+    "bandit henchman": 4,
+    "bandit thaumaturge": 2,
+    "bandit leader": 1
+   }
+  },
+  {
+   "id": "old_fort_road",
+   "kind": "patrol",
+   "route": [
+    [
+     37920,
+     56800
+    ],
+    [
+     33040,
+     54640
+    ],
+    [
+     27760,
+     52920
+    ],
+    [
+     33040,
+     54640
+    ]
+   ],
+   "spawn": {
+    "bandit": 2,
+    "bandit henchman": 1
+   }
+  }
+ ]
+}

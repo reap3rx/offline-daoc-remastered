@@ -1,0 +1,183 @@
+{
+ "zone": 0,
+ "region": 1,
+ "realm": 1,
+ "prefix": "rep000",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Friend of Cotswold's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 6,
+   "bonuses": {
+    "Con": 2,
+    "Hits": 6,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Copper, with a sheaf on it. Every Warden has one; now so do you."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hedge-Warden's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 6,
+   "bonuses": {
+    "Dex": 2,
+    "Qui": 2,
+    "Str": 1,
+    "Hits": 5
+   },
+   "lore": "A Warden's belt, with a hook for the billhook and a pouch for the tally."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Right Hand's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 10,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 2,
+    "Hits": 8
+   },
+   "lore": "Bronze, twisted like a hay-rope. Hollis's own design."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cotswold Fold Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 10,
+   "bonuses": {
+    "Con": 3,
+    "Hits": 10,
+    "Body": 1,
+    "Crush": 1,
+    "Slash": 1
+   },
+   "lore": "Sheepskin and iron. Warm, and it stops a wolf's teeth."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Hearthward",
+   "base": [
+    41,
+    26
+   ],
+   "level": 14,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 14,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Cotswold green, with the village hearth stitched in gold. Only the Hearthwards wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Watch-Friend's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 8,
+   "bonuses": {
+    "Str": 3,
+    "Con": 3,
+    "Dex": 1,
+    "Hits": 7
+   },
+   "lore": "Iron, stamped with Prydwen - Arthur's ship."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Watch-Road Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 8,
+   "bonuses": {
+    "Dex": 3,
+    "Qui": 3,
+    "Str": 1,
+    "Hits": 7
+   },
+   "lore": "The Watch rides every road to Camelot. This belt has done most of them."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sworn Torc of the Watch",
+   "base": [
+    41,
+    29
+   ],
+   "level": 12,
+   "bonuses": {
+    "Pie": 4,
+    "Con": 2,
+    "Power": 2,
+    "Hits": 7
+   },
+   "lore": "Silver and blue. Given when a Watch-Friend swears the oath."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Round Table Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 12,
+   "bonuses": {
+    "Str": 4,
+    "Con": 4,
+    "Dex": 2,
+    "Hits": 10
+   },
+   "lore": "Chased with a ring of twelve seats - and a thirteenth, empty."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Shield of Camelot",
+   "base": [
+    41,
+    26
+   ],
+   "level": 16,
+   "bonuses": {
+    "Con": 5,
+    "Hits": 16,
+    "Body": 2,
+    "Crush": 2,
+    "Slash": 2
+   },
+   "lore": "Pendragon red, with the dragon in gold. Only the Shields of Camelot wear it."
+  }
+ ]
+}

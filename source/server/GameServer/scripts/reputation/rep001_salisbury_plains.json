@@ -1,0 +1,165 @@
+{
+ "zone": 1,
+ "name": "Salisbury Plains",
+ "levels": [
+  10,
+  26
+ ],
+ "realm": 1,
+ "factions": [
+  {
+   "key": "sisters_of_amesbury",
+   "name": "the Sisters of Amesbury",
+   "short": "the Sisters",
+   "kin": [
+    "abbey_faithful",
+    "thornwardens",
+    "keepers_of_the_isle",
+    "emrys_circle",
+    "oath_of_corineus",
+    "harpers_of_tristan",
+    "maidens_of_the_lake",
+    "quarry_oath"
+   ],
+   "titles": [
+    "Friend of Amesbury",
+    "Keeper of the Graves",
+    "Mourner of the Long Knives"
+   ],
+   "speaker": "sp_abbess",
+   "town": "West Downs",
+   "kills": [
+    "ghast",
+    "presence",
+    "wandering spirit",
+    "undead druid",
+    "tomb raider",
+    "raider",
+    "hengist",
+    "feast-master",
+    "giant skeleton",
+    "gogmagog",
+    "legionnaire",
+    "liglim",
+    "cynewulf",
+    "slaver",
+    "cottrel"
+   ],
+   "quartermaster": {
+    "name": "Sister Almoner Ebba",
+    "guild": "the Sisters of Amesbury",
+    "model": 38,
+    "anchor": "sp_abbess",
+    "offset": [
+     4,
+     3
+    ],
+    "greet": "Amesbury's gifts, for those who keep faith with the dead. Show me your standing.",
+    "stock": [
+     {
+      "item": "rep001_friend_of_amesbury_s_ring",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep001_grave_tender_s_belt",
+      "rank": "Trusted",
+      "price": 40
+     },
+     {
+      "item": "rep001_keeper_of_the_graves_torc",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep001_long_knives_bracer",
+      "rank": "Honoured",
+      "price": 80
+     },
+     {
+      "item": "rep001_mantle_of_the_mourner",
+      "rank": "Legend",
+      "price": 150
+     }
+    ]
+   }
+  }
+ ],
+ "shared": [
+  "pendragons_watch"
+ ],
+ "quartermasters": [
+  {
+   "name": "Watch-Quartermaster Bedwin",
+   "guild": "the Pendragon's Watch",
+   "model": 9,
+   "anchor": "sp_osfrid",
+   "offset": [
+    -4,
+    3
+   ],
+   "greet": "Rhun keeps the stores at Prydwen; I keep them here. Same stock, same rules - show me your standing with the Watch.",
+   "stock": [
+    {
+     "item": "rep000_watch_friend_s_ring",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep000_watch_road_belt",
+     "rank": "Trusted",
+     "price": 40
+    },
+    {
+     "item": "rep000_sworn_torc_of_the_watch",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep000_round_table_bracer",
+     "rank": "Honoured",
+     "price": 80
+    },
+    {
+     "item": "rep000_mantle_of_the_shield_of_camelot",
+     "rank": "Legend",
+     "price": 150
+    }
+   ],
+   "faction": "pendragons_watch"
+  }
+ ],
+ "kill_default": "pendragons_watch",
+ "event_default": "pendragons_watch",
+ "quest_default": "sisters_of_amesbury",
+ "quests": {
+  "under_stones": "sisters_of_amesbury",
+  "white_horse": "pendragons_watch",
+  "sp_wild_herd": "pendragons_watch",
+  "sp_stone_eyed": "sisters_of_amesbury",
+  "sp_carrion": "pendragons_watch",
+  "sp_nymphs": "sisters_of_amesbury",
+  "sp_diggers": "pendragons_watch",
+  "sp_what_spade_woke": "sisters_of_amesbury",
+  "sp_paymaster": "pendragons_watch",
+  "sp_long_knives": "sisters_of_amesbury",
+  "sp_mephits": "pendragons_watch",
+  "sp_footprints": "pendragons_watch",
+  "sp_giants_swine": "pendragons_watch",
+  "sp_runaways": "pendragons_watch",
+  "sp_cottrel": "pendragons_watch",
+  "sp_the_dance": "pendragons_watch",
+  "sp_giants_dead": "sisters_of_amesbury",
+  "sp_stonecaller": "sisters_of_amesbury"
+ },
+ "events": {
+  "sp_dance_assault": "sisters_of_amesbury",
+  "sp_dance_return": "sisters_of_amesbury",
+  "sp_feast_night": "sisters_of_amesbury",
+  "salisbury_plains_restless_plain": "sisters_of_amesbury",
+  "salisbury_plains_tomb_robbers": "sisters_of_amesbury",
+  "sp_giants_muster": "pendragons_watch",
+  "salisbury_plains_spriggarn_ambush": "pendragons_watch",
+  "salisbury_plains_basilisk_nest": "pendragons_watch"
+ }
+}

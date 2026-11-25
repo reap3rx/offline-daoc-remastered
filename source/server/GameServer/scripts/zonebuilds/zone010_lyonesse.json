@@ -1,0 +1,503 @@
+{
+ "zone": 10,
+ "name": "Lyonesse",
+ "rating": "deadly",
+ "themes": [
+  "The north shore and the storm rock (peallaidh, the storm-callers)",
+  "The hamadryad wood (east)",
+  "The mire and the cailleach's ring (Deadly heart)",
+  "The drowned fields (bone snappers, archers)",
+  "Drowned Lyonesse's folk and knights",
+  "The ruined cathedral (priests of Arawn)"
+ ],
+ "notes": "Albion's plan 2026-11-24, round 3: Deadly; Tristan's lost country, drowned again by an unnatural storm; the priests of Arawn at the cathedral. Coordinates are zone units (metres x 40).",
+ "keep": [],
+ "tiers": {
+  "Danaoin clerk": "orange",
+  "Arawnite shamaness": "red",
+  "Danaoin fisherman": "orange",
+  "Danaoin sailor": "orange",
+  "Danaoin soldier": "red",
+  "Danaoin farmer": "orange",
+  "Priest of Arawn": "red",
+  "Knight": "red",
+  "Arawnite warrior": "red",
+  "Unnatural Storm Controller": "purple",
+  "Cailleach Uragaig": "purple"
+ },
+ "factions": {
+  "sea": {
+   "id": 9481,
+   "aggro": 75
+  },
+  "wood": {
+   "id": 9482,
+   "aggro": 60
+  },
+  "mire": {
+   "id": 9483,
+   "aggro": 85
+  },
+  "cailleach": {
+   "id": 9484,
+   "aggro": 95
+  },
+  "goblins": {
+   "id": 9485,
+   "aggro": 80
+  },
+  "hounds": {
+   "id": 9486,
+   "aggro": 95
+  },
+  "drowned": {
+   "id": 9487,
+   "aggro": 70
+  },
+  "drowned_knights": {
+   "id": 9488,
+   "aggro": 90
+  },
+  "storm": {
+   "id": 9489,
+   "aggro": 95
+  }
+ },
+ "members": {
+  "peallaidh": {
+   "from": "peallaidh",
+   "tier": "orange",
+   "faction": "sea",
+   "aggro": [
+    75,
+    500
+   ],
+   "roam": 250
+  },
+  "freybug": {
+   "from": "freybug",
+   "tier": "orange",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 300
+  },
+  "giant lizard": {
+   "from": "giant lizard",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 250
+  },
+  "hamadryad": {
+   "from": "hamadryad",
+   "tier": "orange",
+   "faction": "wood",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "witherwoode": {
+   "from": "witherwoode",
+   "tier": "red",
+   "faction": "wood",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 80
+  },
+  "moorlich": {
+   "from": "moorlich",
+   "tier": "red",
+   "faction": "mire",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 250
+  },
+  "bone snapper": {
+   "from": "bone snapper",
+   "tier": "red",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 300
+  },
+  "cailleach priest": {
+   "from": "cailleach priest",
+   "tier": "red",
+   "faction": "cailleach",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 100
+  },
+  "cailleach guard": {
+   "from": "cailleach guard",
+   "tier": "red",
+   "faction": "cailleach",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 100
+  },
+  "pygmy goblin": {
+   "from": "pygmy goblin",
+   "tier": "orange",
+   "faction": "goblins",
+   "aggro": [
+    75,
+    500
+   ],
+   "roam": 250
+  },
+  "pygmy goblin tangler": {
+   "from": "pygmy goblin tangler",
+   "tier": "orange",
+   "faction": "goblins",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 200
+  },
+  "dunter": {
+   "from": "dunter",
+   "tier": "orange",
+   "aggro": [
+    80,
+    500
+   ],
+   "roam": 150
+  },
+  "fitful bwca": {
+   "from": "fitful bwca",
+   "tier": "orange",
+   "aggro": [
+    70,
+    450
+   ],
+   "roam": 200
+  },
+  "gabriel hound": {
+   "from": "gabriel hound",
+   "tier": "red",
+   "faction": "hounds",
+   "aggro": [
+    90,
+    650
+   ],
+   "roam": 450
+  },
+  "shepherd": {
+   "from": "shepherd",
+   "tier": "orange",
+   "faction": "drowned",
+   "guild": "of drowned Lyonesse",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 250
+  },
+  "farmer": {
+   "from": "farmer",
+   "tier": "orange",
+   "faction": "drowned",
+   "guild": "of drowned Lyonesse",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 250
+  },
+  "townsman": {
+   "from": "townsman",
+   "tier": "orange",
+   "faction": "drowned",
+   "guild": "of drowned Lyonesse",
+   "aggro": [
+    60,
+    450
+   ],
+   "roam": 200
+  },
+  "archer": {
+   "from": "archer",
+   "tier": "red",
+   "faction": "drowned",
+   "guild": "of drowned Lyonesse",
+   "aggro": [
+    80,
+    550
+   ],
+   "roam": 200
+  },
+  "pikeman": {
+   "from": "pikeman",
+   "tier": "red",
+   "faction": "drowned_knights",
+   "guild": "of drowned Lyonesse",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 150
+  },
+  "footman": {
+   "from": "footman",
+   "tier": "red",
+   "faction": "drowned_knights",
+   "guild": "of drowned Lyonesse",
+   "aggro": [
+    85,
+    550
+   ],
+   "roam": 150
+  },
+  "knight": {
+   "from": "knight",
+   "tier": "red",
+   "faction": "drowned_knights",
+   "guild": "of drowned Lyonesse",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 150
+  },
+  "storm-caller": {
+   "from": "Crimson Initiate",
+   "tier": "red",
+   "name": "storm-caller",
+   "faction": "storm",
+   "guild": "the White Wind",
+   "aggro": [
+    90,
+    600
+   ],
+   "roam": 100
+  }
+ },
+ "sites": [
+  {
+   "id": "north_shore",
+   "kind": "wildlife",
+   "area": [
+    40000,
+    9200,
+    60000,
+    28000
+   ],
+   "spawn": {
+    "peallaidh": 75,
+    "freybug": 13,
+    "giant lizard": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "storm_rock",
+   "kind": "camp",
+   "at": [
+    47160,
+    18680
+   ],
+   "r": 400,
+   "respawn": 600,
+   "spawn": {
+    "storm-caller": 3,
+    "peallaidh": 4
+   }
+  },
+  {
+   "id": "hamadryad_wood",
+   "kind": "wildlife",
+   "area": [
+    47200,
+    20000,
+    64400,
+    51200
+   ],
+   "spawn": {
+    "hamadryad": 57
+   },
+   "spacing": 260
+  },
+  {
+   "id": "the_mire",
+   "kind": "wildlife",
+   "area": [
+    20000,
+    14000,
+    49200,
+    39600
+   ],
+   "spawn": {
+    "moorlich": 48,
+    "bone snapper": 22
+   },
+   "spacing": 260
+  },
+  {
+   "id": "witherwoode",
+   "kind": "camp",
+   "at": [
+    30760,
+    27320
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "witherwoode": 6
+   }
+  },
+  {
+   "id": "cailleach_ring",
+   "kind": "camp",
+   "at": [
+    30000,
+    33600
+   ],
+   "r": 480,
+   "respawn": 900,
+   "spawn": {
+    "cailleach priest": 4,
+    "cailleach guard": 4
+   }
+  },
+  {
+   "id": "drowned_fields",
+   "kind": "wildlife",
+   "area": [
+    4000,
+    6000,
+    44000,
+    59600
+   ],
+   "spawn": {
+    "bone snapper": 62,
+    "archer": 22,
+    "fitful bwca": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "hound_hill",
+   "kind": "camp",
+   "at": [
+    21240,
+    30320
+   ],
+   "r": 360,
+   "respawn": 600,
+   "spawn": {
+    "gabriel hound": 4
+   }
+  },
+  {
+   "id": "drowned_farms",
+   "kind": "wildlife",
+   "area": [
+    38800,
+    24000,
+    55600,
+    49600
+   ],
+   "spawn": {
+    "shepherd": 31,
+    "farmer": 26,
+    "townsman": 13
+   },
+   "spacing": 260
+  },
+  {
+   "id": "goblin_south",
+   "kind": "wildlife",
+   "area": [
+    33800,
+    50400,
+    64000,
+    58000
+   ],
+   "spawn": {
+    "pygmy goblin tangler": 35,
+    "pygmy goblin": 22
+   },
+   "spacing": 260
+  },
+  {
+   "id": "dunter_tower",
+   "kind": "camp",
+   "at": [
+    54200,
+    47800
+   ],
+   "r": 360,
+   "respawn": 420,
+   "spawn": {
+    "dunter": 5
+   }
+  },
+  {
+   "id": "drowned_knights",
+   "kind": "camp",
+   "at": [
+    48760,
+    50800
+   ],
+   "r": 480,
+   "respawn": 600,
+   "spawn": {
+    "knight": 5,
+    "footman": 5
+   }
+  },
+  {
+   "id": "pike_line",
+   "kind": "camp",
+   "at": [
+    31640,
+    43840
+   ],
+   "r": 360,
+   "respawn": 420,
+   "spawn": {
+    "pikeman": 4
+   }
+  },
+  {
+   "id": "remnant_camp",
+   "kind": "clear",
+   "at": [
+    53800,
+    45400
+   ],
+   "r": 3600,
+   "names": [
+    "shepherd",
+    "farmer",
+    "townsman",
+    "hamadryad",
+    "pygmy goblin",
+    "pygmy goblin tangler",
+    "dunter",
+    "knight",
+    "footman",
+    "bone snapper",
+    "archer"
+   ],
+   "block": "all"
+  }
+ ]
+}

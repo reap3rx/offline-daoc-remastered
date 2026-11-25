@@ -92,6 +92,21 @@
       "during": [
         "dragons_tithe/s6"
       ]
+    },
+    {
+      "id": "dm_hedda",
+      "zone": 4,
+      "realm": 1,
+      "name": "Quarry-Mother Hedda",
+      "model": 38,
+      "level": 56,
+      "pos": [
+        122,
+        300,
+        114.7
+      ],
+      "guild": "the Quarry-Oath of Grimspound",
+      "idle": "Seventy years I've kept the oath with the giants. Seventy years they kept it back. Now the dragon sings and they've forgotten every word."
     }
   ],
   "quests": [
@@ -569,6 +584,667 @@
         }
       },
       "group": true
+    },
+    {
+      "id": "dm_stonecrush",
+      "title": "The Stonecrush",
+      "level": 50,
+      "giver": "bryn_asquith",
+      "offer": "The Stonecrush - the giants' diggers, broad as doors - came up the west valley a month ago, and they haven't stopped digging since. Every day closer to Grimspound.\n\nWill you [stop the digging]?",
+      "accept": "stop the digging",
+      "topics": {},
+      "summary": "The Stonecrush, the giants' diggers, are digging up Dartmoor's west valley toward Grimspound.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 4,
+          "at": [
+            220,
+            700,
+            22.5
+          ],
+          "radius": 50,
+          "goal": "Kill the Stonecrush excavators about 400 m south of Bryn Asquith",
+          "target": "Stonecrush excavator",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bryn_asquith",
+          "goal": "Tell Bryn Asquith",
+          "say": "Stopped. For today. Tomorrow there'll be more - they don't dig for themselves.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Dragon-Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq4_excavator_s_pick_pin",
+              "sq4_dig_dust_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "dm_road",
+      "title": "The Dragon's Road",
+      "level": 51,
+      "giver": "bryn_asquith",
+      "offer": "They don't dig for themselves. They dig in a line - north, straight as an arrow, from the dragon's lair toward the moor's edge. A road.\n\nGo up to the dig-head and [see where it goes]. Then tell me I'm wrong.",
+      "accept": "see where it goes",
+      "topics": {},
+      "summary": "The Stonecrush are digging a straight road north from Golestandt's lair.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 4,
+          "at": [
+            240,
+            560,
+            96.2
+          ],
+          "radius": 50,
+          "goal": "Fight through the Stonecrush rockgrinders about 270 m south of Bryn Asquith",
+          "target": "Stonecrush rockgrinder",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 4,
+          "at": [
+            245,
+            480,
+            8.5
+          ],
+          "goal": "Search the dig-head",
+          "clue": {
+            "name": "a survey stake, painted white",
+            "model": 1347
+          },
+          "text": "A line of white stakes running north, all the way to the edge of the moor - and beyond, toward Cornwall, and Avalon, and Salisbury. Golestandt is building his giants a road to the Giants' Dance.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "bryn_asquith",
+          "goal": "Tell Bryn Asquith",
+          "say": "To the Dance. To Salisbury. The giants are marching north on a dragon's road. I wish I'd been wrong.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Dragon-Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq4_survey_stake_charm",
+              "sq4_rockgrinder_s_ring",
+              "sq4_watch_road_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "dm_stonecrush"
+    },
+    {
+      "id": "dm_kez",
+      "title": "Kez of the Demolishers",
+      "level": 52,
+      "giver": "bryn_asquith",
+      "offer": "The Stonecrush have a boss - Kez, down in the south-west digs, with his demolishers. Kill Kez and the digging stops for a season.\n\nIt's a group's fight. Will you [go for Kez]?",
+      "accept": "go for Kez",
+      "topics": {},
+      "summary": "Kez leads the Stonecrush demolishers in Dartmoor's south-west digs.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 4,
+          "at": [
+            180,
+            1340,
+            12.3
+          ],
+          "radius": 70,
+          "goal": "Bring down Kez about 1.0 km south of Bryn Asquith",
+          "target": "Kez",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bryn_asquith",
+          "goal": "Tell Bryn Asquith",
+          "say": "Kez is down. The dig's quiet. A season, maybe two. Long enough for the Watch to march.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Dragon-Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq4_kez_s_crushing_gauntlet",
+              "sq4_demolisher_s_torc"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "dm_road"
+    },
+    {
+      "id": "dm_ponies",
+      "title": "The Ponies of the Moor",
+      "level": 51,
+      "giver": "mirela",
+      "offer": "The moor ponies were here before Grimspound, before the giants, before anything. The herdsmen are driving them off the north moor - into the lake, some of them - to make room for whatever's coming down the dragon's road.\n\nWill you [stop the herdsmen]?",
+      "accept": "stop the herdsmen",
+      "topics": {},
+      "summary": "Granite giant herdsmen are driving the wild ponies off Dartmoor's north moor.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 4,
+          "at": [
+            1000,
+            380,
+            26.7
+          ],
+          "radius": 50,
+          "goal": "Stop the granite giant herdsmen about 860 m east of Mirela Stonewright",
+          "target": "granite giant herdsman",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mirela",
+          "goal": "Tell Mirela Stonewright",
+          "say": "The ponies will come back. They always do. It's the giants I'm not sure of.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Quarry-Oath of Grimspound.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq4_pony_hair_charm",
+              "sq4_herdsman_hide_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "dm_tegbuk",
+      "title": "Tegbuk",
+      "level": 53,
+      "giver": "mirela",
+      "offer": "Tegbuk. The herd-chief. He swore the quarry oath with my grandfather - I saw him do it when I was a girl. He's the one sending the herdsmen. He's forgotten every word.\n\nIt needs a group. Will you [remind him]?",
+      "accept": "remind him",
+      "topics": {},
+      "summary": "Tegbuk, the giants' herd-chief, who swore the quarry oath with Grimspound, now drives the ponies off the moor.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 4,
+          "at": [
+            846,
+            581,
+            11.7
+          ],
+          "radius": 70,
+          "goal": "Bring down Tegbuk about 750 m east of Mirela Stonewright",
+          "target": "Tegbuk",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mirela",
+          "goal": "Tell Mirela Stonewright",
+          "say": "He looked at you, at the end? They say oath-breakers remember, at the end. I hope he did.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Quarry-Oath of Grimspound.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq4_tegbuk_s_herd_staff_charm",
+              "sq4_oath_breaker_s_ring",
+              "sq4_moor_wind_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "dm_ponies"
+    },
+    {
+      "id": "dm_stonecallers",
+      "title": "The Stonecallers",
+      "level": 54,
+      "giver": "dm_hedda",
+      "offer": "The stonecallers sing to the stones in their ring in the middle valleys. They used to sing the stones awake for the quarry. Now they sing the dragon's song, and the stones listen.\n\nWill you [break the singing]?",
+      "accept": "break the singing",
+      "topics": {},
+      "summary": "The granite giant stonecallers sing Golestandt's song in their ring in Dartmoor's middle valleys.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 4,
+          "at": [
+            760,
+            800,
+            14.2
+          ],
+          "radius": 50,
+          "goal": "Silence the stonecallers about 810 m south-east of Quarry-Mother Hedda",
+          "target": "granite giant stonecaller",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "dm_hedda",
+          "goal": "Tell Quarry-Mother Hedda",
+          "say": "Quiet. For an hour. Do you know what they were singing? I do. I wish I didn't.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Quarry-Oath of Grimspound.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq4_stonecaller_s_throat_stone",
+              "sq4_ring_stone_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "dm_speaking_stone",
+      "title": "The Speaking-Stone",
+      "level": 55,
+      "giver": "dm_hedda",
+      "offer": "In the middle of the ring is the speaking-stone - the giants' oldest. When they swore the quarry oath, they swore it on that stone. If anything still remembers the oath, it does.\n\nWill you [listen to the stone]? Put your hand on it. Don't be afraid of what it says.",
+      "accept": "listen to the stone",
+      "topics": {},
+      "summary": "The giants' speaking-stone stands at the heart of the stonecallers' ring.",
+      "steps": [
+        {
+          "type": "search",
+          "zone": 4,
+          "at": [
+            745,
+            790,
+            14.2
+          ],
+          "goal": "Put your hand on the speaking-stone",
+          "clue": {
+            "name": "a tall grey stone, warm to the touch",
+            "model": 1347
+          },
+          "text": "The stone speaks - in a voice like a furnace door opening: 'GOGMAGOG FELL. HIS BONES STIR UNDER THE PLAIN. THE THRONE IS WARM. A NEW KING SITS IT WHEN THE DRAGON CALLS: CORMORAN OF THE MOUNT.' Then, very small, under it, an old giant's voice: 'the oath, the oath, remember the oath'.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "dm_hedda",
+          "goal": "Tell Quarry-Mother Hedda",
+          "say": "Cormoran. Cormoran of the Mount, the biggest of them, who ate Cornwall's cattle when my grandmother was a girl. And under it - the oath, still. Something still remembers.\n\nThat's the dragon's plan, then. He doesn't want a road. He wants a giant king on Gogmagog's throne, and every giant in Albion behind him.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Quarry-Oath of Grimspound.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq4_speaking_stone_ring",
+              "sq4_dragon_s_song_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "dm_stonecallers"
+    },
+    {
+      "id": "dm_herald",
+      "title": "The Stone-Herald",
+      "level": 56,
+      "giver": "dm_hedda",
+      "offer": "The voice in the stone - it comes from the Stone-Herald, the giant who speaks for the dragon. He stands in the ring and sings Golestandt's words into every stone on the moor.\n\nKill the voice and the moor goes quiet. Bring a group. Will you [silence the Herald]?",
+      "accept": "silence the Herald",
+      "topics": {},
+      "summary": "The Stone-Herald, the giant who speaks for Golestandt, sings the dragon's words into Dartmoor's stones from the stonecallers' ring.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 4,
+          "at": [
+            760,
+            800,
+            14.2
+          ],
+          "radius": 70,
+          "goal": "Silence the Stone-Herald about 810 m south-east of Quarry-Mother Hedda",
+          "target": "the Stone-Herald",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "dm_hedda",
+          "goal": "Tell Quarry-Mother Hedda",
+          "say": "Quiet. The whole moor, quiet. I can hear the ponies.\n\nGo and see Bryn. The Watch has a road to march down now.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Quarry-Oath of Grimspound.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq4_herald_s_voice_stone",
+              "sq4_silent_ring_torc",
+              "sq4_oath_keeper_s_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "dm_speaking_stone"
+    },
+    {
+      "id": "dm_outlookers",
+      "title": "The Outlookers",
+      "level": 55,
+      "giver": "bryn_asquith",
+      "offer": "The outlookers watch the south road - the road to the lair and the throne. Nothing gets down it without them knowing, and the pounders come when they shout.\n\nWill you [blind the road]?",
+      "accept": "blind the road",
+      "topics": {},
+      "summary": "Granite giant outlookers watch the south road to Golestandt's lair and Gogmagog's throne.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 4,
+          "at": [
+            900,
+            1120,
+            13.5
+          ],
+          "radius": 50,
+          "goal": "Kill the granite giant outlookers about 1.1 km south-east of Bryn Asquith",
+          "target": "granite giant outlooker",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bryn_asquith",
+          "goal": "Tell Bryn Asquith",
+          "say": "Blind. For now. The Watch can use that.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Dragon-Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq4_outlooker_s_eye_stone",
+              "sq4_pounder_fist_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "dm_knockers",
+      "title": "The Knockers",
+      "level": 56,
+      "giver": "mirela",
+      "offer": "Every miner knows: the knockers knock where the treasure is. Ours knock where the dragon sleeps now - all day, all night, under the south road. They're waking him, or he's waking them.\n\nWill you [quiet the knocking]?",
+      "accept": "quiet the knocking",
+      "topics": {},
+      "summary": "The granite knockers knock under Dartmoor's south road, where Golestandt sleeps.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 4,
+          "at": [
+            1200,
+            1150,
+            97.8
+          ],
+          "radius": 50,
+          "goal": "Quiet the granite knockers about 1.3 km south-east of Mirela Stonewright",
+          "target": "granite knocker",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "mirela",
+          "goal": "Tell Mirela Stonewright",
+          "say": "Quiet. You can hear something else now, under the road. Breathing.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Quarry-Oath of Grimspound.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq4_knocker_s_lamp_charm",
+              "sq4_deep_seam_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "dm_gorm",
+      "title": "Gorm Throne-Warden",
+      "level": 57,
+      "giver": "bryn_asquith",
+      "offer": "Gorm Throne-Warden keeps Gogmagog's throne in the south-east - keeps it warm, the stonecallers say, for the king who's coming. While Gorm stands, nothing gets near it.\n\nYou'll want a group - two, if you can. Will you [face Gorm]?",
+      "accept": "face Gorm",
+      "topics": {},
+      "summary": "Gorm Throne-Warden keeps Gogmagog's empty throne in Dartmoor's south-east, waiting for a king.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 4,
+          "at": [
+            1310,
+            1470,
+            11.3
+          ],
+          "radius": 70,
+          "goal": "Bring down Gorm Throne-Warden about 1.6 km south-east of Bryn Asquith",
+          "target": "Gorm Throne-Warden",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "bryn_asquith",
+          "goal": "Tell Bryn Asquith",
+          "say": "Gorm's down. The throne's open. Go and look at it - I want to know what you see.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Dragon-Watch.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq4_throne_warden_s_seal",
+              "sq4_stonelord_s_girdle",
+              "sq4_dragon_watch_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "dm_outlookers"
+    },
+    {
+      "id": "dm_throne",
+      "title": "The Giants' Throne",
+      "level": 58,
+      "giver": "bryn_asquith",
+      "offer": "Gorm's gone, and Gogmagog's throne is open. Will you [look at the throne]? Carefully. Then come back and tell me what a giant king's throne looks like with no one on it.",
+      "accept": "look at the throne",
+      "topics": {},
+      "summary": "Gogmagog's throne stands empty in Dartmoor's south-east, with Gorm Throne-Warden gone.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 4,
+          "at": [
+            1235,
+            1410,
+            5.5
+          ],
+          "radius": 25,
+          "goal": "Go to the Giants' Throne in the south-east",
+          "text": "A seat of raw granite the height of three men - empty, for now. Beside it the stonelords are cutting a crown out of the living rock, and one of them is the biggest giant you have ever seen: Cormoran, the giant of the Mount, trying it on for size. Far to the west, under the south road, something breathes out, pleased.",
+          "id": "s1"
+        },
+        {
+          "type": "choice",
+          "npc": "bryn_asquith",
+          "goal": "Tell Bryn Asquith what you saw",
+          "say": "Cormoran. With a crown. On Gogmagog's throne.\n\nThe dragon's making him a king - the first giant king of Albion since Gogmagog - and every giant on the moor will follow. Sir Constantine has to march, now, before the crown is finished.\n\nWill you go with the [Watch], under Constantine's banner? Or for [Grimspound] - Hedda says the oath-stone remembers, and if Gogmagog is broken, the giants might remember too.",
+          "options": [
+            {
+              "keyword": "Watch",
+              "say": "Then you're the Dragon-Watch's. Constantine's at the town gate. Give him the word.",
+              "ending": "watch"
+            },
+            {
+              "keyword": "Grimspound",
+              "say": "Then you're the oath's. Hedda will be glad. Constantine's at the town gate - give him the word anyway. The oath needs the Watch.",
+              "ending": "oath"
+            }
+          ],
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "watch": {
+          "text": "From the Dragon-Watch. Sir Constantine waits at Grimspound: give him the word when you're ready to march.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq4_watch_oath_ring"
+            ],
+            "choice": [
+              "sq4_gogmagog_s_crown_stone",
+              "sq4_quarry_oath_torc"
+            ]
+          }
+        },
+        "oath": {
+          "text": "From the Quarry-Oath of Grimspound. Sir Constantine waits at Grimspound: give him the word when you're ready to march.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [
+              "sq4_quarry_oath_torc"
+            ],
+            "choice": [
+              "sq4_gogmagog_s_crown_stone",
+              "sq4_watch_oath_ring"
+            ]
+          }
+        }
+      },
+      "requires": "dm_gorm"
     }
   ]
 }

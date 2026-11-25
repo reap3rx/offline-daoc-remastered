@@ -161,6 +161,691 @@
     "Hits": 28
    },
    "lore": "Bone and black silk, taken from a priest of Arawn. Scrubbed, and blessed, and still not quite clean."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Peallaidh-Scale Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 40,
+   "bonuses": {
+    "Con": 13,
+    "Hits": 40,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Sea-green scales, sharp at the edges."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Remnant Picket Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 40,
+   "bonuses": {
+    "Str": 13,
+    "Con": 13,
+    "Dex": 7,
+    "Hits": 34
+   },
+   "lore": "Salt-stained iron. The Remnant's own."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Bone-Snapper Jaw Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 43,
+   "bonuses": {
+    "Str": 14,
+    "Con": 14,
+    "Dex": 7,
+    "Hits": 37
+   },
+   "lore": "A jaw-bone, wired shut. Still twitches."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned-Field Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 43,
+   "bonuses": {
+    "Con": 14,
+    "Hits": 43,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Mud-black leather."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Moorlich-Bog Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 44,
+   "bonuses": {
+    "Int": 15,
+    "Pie": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 26
+   },
+   "lore": "Black bog-iron, set with a drowned man's tooth."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mire-Walker's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 44,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 44,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Oiled and black. Mire doesn't stick to it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tristan's Harp-Peg",
+   "base": [
+    41,
+    24
+   ],
+   "level": 42,
+   "bonuses": {
+    "Qui": 14,
+    "Con": 7,
+    "Dex": 7,
+    "Hits": 25,
+    "Power": 5
+   },
+   "lore": "A harp-peg of black yew, worn smooth by a master's hand."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Goblin-Hoard Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 42,
+   "bonuses": {
+    "Dex": 14,
+    "Qui": 14,
+    "Str": 7,
+    "Hits": 36
+   },
+   "lore": "From the pygmy goblins' hoard. They had good taste."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Harper's Travelling Cloak",
+   "base": [
+    41,
+    26
+   ],
+   "level": 42,
+   "bonuses": {
+    "Qui": 14,
+    "Con": 7,
+    "Dex": 7,
+    "Hits": 25,
+    "Power": 5
+   },
+   "lore": "Blue and gold, Lyonesse's colours."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Black-Sail Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 45,
+   "bonuses": {
+    "Pie": 15,
+    "Con": 8,
+    "Power": 6,
+    "Hits": 27
+   },
+   "lore": "Black and white enamel, half and half."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Isolde's Pearl",
+   "base": [
+    41,
+    24
+   ],
+   "level": 45,
+   "bonuses": {
+    "Qui": 15,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 27,
+    "Power": 5
+   },
+   "lore": "A sea-pearl, found in the wreck."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wreck-Diver's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 45,
+   "bonuses": {
+    "Dex": 15,
+    "Qui": 15,
+    "Str": 8,
+    "Hits": 38
+   },
+   "lore": "Weighted, so you sink when you want to."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hamadryad Leaf-Crown",
+   "base": [
+    41,
+    24
+   ],
+   "level": 41,
+   "bonuses": {
+    "Pie": 14,
+    "Con": 7,
+    "Power": 6,
+    "Hits": 25
+   },
+   "lore": "A crown of green leaves that never wither."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Heartwood Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 41,
+   "bonuses": {
+    "Con": 14,
+    "Hits": 41,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Dark heartwood, carved with a tree."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Gabriel-Hound Collar",
+   "base": [
+    41,
+    29
+   ],
+   "level": 45,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 38
+   },
+   "lore": "Black iron, with a ring for a chain no one ever held."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hound-Ward Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 45,
+   "bonuses": {
+    "Pie": 15,
+    "Con": 8,
+    "Power": 6,
+    "Hits": 27
+   },
+   "lore": "A twist of rowan and iron, against the hounds of the sky."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Witherwoode Splinter",
+   "base": [
+    41,
+    24
+   ],
+   "level": 46,
+   "bonuses": {
+    "Int": 15,
+    "Pie": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "Grey wood. It's colder than ice."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Wither-Bark Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 46,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 46,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Bark-grey, stiff, warm on the inside."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Storm-Glass Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 44,
+   "bonuses": {
+    "Int": 15,
+    "Pie": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 26
+   },
+   "lore": "A ring of fused sand from a lightning-strike."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned-Farm Shawl",
+   "base": [
+    41,
+    26
+   ],
+   "level": 44,
+   "bonuses": {
+    "Qui": 15,
+    "Con": 7,
+    "Dex": 7,
+    "Hits": 26,
+    "Power": 5
+   },
+   "lore": "Homespun, sea-stained. A drowned farmer's wife made it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Storm-Caller's Lightning-Rod",
+   "base": [
+    41,
+    24
+   ],
+   "level": 44,
+   "bonuses": {
+    "Int": 15,
+    "Pie": 7,
+    "Dex": 7,
+    "Power": 6,
+    "Hits": 26
+   },
+   "lore": "A twisted iron rod. Your hair stands up when you hold it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Weatherproof Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 44,
+   "bonuses": {
+    "Con": 15,
+    "Hits": 44,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Tarred wool. Nothing gets through."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Claw-Mark Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 44,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 7,
+    "Hits": 37
+   },
+   "lore": "Scored with a dragon's claw, deliberately."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Stormheart Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 47,
+   "bonuses": {
+    "Int": 16,
+    "Pie": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "The heart of the storm-engine, cracked and quiet."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Calm-Sea Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 47,
+   "bonuses": {
+    "Pie": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "Blue glass. The sea is calm in it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Remnant Captain's Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 47,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 47,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Lyonesse blue, salt-white at the hem."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Pikeman's Gorget",
+   "base": [
+    41,
+    29
+   ],
+   "level": 43,
+   "bonuses": {
+    "Str": 14,
+    "Con": 14,
+    "Dex": 7,
+    "Hits": 37
+   },
+   "lore": "Drowned steel, scoured clean."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned Pike-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 43,
+   "bonuses": {
+    "Dex": 14,
+    "Qui": 14,
+    "Str": 7,
+    "Hits": 37
+   },
+   "lore": "From a pike's butt-cap."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned Knight's Spur",
+   "base": [
+    41,
+    24
+   ],
+   "level": 47,
+   "bonuses": {
+    "Str": 16,
+    "Con": 16,
+    "Dex": 8,
+    "Hits": 40
+   },
+   "lore": "Silver, green with age."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lyonesse Shield-Strap",
+   "base": [
+    41,
+    32
+   ],
+   "level": 47,
+   "bonuses": {
+    "Con": 16,
+    "Hits": 47,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "From a knight's shield. Blue and gold, faded."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Knight's Vigil Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 47,
+   "bonuses": {
+    "Pie": 16,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "A plain ring, engraved: 'Until the sea goes back.'"
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Meliodas's Crown-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 17,
+    "Con": 17,
+    "Dex": 8,
+    "Hits": 42
+   },
+   "lore": "A drowned king's crown, cut into a ring. Seawater drips from it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lyonesse Royal Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 50,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Blue, with Lyonesse's sun in gold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Father's Sorrow Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 17,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "Meliodas wore it for Tristan."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Tide-Lord's Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 17,
+    "Pie": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "A shell that hums with the tide."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cailleach's Staff-Head",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 17,
+    "Pie": 8,
+    "Dex": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "A stone the size of a fist, worn into a face."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sea-Wind Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 50,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Grey as a winter sea. The wind can't touch whoever wears it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Keeper of Tristan's Lay Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Qui": 17,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 30,
+    "Power": 6
+   },
+   "lore": "A harp in gold, very small."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Hag-Stone Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 17,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 30
+   },
+   "lore": "A holed stone. Look through it and you see true."
   }
  ]
 }

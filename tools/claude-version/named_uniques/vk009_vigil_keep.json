@@ -1,0 +1,137 @@
+{
+ "zone": 9,
+ "region": 1,
+ "realm": 1,
+ "prefix": "vk009",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cloak of the Relief",
+   "base": [
+    41,
+    26
+   ],
+   "level": 22,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 22,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Marsh-brown, with the Vigil's white tower. Given to those who relieved the Vigil."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Vigil Tower Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 22,
+   "bonuses": {
+    "Pie": 7,
+    "Con": 4,
+    "Power": 3,
+    "Hits": 13
+   },
+   "lore": "The white tower in grey stone."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Drowned Plate Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 22,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 4,
+    "Hits": 19
+   },
+   "lore": "Cut from the Vigil's armour, scoured clean."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Marsh Warden's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 22,
+   "bonuses": {
+    "Con": 7,
+    "Hits": 22,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Bog-iron, twisted by the Wardens' smith."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Vrask's Gorget",
+   "base": [
+    41,
+    29
+   ],
+   "level": 25,
+   "bonuses": {
+    "Str": 8,
+    "Con": 8,
+    "Dex": 4,
+    "Hits": 21
+   },
+   "lore": "Won from Ghoul-Marshal Vrask. Still damp inside."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lord-Commander's Seal",
+   "base": [
+    41,
+    24
+   ],
+   "level": 25,
+   "bonuses": {
+    "Pie": 8,
+    "Con": 4,
+    "Power": 4,
+    "Hits": 15
+   },
+   "lore": "Won from the Drowned Lord-Commander when the keep held."
+  }
+ ],
+ "camp": {
+  "cloak": "vk009_cloak_of_the_relief",
+  "emblem": 26752,
+  "draughts": [
+   [
+    "Strong_Draught_of_Healing",
+    "vk009_apple_isle_draught",
+    "Apple-Isle Draught",
+    "From Caer Witrin's orchards. Sharp and sweet."
+   ],
+   [
+    "Strong_Draught_of_Power",
+    "vk009_marsh_tonic",
+    "Marsh Tonic",
+    "Bitter. Brec swears it clears the head."
+   ],
+   [
+    "CombinedRegens_Draught",
+    "vk009_witrin_cider",
+    "Witrin Cider",
+    "Caer Witrin's best. Everything comes back faster after a cup."
+   ]
+  ]
+ }
+}

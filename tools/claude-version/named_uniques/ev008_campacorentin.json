@@ -1,0 +1,62 @@
+{
+ "zone": 8,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu008",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Green Girdle",
+   "base": [
+    41,
+    32
+   ],
+   "level": 26,
+   "bonuses": {
+    "Con": 9,
+    "Hits": 26,
+    "Body": 3,
+    "Crush": 3,
+    "Slash": 3
+   },
+   "lore": "Green silk, worked with gold. Gawain wore one like it, and lived."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Green Chapel Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 26,
+   "bonuses": {
+    "Str": 9,
+    "Con": 9,
+    "Dex": 4,
+    "Hits": 22
+   },
+   "lore": "A ring of holly-wood that stays green all winter."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Root-Bleeder's Knife-Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 23,
+   "bonuses": {
+    "Int": 8,
+    "Pie": 4,
+    "Dex": 4,
+    "Power": 3,
+    "Hits": 14
+   },
+   "lore": "From a sacrificer's knife. Elaine washed it in the stream."
+  }
+ ]
+}

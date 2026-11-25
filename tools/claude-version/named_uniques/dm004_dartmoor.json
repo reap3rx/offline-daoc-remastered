@@ -1,0 +1,149 @@
+{
+ "zone": 4,
+ "region": 1,
+ "realm": 1,
+ "prefix": "dm004",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Dragon-Watch",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 19,
+    "Hits": 56,
+    "Body": 7,
+    "Crush": 7,
+    "Slash": 7
+   },
+   "lore": "Red, with a white dragon struck through. Given to those who marched with the Watch."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Throne-Breaker's Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 19,
+    "Con": 19,
+    "Dex": 9,
+    "Hits": 48
+   },
+   "lore": "Granite and iron, from the throne-step."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Giant's Girdle",
+   "base": [
+    41,
+    32
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 19,
+    "Con": 19,
+    "Dex": 9,
+    "Hits": 48
+   },
+   "lore": "A giant's bracelet, worn as a belt."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Ring of Grimspound",
+   "base": [
+    41,
+    35
+   ],
+   "level": 50,
+   "bonuses": {
+    "Pie": 19,
+    "Con": 9,
+    "Power": 8,
+    "Hits": 34
+   },
+   "lore": "The quarry-mark, in silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Granite Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 19,
+    "Hits": 56,
+    "Body": 7,
+    "Crush": 7,
+    "Slash": 7
+   },
+   "lore": "Cut from the Giants' Throne itself."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Dragon's-Eye Jewel",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Int": 19,
+    "Pie": 9,
+    "Dex": 9,
+    "Power": 8,
+    "Hits": 34
+   },
+   "lore": "Yellow and slit-pupilled. It blinks."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Cormoran's Crown-Shard",
+   "base": [
+    41,
+    24
+   ],
+   "level": 50,
+   "bonuses": {
+    "Str": 20,
+    "Con": 20,
+    "Dex": 10,
+    "Hits": 51
+   },
+   "lore": "Half of a granite crown. Heavy as guilt."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Throne-Step Mantle",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 20,
+    "Hits": 60,
+    "Body": 8,
+    "Crush": 8,
+    "Slash": 8
+   },
+   "lore": "Grey as the throne-step, and as hard."
+  }
+ ]
+}

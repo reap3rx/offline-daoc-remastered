@@ -63,6 +63,36 @@
       "during": [
         "arawn_sacrament/s7"
       ]
+    },
+    {
+      "id": "ly_meliot",
+      "zone": 10,
+      "realm": 1,
+      "name": "Remnant-Captain Meliot",
+      "model": 28,
+      "level": 48,
+      "pos": [
+        1356,
+        1126,
+        72.0
+      ],
+      "guild": "the Lyonesse Remnant",
+      "idle": "We're what's left of Lyonesse that can still hold a sword. It isn't much. It's enough."
+    },
+    {
+      "id": "ly_gwennol",
+      "zone": 10,
+      "realm": 1,
+      "name": "Harper Gwennol",
+      "model": 38,
+      "level": 46,
+      "pos": [
+        1332,
+        1142,
+        74.7
+      ],
+      "guild": "the Harpers of Tristan",
+      "idle": "Tristan was the best harper who ever lived. We keep his songs. Somebody must."
     }
   ],
   "quests": [
@@ -502,6 +532,996 @@
         }
       },
       "group": true
+    },
+    {
+      "id": "ly_peallaidh",
+      "title": "The North Shore",
+      "level": 40,
+      "giver": "ly_meliot",
+      "offer": "The peallaidh - the shaggy sea-things - come further up the north shore with every tide. The sea's coming with them.\n\nWill you [push them back]?",
+      "accept": "push them back",
+      "topics": {},
+      "summary": "Peallaidh come further up Lyonesse's north shore with every tide.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            1268,
+            628,
+            82.4
+          ],
+          "radius": 50,
+          "goal": "Push back the peallaidh about 510 m north of Remnant-Captain Meliot",
+          "target": "peallaidh",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ly_meliot",
+          "goal": "Tell Remnant-Captain Meliot",
+          "say": "Back - for a tide or two. The sea isn't rising by itself, you know. Nothing here does anything by itself.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Lyonesse Remnant.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq10_peallaidh_scale_bracer",
+              "sq10_remnant_picket_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ly_bone_snappers",
+      "title": "Bone Snappers",
+      "level": 43,
+      "giver": "ly_meliot",
+      "offer": "Bone snappers in the drowned fields to the west - big as boats, and they eat anything that floats or walks. My scouts won't cross.\n\nWill you [clear the fields]?",
+      "accept": "clear the fields",
+      "topics": {},
+      "summary": "Bone snappers hunt the drowned fields of western Lyonesse.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            633,
+            1055,
+            74.8
+          ],
+          "radius": 50,
+          "goal": "Kill the bone snappers about 730 m west of Remnant-Captain Meliot",
+          "target": "bone snapper",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ly_meliot",
+          "goal": "Tell Remnant-Captain Meliot",
+          "say": "My scouts will cross now. Some of them, anyway.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Lyonesse Remnant.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq10_bone_snapper_jaw_charm",
+              "sq10_drowned_field_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ly_moorlich",
+      "title": "The Moorlich Mire",
+      "level": 44,
+      "giver": "sir_kendric",
+      "offer": "Moorlich in the mire - drowned things that rose and stayed risen. The priests of Arawn call them up, I think, to keep the mire between us and their cathedral.\n\nWill you [cross the mire]?",
+      "accept": "cross the mire",
+      "topics": {},
+      "summary": "Moorlich hold the mire between the Remnant's camp and the ruined cathedral.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            906,
+            728,
+            77.5
+          ],
+          "radius": 50,
+          "goal": "Put down the moorlich about 600 m north-west of Sir Kendric",
+          "target": "moorlich",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sir_kendric",
+          "goal": "Tell Sir Kendric",
+          "say": "Crossable. Barely. The cathedral's on the far side - you know what waits there.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Sir Kendric.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq10_moorlich_bog_ring",
+              "sq10_mire_walker_s_mantle"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ly_tristans_harp",
+      "title": "Tristan's Harp",
+      "level": 42,
+      "giver": "ly_gwennol",
+      "offer": "The pygmy goblins of the south have a hoard, and in it - they boast of it - a harp of black yew. If it's Tristan's, it belongs to the Harpers, and to Lyonesse.\n\nWill you [find the harp]?",
+      "accept": "find the harp",
+      "topics": {},
+      "summary": "The pygmy goblins of southern Lyonesse boast of a black yew harp in their hoard.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            1056,
+            1240,
+            69.5
+          ],
+          "radius": 50,
+          "goal": "Fight through the pygmy goblin tanglers about 290 m west of Harper Gwennol",
+          "target": "pygmy goblin tangler",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 10,
+          "at": [
+            1100,
+            1300,
+            69.7
+          ],
+          "goal": "Search the goblins' hoard",
+          "clue": {
+            "name": "a heap of shiny drowned things",
+            "model": 1347
+          },
+          "text": "Under a heap of tarnished cups: a harp of black yew, the strings long gone. Carved on the pillar: a boar, and 'T'.",
+          "give": {
+            "name": "Tristan's harp"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "ly_gwennol",
+          "goal": "Bring the harp to Harper Gwennol",
+          "say": "It's his. It's Tristan's. I can hardly hold it.\n\nI can [restring it], here in the camp, and play his songs for the Remnant - or you can [carry it] to Tintagel, where King Mark's people would weep to see it.",
+          "options": [
+            {
+              "keyword": "restring it",
+              "say": "Then the Remnant will hear Tristan's harp tonight. You'll stay and listen?",
+              "ending": "harp"
+            },
+            {
+              "keyword": "carry it",
+              "say": "Then carry it gently. Mark wronged him, but Mark's people loved him.",
+              "ending": "mark"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "harp": {
+          "text": "From the Harpers of Tristan.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq10_tristan_s_harp_peg"
+            ],
+            "choice": [
+              "sq10_goblin_hoard_ring",
+              "sq10_harper_s_travelling_cloak"
+            ]
+          }
+        },
+        "mark": {
+          "text": "From the Harpers of Tristan.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq10_harper_s_travelling_cloak"
+            ],
+            "choice": [
+              "sq10_tristan_s_harp_peg",
+              "sq10_goblin_hoard_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ly_black_sail",
+      "title": "The Black Sail",
+      "level": 45,
+      "giver": "ly_gwennol",
+      "offer": "You know the end of Tristan's lay? Dying, he sent for Isolde. White sails if she was coming, black if not. She came - and his wife told him the sails were black, and he died.\n\nThe ship is in the old harbour in the north-west, the sailors say. Drowned with the rest. Will you [find the ship]?",
+      "accept": "find the ship",
+      "topics": {},
+      "summary": "Isolde's ship, the one with the sail that was white, lies drowned in Lyonesse's old harbour.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            405,
+            252,
+            68.0
+          ],
+          "radius": 50,
+          "goal": "Get past the drowned sailors in the old harbour about 1.3 km north-west of Harper Gwennol",
+          "target": "Danaoin sailor",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 10,
+          "at": [
+            403,
+            251,
+            68.0
+          ],
+          "goal": "Search the wreck in the harbour",
+          "clue": {
+            "name": "a wreck with a rotted sail",
+            "model": 1347
+          },
+          "text": "The sail, what's left of it, is white. Someone painted it black, long ago - the black flakes off under your hand. And there's a pearl caught in the rigging.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "ly_gwennol",
+          "goal": "Tell Harper Gwennol",
+          "say": "White. It was always white. She came for him.\n\nI'll put that in the lay. It should have been in it all along.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Harpers of Tristan.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq10_black_sail_ring",
+              "sq10_isolde_s_pearl",
+              "sq10_wreck_diver_s_belt"
+            ]
+          }
+        }
+      },
+      "requires": "ly_tristans_harp"
+    },
+    {
+      "id": "ly_hamadryads",
+      "title": "The Weeping Wood",
+      "level": 41,
+      "giver": "ly_gwennol",
+      "offer": "The hamadryads of the east wood used to sing with the Harpers. Now salt-water creeps into their roots and they've gone mad with it.\n\nWill you [quiet the wood]? It's a mercy.",
+      "accept": "quiet the wood",
+      "topics": {},
+      "summary": "Salt-water rot drives the hamadryads of eastern Lyonesse mad.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            1454,
+            843,
+            70.5
+          ],
+          "radius": 50,
+          "goal": "Quiet the hamadryads about 320 m north-east of Harper Gwennol",
+          "target": "hamadryad",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ly_gwennol",
+          "goal": "Tell Harper Gwennol",
+          "say": "Quiet. I'll sing for them tonight.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Harpers of Tristan.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq10_hamadryad_leaf_crown",
+              "sq10_heartwood_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ly_gabriel_hounds",
+      "title": "The Gabriel Hounds",
+      "level": 45,
+      "giver": "ly_gwennol",
+      "offer": "The Gabriel hounds - hounds of the sky, the old songs call them, Annwn's hounds - hunt on the hill in the west. They never came to Lyonesse before. Someone sent them.\n\nWill you [hunt the hounds]? Bring friends.",
+      "accept": "hunt the hounds",
+      "topics": {},
+      "summary": "The Gabriel hounds, Annwn's hounds of the sky, hunt on a hill in western Lyonesse.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            531,
+            758,
+            68.9
+          ],
+          "radius": 50,
+          "goal": "Hunt the Gabriel hounds about 890 m north-west of Harper Gwennol",
+          "target": "gabriel hound",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ly_gwennol",
+          "goal": "Tell Harper Gwennol",
+          "say": "Annwn's hounds, this far south. The priests of Arawn opened a way for them, I'd wager, at someone's asking.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Harpers of Tristan.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq10_gabriel_hound_collar",
+              "sq10_hound_ward_charm"
+            ]
+          }
+        }
+      },
+      "group": true
+    },
+    {
+      "id": "ly_witherwoode",
+      "title": "The Witherwoode",
+      "level": 46,
+      "giver": "ly_gwennol",
+      "offer": "In the middle mire the witherwoode stand - dead trees, walking. They grow where the cailleach breathes. They're spreading toward the camp.\n\nWill you [fell the witherwoode]?",
+      "accept": "fell the witherwoode",
+      "topics": {},
+      "summary": "The witherwoode, dead walking trees, spread from the cailleach's mire toward the Remnant's camp.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            769,
+            683,
+            68.8
+          ],
+          "radius": 50,
+          "goal": "Fell the witherwoode about 750 m north-west of Harper Gwennol",
+          "target": "witherwoode",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ly_gwennol",
+          "goal": "Tell Harper Gwennol",
+          "say": "They grow where she breathes. One day someone will have to stop her breathing.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Harpers of Tristan.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq10_witherwoode_splinter",
+              "sq10_wither_bark_mantle"
+            ]
+          }
+        }
+      },
+      "group": true
+    },
+    {
+      "id": "ly_last_day",
+      "title": "The Day the Sea Came",
+      "level": 41,
+      "giver": "wenna_trevose",
+      "offer": "The drowned folk in the east farms live their last day over and over - you've seen Morvah. But they remember how it ended. If you can get one to stand still long enough...\n\nWill you [ask the drowned]? Gently, if you can.",
+      "accept": "ask the drowned",
+      "topics": {},
+      "summary": "The drowned farmers of eastern Lyonesse relive their last day. Wenna Trevose wants to know how it ended.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            1121,
+            808,
+            68.3
+          ],
+          "radius": 50,
+          "goal": "Calm the drowned shepherds about 400 m north-west of Wenna Trevose",
+          "target": "shepherd",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 10,
+          "at": [
+            1199,
+            775,
+            68.4
+          ],
+          "goal": "Search a drowned farmhouse",
+          "clue": {
+            "name": "a farmhouse with the table still laid",
+            "model": 1347
+          },
+          "text": "A journal, the last page: 'A white storm out of the south, out of a clear sky. No ordinary sea. My husband says there was a beast in the clouds, white as bone.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "wenna_trevose",
+          "goal": "Tell Wenna Trevose",
+          "say": "A beast in the clouds, white as bone. The storm that drowned Lyonesse wasn't weather.\n\nAnd it's coming back.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Wenna Trevose.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq10_storm_glass_ring",
+              "sq10_drowned_farm_shawl"
+            ]
+          }
+        }
+      },
+      "requires": "last_evening"
+    },
+    {
+      "id": "ly_storm_callers",
+      "title": "The Storm-Callers",
+      "level": 44,
+      "giver": "ly_meliot",
+      "offer": "Robed figures on the rock in the north - storm-callers, the farmers call them - sing up the white storm a little every night. The sea rises a finger's width each time.\n\nWill you [break the singing]?",
+      "accept": "break the singing",
+      "topics": {},
+      "summary": "Storm-callers on the north rock sing up a white storm a little every night.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            1179,
+            480,
+            78.4
+          ],
+          "radius": 50,
+          "goal": "Kill the storm-callers on the rock about 670 m north of Remnant-Captain Meliot",
+          "target": "storm-caller",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 10,
+          "at": [
+            1170,
+            470,
+            78.4
+          ],
+          "goal": "Search the storm rock",
+          "clue": {
+            "name": "a rock scored with claw-marks",
+            "model": 1347
+          },
+          "text": "Claw-marks, deep, in a ring round the rock - a dragon's. And a cairn of pale stones: Dartmoor granite.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "ly_meliot",
+          "goal": "Tell Remnant-Captain Meliot",
+          "say": "Dartmoor granite and a dragon's claw. Golestandt drowned Lyonesse. And he means to do it again, to Cornwall.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Lyonesse Remnant.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq10_storm_caller_s_lightning_rod",
+              "sq10_weatherproof_mantle",
+              "sq10_claw_mark_bracer"
+            ]
+          }
+        }
+      },
+      "requires": "ly_peallaidh"
+    },
+    {
+      "id": "ly_storm_controller",
+      "title": "The Unnatural Storm",
+      "level": 47,
+      "giver": "ly_meliot",
+      "offer": "The storm-callers were only the voices. The storm itself has a heart - a thing on the rock that the white dragon left behind. Kill it, and the sea stops rising.\n\nWill you [still the storm]? Bring everyone.",
+      "accept": "still the storm",
+      "topics": {},
+      "summary": "The white dragon's storm has a heart on the north rock of Lyonesse.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            1179,
+            467,
+            78.6
+          ],
+          "radius": 50,
+          "goal": "Destroy the Unnatural Storm Controller about 680 m north of Remnant-Captain Meliot",
+          "target": "Unnatural Storm Controller",
+          "count": 1,
+          "text": "The storm-thing shatters. For the first time in a year, the wind drops, and the sea lies flat.",
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "ly_meliot",
+          "goal": "Tell Remnant-Captain Meliot",
+          "say": "The sea's lying flat. I'd forgotten it could.\n\nCornwall's coast is safe - from this, at least. The dragon will try something else.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Lyonesse Remnant.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq10_stormheart_charm",
+              "sq10_calm_sea_ring",
+              "sq10_remnant_captain_s_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "ly_storm_callers"
+    },
+    {
+      "id": "ly_pike_line",
+      "title": "The Pike Line",
+      "level": 43,
+      "giver": "sir_kendric",
+      "offer": "Drowned pikemen hold a line in the south, as they did the day the sea came - still waiting for an enemy who never arrived.\n\nWill you [break the line]?",
+      "accept": "break the line",
+      "topics": {},
+      "summary": "Drowned pikemen hold a line in southern Lyonesse, waiting for an enemy.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            791,
+            1096,
+            70.1
+          ],
+          "radius": 50,
+          "goal": "Break the drowned pikemen about 560 m west of Sir Kendric",
+          "target": "pikeman",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "sir_kendric",
+          "goal": "Tell Sir Kendric",
+          "say": "Broken. They'll stand again, I expect. The knights behind them won't let them rest.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Sir Kendric.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq10_pikeman_s_gorget",
+              "sq10_drowned_pike_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "ly_drowned_knights",
+      "title": "The Drowned Knights",
+      "level": 47,
+      "giver": "sir_kendric",
+      "offer": "The knights of Lyonesse stand guard in the south, round the old castle-mound - the king's guard, drowned with their king. They answer to no one now.\n\nWill you [face the guard]? Bring everyone.",
+      "accept": "face the guard",
+      "topics": {},
+      "summary": "The drowned knights of Lyonesse's king guard the old castle-mound in the south.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            1219,
+            1270,
+            75.1
+          ],
+          "radius": 50,
+          "goal": "Fight through the drowned footmen about 180 m south-west of Sir Kendric",
+          "target": "footman",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            1225,
+            1275,
+            74.6
+          ],
+          "radius": 50,
+          "goal": "Defeat the drowned knights",
+          "target": "knight",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "sir_kendric",
+          "goal": "Tell Sir Kendric",
+          "say": "The king's guard is broken. Then the king himself will come out. He always does, the drowned say, when his guard falls.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Sir Kendric.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq10_drowned_knight_s_spur",
+              "sq10_lyonesse_shield_strap",
+              "sq10_knight_s_vigil_ring"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "ly_pike_line"
+    },
+    {
+      "id": "ly_meliodas",
+      "title": "The Drowned King",
+      "level": 50,
+      "giver": "sir_kendric",
+      "offer": "King Meliodas of Lyonesse - Tristan's father - drowned with his kingdom. With his guard broken he'll walk out of the castle-mound. He may be the only one who remembers what drowned us.\n\nWill you [face the king]? Make him listen.",
+      "accept": "face the king",
+      "topics": {},
+      "summary": "King Meliodas of Lyonesse, Tristan's drowned father, walks out of the castle-mound.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 10,
+          "at": [
+            1210,
+            1260,
+            75.1
+          ],
+          "radius": 30,
+          "goal": "Go to the old castle-mound about 180 m south-west of Sir Kendric",
+          "text": "Water runs uphill toward the mound. A tall figure in a sea-green crown steps out of it.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 10,
+          "at": [
+            1220,
+            1275,
+            74.8
+          ],
+          "wake_m": 30,
+          "goal": "Make King Meliodas listen",
+          "text": "Meliodas kneels in the water. 'A white beast in the clouds,' he says. 'It asked for my harbour and I said no. And now a queen in a black crown buys my priests. Tell my son's friends: the dragon is in Dartmoor, and the queen is at the lake.'",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "King Meliodas of Lyonesse",
+              "center": [
+                1220,
+                1275,
+                74.8
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Make King Meliodas listen",
+              "announce": "King Meliodas, crowned in sea-wrack: 'Who walks in my kingdom? Kneel, or drown.'",
+              "boss": {
+                "template": 50015,
+                "name": "King Meliodas of Lyonesse",
+                "level": 51,
+                "health_mult": 2.2
+              },
+              "success": "King Meliodas of Lyonesse falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 12016,
+                    "name": "drowned guardsman",
+                    "level": [
+                      48,
+                      49
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "sir_kendric",
+          "goal": "Speak with Sir Kendric",
+          "say": "Dartmoor and the lake. The dragon and the queen. Both threads end the same way: at the heart of each of them.\n\nShall we [bury the king] - here, in the mound, with honour? Or [tell the Harpers] all he said, so it goes into the lay?",
+          "options": [
+            {
+              "keyword": "bury the king",
+              "say": "Then he rests. Lyonesse's last king, under Lyonesse's last hill.",
+              "ending": "buried"
+            },
+            {
+              "keyword": "tell the Harpers",
+              "say": "Then Gwennol will sing it, and every harper in Albion will learn it.",
+              "ending": "lay"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "buried": {
+          "text": "From the Lyonesse Remnant.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq10_lyonesse_royal_mantle"
+            ],
+            "choice": [
+              "sq10_meliodas_s_crown_ring",
+              "sq10_father_s_sorrow_torc",
+              "sq10_tide_lord_s_charm"
+            ]
+          }
+        },
+        "lay": {
+          "text": "From the Harpers of Tristan.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq10_father_s_sorrow_torc"
+            ],
+            "choice": [
+              "sq10_meliodas_s_crown_ring",
+              "sq10_lyonesse_royal_mantle",
+              "sq10_tide_lord_s_charm"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "ly_drowned_knights"
+    },
+    {
+      "id": "ly_cailleach",
+      "title": "The Cailleach",
+      "level": 50,
+      "giver": "ly_gwennol",
+      "offer": "In the middle of the mire the cailleach keeps her ring - the old hag of the sea-wind, who was here before Lyonesse and will be here after. She blew the sea in for the white dragon once. She'll do it again for anyone who pays her.\n\nWill you [face the cailleach]? This is the hardest thing in Lyonesse. Bring everyone.",
+      "accept": "face the cailleach",
+      "topics": {},
+      "summary": "The cailleach, the old hag of the sea-wind, keeps her ring in the heart of the mire.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            757,
+            846,
+            69.4
+          ],
+          "radius": 50,
+          "goal": "Fight through the cailleach's guards about 650 m north-west of Harper Gwennol",
+          "target": "cailleach guard",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            732,
+            839,
+            68.3
+          ],
+          "radius": 50,
+          "goal": "Fight through the cailleach's priests",
+          "target": "cailleach priest",
+          "count": 2,
+          "id": "s2"
+        },
+        {
+          "type": "kill",
+          "zone": 10,
+          "at": [
+            737,
+            842,
+            68.4
+          ],
+          "radius": 50,
+          "goal": "Defeat Cailleach Uragaig",
+          "target": "Cailleach Uragaig",
+          "count": 1,
+          "text": "The cailleach falls, laughing like a gale. 'The wind will find another mouth,' she says. 'It always does.' Then she's only stones.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "ly_gwennol",
+          "goal": "Tell Harper Gwennol",
+          "say": "She's stones. The wind is just wind tonight.\n\nI'll write you into the lay - beside Tristan, if you'll allow it. Lyonesse will remember who stood up for it.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Harpers of Tristan.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq10_cailleach_s_staff_head",
+              "sq10_sea_wind_mantle",
+              "sq10_keeper_of_tristan_s_lay_ring",
+              "sq10_hag_stone_torc"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "ly_witherwoode"
     }
   ]
 }

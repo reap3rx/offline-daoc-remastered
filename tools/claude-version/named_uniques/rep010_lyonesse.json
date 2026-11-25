@@ -1,0 +1,150 @@
+{
+ "zone": 10,
+ "region": 1,
+ "realm": 1,
+ "prefix": "rep010",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Remnant Friend's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 42,
+   "bonuses": {
+    "Con": 14,
+    "Hits": 42,
+    "Body": 5,
+    "Crush": 5,
+    "Slash": 5
+   },
+   "lore": "Salt-stained silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Remnant Knight's Belt",
+   "base": [
+    41,
+    32
+   ],
+   "level": 42,
+   "bonuses": {
+    "Str": 14,
+    "Con": 14,
+    "Dex": 7,
+    "Hits": 36
+   },
+   "lore": "Blue and gold, faded by the sea."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Sword of Lyonesse Torc",
+   "base": [
+    41,
+    29
+   ],
+   "level": 46,
+   "bonuses": {
+    "Str": 15,
+    "Con": 15,
+    "Dex": 8,
+    "Hits": 39
+   },
+   "lore": "A sword and a sun, in gold."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of the Sword of Lyonesse",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Con": 17,
+    "Hits": 50,
+    "Body": 6,
+    "Crush": 6,
+    "Slash": 6
+   },
+   "lore": "Lyonesse blue. Only the Swords of Lyonesse wear it."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Harp-Friend's Charm",
+   "base": [
+    41,
+    24
+   ],
+   "level": 42,
+   "bonuses": {
+    "Qui": 14,
+    "Con": 7,
+    "Dex": 7,
+    "Hits": 25,
+    "Power": 5
+   },
+   "lore": "A harp, very small, in silver."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Harper's Bracer",
+   "base": [
+    41,
+    33
+   ],
+   "level": 46,
+   "bonuses": {
+    "Qui": 15,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 28,
+    "Power": 5
+   },
+   "lore": "Worked with Tristan's lay, in tiny letters."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Lay-Keeper's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 46,
+   "bonuses": {
+    "Pie": 15,
+    "Con": 8,
+    "Power": 7,
+    "Hits": 28
+   },
+   "lore": "Black and white enamel, the two sails."
+  },
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Mantle of Tristan's Lay",
+   "base": [
+    41,
+    26
+   ],
+   "level": 50,
+   "bonuses": {
+    "Qui": 17,
+    "Con": 8,
+    "Dex": 8,
+    "Hits": 30,
+    "Power": 6
+   },
+   "lore": "Blue and gold. Only the Keepers of Tristan's Lay wear it."
+  }
+ ]
+}

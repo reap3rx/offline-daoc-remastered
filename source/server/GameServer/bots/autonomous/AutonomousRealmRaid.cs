@@ -648,7 +648,8 @@ namespace DOL.GS
             Cooldowns.GetValueOrDefault(id) <= GameLoop.GameLoopTime && Bosses.TryGetValue(id, out var boss) &&
             boss.IsAlive && !boss.IsRespawning && boss.ObjectState == GameObject.eObjectState.Active &&
             (id != "epic-albion" || !ApocInitializator.PickedTarget) &&
-            (id != "dragon-hibernia" || !DOL.GS.DynamicEvents.MusterCampaign.CuuldurachSealed);   // (the Muster's campaign opens his ring)
+            (id != "dragon-hibernia" || !DOL.GS.DynamicEvents.MusterCampaign.CuuldurachSealed) &&   // (the Muster's campaign opens his ring)
+            (id != "dragon-albion" || !DOL.GS.DynamicEvents.AlbionCampaign.GolestandtSealed);    // (the Dragon-Watch's opens his lair)
 
         private static bool TryStaging(Raid raid, int slot, out Vector3 staging)
         {

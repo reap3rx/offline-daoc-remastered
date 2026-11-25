@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -107,11 +107,11 @@ namespace DOL.UnitTests
             var c = Bands;
             int before = c.Anchors.Count;
             LevelBands.AddStartAnchors(c);
-            Assert.That(c.Anchors.Count, Is.EqualTo(before + 5), "Ardee, Ardagh, Brynach, Connla and Culraid");
+            Assert.That(c.Anchors.Count, Is.EqualTo(before + 10), "Ardee, Ardagh, Brynach, Connla, Culraid, Humberton, West Downs, Caer Ulfwych, Adribard's Retreat and Cornwall Station");
             Assert.That(c.Anchors.Count(a => a.Name == "Ardee" && a.Region == 200), Is.EqualTo(1));
             Assert.That(c.Anchors.Count(a => a.Name == "Ardagh" && a.Region == 200), Is.EqualTo(1));
             LevelBands.AddStartAnchors(c);
-            Assert.That(c.Anchors.Count, Is.EqualTo(before + 5), "twice is once");
+            Assert.That(c.Anchors.Count, Is.EqualTo(before + 10), "twice is once");
         }
 
         [Test]

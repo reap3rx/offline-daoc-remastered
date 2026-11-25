@@ -66,6 +66,80 @@
         "heretic/s4",
         "heretic/s5"
       ]
+    },
+    {
+      "id": "cf_ifan",
+      "zone": 8,
+      "realm": 1,
+      "name": "Station-Warden Ifan",
+      "model": 9,
+      "level": 26,
+      "pos": [
+        264,
+        282,
+        45.2
+      ],
+      "guild": "the Ulfwych Rangers",
+      "idle": "Campacorentin Station. Last warm fire before the wood swallows you."
+    },
+    {
+      "id": "cf_tewdwr",
+      "zone": 8,
+      "realm": 1,
+      "name": "Archivist Tewdwr",
+      "model": 32,
+      "level": 35,
+      "pos": [
+        348,
+        168,
+        46.0
+      ],
+      "guild": "the Lethantis Association",
+      "idle": "The Association keeps every book in Albion worth keeping. And a few that aren't."
+    },
+    {
+      "id": "cf_gwion",
+      "zone": 8,
+      "realm": 1,
+      "name": "Ranger-Captain Gwion",
+      "model": 28,
+      "level": 38,
+      "pos": [
+        952,
+        880,
+        44.8
+      ],
+      "guild": "the Ulfwych Rangers",
+      "idle": "Caer Ulfwych holds the middle of the wood. The edges hold themselves, mostly."
+    },
+    {
+      "id": "cf_elaine",
+      "zone": 8,
+      "realm": 1,
+      "name": "Thornwarden Elaine",
+      "model": 38,
+      "level": 40,
+      "pos": [
+        940,
+        900,
+        45.1
+      ],
+      "guild": "the Thornwardens",
+      "idle": "We keep the old man's sleep. It's harder than it sounds."
+    },
+    {
+      "id": "cf_alun",
+      "zone": 8,
+      "realm": 1,
+      "name": "Forester Alun",
+      "model": 9,
+      "level": 30,
+      "pos": [
+        1525,
+        412,
+        41.4
+      ],
+      "idle": "The trees have started moving at night. Not swaying. Moving."
     }
   ],
   "quests": [
@@ -424,6 +498,1184 @@
           }
         }
       }
+    },
+    {
+      "id": "cf_poachers",
+      "title": "Poachers in the King's Wood",
+      "level": 6,
+      "giver": "cf_ifan",
+      "offer": "This was a king's forest. Uther hunted here. Now poachers string snares from the north road to the middle wood and nobody stops them.\n\nWill you [stop the poachers]? Rangers can't be everywhere.",
+      "accept": "stop the poachers",
+      "topics": {},
+      "summary": "Poachers are snaring the king's forest north of the middle wood.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            780,
+            513,
+            47.9
+          ],
+          "radius": 50,
+          "goal": "Drive off the poachers on the north road about 570 m south-east of Station-Warden Ifan",
+          "target": "poacher",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_ifan",
+          "goal": "Tell Station-Warden Ifan",
+          "say": "Good. The deer will thank you. The rangers do too.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Ulfwych Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq8_snare_cutter_s_ring",
+              "sq8_ranger_s_acorn_charm"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cf_whelps",
+      "title": "Sylvan Goblins",
+      "level": 7,
+      "giver": "cf_ifan",
+      "offer": "Sylvan goblins. Green, quick and thieving. Their whelps raid the Station's stores, and last week they took a satchel from an Association courier.\n\nWill you [find the satchel]? The Archivist's frantic about it.",
+      "accept": "find the satchel",
+      "topics": {},
+      "summary": "Sylvan goblins stole a Lethantis courier's satchel near Campacorentin Station.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            600,
+            400,
+            52.1
+          ],
+          "radius": 50,
+          "goal": "Chase down the sylvan goblin whelps about 360 m east of Station-Warden Ifan",
+          "target": "sylvan goblin whelp",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 8,
+          "at": [
+            755,
+            409,
+            51.5
+          ],
+          "goal": "Search the goblins' den",
+          "clue": {
+            "name": "a den of stolen things",
+            "model": 1347
+          },
+          "text": "Spoons, boots, a lute - and the courier's satchel, chewed. The scroll-case inside is empty.",
+          "give": {
+            "name": "the courier's satchel"
+          },
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_ifan",
+          "goal": "Bring the satchel to Ifan",
+          "say": "Empty? The Archivist won't like that. Take it to him anyway - he'll want to know.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Ulfwych Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq8_goblin_tooth_bracer",
+              "sq8_whelp_catcher_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cf_scroll",
+      "title": "The Missing Page",
+      "level": 9,
+      "giver": "cf_tewdwr",
+      "offer": "The satchel was carrying a page of Merlin's prophecies - one of the oldest we have. The goblins will have taken it to their war camp; they think writing is magic.\n\nThey're not wrong. Will you [recover the page]?",
+      "accept": "recover the page",
+      "topics": {},
+      "summary": "A page of Merlin's prophecies was taken by the sylvan goblins to their war camp.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            1046,
+            560,
+            47.8
+          ],
+          "radius": 50,
+          "goal": "Fight through the sylvan goblin hunters about 800 m south-east of Archivist Tewdwr",
+          "target": "sylvan goblin hunter",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            896,
+            432,
+            44.2
+          ],
+          "radius": 50,
+          "goal": "Break the goblins' war camp",
+          "target": "sylvan goblin warrior",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 8,
+          "at": [
+            900,
+            436,
+            44.3
+          ],
+          "goal": "Search the war camp for the page",
+          "clue": {
+            "name": "a goblin shrine of paper",
+            "model": 1347
+          },
+          "text": "The page, pinned to a stick and painted round with goblin-marks. Merlin's hand: 'The red dragon and the white fought under Vortigern's tower, and the white was beaten and fled into the south. It sleeps, but not forever.'",
+          "give": {
+            "name": "Merlin's page"
+          },
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_tewdwr",
+          "goal": "Bring the page to Archivist Tewdwr",
+          "say": "'Fled into the south.' Every scholar's read this page. None of us thought to ask where.\n\nDartmoor. The dragon on Dartmoor is the white dragon of Vortigern's tower. Golestandt.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Lethantis Association.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq8_prophecy_page_sash",
+              "sq8_red_and_white_ring",
+              "sq8_lethantis_reading_charm"
+            ]
+          }
+        }
+      },
+      "requires": "cf_whelps"
+    },
+    {
+      "id": "cf_wisps",
+      "title": "Lights in the Western Swamps",
+      "level": 10,
+      "giver": "cf_ifan",
+      "offer": "Will o' wisps in the western swamps, leading travellers off the path. Two of the Station's woodcutters went after the lights last month and came back raving about a hermit in the bog.\n\nWill you [put out the lights]?",
+      "accept": "put out the lights",
+      "topics": {},
+      "summary": "Will o' wisps lure travellers into the western swamps.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            454,
+            971,
+            48.9
+          ],
+          "radius": 50,
+          "goal": "Put out the will o' wisps about 710 m south of Station-Warden Ifan",
+          "target": "will o' wisp",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_ifan",
+          "goal": "Tell Ifan",
+          "say": "A hermit in the bog... The Association drove a man out years ago. Scholar Ivo might know more.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Ulfwych Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq8_wisp_lantern_charm",
+              "sq8_swamp_walker_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cf_ogre_road",
+      "title": "Ogres on the Westwood Road",
+      "level": 12,
+      "giver": "cf_gwion",
+      "offer": "Wood ogres in the south-west have come up onto the Westwood road - scourges, the big ones with the clubs. They've never come so far north.\n\nWill you [clear the road]?",
+      "accept": "clear the road",
+      "topics": {},
+      "summary": "Wood ogre scourges have come up from the south-west onto the Westwood road.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            578,
+            1001,
+            77.4
+          ],
+          "radius": 50,
+          "goal": "Drive the wood ogre scourges off the road about 390 m west of Ranger-Captain Gwion",
+          "target": "wood ogre scourge",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_gwion",
+          "goal": "Tell Ranger-Captain Gwion",
+          "say": "Good. Ogres don't usually move without a reason. I'd like to know it.",
+          "ending": "default",
+          "id": "s2"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Ulfwych Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 65,
+            "copper_per_level": 56,
+            "marks": 6,
+            "items": [],
+            "choice": [
+              "sq8_ogre_tusk_torc",
+              "sq8_westwood_road_bracer"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cf_ogre_seers",
+      "title": "What the Seers Sing",
+      "level": 14,
+      "giver": "cf_gwion",
+      "offer": "The ogre seers in the south-west sing to the others, and the others follow. If anything's moving them, it's the seers.\n\nWill you [silence the seers]? And look at their harness. Something's been nagging at me.",
+      "accept": "silence the seers",
+      "topics": {},
+      "summary": "Wood ogre seers in the south-west are driving the ogres north. Gwion has a suspicion.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            679,
+            1108,
+            76.1
+          ],
+          "radius": 50,
+          "goal": "Silence the wood ogre seers about 360 m south-west of Ranger-Captain Gwion",
+          "target": "wood ogre seer",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 8,
+          "at": [
+            680,
+            1110,
+            77.4
+          ],
+          "goal": "Look at the seers' harness",
+          "clue": {
+            "name": "an ogre's harness",
+            "model": 1347
+          },
+          "text": "Burned into the leather, very old: the Lethantis Association's seal. And a number. These ogres were made, and counted.",
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "cf_gwion",
+          "goal": "Tell Ranger-Captain Gwion",
+          "say": "The Association's seal. The old hermit, Esras - they called him a heretic for saying this.\n\nI can [tell the rangers] - every one of them - and let Lethantis answer for it. Or we [keep it quiet] and I take it to the Archivist privately. The rangers would burn the Station.",
+          "options": [
+            {
+              "keyword": "tell the rangers",
+              "say": "Then they'll know. Lethantis will have to answer.",
+              "ending": "told"
+            },
+            {
+              "keyword": "keep it quiet",
+              "say": "Then it's between us and Tewdwr. I hope he's worth it.",
+              "ending": "quiet"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "told": {
+          "text": "From the Ulfwych Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq8_truth_teller_s_mantle"
+            ],
+            "choice": [
+              "sq8_brand_scar_ring",
+              "sq8_seer_bone_charm"
+            ]
+          }
+        },
+        "quiet": {
+          "text": "From the Ulfwych Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq8_brand_scar_ring",
+              "sq8_seer_bone_charm",
+              "sq8_truth_teller_s_mantle"
+            ]
+          }
+        }
+      },
+      "requires": "cf_ogre_road"
+    },
+    {
+      "id": "cf_bred_king",
+      "title": "The Bred-King",
+      "level": 16,
+      "giver": "cf_gwion",
+      "offer": "The seers sang for someone. The ogres have a lord now - Gorrak, they call him, the Bred-King, bigger than any ogre has a right to be. He's gathering the berserkers in the far south-west.\n\nWill you [end the Bred-King]? Bring a group.",
+      "accept": "end the Bred-King",
+      "topics": {},
+      "summary": "Gorrak the Bred-King gathers the wood ogre berserkers in the far south-west.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            560,
+            1020,
+            72.7
+          ],
+          "radius": 50,
+          "goal": "Break the wood ogre berserkers about 420 m west of Ranger-Captain Gwion",
+          "target": "wood ogre berserker",
+          "count": 3,
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 8,
+          "at": [
+            600,
+            1060,
+            70.5
+          ],
+          "wake_m": 30,
+          "goal": "Defeat Gorrak the Bred-King",
+          "text": "Gorrak falls. On his iron crown, a number: 1. The first of them.",
+          "stages": [
+            {
+              "id": "b1",
+              "type": "boss",
+              "name": "Gorrak the Bred-King",
+              "center": [
+                600,
+                1060,
+                70.5
+              ],
+              "radius": 30,
+              "time_s": 600,
+              "objective": "Defeat Gorrak the Bred-King",
+              "announce": "An ogre twice the size of the others rises from a throne of logs. 'Made us,' it rumbles. 'Left us. Now we take the wood.'",
+              "boss": {
+                "template": 12627,
+                "name": "Gorrak the Bred-King",
+                "level": 17,
+                "health_mult": 2.2
+              },
+              "success": "Gorrak the Bred-King falls.",
+              "fail": "You fall back.",
+              "adds": {
+                "every_s": 30,
+                "count": 2,
+                "mobs": [
+                  {
+                    "template": 12630,
+                    "name": "wood ogre scourge",
+                    "level": [
+                      14,
+                      15
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_gwion",
+          "goal": "Tell Ranger-Captain Gwion",
+          "say": "'Made us. Left us.' That's the saddest thing I've heard an ogre say.\n\nThe road's safe. Thank you.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Ulfwych Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq8_bred_king_s_crown_ring",
+              "sq8_berserker_hide_bracer",
+              "sq8_ulfwych_ranger_s_cloak"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "cf_ogre_seers"
+    },
+    {
+      "id": "cf_spiders",
+      "title": "The Bloated Nest",
+      "level": 15,
+      "giver": "cf_gwion",
+      "offer": "Bloated spiders east of the Caer - and their mother, Ciraron the Webweaver, whom the rangers won't go near. She's webbed the east road shut.\n\nWill you [open the road]?",
+      "accept": "open the road",
+      "topics": {},
+      "summary": "Bloated spiders and their mother Ciraron have webbed shut the road east of Caer Ulfwych.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            1290,
+            800,
+            47.3
+          ],
+          "radius": 50,
+          "goal": "Kill the bloated spiders about 350 m east of Ranger-Captain Gwion",
+          "target": "bloated spider",
+          "count": 6,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            1282,
+            720,
+            61.5
+          ],
+          "radius": 50,
+          "goal": "Kill Ciraron the Webweaver",
+          "target": "Ciraron Webweaver",
+          "count": 1,
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_gwion",
+          "goal": "Tell Ranger-Captain Gwion",
+          "say": "Ciraron? Dead? The rangers will drink to you tonight. I'll pay.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Ulfwych Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq8_webweaver_s_silk_sash",
+              "sq8_bloated_spider_fang_ring"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cf_druid_barrow",
+      "title": "The Druids Who Don't Rest",
+      "level": 12,
+      "giver": "cf_elaine",
+      "offer": "There's a barrow east of the Caer where the old druids lie - the ones who first kept the thorn. They've started walking.\n\nWhen the keepers walk, something's wrong with what they kept. Will you [go to the barrow]?",
+      "accept": "go to the barrow",
+      "topics": {
+        "nimue": "The Lady of the Lake's maiden - some say the Lady herself. Merlin taught her everything. She used it to seal him in a thorn. Whether he asked her to, nobody knows."
+      },
+      "summary": "The old druids who first kept Merlin's thorn walk from their barrow east of Caer Ulfwych.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            1052,
+            816,
+            45.1
+          ],
+          "radius": 50,
+          "goal": "Lay the undead druids to rest about 140 m north-east of Thornwarden Elaine",
+          "target": "undead druid",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 8,
+          "at": [
+            1055,
+            820,
+            44.9
+          ],
+          "goal": "Search the druid barrow",
+          "clue": {
+            "name": "a carved stone at the barrow's heart",
+            "model": 1347
+          },
+          "text": "Ogham, worn but readable: 'Nimue of the Lake sealed the Old Man in the thorn of the deep wood, at his own asking or against it - we were not told. We keep his sleep. Let none wake him who would use him.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_elaine",
+          "goal": "Tell Thornwarden Elaine",
+          "say": "'Let none wake him who would use him.' That's our whole creed in a line.\n\nIf the keepers are restless, someone is trying. I need to know who.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Thornwardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq8_thornwarden_s_briar_ring",
+              "sq8_druid_barrow_torc"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cf_waking_wood",
+      "title": "The Waking Wood",
+      "level": 18,
+      "giver": "cf_alun",
+      "offer": "The oak men are walking. The fellwoods too - the great trees with faces. They're moving south, toward the deep wood, and they flatten whatever's in the way.\n\nThe old one, the Elder Fellwood, leads them. Will you [stop the Elder]? I don't know if it can be stopped.",
+      "accept": "stop the Elder",
+      "topics": {},
+      "summary": "The oak men and fellwoods of the north-east are marching south toward the deep wood.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            1350,
+            300,
+            44.9
+          ],
+          "radius": 50,
+          "goal": "Cut down the walking oak men about 210 m north-west of Forester Alun",
+          "target": "oak man",
+          "count": 5,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            1154,
+            462,
+            57.1
+          ],
+          "radius": 50,
+          "goal": "Face the Elder Fellwood",
+          "target": "Elder Fellwood",
+          "count": 1,
+          "text": "The Elder Fellwood shudders and roots itself where it stands. 'The Old Man's sleep is troubled,' it creaks. 'The wood goes to guard him.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_alun",
+          "goal": "Tell Forester Alun",
+          "say": "Guard him? Who - the Old Man in the thorn? So the trees know too.\n\nThe Thornwardens at the Caer should hear this.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From Alun.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq8_fellwood_heart_ring",
+              "sq8_oak_man_s_bark_bracer",
+              "sq8_forester_s_axe_charm"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cf_pixie_queen",
+      "title": "The Pixie Queen's Price",
+      "level": 20,
+      "giver": "cf_elaine",
+      "offer": "The pixies of the south glades are stealing the Thornwardens' charms - the ones we hang on the thorn to keep its sleep sweet. Their Queen sends them. Someone paid her.\n\nWill you [go to the Pixie Queen]? Pixies are small. Their Queen is not. Bring friends.",
+      "accept": "go to the Pixie Queen",
+      "topics": {},
+      "summary": "The Pixie Queen of the south glades sends her pixies to steal the charms that keep Merlin's sleep.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            928,
+            751,
+            45.9
+          ],
+          "radius": 50,
+          "goal": "Catch the pixie thieves about 150 m north of Thornwarden Elaine",
+          "target": "pixie scout",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            834,
+            1466,
+            44.1
+          ],
+          "radius": 50,
+          "goal": "Face the Pixie Queen",
+          "target": "Pixie Queen",
+          "count": 1,
+          "text": "The Pixie Queen crumples into a heap of thistledown. In it, a red-wax seal: a key under a crown.",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_elaine",
+          "goal": "Bring the seal to Thornwarden Elaine",
+          "say": "A key under a crown. The Crimson - Morgana's own. She's been loosening his sleep one charm at a time.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Thornwardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq8_queen_s_thistle_crown",
+              "sq8_pixie_dust_sash",
+              "sq8_fae_ward_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "cf_druid_barrow"
+    },
+    {
+      "id": "cf_green_witch",
+      "title": "The Green Witch",
+      "level": 20,
+      "giver": "cf_gwion",
+      "offer": "There's a woman in the eastern deep wood they call the Green Witch. The rangers won't pass her hut. Lately she's had visitors: men in red robes.\n\nWill you [visit the witch]?",
+      "accept": "visit the witch",
+      "topics": {},
+      "summary": "The Green Witch of the eastern deep wood has had visitors in red robes.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            1394,
+            993,
+            44.8
+          ],
+          "radius": 50,
+          "goal": "Confront the Green Witch about 460 m east of Ranger-Captain Gwion",
+          "target": "Green Witch",
+          "count": 1,
+          "id": "s1"
+        },
+        {
+          "type": "search",
+          "zone": 8,
+          "at": [
+            1396,
+            990,
+            44.8
+          ],
+          "goal": "Search the witch's hut",
+          "clue": {
+            "name": "a hut hung with green glass",
+            "model": 1347
+          },
+          "text": "A letter, sealed with the key and crown: 'Sister - my Green Knight rides to the Caer to test their courage, as he tested Gawain's. While their eyes are on him, Accolon goes to the thorn. M.'",
+          "id": "s2"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_gwion",
+          "goal": "Bring the letter to Gwion",
+          "say": "Accolon. Accolon of Gaul - the knight who fought Arthur with a stolen Excalibur, at Morgana's bidding. He's long dead.\n\nAnd this Green Knight... I'll double the watch at the Caer.",
+          "ending": "default",
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Ulfwych Rangers.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [],
+            "choice": [
+              "sq8_witch_s_green_glass_ring",
+              "sq8_hedge_witch_s_belt"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "cf_blood_roots",
+      "title": "Blood on the Roots",
+      "level": 21,
+      "giver": "cf_elaine",
+      "offer": "Sacrificers in the deep wood - druids turned to the Crimson, and filidh with them. They bleed things over the roots that run to the thorn. The roots drink it, and the thorn loosens.\n\nWill you [stop the bleeding]?",
+      "accept": "stop the bleeding",
+      "topics": {},
+      "summary": "Crimson sacrificers in the deep wood feed blood to the roots of Merlin's thorn.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            1368,
+            1299,
+            49.5
+          ],
+          "radius": 50,
+          "goal": "Kill the druid sacrificers about 590 m south-east of Thornwarden Elaine",
+          "target": "druid sacrificer",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            1470,
+            942,
+            46.6
+          ],
+          "radius": 50,
+          "goal": "Kill the filidh sacrificers on the eastern ridge",
+          "target": "filidh sacrificer",
+          "count": 3,
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 8,
+          "at": [
+            1365,
+            1290,
+            50.8
+          ],
+          "goal": "Search the sacrificers' altar",
+          "clue": {
+            "name": "a stone channel into the roots",
+            "model": 1347
+          },
+          "text": "A channel cut in the stone, running red down into the roots. And painted on the altar: a key under a crown.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_elaine",
+          "goal": "Tell Thornwarden Elaine",
+          "say": "The roots will heal, given time. But she'll try the front door next. The druids' way - under the Fogou.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Thornwardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq8_blood_root_bracer",
+              "sq8_sacrificer_s_knife_ring"
+            ]
+          }
+        }
+      },
+      "requires": "cf_pixie_queen"
+    },
+    {
+      "id": "cf_druids_way",
+      "title": "The Druids' Way",
+      "level": 22,
+      "giver": "cf_elaine",
+      "offer": "The Druids of the Fogou keep the old way under the roots - from Keltoi Fogou to the thorn. Their archdruid, Elithralia, was one of us once. If she's opened the way to the Crimson, Morgana's people can walk right up to him.\n\nWill you [close the way]? Bring a group.",
+      "accept": "close the way",
+      "topics": {},
+      "summary": "The Druids of the Fogou keep a way under the roots from Keltoi Fogou to Merlin's thorn.",
+      "steps": [
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            1440,
+            1340,
+            45.3
+          ],
+          "radius": 50,
+          "goal": "Fight through the Druids of the Fogou about 670 m south-east of Thornwarden Elaine",
+          "target": "druid",
+          "count": 4,
+          "id": "s1"
+        },
+        {
+          "type": "kill",
+          "zone": 8,
+          "at": [
+            1459,
+            1333,
+            45.8
+          ],
+          "radius": 50,
+          "goal": "Face Elithralia Nodith",
+          "target": "Elithralia Nodith",
+          "count": 1,
+          "text": "Elithralia falls. 'He'd want to wake,' she says. 'Anyone would. I only opened the door.'",
+          "id": "s2"
+        },
+        {
+          "type": "search",
+          "zone": 8,
+          "at": [
+            1505,
+            1352,
+            45.2
+          ],
+          "goal": "Search the Fogou's mouth",
+          "clue": {
+            "name": "a low passage under the roots",
+            "model": 1347
+          },
+          "text": "The passage runs north-west under the roots, toward the thorn. Fresh boot-prints in the mud, heavy, armoured - and a red cord, dropped.",
+          "id": "s3"
+        },
+        {
+          "type": "talk",
+          "npc": "cf_elaine",
+          "goal": "Tell Thornwarden Elaine",
+          "say": "Armoured boots, going to the thorn. Accolon's already inside the wood.\n\nThere's no more time.",
+          "ending": "default",
+          "id": "s4"
+        }
+      ],
+      "endings": {
+        "default": {
+          "text": "From the Thornwardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 75,
+            "copper_per_level": 62,
+            "marks": 8,
+            "items": [],
+            "choice": [
+              "sq8_fogou_stone_charm",
+              "sq8_elithralia_s_ring",
+              "sq8_druids_way_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "cf_blood_roots"
+    },
+    {
+      "id": "cf_merlins_thorn",
+      "title": "Merlin's Thorn",
+      "level": 24,
+      "giver": "cf_elaine",
+      "offer": "Accolon is at the thorn. I'm going there to sing the old man's sleep shut again before he can break it, and I need you to keep me alive while I do it. Bring everyone you trust.\n\nWill you [come to the thorn]?",
+      "accept": "come to the thorn",
+      "topics": {},
+      "summary": "Accolon of Gaul has come to break Merlin's thorn. Thornwarden Elaine goes to sing it shut.",
+      "steps": [
+        {
+          "type": "reach",
+          "zone": 8,
+          "at": [
+            1270,
+            1160,
+            51.5
+          ],
+          "radius": 30,
+          "goal": "Go to Merlin's thorn in the deep wood about 420 m south-east of Thornwarden Elaine",
+          "text": "A great thorn-tree, white with flowers in every season. Something breathes inside it, slow.",
+          "id": "s1"
+        },
+        {
+          "type": "encounter",
+          "zone": 8,
+          "at": [
+            1280,
+            1165,
+            50.6
+          ],
+          "wake_m": 30,
+          "goal": "Keep Thornwarden Elaine alive while she sings",
+          "text": "Elaine's song settles over the thorn like snow - and an armoured knight steps out of the trees.",
+          "stages": [
+            {
+              "id": "d1",
+              "type": "defend",
+              "name": "Keep Thornwarden Elaine alive",
+              "center": [
+                1280,
+                1165,
+                50.6
+              ],
+              "radius": 30,
+              "duration_s": 120,
+              "objective": "Keep Thornwarden Elaine alive",
+              "announce": "Elaine kneels at the thorn and begins to sing. From the roots, the Crimson's sacrificers come running.",
+              "protect": {
+                "template": 60167630,
+                "name": "Thornwarden Elaine",
+                "level": 24,
+                "model": 38
+              },
+              "waves": {
+                "every_s": 20,
+                "count": 2,
+                "from": [
+                  [
+                    1292,
+                    1171,
+                    48.5
+                  ],
+                  [
+                    1270,
+                    1155,
+                    52.1
+                  ]
+                ],
+                "mobs": [
+                  {
+                    "template": 12468,
+                    "name": "druid sacrificer",
+                    "level": [
+                      22,
+                      23
+                    ]
+                  },
+                  {
+                    "template": 12161,
+                    "name": "filidh sacrificer",
+                    "level": [
+                      21,
+                      22
+                    ]
+                  }
+                ]
+              },
+              "thanks": "You came for me.",
+              "success": "They break off.",
+              "fail": "Thornwarden Elaine falls.",
+              "on_fail": "end",
+              "on_success": "d2"
+            },
+            {
+              "id": "d2",
+              "type": "boss",
+              "name": "Accolon of Gaul",
+              "center": [
+                1280,
+                1165,
+                50.6
+              ],
+              "radius": 30,
+              "time_s": 480,
+              "objective": "Defeat Accolon of Gaul",
+              "announce": "Accolon of Gaul, pale as a drowned man, draws a sword that glitters too brightly. 'My lady sends her regards to the old man. And to you.'",
+              "boss": {
+                "template": 12967,
+                "name": "Accolon of Gaul",
+                "level": 25,
+                "health_mult": 2.2
+              },
+              "success": "Accolon of Gaul falls.",
+              "fail": "You fall back."
+            }
+          ],
+          "id": "s2"
+        },
+        {
+          "type": "choice",
+          "npc": "cf_elaine",
+          "goal": "Speak with Thornwarden Elaine at the thorn",
+          "say": "It's done. He sleeps. But - listen. He's talking in his sleep. He knows we're here.\n\n'Two dragons,' he says. 'The white wakes in the south. My lady Morgan wants the gate in the lake.' We can [let him sleep] - that's our oath - or you can [ask him one question]. Just one.",
+          "options": [
+            {
+              "keyword": "let him sleep",
+              "say": "Then sleep, old man. We'll keep the wood.",
+              "ending": "sleep"
+            },
+            {
+              "keyword": "ask him one question",
+              "say": "Ask, then. Quickly.\n\n...He says: 'The white dragon cannot be killed by steel alone. Seek the Afanc's lake and the giants' quarry - and do not let my sister-in-craft reach the Sleeper first.' Then nothing.",
+              "ending": "asked"
+            }
+          ],
+          "id": "s3"
+        }
+      ],
+      "endings": {
+        "sleep": {
+          "text": "From the Thornwardens.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq8_thornwarden_s_mantle"
+            ],
+            "choice": [
+              "sq8_merlin_s_thorn_twig",
+              "sq8_accolon_s_broken_scabbard_ring",
+              "sq8_prophet_s_star_torc"
+            ]
+          }
+        },
+        "asked": {
+          "text": "From the thorn itself.",
+          "tragic": false,
+          "rewards": {
+            "xp_pct": 70,
+            "copper_per_level": 59,
+            "marks": 7,
+            "items": [
+              "sq8_prophet_s_star_torc"
+            ],
+            "choice": [
+              "sq8_merlin_s_thorn_twig",
+              "sq8_accolon_s_broken_scabbard_ring",
+              "sq8_thornwarden_s_mantle"
+            ]
+          }
+        }
+      },
+      "group": true,
+      "requires": "cf_druids_way"
     }
   ]
 }

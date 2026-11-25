@@ -1,796 +1,1937 @@
 {
-  "zone": 9,
-  "region": 1,
-  "name": "Avalon Marsh",
-  "lore": "Avalon Marsh, where Caer Witrin stands on its island of apples, and the ghouls hold court in the drowned ruins to the west.",
-  "chains": [
+ "zone": 9,
+ "region": 1,
+ "name": "Avalon Marsh",
+ "lore": "Avalon Marsh, round the Isle where Arthur sleeps. Caer Witrin stands on its island of apples, the Drowned Vigil still holds its keep in the north-west, and the black barge that carried the King is crossing again by night - for Morgana's people. In the west, Golestandt's giants lay a road of Cornish granite toward the Isle.",
+ "chains": [
+  {
+   "id": "avalon_marsh_ghoul_court",
+   "title": "The Ghoul Court",
+   "levels": [
+    17,
+    18
+   ],
+   "hint": "Torches burn in the drowned ruins...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "avalon_marsh_ghoul_court",
-      "title": "The Ghoul Court",
-      "levels": [17, 18],
-      "hint": "Torches burn in the drowned ruins...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Drowned Court",
-          "objective": "Clear the drowned court",
-          "announce": "The ghoul lord holds court in the drowned ruins and sends his knights to raid the causeway. End his court.",
-          "center": [444, 509, 63.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12017,
-              "name": "ghoul footman",
-              "level": [17, 17]
-            },
-            {
-              "template": 12018,
-              "name": "ghoul knight",
-              "level": [18, 18]
-            }
-          ],
-          "success": "You have cleared the drowned court. The Ghoul Lord of Avalon comes out to fight.",
-          "fail": "They hold the drowned court. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Ghoul Lord of Avalon",
-          "objective": "Defeat the Ghoul Lord of Avalon",
-          "announce": "The Ghoul Lord of Avalon stands at the drowned court. Bring friends.",
-          "center": [444, 509, 63.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12019,
-            "name": "The Ghoul Lord of Avalon",
-            "level": 20,
-            "size": 70,
-            "pos": [444, 509, 63.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12017,
-                "name": "ghoul footman",
-                "level": [17, 17]
-              }
-            ]
-          },
-          "success": "The Ghoul Lord of Avalon falls. The way is safe again.",
-          "fail": "The Ghoul Lord of Avalon slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu9_ghoul_lord_of_avalon_s_band", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Ghouls Hold the Causeway",
-          "objective": "Drive the ghouls off the causeway",
-          "announce": "The ghoul lord's knights have come out of the drowned court and hold the causeway to Caer Witrin.",
-          "center": [544, 733, 47.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12017,
-              "name": "ghoul footman",
-              "level": [17, 17]
-            },
-            {
-              "template": 12018,
-              "name": "ghoul knight",
-              "level": [18, 18]
-            }
-          ],
-          "boss": {
-            "template": 12017,
-            "name": "Ghoul Banneret",
-            "level": 19,
-            "pos": [544, 733, 47.6],
-            "health_mult": 2
-          },
-          "success": "The causeway is clear. The marsh is already pulling at the stones.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Brother Anselm, who is blessing the causeway stones",
-          "announce": "Brother Anselm is blessing the causeway stones. The dead are coming back!",
-          "center": [544, 733, 47.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Brother Anselm",
-            "level": 18,
-            "pos": [544, 733, 47.6],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [464, 704, 60.0],
-              [509, 655, 58.8],
-              [575, 654, 49.1]
-            ],
-            "mobs": [
-              {
-                "template": 12017,
-                "name": "ghoul footman",
-                "level": [17, 17]
-              },
-              {
-                "template": 12018,
-                "name": "ghoul knight",
-                "level": [18, 18]
-              }
-            ]
-          },
-          "thanks": "\"Rest now, all of you. The causeway is holy ground again.\"",
-          "success": "The ghoul footmans break and scatter. The road to Caer Witrin is open again.",
-          "fail": "Brother Anselm falls, and the ghoul footmans take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "avalon_marsh_bogmen",
-      "title": "The Bogmen",
-      "levels": [8, 11],
-      "hint": "Something squelches through the reeds...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Sister Enid",
-          "objective": "Protect Sister Enid, who is gathering healing herbs",
-          "announce": "Sister Enid of Caer Witrin is gathering herbs for the sick, and the bogmen have smelled her.",
-          "center": [990, 970, 44.3],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Sister Enid",
-            "template": 60161835,
-            "level": 11,
-            "model": 74,
-            "equipment": "9f2bc6dd-5b20-4853-9584-3c393d75f4cd",
-            "health_mult": 10,
-            "pos": [990, 970, 44.3]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [948, 900, 61.7],
-              [1007, 887, 46.5],
-              [1062, 925, 47.5]
-            ],
-            "mobs": [
-              {
-                "template": 12005,
-                "name": "bogman gatherer",
-                "level": [8, 8]
-              },
-              {
-                "template": 12008,
-                "name": "bogman trapper",
-                "level": [10, 10]
-              },
-              {
-                "template": 12007,
-                "name": "bogman hunter",
-                "level": [11, 11]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Sister Enid. \"They came from over there - let's finish this.\"",
-          "fail": "Sister Enid falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Herb Beds",
-          "objective": "Clear the herb beds",
-          "announce": "They came from the herb beds. Follow them back and clear it out.",
-          "center": [1064, 626, 48.2],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12005,
-              "name": "bogman gatherer",
-              "level": [8, 8]
-            },
-            {
-              "template": 12008,
-              "name": "bogman trapper",
-              "level": [10, 10]
-            },
-            {
-              "template": 12007,
-              "name": "bogman hunter",
-              "level": [11, 11]
-            }
-          ],
-          "success": "You have cleared the herb beds. Mudgrip the Bog-Chief comes out to fight.",
-          "fail": "They hold the herb beds. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Mudgrip the Bog-Chief",
-          "objective": "Defeat Mudgrip the Bog-Chief",
-          "announce": "Mudgrip the Bog-Chief stands at the herb beds. Bring friends.",
-          "center": [1064, 626, 48.2],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12007,
-            "name": "Mudgrip the Bog-Chief",
-            "level": 13,
-            "size": 74,
-            "pos": [1064, 626, 48.2],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12005,
-                "name": "bogman gatherer",
-                "level": [8, 8]
-              }
-            ]
-          },
-          "success": "Mudgrip the Bog-Chief falls. The way is safe again.",
-          "fail": "Mudgrip the Bog-Chief slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu9_mudgrip_the_bog_chief_s_girdle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Bogman Gatherers Hold the Road to Adibard's Retreat",
-          "objective": "Drive the bogman gatherers off the road to Adibard's Retreat",
-          "announce": "With The Bogmen lost, the bogman gatherers have spread down onto the road to Adibard's Retreat and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1377, 560, 48.5],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12005,
-              "name": "bogman gatherer",
-              "level": [8, 8]
-            },
-            {
-              "template": 12008,
-              "name": "bogman trapper",
-              "level": [10, 10]
-            },
-            {
-              "template": 12007,
-              "name": "bogman hunter",
-              "level": [11, 11]
-            }
-          ],
-          "boss": {
-            "template": 12005,
-            "name": "Bogman gatherer warleader",
-            "level": 12,
-            "pos": [1377, 560, 48.5],
-            "health_mult": 2
-          },
-          "success": "The bogman gatherers are gone from the road to Adibard's Retreat. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Mabyn has come out to set the road to Adibard's Retreat right. The bogman gatherers are coming back for it!",
-          "center": [1377, 560, 48.5],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Mabyn",
-            "level": 11,
-            "pos": [1377, 560, 48.5],
-            "health_mult": 10,
-            "template": 60161835,
-            "model": 74,
-            "equipment": "9f2bc6dd-5b20-4853-9584-3c393d75f4cd"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1332, 632, 51.7],
-              [1294, 578, 41.0],
-              [1307, 513, 50.5]
-            ],
-            "mobs": [
-              {
-                "template": 12005,
-                "name": "bogman gatherer",
-                "level": [8, 8]
-              },
-              {
-                "template": 12008,
-                "name": "bogman trapper",
-                "level": [10, 10]
-              },
-              {
-                "template": 12007,
-                "name": "bogman hunter",
-                "level": [11, 11]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Adibard's Retreat is safe again. Thank you.\"",
-          "success": "The bogman gatherers break and scatter. The road to Adibard's Retreat is open again.",
-          "fail": "Roadwarden Mabyn falls, and the bogman gatherers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "avalon_marsh_shamblers",
-      "title": "Shamblers of the Marsh",
-      "levels": [11, 14],
-      "hint": "Guardian Sergeant Lyle is looking for help in Caer Witrin.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Guardian Sergeant Lyle",
-        "template": 60161835,
-        "level": 15,
-        "model": 74,
-        "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
-        "guild": "Guardians of Caer Witrin",
-        "health_mult": 4,
-        "pos": [483, 936, 60.5],
-        "greet": "Shamblers have risen out of the mire and broken the west causeway. I'm taking my guardians out to clear them. Will you come? Tell me when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Drowned Court",
+     "objective": "Clear the drowned court",
+     "announce": "The ghoul lord holds court in the drowned ruins and sends his knights to raid the causeway. End his court.",
+     "center": [
+      444,
+      509,
+      63.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12017,
+       "name": "ghoul footman",
+       "level": [
+        17,
+        17
+       ]
       },
-      "guards": [
-        {
-          "name": "Guardian",
-          "template": 60161835,
-          "level": 14,
-          "model": 74,
-          "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
-          "guild": "Guardians of Caer Witrin",
-          "health_mult": 2,
-          "count": 3
-        }
-      ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Sinking Causeway",
-          "objective": "Go with Guardian Sergeant Lyle to the sinking causeway",
-          "announce": "Sergeant Lyle leads the guardians of Caer Witrin out onto the marsh.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [511, 972, 51.9],
-            [575, 1052, 45.3],
-            [591, 1148, 44.8],
-            [591, 1236, 45.2],
-            [599, 1276, 45.0],
-            [607, 1292, 44.8]
-          ],
-          "ambushes": [
-            {
-              "at": 3,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 12052,
-                  "name": "shambler",
-                  "level": [12, 13]
-                },
-                {
-                  "template": 12032,
-                  "name": "mud golem",
-                  "level": [14, 14]
-                }
-              ]
-            }
-          ],
-          "success": "Guardian Sergeant Lyle reaches the sinking causeway. \"There they are. Clear them out!\"",
-          "fail": "Guardian Sergeant Lyle falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Sinking Causeway",
-          "objective": "Clear the sinking causeway",
-          "announce": "Clear the sinking causeway!",
-          "center": [608, 1292, 44.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12052,
-              "name": "shambler",
-              "level": [12, 13]
-            },
-            {
-              "template": 12032,
-              "name": "mud golem",
-              "level": [14, 14]
-            },
-            {
-              "template": 12026,
-              "name": "marsh scrag",
-              "level": [11, 11]
-            }
-          ],
-          "success": "You have cleared the sinking causeway. The Mire Colossus comes out to fight.",
-          "fail": "They hold the sinking causeway. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "The Mire Colossus",
-          "objective": "Defeat the Mire Colossus",
-          "announce": "The Mire Colossus stands at the sinking causeway. Bring friends.",
-          "center": [608, 1292, 44.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12032,
-            "name": "The Mire Colossus",
-            "level": 16,
-            "size": 96,
-            "pos": [608, 1292, 44.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12052,
-                "name": "shambler",
-                "level": [12, 13]
-              }
-            ]
-          },
-          "success": "The Mire Colossus falls. Caer Witrin will hear of this in the taverns tonight.",
-          "fail": "The Mire Colossus slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu9_mire_colossus_mantle", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Shamblers Hold the Road to Caer Witrin",
-          "objective": "Drive the shamblers off the road to Caer Witrin",
-          "announce": "With Shamblers of the Marsh lost, the shamblers have spread down onto the road to Caer Witrin and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [447, 1107, 46.7],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12052,
-              "name": "shambler",
-              "level": [12, 13]
-            },
-            {
-              "template": 12032,
-              "name": "mud golem",
-              "level": [14, 14]
-            },
-            {
-              "template": 12026,
-              "name": "marsh scrag",
-              "level": [11, 11]
-            }
-          ],
-          "boss": {
-            "template": 12052,
-            "name": "Shambler warleader",
-            "level": 15,
-            "pos": [447, 1107, 46.7],
-            "health_mult": 2
-          },
-          "success": "The shamblers are gone from the road to Caer Witrin. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hal has come out to set the road to Caer Witrin right. The shamblers are coming back for it!",
-          "center": [447, 1107, 46.7],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hal",
-            "level": 14,
-            "pos": [447, 1107, 46.7],
-            "health_mult": 10,
-            "template": 60161835,
-            "model": 74,
-            "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [532, 1112, 46.0],
-              [503, 1171, 47.2],
-              [440, 1192, 51.0]
-            ],
-            "mobs": [
-              {
-                "template": 12052,
-                "name": "shambler",
-                "level": [12, 13]
-              },
-              {
-                "template": 12032,
-                "name": "mud golem",
-                "level": [14, 14]
-              },
-              {
-                "template": 12026,
-                "name": "marsh scrag",
-                "level": [11, 11]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Caer Witrin is safe again. Thank you.\"",
-          "success": "The shamblers break and scatter. The road to Caer Witrin is open again.",
-          "fail": "Roadwarden Hal falls, and the shamblers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+      {
+       "template": 12018,
+       "name": "ghoul knight",
+       "level": [
+        18,
+        18
+       ]
+      }
+     ],
+     "success": "You have cleared the drowned court. The Ghoul Lord of Avalon comes out to fight.",
+     "fail": "They hold the drowned court. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "avalon_marsh_leapers_pool",
-      "title": "The Leapers' Pool",
-      "levels": [8, 15],
-      "hint": "Something drags the marsh-men under at the dark pool...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Leapers' Pool",
-          "objective": "Clear the leapers' pool",
-          "announce": "Water leapers have taken the dark pool in the marsh, and they pull down anyone who comes to fish it. End them.",
-          "center": [979, 1349, 48.8],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12063,
-              "name": "water leaper",
-              "level": [8, 10]
-            },
-            {
-              "template": 12021,
-              "name": "giant water leaper",
-              "level": [15, 15]
-            }
-          ],
-          "success": "You have cleared the leapers' pool. Grandfather Leaper comes out to fight.",
-          "fail": "They hold the leapers' pool. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Grandfather Leaper",
-          "objective": "Defeat Grandfather Leaper",
-          "announce": "Grandfather Leaper stands at the leapers' pool. Bring friends.",
-          "center": [979, 1349, 48.8],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12021,
-            "name": "Grandfather Leaper",
-            "level": 17,
-            "size": 110,
-            "pos": [979, 1349, 48.8],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12063,
-                "name": "water leaper",
-                "level": [8, 10]
-              }
-            ]
-          },
-          "success": "Grandfather Leaper falls. The way is safe again.",
-          "fail": "Grandfather Leaper slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu9_grandfather_leaper_s_torc", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Water Leapers Hold the Road to Caer Witrin",
-          "objective": "Drive the water leapers off the road to Caer Witrin",
-          "announce": "With The Leapers' Pool lost, the water leapers have spread down onto the road to Caer Witrin and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [758, 951, 49.9],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12063,
-              "name": "water leaper",
-              "level": [8, 10]
-            },
-            {
-              "template": 12021,
-              "name": "giant water leaper",
-              "level": [15, 15]
-            }
-          ],
-          "boss": {
-            "template": 12063,
-            "name": "Water leaper warleader",
-            "level": 16,
-            "pos": [758, 951, 49.9],
-            "health_mult": 2
-          },
-          "success": "The water leapers are gone from the road to Caer Witrin. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hal has come out to set the road to Caer Witrin right. The water leapers are coming back for it!",
-          "center": [758, 951, 49.9],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hal",
-            "level": 15,
-            "pos": [758, 951, 49.9],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [840, 974, 41.3],
-              [799, 1026, 38.9],
-              [733, 1033, 38.4]
-            ],
-            "mobs": [
-              {
-                "template": 12063,
-                "name": "water leaper",
-                "level": [8, 10]
-              },
-              {
-                "template": 12021,
-                "name": "giant water leaper",
-                "level": [15, 15]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Caer Witrin is safe again. Thank you.\"",
-          "success": "The water leapers break and scatter. The road to Caer Witrin is open again.",
-          "fail": "Roadwarden Hal falls, and the water leapers take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "The Ghoul Lord of Avalon",
+     "objective": "Defeat the Ghoul Lord of Avalon",
+     "announce": "The Ghoul Lord of Avalon stands at the drowned court. Bring friends.",
+     "center": [
+      444,
+      509,
+      63.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12019,
+      "name": "The Ghoul Lord of Avalon",
+      "level": 20,
+      "size": 70,
+      "pos": [
+       444,
+       509,
+       63.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12017,
+        "name": "ghoul footman",
+        "level": [
+         17,
+         17
+        ]
+       }
       ]
+     },
+     "success": "The Ghoul Lord of Avalon falls. The way is safe again.",
+     "fail": "The Ghoul Lord of Avalon slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu9_ghoul_lord_of_avalon_s_band",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Ghouls Hold the Causeway",
+     "objective": "Drive the ghouls off the causeway",
+     "announce": "The ghoul lord's knights have come out of the drowned court and hold the causeway to Caer Witrin.",
+     "center": [
+      544,
+      733,
+      47.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12017,
+       "name": "ghoul footman",
+       "level": [
+        17,
+        17
+       ]
+      },
+      {
+       "template": 12018,
+       "name": "ghoul knight",
+       "level": [
+        18,
+        18
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12017,
+      "name": "Ghoul Banneret",
+      "level": 19,
+      "pos": [
+       544,
+       733,
+       47.6
+      ],
+      "health_mult": 2
+     },
+     "success": "The causeway is clear. The marsh is already pulling at the stones.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Brother Anselm, who is blessing the causeway stones",
+     "announce": "Brother Anselm is blessing the causeway stones. The dead are coming back!",
+     "center": [
+      544,
+      733,
+      47.6
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Brother Anselm",
+      "level": 18,
+      "pos": [
+       544,
+       733,
+       47.6
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        464,
+        704,
+        60.0
+       ],
+       [
+        509,
+        655,
+        58.8
+       ],
+       [
+        575,
+        654,
+        49.1
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12017,
+        "name": "ghoul footman",
+        "level": [
+         17,
+         17
+        ]
+       },
+       {
+        "template": 12018,
+        "name": "ghoul knight",
+        "level": [
+         18,
+         18
+        ]
+       }
+      ]
+     },
+     "thanks": "\"Rest now, all of you. The causeway is holy ground again.\"",
+     "success": "The ghoul footmans break and scatter. The road to Caer Witrin is open again.",
+     "fail": "Brother Anselm falls, and the ghoul footmans take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
+   ]
+  },
+  {
+   "id": "avalon_marsh_bogmen",
+   "title": "The Bogmen",
+   "levels": [
+    8,
+    11
+   ],
+   "hint": "Something squelches through the reeds...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Sister Enid",
+     "objective": "Protect Sister Enid, who is gathering healing herbs",
+     "announce": "Sister Enid of Caer Witrin is gathering herbs for the sick, and the bogmen have smelled her.",
+     "center": [
+      990,
+      970,
+      44.3
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Sister Enid",
+      "template": 60161835,
+      "level": 11,
+      "model": 74,
+      "equipment": "9f2bc6dd-5b20-4853-9584-3c393d75f4cd",
+      "health_mult": 10,
+      "pos": [
+       990,
+       970,
+       44.3
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        948,
+        900,
+        61.7
+       ],
+       [
+        1007,
+        887,
+        46.5
+       ],
+       [
+        1062,
+        925,
+        47.5
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12005,
+        "name": "bogman gatherer",
+        "level": [
+         8,
+         8
+        ]
+       },
+       {
+        "template": 12008,
+        "name": "bogman trapper",
+        "level": [
+         10,
+         10
+        ]
+       },
+       {
+        "template": 12007,
+        "name": "bogman hunter",
+        "level": [
+         11,
+         11
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Sister Enid. \"They came from over there - let's finish this.\"",
+     "fail": "Sister Enid falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Herb Beds",
+     "objective": "Clear the herb beds",
+     "announce": "They came from the herb beds. Follow them back and clear it out.",
+     "center": [
+      1064,
+      626,
+      48.2
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12005,
+       "name": "bogman gatherer",
+       "level": [
+        8,
+        8
+       ]
+      },
+      {
+       "template": 12008,
+       "name": "bogman trapper",
+       "level": [
+        10,
+        10
+       ]
+      },
+      {
+       "template": 12007,
+       "name": "bogman hunter",
+       "level": [
+        11,
+        11
+       ]
+      }
+     ],
+     "success": "You have cleared the herb beds. Mudgrip the Bog-Chief comes out to fight.",
+     "fail": "They hold the herb beds. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Mudgrip the Bog-Chief",
+     "objective": "Defeat Mudgrip the Bog-Chief",
+     "announce": "Mudgrip the Bog-Chief stands at the herb beds. Bring friends.",
+     "center": [
+      1064,
+      626,
+      48.2
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12007,
+      "name": "Mudgrip the Bog-Chief",
+      "level": 13,
+      "size": 74,
+      "pos": [
+       1064,
+       626,
+       48.2
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12005,
+        "name": "bogman gatherer",
+        "level": [
+         8,
+         8
+        ]
+       }
+      ]
+     },
+     "success": "Mudgrip the Bog-Chief falls. The way is safe again.",
+     "fail": "Mudgrip the Bog-Chief slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu9_mudgrip_the_bog_chief_s_girdle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Bogman Gatherers Hold the Road to Adibard's Retreat",
+     "objective": "Drive the bogman gatherers off the road to Adibard's Retreat",
+     "announce": "With The Bogmen lost, the bogman gatherers have spread down onto the road to Adibard's Retreat and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1377,
+      560,
+      48.5
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12005,
+       "name": "bogman gatherer",
+       "level": [
+        8,
+        8
+       ]
+      },
+      {
+       "template": 12008,
+       "name": "bogman trapper",
+       "level": [
+        10,
+        10
+       ]
+      },
+      {
+       "template": 12007,
+       "name": "bogman hunter",
+       "level": [
+        11,
+        11
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12005,
+      "name": "Bogman gatherer warleader",
+      "level": 12,
+      "pos": [
+       1377,
+       560,
+       48.5
+      ],
+      "health_mult": 2
+     },
+     "success": "The bogman gatherers are gone from the road to Adibard's Retreat. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Mabyn, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Mabyn has come out to set the road to Adibard's Retreat right. The bogman gatherers are coming back for it!",
+     "center": [
+      1377,
+      560,
+      48.5
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Mabyn",
+      "level": 11,
+      "pos": [
+       1377,
+       560,
+       48.5
+      ],
+      "health_mult": 10,
+      "template": 60161835,
+      "model": 74,
+      "equipment": "9f2bc6dd-5b20-4853-9584-3c393d75f4cd"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1332,
+        632,
+        51.7
+       ],
+       [
+        1294,
+        578,
+        41.0
+       ],
+       [
+        1307,
+        513,
+        50.5
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12005,
+        "name": "bogman gatherer",
+        "level": [
+         8,
+         8
+        ]
+       },
+       {
+        "template": 12008,
+        "name": "bogman trapper",
+        "level": [
+         10,
+         10
+        ]
+       },
+       {
+        "template": 12007,
+        "name": "bogman hunter",
+        "level": [
+         11,
+         11
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Adibard's Retreat is safe again. Thank you.\"",
+     "success": "The bogman gatherers break and scatter. The road to Adibard's Retreat is open again.",
+     "fail": "Roadwarden Mabyn falls, and the bogman gatherers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "avalon_marsh_shamblers",
+   "title": "Shamblers of the Marsh",
+   "levels": [
+    11,
+    14
+   ],
+   "hint": "Guardian Sergeant Lyle is looking for help in Caer Witrin.",
+   "rest_s": 45,
+   "giver": {
+    "name": "Guardian Sergeant Lyle",
+    "template": 60161835,
+    "level": 15,
+    "model": 74,
+    "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
+    "guild": "Guardians of Caer Witrin",
+    "health_mult": 4,
+    "pos": [
+     483,
+     936,
+     60.5
+    ],
+    "greet": "Shamblers have risen out of the mire and broken the west causeway. I'm taking my guardians out to clear them. Will you come? Tell me when you're [ready].",
+    "accept": "ready",
+    "reply": "Good. Stay close - they will have watchers out. With me!",
+    "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "name": "Guardian",
+     "template": 60161835,
+     "level": 14,
+     "model": 74,
+     "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
+     "guild": "Guardians of Caer Witrin",
+     "health_mult": 2,
+     "count": 3
+    }
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "escort",
+     "name": "The Road to Sinking Causeway",
+     "objective": "Go with Guardian Sergeant Lyle to the sinking causeway",
+     "announce": "Sergeant Lyle leads the guardians of Caer Witrin out onto the marsh.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       511,
+       972,
+       51.9
+      ],
+      [
+       575,
+       1052,
+       45.3
+      ],
+      [
+       591,
+       1148,
+       44.8
+      ],
+      [
+       591,
+       1236,
+       45.2
+      ],
+      [
+       599,
+       1276,
+       45.0
+      ],
+      [
+       607,
+       1292,
+       44.8
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 3,
+       "count": 3,
+       "say": "Ambush! To me - hold together!",
+       "mobs": [
+        {
+         "template": 12052,
+         "name": "shambler",
+         "level": [
+          12,
+          13
+         ]
+        },
+        {
+         "template": 12032,
+         "name": "mud golem",
+         "level": [
+          14,
+          14
+         ]
+        }
+       ]
+      }
+     ],
+     "success": "Guardian Sergeant Lyle reaches the sinking causeway. \"There they are. Clear them out!\"",
+     "fail": "Guardian Sergeant Lyle falls on the road. The others carry the body home.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "g2",
+     "type": "cull",
+     "name": "Clear Sinking Causeway",
+     "objective": "Clear the sinking causeway",
+     "announce": "Clear the sinking causeway!",
+     "center": [
+      608,
+      1292,
+      44.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12052,
+       "name": "shambler",
+       "level": [
+        12,
+        13
+       ]
+      },
+      {
+       "template": 12032,
+       "name": "mud golem",
+       "level": [
+        14,
+        14
+       ]
+      },
+      {
+       "template": 12026,
+       "name": "marsh scrag",
+       "level": [
+        11,
+        11
+       ]
+      }
+     ],
+     "success": "You have cleared the sinking causeway. The Mire Colossus comes out to fight.",
+     "fail": "They hold the sinking causeway. They will be bolder next time.",
+     "on_success": "g3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g3",
+     "type": "boss",
+     "name": "The Mire Colossus",
+     "objective": "Defeat the Mire Colossus",
+     "announce": "The Mire Colossus stands at the sinking causeway. Bring friends.",
+     "center": [
+      608,
+      1292,
+      44.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12032,
+      "name": "The Mire Colossus",
+      "level": 16,
+      "size": 96,
+      "pos": [
+       608,
+       1292,
+       44.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12052,
+        "name": "shambler",
+        "level": [
+         12,
+         13
+        ]
+       }
+      ]
+     },
+     "success": "The Mire Colossus falls. Caer Witrin will hear of this in the taverns tonight.",
+     "fail": "The Mire Colossus slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu9_mire_colossus_mantle",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Shamblers Hold the Road to Caer Witrin",
+     "objective": "Drive the shamblers off the road to Caer Witrin",
+     "announce": "With Shamblers of the Marsh lost, the shamblers have spread down onto the road to Caer Witrin and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      447,
+      1107,
+      46.7
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12052,
+       "name": "shambler",
+       "level": [
+        12,
+        13
+       ]
+      },
+      {
+       "template": 12032,
+       "name": "mud golem",
+       "level": [
+        14,
+        14
+       ]
+      },
+      {
+       "template": 12026,
+       "name": "marsh scrag",
+       "level": [
+        11,
+        11
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12052,
+      "name": "Shambler warleader",
+      "level": 15,
+      "pos": [
+       447,
+       1107,
+       46.7
+      ],
+      "health_mult": 2
+     },
+     "success": "The shamblers are gone from the road to Caer Witrin. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hal has come out to set the road to Caer Witrin right. The shamblers are coming back for it!",
+     "center": [
+      447,
+      1107,
+      46.7
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hal",
+      "level": 14,
+      "pos": [
+       447,
+       1107,
+       46.7
+      ],
+      "health_mult": 10,
+      "template": 60161835,
+      "model": 74,
+      "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        532,
+        1112,
+        46.0
+       ],
+       [
+        503,
+        1171,
+        47.2
+       ],
+       [
+        440,
+        1192,
+        51.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12052,
+        "name": "shambler",
+        "level": [
+         12,
+         13
+        ]
+       },
+       {
+        "template": 12032,
+        "name": "mud golem",
+        "level": [
+         14,
+         14
+        ]
+       },
+       {
+        "template": 12026,
+        "name": "marsh scrag",
+        "level": [
+         11,
+         11
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Caer Witrin is safe again. Thank you.\"",
+     "success": "The shamblers break and scatter. The road to Caer Witrin is open again.",
+     "fail": "Roadwarden Hal falls, and the shamblers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "avalon_marsh_leapers_pool",
+   "title": "The Leapers' Pool",
+   "levels": [
+    8,
+    15
+   ],
+   "hint": "Something drags the marsh-men under at the dark pool...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Leapers' Pool",
+     "objective": "Clear the leapers' pool",
+     "announce": "Water leapers have taken the dark pool in the marsh, and they pull down anyone who comes to fish it. End them.",
+     "center": [
+      979,
+      1300,
+      41.9
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12063,
+       "name": "water leaper",
+       "level": [
+        8,
+        10
+       ]
+      },
+      {
+       "template": 12021,
+       "name": "giant water leaper",
+       "level": [
+        15,
+        15
+       ]
+      }
+     ],
+     "success": "You have cleared the leapers' pool. Grandfather Leaper comes out to fight.",
+     "fail": "They hold the leapers' pool. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "Grandfather Leaper",
+     "objective": "Defeat Grandfather Leaper",
+     "announce": "Grandfather Leaper stands at the leapers' pool. Bring friends.",
+     "center": [
+      979,
+      1300,
+      41.9
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12021,
+      "name": "Grandfather Leaper",
+      "level": 17,
+      "size": 110,
+      "pos": [
+       979,
+       1300,
+       41.9
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12063,
+        "name": "water leaper",
+        "level": [
+         8,
+         10
+        ]
+       }
+      ]
+     },
+     "success": "Grandfather Leaper falls. The way is safe again.",
+     "fail": "Grandfather Leaper slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu9_grandfather_leaper_s_torc",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Water Leapers Hold the Road to Caer Witrin",
+     "objective": "Drive the water leapers off the road to Caer Witrin",
+     "announce": "With The Leapers' Pool lost, the water leapers have spread down onto the road to Caer Witrin and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      758,
+      951,
+      49.9
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12063,
+       "name": "water leaper",
+       "level": [
+        8,
+        10
+       ]
+      },
+      {
+       "template": 12021,
+       "name": "giant water leaper",
+       "level": [
+        15,
+        15
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12063,
+      "name": "Water leaper warleader",
+      "level": 16,
+      "pos": [
+       758,
+       951,
+       49.9
+      ],
+      "health_mult": 2
+     },
+     "success": "The water leapers are gone from the road to Caer Witrin. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hal has come out to set the road to Caer Witrin right. The water leapers are coming back for it!",
+     "center": [
+      758,
+      951,
+      49.9
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hal",
+      "level": 15,
+      "pos": [
+       758,
+       951,
+       49.9
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        840,
+        974,
+        41.3
+       ],
+       [
+        799,
+        1026,
+        38.9
+       ],
+       [
+        733,
+        1033,
+        38.4
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12063,
+        "name": "water leaper",
+        "level": [
+         8,
+         10
+        ]
+       },
+       {
+        "template": 12021,
+        "name": "giant water leaper",
+        "level": [
+         15,
+         15
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Caer Witrin is safe again. Thank you.\"",
+     "success": "The water leapers break and scatter. The road to Caer Witrin is open again.",
+     "fail": "Roadwarden Hal falls, and the water leapers take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "am_black_barge_night",
+   "title": "The Black Barge",
+   "levels": [
+    18,
+    22
+   ],
+   "hint": "No moon tonight - and a long black boat is sliding through the mist toward the Isle...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "b1",
+   "stages": [
+    {
+     "id": "b1",
+     "type": "cull",
+     "name": "The Mist",
+     "objective": "Cut through the mist round the landing",
+     "announce": "The black barge is crossing to the Isle with Morgana's people aboard, and the mist round the landing has turned on everyone. Get to the landing!",
+     "center": [
+      1090,
+      490,
+      46.6
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 6,
+     "mobs": [
+      {
+       "template": 12029,
+       "name": "mist sprite",
+       "level": [
+        16,
+        18
+       ]
+      },
+      {
+       "template": 12029,
+       "name": "mist sprite",
+       "level": [
+        16,
+        18
+       ]
+      },
+      {
+       "template": 12075,
+       "name": "crimson initiate",
+       "level": [
+        18,
+        20
+       ],
+       "guild": "the Crimson"
+      }
+     ],
+     "success": "The mist thins. The barge grinds onto the landing, and its oarsmen stand up.",
+     "fail": "The barge reaches the Isle.",
+     "on_success": "b2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 100,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "b2",
+     "type": "boss",
+     "name": "the Oarsmaster",
+     "objective": "Defeat the barge's Oarsmaster",
+     "announce": "The Oarsmaster, drowned three hundred years, lifts his oar like a spear: 'We row for the key and the crown.' Bring friends.",
+     "center": [
+      1090,
+      490,
+      46.6
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 12016,
+      "name": "the Oarsmaster",
+      "level": 22,
+      "size": 62,
+      "pos": [
+       1090,
+       490,
+       46.6
+      ],
+      "health_mult": 3,
+      "guild": "of the Black Barge"
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12016,
+        "name": "drowned oarsman",
+        "level": [
+         18,
+         20
+        ]
+       },
+       {
+        "template": 12075,
+        "name": "crimson initiate",
+        "level": [
+         18,
+         20
+        ],
+        "guild": "the Crimson"
+       }
+      ]
+     },
+     "success": "The Oarsmaster falls back into the water, and the barge drifts empty on the mist.",
+     "fail": "The barge lands its passengers on the Isle.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 180,
+      "tokens": 14,
+      "items": [
+       {
+        "id": "nu009_oarsmaster_s_ring",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ],
+   "time": "night"
+  },
+  {
+   "id": "am_vigil_assault",
+   "title": "Retake the Vigil Keep",
+   "levels": [
+    20,
+    24
+   ],
+   "manual": true,
+   "bots": 8,
+   "min_people": 4,
+   "bot_min_level": 16,
+   "hint": "Warden-Sergeant Cai is gathering the Marsh Wardens east of the Drowned Vigil's keep.",
+   "rest_s": 15,
+   "start": "v1",
+   "giver": {
+    "template": 60161835,
+    "model": 74,
+    "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
+    "guild": "the Marsh Wardens",
+    "name": "Warden-Sergeant Cai",
+    "level": 24,
+    "pos": [
+     525,
+     305,
+     56.7
+    ],
+    "health_mult": 3,
+    "greet": "The Vigil's held that keep for three hundred years with nobody to relieve them. We're the relief. Four at least, bots and all - say [relieve the Vigil].",
+    "accept": "relieve the Vigil",
+    "reply": "Through the walls! Hold the gate, the chapel and the tower, and put down whoever commands them!",
+    "busy": "Not yet. Rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "The Vigil Keep is ours! They're relieved!",
+    "regret": "Back into the reeds! We'll come again."
+   },
+   "guards": [
+    {
+     "template": 60161835,
+     "model": 74,
+     "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
+     "guild": "the Marsh Wardens",
+     "name": "marsh warden",
+     "level": 20,
+     "count": 3
+    }
+   ],
+   "stages": [
+    {
+     "id": "v1",
+     "type": "cull",
+     "name": "The Walls",
+     "objective": "Cut through the Vigil's dead on the walls",
+     "announce": "Over the walls! The Vigil's dead are turning out to meet us, in good order, as they always did!",
+     "center": [
+      360,
+      245,
+      66.6
+     ],
+     "radius": 80,
+     "time_s": 900,
+     "kill": 18,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12017,
+       "name": "ghoul footman",
+       "level": [
+        19,
+        21
+       ],
+       "guild": "the Drowned Vigil"
+      },
+      {
+       "template": 12017,
+       "name": "ghoul footman",
+       "level": [
+        19,
+        21
+       ],
+       "guild": "the Drowned Vigil"
+      },
+      {
+       "template": 12018,
+       "name": "ghoul knight",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the Drowned Vigil"
+      }
+     ],
+     "success": "The walls are ours. The ghouls fall back to the gate, the chapel and the tower.",
+     "fail": "The wardens are thrown back into the reeds.",
+     "on_success": "v2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "v2",
+     "type": "wards",
+     "name": "Gate, Chapel and Tower",
+     "objective": "Hold the gate, the chapel and the tower at once",
+     "announce": "The Vigil hold three posts - the gate, the chapel and the tower. Stand on all three at once and they'll know they've been relieved!",
+     "center": [
+      360,
+      245,
+      66.6
+     ],
+     "radius": 80,
+     "wards": [
+      [
+       395,
+       280,
+       69.6
+      ],
+      [
+       340,
+       255,
+       67.8
+      ],
+      [
+       360,
+       215,
+       69.4
+      ]
+     ],
+     "ward_names": [
+      "the gate",
+      "the chapel",
+      "the tower"
+     ],
+     "ward_radius": 18,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 12017,
+       "name": "ghoul footman",
+       "level": [
+        19,
+        21
+       ],
+       "guild": "the Drowned Vigil"
+      },
+      {
+       "template": 12018,
+       "name": "ghoul knight",
+       "level": [
+        20,
+        22
+       ],
+       "guild": "the Drowned Vigil"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "banner of the Marsh Wardens",
+     "success": "The posts are relieved - and the Vigil's marshal comes out of the keep to see who dares.",
+     "fail": "The Vigil drive the wardens off their posts.",
+     "on_success": "v3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 140,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "v3",
+     "type": "boss",
+     "name": "Ghoul-Marshal Vrask",
+     "objective": "Defeat Ghoul-Marshal Vrask",
+     "announce": "Ghoul-Marshal Vrask, in drowned plate: 'No relief came. No relief will come. Stand to!'",
+     "center": [
+      360,
+      245,
+      66.6
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 12019,
+      "name": "Ghoul-Marshal Vrask",
+      "level": 25,
+      "size": 64,
+      "health_mult": 2.5,
+      "guild": "Marshal of the Drowned Vigil"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12018,
+        "name": "ghoul knight",
+        "level": [
+         20,
+         22
+        ],
+        "guild": "the Drowned Vigil"
+       },
+       {
+        "template": 12019,
+        "name": "ghoul lord",
+        "level": [
+         21,
+         23
+        ],
+        "guild": "the Drowned Vigil"
+       }
+      ]
+     },
+     "success": "Vrask falls - and with him, every ghoul on the walls lowers its weapon. 'Relieved,' something whispers. The Marsh Wardens raise their banner on the tower.",
+     "fail": "Vrask holds the keep.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 260,
+      "tokens": 22,
+      "items": [
+       {
+        "id": "vk009_vrask_s_gorget",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "am_vigil_return",
+   "title": "The Drowned Lord-Commander",
+   "levels": [
+    21,
+    24
+   ],
+   "manual": true,
+   "bots": 8,
+   "bot_min_level": 16,
+   "hint": "The water round the Vigil Keep is rising, and something is walking up out of it.",
+   "wake_m": 200,
+   "auto_fail_s": 900,
+   "start": "x1",
+   "stages": [
+    {
+     "id": "x1",
+     "type": "defend",
+     "name": "The Chapel",
+     "objective": "Keep Warden-Chaplain Mabon alive in the chapel",
+     "announce": "The drowned are coming up out of the marsh round the keep - the whole Vigil, three hundred years of it. Hold the chapel!",
+     "center": [
+      360,
+      245,
+      66.6
+     ],
+     "radius": 70,
+     "duration_s": 200,
+     "protect": {
+      "template": 60161835,
+      "model": 74,
+      "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
+      "guild": "the Marsh Wardens",
+      "name": "Warden-Chaplain Mabon",
+      "level": 22,
+      "pos": [
+       360,
+       245,
+       66.6
+      ],
+      "health_mult": 5
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 4,
+      "from": [
+       [
+        300,
+        260,
+        74.5
+       ],
+       [
+        380,
+        190,
+        68.8
+       ],
+       [
+        330,
+        300,
+        76.6
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12017,
+        "name": "ghoul footman",
+        "level": [
+         19,
+         21
+        ],
+        "guild": "the Drowned Vigil"
+       },
+       {
+        "template": 12018,
+        "name": "ghoul knight",
+        "level": [
+         20,
+         22
+        ],
+        "guild": "the Drowned Vigil"
+       },
+       {
+        "template": 12019,
+        "name": "ghoul lord",
+        "level": [
+         21,
+         23
+        ],
+        "guild": "the Drowned Vigil"
+       }
+      ]
+     },
+     "success": "The first rush breaks - and the Lord-Commander walks up out of the water.",
+     "fail": "Mabon falls in the chapel.",
+     "on_success": "x2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 160,
+      "tokens": 14
+     }
+    },
+    {
+     "id": "x2",
+     "type": "boss",
+     "name": "the Drowned Lord-Commander",
+     "objective": "Defeat the Drowned Lord-Commander",
+     "announce": "The Drowned Lord-Commander, streaming marsh-water: 'Who relieved my Vigil without my order?'",
+     "center": [
+      360,
+      245,
+      66.6
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 12019,
+      "name": "the Drowned Lord-Commander",
+      "level": 25,
+      "size": 66,
+      "health_mult": 2.5,
+      "guild": "of the Drowned Vigil"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12018,
+        "name": "ghoul knight",
+        "level": [
+         20,
+         22
+        ],
+        "guild": "the Drowned Vigil"
+       }
+      ]
+     },
+     "success": "The Lord-Commander sinks back into the marsh. The keep holds - for now.",
+     "fail": "The Vigil take their keep back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 220,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "vk009_lord_commander_s_seal",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "siege": {
+  "id": "vigil_keep",
+  "name": "the Vigil Keep",
+  "enemy": "the Drowned Vigil",
+  "resolve_name": "The Wardens' resolve",
+  "enemy_name": "The Vigil's hold",
+  "faction": "marsh_wardens",
+  "feeds": {
+   "avalon_marsh_ghoul_court": 20,
+   "am_black_barge_night": 10,
+   "avalon_marsh_bogmen": 5,
+   "avalon_marsh_shamblers": 10,
+   "avalon_marsh_leapers_pool": 5
+  },
+  "feed_default": 5,
+  "quests": {
+   "vigil": 15,
+   "am_ghoul_court": 15,
+   "am_vigil_banner": 25,
+   "am_causeway": 10,
+   "am_giant_wolves": 5,
+   "am_mist_monsters": 10
+  },
+  "enemy_feeds": {
+   "avalon_marsh_ghoul_court": 20
+  },
+  "enemy_default": 5,
+  "war_chain": "avalon_marsh_ghoul_court",
+  "assault": "am_vigil_assault",
+  "raids": [],
+  "last_raid": "am_vigil_return",
+  "hold_h": 2,
+  "raid_gap_h": [
+   2,
+   1.5,
+   1.5
+  ],
+  "criers": [
+   "warden_brec",
+   "am_maelor"
+  ],
+  "bots_go_after_m": 30,
+  "open_text": "Hear me! The Marsh Wardens mean to relieve the Drowned Vigil and take their keep! Warden-Sergeant Cai waits in the reeds east of the keep. If no one leads within the half-hour, the Wardens go without you.",
+  "taken_text": "The Vigil Keep is ours! The Marsh Wardens' banner flies on the tower and the Vigil are relieved - go and see.",
+  "repelled_text": "The Wardens have been thrown back from the Vigil Keep. The drowned grow bolder.",
+  "raid_text": "The water is rising round the Vigil Keep: the drowned are coming back for it!",
+  "held_text": "The drowned are thrown back into the marsh. The keep holds.",
+  "fall_text": "The Vigil Keep has fallen to the Drowned Lord-Commander. The Wardens must rebuild their resolve.",
+  "carry_text": "Warden-Sergeant Cai leads you through the reeds at a run.",
+  "carried_cry": "The Wardens wouldn't wait any longer - they have stormed {0}!",
+  "hostile_tier": "orange",
+  "sites": [
+   "vigil_keep",
+   "vigil_walls",
+   "vigil_marsh"
+  ],
+  "staging": [
+   525,
+   305,
+   56.7
+  ],
+  "landing": [
+   430,
+   270,
+   67.3
+  ],
+  "area": [
+   360,
+   245,
+   110
+  ],
+  "camp_npcs": [
+   {
+    "template": 60161835,
+    "model": 74,
+    "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
+    "guild": "the Marsh Wardens",
+    "kind": "marks",
+    "name": "Warden-Quartermaster Ysbail",
+    "level": 22,
+    "pos": [
+     380,
+     265,
+     66.2
+    ],
+    "greet": "The keep's stores - what three hundred years of damp didn't ruin, and what we brought. For the relief.",
+    "stock": [
+     {
+      "item": "vk009_cloak_of_the_relief",
+      "price": 60
+     },
+     {
+      "item": "vk009_vigil_tower_ring",
+      "price": 40
+     },
+     {
+      "item": "vk009_drowned_plate_bracer",
+      "price": 40
+     },
+     {
+      "item": "vk009_marsh_warden_s_torc",
+      "price": 40
+     },
+     {
+      "item": "tw_strong_draught_of_healing",
+      "price": 2
+     },
+     {
+      "item": "tw_strong_draught_of_power",
+      "price": 2
+     }
+    ]
+   },
+   {
+    "template": 60161835,
+    "model": 38,
+    "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
+    "guild": "the Marsh Wardens",
+    "kind": "coin",
+    "name": "Apple-Wife Morfydd",
+    "level": 20,
+    "pos": [
+     345,
+     270,
+     67.8
+    ],
+    "greet": "Cider and cures from Caer Witrin's orchards. Coin, if you please.",
+    "stock": [
+     {
+      "item": "vk009_apple_isle_draught"
+     },
+     {
+      "item": "vk009_marsh_tonic"
+     },
+     {
+      "item": "vk009_witrin_cider"
+     }
+    ]
+   },
+   {
+    "template": 60161835,
+    "model": 74,
+    "equipment": "537f261b-a7ba-4cc1-a75a-dea0c78150f3",
+    "guild": "the Marsh Wardens",
+    "kind": "idle",
+    "name": "marsh warden",
+    "level": 20,
+    "pos": [
+     370,
+     230,
+     66.9
+    ],
+    "count": 3,
+    "idle": "Three hundred years they stood here. I've done three hours and my feet are wet."
+   }
+  ],
+  "holdouts": [
+   {
+    "kind": "holdout",
+    "name": "ghoul straggler",
+    "template": 12017,
+    "level": 21,
+    "pos": [
+     300,
+     200,
+     81.6
+    ],
+    "count": 3,
+    "tier": "orange",
+    "respawn_s": 300
+   },
+   {
+    "kind": "holdout",
+    "name": "drowned knight",
+    "template": 12018,
+    "level": 22,
+    "pos": [
+     420,
+     170,
+     66.5
+    ],
+    "count": 2,
+    "tier": "orange",
+    "respawn_s": 600
+   }
   ]
+ }
 }

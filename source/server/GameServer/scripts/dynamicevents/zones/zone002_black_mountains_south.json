@@ -1,776 +1,2047 @@
 {
-  "zone": 2,
-  "region": 1,
-  "name": "Black Mtns. South",
-  "lore": "The southern Black Mountains: Humberton Castle and Ludlow, goblin fishers on the river and red dwarf thieves in the high passes.",
-  "chains": [
+ "zone": 2,
+ "region": 1,
+ "name": "Black Mtns. South",
+ "lore": "The southern Black Mountains: Humberton keep and Ludlow town, the river and its goblin fishers, and Vetusta Abbey in the south - where Bishop Burhoff has filled the cloister with red-corded brothers and driven the true monks out. The goblins of Tepok's Mine have dug into a cairn of Arthur's dead from Mount Badon, and somebody is buying the bones.",
+ "chains": [
+  {
+   "id": "black_mountains_south_goblin_fishers",
+   "title": "The Drowned Nets",
+   "levels": [
+    4,
+    6
+   ],
+   "hint": "Nets across the river at the drowned reach - and the fishermen in them aren't breathing...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
     {
-      "id": "black_mountains_south_goblin_fishers",
-      "title": "The Goblin Fishers",
-      "levels": [4, 6],
-      "hint": "Nets are strung across the river...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Goblin Weir",
-          "objective": "Clear the goblin weir",
-          "announce": "The goblin fishers have dammed the river with nets and stakes, and the mill below has run dry. Clear the weir.",
-          "center": [426, 460, 56.2],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12171,
-              "name": "goblin fisherman",
-              "level": [4, 6]
-            },
-            {
-              "template": 12235,
-              "name": "undead goblin fisherman",
-              "level": [4, 4]
-            },
-            {
-              "template": 12236,
-              "name": "undead goblin warrior",
-              "level": [5, 5]
-            }
-          ],
-          "success": "You have cleared the goblin weir. Gruk the Net-Master comes out to fight.",
-          "fail": "They hold the goblin weir. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "Gruk the Net-Master",
-          "objective": "Defeat Gruk the Net-Master",
-          "announce": "Gruk the Net-Master stands at the goblin weir. Bring friends.",
-          "center": [426, 460, 56.2],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12171,
-            "name": "Gruk the Net-Master",
-            "level": 8,
-            "size": 57,
-            "pos": [426, 460, 56.2],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12171,
-                "name": "goblin fisherman",
-                "level": [4, 6]
-              }
-            ]
-          },
-          "success": "Gruk the Net-Master falls. The way is safe again.",
-          "fail": "Gruk the Net-Master slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu2_gruk_the_net_master_s_armband", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Goblin Fishermans Hold the Road to Humberton Village",
-          "objective": "Drive the goblin fishermans off the road to Humberton Village",
-          "announce": "With The Goblin Fishers lost, the goblin fishermans have spread down onto the road to Humberton Village and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [446, 779, 58.1],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12171,
-              "name": "goblin fisherman",
-              "level": [4, 6]
-            },
-            {
-              "template": 12235,
-              "name": "undead goblin fisherman",
-              "level": [4, 4]
-            },
-            {
-              "template": 12236,
-              "name": "undead goblin warrior",
-              "level": [5, 5]
-            }
-          ],
-          "boss": {
-            "template": 12171,
-            "name": "Goblin fisherman warleader",
-            "level": 7,
-            "pos": [446, 779, 58.1],
-            "health_mult": 2
-          },
-          "success": "The goblin fishermans are gone from the road to Humberton Village. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Hal has come out to set the road to Humberton Village right. The goblin fishermans are coming back for it!",
-          "center": [446, 779, 58.1],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Hal",
-            "level": 6,
-            "pos": [446, 779, 58.1],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [382, 724, 42.4],
-              [441, 695, 36.1],
-              [503, 716, 54.8]
-            ],
-            "mobs": [
-              {
-                "template": 12171,
-                "name": "goblin fisherman",
-                "level": [4, 6]
-              },
-              {
-                "template": 12235,
-                "name": "undead goblin fisherman",
-                "level": [4, 4]
-              },
-              {
-                "template": 12236,
-                "name": "undead goblin warrior",
-                "level": [5, 5]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Humberton Village is safe again. Thank you.\"",
-          "success": "The goblin fishermans break and scatter. The road to Humberton Village is open again.",
-          "fail": "Roadwarden Hal falls, and the goblin fishermans take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "black_mountains_south_red_dwarf_raid",
-      "title": "The Red Dwarf Raid",
-      "levels": [5, 8],
-      "hint": "Red dwarves have been seen above the road...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "d1",
-      "stages": [
-        {
-          "id": "d1",
-          "type": "defend",
-          "name": "Protect Edwin the Carter",
-          "objective": "Protect Edwin the Carter, who is mending a broken wheel",
-          "announce": "Edwin the carter's wheel has broken on the pass road, and the red dwarves are coming down for his load.",
-          "center": [1226, 277, 77.6],
-          "radius": 70,
-          "duration_s": 180,
-          "protect": {
-            "name": "Edwin the Carter",
-            "template": 60167629,
-            "level": 8,
-            "model": 28,
-            "equipment": "dfb0d504-70ce-4eed-8764-1bb80036b3e3",
-            "health_mult": 10,
-            "pos": [1226, 277, 77.6]
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1306, 250, 78.4],
-              [1276, 301, 80.0],
-              [1251, 358, 71.7]
-            ],
-            "mobs": [
-              {
-                "template": 12205,
-                "name": "red dwarf thief",
-                "level": [5, 7]
-              },
-              {
-                "template": 12199,
-                "name": "red dwarf bandit",
-                "level": [6, 8]
-              }
-            ]
-          },
-          "success": "\"That's done,\" says Edwin the Carter. \"They came from over there - let's finish this.\"",
-          "fail": "Edwin the Carter falls. The attackers are left to do as they please - for now.",
-          "on_success": "d2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 8, "copper_per_level": 60 }
-        },
-        {
-          "id": "d2",
-          "type": "cull",
-          "name": "Clear Carter's Road",
-          "objective": "Clear the carter's road",
-          "announce": "They came from the carter's road. Follow them back and clear it out.",
-          "center": [1463, 397, 49.7],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12205,
-              "name": "red dwarf thief",
-              "level": [5, 7]
-            },
-            {
-              "template": 12199,
-              "name": "red dwarf bandit",
-              "level": [6, 8]
-            }
-          ],
-          "success": "You have cleared the carter's road. Brannoc Redbeard comes out to fight.",
-          "fail": "They hold the carter's road. They will be bolder next time.",
-          "on_success": "d3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "d3",
-          "type": "boss",
-          "name": "Brannoc Redbeard",
-          "objective": "Defeat Brannoc Redbeard",
-          "announce": "Brannoc Redbeard stands at the carter's road. Bring friends.",
-          "center": [1463, 397, 49.7],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12199,
-            "name": "Brannoc Redbeard",
-            "level": 10,
-            "size": 58,
-            "pos": [1463, 397, 49.7],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12205,
-                "name": "red dwarf thief",
-                "level": [5, 7]
-              }
-            ]
-          },
-          "success": "Brannoc Redbeard falls. The way is safe again.",
-          "fail": "Brannoc Redbeard slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu2_brannoc_redbeard_s_eye", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Red Dwarf Thiefs Hold the Road to Humberton Village",
-          "objective": "Drive the red dwarf thiefs off the road to Humberton Village",
-          "announce": "With The Red Dwarf Raid lost, the red dwarf thiefs have spread down onto the road to Humberton Village and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [1216, 779, 158.5],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12205,
-              "name": "red dwarf thief",
-              "level": [5, 7]
-            },
-            {
-              "template": 12199,
-              "name": "red dwarf bandit",
-              "level": [6, 8]
-            }
-          ],
-          "boss": {
-            "template": 12205,
-            "name": "Red dwarf thief warleader",
-            "level": 9,
-            "pos": [1216, 779, 158.5],
-            "health_mult": 2
-          },
-          "success": "The red dwarf thiefs are gone from the road to Humberton Village. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Edith has come out to set the road to Humberton Village right. The red dwarf thiefs are coming back for it!",
-          "center": [1216, 779, 158.5],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Edith",
-            "level": 8,
-            "pos": [1216, 779, 158.5],
-            "health_mult": 10,
-            "template": 60167629,
-            "model": 28,
-            "equipment": "dfb0d504-70ce-4eed-8764-1bb80036b3e3"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [1197, 697, 134.5],
-              [1262, 708, 92.8],
-              [1300, 763, 111.5]
-            ],
-            "mobs": [
-              {
-                "template": 12205,
-                "name": "red dwarf thief",
-                "level": [5, 7]
-              },
-              {
-                "template": 12199,
-                "name": "red dwarf bandit",
-                "level": [6, 8]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Humberton Village is safe again. Thank you.\"",
-          "success": "The red dwarf thiefs break and scatter. The road to Humberton Village is open again.",
-          "fail": "Roadwarden Edith falls, and the red dwarf thiefs take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
-    },
-    {
-      "id": "black_mountains_south_highway_robbery",
-      "title": "Highway Robbery",
-      "levels": [4, 8],
-      "hint": "Veteran Guard Osric is looking for help in Humberton.",
-      "rest_s": 45,
-      "giver": {
-        "name": "Veteran Guard Osric",
-        "template": 60167625,
-        "level": 9,
-        "model": 27,
-        "equipment": "afbf0cbc-36a3-4471-b32a-057ae99619db",
-        "guild": "Humberton Guard",
-        "health_mult": 4,
-        "pos": [593, 1040, 57.1],
-        "greet": "Black Tom and his highwaymen robbed the Ludlow coach again. I know where they camp. Ride with me and we'll end it. Tell me when you're [ready].",
-        "accept": "ready",
-        "reply": "Good. Stay close - they will have watchers out. With me!",
-        "busy": "We've only just come back. Give my people a while to rest, then find me again.",
-        "cooldown_s": 900
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Goblin Weir",
+     "objective": "Clear the goblin weir",
+     "announce": "The goblin fishers have dammed the river with nets and stakes, and the mill below has run dry. Clear the weir.",
+     "center": [
+      436,
+      708,
+      42.1
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12171,
+       "name": "goblin fisherman",
+       "level": [
+        4,
+        6
+       ]
       },
-      "guards": [
-        {
-          "name": "Veteran Guard",
-          "template": 60167625,
-          "level": 8,
-          "model": 27,
-          "equipment": "afbf0cbc-36a3-4471-b32a-057ae99619db",
-          "guild": "Humberton Guard",
-          "health_mult": 2,
-          "count": 3
-        }
-      ],
-      "start": "g1",
-      "stages": [
-        {
-          "id": "g1",
-          "type": "escort",
-          "name": "The Road to Highwaymen's Camp",
-          "objective": "Go with Veteran Guard Osric to the highwaymen's camp",
-          "announce": "Osric of the Humberton guard rides out after Black Tom's highwaymen.",
-          "radius": 60,
-          "time_s": 1500,
-          "path": [
-            [701, 1037, 59.9],
-            [749, 1037, 62.6],
-            [821, 965, 73.4],
-            [821, 901, 63.5],
-            [893, 821, 59.6],
-            [917, 781, 57.8]
-          ],
-          "ambushes": [
-            {
-              "at": 3,
-              "count": 3,
-              "say": "Ambush! To me - hold together!",
-              "mobs": [
-                {
-                  "template": 12361,
-                  "name": "highwayman",
-                  "level": [7, 7]
-                },
-                {
-                  "template": 12076,
-                  "name": "cutpurse",
-                  "level": [4, 4]
-                }
-              ]
-            }
-          ],
-          "success": "Veteran Guard Osric reaches the highwaymen's camp. \"There they are. Clear them out!\"",
-          "fail": "Veteran Guard Osric falls on the road. The others carry the body home.",
-          "on_success": "g2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 60 }
-        },
-        {
-          "id": "g2",
-          "type": "cull",
-          "name": "Clear Highwaymen's Camp",
-          "objective": "Clear the highwaymen's camp",
-          "announce": "Clear the highwaymen's camp!",
-          "center": [916, 777, 58.4],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12361,
-              "name": "highwayman",
-              "level": [7, 7]
-            },
-            {
-              "template": 12076,
-              "name": "cutpurse",
-              "level": [4, 4]
-            },
-            {
-              "template": 12447,
-              "name": "bandit",
-              "level": [5, 8]
-            }
-          ],
-          "success": "You have cleared the highwaymen's camp. Black Tom the Highwayman comes out to fight.",
-          "fail": "They hold the highwaymen's camp. They will be bolder next time.",
-          "on_success": "g3",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "g3",
-          "type": "boss",
-          "name": "Black Tom the Highwayman",
-          "objective": "Defeat Black Tom the Highwayman",
-          "announce": "Black Tom the Highwayman stands at the highwaymen's camp. Bring friends.",
-          "center": [916, 777, 58.4],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12361,
-            "name": "Black Tom the Highwayman",
-            "level": 10,
-            "size": 65,
-            "pos": [916, 777, 58.4],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12361,
-                "name": "highwayman",
-                "level": [7, 7]
-              }
-            ]
-          },
-          "success": "Black Tom the Highwayman falls. Humberton will hear of this in the taverns tonight.",
-          "fail": "Black Tom the Highwayman slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu2_black_tom_the_highwayman_s_amulet", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Highwaymans Hold the Road to Humberton Village",
-          "objective": "Drive the highwaymans off the road to Humberton Village",
-          "announce": "With Highway Robbery lost, the highwaymans have spread down onto the road to Humberton Village and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [686, 769, 58.0],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12361,
-              "name": "highwayman",
-              "level": [7, 7]
-            },
-            {
-              "template": 12076,
-              "name": "cutpurse",
-              "level": [4, 4]
-            },
-            {
-              "template": 12447,
-              "name": "bandit",
-              "level": [5, 8]
-            }
-          ],
-          "boss": {
-            "template": 12361,
-            "name": "Highwayman warleader",
-            "level": 9,
-            "pos": [686, 769, 58.0],
-            "health_mult": 2
-          },
-          "success": "The highwaymans are gone from the road to Humberton Village. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cuthbert has come out to set the road to Humberton Village right. The highwaymans are coming back for it!",
-          "center": [686, 769, 58.0],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cuthbert",
-            "level": 8,
-            "pos": [686, 769, 58.0],
-            "health_mult": 10,
-            "template": 60167625,
-            "model": 27,
-            "equipment": "afbf0cbc-36a3-4471-b32a-057ae99619db"
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [748, 710, 57.4],
-              [771, 772, 58.7],
-              [743, 832, 56.8]
-            ],
-            "mobs": [
-              {
-                "template": 12361,
-                "name": "highwayman",
-                "level": [7, 7]
-              },
-              {
-                "template": 12076,
-                "name": "cutpurse",
-                "level": [4, 4]
-              },
-              {
-                "template": 12447,
-                "name": "bandit",
-                "level": [5, 8]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Humberton Village is safe again. Thank you.\"",
-          "success": "The highwaymans break and scatter. The road to Humberton Village is open again.",
-          "fail": "Roadwarden Cuthbert falls, and the highwaymans take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
-      ]
+      {
+       "template": 12235,
+       "name": "undead goblin fisherman",
+       "level": [
+        4,
+        4
+       ]
+      },
+      {
+       "template": 12236,
+       "name": "undead goblin warrior",
+       "level": [
+        5,
+        5
+       ]
+      }
+     ],
+     "success": "You have cleared the goblin weir. Gruk the Net-Master comes out to fight.",
+     "fail": "They hold the goblin weir. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
     },
     {
-      "id": "black_mountains_south_spider_hollow",
-      "title": "The Spider Hollow",
-      "levels": [6, 8],
-      "hint": "The woods are strung thick with webs...",
-      "rest_s": 45,
-      "first_delay_s": [120, 900],
-      "interval_s": [1500, 2700],
-      "start": "a1",
-      "stages": [
-        {
-          "id": "a1",
-          "type": "cull",
-          "name": "Clear Spider Hollow",
-          "objective": "Clear the spider hollow",
-          "announce": "Giant spiders have strung the woods so thick a cart can't pass, and two woodcutters never came home. Burn out their hollow.",
-          "center": [1268, 523, 53.9],
-          "radius": 60,
-          "time_s": 1200,
-          "kill": 12,
-          "alive": 7,
-          "mobs": [
-            {
-              "template": 12097,
-              "name": "giant spider",
-              "level": [6, 8]
-            }
-          ],
-          "success": "You have cleared the spider hollow. The Brood-Mother comes out to fight.",
-          "fail": "They hold the spider hollow. They will be bolder next time.",
-          "on_success": "a2",
-          "on_fail": "end",
-          "reward": { "xp_pct": 12, "copper_per_level": 80 }
-        },
-        {
-          "id": "a2",
-          "type": "boss",
-          "name": "The Brood-Mother",
-          "objective": "Defeat the Brood-Mother",
-          "announce": "The Brood-Mother stands at the spider hollow. Bring friends.",
-          "center": [1268, 523, 53.9],
-          "radius": 70,
-          "time_s": 1200,
-          "boss": {
-            "template": 12097,
-            "name": "The Brood-Mother",
-            "level": 10,
-            "size": 70,
-            "pos": [1268, 523, 53.9],
-            "health_mult": 2.5
-          },
-          "adds": {
-            "every_s": 60,
-            "count": 2,
-            "mobs": [
-              {
-                "template": 12097,
-                "name": "giant spider",
-                "level": [6, 8]
-              }
-            ]
-          },
-          "success": "The Brood-Mother falls. The way is safe again.",
-          "fail": "The Brood-Mother slips away - for now.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": {
-            "xp_pct": 20,
-            "copper_per_level": 150,
-            "items": [
-              { "id": "nu2_brood_mother_s_cloak", "gold_chance": 40, "silver_chance": 20 }
-            ]
-          }
-        },
-        {
-          "id": "o1",
-          "type": "occupy",
-          "name": "The Giant Spiders Hold the Road to Humberton Village",
-          "objective": "Drive the giant spiders off the road to Humberton Village",
-          "announce": "With The Spider Hollow lost, the giant spiders have spread down onto the road to Humberton Village and stop anyone who passes. They will stay until someone drives them out.",
-          "center": [754, 394, 58.6],
-          "radius": 70,
-          "count": 10,
-          "reinforce_s": 90,
-          "mobs": [
-            {
-              "template": 12097,
-              "name": "giant spider",
-              "level": [6, 8]
-            }
-          ],
-          "boss": {
-            "template": 12097,
-            "name": "Giant spider warleader",
-            "level": 9,
-            "pos": [754, 394, 58.6],
-            "health_mult": 2
-          },
-          "success": "The giant spiders are gone from the road to Humberton Village. It will need setting right.",
-          "fail": "",
-          "on_success": "o2",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 15, "copper_per_level": 100, "tokens": 6 }
-        },
-        {
-          "id": "o2",
-          "type": "defend",
-          "name": "Set It Right",
-          "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
-          "announce": "Roadwarden Cuthbert has come out to set the road to Humberton Village right. The giant spiders are coming back for it!",
-          "center": [754, 394, 58.6],
-          "radius": 70,
-          "duration_s": 120,
-          "protect": {
-            "name": "Roadwarden Cuthbert",
-            "level": 8,
-            "pos": [754, 394, 58.6],
-            "health_mult": 10
-          },
-          "waves": {
-            "every_s": 30,
-            "count": 2,
-            "from": [
-              [826, 350, 59.6],
-              [836, 415, 58.0],
-              [796, 468, 56.7]
-            ],
-            "mobs": [
-              {
-                "template": 12097,
-                "name": "giant spider",
-                "level": [6, 8]
-              }
-            ]
-          },
-          "thanks": "\"That's done - the road to Humberton Village is safe again. Thank you.\"",
-          "success": "The giant spiders break and scatter. The road to Humberton Village is open again.",
-          "fail": "Roadwarden Cuthbert falls, and the giant spiders take the road back.",
-          "on_success": "end",
-          "on_fail": "o1",
-          "reward": { "xp_pct": 10, "copper_per_level": 80, "tokens": 4 }
-        }
+     "id": "a2",
+     "type": "boss",
+     "name": "Gruk the Net-Master",
+     "objective": "Defeat Gruk the Net-Master",
+     "announce": "Gruk the Net-Master stands at the goblin weir. Bring friends.",
+     "center": [
+      436,
+      708,
+      42.1
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12171,
+      "name": "Gruk the Net-Master",
+      "level": 8,
+      "size": 57,
+      "pos": [
+       436,
+       708,
+       42.1
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12171,
+        "name": "goblin fisherman",
+        "level": [
+         4,
+         6
+        ]
+       }
       ]
+     },
+     "success": "Gruk the Net-Master falls. The way is safe again.",
+     "fail": "Gruk the Net-Master slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu2_gruk_the_net_master_s_armband",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Goblin Fishermans Hold the Road to Humberton Village",
+     "objective": "Drive the goblin fishermans off the road to Humberton Village",
+     "announce": "With The Goblin Fishers lost, the goblin fishermans have spread down onto the road to Humberton Village and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      446,
+      779,
+      58.1
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12171,
+       "name": "goblin fisherman",
+       "level": [
+        4,
+        6
+       ]
+      },
+      {
+       "template": 12235,
+       "name": "undead goblin fisherman",
+       "level": [
+        4,
+        4
+       ]
+      },
+      {
+       "template": 12236,
+       "name": "undead goblin warrior",
+       "level": [
+        5,
+        5
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12171,
+      "name": "Goblin fisherman warleader",
+      "level": 7,
+      "pos": [
+       446,
+       779,
+       58.1
+      ],
+      "health_mult": 2
+     },
+     "success": "The goblin fishermans are gone from the road to Humberton Village. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Hal, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Hal has come out to set the road to Humberton Village right. The goblin fishermans are coming back for it!",
+     "center": [
+      446,
+      779,
+      58.1
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Hal",
+      "level": 6,
+      "pos": [
+       446,
+       779,
+       58.1
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        416,
+        749,
+        54.3
+       ],
+       [
+        476,
+        809,
+        60.4
+       ],
+       [
+        416,
+        814,
+        58.1
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12171,
+        "name": "goblin fisherman",
+        "level": [
+         4,
+         6
+        ]
+       },
+       {
+        "template": 12235,
+        "name": "undead goblin fisherman",
+        "level": [
+         4,
+         4
+        ]
+       },
+       {
+        "template": 12236,
+        "name": "undead goblin warrior",
+        "level": [
+         5,
+         5
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Humberton Village is safe again. Thank you.\"",
+     "success": "The goblin fishermans break and scatter. The road to Humberton Village is open again.",
+     "fail": "Roadwarden Hal falls, and the goblin fishermans take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
     }
+   ]
+  },
+  {
+   "id": "black_mountains_south_red_dwarf_raid",
+   "title": "The Red Dwarf Raid",
+   "levels": [
+    5,
+    8
+   ],
+   "hint": "Red dwarves have been seen above the road...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "d1",
+   "stages": [
+    {
+     "id": "d1",
+     "type": "defend",
+     "name": "Protect Edwin the Carter",
+     "objective": "Protect Edwin the Carter, who is mending a broken wheel",
+     "announce": "Edwin the carter's wheel has broken on the pass road, and the red dwarves are coming down for his load.",
+     "center": [
+      1226,
+      277,
+      77.6
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Edwin the Carter",
+      "template": 60167629,
+      "level": 8,
+      "model": 28,
+      "equipment": "dfb0d504-70ce-4eed-8764-1bb80036b3e3",
+      "health_mult": 10,
+      "pos": [
+       1226,
+       277,
+       77.6
+      ]
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1306,
+        250,
+        78.4
+       ],
+       [
+        1276,
+        301,
+        80.0
+       ],
+       [
+        1251,
+        358,
+        71.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12205,
+        "name": "red dwarf thief",
+        "level": [
+         5,
+         7
+        ]
+       },
+       {
+        "template": 12199,
+        "name": "red dwarf bandit",
+        "level": [
+         6,
+         8
+        ]
+       }
+      ]
+     },
+     "success": "\"That's done,\" says Edwin the Carter. \"They came from over there - let's finish this.\"",
+     "fail": "Edwin the Carter falls. The attackers are left to do as they please - for now.",
+     "on_success": "d2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 8,
+      "copper_per_level": 60
+     }
+    },
+    {
+     "id": "d2",
+     "type": "cull",
+     "name": "Clear Carter's Road",
+     "objective": "Clear the carter's road",
+     "announce": "They came from the carter's road. Follow them back and clear it out.",
+     "center": [
+      1463,
+      397,
+      49.7
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12205,
+       "name": "red dwarf thief",
+       "level": [
+        5,
+        7
+       ]
+      },
+      {
+       "template": 12199,
+       "name": "red dwarf bandit",
+       "level": [
+        6,
+        8
+       ]
+      }
+     ],
+     "success": "You have cleared the carter's road. Brannoc Redbeard comes out to fight.",
+     "fail": "They hold the carter's road. They will be bolder next time.",
+     "on_success": "d3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "d3",
+     "type": "boss",
+     "name": "Brannoc Redbeard",
+     "objective": "Defeat Brannoc Redbeard",
+     "announce": "Brannoc Redbeard stands at the carter's road. Bring friends.",
+     "center": [
+      1463,
+      397,
+      49.7
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12199,
+      "name": "Brannoc Redbeard",
+      "level": 10,
+      "size": 58,
+      "pos": [
+       1463,
+       397,
+       49.7
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12205,
+        "name": "red dwarf thief",
+        "level": [
+         5,
+         7
+        ]
+       }
+      ]
+     },
+     "success": "Brannoc Redbeard falls. The way is safe again.",
+     "fail": "Brannoc Redbeard slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu2_brannoc_redbeard_s_eye",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Red Dwarf Thiefs Hold the Road to Humberton Village",
+     "objective": "Drive the red dwarf thiefs off the road to Humberton Village",
+     "announce": "With The Red Dwarf Raid lost, the red dwarf thiefs have spread down onto the road to Humberton Village and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1216,
+      779,
+      158.5
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12205,
+       "name": "red dwarf thief",
+       "level": [
+        5,
+        7
+       ]
+      },
+      {
+       "template": 12199,
+       "name": "red dwarf bandit",
+       "level": [
+        6,
+        8
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12205,
+      "name": "Red dwarf thief warleader",
+      "level": 9,
+      "pos": [
+       1216,
+       779,
+       158.5
+      ],
+      "health_mult": 2
+     },
+     "success": "The red dwarf thiefs are gone from the road to Humberton Village. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Edith, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Edith has come out to set the road to Humberton Village right. The red dwarf thiefs are coming back for it!",
+     "center": [
+      1216,
+      779,
+      158.5
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Edith",
+      "level": 8,
+      "pos": [
+       1216,
+       779,
+       158.5
+      ],
+      "health_mult": 10,
+      "template": 60167629,
+      "model": 28,
+      "equipment": "dfb0d504-70ce-4eed-8764-1bb80036b3e3"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        1197,
+        697,
+        134.5
+       ],
+       [
+        1262,
+        708,
+        92.8
+       ],
+       [
+        1300,
+        763,
+        111.5
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12205,
+        "name": "red dwarf thief",
+        "level": [
+         5,
+         7
+        ]
+       },
+       {
+        "template": 12199,
+        "name": "red dwarf bandit",
+        "level": [
+         6,
+         8
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Humberton Village is safe again. Thank you.\"",
+     "success": "The red dwarf thiefs break and scatter. The road to Humberton Village is open again.",
+     "fail": "Roadwarden Edith falls, and the red dwarf thiefs take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "black_mountains_south_highway_robbery",
+   "title": "Highway Robbery",
+   "levels": [
+    4,
+    8
+   ],
+   "hint": "Veteran Guard Osric is looking for help in Humberton.",
+   "rest_s": 45,
+   "giver": {
+    "name": "Veteran Guard Osric",
+    "template": 60167625,
+    "level": 9,
+    "model": 27,
+    "equipment": "afbf0cbc-36a3-4471-b32a-057ae99619db",
+    "guild": "the Pendragon's Watch",
+    "health_mult": 4,
+    "pos": [
+     593,
+     1040,
+     57.1
+    ],
+    "greet": "Black Tom and his highwaymen robbed the Ludlow coach again - and they let a cart of red-corded monks go by untouched. I know where they camp. Ride with me and we'll end it. Tell me when you're [ready].",
+    "accept": "ready",
+    "reply": "Good. Stay close - they will have watchers out. With me!",
+    "busy": "We've only just come back. Give my people a while to rest, then find me again.",
+    "cooldown_s": 900
+   },
+   "guards": [
+    {
+     "name": "Veteran Guard",
+     "template": 60167625,
+     "level": 8,
+     "model": 27,
+     "equipment": "afbf0cbc-36a3-4471-b32a-057ae99619db",
+     "guild": "the Pendragon's Watch",
+     "health_mult": 2,
+     "count": 3
+    }
+   ],
+   "start": "g1",
+   "stages": [
+    {
+     "id": "g1",
+     "type": "escort",
+     "name": "The Road to Highwaymen's Camp",
+     "objective": "Go with Veteran Guard Osric to the highwaymen's camp",
+     "announce": "Osric of the Humberton guard rides out after Black Tom's highwaymen.",
+     "radius": 60,
+     "time_s": 1500,
+     "path": [
+      [
+       695,
+       993,
+       90.2
+      ],
+      [
+       798,
+       947,
+       82.6
+      ],
+      [
+       900,
+       900,
+       56.9
+      ],
+      [
+       1002,
+       860,
+       51.2
+      ],
+      [
+       1103,
+       820,
+       79.7
+      ],
+      [
+       1205,
+       780,
+       158.9
+      ]
+     ],
+     "ambushes": [
+      {
+       "at": 3,
+       "count": 3,
+       "say": "Ambush! To me - hold together!",
+       "mobs": [
+        {
+         "template": 12361,
+         "name": "highwayman",
+         "level": [
+          7,
+          7
+         ]
+        },
+        {
+         "template": 12076,
+         "name": "cutpurse",
+         "level": [
+          4,
+          4
+         ]
+        }
+       ]
+      }
+     ],
+     "success": "Veteran Guard Osric reaches the highwaymen's camp. \"There they are. Clear them out!\"",
+     "fail": "Veteran Guard Osric falls on the road. The others carry the body home.",
+     "on_success": "g2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 60
+     },
+     "center": [
+      1000,
+      850,
+      50.5
+     ]
+    },
+    {
+     "id": "g2",
+     "type": "cull",
+     "name": "Clear Highwaymen's Camp",
+     "objective": "Clear the highwaymen's camp",
+     "announce": "Clear the highwaymen's camp!",
+     "center": [
+      1205,
+      780,
+      158.9
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12361,
+       "name": "highwayman",
+       "level": [
+        7,
+        7
+       ]
+      },
+      {
+       "template": 12076,
+       "name": "cutpurse",
+       "level": [
+        4,
+        4
+       ]
+      },
+      {
+       "template": 12447,
+       "name": "bandit",
+       "level": [
+        5,
+        8
+       ]
+      }
+     ],
+     "success": "You have cleared the highwaymen's camp. Black Tom the Highwayman comes out to fight.",
+     "fail": "They hold the highwaymen's camp. They will be bolder next time.",
+     "on_success": "g3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "g3",
+     "type": "boss",
+     "name": "Black Tom the Highwayman",
+     "objective": "Defeat Black Tom the Highwayman",
+     "announce": "Black Tom the Highwayman stands at the highwaymen's camp. Bring friends.",
+     "center": [
+      1205,
+      780,
+      158.9
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12361,
+      "name": "Black Tom the Highwayman",
+      "level": 10,
+      "size": 65,
+      "pos": [
+       1205,
+       780,
+       158.9
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12361,
+        "name": "highwayman",
+        "level": [
+         7,
+         7
+        ]
+       }
+      ]
+     },
+     "success": "Black Tom the Highwayman falls. Humberton will hear of this in the taverns tonight.",
+     "fail": "Black Tom the Highwayman slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu2_black_tom_the_highwayman_s_amulet",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Highwaymans Hold the Road to Humberton Village",
+     "objective": "Drive the highwaymans off the road to Humberton Village",
+     "announce": "With Highway Robbery lost, the highwaymans have spread down onto the road to Humberton Village and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      1000,
+      850,
+      50.5
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12361,
+       "name": "highwayman",
+       "level": [
+        7,
+        7
+       ]
+      },
+      {
+       "template": 12076,
+       "name": "cutpurse",
+       "level": [
+        4,
+        4
+       ]
+      },
+      {
+       "template": 12447,
+       "name": "bandit",
+       "level": [
+        5,
+        8
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12361,
+      "name": "Highwayman warleader",
+      "level": 9,
+      "pos": [
+       1000,
+       850,
+       50.5
+      ],
+      "health_mult": 2
+     },
+     "success": "The highwaymans are gone from the road to Humberton Village. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cuthbert has come out to set the road to Humberton Village right. The highwaymans are coming back for it!",
+     "center": [
+      1000,
+      850,
+      50.5
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cuthbert",
+      "level": 8,
+      "pos": [
+       1000,
+       850,
+       50.5
+      ],
+      "health_mult": 10,
+      "template": 60167625,
+      "model": 27,
+      "equipment": "afbf0cbc-36a3-4471-b32a-057ae99619db"
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        970,
+        820,
+        53.4
+       ],
+       [
+        1030,
+        880,
+        52.8
+       ],
+       [
+        970,
+        885,
+        54.7
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12361,
+        "name": "highwayman",
+        "level": [
+         7,
+         7
+        ]
+       },
+       {
+        "template": 12076,
+        "name": "cutpurse",
+        "level": [
+         4,
+         4
+        ]
+       },
+       {
+        "template": 12447,
+        "name": "bandit",
+        "level": [
+         5,
+         8
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Humberton Village is safe again. Thank you.\"",
+     "success": "The highwaymans break and scatter. The road to Humberton Village is open again.",
+     "fail": "Roadwarden Cuthbert falls, and the highwaymans take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "black_mountains_south_spider_hollow",
+   "title": "The Spider Hollow",
+   "levels": [
+    6,
+    8
+   ],
+   "hint": "The woods are strung thick with webs...",
+   "rest_s": 45,
+   "first_delay_s": [
+    120,
+    900
+   ],
+   "interval_s": [
+    1500,
+    2700
+   ],
+   "start": "a1",
+   "stages": [
+    {
+     "id": "a1",
+     "type": "cull",
+     "name": "Clear Spider Hollow",
+     "objective": "Clear the spider hollow",
+     "announce": "Giant spiders have strung the woods so thick a cart can't pass, and two woodcutters never came home. Burn out their hollow.",
+     "center": [
+      760,
+      280,
+      66.8
+     ],
+     "radius": 60,
+     "time_s": 1200,
+     "kill": 12,
+     "alive": 7,
+     "mobs": [
+      {
+       "template": 12097,
+       "name": "giant spider",
+       "level": [
+        6,
+        8
+       ]
+      }
+     ],
+     "success": "You have cleared the spider hollow. The Brood-Mother comes out to fight.",
+     "fail": "They hold the spider hollow. They will be bolder next time.",
+     "on_success": "a2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 80
+     }
+    },
+    {
+     "id": "a2",
+     "type": "boss",
+     "name": "The Brood-Mother",
+     "objective": "Defeat the Brood-Mother",
+     "announce": "The Brood-Mother stands at the spider hollow. Bring friends.",
+     "center": [
+      760,
+      280,
+      66.8
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12097,
+      "name": "The Brood-Mother",
+      "level": 10,
+      "size": 70,
+      "pos": [
+       760,
+       280,
+       66.8
+      ],
+      "health_mult": 2.5
+     },
+     "adds": {
+      "every_s": 60,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12097,
+        "name": "giant spider",
+        "level": [
+         6,
+         8
+        ]
+       }
+      ]
+     },
+     "success": "The Brood-Mother falls. The way is safe again.",
+     "fail": "The Brood-Mother slips away - for now.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 150,
+      "items": [
+       {
+        "id": "nu2_brood_mother_s_cloak",
+        "gold_chance": 40,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Giant Spiders Hold the Road to Humberton Village",
+     "objective": "Drive the giant spiders off the road to Humberton Village",
+     "announce": "With The Spider Hollow lost, the giant spiders have spread down onto the road to Humberton Village and stop anyone who passes. They will stay until someone drives them out.",
+     "center": [
+      754,
+      394,
+      58.6
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12097,
+       "name": "giant spider",
+       "level": [
+        6,
+        8
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12097,
+      "name": "Giant spider warleader",
+      "level": 9,
+      "pos": [
+       754,
+       394,
+       58.6
+      ],
+      "health_mult": 2
+     },
+     "success": "The giant spiders are gone from the road to Humberton Village. It will need setting right.",
+     "fail": "",
+     "on_success": "o2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    },
+    {
+     "id": "o2",
+     "type": "defend",
+     "name": "Set It Right",
+     "objective": "Protect Roadwarden Cuthbert, who is clearing the road and putting up a new waymarker",
+     "announce": "Roadwarden Cuthbert has come out to set the road to Humberton Village right. The giant spiders are coming back for it!",
+     "center": [
+      754,
+      394,
+      58.6
+     ],
+     "radius": 70,
+     "duration_s": 120,
+     "protect": {
+      "name": "Roadwarden Cuthbert",
+      "level": 8,
+      "pos": [
+       754,
+       394,
+       58.6
+      ],
+      "health_mult": 10
+     },
+     "waves": {
+      "every_s": 30,
+      "count": 2,
+      "from": [
+       [
+        724,
+        364,
+        58.3
+       ],
+       [
+        784,
+        424,
+        59.5
+       ],
+       [
+        724,
+        429,
+        60.1
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12097,
+        "name": "giant spider",
+        "level": [
+         6,
+         8
+        ]
+       }
+      ]
+     },
+     "thanks": "\"That's done - the road to Humberton Village is safe again. Thank you.\"",
+     "success": "The giant spiders break and scatter. The road to Humberton Village is open again.",
+     "fail": "Roadwarden Cuthbert falls, and the giant spiders take the road back.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 10,
+      "copper_per_level": 80,
+      "tokens": 4
+     }
+    }
+   ]
+  },
+  {
+   "id": "bs_badon_dead",
+   "title": "The Badon Dead",
+   "levels": [
+    10,
+    13
+   ],
+   "hint": "Mist on the river at Huw's ferry, and the sound of marching under the water...",
+   "rest_s": 45,
+   "first_delay_s": [
+    300,
+    1500
+   ],
+   "interval_s": [
+    1800,
+    3000
+   ],
+   "start": "b1",
+   "stages": [
+    {
+     "id": "b1",
+     "type": "defend",
+     "name": "Huw's Ferry",
+     "objective": "Keep Nest, Huw's wife, alive at the ferry",
+     "announce": "Arthur's dead from Mount Badon are walking up out of the river at Huw's ferry - raised in rotted mail, with their spears still in their hands!",
+     "center": [
+      720,
+      790,
+      58.0
+     ],
+     "radius": 70,
+     "duration_s": 180,
+     "protect": {
+      "name": "Nest the Ferry-Wife",
+      "level": 11,
+      "pos": [
+       720,
+       790,
+       58.0
+      ],
+      "health_mult": 8
+     },
+     "waves": {
+      "every_s": 25,
+      "count": 3,
+      "from": [
+       [
+        700,
+        740,
+        59.6
+       ],
+       [
+        760,
+        760,
+        59.2
+       ],
+       [
+        680,
+        770,
+        58.0
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12728,
+        "name": "drowned spearman of Badon",
+        "level": [
+         10,
+         12
+        ],
+        "size": 50
+       },
+       {
+        "template": 12728,
+        "name": "drowned spearman of Badon",
+        "level": [
+         10,
+         12
+        ],
+        "size": 50
+       },
+       {
+        "template": 12635,
+        "name": "undead goblin warrior",
+        "level": [
+         10,
+         11
+        ]
+       }
+      ]
+     },
+     "thanks": "\"Thirty years married to a ferryman and I never once had to fight the river.\"",
+     "success": "The drowned fall back into the river - all but one, who wades out with a captain's plume rotting on his helm.",
+     "fail": "Nest falls, and the drowned march up the bank.",
+     "on_success": "b2",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 12,
+      "copper_per_level": 90,
+      "tokens": 8
+     }
+    },
+    {
+     "id": "b2",
+     "type": "boss",
+     "name": "the Drowned Captain of Badon",
+     "objective": "Lay the Drowned Captain of Badon to rest",
+     "announce": "The Drowned Captain of Badon raises a red-dragon shield: 'Form on me! The Saxon is at the river!' He doesn't know you. Bring friends.",
+     "center": [
+      720,
+      790,
+      58.0
+     ],
+     "radius": 70,
+     "time_s": 1200,
+     "boss": {
+      "template": 12884,
+      "name": "the Drowned Captain of Badon",
+      "level": 14,
+      "size": 60,
+      "pos": [
+       720,
+       790,
+       58.0
+      ],
+      "health_mult": 3
+     },
+     "adds": {
+      "every_s": 40,
+      "count": 2,
+      "mobs": [
+       {
+        "template": 12728,
+        "name": "drowned spearman of Badon",
+        "level": [
+         10,
+         12
+        ],
+        "size": 50
+       }
+      ]
+     },
+     "success": "The captain sinks to his knees in the shallows. 'Badon,' he says. 'Did we hold?' And then he is only bones.",
+     "fail": "The drowned captain leads his men up onto the road.",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 25,
+      "copper_per_level": 180,
+      "tokens": 14,
+      "items": [
+       {
+        "id": "nu002_drowned_captain_s_plume",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    },
+    {
+     "id": "o1",
+     "type": "occupy",
+     "name": "The Drowned Hold the River Road",
+     "objective": "Drive the drowned spearmen off the river road",
+     "announce": "The drowned of Badon have formed a shield-wall on the river road, and turn back anyone who passes.",
+     "center": [
+      700,
+      860,
+      85.2
+     ],
+     "radius": 70,
+     "count": 10,
+     "reinforce_s": 90,
+     "mobs": [
+      {
+       "template": 12728,
+       "name": "drowned spearman of Badon",
+       "level": [
+        10,
+        12
+       ],
+       "size": 50
+      },
+      {
+       "template": 12635,
+       "name": "undead goblin warrior",
+       "level": [
+        10,
+        11
+       ]
+      }
+     ],
+     "boss": {
+      "template": 12728,
+      "name": "drowned shield-wall leader",
+      "level": 13,
+      "health_mult": 2,
+      "pos": [
+       700,
+       860,
+       85.2
+      ]
+     },
+     "success": "The road is clear again.",
+     "fail": "",
+     "on_success": "end",
+     "on_fail": "o1",
+     "reward": {
+      "xp_pct": 15,
+      "copper_per_level": 100,
+      "tokens": 6
+     }
+    }
+   ]
+  },
+  {
+   "id": "bs_vetusta_assault",
+   "title": "Retake Vetusta Abbey",
+   "levels": [
+    13,
+    17
+   ],
+   "manual": true,
+   "bots": 8,
+   "min_people": 4,
+   "bot_min_level": 10,
+   "hint": "Brother-Knight Gerent is gathering the Abbey Faithful on the road above Vetusta.",
+   "rest_s": 15,
+   "start": "v1",
+   "giver": {
+    "template": 60167630,
+    "model": 28,
+    "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+    "guild": "the Abbey Faithful",
+    "name": "Brother-Knight Gerent",
+    "level": 17,
+    "pos": [
+     600,
+     1370,
+     66.7
+    ],
+    "health_mult": 3,
+    "greet": "Vetusta's bell has rung and the brothers are coming home - but the Bishop's men still hold the cloister. Four at least, bots and all, and when you're ready, say [for Vetusta].",
+    "accept": "for Vetusta",
+    "reply": "Down to the abbey! Through the yard, hold the three doors, and the abbey is ours!",
+    "busy": "Not yet. The brothers are still coming down out of the hills. Rest, and gather.",
+    "cooldown_s": 120,
+    "thanks": "Vetusta is ours! Ring the bell!",
+    "regret": "Back up the road! We'll come again."
+   },
+   "guards": [
+    {
+     "template": 60167625,
+     "model": 27,
+     "equipment": "afbf0cbc-36a3-4471-b32a-057ae99619db",
+     "guild": "the Pendragon's Watch",
+     "name": "Watchman of Humberton",
+     "level": 14,
+     "count": 2
+    },
+    {
+     "template": 60167630,
+     "model": 32,
+     "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+     "guild": "the Abbey Faithful",
+     "name": "brother of Vetusta",
+     "level": 13,
+     "count": 2
+    }
+   ],
+   "stages": [
+    {
+     "id": "v1",
+     "type": "cull",
+     "name": "The Abbey Yard",
+     "objective": "Clear the Bishop's brothers from the abbey yard",
+     "announce": "Into the yard! The Bishop's brothers are coming out of the cloister to meet us!",
+     "center": [
+      560,
+      1470,
+      60.8
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "kill": 20,
+     "alive": 8,
+     "mobs": [
+      {
+       "template": 12284,
+       "name": "dark brother",
+       "level": [
+        13,
+        15
+       ],
+       "guild": "the Brethren of Vetusta"
+      },
+      {
+       "template": 12284,
+       "name": "dark brother",
+       "level": [
+        13,
+        15
+       ],
+       "guild": "the Brethren of Vetusta"
+      },
+      {
+       "template": 12328,
+       "name": "dark brother-in-arms",
+       "level": [
+        14,
+        16
+       ],
+       "guild": "the Brethren of Vetusta"
+      },
+      {
+       "template": 12075,
+       "name": "crimson initiate",
+       "level": [
+        14,
+        16
+       ],
+       "guild": "the Crimson"
+      }
+     ],
+     "success": "The yard is ours. The red-corded brothers fall back to the doors.",
+     "fail": "The Faithful are thrown back up the road.",
+     "on_success": "v2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 120,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "v2",
+     "type": "wards",
+     "name": "The Three Doors",
+     "objective": "Hold the chapel, cloister and bell-tower doors at once",
+     "announce": "The Bishop's men hold three doors - the chapel, the cloister and the bell tower. Stand on all three at once and the Faithful will bar them!",
+     "center": [
+      549,
+      1500,
+      60.8
+     ],
+     "radius": 80,
+     "wards": [
+      [
+       520,
+       1490,
+       60.8
+      ],
+      [
+       575,
+       1515,
+       60.8
+      ],
+      [
+       555,
+       1460,
+       60.8
+      ]
+     ],
+     "ward_names": [
+      "the chapel door",
+      "the cloister door",
+      "the bell-tower door"
+     ],
+     "ward_radius": 20,
+     "hold_s": 30,
+     "time_s": 900,
+     "alive": 2,
+     "mobs": [
+      {
+       "template": 12284,
+       "name": "dark brother",
+       "level": [
+        13,
+        15
+       ],
+       "guild": "the Brethren of Vetusta"
+      },
+      {
+       "template": 12328,
+       "name": "dark brother-in-arms",
+       "level": [
+        14,
+        16
+       ],
+       "guild": "the Brethren of Vetusta"
+      }
+     ],
+     "reinforce_s": 40,
+     "flag": 466,
+     "flag_name": "banner of Vetusta",
+     "success": "The doors are barred - and out of the crypt stair comes the Bishop's sword.",
+     "fail": "The doors hold. The Faithful fall back.",
+     "on_success": "v3",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 14,
+      "copper_per_level": 120,
+      "tokens": 10
+     }
+    },
+    {
+     "id": "v3",
+     "type": "boss",
+     "name": "Brother-Captain Hrodric",
+     "objective": "Defeat Brother-Captain Hrodric, the Bishop's Sword",
+     "announce": "Brother-Captain Hrodric, the Bishop's Sword, red cord over his mail: 'The Lady gave this abbey to my master. I give it to no one.'",
+     "center": [
+      549,
+      1500,
+      60.8
+     ],
+     "radius": 80,
+     "time_s": 1200,
+     "boss": {
+      "template": 12328,
+      "name": "Brother-Captain Hrodric",
+      "level": 18,
+      "size": 62,
+      "health_mult": 2.5,
+      "guild": "the Bishop's Sword"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 12328,
+        "name": "dark brother-in-arms",
+        "level": [
+         14,
+         16
+        ],
+        "guild": "the Brethren of Vetusta"
+       },
+       {
+        "template": 12075,
+        "name": "crimson initiate",
+        "level": [
+         14,
+         16
+        ],
+        "guild": "the Crimson"
+       }
+      ]
+     },
+     "success": "Hrodric falls on the chapel steps. Vetusta's bell rings out over the mountains, and the Abbey Faithful come home.",
+     "fail": "Hrodric drives the Faithful out of the yard.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 35,
+      "copper_per_level": 240,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "va002_hrodric_s_red_cord",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bs_vetusta_return",
+   "title": "The Red Abbot",
+   "levels": [
+    14,
+    17
+   ],
+   "manual": true,
+   "bots": 8,
+   "bot_min_level": 10,
+   "hint": "Red torches on the road from Ludlow: the Red Abbot has come for Vetusta.",
+   "wake_m": 200,
+   "auto_fail_s": 900,
+   "start": "x1",
+   "stages": [
+    {
+     "id": "x1",
+     "type": "defend",
+     "name": "The Chapel Steps",
+     "objective": "Keep Sacristan Hywel alive on the chapel steps",
+     "announce": "The Red Abbot's brothers are at the gate! Every red cord in the mountains. Hold the chapel steps!",
+     "center": [
+      549,
+      1500,
+      60.8
+     ],
+     "radius": 70,
+     "duration_s": 200,
+     "protect": {
+      "template": 60167630,
+      "model": 32,
+      "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+      "guild": "the Abbey Faithful",
+      "name": "Sacristan Hywel",
+      "level": 16,
+      "pos": [
+       549,
+       1500,
+       60.8
+      ],
+      "health_mult": 5
+     },
+     "waves": {
+      "every_s": 22,
+      "count": 4,
+      "from": [
+       [
+        610,
+        1520,
+        70.2
+       ],
+       [
+        500,
+        1530,
+        60.9
+       ],
+       [
+        560,
+        1420,
+        60.8
+       ]
+      ],
+      "mobs": [
+       {
+        "template": 12284,
+        "name": "dark brother",
+        "level": [
+         13,
+         15
+        ],
+        "guild": "the Brethren of Vetusta"
+       },
+       {
+        "template": 12328,
+        "name": "dark brother-in-arms",
+        "level": [
+         14,
+         16
+        ],
+        "guild": "the Brethren of Vetusta"
+       },
+       {
+        "template": 12075,
+        "name": "crimson initiate",
+        "level": [
+         14,
+         16
+        ],
+        "guild": "the Crimson"
+       },
+       {
+        "template": 12161,
+        "name": "filidh sacrificer",
+        "level": [
+         14,
+         15
+        ],
+        "guild": "the Crimson"
+       }
+      ]
+     },
+     "success": "The first rush breaks - and the Red Abbot walks through the gate.",
+     "fail": "Sacristan Hywel falls on the steps.",
+     "on_success": "x2",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 20,
+      "copper_per_level": 140,
+      "tokens": 14
+     }
+    },
+    {
+     "id": "x2",
+     "type": "boss",
+     "name": "the Red Abbot",
+     "objective": "Defeat the Red Abbot",
+     "announce": "The Red Abbot, in Burhoff's own cope: 'The Bishop sends his blessing. All of it.'",
+     "center": [
+      549,
+      1500,
+      60.8
+     ],
+     "radius": 70,
+     "time_s": 900,
+     "boss": {
+      "template": 12075,
+      "name": "the Red Abbot",
+      "level": 18,
+      "size": 62,
+      "health_mult": 2.5,
+      "guild": "of the Crimson"
+     },
+     "adds": {
+      "every_s": 35,
+      "count": 3,
+      "mobs": [
+       {
+        "template": 12328,
+        "name": "dark brother-in-arms",
+        "level": [
+         14,
+         16
+        ],
+        "guild": "the Brethren of Vetusta"
+       },
+       {
+        "template": 12161,
+        "name": "filidh sacrificer",
+        "level": [
+         14,
+         15
+        ],
+        "guild": "the Crimson"
+       }
+      ]
+     },
+     "success": "The Red Abbot falls. Vetusta holds - for now.",
+     "fail": "The Red Abbot takes Vetusta back.",
+     "on_success": "end",
+     "on_fail": "end",
+     "reward": {
+      "xp_pct": 30,
+      "copper_per_level": 200,
+      "tokens": 20,
+      "items": [
+       {
+        "id": "va002_red_abbot_s_cope_clasp",
+        "gold_chance": 35,
+        "silver_chance": 20
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "siege": {
+  "id": "vetusta",
+  "name": "Vetusta Abbey",
+  "enemy": "the Bishop's brothers",
+  "resolve_name": "The Faithful's resolve",
+  "enemy_name": "The Bishop's hold",
+  "faction": "abbey_faithful",
+  "feeds": {
+   "bs_badon_dead": 15,
+   "black_mountains_south_highway_robbery": 10,
+   "black_mountains_south_goblin_fishers": 10,
+   "black_mountains_south_red_dwarf_raid": 5,
+   "black_mountains_south_spider_hollow": 5
+  },
+  "feed_default": 5,
+  "quests": {
+   "bs_camlann_dead": 10,
+   "bs_robbers_landing": 10,
+   "bs_highway": 10,
+   "bs_bishops_letters": 20,
+   "bs_bells_of_vetusta": 25,
+   "bs_badon_cairn": 15,
+   "willing_heart": 10
+  },
+  "enemy_feeds": {
+   "bs_badon_dead": 15
+  },
+  "enemy_default": 5,
+  "war_chain": "bs_badon_dead",
+  "assault": "bs_vetusta_assault",
+  "raids": [],
+  "last_raid": "bs_vetusta_return",
+  "hold_h": 2,
+  "raid_gap_h": [
+   2,
+   1.5,
+   1.5
+  ],
+  "criers": [
+   "bs_prior_anselm",
+   "bs_reeve_gwenda"
+  ],
+  "bots_go_after_m": 30,
+  "open_text": "Hear me! The Abbey Faithful mean to take Vetusta back from the Bishop's brothers! Brother-Knight Gerent waits on the road above the abbey. If no one leads within the half-hour, the Faithful go without you.",
+  "taken_text": "Vetusta is ours! The bell rings again over the mountains, and the Faithful keep the abbey yard - go and see.",
+  "repelled_text": "The Faithful have been thrown back from Vetusta. The Bishop's brothers grow bolder.",
+  "raid_text": "Red torches on the Ludlow road: the Bishop's brothers are coming back for Vetusta!",
+  "held_text": "The red-corded brothers are thrown back from the gate. Vetusta holds.",
+  "fall_text": "Vetusta has fallen to the Red Abbot. The bell is bound again, and the Faithful must rebuild their resolve.",
+  "carry_text": "Brother-Knight Gerent leads you down the abbey road at a run.",
+  "carried_cry": "The Faithful wouldn't wait any longer - they have stormed {0}!",
+  "hostile_tier": "yellow",
+  "sites": [
+   "vetusta_abbey",
+   "abbey_cloister"
+  ],
+  "held_only": [
+   "Brother Darren",
+   "Brother Don",
+   "Brother Tanis",
+   "Sir Lukas",
+   "Sister Deane",
+   "Zenob Mra",
+   "Veteran Guard",
+   "veteran guard"
+  ],
+  "held_only_m": 120,
+  "staging": [
+   600,
+   1370,
+   66.7
+  ],
+  "landing": [
+   560,
+   1470,
+   60.8
+  ],
+  "area": [
+   549,
+   1500,
+   100
+  ],
+  "camp_npcs": [
+   {
+    "template": 60167630,
+    "model": 32,
+    "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+    "guild": "the Abbey Faithful",
+    "kind": "marks",
+    "name": "Cellarer Bede",
+    "level": 16,
+    "pos": [
+     530,
+     1480,
+     60.8
+    ],
+    "greet": "The abbey's own stock, for those who took it back and those who keep it.",
+    "stock": [
+     {
+      "item": "va002_vetusta_bell_cloak",
+      "price": 60
+     },
+     {
+      "item": "va002_cloister_key_ring",
+      "price": 40
+     },
+     {
+      "item": "va002_white_cord_belt",
+      "price": 40
+     },
+     {
+      "item": "va002_abbey_wall_bracer",
+      "price": 40
+     },
+     {
+      "item": "tw_strong_draught_of_healing",
+      "price": 2
+     },
+     {
+      "item": "tw_strong_draught_of_power",
+      "price": 2
+     }
+    ]
+   },
+   {
+    "template": 60167630,
+    "model": 38,
+    "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+    "guild": "the Abbey Faithful",
+    "kind": "coin",
+    "name": "Infirmarian Gwladys",
+    "level": 14,
+    "pos": [
+     565,
+     1485,
+     60.9
+    ],
+    "greet": "The infirmary's open again. Brews from the abbey garden. Coin, mind - the roof needs mending.",
+    "stock": [
+     {
+      "item": "va002_infirmary_draught"
+     },
+     {
+      "item": "va002_abbey_garden_tonic"
+     },
+     {
+      "item": "va002_vetusta_mead"
+     }
+    ]
+   },
+   {
+    "template": 60167630,
+    "model": 32,
+    "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+    "guild": "the Abbey Faithful",
+    "kind": "idle",
+    "name": "brother of Vetusta",
+    "level": 12,
+    "pos": [
+     545,
+     1510,
+     60.8
+    ],
+    "count": 3,
+    "idle": "Three months on the road with nothing but our habits. It's good to sleep under a roof."
+   },
+   {
+    "template": 60167630,
+    "model": 32,
+    "equipment": "eab1762c-33e7-4620-9e02-985d820d0369",
+    "guild": "the Abbey Faithful",
+    "kind": "idle",
+    "name": "Brother Porter Wyn",
+    "level": 14,
+    "pos": [
+     540,
+     1492,
+     60.8
+    ],
+    "idle": "The bell rings the hours again. Listen."
+   }
+  ],
+  "holdouts": [
+   {
+    "kind": "holdout",
+    "name": "red-corded brother",
+    "template": 12284,
+    "level": 15,
+    "pos": [
+     600,
+     1560,
+     67.0
+    ],
+    "count": 3,
+    "tier": "yellow",
+    "respawn_s": 300
+   },
+   {
+    "kind": "holdout",
+    "name": "Bishop's crypt-guard",
+    "template": 12328,
+    "level": 16,
+    "pos": [
+     538,
+     1578,
+     60.8
+    ],
+    "count": 2,
+    "tier": "orange",
+    "respawn_s": 600
+   }
   ]
+ }
 }

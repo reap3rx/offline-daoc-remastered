@@ -1,0 +1,26 @@
+{
+ "zone": 9,
+ "region": 1,
+ "realm": 1,
+ "prefix": "nu009",
+ "story": true,
+ "items": [
+  {
+   "story_reward": true,
+   "scaled": true,
+   "name": "Oarsmaster's Ring",
+   "base": [
+    41,
+    35
+   ],
+   "level": 22,
+   "bonuses": {
+    "Str": 7,
+    "Con": 7,
+    "Dex": 4,
+    "Hits": 19
+   },
+   "lore": "Salt-white bronze, from the oar of the black barge."
+  }
+ ]
+}

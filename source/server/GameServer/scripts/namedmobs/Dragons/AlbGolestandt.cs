@@ -51,6 +51,13 @@ namespace DOL.GS
 
 		public override void TakeDamage(GameObject source, eDamageType damageType, int damageAmount, int criticalAmount)
 		{
+			// sealed in the giants' stone until the Dragon-Watch holds the moor (AlbionCampaign.cs, round 4 of Albion's plan)
+			if (DOL.GS.DynamicEvents.AlbionCampaign.GolestandtSealed)
+			{
+				if ((source as GamePlayer ?? (source as GameSummonedPet)?.Owner as GamePlayer) is GamePlayer sealedFor)
+					sealedFor.Out.SendMessage("Your blow rings off granite. Golestandt sleeps in the giants' stone while their king's throne is filled.", eChatType.CT_System, eChatLoc.CL_ChatWindow);
+				return;
+			}
 			if (DragonLairPlacement.CanReceiveDamageFrom(source))
 			{
 				if (!IsWithinRadius(spawnPoint,LairRadius))//dragon take 0 dmg is it's out of his lair
@@ -204,7 +211,7 @@ namespace DOL.GS
 		}
 		public override void StartAttack(GameObject target)
 		{
-			if (AlbGolestandtBrain.IsRestless)
+			if (AlbGolestandtBrain.IsRestless || DOL.GS.DynamicEvents.AlbionCampaign.GolestandtSealed)
 				return;
 			else
 				base.StartAttack(target);
@@ -330,6 +337,13 @@ namespace DOL.AI.Brain
 		}
 		public override void Think()
 		{
+			if (DOL.GS.DynamicEvents.AlbionCampaign.GolestandtSealed)
+			{
+				// sealed: he sleeps in the stone, whole, and nothing he does reaches out of it
+				ClearAggroList();
+				Body.Health = Body.MaxHealth;
+				return;
+			}
             bool encounterAggro = CheckProximityAggro();
             EncounterAdds.Tick(Body, AggroList.Select(static entry => entry.Key), encounterAggro, IsRestless);
             if (encounterAggro) DragonDiagnostics.Fighting(Body, AggroList.Count);
