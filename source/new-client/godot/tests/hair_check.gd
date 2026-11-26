@@ -26,6 +26,11 @@ func _ready() -> void:
 		var xz := String(args["spot"]).split(",")
 		base = Vector3(float(xz[0]), 0.0, float(xz[1]))
 		base.y = v.zone.height_at(base.x, base.z)
+	if args.has("flow"):                         # (to compare: the hair's flow, the remastered look)
+		Fig3Figure.hair_flow_on = String(args["flow"]) == "1"
+	if args.has("fx"):
+		RenderingServer.global_shader_parameter_set("remaster_fx", float(args["fx"]))
+	var only: Array = String(args.get("styles", "")).split(",", false)
 	cam = Camera3D.new()
 	cam.near = 0.02
 	cam.fov = 24.0
@@ -52,12 +57,22 @@ func _ready() -> void:
 		var offer: Array = fig.creator_styles()
 		var styles: Array = fig.meta.get("hair_styles", [])
 		for hi in offer:
+			if not only.is_empty() and not only.has(str(int(hi))):
+				continue
 			fig.apply({"hair": int(hi)})
+			if args.has("fit"):                      # (trying a fit: added over the style's saved one)
+				var node := String(styles[int(hi)].get("node", ""))
+				var base_fit := fig.hair_fit_of(node).duplicate()
+				for kv in String(args["fit"]).split(";", false):        # (size:0.4;height:0.3 - quotes don't survive the shell)
+					var k := String(kv).get_slice(":", 0)
+					base_fit[k] = float(base_fit.get(k, 0.0)) + float(String(kv).get_slice(":", 1))
+				fig.apply({"hair_fit": {node: base_fit}})
+				print("[hc] fit ", node, " ", base_fit)
 			await _frames(3)
 			for view in [["front", 35.0], ["back", 160.0]]:
 				_aim(sk, hb, float(view[1]))
 				await _frames(2)
-				get_viewport().get_texture().get_image().save_png("%s/%s_hair_%02d_%s.png" % [out, prefix, int(hi), view[0]])
+				get_viewport().get_texture().get_image().save_png("%s/%s_hair_%02d_%s%s.png" % [out, prefix, int(hi), view[0], String(args.get("tag", ""))])
 		print("[hc] ", prefix, " ", offer.size(), " styles")
 		if String(args.get("helms", "1")) != "0":
 			# a short style and a long one (by label), each helm model file once
@@ -69,12 +84,19 @@ func _ready() -> void:
 					short_i = int(hi)
 				if lab.begins_with("Long"):
 					long_i = int(hi)
+			if short_i < 0:                          # (no Short style - the women's lists: the first Medium, else the first)
+				for hi in offer:
+					if String(styles[int(hi)].get("label", "")).begins_with("Medium"):
+						short_i = int(hi)
+						break
+				if short_i < 0 and offer.size() > 0:
+					short_i = int(offer[0])
 			fig.set_helm(0, false, 0)
 			var seen := {}
 			var models := []
 			for k in Fig3Figure._helms:
-				var e = (Fig3Figure._helms[k] as Dictionary).get(prefix)
-				if e is Dictionary and not seen.has(String(e.get("file", ""))):
+				var e = Fig3Figure.helm_entry(int(k), String(fig.meta.get("prefix", prefix)))
+				if e is Dictionary and e.has("file") and not seen.has(String(e.get("file", ""))):
 					seen[String(e.get("file", ""))] = true
 					models.append(int(k))
 			models.sort()

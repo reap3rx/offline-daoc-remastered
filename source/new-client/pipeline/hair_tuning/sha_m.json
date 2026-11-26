@@ -6,12 +6,14 @@
    "fit": {
     "depth": -0.23,
     "fwd": 0.04,
-    "height": 0.61,
+    "height": 0.91,
     "lr": 0.13,
-    "size": 0.38,
+    "size": 0.78,
     "up": -0.54,
     "width": -0.32
-   }
+   },
+   "node": "new_hair_4",
+   "done": "2026-11-26"
   },
   "hair:Pointed Ears/Var 10a.obj": {
    "copied_from": "elf_m",
@@ -27,9 +29,12 @@
    "copied_from": "elf_m",
    "disabled": false,
    "fit": {
-    "height": 0.5,
-    "up": -0.26
-   }
+    "height": 0.8,
+    "up": -0.26,
+    "size": 0.4
+   },
+   "node": "new_hair_7",
+   "done": "2026-11-26"
   },
   "hair:Pointed Ears/Var 15.obj": {
    "copied_from": "elf_m",
@@ -50,9 +55,12 @@
    "copied_from": "elf_m",
    "disabled": false,
    "fit": {
-    "height": 0.21,
-    "up": -0.2
-   }
+    "height": 0.51,
+    "up": -0.2,
+    "size": 0.4
+   },
+   "node": "new_hair_10",
+   "done": "2026-11-26"
   },
   "hair:Pointed Ears/Var 17.obj": {
    "copied_from": "elf_m",
@@ -113,8 +121,12 @@
    "copied_from": "elf_m",
    "disabled": false,
    "fit": {
-    "up": -0.27
-   }
+    "up": -0.27,
+    "size": 0.4,
+    "height": 0.3
+   },
+   "node": "new_hair_1",
+   "done": "2026-11-26"
   },
   "hair:Pointed Ears/Var 5.obj": {
    "copied_from": "elf_m",
@@ -127,8 +139,12 @@
    "fit": {
     "fwd": 0.19,
     "up": -0.31,
-    "width": -0.24
-   }
+    "width": -0.24,
+    "size": 0.4,
+    "height": 0.3
+   },
+   "node": "new_hair_3",
+   "done": "2026-11-26"
   }
  },
  "race": "sha_m"

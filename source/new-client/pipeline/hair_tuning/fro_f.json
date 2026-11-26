@@ -240,13 +240,15 @@
    "fit": {
     "depth": -0.53,
     "fwd": 0.04,
-    "height": 0.37,
+    "height": 0.67,
     "len": -0.33,
     "lr": 0.05,
-    "size": 0.44,
+    "size": 0.84,
     "up": -0.19,
     "width": -0.57
-   }
+   },
+   "node": "new_hair_4",
+   "done": "2026-11-26"
   },
   "hair:Pointed Ears/Var 4.obj": {
    "copied_from": "elf_f",

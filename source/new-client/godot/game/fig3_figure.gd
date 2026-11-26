@@ -127,8 +127,27 @@ static func helm_path(model: int, prefix: String) -> String:
 		var t = JSON.parse_string(FileAccess.get_file_as_string("res://content/helms/helms.json")) \
 				if FileAccess.file_exists("res://content/helms/helms.json") else null
 		_helms = t.get("models", {}) if t is Dictionary else {"_": {}}
-	var e: Dictionary = _helms.get(str(model), {}).get(prefix, {})
+	var e := helm_entry(model, prefix)
 	return "res://content/helms/" + String(e.file) if e.has("file") else ""
+
+
+## The helms a race has none of its own for (the hair and helm check, 2026-11-26: Frostalf, Shar and Half Ogre had no
+## helms at all, Briton women 12 of 32): the nearest race of the same sex's, sized by the two skulls (hair_extra.py's
+## skull radii) - [stand-in, scale].
+const HELM_STAND_IN := {"bri_f": ["hig_f", 0.99], "fro_m": ["nor_m", 1.03], "fro_f": ["nor_f", 1.02],
+	"sha_m": ["fir_m", 0.97], "sha_f": ["fir_f", 1.04], "hal_m": ["hig_m", 1.09], "hal_f": ["hig_f", 1.10]}
+
+
+## One helm model's entry for a race (helms.json: file, hair, scale), its stand-in's when it has none of its own.
+static func helm_entry(model: int, prefix: String) -> Dictionary:
+	var all: Dictionary = _helms.get(str(model), {})
+	var e: Dictionary = all.get(prefix, {})
+	if e.is_empty() and HELM_STAND_IN.has(prefix):
+		var si: Array = HELM_STAND_IN[prefix]
+		e = (all.get(String(si[0]), {}) as Dictionary).duplicate()
+		if not e.is_empty():
+			e["scale"] = float(e.get("scale", 100)) * float(si[1])
+	return e
 
 
 ## The seed an NPC figure's look comes from: its id, except a King / Queen's retinue (mod 2026-10-25: the server's
@@ -1991,7 +2010,7 @@ func set_helm(model: int, hidden := false, color := 0) -> void:
 		_full_helm_tex = String(top.get("tex", ""))
 	_apply_full_helm()
 	if model > 0 and not hidden and not _hood_covers() and _full_helm == 0:     # (a raised hood hides the helm)
-		var e: Dictionary = _helms.get(str(model), {}).get(String(meta.get("prefix", "")), {})
+		var e := helm_entry(model, String(meta.get("prefix", "")))
 		var skel: Skeleton3D = null
 		var sk := find_children("*", "Skeleton3D", true, false)
 		if sk.size() > 0:
@@ -3070,7 +3089,7 @@ void vertex() {
 			vec3 rip = side * sin(ph) * 0.8 + sway_back * (0.5 + 0.5 * sin(ph * 0.73 + 1.7)) * 0.6;
 			np += rip * hair_wave.x * w * w;
 			if (hair_len > 0.15) {
-				hair_tip = smoothstep(hair_len - 0.09, hair_len - 0.01, below + 0.1);
+				hair_tip = smoothstep(hair_len - 0.07, hair_len - 0.005, below - 0.1);    // (sway_head: 0.1 above the head bone)
 			}
 		}
 		if (away * behind > 0.0) {
@@ -4123,8 +4142,9 @@ class Sway extends SkeletonModifier3D:
 			hm.set_shader_parameter("sway_head", head_w)
 			hm.set_shader_parameter("sway_back", back_w)
 			if Fig3Figure.hair_flow_on:
-				if hm.get_instance_id() != _len_id:
-					_len_id = hm.get_instance_id()
+				var lk := hash([hm.get_instance_id(), fig.look.get("hair", 0), fig.look.get("hair_fit", {})])
+				if lk != _len_id:                    # (measured again for each style and fit)
+					_len_id = lk
 					_hair_len = _measure_len(sk, hm)
 				# the ripple: a breeze standing (with the wind), more running and turning; it settles slowly
 				var want := 0.009 * clampf(Fig3Figure.wind, 0.5, 2.0) + minf(speed, 8.0) * 0.003 + minf(absf(_om), 4.0) * 0.008
