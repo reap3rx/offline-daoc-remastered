@@ -7,7 +7,7 @@ from scipy.spatial import cKDTree
 def classic_ear(cP, ears_c, sx):
     """One side's classic ear: its root (where it leaves the skull), its tip, its length."""
     m = ears_c & (cP[:, 0] * sx > 0)
-    if m.sum() < 6:
+    if m.sum() < 4:                                     # (a low classic ear - the Firbolg man's right: 5 points)
         return None
     Q = cP[m]
     inner = Q[np.abs(Q[:, 0]) < np.percentile(np.abs(Q[:, 0]), 25)]

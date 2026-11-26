@@ -141,6 +141,22 @@ func _build_model() -> void:
 			var comp := String(PlayerData.get_meta("companion", "")) if PlayerData.has_meta("companion") else ""
 			if comp != "" and String(spawn.get("name", "")) == comp:
 				f.set_hd(true)
+				# the look you gave your companion (EDIT COMPANION on the customize screen: user://companion_looks.json,
+				# kept per character; it opens there once your companion has been seen here) - else the face you gave
+				# companions of its race (USE FACE FOR MY COMPANION: user://looks/companion_<race>.json)
+				var lk := companion_seen(comp, String(info.race))
+				if not lk.is_empty():
+					f.look = {}
+					f.apply(lk)
+					f.set_shape(lk.get("shape", {}))
+				else:
+					var cf := "user://looks/companion_%s.json" % String(info.race)
+					if FileAccess.file_exists(cf):
+						var face = JSON.parse_string(FileAccess.get_file_as_string(cf))
+						if face is Dictionary:
+							f.apply(face)
+							if (face as Dictionary).has("shape"):
+								f.set_shape(face.shape)
 			tb = _pb("figure", tb)
 			_dress(f)
 			tb = _pb("dress", tb)
@@ -602,6 +618,44 @@ uniform float ghost_white = 0.0;")
 
 
 ## A stable look for a figure NPC from its id (Fig3Figure.npc_look).
+## Your companions' looks (owner 2026-11-25: "a button to Edit Companion in the character customization screen ...
+## greyed out until you unlock your companion"; synced with the save - the launcher's CloudSave): character name ->
+## {name: the companion's, prefix: its figure (race and sex), look: the look given it in the creator (once edited)}.
+const COMPANION_LOOKS := "user://companion_looks.json"
+
+
+static func companion_looks() -> Dictionary:
+	if not FileAccess.file_exists(COMPANION_LOOKS):
+		return {}
+	var d = JSON.parse_string(FileAccess.get_file_as_string(COMPANION_LOOKS))
+	return d if d is Dictionary else {}
+
+
+static func save_companion_looks(d: Dictionary) -> void:
+	var f := FileAccess.open(COMPANION_LOOKS, FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify(d))
+
+
+## Your companion came into view: noted against the character you play (so the customize screen can open it), its
+## figure changed (a new companion of another race or sex) dropping the look made for the old one. -> the look to wear
+## ({} for its own).
+static func companion_seen(comp: String, prefix: String) -> Dictionary:
+	var me := String(Server.selected.get("name", "")) if Server.selected is Dictionary else ""
+	if me == "":
+		return {}
+	var all := companion_looks()
+	var e: Dictionary = all.get(me, {}) if all.get(me) is Dictionary else {}
+	if String(e.get("name", "")) != comp or String(e.get("prefix", "")) != prefix:
+		if String(e.get("prefix", "")) != prefix:
+			e.erase("look")
+		e["name"] = comp
+		e["prefix"] = prefix
+		all[me] = e
+		save_companion_looks(all)
+	return e.get("look", {}) if e.get("look") is Dictionary else {}
+
+
 func _look(f: Fig3Figure) -> Dictionary:
 	return Fig3Figure.npc_look(Fig3Figure.look_seed(spawn), f.meta)   # (NpcManager prepares its textures from the same look)
 

@@ -146,11 +146,14 @@ def detail(PV, T2, UV2, eyes, mouth, nose):
     pores = np.clip(noise(1.1) * 0.8 - 0.9, -3, 0) * -1          # small pits
     fine = noise(2.5) * 0.25 + noise(6) * 0.15
     lipline = np.sin(img[..., 3] * 70.0) * 0.5 * np.clip(img[..., 2] * 1.6 - 0.4, 0, 1)
-    h = 0.5 - 0.22 * pores * img[..., 1] + 0.05 * fine - 0.18 * np.clip(crease, 0, 1) + 0.04 * lipline
-    ao = 1.0 - 0.4 * np.clip(crease, 0, 1) - 0.02 * pores * img[..., 1]
+    # (the HD look, owner 2026-11-25: "the porous look doesn't really fit" - the pores are their own height, which the
+    # player's Skin Detail slider brings in; the creases, the lids' folds and the lips' lines stay)
+    h = 0.5 - 0.18 * np.clip(crease, 0, 1) + 0.04 * lipline
+    hp = 0.5 - 0.22 * pores * img[..., 1] + 0.05 * fine
+    ao = 1.0 - 0.4 * np.clip(crease, 0, 1)
     out = np.zeros((SIZE, SIZE, 4), np.uint8)
-    out[..., 2] = np.clip(h * 255, 0, 255)          # (BGR: R = the height)
+    out[..., 2] = np.clip(h * 255, 0, 255)          # (BGR: R = the creases' height)
     out[..., 1] = np.clip(ao * 255, 0, 255)
-    out[..., 0] = 128
+    out[..., 0] = np.clip(hp * 255, 0, 255)          # (B = the pores' height)
     out[..., 3] = 255
     return out

@@ -169,7 +169,7 @@ def lining_depth(P, lin, rim, To):
     return h, QN[j], dr
 
 
-def fit(mh, cP, cT, cskin, Lc, eye_r, body=None, reg=0.6, log=print):
+def fit(mh, cP, cT, cskin, Lc, eye_r, body=None, reg=0.6, log=print, face_pull=1.0, face_smooth=1.0, face_relax=0, eye_fade=1.0, cheek_relax=0, neck_out=0.0):
     """-> the head's points in the figure's frame, and what was done (scale, turn, the units' similarities)."""
     P0 = mh['P']; T = mh['T']; n = len(P0)
     Lm = eye_front(mh_landmarks(mh), mh['eyes']['L'][1], mh['eyes']['R'][1])
@@ -189,7 +189,7 @@ def fit(mh, cP, cT, cskin, Lc, eye_r, body=None, reg=0.6, log=print):
     for sd in 'LR':
         c, r = mh['eyes'][sd]
         dm = np.linalg.norm(P0 - c, axis=1) / r
-        unit_w['eye' + sd] = np.clip((3.0 - dm) / 1.0, 0, 1)
+        unit_w['eye' + sd] = np.clip((2.0 + eye_fade - dm) / eye_fade, 0, 1)    # (eye_fade: how far out it eases)
         unit_w['ear' + sd] = mh['ear'][sd].copy()
     # the lips: kept whole too (closed as MakeHuman's are - pulled onto the classic mouth they parted)
     lip = np.zeros(n)
@@ -232,7 +232,7 @@ def fit(mh, cP, cT, cskin, Lc, eye_r, body=None, reg=0.6, log=print):
     neck = np.clip(((Lc['chin'][2] - 0.2 * E) - P[:, 2]) / (0.6 * E), 0, 1) * np.clip((P[:, 1] - (Lc['chin'][1] + 0.5 * E)) / (0.5 * E), 0, 1)
     neck = np.maximum(neck, np.clip(((Lc['chin'][2] - 1.0 * E) - P[:, 2]) / (0.5 * E), 0, 1))
     close = np.maximum(scalp, neck)
-    for iters, part in ((40, None), (24, None), (14, close), (8, close), (5, close)):
+    for iters, part in ((int(40 * face_smooth), None), (int(24 * face_smooth), None), (14, close), (8, close), (5, close)):
         N = vnormals(P, T)
         d, idx = tree.query(P[used])
         cosn = (N[used] * QN[idx]).sum(1)
@@ -240,6 +240,8 @@ def fit(mh, cP, cT, cskin, Lc, eye_r, body=None, reg=0.6, log=print):
         w[used] = np.clip((cosn - 0.3) / 0.4, 0, 1) * (1 - held[used])
         if part is not None:
             w *= part
+        elif face_pull < 1.0:                                   # (a face far from MakeHuman's - the Firbolg man's: the
+            w *= face_pull + (1 - face_pull) * close            # face kept to the landmarks' bend, the skull pulled on)
         D = np.zeros_like(P)
         D[used] = (Q[idx] - P[used]) * w[used, None]
         for _ in range(iters):
@@ -253,6 +255,15 @@ def fit(mh, cP, cT, cskin, Lc, eye_r, body=None, reg=0.6, log=print):
         else:
             D = D / np.maximum(w, 1e-6)[:, None]
         P[used] += D[used]
+    # (a face whose classic shape has hard creases - the Firbolg man's under the eyes: the pull eased out of them, the
+    # broad shape kept; the units and the skull / neck as they are)
+    if face_relax:
+        fw = np.zeros(n); fw[used] = (1 - close[used]) * (1 - held[used])
+        D = P - P2
+        for _ in range(face_relax):
+            D = D + 0.5 * fw[:, None] * ((A @ D) - D)
+            D = D - 0.53 * fw[:, None] * ((A @ D) - D)      # (Taubin's step back: no shrinking)
+        P = P2 + D
     # 3. each unit back to MakeHuman's own shape: the similarity that best carries it to where the skin round it went
     units = {}
     for k, w in unit_w.items():
@@ -265,16 +276,62 @@ def fit(mh, cP, cT, cskin, Lc, eye_r, body=None, reg=0.6, log=print):
         P = P + (Pu - P) * w[:, None]
         units[k] = (su, Ru, tu)
         log('  %s: kept whole, x%.3f of MakeHuman\'s size (%d points)' % (k, su / s, core.sum()))
+    # (under the chin kept out over the body's own neck: where the new jaw dipped through it the body's skin and collar
+    # showed through in jagged patches - the Firbolg man's)
+    if neck_out and body is not None:
+        Qb, QNb, _ = dense(body[0], body[1])
+        tb = cKDTree(Qb)
+        low = used & (P[:, 2] < Lc['chin'][2] + 0.5 * E)
+        for _ in range(4):
+            d, j = tb.query(P[low])
+            out = ((P[low] - Qb[j]) * QNb[j]).sum(1)
+            push = np.zeros(n)
+            push[np.where(low)[0]] = np.clip(neck_out * E - out, 0, None) * (d < 0.6 * E)
+            Nn = vnormals(P, T)
+            pw = push.copy()
+            for _ in range(6):
+                pw = np.maximum(pw, 0.85 * (A @ pw))
+            P[used] += (Nn[used] * pw[used, None])
+    # (the cheeks under the eyes smoothed: where a classic face's own hard creases came through - the Firbolg man's)
+    if cheek_relax:
+        cw = np.zeros(n)
+        for sd in 'LR':
+            c, r = mh['eyes'][sd]
+            dm = np.linalg.norm(P0 - c, axis=1) / r
+            below = np.clip((c[2] - P0[:, 2]) / r + 0.5, 0, 1)
+            cw = np.maximum(cw, np.clip((dm - 1.35) / 0.4, 0, 1) * np.clip((6.0 - dm) / 1.5, 0, 1) * below)
+        mz = (Lm['mouthL'][2] + Lm['mouthR'][2]) / 2
+        cw *= np.clip((P0[:, 2] - mz) / (0.5 * mh['eyes']['L'][1]), 0, 1)        # (above the mouth only)
+        core = np.clip(sum(w for k, w in unit_w.items() if not k.startswith('eye')), 0, 1)
+        cw *= (1 - core)
+        cw[~used] = 0
+        for _ in range(cheek_relax):
+            P = P + 0.5 * cw[:, None] * ((A @ P) - P)
+            P = P - 0.53 * cw[:, None] * ((A @ P) - P)
     # the mouth's lining stays behind the skin over it (the skin beside the nose went back onto the classic face and
     # a corner of the lining stood out through it - the owner's check build, the Briton woman)
     lin, rim, To = mouth_lining(mh)
     moved = 0
-    for _ in range(4):
+    for _ in range(12):                                # (a big mouth - the Firbolg's - takes more rounds to settle)
         h, n_, dr = lining_depth(P, lin, rim, To)
         want = -np.minimum(0.045 * E, 0.5 * dr)
         m_ = h > want
         P[lin[m_]] += ((want - h)[m_])[:, None] * n_[m_]
         moved = max(moved, int(m_.sum()))
+    # (deep down the throat, where a thin classic neck - the Firbolg man's - leaves no room behind the skin: those
+    # points drawn in towards the lining's own middle, then set back again)
+    for _ in range(8):
+        h, n_, dr = lining_depth(P, lin, rim, To)
+        deep = (h > -0.2 * np.minimum(0.045 * E, 0.5 * dr)) & (dr > 0.1)
+        if not deep.any():
+            break
+        cin = P[lin].mean(0)
+        P[lin[deep]] = cin + (P[lin[deep]] - cin) * 0.6
+        for _ in range(6):
+            h, n_, dr = lining_depth(P, lin, rim, To)
+            want = -np.minimum(0.045 * E, 0.5 * dr)
+            m_ = h > want
+            P[lin[m_]] += ((want - h)[m_])[:, None] * n_[m_]
     log('  the mouth\'s lining: %d of its %d points set back behind the skin' % (moved, len(lin)))
     # the mouth's inside (teeth, tongue): the lips' and jaw's similarity
     md = np.linalg.norm(P0 - (Lm['mouthL'] + Lm['mouthR']) / 2, axis=1)

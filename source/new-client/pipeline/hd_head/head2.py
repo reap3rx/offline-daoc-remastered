@@ -25,6 +25,17 @@ from hd_layout import layout
 LONG_EAR = 1.3                          # a classic ear this much longer than MakeHuman's: the ear is drawn out to it
 LONG_EARED = ('elf', 'lur', 'inc', 'fro', 'fir')    # ... for the races whose ears are their look (a human's stay MakeHuman's)
 HAIR_REACH = 2.6
+# the asymmetry sliders (the HD look, step 7; owner 2026-11-26: more of them): one side's share of a slider, at half
+ASYM_FROM = (('eye_level', 'eye_height'), ('brow_level', 'brow_height'), ('mouth_tilt', 'mouth_corners'),
+             ('eye_size_side', 'eye_size'), ('cheekbone_level', 'cheekbone_height'), ('cheek_side', 'cheek_fullness'),
+             ('jaw_side', 'jaw_width'), ('ear_level', 'ear_tilt'), ('ear_side', 'ear_out'), ('nostril_side', 'nostril_width'))
+ASYM_LABELS = (('eye_level', 'Eye Level'), ('eye_size_side', 'Eye Size'), ('brow_level', 'Brow Level'),
+               ('nose_lean', 'Nose Lean'), ('nostril_side', 'Nostril'), ('cheekbone_level', 'Cheekbone'),
+               ('cheek_side', 'Cheek Fullness'), ('mouth_tilt', 'Mouth Tilt'), ('jaw_side', 'Jaw'),
+               ('ear_level', 'Ear Tilt'), ('ear_side', 'Ear Out'))
+NORMAL_BAND = 1.0                       # the neck's light eased from the classic edge's to the skin's own over this
+# a race's own fit (the Firbolg man, owner 2026-11-25: creases under the eyes - the eye eased into the cheek further)
+FIT_TUNE = {'fir_m': dict(cheek_relax=40, neck_out=0.0)}
 EYE_FIT = 0.975
 SKIRT = 0.25                            # the lip tucked under the body's edge (hides any hairline gap) ...
 SKIRT_IN = 0.4                          # ... and this far in under the body's skin (level with it, the two flickered)
@@ -145,7 +156,7 @@ def build(folder, out_folder=None):
     V, VT, F, FT, FG = mh2.base()
     VT = np.asarray(VT, float)
     body = body_mesh(g, cP[:, 2].min() - 3.0)
-    P, info = fit2.fit(mh, cP, cT, parts['skin'], L, parts['eye_r'], body=body, log=log)
+    P, info = fit2.fit(mh, cP, cT, parts['skin'], L, parts['eye_r'], body=body, log=log, **FIT_TUNE.get(prefix, {}))
     s, R = info['s'], info['R']
     P_unit = P.copy()
     P_fit = P.copy()
@@ -211,6 +222,38 @@ def build(folder, out_folder=None):
     adj[ring] = sq - Q[ring]
     par = np.full(len(Q), -1.0); par[ring] = si + st
     m = len(S)
+    # (where the cut's edge doubles back on the classic edge - two stretches of it nearest the same stretch of the
+    # classic edge, the Dwarf woman's, Lurikeen woman's, Inconnu woman's necks - the classic points went in twice and
+    # their triangles overlapped: the edge's places along the classic edge made to run one way round, each step's
+    # share kept where it already does)
+    gnext = {}
+    for ti, k in open_e:
+        gnext[grp[T2[ti, k]]] = grp[T2[ti, (k + 1) % 3]]
+    gpar = {}
+    for vtx in ring:
+        gpar.setdefault(grp[vtx], par[vtx])
+    if len(gnext) == len(gpar) and len(gnext) > 3:
+        g0 = next(iter(gnext)); order = [g0]
+        while len(order) < len(gnext):
+            g1 = gnext.get(order[-1])
+            if g1 is None or g1 == g0:
+                break
+            order.append(g1)
+        if len(order) == len(gnext):
+            pv = np.array([gpar[g] for g in order])
+            dd = (np.roll(pv, -1) - pv + m / 2) % m - m / 2
+            sgn = 1.0 if dd.sum() > 0 else -1.0
+            if (dd * sgn < -1e-6).any():
+                inc = np.maximum(dd * sgn, 0.02)
+                inc *= m / inc.sum()
+                newp = (pv[0] + sgn * np.r_[0, np.cumsum(inc)[:-1]]) % m
+                gmap = dict(zip(order, newp))
+                for vtx in ring:
+                    par[vtx] = gmap[grp[vtx]]
+                ii = np.floor(par[ring]).astype(int) % m; tt = par[ring] - np.floor(par[ring])
+                sq = seam.at(S, ii, tt)
+                adj[ring] = sq - Q[ring]
+                log('  neck: the cut\'s edge doubled back on the classic edge in %d places - made to run one way round' % int((dd * sgn < -1e-6).sum()))
     # every classic edge point becomes a point of the new edge (the two edges then close exactly)
     newT, dropT = [], set()
     extra_CI, extra_CW, extra_UV, extra_UVM, extra_adj, extra_par = [], [], [], [], [], []
@@ -262,6 +305,13 @@ def build(folder, out_folder=None):
     Q = Q + adj
     log('  neck: cut on the classic edge - %d edge points (%d of them the classic edge\'s own), %.3f off it before joining' % (
         ringm.sum(), len(extra_CI), off0))
+    # (a classic edge point put in where a cut point already stood: two corners of a triangle at one place - that
+    # triangle has no area and makes its edges three-sided; it goes)
+    gT = grp[T2]
+    flat = (gT[:, 0] == gT[:, 1]) | (gT[:, 1] == gT[:, 2]) | (gT[:, 2] == gT[:, 0])
+    if flat.any():
+        T2 = T2[~flat]
+        log('  neck: %d triangles with two corners at one place taken out' % flat.sum())
     # the lip under the body's edge
     ring_all = np.flatnonzero(ringm & np.isin(np.arange(len(Q)), np.unique(T2)))
     ri = np.floor(par[ring_all]).astype(int) % m; rt = par[ring_all] - np.floor(par[ring_all])
@@ -297,6 +347,16 @@ def build(folder, out_folder=None):
     N = welded_normals(Q, T2, grp)
     ri = np.floor(par[ringm]).astype(int) % m; rt = par[ringm] - np.floor(par[ringm])
     rn = seam.at(SN, ri, rt); N[ringm] = rn / np.maximum(np.linalg.norm(rn, axis=1, keepdims=True), 1e-12)
+    # ... and eased into the skin's own over a band above it (owner 2026-11-25, the Firbolg man: "patchy neck" - where
+    # the new neck stood well off the classic one the edge's light and the skin's met in a step, triangle by triangle)
+    f_n, _, _ = seam.f(Q)
+    band = (~ringm) & (f_n < NORMAL_BAND)
+    if band.any():
+        bi, bt, _ = seam.locate(Q[band])
+        bn = seam.at(SN, bi, bt); bn /= np.maximum(np.linalg.norm(bn, axis=1, keepdims=True), 1e-12)
+        k = np.clip(f_n[band] / NORMAL_BAND, 0, 1); k = (k * k * (3 - 2 * k))[:, None]
+        nb = bn * (1 - k) + N[band] * k
+        N[band] = nb / np.maximum(np.linalg.norm(nb, axis=1, keepdims=True), 1e-12)
     # bones: from the classic skin under each point; the edge's exactly the classic edge's
     fold = {names.index(nm): names.index('Bip01 Head') for nm in ('Bip01 EyeLids', 'Bip01 L Eyeball', 'Bip01 R Eyeball') if nm in names}
     cTs = cT[parts['skin'][cT].all(1)]
@@ -449,6 +509,89 @@ def build(folder, out_folder=None):
             if t is not None:
                 t['skin'] = t['skin'] * k; t['pieces'] = {a_: b_ * k for a_, b_ in t['pieces'].items()}
         log('  eased for when they\'re used together: ' + ', '.join('%s%s x%.2f' % (a_, b_, k) for (a_, b_), k in sorted(scale.items())))
+    # the lashes' length (the HD look, owner 2026-11-25: lash length and thickness): each lash point moved along its
+    # line from the lid (its nearest skin point) - longer by half, shorter by a third; the lid itself stays
+    Xl = pieces['lash']['X']
+    _, jl = cKDTree(Q).query(Xl)
+    out_l = Xl - Q[jl]
+    for sign, k_ in (('+', 0.5), ('-', -0.35)):
+        targets['hx_lash_len' + sign] = dict(skin=np.zeros_like(Q), pieces={'lash': out_l * k_}, carry=False, folds1=0)
+    # slight asymmetry (the HD look, step 7: "slight asymmetry sliders"): one side's share of a level slider - the
+    # left eye, brow or mouth corner alone, at half strength (faces stop looking mirrored; kept slight)
+    Lw = info['E'] if 'E' in info else 1.0
+    def side_w(P):
+        t_ = np.clip((P[:, 0] / (0.25 * Lw) + 1) / 2, 0, 1)
+        return t_ * t_ * (3 - 2 * t_)
+    for key_, src_ in ASYM_FROM:
+        for sign in '+-':
+            t0 = targets.get('hx_%s%s' % (src_, sign))
+            if t0 is None:
+                continue
+            pcs = {nm: d * 0.5 * side_w(pieces[nm]['X'])[:, None] for nm, d in t0['pieces'].items()}
+            targets['hx_%s%s' % (key_, sign)] = dict(skin=t0['skin'] * 0.5 * side_w(Q)[:, None], pieces=pcs, carry=False,
+                                                    folds1=t0.get('folds1', 0))
+    # the nose's lean (one more asymmetry, owner 2026-11-26: more of them): the nose - where its own sliders move the
+    # skin - carried a little to one side, fading into the cheeks
+    wn = np.zeros(len(Q))
+    for nm_ in ('nose_width', 'nose_tip_size', 'nose_bridge_width', 'nostril_width', 'nose_projection'):
+        for sg in '+-':
+            t_ = targets.get('hx_%s%s' % (nm_, sg))
+            if t_ is not None:
+                wn = np.maximum(wn, np.linalg.norm(t_['skin'], axis=1))
+    if wn.max() > 0:
+        wn = np.clip(wn / (0.35 * wn.max()), 0, 1)
+        wn = wn * wn * (3 - 2 * wn)
+        for sign, k_ in (('+', 1.0), ('-', -1.0)):
+            d_ = np.zeros_like(Q); d_[:, 0] = k_ * 0.06 * Lw * wn
+            targets['hx_nose_lean' + sign] = dict(skin=d_, pieces={}, carry=False, folds1=0)
+    # the blink (the HD look, step 6: the head blinks; the creator previews expressions): the upper lid swung down
+    # round its eyeball's middle, so it stays on the eye's surface, its edge to the lower lid's; the skin above it
+    # follows less and less up to the brow; the upper lashes go with it
+    dS_b = np.zeros_like(Q); dL_b = np.zeros_like(pieces['lash']['X']); sw_b = np.zeros(len(Q))
+    Xe = pieces['eyes']['X']
+    for sel in (Xe[:, 0] > 0, Xe[:, 0] <= 0):
+        c, r = check2.sphere_fit(Xe[sel])
+        side = np.sign(c[0])
+        def ang(P):                                    # (the elevation round the eye's left-right axis: + up)
+            return np.arctan2(P[:, 2] - c[2], -(P[:, 1] - c[1]))
+        near = (np.sign(Q[:, 0]) == side) & (np.linalg.norm(Q - c, axis=1) < 2.2 * r) & ((c[1] - Q[:, 1]) > -0.2 * r)
+        # the lids' edges: the skin over this eye nearest its surface, above and below its middle (an upper lid
+        # can rest a little off the eye - the Briton man's - so each edge by its own nearest, not one tolerance)
+        cl_ = check2._clear(Q, Xe, pieces['eyes']['T'], Xe[:, 0] > 0, N)
+        over = np.isfinite(cl_) & near
+        a_all = ang(Q)
+        up_o = over & (Q[:, 2] > c[2]); lo_o = over & (Q[:, 2] <= c[2])
+        if not up_o.any() or not lo_o.any():
+            continue
+        up_e = up_o & (cl_ < np.nanmin(np.where(up_o, cl_, np.nan)) + 0.08)
+        lo_e = lo_o & (cl_ < np.nanmin(np.where(lo_o, cl_, np.nan)) + 0.08)
+        if not up_e.any() or not lo_e.any():
+            continue
+        theta = float(np.median(a_all[up_e]) - np.median(a_all[lo_e])) * 1.06
+        dist = np.linalg.norm(Q - c, axis=1) / r
+        half = (np.abs(Q[:, 0] - c[0]) / r)
+        a_lo = float(np.median(a_all[lo_e]))
+        e_ = np.clip((a_all - (a_lo + 0.12 * theta)) / (0.55 * theta), 0, 1)
+        e_ = e_ * e_ * (3 - 2 * e_)                    # (smoothly: no step where a lid point turns and its neighbour not)
+        h_ = np.clip((1.38 - half) / 0.62, 0, 1)
+        h_ = h_ * h_ * (3 - 2 * h_)
+        fr_ = np.clip(((c[1] - Q[:, 1]) / r + 0.2) / 0.6, 0, 1)     # (the socket's lining behind the eye: less and less)
+        w = np.clip((2.2 - dist) / 1.0, 0, 1) * h_ * e_ * fr_ * near
+        def swing(P, wt):
+            d = P - c
+            a = theta * wt
+            cy, sy = np.cos(a), np.sin(a)
+            # rotation round x: (y, z) -> forward is -y
+            y2 = d[:, 1] * cy - d[:, 2] * sy
+            z2 = d[:, 1] * sy + d[:, 2] * cy
+            return np.c_[d[:, 0], y2, z2] + c - P
+        dS_b += swing(Q, w) * (w[:, None] > 0)
+        sw_b += theta * w
+        Xl = pieces['lash']['X']
+        _, jl2 = cKDTree(Q).query(Xl)
+        wl = w[jl2] * (Xl[:, 2] > c[2] - 0.1 * r) * (np.sign(Xl[:, 0]) == side)
+        dL_b += swing(Xl, wl) * (wl[:, None] > 0)
+    targets['hx_blink+'] = dict(skin=dS_b, pieces={'lash': dL_b}, carry=False, folds1=0, swing=sw_b)
     lip_skin = (info['unit_w']['lips'][CI] * CW).sum(1) > 0.5
     kept_base = np.zeros(len(P), bool); kept_base[np.unique(CI[:, :2])] = True
     kept_base &= fb > 1.5                                   # (away from the neck's join: that is reshaped on purpose)
@@ -565,7 +708,9 @@ def write(res, folder, out_folder, textures=True):
     meta = json.loads((folder / 'figure.json').read_text(encoding='utf-8'))
     meta['hd_head'] = {'node': 'head__hd', 'v': 2, **tex_names, 'features': [
         {'key': f[0], 'label': f[1], 'sliders': [[s_[0], s_[1]] for s_ in f[2] if s_[2] or s_[3]], 'presets': [[p[0], p[1]] for p in f[3]]}
-        for f in FEATURES]}
+        for f in FEATURES] + [{'key': 'asym', 'label': 'Asymmetry', 'sliders': [[k_, l_] for k_, l_ in
+        ASYM_LABELS if 'hx_%s+' % k_ in res['targets']],
+        'presets': [['Even', {}]]}]}
     (out_folder / 'figure.json').write_text(json.dumps(meta, indent=1), encoding='utf-8')
 
 

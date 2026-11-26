@@ -18,6 +18,46 @@ const LOOKS := [
 	["jaw_chin_neck", {"jaw_drop": 1.0, "jowls": 1.0, "neck_thickness": 1.0, "chin_depth": 1.0}],
 ]
 
+## The HD look (set=makeup): the skin smooth and weathered, every brow shape, the makeup styles.
+const MAKEUP := [
+	["smooth", {}],
+	["detail_full", {"skin_detail": 1.0}],
+	["brows_soft_arch", {"hd_brow": 2}],
+	["brows_angled", {"hd_brow": 5, "brow_color": 1}],
+	["brows_bushy", {"hd_brow": 7, "brow_thick": 0.6}],
+	["brows_thin_high", {"hd_brow": 8, "brow_height": 0.8, "brow_arch": 0.8}],
+	["brows_scarred", {"hd_brow": 12}],
+	["brows_none", {"hd_brow": 0}],
+	["lips_red_gloss", {"lip_color": 2, "lip_amt": 0.85, "lip_gloss": 1.0, "lipline_amt": 0.6, "lipline_color": 1}],
+	["liner_thin_wing", {"liner": 1, "liner_wing": 0.7, "lash_amt": 1.4, "lash_len_shape": 1.0}],
+	["smoky", {"liner": 3, "shadow": 2, "shadow_color": 3, "shadow_amt": 0.85}],
+	["winged_blue", {"liner": 2, "liner_wing": 1.0, "shadow": 3, "shadow_color": 6}],
+	["to_brow_plum", {"shadow": 4, "shadow_color": 2, "shadow_amt": 0.6, "lash_color": 2}],
+	["halo_gold", {"shadow": 5, "shadow_color": 7, "lash_len_shape": -1.0}],
+	["blush_contour", {"blush_amt": 0.7, "blush_color": 0, "contour": 1.0}],
+	["war_paint", {"paint": 1, "paint_color": 0}],
+	["age_mid", {"hd_age": 0.55}],
+	["age_old_weathered", {"hd_age": 1.0, "weather": 0.7}],
+	["freckles_band_moles", {"freckles": 3, "freckle_density": 0.8, "moles": 0.8}],
+	["freckles_face_flush", {"freckles": 2, "freckle_density": 0.5, "flush": 0.8, "warmth": 0.6}],
+	["scar_gash_cheek", {"hd_scar": 2, "scar_x": 1.0, "scar_y": 0.0, "scar_turn": 20.0}],
+	["scar_claw_brow", {"hd_scar": 3, "scar_x": -1.0, "scar_y": 0.55, "scar_amt": 0.9}],
+	["blink_half", {"_shape": {"blink": 0.5}}],
+	["blink_full", {"_shape": {"blink": 1.0}}],
+	["expr_smile", {"_expr": 1}],
+	["expr_scowl", {"_expr": 2}],
+	["expr_surprise", {"_expr": 3}],
+	["expr_squint", {"_expr": 4}],
+	["eyes_fibrous_big", {"iris": 1, "iris_size": 1.0, "pupil": -1.0}],
+	["eyes_starburst_hetero", {"iris": 2, "eye_r": 4}],
+	["eyes_ringed_bloodshot", {"iris": 3, "sclera_color": 1, "sclera_amt": 0.8, "pupil": 1.0}],
+	["eyes_black_glow", {"iris": 5, "sclera_color": 4, "sclera_amt": 1.0, "eye_glow": 1.0, "eyes_rgb": [0.9, 0.3, 0.1]}],
+	["tattoo_own", {"tattoo": 1}],
+	["tattoo_moved_red", {"tattoo": 2, "tattoo_x": 0.3, "tattoo_y": -0.4, "tattoo_size": 1.3, "tattoo_turn": 20.0, "tattoo_color": 3}],
+	["tattoo_small_gold", {"tattoo": 1, "tattoo_size": 0.7, "tattoo_y": 0.3, "tattoo_color": 5, "tattoo_amt": 0.8}],
+	["asym_full", {"_shape": {"eye_level": 1.0, "eye_size_side": 1.0, "nose_lean": 1.0, "cheekbone_level": 1.0, "cheek_side": 1.0, "jaw_side": 1.0, "ear_level": 1.0, "ear_side": 1.0, "nostril_side": 1.0, "mouth_tilt": 1.0}}],
+]
+
 # name, yaw (degrees off the face's front), distance (m), fov, the aim's offset from the eyes' middle (right, up, forward)
 const VIEWS := [
 	["front", 0.0, 1.5, 12.0, Vector3(0, -0.02, -0.06)],
@@ -44,7 +84,7 @@ func _ready() -> void:
 	var args: Dictionary = v.args
 	var out := String(args.get("out", "E:/Offline DAOC 036c/claude-work/hd2/shots/shot"))
 	var prefix := String(args.get("figure", "bri_m"))
-	var quick := String(args.get("set", "full")) == "quick"
+	var quick := String(args.get("set", "full")) in ["quick", "makeup", "beast"]
 	await get_tree().create_timer(10.0).timeout
 	get_window().size = Vector2i(720, 720)
 	for n in ["hud", "ui"]:
@@ -66,6 +106,7 @@ func _ready() -> void:
 	v.add_child(cam)
 	cam.make_current()
 	var fig := Fig3Figure.new()
+	fig.blinks = false                              # (still shots: no blink mid-frame)
 	v.add_child(fig)
 	if not fig.load_figure(prefix):
 		print("[hd2] no figure ", prefix)
@@ -115,6 +156,39 @@ func _ready() -> void:
 	await _frames(3)
 	fig.anim.seek(0.4, true)
 	fig.anim.pause()
+	if String(args.get("set", "full")) == "beast":           # (phase 5: a beast race's own sliders, on its classic head)
+		for sh in [["rest", {}], ["tusks_up", {"tusks": 1.0}], ["tusks_down", {"tusks": -1.0}], ["crest_up", {"crest": 1.0}],
+				["crest_down", {"crest": -1.0}], ["muzzle", {"muzzle": 1.0, "muzzle_width": 1.0}]]:
+			fig.set_shape(sh[1])
+			await _frames(6)
+			await shoot.call(String(sh[0]), [VIEWS[0], VIEWS[1], VIEWS[2]])
+		print("[hd2] done ", n, " shots")
+		get_tree().quit()
+		return
+	if String(args.get("set", "full")) == "makeup":
+		var plain := fig.look.duplicate(true)
+		for lk in MAKEUP:
+			var ch: Dictionary = (lk[1] as Dictionary).duplicate()
+			var sh := {}
+			if ch.has("lash_len_shape"):
+				sh["lash_len"] = ch["lash_len_shape"]
+				ch.erase("lash_len_shape")
+			if ch.has("_shape"):
+				sh = ch["_shape"]
+				ch.erase("_shape")
+			var ex := int(ch.get("_expr", 0))
+			ch.erase("_expr")
+			fig.look = plain.duplicate(true)
+			fig.expression = {}
+			fig.apply(ch)
+			fig.set_shape(sh)
+			if ex > 0:
+				fig.set_expression(ex)
+			await _frames(6)
+			await shoot.call(String(lk[0]), [VIEWS[0], VIEWS[4]])
+		print("[hd2] done ", n, " shots")
+		get_tree().quit()
+		return
 	if not quick:
 		for lk in LOOKS:
 			fig.set_shape(lk[1])

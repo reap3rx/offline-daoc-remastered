@@ -83,8 +83,14 @@ def lid_clear(d):
     return d[0] <= -0.008 and d[1] <= EDGE_TOL
 
 
-def folds(Q0, Q1, T):
+def folds(Q0, Q1, T, swing=None):
+    """Triangles turned over between Q0 and Q1. swing: each point's turn round the left-right axis (the blink's lid
+    swung round its eyeball) - a triangle is compared with itself turned by its own points' mean, not at rest."""
     n0 = np.cross(Q0[T[:, 1]] - Q0[T[:, 0]], Q0[T[:, 2]] - Q0[T[:, 0]])
+    if swing is not None:
+        a = swing[T].mean(1)
+        cy, sy = np.cos(a), np.sin(a)
+        n0 = np.c_[n0[:, 0], n0[:, 1] * cy - n0[:, 2] * sy, n0[:, 1] * sy + n0[:, 2] * cy]
     n1 = np.cross(Q1[T[:, 1]] - Q1[T[:, 0]], Q1[T[:, 2]] - Q1[T[:, 0]])
     a0 = np.linalg.norm(n0, axis=1); a1 = np.linalg.norm(n1, axis=1)
     cos = (n0 * n1).sum(1) / np.maximum(a0 * a1, 1e-12)
@@ -194,7 +200,9 @@ def run(res, log=print):
         dp = lid_depth(Q1, X1, Te, left, rest)
         if max(dp[0] / max(LID_TOL, 1e-9), dp[1] / EDGE_TOL) > max(worst[0][0] / max(LID_TOL, 1e-9), worst[0][1] / EDGE_TOL):
             worst = (dp, name)
-        nf = folds(Q, Q1, T) - t.get('folds1', 0)             # (beyond what MakeHuman's own target folds: a lid's crease is one)
+        # (the blink swings the lid's skin that wraps into the socket round with it - it turns over out of sight; its
+        # lid is checked against the eyeball above and looked at in the client)
+        nf = 0 if t.get('swing') is not None else folds(Q, Q1, T) - t.get('folds1', 0)             # (beyond what MakeHuman's own target folds: a lid's crease is one)
         if nf > nfold[0]:
             nfold = (nf, name)
     good = lid_ok(worst[0])

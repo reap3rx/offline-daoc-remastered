@@ -11,7 +11,7 @@ namespace OfflineDaoc.Launcher;
 /// for desktop - so there is nothing to sign in to here: the launcher only copies files into and out of that folder.
 /// The same scheme as the developer's tools\sync\savesync.ps1 (and its folder, so the two read each other's saves):
 ///   current\   the save: the game database (+ -wal / -shm), the realm event records, client\ (settings, keybinds,
-///              quickbars, character looks). previous\: the one before. save-info.json: when and from which computer.
+///              quickbars, character looks, your companions' looks, saved looks). previous\: the one before. save-info.json: when and from which computer.
 ///   in-use.json  the computer playing now (another computer is warned).
 /// The database is only copied while the server is stopped. What stays per computer: the client's [display],
 /// [graphics] and [performance] settings. Before a pull replaces anything here it is backed up (world\save-sync\backups,
@@ -20,8 +20,8 @@ namespace OfflineDaoc.Launcher;
 internal sealed class CloudSave
 {
     public const string FolderName = "OfflineDAoC Saves";
-    private static readonly string[] ClientFiles = ["settings.cfg", "keybinds.cfg", "server_looks.json"];
-    private static readonly string[] ClientDirs = ["server_quickbars", "keybinds", "world"];
+    private static readonly string[] ClientFiles = ["settings.cfg", "keybinds.cfg", "server_looks.json", "companion_looks.json"];
+    private static readonly string[] ClientDirs = ["server_quickbars", "keybinds", "world", "looks"];
     private static readonly string[] MachineSections = ["display", "graphics", "performance"];
 
     private readonly string _stateDir;
@@ -118,7 +118,7 @@ internal sealed class CloudSave
     private string LocalStamp()
     {
         DateTime t = DateTime.MinValue;
-        foreach (string f in new[] { _database, _database + "-wal", _events, Path.Combine(_clientSave, "settings.cfg") })
+        foreach (string f in new[] { _database, _database + "-wal", _events }.Concat(ClientFiles.Select(c => Path.Combine(_clientSave, c))))
             if (File.Exists(f) && File.GetLastWriteTimeUtc(f) > t) t = File.GetLastWriteTimeUtc(f);
         foreach (string d in ClientDirs.Select(d => Path.Combine(_clientSave, d)).Where(Directory.Exists))
             foreach (string f in Directory.EnumerateFiles(d, "*", SearchOption.AllDirectories))

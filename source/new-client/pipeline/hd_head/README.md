@@ -12,6 +12,12 @@ eyeballs, ears and neck edge stitched in) is superseded.
 - ear2.py   long-eared races: MakeHuman's ear drawn out to the classic ear's tip
 - neck2.py  the cut along the classic head's lower edge, every classic edge point a point of the new edge
 - tex2.py   hd_base / hd_remap / hd_detail beside the figure; hd_eye / hd_mouth / hd_lash shared (content/characters/hd_head)
+- mask3.py  the face maps (the HD look): hd_face (each texel's face-space point) and hd_mask (lips, the eyes' rim,
+            face, scalp) - the client draws brows, liner, shadow, blush, contour and lip colour in face space
+- brows3.py the brows' hairs (hd_brow_hair.png, shared)
+- eyes3.py  the eyes drawn (hd_eye white, hd_eye_polar, hd_iris patterns, shared)
+- marks3.py the age lines and scars in face space (hd_age, hd_scars, shared)
+- look3.py  the client shader's HD look in numpy, for previews while tuning (keep in step with Fig3Figure's shader)
 - check2.py what went wrong before, tested on every build and at every slider's end (exit code 3 on a failure)
 - mh2.py    MakeHuman's proxies (.mhclo) and the subdivided helper eyes
 

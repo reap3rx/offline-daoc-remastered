@@ -1,4 +1,4 @@
-"""Every 1.65 (Classic + Shrouded Isles) player race and gender as a Catacombs (fig3) figure with ALL of the client's
+﻿"""Every 1.65 (Classic + Shrouded Isles) player race and gender as a Catacombs (fig3) figure with ALL of the client's
 character-creation options (owner 2026-10-09: "get the models ready for the other 1.65 classes and all customization
 options too").
 
@@ -380,6 +380,9 @@ def build_figure(t, realm, race, gender, fig, upscale_list):
     if '--no-face-shapes' not in sys.argv:              # the classic heads' extra face sliders (owner
         import face_extra                               # 2026-11-25): head shape, muzzle, brow angle ...
         face_extra.run(out)
+        face_extra.run_beast(out)                         # (the beast races' own: Valkyn tusks, Sylvan crest)
+        import hair_extra                                # (2026-11-26: tilt, flare, volume on the fitted hair)
+        hair_extra.run(out)
     upscale_list.update(textures)
     print(f'{prefix}: {race} {gender} fig {fig}, {len(faces)} faces, {len(eyes)} eyes, {len(tones)} tones, '
           f'{len(styles)} hair styles ({sum(1 for s in styles if s["node"])} meshes), {len(tattoos)} tattoos, '

@@ -71,9 +71,12 @@ class Seam:
         return arr[i] * (1 - t)[:, None] + arr[(i + 1) % len(self.S)] * t[:, None]
 
     def f(self, P):
-        """> 0: the head's side of the edge."""
+        """> 0: the head's side of the edge. (Anything higher than the edge's highest point is the head's: on the
+        Dwarf, Lurikeen and Inconnu women the back of the skull lay nearest the back of the neck's edge, whose 'up'
+        leans back, and came out below it - a hole cut in the back of the head.)"""
         d, j = self.tree.query(P)
-        return ((P - self.Q[j]) * self.QU[j]).sum(1), d, j
+        f = ((P - self.Q[j]) * self.QU[j]).sum(1)
+        return np.maximum(f, P[:, 2] - self.S[:, 2].max()), d, j
 
 
 def clip(P, T, f):

@@ -62,6 +62,17 @@ var locks := {}
 var _scene: NifScene
 var _scene_realm := ""
 var _env: Environment
+var _sun: DirectionalLight3D
+var _torch: OmniLight3D
+## The creator's lighting (owner 2026-11-25: "creator lighting (day, torch, overcast, dusk)", to judge the skin and
+## makeup as they'll look in the world): name, the sun's colour, strength and angle, the ambient's share, the torch.
+const LIGHTS := [["Realm", Color(1, 1, 1), 0.7, Vector3(-45, 150, 0), 1.0, false],
+	["Daylight", Color(1.0, 0.97, 0.9), 1.05, Vector3(-55, 160, 0), 1.0, false],
+	["Overcast", Color(0.86, 0.9, 0.98), 0.28, Vector3(-70, 150, 0), 1.25, false],
+	["Dusk", Color(1.0, 0.62, 0.38), 0.75, Vector3(-10, 115, 0), 0.7, false],
+	["Torchlight", Color(0.55, 0.62, 0.9), 0.1, Vector3(-40, 200, 0), 0.45, true]]
+var _light := 0
+var _realm_ambient := 1.0
 var _cam: Camera3D
 var _figure: Fig3Figure
 var _figure_key := ""
@@ -85,6 +96,7 @@ var _drag := 0
 
 
 func _ready() -> void:
+	Fig3Figure.fit_tools = Fig3Figure._load_fit_tools()
 	meta = JSON.parse_string(FileAccess.get_file_as_string(PRE + "/pregame.json"))
 	_font_bold = _font("minionpro-bold.ttf")
 	_font_reg = _font("minionpro-regular.ttf")
@@ -110,6 +122,13 @@ func _ready() -> void:
 	sun.light_energy = 0.7
 	sun.light_cull_mask = 2                            # lights the character only (figure meshes are on layer 2)
 	add_child(sun)
+	_sun = sun
+	_torch = OmniLight3D.new()                         # (the creator's Torchlight: a warm light low beside the face)
+	_torch.light_cull_mask = 2
+	_torch.omni_range = 3.0
+	_torch.light_color = Color(1.0, 0.62, 0.32)
+	_torch.visible = false
+	add_child(_torch)
 	_cam = Camera3D.new()
 	_cam.fov = CAM_FOV
 	_cam.far = 3000.0
@@ -406,10 +425,22 @@ func _build_customize() -> void:
 	_bare_frame()
 	_show_figure(draft if editing else _draft_character())
 	var f := _figure
+	if _comp_seed != "":                              # (a companion never edited: the look it has in game)
+		f.look = {}
+		f.apply(Fig3Figure.npc_look(_comp_seed, f.meta))
+		var cf := "%s/companion_%s.json" % [LOOKS_DIR, f.race]
+		if FileAccess.file_exists(cf):
+			var face = JSON.parse_string(FileAccess.get_file_as_string(cf))
+			if face is Dictionary:
+				f.apply(face)
+		f.apply({"hd": 1})
+		draft.look = f.look.duplicate(true)
+		_comp_seed = ""
 	if not f.is_layered() and not f.layered_changes().is_empty():   # the face taken apart (brows, beard, lines)
 		f.apply(f.layered_changes())
 		draft.look = f.look.duplicate(true)
-	if not _tab in ["face", "skin", "body"] or (_tab == "skin" and (f.meta.get("skin_layers", {}) as Dictionary).is_empty()):
+	if not _tab in ["face", "skin", "body", "makeup"] or (_tab == "skin" and (f.meta.get("skin_layers", {}) as Dictionary).is_empty()) \
+			or (_tab == "makeup" and not (f.is_hd() and f.hd_look_ok())):
 		_tab = "face"
 	_creator_chrome()
 	var content := _creator_panel()
@@ -417,6 +448,7 @@ func _build_customize() -> void:
 	match _tab:
 		"face": y = _c_face(content, y)
 		"skin": y = _c_skin(content, y)
+		"makeup": y = _c_makeup(content, y)
 		"body": y = _c_body(content, y)
 	content.custom_minimum_size = Vector2(CW, y + 8)
 	_status_line()
@@ -521,6 +553,8 @@ func _creator_chrome() -> void:
 	var info := _cpanel(20, 18, 270, 66, "L")
 	_ctext(REALM_NAMES.get(realm, ""), info, 12, 6, 246, 16, 12, Color(0.86, 0.4, 0.34))
 	_ctext(("%s  -  %s" % [race, cls]).to_upper() if not editing else String(draft.get("name", "")).to_upper(), info, 12, 22, 246, 22, 17, GOLD_HI)
+	if _comp_owner != "":
+		_ctext(("%s'S COMPANION  -  %s" % [_comp_owner, race]).to_upper(), info, 12, 44, 246, 16, 11, DIM)
 	if not editing:
 		var chg := _ctext("CHANGE RACE OR CLASS", info, 12, 44, 160, 16, 11, DIM)
 		chg.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -563,6 +597,45 @@ func _creator_chrome() -> void:
 			_tune = ""
 			_keep_scroll(true)
 			_show("customize"), 12, not hd_on)
+	# the light to judge by, and saved looks (owner 2026-11-25: "creator lighting ... saved looks, copy a face to your
+	# companion")
+	var lp := _cpanel(20, 216, 270, 36, "L", 0.6)
+	_cbutton("LIGHT: " + String(LIGHTS[_light][0]).to_upper(), lp, 6, 5, 256, 26, func():
+		_light = (_light + 1) % LIGHTS.size()
+		_apply_light()
+		_keep_scroll(true)
+		_show("customize"), 12, _light != 0)
+	var sp := _cpanel(20, 258, 270, 70 if _comp_owner == "" else 36, "L", 0.6)
+	var saved := _saved_looks()
+	_cbutton("SAVE LOOK", sp, 6, 5, 124, 26, func():
+		_save_look()
+		_keep_scroll(true)
+		_show("customize"), 12)
+	var lname := "LOAD (%d)" % saved.size() if saved.size() > 0 else "NO SAVED LOOKS"
+	_cbutton(lname, sp, 136, 5, 126, 26, func():
+		if saved.size() > 0:
+			_look_pick = (_look_pick + 1) % saved.size()
+			_load_look(String(saved[_look_pick]))
+			_keep_scroll(true)
+			_show("customize"), 12)
+	if _figure != null and _figure.is_hd() and _comp_owner == "":
+		_cbutton("USE FACE FOR MY COMPANION", sp, 6, 38, 258, 26, func():
+			_companion_face()
+			_say("YOUR COMPANION WILL WEAR THIS FACE (IF THEY ARE THE SAME RACE)"), 11)
+	# your companion (owner 2026-11-25: "a button to Edit Companion in the character customization screen and it would
+	# bring them up in the character editor ... greyed out until you unlock your companion") - an existing character's
+	if editing:
+		var cp := _cpanel(20, 334, 270, 36, "L", 0.6)
+		if _comp_owner != "":
+			_cbutton("BACK TO " + _comp_owner.to_upper(), cp, 6, 5, 256, 26, func(): _end_companion(false), 12)
+		else:
+			var ce := _companion_entry()
+			var b := _cbutton("EDIT COMPANION" + ("  (%s)" % String(ce.name).to_upper() if not ce.is_empty() else ""),
+					cp, 6, 5, 256, 26, _edit_companion, 12)
+			if ce.is_empty():
+				b.disabled = true
+				b.add_theme_color_override("font_disabled_color", DIM)
+				b.tooltip_text = "YOUR COMPANION OPENS HERE ONCE YOU HAVE ONE (FROM LEVEL 7) AND IT HAS BEEN AT YOUR SIDE"
 	# the name, top centre (set on the race screen; shown here, a new one from the die)
 	var nm := _cpanel(512 - 130, 18, 260, 40, "C", 0.85)
 	_ctext(String(draft.get("name", "")).to_upper(), nm, 0, 4, 260, 32, 20, CREAM, HORIZONTAL_ALIGNMENT_CENTER)
@@ -570,6 +643,8 @@ func _creator_chrome() -> void:
 	var tabs := [["FACE", "face"]]
 	if not (_figure.meta.get("skin_layers", {}) as Dictionary).is_empty():
 		tabs.append(["SKIN", "skin"])
+	if _figure.is_hd() and _figure.hd_look_ok():
+		tabs.append(["MAKEUP", "makeup"])
 	tabs.append(["BODY", "body"])
 	var tb := Control.new()
 	tb.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -590,7 +665,11 @@ func _creator_chrome() -> void:
 	var bar := Control.new()
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_at(bar, 0, 700, _wext, 50, "L")
-	var back := _cbutton("<  BACK", bar, 24, 0, 190, 44, func(): _show("select" if editing else "create"), 18)
+	var back := _cbutton("<  BACK", bar, 24, 0, 190, 44, func():
+		if _comp_owner != "":
+			_end_companion(false)
+		else:
+			_show("select" if editing else "create"), 18)
 	(back.get_theme_stylebox("normal") as StyleBoxFlat).bg_color = Color(0.45, 0.08, 0.07, 0.95)
 	var fin := _cbutton("SAVE" if editing else "FINISH", bar, _wext - 24 - 230, 0, 230, 44, _customize_continue, 20)
 	(fin.get_theme_stylebox("normal") as StyleBoxFlat).bg_color = Color(0.3, 0.21, 0.06, 0.96)
@@ -598,6 +677,134 @@ func _creator_chrome() -> void:
 
 
 var _body_view := false
+var _expr := 0                                  # (the creator's expression preview: Fig3Figure.EXPRESSIONS)
+var _look_pick := -1
+const LOOKS_DIR := "user://looks"
+
+
+## Saved looks (owner 2026-11-25: "save and load face presets"): user://looks/<race>/<n>.json - the whole look; per
+## race, since the sliders and choices are the race's own.
+func _saved_looks() -> Array:
+	if _figure == null:
+		return []
+	var d := DirAccess.open("%s/%s" % [LOOKS_DIR, _figure.race])
+	if d == null:
+		return []
+	var out := []
+	for f in d.get_files():
+		if f.ends_with(".json"):
+			out.append(f)
+	out.sort()
+	return out
+
+
+func _save_look() -> void:
+	if _figure == null:
+		return
+	var dir := "%s/%s" % [LOOKS_DIR, _figure.race]
+	DirAccess.make_dir_recursive_absolute(dir)
+	var n := _saved_looks().size() + 1
+	var path := "%s/look_%03d.json" % [dir, n]
+	while FileAccess.file_exists(path):
+		n += 1
+		path = "%s/look_%03d.json" % [dir, n]
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify(_figure.look))
+		_say("LOOK SAVED (%d)" % n)
+
+
+func _load_look(file: String) -> void:
+	var txt := FileAccess.get_file_as_string("%s/%s/%s" % [LOOKS_DIR, _figure.race, file])
+	var lk = JSON.parse_string(txt)
+	if not (lk is Dictionary):
+		return
+	var keep_hd = _figure.look.get("hd", 1)
+	_figure.look = {}
+	_figure.apply(lk)
+	_figure.apply({"hd": keep_hd})
+	_figure.set_shape(lk.get("shape", {}))
+	draft.look = _figure.look.duplicate(true)
+	_say("LOOK %s LOADED" % file.get_basename().get_slice("_", 1))
+
+
+## The face (its shape, eyes, brows, makeup, age and marks - not the hair or body) for your companion
+## (user://looks/companion_<race>.json; Npc wears it on your companion of that race).
+const FACE_KEYS := ["shape", "eyes", "eyes_rgb", "eye_r", "eye_r_rgb", "iris", "iris_size", "pupil", "sclera_color",
+	"sclera_color_rgb", "sclera_amt", "eye_glow", "skin", "skin_rgb", "skin_detail", "hd_age", "weather", "flush", "warmth",
+	"freckles", "freckle_density", "freckle_amt", "freckle_color", "freckle_color_rgb", "moles", "hd_scar", "scar_x", "scar_y",
+	"scar_turn", "scar_size", "scar_color", "scar_color_rgb", "scar_amt", "hd_brow", "brow_color", "brow_color_rgb", "brow_amt",
+	"brow_thick", "brow_arch", "brow_tail", "brow_space", "brow_height", "brow_angle", "lash_color", "lash_color_rgb", "lash_amt",
+	"lip_color", "lip_color_rgb", "lip_amt", "lip_gloss", "lipline_amt", "lipline_color", "lipline_color_rgb", "liner",
+	"liner_color", "liner_color_rgb", "liner_amt", "liner_wing", "liner_lower", "shadow", "shadow_color", "shadow_color_rgb",
+	"shadow_amt", "shadow_size", "blush_amt", "blush_color", "blush_color_rgb", "blush_size", "blush_y", "contour", "paint",
+	"paint_color", "paint_color_rgb", "paint_amt", "paint_y", "paint_size", "paint_turn", "tattoo", "tattoo_color",
+	"tattoo_color_rgb", "tattoo_amt", "tattoo_x", "tattoo_y", "tattoo_size", "tattoo_turn"]
+
+
+func _companion_face() -> void:
+	DirAccess.make_dir_recursive_absolute(LOOKS_DIR)
+	var face := {}
+	for k in FACE_KEYS:
+		if _figure.look.has(k):
+			face[k] = _figure.look[k]
+	var f := FileAccess.open("%s/companion_%s.json" % [LOOKS_DIR, _figure.race], FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify(face))
+
+
+## Editing your companion (EDIT COMPANION): the character's own draft waits in _owner_draft; SAVE keeps the companion's
+## look (Npc.COMPANION_LOOKS - your companion wears it in game), BACK drops it; either way back to the character.
+var _comp_owner := ""
+var _owner_draft := {}
+var _comp_seed := ""
+
+
+## The selected character's companion as the game last saw it ({name, prefix, look?}), {} before it has one.
+func _companion_entry() -> Dictionary:
+	var e = Npc.companion_looks().get(String(draft.get("name", "")))
+	return e if e is Dictionary and String(e.get("prefix", "")) != "" and String(e.get("name", "")) != "" else {}
+
+
+func _edit_companion() -> void:
+	var e := _companion_entry()
+	if e.is_empty() or _figure == null:
+		return
+	draft.look = _figure.look.duplicate(true)
+	_owner_draft = draft.duplicate(true)
+	_comp_owner = String(draft.get("name", ""))
+	var pre := String(e.prefix)
+	var race := pre.get_slice("_", 0)
+	for r in Server.RACES.values():
+		if String(r[1]) == race:
+			race = String(r[0])
+	var lk = e.get("look")
+	draft = {"name": String(e.name), "prefix": pre, "race_name": race, "look": (lk as Dictionary).duplicate(true) if lk is Dictionary else {}}
+	_comp_seed = "" if lk is Dictionary and not (lk as Dictionary).is_empty() else "name:" + String(e.name)
+	_yaw = 0.0
+	_zoom = 1.0
+	_keep_scroll(false)
+	_show("customize")
+
+
+func _end_companion(keep: bool) -> void:
+	if keep and _figure != null:
+		var all := Npc.companion_looks()
+		var e: Dictionary = all.get(_comp_owner, {}) if all.get(_comp_owner) is Dictionary else {}
+		e["name"] = String(draft.get("name", e.get("name", "")))
+		e["prefix"] = String(draft.get("prefix", e.get("prefix", "")))
+		e["look"] = _figure.look.duplicate(true)
+		all[_comp_owner] = e
+		Npc.save_companion_looks(all)
+		_say("%s WILL WEAR THIS LOOK" % String(draft.get("name", "")).to_upper())
+	draft = _owner_draft
+	_owner_draft = {}
+	_comp_owner = ""
+	_comp_seed = ""
+	_yaw = 0.0
+	_zoom = 1.0
+	_keep_scroll(false)
+	_show("customize")
 
 
 ## The options' panel, right side, scrolling; returns the control the rows go in.
@@ -943,7 +1150,7 @@ func _c_part_fit(p: Control, kind: String, y: float) -> float:
 	var node := String(list[i].node)
 	var entry := _figure.part_entry(node)
 	var locked := entry.is_empty() or Fig3Figure.part_locked(_figure.race, String(entry._kind), entry)
-	if Fig3Figure.tuning_on() and not locked:
+	if Fig3Figure.fit_tools or (Fig3Figure.tuning_on() and not locked):
 		return _c_fit_rows(p, {"hair": "HAIR", "beard": "BEARD", "moustache": "MOUSTACHE", "sideburns": "SIDEBURNS"}[kind] + " FIT", node, y)
 	return _c_fit_slider(p, node, "len", "Length", y)
 
@@ -955,17 +1162,46 @@ func _c_fit_rows(p: Control, title: String, node: String, y: float) -> float:
 	var entry := _figure.part_entry(node)
 	var locked := not entry.is_empty() and Fig3Figure.part_locked(_figure.race, String(entry._kind), entry)
 	for f in Fig3Figure.HAIR_FIT:
-		if locked and String(f[0]) != "len":       # (a finished style: its fit fixed, Length only)
+		if locked and String(f[0]) != "len" and not Fig3Figure.fit_tools:     # (a finished style: Length only)
 			continue
 		y = _c_fit_slider(p, node, String(f[0]), String(f[1]), y)
+	if Fig3Figure.fit_tools:
+		y = _c_save_position(p, node, y)
 	if Fig3Figure.tuning_on() and not locked:
 		y = _c_tuning(p, node, y)
 	return y
 
 
+## Save Position (the Hair Sliders): this style's fit kept as the race's own - every character of the race who wears
+## it starts from it (players' own sliders over it; on the owner's machine it goes out with the next update).
+## Reset: the look's own fit for it dropped, back to the saved position.
+func _c_save_position(p: Control, node: String, y: float) -> float:
+	var entry := _figure.part_entry(node)
+	if entry.is_empty():
+		return y
+	var rc := _figure.race
+	var key := Fig3Figure.part_key(String(entry._kind), entry)
+	y += 4
+	_cbutton("Save Position", p, 8, y, (CW - 24) / 2.0, 26, func():
+		var part := Fig3Figure.tuning_part(rc, key).duplicate(true)
+		part["fit"] = _figure.hair_fit_of(node).duplicate()
+		part["node"] = node
+		if not part.has("done"):
+			part["done"] = Time.get_date_string_from_system()
+		Fig3Figure.save_tuning_part(rc, key, part)
+		_forget_fits(node)
+		_say("POSITION SAVED FOR " + _tune_race().to_upper())
+		_redraw(), 13)
+	_cbutton("Reset", p, 16 + (CW - 24) / 2.0, y, (CW - 24) / 2.0, 26, func():
+		_forget_fits(node)
+		_figure._apply_hair_fit()
+		_redraw(), 13)
+	return y + 32
+
+
 ## One fit slider for a part (look.hair_fit, by node: over the race's tuned fit). Right-click: 0.
 func _c_fit_slider(p: Control, node: String, k: String, label: String, y: float) -> float:
-	return _c_slider(p, label, float(_figure.hair_fit_of(node).get(k, 0.0)), -1.0, 1.0, func(v: float):
+	return _c_slider(p, label, float(_figure.hair_fit_of(node).get(k, 0.0)), -Fig3Figure.FIT_RANGE, Fig3Figure.FIT_RANGE, func(v: float):
 		var all: Dictionary = (draft.look.get("hair_fit", {}) as Dictionary).duplicate(true)
 		var one: Dictionary = all.get(node, _figure.hair_fit_of(node)).duplicate()
 		one[k] = v
@@ -1067,7 +1303,18 @@ func _c_face(p: Control, y: float) -> float:
 	y = _c_header(p, "APPEARANCE", y)
 	y = _c_colour(p, "Skin Color", "skin", _skin_colours(), y, "skin")
 	y = _c_colour(p, "Eye Color", "eyes", _eye_colours(), y)
+	if f.is_hd():                                   # (the HD look: a moment's expression, to see the face move)
+		var names: Array = Fig3Figure.EXPRESSIONS.map(func(e): return String(e[0]))
+		y = _c_cycle(p, "Expression", String(names[_expr]), func(d: int):
+			_expr = (_expr + d + names.size()) % names.size()
+			_figure.set_expression(_expr)
+			_redraw(), y)
 	y = _c_hair_style(p, y)
+	# the hair sliders (owner 2026-11-26: "a toggle to enable hair sliders ... and then a save position button ... taken
+	# off of being hidden behind gm mode"): every fit slider for the hair and face hair, and Save Position
+	y = _c_cycle(p, "Hair Sliders", "On" if Fig3Figure.fit_tools else "Off", func(_d: int):
+		Fig3Figure.set_fit_tools(not Fig3Figure.fit_tools)
+		_redraw(), y)
 	y = _c_part_fit(p, "hair", y)
 	if not (f.meta.get("hair_under", {}) as Dictionary).is_empty():      # (the scalp cap: on or off under any style)
 		y = _c_key(p, String(f.meta.hair_under.get("label", "Scalp Cap")), "scalp_cap", ["Off", "On"], y)
@@ -1097,6 +1344,14 @@ func _c_face(p: Control, y: float) -> float:
 		y = _c_key(p, "Face", "face", f.meta.get("faces", []).map(func(x): return String(x.label)), y)
 	if f.option_count("tattoo") > 0:
 		y = _c_key(p, "Tattoo", "tattoo", f.meta.get("tattoos", []).map(func(x): return String(x.label)), y)
+		# (the HD head: the tattoo placed, sized, turned and coloured in face space - owner 2026-11-26)
+		if int(f.look.get("tattoo", 0)) > 0 and f.tattoo_movable():
+			y = _c_colour(p, "Tattoo Color", "tattoo_color", Fig3Figure.TATTOO_COLORS, y)
+			y = _c_amount(p, "Strength", "tattoo_amt", 1.0, 0.1, 1.0, y)
+			y = _c_amount(p, "Left / Right", "tattoo_x", 0.0, Fig3Figure.TATTOO_X.x, Fig3Figure.TATTOO_X.y, y)
+			y = _c_amount(p, "Up / Down", "tattoo_y", 0.0, Fig3Figure.TATTOO_Y.x, Fig3Figure.TATTOO_Y.y, y)
+			y = _c_amount(p, "Size", "tattoo_size", 1.0, Fig3Figure.TATTOO_SIZE.x, Fig3Figure.TATTOO_SIZE.y, y)
+			y = _c_amount(p, "Turn", "tattoo_turn", 0.0, Fig3Figure.TATTOO_TURN.x, Fig3Figure.TATTOO_TURN.y, y)
 	var feats := f.face_features()                 # (the HD head's features, or the classic face shapes')
 	if not feats.is_empty():
 		y = _c_header(p, "FEATURES", y + 4)
@@ -1150,9 +1405,14 @@ func _c_face(p: Control, y: float) -> float:
 func _c_skin(p: Control, y: float) -> float:
 	var on := func(k: String) -> bool: return int(draft.look.get(k, 0)) > 0
 	var layers: Array = (_figure.meta.get("skin_layers", {}) as Dictionary).get("layers", [])
+	var hd := _figure.is_hd() and _figure.hd_look_ok()
+	if hd:
+		y = _c_hd_skin(p, y)
 	y = _c_header(p, "FACE DETAIL", y)
 	for d in layers:
 		var key := String(d.key)
+		if hd and key in ["brows", "lips", "age", "scar", "freckles"]:
+			continue                                   # (the HD head: its own brows, age and marks; lip colour on MAKEUP)
 		if key == "stubble" and _figure.race.ends_with("_f"):
 			continue                                   # (owner 2026-11-06: no stubble for women)
 		var opts := ["None"]
@@ -1201,6 +1461,111 @@ func _c_skin(p: Control, y: float) -> float:
 					y = _c_amount(p, "Up / Down", "paint_y", 0.0, pyv.x, pyv.y, y)
 					y = _c_amount(p, "Size", "paint_size", 1.0, Fig3Figure.PAINT_SIZE.x, Fig3Figure.PAINT_SIZE.y, y)
 					y = _c_amount(p, "Turn", "paint_turn", 0.0, Fig3Figure.PAINT_TURN.x, Fig3Figure.PAINT_TURN.y, y)
+	return y
+
+
+# --- the HD look (owner 2026-11-25: "makeup sliders, better eyebrows ... Dragon's Dogma 2's character creator"):
+# the skin's detail, the brows and lashes on SKIN; lips, eyes and cheeks on MAKEUP. Every colour a palette with the
+# colour wheel for any other.
+func _c_hd_skin(p: Control, y: float) -> float:
+	y = _c_header(p, "SKIN", y)
+	y = _c_amount(p, "Skin Detail", "skin_detail", 0.2, 0.0, 1.0, y)
+	y = _c_amount(p, "Age", "hd_age", 0.0, 0.0, 1.0, y)
+	y = _c_amount(p, "Weathering", "weather", 0.0, 0.0, 1.0, y)
+	y = _c_amount(p, "Flush", "flush", 0.0, -1.0, 1.0, y)
+	y = _c_amount(p, "Warmth", "warmth", 0.0, -1.0, 1.0, y)
+	y = _c_header(p, "MARKS", y + 4)
+	var fopts := ["None"]
+	for d in (_figure.meta.get("skin_layers", {}) as Dictionary).get("layers", []):
+		if String(d.key) == "freckles":
+			fopts.append_array(d.options)
+	if fopts.size() == 1:
+		fopts.append_array(["Light", "Many", "Nose Band", "Sparse"])
+	y = _c_key(p, "Freckles", "freckles", fopts, y)
+	if int(draft.look.get("freckles", 0)) > 0:
+		y = _c_amount(p, "Density", "freckle_density", 0.5, 0.0, 1.0, y)
+		y = _c_colour(p, "Freckle Color", "freckle_color", Fig3Figure.FRECKLE_COLORS, y)
+		y = _c_amount(p, "Strength", "freckle_amt", 0.9, 0.1, 1.2, y)
+	y = _c_amount(p, "Moles", "moles", 0.0, 0.0, 1.0, y)
+	var sopts := ["None"]
+	sopts.append_array(Fig3Figure.HD_SCARS)
+	y = _c_key(p, "Scar", "hd_scar", sopts, y)
+	if int(draft.look.get("hd_scar", 0)) > 0:
+		y = _c_colour(p, "Scar Color", "scar_color", Fig3Figure.SCAR_COLORS, y)
+		y = _c_amount(p, "Strength", "scar_amt", 0.7, 0.1, 1.0, y)
+		y = _c_amount(p, "Left / Right", "scar_x", 1.0, -1.6, 1.6, y)
+		y = _c_amount(p, "Up / Down", "scar_y", 0.0, -1.0, 1.0, y)
+		y = _c_amount(p, "Turn", "scar_turn", 0.0, -90.0, 90.0, y)
+		y = _c_amount(p, "Size", "scar_size", 1.0, 0.5, 1.6, y)
+	y = _c_header(p, "BROWS", y + 4)
+	var shapes := ["None"]
+	for b in Fig3Figure.HD_BROWS:
+		shapes.append(String(b[0]))
+	y = _c_key(p, "Shape", "hd_brow", shapes, y, 1)
+	if int(draft.look.get("hd_brow", 1)) > 0:
+		var bc := [_figure.brow_colour(true)]             # (the first: the hair's)
+		bc.append_array(Fig3Figure.BROW_COLORS)
+		y = _c_colour(p, "Brow Color", "brow_color", bc, y)
+		y = _c_amount(p, "Density", "brow_amt", 1.0, 0.3, 1.4, y)
+		for sl in Fig3Figure.HD_BROW_SLIDERS:
+			y = _c_amount(p, String(sl[1]), String(sl[0]), 0.0, -1.0, 1.0, y)
+	y = _c_header(p, "LASHES", y + 4)
+	var lc := [_figure.brow_colour().darkened(0.35)]   # (the first: the brows')
+	lc.append_array(Fig3Figure.LINER_COLORS)
+	y = _c_colour(p, "Lash Color", "lash_color", lc, y)
+	y = _c_amount(p, "Thickness", "lash_amt", 1.0, 0.4, 1.6, y)
+	var shape: Dictionary = _figure.look.get("shape", {})
+	y = _c_slider(p, "Length", float(shape.get("lash_len", 0.0)), -1.0, 1.0, func(v: float):
+		var sh: Dictionary = (_figure.look.get("shape", {}) as Dictionary).duplicate()
+		if absf(v) < 0.001:
+			sh.erase("lash_len")
+		else:
+			sh["lash_len"] = v
+		draft.look["shape"] = sh
+		_figure.set_shape(sh), y)
+	if FileAccess.file_exists(Fig3Figure.ROOT + "/hd_head/hd_eye_polar.png"):
+		y = _c_header(p, "EYES", y + 4)
+		y = _c_key(p, "Iris", "iris", Fig3Figure.IRIS_PATTERNS, y)
+		y = _c_amount(p, "Iris Size", "iris_size", 0.0, -1.0, 1.0, y)
+		y = _c_amount(p, "Pupil Size", "pupil", 0.0, -1.0, 1.0, y)
+		var ec: Array = _eye_colours()
+		var rc := [ec[clampi(int(draft.look.get("eyes", 0)), 0, ec.size() - 1)] if ec.size() > 0 else Color(0.3, 0.4, 0.6)]
+		rc.append_array(ec)                             # (the first: the same as the other eye)
+		y = _c_colour(p, "Right Eye", "eye_r", rc, y)
+		y = _c_colour(p, "Eye White", "sclera_color", Fig3Figure.SCLERA_COLORS, y)
+		y = _c_amount(p, "White Tint", "sclera_amt", 0.0, 0.0, 1.0, y)
+		y = _c_amount(p, "Glow", "eye_glow", 0.0, 0.0, 1.0, y)
+	return y
+
+
+func _c_makeup(p: Control, y: float) -> float:
+	y = _c_header(p, "LIPS", y)
+	var cols := [Color(0.62, 0.42, 0.4)]               # (the first: the lips' own)
+	cols.append_array(Fig3Figure.LIP_COLORS.slice(1))
+	y = _c_colour(p, "Lip Color", "lip_color", cols, y)
+	if int(draft.look.get("lip_color", 0)) > 0 or _figure.custom_colour("lip_color") != null:
+		y = _c_amount(p, "Strength", "lip_amt", 0.6, 0.1, 1.0, y)
+	y = _c_amount(p, "Gloss", "lip_gloss", 0.3, 0.0, 1.0, y)
+	y = _c_amount(p, "Lip Liner", "lipline_amt", 0.0, 0.0, 1.0, y)
+	y = _c_colour(p, "Liner Color", "lipline_color", Fig3Figure.LIP_COLORS.slice(1), y)
+	y = _c_header(p, "EYES", y + 4)
+	y = _c_key(p, "Eyeliner", "liner", Fig3Figure.LINER_STYLES, y)
+	if int(draft.look.get("liner", 0)) > 0:
+		y = _c_colour(p, "Liner Color", "liner_color", Fig3Figure.LINER_COLORS, y)
+		y = _c_amount(p, "Strength", "liner_amt", 0.9, 0.1, 1.0, y)
+		y = _c_amount(p, "Wing", "liner_wing", 0.0, 0.0, 1.0, y)
+		y = _c_amount(p, "Lower Lid", "liner_lower", 0.0, 0.0, 1.0, y)
+	y = _c_key(p, "Eyeshadow", "shadow", Fig3Figure.SHADOW_STYLES, y)
+	if int(draft.look.get("shadow", 0)) > 0:
+		y = _c_colour(p, "Shadow Color", "shadow_color", Fig3Figure.SHADOW_COLORS, y)
+		y = _c_amount(p, "Strength", "shadow_amt", 0.7, 0.1, 1.0, y)
+		y = _c_amount(p, "Size", "shadow_size", 0.0, -1.0, 1.0, y)
+	y = _c_header(p, "CHEEKS", y + 4)
+	y = _c_amount(p, "Blush", "blush_amt", 0.0, 0.0, 1.0, y)
+	y = _c_colour(p, "Blush Color", "blush_color", Fig3Figure.BLUSH_COLORS, y)
+	y = _c_amount(p, "Size", "blush_size", 0.0, -1.0, 1.0, y)
+	y = _c_amount(p, "Up / Down", "blush_y", 0.0, -1.0, 1.0, y)
+	y = _c_amount(p, "Contour", "contour", 0.0, 0.0, 1.0, y)
 	return y
 
 
@@ -1290,6 +1655,24 @@ func _random_skin(all := false) -> Dictionary:
 	if free.call("lip_color"):
 		out["lip_color"] = 0 if randf() < 0.8 else randi_range(1, Fig3Figure.LIP_COLORS.size() - 1)
 		out["lip_amt"] = snappedf(randf_range(0.35, 0.7), 0.05)
+	# the HD look: brows of any shape, a little skin detail, now and then a touch of makeup (more often on women)
+	if _figure.is_hd() and _figure.hd_look_ok():
+		if free.call("hd_brow"):
+			out["hd_brow"] = 1 if randf() < 0.35 else randi_range(1, Fig3Figure.HD_BROWS.size() - 1)   # (not Scarred)
+			for sl in Fig3Figure.HD_BROW_SLIDERS:
+				out[String(sl[0])] = snappedf(clampf(randfn(0.0, 0.3), -0.8, 0.8), 0.05)
+		if free.call("skin_detail"):
+			out["skin_detail"] = snappedf(randf_range(0.0, 0.45), 0.05)
+		var made := 0.4 if _figure.race.ends_with("_f") else 0.06
+		if free.call("liner"):
+			out["liner"] = randi_range(1, 3) if randf() < made else 0
+			out["liner_color"] = 0 if randf() < 0.7 else randi() % Fig3Figure.LINER_COLORS.size()
+			out["liner_wing"] = snappedf(randf_range(0.0, 0.6), 0.05) if randf() < 0.4 else 0.0
+		if free.call("shadow"):
+			out["shadow"] = randi_range(1, Fig3Figure.SHADOW_STYLES.size() - 1) if randf() < made * 0.8 else 0
+			out["shadow_color"] = randi() % Fig3Figure.SHADOW_COLORS.size()
+		if free.call("blush_amt"):
+			out["blush_amt"] = snappedf(randf_range(0.2, 0.6), 0.05) if randf() < made * 0.6 else 0.0
 	return out
 
 
@@ -1358,11 +1741,16 @@ func _customize_existing() -> void:
 	editing = true
 	_yaw = 0.0
 	_zoom = 1.0
+	_comp_owner = ""
+	_comp_seed = ""
 	draft = (chars[sel] as Dictionary).duplicate(true)
 	_show("customize")
 
 
 func _customize_continue() -> void:
+	if _comp_owner != "":
+		_end_companion(true)
+		return
 	draft.look = _figure.look.duplicate(true)
 	if editing:
 		if Server.active:
@@ -1738,6 +2126,28 @@ func _load_realm_scene() -> void:
 	var light: Array = REALM_LIGHT.get(realm, [Color(1, 1, 1), 1.0])
 	_env.ambient_light_color = light[0]
 	_env.ambient_light_energy = light[1]
+	_realm_ambient = float(light[1])
+	_apply_light()
+
+
+func _apply_light() -> void:
+	var l: Array = LIGHTS[clampi(_light, 0, LIGHTS.size() - 1)]
+	if _sun:
+		_sun.light_color = l[1]
+		_sun.light_energy = l[2]
+		_sun.rotation_degrees = l[3]
+	if _env:
+		_env.ambient_light_energy = _realm_ambient * float(l[4])
+	if _torch:
+		_torch.visible = bool(l[5])
+		if _torch.visible:
+			var h := _head_position()
+			var fwd := Vector3(0, 0, 1)
+			if _figure:
+				fwd = (_figure.global_transform.basis * Vector3(0, 0, 1)).normalized()
+			var side := fwd.cross(Vector3.UP).normalized()
+			_torch.global_position = h + fwd * 0.55 + side * 0.45 - Vector3(0, 0.2, 0)
+			_torch.light_energy = 2.2
 
 
 func _show_figure(c: Dictionary) -> void:
@@ -1752,6 +2162,7 @@ func _show_figure(c: Dictionary) -> void:
 		if _figure:
 			_figure.queue_free()
 		_figure = Fig3Figure.new()
+		_expr = 0
 		add_child(_figure)
 		_figure.load_figure(prefix)
 		_figure.set_hd(true)                           # (the player's own figure: the HD head where the race has one)
@@ -2229,6 +2640,54 @@ func _shots(folder: String) -> void:
 	_name_edit.text = "Brennan"
 	_create_continue()
 	await save.call("4_customize")
+	if _figure.is_hd() and _figure.hd_look_ok():         # (the HD look: its pages, the lights, an expression)
+		_figure.apply({"hd_brow": 3, "brow_thick": 0.3, "freckles": 3, "freckle_density": 0.6, "hd_age": 0.4, "hd_scar": 3,
+				"scar_x": -1.0, "scar_y": 0.5, "iris": 1, "liner": 1, "liner_wing": 0.5, "shadow": 1, "shadow_color": 2,
+				"lip_color": 1, "lip_amt": 0.6, "lip_gloss": 0.6, "blush_amt": 0.4})
+		draft.look = _figure.look.duplicate(true)
+		_tab = "skin"
+		_show("customize")
+		await save.call("4b_hd_skin")
+		_scroll.scroll_vertical = 100000
+		await save.call("4c_hd_skin_end")
+		_tab = "makeup"
+		_show("customize")
+		await save.call("4d_hd_makeup")
+		for li in range(1, LIGHTS.size()):
+			_light = li
+			_apply_light()
+			_show("customize")
+			await save.call("4e_light_%s" % String(LIGHTS[li][0]).to_lower())
+		_light = 0
+		_apply_light()
+		_tab = "face"
+		_expr = 1
+		_figure.set_expression(1)
+		_show("customize")
+		await save.call("4f_expr_smile")
+		_expr = 0
+		_figure.set_expression(0)
+		# the Hair Sliders (a long style, tilted back and flared; the toggle put back as it was after)
+		var was := Fig3Figure.fit_tools
+		Fig3Figure.fit_tools = true
+		var hs: Array = _figure.meta.get("hair_styles", [])
+		for i in hs.size():
+			if String(hs[i].get("label", "")).begins_with("Long") and hs[i].get("node") != null and bool(hs[i].get("fit", false)):
+				_figure.apply({"hair": i, "hair_fit": {String(hs[i].node): {"tilt": 1.0, "flare": 1.5, "volume": 0.8, "len": 1.5}}})
+				break
+		draft.look = _figure.look.duplicate(true)
+		_show("customize")
+		_scroll.scroll_vertical = 420
+		await save.call("4h_hair_sliders")
+		Fig3Figure.fit_tools = was
+		_figure.look.erase("hair_fit")
+		_figure.apply({"hair": 0})
+		draft.look = _figure.look.duplicate(true)
+		_save_look()
+		await save.call("4g_saved")
+		var mine := _saved_looks()                       # (the test's own saved look: gone again)
+		if mine.size() > 0:
+			DirAccess.remove_absolute("%s/%s/%s" % [LOOKS_DIR, _figure.race, String(mine[-1])])
 	if not _figure.meta.get("face_shapes", []).is_empty():
 		_figure.set_shape({"nose_tip": 0.8, "cheekbones": 0.8, "chin_point": 0.6, "chin_width": -0.8, "chin_length": 0.2, "eye_size": 0.7})
 		draft.look = _figure.look.duplicate(true)
@@ -2260,6 +2719,34 @@ func _shots(folder: String) -> void:
 	_body_view = false
 	_customize_continue()
 	await save.call("6_select_with_character")
+	# EDIT COMPANION: greyed before the game has seen one; then a test companion (its record put back after)
+	for i in chars.size():
+		if String(chars[i].name) == "Brennan":
+			sel = i
+	_customize_existing()
+	await save.call("7_customize_no_companion")
+	var had := FileAccess.get_file_as_string(Npc.COMPANION_LOOKS) if FileAccess.file_exists(Npc.COMPANION_LOOKS) else ""
+	var all := Npc.companion_looks()
+	all["Brennan"] = {"name": "Aislinn", "prefix": "elf_f"}
+	Npc.save_companion_looks(all)
+	_show("customize")
+	await save.call("7b_customize_companion_ready")
+	_edit_companion()
+	await save.call("7c_companion_editor")
+	_figure.apply({"hair_color": 3, "lip_color": 2, "lip_amt": 0.7, "liner": 2, "liner_amt": 0.8, "eye_glow": 0.6})
+	_customize_continue()
+	await save.call("7d_back_to_character")
+	var saved_ok: bool = (Npc.companion_looks().get("Brennan", {}) as Dictionary).has("look")
+	_edit_companion()
+	await save.call("7e_companion_saved_%s" % ("ok" if saved_ok else "MISSING"))
+	_end_companion(false)
+	if had == "":
+		DirAccess.remove_absolute(Npc.COMPANION_LOOKS)
+	else:
+		var hf := FileAccess.open(Npc.COMPANION_LOOKS, FileAccess.WRITE)
+		hf.store_string(had)
+		hf = null
+	_show("select")
 	CharacterStore.remove(Accounts.account, "Brennan")
 	get_tree().quit()
 

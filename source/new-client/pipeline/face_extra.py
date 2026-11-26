@@ -179,5 +179,86 @@ def run(folder, out=None):
     print('%s: %d extra face sliders, %d hair / helm meshes follow them' % (folder.name, len(EXTRA), carried))
 
 
+# ---- the beast races' own (the character creator plan, phase 5 - owner 2026-11-26): the Valkyn's tusks (its lower
+# teeth, grown from their roots - the Troll's and Kobold's teeth sit behind closed lips, so they have none to grow) and
+# the Sylvan's crest (the leaves standing off the skull, longer or shorter). The rest of phase 5 - muzzle, its width,
+# head width, brow ridge, ear angle - the beast races already have (face_morphs, and the extra sliders above).
+BEAST = {'val': ['tusks'], 'syl': ['crest']}
+BEAST_LABELS = {'tusks': 'Tusk Size', 'crest': 'Crest'}
+
+
+def beast_fields(P, T, keys):
+    from scipy.sparse import coo_matrix
+    from scipy.sparse.csgraph import connected_components
+    grp = weld(P); ng = grp.max() + 1; Tg = grp[T]
+    A = coo_matrix((np.ones(len(Tg) * 3), (Tg.ravel(), np.roll(Tg, 1, 1).ravel())), shape=(ng, ng))
+    _, lab = connected_components(A, directed=False)
+    lab = lab[grp]
+    sizes = np.bincount(lab)
+    skin = np.argmax(sizes)
+    H = float(np.ptp(P[lab == skin][:, 2]))
+    D = {}
+    if 'tusks' in keys:
+        # the teeth: the small pieces in the middle (x ~ 0); the eyes are the pair off to the sides
+        small = [i for i in range(len(sizes)) if i != skin and abs(P[lab == i][:, 0].mean()) < 0.05 * H]
+        d = np.zeros_like(P)
+        if small:
+            low = min(small, key=lambda i: P[lab == i][:, 2].mean())
+            m = lab == low
+            Q = P[m]
+            base = np.array([Q[:, 0].mean(), Q[:, 1].mean(), np.percentile(Q[:, 2], 10)])
+            # grown up and out from the gum line: the points above it most (the tusks' tips)
+            k = np.clip((Q[:, 2] - base[2]) / max(np.ptp(Q[:, 2]), 1e-6), 0, 1)
+            dd = (Q - base) * 0.8
+            dd[:, 2] *= 1.0 + 0.6 * k
+            d[m] = dd * (0.4 + 0.6 * k)[:, None]
+        D['tusks'] = d
+    if 'crest' in keys:
+        Ps = P[lab == skin]
+        top = Ps[Ps[:, 2] > np.percentile(Ps[:, 2], 40)]
+        A_ = np.c_[2 * top, np.ones(len(top))]
+        s_, *_ = np.linalg.lstsq(A_, (top * top).sum(1), rcond=None)
+        c = s_[:3]; R = float(np.sqrt(s_[3] + c @ c))
+        r = np.linalg.norm(P - c, axis=1)
+        w = np.clip((r - 1.02 * R) / (0.12 * R), 0, 1) * (lab == skin) * (P[:, 2] > c[2] - 0.2 * R)
+        D["crest"] = (P - c) * (0.7 * w * (r - R) / np.maximum(r, 1e-6))[:, None]
+    return D
+
+
+def run_beast(folder, out=None):
+    folder = Path(folder); out = Path(out or folder)
+    keys = BEAST.get(folder.name[:3])
+    if not keys:                                        # (not a beast race: nothing to add)
+        return
+    g = G(folder / 'figure.gltf')
+    node = next(n for n in g.g['nodes'] if n.get('name') == 'head' and 'mesh' in n)
+    mesh = g.g['meshes'][node['mesh']]
+    names = list(mesh.get('extras', {}).get('targetNames', []))
+    if any(n == 'fx_' + keys[0] for n in names):
+        print(folder.name, 'already has its beast sliders'); return
+    prim = mesh['primitives'][0]
+    P = g.acc(prim['attributes']['POSITION']).astype(np.float64)
+    T = g.acc(prim['indices']).astype(np.int64).reshape(-1, 3)
+    D = beast_fields(P, T, keys)
+    grp = weld(P); n0 = vertex_normals(P, T, grp)
+    for k in keys:
+        pa, na = add_target(g, D[k], vertex_normals(P + D[k], T, grp) - n0)
+        prim['targets'].append({'POSITION': pa, 'NORMAL': na})
+    mesh['extras']['targetNames'] = names + ['fx_' + k for k in keys]
+    if 'weights' in mesh:
+        mesh['weights'] = mesh['weights'] + [0.0] * len(keys)
+    out.mkdir(parents=True, exist_ok=True)
+    g.save(out / 'figure.gltf')
+    meta = json.loads((folder / 'figure.json').read_text(encoding='utf-8'))
+    fs = [x for x in meta.get('face_shapes', []) if x[0] not in keys]
+    meta['face_shapes'] = fs + [[k, BEAST_LABELS[k]] for k in keys]
+    (out / 'figure.json').write_text(json.dumps(meta, indent=1), encoding='utf-8')
+    print('%s: beast sliders %s (moves up to %s)' % (folder.name, ', '.join(keys),
+          ', '.join('%.2f' % np.linalg.norm(D[k], axis=1).max() for k in keys)))
+
+
 if __name__ == '__main__':
-    run(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None)
+    if sys.argv[1] == '--beast':
+        run_beast(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else None)
+    else:
+        run(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None)

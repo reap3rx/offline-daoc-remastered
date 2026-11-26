@@ -481,6 +481,7 @@ func apply(changes: Dictionary) -> void:
 		m.set_shader_parameter("has_decal", decal != "")
 		if decal != "":
 			m.set_shader_parameter("decal_tex", _tex(decal))
+		_tattoo(m, decal != "")
 		_layers(m)
 		_hd_textures(m)
 		for mi in _parts("head"):
@@ -558,7 +559,7 @@ func apply(changes: Dictionary) -> void:
 			var bst: Dictionary = styles[clampi(int(beards[k].style), 0, styles.size() - 1)]
 			var bcols: Array = beards[k].colours if (beards[k] as Dictionary).has("colours") else bst.colours
 			if bcols.size() > 0:
-				var bm := _hair_material(hair_colour(bcols) if custom_colour("hair_color") != null else bcols[_beard_colour(styles, bcols)])
+				var bm := _hair_material(hair_colour(bcols) if custom_colour("hair_color") != null else aged(bcols[_beard_colour(styles, bcols)]))
 				for mi in _parts(bnode):
 					mi.material_override = bm
 	# the moustache (owner 2026-11-06: "a beard and moustache subfolder" - pipeline/import_hair.py) and the sideburns
@@ -576,7 +577,7 @@ func apply(changes: Dictionary) -> void:
 			_jewels(list[k], k + 1 == worn and not _hair_covered())
 			if k + 1 == worn and (list[k].colours as Array).size() > 0:
 				var mcols: Array = list[k].colours
-				var mm := _hair_material(hair_colour(mcols) if custom_colour("hair_color") != null else mcols[_beard_colour(styles, mcols)])
+				var mm := _hair_material(hair_colour(mcols) if custom_colour("hair_color") != null else aged(mcols[_beard_colour(styles, mcols)]))
 				for mi in _parts(mn):
 					mi.material_override = mm
 	if not (meta.get("turbans", []) as Array).is_empty():
@@ -622,7 +623,26 @@ const TURBAN_HAIR := 2
 ## (Then: "A left/right slider ... one that kind of bends the sides backward ... size height, and size width ... the
 ## width from back to front" - and wider, to fit each style by hand.)
 const HAIR_FIT := [["lr", "Left / Right"], ["up", "Up / Down"], ["fwd", "Forward / Back"], ["size", "Size"],
-	["height", "Height"], ["width", "Width"], ["depth", "Depth"], ["wrap", "Wrap"], ["len", "Length"]]
+	["height", "Height"], ["width", "Width"], ["depth", "Depth"], ["wrap", "Wrap"], ["len", "Length"],
+	["tilt", "Tilt"], ["flare", "Flare"], ["volume", "Volume"]]
+## (owner 2026-11-26: "increase the range of them all"; tilt, flare and volume: pipeline/hair_extra.py)
+const FIT_RANGE := 2.0
+## The creator's Hair Sliders toggle (every fit slider and Save Position, for everyone - no longer the GM's only):
+## remembered on this computer.
+static var fit_tools := false                 # (read from user://creator.cfg when the creator opens)
+
+
+static func _load_fit_tools() -> bool:
+	var c := ConfigFile.new()
+	return c.load("user://creator.cfg") == OK and bool(c.get_value("creator", "hair_sliders", false))
+
+
+static func set_fit_tools(on: bool) -> void:
+	fit_tools = on
+	var c := ConfigFile.new()
+	c.load("user://creator.cfg")
+	c.set_value("creator", "hair_sliders", on)
+	c.save("user://creator.cfg")
 ## The face hair worn beside a beard: [look key, figure.json list, the creator's label].
 const FACE_HAIR := [["moustache", "moustaches", "Moustache"], ["sideburns", "sideburns", "Sideburns"]]
 const TURBAN_COLORS := [Color(0.92, 0.9, 0.84), Color(0.2, 0.18, 0.16), Color(0.55, 0.12, 0.1), Color(0.16, 0.24, 0.5),
@@ -665,9 +685,79 @@ const FRECKLE_COLORS := [Color(0.66, 0.5, 0.4), Color(0.55, 0.38, 0.28), Color(0
 ## Brow colours (look brow_color; 0 = the hair's): black, dark brown, brown, auburn, blonde, grey, white, red.
 const BROW_COLORS := [Color(0.06, 0.05, 0.05), Color(0.16, 0.1, 0.07), Color(0.3, 0.2, 0.12), Color(0.4, 0.18, 0.1),
 	Color(0.62, 0.5, 0.3), Color(0.45, 0.43, 0.42), Color(0.82, 0.8, 0.76), Color(0.55, 0.22, 0.1)]
+## The HD look's makeup colours (owner 2026-11-25: palettes, with the colour wheel for any other): liner, shadow, blush.
+const LINER_COLORS := [Color(0.03, 0.025, 0.03), Color(0.2, 0.12, 0.08), Color(0.16, 0.16, 0.18), Color(0.08, 0.1, 0.25),
+	Color(0.25, 0.08, 0.22), Color(0.1, 0.24, 0.14), Color(0.85, 0.84, 0.8), Color(0.62, 0.48, 0.2)]
+const SHADOW_COLORS := [Color(0.42, 0.33, 0.3), Color(0.5, 0.33, 0.2), Color(0.38, 0.2, 0.36), Color(0.2, 0.19, 0.21),
+	Color(0.7, 0.42, 0.45), Color(0.4, 0.48, 0.36), Color(0.32, 0.45, 0.62), Color(0.72, 0.58, 0.3), Color(0.42, 0.1, 0.14),
+	Color(0.88, 0.84, 0.78)]
+const BLUSH_COLORS := [Color(0.85, 0.42, 0.45), Color(0.9, 0.55, 0.42), Color(0.92, 0.45, 0.35), Color(0.62, 0.22, 0.32),
+	Color(0.6, 0.38, 0.26)]
+## The HD brows (look hd_brow: 0 none, k = HD_BROWS[k - 1]; unset: the first): label, inner shift, arch, peak along,
+## slope, half thickness, inner thickness, tail thickness, length, coarse hairs, gap (pipeline/hd_head/look3.py BROWS).
+const HD_BROWS := [
+	["Natural", 0.0, 0.05, 0.62, 0.0, 0.04, 1.0, 0.35, 1.0, 0.0, 0.0],
+	["Soft Arch", 0.0, 0.075, 0.58, -0.02, 0.036, 0.95, 0.3, 1.0, 0.0, 0.0],
+	["High Arch", 0.01, 0.12, 0.55, -0.05, 0.033, 0.9, 0.28, 0.98, 0.0, 0.0],
+	["Straight", 0.0, 0.015, 0.6, 0.0, 0.04, 1.0, 0.45, 1.02, 0.0, 0.0],
+	["Angled", 0.0, 0.1, 0.68, 0.06, 0.038, 0.85, 0.3, 1.0, 0.0, 0.0],
+	["Thick", 0.0, 0.04, 0.62, 0.0, 0.058, 1.0, 0.45, 1.0, 0.4, 0.0],
+	["Bushy", -0.02, 0.04, 0.62, 0.02, 0.066, 1.05, 0.55, 1.03, 1.0, 0.0],
+	["Thin", 0.01, 0.06, 0.6, -0.02, 0.022, 0.9, 0.4, 0.98, 0.0, 0.0],
+	["Rounded", 0.0, 0.095, 0.5, -0.04, 0.038, 0.95, 0.35, 0.96, 0.0, 0.0],
+	["Feathered", 0.0, 0.06, 0.6, 0.0, 0.046, 1.0, 0.3, 1.0, 0.2, 0.0],
+	["Tapered", 0.0, 0.065, 0.6, -0.02, 0.05, 1.1, 0.15, 1.04, 0.0, 0.0],
+	["Scarred", 0.0, 0.055, 0.62, 0.0, 0.042, 1.0, 0.35, 1.0, 0.2, 0.42]]
+## The brows' sliders (look keys, -1 .. 1) and the liner and shadow styles.
+const HD_BROW_SLIDERS := [["brow_thick", "Thickness"], ["brow_arch", "Arch"], ["brow_tail", "Tail Length"],
+	["brow_space", "Spacing"], ["brow_height", "Height"], ["brow_angle", "Angle"]]
+const LINER_STYLES := ["None", "Thin", "Bold", "Smudged"]
+## The HD scars (pipeline/hd_head/marks3.py SCARS, the tiles of hd_scars.png).
+const HD_SCARS := ["Slash", "Gash", "Claw", "Lip", "Brow", "Burn"]
+## The HD eyes (pipeline/hd_head/eyes3.py PATTERNS, the rows of hd_iris.png) and the eye-white's tints.
+const IRIS_PATTERNS := ["Natural", "Fibrous", "Starburst", "Ringed", "Speckled", "Smooth"]
+const SCLERA_COLORS := [Color(0.95, 0.93, 0.88), Color(0.9, 0.62, 0.6), Color(0.86, 0.8, 0.52), Color(0.55, 0.56, 0.6),
+	Color(0.08, 0.07, 0.08), Color(0.7, 0.12, 0.1), Color(0.35, 0.55, 0.85), Color(0.62, 0.85, 0.6)]
+const SHADOW_STYLES := ["None", "Soft", "Smoky", "Winged", "To the Brow", "Halo"]
 ## War paint placement (owner 2026-11-06: "up, down, scale, and rotation ... clamped to not go off of the face"):
 ## look paint_y (eye spacings), paint_size, paint_turn (degrees) within these.
 const PAINT_Y := Vector2(-0.45, 0.45)
+## The race tattoos on the HD head (owner 2026-11-26: tattoos "as HD face-space layers with their own colour, position
+## and size"): read through figure.json hd_head.tattoo (face space -> the classic face's UV), so they move, scale and
+## turn in face space. look tattoo_x / tattoo_y (eye spacings), tattoo_size, tattoo_turn (degrees), tattoo_amt, and
+## tattoo_color (0 the tattoo's own colours, else a swatch - or tattoo_color_rgb).
+const TATTOO_X := Vector2(-0.6, 0.6)
+const TATTOO_Y := Vector2(-0.8, 0.8)
+const TATTOO_SIZE := Vector2(0.6, 1.5)
+const TATTOO_TURN := Vector2(-40.0, 40.0)
+const TATTOO_COLORS := [Color(0, 0, 0), Color(0.16, 0.3, 0.68), Color(0.06, 0.06, 0.07), Color(0.6, 0.1, 0.08),
+	Color(0.14, 0.4, 0.2), Color(0.72, 0.52, 0.16), Color(0.42, 0.16, 0.52), Color(0.86, 0.84, 0.8), Color(0.5, 0.28, 0.12)]
+
+
+## Whether this head draws its tattoo in face space (the HD head of a race with tattoos).
+func tattoo_movable() -> bool:
+	return is_hd() and (meta.get("hd_head", {}) as Dictionary).has("tattoo")
+
+
+func _tattoo(m: ShaderMaterial, on: bool) -> void:
+	var hh: Dictionary = meta.get("hd_head", {})
+	var fs := on and tattoo_movable()
+	m.set_shader_parameter("tat_fs", fs)
+	m.set_shader_parameter("tat_amt", clampf(float(look.get("tattoo_amt", 1.0)), 0.0, 1.0))
+	if not fs:
+		return
+	m.set_shader_parameter("hd_tat", _hd_load("%s/races/%s/%s.png" % [ROOT, race, String(hh.tattoo)], false))
+	var tr: Array = hh.get("tattoo_range", [-2.2, 2.2, -2.6, 2.4])
+	m.set_shader_parameter("hd_trange", Vector4(tr[0], tr[1], tr[2], tr[3]))
+	m.set_shader_parameter("tat_xf", Vector4(clampf(float(look.get("tattoo_x", 0.0)), TATTOO_X.x, TATTOO_X.y),
+		clampf(float(look.get("tattoo_y", 0.0)), TATTOO_Y.x, TATTOO_Y.y),
+		clampf(float(look.get("tattoo_size", 1.0)), TATTOO_SIZE.x, TATTOO_SIZE.y),
+		deg_to_rad(clampf(float(look.get("tattoo_turn", 0.0)), TATTOO_TURN.x, TATTOO_TURN.y))))
+	var own = custom_colour("tattoo_color")
+	var ci := int(look.get("tattoo_color", 0))
+	var tc: Color = own if own != null else TATTOO_COLORS[clampi(ci, 0, TATTOO_COLORS.size() - 1)]
+	var tinted := own != null or ci > 0
+	m.set_shader_parameter("tat_tint", Color(pow(tc.r, 2.2), pow(tc.g, 2.2), pow(tc.b, 2.2), 1.0 if tinted else 0.0))
 const PAINT_SIZE := Vector2(0.7, 1.35)
 const PAINT_TURN := Vector2(-30.0, 30.0)
 static var _layer_tex := {}                     # path -> the mask texture (shared by every figure of the race)
@@ -740,7 +830,7 @@ func _apply_hair_fit() -> void:
 		for nd in nodes:
 			for mi in _parts(nd):
 				for f in HAIR_FIT:
-					_blend(mi, "hf_" + String(f[0]), clampf(float(fit.get(String(f[0]), 0.0)), -1.0, 1.0))
+					_blend(mi, "hf_" + String(f[0]), clampf(float(fit.get(String(f[0]), 0.0)), -FIT_RANGE, FIT_RANGE))
 
 
 ## A part's rings (a dwarf beard's braids, owner 2026-11-06: "missing the models for the rings"): drawn from their own
@@ -969,6 +1059,7 @@ func _hair_material(col: Dictionary) -> ShaderMaterial:
 		m.set_shader_parameter("relief", 0.16)      # (its strands, raised)
 	m.set_shader_parameter("tint", Color(col.tint[0], col.tint[1], col.tint[2]))
 	m.set_shader_parameter("tint_mode", 1)
+	m.set_shader_parameter("desat", float(col.get("desat", 0.0)))
 	return m
 
 
@@ -1031,19 +1122,19 @@ func _layers(m: ShaderMaterial) -> void:
 	var layered := is_layered() or is_hd()
 	# (the HD head's face has no painted brows: a look that never chose any wears its face's own, as a layer)
 	var brows_opt := int(look.get("brows", int(layered_changes().get("brows", 0)) if is_hd() and not look.has("brows") else 0))
-	var c: int = pick.call("brows", brows_opt) if layered else -1   # (the old faces paint their own)
+	var c: int = pick.call("brows", brows_opt) if layered and not is_hd() else -1   # (the old faces paint their own; the HD head draws its own)
 	if c >= 0:
 		slots.append([c, brow, clampf(float(look.get("brow_amt", 1.0)), 0.0, 1.5) * 0.9, 3])
-	c = pick.call("freckles", int(look.get("freckles", 0)))
+	c = pick.call("freckles", int(look.get("freckles", 0))) if not is_hd() else -1   # (the HD head: its own)
 	if c >= 0:
 		var fc = custom_colour("freckle_color")
 		if fc == null:
 			fc = FRECKLE_COLORS[clampi(int(look.get("freckle_color", 0)), 0, FRECKLE_COLORS.size() - 1)]
 		slots.append([c, fc, clampf(float(look.get("freckle_amt", 0.9)), 0.0, 1.2), 2])
 	var ast := int(look.get("age_style", 1 if float(look.get("age", 0.0)) > 0.01 else 0))
-	if ast > 0:
+	if ast > 0 and not is_hd():
 		slots.append([pick.call("age", ast), Color(0.4, 0.34, 0.32), clampf(float(look.get("age", 0.7)), 0.0, 1.0), 2])
-	c = pick.call("scar", int(look.get("scar", 0)))
+	c = pick.call("scar", int(look.get("scar", 0))) if not is_hd() else -1
 	if c >= 0:
 		var sc = custom_colour("scar_color")
 		if sc == null:
@@ -1066,7 +1157,7 @@ func _layers(m: ShaderMaterial) -> void:
 		scalp_shade = [int((defs.get("scalp", {}) as Dictionary).get("shade_chan", -1)), sc.darkened(0.55), 0.7, 3]
 	var li := int(look.get("lip_color", 0))
 	var lc = custom_colour("lip_color")
-	if lc != null or (li > 0 and li < LIP_COLORS.size()):
+	if (lc != null or (li > 0 and li < LIP_COLORS.size())) and not is_hd():
 		slots.append([pick.call("lips", 1), lc if lc != null else LIP_COLORS[li], clampf(float(look.get("lip_amt", 0.6)), 0.0, 1.0), 1])
 	_paint(m, sl)
 	slots = slots.filter(func(s): return int(s[0]) >= 0)
@@ -1335,18 +1426,153 @@ func _hd_textures(m: ShaderMaterial) -> void:
 			m.set_shader_parameter(k[1], _hd_load("%s/races/%s/%s.png" % [ROOT, race, nm], k[2]))
 	m.set_shader_parameter("hd_uv_k", float(hh.get("uv_k", 0.67)))
 	m.set_shader_parameter("has_eye", false)        # (the HD head's eyes are their own mesh)
+	_hd_look(m, hh)
+
+
+static func _lin(c: Color) -> Vector3:
+	return Vector3(pow(c.r, 2.2), pow(c.g, 2.2), pow(c.b, 2.2))
+
+
+## A look colour: the player's own (key_rgb), or the palette's (key: index; def when unset).
+func _look_colour(key: String, palette: Array, def := 0) -> Color:
+	var own = custom_colour(key)
+	if own != null:
+		return own
+	return palette[clampi(int(look.get(key, def)), 0, palette.size() - 1)]
+
+
+## The brows' colour: the player's own, the brow palette's, or the hair's darkened (as the classic brows).
+func brow_colour(hair_only := false) -> Color:
+	if custom_colour("brow_color") != null and not hair_only:
+		return custom_colour("brow_color")
+	if int(look.get("brow_color", 0)) > 0 and not hair_only:
+		return BROW_COLORS[clampi(int(look.brow_color) - 1, 0, BROW_COLORS.size() - 1)]
+	var hair := Color(0.22, 0.16, 0.11)
+	var hrgb: Array = (meta.get("skin_layers", {}) as Dictionary).get("hair_rgb", [])
+	var styles: Array = meta.get("hair_styles", [])
+	var hs := int(look.get("hair", 0))
+	var cols: Array = styles[hs].get("colours", []) if hs >= 0 and hs < styles.size() else []
+	var hc: Dictionary = cols[clampi(int(look.get("hair_color", 0)), 0, cols.size() - 1)] if cols.size() > 0 else {}
+	if custom_colour("hair_color") != null:
+		hair = custom_colour("hair_color")
+	elif hc.has("rgb"):                              # (the hair as worn: its texture's colour times its tint)
+		var t: Array = hc.get("tint", [1, 1, 1])
+		hair = Color(clampf(float(hc.rgb[0]) * float(t[0]), 0, 1), clampf(float(hc.rgb[1]) * float(t[1]), 0, 1),
+			clampf(float(hc.rgb[2]) * float(t[2]), 0, 1))
+	elif hrgb.size() > 0:
+		var h: Array = hrgb[clampi(int(look.get("hair_color", 0)), 0, hrgb.size() - 1)]
+		hair = Color(h[0], h[1], h[2])
+	return hair.darkened(0.3).lerp(Color(0.55, 0.54, 0.52), grey_k())
+
+
+## The HD look's uniforms (the HD head's face maps beside the figure; the brows' hair shared): the skin's detail, the
+## brows, makeup and lip colour (look keys: Fig3Figure HD_*, the creator's SKIN and MAKEUP pages).
+func _hd_look(m: ShaderMaterial, hh: Dictionary) -> void:
+	var fi: Dictionary = hh.get("face_info", {})
+	if not hh.has("face") or fi.is_empty():
+		m.set_shader_parameter("brow_c", Vector4(0.35, 0, 0, 0))
+		return
+	m.set_shader_parameter("hd_face", _hd_load("%s/races/%s/%s.png" % [ROOT, race, String(hh.face)], false))
+	m.set_shader_parameter("hd_mask", _hd_load("%s/races/%s/%s.png" % [ROOT, race, String(hh.mask)], true))
+	m.set_shader_parameter("hd_brow_hair", _hd_load(ROOT + "/hd_head/hd_brow_hair.png", true))
+	var ur: Array = fi.get("u_range", [-4, 4])
+	var vr: Array = fi.get("v_range", [-6, 4])
+	m.set_shader_parameter("hd_frange", Vector4(ur[0], ur[1], vr[0], vr[1]))
+	var cs: Dictionary = fi.get("corners", {})
+	if cs.has("L") and cs.has("R"):
+		var l: Array = cs.L
+		var r: Array = cs.R
+		m.set_shader_parameter("hd_eyec", Vector4((absf(l[0][0]) + absf(r[0][0])) / 2.0, (float(l[0][1]) + float(r[0][1])) / 2.0,
+			(absf(l[1][0]) + absf(r[1][0])) / 2.0, (float(l[1][1]) + float(r[1][1])) / 2.0))
+	m.set_shader_parameter("skin_detail", clampf(float(look.get("skin_detail", 0.2)), 0.0, 1.0))
+	# the brows
+	var bi := int(look.get("hd_brow", 1))
+	var br: Array = (fi.get("land", {}) as Dictionary).get("browL", [0.32, 0.35])
+	var p: Array = HD_BROWS[clampi(bi - 1, 0, HD_BROWS.size() - 1)]
+	var sl := func(k: String) -> float: return clampf(float(look.get(k, 0.0)), -1.0, 1.0)
+	# (the race's own brow line - its painted brows, fitted in face space: figure.json hd_head.face_info.brow - with
+	# the shape's differences from Natural over it; owner 2026-11-25: they sat "up high and in" from a fixed offset)
+	var rb: Dictionary = fi.get("brow", {})
+	var u0 := float(rb.get("u0", 0.10))
+	var v0 := float(rb.get("v0", float(br[1]) - 0.03))
+	var ln := float(rb.get("len", 0.64))
+	var rslope := float(rb.get("slope", 0.0)) * 0.6    # (the race's sweep kept, softened: an Elf's read as a scowl)
+	var rarch := float(rb.get("arch", 0.05))
+	var th := float(rb.get("th", 0.052)) * (float(p[5]) / 0.04)
+	m.set_shader_parameter("brow_a", Vector4(u0 + p[1] + 0.12 * sl.call("brow_space"), v0 + 0.12 * sl.call("brow_height"),
+		ln * p[8] * (1.0 + 0.25 * sl.call("brow_tail")), maxf(rarch + (float(p[2]) - 0.05) + 0.07 * sl.call("brow_arch"), -0.03)))
+	m.set_shader_parameter("brow_b", Vector4(p[3], rslope + p[4] + 0.15 * sl.call("brow_angle"), th * (1.0 + 0.6 * sl.call("brow_thick")), p[6]))
+	m.set_shader_parameter("brow_c", Vector4(p[7], p[9], p[10], 1.0 if bi > 0 else 0.0))
+	var bc := brow_colour()
+	m.set_shader_parameter("brow_col", Color(pow(bc.r, 2.2), pow(bc.g, 2.2), pow(bc.b, 2.2), clampf(float(look.get("brow_amt", 1.0)), 0.0, 1.5) * 0.95))
+	# the lips: the classic lip colour keys (0: the face's own), gloss, liner
+	var li := int(look.get("lip_color", 0))
+	var lc = custom_colour("lip_color")
+	var on := lc != null or (li > 0 and li < LIP_COLORS.size())
+	var lcol: Color = lc if lc != null else LIP_COLORS[clampi(li, 0, LIP_COLORS.size() - 1)]
+	var lv := _lin(lcol)
+	m.set_shader_parameter("lip_paint", Color(lv.x, lv.y, lv.z, clampf(float(look.get("lip_amt", 0.6)), 0.0, 1.0) if on else 0.0))
+	m.set_shader_parameter("lip_gloss", clampf(float(look.get("lip_gloss", 0.3)), 0.0, 1.0))
+	var la := clampf(float(look.get("lipline_amt", 0.0)), 0.0, 1.0)
+	var llc := _lin(_look_colour("lipline_color", LIP_COLORS.slice(1), 1))
+	m.set_shader_parameter("lip_line", Color(llc.x, llc.y, llc.z, la))
+	# the eyes: liner and shadow
+	var ls := clampi(int(look.get("liner", 0)), 0, LINER_STYLES.size() - 1)
+	var widths := [[0.0, 0.0, 0.0], [0.028, 0.0, 0.0], [0.05, 0.018, 0.0], [0.045, 0.03, 1.0]]
+	var lw: Array = widths[ls]
+	var lnc := _lin(_look_colour("liner_color", LINER_COLORS))
+	m.set_shader_parameter("liner_col", Color(lnc.x, lnc.y, lnc.z, clampf(float(look.get("liner_amt", 0.9)), 0.0, 1.0) if ls > 0 else 0.0))
+	m.set_shader_parameter("liner_w", Vector4(lw[0], lw[1] + 0.03 * clampf(float(look.get("liner_lower", 0.0)), 0.0, 1.0),
+		clampf(float(look.get("liner_wing", 0.0)), 0.0, 1.0), lw[2]))
+	var ss := clampi(int(look.get("shadow", 0)), 0, SHADOW_STYLES.size() - 1)
+	var shc := _lin(_look_colour("shadow_color", SHADOW_COLORS))
+	m.set_shader_parameter("shadow_col", Color(shc.x, shc.y, shc.z, clampf(float(look.get("shadow_amt", 0.7)), 0.0, 1.0) if ss > 0 else 0.0))
+	m.set_shader_parameter("shadow_kind", Vector2(ss, clampf(float(look.get("shadow_size", 0.0)), -1.0, 1.0)))
+	# the cheeks: blush and contour
+	var blc := _lin(_look_colour("blush_color", BLUSH_COLORS))
+	m.set_shader_parameter("blush_col", Color(blc.x, blc.y, blc.z, clampf(float(look.get("blush_amt", 0.0)), 0.0, 1.0)))
+	m.set_shader_parameter("blush_shape", Vector2(clampf(float(look.get("blush_size", 0.0)), -1.0, 1.0), clampf(float(look.get("blush_y", 0.0)), -1.0, 1.0)))
+	m.set_shader_parameter("contour_amt", clampf(float(look.get("contour", 0.0)), 0.0, 1.0))
+	# age and marks (step 5): look hd_age, freckles (the classic options' regions) / freckle_density / freckle_amt /
+	# freckle_color, moles, hd_scar (0 none, k HD_SCARS[k - 1]) with scar_x / scar_y / scar_turn / scar_size /
+	# scar_color / scar_amt, weathering, flush, warmth
+	var ld: Dictionary = fi.get("land", {})
+	if ld.has("nose") and ld.has("mouthL") and ld.has("chin"):
+		m.set_shader_parameter("hd_land", Vector3(float(ld.nose[1]), float(ld.mouthL[1]), float(ld.chin[1])))
+	m.set_shader_parameter("hd_age_tex", _hd_load(ROOT + "/hd_head/hd_age.png", true))
+	m.set_shader_parameter("hd_scar_tex", _hd_load(ROOT + "/hd_head/hd_scars.png", true))
+	m.set_shader_parameter("hd_age", clampf(float(look.get("hd_age", 0.0)), 0.0, 1.0))
+	var fk := int(look.get("freckles", 0))
+	var fc = custom_colour("freckle_color")
+	if fc == null:
+		fc = FRECKLE_COLORS[clampi(int(look.get("freckle_color", 0)), 0, FRECKLE_COLORS.size() - 1)]
+	m.set_shader_parameter("freckle", Color(fc.r, fc.g, fc.b, clampf(float(look.get("freckle_amt", 0.9)), 0.0, 1.2) if fk > 0 else 0.0))
+	m.set_shader_parameter("freckle_kind", Vector2(fk, clampf(float(look.get("freckle_density", 0.5)), 0.0, 1.0)))
+	m.set_shader_parameter("moles", clampf(float(look.get("moles", 0.0)), 0.0, 1.0))
+	var si := int(look.get("hd_scar", 0))
+	m.set_shader_parameter("scar_idx", si - 1 if si > 0 and si <= HD_SCARS.size() else -1)
+	var scc = custom_colour("scar_color")
+	if scc == null:
+		scc = SCAR_COLORS[clampi(int(look.get("scar_color", 0)), 0, SCAR_COLORS.size() - 1)]
+	var scl := _lin(scc)
+	m.set_shader_parameter("scar_col", Color(scl.x, scl.y, scl.z, clampf(float(look.get("scar_amt", 0.7)), 0.0, 1.0)))
+	m.set_shader_parameter("scar_xf", Vector4(0.45 * clampf(float(look.get("scar_x", 1.0)), -1.6, 1.6),
+		-0.35 + 1.1 * clampf(float(look.get("scar_y", 0.0)), -1.0, 1.0), deg_to_rad(clampf(float(look.get("scar_turn", 0.0)), -90.0, 90.0)),
+		clampf(float(look.get("scar_size", 1.0)), 0.5, 1.6)))
+	m.set_shader_parameter("skin_tone", Vector3(clampf(float(look.get("weather", 0.0)), 0.0, 1.0),
+		clampf(float(look.get("flush", 0.0)), -1.0, 1.0), clampf(float(look.get("warmth", 0.0)), -1.0, 1.0)))
 
 
 ## The look's iris colour (linear): the creator's own, or the chosen eye texture's (white but for the iris) - its
 ## coloured part's average.
-func _iris_colour() -> Color:
-	var er = custom_colour("eyes")
+func _iris_colour(key := "eyes", idx := -1) -> Color:
+	var er = custom_colour(key)
 	if er != null:
 		return Color(pow(er.r, 2.2), pow(er.g, 2.2), pow(er.b, 2.2), 1.0)
 	var eyes: Array = meta.get("eyes", [])
 	if eyes.is_empty():
 		return Color(0.12, 0.2, 0.35, 1.0)
-	var nm := String(eyes[clampi(int(look.get("eyes", 0)), 0, eyes.size() - 1)])
+	var nm := String(eyes[clampi(int(look.get("eyes", 0)) if idx < 0 else idx, 0, eyes.size() - 1)])
 	if not _iris.has(nm):
 		var out := Color(0.12, 0.2, 0.35, 1.0)
 		var etex := _tex(nm)
@@ -1385,6 +1611,21 @@ func _hd_piece_material(node_name: String) -> ShaderMaterial:
 		m.set_shader_parameter("albedo_tex", _hd_load(dir + "hd_eye.png", true))
 		m.set_shader_parameter("hd_iris", _iris_colour())
 		m.set_shader_parameter("gloss", 1.0)
+		if FileAccess.file_exists(dir + "hd_eye_polar.png"):
+			# (look iris: the pattern; iris_size, pupil -1 .. 1; eye_r: 0 the other's colour, k eyes[k - 1] - or
+			# eye_r_rgb; sclera_color / sclera_amt; eye_glow 0 .. 1)
+			m.set_shader_parameter("eye_v2", true)
+			m.set_shader_parameter("hd_eye_polar", _hd_load(dir + "hd_eye_polar.png", false))
+			m.set_shader_parameter("hd_iris_tex", _hd_load(dir + "hd_iris.png", true))
+			var er := int(look.get("eye_r", 0))
+			var has_r := custom_colour("eye_r") != null or er > 0
+			m.set_shader_parameter("iris_r", _iris_colour("eye_r", maxi(er - 1, 0)) if has_r else Color(0, 0, 0, 0))
+			m.set_shader_parameter("eye_shape", Vector4(1.0 + 0.12 * clampf(float(look.get("iris_size", 0.0)), -1.0, 1.0),
+				0.32 + 0.12 * clampf(float(look.get("pupil", 0.0)), -1.0, 1.0),
+				clampi(int(look.get("iris", 0)), 0, IRIS_PATTERNS.size() - 1), IRIS_PATTERNS.size()))
+			var sc := _lin(_look_colour("sclera_color", SCLERA_COLORS))
+			m.set_shader_parameter("sclera_tint", Color(sc.x, sc.y, sc.z, clampf(float(look.get("sclera_amt", 0.0)), 0.0, 1.0)))
+			m.set_shader_parameter("eye_glow", clampf(float(look.get("eye_glow", 0.0)), 0.0, 1.0))
 		return m
 	if node_name.begins_with("head__hd_mouth"):
 		var m := _material(false)
@@ -1396,8 +1637,22 @@ func _hd_piece_material(node_name: String) -> ShaderMaterial:
 	if node_name.begins_with("head__hd_lash"):
 		var m := _material(true)
 		m.set_shader_parameter("albedo_tex", _hd_load(dir + "hd_lash.png", true))
+		# (look lash_color: 0 the brows', k LASH palette; lash_amt: thickness - the cutout's alpha scaled)
+		var lcol := brow_colour().darkened(0.35)
+		if custom_colour("lash_color") != null:
+			lcol = custom_colour("lash_color")
+		elif int(look.get("lash_color", 0)) > 0:
+			lcol = LINER_COLORS[clampi(int(look.lash_color) - 1, 0, LINER_COLORS.size() - 1)]
+		m.set_shader_parameter("solid_col", Color(pow(lcol.r, 2.2), pow(lcol.g, 2.2), pow(lcol.b, 2.2), 1.0))
+		m.set_shader_parameter("alpha_k", clampf(float(look.get("lash_amt", 1.0)), 0.4, 1.6))
 		return m
 	return null
+
+
+## The HD head carries its face maps (the HD look: brows, makeup).
+func hd_look_ok() -> bool:
+	var hh: Dictionary = meta.get("hd_head", {})
+	return hh.has("face") and hh.has("face_info")
 
 
 func is_hd() -> bool:
@@ -1469,7 +1724,11 @@ func _apply_hd_shape(on: bool) -> void:
 					_hd_cache.append([mi, idx])
 		if _hd_cache.is_empty():
 			_hd_cache.append(null)                # (none: don't look again)
-	var shape: Dictionary = look.get("shape", {}) if on else {}
+	var shape: Dictionary = (look.get("shape", {}) as Dictionary).duplicate() if on else {}
+	if on:
+		for k in expression:                          # (the creator's expression preview, over the face's own shape)
+			shape[k] = clampf(float(shape.get(k, 0.0)) + float(expression[k]), -1.0, 1.0)
+	_blink_at = []
 	for e in _hd_cache:
 		if e == null:
 			continue
@@ -1478,6 +1737,58 @@ func _apply_hd_shape(on: bool) -> void:
 			var key := String(n).substr(3, String(n).length() - 4)
 			var w := clampf(float(shape.get(key, 0.0)), -1.0, 1.0)
 			mi.set_blend_shape_value(int(e[1][n]), maxf(-w, 0.0) if String(n).ends_with("-") else maxf(w, 0.0))
+			if String(n) == "hx_blink+":
+				_blink_at.append([mi, int(e[1][n])])
+	set_process(on and not _blink_at.is_empty() and blinks)
+
+
+# --- the HD head's blink and the creator's expressions (the HD look, step 6) -----------------------------------
+## Expressions to preview in the creator (owner 2026-11-25: "expression preview (neutral, smile, scowl, surprise)"):
+## the face sliders, moved for a moment - never saved with the look.
+const EXPRESSIONS := [["Neutral", {}],
+	["Smile", {"mouth_corners": 1.0, "lip_corners": 0.6, "laugh_lines": 0.8, "cheek_fullness": 0.35, "eye_opening": -0.25, "dimples": 0.5}],
+	["Scowl", {"brow_height": -0.9, "brow_angle": -0.7, "mouth_corners": -0.7, "eye_opening": -0.35, "brow_ridge": 0.4}],
+	["Surprise", {"brow_height": 1.0, "eye_opening": 0.9, "mouth_corners": -0.2, "brow_angle": 0.4}],
+	["Squint", {"eye_opening": -0.7, "blink": 0.35, "laugh_lines": 0.5, "cheekbone_height": 0.3}]]
+var expression := {}
+var blinks := true                           # (the probe's still shots turn it off)
+var _blink_at := []
+var _blink_t := 0.0
+var _blink_next := 2.0
+var _blink_twice := false
+
+
+func _ready() -> void:
+	if _blink_at.is_empty():
+		set_process(false)                       # (only an HD head blinks: every other figure does no work a frame)
+
+
+func set_expression(i: int) -> void:
+	expression = (EXPRESSIONS[clampi(i, 0, EXPRESSIONS.size() - 1)][1] as Dictionary).duplicate()
+	_apply_shape()
+
+
+## A blink every few seconds (a quick close and open, now and then twice): the HD head's hx_blink+ shape.
+func _process(delta: float) -> void:
+	_blink_t += delta
+	if _blink_t < _blink_next:
+		return
+	var ph := (_blink_t - _blink_next) / 0.17
+	var base := clampf(float(expression.get("blink", 0.0)), 0.0, 1.0)
+	var w := base
+	if ph >= 1.0:
+		_blink_t = 0.0
+		if not _blink_twice and randf() < 0.15:
+			_blink_next = 0.12
+			_blink_twice = true
+		else:
+			_blink_next = randf_range(2.5, 6.0)
+			_blink_twice = false
+	else:
+		w = maxf(base, sin(PI * ph))
+	for b in _blink_at:
+		if is_instance_valid(b[0]):
+			(b[0] as MeshInstance3D).set_blend_shape_value(int(b[1]), w)
 
 
 func _apply_shape() -> void:
@@ -1846,6 +2157,35 @@ func custom_colour(key: String):
 ## A hair style's colour as worn: the chosen one, or - a custom colour - the style's lightest texture tinted to it
 ## (figure.json colours' "rgb": each texture x tint's average).
 func hair_colour(colours: Array) -> Dictionary:
+	return aged(_hair_colour(colours))
+
+
+## Grey with age (the HD look's age slider, owner 2026-11-25: "the age slider greys the hair too"): from halfway on,
+## the colour drawn towards a silver grey - the hair as worn (its texture's colour times its tint) re-tinted.
+func grey_k() -> float:
+	if not is_hd():
+		return 0.0
+	var a := clampf(float(look.get("hd_age", 0.0)), 0.0, 1.0)
+	return 0.85 * clampf((a - 0.5) / 0.5, 0.0, 1.0) * clampf((a - 0.5) / 0.5, 0.0, 1.0) * (3.0 - 2.0 * clampf((a - 0.5) / 0.5, 0.0, 1.0))
+
+
+func aged(col: Dictionary) -> Dictionary:
+	var k := grey_k()
+	if k <= 0.0 or not col.has("rgb"):
+		return col
+	var rgb: Array = col.rgb
+	var t: Array = col.get("tint", [1, 1, 1])
+	var out := col.duplicate()
+	# the colour drained (the shader's desat) and its lightness drawn towards a silver grey's - the tint scaled alike
+	# in every channel (a per-channel tint over a blond texture went lavender)
+	var worn := 0.3 * float(rgb[0]) * float(t[0]) + 0.59 * float(rgb[1]) * float(t[1]) + 0.11 * float(rgb[2]) * float(t[2])
+	var sc := lerpf(1.0, 0.5 / maxf(worn, 0.03), k)
+	out["tint"] = [clampf(float(t[0]) * sc, 0.0, 3.0), clampf(float(t[1]) * sc, 0.0, 3.0), clampf(float(t[2]) * sc, 0.0, 3.0)]
+	out["desat"] = k * 0.92
+	return out
+
+
+func _hair_colour(colours: Array) -> Dictionary:
 	var col: Dictionary = colours[clampi(int(look.get("hair_color", 0)), 0, colours.size() - 1)]
 	var want = custom_colour("hair_color")
 	if want == null:
@@ -2206,7 +2546,7 @@ static func _finish(m: ShaderMaterial, tex: String) -> void:
 
 ## Remastered skin (owner 2026-11-05, the character remaster "A+B"): the face lets a little light through and has a
 ## skin's soft sheen instead of the painted face's flat matte - kept faint, as more blurred the eyes and brows.
-const SKIN_SHADING := "if (remaster_fx > 0.5) {\n\t\tSSS_STRENGTH = 0.05;\n\t\tROUGHNESS = 0.55;\n\t\tSPECULAR = 0.4;\n\t}\n\t//CUTOUT"
+const SKIN_SHADING := "if (remaster_fx > 0.5) {\n\t\tSSS_STRENGTH = 0.05;\n\t\tROUGHNESS = 0.55;\n\t\tSPECULAR = 0.4;\n\t\tif (lip_m > 0.0) {\n\t\t\tROUGHNESS = mix(0.55, 0.2, lip_m * max(lip_gloss, 0.18));\n\t\t\tSPECULAR = mix(0.4, 0.55, lip_m * max(lip_gloss, 0.18));\n\t\t}\n\t}\n\t//CUTOUT"
 
 
 ## Remastered hair (owner 2026-11-05: "Let's do all of the vanilla hair styles"): its texture redrawn as strands
@@ -2237,6 +2577,10 @@ const HAIR_CUTOUT := """if (remaster_fx > 0.5) {
 	if (remaster_fx > 0.5 && fuzz > 0.0) {
 		float edge = 1.0 - smoothstep(0.08, 0.45, abs(dot(NORMAL, VIEW)));
 		ALPHA = c.a * mix(1.0, smoothstep(0.25, 0.55, hf.b), edge * fuzz);
+	}
+	if (remaster_fx > 0.5 && hair_tip > 0.0) {
+		// long hair's ends: broken into strands (the strand mask), more of the gaps open towards the very end
+		ALPHA *= mix(1.0, smoothstep(0.2 + 0.35 * hair_tip, 0.45 + 0.35 * hair_tip, hf.b), hair_tip);
 	}
 	ALPHA_SCISSOR_THRESHOLD = 0.5;
 	ALPHA_ANTIALIASING_EDGE = 0.3;"""
@@ -2333,7 +2677,7 @@ static func _material(cutout: bool, single_sided := false, skin := false, hair :
 			code = code.replace("//CUTOUT", HAIR_FRAGMENT)
 			code = code.replace("//CUTOUT", HAIR_CUTOUT if cutout else "") + HAIR_LIGHT
 		elif cutout:
-			code = code.replace("//CUTOUT", "ALPHA = c.a;\n\tALPHA_SCISSOR_THRESHOLD = 0.5;")
+			code = code.replace("//CUTOUT", "ALPHA = c.a * alpha_k;\n\tALPHA_SCISSOR_THRESHOLD = 0.5;")
 		s.code = code
 		_shaders[key] = s
 	var m := ShaderMaterial.new()
@@ -2361,6 +2705,14 @@ uniform int tint_mode = 0;
 uniform bool has_eye = false;
 uniform vec4 eye_box = vec4(0.0);                  // the eyeball on the face texture: centre uv, half size (Fig3Figure._eye_box)
 uniform bool has_decal = false;
+// the tattoo in face space (the HD head - Fig3Figure._tattoo): hd_tat each face-space texel's classic UV (16 bits a
+// coordinate), over hd_trange (u0, u1, v0, v1); tat_xf: moved across / up, size, turn; tat_tint (a: on): its colour
+uniform sampler2D hd_tat : filter_nearest, repeat_disable;
+uniform vec4 hd_trange = vec4(-2.2, 2.2, -2.6, 2.4);
+uniform bool tat_fs = false;
+uniform vec4 tat_xf = vec4(0.0, 0.0, 1.0, 0.0);
+uniform vec4 tat_tint = vec4(0.0);
+uniform float tat_amt = 1.0;
 // a cloak's guild emblem (Emblems; the client's $insigniaTexture pixel shader): the pattern on the cloak's set 0 (UV2),
 // the logo on its set 2 (CUSTOM0), the cloak's own texture on set 1 - pattern x cloak x 2 x logo, in the client's gamma
 uniform sampler2D pattern_tex : filter_linear, repeat_enable;
@@ -2385,6 +2737,14 @@ uniform vec3 sway_back = vec3(0.0, 0.0, -1.0);
 // springs have them now (a, b: world; a.w the radius) - and the gear on the back, which it lies over (a box: its middle,
 // its sides' ways, how far each way)
 uniform int col_n = 0;
+// hair flow (owner 2026-11-26, "more true movement to the hair ... make the strands more flowy"): the locks at the
+// sides and front move too (never into the face), each strand ripples a little out of step with its neighbours - a
+// breeze standing, more moving and turning - and long hair's ends break into strands (Fig3Figure.Sway sets them):
+// hair_wave x: the ripple (m), y: its speed, z: how much the side / front locks take the sway; hair_len: how far the
+// hair hangs below the head bone (m; 0: no wispy ends)
+uniform vec4 hair_wave = vec4(0.0);
+uniform float hair_len = 0.0;
+varying float hair_tip;
 uniform vec4 col_a[16];
 uniform vec4 col_b[16];
 uniform int box_n = 0;
@@ -2435,7 +2795,57 @@ uniform float hd_uv_k = 0.67;
 // the HD head's eyeballs: the texture's alpha is the iris (grey there) - coloured by the look's eye colour; gloss:
 // a wet shine (the eyes, a little on the teeth)
 uniform vec4 hd_iris = vec4(0.0);
+// the HD eyes drawn (the HD look, step 4; pipeline/hd_head/eyes3.py): hd_eye_polar - each texel's place round its
+// iris (direction, distance, which eye); hd_iris_tex - the patterns, a row each
+uniform bool eye_v2 = false;
+uniform sampler2D hd_eye_polar : filter_linear, repeat_disable;
+uniform sampler2D hd_iris_tex : filter_linear_mipmap, repeat_enable;
+uniform vec4 iris_r = vec4(0.0);                        // the right eye's own colour (a: 1 when it has one)
+uniform vec4 eye_shape = vec4(1.0, 0.32, 0.0, 6.0);     // iris size, pupil size, pattern row, rows
+uniform vec4 sclera_tint = vec4(1.0, 1.0, 1.0, 0.0);    // rgb, amount
+uniform float eye_glow = 0.0;
 uniform float gloss = 0.0;
+// the HD look (owner 2026-11-25: "makeup sliders, better eyebrows ... Dragon's Dogma 2's character creator ... a gold
+// standard"; pipeline/hd_head/mask3.py, look3.py): hd_face - each texel's face-space point (u across in eye spacings,
+// the eyes at -0.5 / +0.5; v up, the eyes at 0), 16 bits a coordinate; hd_mask - r the lips, g the eyes' rim, b how
+// much is face, a the scalp. The brows, liner, shadow, blush, contour and lip colour are drawn in face space here.
+uniform sampler2D hd_face : filter_nearest, repeat_disable;
+uniform sampler2D hd_mask : filter_linear_mipmap, repeat_disable;
+uniform sampler2D hd_brow_hair : filter_linear_mipmap, repeat_enable;
+uniform vec4 hd_frange = vec4(-4.0, 4.0, -6.0, 4.0);
+uniform vec4 hd_eyec = vec4(0.72, -0.06, 0.2, -0.06);   // the eye's outer corner (u, v), its inner corner (u, v)
+uniform float skin_detail = 0.2;                         // 0 smooth .. 1 weathered (pores, speckle)
+uniform vec4 brow_a = vec4(0.0);    // inner u, inner v, length, arch
+uniform vec4 brow_b = vec4(0.62, 0.0, 0.04, 1.0);   // peak along, slope, half thickness, inner thickness
+uniform vec4 brow_c = vec4(0.35, 0.0, 0.0, 0.0);    // tail thickness, coarse hairs, gap (0 none), on (1)
+uniform vec4 brow_col = vec4(0.0);  // rgb, amount
+uniform vec4 lip_paint = vec4(0.0); // rgb, amount
+uniform vec4 lip_line = vec4(0.0);  // rgb, amount
+uniform float lip_gloss = 0.0;
+uniform vec4 liner_col = vec4(0.0); // rgb, amount
+uniform vec4 liner_w = vec4(0.03, 0.0, 0.0, 0.0);   // upper width, lower width, wing, smudge
+uniform vec4 shadow_col = vec4(0.0);    // rgb, amount
+uniform vec2 shadow_kind = vec2(0.0);   // style, size
+uniform vec4 blush_col = vec4(0.0);     // rgb, amount
+uniform vec2 blush_shape = vec2(0.0);   // size, up / down
+uniform float contour_amt = 0.0;
+// age and marks (the HD look, step 5; pipeline/hd_head/marks3.py): the lines and scars drawn in a canonical face space
+// (hd_land: this race's nose, mouth and chin heights, mapped onto the canonical -0.65, -1.08, -1.68)
+uniform sampler2D hd_age_tex : filter_linear_mipmap, repeat_disable;
+uniform sampler2D hd_scar_tex : filter_linear_mipmap, repeat_disable;
+uniform vec3 hd_land = vec3(-0.65, -1.08, -1.68);
+uniform float hd_age = 0.0;
+uniform vec4 freckle = vec4(0.0);          // rgb (multiplies), amount
+uniform vec2 freckle_kind = vec2(0.0);     // the region (1 cheeks, 2 face, 3 nose band, 4 sparse), density
+uniform float moles = 0.0;
+uniform vec4 scar_col = vec4(0.0);         // rgb, amount
+uniform vec4 scar_xf = vec4(0.45, -0.3, 0.0, 1.0);   // where (u, v), turn, size
+uniform int scar_idx = -1;
+uniform vec3 skin_tone = vec3(0.0);        // weathering, flush, warmth
+// the lashes' own colour and thickness (the cutout's alpha scaled)
+uniform vec4 solid_col = vec4(0.0);
+uniform float alpha_k = 1.0;
+uniform float desat = 0.0;                              // (the hair greyed with age: its colour drained)
 varying vec2 logo_uv;
 // the body sliders' bust / pecs and glutes (Fig3Figure.BodyShape._bulge): two points each (world xyz, radius) and the
 // way they swell (world, times the slider)
@@ -2483,6 +2893,148 @@ vec3 hair_collide(vec3 p, float w) {
 	return p;
 }
 
+vec2 hd_dec(vec4 t) {
+	return vec2(t.r * 65280.0 + t.g * 255.0, t.b * 65280.0 + t.a * 255.0) / 65535.0;
+}
+
+// the face-space point under uv: the four texels' points read and blended (the 16-bit pairs can't be filtered)
+vec2 hd_fs(vec2 uv) {
+	vec2 sz = vec2(textureSize(hd_face, 0));
+	vec2 p = uv * sz - 0.5;
+	vec2 f = fract(p);
+	ivec2 i = ivec2(floor(p));
+	ivec2 hi = ivec2(sz) - 1;
+	vec2 a = hd_dec(texelFetch(hd_face, clamp(i, ivec2(0), hi), 0));
+	vec2 b = hd_dec(texelFetch(hd_face, clamp(i + ivec2(1, 0), ivec2(0), hi), 0));
+	vec2 c = hd_dec(texelFetch(hd_face, clamp(i + ivec2(0, 1), ivec2(0), hi), 0));
+	vec2 d = hd_dec(texelFetch(hd_face, clamp(i + ivec2(1, 1), ivec2(0), hi), 0));
+	vec2 q = mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+	return vec2(mix(hd_frange.x, hd_frange.y, q.x), mix(hd_frange.z, hd_frange.w, q.y));
+}
+
+float hd_eye_line(float au) {
+	return hd_eyec.w + (hd_eyec.y - hd_eyec.w) * (au - hd_eyec.z) / (hd_eyec.x - hd_eyec.z);
+}
+
+// the brow (pipeline/hd_head/look3.py brow): its coverage, and its middle line's height (y)
+vec2 hd_brow(float au, float v) {
+	float x = au - brow_a.x;
+	float t = x / brow_a.z;
+	float k = log(0.5) / log(brow_b.x);
+	float bump = sin(3.14159265 * pow(clamp(t, 0.0, 1.0), k));
+	float vc = brow_a.y + brow_b.y * x + brow_a.w * bump;
+	if (brow_c.w < 0.5) return vec2(0.0, vc);
+	float w = brow_b.z * (brow_b.w + (1.0 - brow_b.w) * smoothstep(0.0, 0.35, t)) * (1.0 + (brow_c.x - 1.0) * smoothstep(brow_b.x, 1.0, t));
+	float s = (v - vc) / max(w, 1e-4);
+	if (abs(s) > 1.6 || t < -0.05 || t > 1.02) return vec2(0.0, vc);
+	float body = 1.0 - smoothstep(0.55, 1.0, abs(s));
+	float ends = smoothstep(-0.03, 0.10, t) * (1.0 - smoothstep(0.86, 1.0, t));
+	if (brow_c.z > 0.0) ends *= smoothstep(0.02, 0.05, abs(t - brow_c.z));
+	float ty = clamp(0.5 - s / 2.8, 0.0, 1.0) * 0.5;
+	vec2 hu = vec2(x / 0.4, ty);
+	vec3 h0 = texture(hd_brow_hair, hu).rgb, h1 = texture(hd_brow_hair, hu + vec2(0.0, 0.5)).rgb;
+	float hs = smoothstep(0.05, 0.25, t);
+	float hh = mix(mix(h0.r, h0.g, brow_c.y), mix(h1.r, h1.g, brow_c.y), hs);
+	float inside = 1.0 - smoothstep(0.85, 1.35, abs(s));
+	return vec2(clamp(0.45 * body + 1.2 * hh * inside, 0.0, 1.0) * ends, vc);
+}
+
+float hd_liner(float au, float v, float dist) {
+	float ve = hd_eye_line(au);
+	float upper = smoothstep(-0.015, 0.015, v - ve);
+	float soft = 0.35 + 0.5 * liner_w.w;
+	float uw = liner_w.x;
+	float lu = (1.0 - smoothstep(uw * (1.0 - soft), uw * (1.0 + soft * 0.5), dist)) * upper;
+	float lw = max(liner_w.y, 0.002);
+	float ll = liner_w.y > 0.002 ? (1.0 - smoothstep(lw * (1.0 - soft), lw * (1.0 + soft * 0.5), dist)) * (1.0 - upper) : 0.0;
+	float wg = 0.0;
+	if (liner_w.z > 0.01) {
+		float a = radians(22.0);
+		vec2 p = vec2(au - (hd_eyec.x - 0.03), v - (hd_eyec.y + 0.01));
+		float along = p.x * cos(a) + p.y * sin(a);
+		float across = -p.x * sin(a) + p.y * cos(a);
+		float wl = 0.04 + 0.2 * liner_w.z;
+		float wid = uw * 0.75 * clamp(1.0 - along / wl, 0.0, 1.0);
+		wg = (along > 0.0 && along < wl) ? 1.0 - smoothstep(wid * 0.6, wid + 0.004, abs(across)) : 0.0;
+	}
+	return clamp(max(max(lu, ll), wg), 0.0, 1.0);
+}
+
+float hd_shadow(float au, float v, float dist, float vbrow) {
+	float uo = hd_eyec.x, vo = hd_eyec.y, ui = hd_eyec.z;
+	float upper = smoothstep(-0.02, 0.02, v - hd_eye_line(au));
+	float sz = 1.0 + 0.5 * shadow_kind.y;
+	float along = smoothstep(ui - 0.06, ui + 0.04, au) * (1.0 - smoothstep(uo + 0.02 * sz, uo + 0.12 * sz, au));
+	int st = int(shadow_kind.x + 0.5);
+	float m = 0.0;
+	if (st == 1) {
+		m = upper * (1.0 - smoothstep(0.05 * sz, 0.15 * sz, dist)) * along;
+	} else if (st == 2) {
+		m = (upper * (1.0 - smoothstep(0.04 * sz, 0.2 * sz, dist)) + 0.45 * (1.0 - upper) * (1.0 - smoothstep(0.02 * sz, 0.11 * sz, dist)))
+			* (0.55 + 0.45 * smoothstep(ui, uo, au)) * smoothstep(ui - 0.06, ui + 0.04, au) * (1.0 - smoothstep(uo + 0.08 * sz, uo + 0.2 * sz, au));
+	} else if (st == 3) {
+		float a = radians(28.0);
+		vec2 p = vec2(au - uo, v - (vo + 0.04));
+		float al = p.x * cos(a) + p.y * sin(a);
+		float ac = -p.x * sin(a) + p.y * cos(a);
+		float wing = al > -0.1 ? exp(-pow(max(al, 0.0) / (0.16 * sz), 2.0) - pow(ac / (0.05 * sz), 2.0)) : 0.0;
+		m = max(upper * (1.0 - smoothstep(0.05 * sz, 0.14 * sz, dist)) * along, wing * upper);
+	} else if (st == 4) {
+		m = upper * (1.0 - smoothstep(vbrow - 0.1 * sz, vbrow - 0.02, v)) * smoothstep(ui - 0.04, ui + 0.06, au)
+			* (1.0 - smoothstep(uo + 0.04 * sz, uo + 0.16 * sz, au));
+	} else if (st == 5) {
+		float uc = 0.5 * (ui + uo);
+		m = upper * exp(-pow((au - uc) / (0.14 * sz), 2.0) - pow(max(dist, 0.0) / (0.13 * sz), 2.0)) * 1.2;
+	}
+	return clamp(m, 0.0, 1.0);
+}
+
+float hd_canon(float v) {
+	if (v > hd_land.x) return v * (-0.65 / min(hd_land.x, -0.1));
+	if (v > hd_land.y) return -0.65 + (v - hd_land.x) * (-0.43 / min(hd_land.y - hd_land.x, -0.05));
+	return -1.08 + (v - hd_land.y) * (-0.6 / min(hd_land.z - hd_land.y, -0.05));
+}
+
+float hd_hash(vec2 p) {
+	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
+}
+
+// freckles (and moles): a dot now and then in each cell of face space, as many as the density and the region allow
+float hd_dots(vec2 fs, float cell, float dens, float rmin, float rmax, float seed) {
+	vec2 p = fs / cell;
+	vec2 c0 = floor(p);
+	float best = 0.0;
+	for (int j = -1; j <= 1; j++) {
+		for (int i = -1; i <= 1; i++) {
+			vec2 cc = c0 + vec2(float(i), float(j));
+			float h = hd_hash(cc + seed);
+			if (h > dens) continue;
+			vec2 o = vec2(hd_hash(cc + seed + 7.1), hd_hash(cc + seed + 13.7));
+			float r = mix(rmin, rmax, hd_hash(cc + seed + 21.3));
+			float d = length(p - cc - o);
+			best = max(best, (1.0 - smoothstep(r * 0.6, r, d)) * mix(0.55, 1.0, hd_hash(cc + seed + 3.3)));
+		}
+	}
+	return best;
+}
+
+float hd_freckle_region(float u, float au, float v, int k) {
+	if (k == 1) return exp(-(pow(au - 0.5, 2.0) / 0.09 + pow(v + 0.4, 2.0) / 0.08)) + exp(-(u * u / 0.03 + pow(v + 0.25, 2.0) / 0.06));
+	if (k == 2) return 0.35 + 0.65 * exp(-(pow(au - 0.35, 2.0) / 0.4 + pow(v + 0.3, 2.0) / 0.5));
+	if (k == 3) return min(exp(-(u * u / 0.6 + pow(v + 0.3 + 0.12 * u * u, 2.0) / 0.03)) * 2.0, 1.0);
+	return 0.3;
+}
+
+float hd_contour(float au, float v) {
+	vec2 a0 = vec2(1.0, -0.38), a1 = vec2(0.55, -0.74);
+	vec2 d = a1 - a0;
+	float t = clamp(dot(vec2(au, v) - a0, d) / dot(d, d), 0.0, 1.0);
+	float dist = length(vec2(au, v) - (a0 + t * d));
+	float cheek = exp(-pow(dist / 0.07, 2.0)) * (1.0 - 0.6 * t);
+	float nose = exp(-pow((au - 0.12) / 0.035, 2.0)) * smoothstep(-0.7, -0.5, v) * (1.0 - smoothstep(0.05, 0.25, v));
+	return clamp(cheek + 0.7 * nose, 0.0, 1.0);
+}
+
 void vertex() {
 	logo_uv = CUSTOM0.xy;
 	if (bulge_a.w > 0.0 || bulge_c.w > 0.0) {
@@ -2492,11 +3044,35 @@ void vertex() {
 				+ bulge(wp, wn, bulge_c, bulge_cd, bulge_amt.y) + bulge(wp, wn, bulge_d, bulge_cd, bulge_amt.y);
 		VERTEX += inverse(mat3(MODEL_MATRIX)) * dv;
 	}
-	if (dot(sway_dir, sway_dir) > 1e-6 || col_n > 0 || box_n > 0) {
+	hair_tip = 0.0;
+	if (dot(sway_dir, sway_dir) > 1e-6 || col_n > 0 || box_n > 0 || hair_wave.x > 0.0) {
 		vec3 wp = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
 		float away = smoothstep(0.13, 0.42, distance(wp, sway_head));
 		float behind = smoothstep(-0.03, 0.05, dot(wp - sway_head, sway_back));
 		vec3 np = wp + sway_dir * away * behind;
+		if (hair_wave.x > 0.0) {
+			vec3 rel = wp - sway_head;
+			vec3 side = normalize(cross(vec3(0.0, 1.0, 0.0), sway_back) + vec3(1e-5, 0.0, 0.0));
+			float lat = abs(dot(rel, side));
+			float fwd = -dot(rel, sway_back);
+			// the face: in front of the skull and between the cheeks - nothing there moves
+			float face = (1.0 - smoothstep(0.055, 0.1, lat)) * smoothstep(-0.02, 0.04, fwd);
+			// hanging: how far below the skull's middle (the side locks, the ends at the front)
+			float below = sway_head.y - wp.y;
+			float hang = smoothstep(0.06, 0.26, below) * away * (1.0 - face);
+			// the side and front locks take the sway too - only its back and sideways part, never forward
+			vec3 sd = sway_dir * hair_wave.z;
+			sd -= sway_back * min(dot(sd, sway_back), 0.0);
+			np += sd * hang * (1.0 - behind);
+			// each strand out of step with the next (across the texture), the ripple travelling down the hair
+			float w = max(hang, away * behind);
+			float ph = TIME * hair_wave.y + UV.x * 31.0 + UV.y * 7.0 - below * 18.0;
+			vec3 rip = side * sin(ph) * 0.8 + sway_back * (0.5 + 0.5 * sin(ph * 0.73 + 1.7)) * 0.6;
+			np += rip * hair_wave.x * w * w;
+			if (hair_len > 0.15) {
+				hair_tip = smoothstep(hair_len - 0.09, hair_len - 0.01, below + 0.1);
+			}
+		}
 		if (away * behind > 0.0) {
 			np = hair_collide(np, away * behind);
 		}
@@ -2520,7 +3096,31 @@ void fragment() {
 	}
 	vec4 c = hd_skin ? texture(hd_albedo, UV) : texture(albedo_tex, UV);
 	vec3 col = c.rgb;
-	if (hd_iris.a > 0.5) {
+	vec3 glow_e = vec3(0.0);
+	if (hd_iris.a > 0.5 && eye_v2) {
+		vec4 pp = texture(hd_eye_polar, UV);
+		vec2 dir = normalize(pp.rg - 0.5 + vec2(1e-5));
+		float r = pp.b * 2.0 / eye_shape.x;
+		float ps = eye_shape.y;
+		float a = atan(dir.y, dir.x) / 6.2831853 + 0.5;
+		float q = clamp((r - ps) / (1.0 - ps), 0.0, 1.0);
+		vec2 iu = vec2(a, (eye_shape.z + 0.04 + 0.86 * q) / eye_shape.w);
+		vec2 dx = dFdx(iu), dy = dFdy(iu);
+		dx.x -= round(dx.x); dy.x -= round(dy.x);      // (round the iris: no seam where the angle wraps)
+		float pat = textureGrad(hd_iris_tex, iu, dx, dy).r;
+		vec3 ic = (pp.a > 0.5 && iris_r.a > 0.5) ? iris_r.rgb : hd_iris.rgb;
+		vec3 irc = ic * (0.12 + 1.0 * pat);
+		irc *= mix(1.0, 0.35, smoothstep(0.82, 1.0, r));             // (the limbal ring)
+		float im = 1.0 - smoothstep(0.96, 1.03, r);
+		float pupil = 1.0 - smoothstep(ps - 0.03, ps + 0.01, r);
+		glow_e = irc * im * (1.0 - pupil) * eye_glow * 2.0;
+		irc = mix(irc, vec3(0.006), pupil);
+		vec3 scl = col * mix(vec3(1.0), sclera_tint.rgb * 1.15, sclera_tint.a);
+		col = mix(scl, irc, im);
+		vec3 wn = (INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz;
+		col *= mix(0.5, 1.0, smoothstep(0.7, 0.1, wn.y));
+	}
+	else if (hd_iris.a > 0.5) {
 		col = mix(col, col * hd_iris.rgb * 1.25, c.a);
 		// the upper lid's shade on the eyeball (its top, as the head stands), so the eye sits in its socket
 		vec3 wn = (INV_VIEW_MATRIX * vec4(NORMAL, 0.0)).xyz;
@@ -2539,6 +3139,7 @@ void fragment() {
 		}
 	}
 	else if (tint_mode == 2) col *= mix(tint, vec3(1.0), smoothstep(0.90, 0.99, c.a));
+	if (desat > 0.0) col = mix(col, vec3(dot(col, vec3(0.3, 0.59, 0.11))) * vec3(1.0, 0.99, 0.97), desat);
 	float ref = max(dot(tint, vec3(0.3, 0.59, 0.11)) * 0.45, 0.05);
 	if (layer_count > 0) {
 		float ch[28];
@@ -2560,8 +3161,88 @@ void fragment() {
 			else col = mix(col, lc, m);
 		}
 	}
+	vec2 fsp = vec2(0.0);
+	float lip_m = 0.0;
+	float face_m = 0.0;
+	float age_h = 0.0;                                  // (the age lines' and scars' relief, for the bump below)
+	if (hd_skin) {
+		fsp = hd_fs(UV);
+		vec4 mk = texture(hd_mask, UV);
+		lip_m = mk.r;
+		face_m = mk.b;
+		float au = abs(fsp.x), v = fsp.y;
+		// the skin's fine colour (pores, speckle): the Skin Detail slider (weathering adds to it)
+		float sdet = clamp(skin_detail + 0.4 * skin_tone.x, 0.0, 1.0);
+		col *= mix(1.0, 1.0 + (texture(hd_detail, UV).g - 0.5), sdet);
+		// warmth (the whole skin), flush and weathering (the cheeks and nose redder; weathering browner too)
+		col *= vec3(1.0 + 0.05 * skin_tone.z, 1.0 + 0.01 * skin_tone.z, 1.0 - 0.06 * skin_tone.z);
+		float rosy = clamp(exp(-(pow((au - 0.55) / 0.26, 2.0) + pow((v + 0.4) / 0.2, 2.0))) + exp(-(pow(au / 0.09, 2.0) + pow((v + 0.5) / 0.2, 2.0))), 0.0, 1.0) * face_m;
+		col *= mix(vec3(1.0), vec3(1.06, 0.86, 0.84), clamp(rosy * (0.6 * skin_tone.y + 0.35 * skin_tone.x), 0.0, 1.0));
+		col *= mix(1.0, 0.88, 0.35 * skin_tone.x * face_m);
+		// age: the lines as they come, the shade, the colour a little drained
+		if (hd_age > 0.0) {
+			vec2 at = vec2((au + 1.6) / 3.2, (1.4 - hd_canon(v)) / 3.6);
+			if (at.y > 0.0 && at.y < 1.0 && au < 1.6) {
+				vec4 ag = texture(hd_age_tex, at);
+				float h = ag.r * smoothstep(0.2, 0.45, hd_age) + ag.g * smoothstep(0.45, 0.7, hd_age) + ag.b * smoothstep(0.7, 0.95, hd_age);
+				h *= face_m;
+				col *= (1.0 - 0.4 * h) * (1.0 - 0.25 * ag.a * hd_age * face_m);
+				age_h -= 2.0 * h;
+			}
+			col = mix(col, vec3(dot(col, vec3(0.3, 0.59, 0.11))), 0.1 * hd_age);
+		}
+		// freckles and moles
+		if (freckle.a > 0.0) {
+			int fk = int(freckle_kind.x + 0.5);
+			float reg = hd_freckle_region(fsp.x, au, v, fk) * face_m;
+			float d = hd_dots(fsp, fk == 3 ? 0.022 : 0.03, clamp(reg * (0.25 + 0.75 * freckle_kind.y), 0.0, 1.0) * 0.75, 0.22, 0.42, 1.0);
+			col *= mix(vec3(1.0), freckle.rgb, d * freckle.a);
+		}
+		if (moles > 0.0) {
+			float d = hd_dots(fsp, 0.24, moles * 0.25 * face_m, 0.05, 0.09, 50.0);
+			col *= mix(1.0, 0.45, d);
+		}
+		// a scar, placed
+		if (scar_idx >= 0) {
+			vec2 q = vec2(fsp.x, fsp.y) - scar_xf.xy;
+			float a = -scar_xf.z;
+			q = mat2(vec2(cos(a), sin(a)), vec2(-sin(a), cos(a))) * q / max(scar_xf.w, 0.3);
+			vec2 t = vec2(q.x / 0.8 + 0.5, 0.5 - q.y / 0.8);
+			if (t.x > 0.0 && t.y > 0.0 && t.x < 1.0 && t.y < 1.0) {
+				vec2 o = vec2(float(scar_idx % 3), float(scar_idx / 3));
+				vec4 sk = texture(hd_scar_tex, (o + t) / vec2(3.0, 2.0));
+				float sf = smoothstep(0.02, 0.25, face_m);          // (the face's, not the back of the head's)
+				col = mix(col, scar_col.rgb * clamp(dot(col, vec3(0.3, 0.59, 0.11)) / ref, 0.55, 1.25), sk.r * scar_col.a * sf);
+				age_h += (0.5 * sk.g * scar_col.a - 0.3 * sk.r * scar_col.a) * sf;
+			}
+		}
+		float lum0 = dot(col, vec3(0.3, 0.59, 0.11));
+		float shade = clamp(lum0 / ref, 0.55, 1.25);
+		if (contour_amt > 0.0) col *= 1.0 - 0.45 * contour_amt * hd_contour(au, v) * face_m;
+		if (blush_col.a > 0.0) {
+			float sz = 1.0 + 0.4 * blush_shape.x;
+			float cy = -0.42 + 0.12 * blush_shape.y;
+			float b = exp(-(pow((au - 0.62) / (0.2 * sz), 2.0) + pow((v - cy) / (0.15 * sz), 2.0)) * 1.2);
+			col = mix(col, blush_col.rgb * shade, clamp(b * blush_col.a * 0.95 * face_m, 0.0, 1.0));
+		}
+		vec2 br = hd_brow(au, v);
+		// (face space is the same front and back: what is drawn in it keeps to the face - owner 2026-11-26, the brows
+		// showed again on the back of the head under a short hair style)
+		float front = smoothstep(0.02, 0.25, face_m);
+		br.x *= front;
+		float dist = 0.33 * (1.0 - pow(clamp(mk.g, 0.0, 1.0), 1.0 / 1.3));
+		if (shadow_col.a > 0.0) col = mix(col, shadow_col.rgb * shade, hd_shadow(au, v, dist, br.y) * shadow_col.a * front);
+		if (liner_col.a > 0.0) col = mix(col, liner_col.rgb, hd_liner(au, v, dist) * liner_col.a * front);
+		if (lip_paint.a > 0.0) col = mix(col, lip_paint.rgb * shade, lip_m * lip_paint.a);
+		if (lip_line.a > 0.0) {
+			float lb = textureLod(hd_mask, UV, 2.0).r;
+			float band = smoothstep(0.08, 0.35, lb) * (1.0 - smoothstep(0.55, 0.9, lb));
+			col = mix(col, lip_line.rgb * shade, band * lip_line.a);
+		}
+		col = mix(col, brow_col.rgb, br.x * brow_col.a);
+	}
 	if (paint_idx >= 0) {
-		vec4 fm = textureGrad(paint_map, cuv, gx, gy);
+		vec4 fm = hd_skin ? vec4(fsp, face_m, 1.0) : textureGrad(paint_map, cuv, gx, gy);
 		if (fm.z > 0.01) {
 			float sgn = fm.x < 0.0 ? -1.0 : 1.0;          // (mirrored: each side turns its own way)
 			vec2 c0 = vec2(0.0, paint_xf.w);
@@ -2591,26 +3272,70 @@ void fragment() {
 		col *= e;
 	}
 	if (has_decal) {
-		vec4 d = textureGrad(decal_tex, cuv, gx, gy);
+		vec2 tuv = cuv;
+		vec2 tgx = gx, tgy = gy;
+		float tin = 1.0;
+		if (tat_fs && hd_skin) {
+			// the face point the tattoo is read at: moved, turned and scaled round its middle (between the eyes,
+			// a little up)
+			vec2 piv = vec2(0.0, 0.35);
+			vec2 q = fsp - piv - tat_xf.xy;
+			float cs = cos(-tat_xf.w), sn = sin(-tat_xf.w);
+			q = vec2(cs * q.x - sn * q.y, sn * q.x + cs * q.y) / max(tat_xf.z, 0.05) + piv;
+			vec2 g = vec2((q.x - hd_trange.x) / (hd_trange.y - hd_trange.x), (hd_trange.w - q.y) / (hd_trange.w - hd_trange.z));
+			tin = (g.x > 0.0 && g.x < 1.0 && g.y > 0.0 && g.y < 1.0) ? 1.0 : 0.0;
+			vec2 sz = vec2(textureSize(hd_tat, 0));
+			vec2 pp = clamp(g, vec2(0.0), vec2(1.0)) * sz - 0.5;
+			vec2 f = fract(pp);
+			ivec2 i = ivec2(floor(pp));
+			ivec2 hi = ivec2(sz) - 1;
+			vec4 ta = texelFetch(hd_tat, clamp(i, ivec2(0), hi), 0), tb = texelFetch(hd_tat, clamp(i + ivec2(1, 0), ivec2(0), hi), 0);
+			vec4 tc = texelFetch(hd_tat, clamp(i + ivec2(0, 1), ivec2(0), hi), 0), td = texelFetch(hd_tat, clamp(i + ivec2(1, 1), ivec2(0), hi), 0);
+			tin *= step(0.001, ta.r + ta.g + ta.b + ta.a) * smoothstep(0.0, 0.15, face_m)
+				* smoothstep(-2.0, -1.8, fsp.y);   // (the face only: not the back of the head, nor the neck)
+			tuv = mix(mix(hd_dec(ta), hd_dec(tb), f.x), mix(hd_dec(tc), hd_dec(td), f.x), f.y);
+			tgx = dFdx(tuv); tgy = dFdy(tuv);
+			tgx = length(tgx) > 0.05 ? gx : tgx; tgy = length(tgy) > 0.05 ? gy : tgy;      // (a jump at a seam: no mip)
+		}
+		vec4 d = textureGrad(decal_tex, tuv, tgx, tgy);
+		d.a *= tin * tat_amt;
 		// the client doubles the decal in gamma space (grey 128 = no change); the texture reads linear here, where
 		// grey is 0.21 - doubled, 0.43: the whole face darkened (owner 2026-11-23, Bugs & Fixes: "Selecting a tattoo for
 		// Celts darkens their face considerably"). Back to gamma, doubled, and back to linear.
 		vec3 dg = pow(max(d.rgb, vec3(0.0)), vec3(1.0 / 2.2));
-		col *= mix(vec3(1.0), pow(dg * 2.0, vec3(2.2)), d.a);
+		if (tat_tint.a > 0.5) {
+			// its own colour: the ink - where the grey-backed (Celt) tattoo is off its grey, or the alpha-masked
+			// (Shar) one is drawn - in the chosen colour, shaded by the ink's own light and dark
+			float ink = clamp(length(dg - vec3(0.494, 0.474, 0.494)) * 5.0, 0.0, 1.0);
+			float l = dot(dg, vec3(0.3, 0.59, 0.11));
+			float sh = clamp(l / 0.4, 0.45, 1.3);
+			col = mix(col, tat_tint.rgb * sh * clamp(dot(col, vec3(0.3, 0.59, 0.11)) * 2.4, 0.6, 1.3), ink * d.a);
+		} else {
+			col *= mix(vec3(1.0), pow(dg * 2.0, vec3(2.2)), d.a);
+		}
 	}
-	if (hd_skin) col *= mix(1.0, texture(hd_detail, UV).a, 0.6);      // (the creases' shade)
+	if (hd_skin) col *= mix(1.0, texture(hd_detail, UV).a, 0.35 + 0.25 * skin_detail);      // (the creases' shade)
+	if (solid_col.a > 0.5) col = solid_col.rgb * (0.55 + 0.45 * clamp(dot(c.rgb, vec3(0.3, 0.59, 0.11)) * 3.0, 0.0, 1.0));
 	ALBEDO = col;
+	if (eye_glow > 0.0) EMISSION = glow_e;
 	ROUGHNESS = mix(0.85, 0.14, gloss);
 	SPECULAR = mix(0.3, 0.6, gloss);
+	if (hd_skin && lip_m > 0.0) {
+		float lg = lip_m * max(lip_gloss, 0.18);
+		ROUGHNESS = mix(ROUGHNESS, 0.22, lg);
+		SPECULAR = 0.3 + 0.25 * lg;
+	}
 	if (hd_skin) {
 		// the HD head's fine relief (pores, lid creases, lip lines): the surface gradient bump, as the relief below
 		float lod = max(textureQueryLod(hd_detail, UV).x, 0.0);
 		vec2 stp = exp2(lod) / vec2(textureSize(hd_detail, 0));
-		float h0 = textureLod(hd_detail, UV, lod).r;
-		vec2 dh = vec2(textureLod(hd_detail, UV + vec2(stp.x, 0.0), lod).r - h0,
-				textureLod(hd_detail, UV + vec2(0.0, stp.y), lod).r - h0) / stp;
-		float dhdx = dot(dh, dFdx(UV));
-		float dhdy = dot(dh, dFdy(UV));
+		// (the creases always; the pores by the Skin Detail slider)
+		vec2 hk = vec2(1.0, clamp(skin_detail + 0.4 * skin_tone.x, 0.0, 1.0));
+		float h0 = dot(textureLod(hd_detail, UV, lod).rb, hk);
+		vec2 dh = vec2(dot(textureLod(hd_detail, UV + vec2(stp.x, 0.0), lod).rb, hk) - h0,
+				dot(textureLod(hd_detail, UV + vec2(0.0, stp.y), lod).rb, hk) - h0) / stp;
+		float dhdx = dot(dh, dFdx(UV)) + dFdx(age_h);
+		float dhdy = dot(dh, dFdy(UV)) + dFdy(age_h);
 		vec3 dpdx = dFdx(VERTEX);
 		vec3 dpdy = dFdy(VERTEX);
 		vec3 r1 = cross(dpdy, NORMAL);
@@ -2676,6 +3401,7 @@ var fx_on := true                             # false: no sway, cloak swing, fee
 var back_gear := false                        # something rides on the back (Player.dress; the cloak keeps under it: figure_cloth.gd)
 var _hair_mat: ShaderMaterial                # the hair's material (its sway uniforms)
 static var wind := 1.0                       # SkySystem: the storm's wind (as the trees')
+static var hair_flow_on := true              # the hair's flow (side locks, strand ripple, wispy ends: owner 2026-11-26)
 const SWAY_RANGE_M := 35.0
 
 
@@ -3168,6 +3894,9 @@ class Sway extends SkeletonModifier3D:
 	var fig: Fig3Figure
 	var _neck := -1                              # the head bone (the hair's sway is measured from the skull)
 	var _hair_live := false
+	var _rip := 0.0                              # the hair's ripple now (m), and how far it hangs below the head bone
+	var _len_id := 0
+	var _hair_len := 0.0
 	var _tails: Array[int] = []
 	var _last := Vector3.INF
 	var _back := 0.0
@@ -3222,6 +3951,25 @@ class Sway extends SkeletonModifier3D:
 	var _g_at: Array[Vector3] = [Vector3.INF, Vector3.INF]      # the ground under each foot: where it was asked for,
 	var _g_val: Array[float] = [-INF, -INF]                      # what it was, and how long ago
 	var _g_age: Array[float] = [1.0, 1.0]
+
+	## How far the hair (this material's meshes) hangs below the head bone, in metres (its wispy ends: the last few cm).
+	func _measure_len(sk: Skeleton3D, hm: ShaderMaterial) -> float:
+		var hb := sk.find_bone("Bip01 Head")
+		if hb < 0 or fig == null:
+			return 0.0
+		var top := (sk.global_transform * sk.get_bone_global_pose(hb).origin).y
+		var low := top
+		for k in fig._meshes:
+			if not String(k).begins_with("hair"):
+				continue
+			for mi in fig._meshes[k]:
+				var g := mi as MeshInstance3D
+				if g == null or not g.visible or g.mesh == null or g.material_override != hm:
+					continue
+				var box := g.get_aabb()
+				for i in 8:
+					low = minf(low, (g.global_transform * box.get_endpoint(i)).y)
+		return maxf(top - low, 0.0)
 
 	func _bones(sk: Skeleton3D) -> void:
 		_ready_bones = true
@@ -3374,6 +4122,18 @@ class Sway extends SkeletonModifier3D:
 			var swish := sin(t * 5.0 + _phase) * minf(speed, 8.0) * 0.008
 			hm.set_shader_parameter("sway_head", head_w)
 			hm.set_shader_parameter("sway_back", back_w)
+			if Fig3Figure.hair_flow_on:
+				if hm.get_instance_id() != _len_id:
+					_len_id = hm.get_instance_id()
+					_hair_len = _measure_len(sk, hm)
+				# the ripple: a breeze standing (with the wind), more running and turning; it settles slowly
+				var want := 0.009 * clampf(Fig3Figure.wind, 0.5, 2.0) + minf(speed, 8.0) * 0.003 + minf(absf(_om), 4.0) * 0.008
+				_rip = lerpf(_rip, want, clampf(delta * (4.0 if want > _rip else 1.2), 0.0, 1.0))
+				hm.set_shader_parameter("hair_wave", Vector4(_rip, 2.2 + minf(speed, 8.0) * 0.35, 0.9, 0.0))
+				hm.set_shader_parameter("hair_len", _hair_len)
+			else:
+				hm.set_shader_parameter("hair_wave", Vector4.ZERO)
+				hm.set_shader_parameter("hair_len", 0.0)
 			hm.set_shader_parameter("sway_dir", back_w * (sin(back_h) * 0.75 + absf(bob)) + side_w * (sin(side_ang) * 0.6 + swish)
 					+ up_w * bob)
 			_hair_live = true
@@ -3764,6 +4524,7 @@ class Sway extends SkeletonModifier3D:
 	func _still_hair() -> void:
 		if _hair_live and fig and fig._hair_mat:
 			fig._hair_mat.set_shader_parameter("sway_dir", Vector3.ZERO)
+			fig._hair_mat.set_shader_parameter("hair_wave", Vector4.ZERO)
 		_hair_live = false
 
 	func _turn(sk: Skeleton3D, b: int, axis_back: Vector3, back: float, axis_side: Vector3, side: float) -> void:

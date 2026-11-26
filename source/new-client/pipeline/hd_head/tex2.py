@@ -18,6 +18,10 @@ from fit2 import vnormals
 
 SIZE = hd_tex.SIZE
 SHADE = 0.42                            # how dark the face's own shade goes at its deepest
+SMOOTH = 0.05                           # the skin's smooth scale (of a head unit): finer than this is pores and speckle
+# a race whose classic face is painted with deep shading of its own (the Firbolg man's cheeks, owner 2026-11-25): its
+# tones taken wider, the shading left out (the new head shades itself)
+TONE_WIDE = {'fir_m': 3.0}
 SKINS = {'male': 'skins/young_caucasian_male/young_lightskinned_male_diffuse.png',
          'female': 'skins/young_caucasian_female/young_lightskinned_female_diffuse.png'}
 
@@ -116,7 +120,7 @@ def bake(res, folder, out_folder, log=print):
     u1 = UV[T[:, 1]] - UV[T[:, 0]]; u2 = UV[T[:, 2]] - UV[T[:, 0]]
     a2 = np.abs(u1[:, 0] * u2[:, 1] - u1[:, 1] * u2[:, 0]).sum() / 2
     ppu = np.sqrt(a2 / a3) * SIZE
-    sig = 0.4 * ppu
+    sig = 0.4 * ppu * TONE_WIDE.get(Path(folder).resolve().name.replace('src_', ''), 1.0)
     if bf is not None:
         base = cv2.imread(str(bf), cv2.IMREAD_COLOR)
         Hb, Wb = base.shape[:2]
@@ -130,27 +134,66 @@ def bake(res, folder, out_folder, log=print):
         M_low, _ = mblur(M, wide, sig)
         ratio = np.clip(M / np.maximum(M_low, 0.02), 0.25, 2.2)
         ratio = 1 + (ratio - 1) * (1 - 0.85 * np.clip(full[..., 9], 0, 1))[..., None]
-        out = C_low * ratio
+        # smooth by default (the HD look, owner 2026-11-25: "I'd like to go for a smoother texture"): the skin's own
+        # features (the lips, the lids, the nostrils) at their scale, its pores and speckle taken out - those go to
+        # hd_detail's green, which the Skin Detail slider brings back
+        ratio_s = cv2.GaussianBlur(ratio.astype(np.float32), (0, 0), SMOOTH * ppu)
+        hf = np.clip((ratio / np.maximum(ratio_s, 0.05)).mean(-1), 0.5, 1.5)
+        out = C_low * ratio_s
         # the neck's edge: the classic skin itself (the join shows no line), a little way up
         fs = np.clip(full[..., 8] / 1.6, 0, 1); fs = fs * fs * (3 - 2 * fs)
-        out = C * (1 - fs[..., None]) + out * fs[..., None]
+        # (softened a little way up from the edge: where the new neck stands well off the classic one - the Firbolg
+        # man's - the nearest classic triangle jumps about, and its skin came out in steps)
+        Cb, _ = mblur(C, wide, 0.08 * ppu)
+        gs = np.clip(full[..., 8] / 0.5, 0, 1)[..., None]
+        Cn = C * (1 - gs) + Cb * gs
+        out = Cn * (1 - fs[..., None]) + out * fs[..., None]
         log('  skin: MakeHuman\'s detail in the race\'s own tones (%.0f texels a unit, tones over %.0f texels)' % (ppu, sig))
     else:
         out = M
+        hf = np.ones(M.shape[:2], np.float32)
         log('  skin: MakeHuman\'s own (no classic base face found for the tones)')
     sh = np.clip(full[..., 10], 0, 1)
     out = out * (1 - SHADE * sh)[..., None] * (1 + 0.5 * SHADE * sh[..., None] * np.array([0.0, 0.0, 0.35]))   # (a warm shade)
     out8 = np.clip(out * 255, 0, 255).astype(np.uint8)
-    blur = cv2.GaussianBlur(out8, (0, 0), 1.0)
-    out8 = cv2.addWeighted(out8, 1.3, blur, -0.3, 0)
     cv2.imwrite(str(out_folder / 'hd_base.png'), out8)
     names['albedo'] = 'hd_base'
     # 3. the relief
     em = [L['eyeL'], L['eyeR']]
     mm = (L['mouthL'] + L['mouthR']) / 2
     det = hd_tex.detail(Q, T, UV, em, mm, L['nose'])
-    cv2.imwrite(str(out_folder / 'hd_detail.png'), np.dstack([det[..., 2]] * 3 + [det[..., 1]]))
+    # BGRA: r = the creases' height, g = the skin's fine colour (its pores, speckle: 128 = none), b = the pores'
+    # height, a = the creases' shade
+    hf8 = np.clip(128 + (hf - 1) * 255, 0, 255).astype(np.uint8)
+    cv2.imwrite(str(out_folder / 'hd_detail.png'), np.dstack([det[..., 0], hf8, det[..., 2], det[..., 1]]))
     names['detail'] = 'hd_detail'
+    # 4. the face maps (the HD look: brows, makeup, war paint, freckles drawn in face space)
+    import mask3
+    # the race's own painted brows (its default face's, from the classic skin layers) brought onto this head
+    brow = None
+    sl = meta.get('skin_layers', {}) or {}
+    try:
+        fm = (sl.get('face_map') or [{}])[0]
+        opt = int(fm.get('brows', 1) or 1)
+        chans = next(d['chan'] for d in sl.get('layers', []) if d['key'] == 'brows')
+        ch = chans[max(opt, 1) - 1]
+        bfile = find_race_file(folder, sl['tex'][ch // 4] + '.png')
+        if bfile is not None:
+            bim = cv2.imread(str(bfile), cv2.IMREAD_UNCHANGED)
+            bm = bim[..., [2, 1, 0, 3][ch % 4]].astype(np.float32) / 255
+            Hc, Wc = bm.shape
+            brow = cv2.remap(bm, (cuvp[..., 0] * Wc - 0.5).astype(np.float32), (cuvp[..., 1] * Hc - 0.5).astype(np.float32),
+                             cv2.INTER_LINEAR) * wide
+    except (StopIteration, KeyError, IndexError, ValueError):
+        brow = None
+    fmap, mmap, finfo = mask3.maps(res, full, wide, M, full[..., 7], full[..., 9], log=log, brow=brow)
+    cv2.imwrite(str(out_folder / 'hd_face.png'), fmap)
+    cv2.imwrite(str(out_folder / 'hd_mask.png'), mmap)
+    names['face'] = 'hd_face'; names['mask'] = 'hd_mask'; names['face_info'] = finfo
+    if meta.get('tattoos'):                  # (a race with tattoos: their map in face space)
+        tmap, trange = mask3.tattoo_map(res, full, wide, cuvp)
+        cv2.imwrite(str(out_folder / 'hd_tattoo.png'), tmap)
+        names['tattoo'] = 'hd_tattoo'; names['tattoo_range'] = trange
     names['uv_k'] = round(float(1.0 / max(res.get('lay_scale', 1.5), 1e-6)), 4)
     shared(out_folder.parent / '_hd_shared', log)
     return names
@@ -159,6 +202,15 @@ def bake(res, folder, out_folder, log=print):
 def shared(folder, log=print):
     """The eyeball, mouth and lash textures (the same for every race)."""
     folder = Path(folder); folder.mkdir(parents=True, exist_ok=True)
+    if not (folder / 'hd_brow_hair.png').exists():                  # (the HD look's brows: their hairs)
+        import brows3
+        brows3.make(folder / 'hd_brow_hair.png')
+    if not (folder / 'hd_age.png').exists():                        # (the HD look's age lines and scars)
+        import marks3
+        marks3.make(folder)
+    if not (folder / 'hd_eye_polar.png').exists() and (folder / 'hd_eye.png').exists():
+        import eyes3                                                # (the HD look's eyes: the iris drawn)
+        eyes3.make(folder, mh2.SYS)
     if (folder / 'hd_eye.png').exists() and (folder / 'hd_mouth.png').exists() and (folder / 'hd_lash.png').exists():
         return
     e = cv2.imread(str(Path(mh2.SYS) / 'eyes/materials/brown_eye.png'), cv2.IMREAD_UNCHANGED)[..., :3].astype(np.float32) / 255
@@ -181,6 +233,8 @@ def shared(folder, log=print):
     out[..., 3] = a
     out = cv2.resize(out, (512, 512), interpolation=cv2.INTER_AREA)
     cv2.imwrite(str(folder / 'hd_eye.png'), np.clip(out * 255, 0, 255).astype(np.uint8))
+    import eyes3                                                    # (the HD look: the eye's white, the iris drawn)
+    eyes3.make(folder, mh2.SYS)
     t = cv2.imread(str(Path(mh2.SYS) / 'teeth/teeth_base/teeth.png'), cv2.IMREAD_UNCHANGED)[..., :3]
     g = cv2.imread(str(Path(mh2.SYS) / 'tongue/tongue01/tongue01_diffuse.png'), cv2.IMREAD_COLOR)
     mo = np.hstack([cv2.resize(t, (512, 512), interpolation=cv2.INTER_AREA), cv2.resize(g, (512, 512), interpolation=cv2.INTER_AREA)])
