@@ -1338,10 +1338,10 @@ internal sealed partial class MainForm : Form
             _helpTip.SetToolTip(_performanceValue, snapshot.BotAiDelay is { } aiPeak
                 ? $"{PerformanceHelp}{Environment.NewLine}Last minute: average {aiPeak.AverageMs:0.0} ms, slowest {aiPeak.PeakMs:N0} ms over {aiPeak.Samples:N0} ticks."
                 : $"{PerformanceHelp}{Environment.NewLine}Shown about a minute after the server starts.");
-            _startButton.Enabled = !_resettingKeepsRelics && !_savingXpRates && !_stoppingServer && snapshot.ServerState == "Stopped" && File.Exists(_serverExecutable);
+            _startButton.Enabled = !_resettingKeepsRelics && !_savingXpRates && !_stoppingServer && !_cloudBusy && !_cloudBlocked && snapshot.ServerState == "Stopped" && File.Exists(_serverExecutable);
             _resetKeepsRelics.Enabled = !_resettingKeepsRelics && !_savingXpRates && snapshot.ServerState == "Stopped" && BotGoalsServerStopped();
             _stopButton.Enabled = !_stoppingServer && snapshot.ServerState is "Running" or "Starting";
-            _playButton.Enabled = !_stoppingServer && snapshot.ServerState == "Running" && File.Exists(_clientConnector);
+            _playButton.Enabled = !_stoppingServer && !_cloudBusy && snapshot.ServerState == "Running" && File.Exists(_clientConnector);
             UpdateXpRateControls(snapshot);
             ApplyFilter();
             UpdateDeleteButton();
@@ -2690,7 +2690,7 @@ internal sealed partial class MainForm : Form
         // and the TCP listener coming online.  Without it, a second click can
         // start another CoreServer while the first one is still loading the
         // world, and both processes then contend for the same SQLite database.
-        if (_resettingKeepsRelics || _savingXpRates || _serverProcess is { HasExited: false } || IsServerRunning() || FindExactServerProcess() is not null) return;
+        if (_resettingKeepsRelics || _savingXpRates || _cloudBusy || _cloudBlocked || _serverProcess is { HasExited: false } || IsServerRunning() || FindExactServerProcess() is not null) return;
         if (_botGoalsSettings?.HasUnsavedChanges == true)
         {
             MessageBox.Show(this, "Save or undo your edits in Bot Goals Setting before starting the server.", "Unsaved bot goals");

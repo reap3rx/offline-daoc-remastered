@@ -29,6 +29,7 @@ internal sealed class CloudSave
     private readonly string _database;
     private readonly string _events;
     private readonly string _clientSave;
+    private readonly string _account;
     private readonly string _machine = Environment.MachineName;
 
     public CloudSave(string worldRoot, string database, string events, string clientSave)
@@ -37,6 +38,7 @@ internal sealed class CloudSave
         _database = database;
         _events = events;
         _clientSave = clientSave;
+        _account = Path.Combine(worldRoot, "account.txt");
     }
 
     private string ConfigPath => Path.Combine(_stateDir, "cloud.json");
@@ -139,6 +141,30 @@ internal sealed class CloudSave
 
     public enum Choice { Cloud, Local, Cancel }
 
+    /// <summary>A long copy's progress: what is happening, bytes done, bytes in all. Called on the copying thread
+    /// (owner 2026-11-27, on slow hotel Wi-Fi: "I just can't tell what the launcher is doing").</summary>
+    public Action<string, long, long>? Progress { get; set; }
+
+    /// <summary>File.Copy in 1 MB pieces, reporting each one. A Google Drive file that is only "online" downloads as it is
+    /// read, so on a slow connection this is where the time goes.</summary>
+    private void CopyWithProgress(string src, string dst, string what)
+    {
+        long total = new FileInfo(src).Length, done = 0;
+        var buf = new byte[1 << 20];
+        Progress?.Invoke(what, 0, total);
+        using (var i = new FileStream(src, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, 1 << 16, FileOptions.SequentialScan))
+        using (var o = new FileStream(dst, FileMode.Create, FileAccess.Write, FileShare.None, 1 << 16))
+        {
+            int n;
+            while ((n = i.Read(buf, 0, buf.Length)) > 0)
+            {
+                o.Write(buf, 0, n);
+                done += n;
+                Progress?.Invoke(what, done, total);
+            }
+        }
+    }
+
     /// <summary>Before playing: take the cloud's save when it is newer. ask(question) decides when both have changed.
     /// False when the player chose not to go on.</summary>
     public bool SyncIn(Func<string, Choice> ask, Action<string> log)
@@ -154,6 +180,7 @@ internal sealed class CloudSave
         bool localNew = state != null && LocalChanged();
         if (!cloudNew)
         {
+            if (!localNew) TakeAccount();                // (this computer plays the cloud's save: its login too)
             log(localNew ? "This computer's progress is newer than the cloud's - it goes up when you stop the server." : "Your save is up to date with the cloud.");
             return true;
         }
@@ -181,6 +208,19 @@ internal sealed class CloudSave
         return true;
     }
 
+    /// <summary>The save's login, from the cloud (2026-11-27: the laptop took the desktop's save but logged in with its own
+    /// install's password - "my password is incorrect"). This computer's own is kept beside it, never lost.</summary>
+    private void TakeAccount()
+    {
+        string acc = Path.Combine(Folder, "current", "account.txt");
+        if (!File.Exists(acc)) acc = Path.Combine(Folder, "account.txt");
+        if (!File.Exists(acc) || (File.Exists(_account) && File.ReadAllText(acc) == File.ReadAllText(_account)))
+            return;
+        if (File.Exists(_account) && !File.Exists(_account + ".this-computer"))
+            File.Copy(_account, _account + ".this-computer");
+        File.Copy(acc, _account, true);
+    }
+
     private void Pull(Info info, Action<string> log)
     {
         string cur = Path.Combine(Folder, "current");
@@ -199,9 +239,10 @@ internal sealed class CloudSave
         string incoming = _database + ".incoming";
         foreach (string s in new[] { "", "-wal", "-shm" })
             if (File.Exists(incoming + s)) File.Delete(incoming + s);
-        File.Copy(cloudDb, incoming, true);
+        CopyWithProgress(cloudDb, incoming, "Downloading your save from Google Drive");
         if (File.Exists(cloudDb + "-wal") && new FileInfo(cloudDb + "-wal").Length > 0)   // (a save from an older launcher)
             File.Copy(cloudDb + "-wal", incoming + "-wal", true);
+        log("Checking the downloaded save…");
         if (!Healthy(incoming, out string why))
         {
             foreach (string s in new[] { "", "-wal", "-shm" })
@@ -209,6 +250,7 @@ internal sealed class CloudSave
             throw new IOException("The cloud save didn't arrive whole (" + why + "). Google Drive may still be syncing it: " +
                 "wait until Drive says it's up to date, then start again. Nothing on this computer was changed.");
         }
+        log("Putting the save in place…");
         Flatten(incoming, incoming + ".flat");
         foreach (string s in new[] { "", "-wal", "-shm" })
             if (File.Exists(incoming + s)) File.Delete(incoming + s);
@@ -218,6 +260,7 @@ internal sealed class CloudSave
         File.Move(incoming + ".flat", _database, true);
         string ev = Path.Combine(cur, Path.GetFileName(_events));
         if (File.Exists(ev)) File.Copy(ev, _events, true);
+        TakeAccount();
         string cc = Path.Combine(cur, "client");
         if (Directory.Exists(cc))
         {
@@ -243,6 +286,7 @@ internal sealed class CloudSave
     {
         if (!File.Exists(_database))
             return;
+        log("Checking your save before it goes up…");
         // never send up a damaged save (2026-11-27: a damaged copy replaced the good one); the database goes up as one
         // whole file (its write-ahead log folded in), so the other computer can't get half of it
         if (!Healthy(_database, out string why))
@@ -253,11 +297,13 @@ internal sealed class CloudSave
         Directory.CreateDirectory(stage);
         string flat = Path.Combine(Path.GetTempPath(), "offline-daoc-upload.db");
         Flatten(_database, flat);
-        File.Copy(flat, Path.Combine(stage, Path.GetFileName(_database)), true);
+        CopyWithProgress(flat, Path.Combine(stage, Path.GetFileName(_database)), "Copying your save to Google Drive");
         long upBytes = new FileInfo(flat).Length;
         File.Delete(flat);
         if (File.Exists(_events))
             File.Copy(_events, Path.Combine(stage, Path.GetFileName(_events)), true);
+        if (File.Exists(_account))                       // (the save's login goes with it)
+            File.Copy(_account, Path.Combine(stage, "account.txt"), true);
         string cs = Directory.CreateDirectory(Path.Combine(stage, "client")).FullName;
         foreach (string f in ClientFiles.Where(f => File.Exists(Path.Combine(_clientSave, f))))
             File.Copy(Path.Combine(_clientSave, f), Path.Combine(cs, f), true);

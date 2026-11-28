@@ -58,7 +58,7 @@ internal sealed partial class MainForm
         ShowVersion(GameVersionText);                    // (the header's label is built after InitRemastered)
         if (_updater == null || !_updater.Enabled)
         {
-            CloudSyncIn();
+            await CloudSyncInAsync();
             return;
         }
         _updater.CleanUp();
@@ -70,7 +70,7 @@ internal sealed partial class MainForm
         }
         await CheckForUpdatesAsync(quiet: true);
         if (_updater.GameInstalled)
-            CloudSyncIn();
+            await CloudSyncInAsync();
     }
 
     private async Task CheckForUpdatesAsync(bool quiet)
@@ -118,7 +118,7 @@ internal sealed partial class MainForm
 
     private async Task UpdateClickedAsync()
     {
-        if (_updater == null || _updating)
+        if (_updater == null || _updating || _cloudBusy)
             return;
         if (_updatePlan == null || _updatePlan.UpToDate)
         {
@@ -294,7 +294,7 @@ internal sealed partial class MainForm
             _cloud.Enable(folder);
             if (!IsServerRunning())
             {
-                if (_cloud.CloudInfo() != null) CloudSyncIn();
+                if (_cloud.CloudInfo() != null) _ = CloudSyncInAsync();
                 else _cloud.Push(s => _footer.Text = s);
             }
         }
@@ -305,65 +305,155 @@ internal sealed partial class MainForm
         ShowCloudState();
     }
 
-    /// <summary>Before playing: the cloud's save, when it is newer (asks when both changed).</summary>
-    private void CloudSyncIn()
+    // (owner 2026-11-27, on hotel Wi-Fi: "it locking the start server button / having a little download bar or status
+    // message when it's downloading ... the launcher just has the spinny wheel of death and says not responding.")
+    // The cloud's copies run off the window's thread; while one runs START SERVER, ENTER REALM and UPDATE are locked,
+    // the start button shows the percentage and the footer a bar, the megabytes, the speed and the time left.
+    private bool _cloudBusy;          // a download or upload is running
+    private bool _cloudPulling;       // ... and it is a download (closing then must not send this computer's save up)
+    private bool _cloudBlocked;       // the player said wait, or there is no save to play: START stays locked
+    private Task? _cloudTask;
+    private DateTime _cloudStarted, _cloudShown;
+    private int _cloudPct = -1;
+
+    private void BeginCloudWork(CloudSave cloud, bool pulling)
     {
-        if (_cloud == null || !_cloud.Enabled || IsServerRunning() || FindExactServerProcess() is not null)
+        _cloudBusy = true;
+        _cloudPulling = pulling;
+        _cloudPct = -1;
+        _cloudStarted = DateTime.UtcNow;
+        _startButton.Enabled = _playButton.Enabled = _updateButton.Enabled = false;
+        _startButton.Text = pulling ? "LOADING SAVE" : "SAVING";
+        _footer.Text = pulling ? "Cloud save: checking Google Drive for a newer save… START SERVER unlocks when it's done." :
+            "Cloud save: saving your progress to Google Drive…";
+        cloud.Progress = (what, done, total) =>
+        {
+            try { BeginInvoke(() => ShowCloudProgress(what, done, total, pulling)); } catch { /* the window closed */ }
+        };
+    }
+
+    private void ShowCloudProgress(string what, long done, long total, bool pulling)
+    {
+        int pct = total > 0 ? (int)(100 * done / total) : 100;
+        DateTime now = DateTime.UtcNow;
+        if (pct == _cloudPct && (now - _cloudShown).TotalSeconds < 1 && done < total)
+            return;
+        _cloudPct = pct;
+        _cloudShown = now;
+        if (done == 0) _cloudStarted = now;
+        _startButton.Text = (pulling ? "LOADING " : "SAVING ") + pct + "%";
+        double secs = Math.Max(0.5, (now - _cloudStarted).TotalSeconds);
+        double rate = done / secs;                                          // bytes a second
+        string speed = done > 0 ? $"{rate / 1048576:0.0} MB/s" : "starting";
+        string left = done > 0 && done < total && rate > 0 ? ", about " + FormatTimeLeft((total - done) / rate) + " left" : "";
+        const int Cells = 20;
+        int full = total > 0 ? (int)(Cells * done / total) : Cells;
+        string bar = new string('█', full) + new string('░', Cells - full);
+        _footer.Text = $"{what}  {bar}  {pct}% - {done / 1048576} of {total / 1048576} MB ({speed}{left}). " +
+            (pulling ? "START SERVER unlocks when it's done." : "Please wait before closing.");
+    }
+
+    private static string FormatTimeLeft(double s) =>
+        s < 60 ? "under a minute" : s < 3600 ? $"{Math.Ceiling(s / 60)} min" : $"{s / 3600:0.0} hours";
+
+    private void EndCloudWork(CloudSave cloud)
+    {
+        cloud.Progress = null;
+        _cloudBusy = _cloudPulling = false;
+        _startButton.Text = "START SERVER";
+        _updateButton.Enabled = !_updating;
+        ShowCloudState();
+        _ = RefreshDashboardAsync();                     // (START and ENTER REALM back as the server's state says)
+    }
+
+    /// <summary>A cloud message from the copying thread, shown in the footer.</summary>
+    private void CloudLog(string s)
+    {
+        try { BeginInvoke(() => _footer.Text = s); } catch { /* the window closed */ }
+    }
+
+    /// <summary>Before playing: the cloud's save, when it is newer (asks when both changed). Runs in the background.</summary>
+    private async Task CloudSyncInAsync()
+    {
+        if (_cloud == null || !_cloud.Enabled || _cloudBusy || IsServerRunning() || FindExactServerProcess() is not null)
             return;
         if (!_cloud.Reachable)
         {
             _footer.Text = "Cloud save: Google Drive can't be reached - you are playing this computer's save.";
             return;
         }
+        CloudSave cloud = _cloud;
         try
         {
-            if (_cloud.InUseElsewhere() is { } other &&
+            if (cloud.InUseElsewhere() is { } other &&
                 MessageBox.Show(this, $"Your save is marked as in use on {other.Computer} since {other.Since:g}.\n\nIf you are still playing there, quit there first - " +
                     "its progress hasn't reached the cloud yet.\n\nPlay here anyway?", "Cloud save", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
+                _cloudBlocked = true;
                 _startButton.Enabled = false;
                 _footer.Text = "Waiting for the other computer - restart the launcher when it has finished.";
                 return;
             }
-            bool go = _cloud.SyncIn(question => MessageBox.Show(this, question, "Cloud save", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) switch
-            {
-                DialogResult.Yes => CloudSave.Choice.Cloud,
-                DialogResult.No => CloudSave.Choice.Local,
-                _ => CloudSave.Choice.Cancel,
-            }, s => _footer.Text = s);
+            BeginCloudWork(cloud, pulling: true);
+            Task<bool> work = Task.Run(() => cloud.SyncIn(question => Invoke(() =>
+                MessageBox.Show(this, question, "Cloud save", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) switch
+                {
+                    DialogResult.Yes => CloudSave.Choice.Cloud,
+                    DialogResult.No => CloudSave.Choice.Local,
+                    _ => CloudSave.Choice.Cancel,
+                }), CloudLog));
+            _cloudTask = work;
+            bool go = await work;
             if (!go)
             {
-                _startButton.Enabled = false;
+                _cloudBlocked = true;
+                EndCloudWork(cloud);
                 _footer.Text = "Nothing was changed. Restart the launcher to choose again.";
                 return;
             }
-            _cloud.MarkInUse();
+            cloud.MarkInUse();
+            EndCloudWork(cloud);
         }
         catch (Exception e)
         {
-            MessageBox.Show(this, "Cloud save problem: " + e.Message + "\n\nYou are playing this computer's save.", "Cloud save", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            if (_cloudBusy) EndCloudWork(cloud);
+            bool noSave = !File.Exists(_database);
+            if (noSave) _cloudBlocked = true;             // (nothing to play instead: starting would make an empty world)
+            MessageBox.Show(this, "Cloud save problem: " + e.Message + "\n\n" +
+                (noSave ? "There is no save on this computer to play instead. Close and reopen the launcher to try again." : "You are playing this computer's save."),
+                "Cloud save", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            _footer.Text = noSave ? "Cloud save didn't finish - close and reopen the launcher to try again." : "Cloud save: playing this computer's save.";
         }
         ShowCloudState();
     }
 
-    /// <summary>The server stopped: your progress up to the cloud.</summary>
+    /// <summary>The server stopped: your progress up to the cloud, in the background (START waits for it).</summary>
     private void CloudPushAfterStop()
     {
-        if (_cloud == null || !_cloud.Enabled)
+        if (_cloud == null || !_cloud.Enabled || _cloudBusy)
             return;
         CloudSave cloud = _cloud;
-        _ = Task.Run(async () =>
+        BeginCloudWork(cloud, pulling: false);
+        _cloudTask = Task.Run(async () =>
         {
             await Task.Delay(3000);                      // (the server lets go of the database)
             try
             {
                 if (!cloud.Reachable) throw new IOException("Google Drive can't be reached");
-                cloud.Push(s => BeginInvoke(() => { _footer.Text = s; ShowCloudState(); }));
+                cloud.Push(CloudLog);
             }
             catch (Exception e)
             {
-                BeginInvoke(() => MessageBox.Show(this, "Your progress could not be saved to Google Drive: " + e.Message +
-                    "\n\nIt is safe on this computer and goes up the next time the server stops.", "Cloud save", MessageBoxButtons.OK, MessageBoxIcon.Warning));
+                try
+                {
+                    BeginInvoke(() => MessageBox.Show(this, "Your progress could not be saved to Google Drive: " + e.Message +
+                        "\n\nIt is safe on this computer and goes up the next time the server stops.", "Cloud save", MessageBoxButtons.OK, MessageBoxIcon.Warning));
+                }
+                catch { /* the window closed */ }
+            }
+            finally
+            {
+                try { BeginInvoke(() => EndCloudWork(cloud)); } catch { /* the window closed */ }
             }
         });
     }
@@ -373,8 +463,15 @@ internal sealed partial class MainForm
     {
         if (_cloud == null || !_cloud.Enabled || !_cloud.Reachable || _serverProcess is { HasExited: false })
             return;
+        if (_cloudPulling)
+            return;                                      // (a download was cut short: this computer's save must not go up)
         try
         {
+            if (_cloudBusy && _cloudTask is { IsCompleted: false } upload)
+            {
+                upload.Wait(TimeSpan.FromMinutes(10));   // (the upload after the server stopped finishes first)
+                return;
+            }
             if (_cloud.LocalChanged())
                 _cloud.Push(_ => { });
             _cloud.ClearInUse();
