@@ -1,3 +1,4 @@
+using System.Data.SQLite;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -85,12 +86,15 @@ internal sealed class CloudSave
 
     // ---------------------------------------------------------------- what the cloud holds
 
-    public sealed record Info(string SavedAt, string Computer);
+    public sealed record Info(string SavedAt, string Computer, long Bytes = 0);
 
     public Info? CloudInfo()
     {
         JsonNode? n = ReadJson(Path.Combine(Folder, "save-info.json"));
-        return n == null ? null : new Info(n["saved_at"]?.GetValue<string>() ?? "", n["computer"]?.GetValue<string>() ?? "");
+        if (n == null) return null;
+        long bytes = 0;
+        try { bytes = n["db_bytes"]?.GetValue<long>() ?? 0; } catch { }
+        return new Info(n["saved_at"]?.GetValue<string>() ?? "", n["computer"]?.GetValue<string>() ?? "", bytes);
     }
 
     /// <summary>Another computer is playing on the save now (its name and since when), or null.</summary>
@@ -183,12 +187,35 @@ internal sealed class CloudSave
         string db = Path.GetFileName(_database);
         if (!File.Exists(Path.Combine(cur, db)))
             throw new IOException("The cloud save is incomplete (it has no game database).");
+        // (2026-11-27: a laptop read the save while Google Drive was still downloading it - the copy came out damaged,
+        // the server couldn't start, and the damaged copy went back up.) The cloud's database is copied in whole and
+        // checked before anything here is replaced; a save Drive hasn't finished bringing down is left for later.
+        string cloudDb = Path.Combine(cur, db);
+        long have = new FileInfo(cloudDb).Length;
+        if (info.Bytes > 0 && have != info.Bytes && !File.Exists(cloudDb + "-wal"))
+            throw new IOException($"Google Drive is still downloading your save ({have / 1048576} of {info.Bytes / 1048576} MB). " +
+                "Wait until Drive says it's up to date, then start again. (In File Explorer: right-click \"OfflineDAoC Saves\" > Offline access > Available offline.)");
+        Directory.CreateDirectory(Path.GetDirectoryName(_database)!);
+        string incoming = _database + ".incoming";
+        foreach (string s in new[] { "", "-wal", "-shm" })
+            if (File.Exists(incoming + s)) File.Delete(incoming + s);
+        File.Copy(cloudDb, incoming, true);
+        if (File.Exists(cloudDb + "-wal") && new FileInfo(cloudDb + "-wal").Length > 0)   // (a save from an older launcher)
+            File.Copy(cloudDb + "-wal", incoming + "-wal", true);
+        if (!Healthy(incoming, out string why))
+        {
+            foreach (string s in new[] { "", "-wal", "-shm" })
+                if (File.Exists(incoming + s)) File.Delete(incoming + s);
+            throw new IOException("The cloud save didn't arrive whole (" + why + "). Google Drive may still be syncing it: " +
+                "wait until Drive says it's up to date, then start again. Nothing on this computer was changed.");
+        }
+        Flatten(incoming, incoming + ".flat");
+        foreach (string s in new[] { "", "-wal", "-shm" })
+            if (File.Exists(incoming + s)) File.Delete(incoming + s);
         Backup("before-pull");
         foreach (string s in new[] { "-wal", "-shm" })
             if (File.Exists(_database + s)) File.Delete(_database + s);
-        Directory.CreateDirectory(Path.GetDirectoryName(_database)!);
-        foreach (string n in new[] { db, db + "-wal", db + "-shm" })
-            if (File.Exists(Path.Combine(cur, n))) File.Copy(Path.Combine(cur, n), Path.Combine(Path.GetDirectoryName(_database)!, n), true);
+        File.Move(incoming + ".flat", _database, true);
         string ev = Path.Combine(cur, Path.GetFileName(_events));
         if (File.Exists(ev)) File.Copy(ev, _events, true);
         string cc = Path.Combine(cur, "client");
@@ -216,11 +243,21 @@ internal sealed class CloudSave
     {
         if (!File.Exists(_database))
             return;
+        // never send up a damaged save (2026-11-27: a damaged copy replaced the good one); the database goes up as one
+        // whole file (its write-ahead log folded in), so the other computer can't get half of it
+        if (!Healthy(_database, out string why))
+            throw new IOException("This computer's save is damaged (" + why + "), so it was NOT uploaded - the cloud keeps the good one. " +
+                "Delete this computer's database (data\\opendaoc.sqlite3.db) and start again to take the cloud's save.");
         string stage = Path.Combine(Folder, "uploading");
         if (Directory.Exists(stage)) Directory.Delete(stage, true);
         Directory.CreateDirectory(stage);
-        foreach (string f in new[] { _database, _database + "-wal", _database + "-shm", _events }.Where(File.Exists))
-            File.Copy(f, Path.Combine(stage, Path.GetFileName(f)), true);
+        string flat = Path.Combine(Path.GetTempPath(), "offline-daoc-upload.db");
+        Flatten(_database, flat);
+        File.Copy(flat, Path.Combine(stage, Path.GetFileName(_database)), true);
+        long upBytes = new FileInfo(flat).Length;
+        File.Delete(flat);
+        if (File.Exists(_events))
+            File.Copy(_events, Path.Combine(stage, Path.GetFileName(_events)), true);
         string cs = Directory.CreateDirectory(Path.Combine(stage, "client")).FullName;
         foreach (string f in ClientFiles.Where(f => File.Exists(Path.Combine(_clientSave, f))))
             File.Copy(Path.Combine(_clientSave, f), Path.Combine(cs, f), true);
@@ -237,10 +274,49 @@ internal sealed class CloudSave
         string saved = DateTime.UtcNow.ToString("o"), stamp = LocalStamp();
         WriteJson(Path.Combine(Folder, "save-info.json"), new JsonObject
         {
-            ["saved_at"] = saved, ["computer"] = _machine, ["local_stamp"] = stamp, ["db_bytes"] = new FileInfo(_database).Length,
+            ["saved_at"] = saved, ["computer"] = _machine, ["local_stamp"] = stamp, ["db_bytes"] = upBytes,
         });
         WriteState(saved, stamp);
         log($"Your progress is saved to Google Drive ({new FileInfo(_database).Length / 1048576} MB).");
+    }
+
+    /// <summary>The database opens and SQLite's quick check passes.</summary>
+    public static bool Healthy(string path, out string why)
+    {
+        why = "";
+        try
+        {
+            using var c = new SQLiteConnection($"Data Source={path};Version=3;Read Only=True;Pooling=False;Default Timeout=10");
+            c.Open();
+            using var cmd = c.CreateCommand();
+            cmd.CommandText = "PRAGMA quick_check(1)";
+            string r = Convert.ToString(cmd.ExecuteScalar()) ?? "";
+            if (r == "ok") return true;
+            why = r.Length > 80 ? r[..80] : r;
+            return false;
+        }
+        catch (Exception e)
+        {
+            why = e.Message.Split('\n')[0];
+            return false;
+        }
+    }
+
+    /// <summary>A consistent single-file copy (SQLite's online backup; no -wal / -shm beside it).</summary>
+    private static void Flatten(string src, string dst)
+    {
+        if (File.Exists(dst)) File.Delete(dst);
+        using (var s = new SQLiteConnection($"Data Source={src};Version=3;Read Only=True;Pooling=False;Default Timeout=10"))
+        using (var d = new SQLiteConnection($"Data Source={dst};Version=3;Pooling=False"))
+        {
+            s.Open();
+            d.Open();
+            s.BackupDatabase(d, "main", "main", -1, null, 0);
+            using var cmd = d.CreateCommand();
+            cmd.CommandText = "PRAGMA journal_mode=DELETE";
+            cmd.ExecuteNonQuery();
+        }
+        SQLiteConnection.ClearAllPools();
     }
 
     private void WriteState(string savedAt, string stamp)
